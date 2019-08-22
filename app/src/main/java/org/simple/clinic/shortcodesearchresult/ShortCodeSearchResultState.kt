@@ -5,6 +5,8 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.plumbing.AsyncOp
 import org.simple.clinic.plumbing.AsyncOp.IN_FLIGHT
 import org.simple.clinic.plumbing.AsyncOp.SUCCEEDED
+import java.util.Collections.emptyList
+import javax.inject.Inject
 
 data class ShortCodeSearchResultState(
     val shortCode: String,

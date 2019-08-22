@@ -6,7 +6,6 @@ import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -21,6 +20,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
+import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -125,8 +125,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   fun openPatientShortCodeSearch(validShortCode: String) {
-    Toast.makeText(context, validShortCode, Toast.LENGTH_SHORT).show()
-    // TODO("not implemented")
+    screenRouter.popAndPush(ShortCodeSearchResultScreenKey(validShortCode), RouterDirection.FORWARD)
   }
 
   fun hideQrCodeScannerView() {

@@ -58,6 +58,7 @@ import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.SearchResultsModule
 import org.simple.clinic.security.pin.PinEntryCardView
+import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientView
@@ -126,6 +127,7 @@ interface TheActivityComponent {
   fun inject(target: AllPatientsInFacilityView)
   fun inject(target: RegistrationLoadingScreen)
   fun inject(target: LoggedOutOfDeviceDialog)
+  fun inject(target: ShortCodeSearchResultScreen)
 
   @Subcomponent.Builder
   interface Builder {

@@ -28,9 +28,11 @@
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
     android:background="@color/white100"
+    android:visibility="gone"
     app:layout_constraintBottom_toBottomOf="@+id/qrCodeScannerView"
     app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerView"
-    app:layout_constraintStart_toStartOf="parent">
+    app:layout_constraintStart_toStartOf="parent"
+    tools:visibility="visible">
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -69,7 +71,7 @@
         android:layout_marginTop="@dimen/spacing_4"
         android:gravity="center_horizontal"
         android:visibility="gone"
-        tools:text="@string/scansimpleid_shortcode_error"
+        tools:text="@string/scansimpleid_shortcode_error_not_required_length"
         android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8"
         tools:visibility="visible" />

@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.allpatientsinfacility.PatientSearchResultUiState
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
 class ShortCodeSearchResultUiChangeProducerTest {
@@ -18,7 +19,7 @@ class ShortCodeSearchResultUiChangeProducerTest {
   @Before
   fun setup() {
     states
-        .compose(ShortCodeSearchResultUiChangeProducer(Schedulers.trampoline()))
+        .compose(ShortCodeSearchResultUiChangeProducer(TrampolineSchedulersProvider()))
         .subscribe { uiChange -> uiChange(ui) }
   }
 

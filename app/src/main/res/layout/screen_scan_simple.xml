@@ -56,7 +56,6 @@
         android:textAlignment="center"
         android:ems="10"
         android:hint="@string/scansimpleid_hint_short_code"
-        android:maxLength="7"
         android:imeOptions="actionSearch"
         android:textSize="@dimen/textsize_20"
         android:inputType="number" />

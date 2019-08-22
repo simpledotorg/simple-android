@@ -5,6 +5,9 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.scanid.ShortCodeValidationResult.Empty
+import org.simple.clinic.scanid.ShortCodeValidationResult.NotEqualToRequiredLength
+import org.simple.clinic.scanid.ShortCodeValidationResult.Success
 
 @RunWith(JUnitParamsRunner::class)
 class ShortCodeInputTest {
@@ -24,10 +27,11 @@ class ShortCodeInputTest {
     val shortCodeInput = ShortCodeInput(shortCodeText = input)
 
     //when
-    val isValid = shortCodeInput.isValid()
+    val result = shortCodeInput.validate()
 
     //then
-    assertThat(isValid).isFalse()
+    assertThat(result)
+        .isEqualTo(NotEqualToRequiredLength)
   }
 
   @Test
@@ -36,9 +40,20 @@ class ShortCodeInputTest {
     val shortCodeInput = ShortCodeInput(shortCodeText = "3456789")
 
     //when
-    val isValid = shortCodeInput.isValid()
+    val result = shortCodeInput.validate()
 
     //then
-    assertThat(isValid).isTrue()
+    assertThat(result)
+        .isEqualTo(Success)
+  }
+
+  @Test
+  fun `when short code is empty, then validation should fail with empty`() {
+    // when
+    val result = ShortCodeInput("").validate()
+
+    // then
+    assertThat(result)
+        .isEqualTo(Empty)
   }
 }

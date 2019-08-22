@@ -20,7 +20,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.InvalidPassportCode
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode
-import org.simple.clinic.scanid.ShortCodeValidationError.LESS_THAN_REQUIRED_LENGTH
+import org.simple.clinic.scanid.ShortCodeValidationResult.NotEqualToRequiredLength
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -204,7 +204,7 @@ class ScanSimpleIdScreenControllerTest {
     uiEvents.onNext(ShortCodeSearched(shortCodeInput))
 
     //then
-    verify(screen).showShortCodeValidationError(LESS_THAN_REQUIRED_LENGTH)
+    verify(screen).showShortCodeValidationError(NotEqualToRequiredLength)
     verifyNoMoreInteractions(screen)
   }
 
@@ -215,7 +215,7 @@ class ScanSimpleIdScreenControllerTest {
     val invalidShortCodeInput = ShortCodeInput(invalidShortCode)
 
     uiEvents.onNext(ShortCodeSearched(invalidShortCodeInput))
-    verify(screen).showShortCodeValidationError(LESS_THAN_REQUIRED_LENGTH)
+    verify(screen).showShortCodeValidationError(NotEqualToRequiredLength)
 
     //when
     uiEvents.onNext(ShortCodeChanged)

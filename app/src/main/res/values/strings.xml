@@ -376,6 +376,7 @@
   <string name="scansimpleid_title">Scan card ID</string>
   <string name="scansimpleid_hint_short_code">123 4567</string>
   <string name="scansimpleid_shortcode_error">BP passport number length is less than 7 digits</string>
+  <string name="scansimpleid_type_bp_passport_number">or type BP Passport number</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Sync pending</string>

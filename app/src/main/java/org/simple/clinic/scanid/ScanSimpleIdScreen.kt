@@ -115,7 +115,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     screenRouter.popAndPush(AddIdToPatientSearchScreenKey(identifier), RouterDirection.FORWARD)
   }
 
-  fun showShortCodeValidationError(validationError: ShortCodeValidationError) {
+  fun showShortCodeValidationError(validationError: ShortCodeValidationResult) {
     shortCodeErrorText.visibility = View.VISIBLE
     shortCodeErrorText.text = resources.getString(R.string.scansimpleid_shortcode_error)
   }

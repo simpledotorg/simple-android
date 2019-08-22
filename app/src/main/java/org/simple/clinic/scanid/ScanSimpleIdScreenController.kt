@@ -13,7 +13,8 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.InvalidPassportCode
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode
-import org.simple.clinic.scanid.ShortCodeValidationError.LESS_THAN_REQUIRED_LENGTH
+import org.simple.clinic.scanid.ShortCodeValidationResult.NotEqualToRequiredLength
+import org.simple.clinic.scanid.ShortCodeValidationResult.Success
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -134,11 +135,11 @@ class ScanSimpleIdScreenController @Inject constructor(
         .share()
 
     val showValidationErrors = shortCodes
-        .filter { !it.isValid() }
-        .map { { ui: Ui -> ui.showShortCodeValidationError(LESS_THAN_REQUIRED_LENGTH) } }
+        .filter { it.validate() != Success }
+        .map { { ui: Ui -> ui.showShortCodeValidationError(NotEqualToRequiredLength) } }
 
     val openPatientSearchScreenChanges = shortCodes
-        .filter { it.isValid() }
+        .filter { it.validate() == Success }
         .map { { ui: Ui -> ui.openPatientShortCodeSearch(it.shortCodeText) } }
 
     return Observable.merge(

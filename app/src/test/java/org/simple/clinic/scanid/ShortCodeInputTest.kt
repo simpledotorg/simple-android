@@ -5,8 +5,8 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.scanid.ShortCodeValidationResult.Empty
-import org.simple.clinic.scanid.ShortCodeValidationResult.NotEqualToRequiredLength
+import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
+import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.NotEqualToRequiredLength
 import org.simple.clinic.scanid.ShortCodeValidationResult.Success
 
 @RunWith(JUnitParamsRunner::class)

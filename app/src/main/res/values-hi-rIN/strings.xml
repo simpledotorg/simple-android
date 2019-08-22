@@ -19,7 +19,6 @@
   <string name="home_help">मदद</string>
   <string name="identifiertype_bp_passport">BP पासपोर्ट</string>
   <string name="identifiertype_unknown">ID</string>
-  <string name="patientsearch_name">रोगी का नाम</string>
   <string name="patientsearch_search">अगला</string>
   <string name="patientsearch_error_empty_fullname">रोगी का पूरा नाम लिखें</string>
   <string name="patientsearchresults_empty_state">कोई रोगी मौजूद नहीं</string>
@@ -55,7 +54,6 @@
   <string name="patients_loggedoutalert_title">आप एक बार में केवल एक डिवाइस में लॉग इन कर सकते हैं</string>
   <string name="patients_loggedoutalert_message">आप अपने पिछले डिवाइस से लॉग आउट कर दिए गए हैं।</string>
   <string name="patients_loggedoutalert_dismiss">समझ गया/गई</string>
-  <string name="patients_record_every_patient">उस हर रोगी को रिकॉर्ड करें जिसे उच्च रक्तचाप की समस्या है या जो उच्च BP की दवाइयां ले रहा हो</string>
   <string name="patients_scan_simple_card">BP पासपोर्ट स्कैन करें</string>
   <string name="patients_recentpatients_title">हालिया रोगी</string>
   <string name="patients_recentpatients_no_recent_patients">हाल में कोई रोगी नहीं</string>
@@ -83,7 +81,6 @@
   <string name="patientsummary_medicalhistory_title">ह्रदवाहिनी इतिहास</string>
   <string name="patientsummary_medicalhistory_last_updated">अपडेट हुआ/हुई %s</string>
   <string name="patientsummary_bp_none_added">कोई रक्तचाप नहीं जुड़ा</string>
-  <string name="patientsummary_bp_edit">संपादन करें</string>
   <string name="patientsummary_edit">संपादन करें</string>
   <string name="patientsummary_updatephone_dialog_title">फ़ोन नंबर अपडेट करें</string>
   <string name="patientsummary_updatephone_dialog_message">पहले रोगी का फ़ोन नंबर गलत चिह्नित हुआ था</string>
@@ -202,7 +199,6 @@
   <string name="linkidwithpatient_button_cancel">रद्द करें</string>
   <string name="linkidwithpatient_add_id_text">%1$S\u0020 जोड़ें</string>
   <string name="linkidwithpatient_to_patient_text">\u0020to\u00A0रोगी?</string>
-  <string name="addidtopatientsearch_name">रोगी का नाम</string>
   <string name="addidtopatientsearch_search">अगला</string>
   <string name="addidtopatientsearch_error_empty_fullname">रोगी का पूरा नाम लिखें</string>
   <string name="addidtopatientsearch_add">%1$S\u0020 जोड़ें</string>

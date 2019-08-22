@@ -11,7 +11,7 @@
   <string name="gender_female_letter">F</string>
   <!--suppress UnusedResources -->
   <string name="gender_trans_letter">T</string>
-  <string name="gender_unknown_letter">U</string>
+  <string name="gender_unknown_letter" translatable="false">U</string>
   <string name="api_unexpected_error">Something went wrong. Please try again.</string>
   <string name="api_network_error">No internet connection</string>
 
@@ -34,9 +34,9 @@
   <string name="patientsearchresults_register_patient">Register as a new patient</string>
   <string name="patientsearchresults_register_patient_for_empty_state">Register patient</string>
   <string name="patientsearchresults_item_last_bp">Last BP:</string>
-  <string name="patientsearchresults_item_name_with_gender_and_age">%1$s, %2$s, %3$d</string>
-  <string name="patientsearchresults_item_address_with_colony_and_district">%1$s, %2$s</string>
-  <string name="patientsearchresults_item_last_bp_date_with_facility">%1$s, %2$s</string>
+  <string name="patientsearchresults_item_name_with_gender_and_age" translatable="false">%1$s, %2$s, %3$d</string>
+  <string name="patientsearchresults_item_address_with_colony_and_district" translatable="false">%1$s, %2$s</string>
+  <string name="patientsearchresults_item_last_bp_date_with_facility" translatable="false">%1$s, %2$s</string>
   <string name="patientsearchresults_current_facility_header">Has visited %s</string>
   <string name="patientsearchresults_other_results_header">Other Results</string>
   <string name="patientsearchresults_no_patients_match">No patients match</string>
@@ -49,9 +49,9 @@
   <string name="patiententry_date_of_birth_focused">D.O.B: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">Or</string>
   <string name="patiententry_age">Age</string>
-  <string name="patiententry_gender_female">@string/gender_female</string>
-  <string name="patiententry_gender_male">@string/gender_male</string>
-  <string name="patiententry_gender_transgender">@string/gender_transgender</string>
+  <string name="patiententry_gender_female" translatable="false">@string/gender_female</string>
+  <string name="patiententry_gender_male" translatable="false">@string/gender_male</string>
+  <string name="patiententry_gender_transgender" translatable="false">@string/gender_transgender</string>
   <string name="patiententry_colony_or_village">Colony / Village / Ward</string>
   <string name="patiententry_district">District</string>
   <string name="patiententry_state">State</string>
@@ -69,29 +69,29 @@
   <string name="patiententry_identifier">BP Passport</string>
 
   <!-- Edit patient -->
-  <string name="patientedit_full_name">@string/patiententry_full_name</string>
-  <string name="patientedit_phone_number">@string/patiententry_phone_number</string>
-  <string name="patientedit_gender_female">@string/gender_female</string>
-  <string name="patientedit_gender_male">@string/gender_male</string>
-  <string name="patientedit_gender_transgender">@string/gender_transgender</string>
-  <string name="patientedit_error_empty_gender">@string/patiententry_error_empty_gender</string>
-  <string name="patientedit_colony_or_village">@string/patiententry_colony_or_village</string>
-  <string name="patientedit_district">@string/patiententry_district</string>
-  <string name="patientedit_state">@string/patiententry_state</string>
+  <string name="patientedit_full_name" translatable="false">@string/patiententry_full_name</string>
+  <string name="patientedit_phone_number" translatable="false">@string/patiententry_phone_number</string>
+  <string name="patientedit_gender_female" translatable="false">@string/gender_female</string>
+  <string name="patientedit_gender_male" translatable="false">@string/gender_male</string>
+  <string name="patientedit_gender_transgender" translatable="false">@string/gender_transgender</string>
+  <string name="patientedit_error_empty_gender" translatable="false">@string/patiententry_error_empty_gender</string>
+  <string name="patientedit_colony_or_village" translatable="false">@string/patiententry_colony_or_village</string>
+  <string name="patientedit_district" translatable="false">@string/patiententry_district</string>
+  <string name="patientedit_state" translatable="false">@string/patiententry_state</string>
   <string name="patientedit_save_patient">Save</string>
-  <string name="patientedit_error_empty_fullname">@string/patiententry_error_empty_fullname</string>
-  <string name="patientedit_error_empty_colony_or_village">@string/patiententry_error_empty_colony_or_village</string>
-  <string name="patientedit_error_empty_district">@string/patiententry_error_empty_district</string>
-  <string name="patientedit_error_state_empty">@string/patiententry_error_state_empty</string>
-  <string name="patientedit_error_phonenumber_length_less">@string/patiententry_error_phonenumber_length_less</string>
-  <string name="patientedit_error_phonenumber_length_more">@string/patiententry_error_phonenumber_length_more</string>
-  <string name="patientedit_date_of_birth_unfocused">@string/patiententry_date_of_birth_unfocused</string>
-  <string name="patientedit_date_of_birth_focused">@string/patiententry_date_of_birth_focused</string>
-  <string name="patientedit_dateofbirth_and_age_separator">@string/patiententry_dateofbirth_and_age_separator</string>
-  <string name="patientedit_age">@string/patiententry_age</string>
-  <string name="patientedit_error_both_dateofbirth_and_age_empty">@string/patiententry_error_both_dateofbirth_and_age_empty</string>
-  <string name="patientedit_error_invalid_dateofbirth">@string/patiententry_error_invalid_dateofbirth</string>
-  <string name="patientedit_error_dateofbirth_is_in_future">@string/patiententry_error_dateofbirth_is_in_future</string>
+  <string name="patientedit_error_empty_fullname" translatable="false">@string/patiententry_error_empty_fullname</string>
+  <string name="patientedit_error_empty_colony_or_village" translatable="false">@string/patiententry_error_empty_colony_or_village</string>
+  <string name="patientedit_error_empty_district" translatable="false">@string/patiententry_error_empty_district</string>
+  <string name="patientedit_error_state_empty" translatable="false">@string/patiententry_error_state_empty</string>
+  <string name="patientedit_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
+  <string name="patientedit_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
+  <string name="patientedit_date_of_birth_unfocused" translatable="false">@string/patiententry_date_of_birth_unfocused</string>
+  <string name="patientedit_date_of_birth_focused" translatable="false">@string/patiententry_date_of_birth_focused</string>
+  <string name="patientedit_dateofbirth_and_age_separator" translatable="false">@string/patiententry_dateofbirth_and_age_separator</string>
+  <string name="patientedit_age" translatable="false">@string/patiententry_age</string>
+  <string name="patientedit_error_both_dateofbirth_and_age_empty" translatable="false">@string/patiententry_error_both_dateofbirth_and_age_empty</string>
+  <string name="patientedit_error_invalid_dateofbirth" translatable="false">@string/patiententry_error_invalid_dateofbirth</string>
+  <string name="patientedit_error_dateofbirth_is_in_future" translatable="false">@string/patiententry_error_dateofbirth_is_in_future</string>
   <string name="patientedit_confirm_discard_title">Discard changes?</string>
   <string name="patientedit_confirm_discard_ok">Discard</string>
   <string name="patientedit_confirm_discard_cancel">Cancel</string>
@@ -118,14 +118,11 @@
   <string name="patients_loggedoutalert_title">You can only be logged in on one device at a time</string>
   <string name="patients_loggedoutalert_message">You have been logged out of your previous device.</string>
   <string name="patients_loggedoutalert_dismiss">Got it</string>
-  <!-- Lint complains on the <font> tag for some reason -->
-  <!--suppress UnusedResources -->
-  <string name="patients_record_every_patient">Record <font color="#2f363d"><i>every patient</i></font> who has hypertension or who is taking medicines for high BP</string>
   <string name="patients_scan_simple_card">Scan BP Passport</string>
   <string name="patients_recentpatients_title">Recent Patients</string>
   <string name="patients_recentpatients_no_recent_patients">No recent patients</string>
   <string name="patients_recentpatients_see_all">See All</string>
-  <string name="patients_recentpatients_nameage">%1$s, %2$d</string>
+  <string name="patients_recentpatients_nameage" translatable="false">%1$s, %2$d</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Blood pressure</string>
@@ -161,27 +158,27 @@
   <string name="patientsummary_medicalhistory_title">Cardiovascular History</string>
   <string name="patientsummary_medicalhistory_last_updated">Updated %s</string>
   <string name="patientsummary_bp_none_added">No blood pressures added</string>
-  <string name="patientsummary_bp_reading">%1$d / %2$d</string>
+  <string name="patientsummary_bp_reading" translatable="false">%1$d / %2$d</string>
   <string name="patientsummary_edit">Edit</string>
-  <string name="patientsummary_address_with_colony">%1$s, %2$s, %3$s</string>
-  <string name="patientsummary_address_without_colony">%1$s, %2$s</string>
-  <string name="patientsummary_name">%1$s, %2$s, %3$d</string>
+  <string name="patientsummary_address_with_colony" translatable="false">%1$s, %2$s, %3$s</string>
+  <string name="patientsummary_address_without_colony" translatable="false">%1$s, %2$s</string>
+  <string name="patientsummary_name" translatable="false">%1$s, %2$s, %3$d</string>
 
   <string name="patientsummary_updatephone_dialog_title">Update phone number</string>
   <string name="patientsummary_updatephone_dialog_message">Patient’s phone number was previously marked as incorrect</string>
   <string name="patientsummary_updatephone_phone_hint">Phone number</string>
   <string name="patientsummary_updatephone_save">Save</string>
   <string name="patientsummary_updatephone_cancel">Skip</string>
-  <string name="patientsummary_updatephone_error_phonenumber_length_less">@string/patiententry_error_phonenumber_length_less</string>
-  <string name="patientsummary_updatephone_error_phonenumber_length_more">@string/patiententry_error_phonenumber_length_more</string>
+  <string name="patientsummary_updatephone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
+  <string name="patientsummary_updatephone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
 
   <string name="patientsummary_addphone_dialog_title">Update phone number</string>
   <string name="patientsummary_addphone_dialog_message">Patient’s phone number was not entered during registration</string>
   <string name="patientsummary_addphone_phone_hint">Phone number</string>
   <string name="patientsummary_addphone_save">Save</string>
   <string name="patientsummary_addphone_cancel">Skip</string>
-  <string name="patientsummary_addphone_error_phonenumber_length_less">@string/patiententry_error_phonenumber_length_less</string>
-  <string name="patientsummary_addphone_error_phonenumber_length_more">@string/patiententry_error_phonenumber_length_more</string>
+  <string name="patientsummary_addphone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
+  <string name="patientsummary_addphone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
 
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -212,7 +209,7 @@
 
   <!-- Login -->
   <string name="loginpin_go_back">Go back to phone number screen</string>
-  <string name="loginpin_error_check_internet_connection">@string/api_network_error</string>
+  <string name="loginpin_error_check_internet_connection" translatable="false">@string/api_network_error</string>
 
   <!-- App lock -->
   <string name="applock_logout">Not you?</string>
@@ -228,13 +225,13 @@
   <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">You have made %d incorrect attempts</string>
   <string name="pinentry_pin_number_hint">Your security PIN</string>
   <string name="pinentry_bruteforcelock_timer_label">Try again after</string>
-  <string name="pinentry_bruteforcelock_timer">%1$s:%2$s</string> <!-- minutes:seconds -->
+  <string name="pinentry_bruteforcelock_timer" translatable="false">%1$s:%2$s</string> <!-- minutes:seconds -->
 
   <!-- Registration -->
   <string name="registrationphone_phone_number_label">Your phone number</string>
   <string name="registrationphone_error_invalid_number">Check phone number. It looks like it is too short.</string>
-  <string name="registrationphone_error_unexpected_error">@string/api_unexpected_error</string>
-  <string name="registrationphone_error_check_internet_connection">@string/api_network_error</string>
+  <string name="registrationphone_error_unexpected_error" translatable="false">@string/api_unexpected_error</string>
+  <string name="registrationphone_error_check_internet_connection" translatable="false">@string/api_network_error</string>
   <string name="registration_loggedout_dialog_title">You have been logged out</string>
   <string name="registration_loggedout_dialog_message">Please login again to continue</string>
   <string name="registration_loggedout_dialog_confirm">Okay</string>
@@ -247,7 +244,7 @@
   <string name="registrationpin_error_incomplete_pin">PIN is too short. Please enter 4 numbers.</string>
 
   <string name="registrationconfirmpin_confirm_pin_label">Enter security PIN again</string>
-  <string name="registrationconfirmpin_hint">@string/registrationpin_pin_hint</string>
+  <string name="registrationconfirmpin_hint" translatable="false">@string/registrationpin_pin_hint</string>
   <string name="registrationconfirmpin_error_pin_mismatch">PIN doesn’t match the original PIN</string>
   <string name="registrationconfirmpin_reset_pin">Reset PIN</string>
 
@@ -259,8 +256,8 @@
 
   <string name="registrationfacilities_screen_title">Select your clinic</string>
   <string name="registrationfacilities_search_hint">Search for your clinic</string>
-  <string name="registrationfacilities_facility_address_without_street">%s, %s</string>   <!-- District, State -->
-  <string name="registrationfacilities_facility_address_with_street">%s, %s, %s</string>  <!-- Street, District, State -->
+  <string name="registrationfacilities_facility_address_without_street" translatable="false">%s, %s</string>   <!-- District, State -->
+  <string name="registrationfacilities_facility_address_with_street" translatable="false">%s, %s, %s</string>  <!-- Street, District, State -->
   <string name="registrationfacilities_error_unexpected_title">Something went wrong</string>
   <string name="registrationfacilities_error_unexpected_message">Please try again after some time or get in touch with your supervisor.</string>
   <string name="registrationfacilities_error_internet_connection_title">No internet connection</string>
@@ -274,7 +271,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">No patients overdue</string>
   <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
-  <string name="overdue_list_item_name_age">%s, %d</string>
+  <string name="overdue_list_item_name_age" translatable="false">%s, %d</string>
   <plurals name="overdue_list_item_patient_bp">
     <item quantity="one">%1$d/%2$d, %3$d day ago</item>
     <item quantity="other">%1$d/%2$d, %3$d days ago</item>
@@ -315,7 +312,7 @@
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">Check SMS sent to</string>
-  <string name="enterotp_phonenumber">%1$s %2$s</string>
+  <string name="enterotp_phonenumber" translatable="false">%1$s %2$s</string>
   <string name="enterotp_enter_verification_code">Enter verification code</string>
   <string name="enterotp_incorrect_code">Incorrect code, please try again</string>
   <string name="enterotp_resend_sms">Resend SMS</string>
@@ -374,7 +371,7 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">Scan card ID</string>
-  <string name="scansimpleid_hint_short_code">123 4567</string>
+  <string name="scansimpleid_hint_short_code" translatable="false">123 4567</string>
   <string name="scansimpleid_shortcode_error_empty">Enter BP Passport number</string>
   <string name="scansimpleid_shortcode_error_not_required_length">BP Passport number length is less than 7 digits</string>
   <string name="scansimpleid_type_bp_passport_number">or type BP Passport number</string>

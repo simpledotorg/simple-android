@@ -60,7 +60,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(qrScans(), keyboardEvents, doneClicks()),
+        events = Observable.mergeArray(qrScans(), keyboardEvents, qrCodeChanges(), doneClicks()),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
@@ -83,6 +83,12 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     return qrCodeScannerView
         .scans()
         .map(::ScanSimpleIdScreenQrCodeScanned)
+  }
+
+  private fun qrCodeChanges(): Observable<UiEvent> {
+    return RxTextView
+        .textChangeEvents(shortCodeText)
+        .map { ShortCodeChanged }
   }
 
   private fun doneClicks(): Observable<UiEvent> {

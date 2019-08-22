@@ -2,6 +2,7 @@ package org.simple.clinic.scanid
 
 import android.content.Context
 import android.graphics.Rect
+import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -13,6 +14,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
+import org.simple.clinic.SHORT_CODE_REQUIRED_LENGTH
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
 import org.simple.clinic.bindUiToController
@@ -57,6 +59,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     // screen with the keyboard open. So, we hide it here.
     hideKeyboard()
     toolBar.setNavigationOnClickListener { screenRouter.pop() }
+    shortCodeText.filters = arrayOf(LengthFilter(SHORT_CODE_REQUIRED_LENGTH))
 
     bindUiToController(
         ui = this,

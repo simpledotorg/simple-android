@@ -11,7 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.SHORT_CODE_REQUIRED_LENGTH
@@ -43,8 +42,6 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var utcClock: UtcClock
 
-  private val keyboardEvents = PublishSubject.create<ScanSimpleIdScreenEvent>()
-
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
   override fun onFinishInflate() {
@@ -61,23 +58,10 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(qrScans(), keyboardEvents, qrCodeChanges(), doneClicks()),
+        events = Observable.mergeArray(qrScans(), keyboardEvents(), qrCodeChanges(), doneClicks()),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    keyboardVisibilityDetector.registerListener(this) { isVisible ->
-      val keyboardEvent = if (isVisible) ShowKeyboard else HideKeyboard
-      keyboardEvents.onNext(keyboardEvent)
-    }
-  }
-
-  override fun onDetachedFromWindow() {
-    keyboardVisibilityDetector.unregisterListener(this)
-    super.onDetachedFromWindow()
   }
 
   private fun qrScans(): Observable<UiEvent> {
@@ -96,6 +80,19 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     return RxTextView
         .editorActionEvents(shortCodeText)
         .map { ShortCodeSearched(ShortCodeInput(shortCodeText.text.toString())) }
+  }
+
+  private fun keyboardEvents(): Observable<UiEvent> {
+    return Observable.create<UiEvent> { emitter ->
+      keyboardVisibilityDetector.registerListener(this) { isVisible ->
+        val keyboardEvent = if (isVisible) ShowKeyboard else HideKeyboard
+        emitter.onNext(keyboardEvent)
+      }
+
+      emitter.setCancellable {
+        keyboardVisibilityDetector.unregisterListener(this)
+      }
+    }
   }
 
   fun openPatientSummary(patientUuid: UUID) {

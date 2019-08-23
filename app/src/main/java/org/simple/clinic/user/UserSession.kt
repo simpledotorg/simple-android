@@ -102,7 +102,10 @@ class UserSession @Inject constructor(
           storeUserAndAccessToken(it)
               .toSingleDefault(LoginResult.Success as LoginResult)
         }
-        .doOnSuccess { reportUserLoggedInToAnalytics() }
+        .flatMap { result ->
+          reportUserLoggedInToAnalytics()
+              .toSingleDefault(result)
+        }
         .doOnSuccess { syncOnLoginResult() }
         .doOnSuccess { clearOngoingLoginEntry().subscribe() }
         .onErrorReturn { error ->
@@ -121,13 +124,12 @@ class UserSession @Inject constructor(
         .doOnSuccess { Timber.i("Login result: $it") }
   }
 
-  private fun reportUserLoggedInToAnalytics() {
-    loggedInUser()
-        .subscribeOn(schedulersProvider.io())
-        .take(1)
-        .filterAndUnwrapJust()
-        .map(Analytics::setLoggedInUser)
-        .subscribe()
+  private fun reportUserLoggedInToAnalytics(): Completable {
+    return loggedInUser()
+        .firstOrError()
+        .flatMapCompletable { (user) ->
+          Completable.fromAction { Analytics.setLoggedInUser(user!!) }
+        }
   }
 
   private fun syncOnLoginResult() {

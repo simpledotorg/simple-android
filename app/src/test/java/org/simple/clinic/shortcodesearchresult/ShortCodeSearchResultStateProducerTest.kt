@@ -67,11 +67,6 @@ class ShortCodeSearchResultStateProducerTest {
   fun `when the user clicks on a patient search result, then open the patient summary screen`() {
     // given
     val patientUuid = UUID.fromString("d18fa4dc-3b47-4a88-826f-342401527d65")
-    val patientSearchResults = listOf(PatientMocker.patientSearchResult(uuid = patientUuid))
-    val patientsFetched = ShortCodeSearchResultState
-        .fetchingPatients("1234567")
-        .patientsFetched(patientSearchResults)
-    uiStateProducer.states.onNext(patientsFetched) // TODO Fix `setState` in tests
 
     val testObserver = uiStates.test()
 

@@ -6,7 +6,7 @@ import org.simple.clinic.plumbing.AsyncOp.IN_FLIGHT
 import org.simple.clinic.plumbing.AsyncOp.SUCCEEDED
 
 data class ShortCodeSearchResultState(
-    val bpPassportNumber: String,
+    val shortCode: String,
     val fetchPatientsAsyncOp: AsyncOp,
     val patients: List<PatientSearchResult>
 ) {

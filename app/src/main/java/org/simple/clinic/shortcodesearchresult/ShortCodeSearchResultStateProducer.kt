@@ -32,7 +32,7 @@ class ShortCodeSearchResultStateProducer(
     return events.ofType<ScreenCreated>()
         .flatMap {
           patientRepository
-              .searchByShortCode(initialState.bpPassportNumber)
+              .searchByShortCode(initialState.shortCode)
               .withLatestFrom(states) { patientSearchResults, state ->
                 if (patientSearchResults.isNotEmpty()) {
                   state.patientsFetched(patientSearchResults)

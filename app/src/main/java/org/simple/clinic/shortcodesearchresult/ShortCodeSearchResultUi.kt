@@ -1,6 +1,6 @@
 package org.simple.clinic.shortcodesearchresult
 
-import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.allpatientsinfacility.PatientSearchResultUiState
 import java.util.UUID
 
 interface ShortCodeSearchResultUi {
@@ -8,7 +8,7 @@ interface ShortCodeSearchResultUi {
   fun openPatientSearch()
   fun showLoading()
   fun hideLoading()
-  fun showSearchResults(foundPatients: List<PatientSearchResult>)
+  fun showSearchResults(foundPatients: List<PatientSearchResultUiState>)
   fun showSearchPatientButton()
   fun showNoPatientsMatched()
 }

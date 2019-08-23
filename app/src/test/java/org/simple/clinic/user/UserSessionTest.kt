@@ -167,6 +167,7 @@ class UserSessionTest {
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser(userUuid))))
 
     val result = userSession.loginWithOtp("000000").blockingGet()
 
@@ -196,6 +197,7 @@ class UserSessionTest {
     whenever(dataSync.sync(null)).thenReturn(Completable.complete().doOnComplete { syncInvoked = true })
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser(userUuid))))
 
     userSession.loginWithOtp("000000").blockingGet()
 
@@ -230,6 +232,7 @@ class UserSessionTest {
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser(userUuid))))
 
     assertThat(userSession.loginWithOtp("000000").blockingGet()).isEqualTo(LoginResult.Success)
   }
@@ -635,6 +638,7 @@ class UserSessionTest {
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser(userUuid))))
 
     userSession.loginWithOtp("000000").blockingGet()
 

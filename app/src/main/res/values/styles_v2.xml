@@ -471,7 +471,6 @@
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     <item name="android:tint">@color/grey2</item>
     <item name="android:src">@drawable/ic_clear_circular_24dp</item>
-    <item name="android:layout_gravity">end</item>
   </style>
 
   <style name="Clinic.V2.NoBackgroundRippleButton">

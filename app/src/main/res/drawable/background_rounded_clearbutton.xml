@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <solid android:color="@color/black_opacity_24" />
-  <corners android:radius="@dimen/corner_radius_button" />
-</shape>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+  android:inset="@dimen/spacing_8">
+  <shape>
+    <solid android:color="@color/black_opacity_24" />
+    <corners android:radius="@dimen/corner_radius_button" />
+  </shape>
+</inset>

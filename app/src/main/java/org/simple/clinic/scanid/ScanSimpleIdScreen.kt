@@ -43,9 +43,6 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var utcClock: UtcClock
 
-  @Inject
-  lateinit var activity: TheActivity
-
   private val keyboardEvents = PublishSubject.create<ScanSimpleIdScreenEvent>()
 
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
@@ -131,7 +128,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   fun openPatientShortCodeSearch(validShortCode: String) {
-    Toast.makeText(activity, validShortCode, Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, validShortCode, Toast.LENGTH_SHORT).show()
     // TODO("not implemented")
   }
 

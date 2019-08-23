@@ -38,11 +38,10 @@ class ShortCodeSearchResultStateProducerTest {
     uiEventsSubject.onNext(ScreenCreated())
 
     // then
-    with(testObserver) {
-      assertNoErrors()
-      assertValues(fetchingPatientsState, fetchingPatientsState.patientsFetched(patientSearchResults))
-      assertNotTerminated()
-    }
+    testObserver
+        .assertNoErrors()
+        .assertValues(fetchingPatientsState, fetchingPatientsState.patientsFetched(patientSearchResults))
+        .assertNotTerminated()
   }
 
   @Test
@@ -58,11 +57,10 @@ class ShortCodeSearchResultStateProducerTest {
     uiEventsSubject.onNext(ScreenCreated())
 
     // then
-    with(testObserver) {
-      assertNoErrors()
-      assertValues(fetchingPatientsState, fetchingPatientsState.noMatchingPatients())
-      assertNotTerminated()
-    }
+    testObserver
+        .assertNoErrors()
+        .assertValues(fetchingPatientsState, fetchingPatientsState.noMatchingPatients())
+        .assertNotTerminated()
   }
 
   @Test
@@ -81,11 +79,10 @@ class ShortCodeSearchResultStateProducerTest {
     uiEventsSubject.onNext(ViewPatient(patientUuid))
 
     // then
-    with(testObserver) {
-      assertNoErrors()
-      assertNoValues()
-      assertNotTerminated()
-    }
+    testObserver
+        .assertNoErrors()
+        .assertNoValues()
+        .assertNotTerminated()
 
     verify(ui).openPatientSummary(patientUuid)
     verifyNoMoreInteractions(ui)
@@ -106,11 +103,10 @@ class ShortCodeSearchResultStateProducerTest {
     uiEventsSubject.onNext(SearchPatient)
 
     // then
-    with(testObserver) {
-      assertNoErrors()
-      assertNoValues()
-      assertNotTerminated()
-    }
+    testObserver
+        .assertNoErrors()
+        .assertNoValues()
+        .assertNotTerminated()
 
     verify(ui).openPatientSearch()
     verifyNoMoreInteractions(ui)

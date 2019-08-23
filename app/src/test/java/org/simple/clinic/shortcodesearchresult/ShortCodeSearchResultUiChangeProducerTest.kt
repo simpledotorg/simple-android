@@ -7,6 +7,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.allpatientsinfacility.PatientSearchResultUiState
 import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
@@ -50,7 +51,7 @@ class ShortCodeSearchResultUiChangeProducerTest {
 
     // then
     verify(ui).hideLoading()
-    verify(ui).showSearchResults(foundPatients)
+    verify(ui).showSearchResults(foundPatients.map(::PatientSearchResultUiState))
     verify(ui).showSearchPatientButton()
     verifyNoMoreInteractions(ui)
   }

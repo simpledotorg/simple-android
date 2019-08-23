@@ -104,25 +104,6 @@ class ScanSimpleIdScreenControllerTest {
   }
 
   @Test
-  fun `when the keyboard is up, then don't process valid QR code scan events`() {
-    // given
-    val bpPassportUUid = "69170f2f-c112-4907-b184-a99d1001e269"
-    val patientUuid = UUID.fromString("b123dc5c-a02d-49cb-939e-f4602436f214")
-    whenever(patientRepository.findPatientWithBusinessId(bpPassportUUid))
-        .thenReturn(Observable.just(PatientMocker.patient(uuid = patientUuid).toOptional()))
-
-    // when
-    with(uiEvents) {
-      onNext(ShowKeyboard)
-      onNext(ValidPassportCode(UUID.fromString(bpPassportUUid)))
-    }
-
-    // then
-    verify(screen).hideQrCodeScannerView()
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
   fun `when the keyboard is up, then don't process invalid QR code scan events`() {
     // when
     with(uiEvents) {
@@ -132,66 +113,6 @@ class ScanSimpleIdScreenControllerTest {
 
     // then
     verify(screen).hideQrCodeScannerView()
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
-  fun `when the keyboard is down, then process valid QR code scan events`() {
-    // given
-    val bpPassportUUid = "69170f2f-c112-4907-b184-a99d1001e269"
-    val patientUuid = UUID.fromString("b123dc5c-a02d-49cb-939e-f4602436f214")
-    whenever(patientRepository.findPatientWithBusinessId(bpPassportUUid))
-        .thenReturn(Observable.just(PatientMocker.patient(uuid = patientUuid).toOptional()))
-
-    // when
-    with(uiEvents) {
-      onNext(ShowKeyboard)
-      onNext(HideKeyboard)
-      onNext(ValidPassportCode(UUID.fromString(bpPassportUUid)))
-    }
-
-    // then
-    verify(screen).openPatientSummary(patientUuid)
-    verify(screen).hideQrCodeScannerView()
-    verify(screen).showQrCodeScannerView()
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
-  fun `when the keyboard is down, then don't process invalid QR code events`() {
-    // when
-    with(uiEvents) {
-      onNext(ShowKeyboard)
-      onNext(HideKeyboard)
-      onNext(InvalidPassportCode)
-    }
-
-    // then
-    verify(screen).hideQrCodeScannerView()
-    verify(screen).showQrCodeScannerView()
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
-  fun `ignore valid QR code events when the keyboard is up but begin processing incoming valid QR events when the keyboard is down`() {
-    // given
-    val patientUuid = UUID.fromString("b123dc5c-a02d-49cb-939e-f4602436f214")
-    val bpPassportUUid = "69170f2f-c112-4907-b184-a99d1001e269"
-    whenever(patientRepository.findPatientWithBusinessId(bpPassportUUid))
-        .thenReturn(Observable.just(PatientMocker.patient(uuid = patientUuid).toOptional()))
-
-    // when
-    with(uiEvents) {
-      onNext(ShowKeyboard)
-      onNext(ValidPassportCode(UUID.fromString("39d3296f-7e8d-40c6-8ec8-9a2b083b215a")))
-      onNext(HideKeyboard)
-      onNext(ValidPassportCode(UUID.fromString(bpPassportUUid)))
-    }
-
-    // then
-    verify(screen).openPatientSummary(patientUuid)
-    verify(screen).hideQrCodeScannerView()
-    verify(screen).showQrCodeScannerView()
     verifyNoMoreInteractions(screen)
   }
 

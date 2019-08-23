@@ -77,31 +77,11 @@ class ScanSimpleIdScreenController @Inject constructor(
   }
 
   private fun handleScannedBpPassportCodes(events: Observable<UiEvent>): Observable<UiChange> {
-    val showKeyboardEvents = events
-        .ofType<ShowKeyboard>()
-
-    val hideKeyboardEvents = events
-        .ofType<HideKeyboard>()
-
-    val keyboardEvents = Observable
-        .merge(showKeyboardEvents, hideKeyboardEvents)
-        .share()
-
-    val sharedScannedBpPassportCodeStream = events
+    val scannedBpPassportCodeStream = events
         .ofType<ValidPassportCode>()
         .share()
 
-    val scannedBpPassportCodeStream = sharedScannedBpPassportCodeStream
-        .takeUntil(showKeyboardEvents)
-        .take(1)
-
-    val scannedBpPassportCodeStreamAfterHideKeyboard = sharedScannedBpPassportCodeStream
-        .withLatestFrom(keyboardEvents)
-        .filter { (_, keyboardEvent) -> keyboardEvent is HideKeyboard }
-        .map { it.first }
-
-    val foundPatientStream = Observable
-        .merge(scannedBpPassportCodeStream, scannedBpPassportCodeStreamAfterHideKeyboard)
+    val foundPatientStream = scannedBpPassportCodeStream
         .map { scannedCode -> scannedCode.bpPassportUuid }
         .flatMap { patientRepository.findPatientWithBusinessId(it.toString()) }
         .replay()
@@ -115,6 +95,7 @@ class ScanSimpleIdScreenController @Inject constructor(
         .combineLatest(foundPatientStream, scannedBpPassportCodeStream)
         .filter { (foundPatient, _) -> foundPatient is None }
         .map { (_, scannedBpPassportCode) -> scannedBpPassportCode.bpPassportUuid }
+        .distinctUntilChanged()
         .map { bpPassportCode -> Identifier(value = bpPassportCode.toString(), type = BpPassport) }
         .map { identifier -> { ui: Ui -> ui.openAddIdToPatientScreen(identifier) } }
 

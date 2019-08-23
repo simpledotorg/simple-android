@@ -15,13 +15,13 @@ class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
 
       if (isANewRegistration) {
         mixpanel.alias(userId, null)
-        mixpanel.identify(userId)
-      } else {
-        mixpanel.identify(userId)
       }
 
-      mixpanel.people.identify(userId)
-      mixpanel.people.set("name", user.fullName)
+      mixpanel.identify(userId)
+      with(mixpanel.people) {
+        identify(userId)
+        set("name", user.fullName)
+      }
     }
   }
 

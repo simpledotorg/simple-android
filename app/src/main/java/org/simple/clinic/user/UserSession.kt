@@ -215,11 +215,14 @@ class UserSession @Inject constructor(
         .map { (user, facilityUuids) -> userToPayload(user, facilityUuids) }
         .map(::RegistrationRequest)
         .flatMap { registrationApi.createUser(it) }
-        .flatMap {
-          storeUserAndAccessToken(it)
+        .flatMap { response ->
+          storeUserAndAccessToken(response)
               .toSingleDefault(RegistrationResult.Success as RegistrationResult)
         }
-        .doOnSuccess { reportUserRegisteredToAnalytics() }
+        .flatMap { result ->
+          reportUserRegisteredToAnalytics()
+              .toSingleDefault(result)
+        }
         .onErrorReturn { e ->
           Timber.e(e)
           when (e) {
@@ -230,13 +233,12 @@ class UserSession @Inject constructor(
         .doOnSuccess { Timber.i("Registration result: $it") }
   }
 
-  private fun reportUserRegisteredToAnalytics() {
-    loggedInUser()
-        .subscribeOn(schedulersProvider.io())
-        .take(1)
-        .filterAndUnwrapJust()
-        .map(Analytics::setNewlyRegisteredUser)
-        .subscribe()
+  private fun reportUserRegisteredToAnalytics(): Completable {
+    return loggedInUser()
+        .firstOrError()
+        .flatMapCompletable { (user) ->
+          Completable.fromAction { Analytics.setNewlyRegisteredUser(user!!) }
+        }
   }
 
   private fun userToPayload(user: User, facilityUuids: List<UUID>): LoggedInUserPayload {

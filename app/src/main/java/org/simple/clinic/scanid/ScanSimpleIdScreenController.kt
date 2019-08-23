@@ -129,19 +129,22 @@ class ScanSimpleIdScreenController @Inject constructor(
         .ofType<ShortCodeChanged>()
         .map { { ui: Ui -> ui.hideShortCodeValidationError() } }
 
-    val shortCodes = events
+    val shortCodeInputs = events
         .ofType<ShortCodeSearched>()
         .map { it.shortCode }
         .share()
 
-    val showValidationErrors = shortCodes
+    val shortCodeValidationResults = shortCodeInputs
         .map { it.validate() }
+
+    val showValidationErrors = shortCodeValidationResults
         .filter { it is Failure }
         .map { { ui: Ui -> ui.showShortCodeValidationError(it) } }
 
-    val openPatientSearchScreenChanges = shortCodes
-        .filter { it.validate() == Success }
-        .map { { ui: Ui -> ui.openPatientShortCodeSearch(it.shortCodeText) } }
+    val openPatientSearchScreenChanges = shortCodeValidationResults
+        .filter { it is Success }
+        .withLatestFrom(shortCodeInputs) { _, shortCodeInput -> shortCodeInput.shortCodeText }
+        .map { { ui: Ui -> ui.openPatientShortCodeSearch(it) } }
 
     return Observable.merge(
         hideValidationErrors,

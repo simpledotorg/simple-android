@@ -143,8 +143,8 @@ class KeyboardVisibilityDetector {
   private var layoutListener: OnGlobalLayoutListener? = null
 
   fun registerListener(view: View, visibilityChangeListener: (Boolean) -> Unit) {
-    if (layoutListener != null) {
-      throw IllegalStateException("A listener is already registered. You must call `unregisterListener` before calling `registerListener` again.")
+    check(layoutListener == null) {
+      "A listener is already registered. You must call `unregisterListener` before calling `registerListener` again."
     }
 
     layoutListener = OnGlobalLayoutListener {

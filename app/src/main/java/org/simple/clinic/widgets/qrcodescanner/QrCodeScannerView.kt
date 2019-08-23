@@ -17,11 +17,13 @@ import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.activity.TheActivityLifecycle
+import org.simple.clinic.widgets.ScreenDestroyed
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -29,6 +31,8 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
   @Inject
   lateinit var lifecycle: Observable<TheActivityLifecycle>
+
+  private val qrCodeScansValve = BehaviorSubject.createDefault(true)
 
   private val scannerView = CodeScannerView(context)
       .apply {
@@ -73,7 +77,7 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
   }
 
   fun scans(): Observable<String> {
-    return Observable.create { emitter ->
+    val qrCodeScans = Observable.create<String> { emitter ->
       codeScanner.decodeCallback = DecodeCallback { result ->
         if (result.barcodeFormat == BarcodeFormat.QR_CODE) {
           emitter.onNext(result.text)
@@ -85,16 +89,23 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
         codeScanner.errorCallback = null
       }
     }
+
+    return qrCodeScans
+        .withLatestFrom(qrCodeScansValve)
+        .filter { (_, isOpen) -> isOpen }
+        .map { (qrCode, _) -> qrCode }
   }
 
   fun hideQrCodeScanner() {
     cameraView.visibility = View.INVISIBLE
     viewFinderImageView.visibility = View.INVISIBLE
+    qrCodeScansValve.onNext(false)
   }
 
   fun showQrCodeScanner() {
     cameraView.visibility = View.VISIBLE
     viewFinderImageView.visibility = View.VISIBLE
+    qrCodeScansValve.onNext(true)
   }
 
   private fun stopScanning() {

@@ -432,4 +432,7 @@
   <string name="registrationloader_error_internet_connection_title">No internet connection</string>
   <!--suppress UnusedResources -->
   <string name="registrationloader_retry">Try again</string>
+
+  <!-- Short code search -->
+  <string name="shortcodesearchresult_enter_patient_name_button">Enter Patient\'s name</string>
 </resources>

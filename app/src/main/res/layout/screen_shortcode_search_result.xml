@@ -10,11 +10,11 @@
     android:layout_height="wrap_content"
     app:navigationIcon="@drawable/ic_arrow_back_24dp" />
 
-
-  <include
-    layout="@layout/patient_search_view"
+  <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/toolBar" />
+    android:layout_below="@+id/toolBar">
 
+    <include layout="@layout/patient_search_view" />
+  </RelativeLayout>
 </org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreen>

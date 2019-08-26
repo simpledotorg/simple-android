@@ -49,16 +49,12 @@ class UpdateAnalyticsUserIdTest {
 
   @Test
   @Parameters(value = [
-    "NOT_LOGGED_IN|false",
-    "OTP_REQUESTED|false",
-    "RESETTING_PIN|true",
-    "RESET_PIN_REQUESTED|true",
-    "LOGGED_IN|true",
-    "UNAUTHORIZED|false"
+    "RESETTING_PIN",
+    "RESET_PIN_REQUESTED",
+    "LOGGED_IN"
   ])
   fun `the user id must be set only if the local logged in status is LOGGED_IN, RESETTING_PIN or RESET_PIN_REQUESTED`(
-      loggedInStatus: User.LoggedInStatus,
-      shouldSetUserId: Boolean
+      loggedInStatus: User.LoggedInStatus
   ) {
     // given
     val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus)
@@ -68,10 +64,26 @@ class UpdateAnalyticsUserIdTest {
     updateAnalyticsUserId.listen()
 
     // then
-    if (shouldSetUserId) {
-      assertThat(reporter.user).isEqualTo(user)
-    } else {
-      assertThat(reporter.user).isNull()
-    }
+    assertThat(reporter.user).isEqualTo(user)
+  }
+
+  @Test
+  @Parameters(value = [
+    "NOT_LOGGED_IN",
+    "OTP_REQUESTED",
+    "UNAUTHORIZED"
+  ])
+  fun `the user id must not be set if the local logged in status is NOT_LOGGED_IN, OTP_REQUESTED or UNAUTHORIZED`(
+      loggedInStatus: User.LoggedInStatus
+  ) {
+    // given
+    val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+
+    // when
+    updateAnalyticsUserId.listen()
+
+    // then
+    assertThat(reporter.user).isNull()
   }
 }

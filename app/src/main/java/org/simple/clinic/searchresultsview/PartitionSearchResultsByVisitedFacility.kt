@@ -41,7 +41,8 @@ class PartitionSearchResultsByVisitedFacility(
 
           PatientSearchResults(
               visitedCurrentFacility = patientsInCurrentFacility,
-              notVisitedCurrentFacility = patientsInOtherFacility
+              notVisitedCurrentFacility = patientsInOtherFacility,
+              currentFacility = facility
           )
         }
   }

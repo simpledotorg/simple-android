@@ -24,7 +24,8 @@ class SearchResultsItemTypeTest {
     val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
     val searchResults = PatientSearchResults(
         visitedCurrentFacility = listOf(patientSearchResult1),
-        notVisitedCurrentFacility = listOf(patientSearchResult2)
+        notVisitedCurrentFacility = listOf(patientSearchResult2),
+        currentFacility = currentFacility
     )
 
     // when
@@ -76,7 +77,8 @@ class SearchResultsItemTypeTest {
     val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
     val searchResults = PatientSearchResults(
         visitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2),
-        notVisitedCurrentFacility = emptyList()
+        notVisitedCurrentFacility = emptyList(),
+        currentFacility = currentFacility
     )
 
     // when
@@ -124,7 +126,8 @@ class SearchResultsItemTypeTest {
     val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
     val searchResults = PatientSearchResults(
         visitedCurrentFacility = emptyList(),
-        notVisitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2)
+        notVisitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2),
+        currentFacility = currentFacility
     )
 
     // when
@@ -173,7 +176,8 @@ class SearchResultsItemTypeTest {
     // given
     val searchResults = PatientSearchResults(
         visitedCurrentFacility = emptyList(),
-        notVisitedCurrentFacility = emptyList()
+        notVisitedCurrentFacility = emptyList(),
+        currentFacility = currentFacility
     )
 
     // when

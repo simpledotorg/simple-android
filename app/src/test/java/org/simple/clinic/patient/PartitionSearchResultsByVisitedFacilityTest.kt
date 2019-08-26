@@ -75,7 +75,8 @@ class PartitionSearchResultsByVisitedFacilityTest {
     // then
     val expected = PatientSearchResults(
         visitedCurrentFacility = listOf(patient1InFacilityA, patient3InFacilityA, patient2InFacilityA),
-        notVisitedCurrentFacility = listOf(patient2InFacilityC, patient1InFacilityB, patient1InFacilityC)
+        notVisitedCurrentFacility = listOf(patient2InFacilityC, patient1InFacilityB, patient1InFacilityC),
+        currentFacility = facilityA
     )
     testObserver.assertValue(expected)
   }
@@ -131,11 +132,13 @@ class PartitionSearchResultsByVisitedFacilityTest {
     // then
     val expectedFirst = PatientSearchResults(
         visitedCurrentFacility = listOf(patient1InFacilityA, patient3InFacilityA, patient2InFacilityA),
-        notVisitedCurrentFacility = listOf(patient1InFacilityB)
+        notVisitedCurrentFacility = listOf(patient1InFacilityB),
+        currentFacility = facilityA
     )
     val expectedSecond = PatientSearchResults(
         visitedCurrentFacility = listOf(patient1InFacilityB),
-        notVisitedCurrentFacility = listOf(patient1InFacilityA, patient3InFacilityA, patient2InFacilityA)
+        notVisitedCurrentFacility = listOf(patient1InFacilityA, patient3InFacilityA, patient2InFacilityA),
+        currentFacility = facilityB
     )
     testObserver.assertValues(expectedFirst, expectedSecond)
   }

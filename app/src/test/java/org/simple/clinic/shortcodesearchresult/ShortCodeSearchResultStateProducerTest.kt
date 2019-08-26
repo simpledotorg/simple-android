@@ -89,7 +89,8 @@ class ShortCodeSearchResultStateProducerTest {
     // then
     val expectedPatientResults = PatientSearchResults(
         visitedCurrentFacility = listOf(patientSearchResultsInCurrentFacility),
-        notVisitedCurrentFacility = listOf(patientSearchResultInOtherFacility))
+        notVisitedCurrentFacility = listOf(patientSearchResultInOtherFacility),
+        currentFacility = currentFacility)
 
     testObserver
         .assertNoErrors()
@@ -144,7 +145,8 @@ class ShortCodeSearchResultStateProducerTest {
         .fetchingPatients("1234567")
         .patientsFetched(PatientSearchResults(
             visitedCurrentFacility = patientSearchResults,
-            notVisitedCurrentFacility = emptyList()))
+            notVisitedCurrentFacility = emptyList(),
+            currentFacility = currentFacility))
     uiStateProducer.states.onNext(patientsFetched) // TODO Fix `setState` in tests
 
     val testObserver = uiStates.test()

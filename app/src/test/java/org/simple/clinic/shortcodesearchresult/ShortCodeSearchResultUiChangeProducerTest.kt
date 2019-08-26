@@ -39,7 +39,7 @@ class ShortCodeSearchResultUiChangeProducerTest {
   fun `it shows a list of patients if found`() {
     // given
     val foundPatients = PatientSearchResults(listOf(
-        PatientMocker.patientSearchResult(uuid = UUID.fromString("be021029-4935-4400-8e5b-e57176a45517"))), emptyList())
+        PatientMocker.patientSearchResult(uuid = UUID.fromString("be021029-4935-4400-8e5b-e57176a45517"))), emptyList(), PatientMocker.facility())
 
     val patientsFetched = ShortCodeSearchResultState
         .fetchingPatients("1234567")

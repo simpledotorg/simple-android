@@ -25,7 +25,7 @@ import org.simple.clinic.reports.ReportsSyncAndroidTest
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.storage.files.AndroidFileStorageAndroidTest
-import org.simple.clinic.summary.RelativeTimestampGeneratorAndroidTest
+import org.simple.clinic.util.RelativeTimestampGeneratorAndroidTest
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidTest
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest

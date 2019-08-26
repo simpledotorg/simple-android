@@ -18,10 +18,10 @@ import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.summary.RelativeTimestampGenerator
-import org.simple.clinic.summary.Today
-import org.simple.clinic.summary.WithinSixMonths
-import org.simple.clinic.summary.Yesterday
+import org.simple.clinic.util.RelativeTimestampGenerator
+import org.simple.clinic.util.Today
+import org.simple.clinic.util.WithinSixMonths
+import org.simple.clinic.util.Yesterday
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.UtcClock

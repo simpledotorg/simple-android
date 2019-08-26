@@ -12,7 +12,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.recentpatient.RecentPatientItem.RecentPatientItemViewHolder
 import org.simple.clinic.summary.GroupieItemWithUiEvents
-import org.simple.clinic.summary.RelativeTimestamp
+import org.simple.clinic.util.RelativeTimestamp
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 

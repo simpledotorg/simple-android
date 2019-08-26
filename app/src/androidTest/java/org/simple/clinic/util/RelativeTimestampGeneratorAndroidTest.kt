@@ -1,4 +1,4 @@
-package org.simple.clinic.summary
+package org.simple.clinic.util
 
 import android.app.Application
 import androidx.test.runner.AndroidJUnit4

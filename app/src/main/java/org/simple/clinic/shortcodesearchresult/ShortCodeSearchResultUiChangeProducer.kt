@@ -2,7 +2,6 @@ package org.simple.clinic.shortcodesearchresult
 
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.Scheduler
 import org.simple.clinic.plumbing.AsyncOp.IN_FLIGHT
 import org.simple.clinic.plumbing.AsyncOp.SUCCEEDED
 import org.simple.clinic.plumbing.BaseUiChangeProducer
@@ -37,7 +36,7 @@ class ShortCodeSearchResultUiChangeProducer @Inject constructor(
       states: Observable<ShortCodeSearchResultState>
   ): Observable<(ShortCodeSearchResultUi) -> Unit> {
     return states
-        .filter { it.fetchPatientsAsyncOp == SUCCEEDED && it.patients.isNotEmpty() }
+        .filter { it.fetchPatientsAsyncOp == SUCCEEDED && it.patients.hasNoResults.not() }
         .map { state ->
           { ui: ShortCodeSearchResultUi ->
             with(ui) {
@@ -53,7 +52,7 @@ class ShortCodeSearchResultUiChangeProducer @Inject constructor(
       states: Observable<ShortCodeSearchResultState>
   ): Observable<(ShortCodeSearchResultUi) -> Unit> {
     return states
-        .filter { it.fetchPatientsAsyncOp == SUCCEEDED && it.patients.isEmpty() }
+        .filter { it.fetchPatientsAsyncOp == SUCCEEDED && it.patients.hasNoResults }
         .map {
           { ui: ShortCodeSearchResultUi ->
             with(ui) {

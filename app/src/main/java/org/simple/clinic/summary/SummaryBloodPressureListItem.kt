@@ -17,6 +17,7 @@ import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.RelativeTimestamp
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.setPaddingTop

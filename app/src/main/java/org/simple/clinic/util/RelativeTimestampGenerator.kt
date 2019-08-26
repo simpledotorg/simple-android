@@ -1,4 +1,4 @@
-package org.simple.clinic.summary
+package org.simple.clinic.util
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting

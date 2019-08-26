@@ -12,7 +12,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.RecentPatient
-import org.simple.clinic.summary.RelativeTimestampGenerator
+import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge

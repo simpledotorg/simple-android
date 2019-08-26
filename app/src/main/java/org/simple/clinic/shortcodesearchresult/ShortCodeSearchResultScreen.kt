@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.SearchView
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
@@ -20,7 +21,9 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -55,10 +58,18 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     TheActivity.component.inject(this)
     screenKey = screenRouter.key(this)
 
+    hideKeyboard()
     setupToolBar()
 
     val uiStateProducer = ShortCodeSearchResultStateProducer(screenKey.shortCode, patientRepository, this, schedulersProvider)
     binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
+
+    newPatientButton.text = resources.getString(R.string.shortcodesearchresult_enter_patient_name_button)
+    setupClickEvents()
+  }
+
+  private fun setupClickEvents() {
+    newPatientButton.setOnClickListener { binding.onEvent(SearchPatient) }
   }
 
   private fun setupToolBar() {
@@ -88,11 +99,11 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   }
 
   override fun showLoading() {
-    loader.visibility = View.GONE
+    loader.visibility = View.VISIBLE
   }
 
   override fun hideLoading() {
-    loader.visibility = View.VISIBLE
+    loader.visibility = View.GONE
   }
 
   override fun showSearchResults(foundPatients: List<PatientSearchResultUiState>) {

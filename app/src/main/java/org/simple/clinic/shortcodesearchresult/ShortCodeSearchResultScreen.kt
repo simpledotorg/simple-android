@@ -4,24 +4,25 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
-import android.widget.SearchView
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.allpatientsinfacility.PatientSearchResultUiState
+import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
+import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.Instant
@@ -43,6 +44,15 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   lateinit var patientRepository: PatientRepository
 
   @Inject
+  lateinit var facilityRepository: FacilityRepository
+
+  @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
+  lateinit var bloodPressureDao: BloodPressureMeasurement.RoomDao
+
+  @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
   private lateinit var screenKey: ShortCodeSearchResultScreenKey
@@ -61,7 +71,15 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     hideKeyboard()
     setupToolBar()
 
-    val uiStateProducer = ShortCodeSearchResultStateProducer(screenKey.shortCode, patientRepository, this, schedulersProvider)
+    val uiStateProducer = ShortCodeSearchResultStateProducer(
+        shortCode = screenKey.shortCode,
+        patientRepository = patientRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        bloodPressureDao = bloodPressureDao,
+        ui = this,
+        schedulersProvider = schedulersProvider
+    )
     binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
 
     newPatientButton.text = resources.getString(R.string.shortcodesearchresult_enter_patient_name_button)
@@ -106,7 +124,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     loader.visibility = View.GONE
   }
 
-  override fun showSearchResults(foundPatients: List<PatientSearchResultUiState>) {
+  override fun showSearchResults(foundPatients: PatientSearchResults) {
     TODO("not implemented")
   }
 

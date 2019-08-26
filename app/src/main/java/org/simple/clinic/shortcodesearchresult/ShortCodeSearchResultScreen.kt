@@ -4,6 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.patient_search_view.view.*
 import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
@@ -15,6 +18,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.searchresultsview.PatientSearchResults
+import org.simple.clinic.searchresultsview.SearchResultsItemType
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
@@ -59,16 +63,19 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
 
   private lateinit var binding: ViewControllerBinding<UiEvent, ShortCodeSearchResultState, ShortCodeSearchResultUi>
 
+  private val adapter = GroupAdapter<ViewHolder>()
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
 
+    hideKeyboard()
+
     TheActivity.component.inject(this)
     screenKey = screenRouter.key(this)
 
-    hideKeyboard()
     setupToolBar()
 
     val uiStateProducer = ShortCodeSearchResultStateProducer(
@@ -84,6 +91,8 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
 
     newPatientButton.text = resources.getString(R.string.shortcodesearchresult_enter_patient_name_button)
     setupClickEvents()
+    resultsRecyclerView.layoutManager = LinearLayoutManager(context)
+    resultsRecyclerView.adapter = adapter
   }
 
   private fun setupClickEvents() {
@@ -106,6 +115,13 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
         .append(formattedShortCode)
         .popSpan()
         .build()
+
+    toolBar.setNavigationOnClickListener {
+      screenRouter.pop()
+    }
+    toolBar.setOnClickListener {
+      screenRouter.pop()
+    }
   }
 
   override fun openPatientSummary(patientUuid: UUID) {
@@ -125,7 +141,9 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   }
 
   override fun showSearchResults(foundPatients: PatientSearchResults) {
-    TODO("not implemented")
+    val items = SearchResultsItemType
+        .from(foundPatients)
+    adapter.update(items)
   }
 
   override fun showSearchPatientButton() {

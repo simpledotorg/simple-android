@@ -140,7 +140,7 @@ class PatientSearchViewControllerTest {
         notVisitedCurrentFacility = listOf(searchResult2InOtherFacility, searchResult1InOtherFacility),
         currentFacility = currentFacility
     )
-    verify(screen).updateSearchResults(expectedSearchResults, currentFacility)
+    verify(screen).updateSearchResults(expectedSearchResults)
   }
 
   @Suppress("Unused")

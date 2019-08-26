@@ -50,10 +50,9 @@ class PatientSearchViewController @Inject constructor(
 
     return searchResultsStream
         .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
-        .withLatestFrom(currentFacilityStream)
-        .map { (results, currentFacility) ->
+        .map { results ->
           { ui: Ui ->
-            ui.updateSearchResults(results, currentFacility)
+            ui.updateSearchResults(results)
           }
         }
   }

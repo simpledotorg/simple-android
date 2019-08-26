@@ -11,6 +11,7 @@
     android:id="@+id/loader"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    tools:visibility="visible"
     android:layout_centerInParent="true" />
 
   <RelativeLayout
@@ -20,7 +21,7 @@
     android:layout_above="@+id/newPatientContainer"
     android:paddingBottom="@dimen/spacing_16"
     android:visibility="gone"
-    tools:visibility="visible">
+    tools:visibility="gone">
 
     <TextView
       android:id="@+id/searchresults_empty_state_text"
@@ -61,7 +62,7 @@
     android:clipToPadding="false"
     android:paddingTop="@dimen/spacing_8"
     tools:listitem="@layout/list_patient_search"
-    tools:visibility="gone" />
+    tools:visibility="visible" />
 
   <LinearLayout
     android:id="@+id/newPatientContainer"

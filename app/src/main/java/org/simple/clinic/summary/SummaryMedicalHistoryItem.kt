@@ -16,6 +16,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+import org.simple.clinic.util.RelativeTimestamp
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale.ENGLISH
 

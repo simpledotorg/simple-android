@@ -78,15 +78,13 @@ open class AppModule(private val appContext: Application) {
   open fun elapsedRealtimeClock() = ElapsedRealtimeClock()
 
   @Provides
-  @AppScope
-  fun currentLocale(): Locale = Locale.ENGLISH
+  fun currentLocale(): Locale = Locale.getDefault()
 
   @Provides
   @AppScope
   fun systemDefaultZone(): ZoneId = ZoneId.systemDefault()
 
   @Provides
-  @AppScope
   fun resources(): Resources = appContext.resources
 
   @Provides

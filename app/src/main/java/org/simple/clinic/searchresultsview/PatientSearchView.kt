@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.patient_search_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -75,8 +74,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
           .map { RegisterNewPatientClicked }
 
   fun updateSearchResults(
-      results: PatientSearchResults,
-      currentFacility: Facility
+      results: PatientSearchResults
   ) {
     loader.visibleOrGone(isVisible = false)
     newPatientContainer.visibleOrGone(isVisible = true)
@@ -86,7 +84,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
     } else {
       setEmptyStateVisible(false)
       SearchResultsItemType
-          .from(results, currentFacility)
+          .from(results)
           .let { listItems ->
             listItems.forEach { it.uiEvents = downstreamUiEvents }
             adapter.update(listItems)

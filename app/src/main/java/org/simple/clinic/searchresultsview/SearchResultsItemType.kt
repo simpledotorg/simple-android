@@ -19,19 +19,18 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
     private const val HEADER_NO_PATIENTS_IN_CURRENT_FACILITY = 1L
 
     fun from(
-        results: PatientSearchResults,
-        currentFacility: Facility
+        results: PatientSearchResults
     ): List<SearchResultsItemType<out ViewHolder>> {
       return when {
         results.hasNoResults -> emptyList()
-        else -> generateSearchResultListItems(results, currentFacility)
+        else -> generateSearchResultListItems(results)
       }
     }
 
     private fun generateSearchResultListItems(
-        results: PatientSearchResults,
-        currentFacility: Facility
+        results: PatientSearchResults
     ): List<SearchResultsItemType<ViewHolder>> {
+      val currentFacility = results.currentFacility!!
       val itemsInCurrentFacility = SearchResultRow
           .forSearchResults(results.visitedCurrentFacility, currentFacility)
           .let { searchResultRowsInCurrentFacility ->

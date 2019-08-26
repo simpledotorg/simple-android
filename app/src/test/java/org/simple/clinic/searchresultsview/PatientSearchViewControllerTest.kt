@@ -137,7 +137,8 @@ class PatientSearchViewControllerTest {
     // then
     val expectedSearchResults = PatientSearchResults(
         visitedCurrentFacility = listOf(searchResult1InCurrentFacility, searchResult3InCurrentFacility, searchResult2InCurrentFacility),
-        notVisitedCurrentFacility = listOf(searchResult2InOtherFacility, searchResult1InOtherFacility)
+        notVisitedCurrentFacility = listOf(searchResult2InOtherFacility, searchResult1InOtherFacility),
+        currentFacility = currentFacility
     )
     verify(screen).updateSearchResults(expectedSearchResults, currentFacility)
   }

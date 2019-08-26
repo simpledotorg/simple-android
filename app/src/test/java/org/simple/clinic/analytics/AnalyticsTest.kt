@@ -5,7 +5,6 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.user.User
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -95,85 +94,6 @@ class AnalyticsTest {
   }
 
   @Test
-  fun `when a reporter fails when sending interaction events, no error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.reportUserInteraction("Test")
-  }
-
-  @Test
-  fun `when a reporter fails when sending screen change events, no error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.reportScreenChange("Screen 1", "Screen 2")
-  }
-
-  @Test
-  fun `when a reporter fails when sending validation error events, no error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.reportInputValidationError("Error")
-  }
-
-  @Test
-  fun `when a reporter fails when setting the logged in user, no  error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.setLoggedInUser(user)
-  }
-
-  @Test
-  fun `when a reporter fails when setting the newly registered user, no  error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.setNewlyRegisteredUser(user)
-  }
-
-  @Test
-  fun `when a reporter fails when sending an audit event, no error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.reportViewedPatient(UUID.randomUUID(), "Test")
-  }
-
-  @Test
-  fun `when a reporter fails sending a network event, no error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.reportNetworkCall("test", "get", 1, 1, 1)
-  }
-
-  @Test
-  fun `when a reporter fails sending a network timeout event, no error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.reportNetworkTimeout(
-        url = "test",
-        method = "get",
-        metered = true,
-        networkTransportType = Analytics.NetworkTransportType.WIFI,
-        downstreamBandwidthKbps = 100,
-        upstreamBandwidthKbps = 100)
-  }
-
-  @Test
-  fun `when a reporter fails sending a time taken event, no error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.reportTimeTaken("test", Duration.ofMillis(100L))
-  }
-
-  @Test
-  fun `when a reporter fails sending a data cleared event, no error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.reportDataCleared(
-        patientCount = 1,
-        bloodPressureCount = 1,
-        appointmentCount = 1,
-        prescribedDrugCount = 1,
-        medicalHistoryCount = 1,
-        since = Instant.EPOCH
-    )
-  }
-
-  @Test
-  fun `when a reporter fails clearing the user, no  error should be thrown`() {
-    Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.clearUser()
-  }
-
-  @Test
   fun `when setting the logged in user, the property must also be set on the reporters`() {
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
@@ -205,48 +125,45 @@ class AnalyticsTest {
   }
 
   @Test
-  fun `when multiple reporters are present and one throws an error, the logged in user must be set on the others`() {
+  fun `when multiple reporters are present, the logged in user must be set on all`() {
     val reporter1 = MockAnalyticsReporter()
-    val reporter2 = FailingAnalyticsReporter()
-    val reporter3 = MockAnalyticsReporter()
+    val reporter2 = MockAnalyticsReporter()
 
-    Analytics.addReporter(reporter1, reporter2, reporter3)
+    Analytics.addReporter(reporter1, reporter2)
     Analytics.setLoggedInUser(user)
 
     assertThat(reporter1.user).isEqualTo(user)
-    assertThat(reporter3.user).isEqualTo(user)
+    assertThat(reporter2.user).isEqualTo(user)
 
     Analytics.clearUser()
 
     assertThat(reporter1.user).isNull()
-    assertThat(reporter3.user).isNull()
+    assertThat(reporter2.user).isNull()
   }
 
   @Test
-  fun `when multiple reporters are present and one throws an error, the newly registered user must be set on the others`() {
+  fun `when multiple reporters are present, the newly registered user must be set on all`() {
     val reporter1 = MockAnalyticsReporter()
-    val reporter2 = FailingAnalyticsReporter()
-    val reporter3 = MockAnalyticsReporter()
+    val reporter2 = MockAnalyticsReporter()
 
-    Analytics.addReporter(reporter1, reporter2, reporter3)
+    Analytics.addReporter(reporter1, reporter2)
     Analytics.setNewlyRegisteredUser(user)
 
     assertThat(reporter1.user).isEqualTo(user)
-    assertThat(reporter3.user).isEqualTo(user)
+    assertThat(reporter2.user).isEqualTo(user)
 
     Analytics.clearUser()
 
     assertThat(reporter1.user).isNull()
-    assertThat(reporter3.user).isNull()
+    assertThat(reporter2.user).isNull()
   }
 
   @Test
-  fun `when multiple reporters are present and one throws an error, the others should receive the events`() {
+  fun `when multiple reporters are present, events should be received by all`() {
     val reporter1 = MockAnalyticsReporter()
-    val reporter2 = FailingAnalyticsReporter()
-    val reporter3 = MockAnalyticsReporter()
+    val reporter2 = MockAnalyticsReporter()
 
-    Analytics.addReporter(reporter1, reporter2, reporter3)
+    Analytics.addReporter(reporter1, reporter2)
 
     val uuid1 = UUID.fromString("1eddd1cc-cd7e-4245-8eac-5e9471a9a6c0")
     val uuid2 = UUID.fromString("62a869f6-ac56-47f4-a9b7-f86cd1a81ce0")
@@ -340,21 +257,6 @@ class AnalyticsTest {
     )
 
     assertThat(reporter1.receivedEvents).isEqualTo(expected)
-    assertThat(reporter3.receivedEvents).isEqualTo(expected)
-  }
-
-  private class FailingAnalyticsReporter : AnalyticsReporter {
-
-    override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
-      throw RuntimeException()
-    }
-
-    override fun resetUser() {
-      throw RuntimeException()
-    }
-
-    override fun createEvent(event: String, props: Map<String, Any>) {
-      throw RuntimeException()
-    }
+    assertThat(reporter2.receivedEvents).isEqualTo(expected)
   }
 }

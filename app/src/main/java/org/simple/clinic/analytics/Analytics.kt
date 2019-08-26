@@ -29,73 +29,57 @@ object Analytics {
   }
 
   fun setLoggedInUser(user: User) {
-    reporters.forEach {
-      it.safely("Error setting logged in user!") {
-        setLoggedInUser(user, false)
-      }
-    }
+    reporters.forEach { it.setLoggedInUser(user, false) }
   }
 
   fun setNewlyRegisteredUser(user: User) {
-    reporters.forEach {
-      it.safely("Error setting newly registered user!") {
-        setLoggedInUser(user, true)
-      }
-    }
+    reporters.forEach { it.setLoggedInUser(user, true) }
   }
 
   fun clearUser() {
-    reporters.forEach {
-      it.safely("Error clearing user ID!") {
-        resetUser()
-      }
-    }
+    reporters.forEach(AnalyticsReporter::resetUser)
   }
 
   fun reportUserInteraction(name: String) {
-    reporters.forEach {
-      it.safely("Error reporting interaction!") {
-        createEvent("UserInteraction", mapOf("name" to name))
-      }
-    }
+    val props = mapOf("name" to name)
+
+    reporters.forEach { it.createEvent("UserInteraction", props) }
   }
 
   fun reportScreenChange(outgoingScreen: String, incomingScreen: String) {
-    reporters.forEach {
-      it.safely("Error reporting screen change!") {
-        createEvent("ScreenChange", mapOf("outgoing" to outgoingScreen, "incoming" to incomingScreen))
-      }
-    }
+    val props = mapOf(
+        "outgoing" to outgoingScreen,
+        "incoming" to incomingScreen
+    )
+
+    reporters.forEach { it.createEvent("ScreenChange", props) }
   }
 
   fun reportInputValidationError(error: String) {
-    reporters.forEach {
-      it.safely("Error reporting input validation!") {
-        createEvent("InputValidationError", mapOf("name" to error))
-      }
-    }
+    val props = mapOf("name" to error)
+
+    reporters.forEach { it.createEvent("InputValidationError", props) }
   }
 
   fun reportViewedPatient(patientUuid: UUID, from: String) {
-    reporters.forEach {
-      it.safely("Error reporting viewed patient event!") {
-        createEvent("ViewedPatient", mapOf("patientId" to patientUuid.toString(), "from" to from))
-      }
-    }
+    val props = mapOf(
+        "patientId" to patientUuid.toString(),
+        "from" to from
+    )
+
+    reporters.forEach { it.createEvent("ViewedPatient", props) }
   }
 
   fun reportNetworkCall(url: String, method: String, responseCode: Int, contentLength: Int, durationMillis: Int) {
-    reporters.forEach {
-      it.safely("Error reporting network call") {
-        createEvent("NetworkCall", mapOf(
-            "url" to url,
-            "method" to method,
-            "responseCode" to responseCode,
-            "contentLength" to contentLength,
-            "durationMs" to durationMillis
-        ))
-      }
-    }
+    val props = mapOf(
+        "url" to url,
+        "method" to method,
+        "responseCode" to responseCode,
+        "contentLength" to contentLength,
+        "durationMs" to durationMillis
+    )
+
+    reporters.forEach { it.createEvent("NetworkCall", props) }
   }
 
   fun reportNetworkTimeout(
@@ -106,29 +90,25 @@ object Analytics {
       downstreamBandwidthKbps: Int,
       upstreamBandwidthKbps: Int
   ) {
-    reporters.forEach {
-      it.safely("Error reporting network timeout") {
-        createEvent("NetworkTimeout", mapOf(
-            "url" to url,
-            "method" to method,
-            "metered" to metered,
-            "transport" to networkTransportType,
-            "downstreamKbps" to downstreamBandwidthKbps,
-            "upstreamKbps" to upstreamBandwidthKbps
-        ))
-      }
-    }
+    val props = mapOf(
+        "url" to url,
+        "method" to method,
+        "metered" to metered,
+        "transport" to networkTransportType,
+        "downstreamKbps" to downstreamBandwidthKbps,
+        "upstreamKbps" to upstreamBandwidthKbps
+    )
+
+    reporters.forEach { it.createEvent("NetworkTimeout", props) }
   }
 
   fun reportTimeTaken(operationName: String, timeTaken: Duration) {
-    reporters.forEach {
-      it.safely("Error reporting time taken event") {
-        createEvent("TimeTaken", mapOf(
-            "operationName" to operationName,
-            "timeTakenInMillis" to timeTaken.toMillis()
-        ))
-      }
-    }
+    val props = mapOf(
+        "operationName" to operationName,
+        "timeTakenInMillis" to timeTaken.toMillis()
+    )
+
+    reporters.forEach { it.createEvent("TimeTaken", props) }
   }
 
   fun reportDataCleared(
@@ -139,18 +119,16 @@ object Analytics {
       medicalHistoryCount: Int,
       since: Instant
   ) {
-    reporters.forEach {
-      it.safely("Error reporting data cleared event") {
-        createEvent("DataCleared", mapOf(
-            "pendingPatientCount" to patientCount,
-            "pendingBpCount" to bloodPressureCount,
-            "pendingAppointmentCount" to appointmentCount,
-            "pendingPrescribedDrugCount" to prescribedDrugCount,
-            "pendingMedicalHistoryCount" to medicalHistoryCount,
-            "since" to since.toString()
-        ))
-      }
-    }
+    val props = mapOf(
+        "pendingPatientCount" to patientCount,
+        "pendingBpCount" to bloodPressureCount,
+        "pendingAppointmentCount" to appointmentCount,
+        "pendingPrescribedDrugCount" to prescribedDrugCount,
+        "pendingMedicalHistoryCount" to medicalHistoryCount,
+        "since" to since.toString()
+    )
+
+    reporters.forEach { it.createEvent("DataCleared", props) }
   }
 
   enum class NetworkTransportType {

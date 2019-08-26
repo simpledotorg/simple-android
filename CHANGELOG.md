@@ -10,7 +10,7 @@
 - Update designs for patient summary screen
 - Show loader while patient search results load
 
-## On Demo
+## 2019-08-26-5229
 ### Feature
 - Search by phone number support from the screen to find patient after scanning a BP Passport
 - Older devices will automatically get cleared when the user logs in on a new device

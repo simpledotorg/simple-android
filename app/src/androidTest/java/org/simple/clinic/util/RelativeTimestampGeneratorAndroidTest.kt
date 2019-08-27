@@ -7,8 +7,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneOffset
+import org.simple.clinic.util.RelativeTimestamp.ExactDate
+import org.simple.clinic.util.RelativeTimestamp.Today
+import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
+import org.simple.clinic.util.RelativeTimestamp.Yesterday
+import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
@@ -29,22 +32,22 @@ class RelativeTimestampGeneratorAndroidTest {
 
   @Test
   fun it_should_generate_timestamp_strings() {
-    val generator = RelativeTimestampGenerator()
-    val todayDateTime = LocalDateTime.of(2018, 7, 29, 16, 58)
+    // given
+    val today = Today
+    val yesterday = Yesterday
+    val withinSixMonths = WithinSixMonths(100)
+    val exactDate = ExactDate(Instant.EPOCH)
 
-    val todayTime = LocalDateTime.of(2018, 7, 29, 2, 0, 0).atOffset(ZoneOffset.UTC).toInstant()
-    assertThat(generator.generate(todayDateTime, todayTime).displayText(context, formatter)).isNotEmpty()
+    // when
+    val todayDisplayText = today.displayText(context, formatter)
+    val yesterdayDisplayText = yesterday.displayText(context, formatter)
+    val withinSixMonthsDisplayText = withinSixMonths.displayText(context, formatter)
+    val exactDateDisplayText = exactDate.displayText(context, formatter)
 
-    val yesterdayButWithin24Hours = LocalDateTime.of(2018, 7, 28, 23, 0, 0).atOffset(ZoneOffset.UTC).toInstant()
-    assertThat(generator.generate(todayDateTime, yesterdayButWithin24Hours).displayText(context, formatter)).isNotEmpty()
-
-    val yesterdayButOutside24Hours = LocalDateTime.of(2018, 7, 28, 3, 0, 0).atOffset(ZoneOffset.UTC).toInstant()
-    assertThat(generator.generate(todayDateTime, yesterdayButOutside24Hours).displayText(context, formatter)).isNotEmpty()
-
-    val withinSixMonths = LocalDateTime.of(2018, 3, 29, 4, 0, 0).atOffset(ZoneOffset.UTC).toInstant()
-    assertThat(generator.generate(todayDateTime, withinSixMonths).displayText(context, formatter)).isNotEmpty()
-
-    val olderThanSixMonths = LocalDateTime.of(2017, 1, 27, 3, 0, 0).atOffset(ZoneOffset.UTC).toInstant()
-    assertThat(generator.generate(todayDateTime, olderThanSixMonths).displayText(context, formatter)).isNotEmpty()
+    // then
+    assertThat(todayDisplayText).isNotEmpty()
+    assertThat(yesterdayDisplayText).isNotEmpty()
+    assertThat(withinSixMonthsDisplayText).isNotEmpty()
+    assertThat(exactDateDisplayText).isNotEmpty()
   }
 }

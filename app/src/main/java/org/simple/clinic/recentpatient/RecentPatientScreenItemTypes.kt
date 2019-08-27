@@ -26,7 +26,7 @@ data class RecentPatientItem(
     val age: Int,
     val gender: Gender,
     val lastSeenTimestamp: RelativeTimestamp,
-    val dateFormatter: DateTimeFormatter = RelativeTimestamp.timestampFormatter
+    val dateFormatter: DateTimeFormatter
 ) : RecentPatientScreenItemTypes<RecentPatientItemViewHolder>(uuid.hashCode().toLong()) {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view

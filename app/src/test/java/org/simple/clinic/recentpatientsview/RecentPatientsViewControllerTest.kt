@@ -28,10 +28,12 @@ import org.simple.clinic.util.RelativeTimestamp.Yesterday
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
@@ -52,6 +54,7 @@ class RecentPatientsViewControllerTest {
   private val relativeTimestampGenerator = RelativeTimestampGenerator()
   private val recentPatientLimit = 3
   private val recentPatientLimitPlusOne = recentPatientLimit + 1
+  private val dateFormatter = DateTimeFormatter.ISO_INSTANT
 
   @Before
   fun setUp() {
@@ -69,14 +72,15 @@ class RecentPatientsViewControllerTest {
             limitOfSearchResults = 1,
             scanSimpleCardFeatureEnabled = false,
             recentPatientLimit = recentPatientLimit
-        ))
+        )),
+        exactDateFormatter = dateFormatter
     )
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
 
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
   }
 
@@ -119,21 +123,24 @@ class RecentPatientsViewControllerTest {
             name = "Ajay Kumar",
             age = 42,
             gender = Transgender,
-            updatedAt = Today
+            updatedAt = Today,
+            dateFormatter = dateFormatter
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
             gender = Male,
-            updatedAt = Yesterday
+            updatedAt = Yesterday,
+            dateFormatter = dateFormatter
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
             gender = Female,
-            updatedAt = WithinSixMonths(3)
+            updatedAt = WithinSixMonths(3),
+            dateFormatter = dateFormatter
         )
     ))
     verify(screen).showOrHideRecentPatients(isVisible = true)
@@ -185,21 +192,24 @@ class RecentPatientsViewControllerTest {
             name = "Ajay Kumar",
             age = 42,
             gender = Transgender,
-            updatedAt = Today
+            updatedAt = Today,
+            dateFormatter = dateFormatter
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
             gender = Male,
-            updatedAt = Yesterday
+            updatedAt = Yesterday,
+            dateFormatter = dateFormatter
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
             gender = Female,
-            updatedAt = WithinSixMonths(4)
+            updatedAt = WithinSixMonths(4),
+            dateFormatter = dateFormatter
         ),
         SeeAllItem
     ))

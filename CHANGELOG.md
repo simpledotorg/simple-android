@@ -9,6 +9,7 @@
 - Exclude deleted appointments when loading overdue appointments
 - Update designs for patient summary screen
 - Show loader while patient search results load
+- Add hindi translations to the app
 
 ### Internal
 - Add Mixpanel analytics

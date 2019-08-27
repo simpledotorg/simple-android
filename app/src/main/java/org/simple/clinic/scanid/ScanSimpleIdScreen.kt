@@ -20,6 +20,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
+import org.simple.clinic.scanid.ui.ShortCodeSpanWatcher
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -54,7 +55,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     // screen with the keyboard open. So, we hide it here.
     hideKeyboard()
     toolBar.setNavigationOnClickListener { screenRouter.pop() }
-    shortCodeText.filters = arrayOf(LengthFilter(SHORT_CODE_REQUIRED_LENGTH))
+    setupShortCodeTextField()
 
     bindUiToController(
         ui = this,
@@ -62,6 +63,13 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+  }
+
+  private fun setupShortCodeTextField() {
+    with(shortCodeText) {
+      filters = arrayOf(LengthFilter(SHORT_CODE_REQUIRED_LENGTH))
+      addTextChangedListener(ShortCodeSpanWatcher())
+    }
   }
 
   private fun qrScans(): Observable<UiEvent> {

@@ -2,12 +2,12 @@ package org.simple.clinic.summary
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.util.Future
-import org.simple.clinic.util.OlderThanSixMonths
+import org.simple.clinic.util.RelativeTimestamp.Future
+import org.simple.clinic.util.RelativeTimestamp.OlderThanSixMonths
+import org.simple.clinic.util.RelativeTimestamp.Today
+import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
+import org.simple.clinic.util.RelativeTimestamp.Yesterday
 import org.simple.clinic.util.RelativeTimestampGenerator
-import org.simple.clinic.util.Today
-import org.simple.clinic.util.WithinSixMonths
-import org.simple.clinic.util.Yesterday
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 

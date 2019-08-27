@@ -92,6 +92,7 @@ class ViewControllerBinding<E, S, T>(
 
     disposable = uiEvents
         .compose(uiStateProducer)
+        .share()
         .doOnNext { state -> stateSubject.onNext(state) }
         .compose(uiChangeProducer)
         .subscribe { uiChange -> uiChange(v as T) }

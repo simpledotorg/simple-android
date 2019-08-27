@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import androidx.core.content.res.ResourcesCompat
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -25,11 +26,12 @@ import org.threeten.bp.format.DateTimeFormatter
 
 data class SummaryBloodPressureListItem(
     val measurement: BloodPressureMeasurement,
-    private val daysAgo: RelativeTimestamp,
     val showDivider: Boolean,
     val formattedTime: String?,
     val addTopPadding: Boolean,
-    val dateFormatter: DateTimeFormatter = RelativeTimestamp.timestampFormatter
+    private val daysAgo: RelativeTimestamp,
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val dateFormatter: DateTimeFormatter
 ) : GroupieItemWithUiEvents<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>

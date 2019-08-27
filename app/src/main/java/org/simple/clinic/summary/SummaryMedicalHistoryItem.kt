@@ -24,7 +24,7 @@ import java.util.Locale.ENGLISH
 data class SummaryMedicalHistoryItem(
     val medicalHistory: MedicalHistory,
     val lastUpdatedAt: RelativeTimestamp,
-    val dateFormatter: DateTimeFormatter = RelativeTimestamp.timestampFormatter
+    val dateFormatter: DateTimeFormatter
 ) : GroupieItemWithUiEvents<SummaryMedicalHistoryItem.HistoryViewHolder>(medicalHistory.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>

@@ -2,11 +2,7 @@ package org.simple.clinic.summary
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.util.RelativeTimestamp.Future
-import org.simple.clinic.util.RelativeTimestamp.OlderThanSixMonths
-import org.simple.clinic.util.RelativeTimestamp.Today
-import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
-import org.simple.clinic.util.RelativeTimestamp.Yesterday
+import org.simple.clinic.util.RelativeTimestamp.*
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
@@ -33,11 +29,11 @@ class RelativeTimestampGeneratorTest {
     assertThat(withinSixMonthsTimestamp).isEqualTo(WithinSixMonths(122))
 
     val olderThanSixMonths = LocalDateTime.of(2017, 1, 27, 3, 0, 0).atOffset(ZoneOffset.UTC).toInstant()
-    assertThat(generator.generate(todayDateTime, olderThanSixMonths)).isInstanceOf(OlderThanSixMonths::class.java)
+    assertThat(generator.generate(todayDateTime, olderThanSixMonths)).isInstanceOf(ExactDate::class.java)
 
     val tomorrow = todayDateTime.plusDays(1).atOffset(ZoneOffset.UTC).toInstant()
     val tomorrowTimestamp = generator.generate(todayDateTime, tomorrow)
-    assertThat(tomorrowTimestamp).isEqualTo(Future(tomorrow))
+    assertThat(tomorrowTimestamp).isEqualTo(ExactDate(tomorrow))
   }
 
   @Test

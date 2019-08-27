@@ -35,6 +35,7 @@ import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RelativeTimestampGenerator
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -58,6 +59,7 @@ class PatientSummaryScreenController @Inject constructor(
     private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
     private val timestampGenerator: RelativeTimestampGenerator,
     private val utcClock: UtcClock,
+    private val userClock: UserClock,
     private val zoneId: ZoneId,
     private val configProvider: Single<PatientSummaryConfig>,
     @Named("time_for_bps_recorded") private val timeFormatterForBp: DateTimeFormatter,
@@ -136,7 +138,7 @@ class PatientSummaryScreenController @Inject constructor(
 
       val prescriptionItems = patientUuids
           .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
-          .map { prescriptions -> SummaryPrescribedDrugsItem(prescriptions, exactDateFormatter) }
+          .map { prescriptions -> SummaryPrescribedDrugsItem(prescriptions, exactDateFormatter, userClock) }
 
       val bloodPressures = Observables.combineLatest(patientUuids, configProvider.toObservable())
           .flatMap { (patientUuid, configProvider) -> bpRepository.newestMeasurementsForPatient(patientUuid, configProvider.numberOfBpsToDisplay) }
@@ -152,7 +154,7 @@ class PatientSummaryScreenController @Inject constructor(
             val measurementsByDate = bps.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
             measurementsByDate.mapValues { (_, measurementList) ->
               measurementList.map { measurement ->
-                val timestamp = timestampGenerator.generate(measurement.recordedAt)
+                val timestamp = timestampGenerator.generate(measurement.recordedAt, userClock)
                 SummaryBloodPressureListItem(
                     measurement = measurement,
                     showDivider = measurement == measurementList.last(),
@@ -169,7 +171,7 @@ class PatientSummaryScreenController @Inject constructor(
       val medicalHistoryItems = patientUuids
           .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
           .map { history ->
-            val lastSyncTimestamp = timestampGenerator.generate(history.updatedAt)
+            val lastSyncTimestamp = timestampGenerator.generate(history.updatedAt, userClock)
             SummaryMedicalHistoryItem(history, lastSyncTimestamp, exactDateFormatter)
           }
 

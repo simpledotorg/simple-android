@@ -37,6 +37,10 @@ class RelativeTimestampGenerator @Inject constructor() {
   private fun daysBetween(dateTime: LocalDateTime, today: LocalDateTime) =
       DAYS.between(dateTime.toLocalDate(), today.toLocalDate())
 
+  @Deprecated(
+      message = "",
+      replaceWith = ReplaceWith("generate(time, userClock)")
+  )
   fun generate(time: Instant): RelativeTimestamp {
     val today = LocalDateTime.now(ZoneOffset.UTC)
     return generate(today, time)

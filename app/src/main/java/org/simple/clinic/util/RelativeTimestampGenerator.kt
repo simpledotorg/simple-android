@@ -3,8 +3,7 @@ package org.simple.clinic.util
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import org.simple.clinic.R
-import org.simple.clinic.util.RelativeTimestamp.Future
-import org.simple.clinic.util.RelativeTimestamp.OlderThanSixMonths
+import org.simple.clinic.util.RelativeTimestamp.ExactDate
 import org.simple.clinic.util.RelativeTimestamp.Today
 import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
 import org.simple.clinic.util.RelativeTimestamp.Yesterday
@@ -13,7 +12,6 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit.DAYS
-import java.util.Locale
 import javax.inject.Inject
 
 class RelativeTimestampGenerator @Inject constructor() {
@@ -27,11 +25,11 @@ class RelativeTimestampGenerator @Inject constructor() {
     val tomorrowAtMidnight = todayAtMidnight.plusDays(1)
 
     return when {
-      dateTime > tomorrowAtMidnight -> Future(time)
+      dateTime > tomorrowAtMidnight -> ExactDate(time)
       dateTime > todayAtMidnight -> Today
       dateTime > yesterdayAtMidnight -> Yesterday
       dateTime > today.minusMonths(6) -> WithinSixMonths(daysBetween(dateTime, today))
-      else -> OlderThanSixMonths(time)
+      else -> ExactDate(time)
     }
   }
 
@@ -46,17 +44,12 @@ class RelativeTimestampGenerator @Inject constructor() {
 
 sealed class RelativeTimestamp {
 
-  companion object {
-    val timestampFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM, yyyy", Locale.ENGLISH)
-  }
-
   fun displayText(context: Context, timeFormatter: DateTimeFormatter): String {
     return when (this) {
       Today -> context.getString(R.string.timestamp_today)
       Yesterday -> context.getString(R.string.timestamp_yesterday)
       is WithinSixMonths -> context.getString(R.string.timestamp_days, daysBetween)
-      is OlderThanSixMonths -> timeFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
-      is Future -> timeFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
+      is ExactDate -> timeFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
     }
   }
 
@@ -66,7 +59,5 @@ sealed class RelativeTimestamp {
 
   data class WithinSixMonths(val daysBetween: Long) : RelativeTimestamp()
 
-  data class OlderThanSixMonths(val time: Instant) : RelativeTimestamp()
-
-  data class Future(val time: Instant) : RelativeTimestamp()
+  data class ExactDate(val time: Instant) : RelativeTimestamp()
 }

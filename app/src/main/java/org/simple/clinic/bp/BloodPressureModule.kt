@@ -35,10 +35,7 @@ open class BloodPressureModule {
   }
 
   @Provides
-  fun userInputDatePaddingCharacter(locale: Locale): UserInputDatePaddingCharacter {
-    return when (locale) {
-      Locale.ENGLISH -> UserInputDatePaddingCharacter('0')
-      else -> throw UnsupportedOperationException()
-    }
+  fun userInputDatePaddingCharacter(): UserInputDatePaddingCharacter {
+    return UserInputDatePaddingCharacter('0')
   }
 }

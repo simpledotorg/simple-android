@@ -8,6 +8,7 @@ import org.simple.clinic.util.RelativeTimestamp.Today
 import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
 import org.simple.clinic.util.RelativeTimestamp.Yesterday
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
@@ -28,7 +29,7 @@ class RelativeTimestampGenerator @Inject constructor() {
       dateTime > tomorrowAtMidnight -> ExactDate(time)
       dateTime > todayAtMidnight -> Today
       dateTime > yesterdayAtMidnight -> Yesterday
-      dateTime > today.minusMonths(6) -> WithinSixMonths(daysBetween(dateTime, today))
+      dateTime > today.minusMonths(6) -> WithinSixMonths(daysBetween(dateTime, today).toInt())
       else -> ExactDate(time)
     }
   }
@@ -39,6 +40,25 @@ class RelativeTimestampGenerator @Inject constructor() {
   fun generate(time: Instant): RelativeTimestamp {
     val today = LocalDateTime.now(ZoneOffset.UTC)
     return generate(today, time)
+  }
+
+  fun generate(instant: Instant, userClock: UserClock): RelativeTimestamp {
+    val then = instant.toLocalDateAtZone(userClock.zone)
+    val today = LocalDate.now(userClock)
+    val yesterday = today.minusDays(1)
+    val sixMonthsAgo = today.minusMonths(6)
+
+    return when {
+      then.isAfter(today) -> ExactDate(instant)
+      then == today -> Today
+      then == yesterday -> Yesterday
+      sixMonthsOrLess(then, sixMonthsAgo) -> WithinSixMonths(DAYS.between(then, today).toInt())
+      else -> ExactDate(instant)
+    }
+  }
+
+  private fun sixMonthsOrLess(then: LocalDate, sixMonthsAgo: LocalDate): Boolean {
+    return then == sixMonthsAgo || then.isAfter(sixMonthsAgo)
   }
 }
 
@@ -57,7 +77,7 @@ sealed class RelativeTimestamp {
 
   object Yesterday : RelativeTimestamp()
 
-  data class WithinSixMonths(val daysBetween: Long) : RelativeTimestamp()
+  data class WithinSixMonths(val daysBetween: Int) : RelativeTimestamp()
 
   data class ExactDate(val time: Instant) : RelativeTimestamp()
 }

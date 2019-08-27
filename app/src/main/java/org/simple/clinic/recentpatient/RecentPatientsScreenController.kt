@@ -13,9 +13,12 @@ import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = RecentPatientsScreen
 typealias UiChange = (Ui) -> Unit
@@ -25,7 +28,8 @@ class RecentPatientsScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
     private val relativeTimestampGenerator: RelativeTimestampGenerator,
-    private val utcClock: UtcClock
+    private val utcClock: UtcClock,
+    @Named("exact_date") private val exactDateFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -41,7 +45,8 @@ class RecentPatientsScreenController @Inject constructor(
 
   private fun showRecentPatients(events: Observable<UiEvent>): Observable<UiChange> =
       events.ofType<ScreenCreated>()
-          .flatMap { userSession.requireLoggedInUser() }
+          .flatMap { userSession.loggedInUser() }
+          .filterAndUnwrapJust()
           .switchMap { facilityRepository.currentFacility(it) }
           .switchMap { facility ->
             patientRepository.recentPatients(facility.uuid)
@@ -55,7 +60,8 @@ class RecentPatientsScreenController @Inject constructor(
           name = recentPatient.fullName,
           age = age(recentPatient),
           gender = recentPatient.gender,
-          lastSeenTimestamp = relativeTimestampGenerator.generate(recentPatient.updatedAt)
+          lastSeenTimestamp = relativeTimestampGenerator.generate(recentPatient.updatedAt),
+          dateFormatter = exactDateFormatter
       )
 
   private fun age(recentPatient: RecentPatient): Int =

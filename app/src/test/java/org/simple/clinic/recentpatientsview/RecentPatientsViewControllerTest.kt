@@ -27,6 +27,8 @@ import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
 import org.simple.clinic.util.RelativeTimestamp.Yesterday
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
@@ -55,6 +57,7 @@ class RecentPatientsViewControllerTest {
   private val recentPatientLimit = 3
   private val recentPatientLimitPlusOne = recentPatientLimit + 1
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
+  private val userClock = TestUserClock()
 
   @Before
   fun setUp() {
@@ -67,7 +70,8 @@ class RecentPatientsViewControllerTest {
         patientRepository = patientRepository,
         facilityRepository = facilityRepository,
         relativeTimestampGenerator = relativeTimestampGenerator,
-        utcClock = UtcClock(),
+        utcClock = TestUtcClock(),
+        userClock = userClock,
         patientConfig = Observable.just(PatientConfig(
             limitOfSearchResults = 1,
             scanSimpleCardFeatureEnabled = false,
@@ -96,22 +100,23 @@ class RecentPatientsViewControllerTest {
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
-            age = Age(42, Instant.now(), LocalDate.MIN),
-            gender = Transgender
+            age = Age(42, Instant.now(userClock), LocalDate.MIN),
+            gender = Transgender,
+            updatedAt = Instant.now(userClock)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
-            age = Age(24, Instant.now(), LocalDate.MIN),
+            age = Age(24, Instant.now(userClock), LocalDate.MIN),
             gender = Male,
-            updatedAt = Instant.now().minus(1, ChronoUnit.DAYS)
+            updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
-            age = Age(27, Instant.now(), LocalDate.MIN),
+            age = Age(27, Instant.now(userClock), LocalDate.MIN),
             gender = Female,
-            updatedAt = Instant.now().minus(3, ChronoUnit.DAYS)
+            updatedAt = Instant.now(userClock).minus(3, ChronoUnit.DAYS)
         )
     )))
 
@@ -159,27 +164,28 @@ class RecentPatientsViewControllerTest {
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
-            age = Age(42, Instant.now(), LocalDate.MIN),
-            gender = Transgender
+            age = Age(42, Instant.now(userClock), LocalDate.MIN),
+            gender = Transgender,
+            updatedAt = Instant.now(userClock)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
-            age = Age(24, Instant.now(), LocalDate.MIN),
+            age = Age(24, Instant.now(userClock), LocalDate.MIN),
             gender = Male,
-            updatedAt = Instant.now().minus(1, ChronoUnit.DAYS)
+            updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
-            age = Age(27, Instant.now(), LocalDate.MIN),
+            age = Age(27, Instant.now(userClock), LocalDate.MIN),
             gender = Female,
-            updatedAt = Instant.now().minus(4, ChronoUnit.DAYS)
+            updatedAt = Instant.now(userClock).minus(4, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid4,
             fullName = "Abhilash Devi",
-            age = Age(37, Instant.now(), LocalDate.MIN),
+            age = Age(37, Instant.now(userClock), LocalDate.MIN),
             gender = Transgender
         )
     )))

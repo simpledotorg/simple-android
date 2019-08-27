@@ -22,7 +22,7 @@ import timber.log.Timber
 
 data class SummaryPrescribedDrugsItem(
     val prescriptions: List<PrescribedDrug>,
-    val dateFormatter: DateTimeFormatter = RelativeTimestamp.timestampFormatter
+    val dateFormatter: DateTimeFormatter
 ) : GroupieItemWithUiEvents<SummaryPrescribedDrugsItem.DrugsSummaryViewHolder>(adapterId = PRESCRIBED_DRUGS) {
 
   private val relativeTimestampGenerator = RelativeTimestampGenerator()

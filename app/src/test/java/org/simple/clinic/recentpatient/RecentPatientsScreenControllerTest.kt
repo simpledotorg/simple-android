@@ -25,11 +25,13 @@ import org.simple.clinic.util.RelativeTimestamp.Yesterday
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -47,6 +49,7 @@ class RecentPatientsScreenControllerTest {
   private val loggedInUser = PatientMocker.loggedInUser()
   private val facility = PatientMocker.facility()
   private val relativeTimestampGenerator = RelativeTimestampGenerator()
+  private val dateFormatter = DateTimeFormatter.ISO_INSTANT
 
   @Before
   fun setUp() {
@@ -59,14 +62,15 @@ class RecentPatientsScreenControllerTest {
         patientRepository = patientRepository,
         facilityRepository = facilityRepository,
         relativeTimestampGenerator = relativeTimestampGenerator,
-        utcClock = UtcClock()
+        utcClock = UtcClock(),
+        exactDateFormatter = dateFormatter
     )
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
 
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
   }
 
@@ -111,21 +115,24 @@ class RecentPatientsScreenControllerTest {
             name = "Ajay Kumar",
             age = 42,
             gender = Gender.Transgender,
-            lastSeenTimestamp = Today
+            lastSeenTimestamp = Today,
+            dateFormatter = dateFormatter
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
             gender = Gender.Male,
-            lastSeenTimestamp = Yesterday
+            lastSeenTimestamp = Yesterday,
+            dateFormatter = dateFormatter
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
             gender = Gender.Female,
-            lastSeenTimestamp = WithinSixMonths(2)
+            lastSeenTimestamp = WithinSixMonths(2),
+            dateFormatter = dateFormatter
         )
     ))
   }

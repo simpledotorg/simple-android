@@ -392,7 +392,7 @@ class UserSession @Inject constructor(
 
   @Deprecated(
       message = "User can get logged out now and cleared; Don't use this function anymore",
-      replaceWith = ReplaceWith("loggedInUser")
+      replaceWith = ReplaceWith("loggedInUser()")
   )
   fun requireLoggedInUser(): Observable<User> {
     /*

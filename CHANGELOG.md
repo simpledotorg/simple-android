@@ -10,6 +10,7 @@
 - Update designs for patient summary screen
 - Show loader while patient search results load
 - Add hindi translations to the app
+- Search by short code from Scan BP passport screen
 
 ### Internal
 - Add Mixpanel analytics

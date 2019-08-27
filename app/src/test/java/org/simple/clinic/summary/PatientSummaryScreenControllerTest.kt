@@ -27,8 +27,8 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -53,10 +53,10 @@ import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScre
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.RelativeTimestamp.Today
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.Today
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent

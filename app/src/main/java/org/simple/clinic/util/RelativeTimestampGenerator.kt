@@ -3,6 +3,11 @@ package org.simple.clinic.util
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import org.simple.clinic.R
+import org.simple.clinic.util.RelativeTimestamp.Future
+import org.simple.clinic.util.RelativeTimestamp.OlderThanSixMonths
+import org.simple.clinic.util.RelativeTimestamp.Today
+import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
+import org.simple.clinic.util.RelativeTimestamp.Yesterday
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
@@ -40,43 +45,28 @@ class RelativeTimestampGenerator @Inject constructor() {
 }
 
 sealed class RelativeTimestamp {
-  abstract fun displayText(context: Context): String
-}
-
-object Today : RelativeTimestamp() {
-  override fun displayText(context: Context): String {
-    return context.getString(R.string.timestamp_today)
-  }
-}
-
-object Yesterday : RelativeTimestamp() {
-  override fun displayText(context: Context): String {
-    return context.getString(R.string.timestamp_yesterday)
-  }
-}
-
-data class WithinSixMonths(private val daysBetween: Long) : RelativeTimestamp() {
-  override fun displayText(context: Context): String {
-    return context.getString(R.string.timestamp_days, daysBetween)
-  }
-}
-
-data class OlderThanSixMonths(private val time: Instant) : RelativeTimestamp() {
-  override fun displayText(context: Context): String {
-    return timestampFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
-  }
 
   companion object {
-    val timestampFormatter = DateTimeFormatter.ofPattern("d MMM, yyyy", Locale.ENGLISH)!!
-  }
-}
-
-data class Future(private val time: Instant) : RelativeTimestamp() {
-  override fun displayText(context: Context): String {
-    return timestampFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
+    val timestampFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM, yyyy", Locale.ENGLISH)
   }
 
-  companion object {
-    val timestampFormatter = DateTimeFormatter.ofPattern("d MMM, yyyy", Locale.ENGLISH)!!
+  fun displayText(context: Context): String {
+    return when (this) {
+      Today -> context.getString(R.string.timestamp_today)
+      Yesterday -> context.getString(R.string.timestamp_yesterday)
+      is WithinSixMonths -> context.getString(R.string.timestamp_days, daysBetween)
+      is OlderThanSixMonths -> timestampFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
+      is Future -> timestampFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
+    }
   }
+
+  object Today : RelativeTimestamp()
+
+  object Yesterday : RelativeTimestamp()
+
+  data class WithinSixMonths(val daysBetween: Long) : RelativeTimestamp()
+
+  data class OlderThanSixMonths(val time: Instant) : RelativeTimestamp()
+
+  data class Future(val time: Instant) : RelativeTimestamp()
 }

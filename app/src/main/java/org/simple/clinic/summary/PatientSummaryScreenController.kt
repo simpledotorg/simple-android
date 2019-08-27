@@ -135,7 +135,7 @@ class PatientSummaryScreenController @Inject constructor(
 
       val prescriptionItems = patientUuids
           .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
-          .map(::SummaryPrescribedDrugsItem)
+          .map { prescriptions -> SummaryPrescribedDrugsItem(prescriptions) }
 
       val bloodPressures = Observables.combineLatest(patientUuids, configProvider.toObservable())
           .flatMap { (patientUuid, configProvider) -> bpRepository.newestMeasurementsForPatient(patientUuid, configProvider.numberOfBpsToDisplay) }

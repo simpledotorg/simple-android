@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import android.annotation.SuppressLint
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -22,13 +21,15 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.setPaddingTop
 import org.simple.clinic.widgets.setTextAppearanceCompat
+import org.threeten.bp.format.DateTimeFormatter
 
 data class SummaryBloodPressureListItem(
     val measurement: BloodPressureMeasurement,
     private val daysAgo: RelativeTimestamp,
     val showDivider: Boolean,
     val formattedTime: String?,
-    val addTopPadding: Boolean
+    val addTopPadding: Boolean,
+    val dateFormatter: DateTimeFormatter = RelativeTimestamp.timestampFormatter
 ) : GroupieItemWithUiEvents<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
@@ -39,7 +40,6 @@ data class SummaryBloodPressureListItem(
     return BpViewHolder(itemView)
   }
 
-  @SuppressLint("SetTextI18n")
   override fun bind(holder: BpViewHolder, position: Int) {
     val context = holder.itemView.context
     val resources = context.resources
@@ -60,7 +60,7 @@ data class SummaryBloodPressureListItem(
     }
     holder.readingsTextView.setTextAppearanceCompat(readingsTextAppearanceResId)
 
-    holder.daysAgoTextView.text = daysAgo.displayText(context)
+    holder.daysAgoTextView.text = daysAgo.displayText(context, dateFormatter)
 
     val measurementImageTint = when {
       level.isUrgent() -> R.color.patientsummary_bp_reading_high

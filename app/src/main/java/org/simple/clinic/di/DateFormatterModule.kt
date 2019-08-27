@@ -22,6 +22,6 @@ class DateFormatterModule {
   fun providesTimeFormatterForBPRecorded(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a", locale)
 
   @Provides
-  @Named("recent_patients_header")
+  @Named("exact_date")
   fun providesTimeFormatterForRecentPatientsHeader(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", locale)
 }

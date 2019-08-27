@@ -1,6 +1,5 @@
 package org.simple.clinic.recentpatient
 
-import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -14,6 +13,7 @@ import org.simple.clinic.recentpatient.RecentPatientItem.RecentPatientItemViewHo
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.RelativeTimestamp
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
 sealed class RecentPatientScreenItemTypes<VH : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<VH>(adapterId) {
@@ -25,19 +25,19 @@ data class RecentPatientItem(
     val name: String,
     val age: Int,
     val gender: Gender,
-    val lastSeenTimestamp: RelativeTimestamp
+    val lastSeenTimestamp: RelativeTimestamp,
+    val dateFormatter: DateTimeFormatter = RelativeTimestamp.timestampFormatter
 ) : RecentPatientScreenItemTypes<RecentPatientItemViewHolder>(uuid.hashCode().toLong()) {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view
 
   override fun createViewHolder(itemView: View) = RecentPatientItemViewHolder(itemView)
 
-  @SuppressLint("SetTextI18n")
   override fun bind(viewHolder: RecentPatientItemViewHolder, position: Int) {
     viewHolder.apply {
-      titleTextView.text = "$name, $age"
+      titleTextView.text = itemView.context.getString(R.string.recent_patients_itemview_title, name, age)
 
-      lastSeenTextView.text = lastSeenTimestamp.displayText(itemView.context)
+      lastSeenTextView.text = lastSeenTimestamp.displayText(itemView.context, dateFormatter)
       genderImageView.setImageResource(gender.displayIconRes)
 
       itemView.setOnClickListener {

@@ -50,13 +50,13 @@ sealed class RelativeTimestamp {
     val timestampFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM, yyyy", Locale.ENGLISH)
   }
 
-  fun displayText(context: Context): String {
+  fun displayText(context: Context, timeFormatter: DateTimeFormatter): String {
     return when (this) {
       Today -> context.getString(R.string.timestamp_today)
       Yesterday -> context.getString(R.string.timestamp_yesterday)
       is WithinSixMonths -> context.getString(R.string.timestamp_days, daysBetween)
-      is OlderThanSixMonths -> timestampFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
-      is Future -> timestampFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
+      is OlderThanSixMonths -> timeFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
+      is Future -> timeFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
     }
   }
 

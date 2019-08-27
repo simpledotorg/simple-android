@@ -28,7 +28,7 @@
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
     android:background="@color/white100"
-    android:visibility="gone"
+    android:visibility="visible"
     app:layout_constraintBottom_toBottomOf="@+id/qrCodeScannerView"
     app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerView"
     app:layout_constraintStart_toStartOf="parent"

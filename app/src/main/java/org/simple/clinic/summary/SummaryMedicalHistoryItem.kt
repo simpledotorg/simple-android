@@ -18,11 +18,13 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_F
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.util.RelativeTimestamp
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale.ENGLISH
 
 data class SummaryMedicalHistoryItem(
     val medicalHistory: MedicalHistory,
-    val lastUpdatedAt: RelativeTimestamp
+    val lastUpdatedAt: RelativeTimestamp,
+    val dateFormatter: DateTimeFormatter = RelativeTimestamp.timestampFormatter
 ) : GroupieItemWithUiEvents<SummaryMedicalHistoryItem.HistoryViewHolder>(medicalHistory.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
@@ -37,7 +39,7 @@ data class SummaryMedicalHistoryItem(
     val context = holder.itemView.context
     holder.lastUpdatedAtTextView.text = context.getString(
         R.string.patientsummary_medicalhistory_last_updated,
-        lastUpdatedAt.displayText(context).toLowerCase(ENGLISH))
+        lastUpdatedAt.displayText(context, dateFormatter).toLowerCase(ENGLISH))
 
     val renderQuestionView = { view: MedicalHistoryQuestionView, question: MedicalHistoryQuestion, answer: Answer ->
       view.render(question, answer)

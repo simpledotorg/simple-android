@@ -12,15 +12,20 @@ import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.summary.SummaryListAdapterIds.PRESCRIBED_DRUGS
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
+import org.simple.clinic.util.RelativeTimestamp
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
+import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
 
 data class SummaryPrescribedDrugsItem(
-    val prescriptions: List<PrescribedDrug>
+    val prescriptions: List<PrescribedDrug>,
+    val dateFormatter: DateTimeFormatter = RelativeTimestamp.timestampFormatter
 ) : GroupieItemWithUiEvents<SummaryPrescribedDrugsItem.DrugsSummaryViewHolder>(adapterId = PRESCRIBED_DRUGS) {
+
+  private val relativeTimestampGenerator = RelativeTimestampGenerator()
 
   override lateinit var uiEvents: Subject<UiEvent>
 
@@ -51,11 +56,11 @@ data class SummaryPrescribedDrugsItem(
 
       Timber.i("Last updated prescribedDrug: ${lastUpdatedPrescription.name}: ${lastUpdatedPrescription.updatedAt}")
 
-      val lastUpdatedTimestamp = RelativeTimestampGenerator().generate(lastUpdatedPrescription.updatedAt)
+      val lastUpdatedTimestamp = relativeTimestampGenerator.generate(lastUpdatedPrescription.updatedAt)
 
       holder.lastUpdatedTimestampTextView.text = holder.itemView.resources.getString(
           R.string.patientsummary_prescriptions_last_updated,
-          lastUpdatedTimestamp.displayText(holder.itemView.context)
+          lastUpdatedTimestamp.displayText(holder.itemView.context, dateFormatter)
       )
     }
   }

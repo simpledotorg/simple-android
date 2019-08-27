@@ -21,11 +21,11 @@ import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.RelativeTimestampGenerator
-import org.simple.clinic.util.Today
-import org.simple.clinic.util.WithinSixMonths
-import org.simple.clinic.util.Yesterday
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RelativeTimestamp.Today
+import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
+import org.simple.clinic.util.RelativeTimestamp.Yesterday
+import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated

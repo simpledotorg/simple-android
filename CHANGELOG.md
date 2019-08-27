@@ -13,6 +13,7 @@
 
 ### Internal
 - Add Mixpanel analytics
+- Add device locale, timezone, and timezone offset headers to all requests 
 
 ## 2019-08-26-5229
 ### Feature

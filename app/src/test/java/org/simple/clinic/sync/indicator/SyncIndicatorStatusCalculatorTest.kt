@@ -7,11 +7,8 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,6 +22,7 @@ import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.threeten.bp.Instant
 
 @RunWith(JUnitParamsRunner::class)
@@ -39,11 +37,7 @@ class SyncIndicatorStatusCalculatorTest {
 
   private val syncResultPreference = mock<Preference<LastSyncedState>>()
   private val clock = TestUtcClock()
-
-  @Before
-  fun setUp() {
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-  }
+  private val schedulersProvider = TrampolineSchedulersProvider()
 
   @Test
   @Parameters(value = [
@@ -62,7 +56,7 @@ class SyncIndicatorStatusCalculatorTest {
     val initialState = LastSyncedState()
     whenever(syncResultPreference.get()).thenReturn(initialState)
 
-    syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncResultPreference)
+    syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncResultPreference, schedulersProvider)
     syncCalculator.updateSyncResults()
 
     when (syncGroup) {

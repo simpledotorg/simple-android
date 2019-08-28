@@ -7,10 +7,10 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
 import javax.inject.Inject
 
 typealias Ui = RegistrationConfirmPinScreen
@@ -84,9 +84,9 @@ class RegistrationConfirmPinScreenController @Inject constructor(
     return events
         .ofType<RegistrationConfirmPinValidated>()
         .filter { it.valid }
-        .flatMap {
+        .flatMap { confirmPinValidated ->
           userSession.ongoingRegistrationEntry()
-              .map { entry -> entry.copy(pinConfirmation = it.confirmPin, createdAt = Instant.now(utcClock)) }
+              .map { entry -> entry.withPinConfirmation(pinConfirmation = confirmPinValidated.enteredPin, clock = utcClock) }
               .flatMapCompletable { entry -> userSession.saveOngoingRegistrationEntry(entry) }
               .andThen(Observable.just({ ui: Ui -> ui.openFacilitySelectionScreen() }))
         }
@@ -97,7 +97,7 @@ class RegistrationConfirmPinScreenController @Inject constructor(
         .ofType<RegistrationResetPinClicked>()
         .flatMap {
           userSession.ongoingRegistrationEntry()
-              .map { entry -> entry.copy(pin = null, pinConfirmation = null) }
+              .map(OngoingRegistrationEntry::resetPin)
               .flatMapCompletable { entry -> userSession.saveOngoingRegistrationEntry(entry) }
               .andThen(Observable.just({ ui: Ui -> ui.goBackToPinScreen() }))
         }

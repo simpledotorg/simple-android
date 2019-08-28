@@ -3,8 +3,6 @@ package org.simple.clinic.di
 import dagger.Component
 import org.simple.clinic.DatabaseMigrationAndroidTest
 import org.simple.clinic.FakerModule
-import org.simple.clinic.rules.LocalAuthenticationRule
-import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
@@ -22,12 +20,13 @@ import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapterAndroidTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.reports.ReportsSyncAndroidTest
+import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.RegisterPatientRule
+import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.storage.files.AndroidFileStorageAndroidTest
-import org.simple.clinic.util.RelativeTimestampGeneratorAndroidTest
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidTest
-import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest
@@ -52,7 +51,6 @@ interface TestAppComponent : AppComponent {
   fun inject(target: LocalAuthenticationRule)
   fun inject(target: MedicalHistorySyncAndroidTest)
   fun inject(target: MedicalHistoryRepositoryAndroidTest)
-  fun inject(target: RelativeTimestampGeneratorAndroidTest)
   fun inject(target: PatientSyncAndroidTest)
   fun inject(target: BloodPressureRepositoryAndroidTest)
   fun inject(target: OngoingLoginEntryRepositoryTest)

@@ -9,8 +9,10 @@ data class PatientSearchResults(
     val currentFacility: Facility?
 ) {
   companion object {
-    fun emptyResults() = PatientSearchResults(emptyList(), emptyList(), null)
+    val EMPTY_RESULTS = PatientSearchResults(emptyList(), emptyList(), null)
   }
 
-  val hasNoResults = visitedCurrentFacility.isEmpty() && notVisitedCurrentFacility.isEmpty()
+  val hasNoResults: Boolean
+    get() = visitedCurrentFacility.isEmpty() && notVisitedCurrentFacility.isEmpty()
+
 }

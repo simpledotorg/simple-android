@@ -14,7 +14,7 @@ data class ShortCodeSearchResultState(
     fun fetchingPatients(
         bpPassportNumber: String
     ): ShortCodeSearchResultState =
-        ShortCodeSearchResultState(bpPassportNumber, IN_FLIGHT, PatientSearchResults.emptyResults())
+        ShortCodeSearchResultState(bpPassportNumber, IN_FLIGHT, PatientSearchResults.EMPTY_RESULTS)
   }
 
   fun patientsFetched(
@@ -23,5 +23,5 @@ data class ShortCodeSearchResultState(
       this.copy(fetchPatientsAsyncOp = SUCCEEDED, patients = patientSearchResults)
 
   fun noMatchingPatients(): ShortCodeSearchResultState =
-      this.copy(fetchPatientsAsyncOp = SUCCEEDED, patients = PatientSearchResults.emptyResults())
+      this.copy(fetchPatientsAsyncOp = SUCCEEDED, patients = PatientSearchResults.EMPTY_RESULTS)
 }

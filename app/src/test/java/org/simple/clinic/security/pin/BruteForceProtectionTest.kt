@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,7 +30,7 @@ class BruteForceProtectionTest {
   @Before
   fun setup() {
     config = BruteForceProtectionConfig(isEnabled = true, limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
-    bruteForceProtection = BruteForceProtection(clock, Single.fromCallable { config }, state)
+    bruteForceProtection = BruteForceProtection(clock, Observable.fromCallable { config }, state)
   }
 
   @Test

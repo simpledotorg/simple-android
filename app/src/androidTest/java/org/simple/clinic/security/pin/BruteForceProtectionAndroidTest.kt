@@ -4,6 +4,7 @@ import androidx.test.annotation.UiThreadTest
 import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.TestScheduler
@@ -33,7 +34,7 @@ class BruteForceProtectionAndroidTest {
   lateinit var bruteForceProtection: BruteForceProtection
 
   @Inject
-  lateinit var configProvider: Single<BruteForceProtectionConfig>
+  lateinit var configProvider: Observable<BruteForceProtectionConfig>
 
   @Inject
   lateinit var state: Preference<BruteForceProtectionState>
@@ -45,7 +46,7 @@ class BruteForceProtectionAndroidTest {
     get() = clock as TestUtcClock
 
   private val config
-    get() = configProvider.blockingGet()
+    get() = configProvider.blockingFirst()
 
   private val testScheduler = TestScheduler()
 

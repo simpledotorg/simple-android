@@ -83,17 +83,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
     val screenKey = screenRouter.key<ShortCodeSearchResultScreenKey>(this)
     setupToolBar(screenKey)
     setupScreen()
-
-    val uiStateProducer = ShortCodeSearchResultStateProducer(
-        shortCode = screenKey.shortCode,
-        patientRepository = patientRepository,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
-        bloodPressureDao = bloodPressureDao,
-        ui = this,
-        schedulersProvider = schedulersProvider
-    )
-    binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
+    setupViewControllerBinding(screenKey)
     setupClickEvents()
   }
 
@@ -119,12 +109,23 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
         .popSpan()
         .build()
 
-    toolBar.setNavigationOnClickListener {
-      screenRouter.pop()
+    with(toolBar) {
+      setNavigationOnClickListener { screenRouter.pop() }
+      setOnClickListener { screenRouter.pop() }
     }
-    toolBar.setOnClickListener {
-      screenRouter.pop()
-    }
+  }
+
+  private fun setupViewControllerBinding(screenKey: ShortCodeSearchResultScreenKey) {
+    val uiStateProducer = ShortCodeSearchResultStateProducer(
+        shortCode = screenKey.shortCode,
+        patientRepository = patientRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        bloodPressureDao = bloodPressureDao,
+        ui = this,
+        schedulersProvider = schedulersProvider
+    )
+    binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
   }
 
   private fun setupClickEvents() {
@@ -165,9 +166,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   override fun showSearchResults(foundPatients: PatientSearchResults) {
     val items = SearchResultsItemType
         .from(foundPatients)
-    items.map {
-      it.uiEvents = downstreamEvents
-    }
+        .onEach { it.uiEvents = downstreamEvents }
     adapter.update(items)
   }
 

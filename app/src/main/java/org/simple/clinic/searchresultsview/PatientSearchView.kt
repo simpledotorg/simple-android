@@ -30,9 +30,6 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   @Inject
   lateinit var controller: PatientSearchViewController
 
-  @Inject
-  lateinit var utcClock: UtcClock
-
   val downstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
   val upstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
 

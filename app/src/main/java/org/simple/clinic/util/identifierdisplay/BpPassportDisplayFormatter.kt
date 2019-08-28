@@ -4,7 +4,6 @@ import android.content.res.Resources
 import org.simple.clinic.R
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreator
-import org.simple.clinic.util.Unicode
 import java.util.UUID
 import javax.inject.Inject
 
@@ -18,10 +17,7 @@ class BpPassportDisplayFormatter @Inject constructor(
 
     return if (uuidShortCode.isComplete) {
       // This is guaranteed to be exactly seven characters in length.
-      val prefix = uuidShortCode.shortCode.substring(0, 3)
-      val suffix = uuidShortCode.shortCode.substring(3)
-
-      "$prefix${Unicode.nonBreakingSpace}$suffix"
+      formatShortCode(uuidShortCode.shortCode)
     } else {
       uuidShortCode.shortCode
     }

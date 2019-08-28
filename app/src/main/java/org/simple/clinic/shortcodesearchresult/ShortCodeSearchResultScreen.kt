@@ -25,11 +25,9 @@ import org.simple.clinic.searchresultsview.SearchResultClicked
 import org.simple.clinic.searchresultsview.SearchResultsItemType
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Truss
-import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.identifierdisplay.formatShortCodeForDisplay
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -93,21 +91,7 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   }
 
   private fun setupToolBar(screenKey: ShortCodeSearchResultScreenKey) {
-    val shortCode = screenKey.shortCode
-
-    // This is guaranteed to be exactly 7 characters in length.
-    val prefix = shortCode.substring(0, 3)
-    val suffix = shortCode.substring(3)
-
-    val formattedShortCode = "$prefix${Unicode.nonBreakingSpace}$suffix"
-
-    val textSpacingSpan = TextAppearanceWithLetterSpacingSpan(context, R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_White100)
-
-    toolBar.title = Truss()
-        .pushSpan(textSpacingSpan)
-        .append(formattedShortCode)
-        .popSpan()
-        .build()
+    toolBar.title = formatShortCodeForDisplay(context, screenKey.shortCode)
 
     with(toolBar) {
       setNavigationOnClickListener { screenRouter.pop() }

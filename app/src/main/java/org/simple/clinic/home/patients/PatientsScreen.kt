@@ -57,9 +57,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   lateinit var activity: TheActivity
 
   @Inject
-  lateinit var utcClock: UtcClock
-
-  @Inject
   lateinit var userClock: UserClock
 
   private val searchButton by bindView<Button>(R.id.patients_search_patients)

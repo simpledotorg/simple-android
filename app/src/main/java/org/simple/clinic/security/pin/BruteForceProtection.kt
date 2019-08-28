@@ -84,13 +84,7 @@ class BruteForceProtection @Inject constructor(
         .flatMapCompletable { resetFailedAttempts() }
         .toObservable<Any>()
 
-    val alwaysAllowWhenDisabled = Observables
-        .combineLatest(configProvider, statePreference.asObservable())
-        .filter { (config) -> config.isEnabled.not() }
-        .map { (_, state) -> Allowed(attemptsMade = Math.min(1, state.failedAuthCount), attemptsRemaining = 1) }
-
     return Observables.combineLatest(configProvider, statePreference.asObservable(), autoResets.startWith(Any()))
-        .filter { (config) -> config.isEnabled }
         .map { (config, state) ->
           val (blockedAt: Instant?) = state.limitReachedAt
           val attemptsMade = state.failedAuthCount
@@ -104,6 +98,5 @@ class BruteForceProtection @Inject constructor(
           }
         }
         .distinctUntilChanged()
-        .mergeWith(alwaysAllowWhenDisabled)
   }
 }

@@ -5,10 +5,8 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
@@ -23,43 +21,9 @@ class BruteForceProtectionTest {
 
   private val clock = TestUtcClock()
   private val state = mock<Preference<BruteForceProtectionState>>()
-  private lateinit var config: BruteForceProtectionConfig
+  private val config = BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
 
-  private lateinit var bruteForceProtection: BruteForceProtection
-
-  @Before
-  fun setup() {
-    config = BruteForceProtectionConfig(isEnabled = true, limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
-    bruteForceProtection = BruteForceProtection(clock, Observable.fromCallable { config }, state)
-  }
-
-  @Test
-  fun `when feature flag is disabled then brute force protection should remain disabled`() {
-    config = config.copy(isEnabled = false, limitOfFailedAttempts = 1)
-    val initialState = BruteForceProtectionState(limitReachedAt = None)
-
-    whenever(state.get())
-        .thenReturn(initialState.copy(failedAuthCount = 0))
-        .thenReturn(initialState.copy(failedAuthCount = 1))
-        .thenReturn(initialState.copy(failedAuthCount = 2))
-
-    whenever(state.asObservable())
-        .thenReturn(Observable.just(
-            initialState.copy(failedAuthCount = 0),
-            initialState.copy(failedAuthCount = 1),
-            initialState.copy(failedAuthCount = 2)))
-
-    val stateChangesObserver = bruteForceProtection.protectedStateChanges().test()
-
-    bruteForceProtection.incrementFailedAttempt()
-        .repeat(3)
-        .blockingAwait()
-
-    stateChangesObserver
-        .assertValueAt(0, ProtectedState.Allowed(attemptsMade = 0, attemptsRemaining = 1))
-        .assertValueAt(1, ProtectedState.Allowed(attemptsMade = 1, attemptsRemaining = 1))
-        .assertValueAt(2, ProtectedState.Allowed(attemptsMade = 1, attemptsRemaining = 1))
-  }
+  private val bruteForceProtection = BruteForceProtection(clock, Observable.just(config), state)
 
   @Test
   fun `when incrementing the count of failed attempts then the count should correctly be updated`() {

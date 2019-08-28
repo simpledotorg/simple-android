@@ -16,22 +16,22 @@ import javax.inject.Inject
 class RelativeTimestampGenerator @Inject constructor() {
 
   fun generate(instant: Instant, userClock: UserClock): RelativeTimestamp {
-    val then = instant.toLocalDateAtZone(userClock.zone)
+    val date = instant.toLocalDateAtZone(userClock.zone)
     val today = LocalDate.now(userClock)
     val yesterday = today.minusDays(1)
     val sixMonthsAgo = today.minusMonths(6)
 
     return when {
-      then.isAfter(today) -> ExactDate(instant)
-      then == today -> Today
-      then == yesterday -> Yesterday
-      sixMonthsOrLess(then, sixMonthsAgo) -> WithinSixMonths(DAYS.between(then, today).toInt())
+      date.isAfter(today) -> ExactDate(instant)
+      date == today -> Today
+      date == yesterday -> Yesterday
+      sixMonthsOrLess(date, sixMonthsAgo) -> WithinSixMonths(DAYS.between(date, today).toInt())
       else -> ExactDate(instant)
     }
   }
 
-  private fun sixMonthsOrLess(then: LocalDate, sixMonthsAgo: LocalDate): Boolean {
-    return then == sixMonthsAgo || then.isAfter(sixMonthsAgo)
+  private fun sixMonthsOrLess(date: LocalDate, sixMonthsAgo: LocalDate): Boolean {
+    return date == sixMonthsAgo || date.isAfter(sixMonthsAgo)
   }
 }
 

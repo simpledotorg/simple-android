@@ -19,7 +19,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.util.RelativeTimestamp
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.Locale.ENGLISH
 
 data class SummaryMedicalHistoryItem(
     val medicalHistory: MedicalHistory,
@@ -37,9 +36,13 @@ data class SummaryMedicalHistoryItem(
 
   override fun bind(holder: HistoryViewHolder, position: Int) {
     val context = holder.itemView.context
+
+    val updatedAtDisplayText = lastUpdatedAt.displayText(context, dateFormatter)
+
     holder.lastUpdatedAtTextView.text = context.getString(
         R.string.patientsummary_medicalhistory_last_updated,
-        lastUpdatedAt.displayText(context, dateFormatter).toLowerCase(ENGLISH))
+        updatedAtDisplayText
+    )
 
     val renderQuestionView = { view: MedicalHistoryQuestionView, question: MedicalHistoryQuestion, answer: Answer ->
       view.render(question, answer)

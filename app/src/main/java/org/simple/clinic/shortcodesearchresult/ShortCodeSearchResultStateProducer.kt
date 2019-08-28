@@ -44,6 +44,7 @@ class ShortCodeSearchResultStateProducer(
               .searchByShortCode(shortCode)
               .subscribeOn(schedulersProvider.io())
         }
+        .share()
 
     val noMatchingPatient = shortCodeSearchResults
         .filter { it.isEmpty() }

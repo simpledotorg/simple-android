@@ -7,12 +7,15 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.timer
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import javax.inject.Inject
+import kotlin.math.max
 
 class BruteForceProtection @Inject constructor(
     private val utcClock: UtcClock,
@@ -61,42 +64,68 @@ class BruteForceProtection @Inject constructor(
   }
 
   fun protectedStateChanges(): Observable<ProtectedState> {
-    val autoResets = Observables.combineLatest(configProvider, statePreference.asObservable())
-        .switchMap { (config) ->
-          val state = statePreference.get()
-          val (blockedAt: Instant?) = state.limitReachedAt
-
-          if (blockedAt == null) {
-            Observable.empty()
-
-          } else {
-            val blockExpiresAt = blockedAt + config.blockDuration
-            val now = Instant.now(utcClock)
-
-            // It's possible that the block duration gets updated by a config update
-            // from the server, potentially resulting in a situation where the expiry
-            // time is now in the past.
-            val millisTillExpiry = Math.max(blockExpiresAt.toEpochMilli() - now.toEpochMilli(), 0)
-            val resetIn = Duration.ofMillis(millisTillExpiry + 1)
-            Observables.timer(resetIn)
-          }
-        }
+    val bruteForceProtectionResets = Observables
+        .combineLatest(configProvider, statePreference.asObservable()) { config, state -> config.blockDuration to state.limitReachedAt }
+        .switchMap { (blockDuration, blockedAt) -> signalBruteForceTimerReset(blockedAt, blockDuration) }
         .flatMapCompletable { resetFailedAttempts() }
         .toObservable<Any>()
 
-    return Observables.combineLatest(configProvider, statePreference.asObservable(), autoResets.startWith(Any()))
+    return Observables
+        .combineLatest(
+            configProvider,
+            statePreference.asObservable(),
+            bruteForceProtectionResets.startWith(Any())
+        )
         .map { (config, state) ->
-          val (blockedAt: Instant?) = state.limitReachedAt
-          val attemptsMade = state.failedAuthCount
-
-          if (blockedAt == null) {
-            val attemptsRemaining = Math.max(0, config.limitOfFailedAttempts - attemptsMade)
-            Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
-
-          } else {
-            Blocked(attemptsMade = attemptsMade, blockedTill = blockedAt + config.blockDuration)
-          }
+          generateProtectedState(
+              blockedAt = state.limitReachedAt,
+              attemptsMade = state.failedAuthCount,
+              maxAllowedFailedAttempts = config.limitOfFailedAttempts,
+              blockAttemptsFor = config.blockDuration
+          )
         }
         .distinctUntilChanged()
+  }
+
+  private fun generateProtectedState(
+      blockedAt: Optional<Instant>,
+      attemptsMade: Int,
+      maxAllowedFailedAttempts: Int,
+      blockAttemptsFor: Duration
+  ): ProtectedState {
+    return when (blockedAt) {
+      is None -> {
+        val attemptsRemaining = max(0, maxAllowedFailedAttempts - attemptsMade)
+        Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
+      }
+      is Just -> Blocked(attemptsMade = attemptsMade, blockedTill = blockedAt.value + blockAttemptsFor)
+    }
+  }
+
+  private fun signalBruteForceTimerReset(
+      blockedAt: Optional<Instant>,
+      blockDuration: Duration
+  ): Observable<Long> {
+    return when (blockedAt) {
+      is None -> Observable.empty()
+      is Just -> {
+        val resetDuration = resetBruteForceTimerIn(blockedAt.value, blockDuration)
+        Observables.timer(resetDuration)
+      }
+    }
+  }
+
+  private fun resetBruteForceTimerIn(
+      blockedAt: Instant,
+      blockDuration: Duration
+  ): Duration {
+    val blockExpiresAt = blockedAt + blockDuration
+    val now = Instant.now(utcClock)
+
+    // It's possible that the block duration gets updated by a config update
+    // from the server, potentially resulting in a situation where the expiry
+    // time is now in the past.
+    val millisTillExpiry = Math.max(blockExpiresAt.toEpochMilli() - now.toEpochMilli(), 0)
+    return Duration.ofMillis(millisTillExpiry + 1)
   }
 }

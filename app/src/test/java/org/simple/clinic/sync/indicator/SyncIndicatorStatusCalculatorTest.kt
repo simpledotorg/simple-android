@@ -16,6 +16,8 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.DataSync.SyncGroupResult
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncGroup
+import org.simple.clinic.sync.SyncGroup.DAILY
+import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
@@ -32,43 +34,69 @@ class SyncIndicatorStatusCalculatorTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val dataSync = mock<DataSync>()
-
-  lateinit var syncCalculator: SyncIndicatorStatusCalculator
-
   private val syncResultPreference = mock<Preference<LastSyncedState>>()
   private val clock = TestUtcClock()
   private val schedulersProvider = TrampolineSchedulersProvider()
 
-  @Test
-  @Parameters(value = [
-    "FREQUENT|SUCCESS",
-    "DAILY|SUCCESS",
-    "FREQUENT|FAILURE",
-    "DAILY|FAILURE",
-    "FREQUENT|SYNCING"
-  ])
-  fun `when the frequent sync group is synced successfully, the last synced state preference should be set`(
-      syncGroup: SyncGroup,
-      syncProgress: SyncProgress
-  ) {
-    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(syncGroup, syncProgress)))
+  private val syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncResultPreference, schedulersProvider)
 
+  @Test
+  fun `when the frequent sync group is synced successfully, the last synced state preference should be set to success with the current timestamp`() {
+    // given
     val initialState = LastSyncedState()
     whenever(syncResultPreference.get()).thenReturn(initialState)
+    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(FREQUENT, SUCCESS)))
 
-    syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncResultPreference, schedulersProvider)
+    // when
     syncCalculator.updateSyncResults()
 
-    when (syncGroup) {
-      SyncGroup.FREQUENT -> {
-        when (syncProgress) {
-          SUCCESS -> verify(syncResultPreference).set(LastSyncedState(syncProgress, Instant.now(clock)))
-          FAILURE, SYNCING -> verify(syncResultPreference).set(LastSyncedState(syncProgress, initialState.lastSyncSucceededAt))
-        }
-      }
-      SyncGroup.DAILY -> {
-        verify(syncResultPreference, never()).set(any())
-      }
-    }
+    // then
+    verify(syncResultPreference).set(LastSyncedState(SUCCESS, Instant.now(clock)))
+  }
+
+  @Test
+  fun `when the frequent sync group fails to sync, the last synced state preference should be set to failure without changing the sync timestamp`() {
+    // given
+    val lastSyncSucceededAt = Instant.now(clock).minusSeconds(1)
+    val initialState = LastSyncedState(lastSyncProgress = SUCCESS, lastSyncSucceededAt = lastSyncSucceededAt)
+    whenever(syncResultPreference.get()).thenReturn(initialState)
+    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(FREQUENT, FAILURE)))
+
+    // when
+    syncCalculator.updateSyncResults()
+
+    // then
+    verify(syncResultPreference).set(LastSyncedState(FAILURE, lastSyncSucceededAt))
+  }
+
+  @Test
+  fun `when the frequent sync group begins to sync, the last synced state preference should be set to syncing without changing the sync timestamp`() {
+    // given
+    val lastSyncSucceededAt = Instant.now(clock).minusSeconds(1)
+    val initialState = LastSyncedState(lastSyncProgress = SUCCESS, lastSyncSucceededAt = lastSyncSucceededAt)
+    whenever(syncResultPreference.get()).thenReturn(initialState)
+    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(FREQUENT, SYNCING)))
+
+    // when
+    syncCalculator.updateSyncResults()
+
+    // then
+    verify(syncResultPreference).set(LastSyncedState(SYNCING, lastSyncSucceededAt))
+  }
+
+  @Test
+  @Parameters(value = ["SUCCESS", "FAILURE", "SYNCING"])
+  fun `when the daily sync group sync status changes, the last synced state preference should not be affected`(progress: SyncProgress) {
+    // given
+    val lastSyncSucceededAt = Instant.now(clock).minusSeconds(1)
+    val initialState = LastSyncedState(lastSyncProgress = SUCCESS, lastSyncSucceededAt = lastSyncSucceededAt)
+    whenever(syncResultPreference.get()).thenReturn(initialState)
+    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(DAILY, progress)))
+
+    // when
+    syncCalculator.updateSyncResults()
+
+    // then
+    verify(syncResultPreference, never()).set(any())
   }
 }

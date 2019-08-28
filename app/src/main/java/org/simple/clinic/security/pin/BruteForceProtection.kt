@@ -3,7 +3,6 @@ package org.simple.clinic.security.pin
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 class BruteForceProtection @Inject constructor(
     private val utcClock: UtcClock,
-    private val configProvider: Single<BruteForceProtectionConfig>,
+    private val configProvider: Observable<BruteForceProtectionConfig>,
     private val statePreference: Preference<BruteForceProtectionState>
 ) {
 
@@ -55,7 +54,7 @@ class BruteForceProtection @Inject constructor(
   }
 
   fun protectedStateChanges(): Observable<ProtectedState> {
-    val autoResets = Observables.combineLatest(configProvider.toObservable(), statePreference.asObservable())
+    val autoResets = Observables.combineLatest(configProvider, statePreference.asObservable())
         .switchMap { (config) ->
           val state = statePreference.get()
           val (blockedAt: Instant?) = state.limitReachedAt
@@ -79,11 +78,11 @@ class BruteForceProtection @Inject constructor(
         .toObservable<Any>()
 
     val alwaysAllowWhenDisabled = Observables
-        .combineLatest(configProvider.toObservable(), statePreference.asObservable())
+        .combineLatest(configProvider, statePreference.asObservable())
         .filter { (config) -> config.isEnabled.not() }
         .map { (_, state) -> Allowed(attemptsMade = Math.min(1, state.failedAuthCount), attemptsRemaining = 1) }
 
-    return Observables.combineLatest(configProvider.toObservable(), statePreference.asObservable(), autoResets.startWith(Any()))
+    return Observables.combineLatest(configProvider, statePreference.asObservable(), autoResets.startWith(Any()))
         .filter { (config) -> config.isEnabled }
         .map { (config, state) ->
           val (blockedAt: Instant?) = state.limitReachedAt

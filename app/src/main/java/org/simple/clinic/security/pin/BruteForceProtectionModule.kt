@@ -5,15 +5,15 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Single
+import io.reactivex.Observable
 import org.threeten.bp.Duration
 
 @Module
 open class BruteForceProtectionModule {
 
   @Provides
-  open fun config(): Single<BruteForceProtectionConfig> {
-    return Single.just(BruteForceProtectionConfig(isEnabled = true, limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20)))
+  open fun config(): Observable<BruteForceProtectionConfig> {
+    return Observable.just(BruteForceProtectionConfig(isEnabled = true, limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20)))
   }
 
   @Provides

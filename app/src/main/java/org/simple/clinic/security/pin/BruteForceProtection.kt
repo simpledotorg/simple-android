@@ -4,9 +4,9 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.timer
@@ -26,22 +26,29 @@ class BruteForceProtection @Inject constructor(
   }
 
   fun incrementFailedAttempt(): Completable {
-    return configProvider
-        .flatMapCompletable { config ->
-          Completable.fromAction {
-            val state = statePreference.get()
-            val newFailedAuthCount = state.failedAuthCount + 1
+    val failedAttemptsLimitStream = configProvider.map { it.limitOfFailedAttempts }
 
-            var updatedState = state.copy(failedAuthCount = newFailedAuthCount)
+    val updatedState = statePreference
+        .asObservable()
+        .take(1)
+        .map(BruteForceProtectionState::authenticationFailed)
+        .withLatestFrom(failedAttemptsLimitStream)
+        .map { (state, maxAllowedFailedAttempts) -> updateFailedAttemptLimitReached(state, maxAllowedFailedAttempts) }
+        .doOnNext(statePreference::set)
 
-            val isLimitReached = newFailedAuthCount >= config.limitOfFailedAttempts
-            if (isLimitReached && state.limitReachedAt is None) {
-              updatedState = updatedState.copy(limitReachedAt = Just(Instant.now(utcClock)))
-            }
+    return updatedState.ignoreElements()
+  }
 
-            statePreference.set(updatedState)
-          }
-        }
+  private fun updateFailedAttemptLimitReached(
+      state: BruteForceProtectionState,
+      maxAllowedFailedAttempts: Int
+  ): BruteForceProtectionState {
+    val isLimitReached = state.failedAuthCount >= maxAllowedFailedAttempts
+    return if (isLimitReached && state.limitReachedAt is None) {
+      state.failedAttemptLimitReached(utcClock)
+    } else {
+      state
+    }
   }
 
   /** Just a proxy function, but the name makes more sense. */

@@ -63,7 +63,8 @@ class BruteForceProtectionTest {
 
   @Test
   fun `when incrementing the count of failed attempts then the count should correctly be updated`() {
-    whenever(state.get()).thenReturn(BruteForceProtectionState(failedAuthCount = 3))
+    val bruteForceProtectionState = BruteForceProtectionState(failedAuthCount = 3)
+    whenever(state.asObservable()).thenReturn(Observable.just(bruteForceProtectionState))
 
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
@@ -72,9 +73,11 @@ class BruteForceProtectionTest {
 
   @Test
   fun `when incrementing the count of failed attempts and the limit is reached then the blocked-at time should be set`() {
-    whenever(state.get()).thenReturn(BruteForceProtectionState(
+    val bruteForceProtectionState = BruteForceProtectionState(
         failedAuthCount = config.limitOfFailedAttempts - 1,
-        limitReachedAt = None))
+        limitReachedAt = None
+    )
+    whenever(state.asObservable()).thenReturn(Observable.just(bruteForceProtectionState))
 
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
@@ -86,10 +89,10 @@ class BruteForceProtectionTest {
   @Test
   fun `when incrementing the count of failed attempts and the limit was already reached then the blocked-at time should not be updated`() {
     val timeOfLastAttempt = Instant.now(clock)
-
-    whenever(state.get()).thenReturn(BruteForceProtectionState(
+    val bruteForceProtectionState = BruteForceProtectionState(
         failedAuthCount = config.limitOfFailedAttempts,
-        limitReachedAt = Just(timeOfLastAttempt)))
+        limitReachedAt = Just(timeOfLastAttempt))
+    whenever(state.asObservable()).thenReturn(Observable.just(bruteForceProtectionState))
 
     clock.advanceBy(Duration.ofMinutes(2))
     bruteForceProtection.incrementFailedAttempt().blockingAwait()

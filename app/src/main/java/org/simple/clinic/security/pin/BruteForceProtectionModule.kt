@@ -13,7 +13,7 @@ open class BruteForceProtectionModule {
 
   @Provides
   open fun config(): Observable<BruteForceProtectionConfig> {
-    return Observable.just(BruteForceProtectionConfig(isEnabled = true, limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20)))
+    return Observable.just(BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20)))
   }
 
   @Provides

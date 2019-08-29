@@ -105,52 +105,6 @@ class PatientRepositoryTest {
 
   @Test
   @Parameters(value = [
-    "Name, Name, Name",
-    "Name Surname, Name Surname, NameSurname",
-    "Name Surname, Name   Surname , NameSurname",
-    "Old Name, Name-Surname, NameSurname",
-    "Name, Name.Middle-Surname, NameMiddleSurname"
-  ])
-  fun `when merging patients with server records, update the searchable name of the patient to the full name stripped of all spaces and punctuation`(
-      localFullName: String,
-      remoteFullName: String,
-      expectedSearchableName: String
-  ) {
-    whenever(database.patientDao()).thenReturn(patientDao)
-    whenever(database.addressDao()).thenReturn(patientAddressDao)
-    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
-    whenever(database.businessIdDao()).thenReturn(businessIdDao)
-
-    val patientUuid = UUID.randomUUID()
-    val addressUuid = UUID.randomUUID()
-
-    val localPatientCopy = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, fullName = localFullName, syncStatus = SyncStatus.DONE)
-    whenever(patientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
-
-    val serverAddress = PatientMocker.address(addressUuid).toPayload()
-    val serverPatientWithoutPhone = PatientPayload(
-        uuid = patientUuid,
-        fullName = remoteFullName,
-        gender = mock(),
-        dateOfBirth = mock(),
-        age = 0,
-        ageUpdatedAt = mock(),
-        status = PatientStatus.Active,
-        createdAt = mock(),
-        updatedAt = mock(),
-        deletedAt = null,
-        address = serverAddress,
-        phoneNumbers = null,
-        businessIds = emptyList(),
-        recordedAt = mock())
-
-    repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
-
-    verify(patientDao).save(argThat<List<Patient>> { first().searchableName == expectedSearchableName })
-  }
-
-  @Test
-  @Parameters(value = [
     "PENDING, false",
     "INVALID, true",
     "DONE, true"])

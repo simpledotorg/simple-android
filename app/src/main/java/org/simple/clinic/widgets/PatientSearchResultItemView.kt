@@ -119,7 +119,7 @@ class PatientSearchResultItemView(
         estimateCurrentAge(dateOfBirth!!, utcClock)
       }
       else -> {
-        val (recordedAge, ageRecordedAtTimestamp, _) = age
+        val (recordedAge, ageRecordedAtTimestamp) = age
         estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, utcClock)
       }
     }

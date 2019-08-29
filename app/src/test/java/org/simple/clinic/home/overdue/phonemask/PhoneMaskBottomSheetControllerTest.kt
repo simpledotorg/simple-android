@@ -75,7 +75,7 @@ class PhoneMaskBottomSheetControllerTest {
         uuid = patientUuid,
         fullName = name,
         gender = gender,
-        age = Age(age, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+        age = Age(age, Instant.now(clock)),
         dateOfBirth = null
     ).toOptional()))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
@@ -116,7 +116,7 @@ class PhoneMaskBottomSheetControllerTest {
         uuid = patientUuid,
         fullName = name,
         gender = gender,
-        age = Age(age, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+        age = Age(age, Instant.now(clock)),
         dateOfBirth = null
     ).toOptional()))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
@@ -160,7 +160,7 @@ class PhoneMaskBottomSheetControllerTest {
         uuid = patientUuid,
         fullName = name,
         gender = gender,
-        age = Age(age, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+        age = Age(age, Instant.now(clock)),
         dateOfBirth = null
     ).toOptional()))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(

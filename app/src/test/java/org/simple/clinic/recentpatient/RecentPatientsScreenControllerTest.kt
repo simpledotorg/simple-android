@@ -91,21 +91,21 @@ class RecentPatientsScreenControllerTest {
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
-            age = Age(42, Instant.now(userClock), LocalDate.MIN),
+            age = Age(42, Instant.now(userClock)),
             gender = Gender.Transgender,
             updatedAt = today
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
-            age = Age(24, Instant.now(userClock), LocalDate.MIN),
+            age = Age(24, Instant.now(userClock)),
             gender = Gender.Male,
             updatedAt = yesterday
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
-            age = Age(27, Instant.now(userClock), LocalDate.MIN),
+            age = Age(27, Instant.now(userClock)),
             gender = Gender.Female,
             updatedAt = twoDaysAgo
         )

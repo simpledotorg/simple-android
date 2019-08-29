@@ -361,15 +361,8 @@ class PatientEditScreenController @Inject constructor(
       // When prefilling the details, the age text changed event will get triggered, which will
       // trigger an update of the age and the age updated at timestamp which will change the age
       // calculations again. This handles that case.
-      alreadySavedAge != null && alreadySavedAge.value == enteredAgeValue -> {
-        alreadySavedAge
-      }
-      else -> {
-        Age(
-            value = enteredAgeValue,
-            updatedAt = Instant.now(utcClock),
-            computedDateOfBirth = LocalDate.now(utcClock).minusYears(enteredAgeValue.toLong()))
-      }
+      alreadySavedAge != null && alreadySavedAge.value == enteredAgeValue -> alreadySavedAge
+      else -> Age(enteredAgeValue, Instant.now(utcClock))
     }
   }
 

@@ -1,14 +1,14 @@
 package org.simple.clinic
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.room.testing.MigrationTestHelper
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.InstrumentationRegistry
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 
 private const val TEST_DB_NAME = "migration-test"
 
-class MigrationTestHelperWithForeignConstraints : MigrationTestHelper(
+class MigrationTestHelperWithForeignKeyConstraints : MigrationTestHelper(
     InstrumentationRegistry.getInstrumentation(),
     AppDatabase::class.java.canonicalName,
     AppSqliteOpenHelperFactory()
@@ -17,13 +17,21 @@ class MigrationTestHelperWithForeignConstraints : MigrationTestHelper(
   lateinit var migrations: List<Migration>
 
   fun createDatabase(version: Int): SupportSQLiteDatabase {
-    val db = super.createDatabase(TEST_DB_NAME, version)
-    db.setForeignKeyConstraintsEnabled(true)
-    return db
+    return super.createDatabase(TEST_DB_NAME, version).apply {
+      setForeignKeyConstraintsEnabled(true)
+    }
   }
 
   fun migrateTo(version: Int): SupportSQLiteDatabase {
-    return super.runMigrationsAndValidate(TEST_DB_NAME, version, true, *migrations.toTypedArray())
+    val validateDroppedTables = true
+    return super.runMigrationsAndValidate(
+        TEST_DB_NAME,
+        version,
+        validateDroppedTables,
+        *migrations.toTypedArray()
+    ).apply {
+      setForeignKeyConstraintsEnabled(true)
+    }
   }
 
   @Deprecated(message = "Use migrateTo() instead", replaceWith = ReplaceWith("helper.migrateTo(version, *migrations)"))

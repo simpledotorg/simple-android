@@ -54,7 +54,6 @@ object PatientMocker {
         uuid = uuid,
         addressUuid = addressUuid,
         fullName = fullName,
-        searchableName = fullName,
         gender = gender,
         dateOfBirth = dateOfBirth,
         age = age,

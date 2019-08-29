@@ -12,11 +12,8 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.nameToSearchableForm
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)
@@ -62,7 +59,7 @@ data class PatientPayload(
     val businessIds: List<BusinessIdPayload>,
 
     @Json(name = "recorded_at")
-    val recordedAt: Instant?
+    val recordedAt: Instant
 ) {
 
   fun toDatabaseModel(newStatus: SyncStatus): Patient {
@@ -70,26 +67,15 @@ data class PatientPayload(
         uuid = uuid,
         addressUuid = address.uuid,
         fullName = fullName,
-        searchableName = nameToSearchableForm(fullName),
         gender = gender,
         dateOfBirth = dateOfBirth,
-        age = age?.let {
-          Age(age, ageUpdatedAt!!, computedDateOfBirth(age, ageUpdatedAt))
-        },
+        age = age?.let { Age(age, ageUpdatedAt!!) },
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        // recordedAt should be changed here when PatientPayload starts receiving this field from server
-        recordedAt = recordedAt ?: createdAt,
+        recordedAt = recordedAt,
         syncStatus = newStatus)
-  }
-
-  private fun computedDateOfBirth(years: Int, updatedAt: Instant): LocalDate {
-    val updatedAtLocalDateTime = LocalDateTime.ofInstant(updatedAt, ZoneOffset.UTC)
-    val updatedAtLocalDate = LocalDate.of(updatedAtLocalDateTime.year, updatedAtLocalDateTime.month, updatedAtLocalDateTime.dayOfMonth)
-
-    return updatedAtLocalDate.minusYears(years.toLong())
   }
 }
 

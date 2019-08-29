@@ -71,7 +71,7 @@ data class OverdueAppointment(
      * because referencing column aliases in a WHERE clause is not SQL standard, but sqlite still allows it.
      */
     @Query("""
-          SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth,
+          SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt,
 
           BP.uuid bp_uuid, BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.syncStatus bp_syncStatus, BP.userUuid bp_userUuid,
           BP.facilityUuid bp_facilityUuid, BP.patientUuid bp_patientUuid, BP.createdAt bp_createdAt, BP.updatedAt bp_updatedAt, BP.recordedAt bp_recordedAt,

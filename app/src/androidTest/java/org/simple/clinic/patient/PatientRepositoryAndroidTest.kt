@@ -10,7 +10,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -48,6 +47,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.reports.ReportsRepository
+import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -167,26 +167,6 @@ class PatientRepositoryAndroidTest {
     val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(patient.uuid).firstOrError().blockingGet()
     assertThat(savedPhoneNumbers).hasSize(1)
     assertThat(savedPhoneNumbers.first().number).isEqualTo("227788")
-  }
-
-  @Test
-  fun when_a_patient_is_saved_then_its_searchable_name_should_also_be_added() {
-    val names = arrayOf(
-        "Riya Puri" to "RiyaPuri",
-        "Manabi    Mehra" to "ManabiMehra",
-        "Amit:Sodhi" to "AmitSodhi",
-        "Riya.Puri" to "RiyaPuri",
-        "Riya,Puri" to "RiyaPuri")
-
-    names.forEach { (fullName, expectedSearchableName) ->
-      val patientEntry = testData.ongoingPatientEntry(fullName = fullName)
-
-      val patient = patientRepository.saveOngoingEntry(patientEntry)
-          .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
-          .blockingGet()
-
-      assertThat(patient.searchableName).isEqualTo(expectedSearchableName)
-    }
   }
 
   @Test
@@ -571,7 +551,6 @@ class PatientRepositoryAndroidTest {
               uuid = patientUuid,
               addressUuid = addressUuid,
               fullName = "Name",
-              searchableName = "Name",
               dateOfBirth = LocalDate.now(clock).minusYears(10),
               status = Active
           ),
@@ -737,7 +716,7 @@ class PatientRepositoryAndroidTest {
         addressUuid = addressToSave.uuid,
         fullName = "Old Name",
         gender = Gender.Male,
-        age = Age(value = 30, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+        age = Age(30, Instant.now(clock)),
         dateOfBirth = LocalDate.now(clock),
         createdAt = Instant.now(clock),
         updatedAt = Instant.now(clock)
@@ -761,7 +740,7 @@ class PatientRepositoryAndroidTest {
     val newPatientToSave = originalSavedPatient.copy(
         fullName = "New Name",
         gender = Gender.Transgender,
-        age = Age(value = 35, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+        age = Age(35, Instant.now(clock)),
         dateOfBirth = LocalDate.now(clock)
     )
 
@@ -776,7 +755,6 @@ class PatientRepositoryAndroidTest {
     assertThat(savedPatient.createdAt).isNotEqualTo(savedPatient.updatedAt)
 
     assertThat(savedPatient.fullName).isEqualTo("New Name")
-    assertThat(savedPatient.searchableName).isEqualTo("NewName")
     assertThat(savedPatient.gender).isEqualTo(Gender.Transgender)
   }
 

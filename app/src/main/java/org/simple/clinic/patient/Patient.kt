@@ -17,17 +17,6 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-/**
- * [Regex] for stripping patient names and search queries of white spaces and punctuation
- *
- * Currently matches the following characters
- * - Any whitespace
- * - Comma, Hyphen, SemiColon, Colon, Underscore, Apostrophe, Period
- * */
-private val spacePunctuationRegex = Regex("[\\s;_\\-:,'\\\\.]")
-
-fun nameToSearchableForm(string: String) = string.replace(spacePunctuationRegex, "")
-
 @Entity(
     foreignKeys = [
       ForeignKey(
@@ -47,8 +36,6 @@ data class Patient(
     val addressUuid: UUID,
 
     val fullName: String,
-
-    val searchableName: String,
 
     val gender: Gender,
 
@@ -276,9 +263,8 @@ data class Patient(
       const val patientProfileQuery = """
         SELECT
           P.uuid patient_uuid, P.addressUuid patient_addressUuid, P.fullName patient_fullName,
-          P.searchableName patient_searchableName, P.gender patient_gender, P.dateOfBirth patient_dateOfBirth,
-          P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt,
-          P.age_computedDateOfBirth patient_age_computedDateOfBirth, P.status patient_status,
+          P.gender patient_gender, P.dateOfBirth patient_dateOfBirth,
+          P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt, P.status patient_status,
           P.createdAt patient_createdAt, P.updatedAt patient_updatedAt, P.deletedAt patient_deletedAt,
           P.syncStatus patient_syncStatus, P.recordedAt patient_recordedAt,
 

@@ -160,11 +160,10 @@ class PatientEditScreenControllerTest {
         phoneNumber: String?,
         age: Int
     ): List<Any?> {
-      val patientToReturn = PatientMocker.patient(age = Age(
-          value = age,
-          updatedAt = Instant.now(utcClock),
-          computedDateOfBirth = LocalDate.now(utcClock)
-      ), dateOfBirth = null)
+      val patientToReturn = PatientMocker.patient(
+          age = Age(age, Instant.now(utcClock)),
+          dateOfBirth = null
+      )
       val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
       val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
 
@@ -740,7 +739,7 @@ class PatientEditScreenControllerTest {
       val patient = if (shouldHaveAge) {
         PatientMocker.patient(
             uuid = patientUuid,
-            age = Age(value = 20, updatedAt = Instant.now(utcClock), computedDateOfBirth = LocalDate.now(utcClock)),
+            age = Age(20, Instant.now(utcClock)),
             dateOfBirth = null,
             addressUuid = addressUuid)
 
@@ -845,10 +844,7 @@ class PatientEditScreenControllerTest {
                 PatientEditAgeTextChanged("22")),
             shouldSavePatient = true,
             createExpectedPatient = {
-              val expectedAge = Age(
-                  value = 22,
-                  updatedAt = Instant.now(utcClock).plus(oneYear),
-                  computedDateOfBirth = LocalDate.parse("1949-01-01"))
+              val expectedAge = Age(22, Instant.now(utcClock).plus(oneYear))
 
               it.copy(fullName = "Name", gender = Male, dateOfBirth = null, age = expectedAge)
             },
@@ -880,10 +876,7 @@ class PatientEditScreenControllerTest {
                 PatientEditAgeTextChanged("25")),
             shouldSavePatient = true,
             createExpectedPatient = {
-              val expectedAge = Age(
-                  value = 25,
-                  updatedAt = Instant.now(utcClock),
-                  computedDateOfBirth = LocalDate.parse("1945-01-01"))
+              val expectedAge = Age(25, Instant.now(utcClock))
 
               it.copy(fullName = "Name", gender = Transgender, age = expectedAge)
             },
@@ -927,10 +920,7 @@ class PatientEditScreenControllerTest {
                 PatientEditAgeTextChanged("25")),
             shouldSavePatient = true,
             createExpectedPatient = {
-              val expectedAge = Age(
-                  value = 25,
-                  updatedAt = Instant.now(utcClock).plus(twoYears),
-                  computedDateOfBirth = LocalDate.parse("1947-01-01"))
+              val expectedAge = Age(25, Instant.now(utcClock).plus(twoYears))
 
               it.copy(fullName = "Name", gender = Transgender, age = expectedAge)
             },
@@ -1214,7 +1204,7 @@ class PatientEditScreenControllerTest {
 
       }.let { profile ->
         if (ageValue != null) {
-          val age = Age(value = ageValue, updatedAt = Instant.now(utcClock), computedDateOfBirth = LocalDate.now(utcClock))
+          val age = Age(ageValue, Instant.now(utcClock))
           return@let profile.copy(patient = profile.patient.copy(age = age, dateOfBirth = null))
 
         } else if (dateOfBirthString != null) {

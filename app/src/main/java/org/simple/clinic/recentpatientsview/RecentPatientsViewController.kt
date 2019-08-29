@@ -111,7 +111,7 @@ class RecentPatientsViewController @Inject constructor(
       when (recentPatient.age) {
         null -> estimateCurrentAge(recentPatient.dateOfBirth!!, utcClock)
         else -> {
-          val (recordedAge, ageRecordedAtTimestamp, _) = recentPatient.age
+          val (recordedAge, ageRecordedAtTimestamp) = recentPatient.age
           estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, utcClock)
         }
       }

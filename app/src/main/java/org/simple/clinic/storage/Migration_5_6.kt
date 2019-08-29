@@ -2,7 +2,6 @@ package org.simple.clinic.storage
 
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
-import org.simple.clinic.patient.PatientFuzzySearch
 
 @Suppress("ClassName")
 class Migration_5_6 : Migration(5, 6) {

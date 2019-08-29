@@ -14,7 +14,6 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.patient.PatientFuzzySearch
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
@@ -75,10 +74,6 @@ import org.simple.clinic.util.UuidRoomTypeConverter
 )
 abstract class AppDatabase : RoomDatabase() {
 
-  private val patientFuzzyPatientSearchDao by lazy {
-    PatientFuzzySearch.PatientFuzzySearchDaoImpl(openHelper, patientSearchDao())
-  }
-
   abstract fun patientDao(): Patient.RoomDao
 
   abstract fun addressDao(): PatientAddress.RoomDao
@@ -96,8 +91,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun userDao(): User.RoomDao
 
   abstract fun userFacilityMappingDao(): LoggedInUserFacilityMapping.RoomDao
-
-  fun fuzzyPatientSearchDao(): PatientFuzzySearch.PatientFuzzySearchDao = patientFuzzyPatientSearchDao
 
   abstract fun appointmentDao(): Appointment.RoomDao
 

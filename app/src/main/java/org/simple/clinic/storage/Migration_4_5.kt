@@ -1,11 +1,21 @@
 package org.simple.clinic.storage
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
-import org.simple.clinic.patient.nameToSearchableForm
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Suppress("ClassName")
 class Migration_4_5 : Migration(4, 5) {
+
+  /**
+   * [Regex] for stripping patient names and search queries of white spaces and punctuation
+   *
+   * Currently matches the following characters
+   * - Any whitespace
+   * - Comma, Hyphen, SemiColon, Colon, Underscore, Apostrophe, Period
+   * */
+  private val spacePunctuationRegex = Regex("[\\s;_\\-:,'\\\\.]")
+
+  private fun nameToSearchableForm(string: String) = string.replace(spacePunctuationRegex, "")
 
   override fun migrate(database: SupportSQLiteDatabase) {
     // Update local searchable name in the Patient table to strip out the newly added characters

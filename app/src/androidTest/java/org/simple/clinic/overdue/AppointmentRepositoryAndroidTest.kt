@@ -195,7 +195,6 @@ class AppointmentRepositoryAndroidTest {
             patient1,
             address1,
             faker.name.name(),
-            faker.name.name(),
             Gender.Female,
             LocalDate.parse("1947-08-15"),
             null,
@@ -242,7 +241,6 @@ class AppointmentRepositoryAndroidTest {
             uuid = patient2,
             addressUuid = address2,
             fullName = faker.name.name(),
-            searchableName = faker.name.name(),
             gender = Gender.Transgender,
             dateOfBirth = LocalDate.parse("1997-08-15"),
             age = null,
@@ -289,7 +287,6 @@ class AppointmentRepositoryAndroidTest {
         Patient(
             patient3,
             address1,
-            faker.name.name(),
             faker.name.name(),
             Gender.Male,
             LocalDate.parse("1977-11-15"),

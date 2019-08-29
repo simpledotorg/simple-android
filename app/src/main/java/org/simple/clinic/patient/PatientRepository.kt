@@ -288,14 +288,11 @@ class PatientRepository @Inject constructor(
                 uuid = patientUuid,
                 addressUuid = addressUuid,
                 fullName = personalDetails!!.fullName,
-                searchableName = nameToSearchableForm(personalDetails.fullName),
                 gender = personalDetails.gender!!,
 
                 dateOfBirth = convertToDate(personalDetails.dateOfBirth),
-                age = personalDetails.age?.let {
-                  Age(value = personalDetails.age.toInt(),
-                      updatedAt = Instant.now(utcClock),
-                      computedDateOfBirth = LocalDate.now(utcClock).minusYears(personalDetails.age.toLong()))
+                age = personalDetails.age?.let { ageString ->
+                  Age(ageString.toInt(), Instant.now(utcClock))
                 },
 
                 status = PatientStatus.Active,
@@ -352,7 +349,6 @@ class PatientRepository @Inject constructor(
   fun updatePatient(patient: Patient): Completable {
     return Completable.fromAction {
       val patientToSave = patient.copy(
-          searchableName = nameToSearchableForm(patient.fullName),
           updatedAt = Instant.now(utcClock),
           syncStatus = PENDING
       )

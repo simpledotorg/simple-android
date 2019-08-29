@@ -1,12 +1,13 @@
 package org.simple.clinic
 
+import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
+import android.database.sqlite.SQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import org.junit.Before
@@ -31,7 +32,7 @@ import javax.inject.Named
 class DatabaseMigrationAndroidTest {
 
   @get:Rule
-  val helper = MigrationTestHelperWithForeignConstraints()
+  val helper = MigrationTestHelperWithForeignKeyConstraints()
 
   @get:Rule
   val expectedException = ExpectedException.none()
@@ -85,9 +86,9 @@ class DatabaseMigrationAndroidTest {
       assertThat(cursor.count).isEqualTo(1)
 
       it.moveToFirst()
-      Truth.assertThat(it.string("userUuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
-      Truth.assertThat(it.string("facilityUuid")).isEqualTo("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
-      Truth.assertThat(it.boolean("isCurrentFacility")).isTrue()
+      assertThat(it.string("userUuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
+      assertThat(it.string("facilityUuid")).isEqualTo("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
+      assertThat(it.boolean("isCurrentFacility")).isTrue()
     }
 
     db_v7.query("SELECT * FROM LoggedInUser").use {
@@ -3057,12 +3058,264 @@ class DatabaseMigrationAndroidTest {
       }
     }
   }
+
+  @Test
+  fun migrating_to_45_should_remove_the_columns_from_the_Patient_table() {
+    // given
+    val db_v44 = helper.createDatabase(44)
+    val tableName = "Patient"
+    db_v44.assertColumns(
+        tableName = tableName,
+        expectedColumns = setOf(
+            "uuid", "addressUuid", "fullName", "searchableName", "gender",
+            "dateOfBirth", "age_value", "age_updatedAt", "age_computedDateOfBirth",
+            "status", "createdAt", "updatedAt", "deletedAt", "recordedAt", "syncStatus"
+        )
+    )
+
+    // when
+    val db_v45 = helper.migrateTo(45)
+
+    // then
+    db_v45.assertColumns(
+        tableName = tableName,
+        expectedColumns = setOf(
+            "uuid", "addressUuid", "fullName", "gender",
+            "dateOfBirth", "age_value", "age_updatedAt",
+            "status", "createdAt", "updatedAt", "deletedAt", "recordedAt", "syncStatus"
+        )
+    )
+  }
+
+  @Test
+  fun migrating_to_45_should_not_remove_any_of_the_existing_data_from_the_patient_table() {
+    // given
+    val db_v44 = helper.createDatabase(44)
+
+    val instant = Instant.parse("2018-01-01T00:00:00.000Z")
+
+    val patientAddressUuid = "05f9c798-1701-4379-b14a-b1b18d937a33"
+    db_v44.insert("PatientAddress", mapOf(
+        "uuid" to patientAddressUuid,
+        "colonyOrVillage" to "Colony",
+        "district" to "District",
+        "state" to "State",
+        "country" to "Country",
+        "createdAt" to instant.toString(),
+        "updatedAt" to instant.toString(),
+        "deletedAt" to null
+    ))
+
+    val patientUuid = "0b18af95-e73f-43ea-9838-34abe9d7858e"
+    val name = "Anish Acharya"
+    val searchableName = "anishacharya"
+    val gender = "male"
+    val dateOfBirth = "1990-01-01"
+    val ageValue = 40
+    val ageUpdatedAt = instant.toString()
+    val ageComputedDateofBirth = "1990-01-02"
+    val status = "active"
+    val patientCreatedAt = instant.plusSeconds(1).toString()
+    val patientUpdatedAt = instant.plusSeconds(2).toString()
+    val patientRecordedAt = instant.minusSeconds(1).toString()
+    val syncStatus = "PENDING"
+
+    db_v44.insert(
+        "Patient",
+        mapOf(
+            "uuid" to patientUuid,
+            "addressUuid" to patientAddressUuid,
+            "fullName" to name,
+            "searchableName" to searchableName,
+            "gender" to gender,
+            "dateOfBirth" to dateOfBirth,
+            "age_value" to ageValue,
+            "age_updatedAt" to ageUpdatedAt,
+            "age_computedDateOfBirth" to ageComputedDateofBirth,
+            "status" to status,
+            "createdAt" to patientCreatedAt,
+            "updatedAt" to patientUpdatedAt,
+            "recordedAt" to patientRecordedAt,
+            "syncStatus" to syncStatus
+        )
+    )
+
+    val patientPhoneNumberUuid = "d039c3cd-7c8c-49e5-8f58-edc482728a46"
+    db_v44.insert(
+        "PatientPhoneNumber",
+        mapOf(
+            "uuid" to patientPhoneNumberUuid,
+            "patientUuid" to patientUuid,
+            "number" to "123456",
+            "phoneType" to "mobile",
+            "active" to true,
+            "createdAt" to instant.toString(),
+            "updatedAt" to instant.toString(),
+            "deletedAt" to null
+        )
+    )
+
+    val businessIdUuid = "07e6bb07-46ad-46c6-bb46-ec939ba96ccd"
+    db_v44.insert(
+        "BusinessId",
+        mapOf(
+            "uuid" to businessIdUuid,
+            "patientUuid" to patientUuid,
+            "identifier" to "fdc0706b-3cbf-4644-9cf3-c5b794514dd6",
+            "identifierType" to "simple_bp_passport",
+            "metaVersion" to "org.simple.bppassport.meta.v1",
+            "meta" to "",
+            "createdAt" to instant.toString(),
+            "updatedAt" to instant.toString(),
+            "deletedAt" to null
+        )
+    )
+
+    // when
+    val db_v45 = helper.migrateTo(45)
+
+    // then
+    val expectedPatientTableAfterMigration = mapOf(
+        "uuid" to patientUuid,
+        "addressUuid" to patientAddressUuid,
+        "fullName" to name,
+        "gender" to gender,
+        "dateOfBirth" to dateOfBirth,
+        "age_value" to ageValue,
+        "age_updatedAt" to ageUpdatedAt,
+        "status" to status,
+        "createdAt" to patientCreatedAt,
+        "updatedAt" to patientUpdatedAt,
+        "deletedAt" to null,
+        "recordedAt" to patientRecordedAt,
+        "syncStatus" to syncStatus
+    )
+    db_v45
+        .query("SELECT * FROM Patient")
+        .use { cursor ->
+          with(cursor) {
+            assertThat(count).isEqualTo(1)
+            moveToFirst()
+            assertValues(expectedPatientTableAfterMigration)
+          }
+        }
+
+    db_v45
+        .query("""SELECT "uuid" FROM "PatientPhoneNumber" WHERE uuid == '$patientPhoneNumberUuid'""")
+        .use { cursor ->
+          assertThat(cursor.count).isEqualTo(1)
+        }
+
+    db_v45
+        .query("""SELECT "uuid" FROM "BusinessId" WHERE uuid == '$businessIdUuid'""")
+        .use { cursor ->
+          assertThat(cursor.count).isEqualTo(1)
+        }
+  }
+
+  @Test
+  fun migrating_to_45_should_maintain_the_foreign_key_references_to_the_patient_table() {
+    // given
+    val db_v44 = helper.createDatabase(44)
+
+    val instant = Instant.parse("2018-01-01T00:00:00.000Z")
+
+    val patientAddressUuid = "05f9c798-1701-4379-b14a-b1b18d937a33"
+    val patientUuid = "0b18af95-e73f-43ea-9838-34abe9d7858e"
+    val patientPhoneNumberUuid = "d039c3cd-7c8c-49e5-8f58-edc482728a46"
+    val businessIdUuid = "07e6bb07-46ad-46c6-bb46-ec939ba96ccd"
+
+    db_v44.insert("PatientAddress", mapOf(
+        "uuid" to patientAddressUuid,
+        "colonyOrVillage" to "Colony",
+        "district" to "District",
+        "state" to "State",
+        "country" to "Country",
+        "createdAt" to instant.toString(),
+        "updatedAt" to instant.toString(),
+        "deletedAt" to null
+    ))
+
+    db_v44.insert(
+        "Patient",
+        mapOf(
+            "uuid" to patientUuid,
+            "addressUuid" to patientAddressUuid,
+            "fullName" to "Anish Acharya",
+            "searchableName" to "anishacharya",
+            "gender" to "male",
+            "dateOfBirth" to "1990-01-01",
+            "age_value" to 40,
+            "age_updatedAt" to instant.toString(),
+            "age_computedDateOfBirth" to "1990-01-02",
+            "status" to "active",
+            "createdAt" to instant.plusSeconds(1).toString(),
+            "updatedAt" to instant.plusSeconds(2).toString(),
+            "recordedAt" to instant.minusSeconds(1).toString(),
+            "syncStatus" to "PENDING"
+        )
+    )
+
+    db_v44.insert(
+        "PatientPhoneNumber",
+        mapOf(
+            "uuid" to patientPhoneNumberUuid,
+            "patientUuid" to patientUuid,
+            "number" to "123456",
+            "phoneType" to "mobile",
+            "active" to true,
+            "createdAt" to instant.toString(),
+            "updatedAt" to instant.toString(),
+            "deletedAt" to null
+        )
+    )
+
+    db_v44.insert(
+        "BusinessId",
+        mapOf(
+            "uuid" to businessIdUuid,
+            "patientUuid" to patientUuid,
+            "identifier" to "fdc0706b-3cbf-4644-9cf3-c5b794514dd6",
+            "identifierType" to "simple_bp_passport",
+            "metaVersion" to "org.simple.bppassport.meta.v1",
+            "meta" to "",
+            "createdAt" to instant.toString(),
+            "updatedAt" to instant.toString(),
+            "deletedAt" to null
+        )
+    )
+    val db_v45 = helper.migrateTo(45)
+
+    // when
+    db_v45.execSQL("""DELETE FROM "PatientAddress" WHERE "uuid" = '$patientAddressUuid'""")
+
+    // then
+    db_v45
+        .query("""SELECT "uuid" FROM "Patient" WHERE "uuid" == '$patientUuid'""")
+        .use { cursor ->
+          assertThat(cursor.count).isEqualTo(0)
+        }
+
+    db_v45
+        .query("""SELECT "uuid" FROM "PatientPhoneNumber" WHERE "uuid" == '$patientPhoneNumberUuid'""")
+        .use { cursor ->
+          assertThat(cursor.count).isEqualTo(0)
+        }
+
+    db_v45
+        .query("""SELECT "uuid" FROM "BusinessId" WHERE "uuid" == '$businessIdUuid'""")
+        .use { cursor ->
+          assertThat(cursor.count).isEqualTo(0)
+        }
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
 private fun Cursor.boolean(column: String): Boolean? = getInt(getColumnIndex(column)) == 1
 private fun Cursor.integer(columnName: String): Int? = getInt(getColumnIndex(columnName))
+private fun Cursor.long(columnName: String): Long = getLong(getColumnIndex(columnName))
 private fun Cursor.double(columnName: String): Double = getDouble(getColumnIndex(columnName))
+private fun Cursor.float(columnName: String): Float = getFloat(getColumnIndex(columnName))
 
 private fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedCount: Int) {
   this.query("""
@@ -3095,4 +3348,43 @@ private fun SupportSQLiteDatabase.assertColumns(tableName: String, expectedColum
     val columnsPresentInDatabase = cursor.columnNames.toSet()
     assertThat(columnsPresentInDatabase).isEqualTo(expectedColumns)
   }
+}
+
+private fun SupportSQLiteDatabase.insert(tableName: String, valuesMap: Map<String, Any?>) {
+  val contentValues = valuesMap
+      .entries
+      .fold(ContentValues()) { values, (key, value) ->
+        when (value) {
+          null -> values.putNull(key)
+          is Int -> values.put(key, value)
+          is Long -> values.put(key, value)
+          is Float -> values.put(key, value)
+          is Double -> values.put(key, value)
+          is Boolean -> values.put(key, value)
+          is String -> values.put(key, value)
+          else -> throw IllegalArgumentException("Unknown type (${value.javaClass.name}) for key: $key")
+        }
+
+        values
+      }
+
+  insert(tableName, SQLiteDatabase.CONFLICT_ABORT, contentValues)
+}
+
+private fun Cursor.assertValues(valuesMap: Map<String, Any?>) {
+  assertThat(columnNames.toSet()).containsExactlyElementsIn(valuesMap.keys)
+  valuesMap
+      .forEach { (key, value) ->
+        val withMessage = assertWithMessage("For column [$key]: ")
+        when (value) {
+          null -> withMessage.that(isNull(getColumnIndex(key))).isTrue()
+          is Int -> withMessage.that(integer(key)).isEqualTo(value)
+          is Long -> withMessage.that(long(key)).isEqualTo(value)
+          is Float -> withMessage.that(float(key)).isEqualTo(value)
+          is Double -> withMessage.that(double(key)).isEqualTo(value)
+          is Boolean -> withMessage.that(boolean(key)).isEqualTo(value)
+          is String -> withMessage.that(string(key)).isEqualTo(value)
+          else -> throw IllegalArgumentException("Unknown type (${value.javaClass.name}) for key: $key")
+        }
+      }
 }

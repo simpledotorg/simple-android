@@ -32,7 +32,7 @@ data class RecentPatient(
     companion object {
 
       const val RECENT_PATIENT_QUERY = """
-        SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth,
+        SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt,
         MAX(
             IFNULL(BP.latestRecordedAt, '0'),
             IFNULL(PD.latestUpdatedAt, '0'),

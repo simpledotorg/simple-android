@@ -32,7 +32,6 @@ import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion.BpPasspor
 import org.simple.clinic.patient.businessid.BusinessIdMetaData
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
@@ -120,10 +119,9 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       addressUuid: UUID = UUID.randomUUID(),
       fullName: String = faker.name.name(),
-      searchableName: String = nameToSearchableForm(fullName),
       gender: Gender = randomGender(),
       dateOfBirth: LocalDate? = LocalDate.now(),
-      age: Age? = Age(value = Math.random().times(100).toInt(), updatedAt = Instant.now(), computedDateOfBirth = LocalDate.now()),
+      age: Age? = Age(value = Math.random().times(100).toInt(), updatedAt = Instant.now()),
       status: PatientStatus = PatientStatus.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -135,7 +133,6 @@ class TestData @Inject constructor(
         uuid = uuid,
         addressUuid = addressUuid,
         fullName = fullName,
-        searchableName = searchableName,
         gender = gender,
         dateOfBirth = dateOfBirth,
         age = age,

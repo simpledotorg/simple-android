@@ -100,21 +100,21 @@ class RecentPatientsViewControllerTest {
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
-            age = Age(42, Instant.now(userClock), LocalDate.MIN),
+            age = Age(42, Instant.now(userClock)),
             gender = Transgender,
             updatedAt = Instant.now(userClock)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
-            age = Age(24, Instant.now(userClock), LocalDate.MIN),
+            age = Age(24, Instant.now(userClock)),
             gender = Male,
             updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
-            age = Age(27, Instant.now(userClock), LocalDate.MIN),
+            age = Age(27, Instant.now(userClock)),
             gender = Female,
             updatedAt = Instant.now(userClock).minus(3, ChronoUnit.DAYS)
         )
@@ -164,28 +164,28 @@ class RecentPatientsViewControllerTest {
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
-            age = Age(42, Instant.now(userClock), LocalDate.MIN),
+            age = Age(42, Instant.now(userClock)),
             gender = Transgender,
             updatedAt = Instant.now(userClock)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
-            age = Age(24, Instant.now(userClock), LocalDate.MIN),
+            age = Age(24, Instant.now(userClock)),
             gender = Male,
             updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
-            age = Age(27, Instant.now(userClock), LocalDate.MIN),
+            age = Age(27, Instant.now(userClock)),
             gender = Female,
             updatedAt = Instant.now(userClock).minus(4, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid4,
             fullName = "Abhilash Devi",
-            age = Age(37, Instant.now(userClock), LocalDate.MIN),
+            age = Age(37, Instant.now(userClock)),
             gender = Transgender
         )
     )))

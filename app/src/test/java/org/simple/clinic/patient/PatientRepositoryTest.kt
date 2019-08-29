@@ -58,7 +58,6 @@ class PatientRepositoryTest {
   private val patientDao = mock<Patient.RoomDao>()
   private val patientAddressDao = mock<PatientAddress.RoomDao>()
   private val patientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
-  private val fuzzyPatientSearchDao = mock<PatientFuzzySearch.PatientFuzzySearchDao>()
   private val bloodPressureMeasurementDao = mock<BloodPressureMeasurement.RoomDao>()
   private val businessIdDao = mock<BusinessId.RoomDao>()
   private val dobValidator = mock<UserInputDateValidator>()
@@ -119,7 +118,6 @@ class PatientRepositoryTest {
   ) {
     whenever(database.patientDao()).thenReturn(patientDao)
     whenever(database.addressDao()).thenReturn(patientAddressDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
     whenever(database.businessIdDao()).thenReturn(businessIdDao)
 
@@ -162,7 +160,6 @@ class PatientRepositoryTest {
   ) {
     whenever(database.patientDao()).thenReturn(patientDao)
     whenever(database.addressDao()).thenReturn(patientAddressDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
     whenever(database.businessIdDao()).thenReturn(businessIdDao)
 
@@ -212,7 +209,6 @@ class PatientRepositoryTest {
     whenever(database.patientDao()).thenReturn(patientDao)
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
     whenever(database.businessIdDao()).thenReturn(businessIdDao)
 
     val patientUuid = UUID.randomUUID()
@@ -268,7 +264,6 @@ class PatientRepositoryTest {
     whenever(database.patientDao()).thenReturn(patientDao)
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
     whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(filteredUuids))
     whenever(patientSearchResultDao.searchByIds(any(), any()))
@@ -305,7 +300,6 @@ class PatientRepositoryTest {
     whenever(database.patientDao()).thenReturn(patientDao)
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
     whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(filteredUuids))
     whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))

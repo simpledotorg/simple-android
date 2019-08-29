@@ -12,17 +12,11 @@ import org.simple.clinic.patient.businessid.MoshiBusinessIdMetaDataAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.filter.SortByWeightedNameParts
 import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
-import org.simple.clinic.patient.fuzzy.AgeFuzzer
-import org.simple.clinic.patient.fuzzy.PercentageFuzzer
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.util.UtcClock
 
 @Module
 open class PatientModule {
-
-  @Provides
-  open fun provideAgeFuzzer(utcClock: UtcClock): AgeFuzzer = PercentageFuzzer(utcClock = utcClock, fuzziness = 0.2F)
 
   @Provides
   open fun provideFilterPatientByName(): SearchPatientByName = WeightedLevenshteinSearch(

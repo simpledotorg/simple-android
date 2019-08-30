@@ -2,6 +2,8 @@ package org.simple.clinic.sync
 
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.filterAndUnwrapJust
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -12,9 +14,12 @@ class SyncDataOnApproval @Inject constructor(
 
   override fun sync() {
     val shouldSync = userSession
-        .canSyncData()
-        .distinctUntilChanged()
-        .filter { canSyncData -> canSyncData }
+        .loggedInUser()
+        .filterAndUnwrapJust()
+        .map { it.status }
+        .buffer(2, 1)
+        .filter { (previousStatus, currentStatus) -> currentStatus == UserStatus.ApprovedForSyncing && previousStatus != UserStatus.ApprovedForSyncing }
+        .map { Any() }
 
     shouldSync
         .observeOn(io())

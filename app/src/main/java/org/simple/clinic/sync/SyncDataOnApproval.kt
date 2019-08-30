@@ -2,6 +2,7 @@ package org.simple.clinic.sync
 
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.user.UserSession
+import timber.log.Timber
 import javax.inject.Inject
 
 class SyncDataOnApproval @Inject constructor(
@@ -17,7 +18,10 @@ class SyncDataOnApproval @Inject constructor(
 
     shouldSync
         .observeOn(io())
-        .flatMapCompletable { dataSync.sync(null) }
+        .flatMapCompletable {
+          Timber.tag("SyncWork").i("Sync from SyncDataOnApproval")
+          dataSync.sync(null)
+        }
         .subscribe()
   }
 }

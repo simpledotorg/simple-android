@@ -79,7 +79,7 @@ open class NetworkModule {
 
           if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()
-            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
             addInterceptor(loggingInterceptor)
           }
 

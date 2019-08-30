@@ -29,6 +29,7 @@ class RemoteConfigSync @Inject constructor(
   override fun push(): Completable = Completable.complete()
 
   override fun pull(): Completable {
+    Timber.tag("SyncWork").i("Sync remote config")
     val fetch = Completable.fromAction {
       remoteConfig.fetch(cacheExpiration.value.seconds)
           .addOnCompleteListener { task ->

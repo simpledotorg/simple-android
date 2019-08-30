@@ -35,7 +35,7 @@ buildscript {
       maskedEditText      : '1.0.5',
       itemAnimators       : '1.0.2',
       jbcrypt             : '0.3m',
-      workRuntimeKtx      : '1.0.0-rc02',
+      workManager         : '2.2.0',
       faker               : '1.2.7',
       truth               : '0.40',
       junit               : '4.12',

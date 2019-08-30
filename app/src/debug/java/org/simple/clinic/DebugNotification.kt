@@ -10,6 +10,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.sync.DataSync
+import timber.log.Timber
 import javax.inject.Inject
 
 object DebugNotification {
@@ -55,6 +56,7 @@ class DebugNotificationActionReceiver : BroadcastReceiver() {
   override fun onReceive(context: Context?, intent: Intent?) {
     DebugClinicApp.appComponent().inject(this)
 
+    Timber.tag("SyncWork").i("Sync from DebugNotification")
     dataSync.sync(null)
         .subscribeOn(io())
         .subscribe()

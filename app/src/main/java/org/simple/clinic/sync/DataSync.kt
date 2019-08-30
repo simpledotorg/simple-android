@@ -25,6 +25,7 @@ class DataSync @Inject constructor(
   private val syncErrors = PublishSubject.create<ResolvedError>()
 
   fun sync(syncGroup: SyncGroup?): Completable {
+    Timber.tag("SyncWork").i("Sync group: $syncGroup")
     return if (syncGroup == null) {
       val allSyncGroups = SyncGroup.values()
       Completable.merge(allSyncGroups.map { syncGroup(it) })

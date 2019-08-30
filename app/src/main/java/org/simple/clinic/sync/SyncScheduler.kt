@@ -9,6 +9,7 @@ import androidx.work.WorkRequest
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -46,6 +47,9 @@ class SyncScheduler @Inject constructor(
           .setInputData(SyncWorker.createWorkDataForSyncConfig(syncConfig))
           .addTag(SyncWorker.TAG)
           .build()
+          .apply {
+            Timber.tag("SyncWork").i("Create work request, ID: $id, $syncConfig")
+          }
     }
   }
 

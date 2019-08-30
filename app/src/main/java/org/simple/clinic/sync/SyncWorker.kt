@@ -11,7 +11,6 @@ import javax.inject.Inject
 class SyncWorker(context: Context, private val workerParams: WorkerParameters) : Worker(context, workerParams) {
 
   companion object {
-    const val TAG = "patient-sync"
     private const val NO_GROUP = "no-group-id"
     private const val SYNC_GROUP = "sync_group_id"
 

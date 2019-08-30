@@ -10,6 +10,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import io.reactivex.Flowable
 import org.simple.clinic.util.RoomEnumTypeConverter
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -37,6 +38,10 @@ data class User(
 
     val loggedInStatus: LoggedInStatus
 ) {
+
+  fun withStatus(status: UserStatus, clock: UtcClock): User {
+    return this.copy(status = status, updatedAt = Instant.now(clock))
+  }
 
   enum class LoggedInStatus {
     /**

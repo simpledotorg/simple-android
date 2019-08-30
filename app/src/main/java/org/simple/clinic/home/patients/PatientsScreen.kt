@@ -18,6 +18,7 @@ import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.enterotp.EnterOtpScreenKey
@@ -31,7 +32,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import org.simple.clinic.widgets.visibleOrGone
@@ -103,14 +103,20 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun illustrationResourceId(): Int {
     val today = LocalDate.now(userClock)
 
-    val fathersDay = today.withMonth(Month.JUNE.value).withDayOfMonth(17)
-    val dateToShowFathersDayBannerFrom = fathersDay.minusDays(8)
+    val heartDay = today.withMonth(Month.SEPTEMBER.value).withDayOfMonth(29)
+    val gandhiJayanti = today.withMonth(Month.OCTOBER.value).withDayOfMonth(2)
+    val diwaliDay = today.withMonth(Month.OCTOBER.value).withDayOfMonth(27)
 
     return when (today) {
-      in dateToShowFathersDayBannerFrom..fathersDay -> R.drawable.ic_homescreen_fathers_day
+      in withinWeek(heartDay) -> R.drawable.ic_homescreen_heart_day_29_sep
+      in withinWeek(gandhiJayanti) -> R.drawable.ic_homescreen_gandhi_jayanti_2_oct
+      in withinWeek(diwaliDay) -> R.drawable.ic_homescreen_diwali_27_oct
       else -> R.drawable.illustrations_homescreen
     }
   }
+
+  private fun withinWeek(date: LocalDate): ClosedRange<LocalDate> =
+      date.minusDays(8)..date
 
   private fun setupApprovalStatusAnimations() {
     val entryAnimation = AnimationUtils.loadAnimation(context, R.anim.user_approval_status_entry)

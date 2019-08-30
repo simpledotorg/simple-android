@@ -3,7 +3,7 @@ package org.simple.clinic.sync
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import io.reactivex.Completable
@@ -41,7 +41,7 @@ class SyncScheduler @Inject constructor(
 
       val syncInterval = syncConfig.syncInterval
 
-      PeriodicWorkRequestBuilder<SyncWorker>(syncInterval.frequency.toMinutes(), TimeUnit.MINUTES)
+      PeriodicWorkRequest.Builder(SyncWorker::class.java, syncInterval.frequency.toMinutes(), TimeUnit.MINUTES)
           .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, syncInterval.backOffDelay.toMinutes(), TimeUnit.MINUTES)
           .setConstraints(constraints)
           .setInputData(SyncWorker.createWorkDataForSyncConfig(syncConfig))

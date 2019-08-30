@@ -111,7 +111,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
       in withinWeek(heartDay) -> R.drawable.ic_homescreen_heart_day_29_sep
       in withinWeek(gandhiJayanti) -> R.drawable.ic_homescreen_gandhi_jayanti_2_oct
       in withinWeek(diwaliDay) -> R.drawable.ic_homescreen_diwali_27_oct
-      else -> R.drawable.illustrations_homescreen
+      else -> R.drawable.ic_homescreen_default
     }
   }
 

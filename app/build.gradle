@@ -232,7 +232,6 @@ dependencies {
   implementation "androidx.room:room-runtime:$versions.room"
   kapt "androidx.room:room-compiler:$versions.room"
   implementation "androidx.room:room-rxjava2:$versions.room"
-  implementation "android.arch.work:work-runtime-ktx:$versions.workRuntimeKtx"
   implementation "com.google.android.gms:play-services-location:$versions.playServicesLocation"
   implementation "com.google.firebase:firebase-core:$versions.firebaseCore"
   implementation "com.google.firebase:firebase-config:$versions.firebaseConfig"
@@ -288,6 +287,9 @@ dependencies {
   implementation "com.simplecityapps:recyclerview-fastscroll:$versions.fastScroll"
   implementation "com.google.android:flexbox:$versions.flexbox"
   implementation "com.mixpanel.android:mixpanel-android:$versions.mixpanel"
+
+  implementation "androidx.work:work-runtime:$versions.workManager"
+  implementation "androidx.work:work-gcm:$versions.workManager"
 }
 
 // This must always be present at the bottom of this file, as per:

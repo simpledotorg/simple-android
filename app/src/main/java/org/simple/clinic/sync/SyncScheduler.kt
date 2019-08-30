@@ -2,13 +2,13 @@ package org.simple.clinic.sync
 
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy.REPLACE
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -22,34 +22,62 @@ class SyncScheduler @Inject constructor(
     return Observable.fromIterable(syncs)
         .flatMapSingle { it.syncConfig() }
         .distinct { it.syncGroup }
-        .flatMapSingle(this::createWorkRequest)
+        .map { config -> createWorkRequest(config) to config.syncGroup.name }
         .toList()
-        .flatMapCompletable { workRequests ->
-          Completable.fromAction {
-            workManager.cancelAllWorkByTag(SyncWorker.TAG)
-            workManager.enqueue(workRequests)
-          }
-        }
+        .doOnSuccess { cancelPreviouslyScheduledPeriodicWork() }
+        .flatMapCompletable(this::scheduleWorkRequests)
   }
 
-  private fun createWorkRequest(syncConfig: SyncConfig): Single<WorkRequest> {
-    return Single.fromCallable {
-      val constraints = Constraints.Builder()
-          .setRequiredNetworkType(NetworkType.CONNECTED)
-          .setRequiresBatteryNotLow(true)
-          .build()
+  /*
+   * This is meant to cancel the old periodic work that
+   * was scheduled and persisted before we moved to the
+   * "unique" work system.
+   * TODO 2019-09-02: Remove once the unique work feature has been deployed to enough devices
+   **/
+  private fun cancelPreviouslyScheduledPeriodicWork() {
+    workManager.cancelAllWorkByTag("patient-sync")
+  }
 
-      val syncInterval = syncConfig.syncInterval
+  private fun scheduleWorkRequests(workRequests: List<Pair<PeriodicWorkRequest, String>>): Completable {
+    return Completable.fromAction {
 
-      PeriodicWorkRequest.Builder(SyncWorker::class.java, syncInterval.frequency.toMinutes(), TimeUnit.MINUTES)
-          .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, syncInterval.backOffDelay.toMinutes(), TimeUnit.MINUTES)
-          .setConstraints(constraints)
-          .setInputData(SyncWorker.createWorkDataForSyncConfig(syncConfig))
-          .addTag(SyncWorker.TAG)
-          .build()
-          .apply {
-            Timber.tag("SyncWork").i("Create work request, ID: $id, $syncConfig")
-          }
+      workRequests.forEach { (request, name) ->
+        workManager.enqueueUniquePeriodicWork(name, REPLACE, request)
+      }
     }
+  }
+
+  private fun createWorkRequest(syncConfig: SyncConfig): PeriodicWorkRequest {
+    val constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .setRequiresBatteryNotLow(true)
+        .build()
+
+    val syncInterval = syncConfig.syncInterval
+
+    val syncRepeatIntervalMillis = syncInterval
+        .frequency
+        .toMillis()
+        .coerceAtLeast(PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS)
+    val syncFlexIntervalMillis = PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS
+    val syncBackoffIntervalMillis = syncInterval
+        .backOffDelay
+        .toMillis()
+        .coerceAtLeast(WorkRequest.MIN_BACKOFF_MILLIS)
+        .coerceAtMost(WorkRequest.MAX_BACKOFF_MILLIS)
+
+    return PeriodicWorkRequest
+        .Builder(
+            SyncWorker::class.java,
+            syncRepeatIntervalMillis, TimeUnit.MILLISECONDS,
+            syncFlexIntervalMillis, TimeUnit.MILLISECONDS
+        )
+        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, syncBackoffIntervalMillis, TimeUnit.MILLISECONDS)
+        .setConstraints(constraints)
+        .setInputData(SyncWorker.createWorkDataForSyncConfig(syncConfig))
+        .build()
+        .apply {
+          Timber.tag("SyncWork").i("Create work request, ID: $id, $syncConfig")
+        }
   }
 }

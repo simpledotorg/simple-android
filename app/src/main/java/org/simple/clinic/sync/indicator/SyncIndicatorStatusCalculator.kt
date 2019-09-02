@@ -39,8 +39,9 @@ class SyncIndicatorStatusCalculator @Inject constructor(
   private fun updateLastSyncedState(progress: SyncProgress): LastSyncedState {
     return with(lastSyncedStatePreference.get()) {
       when (progress) {
-        SUCCESS -> success(utcClock)
-        FAILURE, SYNCING -> withProgress(progress)
+        SYNCING -> syncStarted()
+        SUCCESS -> syncedSuccessfully(utcClock)
+        FAILURE -> syncFailed()
       }
     }
   }

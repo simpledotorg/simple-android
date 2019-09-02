@@ -3,7 +3,9 @@ package org.simple.clinic.sync
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
+import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
+import org.simple.clinic.sync.SyncProgress.SYNCING
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 
@@ -13,12 +15,15 @@ data class LastSyncedState(
     val lastSyncSucceededAt: Instant? = null
 ) {
 
-  fun withProgress(syncProgress: SyncProgress): LastSyncedState {
-    check(syncProgress != SUCCESS) { "Use success() instead if the sync is successful!" }
-    return this.copy(lastSyncProgress = syncProgress)
+  fun syncStarted(): LastSyncedState {
+    return this.copy(lastSyncProgress = SYNCING)
   }
 
-  fun success(clock: UtcClock): LastSyncedState {
+  fun syncFailed(): LastSyncedState {
+    return this.copy(lastSyncProgress = FAILURE)
+  }
+
+  fun syncedSuccessfully(clock: UtcClock): LastSyncedState {
     return this.copy(lastSyncProgress = SUCCESS, lastSyncSucceededAt = Instant.now(clock))
   }
 

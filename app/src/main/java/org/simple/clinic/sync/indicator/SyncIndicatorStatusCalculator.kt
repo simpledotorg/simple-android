@@ -32,11 +32,11 @@ class SyncIndicatorStatusCalculator @Inject constructor(
         .subscribeOn(schedulersProvider.io())
         .filter { it.syncGroup == FREQUENT }
         .map { it.syncProgress }
-        .map(this::updateLastSyncedStateWithProgress)
+        .map(this::updateLastSyncedState)
         .subscribe(lastSyncedStatePreference::set)
   }
 
-  private fun updateLastSyncedStateWithProgress(progress: SyncProgress): LastSyncedState {
+  private fun updateLastSyncedState(progress: SyncProgress): LastSyncedState {
     return with(lastSyncedStatePreference.get()) {
       when (progress) {
         SUCCESS -> success(utcClock)

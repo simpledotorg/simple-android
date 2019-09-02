@@ -133,7 +133,6 @@ class UserSession @Inject constructor(
   }
 
   private fun syncOnLoginResult() {
-    Timber.tag("SyncWork").i("Sync on login")
     dataSync
         .get()
         .sync(null)
@@ -441,7 +440,6 @@ class UserSession @Inject constructor(
       medicalHistorySyncPullToken.delete()
     }
 
-    Timber.tag("SyncWork").i("Sync from logout")
     return dataSync
         .get()
         .sync(null)

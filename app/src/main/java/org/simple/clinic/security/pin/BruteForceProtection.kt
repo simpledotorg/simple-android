@@ -38,7 +38,7 @@ class BruteForceProtection @Inject constructor(
 
     val updatedState = pinAuthenticationFailedStream
         .withLatestFrom(failedAttemptsLimitStream)
-        .map { (state, maxAllowedFailedAttempts) -> updateFailedAttemptLimitReached(state, maxAllowedFailedAttempts) }
+        .map { (failedAuthAttemptUpdatedState, maxAllowedFailedAttempts) -> updateFailedAttemptLimitReached(failedAuthAttemptUpdatedState, maxAllowedFailedAttempts) }
         .doOnNext(statePreference::set)
 
     return updatedState.ignoreElements()

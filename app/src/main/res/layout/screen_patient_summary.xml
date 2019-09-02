@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.summary.PatientSummaryScreen android:id="@+id/patientsummary_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.summary.PatientSummaryScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patientsummary_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
@@ -21,10 +21,9 @@
       android:layout_height="wrap_content"
       android:layout_alignParentStart="true"
       android:layout_alignParentTop="true"
-      android:layout_marginTop="@dimen/spacing_4"
-      android:background="?attr/selectableItemBackgroundBorderless"
+      android:background="?selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsummary_contentdescription_up_button"
-      android:padding="@dimen/spacing_8"
+      android:padding="@dimen/spacing_12"
       android:src="@drawable/ic_arrow_back_24dp"
       android:tint="@color/white" />
 
@@ -33,27 +32,27 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
-      android:layout_marginEnd="@dimen/spacing_8"
       android:layout_marginTop="@dimen/spacing_4"
+      android:layout_marginEnd="@dimen/spacing_8"
       android:background="@drawable/background_rounded_clearbutton"
-      android:foreground="?attr/selectableItemBackgroundBorderless"
-      android:minHeight="0dp"
+      android:foreground="?selectableItemBackground"
       android:minWidth="0dp"
-      android:paddingBottom="@dimen/spacing_12"
-      android:paddingEnd="@dimen/spacing_16"
+      android:minHeight="0dp"
       android:paddingStart="@dimen/spacing_16"
       android:paddingTop="@dimen/spacing_12"
+      android:paddingEnd="@dimen/spacing_16"
+      android:paddingBottom="@dimen/spacing_12"
       android:text="@string/patientsummary_edit"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
-      tools:ignore="RelativeOverlap,UnusedAttribute" />
+      tools:ignore="RelativeOverlap" />
 
     <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/patientsummary_back"
-      android:paddingBottom="@dimen/spacing_16"
+      android:paddingStart="@dimen/spacing_16"
       android:paddingEnd="@dimen/spacing_16"
-      android:paddingStart="@dimen/spacing_16">
+      android:paddingBottom="@dimen/spacing_16">
 
       <TextView
         android:id="@+id/patientsummary_fullname"
@@ -69,8 +68,8 @@
         android:id="@+id/patientsummary_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@id/patientsummary_fullname"
         android:layout_below="@id/patientsummary_fullname"
+        android:layout_alignStart="@id/patientsummary_fullname"
         android:layout_marginTop="@dimen/spacing_4"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.White72"
         tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar, Bathinda, Punjab" />
@@ -79,12 +78,12 @@
         android:id="@+id/patientsummary_contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@id/patientsummary_address"
         android:layout_below="@id/patientsummary_address"
-        android:layout_marginEnd="@dimen/spacing_8"
+        android:layout_alignStart="@id/patientsummary_address"
         android:layout_marginTop="@dimen/spacing_4"
-        android:drawablePadding="@dimen/spacing_4"
+        android:layout_marginEnd="@dimen/spacing_8"
         android:drawableStart="@drawable/ic_call_16dp"
+        android:drawablePadding="@dimen/spacing_4"
         android:drawableTint="@color/white72"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.White72"
         android:visibility="gone"

@@ -5,7 +5,6 @@ import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.simple.clinic.ClinicApp
-import timber.log.Timber
 import javax.inject.Inject
 
 class SyncWorker(context: Context, private val workerParams: WorkerParameters) : Worker(context, workerParams) {
@@ -32,7 +31,6 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
   override fun doWork(): Result {
     ClinicApp.appComponent.inject(this)
     val syncGroup = readSyncGroup(workerParams = workerParams)
-    Timber.tag("SyncWork").i("Sync from SyncWorker, ID: ${workerParams.id}")
 
     val completable = if (syncGroup == NO_GROUP) {
       dataSync.sync(null)

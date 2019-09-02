@@ -31,10 +31,12 @@ class BruteForceProtection @Inject constructor(
   fun incrementFailedAttempt(): Completable {
     val failedAttemptsLimitStream = configProvider.map { it.limitOfFailedAttempts }
 
-    val updatedState = statePreference
+    val pinAuthenticationFailedStream = statePreference
         .asObservable()
         .take(1)
         .map(BruteForceProtectionState::authenticationFailed)
+
+    val updatedState = pinAuthenticationFailedStream
         .withLatestFrom(failedAttemptsLimitStream)
         .map { (state, maxAllowedFailedAttempts) -> updateFailedAttemptLimitReached(state, maxAllowedFailedAttempts) }
         .doOnNext(statePreference::set)

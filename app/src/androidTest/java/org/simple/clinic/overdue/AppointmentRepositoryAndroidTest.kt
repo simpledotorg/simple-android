@@ -11,13 +11,11 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGH
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGHEST
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.LOW
@@ -34,6 +32,7 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
+import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -42,7 +41,9 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
-import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.SyncStatus.DONE
+import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
@@ -51,8 +52,6 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.Month
-import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
 
@@ -86,28 +85,24 @@ class AppointmentRepositoryAndroidTest {
   @Inject
   lateinit var clock: UtcClock
 
-  @Inject
-  lateinit var facilityRepository: FacilityRepository
-
   private val testClock: TestUtcClock
     get() = clock as TestUtcClock
 
-  private val authenticationRule = LocalAuthenticationRule()
-
-  private val rxErrorsRule = RxErrorsRule()
-
-  private val currentFacility: Facility
-    get() = facilityRepository.currentFacility(userSession.loggedInUserImmediate()!!).blockingFirst()
+  private val facility: Facility
+    get() = testData.qaFacility()
 
   @get:Rule
   val ruleChain = RuleChain
-      .outerRule(authenticationRule)
-      .around(rxErrorsRule)!!
+      .outerRule(LocalAuthenticationRule())
+      .around(RxErrorsRule())!!
+
+  private val patientUuid = UUID.fromString("fcf0acd3-0b09-4ecb-bcd4-af40ca6456fc")
+  private val appointmentUuid = UUID.fromString("a374e38f-6bc3-4829-899c-0966a4e13b10")
 
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
-    testClock.setDate(LocalDate.of(2018, Month.JANUARY, 1))
+    testClock.setDate(LocalDate.parse("2018-01-01"))
   }
 
   @After
@@ -118,64 +113,89 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun when_creating_new_appointment_then_the_appointment_should_be_saved() {
-    val patientId = UUID.randomUUID()
+    // given
     val appointmentDate = LocalDate.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
 
-    val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
-    savedAppointment.apply {
-      assertThat(this.patientUuid).isEqualTo(patientId)
-      assertThat(this.scheduledDate).isEqualTo(appointmentDate)
-      assertThat(this.status).isEqualTo(Scheduled)
-      assertThat(this.cancelReason).isEqualTo(null)
-      assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
+    //when
+    appointmentRepository.schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = appointmentDate,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).blockingGet()
+
+    // then
+    val savedAppointment = getAppointmentByUuid(appointmentUuid)
+    with(savedAppointment) {
+      assertThat(patientUuid).isEqualTo(this@AppointmentRepositoryAndroidTest.patientUuid)
+      assertThat(scheduledDate).isEqualTo(appointmentDate)
+      assertThat(status).isEqualTo(Scheduled)
+      assertThat(remindOn).isNull()
+      assertThat(cancelReason).isNull()
+      assertThat(agreedToVisit).isNull()
+      assertThat(syncStatus).isEqualTo(PENDING)
     }
   }
 
   @Test
-  fun when_creating_new_appointment_then_all_old_appointments_for_that_patient_should_be_canceled() {
-    val patientId = UUID.randomUUID()
-
-    val date1 = LocalDate.now(clock)
-    val timeOfSchedule = Instant.now(clock)
-    val facility = testData.qaFacility()
-
-    appointmentRepository.schedule(patientId, date1, Manual, facility).blockingGet()
-
-    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
+  fun when_creating_new_appointment_then_all_old_appointments_for_that_patient_should_be_marked_as_visited() {
+    // given
+    val firstAppointmentUuid = UUID.fromString("0bc9cdb3-bfe9-41e9-88b9-2a072c748c47")
+    val scheduledDateOfFirstAppointment = LocalDate.parse("2018-01-01")
+    val firstAppointmentScheduledAtTimestamp = Instant.now(clock)
+    appointmentRepository.schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = firstAppointmentUuid,
+        appointmentDate = scheduledDateOfFirstAppointment,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).blockingGet()
+    markAppointmentSyncStatusAsDone(firstAppointmentUuid)
 
     testClock.advanceBy(Duration.ofHours(24))
 
-    val date2 = LocalDate.now(clock).plusDays(10)
-    appointmentRepository.schedule(patientId, date2, Manual, facility).blockingGet()
+    val secondAppointmentUuid = UUID.fromString("ed31c3ae-8903-45fe-9ad3-0302dcba7fc6")
+    val scheduleDateOfSecondAppointment = LocalDate.parse("2018-02-01")
+    val secondAppointmentScheduledAtTimestamp = Instant.now(clock)
 
-    val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(savedAppointment).hasSize(2)
+    // when
+    appointmentRepository.schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = secondAppointmentUuid,
+        appointmentDate = scheduleDateOfSecondAppointment,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).blockingGet()
 
-    val oldAppointment = savedAppointment[0]
-    oldAppointment.apply {
-      assertThat(this.patientUuid).isEqualTo(patientId)
-      assertThat(this.scheduledDate).isEqualTo(date1)
-      assertThat(this.status).isEqualTo(Visited)
-      assertThat(this.cancelReason).isEqualTo(null)
-      assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
-      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
-      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
+    // then
+    val firstAppointment = getAppointmentByUuid(firstAppointmentUuid)
+    with(firstAppointment) {
+      assertThat(patientUuid).isEqualTo(this@AppointmentRepositoryAndroidTest.patientUuid)
+      assertThat(scheduledDate).isEqualTo(scheduledDateOfFirstAppointment)
+      assertThat(status).isEqualTo(Visited)
+      assertThat(cancelReason).isEqualTo(null)
+      assertThat(syncStatus).isEqualTo(PENDING)
+      assertThat(createdAt).isEqualTo(firstAppointmentScheduledAtTimestamp)
+      assertThat(updatedAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
     }
 
-    val newAppointment = savedAppointment[1]
-    newAppointment.apply {
-      assertThat(this.patientUuid).isEqualTo(patientId)
-      assertThat(this.scheduledDate).isEqualTo(date2)
-      assertThat(this.status).isEqualTo(Scheduled)
-      assertThat(this.cancelReason).isEqualTo(null)
-      assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
+    val secondAppointment = getAppointmentByUuid(secondAppointmentUuid)
+    with(secondAppointment) {
+      assertThat(patientUuid).isEqualTo(this@AppointmentRepositoryAndroidTest.patientUuid)
+      assertThat(scheduledDate).isEqualTo(scheduleDateOfSecondAppointment)
+      assertThat(status).isEqualTo(Scheduled)
+      assertThat(cancelReason).isEqualTo(null)
+      assertThat(syncStatus).isEqualTo(PENDING)
+      assertThat(createdAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
+      assertThat(updatedAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
     }
   }
 
   @Test
   fun when_fetching_appointments_then_only_return_overdue_appointments() {
-    val address1 = UUID.randomUUID()
+    // given
+    val address1 = UUID.fromString("bd3a0da9-99e2-49ef-b014-baff19de3cde")
     database.addressDao().save(
         PatientAddress(
             address1,
@@ -188,9 +208,9 @@ class AppointmentRepositoryAndroidTest {
             null
         )
     )
-    val patient1 = UUID.randomUUID()
+    val patient1 = UUID.fromString("f4abcac4-c798-4b2d-a5f4-c85cea784916")
     val date1 = LocalDate.now(clock).minusDays(100)
-    val bp1 = UUID.randomUUID()
+    val bp1 = UUID.fromString("b9ed0a4a-ed7f-4805-bf2a-b06b53d7307f")
     database.patientDao().save(
         Patient(
             patient1,
@@ -204,16 +224,16 @@ class AppointmentRepositoryAndroidTest {
             Instant.now(clock),
             null,
             Instant.now(clock),
-            SyncStatus.DONE)
+            DONE)
     )
     database.bloodPressureDao().save(listOf(
         BloodPressureMeasurement(
             uuid = bp1,
             systolic = 190,
             diastolic = 100,
-            syncStatus = SyncStatus.PENDING,
+            syncStatus = PENDING,
             userUuid = testData.qaUserUuid(),
-            facilityUuid = testData.qaUserFacilityUuid(),
+            facilityUuid = facility.uuid,
             patientUuid = patient1,
             createdAt = Instant.now(clock),
             updatedAt = Instant.now(clock),
@@ -222,9 +242,9 @@ class AppointmentRepositoryAndroidTest {
         )
     ))
 
-    val patient2 = UUID.randomUUID()
-    val address2 = UUID.randomUUID()
-    val phoneNumber2 = UUID.randomUUID()
+    val patient2 = UUID.fromString("4850dc5a-dbf5-47df-942f-aac052bf95d2")
+    val address2 = UUID.fromString("c7308677-3dd6-41b8-9645-a1fd58bcdb54")
+    val phoneNumber2 = UUID.fromString("20bd3207-d0b3-4c36-91f4-c21c029a3109")
     database.addressDao().save(
         PatientAddress(
             address2,
@@ -250,7 +270,7 @@ class AppointmentRepositoryAndroidTest {
             updatedAt = Instant.now(clock),
             deletedAt = null,
             recordedAt = Instant.now(clock),
-            syncStatus = SyncStatus.DONE
+            syncStatus = DONE
         )
     )
     database.phoneNumberDao().save(listOf(
@@ -266,12 +286,12 @@ class AppointmentRepositoryAndroidTest {
         ))
     )
 
-    val patient3 = UUID.randomUUID()
-    val address3 = UUID.randomUUID()
-    val phoneNumber3 = UUID.randomUUID()
+    val patient3 = UUID.fromString("6b8a2ad2-2be8-4ed8-add5-a2fe11c9f9fd")
+    val address3 = UUID.fromString("4b619331-53c2-4de0-81ec-cf9217e88442")
+    val phoneNumber3 = UUID.fromString("2b3b3439-624a-43fc-ae0c-8b5e7594dfcd")
     val date3 = LocalDate.now(clock).minusDays(10)
-    val bp30 = UUID.randomUUID()
-    val bp31 = UUID.randomUUID()
+    val bp30 = UUID.fromString("223e1d52-41ac-4112-ba38-2797cc73c693")
+    val bp31 = UUID.fromString("6822fc5f-b4fc-4524-a19a-2c162227e6d2")
     database.addressDao().save(
         PatientAddress(
             address3,
@@ -297,7 +317,7 @@ class AppointmentRepositoryAndroidTest {
             Instant.now(clock),
             null,
             Instant.now(clock),
-            SyncStatus.DONE)
+            DONE)
     )
     database.phoneNumberDao().save(listOf(
         PatientPhoneNumber(
@@ -316,9 +336,9 @@ class AppointmentRepositoryAndroidTest {
             uuid = bp30,
             systolic = 190,
             diastolic = 100,
-            syncStatus = SyncStatus.PENDING,
+            syncStatus = PENDING,
             userUuid = testData.qaUserUuid(),
-            facilityUuid = testData.qaUserFacilityUuid(),
+            facilityUuid = facility.uuid,
             patientUuid = patient3,
             createdAt = Instant.now(clock),
             updatedAt = Instant.now(clock),
@@ -329,9 +349,9 @@ class AppointmentRepositoryAndroidTest {
             uuid = bp31,
             systolic = 180,
             diastolic = 110,
-            syncStatus = SyncStatus.PENDING,
+            syncStatus = PENDING,
             userUuid = testData.qaUserUuid(),
-            facilityUuid = testData.qaUserFacilityUuid(),
+            facilityUuid = facility.uuid,
             patientUuid = patient3,
             createdAt = Instant.now(clock).minusSeconds(1000),
             updatedAt = Instant.now(clock).minusSeconds(1000),
@@ -340,22 +360,47 @@ class AppointmentRepositoryAndroidTest {
         )
     ))
 
-    val facility = testData.qaFacility()
+    val scheduleAppointmentForPatient1 = appointmentRepository.schedule(
+        patientUuid = patient1,
+        appointmentUuid = UUID.fromString("5b78b730-8700-4d17-9aa9-25b443b10d81"),
+        appointmentDate = date1,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).toCompletable()
 
-    appointmentRepository.schedule(patient1, date1, Manual, facility).toCompletable()
-        .andThen(appointmentRepository.schedule(patient2, LocalDate.now(clock).minusDays(2), Manual, facility)).toCompletable()
-        .andThen(appointmentRepository.schedule(patient3, date3, Manual, facility))
+    val scheduleAppointmentForPatient2 = appointmentRepository.schedule(
+        patientUuid = patient2,
+        appointmentUuid = UUID.fromString("ecc55e5b-f24f-46ff-9a16-6d922d1f180e"),
+        appointmentDate = LocalDate.now(clock).minusDays(2),
+        appointmentType = Manual,
+        currentFacility = facility
+    ).toCompletable()
+
+    val scheduleAppointmentForPatient3 = appointmentRepository.schedule(
+        patientUuid = patient3,
+        appointmentUuid = UUID.fromString("ef63b0b4-8846-4bf4-bc1f-69996192e0c8"),
+        appointmentDate = date3,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).toCompletable()
+
+    scheduleAppointmentForPatient1
+        .andThen(scheduleAppointmentForPatient2)
+        .andThen(scheduleAppointmentForPatient3)
         .blockingGet()
 
-    val overdueAppts = appointmentRepository.overdueAppointments(testData.qaFacility()).blockingFirst()
-    assertThat(overdueAppts).hasSize(1)
+    //when
+    val overdueAppointments = appointmentRepository.overdueAppointments(facility).blockingFirst()
 
-    overdueAppts[0].apply {
-      assertThat(this.appointment.patientUuid).isEqualTo(patient3)
-      assertThat(this.appointment.scheduledDate).isEqualTo(date3)
-      assertThat(this.appointment.status).isEqualTo(Scheduled)
-      assertThat(this.appointment.cancelReason).isEqualTo(null)
-      assertThat(this.bloodPressure.uuid).isEqualTo(bp30)
+    // then
+    assertThat(overdueAppointments).hasSize(1)
+
+    with(overdueAppointments.first()) {
+      assertThat(appointment.patientUuid).isEqualTo(patient3)
+      assertThat(appointment.scheduledDate).isEqualTo(date3)
+      assertThat(appointment.status).isEqualTo(Scheduled)
+      assertThat(appointment.cancelReason).isEqualTo(null)
+      assertThat(bloodPressure.uuid).isEqualTo(bp30)
     }
   }
 
@@ -364,9 +409,9 @@ class AppointmentRepositoryAndroidTest {
     fun createBloodPressure(patientUuid: UUID, deletedAt: Instant? = null): BloodPressureMeasurement {
       return testData.bloodPressureMeasurement(
           patientUuid = patientUuid,
-          facilityUuid = testData.qaUserFacilityUuid(),
+          facilityUuid = facility.uuid,
           userUuid = testData.qaUserUuid(),
-          syncStatus = SyncStatus.DONE,
+          syncStatus = DONE,
           createdAt = Instant.now(),
           updatedAt = Instant.now(),
           deletedAt = deletedAt)
@@ -375,206 +420,228 @@ class AppointmentRepositoryAndroidTest {
     fun createAppointment(patientUuid: UUID, scheduledDate: LocalDate): Appointment {
       return testData.appointment(
           patientUuid = patientUuid,
-          facilityUuid = testData.qaUserFacilityUuid(),
+          facilityUuid = facility.uuid,
           status = Scheduled,
           scheduledDate = scheduledDate)
     }
 
-    fun createPatient(fullName: String): PatientProfile {
-      return testData.patientProfile(generatePhoneNumber = true)
-          .let { patientProfile ->
-            patientProfile.copy(patient = patientProfile.patient.copy(fullName = fullName))
-          }
-    }
+    // given
+    val noBpsDeletedPatientUuid = UUID.fromString("d05b8ed2-97ae-4fda-8af9-bc4168af3c4d")
+    val latestBpDeletedPatientUuid = UUID.fromString("9e5ec219-f4a5-4bab-9283-0a087c5d7ac2")
+    val oldestBpNotDeletedPatientUuid = UUID.fromString("54e7143c-fe64-4cd8-8c92-f379a79a60f9")
+    val allBpsDeletedPatientUuid = UUID.fromString("05bd9d55-5742-466f-b97e-07301e25fe7e")
 
     val patients = listOf(
-        createPatient(fullName = "No BPs are deleted"),
-        createPatient(fullName = "Latest BP is deleted"),
-        createPatient(fullName = "Oldest BP is not deleted"),
-        createPatient(fullName = "All BPs are deleted"))
+        testData.patientProfile(
+            patientUuid = noBpsDeletedPatientUuid,
+            generatePhoneNumber = true,
+            patientName = "No BPs are deleted"
+        ),
+        testData.patientProfile(
+            patientUuid = latestBpDeletedPatientUuid,
+            generatePhoneNumber = true,
+            patientName = "Latest BP is deleted"
+        ),
+        testData.patientProfile(
+            patientUuid = oldestBpNotDeletedPatientUuid,
+            generatePhoneNumber = true,
+            patientName = "Oldest BP is not deleted"
+        ),
+        testData.patientProfile(
+            patientUuid = allBpsDeletedPatientUuid,
+            generatePhoneNumber = true,
+            patientName = "All BPs are deleted"
+        )
+    )
 
     patientRepository.save(patients).blockingAwait()
 
-    val bpsForPatient0 = patients[0].patient.let { patient ->
-      listOf(
-          createBloodPressure(patientUuid = patient.uuid),
-          createBloodPressure(patientUuid = patient.uuid))
-    }
+    val bpsForPatientWithNoBpsDeleted = listOf(
+        createBloodPressure(patientUuid = noBpsDeletedPatientUuid),
+        createBloodPressure(patientUuid = noBpsDeletedPatientUuid)
+    )
 
-    val bpsForPatient1 = patients[1].patient.let { patient ->
-      listOf(
-          createBloodPressure(patientUuid = patient.uuid),
-          createBloodPressure(patientUuid = patient.uuid),
-          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)))
-    }
+    val bpsForPatientWithLatestBpDeleted = listOf(
+        createBloodPressure(patientUuid = latestBpDeletedPatientUuid),
+        createBloodPressure(patientUuid = latestBpDeletedPatientUuid),
+        createBloodPressure(patientUuid = latestBpDeletedPatientUuid, deletedAt = Instant.now(clock))
+    )
 
-    val bpsForPatient2 = patients[2].patient.let { patient ->
-      listOf(
-          createBloodPressure(patientUuid = patient.uuid),
-          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)),
-          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)))
-    }
+    val bpsForPatientWithOldestBpNotDeleted = listOf(
+        createBloodPressure(patientUuid = oldestBpNotDeletedPatientUuid),
+        createBloodPressure(patientUuid = oldestBpNotDeletedPatientUuid, deletedAt = Instant.now(clock)),
+        createBloodPressure(patientUuid = oldestBpNotDeletedPatientUuid, deletedAt = Instant.now(clock))
+    )
 
-    val bpsForPatient3 = patients[3].patient.let { patient ->
-      listOf(
-          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)),
-          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)),
-          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)))
-    }
+    val bpsForPatientWithAllBpsDeleted = listOf(
+        createBloodPressure(patientUuid = allBpsDeletedPatientUuid, deletedAt = Instant.now(clock)),
+        createBloodPressure(patientUuid = allBpsDeletedPatientUuid, deletedAt = Instant.now(clock)),
+        createBloodPressure(patientUuid = allBpsDeletedPatientUuid, deletedAt = Instant.now(clock))
+    )
 
     bpRepository
-        .save(bpsForPatient0 + bpsForPatient1 + bpsForPatient2 + bpsForPatient3)
+        .save(bpsForPatientWithNoBpsDeleted + bpsForPatientWithLatestBpDeleted + bpsForPatientWithOldestBpNotDeleted + bpsForPatientWithAllBpsDeleted)
         .blockingAwait()
 
     val today = LocalDate.now(clock)
     val appointmentsScheduledFor = today.minusDays(1L)
 
-    val appointmentForPatient0 = createAppointment(
-        patientUuid = patients[0].patient.uuid,
-        scheduledDate = appointmentsScheduledFor)
+    val appointmentForPatientWithNoBpsDeleted = createAppointment(
+        patientUuid = noBpsDeletedPatientUuid,
+        scheduledDate = appointmentsScheduledFor
+    )
 
-    val appointmentForPatient1 = createAppointment(
-        patientUuid = patients[1].patient.uuid,
-        scheduledDate = appointmentsScheduledFor)
+    val appointmentForPatientWithLatestBpDeleted = createAppointment(
+        patientUuid = latestBpDeletedPatientUuid,
+        scheduledDate = appointmentsScheduledFor
+    )
 
-    val appointmentsForPatient2 = createAppointment(
-        patientUuid = patients[2].patient.uuid,
-        scheduledDate = appointmentsScheduledFor)
+    val appointmentsForPatientWithOldestBpNotDeleted = createAppointment(
+        patientUuid = oldestBpNotDeletedPatientUuid,
+        scheduledDate = appointmentsScheduledFor
+    )
 
-    val appointmentsForPatient3 = createAppointment(
-        patientUuid = patients[3].patient.uuid,
-        scheduledDate = appointmentsScheduledFor)
+    val appointmentsForPatientWithAllBpsDeleted = createAppointment(
+        patientUuid = allBpsDeletedPatientUuid,
+        scheduledDate = appointmentsScheduledFor
+    )
 
     appointmentRepository
-        .save(listOf(appointmentForPatient0, appointmentForPatient1, appointmentsForPatient2, appointmentsForPatient3))
+        .save(listOf(appointmentForPatientWithNoBpsDeleted, appointmentForPatientWithLatestBpDeleted, appointmentsForPatientWithOldestBpNotDeleted, appointmentsForPatientWithAllBpsDeleted))
         .blockingAwait()
 
-    val overdueAppointments = appointmentRepository.overdueAppointments(testData.qaFacility()).blockingFirst()
-        .associateBy { it.fullName }
+    // when
+    val overdueAppointments = appointmentRepository.overdueAppointments(facility).blockingFirst()
+        .associateBy { it.appointment.patientUuid }
 
-    assertThat(overdueAppointments.keys)
-        .isEqualTo(setOf("No BPs are deleted", "Latest BP is deleted", "Oldest BP is not deleted"))
+    // then
+    assertThat(overdueAppointments.keys).containsExactly(noBpsDeletedPatientUuid, latestBpDeletedPatientUuid, oldestBpNotDeletedPatientUuid)
 
-    assertThat(overdueAppointments["No BPs are deleted"]!!.bloodPressure.uuid).isEqualTo(bpsForPatient0[1].uuid)
-    assertThat(overdueAppointments["Latest BP is deleted"]!!.bloodPressure.uuid).isEqualTo(bpsForPatient1[1].uuid)
-    assertThat(overdueAppointments["Oldest BP is not deleted"]!!.bloodPressure.uuid).isEqualTo(bpsForPatient2[0].uuid)
+    val appointmentBpUuidOfNoBpsDeletedPatient = overdueAppointments.getValue(noBpsDeletedPatientUuid).bloodPressure.uuid
+    val appointmentBpUuidOfLatestBpDeletedPatient = overdueAppointments.getValue(latestBpDeletedPatientUuid).bloodPressure.uuid
+    val appointmentBpUuidOfOldestBpDeletedPatient = overdueAppointments.getValue(oldestBpNotDeletedPatientUuid).bloodPressure.uuid
+
+    assertThat(appointmentBpUuidOfNoBpsDeletedPatient).isEqualTo(bpsForPatientWithNoBpsDeleted[1].uuid)
+    assertThat(appointmentBpUuidOfLatestBpDeletedPatient).isEqualTo(bpsForPatientWithLatestBpDeleted[1].uuid)
+    assertThat(appointmentBpUuidOfOldestBpDeletedPatient).isEqualTo(bpsForPatientWithOldestBpNotDeleted[0].uuid)
   }
 
   @Test
   fun when_setting_appointment_reminder_then_reminder_with_correct_date_should_be_set() {
-    val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now(clock)
-    val timeOfSchedule = Instant.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
-
-    val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(appointments).hasSize(1)
-    assertThat(appointments.first().remindOn).isNull()
-
-    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
+    // given
+    val appointmentDate = LocalDate.parse("2018-01-01")
+    val appointmentScheduledAtTimestamp = Instant.now(clock)
+    appointmentRepository.schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = appointmentDate,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).blockingGet()
+    markAppointmentSyncStatusAsDone(appointmentUuid)
 
     testClock.advanceBy(Duration.ofHours(24))
 
-    val uuid = appointments[0].uuid
-    val reminderDate = LocalDate.now(clock).plusDays(10)
-    appointmentRepository.createReminder(uuid, reminderDate).blockingGet()
+    val reminderDate = LocalDate.parse("2018-02-01")
 
-    val updatedAppointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(updatedAppointments).hasSize(1)
-    updatedAppointments[0].apply {
-      assertThat(this.uuid).isEqualTo(uuid)
-      assertThat(this.remindOn).isEqualTo(reminderDate)
-      assertThat(this.agreedToVisit).isNull()
-      assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
-      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
-      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
+    // when
+    appointmentRepository.createReminder(appointmentUuid, reminderDate).blockingGet()
+
+    // then
+    val updatedAppointment = getAppointmentByUuid(appointmentUuid)
+    with(updatedAppointment) {
+      assertThat(remindOn).isEqualTo(reminderDate)
+      assertThat(agreedToVisit).isNull()
+      assertThat(syncStatus).isEqualTo(PENDING)
+      assertThat(createdAt).isEqualTo(appointmentScheduledAtTimestamp)
+      assertThat(updatedAt).isEqualTo(Instant.now(clock))
     }
   }
 
   @Test
   fun when_marking_appointment_as_agreed_to_visit_reminder_for_30_days_should_be_set() {
-    val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now(clock)
-    val timeOfSchedule = Instant.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
-
-    val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(appointments).hasSize(1)
-    assertThat(appointments.first().remindOn).isNull()
-    assertThat(appointments.first().agreedToVisit).isNull()
-
-    val uuid = appointments[0].uuid
-    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
+    // given
+    val appointmentScheduleDate = LocalDate.parse("2018-01-01")
+    val appointmentScheduledAtTimestamp = Instant.now(clock)
+    appointmentRepository.schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = appointmentScheduleDate,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).blockingGet()
+    markAppointmentSyncStatusAsDone(appointmentUuid)
 
     testClock.advanceBy(Duration.ofDays(1))
-    appointmentRepository.markAsAgreedToVisit(uuid).blockingAwait()
 
-    val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(updatedList).hasSize(1)
-    updatedList[0].apply {
-      assertThat(this.uuid).isEqualTo(uuid)
-      assertThat(this.remindOn).isEqualTo(LocalDate.now(clock).plusDays(30))
-      assertThat(this.agreedToVisit).isTrue()
-      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
-      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
+    // when
+    appointmentRepository.markAsAgreedToVisit(appointmentUuid).blockingAwait()
+
+    // then
+    with(getAppointmentByUuid(appointmentUuid)) {
+      assertThat(remindOn).isEqualTo(LocalDate.parse("2018-02-01"))
+      assertThat(agreedToVisit).isTrue()
+      assertThat(syncStatus).isEqualTo(PENDING)
+      assertThat(createdAt).isEqualTo(appointmentScheduledAtTimestamp)
+      assertThat(updatedAt).isEqualTo(Instant.now(clock))
     }
   }
 
   @Test
   fun when_removing_appointment_from_list_then_appointment_status_and_cancel_reason_should_be_updated() {
-    val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now(clock)
-    val timeOfSchedule = Instant.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
-
-    val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(appointments).hasSize(1)
-    assertThat(appointments.first().cancelReason).isNull()
-
-    val uuid = appointments[0].uuid
-    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
+    // given
+    val appointmentScheduleDate = LocalDate.parse("2018-01-01")
+    val appointmentScheduledTimestamp = Instant.now(clock)
+    appointmentRepository.schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = appointmentScheduleDate,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).blockingGet()
+    markAppointmentSyncStatusAsDone(appointmentUuid)
 
     testClock.advanceBy(Duration.ofDays(1))
 
-    appointmentRepository.cancelWithReason(uuid, AppointmentCancelReason.PatientNotResponding).blockingGet()
+    // when
+    appointmentRepository.cancelWithReason(appointmentUuid, PatientNotResponding).blockingGet()
 
-    val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(updatedList).hasSize(1)
-    updatedList[0].apply {
-      assertThat(this.uuid).isEqualTo(uuid)
-      assertThat(this.cancelReason).isEqualTo(AppointmentCancelReason.PatientNotResponding)
-      assertThat(this.status).isEqualTo(Cancelled)
-      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
-      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
+    // then
+    val updatedAppointment = getAppointmentByUuid(appointmentUuid)
+    with(updatedAppointment) {
+      assertThat(cancelReason).isEqualTo(PatientNotResponding)
+      assertThat(status).isEqualTo(Cancelled)
+      assertThat(syncStatus).isEqualTo(PENDING)
+      assertThat(createdAt).isEqualTo(appointmentScheduledTimestamp)
+      assertThat(updatedAt).isEqualTo(Instant.now(clock))
     }
   }
 
   @Test
   fun when_removing_appointment_with_reason_as_patient_already_visited_then_appointment_should_be_marked_as_visited() {
-    val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now(clock)
-    val timeOfSchedule = Instant.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
-
-    val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(appointments).hasSize(1)
-    assertThat(appointments.first().status).isEqualTo(Scheduled)
-
-    val uuid = appointments[0].uuid
-    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
+    // given
+    val appointmentScheduleDate = LocalDate.parse("2018-01-01")
+    val appointmentScheduledTimestamp = Instant.now(clock)
+    appointmentRepository.schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = appointmentScheduleDate,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).blockingGet()
+    markAppointmentSyncStatusAsDone(appointmentUuid)
 
     testClock.advanceBy(Duration.ofDays(1))
 
-    appointmentRepository.markAsAlreadyVisited(uuid).blockingAwait()
+    // when
+    appointmentRepository.markAsAlreadyVisited(appointmentUuid).blockingAwait()
 
-    val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(updatedList).hasSize(1)
-    updatedList[0].apply {
-      assertThat(this.uuid).isEqualTo(uuid)
-      assertThat(this.cancelReason).isNull()
-      assertThat(this.status).isEqualTo(Visited)
-      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
-      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
+    // then
+    with(getAppointmentByUuid(appointmentUuid)) {
+      assertThat(cancelReason).isNull()
+      assertThat(status).isEqualTo(Visited)
+      assertThat(createdAt).isEqualTo(appointmentScheduledTimestamp)
+      assertThat(updatedAt).isEqualTo(Instant.now(clock))
     }
   }
 
@@ -583,182 +650,254 @@ class AppointmentRepositoryAndroidTest {
     data class BP(val systolic: Int, val diastolic: Int)
 
     fun savePatientAndAppointment(
+        patientUuid: UUID,
+        appointmentUuid: UUID = UUID.randomUUID(),
         fullName: String,
-        bpMeasurements: List<BP>,
+        bps: List<BP>,
         hasHadHeartAttack: Answer = No,
         hasHadStroke: Answer = No,
         hasDiabetes: Answer = No,
         hasHadKidneyDisease: Answer = No,
         appointmentHasBeenOverdueFor: Duration
     ) {
-      val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName, age = "30"))
-          .andThen(patientRepository.saveOngoingEntryAsPatient(userSession.loggedInUserImmediate()!!, currentFacility))
-          .blockingGet()
-          .uuid
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          patientName = fullName,
+          generatePhoneNumber = true,
+          generateBusinessId = false
+      )
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
 
       val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
-      appointmentRepository.schedule(patientUuid, scheduledDate, Manual, testData.qaFacility()).blockingGet()
-      bpMeasurements.forEach {
-        bpRepository.saveMeasurement(
+      appointmentRepository.schedule(
+          patientUuid = patientUuid,
+          appointmentUuid = appointmentUuid,
+          appointmentDate = scheduledDate,
+          appointmentType = Manual,
+          currentFacility = facility
+      ).blockingGet()
+
+      val bloodPressureMeasurements = bps.mapIndexed { index, (systolic, diastolic) ->
+
+        val bpTimestamp = Instant.now(clock).plusSeconds(index.toLong() + 1)
+
+        testData.bloodPressureMeasurement(
             patientUuid = patientUuid,
-            systolic = it.systolic,
-            diastolic = it.diastolic,
-            loggedInUser = testData.qaUser(),
-            currentFacility = testData.qaFacility()
-        ).blockingGet()
-        testClock.advanceBy(Duration.ofSeconds(1))
+            systolic = systolic,
+            diastolic = diastolic,
+            userUuid = testData.qaUserUuid(),
+            facilityUuid = facility.uuid,
+            recordedAt = bpTimestamp,
+            createdAt = bpTimestamp,
+            updatedAt = bpTimestamp
+        )
       }
+      bpRepository.save(bloodPressureMeasurements).blockingAwait()
+
       medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
           hasHadStroke = hasHadStroke,
           hasDiabetes = hasDiabetes,
           hasHadKidneyDisease = hasHadKidneyDisease,
           hasHadHeartAttack = hasHadHeartAttack
       )).blockingAwait()
-      testClock.advanceBy(Duration.ofSeconds(1))
+      testClock.advanceBy(Duration.ofSeconds(bps.size.toLong() + 1))
     }
 
+    // given
     val thirtyDays = Duration.ofDays(30)
     val threeSixtyFiveDays = Duration.ofDays(366)
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("0620c310-0248-4d05-b7c4-8134bd7335e8"),
         fullName = "Has had a heart attack, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasHadHeartAttack = Yes,
-        appointmentHasBeenOverdueFor = thirtyDays)
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("a3536489-5807-4ceb-98a2-7e0f508f28af"),
         fullName = "Has had a stroke, overdue == 20 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasHadStroke = Yes,
-        appointmentHasBeenOverdueFor = Duration.ofDays(10))
+        appointmentHasBeenOverdueFor = Duration.ofDays(10)
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("2c24c3a5-c385-4e5e-8643-b48ab28107c8"),
         fullName = "Has had a kidney disease, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasHadKidneyDisease = Yes,
-        appointmentHasBeenOverdueFor = thirtyDays)
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("8b497bb5-f809-434c-b1a4-4efdf810f044"),
         fullName = "Has diabetes, overdue == 27 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasDiabetes = Yes,
-        appointmentHasBeenOverdueFor = Duration.ofDays(27))
+        appointmentHasBeenOverdueFor = Duration.ofDays(27)
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("cd78a254-a028-4b5d-bdcd-5ff367ad4143"),
         fullName = "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasHadStroke = Yes,
         hasHadHeartAttack = Yes,
         hasHadKidneyDisease = Yes,
         hasDiabetes = Yes,
-        appointmentHasBeenOverdueFor = thirtyDays)
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("241d61a7-b4fd-43c3-9f7c-24ce31c7b0b7"),
         fullName = "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasHadStroke = Yes,
         hasHadHeartAttack = Yes,
         hasHadKidneyDisease = Yes,
         hasDiabetes = Yes,
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("a8822899-afb9-4b20-af0d-dbee682c068d"),
         fullName = "Systolic > 180, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 9000, diastolic = 100)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 9000, diastolic = 100)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("f50082f5-c7be-430e-998e-9d052735da36"),
         fullName = "Systolic > 180, overdue > 30 days",
-        bpMeasurements = listOf(BP(systolic = 9000, diastolic = 100)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+        bps = listOf(BP(systolic = 9000, diastolic = 100)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("a2f9d14a-ece3-471e-a45b-c40263d3517f"),
         fullName = "Diastolic > 110, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 9000)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 100, diastolic = 9000)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("00dbcd51-a434-4a25-a1cf-1da66600082d"),
         fullName = "Diastolic > 110, overdue > 30 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 9000)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+        bps = listOf(BP(systolic = 100, diastolic = 9000)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("9f51709f-b356-4d9c-b6b7-1466eca35b78"),
         fullName = "Systolic > 180, overdue == 4 days",
-        bpMeasurements = listOf(BP(systolic = 9000, diastolic = 100)),
-        appointmentHasBeenOverdueFor = Duration.ofDays(4))
+        bps = listOf(BP(systolic = 9000, diastolic = 100)),
+        appointmentHasBeenOverdueFor = Duration.ofDays(4)
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("a4ed131e-c02e-469d-87d1-8aa63a9da780"),
         fullName = "Diastolic > 110, overdue == 3 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 9000)),
-        appointmentHasBeenOverdueFor = Duration.ofDays(3))
+        bps = listOf(BP(systolic = 100, diastolic = 9000)),
+        appointmentHasBeenOverdueFor = Duration.ofDays(3)
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("b2a3fbd1-27eb-4ef4-b78d-f66cdbb164b4"),
         fullName = "Systolic == 179, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 179, diastolic = 90)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 179, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("ae1723d3-5162-4ae6-b483-016ed851ccbd"),
         fullName = "Systolic == 160, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 160, diastolic = 90)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 160, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("a6ca12c1-6f00-4ea9-82f7-b949be415471"),
         fullName = "Diastolic == 109, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 101, diastolic = 109)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 101, diastolic = 109)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("ab69af7f-70e8-44b2-8de3-fe591cd2741f"),
         fullName = "Diastolic == 100, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 101, diastolic = 100)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 101, diastolic = 100)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("e365514d-3301-43bc-b801-13ea49c0330d"),
         fullName = "Systolic == 159, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 159, diastolic = 90)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 159, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("5f872222-5389-453d-bc47-b48decaa091b"),
         fullName = "Systolic == 140, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 140, diastolic = 90)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 140, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("b9d7de3c-4f8e-4f99-b306-ca6df4bff2d1"),
         fullName = "Diastolic == 99, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 99)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 100, diastolic = 99)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("e947caf3-7dc2-46de-b269-36e7c561104a"),
         fullName = "Diastolic == 90, overdue == 30 days",
-        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
-        appointmentHasBeenOverdueFor = thirtyDays)
+        bps = listOf(BP(systolic = 100, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("7742babb-10ca-4dce-9eae-59895251284d"),
         fullName = "BP == 139/89, overdue == 366 days",
-        bpMeasurements = listOf(BP(systolic = 139, diastolic = 89)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+        bps = listOf(BP(systolic = 139, diastolic = 89)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("234cbcb8-c3b1-4b7c-be34-7ac3691c1df7"),
         fullName = "BP == 141/91, overdue == 366 days",
-        bpMeasurements = listOf(BP(systolic = 141, diastolic = 91)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+        bps = listOf(BP(systolic = 141, diastolic = 91)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("6fe996ee-5792-4114-93dd-b79577600369"),
         fullName = "BP == 110/80, overdue == 366 days",
-        bpMeasurements = listOf(BP(systolic = 110, diastolic = 80)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+        bps = listOf(BP(systolic = 110, diastolic = 80)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("96c30123-9b08-4e11-b058-e80a62030a31"),
         fullName = "BP == 110/80, overdue between 30 days and 1 year",
-        bpMeasurements = listOf(BP(systolic = 110, diastolic = 80)),
-        appointmentHasBeenOverdueFor = Duration.ofDays(80))
+        bps = listOf(BP(systolic = 110, diastolic = 80)),
+        appointmentHasBeenOverdueFor = Duration.ofDays(80)
+    )
 
     savePatientAndAppointment(
+        patientUuid = UUID.fromString("a0388e84-3741-4bee-96d3-9a2335f0660b"),
         fullName = "Overdue == 3 days",
-        bpMeasurements = listOf(BP(systolic = 9000, diastolic = 9000)),
-        appointmentHasBeenOverdueFor = Duration.ofDays(3))
+        bps = listOf(BP(systolic = 9000, diastolic = 9000)),
+        appointmentHasBeenOverdueFor = Duration.ofDays(3)
+    )
 
-    val appointments = appointmentRepository.overdueAppointments(testData.qaFacility()).blockingFirst()
+    // when
+    val appointments = appointmentRepository.overdueAppointments(facility).blockingFirst()
 
+    // then
     assertThat(appointments.map { it.fullName to it.riskLevel }).isEqualTo(listOf(
         "Systolic > 180, overdue > 30 days" to HIGHEST,
         "Diastolic > 110, overdue > 30 days" to HIGHEST,
@@ -790,97 +929,116 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun when_fetching_appointment_for_patient_it_should_return_the_last_created_appointment() {
-    val patientId = UUID.randomUUID()
-    val scheduledDateNextMonth = LocalDate.now(testClock).plusMonths(1)
-    val facility = testData.qaFacility()
+    // given
+    val scheduledDateForFirstAppointment = LocalDate.parse("2018-02-01")
+    appointmentRepository.schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = UUID.fromString("faa8cd6c-4aca-41c9-983a-1a10b6704466"),
+        appointmentDate = scheduledDateForFirstAppointment,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).blockingGet()
 
-    appointmentRepository.schedule(patientId, scheduledDateNextMonth, Manual, facility).blockingGet()
-
-    val scheduledDateNextWeek = LocalDate.now(testClock).plusWeeks(1)
     testClock.advanceBy(Duration.ofDays(1))
-    val secondAppointment = appointmentRepository.schedule(patientId, scheduledDateNextWeek, Manual, facility).blockingGet()
 
-    val (appointment) = appointmentRepository.lastCreatedAppointmentForPatient(patientId).blockingFirst()
-    assertThat(appointment!!).isEqualTo(secondAppointment)
+    val scheduledDateForSecondAppointment = LocalDate.parse("2018-02-08")
+    val secondAppointment = appointmentRepository.schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = UUID.fromString("634b4807-d3a8-42a9-8411-7c921ed57f49"),
+        appointmentDate = scheduledDateForSecondAppointment,
+        appointmentType = Manual,
+        currentFacility = facility
+    ).blockingGet()
+
+    // when
+    val appointment = appointmentRepository.lastCreatedAppointmentForPatient(patientUuid).blockingFirst().toNullable()!!
+
+    // then
+    assertThat(appointment).isEqualTo(secondAppointment)
   }
 
   @Test
   fun marking_appointment_older_than_current_date_as_visited_should_work_correctly() {
-    val patientId = UUID.randomUUID()
-    val appointmentUuid1 = UUID.randomUUID()
-    val appointmentUuid2 = UUID.randomUUID()
-    val scheduleDate = LocalDate.now(testClock).plusMonths(1)
+    // given
+    val firstAppointmentUuid = UUID.fromString("96b21ba5-e12d-41ec-bfc9-f09bac6ed435")
+    val secondAppointmentUuid = UUID.fromString("2fbbf320-3b78-4f26-a8d6-5a90d2800711")
+
+    val appointmentScheduleDate = LocalDate.parse("2018-02-01")
 
     testClock.advanceBy(Duration.ofHours(1))
     database
         .appointmentDao()
         .save(listOf(testData.appointment(
-            uuid = appointmentUuid1,
-            patientUuid = patientId,
+            uuid = firstAppointmentUuid,
+            patientUuid = patientUuid,
             status = Scheduled,
-            syncStatus = SyncStatus.DONE,
-            scheduledDate = scheduleDate,
+            syncStatus = DONE,
+            scheduledDate = appointmentScheduleDate,
             createdAt = Instant.now(testClock),
             updatedAt = Instant.now(testClock)
         )))
-    val firstAppointment = database.appointmentDao().getOne(appointmentUuid1)
+    val firstAppointmentBeforeMarkingAsCreatedOnCurrentDay = getAppointmentByUuid(firstAppointmentUuid)
+
+    // then
     testClock.advanceBy(Duration.ofHours(1))
+    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid).blockingAwait()
+    assertThat(getAppointmentByUuid(firstAppointmentUuid)).isEqualTo(firstAppointmentBeforeMarkingAsCreatedOnCurrentDay)
 
-    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientId).blockingAwait()
-
-    assertThat(database.appointmentDao().getOne(appointmentUuid1)).isEqualTo(firstAppointment)
-
+    // then
     testClock.advanceBy(Duration.ofDays(1))
-
     database
         .appointmentDao()
         .save(listOf(testData.appointment(
-            uuid = appointmentUuid2,
-            patientUuid = patientId,
-            scheduledDate = scheduleDate,
+            uuid = secondAppointmentUuid,
+            patientUuid = patientUuid,
+            scheduledDate = appointmentScheduleDate,
             status = Scheduled,
-            syncStatus = SyncStatus.PENDING,
+            syncStatus = PENDING,
             createdAt = Instant.now(testClock),
             updatedAt = Instant.now(testClock)
         )))
 
-    val secondAppointment = database.appointmentDao().getOne(appointmentUuid2)
-    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientId).blockingAwait()
+    val secondAppointmentBeforeMarkingAsCreatedOnNextDay = getAppointmentByUuid(secondAppointmentUuid)
+    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid).blockingAwait()
 
-    database.appointmentDao().getOne(firstAppointment!!.uuid)!!.run {
+    val firstAppointmentAfterMarkingAsCreatedOnNextDay = getAppointmentByUuid(firstAppointmentUuid)
+
+    with(firstAppointmentAfterMarkingAsCreatedOnNextDay) {
       assertThat(status).isEqualTo(Visited)
-      assertThat(syncStatus).isEqualTo(SyncStatus.PENDING)
+      assertThat(syncStatus).isEqualTo(PENDING)
       assertThat(updatedAt).isEqualTo(Instant.now(testClock))
     }
-    assertThat(database.appointmentDao().getOne(appointmentUuid2)).isEqualTo(secondAppointment)
+    assertThat(getAppointmentByUuid(secondAppointmentUuid))
+        .isEqualTo(secondAppointmentBeforeMarkingAsCreatedOnNextDay)
   }
 
   @Test
   fun when_scheduling_appointment_for_defaulter_patient_then_the_appointment_should_be_saved_as_defaulter() {
-    val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now(clock)
+    // given
+    val appointmentScheduleDate = LocalDate.parse("2018-01-01")
+
+    // when
     appointmentRepository.schedule(
-        patientUuid = patientId,
-        appointmentDate = appointmentDate,
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = appointmentScheduleDate,
         appointmentType = Automatic,
-        currentFacility = testData.qaFacility()
+        currentFacility = facility
     ).blockingGet()
 
-    val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
-    savedAppointment.let {
-      assertThat(it.patientUuid).isEqualTo(patientId)
-      assertThat(it.scheduledDate).isEqualTo(appointmentDate)
-      assertThat(it.status).isEqualTo(Scheduled)
-      assertThat(it.syncStatus).isEqualTo(SyncStatus.PENDING)
-      assertThat(it.appointmentType).isEqualTo(Automatic)
+    // then
+    val savedAppointment = getAppointmentByUuid(appointmentUuid)
+    with(savedAppointment) {
+      assertThat(patientUuid).isEqualTo(this@AppointmentRepositoryAndroidTest.patientUuid)
+      assertThat(scheduledDate).isEqualTo(appointmentScheduleDate)
+      assertThat(status).isEqualTo(Scheduled)
+      assertThat(syncStatus).isEqualTo(PENDING)
+      assertThat(appointmentType).isEqualTo(Automatic)
     }
   }
 
   @Test
   fun when_picking_overdue_appointment_then_the_latest_recorded_bp_should_be_considered() {
-    val facility = testData.qaFacility()
-    val now = Instant.now(clock)
-
     fun createBloodPressure(patientProfile: PatientProfile, recordedAt: Instant, updatedAt: Instant): BloodPressureMeasurement {
       return testData.bloodPressureMeasurement(
           patientUuid = patientProfile.patient.uuid,
@@ -889,64 +1047,75 @@ class AppointmentRepositoryAndroidTest {
       )
     }
 
-    fun createPatient(fullName: String): PatientProfile {
-      return testData.patientProfile(generatePhoneNumber = true)
-          .let { patientProfile ->
-            patientProfile.copy(patient = patientProfile.patient.copy(fullName = fullName))
-          }
-    }
-
-    fun scheduleAppointment(patientProfile: PatientProfile): Single<Appointment> {
+    fun scheduleAppointment(
+        appointmentUuid: UUID,
+        patientProfile: PatientProfile
+    ): Single<Appointment> {
       return appointmentRepository.schedule(
           patientUuid = patientProfile.patient.uuid,
-          appointmentDate = LocalDate.now(clock).minus(2, ChronoUnit.DAYS),
+          appointmentUuid = appointmentUuid,
+          appointmentDate = LocalDate.parse("2017-12-30"),
           appointmentType = Manual,
-          currentFacility = facility)
+          currentFacility = facility
+      )
     }
 
-    val patient1 = createPatient("Patient with one latest updated retro-active BP")
-    val patient2 = createPatient("Patient with no retro-active BP")
+    // given
+    val now = Instant.now(clock)
 
-    patientRepository.save(listOf(patient1, patient2)).blockingAwait()
+    val firstPatient = testData.patientProfile(
+        patientUuid = UUID.fromString("e1943cfb-faf0-42c4-b5b6-14b5153295b2"),
+        generatePhoneNumber = true
+    )
+    val secondPatient = testData.patientProfile(
+        patientUuid = UUID.fromString("08c7acbf-61f1-439e-93a8-43ba4e990428"),
+        generatePhoneNumber = true
+    )
 
-    val bpOneForPatient1 = createBloodPressure(
-        patientProfile = patient1,
+    patientRepository.save(listOf(firstPatient, secondPatient)).blockingAwait()
+
+    val earlierRecordedBpForFirstPatient = createBloodPressure(
+        patientProfile = firstPatient,
+        recordedAt = now.minusSeconds(1),
+        updatedAt = now.plusSeconds(1)
+    )
+    val laterRecordedBpForFirstPatient = createBloodPressure(
+        patientProfile = firstPatient,
         recordedAt = now,
         updatedAt = now
     )
-    val bpTwoForPatient1 = createBloodPressure(
-        patientProfile = patient1,
-        recordedAt = now.minus(10, ChronoUnit.DAYS),
-        updatedAt = now.plusSeconds(10)
-    )
 
-    val bpOneForPatient2 = createBloodPressure(
-        patientProfile = patient2,
+    val earlierRecordedBpForSecondPatient = createBloodPressure(
+        patientProfile = secondPatient,
         recordedAt = now,
-        updatedAt = now)
-
-    val bpTwoForPatient2 = createBloodPressure(
-        patientProfile = patient2,
-        recordedAt = now.plus(10, ChronoUnit.MINUTES),
+        updatedAt = now.plusSeconds(1)
+    )
+    val laterRecordedBpForSecondPatient = createBloodPressure(
+        patientProfile = secondPatient,
+        recordedAt = now.plusSeconds(1),
         updatedAt = now
     )
 
-    bpRepository.save(listOf(bpOneForPatient1, bpTwoForPatient1, bpOneForPatient2, bpTwoForPatient2)).blockingAwait()
+    bpRepository.save(listOf(laterRecordedBpForFirstPatient, earlierRecordedBpForFirstPatient, earlierRecordedBpForSecondPatient, laterRecordedBpForSecondPatient)).blockingAwait()
 
-    scheduleAppointment(patient1).blockingGet()
-    scheduleAppointment(patient2).blockingGet()
+    val appointmentUuidForFirstPatient = UUID.fromString("d9fd734d-13b8-43e3-a2d7-b40341699050")
+    val appointmentUuidForSecondPatient = UUID.fromString("979e4a13-ae73-4dcf-a1e0-31465dff5512")
 
-    val appointments = appointmentRepository.overdueAppointments(facility).blockingFirst().associateBy { it.fullName }
+    scheduleAppointment(appointmentUuidForFirstPatient, firstPatient).blockingGet()
+    scheduleAppointment(appointmentUuidForSecondPatient, secondPatient).blockingGet()
 
-    assertThat(appointments.keys).isEqualTo(setOf("Patient with one latest updated retro-active BP", "Patient with no retro-active BP"))
+    // when
+    val bloodPressuresByAppointmentUuid = appointmentRepository
+        .overdueAppointments(facility)
+        .blockingFirst()
+        .associateBy({ it.appointment.uuid }, { it.bloodPressure })
 
-    appointments["Patient with one latest updated retro-active BP"]?.let {
-      assertThat(it.bloodPressure).isEqualTo(bpOneForPatient1)
-    }
-
-    appointments["Patient with no retro-active BP"]?.let {
-      assertThat(it.bloodPressure).isEqualTo(bpTwoForPatient2)
-    }
+    // then
+    val expected = mapOf(
+        appointmentUuidForFirstPatient to laterRecordedBpForFirstPatient,
+        appointmentUuidForSecondPatient to laterRecordedBpForSecondPatient
+    )
+    assertThat(bloodPressuresByAppointmentUuid).isEqualTo(expected)
   }
 
   @Test
@@ -983,18 +1152,18 @@ class AppointmentRepositoryAndroidTest {
     val deletedPatientId = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff")
     createOverdueAppointment(
         patientUuid = deletedPatientId,
-        facilityUuid = testData.qaUserFacilityUuid(),
+        facilityUuid = facility.uuid,
         isPatientDeleted = true
     )
     val notDeletedPatientId = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d")
     createOverdueAppointment(
         patientUuid = notDeletedPatientId,
-        facilityUuid = testData.qaUserFacilityUuid(),
+        facilityUuid = facility.uuid,
         isPatientDeleted = false
     )
 
     // when
-    val overdueAppointments = appointmentRepository.overdueAppointments(testData.qaFacility()).blockingFirst()
+    val overdueAppointments = appointmentRepository.overdueAppointments(facility).blockingFirst()
 
     //then
     assertThat(overdueAppointments).hasSize(1)
@@ -1035,21 +1204,29 @@ class AppointmentRepositoryAndroidTest {
     val patientIdWithDeletedAppointment = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff")
     createOverdueAppointment(
         patientUuid = patientIdWithDeletedAppointment,
-        facilityUuid = testData.qaUserFacilityUuid(),
+        facilityUuid = facility.uuid,
         isAppointmentDeleted = true
     )
     val patientIdWithoutDeletedAppointment = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d")
     createOverdueAppointment(
         patientUuid = patientIdWithoutDeletedAppointment,
-        facilityUuid = testData.qaUserFacilityUuid(),
+        facilityUuid = facility.uuid,
         isAppointmentDeleted = false
     )
 
     // when
-    val overdueAppointments = appointmentRepository.overdueAppointments(testData.qaFacility()).blockingFirst()
+    val overdueAppointments = appointmentRepository.overdueAppointments(facility).blockingFirst()
 
     //then
     assertThat(overdueAppointments).hasSize(1)
     assertThat(overdueAppointments.first().appointment.patientUuid).isEqualTo(patientIdWithoutDeletedAppointment)
+  }
+
+  private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
+    appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE).blockingAwait()
+  }
+
+  private fun getAppointmentByUuid(appointmentUuid: UUID): Appointment {
+    return database.appointmentDao().getOne(appointmentUuid)!!
   }
 }

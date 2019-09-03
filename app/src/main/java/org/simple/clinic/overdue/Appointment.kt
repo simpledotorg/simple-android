@@ -129,7 +129,7 @@ data class Appointment(
     @Query("UPDATE Appointment SET syncStatus = :to WHERE uuid IN (:ids)")
     fun updateSyncStatus(ids: List<UUID>, to: SyncStatus)
 
-    @Query("SELECT * FROM Appointment WHERE uuid = :id LIMIT 1")
+    @Query("SELECT * FROM Appointment WHERE uuid = :id")
     fun getOne(id: UUID): Appointment?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

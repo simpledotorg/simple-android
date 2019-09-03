@@ -229,6 +229,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return appointmentRepository
         .schedule(
             patientUuid = uuid,
+            appointmentUuid = UUID.randomUUID(),
             appointmentDate = date,
             appointmentType = appointmentType,
             currentFacility = currentFacility

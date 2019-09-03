@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## Next Release
+
+## On Demo
 ### Feature
 - Exclude deleted patient records while searching by name or phone number
 - Exclude deleted patient records when loading the alphabetical patient log

@@ -33,7 +33,7 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
     val syncGroup = readSyncGroup(workerParams = workerParams)
 
     val completable = if (syncGroup == NO_GROUP) {
-      dataSync.sync(null)
+      dataSync.syncTheWorld()
 
     } else {
       dataSync.sync(SyncGroup.valueOf(syncGroup))

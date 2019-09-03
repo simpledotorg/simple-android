@@ -31,7 +31,7 @@ class SyncDataOnApproval @Inject constructor(
 
     syncSignal
         .observeOn(schedulersProvider.io())
-        .flatMapCompletable { dataSync.sync(null) }
+        .flatMapCompletable { dataSync.syncTheWorld() }
         .subscribe()
   }
 }

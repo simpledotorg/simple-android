@@ -1,6 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
@@ -86,7 +87,7 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
-    whenever(repository.schedule(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
+    whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     val date = LocalDate.now(clock).plus(1, ChronoUnit.MONTHS)
     val defaultTimeToAppointment = Months(1)
@@ -97,7 +98,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     uiEvents.onNext(AppointmentDone)
 
-    verify(repository).schedule(patientUuid, date, Manual, facility)
+    verify(repository).schedule(eq(patientUuid), any(), eq(date), eq(Manual), eq(facility))
     verify(sheet).closeSheet()
   }
 
@@ -111,7 +112,7 @@ class ScheduleAppointmentSheetControllerTest {
       shouldAutomaticAppointmentBeScheduled: Boolean
   ) {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(isPatientDefaulter))
-    whenever(repository.schedule(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
+    whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
@@ -119,13 +120,14 @@ class ScheduleAppointmentSheetControllerTest {
 
     if (shouldAutomaticAppointmentBeScheduled) {
       verify(repository).schedule(
-          patientUuid = patientUuid,
-          appointmentDate = LocalDate.now(clock).plus(Period.ofDays(30)),
-          appointmentType = Automatic,
-          currentFacility = facility
+          patientUuid = eq(patientUuid),
+          appointmentUuid = any(),
+          appointmentDate = eq(LocalDate.now(clock).plus(Period.ofDays(30))),
+          appointmentType = eq(Automatic),
+          currentFacility = eq(facility)
       )
     } else {
-      verify(repository, never()).schedule(any(), any(), any(), any())
+      verify(repository, never()).schedule(any(), any(), any(), any(), any())
     }
     verify(sheet).closeSheet()
   }

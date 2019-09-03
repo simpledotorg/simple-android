@@ -1391,6 +1391,7 @@ class PatientRepositoryAndroidTest {
 
       appointmentDate?.let {
         appointmentRepository.schedule(
+            appointmentUuid = UUID.fromString("cf002164-3032-4a91-8dbe-15c0b029db51"),
             patientUuid = patientUuid,
             appointmentDate = it,
             appointmentType = Manual,

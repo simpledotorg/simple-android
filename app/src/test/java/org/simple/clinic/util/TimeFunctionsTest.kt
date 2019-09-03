@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Month
 import org.threeten.bp.Period
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.temporal.ChronoUnit
@@ -49,7 +50,7 @@ class TimeFunctionsTest {
         expectedEstimatedAge: Int
     ): List<Any> {
       val clock = TestUtcClock()
-      clock.setYear(year)
+      clock.setDate(LocalDate.of(year, Month.JANUARY, 1))
 
       val ageRecordedAt = Instant.now(clock).minus(daysBetweenNowAndPeriod(clock, turnBackAgeRecordedAtBy))
       clock.advanceBy(daysBetweenNowAndPeriod(clock, advanceClockBy))
@@ -125,7 +126,7 @@ class TimeFunctionsTest {
         expectedEstimatedAge: Int
     ): List<Any> {
       val clock = TestUtcClock()
-      clock.setYear(year)
+      clock.setDate(LocalDate.of(year, Month.JANUARY, 1))
       clock.advanceBy(daysBetweenNowAndPeriod(clock, advanceClockBy))
 
       return listOf(

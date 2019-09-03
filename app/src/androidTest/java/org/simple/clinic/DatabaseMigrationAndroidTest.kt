@@ -23,6 +23,8 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.Month
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -54,7 +56,7 @@ class DatabaseMigrationAndroidTest {
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
-    (clock as TestUtcClock).setYear(2000)
+    (clock as TestUtcClock).setDate(LocalDate.of(2000, Month.JANUARY, 1))
 
     helper.migrations = migrations
 

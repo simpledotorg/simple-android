@@ -51,6 +51,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.Month
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
@@ -106,7 +107,7 @@ class AppointmentRepositoryAndroidTest {
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
-    testClock.setYear(2018)
+    testClock.setDate(LocalDate.of(2018, Month.JANUARY, 1))
   }
 
   @After

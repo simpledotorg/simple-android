@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.internal.schedulers.TrampolineScheduler
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -24,6 +25,7 @@ import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 
 @RunWith(JUnitParamsRunner::class)
@@ -33,12 +35,7 @@ class SyncDataOnApprovalTest {
   private val dataSync = mock<DataSync>()
   private val clock = TestUtcClock()
 
-  private val syncDataOnApproval = SyncDataOnApproval(userSession, dataSync)
-
-  @Before
-  fun setup() {
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-  }
+  private val syncDataOnApproval = SyncDataOnApproval(userSession, dataSync, TrampolineSchedulersProvider())
 
   @Parameters(method = "params for syncing on user status changed")
   @Test

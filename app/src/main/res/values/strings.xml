@@ -436,4 +436,6 @@
 
   <!-- Short code search -->
   <string name="shortcodesearchresult_enter_patient_name_button">Enter Patient\'s name</string>
+  <string name="simple_video_watch_video">Watch Video</string>
+  <string name="simple_video_how_to_use_the_simple_app">How to use the Simple app</string>
 </resources>

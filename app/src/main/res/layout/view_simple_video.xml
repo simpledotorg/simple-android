@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@color/blue2">
+
+  <ImageView
+    android:id="@+id/simpleVideoImage"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_marginBottom="@dimen/spacing_24"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:src="@drawable/thumbnail_simple_video"
+    tools:ignore="ContentDescription" />
+
+  <LinearLayout
+    android:id="@+id/textLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignTop="@+id/simpleVideoImage"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:layout_marginStart="@dimen/spacing_12"
+    android:layout_toEndOf="@+id/simpleVideoImage"
+    android:gravity="start"
+    android:orientation="vertical">
+
+    <TextView
+      style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/simple_video_watch_video"
+      android:textAllCaps="true" />
+
+    <TextView
+      style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Bold.Grey0"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_8"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:minLines="2"
+      android:text="@string/simple_video_how_to_use_the_simple_app" />
+
+    <TextView
+      style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="5:07 minutes" />
+  </LinearLayout>
+
+</RelativeLayout>

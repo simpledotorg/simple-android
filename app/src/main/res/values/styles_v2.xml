@@ -197,9 +197,18 @@
     <item name="android:lineSpacingExtra">8sp</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Subtitle1Left.Bold">
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Subtitle1Left.Bold.Grey0">
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Subtitle1Left.Blue1">
     <item name="android:textColor">@color/blue1</item>
   </style>
+
 
   <style name="Clinic.V2.TextAppearance.Subtitle1Left.Grey1">
     <item name="android:textColor">@color/grey1</item>

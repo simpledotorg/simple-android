@@ -1,5 +1,6 @@
 package org.simple.clinic.newentry
 
+import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -10,6 +11,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -37,13 +39,13 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = PatientEntryScreen
 typealias UiChange = (Ui) -> Unit
@@ -53,7 +55,8 @@ class PatientEntryScreenController @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
     private val dobValidator: UserInputDateValidator,
-    private val numberValidator: PhoneNumberValidator
+    private val numberValidator: PhoneNumberValidator,
+    @Named("number_of_patients_registered") private val patientRegisteredCount: Preference<Int>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -306,12 +309,15 @@ class PatientEntryScreenController @Inject constructor(
     val canPatientBeSaved = ongoingEntryChanges
         .map { it.validationErrors(dobValidator, numberValidator).isEmpty() }
 
+    val incrementPatientRegisteredCount = { patientRegisteredCount.set(patientRegisteredCount.get().plus(1)) }
+
     return events
         .ofType<PatientEntrySaveClicked>()
         .withLatestFrom(ongoingEntryChanges, canPatientBeSaved)
         .flatMapSingle { (_, entry, canBeSaved) ->
           when {
             canBeSaved -> patientRepository.saveOngoingEntry(entry)
+                .doOnComplete(incrementPatientRegisteredCount)
                 .andThen(Single.just({ ui: Ui -> ui.openMedicalHistoryEntryScreen() }))
             else -> Single.never()
           }

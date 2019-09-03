@@ -1,5 +1,6 @@
 package org.simple.clinic.newentry
 
+import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.atLeastOnce
@@ -20,6 +21,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
@@ -44,7 +46,6 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -65,9 +66,17 @@ class PatientEntryScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val dobValidator = mock<UserInputDateValidator>()
   private val numberValidator = mock<PhoneNumberValidator>()
+  private val patientRegisteredCount = mock<Preference<Int>>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession, dobValidator, numberValidator)
+  private val controller = PatientEntryScreenController(
+      patientRepository,
+      facilityRepository,
+      userSession,
+      dobValidator,
+      numberValidator,
+      patientRegisteredCount
+  )
   private val reporter = MockAnalyticsReporter()
   private val initialOngoingPatientEntrySubject = PublishSubject.create<OngoingNewPatientEntry>()
 
@@ -127,6 +136,7 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
+    whenever(patientRegisteredCount.get()).thenReturn(0)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
@@ -143,6 +153,29 @@ class PatientEntryScreenControllerTest {
         address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
+    verify(patientRegisteredCount).set(1)
+  }
+
+  @Test
+  fun `when save is clicked and patient is saved then patient registered count should be incremented`() {
+    val existingPatientRegisteredCount = 5
+    val ongoingEntry = OngoingNewPatientEntry(
+        personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
+        address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
+        phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
+    )
+
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
+    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
+    whenever(patientRegisteredCount.get()).thenReturn(existingPatientRegisteredCount)
+
+    uiEvents.onNext(OngoingPatientEntryChanged(ongoingEntry))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    verify(patientRepository).saveOngoingEntry(ongoingEntry)
+    verify(patientRegisteredCount).set(existingPatientRegisteredCount + 1)
   }
 
   @Test
@@ -376,6 +409,7 @@ class PatientEntryScreenControllerTest {
   fun `regression test for validations 4`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRegisteredCount.get()).thenReturn(0)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
@@ -390,6 +424,7 @@ class PatientEntryScreenControllerTest {
 
     verify(screen).openMedicalHistoryEntryScreen()
     verify(patientRepository).saveOngoingEntry(any())
+    verify(patientRegisteredCount).set(any())
   }
 
   @Test
@@ -436,6 +471,7 @@ class PatientEntryScreenControllerTest {
     val identifier = Identifier(value = "id", type = BpPassport)
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry(identifier = identifier)))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRegisteredCount.get()).thenReturn(0)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))

@@ -10,7 +10,7 @@ import javax.inject.Inject
 class SyncWorker(context: Context, private val workerParams: WorkerParameters) : Worker(context, workerParams) {
 
   companion object {
-    private const val NO_GROUP = "no-group-id"
+    private const val NO_GROUP = "no_group_id"
     private const val SYNC_GROUP = "sync_group_id"
 
     fun createWorkDataForSyncConfig(syncConfig: SyncConfig): Data {

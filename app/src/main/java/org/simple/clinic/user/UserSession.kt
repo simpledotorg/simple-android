@@ -135,7 +135,7 @@ class UserSession @Inject constructor(
   private fun syncOnLoginResult() {
     dataSync
         .get()
-        .sync(null)
+        .syncTheWorld()
         .subscribeOn(schedulersProvider.io())
         .onErrorComplete()
         .subscribe()
@@ -442,7 +442,7 @@ class UserSession @Inject constructor(
 
     return dataSync
         .get()
-        .sync(null)
+        .syncTheWorld()
         .subscribeOn(schedulersProvider.io())
         .retry(syncRetryCount.toLong())
         .timeout(timeoutSeconds, TimeUnit.SECONDS)

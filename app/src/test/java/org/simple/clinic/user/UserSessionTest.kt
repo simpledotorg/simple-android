@@ -163,7 +163,7 @@ class UserSessionTest {
   ) {
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(loginApi.login(any())).thenReturn(response)
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
@@ -194,7 +194,7 @@ class UserSessionTest {
 
     whenever(loginApi.login(any())).thenReturn(response)
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete().doOnComplete { syncInvoked = true })
+    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete().doOnComplete { syncInvoked = true })
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser(userUuid))))
@@ -225,7 +225,7 @@ class UserSessionTest {
   ])
   fun `error in sync should not affect login result`(syncWillFail: Boolean) {
     whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", PatientMocker.loggedInUserPayload())))
-    whenever(dataSync.sync(null)).thenAnswer {
+    whenever(dataSync.syncTheWorld()).thenAnswer {
       if (syncWillFail) Completable.error(RuntimeException()) else Completable.complete()
     }
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
@@ -321,7 +321,7 @@ class UserSessionTest {
   @Test
   fun `when performing sync and clear data, the sync must be triggered`() {
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
     whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
@@ -329,7 +329,7 @@ class UserSessionTest {
 
     userSession.syncAndClearData(patientRepository).blockingAwait()
 
-    verify(dataSync).sync(null)
+    verify(dataSync).syncTheWorld()
   }
 
   @Test
@@ -344,7 +344,7 @@ class UserSessionTest {
         }.toTypedArray()
 
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(dataSync.sync(null))
+    whenever(dataSync.syncTheWorld())
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
     whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
@@ -364,7 +364,7 @@ class UserSessionTest {
         .map { Completable.error(RuntimeException()) }.toTypedArray()
 
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(dataSync.sync(null))
+    whenever(dataSync.syncTheWorld())
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
     whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
@@ -380,7 +380,7 @@ class UserSessionTest {
   @Test
   fun `if the sync succeeds when resetting the PIN, it should clear the patient related data`() {
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
     whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
@@ -395,7 +395,7 @@ class UserSessionTest {
 
   @Test
   fun `if the sync fails when resetting the PIN, it should clear the patient related data`() {
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
@@ -411,7 +411,7 @@ class UserSessionTest {
 
   @Test
   fun `after clearing patient related data during forgot PIN flow, the sync timestamps must be cleared`() {
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
@@ -633,7 +633,7 @@ class UserSessionTest {
     var entryCleared = false
 
     whenever(loginApi.login(any())).thenReturn(response)
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete().doOnComplete { entryCleared = true })
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.entry())

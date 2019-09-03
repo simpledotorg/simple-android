@@ -32,7 +32,7 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock())
 
-    dataSync.sync(null).blockingAwait()
+    dataSync.syncTheWorld().blockingAwait()
 
     sync1Consumer.assertInvoked()
     sync2Consumer.assertInvoked()
@@ -61,7 +61,7 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock())
 
-    dataSync.sync(null).blockingAwait()
+    dataSync.syncTheWorld().blockingAwait()
 
     sync1Consumer.assertInvoked()
     sync1Completable.test().assertNoErrors()

@@ -55,7 +55,7 @@ class DebugNotificationActionReceiver : BroadcastReceiver() {
   override fun onReceive(context: Context?, intent: Intent?) {
     DebugClinicApp.appComponent().inject(this)
 
-    dataSync.sync(null)
+    dataSync.syncTheWorld()
         .subscribeOn(io())
         .subscribe()
   }

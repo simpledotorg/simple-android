@@ -44,7 +44,7 @@ class SyncDataOnApprovalTest {
     val user = PatientMocker.loggedInUser(status = previousUserStatus)
     val userSubject = PublishSubject.create<Optional<User>>()
     whenever(userSession.loggedInUser()).thenReturn(userSubject)
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
 
     // when
     syncDataOnApproval.sync()
@@ -54,7 +54,7 @@ class SyncDataOnApprovalTest {
     verifyZeroInteractions(dataSync)
 
     userSubject.onNext(user.withStatus(ApprovedForSyncing, clock).toOptional())
-    verify(dataSync).sync(null)
+    verify(dataSync).syncTheWorld()
     verifyNoMoreInteractions(dataSync)
     clearInvocations(dataSync)
 
@@ -65,7 +65,7 @@ class SyncDataOnApprovalTest {
     verifyZeroInteractions(dataSync)
 
     userSubject.onNext(user.withStatus(ApprovedForSyncing, clock).toOptional())
-    verify(dataSync).sync(null)
+    verify(dataSync).syncTheWorld()
     verifyNoMoreInteractions(dataSync)
   }
 

@@ -66,6 +66,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val scanSimpleCardButton by bindView<Button>(R.id.patients_scan_simple_card)
   private val syncIndicatorView by bindView<SyncIndicatorView>(R.id.patients_sync_indicator)
   private val illustrationImageView by bindView<ImageView>(R.id.patients_record_bp_illustration)
+  private val illustrationFlipper by bindView<ViewFlipper>(R.id.patient_illustration_layout)
 
   @IdRes
   private var currentStatusViewId: Int = R.id.patients_user_status_hidden
@@ -93,8 +94,15 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
-
     illustrationImageView.setImageResource(illustrationResourceId())
+  }
+
+  private fun showIllustration(@IdRes viewId: Int) {
+    illustrationFlipper.apply {
+      val indexOfChildId = indexOfChildId(viewId)
+      if (displayedChild != indexOfChildId)
+        displayedChild = indexOfChildId
+    }
   }
 
   private fun illustrationResourceId(): Int {

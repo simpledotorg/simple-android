@@ -97,14 +97,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     illustrationImageView.setImageResource(illustrationResourceId())
   }
 
-  private fun showIllustration(@IdRes viewId: Int) {
-    illustrationFlipper.apply {
-      val indexOfChildId = indexOfChildId(viewId)
-      if (displayedChild != indexOfChildId)
-        displayedChild = indexOfChildId
-    }
-  }
-
   private fun illustrationResourceId(): Int {
     val today = LocalDate.now(userClock)
 
@@ -221,5 +213,21 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun showAppUpdateDialog() {
     AppUpdateDialog.show(activity.supportFragmentManager)
+  }
+
+  private fun showHomeScreenBackground(@IdRes viewId: Int) {
+    illustrationFlipper.apply {
+      val indexOfChildId = indexOfChildId(viewId)
+      if (displayedChild != indexOfChildId)
+        displayedChild = indexOfChildId
+    }
+  }
+
+  fun showSimpleVideo() {
+    showHomeScreenBackground(R.id.view_simple_video)
+  }
+
+  fun showIllustration() {
+    showHomeScreenBackground(illustrationImageView.id)
   }
 }

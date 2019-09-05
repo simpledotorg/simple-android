@@ -25,7 +25,6 @@ import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -57,12 +56,11 @@ class PatientsScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val approvalStatusApprovedAt = mock<Preference<Instant>>()
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
-  private val dataSync = mock<DataSync>()
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
   private val utcClock = TestUtcClock()
   private val userClock = TestUserClock()
-
+  private val numberOfPatientsRegisteredPref = mock<Preference<Int>>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
@@ -86,12 +84,14 @@ class PatientsScreenControllerTest {
         illustrationDao = mock(),
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
-        appUpdateDialogShownAtPref = appUpdateDialogShownPref
+        appUpdateDialogShownAtPref = appUpdateDialogShownPref,
+        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPref
     )
 
     whenever(userSession.canSyncData()).thenReturn(canSyncStream)
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(checkAppUpdate.listen()).thenReturn(appUpdatesStream)
+    whenever(numberOfPatientsRegisteredPref.get()).thenReturn(0)
 
     uiEvents
         .compose(controller)
@@ -433,6 +433,37 @@ class PatientsScreenControllerTest {
       verify(screen, never()).showAppUpdateDialog()
     }
   }
+
+  @Test
+  fun `when screen is created then display simple video if patient registered count is less than 10`() {
+    //given
+    whenever(userSession.loggedInUser()).thenReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
+    whenever(numberOfPatientsRegisteredPref.get()).thenReturn(9)
+
+    //when
+    uiEvents.onNext(ScreenCreated())
+
+    //then
+    verify(screen).showSimpleVideo()
+    verify(screen, never()).showIllustration()
+  }
+
+  @Test
+  fun `when screen is created then display illustration if patient registered count is exceeds 10`() {
+    //given
+    whenever(userSession.loggedInUser()).thenReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
+    whenever(numberOfPatientsRegisteredPref.get()).thenReturn(10)
+
+    //when
+    uiEvents.onNext(ScreenCreated())
+
+    //then
+    verify(screen, never()).showSimpleVideo()
+    verify(screen).showIllustration()
+  }
+
 
   fun `params for testing app update dialog`(): List<Any> {
 

@@ -51,7 +51,8 @@ class PatientsScreenController @Inject constructor(
     private val illustrationDao: HomescreenIllustration.RoomDao,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
-    @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>
+    @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
+    @Named("number_of_patients_registered") private val numberOfPatientsRegisteredPref: Preference<Int>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -69,7 +70,8 @@ class PatientsScreenController @Inject constructor(
         requestCameraPermissions(replayedEvents),
         openScanSimpleIdScreen(replayedEvents),
         toggleVisibilityOfSyncIndicator(replayedEvents),
-        showAppUpdateDialog(replayedEvents)
+        showAppUpdateDialog(replayedEvents),
+        showSimpleVideo(replayedEvents)
     )
   }
 
@@ -231,5 +233,17 @@ class PatientsScreenController @Inject constructor(
         .filter { hasADayPassedSinceLastUpdateShown() }
         .doOnNext { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }
         .map { Ui::showAppUpdateDialog }
+  }
+
+  private fun showSimpleVideo(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<ScreenCreated>()
+        .map {
+          if (numberOfPatientsRegisteredPref.get() < 10) {
+            { ui: Ui -> ui.showSimpleVideo() }
+          } else {
+            { ui: Ui -> ui.showIllustration() }
+          }
+        }
   }
 }

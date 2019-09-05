@@ -16,6 +16,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGH
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGHEST
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.LOW
@@ -86,6 +87,9 @@ class AppointmentRepositoryAndroidTest {
 
   private val facility: Facility
     get() = testData.qaFacility()
+
+  private val userUuid: UUID
+    get() = testData.qaUserUuid()
 
   @get:Rule
   val ruleChain = RuleChain
@@ -228,7 +232,7 @@ class AppointmentRepositoryAndroidTest {
             systolic = 190,
             diastolic = 100,
             syncStatus = PENDING,
-            userUuid = testData.qaUserUuid(),
+            userUuid = userUuid,
             facilityUuid = facility.uuid,
             patientUuid = patient1,
             createdAt = Instant.now(clock),
@@ -333,7 +337,7 @@ class AppointmentRepositoryAndroidTest {
             systolic = 190,
             diastolic = 100,
             syncStatus = PENDING,
-            userUuid = testData.qaUserUuid(),
+            userUuid = userUuid,
             facilityUuid = facility.uuid,
             patientUuid = patient3,
             createdAt = Instant.now(clock),
@@ -346,7 +350,7 @@ class AppointmentRepositoryAndroidTest {
             systolic = 180,
             diastolic = 110,
             syncStatus = PENDING,
-            userUuid = testData.qaUserUuid(),
+            userUuid = userUuid,
             facilityUuid = facility.uuid,
             patientUuid = patient3,
             createdAt = Instant.now(clock).minusSeconds(1000),
@@ -406,7 +410,7 @@ class AppointmentRepositoryAndroidTest {
       return testData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facility.uuid,
-          userUuid = testData.qaUserUuid(),
+          userUuid = userUuid,
           syncStatus = DONE,
           createdAt = Instant.now(),
           updatedAt = Instant.now(),
@@ -650,7 +654,7 @@ class AppointmentRepositoryAndroidTest {
   }
 
   @Test
-  fun high_risk_patients_should_be_present_at_the_top() {
+  fun high_risk_patients_should_be_present_at_the_top_when_loading_overdue_appointments() {
     data class BP(val systolic: Int, val diastolic: Int)
 
     fun savePatientAndAppointment(
@@ -689,7 +693,7 @@ class AppointmentRepositoryAndroidTest {
             patientUuid = patientUuid,
             systolic = systolic,
             diastolic = diastolic,
-            userUuid = testData.qaUserUuid(),
+            userUuid = userUuid,
             facilityUuid = facility.uuid,
             recordedAt = bpTimestamp,
             createdAt = bpTimestamp,
@@ -1219,6 +1223,115 @@ class AppointmentRepositoryAndroidTest {
     //then
     assertThat(overdueAppointments).hasSize(1)
     assertThat(overdueAppointments.first().appointment.patientUuid).isEqualTo(patientIdWithoutDeletedAppointment)
+  }
+
+  @Test
+  fun appointments_that_are_still_scheduled_after_the_schedule_date_should_be_fetched_as_overdue_appointments() {
+    data class Record(
+        val patientProfile: PatientProfile,
+        val bloodPressureMeasurement: BloodPressureMeasurement,
+        val appointment: Appointment
+    ) {
+      fun save() {
+        patientRepository.save(listOf(patientProfile))
+            .andThen(bpRepository.save(listOf(bloodPressureMeasurement)))
+            .andThen(appointmentRepository.save(listOf(appointment)))
+            .blockingAwait()
+      }
+
+      fun toOverdueAppointment(): OverdueAppointment {
+        return OverdueAppointment(
+            fullName = patientProfile.patient.fullName,
+            gender = patientProfile.patient.gender,
+            dateOfBirth = patientProfile.patient.dateOfBirth,
+            age = patientProfile.patient.age,
+            appointment = appointment,
+            bloodPressure = bloodPressureMeasurement,
+            phoneNumber = patientProfile.phoneNumbers.first(),
+            riskLevelIndex = NONE.levelIndex
+        )
+      }
+    }
+
+    fun createRecord(
+        patientUuid: UUID,
+        bpUuid: UUID,
+        appointmentUuid: UUID,
+        scheduleAppointmentOn: LocalDate
+    ): Record {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          generatePhoneNumber = true
+      )
+
+      val bloodPressureMeasurement = testData.bloodPressureMeasurement(
+          uuid = bpUuid,
+          patientUuid = patientUuid,
+          facilityUuid = facility.uuid,
+          userUuid = userUuid,
+          systolic = 120,
+          diastolic = 80,
+          recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
+          deletedAt = null
+      )
+
+      val appointment = testData.appointment(
+          uuid = appointmentUuid,
+          patientUuid = patientUuid,
+          facilityUuid = facility.uuid,
+          scheduledDate = scheduleAppointmentOn,
+          status = Scheduled,
+          cancelReason = null,
+          remindOn = null,
+          agreedToVisit = null
+      )
+
+      return Record(patientProfile, bloodPressureMeasurement, appointment)
+    }
+
+    // given
+    val currentDate = LocalDate.parse("2018-01-05")
+
+    val oneWeekBeforeCurrentDate = createRecord(
+        patientUuid = UUID.fromString("c5bb0ab7-516d-4c61-ac36-b806ba9bcca5"),
+        bpUuid = UUID.fromString("85765883-b964-4322-a7e3-c922612b078d"),
+        appointmentUuid = UUID.fromString("064a0417-d485-40f0-9659-dbb7a4efbfb7"),
+        scheduleAppointmentOn = currentDate.minusDays(7)
+    )
+
+    val oneDayBeforeCurrentDate = createRecord(
+        patientUuid = UUID.fromString("7dd6a3c6-2977-45d9-bf22-f2b8929d227e"),
+        bpUuid = UUID.fromString("e27345b6-0463-410d-b433-ada8adf8f6f7"),
+        appointmentUuid = UUID.fromString("899a7269-01b0-4d59-9e3b-5a6cc82985d2"),
+        scheduleAppointmentOn = currentDate.minusDays(1)
+    )
+
+    val onCurrentDate = createRecord(
+        patientUuid = UUID.fromString("c83a03f3-61b4-4af6-bcbf-3094ed4044a1"),
+        bpUuid = UUID.fromString("2f439af6-bff9-4d85-9179-9697171863fb"),
+        appointmentUuid = UUID.fromString("6419fb68-6e1d-4928-8435-777da07c54d9"),
+        scheduleAppointmentOn = currentDate
+    )
+
+    val afterCurrentDate = createRecord(
+        patientUuid = UUID.fromString("fae12ba1-e958-4aaf-9802-0b4b09535469"),
+        bpUuid = UUID.fromString("4b25b6bb-4279-4816-81a6-f5f325c832d4"),
+        appointmentUuid = UUID.fromString("b422ca39-2090-4c24-9a4c-5a8904403a57"),
+        scheduleAppointmentOn = currentDate.plusDays(1)
+    )
+
+    listOf(oneWeekBeforeCurrentDate, oneDayBeforeCurrentDate, onCurrentDate, afterCurrentDate).forEach { it.save() }
+    clock.setDate(currentDate)
+
+    // when
+    val overdueAppointments = appointmentRepository
+        .overdueAppointments(facility)
+        .blockingFirst()
+
+    // then
+    val expectedAppointments = listOf(oneWeekBeforeCurrentDate, oneDayBeforeCurrentDate).map(Record::toOverdueAppointment)
+
+    assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {

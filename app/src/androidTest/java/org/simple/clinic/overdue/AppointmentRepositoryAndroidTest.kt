@@ -43,6 +43,7 @@ import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -84,6 +85,9 @@ class AppointmentRepositoryAndroidTest {
   private val facility: Facility by lazy { testData.qaFacility() }
 
   private val userUuid: UUID by lazy { testData.qaUserUuid() }
+
+  @Inject
+  lateinit var userClock: TestUserClock
 
   @get:Rule
   val ruleChain = RuleChain
@@ -414,15 +418,16 @@ class AppointmentRepositoryAndroidTest {
     ).blockingGet()
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
-    clock.advanceBy(Duration.ofDays(1))
+    clock.advanceBy(Duration.ofSeconds(1))
+    userClock.setDate(LocalDate.parse("2018-01-05"))
 
     // when
     appointmentRepository.markAsAgreedToVisit(appointmentUuid).blockingAwait()
 
     // then
-    val appointmentUpdatedAtTimestamp = Instant.now(clock)
+    val appointmentUpdatedAtTimestamp = Instant.parse("2018-01-01T00:00:01Z")
     with(getAppointmentByUuid(appointmentUuid)) {
-      assertThat(remindOn).isEqualTo(LocalDate.parse("2018-02-01"))
+      assertThat(remindOn).isEqualTo(LocalDate.parse("2018-02-04"))
       assertThat(agreedToVisit).isTrue()
       assertThat(syncStatus).isEqualTo(PENDING)
       assertThat(createdAt).isEqualTo(appointmentScheduledAtTimestamp)

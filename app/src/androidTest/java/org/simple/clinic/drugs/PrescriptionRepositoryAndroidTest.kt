@@ -3,21 +3,19 @@ package org.simple.clinic.drugs
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.bloco.faker.Faker
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -29,7 +27,7 @@ import javax.inject.Inject
 class PrescriptionRepositoryAndroidTest {
 
   @Inject
-  lateinit var clock: UtcClock
+  lateinit var clock: TestUtcClock
 
   @Inject
   lateinit var database: AppDatabase
@@ -55,18 +53,10 @@ class PrescriptionRepositoryAndroidTest {
       .outerRule(authenticationRule)
       .around(rxErrorsRule)!!
 
-  private val testUtcClock: TestUtcClock
-    get() = clock as TestUtcClock
-
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-    (clock as TestUtcClock).setDate(LocalDate.of(2000, Month.JANUARY, 1))
-  }
-
-  @After
-  fun tearDown() {
-    (clock as TestUtcClock).resetToEpoch()
+    clock.setDate(LocalDate.of(2000, Month.JANUARY, 1))
   }
 
   @Test
@@ -141,7 +131,7 @@ class PrescriptionRepositoryAndroidTest {
     val correctedPrescription = prescription.copy(name = "Amlodipine")
 
     val durationToAdvanceBy = Duration.ofMinutes(15L)
-    testUtcClock.advanceBy(durationToAdvanceBy)
+    clock.advanceBy(durationToAdvanceBy)
 
     repository.updatePrescription(correctedPrescription).blockingAwait()
 

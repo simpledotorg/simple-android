@@ -27,7 +27,7 @@ import javax.inject.Inject
 class BruteForceProtectionAndroidTest {
 
   @Inject
-  lateinit var clock: UtcClock
+  lateinit var clock: TestUtcClock
 
   @Inject
   lateinit var bruteForceProtection: BruteForceProtection
@@ -40,9 +40,6 @@ class BruteForceProtectionAndroidTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
-
-  private val testClock
-    get() = clock as TestUtcClock
 
   private val config
     get() = configProvider.blockingFirst()
@@ -61,7 +58,6 @@ class BruteForceProtectionAndroidTest {
   @After
   fun tearDown() {
     RxJavaPlugins.reset()
-    testClock.resetToEpoch()
     state.delete()
   }
 
@@ -105,7 +101,7 @@ class BruteForceProtectionAndroidTest {
         blockedTill = Instant.now(clock) + config.blockDuration))
 
     val advanceTimeByMillis = { millis: Long ->
-      testClock.advanceBy(Duration.ofMillis(millis))
+      clock.advanceBy(Duration.ofMillis(millis))
       testScheduler.advanceTimeBy(millis, TimeUnit.MILLISECONDS)
     }
 

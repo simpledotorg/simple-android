@@ -100,7 +100,7 @@ class PatientRepositoryAndroidTest {
   lateinit var testData: TestData
 
   @Inject
-  lateinit var clock: UtcClock
+  lateinit var clock: TestUtcClock
 
   @Inject
   lateinit var configProvider: Observable<PatientConfig>
@@ -123,9 +123,6 @@ class PatientRepositoryAndroidTest {
   val config: PatientConfig
     get() = configProvider.blockingFirst()
 
-  private val testClock: TestUtcClock
-    get() = clock as TestUtcClock
-
   private val loggedInUser: User
     get() = testData.qaUser()
 
@@ -135,12 +132,11 @@ class PatientRepositoryAndroidTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-    testClock.setDate(LocalDate.of(2018, Month.JANUARY, 1))
+    clock.setDate(LocalDate.parse("2018-01-01"))
   }
 
   @After
   fun tearDown() {
-    (clock as TestUtcClock).resetToEpoch()
     reportsRepository.deleteReportsFile().blockingGet()
   }
 
@@ -221,9 +217,9 @@ class PatientRepositoryAndroidTest {
     val identifier = testData.identifier(value = "id", type = BpPassport)
     val patientEntry = testData.ongoingPatientEntry(identifier = identifier)
 
-    val now = Instant.now(testClock)
+    val now = Instant.now(clock)
     val advanceClockBy = Duration.ofDays(7L)
-    testClock.advanceBy(advanceClockBy)
+    clock.advanceBy(advanceClockBy)
 
     val savedPatientUuid = patientRepository.saveOngoingEntry(patientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
@@ -515,15 +511,15 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_patient_is_marked_dead_they_should_marked_as_pending_sync() {
-    val timeOfCreation = Instant.now(testClock)
+    val timeOfCreation = Instant.now(clock)
 
     val patient = patientRepository
         .saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar"))
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    testClock.advanceBy(Duration.ofDays(365))
-    val timeOfDeath = Instant.now(testClock)
+    clock.advanceBy(Duration.ofDays(365))
+    val timeOfDeath = Instant.now(clock)
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
     val deadPatient: Patient = patientRepository.patient(patient.uuid)
@@ -673,7 +669,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
     val updatedAfter = Duration.ofDays(1L)
-    (clock as TestUtcClock).advanceBy(updatedAfter)
+    clock.advanceBy(updatedAfter)
 
     val oldSavedAddress = patientRepository.address(patient.addressUuid)
         .unwrapJust()
@@ -736,7 +732,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
     val updatedAfter = Duration.ofDays(1L)
-    (clock as TestUtcClock).advanceBy(updatedAfter)
+    clock.advanceBy(updatedAfter)
 
     val newPatientToSave = originalSavedPatient.copy(
         fullName = "New Name",
@@ -794,7 +790,7 @@ class PatientRepositoryAndroidTest {
         .blockingAwait()
 
     val updatedAfter = Duration.ofDays(1L)
-    (clock as TestUtcClock).advanceBy(updatedAfter)
+    clock.advanceBy(updatedAfter)
 
     val phoneNumberToUpdate = patientProfile.phoneNumbers[1].copy(number = "12345678", phoneType = PatientPhoneNumberType.Landline)
 
@@ -845,7 +841,7 @@ class PatientRepositoryAndroidTest {
         .blockingAwait()
 
     val updatedAfter = Duration.ofDays(1L)
-    (clock as TestUtcClock).advanceBy(updatedAfter)
+    clock.advanceBy(updatedAfter)
 
     patientRepository.createPhoneNumberForPatient(
         patientUuid = originalSavedPatient.uuid,
@@ -884,7 +880,7 @@ class PatientRepositoryAndroidTest {
         recentPatient1
     )
 
-    testClock.advanceBy(Duration.ofSeconds(1))
+    clock.advanceBy(Duration.ofSeconds(1))
 
     var recentPatient2 = savePatientWithBpWithTestClock()
 
@@ -893,47 +889,47 @@ class PatientRepositoryAndroidTest {
         recentPatient1
     )
 
-    testClock.advanceBy(Duration.ofSeconds(1))
+    clock.advanceBy(Duration.ofSeconds(1))
 
     prescriptionRepository.savePrescription(recentPatient1.uuid, testData.protocolDrug(), currentFacility).blockingAwait()
 
-    recentPatient1 = recentPatient1.copy(updatedAt = testClock.instant())
+    recentPatient1 = recentPatient1.copy(updatedAt = clock.instant())
     verifyRecentPatientOrder(
         recentPatient1,
         recentPatient2
     )
 
-    testClock.advanceBy(Duration.ofSeconds(1))
+    clock.advanceBy(Duration.ofSeconds(1))
 
     val appointment2 = testData.appointment(
         patientUuid = recentPatient2.uuid,
-        createdAt = testClock.instant(),
-        updatedAt = testClock.instant().plusSeconds(1),
+        createdAt = clock.instant(),
+        updatedAt = clock.instant().plusSeconds(1),
         status = Scheduled,
         appointmentType = Manual,
         cancelReason = null
     )
     appointmentRepository.save(listOf(appointment2)).blockingAwait()
 
-    recentPatient2 = recentPatient2.copy(updatedAt = testClock.instant())
+    recentPatient2 = recentPatient2.copy(updatedAt = clock.instant())
     verifyRecentPatientOrder(
         recentPatient2,
         recentPatient1
     )
 
-    testClock.advanceBy(Duration.ofSeconds(1))
+    clock.advanceBy(Duration.ofSeconds(1))
 
     medicalHistoryRepository.save(testData.medicalHistory(
         patientUuid = recentPatient1.uuid,
-        updatedAt = testClock.instant()
-    )) { Instant.now(testClock) }.blockingAwait()
+        updatedAt = clock.instant()
+    )) { Instant.now(clock) }.blockingAwait()
 
     verifyRecentPatientOrder(
         recentPatient2,
         recentPatient1
     )
 
-    testClock.advanceBy(Duration.ofSeconds(1))
+    clock.advanceBy(Duration.ofSeconds(1))
 
     val recentPatient3 = savePatientWithBpWithTestClock()
 
@@ -943,7 +939,7 @@ class PatientRepositoryAndroidTest {
         recentPatient1
     )
 
-    testClock.advanceBy(Duration.ofSeconds(1))
+    clock.advanceBy(Duration.ofSeconds(1))
 
     val recentPatient4 = savePatientWithBpWithTestClock()
 
@@ -1015,10 +1011,10 @@ class PatientRepositoryAndroidTest {
   private fun savePatientWithBpWithTestClock(
       facilityUuid: UUID = testData.qaUserFacilityUuid(),
       patientUuid: UUID = UUID.randomUUID(),
-      createdAt: Instant = Instant.now(testClock),
-      updatedAt: Instant = Instant.now(testClock),
+      createdAt: Instant = Instant.now(clock),
+      updatedAt: Instant = Instant.now(clock),
       deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now(testClock)
+      recordedAt: Instant = Instant.now(clock)
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid).run {
       copy(patient = patient.copy(createdAt = createdAt, updatedAt = updatedAt))
@@ -1195,7 +1191,7 @@ class PatientRepositoryAndroidTest {
     val now = Instant.now(clock)
 
     val duration = Duration.ofDays(1L)
-    testClock.advanceBy(duration)
+    clock.advanceBy(duration)
 
     val savedBusinessId = patientRepository
         .addIdentifierToPatient(
@@ -1478,14 +1474,14 @@ class PatientRepositoryAndroidTest {
             diastolic = 70
         )),
         protocolDrug = null,
-        appointmentDate = LocalDate.now(testClock).plusDays(10))
+        appointmentDate = LocalDate.now(clock).plusDays(10))
 
     patients += savePatientRecord(
         fullName = "BP deleted, Has had heart attack",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
             systolic = 180,
             diastolic = 70,
-            deletedAt = Instant.now(testClock)
+            deletedAt = Instant.now(clock)
         )),
         hasHadHeartAttack = Yes,
         protocolDrug = null,
@@ -1497,11 +1493,11 @@ class PatientRepositoryAndroidTest {
             testData.bloodPressureMeasurement(
                 systolic = 180,
                 diastolic = 70,
-                recordedAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)),
+                recordedAt = Instant.now(clock).minus(40, ChronoUnit.DAYS)),
             testData.bloodPressureMeasurement(
                 systolic = 180,
                 diastolic = 70,
-                recordedAt = Instant.now(testClock).minus(10, ChronoUnit.DAYS)
+                recordedAt = Instant.now(clock).minus(10, ChronoUnit.DAYS)
             )),
         protocolDrug = null,
         appointmentDate = null)
@@ -1512,11 +1508,11 @@ class PatientRepositoryAndroidTest {
             testData.bloodPressureMeasurement(
                 systolic = 180,
                 diastolic = 70,
-                recordedAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)),
+                recordedAt = Instant.now(clock).minus(40, ChronoUnit.DAYS)),
             testData.bloodPressureMeasurement(
                 systolic = 120,
                 diastolic = 70,
-                recordedAt = Instant.now(testClock).minus(10, ChronoUnit.DAYS)
+                recordedAt = Instant.now(clock).minus(10, ChronoUnit.DAYS)
             )),
         protocolDrug = null,
         appointmentDate = null)
@@ -1551,23 +1547,23 @@ class PatientRepositoryAndroidTest {
     val oldBpPassport = testData.businessId(
         patientUuid = patientUuid,
         identifier = identifier,
-        createdAt = Instant.now(testClock),
+        createdAt = Instant.now(clock),
         deletedAt = null
     )
 
-    testClock.advanceBy(Duration.ofMinutes(10))
+    clock.advanceBy(Duration.ofMinutes(10))
 
     val currentBpPassport = testData.businessId(
         patientUuid = patientUuid,
         identifier = identifier,
-        createdAt = Instant.now(testClock),
+        createdAt = Instant.now(clock),
         deletedAt = null
     )
     val deletedBpPassport = testData.businessId(
         patientUuid = patientUuid,
         identifier = identifier,
-        createdAt = Instant.now(testClock),
-        deletedAt = Instant.now(testClock)
+        createdAt = Instant.now(clock),
+        deletedAt = Instant.now(clock)
     )
 
     val dummyProfile = testData.patientProfile(patientUuid = patientUuid, generateBusinessId = false)
@@ -1588,22 +1584,22 @@ class PatientRepositoryAndroidTest {
           .run {
             copy(patient = patient.copy(
                 recordedAt = recordedAt,
-                updatedAt = Instant.now(testClock),
+                updatedAt = Instant.now(clock),
                 syncStatus = DONE)
             )
           }
     }
 
     val patientUuid1 = UUID.randomUUID()
-    val recordedAtForPatient1 = Instant.now(testClock)
+    val recordedAtForPatient1 = Instant.now(clock)
     val patientProfile1 = createPatientProfile(patientUuid1, recordedAtForPatient1)
-    testClock.advanceBy(Duration.ofMinutes(1))
-    val instantToCompare1 = Instant.now(testClock)
+    clock.advanceBy(Duration.ofMinutes(1))
+    val instantToCompare1 = Instant.now(clock)
 
     val patientUuid2 = UUID.randomUUID()
-    val instantToCompare2 = Instant.now(testClock)
-    testClock.advanceBy(Duration.ofMinutes(1))
-    val recordedAtForPatient2 = Instant.now(testClock)
+    val instantToCompare2 = Instant.now(clock)
+    clock.advanceBy(Duration.ofMinutes(1))
+    val recordedAtForPatient2 = Instant.now(clock)
     val patientProfile2 = createPatientProfile(patientUuid2, recordedAtForPatient2)
 
     patientRepository.save(listOf(patientProfile1, patientProfile2)).blockingAwait()
@@ -1619,7 +1615,7 @@ class PatientRepositoryAndroidTest {
 
     assertThat(patient2.recordedAt).isEqualTo(instantToCompare2)
     assertThat(patient2.syncStatus).isEqualTo(PENDING)
-    assertThat(patient2.updatedAt).isEqualTo(Instant.now(testClock))
+    assertThat(patient2.updatedAt).isEqualTo(Instant.now(clock))
   }
 
   @Test
@@ -1633,7 +1629,7 @@ class PatientRepositoryAndroidTest {
           copy(patient = patient.copy(
               createdAt = patientCreatedDate,
               recordedAt = patientCreatedDate,
-              updatedAt = Instant.now(testClock),
+              updatedAt = Instant.now(clock),
               syncStatus = DONE)
           )
         }
@@ -1974,7 +1970,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun verify_recordedAt_is_being_used_for_bp_instead_of_updatedAt_for_recent_patients() {
-    val initialTime = testClock.instant()
+    val initialTime = clock.instant()
 
     val patient1 = savePatientWithBp(
         recordedAt = initialTime,

@@ -172,6 +172,7 @@ class AppointmentRepositoryAndroidTest {
       assertThat(cancelReason).isEqualTo(null)
       assertThat(syncStatus).isEqualTo(PENDING)
       assertThat(createdAt).isEqualTo(firstAppointmentScheduledAtTimestamp)
+      assertThat(createdAt).isLessThan(secondAppointmentScheduledAtTimestamp)
       assertThat(updatedAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
     }
 
@@ -543,13 +544,15 @@ class AppointmentRepositoryAndroidTest {
     appointmentRepository.createReminder(appointmentUuid, reminderDate).blockingGet()
 
     // then
+    val appointmentUpdatedAtTimestamp = Instant.now(clock)
     val updatedAppointment = getAppointmentByUuid(appointmentUuid)
     with(updatedAppointment) {
       assertThat(remindOn).isEqualTo(reminderDate)
       assertThat(agreedToVisit).isNull()
       assertThat(syncStatus).isEqualTo(PENDING)
       assertThat(createdAt).isEqualTo(appointmentScheduledAtTimestamp)
-      assertThat(updatedAt).isEqualTo(Instant.now(clock))
+      assertThat(createdAt).isLessThan(appointmentUpdatedAtTimestamp)
+      assertThat(updatedAt).isEqualTo(appointmentUpdatedAtTimestamp)
     }
   }
 
@@ -573,12 +576,14 @@ class AppointmentRepositoryAndroidTest {
     appointmentRepository.markAsAgreedToVisit(appointmentUuid).blockingAwait()
 
     // then
+    val appointmentUpdatedAtTimestamp = Instant.now(clock)
     with(getAppointmentByUuid(appointmentUuid)) {
       assertThat(remindOn).isEqualTo(LocalDate.parse("2018-02-01"))
       assertThat(agreedToVisit).isTrue()
       assertThat(syncStatus).isEqualTo(PENDING)
       assertThat(createdAt).isEqualTo(appointmentScheduledAtTimestamp)
-      assertThat(updatedAt).isEqualTo(Instant.now(clock))
+      assertThat(createdAt).isLessThan(appointmentUpdatedAtTimestamp)
+      assertThat(updatedAt).isEqualTo(appointmentUpdatedAtTimestamp)
     }
   }
 
@@ -603,12 +608,14 @@ class AppointmentRepositoryAndroidTest {
 
     // then
     val updatedAppointment = getAppointmentByUuid(appointmentUuid)
+    val appointmentUpdatedAtTimestamp = Instant.now(clock)
     with(updatedAppointment) {
       assertThat(cancelReason).isEqualTo(PatientNotResponding)
       assertThat(status).isEqualTo(Cancelled)
       assertThat(syncStatus).isEqualTo(PENDING)
       assertThat(createdAt).isEqualTo(appointmentScheduledTimestamp)
-      assertThat(updatedAt).isEqualTo(Instant.now(clock))
+      assertThat(createdAt).isLessThan(appointmentUpdatedAtTimestamp)
+      assertThat(updatedAt).isEqualTo(appointmentUpdatedAtTimestamp)
     }
   }
 
@@ -632,11 +639,13 @@ class AppointmentRepositoryAndroidTest {
     appointmentRepository.markAsAlreadyVisited(appointmentUuid).blockingAwait()
 
     // then
+    val appointmentUpdatedAtTimestamp = Instant.now(clock)
     with(getAppointmentByUuid(appointmentUuid)) {
       assertThat(cancelReason).isNull()
       assertThat(status).isEqualTo(Visited)
       assertThat(createdAt).isEqualTo(appointmentScheduledTimestamp)
-      assertThat(updatedAt).isEqualTo(Instant.now(clock))
+      assertThat(createdAt).isLessThan(appointmentUpdatedAtTimestamp)
+      assertThat(updatedAt).isEqualTo(appointmentUpdatedAtTimestamp)
     }
   }
 
@@ -1001,6 +1010,8 @@ class AppointmentRepositoryAndroidTest {
     with(firstAppointmentAfterMarkingAsCreatedOnNextDay) {
       assertThat(status).isEqualTo(Visited)
       assertThat(syncStatus).isEqualTo(PENDING)
+      assertThat(createdAt).isEqualTo(firstAppointmentBeforeMarkingAsCreatedOnCurrentDay.createdAt)
+      assertThat(createdAt).isLessThan(updatedAt)
       assertThat(updatedAt).isEqualTo(Instant.now(clock))
     }
     assertThat(getAppointmentByUuid(secondAppointmentUuid))

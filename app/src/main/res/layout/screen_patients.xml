@@ -113,8 +113,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="@dimen/spacing_8"
-          android:layout_marginTop="@dimen/spacing_24"
-          android:visibility="gone" />
+          android:layout_marginTop="@dimen/spacing_24" />
       </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
     </RelativeLayout>
   </androidx.core.widget.NestedScrollView>

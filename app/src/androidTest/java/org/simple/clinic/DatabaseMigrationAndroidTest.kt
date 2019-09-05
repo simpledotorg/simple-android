@@ -51,12 +51,12 @@ class DatabaseMigrationAndroidTest {
   lateinit var lastPatientPullToken: Preference<Optional<String>>
 
   @Inject
-  lateinit var clock: UtcClock
+  lateinit var clock: TestUtcClock
 
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
-    (clock as TestUtcClock).setDate(LocalDate.of(2000, Month.JANUARY, 1))
+    clock.setDate(LocalDate.parse("2000-01-01"))
 
     helper.migrations = migrations
 

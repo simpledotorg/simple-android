@@ -5,7 +5,7 @@ import androidx.room.TypeConverter
 abstract class RoomEnumTypeConverter<T : Enum<T>>(private val enumClass: Class<T>) {
 
   @TypeConverter
-  fun toEnum(serialized: String?): T? {
+  open fun toEnum(serialized: String?): T? {
     if (serialized.isNullOrEmpty()) {
       return null
     }

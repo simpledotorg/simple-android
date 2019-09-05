@@ -32,12 +32,8 @@ class UserInputDateValidator @Inject constructor(
         parsedDate > nowDate -> Result.Invalid.DateIsInFuture
         else -> Result.Valid(parsedDate)
       }
-
-    } catch (e: Exception) {
-      return when (e) {
-        is DateTimeParseException -> Result.Invalid.InvalidPattern
-        else -> throw e
-      }
+    } catch (dte: DateTimeParseException) {
+      return Result.Invalid.InvalidPattern
     }
   }
 

@@ -15,6 +15,7 @@ import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -26,7 +27,8 @@ class AppointmentRepository @Inject constructor(
     private val appointmentDao: Appointment.RoomDao,
     private val overdueDao: OverdueAppointment.RoomDao,
     private val utcClock: UtcClock,
-    private val appointmentConfigProvider: Observable<AppointmentConfig>
+    private val appointmentConfigProvider: Observable<AppointmentConfig>,
+    private val userClock: UserClock
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
   fun schedule(
@@ -84,7 +86,7 @@ class AppointmentRepository @Inject constructor(
     return Completable.fromAction {
       appointmentDao.markAsAgreedToVisit(
           appointmentUUID = appointmentUuid,
-          reminderDate = LocalDate.now(utcClock).plusDays(30),
+          reminderDate = LocalDate.now(userClock).plusDays(30),
           newSyncStatus = SyncStatus.PENDING,
           newUpdatedAt = Instant.now(utcClock))
     }

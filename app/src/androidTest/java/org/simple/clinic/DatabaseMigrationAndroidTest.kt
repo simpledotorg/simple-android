@@ -21,10 +21,8 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -3309,6 +3307,17 @@ class DatabaseMigrationAndroidTest {
         .use { cursor ->
           assertThat(cursor.count).isEqualTo(0)
         }
+  }
+
+  fun migration_to_46_should_create_table_HomescreenIllustration() {
+    val db_v45 = helper.createDatabase(45)
+    db_v45.assertTableDoesNotExist("HomescreenIllustration")
+    val db_v46 = helper.migrateTo(46)
+    db_v46.assertTableExists("HomescreenIllustration")
+    db_v46.assertColumns(
+        "HomescreenIllustration",
+        setOf("eventId", "illustrationUrl", "from_day", "from_month", "to_day", "to_month")
+    )
   }
 }
 

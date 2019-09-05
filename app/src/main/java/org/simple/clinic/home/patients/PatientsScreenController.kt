@@ -12,8 +12,10 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
+import org.simple.clinic.home.patients.illustration.HomescreenIllustration
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -30,7 +32,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -47,6 +48,7 @@ class PatientsScreenController @Inject constructor(
     private val checkAppUpdate: CheckAppUpdateAvailability,
     private val utcClock: UtcClock,
     private val userClock: UserClock,
+    private val illustrationDao: HomescreenIllustration.RoomDao,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>

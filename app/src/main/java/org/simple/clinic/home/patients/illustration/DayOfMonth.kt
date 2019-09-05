@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients.illustration
 
+import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import org.simple.clinic.util.RoomEnumTypeConverter
@@ -11,7 +12,14 @@ data class DayOfMonth(
     val month: Month
 ) {
 
-  class MonthRoomTypeConverter : RoomEnumTypeConverter<Month>(Month::class.java)
+  class MonthRoomTypeConverter : RoomEnumTypeConverter<Month>(Month::class.java) {
+
+    @TypeConverter
+    override fun toEnum(serialized: String?): Month? {
+      serialized ?: return null
+      return super.toEnum(serialized.toUpperCase(Locale.ROOT))
+    }
+  }
 
   object MoshiTypeAdapter {
     @FromJson

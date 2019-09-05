@@ -7,6 +7,8 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.patients.illustration.DayOfMonth
+import org.simple.clinic.home.patients.illustration.HomescreenIllustration
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
@@ -49,9 +51,10 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Protocol::class,
       ProtocolDrug::class,
       BusinessId::class,
-      MissingPhoneReminder::class
+      MissingPhoneReminder::class,
+      HomescreenIllustration::class
     ],
-    version = 45,
+    version = 46,
     exportSchema = true
 )
 @TypeConverters(
@@ -70,7 +73,8 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     Identifier.IdentifierType.RoomTypeConverter::class,
     BusinessId.MetaDataVersion.RoomTypeConverter::class,
     Appointment.AppointmentType.RoomTypeConverter::class,
-    PatientStatus.RoomTypeConverter::class
+    PatientStatus.RoomTypeConverter::class,
+    DayOfMonth.MonthRoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

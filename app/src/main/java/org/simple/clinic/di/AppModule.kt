@@ -7,10 +7,10 @@ import android.os.Vibrator
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.facility.change.FacilityChangeModule
+import org.simple.clinic.home.patients.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
@@ -23,12 +23,13 @@ import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.DataSyncOnApprovalModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.indicator.SyncIndicatorModule
-import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterModule
+import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.ZoneId
 import java.util.Locale
 
@@ -50,7 +51,8 @@ import java.util.Locale
   KeyChangeAnimatorModule::class,
   OnboardingModule::class,
   AppUpdateModule::class,
-  DataSyncOnApprovalModule::class
+  DataSyncOnApprovalModule::class,
+  HomescreenIllustrationModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

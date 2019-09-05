@@ -20,6 +20,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
+import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.patient.PatientConfig
@@ -41,7 +42,6 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
@@ -83,6 +83,7 @@ class PatientsScreenControllerTest {
         checkAppUpdate = checkAppUpdate,
         utcClock = utcClock,
         userClock = userClock,
+        illustrationDao = mock(),
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref

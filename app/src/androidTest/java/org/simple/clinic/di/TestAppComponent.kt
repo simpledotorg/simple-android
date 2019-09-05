@@ -34,7 +34,13 @@ import org.simple.clinic.user.UserSessionServerIntegrationTest
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterAndroidTest
 
 @AppScope
-@Component(modules = [AppModule::class, FakerModule::class])
+@Component(
+    modules = [
+      AppModule::class,
+      FakerModule::class,
+      TestClockModule::class
+    ]
+)
 interface TestAppComponent : AppComponent {
 
   fun inject(target: TestClinicApp)

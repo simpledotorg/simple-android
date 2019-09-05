@@ -2,19 +2,17 @@ package org.simple.clinic.bp
 
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -27,7 +25,7 @@ import javax.inject.Inject
 class BloodPressureRepositoryAndroidTest {
 
   @Inject
-  lateinit var clock: UtcClock
+  lateinit var clock: TestUtcClock
 
   @Inject
   lateinit var appDatabase: org.simple.clinic.AppDatabase
@@ -47,25 +45,17 @@ class BloodPressureRepositoryAndroidTest {
       .outerRule(authenticationRule)
       .around(rxErrorsRule)!!
 
-  val testClock: TestUtcClock
-    get() = clock as TestUtcClock
-
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-    testClock.setDate(LocalDate.of(2000, Month.JANUARY, 1))
-  }
-
-  @After
-  fun tearDown() {
-    testClock.resetToEpoch()
+    clock.setDate(LocalDate.of(2000, Month.JANUARY, 1))
   }
 
   @Test
   fun saving_a_blood_pressure_with_an_older_recorded_time_should_set_the_updated_time_to_the_current_time() {
     val now = Instant.now(clock)
     val oneWeek = Duration.ofDays(7L)
-    testClock.advanceBy(oneWeek)
+    clock.advanceBy(oneWeek)
 
     val savedBloodPressure = repository
         .saveMeasurement(
@@ -93,7 +83,7 @@ class BloodPressureRepositoryAndroidTest {
     appDatabase.bloodPressureDao().save(listOf(bloodPressure))
 
     val durationToAdvanceBy = Duration.ofMinutes(15L)
-    testClock.advanceBy(durationToAdvanceBy)
+    clock.advanceBy(durationToAdvanceBy)
 
     repository.updateMeasurement(bloodPressure.copy(systolic = 130, diastolic = 90)).blockingAwait()
 
@@ -181,7 +171,7 @@ class BloodPressureRepositoryAndroidTest {
     appDatabase.bloodPressureDao().save(listOf(bloodPressure))
 
     val durationToAdvanceBy = Duration.ofMinutes(15L)
-    testClock.advanceBy(durationToAdvanceBy)
+    clock.advanceBy(durationToAdvanceBy)
 
     repository.markBloodPressureAsDeleted(bloodPressure).blockingAwait()
 

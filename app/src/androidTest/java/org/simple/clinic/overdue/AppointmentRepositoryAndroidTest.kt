@@ -47,7 +47,6 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -83,10 +82,7 @@ class AppointmentRepositoryAndroidTest {
   lateinit var faker: Faker
 
   @Inject
-  lateinit var clock: UtcClock
-
-  private val testClock: TestUtcClock
-    get() = clock as TestUtcClock
+  lateinit var clock: TestUtcClock
 
   private val facility: Facility
     get() = testData.qaFacility()
@@ -102,13 +98,12 @@ class AppointmentRepositoryAndroidTest {
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
-    testClock.setDate(LocalDate.parse("2018-01-01"))
+    clock.setDate(LocalDate.parse("2018-01-01"))
   }
 
   @After
   fun tearDown() {
     database.clearAllTables()
-    testClock.resetToEpoch()
   }
 
   @Test
@@ -153,7 +148,7 @@ class AppointmentRepositoryAndroidTest {
     ).blockingGet()
     markAppointmentSyncStatusAsDone(firstAppointmentUuid)
 
-    testClock.advanceBy(Duration.ofHours(24))
+    clock.advanceBy(Duration.ofHours(24))
 
     val secondAppointmentUuid = UUID.fromString("ed31c3ae-8903-45fe-9ad3-0302dcba7fc6")
     val scheduleDateOfSecondAppointment = LocalDate.parse("2018-02-01")
@@ -540,7 +535,7 @@ class AppointmentRepositoryAndroidTest {
     ).blockingGet()
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
-    testClock.advanceBy(Duration.ofHours(24))
+    clock.advanceBy(Duration.ofHours(24))
 
     val reminderDate = LocalDate.parse("2018-02-01")
 
@@ -572,7 +567,7 @@ class AppointmentRepositoryAndroidTest {
     ).blockingGet()
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
-    testClock.advanceBy(Duration.ofDays(1))
+    clock.advanceBy(Duration.ofDays(1))
 
     // when
     appointmentRepository.markAsAgreedToVisit(appointmentUuid).blockingAwait()
@@ -601,7 +596,7 @@ class AppointmentRepositoryAndroidTest {
     ).blockingGet()
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
-    testClock.advanceBy(Duration.ofDays(1))
+    clock.advanceBy(Duration.ofDays(1))
 
     // when
     appointmentRepository.cancelWithReason(appointmentUuid, PatientNotResponding).blockingGet()
@@ -631,7 +626,7 @@ class AppointmentRepositoryAndroidTest {
     ).blockingGet()
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
-    testClock.advanceBy(Duration.ofDays(1))
+    clock.advanceBy(Duration.ofDays(1))
 
     // when
     appointmentRepository.markAsAlreadyVisited(appointmentUuid).blockingAwait()
@@ -700,7 +695,7 @@ class AppointmentRepositoryAndroidTest {
           hasHadKidneyDisease = hasHadKidneyDisease,
           hasHadHeartAttack = hasHadHeartAttack
       )).blockingAwait()
-      testClock.advanceBy(Duration.ofSeconds(bps.size.toLong() + 1))
+      clock.advanceBy(Duration.ofSeconds(bps.size.toLong() + 1))
     }
 
     // given
@@ -939,7 +934,7 @@ class AppointmentRepositoryAndroidTest {
         currentFacility = facility
     ).blockingGet()
 
-    testClock.advanceBy(Duration.ofDays(1))
+    clock.advanceBy(Duration.ofDays(1))
 
     val scheduledDateForSecondAppointment = LocalDate.parse("2018-02-08")
     val secondAppointment = appointmentRepository.schedule(
@@ -965,7 +960,7 @@ class AppointmentRepositoryAndroidTest {
 
     val appointmentScheduleDate = LocalDate.parse("2018-02-01")
 
-    testClock.advanceBy(Duration.ofHours(1))
+    clock.advanceBy(Duration.ofHours(1))
     database
         .appointmentDao()
         .save(listOf(testData.appointment(
@@ -974,18 +969,18 @@ class AppointmentRepositoryAndroidTest {
             status = Scheduled,
             syncStatus = DONE,
             scheduledDate = appointmentScheduleDate,
-            createdAt = Instant.now(testClock),
-            updatedAt = Instant.now(testClock)
+            createdAt = Instant.now(clock),
+            updatedAt = Instant.now(clock)
         )))
     val firstAppointmentBeforeMarkingAsCreatedOnCurrentDay = getAppointmentByUuid(firstAppointmentUuid)
 
     // then
-    testClock.advanceBy(Duration.ofHours(1))
+    clock.advanceBy(Duration.ofHours(1))
     appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid).blockingAwait()
     assertThat(getAppointmentByUuid(firstAppointmentUuid)).isEqualTo(firstAppointmentBeforeMarkingAsCreatedOnCurrentDay)
 
     // then
-    testClock.advanceBy(Duration.ofDays(1))
+    clock.advanceBy(Duration.ofDays(1))
     database
         .appointmentDao()
         .save(listOf(testData.appointment(
@@ -994,8 +989,8 @@ class AppointmentRepositoryAndroidTest {
             scheduledDate = appointmentScheduleDate,
             status = Scheduled,
             syncStatus = PENDING,
-            createdAt = Instant.now(testClock),
-            updatedAt = Instant.now(testClock)
+            createdAt = Instant.now(clock),
+            updatedAt = Instant.now(clock)
         )))
 
     val secondAppointmentBeforeMarkingAsCreatedOnNextDay = getAppointmentByUuid(secondAppointmentUuid)
@@ -1006,7 +1001,7 @@ class AppointmentRepositoryAndroidTest {
     with(firstAppointmentAfterMarkingAsCreatedOnNextDay) {
       assertThat(status).isEqualTo(Visited)
       assertThat(syncStatus).isEqualTo(PENDING)
-      assertThat(updatedAt).isEqualTo(Instant.now(testClock))
+      assertThat(updatedAt).isEqualTo(Instant.now(clock))
     }
     assertThat(getAppointmentByUuid(secondAppointmentUuid))
         .isEqualTo(secondAppointmentBeforeMarkingAsCreatedOnNextDay)

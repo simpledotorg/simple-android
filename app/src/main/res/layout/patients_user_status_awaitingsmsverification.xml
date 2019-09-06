@@ -11,22 +11,22 @@
   tools:showIn="@layout/screen_patients">
 
   <TextView
-    android:id="@+id/patients_awaiting_verification_title"
+    android:id="@+id/awaitingVerificationTitle"
     style="@style/Clinic.UserApprovalStatusTitle"
     android:layout_marginStart="@dimen/spacing_12"
-    android:layout_toStartOf="@+id/patients_enter_code"
+    android:layout_toStartOf="@+id/enterCodeButton"
     android:text="@string/patients_awaiting_sms_verification_title" />
 
   <TextView
     style="@style/Clinic.UserApprovalStatusMessage"
-    android:layout_alignStart="@+id/patients_awaiting_verification_title"
-    android:layout_below="@+id/patients_awaiting_verification_title"
+    android:layout_alignStart="@+id/awaitingVerificationTitle"
+    android:layout_below="@+id/awaitingVerificationTitle"
     android:layout_marginTop="@dimen/spacing_4"
-    android:layout_toStartOf="@+id/patients_enter_code"
+    android:layout_toStartOf="@+id/enterCodeButton"
     android:text="@string/patients_awaiting_sms_verification_message" />
 
   <Button
-    android:id="@+id/patients_enter_code"
+    android:id="@+id/enterCodeButton"
     style="@style/Widget.AppCompat.Button.Borderless.Colored"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

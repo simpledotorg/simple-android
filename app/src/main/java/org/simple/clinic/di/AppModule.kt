@@ -14,6 +14,7 @@ import org.simple.clinic.home.patients.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
+import org.simple.clinic.patient.SimpleVideoModule
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.screen.KeyChangeAnimatorModule
@@ -52,7 +53,8 @@ import java.util.Locale
   OnboardingModule::class,
   AppUpdateModule::class,
   DataSyncOnApprovalModule::class,
-  HomescreenIllustrationModule::class
+  HomescreenIllustrationModule::class,
+  SimpleVideoModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

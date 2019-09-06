@@ -1,7 +1,10 @@
 package org.simple.clinic.home.patients
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -15,6 +18,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
 import kotlinx.android.synthetic.main.patients_user_status_awaitingsmsverification.view.*
 import kotlinx.android.synthetic.main.screen_patients.view.*
+import kotlinx.android.synthetic.main.view_simple_video.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.activity.TheActivityLifecycle
@@ -36,6 +40,8 @@ import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 import javax.inject.Inject
+import javax.inject.Named
+
 
 private const val REQUESTCODE_CAMERA_PERMISSION = 0
 private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
@@ -56,6 +62,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   @Inject
   lateinit var userClock: UserClock
+
+  @field:[Inject Named("training_video_youtube_id")]
+  lateinit var youTubeVideoId: String
 
   @IdRes
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
@@ -213,10 +222,29 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun showSimpleVideo() {
+    //Hard-coding to show this simple video view exists because, as of now,
+    // we are not sure if we will have variations of this training video.
+    // We should improve this implementation later.
     showHomeScreenBackground(R.id.simpleVideoLayout)
+    simpleVideoImage.setOnClickListener {
+      openYouTubeLinkForSimpleVideo()
+    }
+    videoTitleText.setOnClickListener {
+      openYouTubeLinkForSimpleVideo()
+    }
   }
 
   fun showIllustration() {
     showHomeScreenBackground(homeIllustration.id)
+  }
+
+  private fun openYouTubeLinkForSimpleVideo() {
+    val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$youTubeVideoId"))
+    val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=$youTubeVideoId"))
+    try {
+      context.startActivity(appIntent)
+    } catch (ex: ActivityNotFoundException) {
+      context.startActivity(webIntent)
+    }
   }
 }

@@ -17,7 +17,7 @@
     android:id="@+id/patients_user_approved_title"
     style="@style/Clinic.UserApprovalStatusTitle"
     android:layout_marginStart="@dimen/spacing_12"
-    android:layout_toStartOf="@+id/patients_dismiss_user_approved_status"
+    android:layout_toStartOf="@+id/dismissApprovedStatusButton"
     android:text="@string/patients_user_approved_title" />
 
   <TextView
@@ -25,11 +25,11 @@
     android:layout_alignStart="@+id/patients_user_approved_title"
     android:layout_below="@+id/patients_user_approved_title"
     android:layout_marginTop="@dimen/spacing_4"
-    android:layout_toStartOf="@+id/patients_dismiss_user_approved_status"
+    android:layout_toStartOf="@+id/dismissApprovedStatusButton"
     android:text="@string/patients_user_approved_message" />
 
   <Button
-    android:id="@+id/patients_dismiss_user_approved_status"
+    android:id="@+id/dismissApprovedStatusButton"
     style="@style/Widget.AppCompat.Button.Borderless.Colored"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

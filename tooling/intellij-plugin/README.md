@@ -7,6 +7,7 @@ This plugin houses tooling and capabilities that makes life easier while buildin
 The plugin contains,
 - A `uuid()` function expression to generate new UUID strings, commonly used in tests
 - A collection of Live Templates that make working with UUIDs easier
+- A collection of Live Templates that make working with timestamps easier
 
 ## Installation
 1. Go to Preferences (`Cmd + ,`) or Android Studio → Preferences

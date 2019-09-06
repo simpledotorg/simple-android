@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>org.simple.intellij</id>
   <name>Simple.org</name>
-  <version>0.1.0-alpha</version>
+  <version>0.2.0</version>
   <vendor email="ragunath@obvious.in" url="https://www.obvious.in">Obvious</vendor>
 
   <description><![CDATA[

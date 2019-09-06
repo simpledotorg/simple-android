@@ -5,17 +5,16 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.ViewFlipper
 import androidx.annotation.IdRes
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
+import kotlinx.android.synthetic.main.patients_user_status_awaitingsmsverification.view.*
+import kotlinx.android.synthetic.main.screen_patients.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.activity.TheActivityLifecycle
@@ -26,7 +25,6 @@ import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
-import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -59,17 +57,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   @Inject
   lateinit var userClock: UserClock
 
-  private val searchButton by bindView<Button>(R.id.patients_search_patients)
-  private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
-  private val dismissApprovedStatusButton by bindView<Button>(R.id.patients_dismiss_user_approved_status)
-  private val enterOtpManuallyButton by bindView<Button>(R.id.patients_enter_code)
-  private val scanSimpleCardButton by bindView<Button>(R.id.patients_scan_simple_card)
-  private val syncIndicatorView by bindView<SyncIndicatorView>(R.id.patients_sync_indicator)
-  private val illustrationImageView by bindView<ImageView>(R.id.patients_record_bp_illustration)
-  private val illustrationFlipper by bindView<ViewFlipper>(R.id.patient_illustration_layout)
-
   @IdRes
-  private var currentStatusViewId: Int = R.id.patients_user_status_hidden
+  private var currentStatusViewId: Int = R.id.userStatusHiddenView
   private var disposable = Disposables.empty()
 
   override fun onFinishInflate() {
@@ -94,7 +83,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
-    illustrationImageView.setImageResource(illustrationResourceId())
+    homeIllustration.setImageResource(illustrationResourceId())
   }
 
   private fun illustrationResourceId(): Int {
@@ -117,21 +106,21 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun setupApprovalStatusAnimations() {
     val entryAnimation = AnimationUtils.loadAnimation(context, R.anim.user_approval_status_entry)
-    approvalStatusViewFlipper.inAnimation = entryAnimation.apply { interpolator = FastOutSlowInInterpolator() }
+    userStatusViewflipper.inAnimation = entryAnimation.apply { interpolator = FastOutSlowInInterpolator() }
 
     val exitAnimation = AnimationUtils.loadAnimation(context, R.anim.user_approval_status_exit)
-    approvalStatusViewFlipper.outAnimation = exitAnimation.apply { interpolator = FastOutSlowInInterpolator() }
+    userStatusViewflipper.outAnimation = exitAnimation.apply { interpolator = FastOutSlowInInterpolator() }
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun activityStarts() = activityLifecycle.ofType<TheActivityLifecycle.Resumed>()
 
-  private fun searchButtonClicks() = RxView.clicks(searchButton).map { NewPatientClicked }
+  private fun searchButtonClicks() = RxView.clicks(searchPatientsButton).map { NewPatientClicked }
 
   private fun dismissApprovedStatusClicks() = RxView.clicks(dismissApprovedStatusButton).map { UserApprovedStatusDismissed() }
 
-  private fun enterCodeManuallyClicks() = RxView.clicks(enterOtpManuallyButton).map { PatientsEnterCodeManuallyClicked() }
+  private fun enterCodeManuallyClicks() = RxView.clicks(enterCodeButton).map { PatientsEnterCodeManuallyClicked() }
 
   private fun scanCardIdButtonClicks() = RxView.clicks(scanSimpleCardButton).map { ScanCardIdButtonClicked }
 
@@ -140,7 +129,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {
-    approvalStatusViewFlipper.apply {
+    userStatusViewflipper.apply {
       val statusViewIndex = indexOfChildId(statusViewId)
 
       // Avoid duplicate calls because ViewFlipper re-plays transition
@@ -153,7 +142,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun showUserAccountStatus(@IdRes statusViewId: Int) {
     showStatus(statusViewId)
-    currentStatusViewId = approvalStatusViewFlipper.currentView.id
+    currentStatusViewId = userStatusViewflipper.currentView.id
   }
 
   private fun cameraPermissionChanges(): Observable<UiEvent> {
@@ -184,7 +173,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   fun hideUserAccountStatus() {
     // By changing to an empty child instead of hiding the ViewFlipper entirely,
     // ViewFlipper's change animations can be re-used for this transition.
-    showUserAccountStatus(R.id.patients_user_status_hidden)
+    showUserAccountStatus(R.id.userStatusHiddenView)
   }
 
   fun openEnterCodeManuallyScreen() {
@@ -204,11 +193,11 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun hideSyncIndicator() {
-    syncIndicatorView.visibility = View.GONE
+    syncIndicator.visibility = View.GONE
   }
 
   fun showSyncIndicator() {
-    syncIndicatorView.visibility = View.VISIBLE
+    syncIndicator.visibility = View.VISIBLE
   }
 
   fun showAppUpdateDialog() {
@@ -216,7 +205,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {
-    illustrationFlipper.apply {
+    illustrationLayout.apply {
       val indexOfChildId = indexOfChildId(viewId)
       if (displayedChild != indexOfChildId)
         displayedChild = indexOfChildId
@@ -224,10 +213,10 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun showSimpleVideo() {
-    showHomeScreenBackground(R.id.view_simple_video)
+    showHomeScreenBackground(R.id.simpleVideoLayout)
   }
 
   fun showIllustration() {
-    showHomeScreenBackground(illustrationImageView.id)
+    showHomeScreenBackground(homeIllustration.id)
   }
 }

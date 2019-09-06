@@ -1,0 +1,43 @@
+version: "2"
+checks:
+  argument-count:
+    enabled: false
+    config:
+      threshold: 4
+  complex-logic:
+    config:
+      threshold: 4
+  file-lines:
+    enabled: false
+    config:
+      threshold: 250
+  method-complexity:
+    config:
+      threshold: 20
+  method-count:
+    enabled: false
+    config:
+      threshold: 20
+  method-lines:
+    enabled: false
+    config:
+      threshold: 25
+  nested-control-flow:
+    config:
+      threshold: 4
+  return-statements:
+    config:
+      threshold: 4
+  similar-code:
+    enabled: false
+    config:
+      threshold: # language-specific defaults. an override will affect all languages.
+  identical-code:
+    enabled: false
+    config:
+      threshold: # language-specific defaults. an override will affect all languages.
+exclude_patterns:
+  - "**/androidTest/"
+  - "**/test/"
+  - "**/src/main/java/org/simple/clinic/storage/Migration_*.kt"
+  - "**/build/"

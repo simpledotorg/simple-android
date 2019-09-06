@@ -1045,11 +1045,10 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun when_picking_overdue_appointment_then_the_latest_recorded_bp_should_be_considered() {
-    fun createBloodPressure(patientProfile: PatientProfile, recordedAt: Instant, updatedAt: Instant): BloodPressureMeasurement {
+    fun createBloodPressure(patientProfile: PatientProfile, recordedAt: Instant): BloodPressureMeasurement {
       return testData.bloodPressureMeasurement(
           patientUuid = patientProfile.patient.uuid,
-          recordedAt = recordedAt,
-          updatedAt = updatedAt
+          recordedAt = recordedAt
       )
     }
 
@@ -1067,8 +1066,6 @@ class AppointmentRepositoryAndroidTest {
     }
 
     // given
-    val now = Instant.now(clock)
-
     val firstPatient = testData.patientProfile(
         patientUuid = UUID.fromString("e1943cfb-faf0-42c4-b5b6-14b5153295b2"),
         generatePhoneNumber = true
@@ -1082,24 +1079,20 @@ class AppointmentRepositoryAndroidTest {
 
     val earlierRecordedBpForFirstPatient = createBloodPressure(
         patientProfile = firstPatient,
-        recordedAt = now.minusSeconds(1),
-        updatedAt = now.plusSeconds(1)
+        recordedAt = Instant.parse("2017-12-31T23:59:59Z")
     )
     val laterRecordedBpForFirstPatient = createBloodPressure(
         patientProfile = firstPatient,
-        recordedAt = now,
-        updatedAt = now
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
 
     val earlierRecordedBpForSecondPatient = createBloodPressure(
         patientProfile = secondPatient,
-        recordedAt = now,
-        updatedAt = now.plusSeconds(1)
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val laterRecordedBpForSecondPatient = createBloodPressure(
         patientProfile = secondPatient,
-        recordedAt = now.plusSeconds(1),
-        updatedAt = now
+        recordedAt = Instant.parse("2018-01-01T00:00:01Z")
     )
 
     bpRepository.save(listOf(laterRecordedBpForFirstPatient, earlierRecordedBpForFirstPatient, earlierRecordedBpForSecondPatient, laterRecordedBpForSecondPatient)).blockingAwait()

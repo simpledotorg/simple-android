@@ -1,7 +1,5 @@
 package org.simple.clinic.patient
 
-import com.f2prateek.rx.preferences2.Preference
-import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -16,7 +14,6 @@ import org.simple.clinic.patient.filter.SortByWeightedNameParts
 import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.remoteconfig.ConfigReader
-import javax.inject.Named
 
 @Module
 open class PatientModule {
@@ -49,12 +46,5 @@ open class PatientModule {
     )
 
     return MoshiBusinessIdMetaDataAdapter(adapters)
-  }
-
-
-  @Provides
-  @Named("number_of_patients_registered")
-  fun provideCountOfRegisteredPatients(rxSharedPreferences: RxSharedPreferences): Preference<Int> {
-    return rxSharedPreferences.getInteger("number_of_patients_registered", 0)
   }
 }

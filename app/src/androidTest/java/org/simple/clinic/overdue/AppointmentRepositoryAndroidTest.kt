@@ -3,6 +3,7 @@ package org.simple.clinic.overdue
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.bloco.faker.Faker
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
@@ -1530,6 +1531,73 @@ class AppointmentRepositoryAndroidTest {
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
 
+  @Test
+  fun patients_without_blood_pressure_should_not_be_shown_when_fetching_overdue_appointments() {
+
+    val currentDate = LocalDate.parse("2018-01-05")
+
+    fun createRecord(
+        patientUuid: UUID,
+        bpUuid: UUID?,
+        appointmentUuid: UUID
+    ): Record {
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
+
+      val bloodPressureMeasurement = if (bpUuid != null) {
+        testData.bloodPressureMeasurement(
+            uuid = bpUuid,
+            patientUuid = patientUuid,
+            facilityUuid = facility.uuid,
+            userUuid = userUuid,
+            systolic = 120,
+            diastolic = 80,
+            recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            deletedAt = null
+        )
+      } else null
+
+      val appointment = testData.appointment(
+          uuid = appointmentUuid,
+          patientUuid = patientUuid,
+          facilityUuid = facility.uuid,
+          scheduledDate = LocalDate.parse("2018-01-04"),
+          status = Scheduled,
+          cancelReason = null,
+          remindOn = null,
+          agreedToVisit = null
+      )
+
+      return Record(patientProfile, bloodPressureMeasurement, appointment)
+    }
+
+    // given
+    val withBloodPressure = createRecord(
+        patientUuid = UUID.fromString("417c19d3-68a0-4936-bc4f-5b7c2a73ccc7"),
+        bpUuid = UUID.fromString("3414fd9a-8b30-4850-9f8f-3de9305dcb6c"),
+        appointmentUuid = UUID.fromString("053f2f73-b693-420c-a9c6-d8aae1c77395")
+    )
+
+    val withoutBloodPressure = createRecord(
+        patientUuid = UUID.fromString("0af5c909-551b-448d-988e-b00b3304f738"),
+        bpUuid = null,
+        appointmentUuid = UUID.fromString("e58cfd76-aaeb-42a8-8bf1-4c71614c6288")
+    )
+
+    listOf(withBloodPressure, withoutBloodPressure)
+        .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
+    clock.setDate(currentDate)
+
+    // when
+    val overdueAppointments = appointmentRepository
+        .overdueAppointments(facility)
+        .blockingFirst()
+
+    // then
+    val expectedAppointments = listOf(withBloodPressure).map(Record::toOverdueAppointment)
+
+    assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
+  }
+
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
     appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE).blockingAwait()
   }
@@ -1540,7 +1608,7 @@ class AppointmentRepositoryAndroidTest {
 
   data class Record(
       val patientProfile: PatientProfile,
-      val bloodPressureMeasurement: BloodPressureMeasurement,
+      val bloodPressureMeasurement: BloodPressureMeasurement?,
       val appointment: Appointment
   ) {
     fun save(
@@ -1548,13 +1616,20 @@ class AppointmentRepositoryAndroidTest {
         bloodPressureRepository: BloodPressureRepository,
         appointmentRepository: AppointmentRepository
     ) {
+      val saveBp = if (bloodPressureMeasurement != null) {
+        bloodPressureRepository.save(listOf(bloodPressureMeasurement))
+      } else Completable.complete()
+
       patientRepository.save(listOf(patientProfile))
-          .andThen(bloodPressureRepository.save(listOf(bloodPressureMeasurement)))
+          .andThen(saveBp)
           .andThen(appointmentRepository.save(listOf(appointment)))
           .blockingAwait()
     }
 
     fun toOverdueAppointment(): OverdueAppointment {
+      checkNotNull(bloodPressureMeasurement) {
+        "Cannot create an Overdue Appointment without a Blood Pressure Measurement"
+      }
       return OverdueAppointment(
           fullName = patientProfile.patient.fullName,
           gender = patientProfile.patient.gender,

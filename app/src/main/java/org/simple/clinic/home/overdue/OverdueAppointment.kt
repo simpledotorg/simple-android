@@ -103,7 +103,7 @@ data class OverdueAppointment(
 
           INNER JOIN Appointment A ON A.patientUuid = P.uuid
           INNER JOIN BloodPressureMeasurement BP ON (BP.patientUuid = P.uuid AND BP.deletedAt IS NULL)
-          LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
+          LEFT JOIN PatientPhoneNumber PPN ON (PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL)
           LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
 
           WHERE 

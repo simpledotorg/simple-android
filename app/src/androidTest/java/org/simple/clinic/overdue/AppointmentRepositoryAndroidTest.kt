@@ -1451,6 +1451,85 @@ class AppointmentRepositoryAndroidTest {
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
 
+  @Test
+  fun patients_without_phone_number_should_not_be_shown_when_fetching_overdue_appointments() {
+
+    val currentDate = LocalDate.parse("2018-01-05")
+
+    fun createRecord(
+        patientUuid: UUID,
+        bpUuid: UUID,
+        appointmentUuid: UUID,
+        patientPhoneNumber: PatientPhoneNumber?
+    ): Record {
+      val patientProfile = with(testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = false)) {
+        val phoneNumbers = if (patientPhoneNumber == null) emptyList() else listOf(patientPhoneNumber.withPatientUuid(patientUuid))
+
+        this.copy(phoneNumbers = phoneNumbers)
+      }
+
+      val bloodPressureMeasurement = testData.bloodPressureMeasurement(
+          uuid = bpUuid,
+          patientUuid = patientUuid,
+          facilityUuid = facility.uuid,
+          userUuid = userUuid,
+          systolic = 120,
+          diastolic = 80,
+          recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
+          deletedAt = null
+      )
+
+      val appointment = testData.appointment(
+          uuid = appointmentUuid,
+          patientUuid = patientUuid,
+          facilityUuid = facility.uuid,
+          scheduledDate = LocalDate.parse("2018-01-04"),
+          status = Scheduled,
+          cancelReason = null,
+          remindOn = null,
+          agreedToVisit = null
+      )
+
+      return Record(patientProfile, bloodPressureMeasurement, appointment)
+    }
+
+    // given
+    val withPhoneNumber = createRecord(
+        patientUuid = UUID.fromString("417c19d3-68a0-4936-bc4f-5b7c2a73ccc7"),
+        bpUuid = UUID.fromString("3414fd9a-8b30-4850-9f8f-3de9305dcb6c"),
+        appointmentUuid = UUID.fromString("053f2f73-b693-420c-a9c6-d8aae1c77395"),
+        patientPhoneNumber = testData.patientPhoneNumber()
+    )
+
+    val withDeletedPhoneNumber = createRecord(
+        patientUuid = UUID.fromString("0af5c909-551b-448d-988e-b00b3304f738"),
+        bpUuid = UUID.fromString("6b5aed42-9e78-486a-bee2-392455993dfe"),
+        appointmentUuid = UUID.fromString("e58cfd76-aaeb-42a8-8bf1-4c71614c6288"),
+        patientPhoneNumber = testData.patientPhoneNumber(deletedAt = Instant.parse("2018-01-01T00:00:00Z"))
+    )
+
+    val withoutPhoneNumber = createRecord(
+        patientUuid = UUID.fromString("f1ddc613-a7ca-4bb4-a1a0-233672a4eb1d"),
+        bpUuid = UUID.fromString("6847f8ed-8868-42a1-b962-f5b4258f224c"),
+        appointmentUuid = UUID.fromString("2000fdda-8e42-4067-b7d3-38cb9e74f88b"),
+        patientPhoneNumber = null
+    )
+
+    listOf(withPhoneNumber, withDeletedPhoneNumber, withoutPhoneNumber)
+        .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
+    clock.setDate(currentDate)
+
+    // when
+    val overdueAppointments = appointmentRepository
+        .overdueAppointments(facility)
+        .blockingFirst()
+
+    // then
+    val expectedAppointments = listOf(withPhoneNumber).map(Record::toOverdueAppointment)
+
+    assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
+  }
+
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
     appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE).blockingAwait()
   }
@@ -1488,4 +1567,8 @@ class AppointmentRepositoryAndroidTest {
       )
     }
   }
+}
+
+private fun PatientPhoneNumber.withPatientUuid(uuid: UUID): PatientPhoneNumber {
+  return this.copy(patientUuid = uuid)
 }

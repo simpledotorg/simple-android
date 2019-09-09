@@ -2,7 +2,7 @@
 
 ## Next Release
 
-## On Demo
+## 2019-09-09-5430
 ### Feature
 - Exclude deleted patient records while searching by name or phone number
 - Exclude deleted patient records when loading the alphabetical patient log

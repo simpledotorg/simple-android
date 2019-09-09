@@ -96,7 +96,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/scanSimpleCardButton"
-        app:debug_displayedChild="2">
+        android:measureAllChildren="false"
+        app:debug_displayedChild="1">
 
         <ImageView
           android:id="@+id/homeIllustration"
@@ -111,6 +112,7 @@
           layout="@layout/view_simple_video"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/spacing_16"
           android:layout_marginTop="@dimen/spacing_24" />
       </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
     </RelativeLayout>

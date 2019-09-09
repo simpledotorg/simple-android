@@ -85,11 +85,9 @@ class AppointmentRepositoryAndroidTest {
   @Inject
   lateinit var clock: TestUtcClock
 
-  private val facility: Facility
-    get() = testData.qaFacility()
+  private val facility: Facility by lazy { testData.qaFacility() }
 
-  private val userUuid: UUID
-    get() = testData.qaUserUuid()
+  private val userUuid: UUID by lazy { testData.qaUserUuid() }
 
   @get:Rule
   val ruleChain = RuleChain
@@ -406,15 +404,23 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun deleted_blood_pressure_measurements_should_not_be_considered_when_fetching_overdue_appointments() {
-    fun createBloodPressure(patientUuid: UUID, deletedAt: Instant? = null): BloodPressureMeasurement {
+    fun createBloodPressure(
+        bpUuid: UUID,
+        patientUuid: UUID,
+        recordedAt: Instant,
+        deletedAt: Instant? = null
+    ): BloodPressureMeasurement {
       return testData.bloodPressureMeasurement(
+          uuid = bpUuid,
           patientUuid = patientUuid,
           facilityUuid = facility.uuid,
           userUuid = userUuid,
           syncStatus = DONE,
-          createdAt = Instant.now(),
-          updatedAt = Instant.now(),
-          deletedAt = deletedAt)
+          createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+          updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+          recordedAt = recordedAt,
+          deletedAt = deletedAt
+      )
     }
 
     fun createAppointment(patientUuid: UUID, scheduledDate: LocalDate): Appointment {
@@ -457,26 +463,76 @@ class AppointmentRepositoryAndroidTest {
     patientRepository.save(patients).blockingAwait()
 
     val bpsForPatientWithNoBpsDeleted = listOf(
-        createBloodPressure(patientUuid = noBpsDeletedPatientUuid),
-        createBloodPressure(patientUuid = noBpsDeletedPatientUuid)
+        createBloodPressure(
+            bpUuid = UUID.fromString("189b0842-044e-4f1c-a214-24318052f11d"),
+            patientUuid = noBpsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+        ),
+        createBloodPressure(
+            bpUuid = UUID.fromString("ce5deb11-05ee-4f9e-8734-ec3d99f271a9"),
+            patientUuid = noBpsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:01Z")
+        )
     )
 
     val bpsForPatientWithLatestBpDeleted = listOf(
-        createBloodPressure(patientUuid = latestBpDeletedPatientUuid),
-        createBloodPressure(patientUuid = latestBpDeletedPatientUuid),
-        createBloodPressure(patientUuid = latestBpDeletedPatientUuid, deletedAt = Instant.now(clock))
+        createBloodPressure(
+            bpUuid = UUID.fromString("55266e25-0c15-4cd3-969d-3c5d5af48c62"),
+            patientUuid = latestBpDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+        ),
+        createBloodPressure(
+            bpUuid = UUID.fromString("e4c3461e-8624-4b6e-874b-bb73967e423e"),
+            patientUuid = latestBpDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:01Z")
+        ),
+        createBloodPressure(
+            bpUuid = UUID.fromString("e7d19558-36d8-4b5a-a17a-6e3117622b57"),
+            patientUuid = latestBpDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:02Z"),
+            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+        )
     )
 
     val bpsForPatientWithOldestBpNotDeleted = listOf(
-        createBloodPressure(patientUuid = oldestBpNotDeletedPatientUuid),
-        createBloodPressure(patientUuid = oldestBpNotDeletedPatientUuid, deletedAt = Instant.now(clock)),
-        createBloodPressure(patientUuid = oldestBpNotDeletedPatientUuid, deletedAt = Instant.now(clock))
+        createBloodPressure(
+            bpUuid = UUID.fromString("1de759ae-9f60-4be5-a1f1-d18143bf8318"),
+            patientUuid = oldestBpNotDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+        ),
+        createBloodPressure(
+            bpUuid = UUID.fromString("f135aaa8-e4d6-48c0-acbf-ed0938c44f34"),
+            patientUuid = oldestBpNotDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:01Z"),
+            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+        ),
+        createBloodPressure(
+            bpUuid = UUID.fromString("44cff8a9-08c2-4a48-9f4b-5c1ec7d9c10c"),
+            patientUuid = oldestBpNotDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:02Z"),
+            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+        )
     )
 
     val bpsForPatientWithAllBpsDeleted = listOf(
-        createBloodPressure(patientUuid = allBpsDeletedPatientUuid, deletedAt = Instant.now(clock)),
-        createBloodPressure(patientUuid = allBpsDeletedPatientUuid, deletedAt = Instant.now(clock)),
-        createBloodPressure(patientUuid = allBpsDeletedPatientUuid, deletedAt = Instant.now(clock))
+        createBloodPressure(
+            bpUuid = UUID.fromString("264c4295-c61b-41df-8548-460977510574"),
+            patientUuid = allBpsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+        ),
+        createBloodPressure(
+            bpUuid = UUID.fromString("ff2a665e-d09a-4110-9791-8e966690370f"),
+            patientUuid = allBpsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:01Z"),
+            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+        ),
+        createBloodPressure(
+            bpUuid = UUID.fromString("4e97bd7e-87ea-4d4c-a826-3784703937ed"),
+            patientUuid = allBpsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:02Z"),
+            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+        )
     )
 
     bpRepository

@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## Next Release
+### Feature
+- Show Simple video for training user until some patients are registered
 
 ## 2019-09-09-5430
 ### Feature

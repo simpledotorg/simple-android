@@ -464,6 +464,14 @@ class PatientsScreenControllerTest {
     verify(screen).showIllustration()
   }
 
+  @Test
+  fun `when simple video is clicked then open the video in youtube`() {
+    //when
+    uiEvents.onNext(SimpleVideoClicked)
+
+    //then
+    verify(screen).openYouTubeLinkForSimpleVideo()
+  }
 
   fun `params for testing app update dialog`(): List<Any> {
 

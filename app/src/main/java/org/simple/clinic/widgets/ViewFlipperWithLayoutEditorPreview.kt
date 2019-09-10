@@ -9,7 +9,7 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 
 /** Exposes a way to set the displayed child in layout preview. */
-class ViewFlipperWithDebugPreview(context: Context, attrs: AttributeSet) : ViewFlipper(context, attrs) {
+class ViewFlipperWithLayoutEditorPreview(context: Context, attrs: AttributeSet) : ViewFlipper(context, attrs) {
 
   private var childToDisplayPostInflate: Int = 0
 
@@ -18,8 +18,8 @@ class ViewFlipperWithDebugPreview(context: Context, attrs: AttributeSet) : ViewF
 
   init {
     if (isInEditMode) {
-      val attributes = context.obtainStyledAttributes(attrs, R.styleable.ViewFlipperWithDebugPreview)
-      childToDisplayPostInflate = attributes.getInt(R.styleable.ViewFlipperWithDebugPreview_debug_displayedChild, 0)
+      val attributes = context.obtainStyledAttributes(attrs, R.styleable.ViewFlipperWithLayoutEditorPreview)
+      childToDisplayPostInflate = attributes.getInt(R.styleable.ViewFlipperWithLayoutEditorPreview_debug_displayedChild, 0)
       attributes.recycle()
     }
     displayedChildChangesSubject.onNext(displayedChild)

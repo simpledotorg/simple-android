@@ -23,7 +23,7 @@
       android:labelFor="@+id/pinentry_pin"
       android:text="@string/pinentry_pin_number_hint" />
 
-    <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+    <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
       android:id="@+id/pinentry_pin_and_bruteforcelock_viewflipper"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
           android:textAppearance="@style/Clinic.V2.TextAppearance.H5.Numeric.Grey0"
           tools:text="19:42" />
       </LinearLayout>
-    </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
+    </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
     <TextView
       android:id="@+id/pinentry_error"

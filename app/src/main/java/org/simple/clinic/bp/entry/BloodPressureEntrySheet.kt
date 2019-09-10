@@ -28,7 +28,7 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+import org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
 import org.threeten.bp.LocalDate
@@ -36,7 +36,6 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class BloodPressureEntrySheet : BottomSheetActivity() {
 
@@ -58,7 +57,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val dayEditText by bindView<EditText>(R.id.bloodpressureentry_day)
   private val monthEditText by bindView<EditText>(R.id.bloodpressureentry_month)
   private val yearEditText by bindView<EditText>(R.id.bloodpressureentry_year)
-  private val viewFlipper by bindView<ViewFlipperWithDebugPreview>(R.id.bloodpressureentry_view_flipper)
+  private val viewFlipper by bindView<ViewFlipperWithLayoutEditorPreview>(R.id.bloodpressureentry_view_flipper)
   private val dateErrorTextView by bindView<TextView>(R.id.bloodpressureentry_date_error)
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()

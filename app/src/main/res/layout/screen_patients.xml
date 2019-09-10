@@ -91,7 +91,7 @@
         app:drawableTint="@color/white100"
         tools:ignore="MissingPrefix,RtlSymmetry" />
 
-      <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+      <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
         android:id="@+id/illustrationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -114,11 +114,11 @@
           android:layout_height="wrap_content"
           android:layout_marginBottom="@dimen/spacing_16"
           android:layout_marginTop="@dimen/spacing_24" />
-      </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
+      </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
     </RelativeLayout>
   </androidx.core.widget.NestedScrollView>
 
-  <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+  <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
     android:id="@+id/userStatusViewflipper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -136,5 +136,5 @@
     <include layout="@layout/patients_user_status_approved" />
 
     <include layout="@layout/patients_user_status_awaitingsmsverification" />
-  </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
+  </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 </org.simple.clinic.home.patients.PatientsScreen>

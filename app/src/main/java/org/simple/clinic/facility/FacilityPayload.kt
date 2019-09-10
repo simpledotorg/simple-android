@@ -32,7 +32,7 @@ data class FacilityPayload(
     val state: String,
 
     @Json(name = "country")
-    val country: String = "India",
+    val country: String,
 
     @Json(name = "pin")
     val pinCode: String?,

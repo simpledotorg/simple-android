@@ -94,7 +94,7 @@ data class PatientAddressPayload(
     val state: String,
 
     @Json(name = "country")
-    val country: String? = "India",
+    val country: String?,
 
     @Json(name = "created_at")
     val createdAt: Instant,

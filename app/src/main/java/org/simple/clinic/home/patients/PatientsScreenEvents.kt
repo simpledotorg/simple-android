@@ -22,3 +22,7 @@ object ScanCardIdButtonClicked : UiEvent {
 data class PatientsScreenCameraPermissionChanged(val permissionResult: RuntimePermissionResult) : UiEvent {
   override val analyticsName = "Patients:Camera Permission:$permissionResult"
 }
+
+object SimpleVideoClicked : UiEvent {
+  override val analyticsName = "Patients:Simple Video Clicked"
+}

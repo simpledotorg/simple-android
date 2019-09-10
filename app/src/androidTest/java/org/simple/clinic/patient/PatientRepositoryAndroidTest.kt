@@ -55,13 +55,11 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unwrapJust
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.Locale
 import java.util.UUID
@@ -108,17 +106,11 @@ class PatientRepositoryAndroidTest {
   @Inject
   lateinit var businessIdMetaDataAdapter: BusinessIdMetaDataAdapter
 
-  private val authenticationRule = LocalAuthenticationRule()
-
-  private val instantTaskExecutorRule = InstantTaskExecutorRule()
-
-  private val rxErrorsRule = RxErrorsRule()
-
   @get:Rule
   val ruleChain = RuleChain
-      .outerRule(authenticationRule)
-      .around(instantTaskExecutorRule)
-      .around(rxErrorsRule)!!
+      .outerRule(LocalAuthenticationRule())
+      .around(InstantTaskExecutorRule())
+      .around(RxErrorsRule())!!
 
   val config: PatientConfig
     get() = configProvider.blockingFirst()
@@ -2451,5 +2443,42 @@ class PatientRepositoryAndroidTest {
     //then
     assertThat(resultForDeletedPatient).isEqualTo(None)
     assertThat(resultForNotDeletedPatient.value.uuid).isEqualTo(notDeletedPatientId)
+  }
+
+  @Test
+  fun a_patient_must_be_saved_with_the_country_of_the_facility() {
+    // given
+    val facilityCountry = "Bangladesh"
+    val userEnteredPatientColony = "Test Colony"
+    val userEnteredPatientDistrict = "Test District"
+    val userEnteredPatientState = "Test State"
+
+    val facilityToSavePatientAt = testData.facility(
+        uuid = UUID.fromString("d10f34d5-f16c-4095-b345-0867cccf8d06"),
+        country = facilityCountry
+    )
+    val ongoingPatientEntry = testData.ongoingPatientEntry(
+        colony = userEnteredPatientColony,
+        district = userEnteredPatientDistrict,
+        state = userEnteredPatientState
+    )
+    patientRepository.saveOngoingEntry(ongoingPatientEntry).blockingAwait()
+
+    // when
+    val savedPatient = patientRepository.saveOngoingEntryAsPatient(loggedInUser, facilityToSavePatientAt).blockingGet()
+    val savedPatientAddress = patientRepository.address(savedPatient.addressUuid).blockingFirst().toNullable()!!
+
+    // then
+    val expectedPatientAddress = testData.patientAddress(
+        uuid = savedPatient.addressUuid,
+        colonyOrVilage = userEnteredPatientColony,
+        district = userEnteredPatientDistrict,
+        state = userEnteredPatientState,
+        country = facilityCountry,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        deletedAt = null
+    )
+    assertThat(savedPatientAddress).isEqualTo(expectedPatientAddress)
   }
 }

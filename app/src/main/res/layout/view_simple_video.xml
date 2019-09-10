@@ -15,7 +15,7 @@
     android:layout_marginStart="@dimen/spacing_24"
     android:layout_marginTop="@dimen/spacing_24"
     android:src="@drawable/thumbnail_simple_video"
-  tools:ignore="ContentDescription" />
+    tools:ignore="ContentDescription" />
 
   <LinearLayout
     android:id="@+id/textLayout"
@@ -47,6 +47,7 @@
       android:text="@string/simple_video_how_to_use_the_simple_app" />
 
     <TextView
+      android:id="@+id/simpleVideoDuration"
       style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

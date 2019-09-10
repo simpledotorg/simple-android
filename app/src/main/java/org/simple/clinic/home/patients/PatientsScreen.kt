@@ -87,7 +87,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
             dismissApprovedStatusClicks(),
             enterCodeManuallyClicks(),
             scanCardIdButtonClicks(),
-            cameraPermissionChanges()),
+            cameraPermissionChanges(),
+            simpleVideoClicked()),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
@@ -131,6 +132,10 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun enterCodeManuallyClicks() = RxView.clicks(enterCodeButton).map { PatientsEnterCodeManuallyClicked() }
 
   private fun scanCardIdButtonClicks() = RxView.clicks(scanSimpleCardButton).map { ScanCardIdButtonClicked }
+
+  private fun simpleVideoClicked() = RxView.clicks(videoTitleText)
+      .mergeWith(RxView.clicks(simpleVideoImage))
+      .map { SimpleVideoClicked }
 
   fun openPatientSearchScreen() {
     screenRouter.push(PatientSearchScreenKey())
@@ -224,19 +229,13 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     // We should make the title, duration and video thumbnail configurable in order to improve this.
     simpleVideoDuration.text = resources.getString(R.string.simple_video_duration, "5:07")
     showHomeScreenBackground(R.id.simpleVideoLayout)
-    simpleVideoImage.setOnClickListener {
-      openYouTubeLinkForSimpleVideo()
-    }
-    videoTitleText.setOnClickListener {
-      openYouTubeLinkForSimpleVideo()
-    }
   }
 
   fun showIllustration() {
     showHomeScreenBackground(homeIllustration.id)
   }
 
-  private fun openYouTubeLinkForSimpleVideo() {
+  fun openYouTubeLinkForSimpleVideo() {
     val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$youTubeVideoId"))
     val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=$youTubeVideoId"))
     try {

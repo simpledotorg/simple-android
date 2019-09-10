@@ -71,7 +71,8 @@ class PatientsScreenController @Inject constructor(
         openScanSimpleIdScreen(replayedEvents),
         toggleVisibilityOfSyncIndicator(replayedEvents),
         showAppUpdateDialog(replayedEvents),
-        showSimpleVideo(replayedEvents)
+        showSimpleVideo(replayedEvents),
+        openSimpleVideo(replayedEvents)
     )
   }
 
@@ -245,5 +246,11 @@ class PatientsScreenController @Inject constructor(
             { ui: Ui -> ui.showIllustration() }
           }
         }
+  }
+
+  private fun openSimpleVideo(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<SimpleVideoClicked>()
+        .map { Ui::openYouTubeLinkForSimpleVideo }
   }
 }

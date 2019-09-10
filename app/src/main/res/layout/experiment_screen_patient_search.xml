@@ -15,6 +15,13 @@
     android:layout_height="match_parent"
     android:layout_below="@+id/toolbar" />
 
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/instantSearchResults"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/toolbar"
+    android:visibility="gone" />
+
   <!-- This is placed below the all patients view so that the shadow of the toolbar can be cast -->
   <FrameLayout
     android:id="@id/toolbar"

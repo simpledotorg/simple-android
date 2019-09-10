@@ -31,7 +31,6 @@ import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -215,16 +214,15 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {
     illustrationLayout.apply {
-      val indexOfChildId = indexOfChildId(viewId)
-      if (displayedChild != indexOfChildId)
-        displayedChild = indexOfChildId
+      displayedChild = indexOfChildId(viewId)
     }
   }
 
   fun showSimpleVideo() {
-    //Hard-coding to show this simple video view exists because, as of now,
+    // Hard-coding to show this simple video view exists because, as of now,
     // we are not sure if we will have variations of this training video.
-    // We should improve this implementation later.
+    // We should make the title, duration and video thumbnail configurable in order to improve this.
+    simpleVideoDuration.text = resources.getString(R.string.simple_video_duration, "5:07")
     showHomeScreenBackground(R.id.simpleVideoLayout)
     simpleVideoImage.setOnClickListener {
       openYouTubeLinkForSimpleVideo()

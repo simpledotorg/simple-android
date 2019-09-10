@@ -126,19 +126,26 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   fun showInstantSearchResults(results: PatientSearchResults) {
     allPatientsView.visibility = GONE
     instantSearchResults.visibility = VISIBLE
+    if(results.hasNoResults) {
+      emptyStateView.visibility = VISIBLE
+    } else {
+      emptyStateView.visibility = GONE
+    }
     instantSearchResultsAdapter.submitList(SearchResultItem.from(results))
   }
 
   fun hideInstantSearchResults() {
     allPatientsView.visibility = VISIBLE
     instantSearchResults.visibility = GONE
+    emptyStateView.visibility = GONE
+    newPatientContainer.visibility = GONE
     instantSearchResultsAdapter.submitList(emptyList())
   }
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     keyboardVisibilityDetector.registerListener(this) { isKeyboardVisible ->
-      if(isKeyboardVisible.not() && instantSearchResults.visibility == VISIBLE) {
+      if(isKeyboardVisible.not() && (instantSearchResults.visibility == VISIBLE || emptyStateView.visibility == VISIBLE)) {
         newPatientContainer.visibility = VISIBLE
       } else {
         newPatientContainer.visibility = GONE

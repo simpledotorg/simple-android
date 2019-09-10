@@ -7,6 +7,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.PatientToFacilityId
@@ -102,7 +103,7 @@ class PatientSearchScreenController @Inject constructor(
 
     return Observable
         .merge(searchByNumber, searchByName)
-        .switchMapSingle { uuids -> instantPatientSearchDao.searchByIds(uuids, Active) }
+        .switchMapSingle { uuids -> instantPatientSearchDao.searchByIds(uuids, Active).subscribeOn(Schedulers.io()) }
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {

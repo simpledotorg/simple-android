@@ -7,11 +7,6 @@ import dagger.Provides
 import java.util.Locale
 import javax.inject.Named
 
-// SimpleVideoModule class is used to show a training video on home screen.
-// The URL is hard-coded right now which means the video view on UI is fixed as well.
-// This includes the video title, thumbnail and duration.
-// At this point, we are not sure what this training video section would look like in the future
-// so we are keeping this implementation as simple as possible.
 @Module
 class SimpleVideoModule {
 

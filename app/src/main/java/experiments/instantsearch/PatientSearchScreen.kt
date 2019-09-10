@@ -16,7 +16,9 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.scanid.KeyboardVisibilityDetector
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -46,6 +48,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private val instantSearchResultsAdapter = ItemAdapter(SearchResultItem.DiffCallback())
 
+  private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
+
   private val allPatientsInFacilityView by unsafeLazy {
     allPatientsView as AllPatientsInFacilityView
   }
@@ -74,6 +78,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
       layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
       adapter = instantSearchResultsAdapter
     }
+
+    newPatientButton.setOnClickListener { screenRouter.push(PatientEntryScreenKey()) }
 
     bindUiToController(
         ui = this,
@@ -118,14 +124,30 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun showInstantSearchResults(results: PatientSearchResults) {
-    allPatientsView.visibility = View.GONE
-    instantSearchResults.visibility = View.VISIBLE
+    allPatientsView.visibility = GONE
+    instantSearchResults.visibility = VISIBLE
     instantSearchResultsAdapter.submitList(SearchResultItem.from(results))
   }
 
   fun hideInstantSearchResults() {
-    allPatientsView.visibility = View.VISIBLE
-    instantSearchResults.visibility = View.GONE
+    allPatientsView.visibility = VISIBLE
+    instantSearchResults.visibility = GONE
     instantSearchResultsAdapter.submitList(emptyList())
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    keyboardVisibilityDetector.registerListener(this) { isKeyboardVisible ->
+      if(isKeyboardVisible.not() && instantSearchResults.visibility == VISIBLE) {
+        newPatientContainer.visibility = VISIBLE
+      } else {
+        newPatientContainer.visibility = GONE
+      }
+    }
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    keyboardVisibilityDetector.unregisterListener(this)
   }
 }

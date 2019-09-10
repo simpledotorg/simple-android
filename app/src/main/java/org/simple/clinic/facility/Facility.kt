@@ -31,7 +31,7 @@ data class Facility(
 
     val state: String,
 
-    val country: String = "India",
+    val country: String,
 
     val pinCode: String?,
 

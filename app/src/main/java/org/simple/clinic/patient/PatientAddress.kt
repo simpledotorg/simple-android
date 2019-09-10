@@ -24,8 +24,7 @@ data class PatientAddress(
 
     val state: String,
 
-    // TODO: Don't use India as the country for everyone!
-    val country: String? = "India",
+    val country: String?,
 
     val createdAt: Instant,
 

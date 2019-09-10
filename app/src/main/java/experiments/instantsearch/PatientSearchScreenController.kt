@@ -24,8 +24,7 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
 
     return Observable.mergeArray(
         openPatientSummary(replayedEvents),
-        toggleAllPatientsVisibility(replayedEvents),
-        toggleSearchButtonVisibility(replayedEvents)
+        toggleAllPatientsVisibility(replayedEvents)
     )
   }
 
@@ -46,21 +45,6 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
               ui.hideAllPatientsInFacility()
             } else {
               ui.showAllPatientsInFacility()
-            }
-          }
-        }
-  }
-
-  private fun toggleSearchButtonVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return events
-        .ofType<SearchQueryTextChanged>()
-        .map { it.text.isNotBlank() }
-        .map { isSearchQueryPresent ->
-          { ui: Ui ->
-            if (isSearchQueryPresent) {
-              ui.showSearchButton()
-            } else {
-              ui.hideSearchButton()
             }
           }
         }

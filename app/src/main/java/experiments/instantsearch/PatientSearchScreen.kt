@@ -9,7 +9,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_patient_search.view.*
+import kotlinx.android.synthetic.main.experiment_screen_patient_search.view.*
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
@@ -69,7 +69,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         ui = this,
         events = Observable.merge(
             searchTextChanges(),
-            searchClicks(),
             patientClickEvents()
         ),
         controller = controller,
@@ -82,17 +81,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .textChanges(searchQueryEditText)
         .map(CharSequence::toString)
         .map(::SearchQueryTextChanged)
-  }
-
-  private fun searchClicks(): Observable<SearchClicked> {
-    val imeSearchClicks = RxTextView
-        .editorActionEvents(searchQueryEditText)
-        .filter { it.actionId() == EditorInfo.IME_ACTION_SEARCH }
-
-    return RxView
-        .clicks(searchButtonFrame.button)
-        .mergeWith(imeSearchClicks)
-        .map { SearchClicked() }
   }
 
   private fun patientClickEvents(): Observable<UiEvent> {
@@ -125,13 +113,5 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun hideAllPatientsInFacility() {
     allPatientsView.visibility = View.GONE
-  }
-
-  fun showSearchButton() {
-    searchButtonFrame.visibility = View.VISIBLE
-  }
-
-  fun hideSearchButton() {
-    searchButtonFrame.visibility = View.GONE
   }
 }

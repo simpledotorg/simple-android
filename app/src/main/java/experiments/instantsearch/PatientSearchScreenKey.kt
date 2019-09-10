@@ -12,6 +12,6 @@ class PatientSearchScreenKey : FullScreenKey {
   override val analyticsName = "Patient Search:Instant Search Experiment"
 
   override fun layoutRes(): Int {
-    return R.layout.screen_patient_search
+    return R.layout.experiment_screen_patient_search
   }
 }

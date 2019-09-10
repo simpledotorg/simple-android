@@ -4,7 +4,7 @@
     <attr name="cleareableField" format="reference" />
   </declare-styleable>
 
-  <declare-styleable name="ViewFlipperWithDebugPreview">
+  <declare-styleable name="ViewFlipperWithLayoutEditorPreview">
     <attr name="debug_displayedChild" format="integer" />
   </declare-styleable>
 

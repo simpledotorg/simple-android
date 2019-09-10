@@ -10,7 +10,7 @@
   tools:context=".bp.entry.BloodPressureEntrySheet"
   tools:gravity="bottom">
 
-  <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+  <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
     android:id="@+id/bloodpressureentry_view_flipper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -286,5 +286,5 @@
           tools:text="@string/bloodpressureentry_error_date_is_in_future" />
       </LinearLayout>
     </FrameLayout>
-  </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
+  </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 </org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener>

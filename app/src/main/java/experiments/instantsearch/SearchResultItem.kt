@@ -1,5 +1,6 @@
 package experiments.instantsearch
 
+import androidx.recyclerview.widget.DiffUtil
 import experiments.instantsearch.SearchResultItem.Event.SearchResultClicked
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_patient_search.*
@@ -78,7 +79,7 @@ sealed class SearchResultItem : ItemAdapter.Item<SearchResultItem.Event> {
     }
   }
 
-  data class InCurrentFacility(private val facility: Facility) : SearchResultItem() {
+  data class InCurrentFacility(val facility: Facility) : SearchResultItem() {
     override fun layoutResId(): Int {
       return R.layout.list_patient_search_header
     }
@@ -112,8 +113,8 @@ sealed class SearchResultItem : ItemAdapter.Item<SearchResultItem.Event> {
   }
 
   data class SearchResultRow(
-      private val searchResultViewModel: PatientSearchResultViewModel,
-      private val facility: Facility
+      val searchResultViewModel: PatientSearchResultViewModel,
+      val facility: Facility
   ) : SearchResultItem() {
 
     companion object {
@@ -157,5 +158,30 @@ sealed class SearchResultItem : ItemAdapter.Item<SearchResultItem.Event> {
 
   sealed class Event {
     data class SearchResultClicked(val patientUuid: UUID) : Event()
+  }
+
+  class DiffCallback : DiffUtil.ItemCallback<SearchResultItem>() {
+
+    override fun areItemsTheSame(oldItem: SearchResultItem, newItem: SearchResultItem): Boolean {
+      return when {
+        oldItem is InCurrentFacility && newItem is InCurrentFacility -> true
+        oldItem is NotInCurrentFacility && newItem is NotInCurrentFacility -> true
+        oldItem is NoPatientsInCurrentFacility && newItem is NoPatientsInCurrentFacility -> true
+        oldItem is SearchResultRow && newItem is SearchResultRow -> oldItem.searchResultViewModel.uuid == newItem.searchResultViewModel.uuid
+        else -> false
+      }
+    }
+
+    override fun areContentsTheSame(oldItem: SearchResultItem, newItem: SearchResultItem): Boolean {
+      return when {
+        oldItem is InCurrentFacility && newItem is InCurrentFacility -> oldItem.facility == newItem.facility
+        oldItem is NotInCurrentFacility && newItem is NotInCurrentFacility -> true
+        oldItem is NoPatientsInCurrentFacility && newItem is NoPatientsInCurrentFacility -> true
+        oldItem is SearchResultRow && newItem is SearchResultRow -> {
+          (oldItem.searchResultViewModel == newItem.searchResultViewModel) && (oldItem.facility == newItem.facility)
+        }
+        else -> false
+      }
+    }
   }
 }

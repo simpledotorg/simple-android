@@ -3,7 +3,6 @@ package experiments.instantsearch
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -20,6 +19,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -41,6 +41,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  private val adapter = ItemAdapter(SearchResultItem.DiffCallback())
 
   private val allPatientsInFacilityView by unsafeLazy {
     allPatientsView as AllPatientsInFacilityView

@@ -15,4 +15,6 @@ data class PatientSearchResults(
 
   val hasNoResults: Boolean
     get() = visitedCurrentFacility.isEmpty() && notVisitedCurrentFacility.isEmpty()
+
+  fun withSearchQuery(searchQuery: String): PatientSearchResults = this.copy(searchQuery = searchQuery)
 }

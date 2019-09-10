@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -42,7 +44,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   @Inject
   lateinit var utcClock: UtcClock
 
-  private val adapter = ItemAdapter(SearchResultItem.DiffCallback())
+  private val instantSearchResultsAdapter = ItemAdapter(SearchResultItem.DiffCallback())
 
   private val allPatientsInFacilityView by unsafeLazy {
     allPatientsView as AllPatientsInFacilityView
@@ -66,6 +68,12 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
+
+    instantSearchResults.apply {
+      setHasFixedSize(true)
+      layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+      adapter = instantSearchResultsAdapter
+    }
 
     bindUiToController(
         ui = this,
@@ -111,13 +119,13 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun showInstantSearchResults(results: PatientSearchResults) {
     allPatientsView.visibility = View.GONE
-    adapter.submitList(SearchResultItem.from(results))
     instantSearchResults.visibility = View.VISIBLE
+    instantSearchResultsAdapter.submitList(SearchResultItem.from(results))
   }
 
   fun hideInstantSearchResults() {
     allPatientsView.visibility = View.VISIBLE
-    adapter.submitList(emptyList())
     instantSearchResults.visibility = View.GONE
+    instantSearchResultsAdapter.submitList(emptyList())
   }
 }

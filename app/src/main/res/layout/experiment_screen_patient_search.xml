@@ -5,7 +5,7 @@
   android:id="@+id/patientsearch_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:animateLayoutChanges="true"
+  android:animateLayoutChanges="false"
   android:clipChildren="false">
 
   <include
@@ -13,14 +13,17 @@
     layout="@layout/view_allpatientsinfacility"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/toolbar" />
+    android:layout_below="@+id/toolbar"
+    tools:visibility="gone"/>
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/instantSearchResults"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@id/toolbar"
-    android:visibility="gone" />
+    android:visibility="gone"
+    tools:visibility="visible"
+    tools:listitem="@layout/list_patient_search"/>
 
   <!-- This is placed below the all patients view so that the shadow of the toolbar can be cast -->
   <FrameLayout

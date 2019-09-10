@@ -142,7 +142,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
       .map { SimpleVideoClicked }
 
   fun openPatientSearchScreen() {
-    screenRouter.push(PatientSearchScreenKey())
+//    screenRouter.push(PatientSearchScreenKey())
+    screenRouter.push(experiments.instantsearch.PatientSearchScreenKey())
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {

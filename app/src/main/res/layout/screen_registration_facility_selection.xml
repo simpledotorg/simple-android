@@ -8,7 +8,7 @@
   android:background="@color/grey4"
   android:orientation="vertical">
 
-  <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+  <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
     android:id="@+id/registrationfacilities_toolbar_container"
     style="@style/Clinic.V2.FacilitySelection.ToolbarFlipper"
     app:debug_displayedChild="0">
@@ -29,7 +29,7 @@
         android:importantForAutofill="no"
         tools:ignore="UnusedAttribute" />
     </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
-  </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
+  </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
   <include
     android:id="@+id/registrationfacilities_progress"

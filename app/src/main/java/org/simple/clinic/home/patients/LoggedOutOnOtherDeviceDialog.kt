@@ -22,12 +22,13 @@ class LoggedOutOnOtherDeviceDialog : AppCompatDialogFragment() {
     }
   }
 
+  @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return AlertDialog.Builder(requireContext())
         .setTitle(R.string.patients_loggedoutalert_title)
         .setMessage(R.string.patients_loggedoutalert_message)
         .setPositiveButton(R.string.patients_loggedoutalert_dismiss) { _, _ ->
-          val view = dialog.ownerActivity.findViewById<View>(android.R.id.content)
+          val view = dialog!!.ownerActivity.findViewById<View>(android.R.id.content)
           Snackbar.make(view, R.string.patients_you_are_now_logged_in, Snackbar.LENGTH_LONG).show()
         }
         .create()

@@ -290,6 +290,9 @@ dependencies {
 
   implementation "androidx.work:work-runtime:$versions.workManager"
   implementation "androidx.work:work-gcm:$versions.workManager"
+
+  // Experiments Only
+  implementation "androidx.preference:preference:$versions.androidXPreference"
 }
 
 // This must always be present at the bottom of this file, as per:

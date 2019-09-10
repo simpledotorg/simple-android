@@ -2,7 +2,6 @@ package experiments.instantsearch
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -126,7 +125,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   fun showInstantSearchResults(results: PatientSearchResults) {
     allPatientsView.visibility = GONE
     instantSearchResults.visibility = VISIBLE
-    if(results.hasNoResults) {
+    if (results.hasNoResults) {
       emptyStateView.visibility = VISIBLE
     } else {
       emptyStateView.visibility = GONE
@@ -145,7 +144,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     keyboardVisibilityDetector.registerListener(this) { isKeyboardVisible ->
-      if(isKeyboardVisible.not() && (instantSearchResults.visibility == VISIBLE || emptyStateView.visibility == VISIBLE)) {
+      if (isKeyboardVisible.not() && (instantSearchResults.visibility == VISIBLE || emptyStateView.visibility == VISIBLE)) {
         newPatientContainer.visibility = VISIBLE
       } else {
         newPatientContainer.visibility = GONE

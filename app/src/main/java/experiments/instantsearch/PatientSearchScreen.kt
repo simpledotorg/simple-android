@@ -109,11 +109,15 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     ))
   }
 
-  fun showAllPatientsInFacility() {
-    allPatientsView.visibility = View.VISIBLE
+  fun showInstantSearchResults(results: PatientSearchResults) {
+    allPatientsView.visibility = View.GONE
+    adapter.submitList(SearchResultItem.from(results))
+    instantSearchResults.visibility = View.VISIBLE
   }
 
-  fun hideAllPatientsInFacility() {
-    allPatientsView.visibility = View.GONE
+  fun hideInstantSearchResults() {
+    allPatientsView.visibility = View.VISIBLE
+    adapter.submitList(emptyList())
+    instantSearchResults.visibility = View.GONE
   }
 }

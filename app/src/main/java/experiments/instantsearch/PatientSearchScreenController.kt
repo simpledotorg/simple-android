@@ -23,8 +23,7 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
         .replay()
 
     return Observable.mergeArray(
-        openPatientSummary(replayedEvents),
-        toggleAllPatientsVisibility(replayedEvents)
+        openPatientSummary(replayedEvents)
     )
   }
 
@@ -33,20 +32,5 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
         .ofType<PatientItemClicked>()
         .map { it.patientUuid }
         .map { patientUuid -> { ui: Ui -> ui.openPatientSummary(patientUuid) } }
-  }
-
-  private fun toggleAllPatientsVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return events
-        .ofType<SearchQueryTextChanged>()
-        .map { it.text.isNotBlank() }
-        .map { isSearchQueryPresent ->
-          { ui: Ui ->
-            if (isSearchQueryPresent) {
-              ui.hideAllPatientsInFacility()
-            } else {
-              ui.showAllPatientsInFacility()
-            }
-          }
-        }
   }
 }

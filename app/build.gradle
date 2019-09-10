@@ -290,6 +290,13 @@ dependencies {
 
   implementation "androidx.work:work-runtime:$versions.workManager"
   implementation "androidx.work:work-gcm:$versions.workManager"
+
+  implementation "com.spotify.mobius:mobius-core:$versions.mobius"
+  implementation("com.spotify.mobius:mobius-rx2:$versions.mobius") {
+    exclude group: "io.reactivex.rxjava2"
+    because "Traceur is incompatible with the version of RxJava this artifact pulls in transitively"
+  }
+  testImplementation "com.spotify.mobius:mobius-test:$versions.mobius"
 }
 
 // This must always be present at the bottom of this file, as per:

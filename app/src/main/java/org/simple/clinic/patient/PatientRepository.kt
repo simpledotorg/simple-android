@@ -249,7 +249,7 @@ class PatientRepository @Inject constructor(
 
   fun saveOngoingEntryAsPatient(
       loggedInUser: User,
-      currentFacility: Facility
+      facility: Facility
   ): Single<Patient> {
     val cachedOngoingEntry = ongoingEntry().cache()
 
@@ -273,6 +273,7 @@ class PatientRepository @Inject constructor(
                 colonyOrVillage = address!!.colonyOrVillage,
                 district = address.district,
                 state = address.state,
+                country = facility.country,
                 createdAt = Instant.now(utcClock),
                 updatedAt = Instant.now(utcClock),
                 deletedAt = null)
@@ -314,7 +315,7 @@ class PatientRepository @Inject constructor(
           if (entry.identifier == null) {
             Completable.complete()
           } else {
-            addIdentifierToPatient(patientUuid, entry.identifier, loggedInUser, currentFacility).toCompletable()
+            addIdentifierToPatient(patientUuid, entry.identifier, loggedInUser, facility).toCompletable()
           }
         }
 

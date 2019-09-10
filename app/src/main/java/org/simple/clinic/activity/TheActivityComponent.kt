@@ -7,6 +7,7 @@ import dagger.BindsInstance
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
+import experiments.ExperimentsComponent
 import io.reactivex.Observable
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen
@@ -128,6 +129,8 @@ interface TheActivityComponent {
   fun inject(target: RegistrationLoadingScreen)
   fun inject(target: LoggedOutOfDeviceDialog)
   fun inject(target: ShortCodeSearchResultScreen)
+
+  fun experimentsComponentBuilder(): ExperimentsComponent.Builder
 
   @Subcomponent.Builder
   interface Builder {

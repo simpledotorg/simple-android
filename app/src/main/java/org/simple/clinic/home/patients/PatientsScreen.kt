@@ -24,6 +24,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -61,6 +62,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var crashReporter: CrashReporter
 
   @field:[Inject Named("training_video_youtube_id")]
   lateinit var youTubeVideoId: String
@@ -236,12 +240,19 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun openYouTubeLinkForSimpleVideo() {
-    val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$youTubeVideoId"))
-    val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=$youTubeVideoId"))
-    try {
-      context.startActivity(appIntent)
-    } catch (ex: ActivityNotFoundException) {
-      context.startActivity(webIntent)
+    val packageManager = context.packageManager
+    val appUri = "vnd.youtube:$youTubeVideoId"
+    val webUri = "http://www.youtube.com/watch?v=$youTubeVideoId"
+
+    val resolvedIntent = listOf(appUri, webUri)
+        .map { Uri.parse(it) }
+        .map { Intent(Intent.ACTION_VIEW, it) }
+        .firstOrNull { it.resolveActivity(packageManager) != null }
+
+    if (resolvedIntent != null) {
+      context.startActivity(resolvedIntent)
+    } else {
+      crashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
   }
 }

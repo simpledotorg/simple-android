@@ -96,6 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/scanSimpleCardButton"
+        android:visibility="invisible"
         android:measureAllChildren="false"
         app:debug_displayedChild="1">
 

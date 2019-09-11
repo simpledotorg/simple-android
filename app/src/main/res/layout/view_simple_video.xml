@@ -14,8 +14,9 @@
     android:layout_marginBottom="@dimen/spacing_24"
     android:layout_marginStart="@dimen/spacing_24"
     android:layout_marginTop="@dimen/spacing_24"
+    android:foreground="?selectableItemBackground"
     android:src="@drawable/thumbnail_simple_video"
-    tools:ignore="ContentDescription" />
+    tools:ignore="ContentDescription,UnusedAttribute" />
 
   <LinearLayout
     android:id="@+id/textLayout"

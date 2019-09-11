@@ -225,6 +225,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     illustrationLayout.apply {
       displayedChild = indexOfChildId(viewId)
     }
+    illustrationLayout.visibility = View.VISIBLE
   }
 
   fun showSimpleVideo() {

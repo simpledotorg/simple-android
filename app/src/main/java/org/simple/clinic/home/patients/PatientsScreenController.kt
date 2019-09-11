@@ -76,6 +76,8 @@ class PatientsScreenController @Inject constructor(
     )
   }
 
+  private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
+
   private fun enterCodeManuallyClicks(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientsEnterCodeManuallyClicked>()
         .map { { ui: Ui -> ui.openEnterCodeManuallyScreen() } }
@@ -87,10 +89,9 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun refreshApprovalStatusOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreate = events.ofType<ScreenCreated>()
     val screenResumes = events.ofType<TheActivityLifecycle.Resumed>()
 
-    return Observable.merge(screenCreate, screenResumes)
+    return Observable.merge(screenCreated(events), screenResumes)
         // Depending upon the entry point of Patients screen, both screen-create
         // and screen-resume events may or may not happen at the same time.
         // So duplicate triggers are dropped by restricting flatMap's
@@ -125,8 +126,7 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun displayUserAccountStatusNotification(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
+    return screenCreated(events)
         .flatMap {
           val user = userSession.loggedInUser().map { (user) -> user!! }
 
@@ -171,8 +171,7 @@ class PatientsScreenController @Inject constructor(
     val isScanCardFeatureEnabledStream = configProvider
         .map { it.scanSimpleCardFeatureEnabled }
 
-    return events
-        .ofType<ScreenCreated>()
+    return screenCreated(events)
         .withLatestFrom(isScanCardFeatureEnabledStream)
         .map { (_, isScanCardFeatureEnabled) ->
           { ui: Ui -> ui.setScanCardButtonEnabled(isScanCardFeatureEnabled) }
@@ -193,15 +192,13 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun toggleVisibilityOfSyncIndicator(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreated = events.ofType<ScreenCreated>()
-
     val canUserSync =
         userSession
             .canSyncData()
             .distinctUntilChanged()
 
     return Observables
-        .combineLatest(screenCreated, canUserSync)
+        .combineLatest(screenCreated(events), canUserSync)
         .map { (_, canSync) ->
           { ui: Ui ->
             when {
@@ -220,16 +217,13 @@ class PatientsScreenController @Inject constructor(
       return lastShownDate.isBefore(today)
     }
 
-    val screenCreated = events
-        .ofType<ScreenCreated>()
-
     val availableUpdate = checkAppUpdate
         .listen()
         .filter { it is ShowAppUpdate }
 
 
     return Observables
-        .combineLatest(screenCreated, availableUpdate)
+        .combineLatest(screenCreated(events), availableUpdate)
         .map { (_, update) -> update }
         .filter { hasADayPassedSinceLastUpdateShown() }
         .doOnNext { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }
@@ -237,8 +231,7 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun showSimpleVideo(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
+    return screenCreated(events)
         .map {
           if (numberOfPatientsRegisteredPref.get() < 10) {
             { ui: Ui -> ui.showSimpleVideo() }

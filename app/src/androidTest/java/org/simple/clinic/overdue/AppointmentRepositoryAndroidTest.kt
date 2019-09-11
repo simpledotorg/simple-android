@@ -35,14 +35,9 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
-import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
@@ -1073,12 +1068,12 @@ class AppointmentRepositoryAndroidTest {
   @Test
   fun appointments_that_are_still_scheduled_after_the_schedule_date_should_be_fetched_as_overdue_appointments() {
 
-    fun createRecord(
+    fun createAppointmentRecord(
         patientUuid: UUID,
         bpUuid: UUID,
         appointmentUuid: UUID,
         scheduleAppointmentOn: LocalDate
-    ): Record {
+    ): RecordAppointment {
       val patientProfile = testData.patientProfile(
           patientUuid = patientUuid,
           generatePhoneNumber = true
@@ -1106,34 +1101,34 @@ class AppointmentRepositoryAndroidTest {
           agreedToVisit = null
       )
 
-      return Record(patientProfile, bloodPressureMeasurement, appointment)
+      return RecordAppointment(patientProfile, bloodPressureMeasurement, appointment)
     }
 
     // given
     val currentDate = LocalDate.parse("2018-01-05")
 
-    val oneWeekBeforeCurrentDate = createRecord(
+    val oneWeekBeforeCurrentDate = createAppointmentRecord(
         patientUuid = UUID.fromString("c5bb0ab7-516d-4c61-ac36-b806ba9bcca5"),
         bpUuid = UUID.fromString("85765883-b964-4322-a7e3-c922612b078d"),
         appointmentUuid = UUID.fromString("064a0417-d485-40f0-9659-dbb7a4efbfb7"),
         scheduleAppointmentOn = currentDate.minusDays(7)
     )
 
-    val oneDayBeforeCurrentDate = createRecord(
+    val oneDayBeforeCurrentDate = createAppointmentRecord(
         patientUuid = UUID.fromString("7dd6a3c6-2977-45d9-bf22-f2b8929d227e"),
         bpUuid = UUID.fromString("e27345b6-0463-410d-b433-ada8adf8f6f7"),
         appointmentUuid = UUID.fromString("899a7269-01b0-4d59-9e3b-5a6cc82985d2"),
         scheduleAppointmentOn = currentDate.minusDays(1)
     )
 
-    val onCurrentDate = createRecord(
+    val onCurrentDate = createAppointmentRecord(
         patientUuid = UUID.fromString("c83a03f3-61b4-4af6-bcbf-3094ed4044a1"),
         bpUuid = UUID.fromString("2f439af6-bff9-4d85-9179-9697171863fb"),
         appointmentUuid = UUID.fromString("6419fb68-6e1d-4928-8435-777da07c54d9"),
         scheduleAppointmentOn = currentDate
     )
 
-    val afterCurrentDate = createRecord(
+    val afterCurrentDate = createAppointmentRecord(
         patientUuid = UUID.fromString("fae12ba1-e958-4aaf-9802-0b4b09535469"),
         bpUuid = UUID.fromString("4b25b6bb-4279-4816-81a6-f5f325c832d4"),
         appointmentUuid = UUID.fromString("b422ca39-2090-4c24-9a4c-5a8904403a57"),
@@ -1150,7 +1145,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(oneWeekBeforeCurrentDate, oneDayBeforeCurrentDate).map(Record::toOverdueAppointment)
+    val expectedAppointments = listOf(oneWeekBeforeCurrentDate, oneDayBeforeCurrentDate).map(RecordAppointment::toOverdueAppointment)
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -1160,12 +1155,12 @@ class AppointmentRepositoryAndroidTest {
 
     val currentDate = LocalDate.parse("2018-01-05")
 
-    fun createRecord(
+    fun createAppointmentRecord(
         patientUuid: UUID,
         bpUuid: UUID,
         appointmentUuid: UUID,
         appointmentReminderOn: LocalDate
-    ): Record {
+    ): RecordAppointment {
       val patientProfile = testData.patientProfile(
           patientUuid = patientUuid,
           generatePhoneNumber = true
@@ -1193,32 +1188,32 @@ class AppointmentRepositoryAndroidTest {
           agreedToVisit = null
       )
 
-      return Record(patientProfile, bloodPressureMeasurement, appointment)
+      return RecordAppointment(patientProfile, bloodPressureMeasurement, appointment)
     }
 
     // given
-    val remindOneWeekBeforeCurrentDate = createRecord(
+    val remindOneWeekBeforeCurrentDate = createAppointmentRecord(
         patientUuid = UUID.fromString("417c19d3-68a0-4936-bc4f-5b7c2a73ccc7"),
         bpUuid = UUID.fromString("3414fd9a-8b30-4850-9f8f-3de9305dcb6c"),
         appointmentUuid = UUID.fromString("053f2f73-b693-420c-a9c6-d8aae1c77395"),
         appointmentReminderOn = currentDate.minusWeeks(1)
     )
 
-    val remindOneDayBeforeCurrentDate = createRecord(
+    val remindOneDayBeforeCurrentDate = createAppointmentRecord(
         patientUuid = UUID.fromString("0af5c909-551b-448d-988e-b00b3304f738"),
         bpUuid = UUID.fromString("6b5aed42-9e78-486a-bee2-392455993dfe"),
         appointmentUuid = UUID.fromString("e58cfd76-aaeb-42a8-8bf1-4c71614c6288"),
         appointmentReminderOn = currentDate.minusDays(1)
     )
 
-    val remindOnCurrentDate = createRecord(
+    val remindOnCurrentDate = createAppointmentRecord(
         patientUuid = UUID.fromString("6fc5a658-4afc-473b-a062-c57849f4ade9"),
         bpUuid = UUID.fromString("ff440058-6dbc-4283-b0c3-882ee069ed6c"),
         appointmentUuid = UUID.fromString("27625873-bda2-47ff-ab2c-a664224a8d7e"),
         appointmentReminderOn = currentDate
     )
 
-    val remindAfterCurrentDate = createRecord(
+    val remindAfterCurrentDate = createAppointmentRecord(
         patientUuid = UUID.fromString("f1ddc613-a7ca-4bb4-a1a0-233672a4eb1d"),
         bpUuid = UUID.fromString("6847f8ed-8868-42a1-b962-f5b4258f224c"),
         appointmentUuid = UUID.fromString("2000fdda-8e42-4067-b7d3-38cb9e74f88b"),
@@ -1235,7 +1230,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(remindOneWeekBeforeCurrentDate, remindOneDayBeforeCurrentDate).map(Record::toOverdueAppointment)
+    val expectedAppointments = listOf(remindOneWeekBeforeCurrentDate, remindOneDayBeforeCurrentDate).map(RecordAppointment::toOverdueAppointment)
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -1245,12 +1240,12 @@ class AppointmentRepositoryAndroidTest {
 
     val currentDate = LocalDate.parse("2018-01-05")
 
-    fun createRecord(
+    fun createAppointmentRecord(
         patientUuid: UUID,
         bpUuid: UUID,
         appointmentUuid: UUID,
         patientPhoneNumber: PatientPhoneNumber?
-    ): Record {
+    ): RecordAppointment {
       val patientProfile = with(testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = false)) {
         val phoneNumbers = if (patientPhoneNumber == null) emptyList() else listOf(patientPhoneNumber.withPatientUuid(patientUuid))
 
@@ -1279,25 +1274,25 @@ class AppointmentRepositoryAndroidTest {
           agreedToVisit = null
       )
 
-      return Record(patientProfile, bloodPressureMeasurement, appointment)
+      return RecordAppointment(patientProfile, bloodPressureMeasurement, appointment)
     }
 
     // given
-    val withPhoneNumber = createRecord(
+    val withPhoneNumber = createAppointmentRecord(
         patientUuid = UUID.fromString("417c19d3-68a0-4936-bc4f-5b7c2a73ccc7"),
         bpUuid = UUID.fromString("3414fd9a-8b30-4850-9f8f-3de9305dcb6c"),
         appointmentUuid = UUID.fromString("053f2f73-b693-420c-a9c6-d8aae1c77395"),
         patientPhoneNumber = testData.patientPhoneNumber()
     )
 
-    val withDeletedPhoneNumber = createRecord(
+    val withDeletedPhoneNumber = createAppointmentRecord(
         patientUuid = UUID.fromString("0af5c909-551b-448d-988e-b00b3304f738"),
         bpUuid = UUID.fromString("6b5aed42-9e78-486a-bee2-392455993dfe"),
         appointmentUuid = UUID.fromString("e58cfd76-aaeb-42a8-8bf1-4c71614c6288"),
         patientPhoneNumber = testData.patientPhoneNumber(deletedAt = Instant.parse("2018-01-01T00:00:00Z"))
     )
 
-    val withoutPhoneNumber = createRecord(
+    val withoutPhoneNumber = createAppointmentRecord(
         patientUuid = UUID.fromString("f1ddc613-a7ca-4bb4-a1a0-233672a4eb1d"),
         bpUuid = UUID.fromString("6847f8ed-8868-42a1-b962-f5b4258f224c"),
         appointmentUuid = UUID.fromString("2000fdda-8e42-4067-b7d3-38cb9e74f88b"),
@@ -1314,7 +1309,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(withPhoneNumber).map(Record::toOverdueAppointment)
+    val expectedAppointments = listOf(withPhoneNumber).map(RecordAppointment::toOverdueAppointment)
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -1324,11 +1319,11 @@ class AppointmentRepositoryAndroidTest {
 
     val currentDate = LocalDate.parse("2018-01-05")
 
-    fun createRecord(
+    fun createAppointmentRecord(
         patientUuid: UUID,
         bpUuid: UUID?,
         appointmentUuid: UUID
-    ): Record {
+    ): RecordAppointment {
       val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
 
       val bloodPressureMeasurement = if (bpUuid != null) {
@@ -1355,17 +1350,17 @@ class AppointmentRepositoryAndroidTest {
           agreedToVisit = null
       )
 
-      return Record(patientProfile, bloodPressureMeasurement, appointment)
+      return RecordAppointment(patientProfile, bloodPressureMeasurement, appointment)
     }
 
     // given
-    val withBloodPressure = createRecord(
+    val withBloodPressure = createAppointmentRecord(
         patientUuid = UUID.fromString("417c19d3-68a0-4936-bc4f-5b7c2a73ccc7"),
         bpUuid = UUID.fromString("3414fd9a-8b30-4850-9f8f-3de9305dcb6c"),
         appointmentUuid = UUID.fromString("053f2f73-b693-420c-a9c6-d8aae1c77395")
     )
 
-    val withoutBloodPressure = createRecord(
+    val withoutBloodPressure = createAppointmentRecord(
         patientUuid = UUID.fromString("0af5c909-551b-448d-988e-b00b3304f738"),
         bpUuid = null,
         appointmentUuid = UUID.fromString("e58cfd76-aaeb-42a8-8bf1-4c71614c6288")
@@ -1381,7 +1376,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(withBloodPressure).map(Record::toOverdueAppointment)
+    val expectedAppointments = listOf(withBloodPressure).map(RecordAppointment::toOverdueAppointment)
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -1394,7 +1389,7 @@ class AppointmentRepositoryAndroidTest {
     return database.appointmentDao().getOne(appointmentUuid)!!
   }
 
-  data class Record(
+  data class RecordAppointment(
       val patientProfile: PatientProfile,
       val bloodPressureMeasurement: BloodPressureMeasurement?,
       val appointment: Appointment

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.simple.clinic"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  package="org.simple.clinic"
   android:installLocation="preferExternal">
 
   <uses-feature
@@ -34,7 +34,7 @@
     <meta-data
       android:name="com.heapanalytics.android.autoInitEnvId"
       android:value="none"
-      tools:replace="android:value"/>
+      tools:replace="android:value" />
     <!-- Mixpanel is causing error logs to be written needlessly because of a problem with their
     A/B testing framework. Since we don't use it, we can disable it.
     https://github.com/mixpanel/mixpanel-android/issues/253
@@ -101,5 +101,16 @@
       android:name="androidx.work.impl.WorkManagerInitializer"
       android:enabled="false"
       android:exported="false" />
+
+    <activity
+      android:name="experiments.ExperimentsToggleActivity"
+      android:label="Simple Experiments Toggles"
+      android:icon="@drawable/experiments_ic_activityicon">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+
   </application>
 </manifest>

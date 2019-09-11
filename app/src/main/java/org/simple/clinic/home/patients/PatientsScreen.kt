@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import androidx.annotation.IdRes
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
@@ -29,7 +30,6 @@ import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
-import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ScreenCreated
@@ -41,7 +41,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 import javax.inject.Inject
 import javax.inject.Named
-
 
 private const val REQUESTCODE_CAMERA_PERMISSION = 0
 private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
@@ -68,6 +67,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   @field:[Inject Named("training_video_youtube_id")]
   lateinit var youTubeVideoId: String
+
+  @field:[Inject Named("experiment_instantsearch_v1_toggle")]
+  lateinit var instantSearchV1ExperimentToggle: Preference<Boolean>
 
   @IdRes
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
@@ -142,8 +144,15 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
       .map { SimpleVideoClicked }
 
   fun openPatientSearchScreen() {
-//    screenRouter.push(PatientSearchScreenKey())
-    screenRouter.push(experiments.instantsearch.PatientSearchScreenKey())
+    // TODO: See if we can do this in the ScreenRouter and dynamically replace the keys instead of needing to do this here
+    val screenKey = if (instantSearchV1ExperimentToggle.get()) {
+      experiments.instantsearch.PatientSearchScreenKey()
+    } else {
+      org.simple.clinic.search.PatientSearchScreenKey()
+    }
+
+    screenRouter.push(screenKey)
+
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {

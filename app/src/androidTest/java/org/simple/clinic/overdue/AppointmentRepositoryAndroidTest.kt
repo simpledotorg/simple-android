@@ -405,7 +405,7 @@ class AppointmentRepositoryAndroidTest {
   }
 
   @Test
-  fun when_marking_appointment_as_agreed_to_visit_reminder_for_30_days_should_be_set() {
+  fun when_marking_appointment_as_agreed_to_visit_reminder_for_a_month_should_be_set() {
     // given
     val appointmentScheduleDate = LocalDate.parse("2018-01-01")
     val appointmentScheduledAtTimestamp = Instant.now(clock)
@@ -419,7 +419,7 @@ class AppointmentRepositoryAndroidTest {
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
     clock.advanceBy(Duration.ofSeconds(1))
-    userClock.setDate(LocalDate.parse("2018-01-05"))
+    userClock.setDate(LocalDate.parse("2018-01-31"))
 
     // when
     appointmentRepository.markAsAgreedToVisit(appointmentUuid).blockingAwait()
@@ -427,7 +427,7 @@ class AppointmentRepositoryAndroidTest {
     // then
     val appointmentUpdatedAtTimestamp = Instant.parse("2018-01-01T00:00:01Z")
     with(getAppointmentByUuid(appointmentUuid)) {
-      assertThat(remindOn).isEqualTo(LocalDate.parse("2018-02-04"))
+      assertThat(remindOn).isEqualTo(LocalDate.parse("2018-02-28"))
       assertThat(agreedToVisit).isTrue()
       assertThat(syncStatus).isEqualTo(PENDING)
       assertThat(createdAt).isEqualTo(appointmentScheduledAtTimestamp)

@@ -86,7 +86,7 @@ class AppointmentRepository @Inject constructor(
     return Completable.fromAction {
       appointmentDao.markAsAgreedToVisit(
           appointmentUUID = appointmentUuid,
-          reminderDate = LocalDate.now(userClock).plusDays(30),
+          reminderDate = LocalDate.now(userClock).plusMonths(1),
           newSyncStatus = SyncStatus.PENDING,
           newUpdatedAt = Instant.now(utcClock))
     }

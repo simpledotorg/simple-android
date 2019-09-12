@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.google.common.util.concurrent.MoreExecutors
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.subjects.PublishSubject
+import org.junit.After
 import org.junit.Test
 import org.simple.mobius.migration.fix.CounterEffect
 import org.simple.mobius.migration.fix.CounterEvent
@@ -24,6 +25,11 @@ class MobiusTestFixtureTest {
       .build()
   private val executorService = MoreExecutors.newDirectExecutorService()
   private val fixture = MobiusTestFixture(events, ::update, defaultModel, renderFunction, effectHandler, executorService)
+
+  @After
+  fun teardown() {
+    fixture.dispose()
+  }
 
   @Test
   fun `it can dispatch events to update the model`() {
@@ -58,6 +64,20 @@ class MobiusTestFixtureTest {
         .isEqualTo(-1)
     assertThat(view.notifyNegativeNumberInvoked)
         .isTrue()
+  }
+
+  @Test
+  fun `it can dispose the fixture once dispose is called`() {
+    assertThat(view.model)
+        .isEqualTo(0)
+
+    // when
+    fixture.dispose()
+    events.onNext(Increment)
+
+    // then
+    assertThat(view.model)
+        .isEqualTo(0)
   }
 }
 

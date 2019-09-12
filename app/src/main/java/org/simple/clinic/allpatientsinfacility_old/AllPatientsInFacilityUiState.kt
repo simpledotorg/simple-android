@@ -1,4 +1,4 @@
-package org.simple.clinic.allpatientsinfacility
+package org.simple.clinic.allpatientsinfacility_old
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

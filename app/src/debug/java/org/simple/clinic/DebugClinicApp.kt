@@ -2,6 +2,7 @@ package org.simple.clinic
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.StrictMode
 import com.facebook.stetho.Stetho
 import com.squareup.leakcanary.LeakCanary
 import com.tspoon.traceur.Traceur
@@ -44,6 +45,7 @@ class DebugClinicApp : ClinicApp() {
     if (LeakCanary.isInAnalyzerProcess(this)) {
       return
     }
+    addStrictModeChecks()
     Traceur.enableLogging()
     super.onCreate()
     LeakCanary.install(this)
@@ -87,5 +89,25 @@ class DebugClinicApp : ClinicApp() {
         .bruteForceProtectionModule(DebugBruteForceProtectionModule())
         .networkModule(DebugNetworkModule())
         .build()
+  }
+
+  private fun addStrictModeChecks() {
+    StrictMode
+        .setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .penaltyDeathOnNetwork()
+                .build()
+        )
+    StrictMode.setVmPolicy(
+        StrictMode.VmPolicy.Builder()
+            .detectLeakedClosableObjects()
+            .detectLeakedRegistrationObjects()
+            .detectLeakedSqlLiteObjects()
+            .penaltyLog()
+            .penaltyDeath()
+            .build()
+    )
   }
 }

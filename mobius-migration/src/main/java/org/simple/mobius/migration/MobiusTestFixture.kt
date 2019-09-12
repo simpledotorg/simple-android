@@ -12,9 +12,10 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.ExecutorService
 
 class MobiusTestFixture<M: Any, E, F>(
-    defaultModel: M,
-    updateFunction: (M, E) -> Next<M, F>,
     events: Observable<E>,
+    updateFunction: (M, E) -> Next<M, F>,
+    defaultModel: M,
+    renderFunction: (M) -> Unit,
     executorService: ExecutorService
 ) {
   private val disposable: Disposable
@@ -38,7 +39,7 @@ class MobiusTestFixture<M: Any, E, F>(
     controller = Mobius.controller(loop, defaultModel, workRunner)
 
     with(controller) {
-      connect(createViewConnectable())
+      connect(createViewConnectable(renderFunction))
       start()
     }
   }
@@ -55,11 +56,11 @@ class MobiusTestFixture<M: Any, E, F>(
     }
   }
 
-  private fun createViewConnectable(): Connectable<M, E> {
+  private fun createViewConnectable(renderFunction: (M) -> Unit): Connectable<M, E> {
     return Connectable {
       object : Connection<M> {
         override fun accept(value: M) {
-          /* no-op */
+          renderFunction(value)
         }
 
         override fun dispose() {

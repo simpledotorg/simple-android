@@ -46,6 +46,10 @@ class MobiusTestFixture<M: Any, E, F>(
     }
   }
 
+  fun dispose() {
+    disposable.dispose()
+  }
+
   private fun createViewConnectable(renderFunction: (M) -> Unit): Connectable<M, E> {
     return Connectable {
       object : Connection<M> {

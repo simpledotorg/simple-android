@@ -7,7 +7,9 @@ import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import com.spotify.mobius.runners.WorkRunners
+import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.ExecutorService
 
@@ -16,6 +18,7 @@ class MobiusTestFixture<M: Any, E, F>(
     updateFunction: (M, E) -> Next<M, F>,
     defaultModel: M,
     renderFunction: (M) -> Unit,
+    effectHandler: ObservableTransformer<F, E>,
     executorService: ExecutorService
 ) {
   private val disposable: Disposable
@@ -27,10 +30,9 @@ class MobiusTestFixture<M: Any, E, F>(
         .subscribe(eventSource::notifyEvent)
 
     val update = Update<M, E, F> { model, event -> updateFunction(model, event) }
-    val effectHandler = createEffectHandler()
     val workRunner = WorkRunners.from(executorService)
 
-    val loop = Mobius
+    val loop = RxMobius
         .loop(update, effectHandler)
         .eventSource(eventSource)
         .eventRunner { workRunner }
@@ -44,18 +46,6 @@ class MobiusTestFixture<M: Any, E, F>(
     }
   }
 
-  private fun createEffectHandler() = Connectable<F, E> {
-    object : Connection<F> {
-      override fun accept(value: F) {
-        /* no-op */
-      }
-
-      override fun dispose() {
-        /* no-op */
-      }
-    }
-  }
-
   private fun createViewConnectable(renderFunction: (M) -> Unit): Connectable<M, E> {
     return Connectable {
       object : Connection<M> {
@@ -64,7 +54,7 @@ class MobiusTestFixture<M: Any, E, F>(
         }
 
         override fun dispose() {
-          /* no-op */
+          /* nothing to dispose */
         }
       }
     }

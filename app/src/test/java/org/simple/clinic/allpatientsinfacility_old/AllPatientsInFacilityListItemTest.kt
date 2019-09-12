@@ -1,9 +1,9 @@
-package org.simple.clinic.allpatientsinfacility
+package org.simple.clinic.allpatientsinfacility_old
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.FacilityHeader
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.SearchResult
+import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.FacilityHeader
+import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.SearchResult
 import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 

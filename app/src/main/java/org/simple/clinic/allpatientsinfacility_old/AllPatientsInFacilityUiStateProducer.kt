@@ -1,4 +1,4 @@
-package org.simple.clinic.allpatientsinfacility
+package org.simple.clinic.allpatientsinfacility_old
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource

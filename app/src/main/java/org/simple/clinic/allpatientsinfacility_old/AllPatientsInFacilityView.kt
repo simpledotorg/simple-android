@@ -1,4 +1,4 @@
-package org.simple.clinic.allpatientsinfacility
+package org.simple.clinic.allpatientsinfacility_old
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -18,8 +18,8 @@ import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
+import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
+import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.Event.SearchResultClicked
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale

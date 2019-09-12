@@ -11,15 +11,15 @@ import org.simple.mobius.migration.fix.update
 import kotlin.properties.Delegates
 
 class MobiusTestFixtureTest {
-  private val executorService = MoreExecutors.newDirectExecutorService()
   private val events = PublishSubject.create<CounterEvent>()
-  private val noopRenderFunction: (CounterModel) -> Unit = { /* deliberately no-op */ }
+  private val defaultModel: CounterModel = 0
+  private val view = View()
+  private val renderFunction = { model: CounterModel -> view.render(model) }
+  private val executorService = MoreExecutors.newDirectExecutorService()
+  private val fixture = MobiusTestFixture(events, ::update, defaultModel, renderFunction, executorService)
 
   @Test
   fun `it can dispatch events to update the model`() {
-    // given
-    val fixture = MobiusTestFixture(events, ::update, 0, noopRenderFunction, executorService)
-
     // when
     with(events) {
       onNext(Increment)
@@ -33,24 +33,19 @@ class MobiusTestFixtureTest {
 
   @Test
   fun `it can invoke the render function after a model update`() {
-    // given
-    val view = object {
-      var model by Delegates.notNull<Int>()
-
-      fun render(model: CounterModel) {
-        this.model = model
-      }
-    }
-    val renderFunction = { model: CounterModel -> view.render(model) }
-    MobiusTestFixture(events, ::update, 0, renderFunction, executorService)
-
     // when
-    with(events) {
-      onNext(Increment)
-    }
+    events.onNext(Increment)
 
     // then
     assertThat(view.model)
         .isEqualTo(1)
+  }
+}
+
+class View {
+  var model by Delegates.notNull<CounterModel>()
+
+  fun render(model: CounterModel) {
+    this.model = model
   }
 }

@@ -1,9 +1,9 @@
-package org.simple.clinic.allpatientsinfacility
+package org.simple.clinic.allpatientsinfacility_old
 
 import androidx.recyclerview.widget.DiffUtil
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.SectionTitle.None
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.SectionTitle.Text
+import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.SectionTitle.None
+import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.SectionTitle.Text
 import org.simple.clinic.widgets.ItemAdapter
 import java.util.Locale
 

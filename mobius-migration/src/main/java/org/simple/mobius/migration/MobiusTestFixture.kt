@@ -1,5 +1,6 @@
 package org.simple.mobius.migration
 
+import com.google.common.util.concurrent.MoreExecutors
 import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
 import com.spotify.mobius.First
@@ -23,7 +24,7 @@ class MobiusTestFixture<M: Any, E, F>(
     defaultModel: M,
     renderFunction: (M) -> Unit,
     effectHandler: ObservableTransformer<F, E>,
-    executorService: ExecutorService
+    executorService: ExecutorService = MoreExecutors.newDirectExecutorService()
 ) {
   private val disposable: Disposable
   private val controller: MobiusLoop.Controller<M, E>

@@ -13,9 +13,9 @@ import kotlinx.android.synthetic.main.screen_addidtopatientsearch.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreenKey
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
+import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListScrolled
+import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilitySearchResultClicked
+import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter

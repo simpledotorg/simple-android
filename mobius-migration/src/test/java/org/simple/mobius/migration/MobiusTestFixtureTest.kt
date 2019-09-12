@@ -1,16 +1,18 @@
 package org.simple.mobius.migration
 
 import com.google.common.truth.Truth.assertThat
-import com.google.common.util.concurrent.MoreExecutors
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
 import org.simple.mobius.migration.fix.CounterEffect
+import org.simple.mobius.migration.fix.CounterEffect.NegativeNumberEffect
+import org.simple.mobius.migration.fix.CounterEffect.NumberZeroEffect
 import org.simple.mobius.migration.fix.CounterEvent
 import org.simple.mobius.migration.fix.CounterEvent.Decrement
 import org.simple.mobius.migration.fix.CounterEvent.Increment
 import org.simple.mobius.migration.fix.CounterModel
+import org.simple.mobius.migration.fix.init
 import org.simple.mobius.migration.fix.update
 import kotlin.properties.Delegates
 
@@ -21,10 +23,10 @@ class MobiusTestFixtureTest {
   private val renderFunction = { model: CounterModel -> view.render(model) }
   private val effectHandler = RxMobius
       .subtypeEffectHandler<CounterEffect, CounterEvent>()
-      .addAction(CounterEffect.NegativeNumberEffect::class.java) { view.notifyNegativeNumber() }
+      .addAction(NumberZeroEffect::class.java) { /* no-op */ }
+      .addAction(NegativeNumberEffect::class.java) { view.notifyNegativeNumber() }
       .build()
-  private val executorService = MoreExecutors.newDirectExecutorService()
-  private val fixture = MobiusTestFixture(events, ::update, defaultModel, renderFunction, effectHandler, executorService)
+  private val fixture = MobiusTestFixture(events, ::init, ::update, defaultModel, renderFunction, effectHandler)
 
   @After
   fun teardown() {
@@ -78,6 +80,12 @@ class MobiusTestFixtureTest {
     // then
     assertThat(view.model)
         .isEqualTo(0)
+  }
+
+  @Test
+  fun `it can observe effects from an init function`() {
+    assertThat(fixture.lastKnownEffect)
+        .isEqualTo(NumberZeroEffect)
   }
 }
 

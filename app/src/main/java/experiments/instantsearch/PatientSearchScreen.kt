@@ -5,11 +5,13 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.experiment_screen_patient_search.view.*
+import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
@@ -71,6 +73,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
+    hideKeyboardWhenInstantSearchResultsListIsScrolled(screenDestroys)
 
     instantSearchResults.apply {
       setHasFixedSize(true)
@@ -110,6 +113,15 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     allPatientsInFacilityView
         .uiEvents
         .ofType<AllPatientsInFacilityListScrolled>()
+        .takeUntil(screenDestroys)
+        .subscribe { hideKeyboard() }
+  }
+
+  @Suppress("CheckResult")
+  private fun hideKeyboardWhenInstantSearchResultsListIsScrolled(screenDestroys: Observable<ScreenDestroyed>) {
+    RxRecyclerView
+        .scrollStateChanges(instantSearchResults)
+        .filter { it == RecyclerView.SCROLL_STATE_DRAGGING }
         .takeUntil(screenDestroys)
         .subscribe { hideKeyboard() }
   }

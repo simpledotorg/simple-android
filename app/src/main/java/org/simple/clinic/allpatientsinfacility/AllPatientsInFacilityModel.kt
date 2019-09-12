@@ -12,22 +12,22 @@ import org.threeten.bp.LocalDate
 import java.util.UUID
 
 @Parcelize
-data class AllPatientsInFacilityUiState(
+data class AllPatientsInFacilityModel(
     val patientsQueried: Boolean,
     val facilityUiState: FacilityUiState? = null,
     val patients: List<PatientSearchResultUiState> = emptyList()
 ) : Parcelable {
   companion object {
-    val FETCHING_PATIENTS = AllPatientsInFacilityUiState(false)
+    val FETCHING_PATIENTS = AllPatientsInFacilityModel(false)
   }
 
-  fun facilityFetched(facility: Facility): AllPatientsInFacilityUiState =
+  fun facilityFetched(facility: Facility): AllPatientsInFacilityModel =
       copy(facilityUiState = FacilityUiState(facility.uuid, facility.name))
 
-  fun noPatients(): AllPatientsInFacilityUiState =
+  fun noPatients(): AllPatientsInFacilityModel =
       copy(patients = emptyList(), patientsQueried = true)
 
-  fun hasPatients(patientSearchResults: List<PatientSearchResultUiState>): AllPatientsInFacilityUiState =
+  fun hasPatients(patientSearchResults: List<PatientSearchResultUiState>): AllPatientsInFacilityModel =
       copy(patients = patientSearchResults, patientsQueried = true)
 }
 

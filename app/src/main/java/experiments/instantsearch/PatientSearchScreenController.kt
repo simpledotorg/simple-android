@@ -31,6 +31,8 @@ class PatientSearchScreenController @Inject constructor(
     private val bloodPressureDao: BloodPressureMeasurement.RoomDao
 ) : ObservableTransformer<UiEvent, UiChange> {
 
+  private val whitespaceRegex = Regex("\\s")
+
   /**
    * Regular expression that matches digits with interleaved white spaces
    **/
@@ -89,7 +91,7 @@ class PatientSearchScreenController @Inject constructor(
         .map {
           patientDetails
               .filter { it.patientPhoneNumber != null }
-              .filter { it.patientPhoneNumber!!.contains(searchQuery) }
+              .filter { it.patientPhoneNumber!!.startsWith(searchQuery) }
               .map { it.patientUuid }
         }
 
@@ -97,7 +99,12 @@ class PatientSearchScreenController @Inject constructor(
         .filter { it.not() }
         .map {
           patientDetails
-              .filter { it.patientName.contains(searchQuery, ignoreCase = true) }
+              .filter { patient ->
+                val nameParts = patient.patientName.split(whitespaceRegex)
+                nameParts.any {
+                  it.startsWith(searchQuery, ignoreCase = true)
+                }
+              }
               .map { it.patientUuid }
         }
 

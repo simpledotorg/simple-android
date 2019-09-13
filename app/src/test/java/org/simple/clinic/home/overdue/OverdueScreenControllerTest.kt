@@ -24,7 +24,9 @@ import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.LocalDate
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -43,11 +45,13 @@ class OverdueScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val facility = PatientMocker.facility()
   private val user = PatientMocker.loggedInUser()
+  private val userClock = TestUserClock(LocalDate.parse("2018-01-01"))
 
   private val controller = OverdueScreenController(
       appointmentRepository = repository,
       userSession = userSession,
-      facilityRepository = facilityRepository
+      facilityRepository = facilityRepository,
+      userClock = userClock
   )
 
   @Before
@@ -87,7 +91,7 @@ class OverdueScreenControllerTest {
   @Test
   fun `when "mark patient as agreed to visit" is clicked, then relevant repository method should be called`() {
     val appointmentUuid = UUID.randomUUID()
-    whenever(repository.markAsAgreedToVisit(appointmentUuid)).thenReturn(Completable.complete())
+    whenever(repository.markAsAgreedToVisit(appointmentUuid, userClock)).thenReturn(Completable.complete())
 
     uiEvents.onNext(AgreedToVisitClicked(appointmentUuid))
 

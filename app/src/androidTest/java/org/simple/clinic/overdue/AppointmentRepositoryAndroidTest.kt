@@ -86,9 +86,6 @@ class AppointmentRepositoryAndroidTest {
 
   private val userUuid: UUID by lazy { testData.qaUserUuid() }
 
-  @Inject
-  lateinit var userClock: TestUserClock
-
   @get:Rule
   val ruleChain = RuleChain
       .outerRule(LocalAuthenticationRule())
@@ -419,10 +416,10 @@ class AppointmentRepositoryAndroidTest {
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
     clock.advanceBy(Duration.ofSeconds(1))
-    userClock.setDate(LocalDate.parse("2018-01-31"))
+    val userClock = TestUserClock(LocalDate.parse("2018-01-31"))
 
     // when
-    appointmentRepository.markAsAgreedToVisit(appointmentUuid).blockingAwait()
+    appointmentRepository.markAsAgreedToVisit(appointmentUuid, userClock).blockingAwait()
 
     // then
     val appointmentUpdatedAtTimestamp = Instant.parse("2018-01-01T00:00:01Z")

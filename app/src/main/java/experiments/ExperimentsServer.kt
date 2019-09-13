@@ -8,14 +8,70 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.facility.FacilityPayload
+import org.simple.clinic.facility.FacilityPullResponse
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 
-class ExperimentsServer(moshi: Moshi): Interceptor {
+object ExperimentData {
+  val facilityPayload = listOf(
+      FacilityPayload(
+          uuid = UUID.fromString("f992fe9a-459e-4dff-87ac-88c50fe9d729"),
+          name = "Facility 1",
+          facilityType = "PHC",
+          streetAddress = "",
+          villageOrColony = "",
+          district = "Bathinda",
+          state = "Punjab",
+          country = "India",
+          pinCode = "",
+          protocolUuid = UUID.fromString("ad7d5e34-4d4a-4dcc-98dc-27e98977d1cc"),
+          groupUuid = UUID.fromString("5ed7b8dd-1834-47d8-bed7-a93e476c8785"),
+          locationLatitude = 30.381528,
+          locationLongitude = 74.978558,
+          createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+          updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+          deletedAt = null
+      ),
+      FacilityPayload(
+          uuid = UUID.fromString("b12578cf-05b5-4082-ae4e-0c41a056ac03"),
+          name = "Facility 2",
+          facilityType = "PHC",
+          streetAddress = "",
+          villageOrColony = "",
+          district = "Bathinda",
+          state = "Punjab",
+          country = "India",
+          pinCode = "",
+          protocolUuid = UUID.fromString("ad7d5e34-4d4a-4dcc-98dc-27e98977d1cc"),
+          groupUuid = UUID.fromString("5ed7b8dd-1834-47d8-bed7-a93e476c8785"),
+          locationLatitude = 30.381528,
+          locationLongitude = 74.978558,
+          createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+          updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+          deletedAt = null
+      )
+  )
+
+  val loggedInUserPayload = LoggedInUserPayload(
+      uuid = UUID.fromString("a9e10bef-0978-4363-9d4c-09587cb5805d"),
+      fullName = "Test User",
+      phoneNumber = "1111111111",
+      pinDigest = "\$2a\$10\$HDDWyQS.SNtJ03QnubMBkeIDlLfpxXBQ0pgnuXmUvdtsSQVO4pgze",
+      registrationFacilityId = facilityPayload.first().uuid,
+      status = UserStatus.DisapprovedForSyncing,
+      createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+      updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+  )
+
+}
+
+class ExperimentsServer(moshi: Moshi) : Interceptor {
 
   private val loggedInUserPayloadAdapter = moshi.adapter(LoggedInUserPayload::class.java)
+  private val facilityPullResponseAdapter = moshi.adapter(FacilityPullResponse::class.java)
 
   private val json = MediaType.parse("application/json")
   private val text = MediaType.parse("text/plain")
@@ -34,10 +90,11 @@ class ExperimentsServer(moshi: Moshi): Interceptor {
     val url = request.url().toString()
 
     val startIndex = "${BuildConfig.API_ENDPOINT}/v3/".lastIndex
-    val endIndex = if(url.contains('?')) url.indexOf('?') else url.lastIndex
+    val endIndex = if (url.contains('?')) url.indexOf('?') else url.lastIndex
     val resource = url.substring(startIndex, endIndex)
-    when(resource) {
+    when (resource) {
       "users/find" -> builder.loggedInUser()
+      "facilities/sync" -> builder.facilties()
       else -> builder.serverError()
     }
   }
@@ -45,18 +102,16 @@ class ExperimentsServer(moshi: Moshi): Interceptor {
   private fun Response.Builder.loggedInUser(): Response.Builder {
     code(200).message("OK")
 
-    val loggedInUserPayload = LoggedInUserPayload(
-        uuid = UUID.fromString("a9e10bef-0978-4363-9d4c-09587cb5805d"),
-        fullName = "Test User",
-        phoneNumber = "1111111111",
-        pinDigest = "\$2a\$10\$HDDWyQS.SNtJ03QnubMBkeIDlLfpxXBQ0pgnuXmUvdtsSQVO4pgze",
-        registrationFacilityId = UUID.fromString("9c422ef8-95f3-415b-a6be-0c04198a7411"),
-        status = UserStatus.DisapprovedForSyncing,
-        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
-        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
-    )
+    body(ResponseBody.create(json, loggedInUserPayloadAdapter.toJson(ExperimentData.loggedInUserPayload)))
 
-    body(ResponseBody.create(json, loggedInUserPayloadAdapter.toJson(loggedInUserPayload)))
+    return this
+  }
+
+  private fun Response.Builder.facilties(): Response.Builder {
+    code(200).message("OK")
+
+    val facilityPullResponse = FacilityPullResponse(ExperimentData.facilityPayload, processToken = "token")
+    body(ResponseBody.create(json, facilityPullResponseAdapter.toJson(facilityPullResponse)))
 
     return this
   }

@@ -28,7 +28,8 @@ class MobiusTestFixture<M: Any, E, F>(
     initFunction: InitFunction<M, F>?,
     updateFunction: UpdateFunction<M, E, F>,
     effectHandler: EffectHandler<F, E>,
-    modelUpdateListener: ModelUpdateListener<M>
+    modelUpdateListener: ModelUpdateListener<M>,
+    requiresLogging: Boolean = false
 ) {
   private val eventsDisposable: Disposable
   private val controller: MobiusLoop.Controller<M, E>
@@ -49,7 +50,8 @@ class MobiusTestFixture<M: Any, E, F>(
         initFunction,
         updateFunction,
         createEffectHandlerListener(effectHandler),
-        immediateWorkRunner
+        immediateWorkRunner,
+        requiresLogging
     )
 
     eventsDisposable = events.subscribe(eventSource::notifyEvent)
@@ -70,7 +72,8 @@ class MobiusTestFixture<M: Any, E, F>(
       initFunction: InitFunction<M, F>?,
       updateFunction: UpdateFunction<M, E, F>,
       effectHandlerListener: EffectHandler<F, E>,
-      workRunner: WorkRunner
+      workRunner: WorkRunner,
+      requiresLogging: Boolean
   ): MobiusLoop.Builder<M, E, F> {
     val update = Update<M, E, F> { model, event -> updateFunction(model, event) }
 
@@ -80,6 +83,7 @@ class MobiusTestFixture<M: Any, E, F>(
         .eventSource(eventSource)
         .eventRunner { workRunner }
         .effectRunner { workRunner }
+        .logger(if (requiresLogging) ConsoleLogger<M, E, F>() else NoopLogger())
   }
 
   private fun createEffectHandlerListener(

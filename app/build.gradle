@@ -12,7 +12,6 @@ apply from: "../quality/install-git-hook.gradle"
 
 repositories {
   maven { url 'https://jitpack.io' }
-  maven { url 'https://heap-maven-public.s3.amazonaws.com/android-testing' }
 }
 
 sentry {
@@ -81,7 +80,10 @@ android {
 
     release {
       debuggable false
-      ext.heapEnabled = true
+      ext {
+        heapEnabled = true
+        heapAutoInit = false
+      }
       if (runProguard.equalsIgnoreCase("true")) {
         minifyEnabled true
         shrinkResources true

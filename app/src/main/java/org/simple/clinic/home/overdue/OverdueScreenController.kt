@@ -9,6 +9,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -18,7 +19,8 @@ typealias UiChange = (Ui) -> Unit
 class OverdueScreenController @Inject constructor(
     private val appointmentRepository: AppointmentRepository,
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    private val userClock: UserClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -72,7 +74,7 @@ class OverdueScreenController @Inject constructor(
     return events.ofType<AgreedToVisitClicked>()
         .flatMap {
           appointmentRepository
-              .markAsAgreedToVisit(it.appointmentUuid)
+              .markAsAgreedToVisit(it.appointmentUuid, userClock)
               .toObservable<UiChange>()
         }
   }

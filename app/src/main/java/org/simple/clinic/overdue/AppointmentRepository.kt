@@ -27,8 +27,7 @@ class AppointmentRepository @Inject constructor(
     private val appointmentDao: Appointment.RoomDao,
     private val overdueDao: OverdueAppointment.RoomDao,
     private val utcClock: UtcClock,
-    private val appointmentConfigProvider: Observable<AppointmentConfig>,
-    private val userClock: UserClock
+    private val appointmentConfigProvider: Observable<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
   fun schedule(
@@ -82,7 +81,7 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  fun markAsAgreedToVisit(appointmentUuid: UUID): Completable {
+  fun markAsAgreedToVisit(appointmentUuid: UUID, userClock: UserClock): Completable {
     return Completable.fromAction {
       appointmentDao.markAsAgreedToVisit(
           appointmentUUID = appointmentUuid,

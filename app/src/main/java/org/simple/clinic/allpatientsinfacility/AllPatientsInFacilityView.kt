@@ -1,4 +1,4 @@
-package org.simple.clinic.allpatientsinfacility_old
+package org.simple.clinic.allpatientsinfacility
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,12 +14,16 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.view_allpatientsinfacility_old.view.*
+import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
-import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
-import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.Event.SearchResultClicked
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -30,28 +34,43 @@ class AllPatientsInFacilityView(
     attributeSet: AttributeSet
 ) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi {
 
-  companion object {
-    private val FEATURE_STATE_KEY = AllPatientsInFacilityView::class.java.name
-    private val VIEW_STATE_KEY = FEATURE_STATE_KEY + "ViewState"
-  }
-
   private val searchResultsAdapter by unsafeLazy {
     AllPatientsInFacilityListAdapter(AllPatientsInFacilityListItemCallback(), locale)
   }
 
   @Inject
-  lateinit var uiStateProducer: AllPatientsInFacilityUiStateProducer
-
-  @Inject
-  lateinit var uiChangeProducer: AllPatientsInFacilityUiChangeProducer
-
-  @Inject
   lateinit var locale: Locale
 
+  @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
+  lateinit var facilityRepository: FacilityRepository
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
+  @Inject
+  lateinit var schedulersProvider: SchedulersProvider
+
+  private val viewRenderer by unsafeLazy { AllPatientsInFacilityUiRenderer(this) }
+
   private val downstreamUiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var binding: ViewControllerBinding<UiEvent, AllPatientsInFacilityUiState, AllPatientsInFacilityUi>
 
   val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
+
+  private val delegate by unsafeLazy {
+    val effectHandler = AllPatientsInFacilityEffectHandler
+        .createEffectHandler(userSession, facilityRepository, patientRepository, schedulersProvider)
+
+    MobiusDelegate(
+        AllPatientsInFacilityModel.FETCHING_PATIENTS,
+        ::allPatientsInFacilityInit,
+        ::allPatientsInFacilityUpdate,
+        effectHandler,
+        viewRenderer::render
+    )
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -64,12 +83,38 @@ class AllPatientsInFacilityView(
     setupAllPatientsList()
     setupInitialViewVisibility()
     forwardListEventsToDownstream()
+    delegate.prepare()
+  }
 
-    binding = ViewControllerBinding.bindToView(
-        view = this,
-        uiStateProducer = uiStateProducer,
-        uiChangeProducer = uiChangeProducer
-    )
+  override fun showNoPatientsFound(facilityName: String) {
+    patientsList.visibility = View.GONE
+    noPatientsContainer.visibility = View.VISIBLE
+    noPatientsLabel.text = resources.getString(R.string.allpatientsinfacility_nopatients_title, facilityName)
+  }
+
+  override fun showPatients(facilityUiState: FacilityUiState, patientSearchResults: List<PatientSearchResultUiState>) {
+    patientsList.visibility = View.VISIBLE
+    noPatientsContainer.visibility = View.GONE
+    val listItems = AllPatientsInFacilityListItem.mapSearchResultsToListItems(facilityUiState, patientSearchResults)
+    searchResultsAdapter.submitList(listItems)
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state as Bundle?))
   }
 
   @SuppressLint("CheckResult")
@@ -105,38 +150,5 @@ class AllPatientsInFacilityView(
       layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
       adapter = searchResultsAdapter
     }
-  }
-
-  override fun showNoPatientsFound(facilityName: String) {
-    patientsList.visibility = View.GONE
-    noPatientsContainer.visibility = View.VISIBLE
-    noPatientsLabel.text = resources.getString(R.string.allpatientsinfacility_nopatients_title, facilityName)
-  }
-
-  override fun showPatients(facilityUiState: FacilityUiState, patientSearchResults: List<PatientSearchResultUiState>) {
-    patientsList.visibility = View.VISIBLE
-    noPatientsContainer.visibility = View.GONE
-    val listItems = AllPatientsInFacilityListItem.mapSearchResultsToListItems(facilityUiState, patientSearchResults)
-    searchResultsAdapter.submitList(listItems)
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return Bundle().apply {
-      val viewState = super.onSaveInstanceState()
-      putParcelable(VIEW_STATE_KEY, viewState)
-      putParcelable(FEATURE_STATE_KEY, binding.latestState())
-    }
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    val bundle = state as Bundle
-    val viewState = bundle[VIEW_STATE_KEY]
-    val controllerState = bundle[FEATURE_STATE_KEY]
-
-    (controllerState as AllPatientsInFacilityUiState?)?.let {
-      binding.restoreSavedState(it)
-    }
-
-    super.onRestoreInstanceState(viewState as Parcelable)
   }
 }

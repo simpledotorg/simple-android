@@ -18,9 +18,16 @@ class MobiusTestFixtureTest {
   private val events = PublishSubject.create<CounterEvent>()
   private val defaultModel: CounterModel = 0
   private val view = VerifiableCounterView()
-  private val renderFunction = { model: CounterModel -> view.render(model) }
+  private val modelUpdateListener = { model: CounterModel -> view.render(model) }
   private val effectHandler = createEffectHandler(view)
-  private val fixture = MobiusTestFixture(events, ::init, ::update, defaultModel, renderFunction, effectHandler)
+  private val fixture = MobiusTestFixture(
+      events,
+      defaultModel,
+      ::init,
+      ::update,
+      effectHandler,
+      modelUpdateListener
+  )
 
   @After
   fun teardown() {

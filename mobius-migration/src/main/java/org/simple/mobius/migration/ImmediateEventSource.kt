@@ -15,6 +15,7 @@ internal class ImmediateEventSource<E> : EventSource<E> {
   }
 
   fun notifyEvent(e: E) {
-    consumer?.accept(e)
+    requireNotNull(consumer) { "'consumer' cannot be null" }
+    consumer!!.accept(e)
   }
 }

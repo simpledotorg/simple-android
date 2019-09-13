@@ -1,12 +1,10 @@
 package org.simple.mobius.migration.fix
 
-import com.spotify.mobius.First
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import org.simple.mobius.migration.fix.CounterEffect.NegativeNumberEffect
-import org.simple.mobius.migration.fix.CounterEffect.NumberZeroEffect
 import org.simple.mobius.migration.fix.CounterEvent.Decrement
 import org.simple.mobius.migration.fix.CounterEvent.Increment
 import kotlin.properties.Delegates
@@ -16,10 +14,6 @@ typealias CounterModel = Int
 sealed class CounterEvent {
   object Increment : CounterEvent()
   object Decrement : CounterEvent()
-}
-
-fun init(model: CounterModel): First<CounterModel, CounterEffect> {
-  return First.first(model, setOf(NumberZeroEffect))
 }
 
 fun update(
@@ -35,13 +29,11 @@ fun update(
 fun createEffectHandler(view: VerifiableCounterView): ObservableTransformer<CounterEffect, CounterEvent> {
   return RxMobius
       .subtypeEffectHandler<CounterEffect, CounterEvent>()
-      .addAction(NumberZeroEffect::class.java) { /* no-op */ }
       .addAction(NegativeNumberEffect::class.java) { view.notifyNegativeNumber() }
       .build()
 }
 
 sealed class CounterEffect {
-  object NumberZeroEffect : CounterEffect()
   object NegativeNumberEffect : CounterEffect()
 }
 

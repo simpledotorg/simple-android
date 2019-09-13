@@ -298,6 +298,8 @@ dependencies {
     exclude group: "io.reactivex.rxjava2"
     because "Traceur is incompatible with the version of RxJava this artifact pulls in transitively"
   }
+  implementation "com.spotify.mobius:mobius-android:$versions.mobius"
+  implementation "com.spotify.mobius:mobius-extras:$versions.mobius"
   testImplementation "com.spotify.mobius:mobius-test:$versions.mobius"
   testImplementation(project(":mobius-migration")) {
     exclude group: "io.reactivex.rxjava2"

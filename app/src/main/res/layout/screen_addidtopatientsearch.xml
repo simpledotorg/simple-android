@@ -30,7 +30,7 @@
 
   <include
     android:id="@+id/allPatientsView"
-    layout="@layout/view_allpatientsinfacility"
+    layout="@layout/view_allpatientsinfacility_old"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/enterPatientNameInputContainer" />

@@ -10,6 +10,7 @@ import okhttp3.ResponseBody
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.facility.FacilityPullResponse
+import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
@@ -72,6 +73,7 @@ class ExperimentsServer(moshi: Moshi) : Interceptor {
 
   private val loggedInUserPayloadAdapter = moshi.adapter(LoggedInUserPayload::class.java)
   private val facilityPullResponseAdapter = moshi.adapter(FacilityPullResponse::class.java)
+  private val loginResponsePayloadAdapter = moshi.adapter(LoginResponse::class.java)
 
   private val json = MediaType.parse("application/json")
   private val text = MediaType.parse("text/plain")
@@ -105,6 +107,7 @@ class ExperimentsServer(moshi: Moshi) : Interceptor {
       "POST" -> {
         when (resource) {
           "users/${ExperimentData.loggedInUserPayload.uuid}/request_otp" -> builder.ok()
+          "login" -> builder.loginResponse()
         }
       }
       else -> builder.serverError()
@@ -116,6 +119,18 @@ class ExperimentsServer(moshi: Moshi) : Interceptor {
     code(200).message("OK")
 
     body(ResponseBody.create(json, loggedInUserPayloadAdapter.toJson(ExperimentData.loggedInUserPayload)))
+
+    return this
+  }
+
+  private fun Response.Builder.loginResponse(): Response.Builder {
+    code(200).message("OK")
+
+    val loginResponse = LoginResponse(
+        accessToken = "token",
+        loggedInUser = ExperimentData.loggedInUserPayload
+    )
+    body(ResponseBody.create(json, loginResponsePayloadAdapter.toJson(loginResponse)))
 
     return this
   }

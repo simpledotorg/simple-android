@@ -8,16 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.android.schedulers.AndroidSchedulers.*
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.Schedulers.*
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers.io
 import kotlinx.android.synthetic.main.experiments_activitytoggle.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeUnit.*
+import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
 
 class ExperimentsToggleActivity : AppCompatActivity() {
@@ -38,6 +39,12 @@ class ExperimentsToggleActivity : AppCompatActivity() {
 
     @Inject
     lateinit var patientRepository: PatientRepository
+
+    @Inject
+    lateinit var bloodPressureRepository: BloodPressureRepository
+
+    @Inject
+    lateinit var prescriptionRepository: PrescriptionRepository
 
     override fun onAttach(context: Context) {
       super.onAttach(context)
@@ -79,8 +86,26 @@ class ExperimentsToggleActivity : AppCompatActivity() {
           .setCancelable(false)
           .create()
 
+      val saveSeedData = Observable.fromIterable(ExperimentData.seedData)
+          .flatMapCompletable { seedDataRecord ->
+            val phoneNumbers = if (seedDataRecord.phoneNumber != null) listOf(seedDataRecord.phoneNumber) else emptyList()
+
+            val patientProfile = PatientProfile(
+                seedDataRecord.patient,
+                seedDataRecord.address,
+                phoneNumbers,
+                emptyList()
+            )
+
+            patientRepository.save(listOf(patientProfile))
+                .andThen(bloodPressureRepository.save(seedDataRecord.bloodPressureMeasurements))
+                .andThen(prescriptionRepository.save(seedDataRecord.prescribedDrugs))
+          }
+
+
       patientRepository
           .clearPatientData()
+          .andThen(saveSeedData)
           .doOnSubscribe { requireActivity().runOnUiThread { dialog.show() } }
           .subscribeOn(io())
           .delay(3L, SECONDS)

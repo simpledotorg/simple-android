@@ -18,6 +18,7 @@ import org.simple.clinic.patient.PatientStatus.Active
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
@@ -28,7 +29,8 @@ class PatientSearchScreenController @Inject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val instantPatientSearchDao: InstantPatientSearchExperimentsDao,
-    private val bloodPressureDao: BloodPressureMeasurement.RoomDao
+    private val bloodPressureDao: BloodPressureMeasurement.RoomDao,
+    private val locale: Locale
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private val whitespaceRegex = Regex("\\s")
@@ -110,7 +112,11 @@ class PatientSearchScreenController @Inject constructor(
 
     return Observable
         .merge(searchByNumber, searchByName)
-        .switchMapSingle { uuids -> instantPatientSearchDao.searchByIds(uuids, Active).subscribeOn(Schedulers.io()) }
+        .switchMapSingle { uuids -> instantPatientSearchDao
+            .searchByIds(uuids, Active)
+            .subscribeOn(Schedulers.io())
+            .map { results -> results.sortedBy { it.fullName.toLowerCase(locale) } }
+        }
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {

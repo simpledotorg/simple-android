@@ -88,15 +88,28 @@ class ExperimentsServer(moshi: Moshi) : Interceptor {
 
   private fun setResponse(request: Request, builder: Response.Builder) {
     val url = request.url().toString()
+    val method = request.method()
 
     val startIndex = "${BuildConfig.API_ENDPOINT}/v3/".lastIndex
-    val endIndex = if (url.contains('?')) url.indexOf('?') else url.lastIndex
+    val endIndex = if (url.contains('?')) url.indexOf('?') else url.lastIndex + 1
     val resource = url.substring(startIndex, endIndex)
-    when (resource) {
-      "users/find" -> builder.loggedInUser()
-      "facilities/sync" -> builder.facilties()
+
+    when(method) {
+      "GET" -> {
+        when (resource) {
+          "users/find" -> builder.loggedInUser()
+          "facilities/sync" -> builder.facilities()
+          else -> builder.serverError()
+        }
+      }
+      "POST" -> {
+        when (resource) {
+          "users/${ExperimentData.loggedInUserPayload.uuid}/request_otp" -> builder.ok()
+        }
+      }
       else -> builder.serverError()
     }
+
   }
 
   private fun Response.Builder.loggedInUser(): Response.Builder {
@@ -107,11 +120,19 @@ class ExperimentsServer(moshi: Moshi) : Interceptor {
     return this
   }
 
-  private fun Response.Builder.facilties(): Response.Builder {
+  private fun Response.Builder.facilities(): Response.Builder {
     code(200).message("OK")
 
     val facilityPullResponse = FacilityPullResponse(ExperimentData.facilityPayload, processToken = "token")
     body(ResponseBody.create(json, facilityPullResponseAdapter.toJson(facilityPullResponse)))
+
+    return this
+  }
+
+  private fun Response.Builder.ok(): Response.Builder {
+    code(200)
+        .message("OK")
+        .body(ResponseBody.create(text, ""))
 
     return this
   }

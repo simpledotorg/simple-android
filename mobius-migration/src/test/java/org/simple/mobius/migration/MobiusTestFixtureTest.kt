@@ -4,14 +4,12 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
-import org.simple.mobius.migration.fix.CounterEffect.NumberZeroEffect
 import org.simple.mobius.migration.fix.CounterEvent
 import org.simple.mobius.migration.fix.CounterEvent.Decrement
 import org.simple.mobius.migration.fix.CounterEvent.Increment
 import org.simple.mobius.migration.fix.CounterModel
 import org.simple.mobius.migration.fix.VerifiableCounterView
 import org.simple.mobius.migration.fix.createEffectHandler
-import org.simple.mobius.migration.fix.init
 import org.simple.mobius.migration.fix.update
 
 class MobiusTestFixtureTest {
@@ -23,7 +21,7 @@ class MobiusTestFixtureTest {
   private val fixture = MobiusTestFixture(
       events,
       defaultModel,
-      ::init,
+      null,
       ::update,
       effectHandler,
       modelUpdateListener
@@ -81,13 +79,5 @@ class MobiusTestFixtureTest {
     // then
     assertThat(view.model)
         .isEqualTo(defaultModel)
-  }
-
-  @Test
-  fun `it can observe effects from an init function`() {
-    assertThat(fixture.model)
-        .isEqualTo(defaultModel)
-    assertThat(fixture.lastKnownEffect)
-        .isEqualTo(NumberZeroEffect)
   }
 }

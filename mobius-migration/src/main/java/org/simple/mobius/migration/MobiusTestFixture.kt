@@ -43,8 +43,8 @@ class MobiusTestFixture<M: Any, E, F>(
 
     val loop = createLoop(
         eventSource,
-        initFunction,
-        updateFunction,
+        spyingInitFunction(initFunction, modelUpdateListener),
+        spyingUpdateFunction(updateFunction, modelUpdateListener),
         effectHandler,
         immediateWorkRunner,
         requiresLogging
@@ -52,7 +52,7 @@ class MobiusTestFixture<M: Any, E, F>(
 
     controller = Mobius.controller(loop, defaultModel, immediateWorkRunner)
     with(controller) {
-      connect(createModelUpdateListenerConnectable(modelUpdateListener))
+      connect(createNoOpConnectable())
       start()
     }
   }
@@ -63,7 +63,7 @@ class MobiusTestFixture<M: Any, E, F>(
 
   private fun createLoop(
       eventSource: EventSource<E>,
-      initFunction: InitFunction<M, F>?,
+      initFunction: InitFunction<M, F>,
       updateFunction: UpdateFunction<M, E, F>,
       effectHandlerListener: EffectHandler<F, E>,
       workRunner: WorkRunner,
@@ -73,24 +73,46 @@ class MobiusTestFixture<M: Any, E, F>(
 
     return RxMobius
         .loop(update, effectHandlerListener)
-        .init { model -> initFunction?.invoke(model) ?: First.first(model) }
+        .init(initFunction)
         .eventSource(eventSource)
         .eventRunner { workRunner }
         .effectRunner { workRunner }
         .logger(if (requiresLogging) ConsoleLogger<M, E, F>() else NoopLogger())
   }
 
-  private fun createModelUpdateListenerConnectable(
-      modelUpdateListener: (M) -> Unit
-  ): Connectable<M, E> {
+  private fun spyingInitFunction(
+      initFunction: InitFunction<M, F>?,
+      modelUpdateListener: ModelUpdateListener<M>
+  ): (M) -> First<M, F> {
+    return { model: M ->
+      (initFunction?.invoke(model) ?: First.first(model)).also { first ->
+        modelUpdateListener(first.model())
+      }
+    }
+  }
+
+  private fun spyingUpdateFunction(
+      updateFunction: UpdateFunction<M, E, F>,
+      modelUpdateListener: ModelUpdateListener<M>
+  ): (M, E) -> Next<M, F> {
+    return { model: M, event: E ->
+      updateFunction(model, event).also { next ->
+        if (next.hasModel()) {
+          modelUpdateListener(next.modelUnsafe())
+        }
+      }
+    }
+  }
+
+  private fun createNoOpConnectable(): Connectable<M, E> {
     return Connectable {
       object : Connection<M> {
         override fun accept(value: M) {
-          modelUpdateListener(value)
+          /* no-op */
         }
 
         override fun dispose() {
-          /* nothing to dispose */
+          /* no-op */
         }
       }
     }

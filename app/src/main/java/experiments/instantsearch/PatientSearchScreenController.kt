@@ -88,6 +88,8 @@ class PatientSearchScreenController @Inject constructor(
     val isPhoneNumberInput = Observable.just(searchQuery)
         .map { digitsRegex.matches(searchQuery) }
 
+    val combinedSearchQuery = searchQuery.replace(whitespaceRegex, "")
+
     val searchByNumber = isPhoneNumberInput
         .filter { it }
         .map {
@@ -102,10 +104,9 @@ class PatientSearchScreenController @Inject constructor(
         .map {
           patientDetails
               .filter { patient ->
-                val nameParts = patient.patientName.split(whitespaceRegex)
-                nameParts.any {
-                  it.startsWith(searchQuery, ignoreCase = true)
-                }
+                val combinedName = patient.patientName.replace(whitespaceRegex, "")
+
+                combinedName.startsWith(combinedSearchQuery, ignoreCase = true)
               }
               .map { it.patientUuid }
         }

@@ -15,7 +15,6 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
-import java.util.concurrent.atomic.AtomicReference
 
 typealias InitFunction<M, F> = (M) -> First<M, F>
 typealias UpdateFunction<M, E, F> = (M, E) -> Next<M, F>
@@ -33,10 +32,6 @@ class MobiusTestFixture<M: Any, E, F>(
 ) {
   private val eventsDisposable: Disposable
   private val controller: MobiusLoop.Controller<M, E>
-  private val lastKnownEffectReference = AtomicReference<F>()
-
-  internal val lastKnownEffect: F?
-    get() = lastKnownEffectReference.get()
 
   val model: M
     get() = controller.model
@@ -44,17 +39,16 @@ class MobiusTestFixture<M: Any, E, F>(
   init {
     val immediateWorkRunner = WorkRunners.from(MoreExecutors.newDirectExecutorService())
     val eventSource = ImmediateEventSource<E>()
+    eventsDisposable = events.subscribe(eventSource::notifyEvent)
 
     val loop = createLoop(
         eventSource,
         initFunction,
         updateFunction,
-        createEffectHandlerListener(effectHandler),
+        effectHandler,
         immediateWorkRunner,
         requiresLogging
     )
-
-    eventsDisposable = events.subscribe(eventSource::notifyEvent)
 
     controller = Mobius.controller(loop, defaultModel, immediateWorkRunner)
     with(controller) {
@@ -84,16 +78,6 @@ class MobiusTestFixture<M: Any, E, F>(
         .eventRunner { workRunner }
         .effectRunner { workRunner }
         .logger(if (requiresLogging) ConsoleLogger<M, E, F>() else NoopLogger())
-  }
-
-  private fun createEffectHandlerListener(
-      effectHandler: ObservableTransformer<F, E>
-  ): ObservableTransformer<F, E> {
-    return ObservableTransformer { upstream ->
-      upstream
-          .doOnNext { lastKnownEffectReference.set(it) }
-          .compose(effectHandler)
-    }
   }
 
   private fun createModelUpdateListenerConnectable(

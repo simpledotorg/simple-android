@@ -72,14 +72,15 @@ open class NetworkModule {
       loggedInInterceptor: LoggedInUserHttpInterceptor,
       appInfoHttpInterceptor: AppInfoHttpInterceptor,
       networkAnalyticsInterceptor: NetworkAnalyticsInterceptor,
-      configReader: ConfigReader
+      configReader: ConfigReader,
+      moshi: Moshi
   ): OkHttpClient {
     return OkHttpClient.Builder()
         .apply {
           addInterceptor(appInfoHttpInterceptor)
           addInterceptor(loggedInInterceptor)
           addInterceptor(networkAnalyticsInterceptor)
-          addInterceptor(ExperimentsServer())
+          addInterceptor(ExperimentsServer(moshi))
 
           if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()

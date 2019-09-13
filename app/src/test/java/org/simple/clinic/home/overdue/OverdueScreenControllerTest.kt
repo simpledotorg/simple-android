@@ -25,6 +25,7 @@ import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -57,7 +58,7 @@ class OverdueScreenControllerTest {
   @Before
   fun setUp() {
     whenever(maskedPhoneCaller.secureCall(any(), any())).thenReturn(Completable.complete())
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(user.toOptional()))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }

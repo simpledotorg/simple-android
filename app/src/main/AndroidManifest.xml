@@ -31,10 +31,6 @@
     <meta-data
       android:name="google_analytics_adid_collection_enabled"
       android:value="false" />
-    <meta-data
-      android:name="com.heapanalytics.android.autoInitEnvId"
-      android:value="none"
-      tools:replace="android:value" />
     <!-- Mixpanel is causing error logs to be written needlessly because of a problem with their
     A/B testing framework. Since we don't use it, we can disable it.
     https://github.com/mixpanel/mixpanel-android/issues/253

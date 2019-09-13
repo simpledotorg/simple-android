@@ -10,6 +10,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -47,7 +48,8 @@ class OverdueScreenController @Inject constructor(
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
     val overdueAppointmentsStream = events
         .ofType<OverdueScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
+        .flatMap { userSession.loggedInUser() }
+        .filterAndUnwrapJust()
         .switchMap { facilityRepository.currentFacility(it) }
         .flatMap { currentFacility -> appointmentRepository.overdueAppointments(currentFacility) }
         .replay()

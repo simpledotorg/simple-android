@@ -4,6 +4,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import experiments.ExperimentsServer
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
@@ -78,6 +79,7 @@ open class NetworkModule {
           addInterceptor(appInfoHttpInterceptor)
           addInterceptor(loggedInInterceptor)
           addInterceptor(networkAnalyticsInterceptor)
+          addInterceptor(ExperimentsServer())
 
           if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()

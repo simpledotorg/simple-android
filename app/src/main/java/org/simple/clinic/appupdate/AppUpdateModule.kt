@@ -10,7 +10,10 @@ import org.simple.clinic.remoteconfig.ConfigReader
 open class AppUpdateModule {
 
   @Provides
-  fun appUpdateConfig(reader: ConfigReader) = AppUpdateConfig.read(reader)
+  fun appUpdateConfig(reader: ConfigReader) = AppUpdateConfig
+      .read(reader)
+      // For experiments
+      .map { it.copy(inAppUpdateEnabled = false) }
 
 
   @Provides

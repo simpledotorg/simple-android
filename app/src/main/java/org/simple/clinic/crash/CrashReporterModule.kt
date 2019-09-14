@@ -10,6 +10,6 @@ open class CrashReporterModule {
 
   @Provides
   open fun crashReporter(userSession: UserSession, facilityRepository: FacilityRepository): CrashReporter {
-    return SentryCrashReporter(userSession, facilityRepository)
+    return NoOpCrashReporter()
   }
 }

@@ -18,12 +18,14 @@
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/instantSearchResults"
+    android:clipToPadding="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@id/toolbar"
     android:visibility="gone"
     tools:listitem="@layout/list_patient_search"
-    tools:visibility="visible" />
+    tools:visibility="visible"
+    android:paddingBottom="100dp"/>
 
   <RelativeLayout
     android:id="@+id/emptyStateView"

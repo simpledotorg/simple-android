@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.view_allpatientsinfacility_old.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.allpatientsinfacility.migration.ExposesUiEvents
 import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.Event.SearchResultClicked
 import org.simple.clinic.util.unsafeLazy
@@ -28,7 +29,7 @@ import javax.inject.Inject
 class AllPatientsInFacilityView(
     context: Context,
     attributeSet: AttributeSet
-) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi {
+) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi, ExposesUiEvents {
 
   companion object {
     private val FEATURE_STATE_KEY = AllPatientsInFacilityView::class.java.name
@@ -51,7 +52,7 @@ class AllPatientsInFacilityView(
   private val downstreamUiEvents = PublishSubject.create<UiEvent>()
   private lateinit var binding: ViewControllerBinding<UiEvent, AllPatientsInFacilityUiState, AllPatientsInFacilityUi>
 
-  val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
+  override val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
 
   override fun onFinishInflate() {
     super.onFinishInflate()

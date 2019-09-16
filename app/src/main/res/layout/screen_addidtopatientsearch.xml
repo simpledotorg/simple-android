@@ -28,9 +28,8 @@
       tools:text="Add BP Passport 512 8097 to patient" />
   </androidx.appcompat.widget.Toolbar>
 
-  <include
-    android:id="@+id/allPatientsView"
-    layout="@layout/view_allpatientsinfacility_old"
+  <ViewStub
+    android:id="@+id/allPatientsViewStub"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/enterPatientNameInputContainer" />

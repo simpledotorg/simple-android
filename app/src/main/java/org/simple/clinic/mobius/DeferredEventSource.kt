@@ -21,10 +21,13 @@ package org.simple.clinic.mobius
 import com.spotify.mobius.EventSource
 import com.spotify.mobius.disposables.Disposable
 import com.spotify.mobius.functions.Consumer
+import org.simple.clinic.crash.CrashReporter
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
-class DeferredEventSource<E> : EventSource<E> {
+class DeferredEventSource<E>(
+    private val crashReporter: CrashReporter
+) : EventSource<E> {
   private val events = LinkedBlockingQueue<E>()
 
   override fun subscribe(eventConsumer: Consumer<E>): Disposable {
@@ -37,7 +40,7 @@ class DeferredEventSource<E> : EventSource<E> {
             eventConsumer.accept(event)
           }
         } catch (e: Throwable) {
-          // TODO(rj) 8/Jan/19 - Log this exception.
+          crashReporter.report(e)
         }
       }
     }

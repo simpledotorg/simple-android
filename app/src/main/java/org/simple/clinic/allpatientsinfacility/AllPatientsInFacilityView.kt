@@ -19,6 +19,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
+import org.simple.clinic.allpatientsinfacility.migration.ExposesUiEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientRepository
@@ -32,7 +33,7 @@ import javax.inject.Inject
 class AllPatientsInFacilityView(
     context: Context,
     attributeSet: AttributeSet
-) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi {
+) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi, ExposesUiEvents {
 
   private val searchResultsAdapter by unsafeLazy {
     AllPatientsInFacilityListAdapter(AllPatientsInFacilityListItemCallback(), locale)
@@ -57,7 +58,7 @@ class AllPatientsInFacilityView(
 
   private val downstreamUiEvents = PublishSubject.create<UiEvent>()
 
-  val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
+  override val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
 
   private val delegate by unsafeLazy {
     val effectHandler = AllPatientsInFacilityEffectHandler

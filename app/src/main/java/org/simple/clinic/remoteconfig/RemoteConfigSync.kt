@@ -49,6 +49,7 @@ class RemoteConfigSync @Inject constructor(
   private fun logError() = { e: Throwable ->
     if (e is FirebaseRemoteConfigFetchThrottledException) {
       // This is expected.
+      crashReporter.report(e)
 
     } else {
       val resolvedError = ErrorResolver.resolve(e)

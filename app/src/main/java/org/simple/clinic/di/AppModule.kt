@@ -12,6 +12,7 @@ import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.home.patients.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
+import org.simple.clinic.mobius.migration.MobiusMigrationModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.SimpleVideoModule
@@ -54,7 +55,8 @@ import java.util.Locale
   AppUpdateModule::class,
   DataSyncOnApprovalModule::class,
   HomescreenIllustrationModule::class,
-  SimpleVideoModule::class
+  SimpleVideoModule::class,
+  MobiusMigrationModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

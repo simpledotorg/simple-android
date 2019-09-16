@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Feature
 - Show Simple video for training user until some patients are registered
 

@@ -20,6 +20,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
 import org.simple.clinic.allpatientsinfacility.migration.ExposesUiEvents
+import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientRepository
@@ -54,6 +55,9 @@ class AllPatientsInFacilityView(
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
+  @Inject
+  lateinit var crashReporter: CrashReporter
+
   private val viewRenderer by unsafeLazy { AllPatientsInFacilityUiRenderer(this) }
 
   private val downstreamUiEvents = PublishSubject.create<UiEvent>()
@@ -69,7 +73,8 @@ class AllPatientsInFacilityView(
         ::allPatientsInFacilityInit,
         ::allPatientsInFacilityUpdate,
         effectHandler,
-        viewRenderer::render
+        viewRenderer::render,
+        crashReporter
     )
   }
 

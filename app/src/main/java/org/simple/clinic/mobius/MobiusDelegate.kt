@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
+import com.spotify.mobius.EventSource
 import com.spotify.mobius.First
 import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Next
@@ -13,6 +14,7 @@ import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.functions.Function
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.util.unsafeLazy
 
 class MobiusDelegate<M : Parcelable, E, F>(
@@ -20,7 +22,8 @@ class MobiusDelegate<M : Parcelable, E, F>(
     private val initFunction: (M) -> First<M, F>,
     private val updateFunction: (M, E) -> Next<M, F>,
     private val effectHandler: ObservableTransformer<F, E>,
-    private val modelUpdateListener: (M) -> Unit
+    private val modelUpdateListener: (M) -> Unit,
+    private val crashReporter: CrashReporter
 ) : Connectable<M, E> {
   private val modelKey = defaultModel::class.java.name
   private val viewStateKey = "ViewState_$modelKey"
@@ -39,8 +42,8 @@ class MobiusDelegate<M : Parcelable, E, F>(
         .eventSource(eventSource)
   }
 
-  val eventSource by unsafeLazy {
-    DeferredEventSource<E>()
+  val eventSource: EventSource<E> by unsafeLazy {
+    DeferredEventSource<E>(crashReporter)
   }
 
   fun prepare() {

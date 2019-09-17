@@ -26,6 +26,7 @@ import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.enterotp.EnterOtpScreenKey
+import org.simple.clinic.home.patients.illustration.HomescreenIllustration
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
@@ -255,5 +256,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     } else {
       crashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
+  }
+
+  fun showIllustration(illustration: HomescreenIllustration) {
   }
 }

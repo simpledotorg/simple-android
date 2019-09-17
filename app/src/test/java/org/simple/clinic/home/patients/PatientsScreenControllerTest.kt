@@ -81,7 +81,7 @@ class PatientsScreenControllerTest {
         checkAppUpdate = checkAppUpdate,
         utcClock = utcClock,
         userClock = userClock,
-        illustrationDao = mock(),
+        patientScreenRepository = mock(),
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,

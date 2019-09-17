@@ -14,7 +14,7 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class AllPatientsInFacilityModelProducerTest {
+class AllPatientsInFacilityLogicTest {
   private val defaultModel = AllPatientsInFacilityModel.FETCHING_PATIENTS
   private val modelUpdates = PublishSubject.create<AllPatientsInFacilityModel>()
   private val testObserver = modelUpdates.test()

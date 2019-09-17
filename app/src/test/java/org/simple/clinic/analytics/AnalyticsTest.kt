@@ -4,6 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
+import org.simple.clinic.mobius.migration.Architecture.MOBIUS
+import org.simple.clinic.mobius.migration.Architecture.ORIGINAL
 import org.simple.clinic.patient.PatientMocker
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -258,5 +260,49 @@ class AnalyticsTest {
 
     assertThat(reporter1.receivedEvents).isEqualTo(expected)
     assertThat(reporter2.receivedEvents).isEqualTo(expected)
+  }
+
+  @Test
+  fun `when reporting migration events, events should not contain hosted screen if not present`() {
+    // given
+    val screen = "Screen A"
+    val architecture = ORIGINAL
+
+    val reporter = MockAnalyticsReporter()
+    Analytics.addReporter(reporter)
+
+    // when
+    Analytics.reportArchitectureMigration(screen, architecture)
+
+    // then
+    val expectedEvent = Event("ArchitectureMigration", mapOf(
+        "screen" to screen,
+        "architecture" to architecture.analyticsName
+    ))
+    assertThat(reporter.receivedEvents)
+        .containsExactly(expectedEvent)
+  }
+
+  @Test
+  fun `when reporting migration events, events should contain hosted screen if present`() {
+    // given
+    val screen = "Screen A"
+    val architecture = MOBIUS
+    val hostScreen = "Screen B"
+
+    val reporter = MockAnalyticsReporter()
+    Analytics.addReporter(reporter)
+
+    // when
+    Analytics.reportArchitectureMigration(screen, architecture, hostScreen)
+
+    // then
+    val expectedEvent = Event("ArchitectureMigration", mapOf(
+        "screen" to screen,
+        "architecture" to architecture.analyticsName,
+        "hostedScreen" to hostScreen
+    ))
+    assertThat(reporter.receivedEvents)
+        .containsExactly(expectedEvent)
   }
 }

@@ -17,7 +17,10 @@ import org.simple.clinic.allpatientsinfacility.migration.AllPatientsInFacilityVi
 import org.simple.clinic.allpatientsinfacility.migration.ExposesUiEvents
 import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilitySearchResultClicked
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.mobius.migration.Architecture.MOBIUS
+import org.simple.clinic.mobius.migration.Architecture.ORIGINAL
 import org.simple.clinic.mobius.migration.MobiusMigrationConfig
 import org.simple.clinic.mobius.migration.RevertToCommit
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -34,7 +37,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import org.threeten.bp.Instant
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -70,14 +72,15 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   private val allPatientsInFacilityView by unsafeLazy {
-    allPatientsViewStub.layoutResource = if (mobiusMigrationConfig.useAllPatientsInFacilityView) {
-      Timber.d("Using AllPatientsInFacilityView (Mobius)")
-      R.layout.view_allpatientsinfacility
+    val (layoutResId, architecture) = if (mobiusMigrationConfig.useAllPatientsInFacilityView) {
+      R.layout.view_allpatientsinfacility to MOBIUS
     } else {
-      Timber.d("Using AllPatientsInFacilityView (OG Architecture)")
-      R.layout.view_allpatientsinfacility_old
+      R.layout.view_allpatientsinfacility_old to ORIGINAL
     }
 
+    Analytics.reportArchitectureMigration("AllPatientsInFacilityView", architecture, "AddIdToPatientSearchScreen")
+
+    allPatientsViewStub.layoutResource = layoutResId
     allPatientsViewStub.inflate() as ExposesUiEvents
   }
 

@@ -54,8 +54,7 @@ class DebugClinicApp : ClinicApp() {
 
     Timber.plant(Timber.DebugTree())
     Stetho.initializeWithDefaults(this)
-    syncScheduler.schedule().subscribe()
-    syncIndicatorStatusCalculator.updateSyncResults()
+    setupSync()
     showDebugNotification()
 
     ViewPump.init(ViewPump.builder()
@@ -63,6 +62,11 @@ class DebugClinicApp : ClinicApp() {
         .build())
 
     signature = AppSignature(this)
+  }
+
+  private fun setupSync() {
+    syncScheduler.schedule().subscribe()
+    syncIndicatorStatusCalculator.updateSyncResults()
   }
 
   private fun showDebugNotification() {

@@ -79,7 +79,7 @@ class PatientsScreenController @Inject constructor(
   private fun showIllustration(events: Observable<UiEvent>): Observable<UiChange> =
       screenCreated(events)
           .flatMap { patientScreenRepository.illustrations() }
-          .map { { ui: Ui -> ui.showIllustration(it) } }
+          .map { { ui: Ui -> ui.showIllustration(it.file) } }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
 

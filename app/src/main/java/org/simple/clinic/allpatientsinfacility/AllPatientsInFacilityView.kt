@@ -13,6 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
@@ -59,6 +60,7 @@ class AllPatientsInFacilityView(
 
   override val uiEvents: Observable<UiEvent>
     get() = Observable.merge(searchResultClicks(), listScrollEvents())
+        .compose(ReportAnalyticsEvents())
 
   private val delegate by unsafeLazy {
     val effectHandler = AllPatientsInFacilityEffectHandler

@@ -26,7 +26,6 @@ import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.enterotp.EnterOtpScreenKey
-import org.simple.clinic.home.patients.illustration.HomescreenIllustration
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
@@ -40,6 +39,7 @@ import org.simple.clinic.widgets.indexOfChildId
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -258,6 +258,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     }
   }
 
-  fun showIllustration(illustration: HomescreenIllustration) {
+  fun showIllustration(illustrationFile: File) {
   }
 }

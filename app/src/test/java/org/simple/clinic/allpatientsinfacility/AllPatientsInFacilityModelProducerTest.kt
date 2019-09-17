@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
@@ -98,37 +97,6 @@ class AllPatientsInFacilityModelProducerTest {
     }
   }
 
-  @Ignore("This is automatically handled by Mobius, delete this test after manual verification.")
-  @Test
-  fun `when the screen is restored, then the ui change producer should emit the last known state`() {
-    // given
-    whenever(patientRepository.allPatientsInFacility(facility))
-        .thenReturn(Observable.just(emptyList()))
-
-    dispatchScreenCreatedEvent()
-
-    val facilityFetchedState = defaultModel.facilityFetched(facility)
-    val noPatientsState = facilityFetchedState.noPatients()
-
-    with(testObserver) {
-      assertNoErrors()
-      assertValues(defaultModel, facilityFetchedState, noPatientsState)
-      assertNotTerminated()
-    }
-
-    // when
-    testObserver.dispose()
-    val restoredTestObserver = modelUpdates.test()
-    dispatchScreenRestoredEvent()
-
-    // then
-    with(restoredTestObserver) {
-      assertNoErrors()
-      assertValue(noPatientsState)
-      assertNotTerminated()
-    }
-  }
-
   private fun dispatchScreenCreatedEvent() {
     MobiusTestFixture(
         Observable.never(),
@@ -138,9 +106,5 @@ class AllPatientsInFacilityModelProducerTest {
         effectHandler,
         modelUpdates::onNext
     )
-  }
-
-  private fun dispatchScreenRestoredEvent() {
-    /* not required, used only to make the tests look structurally similar */
   }
 }

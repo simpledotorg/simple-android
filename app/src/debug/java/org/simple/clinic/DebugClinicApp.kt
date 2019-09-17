@@ -27,13 +27,7 @@ import javax.inject.Inject
 @SuppressLint("Registered")
 class DebugClinicApp : ClinicApp() {
 
-  @Inject
-  lateinit var syncScheduler: SyncScheduler
-
   private lateinit var signature: AppSignature
-
-  @Inject
-  lateinit var syncIndicatorStatusCalculator: SyncIndicatorStatusCalculator
 
   companion object {
     fun appComponent(): DebugAppComponent {
@@ -62,11 +56,6 @@ class DebugClinicApp : ClinicApp() {
         .build())
 
     signature = AppSignature(this)
-  }
-
-  private fun setupSync() {
-    syncScheduler.schedule().subscribe()
-    syncIndicatorStatusCalculator.updateSyncResults()
   }
 
   private fun showDebugNotification() {

@@ -3,8 +3,11 @@ package org.simple.clinic.home.patients.illustration
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import io.reactivex.Observable
 
 @Entity
 data class HomescreenIllustration(
@@ -24,6 +27,9 @@ data class HomescreenIllustration(
   interface RoomDao {
 
     @Query("SELECT * FROM HomescreenIllustration")
-    fun illustrations(): List<HomescreenIllustration>
+    fun illustrations(): Observable<List<HomescreenIllustration>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun save(homescreenIllustration: HomescreenIllustration)
   }
 }

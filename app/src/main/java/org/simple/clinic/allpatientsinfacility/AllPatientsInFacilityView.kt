@@ -89,6 +89,7 @@ class AllPatientsInFacilityView(
     setupAllPatientsList()
     setupInitialViewVisibility()
     forwardListEventsToDownstream()
+
     delegate.prepare()
   }
 
@@ -120,7 +121,9 @@ class AllPatientsInFacilityView(
   }
 
   override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state as Bundle?))
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state as Bundle?)).also {
+      delegate.prepare()
+    }
   }
 
   @SuppressLint("CheckResult")

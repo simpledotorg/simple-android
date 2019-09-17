@@ -17,12 +17,9 @@ import org.simple.clinic.di.DebugBruteForceProtectionModule
 import org.simple.clinic.di.DebugCrashReporterModule
 import org.simple.clinic.di.DebugLoginModule
 import org.simple.clinic.di.DebugNetworkModule
-import org.simple.clinic.sync.SyncScheduler
-import org.simple.clinic.sync.indicator.SyncIndicatorStatusCalculator
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
 import timber.log.Timber
-import javax.inject.Inject
 
 @SuppressLint("Registered")
 class DebugClinicApp : ClinicApp() {

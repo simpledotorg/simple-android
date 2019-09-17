@@ -3,6 +3,7 @@
 ## Next Release
 ### Internal
 - Trigger a full sync when the application starts
+- Migrate AllPatientsInFacilityView to Mobius
 
 ## On Demo
 ### Feature

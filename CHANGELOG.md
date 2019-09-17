@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Release
+### Internal
+- Trigger a full sync when the application starts
+
 ## On Demo
 ### Feature
 - Show Simple video for training user until some patients are registered

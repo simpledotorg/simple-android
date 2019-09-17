@@ -51,6 +51,9 @@ class MobiusTestFixture<M: Any, E, F>(
     )
 
     controller = Mobius.controller(loop, defaultModel, immediateWorkRunner)
+  }
+
+  fun start() {
     with(controller) {
       connect(createNoOpConnectable())
       start()

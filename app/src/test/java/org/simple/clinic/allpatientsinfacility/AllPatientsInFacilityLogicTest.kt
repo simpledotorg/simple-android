@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
@@ -32,12 +33,28 @@ class AllPatientsInFacilityLogicTest {
       TrampolineSchedulersProvider()
   )
 
+  private lateinit var fixture: MobiusTestFixture<AllPatientsInFacilityModel, AllPatientsInFacilityEvent, AllPatientsInFacilityEffect>
+
   @Before
   fun setUp() {
     whenever(userSession.requireLoggedInUser())
         .thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user))
         .thenReturn(Observable.just(facility))
+
+    fixture = MobiusTestFixture(
+        Observable.never(),
+        defaultModel,
+        ::allPatientsInFacilityInit,
+        ::allPatientsInFacilityUpdate,
+        effectHandler,
+        modelUpdates::onNext
+    )
+  }
+
+  @After
+  fun teardown() {
+    fixture.dispose()
   }
 
   @Test
@@ -47,7 +64,7 @@ class AllPatientsInFacilityLogicTest {
         .thenReturn(Observable.never())
 
     // when
-    dispatchScreenCreatedEvent()
+    screenCreated()
 
     // then
     with(testObserver) {
@@ -64,7 +81,7 @@ class AllPatientsInFacilityLogicTest {
         .thenReturn(Observable.just(emptyList()))
 
     // when
-    dispatchScreenCreatedEvent()
+    screenCreated()
 
     // then
     val facilityFetchedState = defaultModel.facilityFetched(facility)
@@ -84,7 +101,7 @@ class AllPatientsInFacilityLogicTest {
         .thenReturn(Observable.just(patientSearchResults))
 
     // when
-    dispatchScreenCreatedEvent()
+    screenCreated()
 
     // then
     val facilityFetchedState = defaultModel.facilityFetched(facility)
@@ -97,14 +114,7 @@ class AllPatientsInFacilityLogicTest {
     }
   }
 
-  private fun dispatchScreenCreatedEvent() {
-    MobiusTestFixture(
-        Observable.never(),
-        defaultModel,
-        ::allPatientsInFacilityInit,
-        ::allPatientsInFacilityUpdate,
-        effectHandler,
-        modelUpdates::onNext
-    )
+  private fun screenCreated() {
+    fixture.start()
   }
 }

@@ -16,6 +16,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_allpatientsinfacility_old.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
@@ -54,7 +55,7 @@ class AllPatientsInFacilityView(
   private val downstreamUiEvents = PublishSubject.create<UiEvent>()
   private lateinit var binding: ViewControllerBinding<UiEvent, AllPatientsInFacilityUiState, AllPatientsInFacilityUi>
 
-  override val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
+  override val uiEvents: Observable<UiEvent> = downstreamUiEvents.compose(ReportAnalyticsEvents()).hide()
 
   override fun onFinishInflate() {
     super.onFinishInflate()

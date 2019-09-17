@@ -18,6 +18,8 @@ import kotlinx.android.synthetic.main.view_allpatientsinfacility_old.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.migration.ExposesUiEvents
 import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListItem.Event.SearchResultClicked

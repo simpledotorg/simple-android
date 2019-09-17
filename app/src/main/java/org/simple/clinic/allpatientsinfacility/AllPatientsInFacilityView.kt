@@ -1,6 +1,5 @@
 package org.simple.clinic.allpatientsinfacility
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
@@ -10,10 +9,8 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -60,9 +57,8 @@ class AllPatientsInFacilityView(
 
   private val viewRenderer by unsafeLazy { AllPatientsInFacilityUiRenderer(this) }
 
-  private val downstreamUiEvents = PublishSubject.create<UiEvent>()
-
-  override val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
+  override val uiEvents: Observable<UiEvent>
+    get() = Observable.merge(searchResultClicks(), listScrollEvents())
 
   private val delegate by unsafeLazy {
     val effectHandler = AllPatientsInFacilityEffectHandler
@@ -88,7 +84,6 @@ class AllPatientsInFacilityView(
 
     setupAllPatientsList()
     setupInitialViewVisibility()
-    forwardListEventsToDownstream()
 
     delegate.prepare()
   }
@@ -124,13 +119,6 @@ class AllPatientsInFacilityView(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state as Bundle?)).also {
       delegate.prepare()
     }
-  }
-
-  @SuppressLint("CheckResult")
-  private fun forwardListEventsToDownstream() {
-    Observable.merge(searchResultClicks(), listScrollEvents())
-        .takeUntil(RxView.detaches(this))
-        .subscribe(downstreamUiEvents::onNext)
   }
 
   private fun searchResultClicks(): Observable<UiEvent> {

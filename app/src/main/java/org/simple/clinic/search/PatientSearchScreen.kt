@@ -12,10 +12,10 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.migration.AllPatientsInFacilityViewMigration
 import org.simple.clinic.allpatientsinfacility.migration.ExposesUiEvents
-import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilityListScrolled
-import org.simple.clinic.allpatientsinfacility_old.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.mobius.migration.Architecture

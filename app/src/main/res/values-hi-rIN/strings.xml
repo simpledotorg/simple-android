@@ -1,26 +1,31 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<resources>
-  <plurals name="overdue_list_item_patient_bp">
-    <item quantity="one">%1$d/%2$d, %3$d दिन पहले</item>
-    <item quantity="other">%1$d/%2$d, %3$d दिन पहले</item>
-  </plurals>
-  <plurals name="overdue_list_item_overdue_days">
-    <item quantity="one">%d दिन भुगतान शेष</item>
-    <item quantity="other">%d दिनों का भुगतान शेष</item>
-  </plurals>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <string name="app_name">सिम्पल</string>
+
+  <!-- Common -->
   <string name="gender_female">महिला</string>
   <string name="gender_male">पुरुष</string>
   <string name="gender_transgender">ट्रांसजेंडर</string>
+  <!--suppress UnusedResources -->
   <string name="gender_male_letter">पु</string>
+  <!--suppress UnusedResources -->
   <string name="gender_female_letter">म</string>
+  <!--suppress UnusedResources -->
   <string name="gender_trans_letter">ट्रां</string>
+  <string name="api_unexpected_error">कुछ ग़लत हुआ। फिर प्रयास करें</string>
   <string name="api_network_error">कोई इंटरनेट कनेक्शन नहीं है</string>
+
   <string name="home_help">मदद</string>
+
+  <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">बी पी पासपोर्ट</string>
   <string name="identifiertype_unknown">ID</string>
+
+  <!-- Patient search -->
   <string name="patientsearch_search">अगला</string>
   <string name="patientsearch_error_empty_fullname">रोगी का पूरा नाम लिखें</string>
+  <string name="patientsearch_hint">नाम या फ़ोन नम्बर</string>
+
+  <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">कोई रोगी मौजूद नहीं</string>
   <string name="patientsearchresults_register_patient_rationale">क्या आप इस सूची में रोगी का नाम ढूंढ नहीं पाए?</string>
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">रोगी रजिस्टर नहीं हुआ है</string>
@@ -30,18 +35,46 @@
   <string name="patientsearchresults_current_facility_header">%S में विज़िट कर चुका है</string>
   <string name="patientsearchresults_other_results_header">अन्य परिणाम</string>
   <string name="patientsearchresults_no_patients_match">कोई रोगी मौजूद नहीं</string>
+
+  <!-- Manual patient entry -->
+  <string name="patiententry_contentdescription_up_button">ढूँड़ने वापिस जाएँ</string>
+  <string name="patiententry_full_name">मरीज़ का नाम</string>
+  <string name="patiententry_phone_number">फ़ोन नम्बर</string>
+  <string name="patiententry_date_of_birth_unfocused">जन्म तिथी</string>
+  <string name="patiententry_date_of_birth_focused">जन्म तिथी : DD/MM/YY</string>
+  <string name="patiententry_dateofbirth_and_age_separator">या</string>
+  <string name="patiententry_age">उम्र</string>
   <string name="patiententry_colony_or_village">कॉलोनी / गांव / वार्ड</string>
+  <string name="patiententry_district">ज़िला</string>
+  <string name="patiententry_state">राज्य</string>
+  <string name="patiententry_save_patient">आगे</string>
+  <string name="patiententry_error_empty_fullname">मरीज़ का पूरा नाम लिखें</string>
+  <string name="patiententry_error_empty_gender">मरीज़ का लिंग चुनें</string>
   <string name="patiententry_error_empty_colony_or_village">कॉलोनी / गांव / वार्ड लिखें</string>
+  <string name="patiententry_error_empty_district">मरीज़ का ज़िला लिखें</string>
+  <string name="patiententry_error_state_empty">मरीज़ का राज्य  लिखें</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">रोगी की उम्र लिखें</string>
+  <string name="patiententry_error_invalid_dateofbirth">मरीज़ का जन्म दिन DD/MM/YY के तौर पर लिखें</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">मरीज़ का जन्म दिन ठीक करें</string>
   <string name="patiententry_error_phonenumber_length_less">फ़ोन नंबर में 6 अंक से कम नहीं हो सकते</string>
   <string name="patiententry_error_phonenumber_length_more">फ़ोन नंबर में 12 अंक से ज़्यादा नहीं हो सकते</string>
   <string name="patiententry_identifier">बी पी पासपोर्ट</string>
+
   <string name="patientedit_save_patient">सहेजें</string>
   <string name="patientedit_confirm_discard_title">बदलाव निकालें?</string>
   <string name="patientedit_confirm_discard_ok">निकालें</string>
   <string name="patientedit_confirm_discard_cancel">रद्द करें</string>
+
+  <!-- Home: Tabs -->
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
   <string name="tab_patient">रोगी</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_overdue">जाँच बाक़ी</string>
+  <!--suppress UnusedResources -->
   <string name="tab_progress">प्रगति</string>
+
+  <string name="home_search_patient_name_phone">मरीज़ का नाम लिखें</string>
   <string name="patients_user_awaiting_approval_title">स्वीकृति का इंतज़ार कर रहा है</string>
   <string name="patients_user_awaiting_approval_message">एक बार स्वीकृति मिलने के बाद, आप अपने क्लिनिक से रोगियों के रिकॉर्ड एक्सेस कर सकेंगे।</string>
   <string name="patients_user_approved_title">आपको स्वीकृति मिल गई है!</string>
@@ -58,10 +91,13 @@
   <string name="patients_recentpatients_title">हालिया रोगी</string>
   <string name="patients_recentpatients_no_recent_patients">हाल में कोई रोगी नहीं</string>
   <string name="patients_recentpatients_see_all">सभी देखें</string>
+  <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">रक्तचाप</string>
   <string name="bloodpressureentry_sheet_title_edit_blood_pressure">रक्तचाप का संपादन करें</string>
   <string name="bloodpressureentry_sheet_title_enter_date">विज़िट की तारीख</string>
   <string name="bloodpressureentry_remove">हटा दें</string>
+  <string name="bloodpressureentry_systolic">सिस्टॉलिक</string>
+  <string name="bloodpressureentry_diastolic">डयास्टॉलिक</string>
   <string name="bloodpressureentry_day">दिन</string>
   <string name="bloodpressureentry_month">महीना</string>
   <string name="bloodpressureentry_year">साल</string>
@@ -78,6 +114,14 @@
   <string name="bloodpressureentry_remove_bp_message">क्या आप निश्चित हैं कि आप रक्तचाप की रिकॉर्डिंग हटाना चाहते हैं?</string>
   <string name="bloodpressureentry_remove_bp_confirm">हटा दें</string>
   <string name="bloodpressureentry_remove_bp_cancel">रद्द करें</string>
+
+  <!-- Patient summary -->
+  <string name="patientsummary_contentdescription_up_button">वापिस जाएँ</string>
+  <string name="patientsummary_prescriptions_last_updated">बदले गए %s</string>
+  <string name="patientsummary_prescriptions_add">दवाई जोड़ें</string>
+  <string name="patientsummary_prescriptions_update">दवाई बदलें</string>
+  <string name="patientsummary_bp_add_new">नया बी पी</string>
+  <string name="patientsummary_finish_saving_patient">सेव</string>
   <string name="patientsummary_medicalhistory_title">ह्रदवाहिनी इतिहास</string>
   <string name="patientsummary_medicalhistory_last_updated">अपडेट हुआ/हुई %s</string>
   <string name="patientsummary_bp_none_added">कोई रक्तचाप नहीं जुड़ा</string>
@@ -92,59 +136,115 @@
   <string name="patientsummary_addphone_phone_hint">फ़ोन नंबर</string>
   <string name="patientsummary_addphone_save">सहेजें</string>
   <string name="patientsummary_addphone_cancel">छोड़ें</string>
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_low">कम</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_high">उच्च</string>
+
+  <string name="timestamp_today">"आज "</string>
+  <string name="timestamp_yesterday">"कल "</string>
+  <!--suppress PluralsCandidate -->
+  <string name="timestamp_days">%d दिन पहले</string>
+
+  <!-- Prescribed drugs -->
+  <string name="patient_prescribeddrugs_screen_title">बी पी की दवाइयाँ</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">और दवाई जोड़ें</string>
+
+  <string name="customprescription_enter_medicine">दवाई लिखें</string>
   <string name="customprescription_edit_medicine">दवाई लिखें</string>
+  <string name="customprescription_save_drug">सेव</string>
+  <string name="customprescription_drug_name_hint">दवाई का नाम</string>
+  <string name="customprescription_drug_dosage_hint">मात्रा</string>
+
   <string name="customprescription_delete_title">दवाई हटा दें</string>
   <string name="customprescription_delete_message">क्या आप वाकई इस दवाई को हटाना चाहते हैं?</string>
   <string name="customprescription_delete_confirm">हटा दें</string>
   <string name="customprescription_delete_cancel">रद्द करें</string>
+
+  <!-- Login -->
+  <string name="loginpin_go_back">फ़ोन नम्बर स्क्रीन जाएँ</string>
+  <!-- App lock -->
   <string name="applock_logout">क्या ये आप नहीं हैं?</string>
   <string name="applock_reset_pin_alert_title">सुरक्षा पिन रीसेट करना चाहेंगे?</string>
   <string name="applock_reset_pin_alert_message">क्या आप वाकई अपना सुरक्षा पिन रीसेट करना चाहते हैं?</string>
   <string name="applock_reset_pin_alert_confirm">रीसेट करें</string>
   <string name="applock_reset_pin_alert_cancel">रद्द करें</string>
+
+  <!-- PIN entry -->
   <string name="pinentry_forgotpin">पिन भूल गए?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">पिन मूल पिन से अलग है</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts">पिन गलत है, %d प्रयास शेष हैं</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached">आपने %d गलत प्रयास कर चुके हैं</string>
+  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">पिन गलत है, %d प्रयास शेष हैं</string>
+  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">आपने %d गलत प्रयास कर चुके हैं</string>
   <string name="pinentry_pin_number_hint">आपका सुरक्षा पिन</string>
   <string name="pinentry_bruteforcelock_timer_label">इसके बाद फिर से प्रयास करें</string>
+  <!-- minutes:seconds -->
+
+  <!-- Registration -->
   <string name="registrationphone_phone_number_label">आपका फ़ोन नंबर</string>
   <string name="registrationphone_error_invalid_number">फ़ोन नंबर जांचें। ये बहुत छोटा लग रहा है।</string>
+  <string name="registration_loggedout_dialog_title">आप लॉग आउट हो चुके हैं</string>
+  <string name="registration_loggedout_dialog_message">आगे बढ़ने के लिए फिर लॉग इन करें</string>
+  <string name="registration_loggedout_dialog_confirm">ठीक है</string>
+
   <string name="registrationname_name_label">हमें अपना पूरा नाम बताएं</string>
   <string name="registrationname_error_empty_name">कृपया अपना पूरा नाम लिखें</string>
+
   <string name="registrationpin_pin_label">अपना सुरक्षा पिन बनाएं</string>
   <string name="registrationpin_pin_hint">अपना पिन याद रखें, बाद में आपको इसकी ज़रूरत पड़ेगी</string>
   <string name="registrationpin_error_incomplete_pin">पिन बहुत छोटा है। कृपया 4 अंक लिखें।</string>
+
   <string name="registrationconfirmpin_confirm_pin_label">सुरक्षा पिन फिर लिखें</string>
   <string name="registrationconfirmpin_error_pin_mismatch">पिन मूल पिन से अलग है</string>
   <string name="registrationconfirmpin_reset_pin">पिन रीसेट करें</string>
+
   <string name="registrationlocation_screen_title">स्थान का एक्सेस</string>
   <string name="registrationlocation_skip_permission">छोड़ें</string>
   <string name="registrationlocation_permission_rationale_description">आपके स्थान से हमें आपके क्लिनिक को ढूंढने में मदद मिलेगी</string>
   <string name="registrationlocation_permission_rationale_title">अपने क्लिनिक को ज़्यादा तेज़ी से ढूंढें</string>
   <string name="registrationlocation_allow_access">स्थान के एक्सेस की अनुमति दें</string>
+
   <string name="registrationfacilities_screen_title">अपने क्लिनिक का चयन करें</string>
   <string name="registrationfacilities_search_hint">अपने क्लिनिक को ढूंढें</string>
+  <!-- Street, District, State -->
   <string name="registrationfacilities_error_unexpected_title">कुछ गलत हुआ</string>
   <string name="registrationfacilities_error_unexpected_message">कृपया थोड़ी देर बाद फिर से प्रयास करें या अपने सुपरवाइज़र से संपर्क करें।</string>
   <string name="registrationfacilities_error_internet_connection_title">कोई इंटरनेट कनेक्शन नहीं है</string>
   <string name="registrationfacilities_retry">फिर प्रयास करें</string>
   <string name="registrationfacilities_header_suggested_facilities">सुझाए गए क्लिनिक</string>
   <string name="registrationfacilities_header_all_facilities">सभी क्लिनिक</string>
+
+  <!-- Onboarding -->
   <string name="onboarding_get_started">शुरू करें</string>
+
+  <!-- Overdue List -->
   <string name="overdue_no_patients">किसी रोगी का भुगतान शेष नहीं</string>
   <string name="overdue_empty_desc">आप उन रोगियों को कॉल कर पाएंगे जो अपने फ़ॉलो-अप रक्तचाप रीडिंग करवाने के लिए अपनी नियत विज़िट पर नहीं आते।</string>
+  <plurals name="overdue_list_item_patient_bp">
+    <item quantity="one">%1$d/%2$d, %3$d दिन पहले</item>
+    <item quantity="other">%1$d/%2$d, %3$d दिन पहले</item>
+  </plurals>
+  <plurals name="overdue_list_item_overdue_days">
+    <item quantity="one">%d दिन भुगतान शेष</item>
+    <item quantity="other">%d दिनों का भुगतान शेष</item>
+  </plurals>
   <string name="overduelist_last_bp">पिछला बी पी:</string>
   <string name="overduelist_agreed_to_visit">रोगी को ‘विज़िट के लिए सहमत’ के रूप में चिह्नित करें</string>
   <string name="overduelist_remind_call_later">बाद में कॉल करना याद दिलाएं…</string>
   <string name="overduelist_remove_from_list">भुगतान शेष सूची से हटा दें…</string>
   <string name="overduelist_result_of_call">कॉल का परिणाम</string>
   <string name="overduelist_high_risk">उच्च जोखिम</string>
+
+  <!-- Phone number masking -->
   <string name="phonemasking_call_normal">सामान्य</string>
   <string name="phonemasking_call_secure">सुरक्षित</string>
   <string name="phonemasking_help_text">सुरक्षित कॉलों से आपका नंबर छिपा रहता है और ये नंबर टोल फ़्री होता है</string>
+
+  <!-- Appointment reminder -->
   <string name="appointmentreminder_call_later_in">बाद में कॉल करें</string>
   <string name="appointmentreminder_done">पूरा हुआ</string>
+
+  <!-- Remove Overdue Patients -->
   <string name="removeappointment_select_a_reason">किसी कारण का चयन करें</string>
   <string name="removeappointment_patient_already_visited">रोगी पहले ही विज़िट कर चुका है</string>
   <string name="removeappointment_patient_is_not_responding">रोगी जवाब नहीं दे रहा है</string>
@@ -153,115 +253,22 @@
   <string name="removeappointment_moved_to_private">निजी डॉक्टर के पास चला गया</string>
   <string name="removeappointment_patient_died">जीवित नहीं</string>
   <string name="removeappointment_other_reason">अन्य कारण</string>
+
+  <!-- Facility change -->
   <string name="changefacility_screen_title">अपने क्लिनिक का चयन करें</string>
   <string name="facilitychange_search_hint">अपने क्लिनिक को ढूंढें</string>
+
+  <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">इसे/इन्हें भेजे SMS की जांच करें</string>
   <string name="enterotp_enter_verification_code">सत्यापन कोड लिखें</string>
   <string name="enterotp_incorrect_code">गलत कोड, कृपया फिर प्रयास करें</string>
   <string name="enterotp_resend_sms">SMS को फिर भेजें</string>
   <string name="enterotp_sms_sent">नया सत्यापन SMS भेजा गया</string>
+
+  <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">अगली विज़िट के लिए समय नियत करें</string>
   <string name="scheduleappointment_not_now">अभी नहीं</string>
   <string name="scheduleappointment_done">पूरा हुआ</string>
-  <string name="forgotpin_create_new_pin">नया सुरक्षा पिन बनाएं</string>
-  <string name="forgotpin_create_new_pin_invalid_pin">पिन बहुत छोटा है। कृपया 4 अंक लिखें।</string>
-  <string name="forgotpin_confirm_pin">सुरक्षा पिन फिर लिखें</string>
-  <string name="forgotpin_confirm_pin_message">पिन कन्फ़र्म करने के लिए अपने पिन को फिर लिखें</string>
-  <string name="forgotpin_error_pin_mismatch">पिन मूल पिन से अलग है</string>
-  <string name="reports_come_back_later">बाद में आएं</string>
-  <string name="reports_you_will_be_able_to_see">आप अपने क्लिनिक की उच्च रक्तचाप की रिपोर्टें यहां देख सकेंगे।</string>
-  <string name="medicalhistory_question_heartattack">पिछले 3 साल में हुए हृदयाघात</string>
-  <string name="medicalhistory_question_stroke">स्ट्रोक का पिछला इतिहास</string>
-  <string name="medicalhistory_question_kidney">गुर्दे की बीमारी का पिछला इतिहास</string>
-  <string name="medicalhistory_question_diagnosed_with_hypertension">उच्च रक्तचाप रोग की पहचान हुई</string>
-  <string name="medicalhistory_question_takes_hypertension_drugs">पहले ही उच्च रक्तचाप की दवाएं लेता/लेती है</string>
-  <string name="medicalhistory_question_diabetes">मधुमेह है</string>
-  <string name="medicalhistory_question_none">उपर्युक्त में से कोई नहीं</string>
-  <string name="newmedicalhistory_next">अगला</string>
-  <string name="newmedicalhistory_yes">हां</string>
-  <string name="newmedicalhistory_no">नहीं</string>
-  <string name="prescribed_drugs_dosage_none">कोई नहीं</string>
-  <string name="prescribed_drug_with_dosages_sheet_drug_name">%s मात्रा</string>
-  <string name="scansimpleid_title">कार्ड ID स्कैन करें</string>
-  <string name="syncindicator_status_pending">सिंक लंबित है</string>
-  <string name="syncindicator_status_failed">सिंक विफल रहा</string>
-  <string name="syncindicator_status_syncing">सिंक हो रहा है…</string>
-  <string name="syncindicator_status_synced_just_now">अभी-अभी सिंक हुआ था</string>
-  <string name="syncindicator_status_synced">%d मिनट पहले सिंक हुआ था</string>
-  <string name="syncindicator_dialog_error_network">रोगी रिकॉर्ड सिंक करने के लिए निश्चित करें कि आपके पास एक चालू इंटरनेट कनेक्शन है।</string>
-  <string name="syncindicator_dialog_button_text">ठीक है</string>
-  <string name="syncindicator_dialog_error_server">इस वक्त सिंक सर्वर काम नहीं कर रहे हैं। कृपया बाद में फिर प्रयास करें या अपने सुपरवाइज़र से संपर्क करें।</string>
-  <string name="help_title">मदद</string>
-  <string name="help_no_connection">कोई इंटरनेट कनेक्शन नहीं है</string>
-  <string name="help_something_went_wrong">कुछ गलत हुआ</string>
-  <string name="help_try_again">फिर प्रयास करें</string>
-  <string name="linkidwithpatient_button_add">जोड़ें</string>
-  <string name="linkidwithpatient_button_cancel">रद्द करें</string>
-  <string name="linkidwithpatient_add_id_text">%1$S\u0020 जोड़ें</string>
-  <string name="linkidwithpatient_to_patient_text">\u0020to\u00A0रोगी?</string>
-  <string name="addidtopatientsearch_search">अगला</string>
-  <string name="addidtopatientsearch_error_empty_fullname">रोगी का पूरा नाम लिखें</string>
-  <string name="addidtopatientsearch_add">%1$S\u0020 जोड़ें</string>
-  <string name="addidtopatientsearch_to_patient">\u0020to\u00A0रोगी</string>
-  <string name="recent_patients_toolbar_title">हालिया रोगी</string>
-  <string name="recent_patients_itemview_last_seen">पिछले बार दिखा:\u0020</string>
-  <string name="addidtopatientsearchresults_add">%1$S\u0020 जोड़ें</string>
-  <string name="addidtopatientsearchresults_to_patient">\u0020to\u00A0रोगी</string>
-  <string name="appupdatedialog_title">ऐप अपडेट करें</string>
-  <string name="appupdatedialog_body">Simple को अपडेट करने के लिए आपको प्ले स्टोर पर ले जाया जाएगा</string>
-  <string name="appupdatedialog_positive_button_text">अपडेट करें</string>
-  <string name="appupdatedialog_negative_button_text">अभी नहीं</string>
-  <string name="allpatientsinfacility_nopatients_message">आप अपने यहां रजिस्टर हुए सभी रोगियों को यहां देख सकेंगे।</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$S में कोई रोगी नहीं</string>
-  <string name="allpatientsinfacility_foundpatients_header">सभी रोगी: %1$s</string>
-  <string name="addidtopatientsearch_hint">नाम या फ़ोन नम्बर</string>
-  <string name="api_unexpected_error">कुछ ग़लत हुआ। फिर प्रयास करें</string>
-  <string name="bloodpressure_level_high">उच्च</string>
-  <string name="bloodpressure_level_low">कम</string>
-  <string name="bloodpressureentry_diastolic">डयास्टॉलिक</string>
-  <string name="bloodpressureentry_systolic">सिस्टॉलिक</string>
-  <string name="customprescription_drug_dosage_hint">मात्रा</string>
-  <string name="customprescription_drug_name_hint">दवाई का नाम</string>
-  <string name="customprescription_enter_medicine">दवाई लिखें</string>
-  <string name="customprescription_save_drug">सेव</string>
-  <string name="home_search_patient_name_phone">मरीज़ का नाम लिखें</string>
-  <string name="loginpin_go_back">फ़ोन नम्बर स्क्रीन जाएँ</string>
-  <string name="patient_prescribeddrugs_add_custom_prescription">और दवाई जोड़ें</string>
-  <string name="patient_prescribeddrugs_screen_title">बी पी की दवाइयाँ</string>
-  <string name="patiententry_age">उम्र</string>
-  <string name="patiententry_contentdescription_up_button">ढूँड़ने वापिस जाएँ</string>
-  <string name="patiententry_date_of_birth_focused">जन्म तिथी : DD/MM/YY</string>
-  <string name="patiententry_date_of_birth_unfocused">जन्म तिथी</string>
-  <string name="patiententry_dateofbirth_and_age_separator">या</string>
-  <string name="patiententry_district">ज़िला</string>
-  <string name="patiententry_error_dateofbirth_is_in_future">मरीज़ का जन्म दिन ठीक करें</string>
-  <string name="patiententry_error_empty_fullname">मरीज़ का पूरा नाम लिखें</string>
-  <string name="patiententry_error_empty_district">मरीज़ का ज़िला लिखें</string>
-  <string name="patiententry_error_empty_gender">मरीज़ का लिंग चुनें</string>
-  <string name="patiententry_error_invalid_dateofbirth">मरीज़ का जन्म दिन DD/MM/YY के तौर पर लिखें</string>
-  <string name="patiententry_error_state_empty">मरीज़ का राज्य  लिखें</string>
-  <string name="patiententry_full_name">मरीज़ का नाम</string>
-  <string name="patiententry_phone_number">फ़ोन नम्बर</string>
-  <string name="patiententry_save_patient">आगे</string>
-  <string name="patiententry_state">राज्य</string>
-  <string name="patientsearch_hint">नाम या फ़ोन नम्बर</string>
-  <string name="patientsummary_bp_add_new">नया बी पी</string>
-  <string name="patientsummary_contentdescription_up_button">वापिस जाएँ</string>
-  <string name="patientsummary_finish_saving_patient">सेव</string>
-  <string name="patientsummary_prescriptions_add">दवाई जोड़ें</string>
-  <string name="patientsummary_prescriptions_last_updated">बदले गए %s</string>
-  <string name="patientsummary_prescriptions_update">दवाई बदलें</string>
-  <string name="registration_loggedout_dialog_confirm">ठीक है</string>
-  <string name="registration_loggedout_dialog_message">आगे बढ़ने के लिए फिर लॉग इन करें</string>
-  <string name="registration_loggedout_dialog_title">आप लॉग आउट हो चुके हैं</string>
-  <string name="registrationloader_error_internet_connection_title">कोई इंटर्नेट कनेक्शन नहीं</string>
-  <string name="registrationloader_error_unexpected_message">कृपया कुछ देर बाद कोशिश करें या अपने सूपर्वायज़र से सम्पर्क करें</string>
-  <string name="registrationloader_error_unexpected_title">कुछ ग़लत हुआ</string>
-  <string name="registrationloader_retry">फिर कोशिश करें</string>
-  <string name="tab_overdue">जाँच बाक़ी</string>
-  <string name="timestamp_days">%d दिन पहले</string>
-  <string name="timestamp_today">"आज "</string>
-  <string name="timestamp_yesterday">"कल "</string>
   <plurals name="scheduleappointment_appointmentin_days">
     <item quantity="one">%d दिन</item>
     <item quantity="other">%d दिन</item>
@@ -274,4 +281,108 @@
     <item quantity="one">%d महीना</item>
     <item quantity="other">%d महीने</item>
   </plurals>
+
+  <!-- Forgot PIN -->
+  <string name="forgotpin_create_new_pin">नया सुरक्षा पिन बनाएं</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">पिन बहुत छोटा है। कृपया 4 अंक लिखें।</string>
+  <string name="forgotpin_confirm_pin">सुरक्षा पिन फिर लिखें</string>
+  <string name="forgotpin_confirm_pin_message">पिन कन्फ़र्म करने के लिए अपने पिन को फिर लिखें</string>
+  <string name="forgotpin_error_pin_mismatch">पिन मूल पिन से अलग है</string>
+
+  <!-- Reports -->
+  <string name="reports_come_back_later">बाद में आएं</string>
+  <string name="reports_you_will_be_able_to_see">आप अपने क्लिनिक की उच्च रक्तचाप की रिपोर्टें यहां देख सकेंगे।</string>
+
+  <!-- Medical History -->
+  <!--suppress UnusedResources used in enum -->
+  <string name="medicalhistory_question_heartattack">पिछले 3 साल में हुए हृदयाघात</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_stroke">स्ट्रोक का पिछला इतिहास</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_kidney">गुर्दे की बीमारी का पिछला इतिहास</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diagnosed_with_hypertension">उच्च रक्तचाप रोग की पहचान हुई</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_takes_hypertension_drugs">पहले ही उच्च रक्तचाप की दवाएं लेता/लेती है</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diabetes">मधुमेह है</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_none">उपर्युक्त में से कोई नहीं</string>
+  <string name="newmedicalhistory_next">अगला</string>
+  <string name="newmedicalhistory_yes">हां</string>
+  <string name="newmedicalhistory_no">नहीं</string>
+
+  <!--Prescribed Drug with Dosages Sheet-->
+  <string name="prescribed_drugs_dosage_none">कोई नहीं</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">%s मात्रा</string>
+
+  <!--Scan Simple ID-->
+  <string name="scansimpleid_title">कार्ड ID स्कैन करें</string>
+  <string name="scansimpleid_shortcode_error_empty">बी पी पास्पोर्ट नम्बर लिखें </string>
+  <string name="scansimpleid_shortcode_error_not_required_length">बी पी पास्पोर्ट नम्बर में 7 से कम अंक हैं </string>
+  <string name="scansimpleid_type_bp_passport_number">या बप पास्पोर्ट नम्बर लिखें </string>
+
+  <!--- Sync Indicator-->
+  <string name="syncindicator_status_pending">सिंक लंबित है</string>
+  <string name="syncindicator_status_failed">सिंक विफल रहा</string>
+  <string name="syncindicator_status_syncing">सिंक हो रहा है…</string>
+  <string name="syncindicator_status_synced_just_now">अभी-अभी सिंक हुआ था</string>
+  <string name="syncindicator_status_synced">%d मिनट पहले सिंक हुआ था</string>
+  <string name="syncindicator_dialog_error_network">रोगी रिकॉर्ड सिंक करने के लिए निश्चित करें कि आपके पास एक चालू इंटरनेट कनेक्शन है।</string>
+  <string name="syncindicator_dialog_button_text">ठीक है</string>
+  <string name="syncindicator_dialog_error_server">इस वक्त सिंक सर्वर काम नहीं कर रहे हैं। कृपया बाद में फिर प्रयास करें या अपने सुपरवाइज़र से संपर्क करें।</string>
+
+  <!-- Help Screen -->
+  <string name="help_title">मदद</string>
+  <string name="help_no_connection">कोई इंटरनेट कनेक्शन नहीं है</string>
+  <string name="help_something_went_wrong">कुछ गलत हुआ</string>
+  <string name="help_try_again">फिर प्रयास करें</string>
+
+  <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_add">जोड़ें</string>
+  <string name="linkidwithpatient_button_cancel">रद्द करें</string>
+  <string name="linkidwithpatient_add_id_text">%1$S\u0020 जोड़ें</string>
+  <string name="linkidwithpatient_to_patient_text">\u0020to\u00A0रोगी?</string>
+
+  <!-- Add ID to Patient: Search -->
+  <string name="addidtopatientsearch_search">अगला</string>
+  <string name="addidtopatientsearch_error_empty_fullname">रोगी का पूरा नाम लिखें</string>
+  <string name="addidtopatientsearch_hint">नाम या फ़ोन नम्बर</string>
+  <string name="addidtopatientsearch_add">%1$S\u0020 जोड़ें</string>
+  <string name="addidtopatientsearch_to_patient">\u0020to\u00A0रोगी</string>
+
+  <!-- Recent Patients -->
+  <string name="recent_patients_toolbar_title">हालिया रोगी</string>
+
+  <!-- Recent Patients Item View -->
+  <string name="recent_patients_itemview_last_seen">पिछले बार दिखा:\u0020</string>
+  <!-- Add ID to Patient: Search Results-->
+  <string name="addidtopatientsearchresults_add">%1$S\u0020 जोड़ें</string>
+  <string name="addidtopatientsearchresults_to_patient">\u0020to\u00A0रोगी</string>
+
+  <!-- App update : Dialog -->
+  <string name="appupdatedialog_title">ऐप अपडेट करें</string>
+  <string name="appupdatedialog_body">Simple को अपडेट करने के लिए आपको प्ले स्टोर पर ले जाया जाएगा</string>
+  <string name="appupdatedialog_positive_button_text">अपडेट करें</string>
+  <string name="appupdatedialog_negative_button_text">अभी नहीं</string>
+
+  <!-- All Patients In Facility View-->
+  <string name="allpatientsinfacility_nopatients_message">आप अपने यहां रजिस्टर हुए सभी रोगियों को यहां देख सकेंगे।</string>
+  <string name="allpatientsinfacility_nopatients_title">%1$S में कोई रोगी नहीं</string>
+  <string name="allpatientsinfacility_foundpatients_header">सभी रोगी: %1$s</string>
+
+  <!--Registration loader screen -->
+  <string name="registrationloader_error_unexpected_title">कुछ ग़लत हुआ</string>
+  <string name="registrationloader_error_unexpected_message">कृपया कुछ देर बाद कोशिश करें या अपने सूपर्वायज़र से सम्पर्क करें</string>
+  <string name="registrationloader_error_internet_connection_title">कोई इंटर्नेट कनेक्शन नहीं</string>
+  <!--suppress UnusedResources -->
+  <string name="registrationloader_retry">फिर कोशिश करें</string>
+
+  <!-- Short code search -->
+  <string name="shortcodesearchresult_enter_patient_name_button">मरीज़ का नाम लिखें </string>
+
+  <!-- Simple video -->
+  <string name="simple_video_watch_video">विडीओ देखें </string>
+  <string name="simple_video_how_to_use_the_simple_app">सिम्पल ऐप को कैसे इस्तेमाल करें </string>
+  <string name="simple_video_duration">%s मिनट </string>
 </resources>

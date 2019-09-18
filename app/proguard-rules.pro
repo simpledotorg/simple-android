@@ -49,3 +49,9 @@
 }
 
 -dontwarn com.jcabi.aspects.apt.**
+
+# Mobius
+-dontwarn com.google.auto.value.AutoValue$Builder
+-dontwarn org.slf4j.impl.StaticLoggerBinder
+-dontwarn org.slf4j.impl.StaticMDCBinder
+-dontwarn org.slf4j.impl.StaticMarkerBinder

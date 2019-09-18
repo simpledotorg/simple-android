@@ -47,6 +47,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
@@ -96,6 +97,7 @@ class PatientEditScreenControllerTest {
         patientRepository,
         numberValidator,
         utcClock,
+        TestUserClock(),
         dobValidator,
         dateOfBirthFormat)
 

@@ -12,6 +12,7 @@ import android.widget.RelativeLayout
 import androidx.annotation.IdRes
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
+import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.ofType
@@ -259,5 +260,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun showIllustration(illustrationFile: File) {
+    Picasso.get().load(illustrationFile).into(homeIllustration)
   }
 }

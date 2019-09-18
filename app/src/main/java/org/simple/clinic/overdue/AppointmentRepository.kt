@@ -123,16 +123,22 @@ class AppointmentRepository @Inject constructor(
   }
 
   fun overdueAppointments(facility: Facility): Observable<List<OverdueAppointment>> {
+    return overdueAppointments(since = LocalDate.now(utcClock), facility = facility)
+  }
+
+  fun overdueAppointments(
+      since: LocalDate,
+      facility: Facility
+  ): Observable<List<OverdueAppointment>> {
     return appointmentConfigProvider
         .flatMap { appointmentConfig ->
-          val today = LocalDate.now(utcClock)
           overdueDao
               .appointmentsForFacility(
                   facilityUuid = facility.uuid,
                   scheduledStatus = Scheduled,
-                  scheduledBefore = today,
-                  minimumOverdueDateForHighRisk = today.minus(appointmentConfig.minimumOverduePeriodForHighRisk),
-                  overdueDateForLowestRiskLevel = today.minus(appointmentConfig.overduePeriodForLowestRiskLevel)
+                  scheduledBefore = since,
+                  minimumOverdueDateForHighRisk = since.minus(appointmentConfig.minimumOverduePeriodForHighRisk),
+                  overdueDateForLowestRiskLevel = since.minus(appointmentConfig.overduePeriodForLowestRiskLevel)
               ).toObservable()
         }
   }

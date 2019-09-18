@@ -2,12 +2,14 @@
 
 ## Next Release
 ### Internal
-- Trigger a full sync when the application starts
 - Migrate AllPatientsInFacilityView to Mobius
 
 ## On Demo
 ### Feature
 - Show Simple video for training user until some patients are registered
+
+### Internal
+- Trigger a full sync when the application starts
 
 ## 2019-09-09-5430
 ### Feature
@@ -169,4 +171,3 @@
 ## 1356-07Oct
 - Fix: crash if multiple histories are present for the same patient 
 - Fix: crash if empty systolic or diastolic blood pressure value is submitted
- 

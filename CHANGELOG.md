@@ -4,6 +4,9 @@
 ### Feature
 - Show Simple video for training user until some patients are registered
 
+### Internal
+- Trigger a full sync when the application starts
+
 ## 2019-09-09-5430
 ### Feature
 - Exclude deleted patient records while searching by name or phone number

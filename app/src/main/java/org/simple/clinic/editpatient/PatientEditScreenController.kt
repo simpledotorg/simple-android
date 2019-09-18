@@ -32,6 +32,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.None
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
+import org.simple.clinic.util.extractNullable
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -122,17 +123,17 @@ class PatientEditScreenController @Inject constructor(
         }
 
     val prefillPatientAge = savedPatient
-        .filter { it.age != null }
-        .map {
+        .extractNullable { it.age }
+        .map { age ->
           { ui: Ui ->
-            val estimatedAge = estimateCurrentAge(it.age!!.value, it.age.updatedAt, utcClock)
+            val estimatedAge = estimateCurrentAge(age.value, age.updatedAt, utcClock)
             ui.setPatientAge(estimatedAge)
           }
         }
 
     val prefillPatientDateOfBirth = savedPatient
-        .filter { it.dateOfBirth != null }
-        .map { { ui: Ui -> ui.setPatientDateofBirth(it.dateOfBirth!!) } }
+        .extractNullable { it.dateOfBirth }
+        .map { dateOfBirth -> { ui: Ui -> ui.setPatientDateofBirth(dateOfBirth) } }
 
     return Observable.mergeArray(
         preFillPatientProfile,

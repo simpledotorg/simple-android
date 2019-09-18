@@ -30,6 +30,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.None
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.extractNullable
@@ -53,6 +54,7 @@ class PatientEditScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val numberValidator: PhoneNumberValidator,
     private val utcClock: UtcClock,
+    private val userClock: UserClock,
     private val dobValidator: UserInputDateValidator,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -126,7 +128,7 @@ class PatientEditScreenController @Inject constructor(
         .extractNullable { it.age }
         .map { age ->
           { ui: Ui ->
-            val estimatedAge = estimateCurrentAge(age.value, age.updatedAt, utcClock)
+            val estimatedAge = estimateCurrentAge(age.value, age.updatedAt, userClock)
             ui.setPatientAge(estimatedAge)
           }
         }

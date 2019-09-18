@@ -23,3 +23,9 @@ operator fun Timed<*>.minus(timed: Timed<*>): Duration {
 fun Observable<Boolean>.filterTrue(): Observable<Boolean> {
   return this.filter { isTrue -> isTrue }
 }
+
+inline fun <T : Any, Y : Any> Observable<T>.extractNullable(crossinline mapper: (T) -> Y?): Observable<Y> {
+  return this
+      .map { mapper(it).toOptional() }
+      .filterAndUnwrapJust()
+}

@@ -352,7 +352,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingAwait()
 
     // when
-    val overdueAppointments = appointmentRepository.overdueAppointments(facility).blockingFirst()
+    val overdueAppointments = appointmentRepository.overdueAppointments(since = today, facility = facility).blockingFirst()
         .associateBy { it.appointment.patientUuid }
 
     // then
@@ -745,7 +745,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // when
-    val appointments = appointmentRepository.overdueAppointments(facility).blockingFirst()
+    val appointments = appointmentRepository.overdueAppointments(since = LocalDate.now(clock), facility = facility).blockingFirst()
 
     // then
     assertThat(appointments.map { it.fullName to it.riskLevel }).isEqualTo(listOf(
@@ -951,7 +951,7 @@ class AppointmentRepositoryAndroidTest {
 
     // when
     val bloodPressuresByAppointmentUuid = appointmentRepository
-        .overdueAppointments(facility)
+        .overdueAppointments(since = LocalDate.now(clock), facility = facility)
         .blockingFirst()
         .associateBy({ it.appointment.uuid }, { it.bloodPressure })
 
@@ -1008,7 +1008,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // when
-    val overdueAppointments = appointmentRepository.overdueAppointments(facility).blockingFirst()
+    val overdueAppointments = appointmentRepository.overdueAppointments(since = LocalDate.now(clock), facility = facility).blockingFirst()
 
     //then
     assertThat(overdueAppointments).hasSize(1)
@@ -1060,7 +1060,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // when
-    val overdueAppointments = appointmentRepository.overdueAppointments(facility).blockingFirst()
+    val overdueAppointments = appointmentRepository.overdueAppointments(since = LocalDate.now(clock), facility = facility).blockingFirst()
 
     //then
     assertThat(overdueAppointments).hasSize(1)
@@ -1139,11 +1139,10 @@ class AppointmentRepositoryAndroidTest {
 
     listOf(oneWeekBeforeCurrentDate, oneDayBeforeCurrentDate, onCurrentDate, afterCurrentDate)
         .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
-    clock.setDate(currentDate)
 
     // when
     val overdueAppointments = appointmentRepository
-        .overdueAppointments(facility)
+        .overdueAppointments(since = currentDate, facility = facility)
         .blockingFirst()
 
     // then
@@ -1224,11 +1223,10 @@ class AppointmentRepositoryAndroidTest {
 
     listOf(remindOneWeekBeforeCurrentDate, remindOneDayBeforeCurrentDate, remindOnCurrentDate, remindAfterCurrentDate)
         .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
-    clock.setDate(currentDate)
 
     // when
     val overdueAppointments = appointmentRepository
-        .overdueAppointments(facility)
+        .overdueAppointments(since = currentDate, facility = facility)
         .blockingFirst()
 
     // then
@@ -1303,11 +1301,10 @@ class AppointmentRepositoryAndroidTest {
 
     listOf(withPhoneNumber, withDeletedPhoneNumber, withoutPhoneNumber)
         .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
-    clock.setDate(currentDate)
 
     // when
     val overdueAppointments = appointmentRepository
-        .overdueAppointments(facility)
+        .overdueAppointments(since = currentDate, facility = facility)
         .blockingFirst()
 
     // then
@@ -1370,11 +1367,10 @@ class AppointmentRepositoryAndroidTest {
 
     listOf(withBloodPressure, withoutBloodPressure)
         .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
-    clock.setDate(currentDate)
 
     // when
     val overdueAppointments = appointmentRepository
-        .overdueAppointments(facility)
+        .overdueAppointments(since = currentDate, facility = facility)
         .blockingFirst()
 
     // then

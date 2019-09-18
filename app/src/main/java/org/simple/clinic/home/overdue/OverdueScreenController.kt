@@ -12,6 +12,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 typealias Ui = OverdueScreen
@@ -51,7 +52,7 @@ class OverdueScreenController @Inject constructor(
         .flatMap { userSession.loggedInUser() }
         .filterAndUnwrapJust()
         .switchMap { facilityRepository.currentFacility(it) }
-        .flatMap { currentFacility -> appointmentRepository.overdueAppointments(currentFacility) }
+        .flatMap { currentFacility -> appointmentRepository.overdueAppointments(since = LocalDate.now(userClock), facility = currentFacility) }
         .replay()
         .refCount()
 

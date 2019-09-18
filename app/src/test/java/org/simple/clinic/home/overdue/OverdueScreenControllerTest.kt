@@ -46,7 +46,8 @@ class OverdueScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val facility = PatientMocker.facility()
   private val user = PatientMocker.loggedInUser()
-  private val userClock = TestUserClock(LocalDate.parse("2018-01-01"))
+  private val dateOnClock = LocalDate.parse("2018-01-01")
+  private val userClock = TestUserClock(dateOnClock)
 
   private val controller = OverdueScreenController(
       appointmentRepository = repository,
@@ -70,7 +71,7 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when screen is created, and overdue list is empty, show empty list UI`() {
-    whenever(repository.overdueAppointments(facility))
+    whenever(repository.overdueAppointments(dateOnClock, facility))
         .thenReturn(Observable.just(emptyList()))
 
     uiEvents.onNext(OverdueScreenCreated())
@@ -128,7 +129,7 @@ class OverdueScreenControllerTest {
         PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.LOW),
         PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.NONE)
     )
-    whenever(repository.overdueAppointments(facility))
+    whenever(repository.overdueAppointments(dateOnClock, facility))
         .thenReturn(Observable.just(overdueAppointments))
 
     // when

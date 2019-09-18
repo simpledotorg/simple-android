@@ -122,6 +122,10 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao.count().toObservable()
   }
 
+  @Deprecated(
+      message = "",
+      replaceWith = ReplaceWith("overdueAppointments(since = , facility = facility)")
+  )
   fun overdueAppointments(facility: Facility): Observable<List<OverdueAppointment>> {
     return overdueAppointments(since = LocalDate.now(utcClock), facility = facility)
   }

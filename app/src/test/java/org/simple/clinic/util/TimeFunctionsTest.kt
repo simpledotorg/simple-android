@@ -194,4 +194,62 @@ class TimeFunctionsTest {
     )
   }
 
+  @Test
+  fun `the current age must be estimated from the recorded age correctly`() {
+    // given
+    val recordedAge = 30
+    val ageRecordedAt = Instant.parse("2018-01-01T00:00:00Z")
+
+    fun estimateAgeAtDate(date: LocalDate): Int {
+      val clock = TestUserClock(date)
+      return estimateCurrentAge(recordedAge = recordedAge, ageRecordedAtTimestamp = ageRecordedAt, clock = clock)
+    }
+
+    // when
+    val `estimated age on the same day` = estimateAgeAtDate(LocalDate.parse("2018-01-01"))
+    val `estimated age almost a year later` = estimateAgeAtDate(LocalDate.parse("2018-12-31"))
+    val `estimated age a year later` = estimateAgeAtDate(LocalDate.parse("2019-01-01"))
+    val `estimated age a year and six months later` = estimateAgeAtDate(LocalDate.parse("2019-07-01"))
+    val `estimated age two years later` = estimateAgeAtDate(LocalDate.parse("2020-01-01"))
+    val `estimated age two years and nine months later` = estimateAgeAtDate(LocalDate.parse("2020-10-01"))
+    val `estimated age three years and a day later` = estimateAgeAtDate(LocalDate.parse("2021-01-02"))
+
+    // then
+    assertThat(`estimated age on the same day`).isEqualTo(30)
+    assertThat(`estimated age almost a year later`).isEqualTo(30)
+    assertThat(`estimated age a year later`).isEqualTo(31)
+    assertThat(`estimated age a year and six months later`).isEqualTo(31)
+    assertThat(`estimated age two years later`).isEqualTo(32)
+    assertThat(`estimated age two years and nine months later`).isEqualTo(32)
+    assertThat(`estimated age three years and a day later`).isEqualTo(33)
+  }
+
+  @Test
+  fun `the current age must be estimated from the recorded date correctly`() {
+    // given
+    val recordedDateOfBirth = LocalDate.parse("1988-01-01")
+
+    fun estimateAgeAtDate(date: LocalDate): Int {
+      val clock = TestUserClock(date)
+      return estimateCurrentAge(recordedDateOfBirth = recordedDateOfBirth, clock = clock)
+    }
+
+    // when
+    val `estimated age on the same day` = estimateAgeAtDate(LocalDate.parse("2018-01-01"))
+    val `estimated age almost a year later` = estimateAgeAtDate(LocalDate.parse("2018-12-31"))
+    val `estimated age a year later` = estimateAgeAtDate(LocalDate.parse("2019-01-01"))
+    val `estimated age a year and six months later` = estimateAgeAtDate(LocalDate.parse("2019-07-01"))
+    val `estimated age two years later` = estimateAgeAtDate(LocalDate.parse("2020-01-01"))
+    val `estimated age two years and nine months later` = estimateAgeAtDate(LocalDate.parse("2020-10-01"))
+    val `estimated age three years and a day later` = estimateAgeAtDate(LocalDate.parse("2021-01-02"))
+
+    // then
+    assertThat(`estimated age on the same day`).isEqualTo(30)
+    assertThat(`estimated age almost a year later`).isEqualTo(30)
+    assertThat(`estimated age a year later`).isEqualTo(31)
+    assertThat(`estimated age a year and six months later`).isEqualTo(31)
+    assertThat(`estimated age two years later`).isEqualTo(32)
+    assertThat(`estimated age two years and nine months later`).isEqualTo(32)
+    assertThat(`estimated age three years and a day later`).isEqualTo(33)
+  }
 }

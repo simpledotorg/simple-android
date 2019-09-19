@@ -10,7 +10,7 @@ import dagger.Provides
 import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.facility.change.FacilityChangeModule
-import org.simple.clinic.home.patients.illustration.HomescreenIllustrationModule
+import org.simple.clinic.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.mobius.migration.MobiusMigrationModule
 import org.simple.clinic.onboarding.OnboardingModule

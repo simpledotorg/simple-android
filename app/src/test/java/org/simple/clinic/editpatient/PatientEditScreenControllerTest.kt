@@ -119,7 +119,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -152,7 +152,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
@@ -194,7 +194,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -220,7 +220,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -248,7 +248,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -274,7 +274,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
@@ -302,7 +302,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
@@ -355,7 +355,7 @@ class PatientEditScreenControllerTest {
       whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
     }
 
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPatientNameTextChanged(name))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
@@ -541,7 +541,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
     whenever(numberValidator.validate(any(), any())).thenReturn(BLANK)
 
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
     uiEvents.onNext(PatientEditSaveClicked())
     uiEvents.onNext(inputChange)
 
@@ -597,7 +597,7 @@ class PatientEditScreenControllerTest {
     whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
 
     utcClock.advanceBy(advanceClockBy)
-    uiEvents.onNext(PatientEditScreenCreated(existingSavedPatient.uuid))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(existingSavedPatient.uuid))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditSaveClicked())
 
@@ -1042,7 +1042,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.phoneNumber(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
     whenever(patientRepository.address(existingSavedAddress.uuid)).thenReturn(Observable.just(existingSavedAddress.toOptional()))
 
-    uiEvents.onNext(PatientEditScreenCreated(existingSavedPatient.uuid))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(existingSavedPatient.uuid))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditBackClicked())
 

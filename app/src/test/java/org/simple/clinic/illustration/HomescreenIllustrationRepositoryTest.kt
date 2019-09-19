@@ -13,6 +13,7 @@ import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 import java.io.File
+import java.io.FileNotFoundException
 
 class HomescreenIllustrationRepositoryTest {
 
@@ -28,11 +29,10 @@ class HomescreenIllustrationRepositoryTest {
       fileStorage = fileStorage,
       userClock = userClock
   )
+  private val eventId = "world_heart_day"
 
   @Before
   fun setUp() {
-    val eventId = "world_heart_day"
-
     whenever(illustrationDao.illustrations()).thenReturn(Observable.just(listOf(
         HomescreenIllustration(
             eventId = "event-1",
@@ -83,6 +83,18 @@ class HomescreenIllustrationRepositoryTest {
   @Test
   fun `verify illustration is not set if there is no event today`() {
     userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 21))
+    repository.illustrations()
+        .test()
+        .assertNoValues()
+        .assertNoErrors()
+  }
+
+  @Test
+  fun `verify illustration is not set when there is event today but no illustration file`() {
+    whenever(fileStorage.getFile(eventId)).thenReturn(GetFileResult.Failure(FileNotFoundException()))
+
+    userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 20))
+
     repository.illustrations()
         .test()
         .assertNoValues()

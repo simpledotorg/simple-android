@@ -70,7 +70,6 @@ class RecentPatientsViewControllerTest {
         patientRepository = patientRepository,
         facilityRepository = facilityRepository,
         relativeTimestampGenerator = relativeTimestampGenerator,
-        utcClock = TestUtcClock(),
         userClock = userClock,
         patientConfig = Observable.just(PatientConfig(
             limitOfSearchResults = 1,

@@ -31,6 +31,7 @@ import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
@@ -50,7 +51,7 @@ class PhoneMaskBottomSheetControllerTest {
   private val phoneCaller = mock<PhoneCaller>()
   private val patientUuid: UUID = UUID.fromString("90d20a06-6e8b-4f26-b317-1ac18441765d")
   private val patientRepository: PatientRepository = mock()
-  private val clock = TestUtcClock()
+  private val clock = TestUserClock()
 
   private val controller = PhoneMaskBottomSheetController(
       phoneCaller = phoneCaller,

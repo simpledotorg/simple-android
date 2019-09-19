@@ -19,7 +19,7 @@ sealed class PatientEditScreenCreated(
     fun fromPatientData(
         patient: Patient,
         address: PatientAddress,
-        phoneNumber: PatientPhoneNumber
+        phoneNumber: PatientPhoneNumber?
     ): PatientEditScreenCreated {
       return PatientEditScreenCreatedWithData(
           patient.uuid,
@@ -38,7 +38,7 @@ sealed class PatientEditScreenCreated(
       override val patientUuid: UUID,
       val patient: Patient,
       val address: PatientAddress,
-      val phoneNumber: PatientPhoneNumber
+      val phoneNumber: PatientPhoneNumber?
   ) : PatientEditScreenCreated(patientUuid)
 }
 

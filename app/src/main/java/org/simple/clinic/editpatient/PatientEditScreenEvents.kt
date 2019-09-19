@@ -30,6 +30,10 @@ sealed class PatientEditScreenCreated(
     }
   }
 
+  @Deprecated("""
+    We are removing the necessity to query patient information from their UUID,
+    instead we'll pass all required information from the previous screen
+    """)
   data class PatientEditScreenCreatedWithUuid(
       override val patientUuid: UUID
   ) : PatientEditScreenCreated(patientUuid)

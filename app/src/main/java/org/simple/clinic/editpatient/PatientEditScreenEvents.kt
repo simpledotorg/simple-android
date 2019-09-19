@@ -12,6 +12,7 @@ sealed class PatientEditScreenCreated(
     open val patientUuid: UUID // TODO(rj) 19/Sep/19 - Remove the `patientUuid` property
 ) : UiEvent {
   companion object {
+    @Deprecated("", replaceWith = ReplaceWith("PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber)"))
     fun fromPatientUuid(uuid: UUID): PatientEditScreenCreated {
       return PatientEditScreenCreatedWithUuid(uuid)
     }

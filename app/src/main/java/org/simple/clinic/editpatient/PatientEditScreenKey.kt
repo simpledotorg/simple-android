@@ -3,14 +3,25 @@ package org.simple.clinic.editpatient
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.router.screen.FullScreenKey
 import java.util.UUID
 
-@Parcelize
-data class PatientEditScreenKey(val patientUuid: UUID) : FullScreenKey {
+sealed class PatientEditScreenKey(open val patientUuid: UUID) : FullScreenKey {
   companion object {
+    @Deprecated("Use `fromPatientData` instead.")
     fun fromPatientUuid(uuid: UUID): PatientEditScreenKey =
-        PatientEditScreenKey(uuid)
+        PatientEditScreenKeyWithUuid(uuid)
+
+    fun fromPatientData(
+        patient: Patient,
+        address: PatientAddress,
+        phoneNumber: PatientPhoneNumber?
+    ): PatientEditScreenKey {
+      return PatientEditScreenKeyWithData(patient, address, phoneNumber)
+    }
   }
 
   @IgnoredOnParcel
@@ -18,3 +29,15 @@ data class PatientEditScreenKey(val patientUuid: UUID) : FullScreenKey {
 
   override fun layoutRes() = R.layout.screen_patient_edit
 }
+
+@Parcelize
+data class PatientEditScreenKeyWithUuid(
+    override val patientUuid: UUID
+) : PatientEditScreenKey(patientUuid)
+
+@Parcelize
+data class PatientEditScreenKeyWithData(
+    val patient: Patient,
+    val address: PatientAddress,
+    val phoneNumber: PatientPhoneNumber?
+) : PatientEditScreenKey(patient.uuid)

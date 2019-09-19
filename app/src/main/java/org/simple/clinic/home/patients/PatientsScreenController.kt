@@ -15,6 +15,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
+import org.simple.clinic.home.patients.illustration.HomescreenIllustrationRepository
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -47,7 +48,7 @@ class PatientsScreenController @Inject constructor(
     private val checkAppUpdate: CheckAppUpdateAvailability,
     private val utcClock: UtcClock,
     private val userClock: UserClock,
-    private val patientScreenRepository: PatientScreenRepository,
+    private val homescreenIllustrationRepository: HomescreenIllustrationRepository,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
@@ -78,7 +79,7 @@ class PatientsScreenController @Inject constructor(
 
   private fun showIllustration(events: Observable<UiEvent>): Observable<UiChange> =
       screenCreated(events)
-          .flatMap { patientScreenRepository.illustrations() }
+          .flatMap { homescreenIllustrationRepository.illustrations() }
           .map { { ui: Ui -> ui.showIllustration(it.file) } }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()

@@ -59,7 +59,7 @@ class HomescreenIllustrationRepositoryTest {
   @Test
   fun `verify correct illustration is picked up`() {
     userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 18))
-    repository.illustrations()
+    repository.illustrationImageToShow()
         .test()
         .assertValues(chosenFile)
   }
@@ -67,7 +67,7 @@ class HomescreenIllustrationRepositoryTest {
   @Test
   fun `verify illustration is picked up when today is "from" date`() {
     userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 10))
-    repository.illustrations()
+    repository.illustrationImageToShow()
         .test()
         .assertValues(chosenFile)
   }
@@ -75,7 +75,7 @@ class HomescreenIllustrationRepositoryTest {
   @Test
   fun `verify illustration is picked up when today is "to" date`() {
     userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 20))
-    repository.illustrations()
+    repository.illustrationImageToShow()
         .test()
         .assertValues(chosenFile)
   }
@@ -83,7 +83,7 @@ class HomescreenIllustrationRepositoryTest {
   @Test
   fun `verify illustration is not set if there is no event today`() {
     userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 21))
-    repository.illustrations()
+    repository.illustrationImageToShow()
         .test()
         .assertNoValues()
         .assertNoErrors()
@@ -95,7 +95,7 @@ class HomescreenIllustrationRepositoryTest {
 
     userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 20))
 
-    repository.illustrations()
+    repository.illustrationImageToShow()
         .test()
         .assertNoValues()
         .assertNoErrors()

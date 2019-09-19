@@ -95,7 +95,7 @@ class PatientsScreenControllerTest {
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(checkAppUpdate.listen()).thenReturn(appUpdatesStream)
     whenever(numberOfPatientsRegisteredPref.get()).thenReturn(0)
-    whenever(homescreenIllustrationRepository.illustrations()).thenReturn(Observable.empty())
+    whenever(homescreenIllustrationRepository.illustrationImageToShow()).thenReturn(Observable.empty())
 
     uiEvents
         .compose(controller)
@@ -531,7 +531,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
 
     val file: File = mock()
-    whenever(homescreenIllustrationRepository.illustrations()).thenReturn(Observable.just(file))
+    whenever(homescreenIllustrationRepository.illustrationImageToShow()).thenReturn(Observable.just(file))
 
     // when
     uiEvents.onNext(ScreenCreated())

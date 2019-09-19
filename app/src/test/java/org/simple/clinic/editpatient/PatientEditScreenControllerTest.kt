@@ -44,7 +44,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -106,104 +105,6 @@ class PatientEditScreenControllerTest {
     uiEvents
         .compose(controller)
         .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
-  }
-
-  @Test
-  @Parameters(method = "params for prefilling fields on screen created")
-  fun `when screen is created then the existing patient data must be prefilled`(
-      patient: Patient,
-      address: PatientAddress,
-      shouldSetColonyOrVillage: Boolean,
-      phoneNumber: PatientPhoneNumber?,
-      shouldSetPhoneNumber: Boolean,
-      shouldSetAge: Boolean,
-      shouldSetDateOfBirth: Boolean
-  ) {
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(Just(patient)))
-    whenever(patientRepository.address(patient.addressUuid)).thenReturn(Observable.just(Just(address)))
-    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
-
-    uiEvents.onNext(PatientEditScreenCreated(patient.uuid))
-
-    if (shouldSetColonyOrVillage) {
-      verify(screen).setColonyOrVillage(address.colonyOrVillage!!)
-    } else {
-      verify(screen, never()).setColonyOrVillage(any())
-    }
-
-    verify(screen).setDistrict(address.district)
-    verify(screen).setState(address.state)
-    verify(screen).setGender(patient.gender)
-    verify(screen).setPatientName(patient.fullName)
-
-    if (shouldSetPhoneNumber) {
-      verify(screen).setPatientPhoneNumber(phoneNumber!!.number)
-    } else {
-      verify(screen, never()).setPatientPhoneNumber(any())
-    }
-
-    if (shouldSetAge) {
-      verify(screen).setPatientAge(any())
-    } else {
-      verify(screen, never()).setPatientAge(any())
-    }
-
-    if (shouldSetDateOfBirth) {
-      verify(screen).setPatientDateofBirth(patient.dateOfBirth!!)
-    } else {
-      verify(screen, never()).setPatientDateofBirth(any())
-    }
-  }
-
-  @Suppress("Unused")
-  private fun `params for prefilling fields on screen created`(): List<List<Any?>> {
-    fun generateTestDataWithAge(
-        colonyOrVillage: String?,
-        phoneNumber: String?,
-        age: Int
-    ): List<Any?> {
-      val patientToReturn = PatientMocker.patient(
-          age = Age(age, Instant.now(utcClock)),
-          dateOfBirth = null
-      )
-      val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
-      val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
-
-      return listOf(
-          patientToReturn,
-          addressToReturn,
-          colonyOrVillage.isNullOrBlank().not(),
-          phoneNumberToReturn,
-          phoneNumberToReturn != null,
-          true,
-          false)
-    }
-
-    fun generateTestDataWithDateOfBirth(
-        colonyOrVillage: String?,
-        phoneNumber: String?,
-        dateOfBirth: LocalDate
-    ): List<Any?> {
-      val patientToReturn = PatientMocker.patient(dateOfBirth = dateOfBirth, age = null)
-      val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
-      val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
-
-      return listOf(
-          patientToReturn,
-          addressToReturn,
-          colonyOrVillage.isNullOrBlank().not(),
-          phoneNumberToReturn,
-          phoneNumberToReturn != null,
-          false,
-          true)
-    }
-
-    return listOf(
-        generateTestDataWithAge(colonyOrVillage = "Colony", phoneNumber = "1111111111", age = 23),
-        generateTestDataWithAge(colonyOrVillage = null, phoneNumber = "1111111111", age = 23),
-        generateTestDataWithAge(colonyOrVillage = "", phoneNumber = "1111111111", age = 23),
-        generateTestDataWithAge(colonyOrVillage = "Colony", phoneNumber = null, age = 23),
-        generateTestDataWithDateOfBirth(colonyOrVillage = "Colony", phoneNumber = null, dateOfBirth = LocalDate.parse("1995-11-28")))
   }
 
   @Test

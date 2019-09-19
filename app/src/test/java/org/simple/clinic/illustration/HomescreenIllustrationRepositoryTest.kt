@@ -3,6 +3,7 @@ package org.simple.clinic.illustration
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.storage.files.FileStorage
@@ -18,22 +19,20 @@ class HomescreenIllustrationRepositoryTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  val userClock = TestUserClock()
+  private val userClock = TestUserClock()
+  private val illustrationDao: HomescreenIllustration.RoomDao = mock()
+  private val fileStorage: FileStorage = mock()
+  private val chosenFile: File = mock()
+  private val repository = HomescreenIllustrationRepository(
+      illustrationDao = illustrationDao,
+      fileStorage = fileStorage,
+      userClock = userClock
+  )
 
-  @Test
-  fun `verify correct illustration is picked up`() {
-    val illustrationDao: HomescreenIllustration.RoomDao = mock()
-    val fileStorage: FileStorage = mock()
+  @Before
+  fun setUp() {
     val eventId = "world_heart_day"
-    val chosenFile: File = mock()
 
-    userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 18))
-
-    val repository = HomescreenIllustrationRepository(
-        illustrationDao = illustrationDao,
-        fileStorage = fileStorage,
-        userClock = userClock
-    )
     whenever(illustrationDao.illustrations()).thenReturn(Observable.just(listOf(
         HomescreenIllustration(
             eventId = "event-1",
@@ -55,7 +54,19 @@ class HomescreenIllustrationRepositoryTest {
         )
     )))
     whenever(fileStorage.getFile(eventId)).thenReturn(GetFileResult.Success(chosenFile))
+  }
 
+  @Test
+  fun `verify correct illustration is picked up`() {
+    userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 18))
+    repository.illustrations()
+        .test()
+        .assertValues(chosenFile)
+  }
+
+  @Test
+  fun `verify illustration is picked up when today is "from" date`() {
+    userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 10))
     repository.illustrations()
         .test()
         .assertValues(chosenFile)

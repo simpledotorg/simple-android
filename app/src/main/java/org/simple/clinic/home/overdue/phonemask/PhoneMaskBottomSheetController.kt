@@ -19,6 +19,7 @@ import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.unwrapJust
@@ -31,7 +32,7 @@ private typealias UiChange = (Ui) -> Unit
 class PhoneMaskBottomSheetController @Inject constructor(
     private val phoneCaller: PhoneCaller,
     private val patientRepository: PatientRepository,
-    private val clock: UtcClock
+    private val clock: UserClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {

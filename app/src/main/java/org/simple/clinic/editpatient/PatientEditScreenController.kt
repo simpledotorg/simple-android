@@ -10,7 +10,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.editpatient.PatientEditScreenCreated.PatientEditScreenCreatedWithData
-import org.simple.clinic.editpatient.PatientEditScreenCreated.PatientEditScreenCreatedWithUuid
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -35,7 +34,6 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
-import org.simple.clinic.util.extractNullable
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -78,13 +76,6 @@ class PatientEditScreenController @Inject constructor(
   }
 
   private fun prefillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    return Observable.merge(
-        prefillWhenPatientHasUuid(events),
-        prefillWhenPatientHasData(events)
-    )
-  }
-
-  private fun prefillWhenPatientHasData(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<PatientEditScreenCreatedWithData>()
         .take(1)
@@ -112,76 +103,6 @@ class PatientEditScreenController @Inject constructor(
             }
           }
         }
-  }
-
-  private fun prefillWhenPatientHasUuid(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuidStream = events.ofType<PatientEditScreenCreatedWithUuid>()
-        .map { it.patientUuid }
-
-    val savedPatient = patientUuidStream
-        .flatMap(patientRepository::patient)
-        .take(1)
-        .unwrapJust()
-        .replay()
-        .refCount()
-
-    val savedAddress = savedPatient
-        .flatMap { patient ->
-          patientRepository
-              .address(patient.addressUuid)
-              .take(1)
-              .unwrapJust()
-        }
-
-    val preFillPatientProfile = savedPatient
-        .map { patient: Patient ->
-          { ui: Ui ->
-            ui.setPatientName(patient.fullName)
-            ui.setGender(patient.gender)
-          }
-        }
-
-    val preFillPhoneNumber = savedPatient
-        .flatMap { patientRepository.phoneNumber(it.uuid) }
-        .take(1)
-        .filterAndUnwrapJust()
-        .map { phoneNumber ->
-          { ui: Ui ->
-            ui.setPatientPhoneNumber(phoneNumber.number)
-          }
-        }
-
-    val preFillPatientAddress = savedAddress
-        .map { address ->
-          { ui: Ui ->
-            ui.setState(address.state)
-            ui.setDistrict(address.district)
-
-            if (address.colonyOrVillage.isNullOrBlank().not()) {
-              ui.setColonyOrVillage(address.colonyOrVillage!!)
-            }
-          }
-        }
-
-    val prefillPatientAge = savedPatient
-        .extractNullable { it.age }
-        .map { age ->
-          { ui: Ui ->
-            val estimatedAge = estimateCurrentAge(age.value, age.updatedAt, userClock)
-            ui.setPatientAge(estimatedAge)
-          }
-        }
-
-    val prefillPatientDateOfBirth = savedPatient
-        .extractNullable { it.dateOfBirth }
-        .map { dateOfBirth -> { ui: Ui -> ui.setPatientDateofBirth(dateOfBirth) } }
-
-    return Observable.mergeArray(
-        preFillPatientProfile,
-        preFillPhoneNumber,
-        preFillPatientAddress,
-        prefillPatientAge,
-        prefillPatientDateOfBirth)
   }
 
   private fun mergeWithOngoingEntryPatientEntryChanges(): ObservableTransformer<UiEvent, UiEvent> {

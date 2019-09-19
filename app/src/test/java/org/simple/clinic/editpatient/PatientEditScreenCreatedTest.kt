@@ -14,7 +14,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Just
@@ -162,4 +165,22 @@ class PatientEditScreenCreatedWithDataTest {
         phoneNumberToReturn
     )
   }
+}
+
+data class TestData(
+    val patient: Patient,
+    val address: PatientAddress,
+    val phoneNumber: PatientPhoneNumber?
+) {
+  val shouldSetColonyOrVillage: Boolean
+    get() = address.colonyOrVillage.isNullOrBlank().not()
+
+  val shouldSetPhoneNumber: Boolean
+    get() = phoneNumber != null
+
+  val shouldSetAge: Boolean
+    get() = patient.age != null
+
+  val shouldSetDateOfBirth: Boolean
+    get() = patient.dateOfBirth != null
 }

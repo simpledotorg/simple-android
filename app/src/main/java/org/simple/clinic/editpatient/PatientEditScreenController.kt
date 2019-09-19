@@ -9,6 +9,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.editpatient.PatientEditScreenCreated.PatientEditScreenCreatedWithData
+import org.simple.clinic.editpatient.PatientEditScreenCreated.PatientEditScreenCreatedWithUuid
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -76,7 +78,44 @@ class PatientEditScreenController @Inject constructor(
   }
 
   private fun prefillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuidStream = events.ofType<PatientEditScreenCreated>()
+    return Observable.merge(
+        prefillWhenPatientHasUuid(events),
+        prefillWhenPatientHasData(events)
+    )
+  }
+
+  private fun prefillWhenPatientHasData(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientEditScreenCreatedWithData>()
+        .take(1)
+        .map { (_, patient, address, phoneNumber) ->
+          { ui: Ui ->
+            ui.setPatientName(patient.fullName)
+            ui.setGender(patient.gender)
+            phoneNumber?.let { ui.setPatientPhoneNumber(it.number) }
+            ui.setState(address.state)
+            ui.setDistrict(address.district)
+
+            if (address.colonyOrVillage.isNullOrBlank().not()) {
+              ui.setColonyOrVillage(address.colonyOrVillage!!)
+            }
+
+            val age = patient.age
+            if (age != null) {
+              val estimatedAge = estimateCurrentAge(age.value, age.updatedAt, userClock)
+              ui.setPatientAge(estimatedAge)
+            }
+
+            val dateOfBirth = patient.dateOfBirth
+            if (dateOfBirth != null) {
+              ui.setPatientDateofBirth(dateOfBirth)
+            }
+          }
+        }
+  }
+
+  private fun prefillWhenPatientHasUuid(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuidStream = events.ofType<PatientEditScreenCreatedWithUuid>()
         .map { it.patientUuid }
 
     val savedPatient = patientUuidStream

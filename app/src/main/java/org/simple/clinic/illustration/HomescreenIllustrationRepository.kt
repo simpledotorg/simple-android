@@ -18,7 +18,7 @@ class HomescreenIllustrationRepository @Inject constructor(
     private val userClock: UserClock
 ) {
 
-  fun illustrations(): Observable<File> =
+  fun illustrationImageToShow(): Observable<File> =
       illustrationDao.illustrations()
           .map { pickIllustration(it) }
           .ofType<Just<HomescreenIllustration>>()

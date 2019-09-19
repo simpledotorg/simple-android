@@ -31,7 +31,10 @@ class HomescreenIllustrationRepository @Inject constructor(
     val today = LocalDate.now(userClock)
     return illustrations
         .firstOrNull { illustration ->
-          today in toLocalDate(illustration.from)..toLocalDate(illustration.to)
+          val showIllustrationFrom = toLocalDate(illustration.from)
+          val showIllustrationTill = toLocalDate(illustration.to)
+          
+          today in showIllustrationFrom..showIllustrationTill
         }
         .toOptional()
   }

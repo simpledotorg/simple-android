@@ -5,12 +5,9 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.util.toUtcInstant
-import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.io.File
 import javax.inject.Inject
@@ -31,17 +28,16 @@ class HomescreenIllustrationRepository @Inject constructor(
           .map { it.file }
 
   private fun pickIllustration(illustrations: List<HomescreenIllustration>): Optional<HomescreenIllustration> {
-    illustrations.forEach {
-      if (userClock.instant() in toInstant(it.from)..toInstant(it.to)) {
-        return it.toOptional()
-      }
-    }
-    return None
+    val today = LocalDate.now(userClock)
+    return illustrations
+        .firstOrNull { illustration ->
+          today in toLocalDate(illustration.from)..toLocalDate(illustration.to)
+        }
+        .toOptional()
   }
 
-  private fun toInstant(dayOfMonth: DayOfMonth): Instant =
+  private fun toLocalDate(dayOfMonth: DayOfMonth): LocalDate =
       LocalDate.now(userClock)
           .withMonth(dayOfMonth.month.value)
           .withDayOfMonth(dayOfMonth.day)
-          .toUtcInstant(userClock)
 }

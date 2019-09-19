@@ -1,4 +1,4 @@
-package org.simple.clinic.home.patients.illustration
+package org.simple.clinic.illustration
 
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson

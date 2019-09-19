@@ -88,6 +88,17 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
+  @Deprecated("""
+    ~ DOA ~
+
+    This is a quick work around that passes patient information to the Edit Patient screen so
+    that the Edit Patient screen doesn't have to re-query this information from the database.
+
+    This needs to go when we refactor this screen to Mobius and an appropriate mechanism to pass
+    this information should be built.
+    """)
+  private var patientSummaryProfile: PatientSummaryProfile? = null
+
   private val rootLayout by bindView<ViewGroup>(R.id.patientsummary_root)
   private val backButton by bindView<ImageButton>(R.id.patientsummary_back)
   private val fullNameTextView by bindView<TextView>(R.id.patientsummary_fullname)
@@ -151,11 +162,17 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   private fun setupEditButtonClicks() {
-    editButton.setOnClickListener {
-      val key = screenRouter.key<PatientSummaryScreenKey>(this)
+    editButton.setOnClickListener { screenRouter.push(createEditPatientScreenKey(patientSummaryProfile!!)) }
+  }
 
-      screenRouter.push(PatientEditScreenKey.fromPatientUuid(key.patientUuid))
-    }
+  private fun createEditPatientScreenKey(
+      patientSummaryProfile: PatientSummaryProfile
+  ): PatientEditScreenKey {
+    return PatientEditScreenKey.fromPatientData(
+        patientSummaryProfile.patient,
+        patientSummaryProfile.address,
+        patientSummaryProfile.phoneNumber.toNullable()
+    )
   }
 
   private fun screenCreates(): Observable<UiEvent> {
@@ -225,6 +242,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     displayPhoneNumber(patientSummaryProfile.phoneNumber.toNullable())
     displayPatientAddress(patientSummaryProfile.address)
     displayBpPassport(patientSummaryProfile.bpPassport, patientSummaryProfile.phoneNumber.isNotEmpty())
+
+    this.patientSummaryProfile = patientSummaryProfile
   }
 
   private fun displayPatientAddress(address: PatientAddress) {

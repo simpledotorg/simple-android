@@ -2,9 +2,9 @@ package org.simple.clinic.editpatient
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.FragmentManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter

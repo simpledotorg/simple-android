@@ -89,7 +89,7 @@ class PatientEditScreenCreatedTest {
     whenever(patientRepository.address(patient.addressUuid)).thenReturn(Observable.just(Just(address)))
     whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
 
-    uiEvents.onNext(PatientEditScreenCreated(patient.uuid))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(patient.uuid))
 
     if (shouldSetColonyOrVillage) {
       verify(screen).setColonyOrVillage(address.colonyOrVillage!!)

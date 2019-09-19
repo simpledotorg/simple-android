@@ -32,7 +32,6 @@ class RecentPatientsViewController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
     private val relativeTimestampGenerator: RelativeTimestampGenerator,
-    private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val patientConfig: Observable<PatientConfig>,
     @Named("exact_date") private val exactDateFormatter: DateTimeFormatter
@@ -109,10 +108,10 @@ class RecentPatientsViewController @Inject constructor(
 
   private fun age(recentPatient: RecentPatient): Int =
       when (recentPatient.age) {
-        null -> estimateCurrentAge(recentPatient.dateOfBirth!!, utcClock)
+        null -> estimateCurrentAge(recentPatient.dateOfBirth!!, userClock)
         else -> {
           val (recordedAge, ageRecordedAtTimestamp) = recentPatient.age
-          estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, utcClock)
+          estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, userClock)
         }
       }
 

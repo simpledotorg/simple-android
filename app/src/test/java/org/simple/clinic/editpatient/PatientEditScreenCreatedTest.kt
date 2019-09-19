@@ -76,15 +76,15 @@ class PatientEditScreenCreatedTest {
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
-  fun `when screen is created then the existing patient data must be prefilled`(
-      patient: Patient,
-      address: PatientAddress,
-      shouldSetColonyOrVillage: Boolean,
-      phoneNumber: PatientPhoneNumber?,
-      shouldSetPhoneNumber: Boolean,
-      shouldSetAge: Boolean,
-      shouldSetDateOfBirth: Boolean
-  ) {
+  fun `when screen is created then the existing patient data must be prefilled`(data: TestData) {
+    val patient = data.patient
+    val address = data.address
+    val shouldSetColonyOrVillage = data.shouldSetColonyOrVillage
+    val shouldSetPhoneNumber = data.shouldSetPhoneNumber
+    val shouldSetAge = data.shouldSetAge
+    val shouldSetDateOfBirth = data.shouldSetDateOfBirth
+    val phoneNumber = data.phoneNumber
+
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(patient.addressUuid)).thenReturn(Observable.just(Just(address)))
     whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
@@ -122,53 +122,64 @@ class PatientEditScreenCreatedTest {
   }
 
   @Suppress("Unused")
-  private fun `params for prefilling fields on screen created`(): List<List<Any?>> {
-    fun generateTestDataWithAge(
-        colonyOrVillage: String?,
-        phoneNumber: String?,
-        age: Int
-    ): List<Any?> {
-      val patientToReturn = PatientMocker.patient(
-          age = Age(age, Instant.now(utcClock)),
-          dateOfBirth = null
-      )
-      val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
-      val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
-
-      return listOf(
-          patientToReturn,
-          addressToReturn,
-          colonyOrVillage.isNullOrBlank().not(),
-          phoneNumberToReturn,
-          phoneNumberToReturn != null,
-          true,
-          false)
-    }
-
-    fun generateTestDataWithDateOfBirth(
-        colonyOrVillage: String?,
-        phoneNumber: String?,
-        dateOfBirth: LocalDate
-    ): List<Any?> {
-      val patientToReturn = PatientMocker.patient(dateOfBirth = dateOfBirth, age = null)
-      val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
-      val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
-
-      return listOf(
-          patientToReturn,
-          addressToReturn,
-          colonyOrVillage.isNullOrBlank().not(),
-          phoneNumberToReturn,
-          phoneNumberToReturn != null,
-          false,
-          true)
-    }
-
+  private fun `params for prefilling fields on screen created`(): List<TestData> {
     return listOf(
-        generateTestDataWithAge(colonyOrVillage = "Colony", phoneNumber = "1111111111", age = 23),
-        generateTestDataWithAge(colonyOrVillage = null, phoneNumber = "1111111111", age = 23),
-        generateTestDataWithAge(colonyOrVillage = "", phoneNumber = "1111111111", age = 23),
-        generateTestDataWithAge(colonyOrVillage = "Colony", phoneNumber = null, age = 23),
-        generateTestDataWithDateOfBirth(colonyOrVillage = "Colony", phoneNumber = null, dateOfBirth = LocalDate.parse("1995-11-28")))
+        testDataWithAge(colonyOrVillage = "Colony", phoneNumber = "1111111111"),
+        testDataWithAge(colonyOrVillage = null, phoneNumber = "1111111111"),
+        testDataWithAge(colonyOrVillage = "", phoneNumber = "1111111111"),
+        testDataWithAge(colonyOrVillage = "Colony", phoneNumber = null),
+        testDataWithDateOfBirth(colonyOrVillage = "Colony", phoneNumber = null, dateOfBirth = LocalDate.parse("1995-11-28")))
   }
+
+  private fun testDataWithAge(
+      colonyOrVillage: String?,
+      phoneNumber: String?
+  ): TestData {
+    val patientToReturn = PatientMocker.patient(
+        age = Age(23, Instant.now(utcClock)),
+        dateOfBirth = null
+    )
+    val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
+    val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
+
+    return TestData(
+        patientToReturn,
+        addressToReturn,
+        phoneNumberToReturn
+    )
+  }
+
+  private fun testDataWithDateOfBirth(
+      colonyOrVillage: String?,
+      phoneNumber: String?,
+      dateOfBirth: LocalDate
+  ): TestData {
+    val patientToReturn = PatientMocker.patient(dateOfBirth = dateOfBirth, age = null)
+    val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
+    val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
+
+    return TestData(
+        patientToReturn,
+        addressToReturn,
+        phoneNumberToReturn
+    )
+  }
+}
+
+data class TestData(
+    val patient: Patient,
+    val address: PatientAddress,
+    val phoneNumber: PatientPhoneNumber?
+) {
+  val shouldSetColonyOrVillage: Boolean
+    get() = address.colonyOrVillage.isNullOrBlank().not()
+
+  val shouldSetPhoneNumber: Boolean
+    get() = phoneNumber != null
+
+  val shouldSetAge: Boolean
+    get() = patient.age != null
+
+  val shouldSetDateOfBirth: Boolean
+    get() = patient.dateOfBirth != null
 }

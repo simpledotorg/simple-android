@@ -71,4 +71,12 @@ class HomescreenIllustrationRepositoryTest {
         .test()
         .assertValues(chosenFile)
   }
+
+  @Test
+  fun `verify illustration is picked up when today is "to" date`() {
+    userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 20))
+    repository.illustrations()
+        .test()
+        .assertValues(chosenFile)
+  }
 }

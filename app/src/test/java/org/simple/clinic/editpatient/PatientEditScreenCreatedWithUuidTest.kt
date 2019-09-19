@@ -33,7 +33,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)
-class PatientEditScreenCreatedTest {
+class PatientEditScreenCreatedWithUuidTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -85,7 +85,7 @@ class PatientEditScreenCreatedTest {
     val shouldSetDateOfBirth = data.shouldSetDateOfBirth
     val phoneNumber = data.phoneNumber
 
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(Just(patient)))
+    whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(patient.addressUuid)).thenReturn(Observable.just(Just(address)))
     whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
 

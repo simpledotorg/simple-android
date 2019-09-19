@@ -23,6 +23,7 @@ import org.mockito.Mockito.verify
 import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
+import org.simple.clinic.home.patients.illustration.HomescreenIllustrationRepository
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.storage.files.GetFileResult
@@ -60,7 +61,7 @@ class PatientsScreenControllerTest {
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
-  private val patientScreenRepository: PatientScreenRepository = mock()
+  private val homescreenIllustrationRepository: HomescreenIllustrationRepository = mock()
   private val utcClock = TestUtcClock()
   private val userClock = TestUserClock()
   private val numberOfPatientsRegisteredPref = mock<Preference<Int>>()
@@ -84,7 +85,7 @@ class PatientsScreenControllerTest {
         checkAppUpdate = checkAppUpdate,
         utcClock = utcClock,
         userClock = userClock,
-        patientScreenRepository = patientScreenRepository,
+        homescreenIllustrationRepository = homescreenIllustrationRepository,
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
@@ -95,7 +96,7 @@ class PatientsScreenControllerTest {
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(checkAppUpdate.listen()).thenReturn(appUpdatesStream)
     whenever(numberOfPatientsRegisteredPref.get()).thenReturn(0)
-    whenever(patientScreenRepository.illustrations()).thenReturn(Observable.empty())
+    whenever(homescreenIllustrationRepository.illustrations()).thenReturn(Observable.empty())
 
     uiEvents
         .compose(controller)
@@ -531,7 +532,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
 
     val file: File = mock()
-    whenever(patientScreenRepository.illustrations()).thenReturn(Observable.just(GetFileResult.Success(file)))
+    whenever(homescreenIllustrationRepository.illustrations()).thenReturn(Observable.just(GetFileResult.Success(file)))
 
     // when
     uiEvents.onNext(ScreenCreated())

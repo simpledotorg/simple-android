@@ -1,9 +1,7 @@
-package org.simple.clinic.home.patients
+package org.simple.clinic.home.patients.illustration
 
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.home.patients.illustration.DayOfMonth
-import org.simple.clinic.home.patients.illustration.HomescreenIllustration
 import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.util.Just
@@ -16,7 +14,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
-class PatientScreenRepository @Inject constructor(
+class HomescreenIllustrationRepository @Inject constructor(
     private val illustrationDao: HomescreenIllustration.RoomDao,
     private val fileStorage: FileStorage,
     private val userClock: UserClock

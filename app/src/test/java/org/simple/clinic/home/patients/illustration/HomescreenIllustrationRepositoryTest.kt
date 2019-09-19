@@ -1,12 +1,10 @@
-package org.simple.clinic.home.patients
+package org.simple.clinic.home.patients.illustration
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.home.patients.illustration.DayOfMonth
-import org.simple.clinic.home.patients.illustration.HomescreenIllustration
 import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.util.RxErrorsRule
@@ -15,7 +13,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 import java.io.File
 
-class PatientScreenRepositoryTest {
+class HomescreenIllustrationRepositoryTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -31,7 +29,7 @@ class PatientScreenRepositoryTest {
 
     userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 18))
 
-    val repository = PatientScreenRepository(
+    val repository = HomescreenIllustrationRepository(
         illustrationDao = illustrationDao,
         fileStorage = fileStorage,
         userClock = userClock

@@ -15,7 +15,6 @@ import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.searchresultsview.PhoneNumberObfuscator
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.LocalDate
@@ -34,9 +33,6 @@ class PatientSearchResultItemView(
 
   @field:[Inject Named("date_for_search_results")]
   lateinit var dateTimeFormatter: DateTimeFormatter
-
-  @field:Inject
-  lateinit var utcClock: UtcClock
 
   @field:Inject
   lateinit var userClock: UserClock
@@ -116,11 +112,11 @@ class PatientSearchResultItemView(
 
     val ageString = when (age) {
       null -> {
-        estimateCurrentAge(dateOfBirth!!, utcClock)
+        estimateCurrentAge(dateOfBirth!!, userClock)
       }
       else -> {
         val (recordedAge, ageRecordedAtTimestamp) = age
-        estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, utcClock)
+        estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, userClock)
       }
     }
 

@@ -2,18 +2,44 @@ package org.simple.clinic.editpatient
 
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingEditPatientEntry
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-// TODO(rj) 19/Sep/19 - Remove the `patientUuid` property
-sealed class PatientEditScreenCreated(open val patientUuid: UUID) : UiEvent {
+sealed class PatientEditScreenCreated(
+    open val patientUuid: UUID // TODO(rj) 19/Sep/19 - Remove the `patientUuid` property
+) : UiEvent {
   companion object {
     fun fromPatientUuid(uuid: UUID): PatientEditScreenCreated {
       return PatientEditScreenCreatedWithUuid(uuid)
     }
+
+    fun fromPatientData(
+        patient: Patient,
+        address: PatientAddress,
+        phoneNumber: PatientPhoneNumber
+    ): PatientEditScreenCreated {
+      return PatientEditScreenCreatedWithData(
+          patient.uuid,
+          patient,
+          address,
+          phoneNumber
+      )
+    }
   }
 
-  data class PatientEditScreenCreatedWithUuid(override val patientUuid: UUID) : PatientEditScreenCreated(patientUuid)
+  data class PatientEditScreenCreatedWithUuid(
+      override val patientUuid: UUID
+  ) : PatientEditScreenCreated(patientUuid)
+
+  data class PatientEditScreenCreatedWithData(
+      override val patientUuid: UUID,
+      val patient: Patient,
+      val address: PatientAddress,
+      val phoneNumber: PatientPhoneNumber
+  ) : PatientEditScreenCreated(patientUuid)
 }
 
 data class PatientEditPatientNameTextChanged(val name: String) : UiEvent {

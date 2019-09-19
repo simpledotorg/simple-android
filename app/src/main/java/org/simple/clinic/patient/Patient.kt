@@ -1,5 +1,6 @@
 package org.simple.clinic.patient
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -8,6 +9,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
@@ -29,6 +31,7 @@ import java.util.UUID
     indices = [
       Index("addressUuid")
     ])
+@Parcelize
 data class Patient(
     @PrimaryKey
     val uuid: UUID,
@@ -55,7 +58,7 @@ data class Patient(
     val recordedAt: Instant,
 
     val syncStatus: SyncStatus
-) {
+) : Parcelable {
 
   @Dao
   abstract class RoomDao : DaoWithUpsert<Patient>() {

@@ -58,6 +58,6 @@ class HomescreenIllustrationRepositoryTest {
 
     repository.illustrations()
         .test()
-        .assertValues(GetFileResult.Success(chosenFile))
+        .assertValues(chosenFile)
   }
 }

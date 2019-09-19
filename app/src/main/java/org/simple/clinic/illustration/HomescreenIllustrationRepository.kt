@@ -12,6 +12,7 @@ import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.toUtcInstant
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import java.io.File
 import javax.inject.Inject
 
 class HomescreenIllustrationRepository @Inject constructor(
@@ -20,13 +21,14 @@ class HomescreenIllustrationRepository @Inject constructor(
     private val userClock: UserClock
 ) {
 
-  fun illustrations(): Observable<GetFileResult.Success> =
+  fun illustrations(): Observable<File> =
       illustrationDao.illustrations()
           .map { pickIllustration(it) }
           .ofType<Just<HomescreenIllustration>>()
           .map { it.value }
           .map { fileStorage.getFile(it.eventId) }
-          .ofType()
+          .ofType<GetFileResult.Success>()
+          .map { it.file }
 
   private fun pickIllustration(illustrations: List<HomescreenIllustration>): Optional<HomescreenIllustration> {
     illustrations.forEach {

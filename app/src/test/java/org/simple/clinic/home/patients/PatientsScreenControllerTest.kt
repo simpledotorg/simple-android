@@ -26,7 +26,6 @@ import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.illustration.HomescreenIllustrationRepository
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -532,7 +531,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
 
     val file: File = mock()
-    whenever(homescreenIllustrationRepository.illustrations()).thenReturn(Observable.just(GetFileResult.Success(file)))
+    whenever(homescreenIllustrationRepository.illustrations()).thenReturn(Observable.just(file))
 
     // when
     uiEvents.onNext(ScreenCreated())

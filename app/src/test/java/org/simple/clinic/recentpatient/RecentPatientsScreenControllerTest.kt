@@ -47,9 +47,17 @@ class RecentPatientsScreenControllerTest {
   private val uiEvents: Subject<UiEvent> = PublishSubject.create()
   private val loggedInUser = PatientMocker.loggedInUser()
   private val facility = PatientMocker.facility()
-  private val relativeTimestampGenerator = RelativeTimestampGenerator()
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
   private val userClock = TestUserClock()
+
+  private val controller = RecentPatientsScreenController(
+      userSession = userSession,
+      patientRepository = patientRepository,
+      facilityRepository = facilityRepository,
+      relativeTimestampGenerator = RelativeTimestampGenerator(),
+      userClock = userClock,
+      exactDateFormatter = dateFormatter
+  )
 
   @Before
   fun setUp() {
@@ -57,21 +65,12 @@ class RecentPatientsScreenControllerTest {
     // operation on the IO thread, which was causing flakiness in this test.
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    val controller = RecentPatientsScreenController(
-        userSession = userSession,
-        patientRepository = patientRepository,
-        facilityRepository = facilityRepository,
-        relativeTimestampGenerator = relativeTimestampGenerator,
-        userClock = userClock,
-        exactDateFormatter = dateFormatter
-    )
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
-
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
   }
 
   @Test

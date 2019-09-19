@@ -55,7 +55,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
-import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
@@ -83,7 +83,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   lateinit var activity: TheActivity
 
   @Inject
-  lateinit var clock: UtcClock
+  lateinit var userClock: UserClock
 
   @Inject
   lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
@@ -230,11 +230,11 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     val ageValue = when {
       patient.dateOfBirth == null -> {
         patient.age!!.let { age ->
-          estimateCurrentAge(age.value, age.updatedAt, clock)
+          estimateCurrentAge(age.value, age.updatedAt, userClock)
         }
       }
       else -> {
-        estimateCurrentAge(patient.dateOfBirth, clock)
+        estimateCurrentAge(patient.dateOfBirth, userClock)
       }
     }
 

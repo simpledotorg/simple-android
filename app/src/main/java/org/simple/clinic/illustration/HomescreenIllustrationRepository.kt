@@ -1,4 +1,4 @@
-package org.simple.clinic.home.patients.illustration
+package org.simple.clinic.illustration
 
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType

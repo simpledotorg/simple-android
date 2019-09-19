@@ -15,7 +15,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
-import org.simple.clinic.home.patients.illustration.HomescreenIllustrationRepository
+import org.simple.clinic.illustration.HomescreenIllustrationRepository
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN

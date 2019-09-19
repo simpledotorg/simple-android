@@ -8,6 +8,10 @@ import java.util.UUID
 
 @Parcelize
 data class PatientEditScreenKey(val patientUuid: UUID) : FullScreenKey {
+  companion object {
+    fun fromPatientUuid(uuid: UUID): PatientEditScreenKey =
+        PatientEditScreenKey(uuid)
+  }
 
   @IgnoredOnParcel
   override val analyticsName = "Edit Patient"

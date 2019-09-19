@@ -154,7 +154,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     editButton.setOnClickListener {
       val key = screenRouter.key<PatientSummaryScreenKey>(this)
 
-      screenRouter.push(PatientEditScreenKey(key.patientUuid))
+      screenRouter.push(PatientEditScreenKey.fromPatientUuid(key.patientUuid))
     }
   }
 

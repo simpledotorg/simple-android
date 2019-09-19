@@ -79,4 +79,13 @@ class HomescreenIllustrationRepositoryTest {
         .test()
         .assertValues(chosenFile)
   }
+
+  @Test
+  fun `verify illustration is not set if there is no event today`() {
+    userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 21))
+    repository.illustrations()
+        .test()
+        .assertNoValues()
+        .assertNoErrors()
+  }
 }

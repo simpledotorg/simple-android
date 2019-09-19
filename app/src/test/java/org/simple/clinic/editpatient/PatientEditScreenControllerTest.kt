@@ -44,7 +44,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
-import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -109,17 +108,21 @@ class PatientEditScreenControllerTest {
 
   @Test
   fun `when save is clicked, patient name should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
 
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -141,9 +144,13 @@ class PatientEditScreenControllerTest {
       numberValidationResult: PhoneNumberValidator.Result,
       expectedError: PatientEditValidationError?
   ) {
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber = alreadyPresentPhoneNumber
+
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
 
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
 
@@ -152,7 +159,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
@@ -185,16 +192,20 @@ class PatientEditScreenControllerTest {
 
   @Test
   fun `when save is clicked, the colony should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -211,16 +222,20 @@ class PatientEditScreenControllerTest {
 
   @Test
   fun `when save is clicked, the district should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -237,18 +252,22 @@ class PatientEditScreenControllerTest {
 
   @Test
   fun `when save is clicked, the state should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1947-01-01")))
-    whenever(numberValidator.validate(any(), any())).thenReturn(PhoneNumberValidator.Result.VALID)
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
+    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -265,16 +284,20 @@ class PatientEditScreenControllerTest {
 
   @Test
   fun `when save is clicked, the age should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
@@ -292,17 +315,21 @@ class PatientEditScreenControllerTest {
   fun `when save is clicked, the date of birth should be validated`(
       dateOfBirthTestParams: DateOfBirthTestParams
   ) {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(dobValidator.validate(any(), any())).thenReturn(dateOfBirthTestParams.dobValidationResult)
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
@@ -343,9 +370,12 @@ class PatientEditScreenControllerTest {
       dateOfBirth: String?,
       expectedErrors: Set<PatientEditValidationError>
   ) {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
     whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
@@ -355,7 +385,7 @@ class PatientEditScreenControllerTest {
       whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
     }
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, alreadyPresentPhoneNumber))
 
     uiEvents.onNext(PatientEditPatientNameTextChanged(name))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
@@ -536,12 +566,16 @@ class PatientEditScreenControllerTest {
       inputChange: UiEvent,
       expectedErrorsToHide: Set<PatientEditValidationError>
   ) {
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(numberValidator.validate(any(), any())).thenReturn(BLANK)
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(UUID.randomUUID()))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditSaveClicked())
     uiEvents.onNext(inputChange)
 
@@ -597,7 +631,7 @@ class PatientEditScreenControllerTest {
     whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
 
     utcClock.advanceBy(advanceClockBy)
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(existingSavedPatient.uuid))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditSaveClicked())
 
@@ -1042,7 +1076,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.phoneNumber(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
     whenever(patientRepository.address(existingSavedAddress.uuid)).thenReturn(Observable.just(existingSavedAddress.toOptional()))
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientUuid(existingSavedPatient.uuid))
+    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditBackClicked())
 

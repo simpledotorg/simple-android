@@ -28,13 +28,10 @@ import org.simple.clinic.util.RelativeTimestamp.Yesterday
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
@@ -53,11 +50,24 @@ class RecentPatientsViewControllerTest {
   private val uiEvents: Subject<UiEvent> = PublishSubject.create()
   private val loggedInUser = PatientMocker.loggedInUser()
   private val facility = PatientMocker.facility()
-  private val relativeTimestampGenerator = RelativeTimestampGenerator()
   private val recentPatientLimit = 3
   private val recentPatientLimitPlusOne = recentPatientLimit + 1
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
   private val userClock = TestUserClock()
+
+  private val controller = RecentPatientsViewController(
+      userSession = userSession,
+      patientRepository = patientRepository,
+      facilityRepository = facilityRepository,
+      relativeTimestampGenerator = RelativeTimestampGenerator(),
+      userClock = userClock,
+      patientConfig = Observable.just(PatientConfig(
+          limitOfSearchResults = 1,
+          scanSimpleCardFeatureEnabled = false,
+          recentPatientLimit = recentPatientLimit
+      )),
+      exactDateFormatter = dateFormatter
+  )
 
   @Before
   fun setUp() {
@@ -65,26 +75,13 @@ class RecentPatientsViewControllerTest {
     // operation on the IO thread, which was causing flakiness in this test.
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    val controller = RecentPatientsViewController(
-        userSession = userSession,
-        patientRepository = patientRepository,
-        facilityRepository = facilityRepository,
-        relativeTimestampGenerator = relativeTimestampGenerator,
-        userClock = userClock,
-        patientConfig = Observable.just(PatientConfig(
-            limitOfSearchResults = 1,
-            scanSimpleCardFeatureEnabled = false,
-            recentPatientLimit = recentPatientLimit
-        )),
-        exactDateFormatter = dateFormatter
-    )
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
 
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
   }
 
   @Test

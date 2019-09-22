@@ -3,6 +3,7 @@ package org.simple.mobius.migration
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.simple.mobius.migration.fix.CounterEvent
 import org.simple.mobius.migration.fix.CounterEvent.Decrement
@@ -26,6 +27,11 @@ class MobiusTestFixtureTest {
       effectHandler,
       modelUpdateListener
   )
+
+  @Before
+  fun setup() {
+    fixture.start()
+  }
 
   @After
   fun teardown() {

@@ -23,7 +23,9 @@ class EventsOnlyTest {
         ::eveUpdate,
         eveEffectHandler(),
         modelUpdatesSubject::onNext
-    )
+    ).also {
+      it.start()
+    }
 
     // then
     testObserver

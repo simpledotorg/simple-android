@@ -6,10 +6,8 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 
 data class PatientEditScreenCreated(
-    val patientUuid: UUID, // TODO(rj) 19/Sep/19 - Remove the `patientUuid` property
     val patient: Patient,
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?
@@ -21,7 +19,6 @@ data class PatientEditScreenCreated(
         phoneNumber: PatientPhoneNumber?
     ): PatientEditScreenCreated {
       return PatientEditScreenCreated(
-          patient.uuid,
           patient,
           address,
           phoneNumber

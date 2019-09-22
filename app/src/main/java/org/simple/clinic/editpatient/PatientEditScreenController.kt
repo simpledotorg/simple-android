@@ -21,6 +21,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.OngoingEditPatientEntry
+import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth
 import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.Patient
@@ -79,7 +80,7 @@ class PatientEditScreenController @Inject constructor(
     return events
         .ofType<PatientEditScreenCreated>()
         .take(1)
-        .map { (_, patient, address, phoneNumber) ->
+        .map { (patient, address, phoneNumber) ->
           { ui: Ui ->
             ui.setPatientName(patient.fullName)
             ui.setGender(patient.gender)
@@ -133,11 +134,11 @@ class PatientEditScreenController @Inject constructor(
 
       val ageChanges = events
           .ofType<PatientEditAgeTextChanged>()
-          .map { EntryWithAge(it.age) as OngoingEditPatientEntry.EitherAgeOrDateOfBirth }
+          .map { EntryWithAge(it.age) as EitherAgeOrDateOfBirth }
 
       val dateOfBirthChanges = events
           .ofType<PatientEditDateOfBirthTextChanged>()
-          .map { EntryWithDateOfBirth(it.dateOfBirth) as OngoingEditPatientEntry.EitherAgeOrDateOfBirth }
+          .map { EntryWithDateOfBirth(it.dateOfBirth) as EitherAgeOrDateOfBirth }
 
       val ageOrDateOfBirthChanges = Observable.merge(ageChanges, dateOfBirthChanges)
 
@@ -379,33 +380,12 @@ class PatientEditScreenController @Inject constructor(
         .ofType<OngoingEditPatientEntryChanged>()
         .map { it.ongoingEditPatientEntry }
 
-    val patientUuidStream = events.ofType<PatientEditScreenCreated>()
-        .map { it.patient.uuid }
-
-    val savedPatient = patientUuidStream
-        .flatMap { patientRepository.patient(it).take(1).unwrapJust() }
-        .replay()
-        .refCount()
-
-    val savedPatientAddress = savedPatient
-        .flatMap { patientRepository.address(it.addressUuid).take(1).unwrapJust() }
-        .replay()
-        .refCount()
-
-    val savedNumbers = patientUuidStream
-        .flatMap { patientRepository.phoneNumber(it).take(1) }
-        .replay()
-        .refCount()
-
     val hasEntryChangedStream = events
         .ofType<PatientEditBackClicked>()
         .withLatestFrom(ongoingEntryChanges) { _, entry -> entry }
-        .withLatestFrom(savedPatient, savedPatientAddress, savedNumbers) { entry, patient, patientAddress, phoneNumbers ->
-          hasPatientBeenEdited(
-              entry = entry,
-              savedPatient = patient,
-              savedPatientAddress = patientAddress,
-              savedPatientPhoneNumber = phoneNumbers.toNullable())
+        .withLatestFrom(events.ofType<PatientEditScreenCreated>())
+        .map { (ongoingEntry, screenCreated) ->
+          hasEdits(ongoingEntry, screenCreated.patient, screenCreated.phoneNumber, screenCreated.address)
         }
 
     val confirmDiscardChanges = hasEntryChangedStream
@@ -419,59 +399,63 @@ class PatientEditScreenController @Inject constructor(
     return confirmDiscardChanges.mergeWith(closeScreenWithoutConfirmation)
   }
 
-  private fun hasPatientBeenEdited(
+  private fun hasEdits(
       entry: OngoingEditPatientEntry,
       savedPatient: Patient,
-      savedPatientAddress: PatientAddress,
-      savedPatientPhoneNumber: PatientPhoneNumber?
+      savedPatientPhoneNumber: PatientPhoneNumber?,
+      savedPatientAddress: PatientAddress
   ): Boolean {
-    val hasPatientChanged = entry.run {
-      name != savedPatient.fullName || gender != savedPatient.gender
+    return hasPatientChanged(entry, savedPatient)
+        || hasPhoneNumberChanged(savedPatientPhoneNumber, entry)
+        || hasColonyOrVillageChanged(savedPatientAddress, entry)
+        || hasDistrictOrStateChanged(entry, savedPatientAddress)
+        || hasAgeOrDateOfBirthChanged(entry, savedPatient)
+  }
+
+  private fun hasPatientChanged(entry: OngoingEditPatientEntry, savedPatient: Patient) =
+      entry.name != savedPatient.fullName || entry.gender != savedPatient.gender
+
+  private fun hasPhoneNumberChanged(savedPatientPhoneNumber: PatientPhoneNumber?, entry: OngoingEditPatientEntry): Boolean {
+    return when (savedPatientPhoneNumber) {
+      null -> entry.phoneNumber.isNotBlank()
+      else -> savedPatientPhoneNumber.number != entry.phoneNumber
     }
+  }
 
-    val hasPhoneNumberChanged = entry.run {
-      when (savedPatientPhoneNumber) {
-        null -> phoneNumber.isNotBlank()
-        else -> savedPatientPhoneNumber.number != phoneNumber
-      }
+  private fun hasColonyOrVillageChanged(savedPatientAddress: PatientAddress, entry: OngoingEditPatientEntry): Boolean {
+    return when (savedPatientAddress.colonyOrVillage) {
+      null -> entry.colonyOrVillage.isNotBlank()
+      else -> savedPatientAddress.colonyOrVillage != entry.colonyOrVillage
     }
+  }
 
-    val hasDistrictOrStateChanged = entry.run {
-      district != savedPatientAddress.district || state != savedPatientAddress.state
+  private fun hasDistrictOrStateChanged(entry: OngoingEditPatientEntry, savedPatientAddress: PatientAddress) =
+      entry.district != savedPatientAddress.district || entry.state != savedPatientAddress.state
+
+  private fun hasAgeOrDateOfBirthChanged(entry: OngoingEditPatientEntry, savedPatient: Patient): Boolean {
+    return when (entry.ageOrDateOfBirth) {
+      is EntryWithAge -> hasAgeChanged(savedPatient, entry.ageOrDateOfBirth)
+      is EntryWithDateOfBirth -> hasDateOfBirthChanged(savedPatient, entry.ageOrDateOfBirth)
     }
+  }
 
-    val hasColonyOrVillageChanged = entry.run {
-      when (savedPatientAddress.colonyOrVillage) {
-        null -> colonyOrVillage.isNotBlank()
-        else -> savedPatientAddress.colonyOrVillage != colonyOrVillage
-      }
+  private fun hasAgeChanged(savedPatient: Patient, ageOrDateOfBirth: EntryWithAge): Boolean {
+    val savedAgeAsString = savedPatient.age?.value?.toString()
+    return if (savedAgeAsString == null && ageOrDateOfBirth.age.isBlank()) {
+      false
+    } else {
+      ageOrDateOfBirth.age != savedAgeAsString
     }
+  }
 
-    val hasAgeOrDateOfBirthChanged = entry.run {
-      when (ageOrDateOfBirth) {
-        is EntryWithAge -> {
-          val savedAgeAsString = savedPatient.age?.value?.toString()
-          if (savedAgeAsString == null && ageOrDateOfBirth.age.isBlank()) {
-            false
+  private fun hasDateOfBirthChanged(savedPatient: Patient, ageOrDateOfBirth: EntryWithDateOfBirth): Boolean {
+    val savedDateOfBirthAsString = savedPatient.dateOfBirth?.format(dateOfBirthFormatter)
 
-          } else {
-            ageOrDateOfBirth.age != savedAgeAsString
-          }
-        }
+    return if (savedDateOfBirthAsString == null && ageOrDateOfBirth.dateOfBirth.isBlank()) {
+      false
 
-        is EntryWithDateOfBirth -> {
-          val savedDateOfBirthAsString = savedPatient.dateOfBirth?.format(dateOfBirthFormatter)
-
-          if (savedDateOfBirthAsString == null && ageOrDateOfBirth.dateOfBirth.isBlank()) {
-            false
-
-          } else {
-            ageOrDateOfBirth.dateOfBirth != savedDateOfBirthAsString
-          }
-        }
-      }
+    } else {
+      ageOrDateOfBirth.dateOfBirth != savedDateOfBirthAsString
     }
-
-    return hasPatientChanged || hasPhoneNumberChanged || hasColonyOrVillageChanged || hasDistrictOrStateChanged || hasAgeOrDateOfBirthChanged
   }
 }

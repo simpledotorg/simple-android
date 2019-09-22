@@ -8,21 +8,19 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-sealed class PatientEditScreenCreated(
-    open val patientUuid: UUID // TODO(rj) 19/Sep/19 - Remove the `patientUuid` property
+data class PatientEditScreenCreated(
+    val patientUuid: UUID, // TODO(rj) 19/Sep/19 - Remove the `patientUuid` property
+    val patient: Patient,
+    val address: PatientAddress,
+    val phoneNumber: PatientPhoneNumber?
 ) : UiEvent {
   companion object {
-    @Deprecated("", replaceWith = ReplaceWith("PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber)"))
-    fun fromPatientUuid(uuid: UUID): PatientEditScreenCreated {
-      return PatientEditScreenCreatedWithUuid(uuid)
-    }
-
     fun fromPatientData(
         patient: Patient,
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?
     ): PatientEditScreenCreated {
-      return PatientEditScreenCreatedWithData(
+      return PatientEditScreenCreated(
           patient.uuid,
           patient,
           address,
@@ -30,21 +28,6 @@ sealed class PatientEditScreenCreated(
       )
     }
   }
-
-  @Deprecated("""
-    We are removing the necessity to query patient information from their UUID,
-    instead we'll pass all required information from the previous screen
-    """)
-  data class PatientEditScreenCreatedWithUuid(
-      override val patientUuid: UUID
-  ) : PatientEditScreenCreated(patientUuid)
-
-  data class PatientEditScreenCreatedWithData(
-      override val patientUuid: UUID,
-      val patient: Patient,
-      val address: PatientAddress,
-      val phoneNumber: PatientPhoneNumber?
-  ) : PatientEditScreenCreated(patientUuid)
 }
 
 data class PatientEditPatientNameTextChanged(val name: String) : UiEvent {

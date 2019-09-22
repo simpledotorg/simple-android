@@ -9,7 +9,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.editpatient.PatientEditScreenCreated.PatientEditScreenCreatedWithData
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -35,6 +34,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
@@ -77,7 +77,7 @@ class PatientEditScreenController @Inject constructor(
 
   private fun prefillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<PatientEditScreenCreatedWithData>()
+        .ofType<PatientEditScreenCreated>()
         .take(1)
         .map { (_, patient, address, phoneNumber) ->
           { ui: Ui ->
@@ -168,7 +168,7 @@ class PatientEditScreenController @Inject constructor(
     val ongoingEditPatientEntryChanges = events.ofType<OngoingEditPatientEntryChanged>()
 
     val savedPhoneNumber = events.ofType<PatientEditScreenCreated>()
-        .flatMap { patientRepository.phoneNumber(it.patientUuid) }
+        .map { it.phoneNumber.toOptional() }
         .take(1)
         .replay()
         .refCount()
@@ -209,7 +209,7 @@ class PatientEditScreenController @Inject constructor(
     val saveClicks = events.ofType<PatientEditSaveClicked>()
 
     val patientUuidStream = events.ofType<PatientEditScreenCreated>()
-        .map { it.patientUuid }
+        .map { it.patient.uuid }
 
     val entryChanges = events.ofType<OngoingEditPatientEntryChanged>()
         .map { it.ongoingEditPatientEntry }
@@ -380,7 +380,7 @@ class PatientEditScreenController @Inject constructor(
         .map { it.ongoingEditPatientEntry }
 
     val patientUuidStream = events.ofType<PatientEditScreenCreated>()
-        .map { it.patientUuid }
+        .map { it.patient.uuid }
 
     val savedPatient = patientUuidStream
         .flatMap { patientRepository.patient(it).take(1).unwrapJust() }

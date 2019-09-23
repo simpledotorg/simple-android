@@ -448,30 +448,12 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary open intentions except new patient")
+  @Parameters(method = "patient summary open intentions")
   fun `when new-BP is clicked then BP entry sheet should be shown`(openIntention: OpenIntention) {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
     verify(screen, times(1)).showBloodPressureEntrySheet(patientUuid)
-    verify(screen, never()).showBloodPressureEntrySheetIfNotShownAlready(any())
-  }
-
-  @Test
-  fun `when screen was opened after saving a new patient then BP entry sheet should be shown`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewNewPatient, screenCreatedTimestamp = Instant.now(utcClock)))
-
-    verify(screen, times(1)).showBloodPressureEntrySheetIfNotShownAlready(any())
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions except new patient")
-  fun `when screen was opened for any intention except creating a new patient, the BP entry sheet should not be shown`(
-      openIntention: OpenIntention
-  ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
-
-    verify(screen, never()).showBloodPressureEntrySheet(any())
   }
 
   @Test

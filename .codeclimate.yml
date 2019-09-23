@@ -5,29 +5,33 @@ checks:
     config:
       threshold: 4
   complex-logic:
+    enabled: true
     config:
-      threshold: 4
+      threshold: 1
   file-lines:
     enabled: false
     config:
       threshold: 250
   method-complexity:
+    enabled: true
     config:
-      threshold: 20
+      threshold: 15
   method-count:
     enabled: false
     config:
       threshold: 20
   method-lines:
-    enabled: false
+    enabled: true
     config:
-      threshold: 25
+      threshold: 40
   nested-control-flow:
+    enabled: true
     config:
-      threshold: 4
+      threshold: 2
   return-statements:
+    enabled: true
     config:
-      threshold: 4
+      threshold: 2
   similar-code:
     enabled: false
     config:
@@ -41,3 +45,4 @@ exclude_patterns:
   - "**/test/"
   - "**/src/main/java/org/simple/clinic/storage/Migration_*.kt"
   - "**/build/"
+  - "**/src/main/java/org/simple/clinic/widgets/OmegaCenterIconButton.java"

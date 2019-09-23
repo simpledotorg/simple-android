@@ -104,22 +104,19 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val medicalHistorySection = Section()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
-  private var bpEntrySheetAlreadyShownOnStart: Boolean = false
   private var linkIdWithPatientShown: Boolean = false
 
   override fun onSaveInstanceState(): Parcelable {
     return PatientSummaryScreenSavedState(
         super.onSaveInstanceState(),
-        bpEntryShownOnStart = bpEntrySheetAlreadyShownOnStart,
         linkIdWithPatientShown = linkIdWithPatientShown)
   }
 
   override fun onRestoreInstanceState(state: Parcelable) {
-    val (superSavedState, bpEntryShownOnStart, waslinkIdWithPatientShown) = state as PatientSummaryScreenSavedState
-    bpEntrySheetAlreadyShownOnStart = bpEntryShownOnStart
-    linkIdWithPatientShown = waslinkIdWithPatientShown
+    val savedState = state as PatientSummaryScreenSavedState
+    linkIdWithPatientShown = savedState.linkIdWithPatientShown
 
-    super.onRestoreInstanceState(superSavedState)
+    super.onRestoreInstanceState(savedState.superSavedState)
   }
 
   @SuppressLint("CheckResult")
@@ -318,14 +315,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
-  fun showBloodPressureEntrySheetIfNotShownAlready(patientUuid: UUID) {
-    // FIXME: This is a really ugly workaround. Shouldn't be managing state like this.
-    if (!bpEntrySheetAlreadyShownOnStart) {
-      bpEntrySheetAlreadyShownOnStart = true
-      showBloodPressureEntrySheet(patientUuid)
-    }
-  }
-
   fun showBloodPressureEntrySheet(patientUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
     activity.startActivityForResult(intent, REQCODE_BP_ENTRY)
@@ -377,7 +366,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 @Parcelize
 data class PatientSummaryScreenSavedState(
     val superSavedState: Parcelable?,
-    val bpEntryShownOnStart: Boolean,
     val linkIdWithPatientShown: Boolean
 ) : Parcelable
 

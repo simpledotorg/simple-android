@@ -316,18 +316,10 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
-    val autoShows = events
-        .ofType<PatientSummaryScreenCreated>()
-        .filter { it.openIntention == ViewNewPatient }
-        .withLatestFrom(patientUuid)
-        .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheetIfNotShownAlready(patientUuid) } }
-
-    val newBpClicks = events
+    return events
         .ofType<PatientSummaryNewBpClicked>()
         .withLatestFrom(patientUuid)
         .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheet(patientUuid) } }
-
-    return autoShows.mergeWith(newBpClicks)
   }
 
   private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {

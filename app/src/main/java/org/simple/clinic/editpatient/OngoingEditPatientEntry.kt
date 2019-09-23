@@ -1,5 +1,9 @@
 package org.simple.clinic.editpatient
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
+import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -19,8 +23,12 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.UUID
 
-data class OngoingEditPatientEntry(
+@Parcelize
+data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the constructor
+    val patientUuid: UUID,
     val name: String,
     val gender: Gender,
     val phoneNumber: String,
@@ -28,7 +36,33 @@ data class OngoingEditPatientEntry(
     val district: String,
     val state: String,
     val ageOrDateOfBirth: EitherAgeOrDateOfBirth
-) {
+) : Parcelable {
+  companion object {
+    fun from(
+        screenCreated: PatientEditScreenCreated,
+        dateOfBirthFormatter: DateTimeFormatter
+    ): OngoingEditPatientEntry {
+      val (patient, address, phoneNumber) = screenCreated
+
+      val ageOrDateOfBirth = when {
+        patient.age != null -> EntryWithAge(patient.age.value.toString())
+        patient.dateOfBirth != null -> EntryWithDateOfBirth(patient.dateOfBirth.format(dateOfBirthFormatter))
+        else -> throw IllegalStateException("`age` or `dateOfBirth` should be present")
+      }
+
+      return OngoingEditPatientEntry(
+          patientUuid = patient.uuid,
+          name = patient.fullName,
+          gender = patient.gender,
+          phoneNumber = phoneNumber?.number ?: "",
+          colonyOrVillage = address.colonyOrVillage ?: "",
+          district = address.district,
+          state = address.state,
+          ageOrDateOfBirth = ageOrDateOfBirth
+      )
+    }
+  }
+
   fun validate(
       alreadySavedNumber: PatientPhoneNumber?,
       numberValidator: PhoneNumberValidator,
@@ -66,14 +100,14 @@ data class OngoingEditPatientEntry(
       errors.add(DISTRICT_EMPTY)
     }
 
-    if (ageOrDateOfBirth is EitherAgeOrDateOfBirth.EntryWithDateOfBirth) {
+    if (ageOrDateOfBirth is EntryWithDateOfBirth) {
       when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
         InvalidPattern -> errors.add(INVALID_DATE_OF_BIRTH)
         DateIsInFuture -> errors.add(DATE_OF_BIRTH_IN_FUTURE)
         is Valid -> { /* Nothing to do here. */ }
       }
 
-    } else if(ageOrDateOfBirth is EitherAgeOrDateOfBirth.EntryWithAge) {
+    } else if(ageOrDateOfBirth is EntryWithAge) {
       if (ageOrDateOfBirth.age.isBlank()) {
         errors.add(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
       }
@@ -82,10 +116,12 @@ data class OngoingEditPatientEntry(
     return errors
   }
 
-  sealed class EitherAgeOrDateOfBirth {
+  sealed class EitherAgeOrDateOfBirth : Parcelable {
 
+    @Parcelize
     data class EntryWithAge(val age: String): EitherAgeOrDateOfBirth()
 
+    @Parcelize
     data class EntryWithDateOfBirth(val dateOfBirth: String): EitherAgeOrDateOfBirth()
   }
 }

@@ -23,6 +23,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -44,6 +45,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -109,53 +111,23 @@ class PatientEditScreenController @Inject constructor(
 
   private fun mergeWithOngoingEntryPatientEntryChanges(): ObservableTransformer<UiEvent, UiEvent> {
     return ObservableTransformer { events ->
-      val patientUuids = events
-          .ofType<PatientEditScreenCreated>()
-          .map { it.patient.uuid }
-
-      val nameChanges = events
-          .ofType<PatientEditPatientNameTextChanged>()
-          .map { it.name }
-
-      val genderChanges = events
-          .ofType<PatientEditGenderChanged>()
-          .map { it.gender }
-
-      val colonyOrVillageChanges = events
-          .ofType<PatientEditColonyOrVillageChanged>()
-          .map { it.colonyOrVillage }
-
-      val districtChanges = events
-          .ofType<PatientEditDistrictTextChanged>()
-          .map { it.district }
-
-      val stateChanges = events
-          .ofType<PatientEditStateTextChanged>()
-          .map { it.state }
-
-      val phoneNumberChanges = events
-          .ofType<PatientEditPhoneNumberTextChanged>()
-          .map { it.phoneNumber }
-
       val ageChanges = events
           .ofType<PatientEditAgeTextChanged>()
-          .map { EntryWithAge(it.age) as EitherAgeOrDateOfBirth }
+          .map { EntryWithAge(it.age.trim()) as EitherAgeOrDateOfBirth }
 
       val dateOfBirthChanges = events
           .ofType<PatientEditDateOfBirthTextChanged>()
-          .map { EntryWithDateOfBirth(it.dateOfBirth) as EitherAgeOrDateOfBirth }
-
-      val ageOrDateOfBirthChanges = Observable.merge(ageChanges, dateOfBirthChanges)
+          .map { EntryWithDateOfBirth(it.dateOfBirth.trim()) as EitherAgeOrDateOfBirth }
 
       val ongoingEntryChanges = Observables.combineLatest(
-          patientUuids,
-          nameChanges,
-          genderChanges,
-          colonyOrVillageChanges,
-          districtChanges,
-          stateChanges,
-          phoneNumberChanges,
-          ageOrDateOfBirthChanges
+          events.mapType<PatientEditScreenCreated, UUID> { it.patient.uuid },
+          events.mapType<PatientEditPatientNameTextChanged, String> { it.name.trim() },
+          events.mapType<PatientEditGenderChanged, Gender> { it.gender },
+          events.mapType<PatientEditColonyOrVillageChanged, String> { it.colonyOrVillage.trim() },
+          events.mapType<PatientEditDistrictTextChanged, String> { it.district.trim() },
+          events.mapType<PatientEditStateTextChanged, String> { it.state.trim() },
+          events.mapType<PatientEditPhoneNumberTextChanged, String> { it.phoneNumber.trim() },
+          Observable.merge(ageChanges, dateOfBirthChanges)
       ) { patientUuid, name, gender, colonyOrVillage, district, state, phoneNumber, ageOrDateOfBirth ->
         OngoingEditPatientEntryChanged(OngoingEditPatientEntry(
             patientUuid = patientUuid,
@@ -383,6 +355,9 @@ class PatientEditScreenController @Inject constructor(
   }
 
   private fun closeScreenWithoutSaving(events: Observable<UiEvent>): Observable<UiChange> {
+    val savedOngoingEntry = events
+        .mapType<PatientEditScreenCreated, OngoingEditPatientEntry> { OngoingEditPatientEntry.from(it, dateOfBirthFormatter) }
+
     val ongoingEntryChanges = events
         .ofType<OngoingEditPatientEntryChanged>()
         .map { it.ongoingEditPatientEntry }
@@ -390,10 +365,8 @@ class PatientEditScreenController @Inject constructor(
     val hasEntryChangedStream = events
         .ofType<PatientEditBackClicked>()
         .withLatestFrom(ongoingEntryChanges) { _, entry -> entry }
-        .withLatestFrom(events.ofType<PatientEditScreenCreated>())
-        .map { (ongoingEntry, screenCreated) ->
-          hasEdits(screenCreated.patient, screenCreated.phoneNumber, screenCreated.address, ongoingEntry, OngoingEditPatientEntry.from(screenCreated, dateOfBirthFormatter))
-        }
+        .withLatestFrom(savedOngoingEntry)
+        .map { (ongoingEntry, savedOngoingEntry) -> ongoingEntry != savedOngoingEntry }
 
     val confirmDiscardChanges = hasEntryChangedStream
         .filter { hasEntryChanged -> hasEntryChanged }
@@ -406,64 +379,9 @@ class PatientEditScreenController @Inject constructor(
     return confirmDiscardChanges.mergeWith(closeScreenWithoutConfirmation)
   }
 
-  private fun hasEdits(
-      savedPatient: Patient,
-      savedPatientPhoneNumber: PatientPhoneNumber?,
-      savedPatientAddress: PatientAddress,
-      updatedEntry: OngoingEditPatientEntry,
-      savedEntry: OngoingEditPatientEntry
-  ): Boolean {
-    return hasPatientChanged(updatedEntry, savedPatient)
-        || hasPhoneNumberChanged(savedPatientPhoneNumber, updatedEntry)
-        || hasColonyOrVillageChanged(savedPatientAddress, updatedEntry)
-        || hasDistrictOrStateChanged(updatedEntry, savedPatientAddress)
-        || hasAgeOrDateOfBirthChanged(updatedEntry, savedPatient)
-  }
-
-  private fun hasPatientChanged(entry: OngoingEditPatientEntry, savedPatient: Patient) =
-      entry.name != savedPatient.fullName || entry.gender != savedPatient.gender
-
-  private fun hasPhoneNumberChanged(savedPatientPhoneNumber: PatientPhoneNumber?, entry: OngoingEditPatientEntry): Boolean {
-    return when (savedPatientPhoneNumber) {
-      null -> entry.phoneNumber.isNotBlank()
-      else -> savedPatientPhoneNumber.number != entry.phoneNumber
-    }
-  }
-
-  private fun hasColonyOrVillageChanged(savedPatientAddress: PatientAddress, entry: OngoingEditPatientEntry): Boolean {
-    return when (savedPatientAddress.colonyOrVillage) {
-      null -> entry.colonyOrVillage.isNotBlank()
-      else -> savedPatientAddress.colonyOrVillage != entry.colonyOrVillage
-    }
-  }
-
-  private fun hasDistrictOrStateChanged(entry: OngoingEditPatientEntry, savedPatientAddress: PatientAddress) =
-      entry.district != savedPatientAddress.district || entry.state != savedPatientAddress.state
-
-  private fun hasAgeOrDateOfBirthChanged(entry: OngoingEditPatientEntry, savedPatient: Patient): Boolean {
-    return when (entry.ageOrDateOfBirth) {
-      is EntryWithAge -> hasAgeChanged(savedPatient, entry.ageOrDateOfBirth)
-      is EntryWithDateOfBirth -> hasDateOfBirthChanged(savedPatient, entry.ageOrDateOfBirth)
-    }
-  }
-
-  private fun hasAgeChanged(savedPatient: Patient, ageOrDateOfBirth: EntryWithAge): Boolean {
-    val savedAgeAsString = savedPatient.age?.value?.toString()
-    return if (savedAgeAsString == null && ageOrDateOfBirth.age.isBlank()) {
-      false
-    } else {
-      ageOrDateOfBirth.age != savedAgeAsString
-    }
-  }
-
-  private fun hasDateOfBirthChanged(savedPatient: Patient, ageOrDateOfBirth: EntryWithDateOfBirth): Boolean {
-    val savedDateOfBirthAsString = savedPatient.dateOfBirth?.format(dateOfBirthFormatter)
-
-    return if (savedDateOfBirthAsString == null && ageOrDateOfBirth.dateOfBirth.isBlank()) {
-      false
-
-    } else {
-      ageOrDateOfBirth.dateOfBirth != savedDateOfBirthAsString
-    }
+  private inline fun <reified T : Any, R> Observable<UiEvent>.mapType(
+      crossinline mapper: (T) -> R
+  ): Observable<R> {
+    return this.ofType<T>().map { mapper(it) }
   }
 }

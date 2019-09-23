@@ -33,7 +33,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)
-class PatientEditScreenCreatedWithDataTest {
+class PatientEditScreenCreatedTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -76,14 +76,8 @@ class PatientEditScreenCreatedWithDataTest {
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
-  fun `when screen is created then the existing patient data must be prefilled`(data: TestData) {
-    val patient = data.patient
-    val address = data.address
-    val shouldSetColonyOrVillage = data.shouldSetColonyOrVillage
-    val shouldSetPhoneNumber = data.shouldSetPhoneNumber
-    val shouldSetAge = data.shouldSetAge
-    val shouldSetDateOfBirth = data.shouldSetDateOfBirth
-    val phoneNumber = data.phoneNumber
+  fun `when screen is created then the existing patient data must be prefilled`(testData: TestData) {
+    val (patient, address, phoneNumber) = testData
 
     whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(patient.addressUuid)).thenReturn(Observable.just(Just(address)))
@@ -91,7 +85,7 @@ class PatientEditScreenCreatedWithDataTest {
 
     uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
 
-    if (shouldSetColonyOrVillage) {
+    if (testData.shouldSetColonyOrVillage) {
       verify(screen).setColonyOrVillage(address.colonyOrVillage!!)
     } else {
       verify(screen, never()).setColonyOrVillage(any())
@@ -102,19 +96,19 @@ class PatientEditScreenCreatedWithDataTest {
     verify(screen).setGender(patient.gender)
     verify(screen).setPatientName(patient.fullName)
 
-    if (shouldSetPhoneNumber) {
+    if (testData.shouldSetPhoneNumber) {
       verify(screen).setPatientPhoneNumber(phoneNumber!!.number)
     } else {
       verify(screen, never()).setPatientPhoneNumber(any())
     }
 
-    if (shouldSetAge) {
+    if (testData.shouldSetAge) {
       verify(screen).setPatientAge(any())
     } else {
       verify(screen, never()).setPatientAge(any())
     }
 
-    if (shouldSetDateOfBirth) {
+    if (testData.shouldSetDateOfBirth) {
       verify(screen).setPatientDateofBirth(patient.dateOfBirth!!)
     } else {
       verify(screen, never()).setPatientDateofBirth(any())

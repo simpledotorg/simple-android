@@ -109,6 +109,10 @@ class PatientEditScreenController @Inject constructor(
 
   private fun mergeWithOngoingEntryPatientEntryChanges(): ObservableTransformer<UiEvent, UiEvent> {
     return ObservableTransformer { events ->
+      val patientUuids = events
+          .ofType<PatientEditScreenCreated>()
+          .map { it.patient.uuid }
+
       val nameChanges = events
           .ofType<PatientEditPatientNameTextChanged>()
           .map { it.name }
@@ -144,6 +148,7 @@ class PatientEditScreenController @Inject constructor(
       val ageOrDateOfBirthChanges = Observable.merge(ageChanges, dateOfBirthChanges)
 
       val ongoingEntryChanges = Observables.combineLatest(
+          patientUuids,
           nameChanges,
           genderChanges,
           colonyOrVillageChanges,
@@ -151,15 +156,16 @@ class PatientEditScreenController @Inject constructor(
           stateChanges,
           phoneNumberChanges,
           ageOrDateOfBirthChanges
-      ) { name, gender, colonyOrVillage, district, state, phoneNumber, ageOrDateOFBirth ->
+      ) { patientUuid, name, gender, colonyOrVillage, district, state, phoneNumber, ageOrDateOfBirth ->
         OngoingEditPatientEntryChanged(OngoingEditPatientEntry(
+            patientUuid = patientUuid,
             name = name,
             gender = gender,
             phoneNumber = phoneNumber,
             colonyOrVillage = colonyOrVillage,
             district = district,
             state = state,
-            ageOrDateOfBirth = ageOrDateOFBirth))
+            ageOrDateOfBirth = ageOrDateOfBirth))
       }
 
       events.mergeWith(ongoingEntryChanges)
@@ -386,7 +392,7 @@ class PatientEditScreenController @Inject constructor(
         .withLatestFrom(ongoingEntryChanges) { _, entry -> entry }
         .withLatestFrom(events.ofType<PatientEditScreenCreated>())
         .map { (ongoingEntry, screenCreated) ->
-          hasEdits(ongoingEntry, screenCreated.patient, screenCreated.phoneNumber, screenCreated.address)
+          hasEdits(screenCreated.patient, screenCreated.phoneNumber, screenCreated.address, ongoingEntry, OngoingEditPatientEntry.from(screenCreated, dateOfBirthFormatter))
         }
 
     val confirmDiscardChanges = hasEntryChangedStream
@@ -401,16 +407,17 @@ class PatientEditScreenController @Inject constructor(
   }
 
   private fun hasEdits(
-      entry: OngoingEditPatientEntry,
       savedPatient: Patient,
       savedPatientPhoneNumber: PatientPhoneNumber?,
-      savedPatientAddress: PatientAddress
+      savedPatientAddress: PatientAddress,
+      updatedEntry: OngoingEditPatientEntry,
+      savedEntry: OngoingEditPatientEntry
   ): Boolean {
-    return hasPatientChanged(entry, savedPatient)
-        || hasPhoneNumberChanged(savedPatientPhoneNumber, entry)
-        || hasColonyOrVillageChanged(savedPatientAddress, entry)
-        || hasDistrictOrStateChanged(entry, savedPatientAddress)
-        || hasAgeOrDateOfBirthChanged(entry, savedPatient)
+    return hasPatientChanged(updatedEntry, savedPatient)
+        || hasPhoneNumberChanged(savedPatientPhoneNumber, updatedEntry)
+        || hasColonyOrVillageChanged(savedPatientAddress, updatedEntry)
+        || hasDistrictOrStateChanged(updatedEntry, savedPatientAddress)
+        || hasAgeOrDateOfBirthChanged(updatedEntry, savedPatient)
   }
 
   private fun hasPatientChanged(entry: OngoingEditPatientEntry, savedPatient: Patient) =

@@ -81,29 +81,31 @@ class PatientEditScreenController @Inject constructor(
         .ofType<PatientEditScreenCreated>()
         .take(1)
         .map { (patient, address, phoneNumber) ->
-          { ui: Ui ->
-            ui.setPatientName(patient.fullName)
-            ui.setGender(patient.gender)
-            phoneNumber?.let { ui.setPatientPhoneNumber(it.number) }
-            ui.setState(address.state)
-            ui.setDistrict(address.district)
-
-            if (address.colonyOrVillage.isNullOrBlank().not()) {
-              ui.setColonyOrVillage(address.colonyOrVillage!!)
-            }
-
-            val age = patient.age
-            if (age != null) {
-              val estimatedAge = estimateCurrentAge(age.value, age.updatedAt, userClock)
-              ui.setPatientAge(estimatedAge)
-            }
-
-            val dateOfBirth = patient.dateOfBirth
-            if (dateOfBirth != null) {
-              ui.setPatientDateofBirth(dateOfBirth)
-            }
-          }
+          { ui: Ui -> prefillFormFields(ui, patient, phoneNumber, address) }
         }
+  }
+
+  private fun prefillFormFields(ui: Ui, patient: Patient, phoneNumber: PatientPhoneNumber?, address: PatientAddress) {
+    ui.setPatientName(patient.fullName)
+    ui.setGender(patient.gender)
+    phoneNumber?.let { ui.setPatientPhoneNumber(it.number) }
+    ui.setState(address.state)
+    ui.setDistrict(address.district)
+
+    if (address.colonyOrVillage.isNullOrBlank().not()) {
+      ui.setColonyOrVillage(address.colonyOrVillage!!)
+    }
+
+    val age = patient.age
+    if (age != null) {
+      val estimatedAge = estimateCurrentAge(age.value, age.updatedAt, userClock)
+      ui.setPatientAge(estimatedAge)
+    }
+
+    val dateOfBirth = patient.dateOfBirth
+    if (dateOfBirth != null) {
+      ui.setPatientDateofBirth(dateOfBirth)
+    }
   }
 
   private fun mergeWithOngoingEntryPatientEntryChanges(): ObservableTransformer<UiEvent, UiEvent> {

@@ -5,6 +5,7 @@ import org.simple.clinic.patient.DateOfBirth.Type.GUESSED
 import org.simple.clinic.patient.DateOfBirth.Type.RECORDED
 import org.simple.clinic.util.UserClock
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
 
 /**
  * This is a class that is meant to encapsulate dealing with the intricacies of the [Age] and the
@@ -19,6 +20,10 @@ data class DateOfBirth(
     val date: LocalDate,
     val type: Type
 ) {
+
+  fun estimateAge(userClock: UserClock): Int {
+    return Period.between(date, LocalDate.now(userClock)).years
+  }
 
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {

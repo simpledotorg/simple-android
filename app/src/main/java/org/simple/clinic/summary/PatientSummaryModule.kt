@@ -2,17 +2,16 @@ package org.simple.clinic.summary
 
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Single
+import io.reactivex.Observable
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.remoteconfig.ConfigReader
 
 @Module
 open class PatientSummaryModule {
 
   @Provides
-  open fun providesSummaryConfig(): Single<PatientSummaryConfig> = Single.just(PatientSummaryConfig(
-      numberOfBpPlaceholders = 3,
-      numberOfBpsToDisplay = 100
-  ))
+  open fun providesSummaryConfig(configReader: ConfigReader): Observable<PatientSummaryConfig> =
+      PatientSummaryConfig.read(configReader)
 
   @Provides
   fun missingPhoneReminderDao(appDatabase: AppDatabase) = appDatabase.missingPhoneReminderDao()

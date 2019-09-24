@@ -6,11 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.item_overdue_list_patient.*
 import org.simple.clinic.R
-import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -50,7 +49,7 @@ data class OverdueAppointmentRow(
           patientUuid = overdueAppointment.appointment.patientUuid,
           name = overdueAppointment.fullName,
           gender = overdueAppointment.gender,
-          age = ageFromDateOfBirth(overdueAppointment.dateOfBirth, overdueAppointment.age, clock),
+          age = DateOfBirth.fromOverdueAppointment(overdueAppointment, clock).estimateAge(clock),
           phoneNumber = overdueAppointment.phoneNumber?.number,
           bpSystolic = overdueAppointment.bloodPressure.systolic,
           bpDiastolic = overdueAppointment.bloodPressure.diastolic,
@@ -58,18 +57,6 @@ data class OverdueAppointmentRow(
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
           isAtHighRisk = overdueAppointment.isAtHighRisk
       )
-    }
-
-    private fun ageFromDateOfBirth(
-        dateOfBirth: LocalDate?,
-        age: Age?,
-        clock: UserClock
-    ): Int {
-      return if (age == null) {
-        estimateCurrentAge(dateOfBirth!!, clock)
-      } else {
-        estimateCurrentAge(age.value, age.updatedAt, clock)
-      }
     }
 
     private fun calculateDaysAgoFromInstant(

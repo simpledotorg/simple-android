@@ -39,4 +39,37 @@ class DateOfBirthTest {
             type = GUESSED
         ))
   }
+
+  @Test
+  fun `the current age must be estimated from the DateOfBirth correctly`() {
+    // given
+    val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
+
+    fun estimateAgeAtDate(date: LocalDate): Int {
+      val clock = TestUserClock(date)
+      return DateOfBirth.fromAge(age, clock).estimateAge(clock)
+    }
+
+    // then
+    val `estimated age on the same day` = estimateAgeAtDate(LocalDate.parse("2018-01-01"))
+    assertThat(`estimated age on the same day`).isEqualTo(30)
+
+    val `estimated age almost a year later` = estimateAgeAtDate(LocalDate.parse("2018-12-31"))
+    assertThat(`estimated age almost a year later`).isEqualTo(30)
+
+    val `estimated age a year later` = estimateAgeAtDate(LocalDate.parse("2019-01-01"))
+    assertThat(`estimated age a year later`).isEqualTo(31)
+
+    val `estimated age a year and six months later` = estimateAgeAtDate(LocalDate.parse("2019-07-01"))
+    assertThat(`estimated age a year and six months later`).isEqualTo(31)
+
+    val `estimated age two years later` = estimateAgeAtDate(LocalDate.parse("2020-01-01"))
+    assertThat(`estimated age two years later`).isEqualTo(32)
+
+    val `estimated age two years and nine months later` = estimateAgeAtDate(LocalDate.parse("2020-10-01"))
+    assertThat(`estimated age two years and nine months later`).isEqualTo(32)
+
+    val `estimated age three years and a day later` = estimateAgeAtDate(LocalDate.parse("2021-01-02"))
+    assertThat(`estimated age three years and a day later`).isEqualTo(33)
+  }
 }

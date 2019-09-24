@@ -3,7 +3,6 @@ package org.simple.clinic.editpatient
 import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
@@ -40,6 +39,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
@@ -76,7 +76,7 @@ class PatientEditScreenControllerTest {
 
   private lateinit var screen: PatientEditScreen
   private lateinit var patientRepository: PatientRepository
-  private lateinit var numberValidator: PhoneNumberValidator
+  private val numberValidator: PhoneNumberValidator = IndianPhoneNumberValidator()
   private lateinit var controller: PatientEditScreenController
 
   private lateinit var errorConsumer: (Throwable) -> Unit
@@ -87,7 +87,6 @@ class PatientEditScreenControllerTest {
   fun setUp() {
     screen = mock()
     patientRepository = mock()
-    numberValidator = mock()
     dobValidator = mock()
 
     whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(utcClock))
@@ -113,7 +112,6 @@ class PatientEditScreenControllerTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
     whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
     whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
@@ -139,65 +137,11 @@ class PatientEditScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for validating phone numbers")
-  fun `when save is clicked, phone number should be validated`(
-      alreadyPresentPhoneNumber: PatientPhoneNumber?,
-      numberValidationResult: PhoneNumberValidator.Result,
-      expectedError: PatientEditValidationError?
-  ) {
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
-    val phoneNumber = alreadyPresentPhoneNumber
-
-    whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
-
-    whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
-
-    whenever(patientRepository.updatePhoneNumberForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(eq(patient.uuid), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
-
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
-
-    uiEvents.onNext(PatientEditGenderChanged(Male))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
-    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
-    uiEvents.onNext(PatientEditStateTextChanged("State"))
-    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
-    uiEvents.onNext(PatientEditAgeTextChanged("1"))
-
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditSaveClicked())
-
-    if (expectedError == null) {
-      verify(screen, never()).showValidationErrors(any())
-    } else {
-      verify(screen).showValidationErrors(setOf(expectedError))
-    }
-  }
-
-  @Suppress("Unused")
-  private fun `params for validating phone numbers`(): List<List<Any?>> {
-    return listOf(
-        listOf(null, BLANK, null),
-        listOf(null, LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_LONG),
-        listOf(null, LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_SHORT),
-        listOf(PatientMocker.phoneNumber(), BLANK, PHONE_NUMBER_EMPTY),
-        listOf(PatientMocker.phoneNumber(), LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_SHORT),
-        listOf(PatientMocker.phoneNumber(), LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_LONG)
-    )
-  }
-
-  @Test
   fun `when save is clicked, the colony should be validated`() {
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
     whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
@@ -227,7 +171,6 @@ class PatientEditScreenControllerTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
     whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
@@ -261,7 +204,6 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
     whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1947-01-01")))
-    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
@@ -292,7 +234,6 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
     whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
-    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
@@ -324,7 +265,6 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
     whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(dobValidator.validate(any(), any())).thenReturn(dateOfBirthTestParams.dobValidationResult)
-    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
@@ -358,210 +298,6 @@ class PatientEditScreenControllerTest {
   )
 
   @Test
-  @Parameters(method = "params for validating all fields on save clicks")
-  fun `when save is clicked, all fields should be validated`(
-      alreadyPresentPhoneNumber: PatientPhoneNumber?,
-      name: String,
-      numberValidationResult: PhoneNumberValidator.Result,
-      colonyOrVillage: String,
-      district: String,
-      state: String,
-      age: String?,
-      userInputDateOfBirthValidationResult: UserInputDateValidator.Result?,
-      dateOfBirth: String?,
-      expectedErrors: Set<PatientEditValidationError>
-  ) {
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
-
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
-    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
-    whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
-    if (userInputDateOfBirthValidationResult != null) {
-      whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
-    }
-
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, alreadyPresentPhoneNumber))
-
-    uiEvents.onNext(PatientEditPatientNameTextChanged(name))
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged(colonyOrVillage))
-    uiEvents.onNext(PatientEditDistrictTextChanged(district))
-    uiEvents.onNext(PatientEditStateTextChanged(state))
-    uiEvents.onNext(PatientEditGenderChanged(Male))
-    if (age != null) {
-      uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
-      uiEvents.onNext(PatientEditAgeTextChanged(age))
-    }
-    if (dateOfBirth != null) {
-      uiEvents.onNext(PatientEditAgeTextChanged(""))
-      uiEvents.onNext(PatientEditDateOfBirthTextChanged(dateOfBirth))
-    }
-
-    if (age == null && dateOfBirth == null) {
-      uiEvents.onNext(PatientEditAgeTextChanged(""))
-    }
-
-    uiEvents.onNext(PatientEditSaveClicked())
-
-    if (expectedErrors.isNotEmpty()) {
-      // This is order dependent because finding the first field
-      // with error is only possible once the errors are set.
-      val inOrder = inOrder(screen)
-
-      inOrder.verify(screen).showValidationErrors(expectedErrors)
-      inOrder.verify(screen).scrollToFirstFieldWithError()
-
-    } else {
-      verify(screen, never()).showValidationErrors(any())
-      verify(screen, never()).scrollToFirstFieldWithError()
-    }
-  }
-
-  @Suppress("Unused")
-  private fun `params for validating all fields on save clicks`(): List<List<Any?>> {
-    return listOf(
-        listOf(
-            PatientMocker.phoneNumber(),
-            "",
-            BLANK,
-            "",
-            "",
-            "",
-            "1",
-            null,
-            null,
-            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY)
-        ),
-        listOf(
-            null,
-            "",
-            BLANK,
-            "",
-            "",
-            "",
-            "",
-            null,
-            null,
-            setOf(FULL_NAME_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
-        ),
-        listOf(
-            PatientMocker.phoneNumber(),
-            "",
-            LENGTH_TOO_SHORT,
-            "Colony",
-            "",
-            "",
-            "1",
-            null,
-            null,
-            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY)
-        ),
-        listOf(
-            null,
-            "",
-            LENGTH_TOO_SHORT,
-            "Colony",
-            "",
-            "",
-            "",
-            null,
-            null,
-            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
-        ),
-        listOf(
-            PatientMocker.phoneNumber(),
-            "Name",
-            LENGTH_TOO_LONG,
-            "",
-            "District",
-            "",
-            "1",
-            null,
-            null,
-            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY)
-        ),
-        listOf(
-            null,
-            "Name",
-            LENGTH_TOO_LONG,
-            "",
-            "District",
-            "",
-            null,
-            InvalidPattern,
-            "01/01/2000",
-            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY, INVALID_DATE_OF_BIRTH)
-        ),
-        listOf(
-            PatientMocker.phoneNumber(),
-            "",
-            VALID,
-            "Colony",
-            "District",
-            "",
-            null,
-            null,
-            null,
-            setOf(FULL_NAME_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
-        ),
-        listOf(
-            null,
-            "",
-            VALID,
-            "Colony",
-            "District",
-            "",
-            null,
-            DateIsInFuture,
-            "01/01/2000",
-            setOf(FULL_NAME_EMPTY, STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE)
-        ),
-        listOf(
-            null,
-            "",
-            BLANK,
-            "Colony",
-            "District",
-            "State",
-            "",
-            null,
-            null,
-            setOf(FULL_NAME_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
-        ),
-        listOf(
-            PatientMocker.phoneNumber(),
-            "Name",
-            VALID,
-            "Colony",
-            "District",
-            "State",
-            "1",
-            null,
-            null,
-            emptySet<PatientEditValidationError>()
-        ),
-        listOf(
-            null,
-            "Name",
-            VALID,
-            "Colony",
-            "District",
-            "State",
-            null,
-            Valid(LocalDate.parse("1947-01-01")),
-            "01/01/2000",
-            emptySet<PatientEditValidationError>()
-        )
-    )
-  }
-
-  @Test
   @Parameters(method = "params for hiding errors on text changes")
   fun `when input changes, errors corresponding to the input must be hidden`(
       inputChange: UiEvent,
@@ -574,7 +310,6 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
     whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
     whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
-    whenever(numberValidator.validate(any(), any())).thenReturn(BLANK)
 
     uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditSaveClicked())
@@ -628,7 +363,6 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
     whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
 
     utcClock.advanceBy(advanceClockBy)

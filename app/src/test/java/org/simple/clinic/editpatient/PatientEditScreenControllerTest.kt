@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient
 
 import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -113,14 +114,14 @@ class PatientEditScreenControllerTest {
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
+    whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
 
-    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePhoneNumberForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(eq(patient.uuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(patient.uuid, address)).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(patient)).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
 
@@ -148,15 +149,15 @@ class PatientEditScreenControllerTest {
     val address = PatientMocker.address()
     val phoneNumber = alreadyPresentPhoneNumber
 
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
+    whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
 
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
 
-    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePhoneNumberForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(eq(patient.uuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
@@ -570,9 +571,9 @@ class PatientEditScreenControllerTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
+    whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
+    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(numberValidator.validate(any(), any())).thenReturn(BLANK)
 
     uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))

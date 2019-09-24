@@ -4,6 +4,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Timed
 import org.threeten.bp.Duration
 import java.util.concurrent.TimeUnit
@@ -28,4 +29,10 @@ inline fun <T : Any, Y : Any> Observable<T>.extractNullable(crossinline mapper: 
   return this
       .map { mapper(it).toOptional() }
       .filterAndUnwrapJust()
+}
+
+inline fun <reified T : Any, R> Observable<in T>.mapType(
+    crossinline mapper: (T) -> R
+): Observable<R> {
+  return this.ofType<T>().map { mapper(it) }
 }

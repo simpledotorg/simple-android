@@ -22,6 +22,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -32,7 +33,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.None
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.mapType
 import org.simple.clinic.util.toOptional
@@ -96,15 +96,10 @@ class PatientEditScreenController @Inject constructor(
       ui.setColonyOrVillage(address.colonyOrVillage!!)
     }
 
-    val age = patient.age
-    if (age != null) {
-      val estimatedAge = estimateCurrentAge(age.value, age.updatedAt, userClock)
-      ui.setPatientAge(estimatedAge)
-    }
-
-    val dateOfBirth = patient.dateOfBirth
-    if (dateOfBirth != null) {
-      ui.setPatientDateofBirth(dateOfBirth)
+    val dateOfBirth = DateOfBirth.fromPatient(patient, userClock)
+    when (dateOfBirth.type) {
+      DateOfBirth.Type.RECORDED -> ui.setPatientDateofBirth(dateOfBirth.date)
+      DateOfBirth.Type.GUESSED -> ui.setPatientAge(dateOfBirth.estimateAge(userClock))
     }
   }
 

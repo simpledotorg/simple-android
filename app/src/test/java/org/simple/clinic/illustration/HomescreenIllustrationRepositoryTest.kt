@@ -24,35 +24,36 @@ class HomescreenIllustrationRepositoryTest {
   private val illustrationDao: HomescreenIllustration.RoomDao = mock()
   private val fileStorage: FileStorage = mock()
   private val chosenFile: File = mock()
+  private val eventId = "world_heart_day"
+  private val illustrations = listOf(
+      HomescreenIllustration(
+          eventId = "event-1",
+          illustrationUrl = "some-illustration-url-1",
+          from = DayOfMonth(10, Month.AUGUST),
+          to = DayOfMonth(20, Month.AUGUST)
+      ),
+      HomescreenIllustration(
+          eventId = eventId,
+          illustrationUrl = "some-illustration-url-2",
+          from = DayOfMonth(10, Month.SEPTEMBER),
+          to = DayOfMonth(20, Month.SEPTEMBER)
+      ),
+      HomescreenIllustration(
+          eventId = "event-2",
+          illustrationUrl = "some-illustration-url-3",
+          from = DayOfMonth(10, Month.OCTOBER),
+          to = DayOfMonth(20, Month.OCTOBER)
+      )
+  )
   private val repository = HomescreenIllustrationRepository(
-      illustrationDao = illustrationDao,
+      illustrations = illustrations,
       fileStorage = fileStorage,
       userClock = userClock
   )
-  private val eventId = "world_heart_day"
 
   @Before
   fun setUp() {
-    whenever(illustrationDao.illustrations()).thenReturn(Observable.just(listOf(
-        HomescreenIllustration(
-            eventId = "event-1",
-            illustrationUrl = "some-illustration-url-1",
-            from = DayOfMonth(10, Month.AUGUST),
-            to = DayOfMonth(20, Month.AUGUST)
-        ),
-        HomescreenIllustration(
-            eventId = eventId,
-            illustrationUrl = "some-illustration-url-2",
-            from = DayOfMonth(10, Month.SEPTEMBER),
-            to = DayOfMonth(20, Month.SEPTEMBER)
-        ),
-        HomescreenIllustration(
-            eventId = "event-2",
-            illustrationUrl = "some-illustration-url-3",
-            from = DayOfMonth(10, Month.OCTOBER),
-            to = DayOfMonth(20, Month.OCTOBER)
-        )
-    )))
+    whenever(illustrationDao.illustrations()).thenReturn(Observable.just(illustrations))
     whenever(fileStorage.getFile(eventId)).thenReturn(GetFileResult.Success(chosenFile))
   }
 

@@ -5,6 +5,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.DateOfBirth.Type.GUESSED
 import org.simple.clinic.patient.DateOfBirth.Type.RECORDED
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
 
@@ -46,6 +47,10 @@ data class DateOfBirth(
 
     fun fromOverdueAppointment(overdueAppointment: OverdueAppointment, userClock: UserClock): DateOfBirth {
       return fromAgeOrDate(overdueAppointment.age, overdueAppointment.dateOfBirth, userClock)
+    }
+
+    fun fromPatientSearchResultViewModel(viewModel: PatientSearchResultItemView.PatientSearchResultViewModel, userClock: UserClock): DateOfBirth {
+      return fromAgeOrDate(viewModel.age, viewModel.dateOfBirth, userClock)
     }
 
     private fun fromAgeOrDate(age: Age?, date: LocalDate?, clock: UserClock): DateOfBirth {

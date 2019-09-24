@@ -8,10 +8,10 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.phone.Dialer.Automatic
 import org.simple.clinic.phone.Dialer.Manual
 import org.simple.clinic.phone.PhoneCaller
@@ -20,8 +20,6 @@ import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -79,12 +77,7 @@ class PhoneMaskBottomSheetController @Inject constructor(
   }
 
   private fun ageValue(patient: Patient): Int {
-    return if (patient.dateOfBirth == null) {
-      val age = patient.age!!
-      estimateCurrentAge(age.value, age.updatedAt, clock)
-    } else {
-      estimateCurrentAge(patient.dateOfBirth, clock)
-    }
+    return DateOfBirth.fromPatient(patient, clock).estimateAge(clock)
   }
 
   private fun requestCallPermissionForNormalCalls(events: Observable<UiEvent>) =

@@ -16,6 +16,7 @@ import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -32,6 +33,7 @@ class RecentPatientsViewController @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val relativeTimestampGenerator: RelativeTimestampGenerator,
     private val userClock: UserClock,
+    private val utcClock: UtcClock,
     private val patientConfig: Observable<PatientConfig>,
     @Named("exact_date") private val exactDateFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -106,7 +108,7 @@ class RecentPatientsViewController @Inject constructor(
       )
 
   private fun age(recentPatient: RecentPatient): Int {
-    return DateOfBirth.fromRecentPatient(recentPatient, userClock).estimateAge(userClock)
+    return DateOfBirth.fromRecentPatient(recentPatient, userClock, utcClock).estimateAge(userClock)
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> =

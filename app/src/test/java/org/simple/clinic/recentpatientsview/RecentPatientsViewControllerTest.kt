@@ -28,6 +28,7 @@ import org.simple.clinic.util.RelativeTimestamp.Yesterday
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -61,6 +62,7 @@ class RecentPatientsViewControllerTest {
       facilityRepository = facilityRepository,
       relativeTimestampGenerator = RelativeTimestampGenerator(),
       userClock = userClock,
+      utcClock = TestUtcClock(),
       patientConfig = Observable.just(PatientConfig(
           limitOfSearchResults = 1,
           scanSimpleCardFeatureEnabled = false,

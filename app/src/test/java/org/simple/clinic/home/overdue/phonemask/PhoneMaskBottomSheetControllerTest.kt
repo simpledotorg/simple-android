@@ -51,12 +51,13 @@ class PhoneMaskBottomSheetControllerTest {
   private val phoneCaller = mock<PhoneCaller>()
   private val patientUuid: UUID = UUID.fromString("90d20a06-6e8b-4f26-b317-1ac18441765d")
   private val patientRepository: PatientRepository = mock()
-  private val clock = TestUserClock()
+  private val userClock = TestUserClock()
 
   private val controller = PhoneMaskBottomSheetController(
       phoneCaller = phoneCaller,
       patientRepository = patientRepository,
-      clock = clock
+      userClock = userClock,
+      utcClock = TestUtcClock()
   )
 
   @Before
@@ -76,7 +77,7 @@ class PhoneMaskBottomSheetControllerTest {
         uuid = patientUuid,
         fullName = name,
         gender = gender,
-        age = Age(age, Instant.now(clock)),
+        age = Age(age, Instant.now(userClock)),
         dateOfBirth = null
     ).toOptional()))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
@@ -117,7 +118,7 @@ class PhoneMaskBottomSheetControllerTest {
         uuid = patientUuid,
         fullName = name,
         gender = gender,
-        age = Age(age, Instant.now(clock)),
+        age = Age(age, Instant.now(userClock)),
         dateOfBirth = null
     ).toOptional()))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
@@ -161,7 +162,7 @@ class PhoneMaskBottomSheetControllerTest {
         uuid = patientUuid,
         fullName = name,
         gender = gender,
-        age = Age(age, Instant.now(clock)),
+        age = Age(age, Instant.now(userClock)),
         dateOfBirth = null
     ).toOptional()))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(

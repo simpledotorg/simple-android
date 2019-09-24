@@ -16,11 +16,11 @@ class DateOfBirthTest {
     // given
     val `age recorded on the same day` = Age(
         value = 30,
-        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+        updatedAt = Instant.parse("2018-01-01T00:00:01Z")
     )
     val `age recorded a year earlier` = Age(
         value = 30,
-        updatedAt = Instant.parse("2017-01-01T00:00:00Z")
+        updatedAt = Instant.parse("2017-01-01T00:00:02Z")
     )
 
     // when
@@ -31,12 +31,14 @@ class DateOfBirthTest {
     assertThat(`dob from age recorded on the same day`)
         .isEqualTo(DateOfBirth(
             date = LocalDate.parse("1988-01-01"),
-            type = FROM_AGE
+            type = FROM_AGE,
+            updatedAt = `age recorded on the same day`.updatedAt
         ))
     assertThat(`dob from age recorded a year earlier`)
         .isEqualTo(DateOfBirth(
             date = LocalDate.parse("1987-01-01"),
-            type = FROM_AGE
+            type = FROM_AGE,
+            updatedAt = `age recorded a year earlier`.updatedAt
         ))
   }
 

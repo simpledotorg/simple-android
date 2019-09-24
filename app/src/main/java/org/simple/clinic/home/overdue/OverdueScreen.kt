@@ -15,6 +15,7 @@ import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.locationRectOnScreen
@@ -35,6 +36,9 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var utcClock: UtcClock
 
   private val overdueListAdapter = ItemAdapter(OverdueAppointmentRow.DiffCallback())
 
@@ -92,7 +96,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun updateList(overdueAppointments: List<OverdueAppointment>) {
-    overdueListAdapter.submitList(OverdueAppointmentRow.from(overdueAppointments, userClock))
+    overdueListAdapter.submitList(OverdueAppointmentRow.from(overdueAppointments, userClock, utcClock))
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

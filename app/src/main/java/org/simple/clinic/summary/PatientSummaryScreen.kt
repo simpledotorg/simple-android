@@ -57,6 +57,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -84,6 +85,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var utcClock: UtcClock
 
   @Inject
   lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
@@ -227,7 +231,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @SuppressLint("SetTextI18n")
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
-    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val ageValue = DateOfBirth.fromPatient(patient, userClock, utcClock).estimateAge(userClock)
 
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
     displayPhoneNumber(patientSummaryProfile.phoneNumber.toNullable())

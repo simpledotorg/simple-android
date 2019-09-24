@@ -10,6 +10,7 @@ import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -39,22 +40,30 @@ data class OverdueAppointmentRow(
 
   companion object {
 
-    fun from(appointments: List<OverdueAppointment>, clock: UserClock): List<OverdueAppointmentRow> {
-      return appointments.map { overdueAppointment -> from(overdueAppointment, clock) }
+    fun from(
+        appointments: List<OverdueAppointment>,
+        userClock: UserClock,
+        utcClock: UtcClock
+    ): List<OverdueAppointmentRow> {
+      return appointments.map { overdueAppointment -> from(overdueAppointment, userClock, utcClock) }
     }
 
-    private fun from(overdueAppointment: OverdueAppointment, clock: UserClock): OverdueAppointmentRow {
+    private fun from(
+        overdueAppointment: OverdueAppointment,
+        userClock: UserClock,
+        utcClock: UtcClock
+    ): OverdueAppointmentRow {
       return OverdueAppointmentRow(
           appointmentUuid = overdueAppointment.appointment.uuid,
           patientUuid = overdueAppointment.appointment.patientUuid,
           name = overdueAppointment.fullName,
           gender = overdueAppointment.gender,
-          age = DateOfBirth.fromOverdueAppointment(overdueAppointment, clock).estimateAge(clock),
+          age = DateOfBirth.fromOverdueAppointment(overdueAppointment, userClock, utcClock).estimateAge(userClock),
           phoneNumber = overdueAppointment.phoneNumber?.number,
           bpSystolic = overdueAppointment.bloodPressure.systolic,
           bpDiastolic = overdueAppointment.bloodPressure.diastolic,
-          bpDaysAgo = calculateDaysAgoFromInstant(overdueAppointment.bloodPressure.recordedAt, clock),
-          overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
+          bpDaysAgo = calculateDaysAgoFromInstant(overdueAppointment.bloodPressure.recordedAt, userClock),
+          overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, userClock),
           isAtHighRisk = overdueAppointment.isAtHighRisk
       )
     }

@@ -97,7 +97,7 @@ class PatientEditScreenController @Inject constructor(
       ui.setColonyOrVillage(address.colonyOrVillage!!)
     }
 
-    val dateOfBirth = DateOfBirth.fromPatient(patient, userClock)
+    val dateOfBirth = DateOfBirth.fromPatient(patient, userClock, utcClock)
     when (dateOfBirth.type) {
       DateOfBirth.Type.EXACT -> ui.setPatientDateOfBirth(dateOfBirth.date)
       DateOfBirth.Type.FROM_AGE -> ui.setPatientAge(dateOfBirth.estimateAge(userClock))

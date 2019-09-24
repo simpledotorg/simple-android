@@ -16,6 +16,7 @@ import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.searchresultsview.PhoneNumberObfuscator
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -37,6 +38,9 @@ class PatientSearchResultItemView(
   @field:Inject
   lateinit var userClock: UserClock
 
+  @Inject
+  lateinit var utcClock: UtcClock
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     inflate(context, R.layout.view_patient_search_result, this)
@@ -47,7 +51,7 @@ class PatientSearchResultItemView(
   }
 
   fun render(model: PatientSearchResultViewModel, currentFacilityUuid: UUID) {
-    renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))
+    renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel(model, userClock, utcClock))
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)
     renderPatientPhoneNumber(model.phoneNumber)

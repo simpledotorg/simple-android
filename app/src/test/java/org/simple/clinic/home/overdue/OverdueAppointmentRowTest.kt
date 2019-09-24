@@ -6,6 +6,7 @@ import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -64,7 +65,7 @@ class OverdueAppointmentRowTest {
     val appointments = listOf(appointmentDelayedBy4Days, appointmentDelayedByOneWeek)
 
     // when
-    val overdueListItems = OverdueAppointmentRow.from(appointments, userClock)
+    val overdueListItems = OverdueAppointmentRow.from(appointments, userClock, TestUtcClock())
 
     // then
     val expectedListItems = listOf(

@@ -14,6 +14,7 @@ import org.simple.clinic.facility.FacilityModule
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.help.HelpModule
 import org.simple.clinic.help.HelpSync
+import org.simple.clinic.illustration.IllustrationSync
 import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
@@ -78,12 +79,14 @@ class SyncModule {
       prescriptionSync: PrescriptionSync,
       reportsSync: ReportsSync,
       remoteConfigSync: RemoteConfigSync,
-      helpSync: HelpSync
+      helpSync: HelpSync,
+      illustrationSync: IllustrationSync
   ): ArrayList<ModelSync> {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
-        prescriptionSync, reportsSync, remoteConfigSync, helpSync
+        prescriptionSync, reportsSync, remoteConfigSync,
+        helpSync, illustrationSync
     )
   }
 

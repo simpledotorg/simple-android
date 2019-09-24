@@ -3,7 +3,6 @@ package org.simple.clinic.summary
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
@@ -61,7 +60,7 @@ class PatientSummaryScreenController @Inject constructor(
     private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val zoneId: ZoneId,
-    private val configProvider: Single<PatientSummaryConfig>,
+    private val configProvider: Observable<PatientSummaryConfig>,
     @Named("time_for_bps_recorded") private val timeFormatterForBp: DateTimeFormatter,
     @Named("exact_date") private val exactDateFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -140,7 +139,7 @@ class PatientSummaryScreenController @Inject constructor(
           .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
           .map { prescriptions -> SummaryPrescribedDrugsItem(prescriptions, exactDateFormatter, userClock) }
 
-      val bloodPressures = Observables.combineLatest(patientUuids, configProvider.toObservable())
+      val bloodPressures = Observables.combineLatest(patientUuids, configProvider)
           .flatMap { (patientUuid, configProvider) -> bpRepository.newestMeasurementsForPatient(patientUuid, configProvider.numberOfBpsToDisplay) }
           .replay(1)
           .refCount()
@@ -258,7 +257,7 @@ class PatientSummaryScreenController @Inject constructor(
           bpList.groupBy { item -> item.measurement.createdAt.atZone(utcClock.zone).toLocalDate() }
         }
         .map { it.size }
-        .withLatestFrom(configProvider.toObservable())
+        .withLatestFrom(configProvider)
         .map { (numberOfBloodPressures, config) ->
           val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodPressures)
 

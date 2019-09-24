@@ -20,6 +20,7 @@ data class DateOfBirth(
     val type: Type
 ) {
 
+  // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
     fun fromDate(date: LocalDate): DateOfBirth {
       return DateOfBirth(date, RECORDED)
@@ -31,6 +32,14 @@ data class DateOfBirth(
       val guessedDateOfBirth = ageRecordedAtDate.minusYears(age.value.toLong()).toLocalDate()
 
       return DateOfBirth(guessedDateOfBirth, GUESSED)
+    }
+
+    fun fromPatient(patient: Patient, userClock: UserClock): DateOfBirth {
+      return when {
+        patient.dateOfBirth != null -> fromDate(patient.dateOfBirth)
+        patient.age != null -> fromAge(patient.age, userClock)
+        else -> throw IllegalStateException("Both age AND dateOfBirth cannot be null!")
+      }
     }
   }
 

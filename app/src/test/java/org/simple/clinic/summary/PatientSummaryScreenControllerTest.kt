@@ -104,7 +104,7 @@ class PatientSummaryScreenControllerTest {
       utcClock = utcClock,
       userClock = userClock,
       zoneId = zoneId,
-      configProvider = configSubject.firstOrError(),
+      configProvider = configSubject,
       timeFormatterForBp = timeFormatter,
       exactDateFormatter = dateFormatter
   )
@@ -173,7 +173,8 @@ class PatientSummaryScreenControllerTest {
   fun `patient's prescription summary should be populated`(intention: OpenIntention) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     val prescriptions = listOf(
@@ -194,7 +195,8 @@ class PatientSummaryScreenControllerTest {
   fun `patient's blood pressure history should be populated`(intention: OpenIntention) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     val bloodPressureMeasurements = listOf(
@@ -227,7 +229,8 @@ class PatientSummaryScreenControllerTest {
   ) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 3,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
@@ -433,7 +436,8 @@ class PatientSummaryScreenControllerTest {
   fun `patient's medical history should be populated`(openIntention: OpenIntention) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
@@ -461,7 +465,8 @@ class PatientSummaryScreenControllerTest {
   fun `when update medicines is clicked then BP medicines screen should be shown`(openIntention: OpenIntention) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
@@ -545,7 +550,8 @@ class PatientSummaryScreenControllerTest {
   ) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
@@ -682,7 +688,8 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
@@ -710,7 +717,8 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
@@ -732,7 +740,8 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
@@ -758,7 +767,8 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
@@ -773,7 +783,8 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100)
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))

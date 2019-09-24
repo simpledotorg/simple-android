@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -20,11 +19,9 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Instant
@@ -78,10 +75,6 @@ class PatientEditScreenCreatedTest {
   @Parameters(method = "params for prefilling fields on screen created")
   fun `when screen is created then the existing patient data must be prefilled`(testData: TestData) {
     val (patient, address, phoneNumber) = testData
-
-    whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(Just(patient)))
-    whenever(patientRepository.address(patient.addressUuid)).thenReturn(Observable.just(Just(address)))
-    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
 
     uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
 

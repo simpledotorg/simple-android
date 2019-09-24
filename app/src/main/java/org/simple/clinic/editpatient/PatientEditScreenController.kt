@@ -36,7 +36,6 @@ import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.mapType
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
@@ -185,14 +184,17 @@ class PatientEditScreenController @Inject constructor(
   private fun savePatientDetails(events: Observable<UiEvent>): Observable<UiChange> {
     val saveClicks = events.ofType<PatientEditSaveClicked>()
 
-    val patientUuidStream = events.ofType<PatientEditScreenCreated>()
+    val screenCreatedStream = events
+        .ofType<PatientEditScreenCreated>()
+
+    val patientUuidStream = screenCreatedStream
         .map { it.patient.uuid }
 
     val entryChanges = events.ofType<OngoingEditPatientEntryChanged>()
         .map { it.ongoingEditPatientEntry }
 
-    val savedNumbers = patientUuidStream
-        .flatMap { patientRepository.phoneNumber(it) }
+    val savedNumbers = screenCreatedStream
+        .map { it.phoneNumber.toOptional() }
         .take(1)
         .replay()
         .refCount()
@@ -236,13 +238,14 @@ class PatientEditScreenController @Inject constructor(
 
     val saveOrUpdatePhoneNumber = Observable.merge(createNewPhoneNumber, updateExistingPhoneNumber)
 
-    val savedPatient = patientUuidStream
-        .flatMap { patientRepository.patient(it).take(1).unwrapJust() }
+    val savedPatient = screenCreatedStream
+        .map { it.patient }
+        .take(1)
         .replay()
         .refCount()
 
-    val savedPatientAddress = savedPatient
-        .flatMap { patientRepository.address(it.addressUuid).take(1).unwrapJust() }
+    val savedPatientAddress = screenCreatedStream
+        .map { it.address }
         .replay()
         .refCount()
 

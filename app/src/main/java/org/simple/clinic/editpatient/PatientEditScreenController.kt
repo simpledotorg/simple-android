@@ -9,7 +9,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -35,6 +34,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.mapType
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -111,13 +111,10 @@ class PatientEditScreenController @Inject constructor(
 
   private fun mergeWithOngoingEntryPatientEntryChanges(): ObservableTransformer<UiEvent, UiEvent> {
     return ObservableTransformer { events ->
-      val ageChanges = events
-          .ofType<PatientEditAgeTextChanged>()
-          .map { EntryWithAge(it.age.trim()) as EitherAgeOrDateOfBirth }
-
-      val dateOfBirthChanges = events
-          .ofType<PatientEditDateOfBirthTextChanged>()
-          .map { EntryWithDateOfBirth(it.dateOfBirth.trim()) as EitherAgeOrDateOfBirth }
+      val eitherAgeOrDateOfBirthChanges = Observable.merge(
+          events.mapType<PatientEditAgeTextChanged, EntryWithAge> { EntryWithAge(it.age.trim()) },
+          events.mapType<PatientEditDateOfBirthTextChanged, EntryWithDateOfBirth> { EntryWithDateOfBirth(it.dateOfBirth.trim()) }
+      )
 
       val ongoingEntryChanges = Observables.combineLatest(
           events.mapType<PatientEditScreenCreated, UUID> { it.patient.uuid },
@@ -127,7 +124,7 @@ class PatientEditScreenController @Inject constructor(
           events.mapType<PatientEditDistrictTextChanged, String> { it.district.trim() },
           events.mapType<PatientEditStateTextChanged, String> { it.state.trim() },
           events.mapType<PatientEditPhoneNumberTextChanged, String> { it.phoneNumber.trim() },
-          Observable.merge(ageChanges, dateOfBirthChanges)
+          eitherAgeOrDateOfBirthChanges
       ) { patientUuid, name, gender, colonyOrVillage, district, state, phoneNumber, ageOrDateOfBirth ->
         OngoingEditPatientEntryChanged(OngoingEditPatientEntry(
             patientUuid = patientUuid,
@@ -377,11 +374,5 @@ class PatientEditScreenController @Inject constructor(
         .map { { ui: Ui -> ui.goBack() } }
 
     return confirmDiscardChanges.mergeWith(closeScreenWithoutConfirmation)
-  }
-
-  private inline fun <reified T : Any, R> Observable<UiEvent>.mapType(
-      crossinline mapper: (T) -> R
-  ): Observable<R> {
-    return this.ofType<T>().map { mapper(it) }
   }
 }

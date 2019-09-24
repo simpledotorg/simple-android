@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
@@ -15,7 +16,6 @@ import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.searchresultsview.PhoneNumberObfuscator
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -47,7 +47,7 @@ class PatientSearchResultItemView(
   }
 
   fun render(model: PatientSearchResultViewModel, currentFacilityUuid: UUID) {
-    renderPatientNameAgeAndGender(model.fullName, model.gender, model.age, model.dateOfBirth)
+    renderPatientNameAgeAndGender(model.fullName, model.gender, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)
     renderPatientPhoneNumber(model.phoneNumber)
@@ -107,24 +107,16 @@ class PatientSearchResultItemView(
     }
   }
 
-  private fun renderPatientNameAgeAndGender(fullName: String, gender: Gender, age: Age?, dateOfBirth: LocalDate?) {
+  private fun renderPatientNameAgeAndGender(fullName: String, gender: Gender, dateOfBirth: DateOfBirth) {
     genderLabel.setImageResource(gender.displayIconRes)
 
-    val ageString = when (age) {
-      null -> {
-        estimateCurrentAge(dateOfBirth!!, userClock)
-      }
-      else -> {
-        val (recordedAge, ageRecordedAtTimestamp) = age
-        estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, userClock)
-      }
-    }
+    val ageValue = dateOfBirth.estimateAge(userClock)
 
     patientNameAgeGenderLabel.text = resources.getString(
         R.string.patientsearchresults_item_name_with_gender_and_age,
         fullName,
         resources.getString(gender.displayLetterRes),
-        ageString)
+        ageValue)
   }
 
   data class PatientSearchResultViewModel(

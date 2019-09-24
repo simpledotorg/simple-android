@@ -1,6 +1,7 @@
 package org.simple.clinic.patient
 
 import androidx.room.Embedded
+import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.DateOfBirth.Type.GUESSED
 import org.simple.clinic.patient.DateOfBirth.Type.RECORDED
 import org.simple.clinic.util.UserClock
@@ -40,9 +41,17 @@ data class DateOfBirth(
     }
 
     fun fromPatient(patient: Patient, userClock: UserClock): DateOfBirth {
+      return fromAgeOrDate(patient.age, patient.dateOfBirth, userClock)
+    }
+
+    fun fromOverdueAppointment(overdueAppointment: OverdueAppointment, userClock: UserClock): DateOfBirth {
+      return fromAgeOrDate(overdueAppointment.age, overdueAppointment.dateOfBirth, userClock)
+    }
+
+    private fun fromAgeOrDate(age: Age?, date: LocalDate?, clock: UserClock): DateOfBirth {
       return when {
-        patient.dateOfBirth != null -> fromDate(patient.dateOfBirth)
-        patient.age != null -> fromAge(patient.age, userClock)
+        date != null -> fromDate(date)
+        age != null -> fromAge(age, clock)
         else -> throw IllegalStateException("Both age AND dateOfBirth cannot be null!")
       }
     }

@@ -3,21 +3,8 @@ package org.simple.clinic.util
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
-import org.threeten.bp.Period
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset.UTC
-
-fun estimateCurrentAge(recordedAge: Int, ageRecordedAtTimestamp: Instant, clock: UserClock): Int {
-  val ageRecordedAtDate = ageRecordedAtTimestamp.toLocalDateAtZone(clock.zone)
-  val today = LocalDate.now(clock)
-
-  val yearsPassedSinceAgeRecorded = Period.between(ageRecordedAtDate, today).years
-  return recordedAge + yearsPassedSinceAgeRecorded
-}
-
-fun estimateCurrentAge(recordedDateOfBirth: LocalDate, clock: UserClock): Int {
-  return Period.between(recordedDateOfBirth, LocalDate.now(clock)).years
-}
 
 fun Instant.toLocalDateAtZone(zone: ZoneId): LocalDate {
   return this.atZone(UTC)

@@ -31,6 +31,7 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.PatientEditScreenKey
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -56,7 +57,6 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -227,16 +227,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @SuppressLint("SetTextI18n")
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
-    val ageValue = when {
-      patient.dateOfBirth == null -> {
-        patient.age!!.let { age ->
-          estimateCurrentAge(age.value, age.updatedAt, userClock)
-        }
-      }
-      else -> {
-        estimateCurrentAge(patient.dateOfBirth, userClock)
-      }
-    }
+    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
 
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
     displayPhoneNumber(patientSummaryProfile.phoneNumber.toNullable())

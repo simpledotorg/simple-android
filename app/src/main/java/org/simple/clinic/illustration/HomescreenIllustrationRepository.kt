@@ -13,13 +13,13 @@ import java.io.File
 import javax.inject.Inject
 
 class HomescreenIllustrationRepository @Inject constructor(
-    private val illustrationDao: HomescreenIllustration.RoomDao,
+    private val illustrations: List<HomescreenIllustration>,
     private val fileStorage: FileStorage,
     private val userClock: UserClock
 ) {
 
   fun illustrationImageToShow(): Observable<File> =
-      illustrationDao.illustrations()
+      Observable.just(illustrations)
           .map { pickIllustration(it) }
           .ofType<Just<HomescreenIllustration>>()
           .map { it.value }
@@ -33,7 +33,7 @@ class HomescreenIllustrationRepository @Inject constructor(
         .firstOrNull { illustration ->
           val showIllustrationFrom = toLocalDate(illustration.from)
           val showIllustrationTill = toLocalDate(illustration.to)
-          
+
           today in showIllustrationFrom..showIllustrationTill
         }
         .toOptional()

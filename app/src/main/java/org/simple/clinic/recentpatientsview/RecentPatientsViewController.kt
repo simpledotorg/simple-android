@@ -9,14 +9,13 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.RecentPatient
-import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -106,14 +105,9 @@ class RecentPatientsViewController @Inject constructor(
           dateFormatter = exactDateFormatter
       )
 
-  private fun age(recentPatient: RecentPatient): Int =
-      when (recentPatient.age) {
-        null -> estimateCurrentAge(recentPatient.dateOfBirth!!, userClock)
-        else -> {
-          val (recordedAge, ageRecordedAtTimestamp) = recentPatient.age
-          estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, userClock)
-        }
-      }
+  private fun age(recentPatient: RecentPatient): Int {
+    return DateOfBirth.fromRecentPatient(recentPatient, userClock).estimateAge(userClock)
+  }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> =
       events

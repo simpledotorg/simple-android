@@ -102,7 +102,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
       whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
     }
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, alreadyPresentPhoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
 
     uiEvents.onNext(PatientEditPatientNameTextChanged(name))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
@@ -299,7 +299,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))

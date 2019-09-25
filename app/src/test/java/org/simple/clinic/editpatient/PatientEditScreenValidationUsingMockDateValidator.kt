@@ -98,7 +98,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
@@ -145,7 +145,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
     whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
 
     utcClock.advanceBy(advanceClockBy)
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditSaveClicked())
 

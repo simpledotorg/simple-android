@@ -166,16 +166,16 @@ class PatientEditScreenValidationUsingMockDateValidator {
         }
 
       } else {
-        verify(patientRepository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
-        verify(patientRepository, never()).updatePhoneNumberForPatient(any(), any())
+        verify(patientRepository, never()).createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())
+        verify(patientRepository, never()).updatePhoneNumberForPatient(eq(patientUuid), any())
       }
       verify(screen).goBack()
 
     } else {
       verify(patientRepository, never()).updatePatient(any())
-      verify(patientRepository, never()).updateAddressForPatient(any(), any())
-      verify(patientRepository, never()).updatePhoneNumberForPatient(any(), any())
-      verify(patientRepository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
+      verify(patientRepository, never()).updateAddressForPatient(eq(patientUuid), any())
+      verify(patientRepository, never()).updatePhoneNumberForPatient(eq(patientUuid), any())
+      verify(patientRepository, never()).createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())
       verify(screen, never()).goBack()
     }
   }

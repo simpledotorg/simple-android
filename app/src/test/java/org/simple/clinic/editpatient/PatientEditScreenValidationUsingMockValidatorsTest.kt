@@ -16,17 +16,32 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
@@ -148,134 +163,134 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
         ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "",
-            PhoneNumberValidator.Result.BLANK,
+            BLANK,
             "",
             "",
             "",
             "1",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY)
+            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY)
         ),
         ValidateFieldsTestParams(
             null,
             "",
-            PhoneNumberValidator.Result.BLANK,
+            BLANK,
             "",
             "",
             "",
             "",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
+            setOf(FULL_NAME_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
         ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "",
-            PhoneNumberValidator.Result.LENGTH_TOO_SHORT,
+            LENGTH_TOO_SHORT,
             "Colony",
             "",
             "",
             "1",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY)
+            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY)
         ),
         ValidateFieldsTestParams(
             null,
             "",
-            PhoneNumberValidator.Result.LENGTH_TOO_SHORT,
+            LENGTH_TOO_SHORT,
             "Colony",
             "",
             "",
             "",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
+            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
         ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "Name",
-            PhoneNumberValidator.Result.LENGTH_TOO_LONG,
+            LENGTH_TOO_LONG,
             "",
             "District",
             "",
             "1",
             null,
             null,
-            setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY)
+            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY)
         ),
         ValidateFieldsTestParams(
             null,
             "Name",
-            PhoneNumberValidator.Result.LENGTH_TOO_LONG,
+            LENGTH_TOO_LONG,
             "",
             "District",
             "",
             null,
             UserInputDateValidator.Result.Invalid.InvalidPattern,
             "01/01/2000",
-            setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.INVALID_DATE_OF_BIRTH)
+            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY, INVALID_DATE_OF_BIRTH)
         ),
         ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "",
-            PhoneNumberValidator.Result.VALID,
+            VALID,
             "Colony",
             "District",
             "",
             null,
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
+            setOf(FULL_NAME_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
         ValidateFieldsTestParams(
             null,
             "",
-            PhoneNumberValidator.Result.VALID,
+            VALID,
             "Colony",
             "District",
             "",
             null,
             UserInputDateValidator.Result.Invalid.DateIsInFuture,
             "01/01/2000",
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE)
+            setOf(FULL_NAME_EMPTY, STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE)
         ),
         ValidateFieldsTestParams(
             null,
             "",
-            PhoneNumberValidator.Result.BLANK,
+            BLANK,
             "Colony",
             "District",
             "State",
             "",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
+            setOf(FULL_NAME_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
         ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "Name",
-            PhoneNumberValidator.Result.VALID,
+            VALID,
             "Colony",
             "District",
             "State",
             "1",
             null,
             null,
-            emptySet<PatientEditValidationError>()
+            emptySet()
         ),
         ValidateFieldsTestParams(
             null,
             "Name",
-            PhoneNumberValidator.Result.VALID,
+            VALID,
             "Colony",
             "District",
             "State",
             null,
-            UserInputDateValidator.Result.Valid(LocalDate.parse("1947-01-01")),
+            Valid(LocalDate.parse("1947-01-01")),
             "01/01/2000",
-            emptySet<PatientEditValidationError>()
+            emptySet()
         )
     )
   }
@@ -287,11 +302,10 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
 
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
-    val phoneNumber = alreadyPresentPhoneNumber
 
     whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
     whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
+    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
 
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
 
@@ -300,7 +314,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
 
     uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
@@ -322,12 +336,12 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
   @Suppress("Unused")
   private fun `params for validating phone numbers`(): List<ValidatePhoneNumberTestParams> {
     return listOf(
-        ValidatePhoneNumberTestParams(null, PhoneNumberValidator.Result.BLANK, null),
-        ValidatePhoneNumberTestParams(null, PhoneNumberValidator.Result.LENGTH_TOO_LONG, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG),
-        ValidatePhoneNumberTestParams(null, PhoneNumberValidator.Result.LENGTH_TOO_SHORT, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), PhoneNumberValidator.Result.BLANK, PatientEditValidationError.PHONE_NUMBER_EMPTY),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), PhoneNumberValidator.Result.LENGTH_TOO_SHORT, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), PhoneNumberValidator.Result.LENGTH_TOO_LONG, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG)
+        ValidatePhoneNumberTestParams(null, BLANK, null),
+        ValidatePhoneNumberTestParams(null, LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_LONG),
+        ValidatePhoneNumberTestParams(null, LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_SHORT),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), BLANK, PHONE_NUMBER_EMPTY),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_SHORT),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_LONG)
     )
   }
 }

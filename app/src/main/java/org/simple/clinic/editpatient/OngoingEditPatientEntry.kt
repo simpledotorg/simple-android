@@ -77,11 +77,7 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
     when (numberValidator.validate(phoneNumber, Type.LANDLINE_OR_MOBILE)) {
       Result.LENGTH_TOO_SHORT -> errors.add(PHONE_NUMBER_LENGTH_TOO_SHORT)
       Result.LENGTH_TOO_LONG -> errors.add(PHONE_NUMBER_LENGTH_TOO_LONG)
-      Result.BLANK -> {
-        if (alreadySavedNumber != null) {
-          errors.add(PHONE_NUMBER_EMPTY)
-        }
-      }
+      Result.BLANK -> alreadySavedNumber?.let { errors.add(PHONE_NUMBER_EMPTY) }
 
       Result.VALID -> {
         // Do nothing here

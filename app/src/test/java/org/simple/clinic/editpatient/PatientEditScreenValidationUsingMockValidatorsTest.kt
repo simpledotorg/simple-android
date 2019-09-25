@@ -282,11 +282,9 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
 
   @Test
   @Parameters(method = "params for validating phone numbers")
-  fun `when save is clicked, phone number should be validated`(
-      alreadyPresentPhoneNumber: PatientPhoneNumber?,
-      numberValidationResult: PhoneNumberValidator.Result,
-      expectedError: PatientEditValidationError?
-  ) {
+  fun `when save is clicked, phone number should be validated`(testParams: ValidatePhoneNumberTestParams) {
+    val (alreadyPresentPhoneNumber, numberValidationResult, expectedError) = testParams
+
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
     val phoneNumber = alreadyPresentPhoneNumber
@@ -322,14 +320,14 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
   }
 
   @Suppress("Unused")
-  private fun `params for validating phone numbers`(): List<List<Any?>> {
+  private fun `params for validating phone numbers`(): List<ValidatePhoneNumberTestParams> {
     return listOf(
-        listOf(null, PhoneNumberValidator.Result.BLANK, null),
-        listOf(null, PhoneNumberValidator.Result.LENGTH_TOO_LONG, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG),
-        listOf(null, PhoneNumberValidator.Result.LENGTH_TOO_SHORT, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT),
-        listOf(PatientMocker.phoneNumber(), PhoneNumberValidator.Result.BLANK, PatientEditValidationError.PHONE_NUMBER_EMPTY),
-        listOf(PatientMocker.phoneNumber(), PhoneNumberValidator.Result.LENGTH_TOO_SHORT, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT),
-        listOf(PatientMocker.phoneNumber(), PhoneNumberValidator.Result.LENGTH_TOO_LONG, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG)
+        ValidatePhoneNumberTestParams(null, PhoneNumberValidator.Result.BLANK, null),
+        ValidatePhoneNumberTestParams(null, PhoneNumberValidator.Result.LENGTH_TOO_LONG, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG),
+        ValidatePhoneNumberTestParams(null, PhoneNumberValidator.Result.LENGTH_TOO_SHORT, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), PhoneNumberValidator.Result.BLANK, PatientEditValidationError.PHONE_NUMBER_EMPTY),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), PhoneNumberValidator.Result.LENGTH_TOO_SHORT, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), PhoneNumberValidator.Result.LENGTH_TOO_LONG, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG)
     )
   }
 }
@@ -345,4 +343,10 @@ data class ValidateFieldsTestParams(
     val userInputDateOfBirthValidationResult: UserInputDateValidator.Result?,
     val dateOfBirth: String?,
     val expectedErrors: Set<PatientEditValidationError>
+)
+
+data class ValidatePhoneNumberTestParams(
+    val alreadyPresentPhoneNumber: PatientPhoneNumber?,
+    val numberValidationResult: PhoneNumberValidator.Result,
+    val expectedError: PatientEditValidationError?
 )

@@ -90,13 +90,10 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
 
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
+
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
     if (userInputDateOfBirthValidationResult != null) {
       whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)

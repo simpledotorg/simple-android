@@ -110,7 +110,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(patient.uuid, address)).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(patient)).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -139,7 +139,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -168,7 +168,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -198,7 +198,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
@@ -227,7 +227,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
@@ -260,7 +260,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
     whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditSaveClicked())
     uiEvents.onNext(inputChange)
 
@@ -348,7 +348,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.phoneNumber(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
     whenever(patientRepository.address(existingSavedAddress.uuid)).thenReturn(Observable.just(existingSavedAddress.toOptional()))
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditBackClicked())
 

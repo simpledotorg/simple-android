@@ -136,7 +136,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private fun screenCreates(): Observable<UiEvent> {
     val key = screenRouter.key<PatientEditScreenKey>(this)
     val patientEditScreenCreated = PatientEditScreenCreated
-        .fromPatientData(key.patient, key.address, key.phoneNumber)
+        .from(key.patient, key.address, key.phoneNumber)
     return Observable.just(patientEditScreenCreated)
   }
 

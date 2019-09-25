@@ -77,7 +77,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
 
   @Test
   @Parameters(method = "params for validating all fields on save clicks")
-  fun `when save is clicked, all fields should be validated`(validateFieldsData: ValidateFieldsData) {
+  fun `when save is clicked, all fields should be validated`(validateFieldsTestParams: ValidateFieldsTestParams) {
     val (alreadyPresentPhoneNumber,
         name,
         numberValidationResult,
@@ -88,7 +88,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
         userInputDateOfBirthValidationResult,
         dateOfBirth,
         expectedErrors
-    ) = validateFieldsData
+    ) = validateFieldsTestParams
 
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
@@ -143,9 +143,9 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
   }
 
   @Suppress("Unused")
-  private fun `params for validating all fields on save clicks`(): List<ValidateFieldsData> {
+  private fun `params for validating all fields on save clicks`(): List<ValidateFieldsTestParams> {
     return listOf(
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "",
             PhoneNumberValidator.Result.BLANK,
@@ -157,7 +157,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY)
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             null,
             "",
             PhoneNumberValidator.Result.BLANK,
@@ -169,7 +169,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "",
             PhoneNumberValidator.Result.LENGTH_TOO_SHORT,
@@ -181,7 +181,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY)
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             null,
             "",
             PhoneNumberValidator.Result.LENGTH_TOO_SHORT,
@@ -193,7 +193,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "Name",
             PhoneNumberValidator.Result.LENGTH_TOO_LONG,
@@ -205,7 +205,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             null,
             setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY)
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             null,
             "Name",
             PhoneNumberValidator.Result.LENGTH_TOO_LONG,
@@ -217,7 +217,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             "01/01/2000",
             setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.INVALID_DATE_OF_BIRTH)
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "",
             PhoneNumberValidator.Result.VALID,
@@ -229,7 +229,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             null,
             "",
             PhoneNumberValidator.Result.VALID,
@@ -241,7 +241,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             "01/01/2000",
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE)
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             null,
             "",
             PhoneNumberValidator.Result.BLANK,
@@ -253,7 +253,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             PatientMocker.phoneNumber(),
             "Name",
             PhoneNumberValidator.Result.VALID,
@@ -265,7 +265,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
             null,
             emptySet<PatientEditValidationError>()
         ),
-        ValidateFieldsData(
+        ValidateFieldsTestParams(
             null,
             "Name",
             PhoneNumberValidator.Result.VALID,
@@ -334,7 +334,7 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
   }
 }
 
-data class ValidateFieldsData(
+data class ValidateFieldsTestParams(
     val alreadyPresentPhoneNumber: PatientPhoneNumber?,
     val name: String,
     val numberValidationResult: PhoneNumberValidator.Result,

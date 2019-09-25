@@ -13,6 +13,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.editpatient.PatientEditScreenControllerTest.DateOfBirthTestParams
+import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.editpatient.PatientEditValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -24,11 +27,18 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -81,7 +91,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
   @Test
   @Parameters(method = "params for date of birth should be validated")
   fun `when save is clicked, the date of birth should be validated`(
-      dateOfBirthTestParams: PatientEditScreenControllerTest.DateOfBirthTestParams
+      dateOfBirthTestParams: DateOfBirthTestParams
   ) {
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
@@ -103,10 +113,10 @@ class PatientEditScreenValidationUsingMockDateValidator {
   }
 
   @Suppress("Unused")
-  private fun `params for date of birth should be validated`(): List<PatientEditScreenControllerTest.DateOfBirthTestParams> {
+  private fun `params for date of birth should be validated`(): List<DateOfBirthTestParams> {
     return listOf(
-        PatientEditScreenControllerTest.DateOfBirthTestParams("01/01/2000", UserInputDateValidator.Result.Invalid.InvalidPattern, PatientEditValidationError.INVALID_DATE_OF_BIRTH),
-        PatientEditScreenControllerTest.DateOfBirthTestParams("01/01/2000", UserInputDateValidator.Result.Invalid.DateIsInFuture, PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE)
+        DateOfBirthTestParams("01/01/2000", InvalidPattern, INVALID_DATE_OF_BIRTH),
+        DateOfBirthTestParams("01/01/2000", DateIsInFuture, DATE_OF_BIRTH_IN_FUTURE)
     )
   }
 
@@ -201,8 +211,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
 
     fun generateTestData(
         patientProfile: PatientProfile,
-        numberValidationResult: PhoneNumberValidator.Result = PhoneNumberValidator.Result.VALID,
-        userInputDateOfBirthValidationResult: UserInputDateValidator.Result = UserInputDateValidator.Result.Valid(LocalDate.parse("1947-01-01")),
+        numberValidationResult: PhoneNumberValidator.Result = VALID,
+        userInputDateOfBirthValidationResult: UserInputDateValidator.Result = Valid(LocalDate.parse("1947-01-01")),
         advanceClockBy: Duration = Duration.ZERO,
         inputEvents: List<UiEvent>,
         shouldSavePatient: Boolean,
@@ -253,7 +263,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
     return listOf(
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Valid(LocalDate.of(1985, Month.MAY, 20)),
+            userInputDateOfBirthValidationResult = Valid(LocalDate.of(1985, Month.MAY, 20)),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -270,7 +280,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Valid(LocalDate.parse("1949-01-01")),
+            userInputDateOfBirthValidationResult = Valid(LocalDate.parse("1949-01-01")),
             advanceClockBy = oneYear,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
@@ -305,7 +315,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Valid(LocalDate.parse("1945-01-01")),
+            userInputDateOfBirthValidationResult = Valid(LocalDate.parse("1945-01-01")),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -325,7 +335,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Valid(LocalDate.parse("1965-06-25")),
+            userInputDateOfBirthValidationResult = Valid(LocalDate.parse("1965-06-25")),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -348,7 +358,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Valid(LocalDate.parse("1947-01-01")),
+            userInputDateOfBirthValidationResult = Valid(LocalDate.parse("1947-01-01")),
             advanceClockBy = twoYears,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
@@ -399,7 +409,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Invalid.InvalidPattern,
+            userInputDateOfBirthValidationResult = InvalidPattern,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -413,7 +423,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Invalid.DateIsInFuture,
+            userInputDateOfBirthValidationResult = DateIsInFuture,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -440,7 +450,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Invalid.DateIsInFuture,
+            userInputDateOfBirthValidationResult = DateIsInFuture,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -455,7 +465,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Invalid.InvalidPattern,
+            userInputDateOfBirthValidationResult = InvalidPattern,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -470,8 +480,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            numberValidationResult = PhoneNumberValidator.Result.LENGTH_TOO_SHORT,
-            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.Invalid.InvalidPattern,
+            numberValidationResult = LENGTH_TOO_SHORT,
+            userInputDateOfBirthValidationResult = InvalidPattern,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -493,7 +503,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            numberValidationResult = PhoneNumberValidator.Result.LENGTH_TOO_LONG,
+            numberValidationResult = LENGTH_TOO_LONG,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged(""),
                 PatientEditDistrictTextChanged("District"),
@@ -510,7 +520,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            numberValidationResult = PhoneNumberValidator.Result.BLANK,
+            numberValidationResult = BLANK,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),

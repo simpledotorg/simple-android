@@ -193,16 +193,10 @@ class PatientEditScreenControllerTest {
     verify(screen).showValidationErrors(setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
   }
 
-  data class DateOfBirthTestParams(
-      val dateOfBirth: String,
-      val dobValidationResult: UserInputDateValidator.Result,
-      val expectedError: PatientEditValidationError
-  )
-
   @Test
   @Parameters(method = "params for hiding errors on text changes")
-  fun `when input changes, errors corresponding to the input must be hidden`(textChangeData: HidingErrorsOnTextChangeData) {
-    val (inputChange, expectedErrorsToHide) = textChangeData
+  fun `when input changes, errors corresponding to the input must be hidden`(textChangeParams: HidingErrorsOnTextChangeParams) {
+    val (inputChange, expectedErrorsToHide) = textChangeParams
 
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
@@ -220,28 +214,23 @@ class PatientEditScreenControllerTest {
   }
 
   @Suppress("Unused")
-  private fun `params for hiding errors on text changes`(): List<HidingErrorsOnTextChangeData> {
+  private fun `params for hiding errors on text changes`(): List<HidingErrorsOnTextChangeParams> {
     return listOf(
-        HidingErrorsOnTextChangeData(PatientEditPatientNameTextChanged(""), setOf(FULL_NAME_EMPTY)),
-        HidingErrorsOnTextChangeData(PatientEditPatientNameTextChanged("Name"), setOf(FULL_NAME_EMPTY)),
-        HidingErrorsOnTextChangeData(PatientEditPhoneNumberTextChanged(""), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
-        HidingErrorsOnTextChangeData(PatientEditPhoneNumberTextChanged("12345"), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
-        HidingErrorsOnTextChangeData(PatientEditColonyOrVillageChanged(""), setOf(COLONY_OR_VILLAGE_EMPTY)),
-        HidingErrorsOnTextChangeData(PatientEditColonyOrVillageChanged("Colony"), setOf(COLONY_OR_VILLAGE_EMPTY)),
-        HidingErrorsOnTextChangeData(PatientEditStateTextChanged(""), setOf(STATE_EMPTY)),
-        HidingErrorsOnTextChangeData(PatientEditStateTextChanged("State"), setOf(STATE_EMPTY)),
-        HidingErrorsOnTextChangeData(PatientEditDistrictTextChanged(""), setOf(DISTRICT_EMPTY)),
-        HidingErrorsOnTextChangeData(PatientEditDistrictTextChanged("District"), setOf(DISTRICT_EMPTY)),
-        HidingErrorsOnTextChangeData(PatientEditAgeTextChanged("1"), setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)),
-        HidingErrorsOnTextChangeData(PatientEditDateOfBirthTextChanged("20/02/1990"), setOf(DATE_OF_BIRTH_IN_FUTURE, INVALID_DATE_OF_BIRTH)),
-        HidingErrorsOnTextChangeData(PatientEditGenderChanged(Transgender), emptySet())
+        HidingErrorsOnTextChangeParams(PatientEditPatientNameTextChanged(""), setOf(FULL_NAME_EMPTY)),
+        HidingErrorsOnTextChangeParams(PatientEditPatientNameTextChanged("Name"), setOf(FULL_NAME_EMPTY)),
+        HidingErrorsOnTextChangeParams(PatientEditPhoneNumberTextChanged(""), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
+        HidingErrorsOnTextChangeParams(PatientEditPhoneNumberTextChanged("12345"), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
+        HidingErrorsOnTextChangeParams(PatientEditColonyOrVillageChanged(""), setOf(COLONY_OR_VILLAGE_EMPTY)),
+        HidingErrorsOnTextChangeParams(PatientEditColonyOrVillageChanged("Colony"), setOf(COLONY_OR_VILLAGE_EMPTY)),
+        HidingErrorsOnTextChangeParams(PatientEditStateTextChanged(""), setOf(STATE_EMPTY)),
+        HidingErrorsOnTextChangeParams(PatientEditStateTextChanged("State"), setOf(STATE_EMPTY)),
+        HidingErrorsOnTextChangeParams(PatientEditDistrictTextChanged(""), setOf(DISTRICT_EMPTY)),
+        HidingErrorsOnTextChangeParams(PatientEditDistrictTextChanged("District"), setOf(DISTRICT_EMPTY)),
+        HidingErrorsOnTextChangeParams(PatientEditAgeTextChanged("1"), setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)),
+        HidingErrorsOnTextChangeParams(PatientEditDateOfBirthTextChanged("20/02/1990"), setOf(DATE_OF_BIRTH_IN_FUTURE, INVALID_DATE_OF_BIRTH)),
+        HidingErrorsOnTextChangeParams(PatientEditGenderChanged(Transgender), emptySet())
     )
   }
-
-  data class HidingErrorsOnTextChangeData(
-      val inputChange: UiEvent,
-      val expectedErrorsToHide: Set<PatientEditValidationError>
-  )
 
   @Test
   fun `when data of birth has focus, the date format should be shown in the label`() {
@@ -290,13 +279,13 @@ class PatientEditScreenControllerTest {
 
   @Test
   @Parameters(method = "params for confirming discard changes")
-  fun `when back is clicked, the confirm discard changes popup must be shown if there have been changes`(testData: ConfirmDiscardChangesTestData) {
+  fun `when back is clicked, the confirm discard changes popup must be shown if there have been changes`(testParams: ConfirmDiscardChangesTestParams) {
     val (existingSavedPatient,
         existingSavedAddress,
         existingSavedPhoneNumber,
         inputEvents,
         shouldShowConfirmDiscardChangesPopup
-    ) = testData
+    ) = testParams
 
     uiEvents.onNext(PatientEditScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
@@ -312,7 +301,7 @@ class PatientEditScreenControllerTest {
   }
 
   @Suppress("Unused")
-  private fun `params for confirming discard changes`(): List<ConfirmDiscardChangesTestData> {
+  private fun `params for confirming discard changes`(): List<ConfirmDiscardChangesTestParams> {
     val noUserInputOnScreen = createConfirmDiscardChangesTestData(
         patientProfile = generatePatientProfile(
             patientUuid = UUID.fromString("b50f8631-aa87-4bad-989e-552c3c36bb60"),
@@ -801,7 +790,7 @@ class PatientEditScreenControllerTest {
       patientProfile: PatientProfile,
       inputEvents: List<UiEvent>,
       shouldShowConfirmDiscardChangesPopup: Boolean
-  ): ConfirmDiscardChangesTestData {
+  ): ConfirmDiscardChangesTestParams {
     val preCreateInputEvents = listOf(
         PatientEditPatientNameTextChanged(patientProfile.patient.fullName),
         PatientEditDistrictTextChanged(patientProfile.address.district),
@@ -817,7 +806,7 @@ class PatientEditScreenControllerTest {
       }
     }
 
-    return ConfirmDiscardChangesTestData(
+    return ConfirmDiscardChangesTestParams(
         patientProfile.patient,
         patientProfile.address,
         if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first(),
@@ -888,10 +877,21 @@ class PatientEditScreenControllerTest {
   }
 }
 
-data class ConfirmDiscardChangesTestData(
+data class DateOfBirthTestParams(
+    val dateOfBirth: String,
+    val dobValidationResult: UserInputDateValidator.Result,
+    val expectedError: PatientEditValidationError
+)
+
+data class ConfirmDiscardChangesTestParams(
     val existingSavedPatient: Patient,
     val existingSavedAddress: PatientAddress,
     val existingSavedPhoneNumber: PatientPhoneNumber?,
     val inputEvents: List<UiEvent>,
     val shouldShowConfirmDiscardChangesPopup: Boolean
+)
+
+data class HidingErrorsOnTextChangeParams(
+    val inputChange: UiEvent,
+    val expectedErrorsToHide: Set<PatientEditValidationError>
 )

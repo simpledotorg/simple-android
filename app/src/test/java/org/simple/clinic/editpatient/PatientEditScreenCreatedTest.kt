@@ -73,12 +73,12 @@ class PatientEditScreenCreatedTest {
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
-  fun `when screen is created then the existing patient data must be prefilled`(patientFormData: PatientFormData) {
-    val (patient, address, phoneNumber) = patientFormData
+  fun `when screen is created then the existing patient data must be prefilled`(patientFormTestParams: PatientFormTestParams) {
+    val (patient, address, phoneNumber) = patientFormTestParams
 
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
-    if (patientFormData.shouldSetColonyOrVillage) {
+    if (patientFormTestParams.shouldSetColonyOrVillage) {
       verify(screen).setColonyOrVillage(address.colonyOrVillage!!)
     } else {
       verify(screen, never()).setColonyOrVillage(any())
@@ -89,19 +89,19 @@ class PatientEditScreenCreatedTest {
     verify(screen).setGender(patient.gender)
     verify(screen).setPatientName(patient.fullName)
 
-    if (patientFormData.shouldSetPhoneNumber) {
+    if (patientFormTestParams.shouldSetPhoneNumber) {
       verify(screen).setPatientPhoneNumber(phoneNumber!!.number)
     } else {
       verify(screen, never()).setPatientPhoneNumber(any())
     }
 
-    if (patientFormData.shouldSetAge) {
+    if (patientFormTestParams.shouldSetAge) {
       verify(screen).setPatientAge(any())
     } else {
       verify(screen, never()).setPatientAge(any())
     }
 
-    if (patientFormData.shouldSetDateOfBirth) {
+    if (patientFormTestParams.shouldSetDateOfBirth) {
       verify(screen).setPatientDateofBirth(patient.dateOfBirth!!)
     } else {
       verify(screen, never()).setPatientDateofBirth(any())
@@ -109,7 +109,7 @@ class PatientEditScreenCreatedTest {
   }
 
   @Suppress("Unused")
-  private fun `params for prefilling fields on screen created`(): List<PatientFormData> {
+  private fun `params for prefilling fields on screen created`(): List<PatientFormTestParams> {
     return listOf(
         patientFormDataWithAge(colonyOrVillage = "Colony", phoneNumber = "1111111111"),
         patientFormDataWithAge(colonyOrVillage = null, phoneNumber = "1111111111"),
@@ -122,7 +122,7 @@ class PatientEditScreenCreatedTest {
   private fun patientFormDataWithAge(
       colonyOrVillage: String?,
       phoneNumber: String?
-  ): PatientFormData {
+  ): PatientFormTestParams {
     val patientToReturn = PatientMocker.patient(
         age = Age(23, Instant.now(utcClock)),
         dateOfBirth = null
@@ -130,7 +130,7 @@ class PatientEditScreenCreatedTest {
     val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
     val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
 
-    return PatientFormData(
+    return PatientFormTestParams(
         patientToReturn,
         addressToReturn,
         phoneNumberToReturn
@@ -141,12 +141,12 @@ class PatientEditScreenCreatedTest {
       colonyOrVillage: String?,
       phoneNumber: String?,
       dateOfBirth: LocalDate
-  ): PatientFormData {
+  ): PatientFormTestParams {
     val patientToReturn = PatientMocker.patient(dateOfBirth = dateOfBirth, age = null)
     val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
     val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
 
-    return PatientFormData(
+    return PatientFormTestParams(
         patientToReturn,
         addressToReturn,
         phoneNumberToReturn
@@ -154,7 +154,7 @@ class PatientEditScreenCreatedTest {
   }
 }
 
-data class PatientFormData(
+data class PatientFormTestParams(
     val patient: Patient,
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?

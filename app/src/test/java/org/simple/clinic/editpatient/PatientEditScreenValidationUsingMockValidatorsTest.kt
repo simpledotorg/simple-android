@@ -32,7 +32,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)
-class PatientEditScreenValidationUsingMockNumberValidatorTest {
+class PatientEditScreenValidationUsingMockValidatorsTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -42,12 +42,14 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
 
   private lateinit var screen: PatientEditScreen
   private lateinit var patientRepository: PatientRepository
-  private lateinit var numberValidator: PhoneNumberValidator
   private lateinit var controller: PatientEditScreenController
 
-  private lateinit var errorConsumer: (Throwable) -> Unit
+  private lateinit var numberValidator: PhoneNumberValidator
   private lateinit var dobValidator: UserInputDateValidator
+
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+
+  private lateinit var errorConsumer: (Throwable) -> Unit
 
   @Before
   fun setUp() {
@@ -96,6 +98,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
+
     if (userInputDateOfBirthValidationResult != null) {
       whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
     }
@@ -108,10 +111,12 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
     uiEvents.onNext(PatientEditDistrictTextChanged(district))
     uiEvents.onNext(PatientEditStateTextChanged(state))
     uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+
     if (age != null) {
       uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
       uiEvents.onNext(PatientEditAgeTextChanged(age))
     }
+
     if (dateOfBirth != null) {
       uiEvents.onNext(PatientEditAgeTextChanged(""))
       uiEvents.onNext(PatientEditDateOfBirthTextChanged(dateOfBirth))

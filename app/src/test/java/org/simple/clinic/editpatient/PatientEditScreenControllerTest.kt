@@ -201,10 +201,9 @@ class PatientEditScreenControllerTest {
 
   @Test
   @Parameters(method = "params for hiding errors on text changes")
-  fun `when input changes, errors corresponding to the input must be hidden`(
-      inputChange: UiEvent,
-      expectedErrorsToHide: Set<PatientEditValidationError>
-  ) {
+  fun `when input changes, errors corresponding to the input must be hidden`(textChangeData: HidingErrorsOnTextChangeData) {
+    val (inputChange, expectedErrorsToHide) = textChangeData
+
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
@@ -221,23 +220,28 @@ class PatientEditScreenControllerTest {
   }
 
   @Suppress("Unused")
-  private fun `params for hiding errors on text changes`(): List<List<Any>> {
+  private fun `params for hiding errors on text changes`(): List<HidingErrorsOnTextChangeData> {
     return listOf(
-        listOf(PatientEditPatientNameTextChanged(""), setOf(FULL_NAME_EMPTY)),
-        listOf(PatientEditPatientNameTextChanged("Name"), setOf(FULL_NAME_EMPTY)),
-        listOf(PatientEditPhoneNumberTextChanged(""), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
-        listOf(PatientEditPhoneNumberTextChanged("12345"), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
-        listOf(PatientEditColonyOrVillageChanged(""), setOf(COLONY_OR_VILLAGE_EMPTY)),
-        listOf(PatientEditColonyOrVillageChanged("Colony"), setOf(COLONY_OR_VILLAGE_EMPTY)),
-        listOf(PatientEditStateTextChanged(""), setOf(STATE_EMPTY)),
-        listOf(PatientEditStateTextChanged("State"), setOf(STATE_EMPTY)),
-        listOf(PatientEditDistrictTextChanged(""), setOf(DISTRICT_EMPTY)),
-        listOf(PatientEditDistrictTextChanged("District"), setOf(DISTRICT_EMPTY)),
-        listOf(PatientEditAgeTextChanged("1"), setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)),
-        listOf(PatientEditDateOfBirthTextChanged("20/02/1990"), setOf(DATE_OF_BIRTH_IN_FUTURE, INVALID_DATE_OF_BIRTH)),
-        listOf(PatientEditGenderChanged(Transgender), emptySet<PatientEditValidationError>())
+        HidingErrorsOnTextChangeData(PatientEditPatientNameTextChanged(""), setOf(FULL_NAME_EMPTY)),
+        HidingErrorsOnTextChangeData(PatientEditPatientNameTextChanged("Name"), setOf(FULL_NAME_EMPTY)),
+        HidingErrorsOnTextChangeData(PatientEditPhoneNumberTextChanged(""), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
+        HidingErrorsOnTextChangeData(PatientEditPhoneNumberTextChanged("12345"), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
+        HidingErrorsOnTextChangeData(PatientEditColonyOrVillageChanged(""), setOf(COLONY_OR_VILLAGE_EMPTY)),
+        HidingErrorsOnTextChangeData(PatientEditColonyOrVillageChanged("Colony"), setOf(COLONY_OR_VILLAGE_EMPTY)),
+        HidingErrorsOnTextChangeData(PatientEditStateTextChanged(""), setOf(STATE_EMPTY)),
+        HidingErrorsOnTextChangeData(PatientEditStateTextChanged("State"), setOf(STATE_EMPTY)),
+        HidingErrorsOnTextChangeData(PatientEditDistrictTextChanged(""), setOf(DISTRICT_EMPTY)),
+        HidingErrorsOnTextChangeData(PatientEditDistrictTextChanged("District"), setOf(DISTRICT_EMPTY)),
+        HidingErrorsOnTextChangeData(PatientEditAgeTextChanged("1"), setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)),
+        HidingErrorsOnTextChangeData(PatientEditDateOfBirthTextChanged("20/02/1990"), setOf(DATE_OF_BIRTH_IN_FUTURE, INVALID_DATE_OF_BIRTH)),
+        HidingErrorsOnTextChangeData(PatientEditGenderChanged(Transgender), emptySet())
     )
   }
+
+  data class HidingErrorsOnTextChangeData(
+      val inputChange: UiEvent,
+      val expectedErrorsToHide: Set<PatientEditValidationError>
+  )
 
   @Test
   fun `when data of birth has focus, the date format should be shown in the label`() {

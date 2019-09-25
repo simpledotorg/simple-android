@@ -6,7 +6,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -28,7 +27,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Duration
@@ -89,14 +87,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
     whenever(dobValidator.validate(any(), any())).thenReturn(dateOfBirthTestParams.dobValidationResult)
-    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
@@ -119,7 +110,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
     )
   }
 
-
   @Test
   @Parameters(method = "params for saving patient on save clicked")
   fun `when save is clicked, the patient details must be updated if there are no errors`(
@@ -135,14 +125,12 @@ class PatientEditScreenValidationUsingMockDateValidator {
       expectedSavedPatientAddress: PatientAddress?,
       expectedSavedPatientPhoneNumber: PatientPhoneNumber?
   ) {
-    whenever(patientRepository.patient(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPatient.toOptional()))
-    whenever(patientRepository.phoneNumber(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
-    whenever(patientRepository.address(existingSavedAddress.uuid)).thenReturn(Observable.just(existingSavedAddress.toOptional()))
+    whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
+
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
 
     utcClock.advanceBy(advanceClockBy)
     uiEvents.onNext(PatientEditScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))

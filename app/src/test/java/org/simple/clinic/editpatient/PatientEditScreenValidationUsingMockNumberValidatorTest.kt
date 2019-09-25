@@ -75,18 +75,19 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
 
   @Test
   @Parameters(method = "params for validating all fields on save clicks")
-  fun `when save is clicked, all fields should be validated`(
-      alreadyPresentPhoneNumber: PatientPhoneNumber?,
-      name: String,
-      numberValidationResult: PhoneNumberValidator.Result,
-      colonyOrVillage: String,
-      district: String,
-      state: String,
-      age: String?,
-      userInputDateOfBirthValidationResult: UserInputDateValidator.Result?,
-      dateOfBirth: String?,
-      expectedErrors: Set<PatientEditValidationError>
-  ) {
+  fun `when save is clicked, all fields should be validated`(validateFieldsData: ValidateFieldsData) {
+    val (alreadyPresentPhoneNumber,
+        name,
+        numberValidationResult,
+        colonyOrVillage,
+        district,
+        state,
+        age,
+        userInputDateOfBirthValidationResult,
+        dateOfBirth,
+        expectedErrors
+    ) = validateFieldsData
+
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
 
@@ -137,9 +138,9 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
   }
 
   @Suppress("Unused")
-  private fun `params for validating all fields on save clicks`(): List<List<Any?>> {
+  private fun `params for validating all fields on save clicks`(): List<ValidateFieldsData> {
     return listOf(
-        listOf(
+        ValidateFieldsData(
             PatientMocker.phoneNumber(),
             "",
             PhoneNumberValidator.Result.BLANK,
@@ -151,7 +152,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY)
         ),
-        listOf(
+        ValidateFieldsData(
             null,
             "",
             PhoneNumberValidator.Result.BLANK,
@@ -163,7 +164,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
-        listOf(
+        ValidateFieldsData(
             PatientMocker.phoneNumber(),
             "",
             PhoneNumberValidator.Result.LENGTH_TOO_SHORT,
@@ -175,7 +176,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY)
         ),
-        listOf(
+        ValidateFieldsData(
             null,
             "",
             PhoneNumberValidator.Result.LENGTH_TOO_SHORT,
@@ -187,7 +188,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
-        listOf(
+        ValidateFieldsData(
             PatientMocker.phoneNumber(),
             "Name",
             PhoneNumberValidator.Result.LENGTH_TOO_LONG,
@@ -199,7 +200,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             null,
             setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY)
         ),
-        listOf(
+        ValidateFieldsData(
             null,
             "Name",
             PhoneNumberValidator.Result.LENGTH_TOO_LONG,
@@ -211,7 +212,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             "01/01/2000",
             setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.INVALID_DATE_OF_BIRTH)
         ),
-        listOf(
+        ValidateFieldsData(
             PatientMocker.phoneNumber(),
             "",
             PhoneNumberValidator.Result.VALID,
@@ -223,7 +224,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
-        listOf(
+        ValidateFieldsData(
             null,
             "",
             PhoneNumberValidator.Result.VALID,
@@ -235,7 +236,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             "01/01/2000",
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE)
         ),
-        listOf(
+        ValidateFieldsData(
             null,
             "",
             PhoneNumberValidator.Result.BLANK,
@@ -247,7 +248,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             null,
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
-        listOf(
+        ValidateFieldsData(
             PatientMocker.phoneNumber(),
             "Name",
             PhoneNumberValidator.Result.VALID,
@@ -259,7 +260,7 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
             null,
             emptySet<PatientEditValidationError>()
         ),
-        listOf(
+        ValidateFieldsData(
             null,
             "Name",
             PhoneNumberValidator.Result.VALID,
@@ -327,3 +328,16 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
     )
   }
 }
+
+data class ValidateFieldsData(
+    val alreadyPresentPhoneNumber: PatientPhoneNumber?,
+    val name: String,
+    val numberValidationResult: PhoneNumberValidator.Result,
+    val colonyOrVillage: String,
+    val district: String,
+    val state: String,
+    val age: String?,
+    val userInputDateOfBirthValidationResult: UserInputDateValidator.Result?,
+    val dateOfBirth: String?,
+    val expectedErrors: Set<PatientEditValidationError>
+)

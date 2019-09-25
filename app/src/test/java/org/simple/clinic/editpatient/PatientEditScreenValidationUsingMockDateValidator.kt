@@ -149,35 +149,35 @@ class PatientEditScreenValidationUsingMockDateValidator {
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditSaveClicked())
 
-    if (shouldSavePatient) {
-      verify(patientRepository).updatePatient(expectedSavedPatient!!)
-      verify(patientRepository).updateAddressForPatient(expectedSavedPatient.uuid, expectedSavedPatientAddress!!)
-
-      if (expectedSavedPatientPhoneNumber != null) {
-        if (existingSavedPhoneNumber == null) {
-          verify(patientRepository).createPhoneNumberForPatient(
-              patientUuid = expectedSavedPatientPhoneNumber.patientUuid,
-              number = expectedSavedPatientPhoneNumber.number,
-              phoneNumberType = PatientPhoneNumberType.Mobile,
-              active = true
-          )
-        } else {
-          verify(patientRepository).updatePhoneNumberForPatient(expectedSavedPatient.uuid, expectedSavedPatientPhoneNumber)
-        }
-
-      } else {
-        verify(patientRepository, never()).createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())
-        verify(patientRepository, never()).updatePhoneNumberForPatient(eq(patientUuid), any())
-      }
-      verify(screen).goBack()
-
-    } else {
+    if (!shouldSavePatient) {
       verify(patientRepository, never()).updatePatient(any())
       verify(patientRepository, never()).updateAddressForPatient(eq(patientUuid), any())
       verify(patientRepository, never()).updatePhoneNumberForPatient(eq(patientUuid), any())
       verify(patientRepository, never()).createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())
       verify(screen, never()).goBack()
+      return
     }
+
+    verify(patientRepository).updatePatient(expectedSavedPatient!!)
+    verify(patientRepository).updateAddressForPatient(expectedSavedPatient.uuid, expectedSavedPatientAddress!!)
+
+    if (expectedSavedPatientPhoneNumber != null) {
+      if (existingSavedPhoneNumber == null) {
+        verify(patientRepository).createPhoneNumberForPatient(
+            patientUuid = expectedSavedPatientPhoneNumber.patientUuid,
+            number = expectedSavedPatientPhoneNumber.number,
+            phoneNumberType = PatientPhoneNumberType.Mobile,
+            active = true
+        )
+      } else {
+        verify(patientRepository).updatePhoneNumberForPatient(expectedSavedPatient.uuid, expectedSavedPatientPhoneNumber)
+      }
+
+    } else {
+      verify(patientRepository, never()).createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())
+      verify(patientRepository, never()).updatePhoneNumberForPatient(eq(patientUuid), any())
+    }
+    verify(screen).goBack()
   }
 
   @Suppress("Unused")

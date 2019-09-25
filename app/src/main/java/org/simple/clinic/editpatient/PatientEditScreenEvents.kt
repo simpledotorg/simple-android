@@ -12,7 +12,7 @@ data class PatientEditScreenCreated(
     val phoneNumber: PatientPhoneNumber?
 ) : UiEvent {
   companion object {
-    fun fromPatientData(
+    fun from(
         patient: Patient,
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?

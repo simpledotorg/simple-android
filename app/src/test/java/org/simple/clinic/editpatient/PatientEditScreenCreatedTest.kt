@@ -76,7 +76,7 @@ class PatientEditScreenCreatedTest {
   fun `when screen is created then the existing patient data must be prefilled`(patientFormData: PatientFormData) {
     val (patient, address, phoneNumber) = patientFormData
 
-    uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     if (patientFormData.shouldSetColonyOrVillage) {
       verify(screen).setColonyOrVillage(address.colonyOrVillage!!)

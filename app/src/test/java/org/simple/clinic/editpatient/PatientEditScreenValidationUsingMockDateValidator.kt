@@ -122,19 +122,20 @@ class PatientEditScreenValidationUsingMockDateValidator {
 
   @Test
   @Parameters(method = "params for saving patient on save clicked")
-  fun `when save is clicked, the patient details must be updated if there are no errors`(
-      existingSavedPatient: Patient,
-      existingSavedAddress: PatientAddress,
-      existingSavedPhoneNumber: PatientPhoneNumber?,
-      numberValidationResult: PhoneNumberValidator.Result,
-      userInputDateOfBirthValidationResult: UserInputDateValidator.Result,
-      advanceClockBy: Duration,
-      inputEvents: List<UiEvent>,
-      shouldSavePatient: Boolean,
-      expectedSavedPatient: Patient?,
-      expectedSavedPatientAddress: PatientAddress?,
-      expectedSavedPatientPhoneNumber: PatientPhoneNumber?
-  ) {
+  fun `when save is clicked, the patient details must be updated if there are no errors`(testParams: SavePatientTestParams) {
+    val (existingSavedPatient,
+        existingSavedAddress,
+        existingSavedPhoneNumber,
+        numberValidationResult,
+        userInputDateOfBirthValidationResult,
+        advanceClockBy,
+        inputEvents,
+        shouldSavePatient,
+        expectedSavedPatient,
+        expectedSavedPatientAddress,
+        expectedSavedPatientPhoneNumber
+    ) = testParams
+
     val patientUuid = existingSavedPatient.uuid
 
     whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
@@ -181,7 +182,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
   }
 
   @Suppress("Unused")
-  private fun `params for saving patient on save clicked`(): List<List<Any?>> {
+  private fun `params for saving patient on save clicked`(): List<SavePatientTestParams> {
     val oneYear = Duration.ofDays(365L)
     val twoYears = oneYear.plus(oneYear)
 
@@ -493,7 +494,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
       createExpectedPatient: (Patient) -> Patient = { it },
       createExpectedAddress: (PatientAddress) -> PatientAddress = { it },
       createExpectedPhoneNumber: (UUID, PatientPhoneNumber?) -> PatientPhoneNumber? = { _, phoneNumber -> phoneNumber }
-  ): List<Any?> {
+  ): SavePatientTestParams {
     val expectedPatientPhoneNumber = if (shouldSavePatient) {
       val alreadySavedPhoneNumber = if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first()
       createExpectedPhoneNumber(patientProfile.patient.uuid, alreadySavedPhoneNumber)
@@ -516,7 +517,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
         }
     )
 
-    return listOf(
+    return SavePatientTestParams(
         patientProfile.patient,
         patientProfile.address,
         patientProfile.phoneNumbers.firstOrNull(),
@@ -531,3 +532,17 @@ class PatientEditScreenValidationUsingMockDateValidator {
     )
   }
 }
+
+data class SavePatientTestParams(
+    val existingSavedPatient: Patient,
+    val existingSavedAddress: PatientAddress,
+    val existingSavedPhoneNumber: PatientPhoneNumber?,
+    val numberValidationResult: PhoneNumberValidator.Result,
+    val userInputDateOfBirthValidationResult: UserInputDateValidator.Result,
+    val advanceClockBy: Duration,
+    val inputEvents: List<UiEvent>,
+    val shouldSavePatient: Boolean,
+    val expectedSavedPatient: Patient?,
+    val expectedSavedPatientAddress: PatientAddress?,
+    val expectedSavedPatientPhoneNumber: PatientPhoneNumber?
+)

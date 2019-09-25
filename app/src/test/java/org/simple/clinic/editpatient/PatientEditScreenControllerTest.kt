@@ -312,95 +312,6 @@ class PatientEditScreenControllerTest {
 
   @Suppress("Unused")
   private fun `params for confirming discard changes`(): List<List<Any?>> {
-    fun generatePatientProfile(
-        patientUuid: UUID,
-        addressUuid: UUID,
-        name: String? = null,
-        phoneNumber: String? = null,
-        gender: Gender? = null,
-        ageValue: Int? = null,
-        dateOfBirthString: String? = null,
-        colonyOrVillage: String? = null,
-        district: String? = null,
-        state: String? = null
-    ): PatientProfile {
-      return PatientProfile(
-          patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid),
-          address = PatientMocker.address(uuid = addressUuid),
-          phoneNumbers = phoneNumber?.let { listOf(PatientMocker.phoneNumber(patientUuid = patientUuid, number = it)) } ?: emptyList(),
-          businessIds = emptyList()
-      ).let { profile ->
-        if (gender != null) {
-          return@let profile.copy(patient = profile.patient.copy(gender = gender))
-        }
-        profile
-
-      }.let { profile ->
-        if (name != null) {
-          return@let profile.copy(patient = profile.patient.copy(fullName = name))
-        }
-        profile
-
-      }.let { profile ->
-        if (colonyOrVillage != null) {
-          return@let profile.copy(address = profile.address.copy(colonyOrVillage = colonyOrVillage))
-        }
-        profile
-
-      }.let { profile ->
-        if (district != null) {
-          return@let profile.copy(address = profile.address.copy(district = district))
-        }
-        profile
-
-      }.let { profile ->
-        if (state != null) {
-          return@let profile.copy(address = profile.address.copy(state = state))
-        }
-        profile
-
-      }.let { profile ->
-        if (ageValue != null) {
-          val age = Age(ageValue, Instant.now(utcClock))
-          return@let profile.copy(patient = profile.patient.copy(age = age, dateOfBirth = null))
-
-        } else if (dateOfBirthString != null) {
-          val dateOfBirth = LocalDate.parse(dateOfBirthString)
-          return@let profile.copy(patient = profile.patient.copy(age = null, dateOfBirth = dateOfBirth))
-        }
-        profile
-
-      }
-    }
-
-    fun generateTestData(
-        patientProfile: PatientProfile,
-        inputEvents: List<UiEvent>,
-        shouldShowConfirmDiscardChangesPopup: Boolean
-    ): List<Any?> {
-      val preCreateInputEvents = listOf(
-          PatientEditPatientNameTextChanged(patientProfile.patient.fullName),
-          PatientEditDistrictTextChanged(patientProfile.address.district),
-          PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage ?: ""),
-          PatientEditStateTextChanged(patientProfile.address.state),
-          PatientEditGenderChanged(patientProfile.patient.gender),
-          PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: "")
-      ) + patientProfile.let { (patient, _, _) ->
-        if (patient.age != null) {
-          listOf(PatientEditAgeTextChanged(patient.age!!.value.toString()))
-        } else {
-          listOf(PatientEditDateOfBirthTextChanged(patient.dateOfBirth!!.format(dateOfBirthFormat)))
-        }
-      }
-
-      return listOf(
-          patientProfile.patient,
-          patientProfile.address,
-          if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first(),
-          preCreateInputEvents + inputEvents,
-          shouldShowConfirmDiscardChangesPopup)
-    }
-
     return listOf(
         generateTestData(
             patientProfile = generatePatientProfile(
@@ -409,6 +320,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = emptyList(),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("1ed5d944-1cf8-4a2d-8324-f347255236ed"),
@@ -429,6 +341,7 @@ class PatientEditScreenControllerTest {
                 PatientEditStateTextChanged("Bangalore"),
                 PatientEditAgeTextChanged("32")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("a1b9fba3-8b98-4503-aa7d-10f2f5640892"),
@@ -450,6 +363,7 @@ class PatientEditScreenControllerTest {
                 PatientEditAgeTextChanged(""),
                 PatientEditDateOfBirthTextChanged("13/06/1995")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("f36e29c3-07ff-44d9-aff0-81cb5f104023"),
@@ -470,6 +384,7 @@ class PatientEditScreenControllerTest {
                 PatientEditStateTextChanged("Bangalore"),
                 PatientEditDateOfBirthTextChanged("13/06/1994")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("2b3d15bb-c7ed-4bb4-807d-a4697d47f3b3"),
@@ -491,6 +406,7 @@ class PatientEditScreenControllerTest {
                 PatientEditDateOfBirthTextChanged(""),
                 PatientEditAgeTextChanged("30")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("4a015332-a9f7-4d1b-bd79-3899c5f3c1b5"),
@@ -518,6 +434,7 @@ class PatientEditScreenControllerTest {
                 PatientEditStateTextChanged("Bengaluru"),
                 PatientEditAgeTextChanged("30")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("6af69bbd-47f0-4dc4-874a-4980752d4008"),
@@ -545,6 +462,7 @@ class PatientEditScreenControllerTest {
                 PatientEditStateTextChanged("Bengaluru"),
                 PatientEditDateOfBirthTextChanged("13/06/1995")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("745579dd-b2f8-4841-bd66-09eae14d8e20"),
@@ -553,6 +471,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditPatientNameTextChanged("Anisha")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("bc91fdce-3897-4ac4-9c60-fa39e221a5ff"),
@@ -563,6 +482,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Anisha"),
                 PatientEditPatientNameTextChanged("Anish")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("24650bc5-0cd1-4c50-8e0d-7ce1969a94f6"),
@@ -571,6 +491,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditPatientNameTextChanged("Anish")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("d39a4471-73bc-4b1d-9eaf-74260258e919"),
@@ -579,6 +500,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditPhoneNumberTextChanged("12345")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("ed0400d7-9968-47f9-8227-371d0f8d26f6"),
@@ -589,6 +511,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPhoneNumberTextChanged("12345"),
                 PatientEditPhoneNumberTextChanged("")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("664f1b00-b33b-45ec-af6e-79d08806283e"),
@@ -597,6 +520,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditPhoneNumberTextChanged("")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("ea27df22-9b81-4f14-8946-fbacce42bbf5"),
@@ -605,6 +529,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditPhoneNumberTextChanged("12345")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("e184c407-bf6a-4757-9e15-78dac12884e8"),
@@ -615,6 +540,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditPhoneNumberTextChanged("1234567")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("049727ba-5d75-4abd-9a16-1a7831fa9cfa"),
@@ -623,6 +549,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditColonyOrVillageChanged("Bathinda")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("81f497de-4cf8-4cae-afd6-ea356946f6f9"),
@@ -633,6 +560,7 @@ class PatientEditScreenControllerTest {
                 PatientEditColonyOrVillageChanged("Bathinda"),
                 PatientEditColonyOrVillageChanged("Batinda")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("6829987a-ffad-4e64-99a6-e2ecbdb83609"),
@@ -641,6 +569,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditColonyOrVillageChanged("Bathinda")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("ff29c615-4b7d-4ba1-ae7a-55c246e06fb0"),
@@ -649,6 +578,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditDistrictTextChanged("Hoshiarpur")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("3e1f6170-7430-4256-8dff-e93ed184df4f"),
@@ -659,6 +589,7 @@ class PatientEditScreenControllerTest {
                 PatientEditDistrictTextChanged("Hoshiarpur"),
                 PatientEditDistrictTextChanged("Hosiarpur")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("424c84e8-559b-459c-9e64-3fd458a2b5b5"),
@@ -667,6 +598,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditDistrictTextChanged("Hoshiarpur")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("3ee202bf-3985-4b0c-9281-b448bfbbc05e"),
@@ -675,6 +607,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditStateTextChanged("Bangalore")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("a81f8ebd-38e1-4eed-bbcf-6d2f9245880c"),
@@ -685,6 +618,7 @@ class PatientEditScreenControllerTest {
                 PatientEditStateTextChanged("Bangalore"),
                 PatientEditStateTextChanged("Bengaluru")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("ed581f52-3648-412f-b030-d9c7e1ae1aae"),
@@ -693,6 +627,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditStateTextChanged("Bengaluru")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("bd3ace1b-8516-4aec-8510-a59fe474b489"),
@@ -701,6 +636,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditGenderChanged(Female)),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("f218df49-5fbf-4680-a438-6b10a84d629d"),
@@ -711,6 +647,7 @@ class PatientEditScreenControllerTest {
                 PatientEditGenderChanged(Female),
                 PatientEditGenderChanged(Male)),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("1ff4de1b-189d-43e7-8c0d-5aa556fd9e38"),
@@ -719,6 +656,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditGenderChanged(Male)),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("693f4b61-9462-4b2e-afc1-17eb5af9f175"),
@@ -727,6 +665,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditAgeTextChanged("30")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("998fe915-99c1-4dd4-9dc3-46ce5977a40f"),
@@ -737,6 +676,7 @@ class PatientEditScreenControllerTest {
                 PatientEditAgeTextChanged("31"),
                 PatientEditAgeTextChanged("30")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("6a1c3a8c-1f46-4193-b0e0-19ea0d03cb7b"),
@@ -745,6 +685,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditAgeTextChanged("31")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("c03d3eb8-ef8f-4372-ae77-d10a77fb6d3a"),
@@ -755,6 +696,7 @@ class PatientEditScreenControllerTest {
                 PatientEditAgeTextChanged(""),
                 PatientEditDateOfBirthTextChanged("13/06/1995")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("eddc456e-f27e-4f7e-bdbe-eb994db740b2"),
@@ -767,6 +709,7 @@ class PatientEditScreenControllerTest {
                 PatientEditDateOfBirthTextChanged(""),
                 PatientEditAgeTextChanged("30")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("50fc5672-5eca-4fc8-9639-450ab37bb1be"),
@@ -775,6 +718,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditDateOfBirthTextChanged("13/06/1995")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("e7049567-c518-45aa-ad9f-542a3d9b0d8a"),
@@ -785,6 +729,7 @@ class PatientEditScreenControllerTest {
                 PatientEditDateOfBirthTextChanged("13/06/1996"),
                 PatientEditDateOfBirthTextChanged("13/06/1995")),
             shouldShowConfirmDiscardChangesPopup = false),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("55ddb042-486f-4262-be69-0c66bf80d949"),
@@ -793,6 +738,7 @@ class PatientEditScreenControllerTest {
             ),
             inputEvents = listOf(PatientEditDateOfBirthTextChanged("13/06/1996")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("f4772448-41e0-4d26-8cd7-1aa6ec1e336c"),
@@ -803,6 +749,7 @@ class PatientEditScreenControllerTest {
                 PatientEditDateOfBirthTextChanged(""),
                 PatientEditAgeTextChanged("30")),
             shouldShowConfirmDiscardChangesPopup = true),
+
         generateTestData(
             patientProfile = generatePatientProfile(
                 patientUuid = UUID.fromString("4456b23f-ef05-413e-88e9-81acead06121"),
@@ -815,5 +762,93 @@ class PatientEditScreenControllerTest {
                 PatientEditAgeTextChanged(""),
                 PatientEditDateOfBirthTextChanged("13/06/1995")),
             shouldShowConfirmDiscardChangesPopup = false))
+  }
+
+  private fun generateTestData(
+      patientProfile: PatientProfile,
+      inputEvents: List<UiEvent>,
+      shouldShowConfirmDiscardChangesPopup: Boolean
+  ): List<Any?> {
+    val preCreateInputEvents = listOf(
+        PatientEditPatientNameTextChanged(patientProfile.patient.fullName),
+        PatientEditDistrictTextChanged(patientProfile.address.district),
+        PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage ?: ""),
+        PatientEditStateTextChanged(patientProfile.address.state),
+        PatientEditGenderChanged(patientProfile.patient.gender),
+        PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: "")
+    ) + patientProfile.let { (patient, _, _) ->
+      if (patient.age != null) {
+        listOf(PatientEditAgeTextChanged(patient.age!!.value.toString()))
+      } else {
+        listOf(PatientEditDateOfBirthTextChanged(patient.dateOfBirth!!.format(dateOfBirthFormat)))
+      }
+    }
+
+    return listOf(
+        patientProfile.patient,
+        patientProfile.address,
+        if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first(),
+        preCreateInputEvents + inputEvents,
+        shouldShowConfirmDiscardChangesPopup)
+  }
+
+  private fun generatePatientProfile(
+      patientUuid: UUID,
+      addressUuid: UUID,
+      name: String? = null,
+      phoneNumber: String? = null,
+      gender: Gender? = null,
+      ageValue: Int? = null,
+      dateOfBirthString: String? = null,
+      colonyOrVillage: String? = null,
+      district: String? = null,
+      state: String? = null
+  ): PatientProfile {
+    return PatientProfile(
+        patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid),
+        address = PatientMocker.address(uuid = addressUuid),
+        phoneNumbers = phoneNumber?.let { listOf(PatientMocker.phoneNumber(patientUuid = patientUuid, number = it)) } ?: emptyList(),
+        businessIds = emptyList()
+    ).let { profile ->
+      if (gender != null) {
+        return@let profile.copy(patient = profile.patient.copy(gender = gender))
+      }
+      profile
+
+    }.let { profile ->
+      if (name != null) {
+        return@let profile.copy(patient = profile.patient.copy(fullName = name))
+      }
+      profile
+
+    }.let { profile ->
+      if (colonyOrVillage != null) {
+        return@let profile.copy(address = profile.address.copy(colonyOrVillage = colonyOrVillage))
+      }
+      profile
+
+    }.let { profile ->
+      if (district != null) {
+        return@let profile.copy(address = profile.address.copy(district = district))
+      }
+      profile
+
+    }.let { profile ->
+      if (state != null) {
+        return@let profile.copy(address = profile.address.copy(state = state))
+      }
+      profile
+
+    }.let { profile ->
+      if (ageValue != null) {
+        val age = Age(ageValue, Instant.now(utcClock))
+        return@let profile.copy(patient = profile.patient.copy(age = age, dateOfBirth = null))
+
+      } else if (dateOfBirthString != null) {
+        val dateOfBirth = LocalDate.parse(dateOfBirthString)
+        return@let profile.copy(patient = profile.patient.copy(age = null, dateOfBirth = dateOfBirth))
+      }
+      profile
+    }
   }
 }

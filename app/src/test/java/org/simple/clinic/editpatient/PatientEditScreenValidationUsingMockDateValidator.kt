@@ -1,6 +1,7 @@
 package org.simple.clinic.editpatient
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -135,12 +136,14 @@ class PatientEditScreenValidationUsingMockDateValidator {
       expectedSavedPatientAddress: PatientAddress?,
       expectedSavedPatientPhoneNumber: PatientPhoneNumber?
   ) {
+    val patientUuid = existingSavedPatient.uuid
+
     whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
 
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
 
     utcClock.advanceBy(advanceClockBy)
     uiEvents.onNext(PatientEditScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))

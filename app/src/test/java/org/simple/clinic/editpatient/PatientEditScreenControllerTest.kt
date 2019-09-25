@@ -2,14 +2,10 @@ package org.simple.clinic.editpatient
 
 import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -43,7 +39,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
@@ -101,15 +96,6 @@ class PatientEditScreenControllerTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
-
-    whenever(patientRepository.updatePhoneNumberForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(eq(patient.uuid), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(patient.uuid, address)).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePatient(patient)).thenReturn(Completable.complete())
-
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
@@ -130,14 +116,6 @@ class PatientEditScreenControllerTest {
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
-
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
-    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
@@ -160,14 +138,6 @@ class PatientEditScreenControllerTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
-    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
-
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
@@ -189,15 +159,6 @@ class PatientEditScreenControllerTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
-
-    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
-
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
@@ -218,14 +179,6 @@ class PatientEditScreenControllerTest {
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
-
-    whenever(patientRepository.patient(any())).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(any())).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(phoneNumber.toOptional()))
-    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
@@ -255,10 +208,6 @@ class PatientEditScreenControllerTest {
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
-
-    whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
 
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditSaveClicked())
@@ -344,10 +293,6 @@ class PatientEditScreenControllerTest {
       inputEvents: List<UiEvent>,
       shouldShowConfirmDiscardChangesPopup: Boolean
   ) {
-    whenever(patientRepository.patient(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPatient.toOptional()))
-    whenever(patientRepository.phoneNumber(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
-    whenever(patientRepository.address(existingSavedAddress.uuid)).thenReturn(Observable.just(existingSavedAddress.toOptional()))
-
     uiEvents.onNext(PatientEditScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditBackClicked())

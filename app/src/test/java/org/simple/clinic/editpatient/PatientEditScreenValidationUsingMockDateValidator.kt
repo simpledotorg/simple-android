@@ -180,83 +180,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
 
   @Suppress("Unused")
   private fun `params for saving patient on save clicked`(): List<List<Any?>> {
-
-    fun generatePatientProfile(shouldAddNumber: Boolean, shouldHaveAge: Boolean): PatientProfile {
-      val patientUuid = UUID.randomUUID()
-      val addressUuid = UUID.randomUUID()
-
-      val patient = if (shouldHaveAge) {
-        PatientMocker.patient(
-            uuid = patientUuid,
-            age = Age(20, Instant.now(utcClock)),
-            dateOfBirth = null,
-            addressUuid = addressUuid)
-
-      } else {
-        PatientMocker.patient(
-            uuid = patientUuid,
-            age = null,
-            dateOfBirth = LocalDate.now(utcClock),
-            addressUuid = addressUuid
-        )
-      }
-
-      return PatientProfile(
-          patient = patient,
-          address = PatientMocker.address(uuid = addressUuid),
-          phoneNumbers = if (shouldAddNumber) listOf(PatientMocker.phoneNumber(patientUuid = patientUuid)) else emptyList(),
-          businessIds = emptyList()
-      )
-    }
-
-    fun generateTestData(
-        patientProfile: PatientProfile,
-        numberValidationResult: PhoneNumberValidator.Result = VALID,
-        userInputDateOfBirthValidationResult: UserInputDateValidator.Result = Valid(LocalDate.parse("1947-01-01")),
-        advanceClockBy: Duration = Duration.ZERO,
-        inputEvents: List<UiEvent>,
-        shouldSavePatient: Boolean,
-        createExpectedPatient: (Patient) -> Patient = { it },
-        createExpectedAddress: (PatientAddress) -> PatientAddress = { it },
-        createExpectedPhoneNumber: (UUID, PatientPhoneNumber?) -> PatientPhoneNumber? = { id, phoneNumber -> phoneNumber }
-    ): List<Any?> {
-
-      val expectedPatientPhoneNumber = if (shouldSavePatient) {
-        val alreadySavedPhoneNumber = if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first()
-        createExpectedPhoneNumber(patientProfile.patient.uuid, alreadySavedPhoneNumber)
-
-      } else null
-
-      val preCreateInputEvents = listOf(
-          PatientEditPatientNameTextChanged(patientProfile.patient.fullName),
-          PatientEditDistrictTextChanged(patientProfile.address.district),
-          PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage ?: ""),
-          PatientEditStateTextChanged(patientProfile.address.state),
-          PatientEditGenderChanged(patientProfile.patient.gender),
-          PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: ""),
-
-          if (patientProfile.patient.age != null) {
-            PatientEditAgeTextChanged(patientProfile.patient.age!!.value.toString())
-          } else {
-            PatientEditDateOfBirthTextChanged(dateOfBirthFormat.format(patientProfile.patient.dateOfBirth!!))
-          }
-      )
-
-      return listOf(
-          patientProfile.patient,
-          patientProfile.address,
-          patientProfile.phoneNumbers.firstOrNull(),
-          numberValidationResult,
-          userInputDateOfBirthValidationResult,
-          advanceClockBy,
-          preCreateInputEvents + inputEvents,
-          shouldSavePatient,
-          if (shouldSavePatient) createExpectedPatient(patientProfile.patient) else null,
-          if (shouldSavePatient) createExpectedAddress(patientProfile.address) else null,
-          expectedPatientPhoneNumber
-      )
-    }
-
     val oneYear = Duration.ofDays(365L)
     val twoYears = oneYear.plus(oneYear)
 
@@ -527,6 +450,82 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditStateTextChanged(""),
                 PatientEditGenderChanged(Gender.Female)),
             shouldSavePatient = false)
+    )
+  }
+
+  private fun generatePatientProfile(shouldAddNumber: Boolean, shouldHaveAge: Boolean): PatientProfile {
+    val patientUuid = UUID.randomUUID()
+    val addressUuid = UUID.randomUUID()
+
+    val patient = if (shouldHaveAge) {
+      PatientMocker.patient(
+          uuid = patientUuid,
+          age = Age(20, Instant.now(utcClock)),
+          dateOfBirth = null,
+          addressUuid = addressUuid)
+
+    } else {
+      PatientMocker.patient(
+          uuid = patientUuid,
+          age = null,
+          dateOfBirth = LocalDate.now(utcClock),
+          addressUuid = addressUuid
+      )
+    }
+
+    return PatientProfile(
+        patient = patient,
+        address = PatientMocker.address(uuid = addressUuid),
+        phoneNumbers = if (shouldAddNumber) listOf(PatientMocker.phoneNumber(patientUuid = patientUuid)) else emptyList(),
+        businessIds = emptyList()
+    )
+  }
+
+  private fun generateTestData(
+      patientProfile: PatientProfile,
+      numberValidationResult: PhoneNumberValidator.Result = VALID,
+      userInputDateOfBirthValidationResult: UserInputDateValidator.Result = Valid(LocalDate.parse("1947-01-01")),
+      advanceClockBy: Duration = Duration.ZERO,
+      inputEvents: List<UiEvent>,
+      shouldSavePatient: Boolean,
+      createExpectedPatient: (Patient) -> Patient = { it },
+      createExpectedAddress: (PatientAddress) -> PatientAddress = { it },
+      createExpectedPhoneNumber: (UUID, PatientPhoneNumber?) -> PatientPhoneNumber? = { _, phoneNumber -> phoneNumber }
+  ): List<Any?> {
+    val expectedPatientPhoneNumber = if (shouldSavePatient) {
+      val alreadySavedPhoneNumber = if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first()
+      createExpectedPhoneNumber(patientProfile.patient.uuid, alreadySavedPhoneNumber)
+    } else {
+      null
+    }
+
+    val preCreateInputEvents = listOf(
+        PatientEditPatientNameTextChanged(patientProfile.patient.fullName),
+        PatientEditDistrictTextChanged(patientProfile.address.district),
+        PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage ?: ""),
+        PatientEditStateTextChanged(patientProfile.address.state),
+        PatientEditGenderChanged(patientProfile.patient.gender),
+        PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: ""),
+
+        if (patientProfile.patient.age != null) {
+          PatientEditAgeTextChanged(patientProfile.patient.age!!.value.toString())
+        } else {
+          PatientEditDateOfBirthTextChanged(dateOfBirthFormat.format(patientProfile.patient.dateOfBirth!!))
+        }
+    )
+
+    return listOf(
+        patientProfile.patient,
+        patientProfile.address,
+        patientProfile.phoneNumbers.firstOrNull(),
+        numberValidationResult,
+        userInputDateOfBirthValidationResult,
+        advanceClockBy,
+        preCreateInputEvents + inputEvents,
+        shouldSavePatient,
+        if (shouldSavePatient) createExpectedPatient(patientProfile.patient) else null,
+        if (shouldSavePatient) createExpectedAddress(patientProfile.address) else null,
+        expectedPatientPhoneNumber
     )
   }
 }

@@ -8,7 +8,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -38,7 +37,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
@@ -295,22 +293,64 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
     )
   }
 
+  data class ValidateFieldsTestParams(
+      val alreadyPresentPhoneNumber: PatientPhoneNumber?,
+      val name: String,
+      val numberValidationResult: PhoneNumberValidator.Result,
+      val colonyOrVillage: String,
+      val district: String,
+      val state: String,
+      val age: String?,
+      val userInputDateOfBirthValidationResult: UserInputDateValidator.Result?,
+      val dateOfBirth: String?,
+      val expectedErrors: Set<PatientEditValidationError>
+  )
+
   @Test
   @Parameters(method = "params for validating phone numbers")
-  fun `when save is clicked, phone number should be validated`(testParams: ValidatePhoneNumberTestParams) {
+  fun `when save is clicked, invalid phone numbers should show appropriate errors`(testParams: ValidatePhoneNumberTestParams) {
     val (alreadyPresentPhoneNumber, numberValidationResult, expectedError) = testParams
 
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
 
-    whenever(patientRepository.patient(patient.uuid)).thenReturn(Observable.just(patient.toOptional()))
-    whenever(patientRepository.address(address.uuid)).thenReturn(Observable.just(address.toOptional()))
-    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
+    whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
+
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
+
+    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
+    uiEvents.onNext(PatientEditStateTextChanged("State"))
+    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    verify(screen).showValidationErrors(setOf(expectedError))
+  }
+
+  @Suppress("Unused")
+  private fun `params for validating phone numbers`(): List<ValidatePhoneNumberTestParams> {
+    return listOf(
+        ValidatePhoneNumberTestParams(null, LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_LONG),
+        ValidatePhoneNumberTestParams(null, LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_SHORT),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), BLANK, PHONE_NUMBER_EMPTY),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_SHORT),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_LONG)
+    )
+  }
+
+  @Test
+  fun `when save is clicked, valid phone number should not show errors`() {
+    val (alreadyPresentPhoneNumber, numberValidationResult) = null to BLANK
+
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
 
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
 
-    whenever(patientRepository.updatePhoneNumberForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(eq(patient.uuid), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
@@ -326,41 +366,12 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    if (expectedError == null) {
-      verify(screen, never()).showValidationErrors(any())
-    } else {
-      verify(screen).showValidationErrors(setOf(expectedError))
-    }
+    verify(screen, never()).showValidationErrors(any())
   }
 
-  @Suppress("Unused")
-  private fun `params for validating phone numbers`(): List<ValidatePhoneNumberTestParams> {
-    return listOf(
-        ValidatePhoneNumberTestParams(null, BLANK, null),
-        ValidatePhoneNumberTestParams(null, LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_LONG),
-        ValidatePhoneNumberTestParams(null, LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_SHORT),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), BLANK, PHONE_NUMBER_EMPTY),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_SHORT),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_LONG)
-    )
-  }
+  data class ValidatePhoneNumberTestParams(
+      val alreadyPresentPhoneNumber: PatientPhoneNumber?,
+      val numberValidationResult: PhoneNumberValidator.Result,
+      val expectedError: PatientEditValidationError
+  )
 }
-
-data class ValidateFieldsTestParams(
-    val alreadyPresentPhoneNumber: PatientPhoneNumber?,
-    val name: String,
-    val numberValidationResult: PhoneNumberValidator.Result,
-    val colonyOrVillage: String,
-    val district: String,
-    val state: String,
-    val age: String?,
-    val userInputDateOfBirthValidationResult: UserInputDateValidator.Result?,
-    val dateOfBirth: String?,
-    val expectedErrors: Set<PatientEditValidationError>
-)
-
-data class ValidatePhoneNumberTestParams(
-    val alreadyPresentPhoneNumber: PatientPhoneNumber?,
-    val numberValidationResult: PhoneNumberValidator.Result,
-    val expectedError: PatientEditValidationError?
-)

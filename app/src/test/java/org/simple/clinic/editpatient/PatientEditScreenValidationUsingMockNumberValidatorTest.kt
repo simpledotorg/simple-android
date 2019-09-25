@@ -277,7 +277,6 @@ class PatientEditScreenValidationUsingMockNumberValidatorTest {
     )
   }
 
-
   @Test
   @Parameters(method = "params for validating phone numbers")
   fun `when save is clicked, phone number should be validated`(

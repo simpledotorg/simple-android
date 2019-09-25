@@ -73,12 +73,12 @@ class PatientEditScreenCreatedTest {
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
-  fun `when screen is created then the existing patient data must be prefilled`(testData: TestData) {
-    val (patient, address, phoneNumber) = testData
+  fun `when screen is created then the existing patient data must be prefilled`(patientFormData: PatientFormData) {
+    val (patient, address, phoneNumber) = patientFormData
 
     uiEvents.onNext(PatientEditScreenCreated.fromPatientData(patient, address, phoneNumber))
 
-    if (testData.shouldSetColonyOrVillage) {
+    if (patientFormData.shouldSetColonyOrVillage) {
       verify(screen).setColonyOrVillage(address.colonyOrVillage!!)
     } else {
       verify(screen, never()).setColonyOrVillage(any())
@@ -89,19 +89,19 @@ class PatientEditScreenCreatedTest {
     verify(screen).setGender(patient.gender)
     verify(screen).setPatientName(patient.fullName)
 
-    if (testData.shouldSetPhoneNumber) {
+    if (patientFormData.shouldSetPhoneNumber) {
       verify(screen).setPatientPhoneNumber(phoneNumber!!.number)
     } else {
       verify(screen, never()).setPatientPhoneNumber(any())
     }
 
-    if (testData.shouldSetAge) {
+    if (patientFormData.shouldSetAge) {
       verify(screen).setPatientAge(any())
     } else {
       verify(screen, never()).setPatientAge(any())
     }
 
-    if (testData.shouldSetDateOfBirth) {
+    if (patientFormData.shouldSetDateOfBirth) {
       verify(screen).setPatientDateofBirth(patient.dateOfBirth!!)
     } else {
       verify(screen, never()).setPatientDateofBirth(any())
@@ -109,20 +109,20 @@ class PatientEditScreenCreatedTest {
   }
 
   @Suppress("Unused")
-  private fun `params for prefilling fields on screen created`(): List<TestData> {
+  private fun `params for prefilling fields on screen created`(): List<PatientFormData> {
     return listOf(
-        testDataWithAge(colonyOrVillage = "Colony", phoneNumber = "1111111111"),
-        testDataWithAge(colonyOrVillage = null, phoneNumber = "1111111111"),
-        testDataWithAge(colonyOrVillage = "", phoneNumber = "1111111111"),
-        testDataWithAge(colonyOrVillage = "Colony", phoneNumber = null),
-        testDataWithDateOfBirth(colonyOrVillage = "Colony", phoneNumber = null, dateOfBirth = LocalDate.parse("1995-11-28"))
+        patientFormDataWithAge(colonyOrVillage = "Colony", phoneNumber = "1111111111"),
+        patientFormDataWithAge(colonyOrVillage = null, phoneNumber = "1111111111"),
+        patientFormDataWithAge(colonyOrVillage = "", phoneNumber = "1111111111"),
+        patientFormDataWithAge(colonyOrVillage = "Colony", phoneNumber = null),
+        patientFormDataWithDateOfBirth(colonyOrVillage = "Colony", phoneNumber = null, dateOfBirth = LocalDate.parse("1995-11-28"))
     )
   }
 
-  private fun testDataWithAge(
+  private fun patientFormDataWithAge(
       colonyOrVillage: String?,
       phoneNumber: String?
-  ): TestData {
+  ): PatientFormData {
     val patientToReturn = PatientMocker.patient(
         age = Age(23, Instant.now(utcClock)),
         dateOfBirth = null
@@ -130,23 +130,23 @@ class PatientEditScreenCreatedTest {
     val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
     val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
 
-    return TestData(
+    return PatientFormData(
         patientToReturn,
         addressToReturn,
         phoneNumberToReturn
     )
   }
 
-  private fun testDataWithDateOfBirth(
+  private fun patientFormDataWithDateOfBirth(
       colonyOrVillage: String?,
       phoneNumber: String?,
       dateOfBirth: LocalDate
-  ): TestData {
+  ): PatientFormData {
     val patientToReturn = PatientMocker.patient(dateOfBirth = dateOfBirth, age = null)
     val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
     val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
 
-    return TestData(
+    return PatientFormData(
         patientToReturn,
         addressToReturn,
         phoneNumberToReturn
@@ -154,7 +154,7 @@ class PatientEditScreenCreatedTest {
   }
 }
 
-data class TestData(
+data class PatientFormData(
     val patient: Patient,
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?

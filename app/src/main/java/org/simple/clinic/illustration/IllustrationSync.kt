@@ -33,6 +33,9 @@ class IllustrationSync @Inject constructor(
   override fun syncConfig() = configProvider
 
   private fun saveIllustration(illustration: HomescreenIllustration) {
+    val illustrationsFile = File(illustrationsFolder, illustration.eventId)
+    if (illustrationsFile.exists()) return
+
     fileDownloadService.downloadFile(illustration.illustrationUrl)
         .enqueue(object : retrofit2.Callback<ResponseBody> {
           override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -41,7 +44,6 @@ class IllustrationSync @Inject constructor(
 
           override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
             response.body()?.byteStream()?.use { inputStream ->
-              val illustrationsFile = File(illustrationsFolder, illustration.eventId)
               fileOperations.createFileIfItDoesNotExist(illustrationsFile)
               illustrationsFile.outputStream().use { outputStream ->
                 inputStream.copyTo(outputStream)

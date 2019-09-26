@@ -32,6 +32,7 @@ import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DateOfBirthFocusChanged
 import org.simple.clinic.editpatient.DistrictChanged
 import org.simple.clinic.editpatient.EditPatientScreenCreated
+import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient.GenderChanged
 import org.simple.clinic.editpatient.NameChanged

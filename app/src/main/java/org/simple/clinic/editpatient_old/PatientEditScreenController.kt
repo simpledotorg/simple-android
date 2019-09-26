@@ -14,7 +14,6 @@ import org.simple.clinic.editpatient.ColonyOrVillageChanged
 import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DateOfBirthFocusChanged
 import org.simple.clinic.editpatient.DistrictChanged
-import org.simple.clinic.editpatient.EditPatientScreenCreated
 import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -31,9 +30,10 @@ import org.simple.clinic.editpatient.NameChanged
 import org.simple.clinic.editpatient.OngoingEditPatientEntry
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.editpatient.PatientEditBackClicked
+import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.PhoneNumberChanged
 import org.simple.clinic.editpatient.SaveClicked
+import org.simple.clinic.editpatient.ScreenCreated
 import org.simple.clinic.editpatient.StateChanged
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
@@ -92,7 +92,7 @@ class PatientEditScreenController @Inject constructor(
 
   private fun prefillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<EditPatientScreenCreated>()
+        .ofType<ScreenCreated>()
         .take(1)
         .map { (patient, address, phoneNumber) ->
           { ui: Ui -> prefillFormFields(ui, patient, phoneNumber, address) }
@@ -125,7 +125,7 @@ class PatientEditScreenController @Inject constructor(
       )
 
       val ongoingEntryChanges = Observables.combineLatest(
-          events.mapType<EditPatientScreenCreated, UUID> { it.patient.uuid },
+          events.mapType<ScreenCreated, UUID> { it.patient.uuid },
           events.mapType<NameChanged, String> { it.name.trim() },
           events.mapType<GenderChanged, Gender> { it.gender },
           events.mapType<ColonyOrVillageChanged, String> { it.colonyOrVillage.trim() },
@@ -152,7 +152,7 @@ class PatientEditScreenController @Inject constructor(
   private fun showValidationErrorsOnSaveClick(events: Observable<UiEvent>): Observable<UiChange> {
     val ongoingEditPatientEntryChanges = events.ofType<OngoingEditPatientEntryChanged>()
 
-    val savedPhoneNumber = events.ofType<EditPatientScreenCreated>()
+    val savedPhoneNumber = events.ofType<ScreenCreated>()
         .map { it.phoneNumber.toOptional() }
         .take(1)
         .replay()
@@ -194,7 +194,7 @@ class PatientEditScreenController @Inject constructor(
     val saveClicks = events.ofType<SaveClicked>()
 
     val screenCreatedStream = events
-        .ofType<EditPatientScreenCreated>()
+        .ofType<ScreenCreated>()
 
     val patientUuidStream = screenCreatedStream
         .map { it.patient.uuid }
@@ -365,14 +365,14 @@ class PatientEditScreenController @Inject constructor(
 
   private fun closeScreenWithoutSaving(events: Observable<UiEvent>): Observable<UiChange> {
     val savedOngoingEntry = events
-        .mapType<EditPatientScreenCreated, OngoingEditPatientEntry> { OngoingEditPatientEntry.from(it, dateOfBirthFormatter) }
+        .mapType<ScreenCreated, OngoingEditPatientEntry> { OngoingEditPatientEntry.from(it.patient, it.address, it.phoneNumber, dateOfBirthFormatter) }
 
     val ongoingEntryChanges = events
         .ofType<OngoingEditPatientEntryChanged>()
         .map { it.ongoingEditPatientEntry }
 
     val hasEntryChangedStream = events
-        .ofType<PatientEditBackClicked>()
+        .ofType<BackClicked>()
         .withLatestFrom(ongoingEntryChanges) { _, entry -> entry }
         .withLatestFrom(savedOngoingEntry)
         .map { (ongoingEntry, savedOngoingEntry) -> ongoingEntry != savedOngoingEntry }

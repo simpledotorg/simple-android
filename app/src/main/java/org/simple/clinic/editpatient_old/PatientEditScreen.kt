@@ -31,7 +31,7 @@ import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DateOfBirthFocusChanged
 import org.simple.clinic.editpatient.DistrictChanged
-import org.simple.clinic.editpatient.EditPatientScreenCreated
+import org.simple.clinic.editpatient.ScreenCreated
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient.EditPatientValidationError
@@ -47,7 +47,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient.GenderChanged
 import org.simple.clinic.editpatient.NameChanged
-import org.simple.clinic.editpatient.PatientEditBackClicked
+import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.PhoneNumberChanged
 import org.simple.clinic.editpatient.SaveClicked
 import org.simple.clinic.editpatient.StateChanged
@@ -151,7 +151,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun screenCreates(): Observable<UiEvent> {
     val key = screenRouter.key<EditPatientScreenKey>(this)
-    val patientEditScreenCreated = EditPatientScreenCreated
+    val patientEditScreenCreated = ScreenCreated
         .from(key.patient, key.address, key.phoneNumber)
     return Observable.just(patientEditScreenCreated)
   }
@@ -194,7 +194,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     return RxView.clicks(backButton)
         .mergeWith(hardwareBackKeyClicks)
-        .map { PatientEditBackClicked() }
+        .map { BackClicked() }
   }
 
   private fun genderChanges(): Observable<UiEvent> {

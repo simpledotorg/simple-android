@@ -21,6 +21,8 @@ import org.simple.clinic.util.TestUtcClock
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)
 class EditPatientScreenCreatedTest {
@@ -30,6 +32,7 @@ class EditPatientScreenCreatedTest {
 
   private val ui: EditPatientUi = mock()
   private val utcClock: TestUtcClock = TestUtcClock()
+  private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
@@ -137,7 +140,7 @@ class EditPatientScreenCreatedTest {
 
     MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         Observable.never<EditPatientEvent>(),
-        EditPatientModel,
+        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         editPatientInit,
         editPatientUpdate,
         EditPatientEffectHandler.createEffectHandler(ui, TestUserClock()),

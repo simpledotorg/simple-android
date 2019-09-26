@@ -17,6 +17,11 @@ object EditPatientEffectHandler {
         .addConsumer(PrefillFormEffect::class.java) { (patient, address, phoneNumber) ->
           prefillFormFields(ui, patient, address, phoneNumber, userClock)
         }
+        .addConsumer(HideValidationErrorsEffect::class.java) { ui.hideValidationErrors(it.validationErrors) }
+        .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java) { ui.showDatePatternInDateOfBirthLabel() }
+        .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java) { ui.hideDatePatternInDateOfBirthLabel() }
+        .addAction(GoBackEffect::class.java) { ui.goBack() }
+        .addAction(ShowDiscardChangesAlertEffect::class.java) { ui.showDiscardChangesAlert() }
         .build()
   }
 

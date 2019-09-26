@@ -33,10 +33,6 @@ class EditPatientUpdate : Update<EditPatientModel, EditPatientEvent, EditPatient
     return when (event) {
       is DateOfBirthFocusChanged -> dispatchDatePatternInLabelEffect(event)
 
-      is ScreenCreated -> {
-        TODO()
-      }
-
       is NameChanged -> {
         next(
             model.updateName(event.name),

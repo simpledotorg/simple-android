@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -531,18 +532,310 @@ class PatientEditScreenValidationUsingMockDateValidator {
         expectedPatientPhoneNumber
     )
   }
-}
 
-data class SavePatientTestParams(
-    val existingSavedPatient: Patient,
-    val existingSavedAddress: PatientAddress,
-    val existingSavedPhoneNumber: PatientPhoneNumber?,
-    val numberValidationResult: PhoneNumberValidator.Result,
-    val userInputDateOfBirthValidationResult: UserInputDateValidator.Result,
-    val advanceClockBy: Duration,
-    val inputEvents: List<UiEvent>,
-    val shouldSavePatient: Boolean,
-    val expectedSavedPatient: Patient?,
-    val expectedSavedPatientAddress: PatientAddress?,
-    val expectedSavedPatientPhoneNumber: PatientPhoneNumber?
-)
+  data class SavePatientTestParams(
+      val existingSavedPatient: Patient,
+      val existingSavedAddress: PatientAddress,
+      val existingSavedPhoneNumber: PatientPhoneNumber?,
+      val numberValidationResult: PhoneNumberValidator.Result,
+      val userInputDateOfBirthValidationResult: UserInputDateValidator.Result,
+      val advanceClockBy: Duration,
+      val inputEvents: List<UiEvent>,
+      val shouldSavePatient: Boolean,
+      val expectedSavedPatient: Patient?,
+      val expectedSavedPatientAddress: PatientAddress?,
+      val expectedSavedPatientPhoneNumber: PatientPhoneNumber?
+  )
+
+  @Test
+  @Parameters(method = "params for validating all fields on save clicks")
+  fun `when save is clicked, all fields should be validated`(validateFieldsTestParams: ValidateFieldsTestParams) {
+    val (alreadyPresentPhoneNumber,
+        name,
+        colonyOrVillage,
+        district,
+        state,
+        age,
+        userInputDateOfBirthValidationResult,
+        dateOfBirth,
+        expectedErrors,
+        enteredPhoneNumber
+    ) = validateFieldsTestParams
+
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val patientUuid = patient.uuid
+    val phoneNumber = alreadyPresentPhoneNumber?.copy(patientUuid = patientUuid)
+
+    whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
+
+    if (userInputDateOfBirthValidationResult != null) {
+      whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
+    }
+
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+
+    uiEvents.onNext(PatientEditPatientNameTextChanged(name))
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(enteredPhoneNumber))
+    uiEvents.onNext(PatientEditColonyOrVillageChanged(colonyOrVillage))
+    uiEvents.onNext(PatientEditDistrictTextChanged(district))
+    uiEvents.onNext(PatientEditStateTextChanged(state))
+    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+
+    if (age != null) {
+      uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
+      uiEvents.onNext(PatientEditAgeTextChanged(age))
+    }
+
+    if (dateOfBirth != null) {
+      uiEvents.onNext(PatientEditAgeTextChanged(""))
+      uiEvents.onNext(PatientEditDateOfBirthTextChanged(dateOfBirth))
+    }
+
+    if (age == null && dateOfBirth == null) {
+      uiEvents.onNext(PatientEditAgeTextChanged(""))
+    }
+
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    if (expectedErrors.isNotEmpty()) {
+      // This is order dependent because finding the first field
+      // with error is only possible once the errors are set.
+      val inOrder = inOrder(screen)
+
+      inOrder.verify(screen).showValidationErrors(expectedErrors)
+      inOrder.verify(screen).scrollToFirstFieldWithError()
+
+    } else {
+      verify(screen, never()).showValidationErrors(any())
+      verify(screen, never()).scrollToFirstFieldWithError()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for validating all fields on save clicks`(): List<ValidateFieldsTestParams> {
+    return listOf(
+        ValidateFieldsTestParams(
+            PatientMocker.phoneNumber(),
+            "",
+            "",
+            "",
+            "",
+            "1",
+            null,
+            null,
+            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY),
+            ""
+        ),
+        ValidateFieldsTestParams(
+            null,
+            "",
+            "",
+            "",
+            "",
+            "",
+            null,
+            null,
+            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            enteredPhoneNumber = "1234567890"
+        ),
+        ValidateFieldsTestParams(
+            PatientMocker.phoneNumber(),
+            "",
+            "Colony",
+            "",
+            "",
+            "1",
+            null,
+            null,
+            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY),
+            enteredPhoneNumber = "1234"
+        ),
+        ValidateFieldsTestParams(
+            null,
+            "",
+            "Colony",
+            "",
+            "",
+            "",
+            null,
+            null,
+            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            enteredPhoneNumber = "1234"
+        ),
+        ValidateFieldsTestParams(
+            PatientMocker.phoneNumber(),
+            "Name",
+            "",
+            "District",
+            "",
+            "1",
+            null,
+            null,
+            setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY),
+            "12345678901234"
+        ),
+        ValidateFieldsTestParams(
+            null,
+            "Name",
+            "",
+            "District",
+            "",
+            null,
+            UserInputDateValidator.Result.Invalid.InvalidPattern,
+            "01/01/2000",
+            setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY, INVALID_DATE_OF_BIRTH),
+            "12345678901234"
+        ),
+        ValidateFieldsTestParams(
+            PatientMocker.phoneNumber(),
+            "",
+            "Colony",
+            "District",
+            "",
+            null,
+            null,
+            null,
+            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            "1234567890"
+        ),
+        ValidateFieldsTestParams(
+            null,
+            "",
+            "Colony",
+            "District",
+            "",
+            null,
+            UserInputDateValidator.Result.Invalid.DateIsInFuture,
+            "01/01/2000",
+            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE),
+            "1234567890"
+        ),
+        ValidateFieldsTestParams(
+            null,
+            "",
+            "Colony",
+            "District",
+            "State",
+            "",
+            null,
+            null,
+            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            "12334567890"
+        ),
+        ValidateFieldsTestParams(
+            PatientMocker.phoneNumber(),
+            "Name",
+            "Colony",
+            "District",
+            "State",
+            "1",
+            null,
+            null,
+            emptySet(),
+            "1234567890"
+        ),
+        ValidateFieldsTestParams(
+            null,
+            "Name",
+            "Colony",
+            "District",
+            "State",
+            null,
+            Valid(LocalDate.parse("1947-01-01")),
+            "01/01/2000",
+            emptySet(),
+            "1234567890"
+        )
+    )
+  }
+
+  data class ValidateFieldsTestParams(
+      val alreadyPresentPhoneNumber: PatientPhoneNumber?,
+      val name: String,
+      val colonyOrVillage: String,
+      val district: String,
+      val state: String,
+      val age: String?,
+      val userInputDateOfBirthValidationResult: UserInputDateValidator.Result?,
+      val dateOfBirth: String?,
+      val expectedErrors: Set<PatientEditValidationError>,
+      val enteredPhoneNumber: String = ""
+  )
+
+  @Test
+  @Parameters(method = "params for validating phone numbers")
+  fun `when save is clicked, invalid phone numbers should show appropriate errors`(testParams: ValidatePhoneNumberTestParams) {
+    val (alreadyPresentPhoneNumber,
+        enteredPhoneNumber,
+        expectedError
+    ) = testParams
+
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val patientUuid = patient.uuid
+
+    whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
+
+    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
+    uiEvents.onNext(PatientEditStateTextChanged("State"))
+    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(enteredPhoneNumber))
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    verify(screen).showValidationErrors(setOf(expectedError))
+  }
+
+  @Suppress("Unused")
+  private fun `params for validating phone numbers`(): List<ValidatePhoneNumberTestParams> {
+    return listOf(
+        ValidatePhoneNumberTestParams(null, "1234", PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT),
+        ValidatePhoneNumberTestParams(null, "12345678901234", PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "12345678901234", PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "", PatientEditValidationError.PHONE_NUMBER_EMPTY),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "1234", PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT)
+    )
+  }
+
+  data class ValidatePhoneNumberTestParams(
+      val alreadyPresentPhoneNumber: PatientPhoneNumber?,
+      val enteredPhoneNumber: String,
+      val expectedError: PatientEditValidationError
+  )
+
+  @Test
+  fun `when save is clicked, valid phone number should not show errors`() {
+    val (alreadyPresentPhoneNumber, numberValidationResult) = null to BLANK
+
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+
+    whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
+
+    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
+    uiEvents.onNext(PatientEditStateTextChanged("State"))
+    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    verify(screen, never()).showValidationErrors(any())
+  }
+}

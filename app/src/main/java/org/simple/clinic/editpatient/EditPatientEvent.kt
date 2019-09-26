@@ -1,32 +1,9 @@
 package org.simple.clinic.editpatient
 
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.widgets.UiEvent
 
 sealed class EditPatientEvent : UiEvent
-
-data class ScreenCreated( // TODO(rj): 2019-09-26 Move this class to 'editpatient_old' package
-    val patient: Patient,
-    val address: PatientAddress,
-    val phoneNumber: PatientPhoneNumber?
-) : EditPatientEvent() {
-  companion object {
-    fun from(
-        patient: Patient,
-        address: PatientAddress,
-        phoneNumber: PatientPhoneNumber?
-    ): ScreenCreated {
-      return ScreenCreated(
-          patient,
-          address,
-          phoneNumber
-      )
-    }
-  }
-}
 
 data class NameChanged(val name: String) : EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Patient Name Text Changed"

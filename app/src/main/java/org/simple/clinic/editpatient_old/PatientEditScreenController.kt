@@ -10,6 +10,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.editpatient.AgeChanged
+import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.ColonyOrVillageChanged
 import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DateOfBirthFocusChanged
@@ -30,10 +31,8 @@ import org.simple.clinic.editpatient.NameChanged
 import org.simple.clinic.editpatient.OngoingEditPatientEntry
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.PhoneNumberChanged
 import org.simple.clinic.editpatient.SaveClicked
-import org.simple.clinic.editpatient.ScreenCreated
 import org.simple.clinic.editpatient.StateChanged
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth

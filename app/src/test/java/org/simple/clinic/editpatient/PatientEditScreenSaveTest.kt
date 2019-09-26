@@ -87,6 +87,109 @@ class PatientEditScreenSaveTest {
   }
 
   @Test
+  fun `when save is clicked, patient name should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
+    uiEvents.onNext(PatientEditStateTextChanged("State"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+
+    uiEvents.onNext(PatientEditPatientNameTextChanged(""))
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    verify(screen).showValidationErrors(setOf(FULL_NAME_EMPTY))
+  }
+
+  @Test
+  fun `when save is clicked, the colony should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
+    uiEvents.onNext(PatientEditStateTextChanged("State"))
+    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+
+    uiEvents.onNext(PatientEditColonyOrVillageChanged(""))
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    verify(screen).showValidationErrors(setOf(COLONY_OR_VILLAGE_EMPTY))
+  }
+
+  @Test
+  fun `when save is clicked, the district should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(PatientEditStateTextChanged("State"))
+    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+
+    uiEvents.onNext(PatientEditDistrictTextChanged(""))
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    verify(screen).showValidationErrors(setOf(DISTRICT_EMPTY))
+  }
+
+  @Test
+  fun `when save is clicked, the state should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
+    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+
+    uiEvents.onNext(PatientEditStateTextChanged(""))
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    verify(screen).showValidationErrors(setOf(STATE_EMPTY))
+  }
+
+  @Test
+  fun `when save is clicked, the age should be validated`() {
+    val patient = PatientMocker.patient()
+    val address = PatientMocker.address()
+    val phoneNumber: PatientPhoneNumber? = null
+
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
+    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditStateTextChanged("State"))
+    uiEvents.onNext(PatientEditAgeTextChanged(""))
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    verify(screen).showValidationErrors(setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
+  }
+
+  @Test
   @Parameters(method = "params for date of birth should be validated")
   fun `when save is clicked, the date of birth should be validated`(
       dateOfBirthTestParams: DateOfBirthTestParams

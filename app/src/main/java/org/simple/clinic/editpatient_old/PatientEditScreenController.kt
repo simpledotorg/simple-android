@@ -10,6 +10,9 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.editpatient.EditPatientUi
+import org.simple.clinic.editpatient.OngoingEditPatientEntry
+import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
+import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.editpatient.OngoingEditPatientEntryChanged
 import org.simple.clinic.editpatient.PatientEditAgeTextChanged
 import org.simple.clinic.editpatient.PatientEditBackClicked
@@ -23,8 +26,6 @@ import org.simple.clinic.editpatient.PatientEditPhoneNumberTextChanged
 import org.simple.clinic.editpatient.PatientEditSaveClicked
 import org.simple.clinic.editpatient.PatientEditScreenCreated
 import org.simple.clinic.editpatient.PatientEditStateTextChanged
-import org.simple.clinic.editpatient_old.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
-import org.simple.clinic.editpatient_old.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE

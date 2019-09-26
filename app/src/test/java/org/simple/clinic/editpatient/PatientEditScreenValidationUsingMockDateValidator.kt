@@ -15,8 +15,16 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -621,7 +629,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "1",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY),
+            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY),
             ""
         ),
         ValidateFieldsTestParams(
@@ -633,7 +641,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            setOf(FULL_NAME_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
             enteredPhoneNumber = "1234567890"
         ),
         ValidateFieldsTestParams(
@@ -645,7 +653,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "1",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY),
+            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY),
             enteredPhoneNumber = "1234"
         ),
         ValidateFieldsTestParams(
@@ -657,7 +665,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT, PatientEditValidationError.DISTRICT_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
             enteredPhoneNumber = "1234"
         ),
         ValidateFieldsTestParams(
@@ -669,7 +677,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "1",
             null,
             null,
-            setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY),
+            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY),
             "12345678901234"
         ),
         ValidateFieldsTestParams(
@@ -679,9 +687,9 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "District",
             "",
             null,
-            UserInputDateValidator.Result.Invalid.InvalidPattern,
+            InvalidPattern,
             "24/24/2000",
-            setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY, INVALID_DATE_OF_BIRTH),
+            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY, INVALID_DATE_OF_BIRTH),
             "12345678901234"
         ),
         ValidateFieldsTestParams(
@@ -693,7 +701,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             null,
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            setOf(FULL_NAME_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
             "1234567890"
         ),
         ValidateFieldsTestParams(
@@ -703,9 +711,9 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "District",
             "",
             null,
-            UserInputDateValidator.Result.Invalid.DateIsInFuture,
+            DateIsInFuture,
             "01/01/$nextYear",
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE),
+            setOf(FULL_NAME_EMPTY, STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE),
             "1234567890"
         ),
         ValidateFieldsTestParams(
@@ -717,7 +725,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             null,
             null,
-            setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+            setOf(FULL_NAME_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
             "12334567890"
         ),
         ValidateFieldsTestParams(
@@ -794,11 +802,11 @@ class PatientEditScreenValidationUsingMockDateValidator {
   @Suppress("Unused")
   private fun `params for validating phone numbers`(): List<ValidatePhoneNumberTestParams> {
     return listOf(
-        ValidatePhoneNumberTestParams(null, "1234", PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT),
-        ValidatePhoneNumberTestParams(null, "12345678901234", PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "12345678901234", PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "", PatientEditValidationError.PHONE_NUMBER_EMPTY),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "1234", PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT)
+        ValidatePhoneNumberTestParams(null, "1234", PHONE_NUMBER_LENGTH_TOO_SHORT),
+        ValidatePhoneNumberTestParams(null, "12345678901234", PHONE_NUMBER_LENGTH_TOO_LONG),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "12345678901234", PHONE_NUMBER_LENGTH_TOO_LONG),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "", PHONE_NUMBER_EMPTY),
+        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "1234", PHONE_NUMBER_LENGTH_TOO_SHORT)
     )
   }
 

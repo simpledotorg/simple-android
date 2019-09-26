@@ -17,7 +17,6 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -38,8 +37,6 @@ class PatientEditScreenCreatedTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val ui: EditPatientUi = mock()
-  private val patientRepository: PatientRepository = mock()
-  private val errorConsumer: (Throwable) -> Unit = { throw it }
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
@@ -47,7 +44,7 @@ class PatientEditScreenCreatedTest {
   @Before
   fun setUp() {
     val controller = PatientEditScreenController(
-        patientRepository,
+        mock(),
         IndianPhoneNumberValidator(),
         utcClock,
         TestUserClock(),
@@ -56,7 +53,7 @@ class PatientEditScreenCreatedTest {
 
     uiEvents
         .compose(controller)
-        .subscribe({ uiChange -> uiChange(ui) }, { e -> errorConsumer(e) })
+        .subscribe({ uiChange -> uiChange(ui) }, { e -> throw e })
   }
 
   @Test

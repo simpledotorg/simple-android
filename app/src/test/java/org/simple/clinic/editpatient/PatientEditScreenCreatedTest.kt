@@ -4,7 +4,6 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -26,6 +25,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
@@ -42,22 +42,18 @@ class PatientEditScreenCreatedTest {
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private lateinit var dobValidator: UserInputDateValidator
 
   @Before
   fun setUp() {
     screen = mock()
     patientRepository = mock()
-    dobValidator = mock()
-
-    whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(utcClock))
 
     val controller = PatientEditScreenController(
         patientRepository,
         IndianPhoneNumberValidator(),
         utcClock,
         TestUserClock(),
-        dobValidator,
+        UserInputDateValidator(ZoneOffset.UTC, dateOfBirthFormat),
         dateOfBirthFormat)
 
     errorConsumer = { throw it }

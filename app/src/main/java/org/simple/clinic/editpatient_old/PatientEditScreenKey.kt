@@ -1,4 +1,4 @@
-package org.simple.clinic.editpatient
+package org.simple.clinic.editpatient_old
 
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
@@ -27,5 +27,5 @@ data class PatientEditScreenKey(
   @IgnoredOnParcel
   override val analyticsName = "Edit Patient"
 
-  override fun layoutRes() = R.layout.screen_patient_edit
+  override fun layoutRes() = R.layout.screen_patient_edit_old
 }

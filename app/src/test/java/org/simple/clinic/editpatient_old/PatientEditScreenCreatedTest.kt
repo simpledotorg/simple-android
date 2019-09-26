@@ -1,4 +1,4 @@
-package org.simple.clinic.editpatient
+package org.simple.clinic.editpatient_old
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock

@@ -114,8 +114,31 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
     return errors
   }
 
-  sealed class EitherAgeOrDateOfBirth : Parcelable {
+  fun updateName(name: String): OngoingEditPatientEntry =
+      copy(name = name)
 
+  fun updateGender(gender: Gender): OngoingEditPatientEntry =
+      copy(gender = gender)
+
+  fun updatePhoneNumber(phoneNumber: String): OngoingEditPatientEntry =
+      copy(phoneNumber = phoneNumber)
+
+  fun updateColonyOrVillage(colonyOrVillage: String): OngoingEditPatientEntry =
+      copy(colonyOrVillage = colonyOrVillage)
+
+  fun updateDistrict(district: String): OngoingEditPatientEntry =
+      copy(district = district)
+
+  fun updateState(state: String): OngoingEditPatientEntry =
+      copy(state = state)
+
+  fun updateAge(age: String): OngoingEditPatientEntry =
+      copy(ageOrDateOfBirth = EntryWithAge(age))
+
+  fun updateDateOfBirth(dateOfBirth: String): OngoingEditPatientEntry =
+      copy(ageOrDateOfBirth = EntryWithDateOfBirth(dateOfBirth))
+
+  sealed class EitherAgeOrDateOfBirth : Parcelable {
     @Parcelize
     data class EntryWithAge(val age: String) : EitherAgeOrDateOfBirth()
 

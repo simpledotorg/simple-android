@@ -25,7 +25,7 @@ class HomescreenIllustrationModule {
     return listOf(
         HomescreenIllustration(
             eventId = "valmiki-jayanti.png",
-            illustrationUrl = "https://firebasestorage.googleapis.com/v0/b/simple-org.appspot.com/o/image%20(4).png?alt=media&token=1b123ed1-e644-46d4-b4cd-f0ed54a90420",
+            illustrationUrl = "https://firebasestorage.googleapis.com/v0/b/simple-org.appspot.com/o/valmiki.png?alt=media&token=15a1f9da-3712-403b-aa13-e51cba37ef88",
             from = DayOfMonth(20, Month.SEPTEMBER),
             to = DayOfMonth(30, Month.SEPTEMBER)
         )

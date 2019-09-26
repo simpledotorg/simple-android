@@ -1,6 +1,6 @@
 package org.simple.clinic.editpatient_old
 
-enum class PatientEditValidationError(val analyticsName: String) {
+enum class EditPatientValidationError(val analyticsName: String) {
   FULL_NAME_EMPTY("Patient Edit:Name is empty"),
   PHONE_NUMBER_EMPTY("Patient Edit:Phone Number is empty"),
   PHONE_NUMBER_LENGTH_TOO_SHORT("Patient Edit:Phone Number is less than 6 digits"),

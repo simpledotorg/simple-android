@@ -4,17 +4,17 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.editpatient_old.PatientEditValidationError
-import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient_old.PatientEditValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient_old.PatientEditValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient_old.PatientEditValidationError.INVALID_DATE_OF_BIRTH
-import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient_old.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError
+import org.simple.clinic.editpatient_old.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.editpatient_old.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.editpatient_old.EditPatientValidationError.DISTRICT_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.editpatient_old.EditPatientValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.editpatient_old.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.editpatient_old.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -68,8 +68,8 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
       alreadySavedNumber: PatientPhoneNumber?,
       numberValidator: PhoneNumberValidator,
       dobValidator: UserInputDateValidator
-  ): Set<PatientEditValidationError> {
-    val errors = mutableSetOf<PatientEditValidationError>()
+  ): Set<EditPatientValidationError> {
+    val errors = mutableSetOf<EditPatientValidationError>()
 
     if (name.isBlank()) {
       errors.add(FULL_NAME_EMPTY)

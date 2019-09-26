@@ -25,11 +25,21 @@ class MobiusTestFixture<M: Any, E, F>(
     events: Observable<E>,
     defaultModel: M,
     initFunction: InitFunction<M, F>?,
-    updateFunction: UpdateFunction<M, E, F>,
+    update: Update<M, E, F>,
     effectHandler: EffectHandler<F, E>,
     modelUpdateListener: ModelUpdateListener<M>,
     requiresLogging: Boolean = false
 ) {
+  constructor(
+      events: Observable<E>,
+      defaultModel: M,
+      initFunction: InitFunction<M, F>?,
+      updateFunction: UpdateFunction<M, E, F>,
+      effectHandler: EffectHandler<F, E>,
+      modelUpdateListener: ModelUpdateListener<M>,
+      requiresLogging: Boolean = false
+  ) : this(events, defaultModel, initFunction, Update { model: M, event: E -> updateFunction(model, event) }, effectHandler, modelUpdateListener, requiresLogging)
+
   private val eventsDisposable: Disposable
   private val controller: MobiusLoop.Controller<M, E>
 
@@ -44,7 +54,7 @@ class MobiusTestFixture<M: Any, E, F>(
     val loop = createLoop(
         eventSource,
         spyingInitFunction(initFunction, modelUpdateListener),
-        spyingUpdateFunction(updateFunction, modelUpdateListener),
+        spyingUpdate(update, modelUpdateListener),
         effectHandler,
         immediateWorkRunner,
         requiresLogging
@@ -67,13 +77,11 @@ class MobiusTestFixture<M: Any, E, F>(
   private fun createLoop(
       eventSource: EventSource<E>,
       initFunction: InitFunction<M, F>,
-      updateFunction: UpdateFunction<M, E, F>,
+      update: Update<M, E, F>,
       effectHandlerListener: EffectHandler<F, E>,
       workRunner: WorkRunner,
       requiresLogging: Boolean
   ): MobiusLoop.Builder<M, E, F> {
-    val update = Update<M, E, F> { model, event -> updateFunction(model, event) }
-
     return RxMobius
         .loop(update, effectHandlerListener)
         .init(initFunction)
@@ -94,12 +102,12 @@ class MobiusTestFixture<M: Any, E, F>(
     }
   }
 
-  private fun spyingUpdateFunction(
-      updateFunction: UpdateFunction<M, E, F>,
+  private fun spyingUpdate(
+      update: Update<M, E, F>,
       modelUpdateListener: ModelUpdateListener<M>
-  ): (M, E) -> Next<M, F> {
-    return { model: M, event: E ->
-      updateFunction(model, event).also { next ->
+  ): Update<M, E, F> {
+    return Update { model, event ->
+      update.update(model, event).also { next ->
         if (next.hasModel()) {
           modelUpdateListener(next.modelUnsafe())
         }

@@ -98,8 +98,8 @@ class PatientEditScreenController @Inject constructor(
 
     val dateOfBirth = DateOfBirth.fromPatient(patient, userClock)
     when (dateOfBirth.type) {
-      DateOfBirth.Type.RECORDED -> ui.setPatientDateofBirth(dateOfBirth.date)
-      DateOfBirth.Type.GUESSED -> ui.setPatientAge(dateOfBirth.estimateAge(userClock))
+      DateOfBirth.Type.EXACT -> ui.setPatientDateofBirth(dateOfBirth.date)
+      DateOfBirth.Type.FROM_AGE -> ui.setPatientAge(dateOfBirth.estimateAge(userClock))
     }
   }
 

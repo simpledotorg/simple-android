@@ -2,8 +2,8 @@ package org.simple.clinic.patient
 
 import androidx.room.Embedded
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.patient.DateOfBirth.Type.GUESSED
-import org.simple.clinic.patient.DateOfBirth.Type.RECORDED
+import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
+import org.simple.clinic.patient.DateOfBirth.Type.EXACT
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.threeten.bp.LocalDate
@@ -30,7 +30,7 @@ data class DateOfBirth(
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
     fun fromDate(date: LocalDate): DateOfBirth {
-      return DateOfBirth(date, RECORDED)
+      return DateOfBirth(date, EXACT)
     }
 
     fun fromAge(age: Age, userClock: UserClock): DateOfBirth {
@@ -38,7 +38,7 @@ data class DateOfBirth(
 
       val guessedDateOfBirth = ageRecordedAtDate.minusYears(age.value.toLong()).toLocalDate()
 
-      return DateOfBirth(guessedDateOfBirth, GUESSED)
+      return DateOfBirth(guessedDateOfBirth, FROM_AGE)
     }
 
     fun fromPatient(patient: Patient, userClock: UserClock): DateOfBirth {
@@ -67,6 +67,6 @@ data class DateOfBirth(
   }
 
   enum class Type {
-    RECORDED, GUESSED
+    EXACT, FROM_AGE
   }
 }

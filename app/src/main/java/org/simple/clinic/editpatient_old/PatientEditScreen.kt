@@ -193,7 +193,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     return RxView.clicks(backButton)
         .mergeWith(hardwareBackKeyClicks)
-        .map { BackClicked() }
+        .map { BackClicked }
   }
 
   private fun genderChanges(): Observable<UiEvent> {

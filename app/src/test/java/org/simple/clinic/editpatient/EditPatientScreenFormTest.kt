@@ -184,7 +184,7 @@ class EditPatientScreenFormTest {
 
     screenCreated(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber)
     inputEvents.forEach { uiEvents.onNext(it) }
-    uiEvents.onNext(BackClicked())
+    uiEvents.onNext(BackClicked)
 
     if (shouldShowConfirmDiscardChangesPopup) {
       verify(ui).showDiscardChangesAlert()

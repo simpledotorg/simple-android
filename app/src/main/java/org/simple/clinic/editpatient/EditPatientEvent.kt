@@ -41,7 +41,7 @@ data class AgeChanged(val age: String): EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Age Text Changed"
 }
 
-class SaveClicked: EditPatientEvent() {
+object SaveClicked: EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Save Clicked"
 }
 

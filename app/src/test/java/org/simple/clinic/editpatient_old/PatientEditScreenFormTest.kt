@@ -104,7 +104,7 @@ class PatientEditScreenFormTest {
     val phoneNumber: PatientPhoneNumber? = null
 
     uiEvents.onNext(ScreenCreated.from(patient, address, phoneNumber))
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
     uiEvents.onNext(inputChange)
 
     if (expectedErrorsToHide.isNotEmpty()) {

@@ -108,7 +108,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(AgeChanged("1"))
 
     uiEvents.onNext(NameChanged(""))
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     verify(ui).showValidationErrors(setOf(FULL_NAME_EMPTY))
   }
@@ -129,7 +129,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(AgeChanged("1"))
 
     uiEvents.onNext(ColonyOrVillageChanged(""))
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     verify(ui).showValidationErrors(setOf(COLONY_OR_VILLAGE_EMPTY))
   }
@@ -150,7 +150,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(AgeChanged("1"))
 
     uiEvents.onNext(DistrictChanged(""))
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     verify(ui).showValidationErrors(setOf(DISTRICT_EMPTY))
   }
@@ -171,7 +171,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(AgeChanged("1"))
 
     uiEvents.onNext(StateChanged(""))
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     verify(ui).showValidationErrors(setOf(STATE_EMPTY))
   }
@@ -190,7 +190,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(NameChanged("Name"))
     uiEvents.onNext(StateChanged("State"))
     uiEvents.onNext(AgeChanged(""))
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     verify(ui).showValidationErrors(setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
   }
@@ -212,7 +212,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(NameChanged("Name"))
     uiEvents.onNext(StateChanged("State"))
     uiEvents.onNext(DateOfBirthChanged(dateOfBirthTestParams.dateOfBirth))
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     verify(ui).showValidationErrors(setOf(dateOfBirthTestParams.expectedError))
   }
@@ -255,7 +255,7 @@ class PatientEditScreenSaveTest {
     utcClock.advanceBy(advanceClockBy)
     uiEvents.onNext(ScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     if (!shouldSavePatient) {
       verify(patientRepository, never()).updatePatient(any())
@@ -684,7 +684,7 @@ class PatientEditScreenSaveTest {
       uiEvents.onNext(AgeChanged(""))
     }
 
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     if (expectedErrors.isNotEmpty()) {
       // This is order dependent because finding the first field
@@ -865,7 +865,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(AgeChanged("1"))
 
     uiEvents.onNext(PhoneNumberChanged(enteredPhoneNumber))
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     verify(ui).showValidationErrors(setOf(expectedError))
   }
@@ -905,7 +905,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(AgeChanged("1"))
 
     uiEvents.onNext(PhoneNumberChanged(""))
-    uiEvents.onNext(SaveClicked())
+    uiEvents.onNext(SaveClicked)
 
     verify(ui, never()).showValidationErrors(any())
   }

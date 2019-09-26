@@ -156,7 +156,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun saveClicks(): Observable<UiEvent> {
-    return RxView.clicks(saveButton.button).map { SaveClicked() }
+    return RxView.clicks(saveButton.button).map { SaveClicked }
   }
 
   private fun nameTextChanges(): Observable<UiEvent> {

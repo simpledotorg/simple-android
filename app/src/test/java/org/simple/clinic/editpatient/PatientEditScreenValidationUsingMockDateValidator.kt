@@ -185,8 +185,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
     val twoYears = oneYear.plus(oneYear)
 
     return listOf(
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -201,8 +201,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
             }),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             advanceClockBy = oneYear,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
@@ -223,8 +223,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
             }),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -235,8 +235,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = true,
             createExpectedPatient = { it.copy(fullName = "Name", gender = Gender.Male) },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -254,8 +254,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
             }),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -276,8 +276,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
             }),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             advanceClockBy = twoYears,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
@@ -296,8 +296,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
             }),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -313,8 +313,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "1234567") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "1234567")
             }),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -326,8 +326,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditPhoneNumberTextChanged("1234567"),
                 PatientEditAgeTextChanged("")),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -339,8 +339,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditPhoneNumberTextChanged("1234567"),
                 PatientEditDateOfBirthTextChanged("12/34")),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -352,8 +352,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditPhoneNumberTextChanged("1234567"),
                 PatientEditDateOfBirthTextChanged("30/11/$nextYear")),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -365,8 +365,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditPhoneNumberTextChanged("1234567"),
                 PatientEditAgeTextChanged("")),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -379,8 +379,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditAgeTextChanged(""),
                 PatientEditDateOfBirthTextChanged("30/11/$nextYear")),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -393,8 +393,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditAgeTextChanged(""),
                 PatientEditDateOfBirthTextChanged("30/11")),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -402,8 +402,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditGenderChanged(Gender.Transgender),
                 PatientEditPhoneNumberTextChanged("1234")),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -415,24 +415,24 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditPhoneNumberTextChanged("1234567"),
                 PatientEditPatientNameTextChanged("")),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
                 PatientEditGenderChanged(Gender.Transgender),
                 PatientEditPhoneNumberTextChanged("12345678901234")),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged(""),
                 PatientEditStateTextChanged("State"),
                 PatientEditGenderChanged(Gender.Transgender)),
             shouldSavePatient = false),
-        generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
+        createSavePatientTestParams(
+            patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -442,7 +442,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
     )
   }
 
-  private fun generatePatientProfile(shouldAddNumber: Boolean, shouldHaveAge: Boolean): PatientProfile {
+  private fun createPatientProfile(shouldAddNumber: Boolean, shouldHaveAge: Boolean): PatientProfile {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
@@ -470,7 +470,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
     )
   }
 
-  private fun generateTestData(
+  private fun createSavePatientTestParams(
       patientProfile: PatientProfile,
       advanceClockBy: Duration = Duration.ZERO,
       inputEvents: List<UiEvent>,

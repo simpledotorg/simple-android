@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient_old
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.editpatient.PatientEditScreenCreated
 import org.simple.clinic.editpatient_old.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient_old.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT

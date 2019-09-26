@@ -14,6 +14,18 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.editpatient.EditPatientUi
+import org.simple.clinic.editpatient.PatientEditAgeTextChanged
+import org.simple.clinic.editpatient.PatientEditBackClicked
+import org.simple.clinic.editpatient.PatientEditColonyOrVillageChanged
+import org.simple.clinic.editpatient.PatientEditDateOfBirthFocusChanged
+import org.simple.clinic.editpatient.PatientEditDateOfBirthTextChanged
+import org.simple.clinic.editpatient.PatientEditDistrictTextChanged
+import org.simple.clinic.editpatient.PatientEditGenderChanged
+import org.simple.clinic.editpatient.PatientEditPatientNameTextChanged
+import org.simple.clinic.editpatient.PatientEditPhoneNumberTextChanged
+import org.simple.clinic.editpatient.PatientEditSaveClicked
+import org.simple.clinic.editpatient.PatientEditScreenCreated
+import org.simple.clinic.editpatient.PatientEditStateTextChanged
 import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -688,10 +700,12 @@ class PatientEditScreenFormTest {
     val preCreateInputEvents = listOf(
         PatientEditPatientNameTextChanged(patientProfile.patient.fullName),
         PatientEditDistrictTextChanged(patientProfile.address.district),
-        PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage ?: ""),
+        PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage
+            ?: ""),
         PatientEditStateTextChanged(patientProfile.address.state),
         PatientEditGenderChanged(patientProfile.patient.gender),
-        PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: "")
+        PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number
+            ?: "")
     ) + patientProfile.let { (patient, _, _) ->
       if (patient.age != null) {
         listOf(PatientEditAgeTextChanged(patient.age!!.value.toString()))

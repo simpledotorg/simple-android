@@ -306,6 +306,7 @@ dependencies {
     exclude group: "io.reactivex.rxjava2"
     because "Traceur is incompatible with the version of RxJava this artifact pulls in transitively"
   }
+  testImplementation "org.threeten:threetenbp:$versions.threeTenBp"
 }
 
 // This must always be present at the bottom of this file, as per:

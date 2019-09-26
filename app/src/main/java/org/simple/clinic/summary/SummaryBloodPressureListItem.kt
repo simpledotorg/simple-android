@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -18,6 +19,8 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RelativeTimestamp
+import org.simple.clinic.util.Truss
+import org.simple.clinic.util.Unicode
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.setPaddingTop
@@ -31,7 +34,8 @@ data class SummaryBloodPressureListItem(
     val addTopPadding: Boolean,
     private val daysAgo: RelativeTimestamp,
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val dateFormatter: DateTimeFormatter
+    val dateFormatter: DateTimeFormatter,
+    val isBpEditable: Boolean
 ) : GroupieItemWithUiEvents<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
@@ -62,7 +66,21 @@ data class SummaryBloodPressureListItem(
     }
     holder.readingsTextView.setTextAppearanceCompat(readingsTextAppearanceResId)
 
-    holder.daysAgoTextView.text = daysAgo.displayText(context, dateFormatter)
+    val daysAgoText = daysAgo.displayText(context, dateFormatter)
+
+    holder.daysAgoTextView.text = if (isBpEditable) {
+      val colorSpanForEditLabel = ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.blue1, context.theme))
+      Truss()
+          .pushSpan(colorSpanForEditLabel)
+          .append(resources.getString(R.string.patientsummary_edit))
+          .popSpan()
+          .append(" ${Unicode.bullet} ")
+          .append(daysAgoText)
+          .build()
+
+    } else {
+      daysAgoText
+    }
 
     val measurementImageTint = when {
       level.isUrgent() -> R.color.patientsummary_bp_reading_high
@@ -70,7 +88,12 @@ data class SummaryBloodPressureListItem(
     }
     holder.heartImageView.imageTintList = ResourcesCompat.getColorStateList(resources, measurementImageTint, null)
 
-    holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
+    if(isBpEditable) {
+      holder.itemView.isEnabled = true
+      holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
+    } else {
+      holder.itemView.isEnabled = false
+    }
 
     holder.divider.visibility = if (showDivider) VISIBLE else GONE
 

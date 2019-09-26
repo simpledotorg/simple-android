@@ -15,6 +15,8 @@ import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
@@ -39,11 +41,11 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
 ) : Parcelable {
   companion object {
     fun from(
-        screenCreated: EditPatientScreenCreated,
+        patient: Patient,
+        address: PatientAddress,
+        phoneNumber: PatientPhoneNumber?,
         dateOfBirthFormatter: DateTimeFormatter
     ): OngoingEditPatientEntry {
-      val (patient, address, phoneNumber) = screenCreated
-
       val ageOrDateOfBirth = when {
         patient.age != null -> EntryWithAge(patient.age.value.toString())
         patient.dateOfBirth != null -> EntryWithDateOfBirth(patient.dateOfBirth.format(dateOfBirthFormatter))
@@ -103,7 +105,7 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
         is Valid -> { /* Nothing to do here. */ }
       }
 
-    } else if(ageOrDateOfBirth is EntryWithAge) {
+    } else if (ageOrDateOfBirth is EntryWithAge) {
       if (ageOrDateOfBirth.age.isBlank()) {
         errors.add(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
       }
@@ -115,9 +117,9 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
   sealed class EitherAgeOrDateOfBirth : Parcelable {
 
     @Parcelize
-    data class EntryWithAge(val age: String): EitherAgeOrDateOfBirth()
+    data class EntryWithAge(val age: String) : EitherAgeOrDateOfBirth()
 
     @Parcelize
-    data class EntryWithDateOfBirth(val dateOfBirth: String): EitherAgeOrDateOfBirth()
+    data class EntryWithDateOfBirth(val dateOfBirth: String) : EitherAgeOrDateOfBirth()
   }
 }

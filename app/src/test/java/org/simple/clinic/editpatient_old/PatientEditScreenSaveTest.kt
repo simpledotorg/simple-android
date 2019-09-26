@@ -19,7 +19,7 @@ import org.simple.clinic.editpatient.AgeChanged
 import org.simple.clinic.editpatient.ColonyOrVillageChanged
 import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DistrictChanged
-import org.simple.clinic.editpatient.EditPatientScreenCreated
+import org.simple.clinic.editpatient.ScreenCreated
 import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient.EditPatientValidationError
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -99,7 +99,7 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(ScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PhoneNumberChanged(""))
     uiEvents.onNext(GenderChanged(Gender.Male))
@@ -120,7 +120,7 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(ScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PhoneNumberChanged(""))
     uiEvents.onNext(GenderChanged(Gender.Male))
@@ -141,7 +141,7 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(ScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PhoneNumberChanged(""))
     uiEvents.onNext(GenderChanged(Gender.Male))
@@ -162,7 +162,7 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(ScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(PhoneNumberChanged(""))
     uiEvents.onNext(GenderChanged(Gender.Male))
@@ -183,7 +183,7 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(ScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(PhoneNumberChanged(""))
     uiEvents.onNext(GenderChanged(Gender.Male))
     uiEvents.onNext(ColonyOrVillageChanged("Colony"))
@@ -205,7 +205,7 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(ScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(PhoneNumberChanged(""))
     uiEvents.onNext(GenderChanged(Gender.Male))
     uiEvents.onNext(ColonyOrVillageChanged("Colony"))
@@ -254,7 +254,7 @@ class PatientEditScreenSaveTest {
     whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
 
     utcClock.advanceBy(advanceClockBy)
-    uiEvents.onNext(EditPatientScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
+    uiEvents.onNext(ScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(SaveClicked())
 
@@ -662,7 +662,7 @@ class PatientEditScreenSaveTest {
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(ScreenCreated.from(patient, address, phoneNumber))
 
     uiEvents.onNext(NameChanged(name))
     uiEvents.onNext(PhoneNumberChanged(enteredPhoneNumber))
@@ -856,7 +856,7 @@ class PatientEditScreenSaveTest {
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
+    uiEvents.onNext(ScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
 
     uiEvents.onNext(GenderChanged(Gender.Male))
     uiEvents.onNext(ColonyOrVillageChanged("Colony"))
@@ -896,7 +896,7 @@ class PatientEditScreenSaveTest {
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, null))
+    uiEvents.onNext(ScreenCreated.from(patient, address, null))
 
     uiEvents.onNext(GenderChanged(Gender.Male))
     uiEvents.onNext(ColonyOrVillageChanged("Colony"))

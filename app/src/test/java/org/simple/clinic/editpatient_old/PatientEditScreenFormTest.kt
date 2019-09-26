@@ -18,7 +18,7 @@ import org.simple.clinic.editpatient.ColonyOrVillageChanged
 import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DateOfBirthFocusChanged
 import org.simple.clinic.editpatient.DistrictChanged
-import org.simple.clinic.editpatient.EditPatientScreenCreated
+import org.simple.clinic.editpatient.ScreenCreated
 import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient.EditPatientValidationError
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -33,7 +33,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient.GenderChanged
 import org.simple.clinic.editpatient.NameChanged
-import org.simple.clinic.editpatient.PatientEditBackClicked
+import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.PhoneNumberChanged
 import org.simple.clinic.editpatient.SaveClicked
 import org.simple.clinic.editpatient.StateChanged
@@ -104,7 +104,7 @@ class PatientEditScreenFormTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(ScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(SaveClicked())
     uiEvents.onNext(inputChange)
 
@@ -194,9 +194,9 @@ class PatientEditScreenFormTest {
         shouldShowConfirmDiscardChangesPopup
     ) = testParams
 
-    uiEvents.onNext(EditPatientScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
+    uiEvents.onNext(ScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
-    uiEvents.onNext(PatientEditBackClicked())
+    uiEvents.onNext(BackClicked())
 
     if (shouldShowConfirmDiscardChangesPopup) {
       verify(ui).showDiscardChangesAlert()

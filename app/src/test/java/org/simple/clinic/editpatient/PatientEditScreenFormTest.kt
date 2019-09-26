@@ -51,7 +51,7 @@ import java.util.Locale
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class PatientEditScreenControllerTest {
+class PatientEditScreenFormTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

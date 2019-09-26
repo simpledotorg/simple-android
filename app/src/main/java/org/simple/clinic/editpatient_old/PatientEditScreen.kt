@@ -25,6 +25,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
+import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -60,7 +61,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientEditScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
+class PatientEditScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), EditPatientUi {
 
   @Inject
   lateinit var controller: PatientEditScreenController
@@ -201,27 +202,27 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun ageTextChanges(): Observable<UiEvent> = ageEditText.textChanges(::PatientEditAgeTextChanged)
 
-  fun setPatientName(name: String) {
+  override fun setPatientName(name: String) {
     fullNameEditText.setTextAndCursor(name)
   }
 
-  fun setPatientPhoneNumber(number: String) {
+  override fun setPatientPhoneNumber(number: String) {
     phoneNumberEditText.setTextAndCursor(number)
   }
 
-  fun setColonyOrVillage(colonyOrVillage: String) {
+  override fun setColonyOrVillage(colonyOrVillage: String) {
     colonyEditText.setTextAndCursor(colonyOrVillage)
   }
 
-  fun setDistrict(district: String) {
+  override fun setDistrict(district: String) {
     districtEditText.setTextAndCursor(district)
   }
 
-  fun setState(state: String) {
+  override fun setState(state: String) {
     stateEditText.setTextAndCursor(state)
   }
 
-  fun setGender(gender: Gender) {
+  override fun setGender(gender: Gender) {
     val genderButton: RadioButton? = when (gender) {
       Male -> maleRadioButton
       Female -> femaleRadioButton
@@ -235,15 +236,15 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     genderButton?.isChecked = true
   }
 
-  fun setPatientAge(age: Int) {
+  override fun setPatientAge(age: Int) {
     ageEditText.setTextAndCursor(age.toString())
   }
 
-  fun setPatientDateofBirth(dateOfBirth: LocalDate) {
+  override fun setPatientDateOfBirth(dateOfBirth: LocalDate) {
     dateOfBirthEditText.setTextAndCursor(dateOfBirthFormat.format(dateOfBirth))
   }
 
-  fun showValidationErrors(errors: Set<PatientEditValidationError>) {
+  override fun showValidationErrors(errors: Set<PatientEditValidationError>) {
     errors.forEach {
       when (it) {
         FULL_NAME_EMPTY -> {
@@ -286,7 +287,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
-  fun hideValidationErrors(errors: Set<PatientEditValidationError>) {
+  override fun hideValidationErrors(errors: Set<PatientEditValidationError>) {
     errors.forEach {
       when (it) {
         FULL_NAME_EMPTY -> {
@@ -381,7 +382,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     phoneNumberInputLayout.error = null
   }
 
-  fun scrollToFirstFieldWithError() {
+  override fun scrollToFirstFieldWithError() {
     val views = arrayOf(
         fullNameInputLayout,
         phoneNumberInputLayout,
@@ -398,19 +399,19 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
-  fun goBack() {
+  override fun goBack() {
     screenRouter.pop()
   }
 
-  fun showDatePatternInDateOfBirthLabel() {
+  override fun showDatePatternInDateOfBirthLabel() {
     dateOfBirthInputLayout.hint = resources.getString(R.string.patientedit_date_of_birth_focused)
   }
 
-  fun hideDatePatternInDateOfBirthLabel() {
+  override fun hideDatePatternInDateOfBirthLabel() {
     dateOfBirthInputLayout.hint = resources.getString(R.string.patientedit_date_of_birth_unfocused)
   }
 
-  fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {
+  override fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {
     val transition = TransitionSet()
         .addTransition(ChangeBounds())
         .addTransition(Fade())
@@ -435,7 +436,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
-  fun showDiscardChangesAlert() {
+  override fun showDiscardChangesAlert() {
     ConfirmDiscardChangesDialog.show(activity.supportFragmentManager)
   }
 }

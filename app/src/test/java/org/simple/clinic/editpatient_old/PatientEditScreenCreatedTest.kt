@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -36,7 +37,7 @@ class PatientEditScreenCreatedTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var screen: PatientEditScreen
+  private lateinit var screen: EditPatientUi
   private lateinit var patientRepository: PatientRepository
   private lateinit var errorConsumer: (Throwable) -> Unit
 
@@ -94,9 +95,9 @@ class PatientEditScreenCreatedTest {
     }
 
     if (patientFormTestParams.shouldSetDateOfBirth) {
-      verify(screen).setPatientDateofBirth(patient.dateOfBirth!!)
+      verify(screen).setPatientDateOfBirth(patient.dateOfBirth!!)
     } else {
-      verify(screen, never()).setPatientDateofBirth(any())
+      verify(screen, never()).setPatientDateOfBirth(any())
     }
   }
 

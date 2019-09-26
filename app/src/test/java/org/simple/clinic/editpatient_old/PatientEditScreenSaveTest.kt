@@ -1,4 +1,4 @@
-package org.simple.clinic.editpatient
+package org.simple.clinic.editpatient_old
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
@@ -15,16 +15,16 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient.PatientEditValidationError.INVALID_DATE_OF_BIRTH
-import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.editpatient_old.PatientEditValidationError.DISTRICT_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.editpatient_old.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient

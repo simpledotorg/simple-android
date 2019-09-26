@@ -1,4 +1,4 @@
-package org.simple.clinic.editpatient
+package org.simple.clinic.editpatient_old
 
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient

@@ -37,18 +37,15 @@ class PatientEditScreenCreatedTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var screen: EditPatientUi
-  private lateinit var patientRepository: PatientRepository
-  private lateinit var errorConsumer: (Throwable) -> Unit
+  private val ui: EditPatientUi = mock()
+  private val patientRepository: PatientRepository = mock()
+  private val errorConsumer: (Throwable) -> Unit = { throw it }
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   @Before
   fun setUp() {
-    screen = mock()
-    patientRepository = mock()
-
     val controller = PatientEditScreenController(
         patientRepository,
         IndianPhoneNumberValidator(),
@@ -57,11 +54,9 @@ class PatientEditScreenCreatedTest {
         UserInputDateValidator(ZoneOffset.UTC, dateOfBirthFormat),
         dateOfBirthFormat)
 
-    errorConsumer = { throw it }
-
     uiEvents
         .compose(controller)
-        .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
+        .subscribe({ uiChange -> uiChange(ui) }, { e -> errorConsumer(e) })
   }
 
   @Test
@@ -72,32 +67,32 @@ class PatientEditScreenCreatedTest {
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
     if (patientFormTestParams.shouldSetColonyOrVillage) {
-      verify(screen).setColonyOrVillage(address.colonyOrVillage!!)
+      verify(ui).setColonyOrVillage(address.colonyOrVillage!!)
     } else {
-      verify(screen, never()).setColonyOrVillage(any())
+      verify(ui, never()).setColonyOrVillage(any())
     }
 
-    verify(screen).setDistrict(address.district)
-    verify(screen).setState(address.state)
-    verify(screen).setGender(patient.gender)
-    verify(screen).setPatientName(patient.fullName)
+    verify(ui).setDistrict(address.district)
+    verify(ui).setState(address.state)
+    verify(ui).setGender(patient.gender)
+    verify(ui).setPatientName(patient.fullName)
 
     if (patientFormTestParams.shouldSetPhoneNumber) {
-      verify(screen).setPatientPhoneNumber(phoneNumber!!.number)
+      verify(ui).setPatientPhoneNumber(phoneNumber!!.number)
     } else {
-      verify(screen, never()).setPatientPhoneNumber(any())
+      verify(ui, never()).setPatientPhoneNumber(any())
     }
 
     if (patientFormTestParams.shouldSetAge) {
-      verify(screen).setPatientAge(any())
+      verify(ui).setPatientAge(any())
     } else {
-      verify(screen, never()).setPatientAge(any())
+      verify(ui, never()).setPatientAge(any())
     }
 
     if (patientFormTestParams.shouldSetDateOfBirth) {
-      verify(screen).setPatientDateOfBirth(patient.dateOfBirth!!)
+      verify(ui).setPatientDateOfBirth(patient.dateOfBirth!!)
     } else {
-      verify(screen, never()).setPatientDateOfBirth(any())
+      verify(ui, never()).setPatientDateOfBirth(any())
     }
   }
 

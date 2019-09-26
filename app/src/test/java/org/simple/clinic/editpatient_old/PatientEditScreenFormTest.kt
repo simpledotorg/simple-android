@@ -58,8 +58,8 @@ class PatientEditScreenFormTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var screen: EditPatientUi
-  private lateinit var patientRepository: PatientRepository
+  private val ui: EditPatientUi = mock()
+  private val patientRepository: PatientRepository = mock()
   private lateinit var errorConsumer: (Throwable) -> Unit
 
   private val utcClock: TestUtcClock = TestUtcClock()
@@ -67,9 +67,6 @@ class PatientEditScreenFormTest {
 
   @Before
   fun setUp() {
-    screen = mock()
-    patientRepository = mock()
-
     val controller = PatientEditScreenController(
         patientRepository,
         IndianPhoneNumberValidator(),
@@ -82,7 +79,7 @@ class PatientEditScreenFormTest {
 
     uiEvents
         .compose(controller)
-        .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
+        .subscribe({ uiChange -> uiChange(ui) }, { e -> errorConsumer(e) })
   }
 
   @Test
@@ -99,9 +96,9 @@ class PatientEditScreenFormTest {
     uiEvents.onNext(inputChange)
 
     if (expectedErrorsToHide.isNotEmpty()) {
-      verify(screen).hideValidationErrors(expectedErrorsToHide)
+      verify(ui).hideValidationErrors(expectedErrorsToHide)
     } else {
-      verify(screen, never()).hideValidationErrors(any())
+      verify(ui, never()).hideValidationErrors(any())
     }
   }
 
@@ -137,8 +134,8 @@ class PatientEditScreenFormTest {
     uiEvents.onNext(PatientEditDateOfBirthFocusChanged(hasFocus = true))
     uiEvents.onNext(PatientEditDateOfBirthFocusChanged(hasFocus = false))
 
-    verify(screen, times(2)).showDatePatternInDateOfBirthLabel()
-    verify(screen, times(2)).hideDatePatternInDateOfBirthLabel()
+    verify(ui, times(2)).showDatePatternInDateOfBirthLabel()
+    verify(ui, times(2)).hideDatePatternInDateOfBirthLabel()
   }
 
   @Test
@@ -148,22 +145,22 @@ class PatientEditScreenFormTest {
     uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientEditDateOfBirthTextChanged("01/01/1990"))
 
-    verify(screen, times(2)).showDatePatternInDateOfBirthLabel()
-    verify(screen).hideDatePatternInDateOfBirthLabel()
+    verify(ui, times(2)).showDatePatternInDateOfBirthLabel()
+    verify(ui).hideDatePatternInDateOfBirthLabel()
   }
 
   @Test
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
     uiEvents.onNext(PatientEditAgeTextChanged(""))
     uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
-    verify(screen).setDateOfBirthAndAgeVisibility(BOTH_VISIBLE)
+    verify(ui).setDateOfBirthAndAgeVisibility(BOTH_VISIBLE)
 
     uiEvents.onNext(PatientEditDateOfBirthTextChanged("1"))
-    verify(screen).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
+    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
 
     uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientEditAgeTextChanged("1"))
-    verify(screen).setDateOfBirthAndAgeVisibility(AGE_VISIBLE)
+    verify(ui).setDateOfBirthAndAgeVisibility(AGE_VISIBLE)
   }
 
   @Test
@@ -189,11 +186,11 @@ class PatientEditScreenFormTest {
     uiEvents.onNext(PatientEditBackClicked())
 
     if (shouldShowConfirmDiscardChangesPopup) {
-      verify(screen).showDiscardChangesAlert()
-      verify(screen, never()).goBack()
+      verify(ui).showDiscardChangesAlert()
+      verify(ui, never()).goBack()
     } else {
-      verify(screen).goBack()
-      verify(screen, never()).showDiscardChangesAlert()
+      verify(ui).goBack()
+      verify(ui, never()).showDiscardChangesAlert()
     }
   }
 

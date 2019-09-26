@@ -47,8 +47,8 @@ class HomescreenIllustrationRepositoryTest {
   )
   private val repository = HomescreenIllustrationRepository(
       illustrations = illustrations,
-      fileStorage = fileStorage,
-      userClock = userClock
+      userClock = userClock,
+      illustrationsFolder = File("")
   )
 
   @Before

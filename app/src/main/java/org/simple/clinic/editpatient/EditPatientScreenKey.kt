@@ -1,4 +1,4 @@
-package org.simple.clinic.editpatient_old
+package org.simple.clinic.editpatient
 
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize

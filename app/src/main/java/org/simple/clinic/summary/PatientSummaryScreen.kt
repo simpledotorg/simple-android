@@ -29,7 +29,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
-import org.simple.clinic.editpatient.PatientEditScreenKey
+import org.simple.clinic.editpatient_old.PatientEditScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender

@@ -1,4 +1,4 @@
-package org.simple.clinic.editpatient
+package org.simple.clinic.editpatient_old
 
 enum class PatientEditValidationError(val analyticsName: String) {
   FULL_NAME_EMPTY("Patient Edit:Name is empty"),

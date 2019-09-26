@@ -1,4 +1,4 @@
-package org.simple.clinic.editpatient
+package org.simple.clinic.editpatient_old
 
 import android.content.Context
 import android.util.AttributeSet
@@ -25,16 +25,16 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
-import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient.PatientEditValidationError.INVALID_DATE_OF_BIRTH
-import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.editpatient_old.PatientEditValidationError.DISTRICT_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.editpatient_old.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -92,7 +92,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val maleRadioButton by bindView<RadioButton>(R.id.patientedit_gender_male)
   private val transgenderRadioButton by bindView<RadioButton>(R.id.patientedit_gender_transgender)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patientedit_gender_radiogroup)
-  private val ageEditext by bindView<EditText>(R.id.patientedit_age)
+  private val ageEditText by bindView<EditText>(R.id.patientedit_age)
   private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patientedit_date_of_birth)
   private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patientedit_date_of_birth_inputlayout)
   private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patientedit_date_of_birth_container)
@@ -199,7 +199,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun dateOfBirthFocusChanges(): Observable<UiEvent> = dateOfBirthEditText.focusChanges.map(::PatientEditDateOfBirthFocusChanged)
 
-  private fun ageTextChanges(): Observable<UiEvent> = ageEditext.textChanges(::PatientEditAgeTextChanged)
+  private fun ageTextChanges(): Observable<UiEvent> = ageEditText.textChanges(::PatientEditAgeTextChanged)
 
   fun setPatientName(name: String) {
     fullNameEditText.setTextAndCursor(name)
@@ -236,7 +236,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   fun setPatientAge(age: Int) {
-    ageEditext.setTextAndCursor(age.toString())
+    ageEditText.setTextAndCursor(age.toString())
   }
 
   fun setPatientDateofBirth(dateOfBirth: LocalDate) {

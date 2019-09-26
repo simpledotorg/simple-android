@@ -59,9 +59,9 @@ class PatientEditScreenSaveTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var screen: EditPatientUi
-  private lateinit var patientRepository: PatientRepository
-  private lateinit var errorConsumer: (Throwable) -> Unit
+  private val ui: EditPatientUi = mock()
+  private val patientRepository: PatientRepository = mock()
+  private val errorConsumer: (Throwable) -> Unit = { throw it }
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
@@ -69,9 +69,6 @@ class PatientEditScreenSaveTest {
 
   @Before
   fun setUp() {
-    screen = mock()
-    patientRepository = mock()
-
     val controller = PatientEditScreenController(
         patientRepository,
         IndianPhoneNumberValidator(),
@@ -80,11 +77,9 @@ class PatientEditScreenSaveTest {
         UserInputDateValidator(ZoneOffset.UTC, dateOfBirthFormat),
         dateOfBirthFormat)
 
-    errorConsumer = { throw it }
-
     uiEvents
         .compose(controller)
-        .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
+        .subscribe({ uiChange -> uiChange(ui) }, { e -> errorConsumer(e) })
   }
 
   @Test
@@ -105,7 +100,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(PatientEditPatientNameTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    verify(screen).showValidationErrors(setOf(FULL_NAME_EMPTY))
+    verify(ui).showValidationErrors(setOf(FULL_NAME_EMPTY))
   }
 
   @Test
@@ -126,7 +121,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(PatientEditColonyOrVillageChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    verify(screen).showValidationErrors(setOf(COLONY_OR_VILLAGE_EMPTY))
+    verify(ui).showValidationErrors(setOf(COLONY_OR_VILLAGE_EMPTY))
   }
 
   @Test
@@ -147,7 +142,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(PatientEditDistrictTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    verify(screen).showValidationErrors(setOf(DISTRICT_EMPTY))
+    verify(ui).showValidationErrors(setOf(DISTRICT_EMPTY))
   }
 
   @Test
@@ -168,7 +163,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(PatientEditStateTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    verify(screen).showValidationErrors(setOf(STATE_EMPTY))
+    verify(ui).showValidationErrors(setOf(STATE_EMPTY))
   }
 
   @Test
@@ -187,7 +182,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(PatientEditAgeTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    verify(screen).showValidationErrors(setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
+    verify(ui).showValidationErrors(setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
   }
 
   @Test
@@ -209,7 +204,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(PatientEditDateOfBirthTextChanged(dateOfBirthTestParams.dateOfBirth))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    verify(screen).showValidationErrors(setOf(dateOfBirthTestParams.expectedError))
+    verify(ui).showValidationErrors(setOf(dateOfBirthTestParams.expectedError))
   }
 
   @Suppress("Unused")
@@ -257,7 +252,7 @@ class PatientEditScreenSaveTest {
       verify(patientRepository, never()).updateAddressForPatient(eq(patientUuid), any())
       verify(patientRepository, never()).updatePhoneNumberForPatient(eq(patientUuid), any())
       verify(patientRepository, never()).createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())
-      verify(screen, never()).goBack()
+      verify(ui, never()).goBack()
       return
     }
 
@@ -280,7 +275,7 @@ class PatientEditScreenSaveTest {
       verify(patientRepository, never()).createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())
       verify(patientRepository, never()).updatePhoneNumberForPatient(eq(patientUuid), any())
     }
-    verify(screen).goBack()
+    verify(ui).goBack()
   }
 
   @Suppress("Unused")
@@ -682,14 +677,14 @@ class PatientEditScreenSaveTest {
     if (expectedErrors.isNotEmpty()) {
       // This is order dependent because finding the first field
       // with error is only possible once the errors are set.
-      val inOrder = inOrder(screen)
+      val inOrder = inOrder(ui)
 
-      inOrder.verify(screen).showValidationErrors(expectedErrors)
-      inOrder.verify(screen).scrollToFirstFieldWithError()
+      inOrder.verify(ui).showValidationErrors(expectedErrors)
+      inOrder.verify(ui).scrollToFirstFieldWithError()
 
     } else {
-      verify(screen, never()).showValidationErrors(any())
-      verify(screen, never()).scrollToFirstFieldWithError()
+      verify(ui, never()).showValidationErrors(any())
+      verify(ui, never()).scrollToFirstFieldWithError()
     }
   }
 
@@ -860,7 +855,7 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(enteredPhoneNumber))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    verify(screen).showValidationErrors(setOf(expectedError))
+    verify(ui).showValidationErrors(setOf(expectedError))
   }
 
   @Suppress("Unused")
@@ -900,6 +895,6 @@ class PatientEditScreenSaveTest {
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    verify(screen, never()).showValidationErrors(any())
+    verify(ui, never()).showValidationErrors(any())
   }
 }

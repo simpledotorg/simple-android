@@ -344,6 +344,12 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
     )
   }
 
+  data class ValidatePhoneNumberTestParams(
+      val alreadyPresentPhoneNumber: PatientPhoneNumber?,
+      val enteredPhoneNumber: String,
+      val expectedError: PatientEditValidationError
+  )
+
   @Test
   fun `when save is clicked, valid phone number should not show errors`() {
     val (alreadyPresentPhoneNumber, numberValidationResult) = null to BLANK
@@ -368,10 +374,4 @@ class PatientEditScreenValidationUsingMockValidatorsTest {
 
     verify(screen, never()).showValidationErrors(any())
   }
-
-  data class ValidatePhoneNumberTestParams(
-      val alreadyPresentPhoneNumber: PatientPhoneNumber?,
-      val enteredPhoneNumber: String,
-      val expectedError: PatientEditValidationError
-  )
 }

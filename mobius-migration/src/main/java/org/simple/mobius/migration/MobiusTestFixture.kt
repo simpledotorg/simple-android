@@ -5,6 +5,7 @@ import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
 import com.spotify.mobius.EventSource
 import com.spotify.mobius.First
+import com.spotify.mobius.Init
 import com.spotify.mobius.Mobius
 import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Next
@@ -24,7 +25,7 @@ typealias EffectHandler<F, E> = ObservableTransformer<F, E>
 class MobiusTestFixture<M: Any, E, F>(
     events: Observable<E>,
     defaultModel: M,
-    initFunction: InitFunction<M, F>?,
+    init: Init<M, F>?,
     update: Update<M, E, F>,
     effectHandler: EffectHandler<F, E>,
     modelUpdateListener: ModelUpdateListener<M>,
@@ -38,7 +39,15 @@ class MobiusTestFixture<M: Any, E, F>(
       effectHandler: EffectHandler<F, E>,
       modelUpdateListener: ModelUpdateListener<M>,
       requiresLogging: Boolean = false
-  ) : this(events, defaultModel, initFunction, Update { model: M, event: E -> updateFunction(model, event) }, effectHandler, modelUpdateListener, requiresLogging)
+  ) : this(
+      events,
+      defaultModel,
+      Init { initFunction?.invoke(it) ?: First.first(it) },
+      Update { model: M, event: E -> updateFunction(model, event) },
+      effectHandler,
+      modelUpdateListener,
+      requiresLogging
+  )
 
   private val eventsDisposable: Disposable
   private val controller: MobiusLoop.Controller<M, E>
@@ -53,7 +62,7 @@ class MobiusTestFixture<M: Any, E, F>(
 
     val loop = createLoop(
         eventSource,
-        spyingInitFunction(initFunction, modelUpdateListener),
+        spyingInit(init, modelUpdateListener),
         spyingUpdate(update, modelUpdateListener),
         effectHandler,
         immediateWorkRunner,
@@ -76,7 +85,7 @@ class MobiusTestFixture<M: Any, E, F>(
 
   private fun createLoop(
       eventSource: EventSource<E>,
-      initFunction: InitFunction<M, F>,
+      init: Init<M, F>,
       update: Update<M, E, F>,
       effectHandlerListener: EffectHandler<F, E>,
       workRunner: WorkRunner,
@@ -84,19 +93,19 @@ class MobiusTestFixture<M: Any, E, F>(
   ): MobiusLoop.Builder<M, E, F> {
     return RxMobius
         .loop(update, effectHandlerListener)
-        .init(initFunction)
+        .init(init)
         .eventSource(eventSource)
         .eventRunner { workRunner }
         .effectRunner { workRunner }
         .logger(if (requiresLogging) ConsoleLogger<M, E, F>() else NoopLogger())
   }
 
-  private fun spyingInitFunction(
-      initFunction: InitFunction<M, F>?,
+  private fun spyingInit(
+      init: Init<M, F>?,
       modelUpdateListener: ModelUpdateListener<M>
-  ): (M) -> First<M, F> {
-    return { model: M ->
-      (initFunction?.invoke(model) ?: First.first(model)).also { first ->
+  ): Init<M, F> {
+    return Init { model ->
+      (init?.init(model) ?: First.first(model)).also { first ->
         modelUpdateListener(first.model())
       }
     }

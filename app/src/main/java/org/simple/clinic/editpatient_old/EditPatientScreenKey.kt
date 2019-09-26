@@ -9,7 +9,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.router.screen.FullScreenKey
 
 @Parcelize
-data class PatientEditScreenKey(
+data class EditPatientScreenKey(
     val patient: Patient,
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?
@@ -19,8 +19,8 @@ data class PatientEditScreenKey(
         patient: Patient,
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?
-    ): PatientEditScreenKey {
-      return PatientEditScreenKey(patient, address, phoneNumber)
+    ): EditPatientScreenKey {
+      return EditPatientScreenKey(patient, address, phoneNumber)
     }
   }
 

@@ -29,7 +29,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
-import org.simple.clinic.editpatient_old.PatientEditScreenKey
+import org.simple.clinic.editpatient_old.EditPatientScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -167,8 +167,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private fun createEditPatientScreenKey(
       patientSummaryProfile: PatientSummaryProfile
-  ): PatientEditScreenKey {
-    return PatientEditScreenKey.fromPatientData(
+  ): EditPatientScreenKey {
+    return EditPatientScreenKey.fromPatientData(
         patientSummaryProfile.patient,
         patientSummaryProfile.address,
         patientSummaryProfile.phoneNumber.toNullable()

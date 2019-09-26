@@ -52,7 +52,7 @@ import java.util.Locale
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class PatientEditScreenValidationUsingMockDateValidator {
+class PatientEditScreenSaveTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

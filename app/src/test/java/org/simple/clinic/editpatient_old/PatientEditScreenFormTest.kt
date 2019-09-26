@@ -14,11 +14,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.editpatient.AgeChanged
+import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.ColonyOrVillageChanged
 import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DateOfBirthFocusChanged
 import org.simple.clinic.editpatient.DistrictChanged
-import org.simple.clinic.editpatient.ScreenCreated
 import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient.EditPatientValidationError
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -33,7 +33,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient.GenderChanged
 import org.simple.clinic.editpatient.NameChanged
-import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.PhoneNumberChanged
 import org.simple.clinic.editpatient.SaveClicked
 import org.simple.clinic.editpatient.StateChanged

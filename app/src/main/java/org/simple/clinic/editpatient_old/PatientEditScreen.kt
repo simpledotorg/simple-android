@@ -26,12 +26,12 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.editpatient.AgeChanged
+import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.ColonyOrVillageChanged
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DateOfBirthFocusChanged
 import org.simple.clinic.editpatient.DistrictChanged
-import org.simple.clinic.editpatient.ScreenCreated
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient.EditPatientValidationError
@@ -47,7 +47,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient.GenderChanged
 import org.simple.clinic.editpatient.NameChanged
-import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.PhoneNumberChanged
 import org.simple.clinic.editpatient.SaveClicked
 import org.simple.clinic.editpatient.StateChanged

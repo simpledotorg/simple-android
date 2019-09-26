@@ -15,17 +15,17 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.editpatient.AgeChanged
+import org.simple.clinic.editpatient.ColonyOrVillageChanged
+import org.simple.clinic.editpatient.DateOfBirthChanged
+import org.simple.clinic.editpatient.DistrictChanged
+import org.simple.clinic.editpatient.EditPatientScreenCreated
 import org.simple.clinic.editpatient.EditPatientUi
-import org.simple.clinic.editpatient.PatientEditAgeTextChanged
-import org.simple.clinic.editpatient.PatientEditColonyOrVillageChanged
-import org.simple.clinic.editpatient.PatientEditDateOfBirthTextChanged
-import org.simple.clinic.editpatient.PatientEditDistrictTextChanged
-import org.simple.clinic.editpatient.PatientEditGenderChanged
-import org.simple.clinic.editpatient.PatientEditPatientNameTextChanged
-import org.simple.clinic.editpatient.PatientEditPhoneNumberTextChanged
-import org.simple.clinic.editpatient.PatientEditSaveClicked
-import org.simple.clinic.editpatient.PatientEditScreenCreated
-import org.simple.clinic.editpatient.PatientEditStateTextChanged
+import org.simple.clinic.editpatient.GenderChanged
+import org.simple.clinic.editpatient.NameChanged
+import org.simple.clinic.editpatient.PhoneNumberChanged
+import org.simple.clinic.editpatient.SaveClicked
+import org.simple.clinic.editpatient.StateChanged
 import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -98,17 +98,17 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
 
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
-    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
-    uiEvents.onNext(PatientEditStateTextChanged("State"))
-    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+    uiEvents.onNext(PhoneNumberChanged(""))
+    uiEvents.onNext(GenderChanged(Gender.Male))
+    uiEvents.onNext(ColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(DistrictChanged("District"))
+    uiEvents.onNext(StateChanged("State"))
+    uiEvents.onNext(AgeChanged("1"))
 
-    uiEvents.onNext(PatientEditPatientNameTextChanged(""))
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(NameChanged(""))
+    uiEvents.onNext(SaveClicked())
 
     verify(ui).showValidationErrors(setOf(FULL_NAME_EMPTY))
   }
@@ -119,17 +119,17 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
 
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
-    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
-    uiEvents.onNext(PatientEditStateTextChanged("State"))
-    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
-    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+    uiEvents.onNext(PhoneNumberChanged(""))
+    uiEvents.onNext(GenderChanged(Gender.Male))
+    uiEvents.onNext(DistrictChanged("District"))
+    uiEvents.onNext(StateChanged("State"))
+    uiEvents.onNext(NameChanged("Name"))
+    uiEvents.onNext(AgeChanged("1"))
 
-    uiEvents.onNext(PatientEditColonyOrVillageChanged(""))
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(ColonyOrVillageChanged(""))
+    uiEvents.onNext(SaveClicked())
 
     verify(ui).showValidationErrors(setOf(COLONY_OR_VILLAGE_EMPTY))
   }
@@ -140,17 +140,17 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
 
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
-    uiEvents.onNext(PatientEditStateTextChanged("State"))
-    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
-    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+    uiEvents.onNext(PhoneNumberChanged(""))
+    uiEvents.onNext(GenderChanged(Gender.Male))
+    uiEvents.onNext(ColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(StateChanged("State"))
+    uiEvents.onNext(NameChanged("Name"))
+    uiEvents.onNext(AgeChanged("1"))
 
-    uiEvents.onNext(PatientEditDistrictTextChanged(""))
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(DistrictChanged(""))
+    uiEvents.onNext(SaveClicked())
 
     verify(ui).showValidationErrors(setOf(DISTRICT_EMPTY))
   }
@@ -161,17 +161,17 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
 
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
-    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
-    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
-    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+    uiEvents.onNext(PhoneNumberChanged(""))
+    uiEvents.onNext(GenderChanged(Gender.Male))
+    uiEvents.onNext(ColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(DistrictChanged("District"))
+    uiEvents.onNext(NameChanged("Name"))
+    uiEvents.onNext(AgeChanged("1"))
 
-    uiEvents.onNext(PatientEditStateTextChanged(""))
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(StateChanged(""))
+    uiEvents.onNext(SaveClicked())
 
     verify(ui).showValidationErrors(setOf(STATE_EMPTY))
   }
@@ -182,15 +182,15 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
-    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
-    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
-    uiEvents.onNext(PatientEditStateTextChanged("State"))
-    uiEvents.onNext(PatientEditAgeTextChanged(""))
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(PhoneNumberChanged(""))
+    uiEvents.onNext(GenderChanged(Gender.Male))
+    uiEvents.onNext(ColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(DistrictChanged("District"))
+    uiEvents.onNext(NameChanged("Name"))
+    uiEvents.onNext(StateChanged("State"))
+    uiEvents.onNext(AgeChanged(""))
+    uiEvents.onNext(SaveClicked())
 
     verify(ui).showValidationErrors(setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
   }
@@ -204,15 +204,15 @@ class PatientEditScreenSaveTest {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
-    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
-    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
-    uiEvents.onNext(PatientEditStateTextChanged("State"))
-    uiEvents.onNext(PatientEditDateOfBirthTextChanged(dateOfBirthTestParams.dateOfBirth))
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(PhoneNumberChanged(""))
+    uiEvents.onNext(GenderChanged(Gender.Male))
+    uiEvents.onNext(ColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(DistrictChanged("District"))
+    uiEvents.onNext(NameChanged("Name"))
+    uiEvents.onNext(StateChanged("State"))
+    uiEvents.onNext(DateOfBirthChanged(dateOfBirthTestParams.dateOfBirth))
+    uiEvents.onNext(SaveClicked())
 
     verify(ui).showValidationErrors(setOf(dateOfBirthTestParams.expectedError))
   }
@@ -253,9 +253,9 @@ class PatientEditScreenSaveTest {
     whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
 
     utcClock.advanceBy(advanceClockBy)
-    uiEvents.onNext(PatientEditScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
+    uiEvents.onNext(EditPatientScreenCreated.from(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber))
     inputEvents.forEach { uiEvents.onNext(it) }
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(SaveClicked())
 
     if (!shouldSavePatient) {
       verify(patientRepository, never()).updatePatient(any())
@@ -297,13 +297,13 @@ class PatientEditScreenSaveTest {
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditColonyOrVillageChanged("Colony"),
-                PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Male),
-                PatientEditPhoneNumberTextChanged("12345678"),
-                PatientEditDateOfBirthTextChanged("20/05/1985")),
+                NameChanged("Name"),
+                DistrictChanged("District"),
+                ColonyOrVillageChanged("Colony"),
+                StateChanged("State"),
+                GenderChanged(Gender.Male),
+                PhoneNumberChanged("12345678"),
+                DateOfBirthChanged("20/05/1985")),
             shouldSavePatient = true,
             createExpectedPatient = { it.copy(fullName = "Name", gender = Gender.Male, dateOfBirth = LocalDate.of(1985, Month.MAY, 20)) },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
@@ -314,14 +314,14 @@ class PatientEditScreenSaveTest {
             patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             advanceClockBy = oneYear,
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditColonyOrVillageChanged("Colony"),
-                PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Male),
-                PatientEditPhoneNumberTextChanged("12345678"),
-                PatientEditDateOfBirthTextChanged(""),
-                PatientEditAgeTextChanged("22")),
+                NameChanged("Name"),
+                DistrictChanged("District"),
+                ColonyOrVillageChanged("Colony"),
+                StateChanged("State"),
+                GenderChanged(Gender.Male),
+                PhoneNumberChanged("12345678"),
+                DateOfBirthChanged(""),
+                AgeChanged("22")),
             shouldSavePatient = true,
             createExpectedPatient = {
               val expectedAge = Age(22, Instant.now(utcClock).plus(oneYear))
@@ -335,24 +335,24 @@ class PatientEditScreenSaveTest {
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditColonyOrVillageChanged("Colony"),
-                PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Male),
-                PatientEditPhoneNumberTextChanged("")),
+                NameChanged("Name"),
+                DistrictChanged("District"),
+                ColonyOrVillageChanged("Colony"),
+                StateChanged("State"),
+                GenderChanged(Gender.Male),
+                PhoneNumberChanged("")),
             shouldSavePatient = true,
             createExpectedPatient = { it.copy(fullName = "Name", gender = Gender.Male) },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditAgeTextChanged("25")),
+                NameChanged("Name"),
+                DistrictChanged("District"),
+                StateChanged("State"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                AgeChanged("25")),
             shouldSavePatient = true,
             createExpectedPatient = {
               val expectedAge = Age(25, Instant.now(utcClock))
@@ -366,13 +366,13 @@ class PatientEditScreenSaveTest {
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditAgeTextChanged(""),
-                PatientEditDateOfBirthTextChanged("25/06/1965")),
+                NameChanged("Name"),
+                DistrictChanged("District"),
+                StateChanged("State"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                AgeChanged(""),
+                DateOfBirthChanged("25/06/1965")),
             shouldSavePatient = true,
             createExpectedPatient = {
               it.copy(
@@ -389,12 +389,12 @@ class PatientEditScreenSaveTest {
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             advanceClockBy = twoYears,
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditAgeTextChanged("25")),
+                NameChanged("Name"),
+                DistrictChanged("District"),
+                StateChanged("State"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                AgeChanged("25")),
             shouldSavePatient = true,
             createExpectedPatient = {
               val expectedAge = Age(25, Instant.now(utcClock).plus(twoYears))
@@ -408,14 +408,14 @@ class PatientEditScreenSaveTest {
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name 1"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditStateTextChanged("State 2"),
-                PatientEditPatientNameTextChanged("Name 2"),
-                PatientEditPhoneNumberTextChanged("1234567")),
+                NameChanged("Name 1"),
+                DistrictChanged("District"),
+                StateChanged("State 1"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                StateChanged("State 2"),
+                NameChanged("Name 2"),
+                PhoneNumberChanged("1234567")),
             shouldSavePatient = true,
             createExpectedPatient = { it.copy(fullName = "Name 2", gender = Gender.Transgender) },
             createExpectedAddress = { it.copy(district = "District", state = "State 2") },
@@ -425,128 +425,128 @@ class PatientEditScreenSaveTest {
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name 1"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditStateTextChanged("State 2"),
-                PatientEditPatientNameTextChanged("Name 2"),
-                PatientEditPhoneNumberTextChanged("1234567"),
-                PatientEditAgeTextChanged("")),
+                NameChanged("Name 1"),
+                DistrictChanged("District"),
+                StateChanged("State 1"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                StateChanged("State 2"),
+                NameChanged("Name 2"),
+                PhoneNumberChanged("1234567"),
+                AgeChanged("")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name 1"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditStateTextChanged("State 2"),
-                PatientEditPatientNameTextChanged("Name 2"),
-                PatientEditPhoneNumberTextChanged("1234567"),
-                PatientEditDateOfBirthTextChanged("12/34")),
+                NameChanged("Name 1"),
+                DistrictChanged("District"),
+                StateChanged("State 1"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                StateChanged("State 2"),
+                NameChanged("Name 2"),
+                PhoneNumberChanged("1234567"),
+                DateOfBirthChanged("12/34")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name 1"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditStateTextChanged("State 2"),
-                PatientEditPatientNameTextChanged("Name 2"),
-                PatientEditPhoneNumberTextChanged("1234567"),
-                PatientEditDateOfBirthTextChanged("30/11/$nextYear")),
+                NameChanged("Name 1"),
+                DistrictChanged("District"),
+                StateChanged("State 1"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                StateChanged("State 2"),
+                NameChanged("Name 2"),
+                PhoneNumberChanged("1234567"),
+                DateOfBirthChanged("30/11/$nextYear")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name 1"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditStateTextChanged("State 2"),
-                PatientEditPatientNameTextChanged("Name 2"),
-                PatientEditPhoneNumberTextChanged("1234567"),
-                PatientEditAgeTextChanged("")),
+                NameChanged("Name 1"),
+                DistrictChanged("District"),
+                StateChanged("State 1"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                StateChanged("State 2"),
+                NameChanged("Name 2"),
+                PhoneNumberChanged("1234567"),
+                AgeChanged("")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name 1"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditStateTextChanged("State 2"),
-                PatientEditPatientNameTextChanged("Name 2"),
-                PatientEditPhoneNumberTextChanged("1234567"),
-                PatientEditAgeTextChanged(""),
-                PatientEditDateOfBirthTextChanged("30/11/$nextYear")),
+                NameChanged("Name 1"),
+                DistrictChanged("District"),
+                StateChanged("State 1"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                StateChanged("State 2"),
+                NameChanged("Name 2"),
+                PhoneNumberChanged("1234567"),
+                AgeChanged(""),
+                DateOfBirthChanged("30/11/$nextYear")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name 1"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditStateTextChanged("State 2"),
-                PatientEditPatientNameTextChanged("Name 2"),
-                PatientEditPhoneNumberTextChanged("1234567"),
-                PatientEditAgeTextChanged(""),
-                PatientEditDateOfBirthTextChanged("30/11")),
+                NameChanged("Name 1"),
+                DistrictChanged("District"),
+                StateChanged("State 1"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                StateChanged("State 2"),
+                NameChanged("Name 2"),
+                PhoneNumberChanged("1234567"),
+                AgeChanged(""),
+                DateOfBirthChanged("30/11")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("1234")),
+                NameChanged("Name"),
+                DistrictChanged("District"),
+                StateChanged("State"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("1234")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name 1"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditStateTextChanged("State 2"),
-                PatientEditPatientNameTextChanged("Name 2"),
-                PatientEditPhoneNumberTextChanged("1234567"),
-                PatientEditPatientNameTextChanged("")),
+                NameChanged("Name 1"),
+                DistrictChanged("District"),
+                StateChanged("State 1"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("123456"),
+                StateChanged("State 2"),
+                NameChanged("Name 2"),
+                PhoneNumberChanged("1234567"),
+                NameChanged("")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Transgender),
-                PatientEditPhoneNumberTextChanged("12345678901234")),
+                DistrictChanged("District"),
+                StateChanged("State"),
+                GenderChanged(Gender.Transgender),
+                PhoneNumberChanged("12345678901234")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name"),
-                PatientEditDistrictTextChanged(""),
-                PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Transgender)),
+                NameChanged("Name"),
+                DistrictChanged(""),
+                StateChanged("State"),
+                GenderChanged(Gender.Transgender)),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged("Name"),
-                PatientEditDistrictTextChanged("District"),
-                PatientEditStateTextChanged(""),
-                PatientEditGenderChanged(Gender.Female)),
+                NameChanged("Name"),
+                DistrictChanged("District"),
+                StateChanged(""),
+                GenderChanged(Gender.Female)),
             shouldSavePatient = false)
     )
   }
@@ -596,19 +596,19 @@ class PatientEditScreenSaveTest {
     }
 
     val preCreateInputEvents = listOf(
-        PatientEditPatientNameTextChanged(patientProfile.patient.fullName),
-        PatientEditDistrictTextChanged(patientProfile.address.district),
-        PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage
+        NameChanged(patientProfile.patient.fullName),
+        DistrictChanged(patientProfile.address.district),
+        ColonyOrVillageChanged(patientProfile.address.colonyOrVillage
             ?: ""),
-        PatientEditStateTextChanged(patientProfile.address.state),
-        PatientEditGenderChanged(patientProfile.patient.gender),
-        PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number
+        StateChanged(patientProfile.address.state),
+        GenderChanged(patientProfile.patient.gender),
+        PhoneNumberChanged(patientProfile.phoneNumbers.firstOrNull()?.number
             ?: ""),
 
         if (patientProfile.patient.age != null) {
-          PatientEditAgeTextChanged(patientProfile.patient.age!!.value.toString())
+          AgeChanged(patientProfile.patient.age!!.value.toString())
         } else {
-          PatientEditDateOfBirthTextChanged(dateOfBirthFormat.format(patientProfile.patient.dateOfBirth!!))
+          DateOfBirthChanged(dateOfBirthFormat.format(patientProfile.patient.dateOfBirth!!))
         }
     )
 
@@ -661,30 +661,30 @@ class PatientEditScreenSaveTest {
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
 
-    uiEvents.onNext(PatientEditPatientNameTextChanged(name))
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(enteredPhoneNumber))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged(colonyOrVillage))
-    uiEvents.onNext(PatientEditDistrictTextChanged(district))
-    uiEvents.onNext(PatientEditStateTextChanged(state))
-    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
+    uiEvents.onNext(NameChanged(name))
+    uiEvents.onNext(PhoneNumberChanged(enteredPhoneNumber))
+    uiEvents.onNext(ColonyOrVillageChanged(colonyOrVillage))
+    uiEvents.onNext(DistrictChanged(district))
+    uiEvents.onNext(StateChanged(state))
+    uiEvents.onNext(GenderChanged(Gender.Male))
 
     if (age != null) {
-      uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
-      uiEvents.onNext(PatientEditAgeTextChanged(age))
+      uiEvents.onNext(DateOfBirthChanged(""))
+      uiEvents.onNext(AgeChanged(age))
     }
 
     if (dateOfBirth != null) {
-      uiEvents.onNext(PatientEditAgeTextChanged(""))
-      uiEvents.onNext(PatientEditDateOfBirthTextChanged(dateOfBirth))
+      uiEvents.onNext(AgeChanged(""))
+      uiEvents.onNext(DateOfBirthChanged(dateOfBirth))
     }
 
     if (age == null && dateOfBirth == null) {
-      uiEvents.onNext(PatientEditAgeTextChanged(""))
+      uiEvents.onNext(AgeChanged(""))
     }
 
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(SaveClicked())
 
     if (expectedErrors.isNotEmpty()) {
       // This is order dependent because finding the first field
@@ -855,17 +855,17 @@ class PatientEditScreenSaveTest {
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
 
-    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
-    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
-    uiEvents.onNext(PatientEditStateTextChanged("State"))
-    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
-    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+    uiEvents.onNext(GenderChanged(Gender.Male))
+    uiEvents.onNext(ColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(DistrictChanged("District"))
+    uiEvents.onNext(StateChanged("State"))
+    uiEvents.onNext(NameChanged("Name"))
+    uiEvents.onNext(AgeChanged("1"))
 
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(enteredPhoneNumber))
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(PhoneNumberChanged(enteredPhoneNumber))
+    uiEvents.onNext(SaveClicked())
 
     verify(ui).showValidationErrors(setOf(expectedError))
   }
@@ -895,17 +895,17 @@ class PatientEditScreenSaveTest {
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, null))
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, null))
 
-    uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
-    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
-    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
-    uiEvents.onNext(PatientEditStateTextChanged("State"))
-    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
-    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+    uiEvents.onNext(GenderChanged(Gender.Male))
+    uiEvents.onNext(ColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(DistrictChanged("District"))
+    uiEvents.onNext(StateChanged("State"))
+    uiEvents.onNext(NameChanged("Name"))
+    uiEvents.onNext(AgeChanged("1"))
 
-    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditSaveClicked())
+    uiEvents.onNext(PhoneNumberChanged(""))
+    uiEvents.onNext(SaveClicked())
 
     verify(ui, never()).showValidationErrors(any())
   }

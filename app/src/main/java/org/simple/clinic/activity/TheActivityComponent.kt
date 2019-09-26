@@ -18,7 +18,7 @@ import org.simple.clinic.drugs.selection.PrescribedDrugScreen
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
-import org.simple.clinic.editpatient_old.ConfirmDiscardChangesDialog
+import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient_old.PatientEditScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.change.FacilityChangeScreen

@@ -1,4 +1,4 @@
-package org.simple.clinic.editpatient_old
+package org.simple.clinic.editpatient
 
 import android.app.Dialog
 import android.os.Bundle

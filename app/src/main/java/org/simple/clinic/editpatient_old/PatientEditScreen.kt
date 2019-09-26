@@ -27,6 +27,7 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.editpatient.AgeChanged
 import org.simple.clinic.editpatient.ColonyOrVillageChanged
+import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DateOfBirthFocusChanged
 import org.simple.clinic.editpatient.DistrictChanged

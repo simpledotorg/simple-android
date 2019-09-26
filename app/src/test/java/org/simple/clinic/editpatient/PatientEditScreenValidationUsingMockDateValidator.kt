@@ -812,16 +812,14 @@ class PatientEditScreenValidationUsingMockDateValidator {
   )
 
   @Test
-  fun `when save is clicked, valid phone number should not show errors`() {
-    val (alreadyPresentPhoneNumber, numberValidationResult) = null to BLANK
-
+  fun `when save is clicked and phone number is not already saved, entering a blank phone number should not show errors`() {
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
 
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, alreadyPresentPhoneNumber))
+    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, null))
 
     uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))

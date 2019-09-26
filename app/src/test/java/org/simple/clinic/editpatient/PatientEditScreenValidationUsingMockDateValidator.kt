@@ -44,6 +44,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -61,22 +62,19 @@ class PatientEditScreenValidationUsingMockDateValidator {
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private lateinit var dobValidator: UserInputDateValidator
+  private val nextYear = LocalDate.now().year + 1
 
   @Before
   fun setUp() {
     screen = mock()
     patientRepository = mock()
-    dobValidator = mock()
-
-    whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(utcClock))
 
     val controller = PatientEditScreenController(
         patientRepository,
         IndianPhoneNumberValidator(),
         utcClock,
         TestUserClock(),
-        dobValidator,
+        UserInputDateValidator(ZoneOffset.UTC, dateOfBirthFormat),
         dateOfBirthFormat)
 
     errorConsumer = { throw it }
@@ -95,8 +93,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
 
-    whenever(dobValidator.validate(any(), any())).thenReturn(dateOfBirthTestParams.dobValidationResult)
-
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditGenderChanged(Gender.Male))
@@ -113,8 +109,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
   @Suppress("Unused")
   private fun `params for date of birth should be validated`(): List<DateOfBirthTestParams> {
     return listOf(
-        DateOfBirthTestParams("01/01/2000", InvalidPattern, INVALID_DATE_OF_BIRTH),
-        DateOfBirthTestParams("01/01/2000", DateIsInFuture, DATE_OF_BIRTH_IN_FUTURE)
+        DateOfBirthTestParams("20/40-80", InvalidPattern, INVALID_DATE_OF_BIRTH),
+        DateOfBirthTestParams("01/01/$nextYear", DateIsInFuture, DATE_OF_BIRTH_IN_FUTURE)
     )
   }
 
@@ -141,8 +137,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
     ) = testParams
 
     val patientUuid = existingSavedPatient.uuid
-
-    whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
 
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
@@ -363,7 +357,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditStateTextChanged("State 2"),
                 PatientEditPatientNameTextChanged("Name 2"),
                 PatientEditPhoneNumberTextChanged("1234567"),
-                PatientEditDateOfBirthTextChanged("30/11/2000")),
+                PatientEditDateOfBirthTextChanged("30/11/$nextYear")),
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
@@ -391,7 +385,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditPatientNameTextChanged("Name 2"),
                 PatientEditPhoneNumberTextChanged("1234567"),
                 PatientEditAgeTextChanged(""),
-                PatientEditDateOfBirthTextChanged("30/11/2000")),
+                PatientEditDateOfBirthTextChanged("30/11/$nextYear")),
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
@@ -416,7 +410,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Transgender)),
+                PatientEditGenderChanged(Gender.Transgender),
+                PatientEditPhoneNumberTextChanged("1234")),
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
@@ -435,10 +430,10 @@ class PatientEditScreenValidationUsingMockDateValidator {
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             numberValidationResult = LENGTH_TOO_LONG,
             inputEvents = listOf(
-                PatientEditPatientNameTextChanged(""),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(Gender.Transgender)),
+                PatientEditGenderChanged(Gender.Transgender),
+                PatientEditPhoneNumberTextChanged("12345678901234")),
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
@@ -540,8 +535,8 @@ class PatientEditScreenValidationUsingMockDateValidator {
       val existingSavedPatient: Patient,
       val existingSavedAddress: PatientAddress,
       val existingSavedPhoneNumber: PatientPhoneNumber?,
-      val numberValidationResult: PhoneNumberValidator.Result,
-      val userInputDateOfBirthValidationResult: UserInputDateValidator.Result,
+      val numberValidationResult: PhoneNumberValidator.Result, // TODO Remove this
+      val userInputDateOfBirthValidationResult: UserInputDateValidator.Result, // TODO Remove this
       val advanceClockBy: Duration,
       val inputEvents: List<UiEvent>,
       val shouldSavePatient: Boolean,
@@ -574,10 +569,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
     whenever(patientRepository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
-
-    if (userInputDateOfBirthValidationResult != null) {
-      whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
-    }
 
     uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
 
@@ -689,7 +680,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             null,
             UserInputDateValidator.Result.Invalid.InvalidPattern,
-            "01/01/2000",
+            "24/24/2000",
             setOf(PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG, PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY, PatientEditValidationError.STATE_EMPTY, INVALID_DATE_OF_BIRTH),
             "12345678901234"
         ),
@@ -713,7 +704,7 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             null,
             UserInputDateValidator.Result.Invalid.DateIsInFuture,
-            "01/01/2000",
+            "01/01/$nextYear",
             setOf(PatientEditValidationError.FULL_NAME_EMPTY, PatientEditValidationError.STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE),
             "1234567890"
         ),

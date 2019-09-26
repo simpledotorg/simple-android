@@ -1,6 +1,6 @@
 package org.simple.clinic.editpatient
 
-import org.simple.clinic.editpatient_old.PatientEditValidationError
+import org.simple.clinic.editpatient_old.EditPatientValidationError
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.threeten.bp.LocalDate
@@ -14,8 +14,8 @@ interface EditPatientUi {
   fun setGender(gender: Gender)
   fun setPatientAge(age: Int)
   fun setPatientDateOfBirth(dateOfBirth: LocalDate)
-  fun showValidationErrors(errors: Set<PatientEditValidationError>)
-  fun hideValidationErrors(errors: Set<PatientEditValidationError>)
+  fun showValidationErrors(errors: Set<EditPatientValidationError>)
+  fun hideValidationErrors(errors: Set<EditPatientValidationError>)
   fun scrollToFirstFieldWithError()
   fun goBack()
   fun showDatePatternInDateOfBirthLabel()

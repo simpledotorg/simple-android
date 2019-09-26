@@ -26,16 +26,16 @@ import org.simple.clinic.editpatient.NameChanged
 import org.simple.clinic.editpatient.PhoneNumberChanged
 import org.simple.clinic.editpatient.SaveClicked
 import org.simple.clinic.editpatient.StateChanged
-import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient_old.PatientEditValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient_old.PatientEditValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient_old.PatientEditValidationError.INVALID_DATE_OF_BIRTH
-import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient_old.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient_old.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.editpatient_old.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.editpatient_old.EditPatientValidationError.DISTRICT_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.editpatient_old.EditPatientValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.editpatient_old.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.editpatient_old.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.editpatient_old.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -228,7 +228,7 @@ class PatientEditScreenSaveTest {
   data class DateOfBirthTestParams(
       val dateOfBirth: String,
       val dobValidationResult: UserInputDateValidator.Result,
-      val expectedError: PatientEditValidationError
+      val expectedError: EditPatientValidationError
   )
 
   @Test
@@ -835,7 +835,7 @@ class PatientEditScreenSaveTest {
       val state: String,
       val age: String?,
       val dateOfBirth: String?,
-      val expectedErrors: Set<PatientEditValidationError>,
+      val expectedErrors: Set<EditPatientValidationError>,
       val enteredPhoneNumber: String = ""
   )
 
@@ -884,7 +884,7 @@ class PatientEditScreenSaveTest {
   data class ValidatePhoneNumberTestParams(
       val alreadyPresentPhoneNumber: PatientPhoneNumber?,
       val enteredPhoneNumber: String,
-      val expectedError: PatientEditValidationError
+      val expectedError: EditPatientValidationError
   )
 
   @Test

@@ -40,7 +40,7 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
 ) : Parcelable {
   companion object {
     fun from(
-        screenCreated: PatientEditScreenCreated,
+        screenCreated: EditPatientScreenCreated,
         dateOfBirthFormatter: DateTimeFormatter
     ): OngoingEditPatientEntry {
       val (patient, address, phoneNumber) = screenCreated

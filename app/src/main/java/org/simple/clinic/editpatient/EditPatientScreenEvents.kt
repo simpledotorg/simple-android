@@ -6,7 +6,7 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.widgets.UiEvent
 
-data class PatientEditScreenCreated(
+data class EditPatientScreenCreated(
     val patient: Patient,
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?
@@ -16,8 +16,8 @@ data class PatientEditScreenCreated(
         patient: Patient,
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?
-    ): PatientEditScreenCreated {
-      return PatientEditScreenCreated(
+    ): EditPatientScreenCreated {
+      return EditPatientScreenCreated(
           patient,
           address,
           phoneNumber
@@ -26,46 +26,44 @@ data class PatientEditScreenCreated(
   }
 }
 
-data class PatientEditPatientNameTextChanged(val name: String) : UiEvent {
+data class NameChanged(val name: String) : UiEvent {
   override val analyticsName = "Edit Patient Entry:Patient Name Text Changed"
 }
 
-data class PatientEditPhoneNumberTextChanged(val phoneNumber: String) : UiEvent {
+data class PhoneNumberChanged(val phoneNumber: String) : UiEvent {
   override val analyticsName = "Edit Patient Entry:Phone Number Text Changed"
 }
 
-data class PatientEditGenderChanged(val gender: Gender) : UiEvent {
+data class GenderChanged(val gender: Gender) : UiEvent {
   override val analyticsName = "Edit Patient Entry:Changed Gender"
 }
 
-data class PatientEditColonyOrVillageChanged(val colonyOrVillage: String): UiEvent {
+data class ColonyOrVillageChanged(val colonyOrVillage: String): UiEvent {
   override val analyticsName = "Edit Patient Entry:Colony Or Village Text Changed"
 }
 
-data class PatientEditDistrictTextChanged(val district: String): UiEvent {
+data class DistrictChanged(val district: String): UiEvent {
   override val analyticsName = "Edit Patient Entry:District Text Changed"
 }
 
-data class PatientEditStateTextChanged(val state: String): UiEvent {
+data class StateChanged(val state: String): UiEvent {
   override val analyticsName = "Edit Patient Entry:State Text Changed"
 }
 
-data class OngoingEditPatientEntryChanged(val ongoingEditPatientEntry: OngoingEditPatientEntry): UiEvent
-
-class PatientEditSaveClicked: UiEvent {
-  override val analyticsName = "Edit Patient Entry:Save Clicked"
-}
-
-data class PatientEditDateOfBirthFocusChanged(val hasFocus: Boolean): UiEvent {
+data class DateOfBirthFocusChanged(val hasFocus: Boolean): UiEvent {
   override val analyticsName = "Edit Patient Entry:Focused on DOB Text Field"
 }
 
-data class PatientEditDateOfBirthTextChanged(val dateOfBirth: String): UiEvent {
+data class DateOfBirthChanged(val dateOfBirth: String): UiEvent {
   override val analyticsName = "Edit Patient Entry:DOB Text Changed"
 }
 
-data class PatientEditAgeTextChanged(val age: String): UiEvent {
+data class AgeChanged(val age: String): UiEvent {
   override val analyticsName = "Edit Patient Entry:Age Text Changed"
+}
+
+class SaveClicked: UiEvent {
+  override val analyticsName = "Edit Patient Entry:Save Clicked"
 }
 
 class PatientEditBackClicked: UiEvent {

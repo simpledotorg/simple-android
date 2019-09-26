@@ -11,8 +11,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.editpatient.EditPatientScreenCreated
 import org.simple.clinic.editpatient.EditPatientUi
-import org.simple.clinic.editpatient.PatientEditScreenCreated
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -62,7 +62,7 @@ class PatientEditScreenCreatedTest {
   fun `when screen is created then the existing patient data must be prefilled`(patientFormTestParams: PatientFormTestParams) {
     val (patient, address, phoneNumber) = patientFormTestParams
 
-    uiEvents.onNext(PatientEditScreenCreated.from(patient, address, phoneNumber))
+    uiEvents.onNext(EditPatientScreenCreated.from(patient, address, phoneNumber))
 
     if (patientFormTestParams.shouldSetColonyOrVillage) {
       verify(ui).setColonyOrVillage(address.colonyOrVillage!!)

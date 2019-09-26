@@ -18,7 +18,7 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -36,29 +36,25 @@ class PatientEditScreenCreatedTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  val utcClock: TestUtcClock = TestUtcClock()
-
   private lateinit var screen: PatientEditScreen
   private lateinit var patientRepository: PatientRepository
-  private lateinit var numberValidator: PhoneNumberValidator
-  private lateinit var controller: PatientEditScreenController
-
   private lateinit var errorConsumer: (Throwable) -> Unit
-  private lateinit var dobValidator: UserInputDateValidator
+
+  private val utcClock: TestUtcClock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private lateinit var dobValidator: UserInputDateValidator
 
   @Before
   fun setUp() {
     screen = mock()
     patientRepository = mock()
-    numberValidator = mock()
     dobValidator = mock()
 
     whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(utcClock))
 
-    controller = PatientEditScreenController(
+    val controller = PatientEditScreenController(
         patientRepository,
-        numberValidator,
+        IndianPhoneNumberValidator(),
         utcClock,
         TestUserClock(),
         dobValidator,

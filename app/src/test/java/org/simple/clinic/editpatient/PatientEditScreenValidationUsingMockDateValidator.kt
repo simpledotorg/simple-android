@@ -55,14 +55,11 @@ class PatientEditScreenValidationUsingMockDateValidator {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  val utcClock: TestUtcClock = TestUtcClock()
-
   private lateinit var screen: PatientEditScreen
   private lateinit var patientRepository: PatientRepository
-  private val numberValidator: PhoneNumberValidator = IndianPhoneNumberValidator()
-  private lateinit var controller: PatientEditScreenController
-
   private lateinit var errorConsumer: (Throwable) -> Unit
+
+  private val utcClock: TestUtcClock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private lateinit var dobValidator: UserInputDateValidator
 
@@ -74,9 +71,9 @@ class PatientEditScreenValidationUsingMockDateValidator {
 
     whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(utcClock))
 
-    controller = PatientEditScreenController(
+    val controller = PatientEditScreenController(
         patientRepository,
-        numberValidator,
+        IndianPhoneNumberValidator(),
         utcClock,
         TestUserClock(),
         dobValidator,

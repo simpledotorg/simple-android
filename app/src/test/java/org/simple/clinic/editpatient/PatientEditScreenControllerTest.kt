@@ -226,6 +226,11 @@ class PatientEditScreenControllerTest {
     )
   }
 
+  data class HidingErrorsOnTextChangeParams(
+      val inputChange: UiEvent,
+      val expectedErrorsToHide: Set<PatientEditValidationError>
+  )
+
   @Test
   fun `when data of birth has focus, the date format should be shown in the label`() {
     uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
@@ -809,6 +814,14 @@ class PatientEditScreenControllerTest {
     )
   }
 
+  data class ConfirmDiscardChangesTestParams(
+      val existingSavedPatient: Patient,
+      val existingSavedAddress: PatientAddress,
+      val existingSavedPhoneNumber: PatientPhoneNumber?,
+      val inputEvents: List<UiEvent>,
+      val shouldShowConfirmDiscardChangesPopup: Boolean
+  )
+
   private fun generatePatientProfile(
       patientUuid: UUID,
       addressUuid: UUID,
@@ -870,22 +883,3 @@ class PatientEditScreenControllerTest {
     }
   }
 }
-
-data class DateOfBirthTestParams(
-    val dateOfBirth: String,
-    val dobValidationResult: UserInputDateValidator.Result,
-    val expectedError: PatientEditValidationError
-)
-
-data class ConfirmDiscardChangesTestParams(
-    val existingSavedPatient: Patient,
-    val existingSavedAddress: PatientAddress,
-    val existingSavedPhoneNumber: PatientPhoneNumber?,
-    val inputEvents: List<UiEvent>,
-    val shouldShowConfirmDiscardChangesPopup: Boolean
-)
-
-data class HidingErrorsOnTextChangeParams(
-    val inputChange: UiEvent,
-    val expectedErrorsToHide: Set<PatientEditValidationError>
-)

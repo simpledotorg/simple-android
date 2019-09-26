@@ -25,19 +25,19 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
+import org.simple.clinic.editpatient.AgeChanged
+import org.simple.clinic.editpatient.ColonyOrVillageChanged
+import org.simple.clinic.editpatient.DateOfBirthChanged
+import org.simple.clinic.editpatient.DateOfBirthFocusChanged
+import org.simple.clinic.editpatient.DistrictChanged
+import org.simple.clinic.editpatient.EditPatientScreenCreated
 import org.simple.clinic.editpatient.EditPatientUi
-import org.simple.clinic.editpatient.PatientEditAgeTextChanged
+import org.simple.clinic.editpatient.GenderChanged
+import org.simple.clinic.editpatient.NameChanged
 import org.simple.clinic.editpatient.PatientEditBackClicked
-import org.simple.clinic.editpatient.PatientEditColonyOrVillageChanged
-import org.simple.clinic.editpatient.PatientEditDateOfBirthFocusChanged
-import org.simple.clinic.editpatient.PatientEditDateOfBirthTextChanged
-import org.simple.clinic.editpatient.PatientEditDistrictTextChanged
-import org.simple.clinic.editpatient.PatientEditGenderChanged
-import org.simple.clinic.editpatient.PatientEditPatientNameTextChanged
-import org.simple.clinic.editpatient.PatientEditPhoneNumberTextChanged
-import org.simple.clinic.editpatient.PatientEditSaveClicked
-import org.simple.clinic.editpatient.PatientEditScreenCreated
-import org.simple.clinic.editpatient.PatientEditStateTextChanged
+import org.simple.clinic.editpatient.PhoneNumberChanged
+import org.simple.clinic.editpatient.SaveClicked
+import org.simple.clinic.editpatient.StateChanged
 import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -148,33 +148,33 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun screenCreates(): Observable<UiEvent> {
     val key = screenRouter.key<PatientEditScreenKey>(this)
-    val patientEditScreenCreated = PatientEditScreenCreated
+    val patientEditScreenCreated = EditPatientScreenCreated
         .from(key.patient, key.address, key.phoneNumber)
     return Observable.just(patientEditScreenCreated)
   }
 
   private fun saveClicks(): Observable<UiEvent> {
-    return RxView.clicks(saveButton.button).map { PatientEditSaveClicked() }
+    return RxView.clicks(saveButton.button).map { SaveClicked() }
   }
 
   private fun nameTextChanges(): Observable<UiEvent> {
-    return RxTextView.textChanges(fullNameEditText).map { PatientEditPatientNameTextChanged(it.toString()) }
+    return RxTextView.textChanges(fullNameEditText).map { NameChanged(it.toString()) }
   }
 
   private fun phoneNumberTextChanges(): Observable<UiEvent> {
-    return RxTextView.textChanges(phoneNumberEditText).map { PatientEditPhoneNumberTextChanged(it.toString()) }
+    return RxTextView.textChanges(phoneNumberEditText).map { PhoneNumberChanged(it.toString()) }
   }
 
   private fun districtTextChanges(): Observable<UiEvent> {
-    return RxTextView.textChanges(districtEditText).map { PatientEditDistrictTextChanged(it.toString()) }
+    return RxTextView.textChanges(districtEditText).map { DistrictChanged(it.toString()) }
   }
 
   private fun stateTextChanges(): Observable<UiEvent> {
-    return RxTextView.textChanges(stateEditText).map { PatientEditStateTextChanged(it.toString()) }
+    return RxTextView.textChanges(stateEditText).map { StateChanged(it.toString()) }
   }
 
   private fun colonyTextChanges(): Observable<UiEvent> {
-    return RxTextView.textChanges(colonyEditText).map { PatientEditColonyOrVillageChanged(it.toString()) }
+    return RxTextView.textChanges(colonyEditText).map { ColonyOrVillageChanged(it.toString()) }
   }
 
   private fun backClicks(): Observable<UiEvent> {
@@ -204,15 +204,15 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
         .filter { it != -1 }
         .map { checkedId ->
           val gender = radioIdToGenders[checkedId]!!
-          PatientEditGenderChanged(gender)
+          GenderChanged(gender)
         }
   }
 
-  private fun dateOfBirthTextChanges(): Observable<UiEvent> = dateOfBirthEditText.textChanges(::PatientEditDateOfBirthTextChanged)
+  private fun dateOfBirthTextChanges(): Observable<UiEvent> = dateOfBirthEditText.textChanges(::DateOfBirthChanged)
 
-  private fun dateOfBirthFocusChanges(): Observable<UiEvent> = dateOfBirthEditText.focusChanges.map(::PatientEditDateOfBirthFocusChanged)
+  private fun dateOfBirthFocusChanges(): Observable<UiEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
 
-  private fun ageTextChanges(): Observable<UiEvent> = ageEditText.textChanges(::PatientEditAgeTextChanged)
+  private fun ageTextChanges(): Observable<UiEvent> = ageEditText.textChanges(::AgeChanged)
 
   override fun setPatientName(name: String) {
     fullNameEditText.setTextAndCursor(name)

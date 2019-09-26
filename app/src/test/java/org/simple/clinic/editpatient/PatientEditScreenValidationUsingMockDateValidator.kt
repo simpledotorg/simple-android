@@ -35,11 +35,6 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -47,7 +42,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -134,8 +128,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
     val (existingSavedPatient,
         existingSavedAddress,
         existingSavedPhoneNumber,
-        numberValidationResult,
-        userInputDateOfBirthValidationResult,
         advanceClockBy,
         inputEvents,
         shouldSavePatient,
@@ -195,7 +187,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
     return listOf(
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            userInputDateOfBirthValidationResult = Valid(LocalDate.of(1985, Month.MAY, 20)),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -212,7 +203,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            userInputDateOfBirthValidationResult = Valid(LocalDate.parse("1949-01-01")),
             advanceClockBy = oneYear,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
@@ -247,7 +237,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = Valid(LocalDate.parse("1945-01-01")),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -267,7 +256,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = Valid(LocalDate.parse("1965-06-25")),
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -290,7 +278,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = Valid(LocalDate.parse("1947-01-01")),
             advanceClockBy = twoYears,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
@@ -341,7 +328,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            userInputDateOfBirthValidationResult = InvalidPattern,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -355,7 +341,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            userInputDateOfBirthValidationResult = DateIsInFuture,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -382,7 +367,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = DateIsInFuture,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -397,7 +381,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            userInputDateOfBirthValidationResult = InvalidPattern,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -412,8 +395,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            numberValidationResult = LENGTH_TOO_SHORT,
-            userInputDateOfBirthValidationResult = InvalidPattern,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -436,7 +417,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            numberValidationResult = LENGTH_TOO_LONG,
             inputEvents = listOf(
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
@@ -453,7 +433,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            numberValidationResult = BLANK,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -493,8 +472,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
 
   private fun generateTestData(
       patientProfile: PatientProfile,
-      numberValidationResult: PhoneNumberValidator.Result = VALID,
-      userInputDateOfBirthValidationResult: UserInputDateValidator.Result = Valid(LocalDate.parse("1947-01-01")),
       advanceClockBy: Duration = Duration.ZERO,
       inputEvents: List<UiEvent>,
       shouldSavePatient: Boolean,
@@ -528,8 +505,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
         patientProfile.patient,
         patientProfile.address,
         patientProfile.phoneNumbers.firstOrNull(),
-        numberValidationResult,
-        userInputDateOfBirthValidationResult,
         advanceClockBy,
         preCreateInputEvents + inputEvents,
         shouldSavePatient,
@@ -543,8 +518,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
       val existingSavedPatient: Patient,
       val existingSavedAddress: PatientAddress,
       val existingSavedPhoneNumber: PatientPhoneNumber?,
-      val numberValidationResult: PhoneNumberValidator.Result, // TODO Remove this
-      val userInputDateOfBirthValidationResult: UserInputDateValidator.Result, // TODO Remove this
       val advanceClockBy: Duration,
       val inputEvents: List<UiEvent>,
       val shouldSavePatient: Boolean,
@@ -562,7 +535,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
         district,
         state,
         age,
-        userInputDateOfBirthValidationResult,
         dateOfBirth,
         expectedErrors,
         enteredPhoneNumber
@@ -628,7 +600,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             "1",
             null,
-            null,
             setOf(FULL_NAME_EMPTY, PHONE_NUMBER_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY),
             ""
         ),
@@ -639,7 +610,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             "",
             "",
-            null,
             null,
             setOf(FULL_NAME_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
             enteredPhoneNumber = "1234567890"
@@ -652,7 +622,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             "1",
             null,
-            null,
             setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY),
             enteredPhoneNumber = "1234"
         ),
@@ -663,7 +632,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             "",
             "",
-            null,
             null,
             setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
             enteredPhoneNumber = "1234"
@@ -676,7 +644,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             "1",
             null,
-            null,
             setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY),
             "12345678901234"
         ),
@@ -687,7 +654,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "District",
             "",
             null,
-            InvalidPattern,
             "24/24/2000",
             setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY, INVALID_DATE_OF_BIRTH),
             "12345678901234"
@@ -700,7 +666,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "",
             null,
             null,
-            null,
             setOf(FULL_NAME_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
             "1234567890"
         ),
@@ -711,7 +676,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "District",
             "",
             null,
-            DateIsInFuture,
             "01/01/$nextYear",
             setOf(FULL_NAME_EMPTY, STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE),
             "1234567890"
@@ -724,7 +688,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "State",
             "",
             null,
-            null,
             setOf(FULL_NAME_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
             "12334567890"
         ),
@@ -736,7 +699,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "State",
             "1",
             null,
-            null,
             emptySet(),
             "1234567890"
         ),
@@ -747,7 +709,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
             "District",
             "State",
             null,
-            Valid(LocalDate.parse("1947-01-01")),
             "01/01/2000",
             emptySet(),
             "1234567890"
@@ -762,7 +723,6 @@ class PatientEditScreenValidationUsingMockDateValidator {
       val district: String,
       val state: String,
       val age: String?,
-      val userInputDateOfBirthValidationResult: UserInputDateValidator.Result?,
       val dateOfBirth: String?,
       val expectedErrors: Set<PatientEditValidationError>,
       val enteredPhoneNumber: String = ""

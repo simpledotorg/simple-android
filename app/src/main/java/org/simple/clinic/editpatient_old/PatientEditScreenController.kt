@@ -9,6 +9,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient_old.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient_old.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -48,7 +49,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = PatientEditScreen
+typealias Ui = EditPatientUi
 typealias UiChange = (Ui) -> Unit
 
 class PatientEditScreenController @Inject constructor(
@@ -98,7 +99,7 @@ class PatientEditScreenController @Inject constructor(
 
     val dateOfBirth = DateOfBirth.fromPatient(patient, userClock)
     when (dateOfBirth.type) {
-      DateOfBirth.Type.EXACT -> ui.setPatientDateofBirth(dateOfBirth.date)
+      DateOfBirth.Type.EXACT -> ui.setPatientDateOfBirth(dateOfBirth.date)
       DateOfBirth.Type.FROM_AGE -> ui.setPatientAge(dateOfBirth.estimateAge(userClock))
     }
   }

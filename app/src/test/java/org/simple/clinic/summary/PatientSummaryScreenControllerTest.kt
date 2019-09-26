@@ -302,7 +302,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 )
             )
         ),
@@ -320,7 +321,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest3[1],
@@ -328,7 +330,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 )
             )
         ),
@@ -346,7 +349,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest4[1],
@@ -354,7 +358,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest4[2],
@@ -362,7 +367,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 )
             )
         ),
@@ -377,7 +383,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest5[1],
@@ -385,7 +392,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest5[2],
@@ -393,7 +401,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 )
             )
         ),
@@ -408,7 +417,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest6[1],
@@ -416,7 +426,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest6[2],
@@ -424,10 +435,98 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 )
             )
         )
+    )
+  }
+
+  @Test
+  fun `when a bp is created then it should be editable till a fixed config duration`() {
+    //given
+    val config = PatientSummaryConfig(
+        numberOfBpPlaceholders = 3,
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = Duration.ofMinutes(60))
+
+    val now = Instant.now(utcClock)
+
+    val bps = listOf(
+        PatientMocker.bp(
+            uuid = UUID.fromString("2077cea4-c880-4163-a577-74cab23741a6"),
+            patientUuid = patientUuid,
+            createdAt = now,
+            recordedAt = now
+        ),
+        PatientMocker.bp(
+            uuid = UUID.fromString("5ed902c6-8c77-4a88-ba57-0cfb31a419fe"),
+            patientUuid = patientUuid,
+            createdAt = now.minus(10, ChronoUnit.MINUTES),
+            recordedAt = now.minus(1, ChronoUnit.DAYS)
+        )
+    )
+
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bps))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
+
+    //when
+    configSubject.onNext(config)
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewExistingPatient, screenCreatedTimestamp = Instant.now(utcClock)))
+
+    verify(screen).populateList(
+        prescribedDrugsItem = any(),
+        measurementPlaceholderItems = any(),
+        measurementItems = check {
+          it.forEachIndexed { index, item -> assertThat(item.isBpEditable).isTrue() }
+        },
+        medicalHistoryItem = any()
+    )
+  }
+
+  @Test
+  fun `when a bp is created more than the fixed config duration ago then it should not be editable`() {
+    //given
+    val permittedDuration = Duration.ofMinutes(60)
+    val config = PatientSummaryConfig(
+        numberOfBpPlaceholders = 3,
+        numberOfBpsToDisplay = 100,
+        bpEditableDuration = permittedDuration)
+
+    val now = Instant.now(utcClock)
+
+    val bps = listOf(
+        PatientMocker.bp(
+            uuid = UUID.fromString("2077cea4-c880-4163-a577-74cab23741a6"),
+            patientUuid = patientUuid,
+            createdAt = now.minus(1, ChronoUnit.DAYS),
+            recordedAt = now
+        ),
+        PatientMocker.bp(
+            uuid = UUID.fromString("5ed902c6-8c77-4a88-ba57-0cfb31a419fe"),
+            patientUuid = patientUuid,
+            createdAt = now.minus(70, ChronoUnit.MINUTES),
+            recordedAt = now.minus(1, ChronoUnit.DAYS)
+        )
+    )
+
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bps))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
+
+    //when
+    configSubject.onNext(config)
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewExistingPatient, screenCreatedTimestamp = Instant.now(utcClock)))
+
+    verify(screen).populateList(
+        prescribedDrugsItem = any(),
+        measurementPlaceholderItems = any(),
+        measurementItems = check {
+          it.forEachIndexed { index, item -> assertThat(item.isBpEditable).isFalse() }
+        },
+        medicalHistoryItem = any()
     )
   }
 
@@ -605,7 +704,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime(bpsForTest1[0].recordedAt),
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest1[1],
@@ -613,7 +713,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime(bpsForTest1[1].recordedAt),
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest1[2],
@@ -621,7 +722,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = null,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 )
             )),
         listOf(
@@ -634,7 +736,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime(bpsForTest2[0].recordedAt),
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest2[1],
@@ -642,7 +745,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime(bpsForTest2[1].recordedAt),
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest2[2],
@@ -650,7 +754,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime(bpsForTest2[2].recordedAt),
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest2[3],
@@ -658,7 +763,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = displayTime(bpsForTest2[3].recordedAt),
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 ),
                 SummaryBloodPressureListItem(
                     measurement = bpsForTest2[4],
@@ -666,7 +772,8 @@ class PatientSummaryScreenControllerTest {
                     formattedTime = null,
                     addTopPadding = false,
                     daysAgo = Today,
-                    dateFormatter = dateFormatter
+                    dateFormatter = dateFormatter,
+                    isBpEditable = false
                 )
             ))
     )

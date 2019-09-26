@@ -118,6 +118,12 @@ class PatientEditScreenValidationUsingMockDateValidator {
     )
   }
 
+  data class DateOfBirthTestParams(
+      val dateOfBirth: String,
+      val dobValidationResult: UserInputDateValidator.Result,
+      val expectedError: PatientEditValidationError
+  )
+
   @Test
   @Parameters(method = "params for saving patient on save clicked")
   fun `when save is clicked, the patient details must be updated if there are no errors`(testParams: SavePatientTestParams) {

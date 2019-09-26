@@ -1,5 +1,6 @@
-package org.simple.clinic.editpatient_old
+package org.simple.clinic.editpatient
 
+import org.simple.clinic.editpatient_old.OngoingEditPatientEntry
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress

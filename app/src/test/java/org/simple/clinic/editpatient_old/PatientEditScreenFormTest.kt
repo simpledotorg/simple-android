@@ -13,6 +13,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient_old.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient_old.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient_old.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -57,7 +58,7 @@ class PatientEditScreenFormTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var screen: PatientEditScreen
+  private lateinit var screen: EditPatientUi
   private lateinit var patientRepository: PatientRepository
   private lateinit var errorConsumer: (Throwable) -> Unit
 

@@ -1,6 +1,5 @@
 package org.simple.clinic.editpatient
 
-import org.simple.clinic.editpatient_old.EditPatientValidationError
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.threeten.bp.LocalDate

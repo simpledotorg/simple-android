@@ -144,22 +144,22 @@ class PatientEditScreenCreatedTest {
         phoneNumberToReturn
     )
   }
-}
 
-data class PatientFormTestParams(
-    val patient: Patient,
-    val address: PatientAddress,
-    val phoneNumber: PatientPhoneNumber?
-) {
-  val shouldSetColonyOrVillage: Boolean
-    get() = address.colonyOrVillage.isNullOrBlank().not()
+  data class PatientFormTestParams(
+      val patient: Patient,
+      val address: PatientAddress,
+      val phoneNumber: PatientPhoneNumber?
+  ) {
+    val shouldSetColonyOrVillage: Boolean
+      get() = address.colonyOrVillage.isNullOrBlank().not()
 
-  val shouldSetPhoneNumber: Boolean
-    get() = phoneNumber != null
+    val shouldSetPhoneNumber: Boolean
+      get() = phoneNumber != null
 
-  val shouldSetAge: Boolean
-    get() = patient.age != null
+    val shouldSetAge: Boolean
+      get() = patient.age != null
 
-  val shouldSetDateOfBirth: Boolean
-    get() = patient.dateOfBirth != null
+    val shouldSetDateOfBirth: Boolean
+      get() = patient.dateOfBirth != null
+  }
 }

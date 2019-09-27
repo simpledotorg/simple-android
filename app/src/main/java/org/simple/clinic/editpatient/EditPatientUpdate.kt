@@ -36,82 +36,35 @@ class EditPatientUpdate(
       event: EditPatientEvent
   ): Next<EditPatientModel, EditPatientEffect> {
     return when (event) {
-      is DateOfBirthFocusChanged -> dispatchDatePatternInLabelEffect(event)
-
-      is NameChanged -> {
-        next(
-            model.updateName(event.name),
-            setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
-        )
-      }
-
-      is GenderChanged -> {
-        next(model.updateGender(event.gender))
-      }
-
-      is PhoneNumberChanged -> {
-        next(
-            model.updatePhoneNumber(event.phoneNumber),
-            setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
-        )
-      }
-
-      is ColonyOrVillageChanged -> {
-        next(
-            model.updateColonyOrVillage(event.colonyOrVillage),
-            setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
-        )
-      }
-
-      is DistrictChanged -> {
-        next(
-            model.updateDistrict(event.district),
-            setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
-        )
-      }
-
-      is StateChanged -> {
-        next(
-            model.updateState(event.state),
-            setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
-        )
-      }
-
-      is AgeChanged -> {
-        next(
-            model.updateAge(event.age),
-            setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
-        )
-      }
-
-      is DateOfBirthChanged -> {
-        next(
-            model.updateDateOfBirth(event.dateOfBirth),
-            if (event.dateOfBirth.isBlank()) {
-              setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
-            } else {
-              setOf(ShowDatePatternInDateOfBirthLabelEffect, HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
-            }
-        )
-      }
-
-      is SaveClicked -> {
-        val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator)
-        return if (validationErrors.isEmpty()) {
-          val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber) = model
-          onlyEffect(SavePatientEffect(model.ongoingEntry, savedPatient, savedAddress, savedPhoneNumber))
-        } else {
-          onlyEffect(ShowValidationErrorsEffect(validationErrors))
-        }
-      }
-
-      is BackClicked -> {
-        if (model.existingEntry != model.ongoingEntry) onlyEffect(ShowDiscardChangesAlertEffect) else onlyEffect(GoBackEffect)
-      }
+      is NameChanged -> onTextFieldChanged(event) { model.updateName(event.name) }
+      is GenderChanged -> onGenderChanged(model, event)
+      is PhoneNumberChanged -> onTextFieldChanged(event) { model.updatePhoneNumber(event.phoneNumber) }
+      is ColonyOrVillageChanged -> onTextFieldChanged(event) { model.updateColonyOrVillage(event.colonyOrVillage) }
+      is DistrictChanged -> onTextFieldChanged(event) { model.updateDistrict(event.district) }
+      is StateChanged -> onTextFieldChanged(event) { model.updateState(event.state) }
+      is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(event)
+      is DateOfBirthChanged -> onDateOfBirthChanged(model, event)
+      is AgeChanged -> onTextFieldChanged(event) { model.updateAge(event.age) }
+      is BackClicked -> onBackClicked(model)
+      is SaveClicked -> onSaveClicked(model)
     }
   }
 
-  private fun dispatchDatePatternInLabelEffect(
+  private fun onTextFieldChanged(
+      event: EditPatientEvent,
+      modifier: () -> EditPatientModel
+  ): Next<EditPatientModel, EditPatientEffect> = next(
+      modifier(),
+      setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
+  )
+
+  private fun onGenderChanged(
+      model: EditPatientModel,
+      event: GenderChanged
+  ): Next<EditPatientModel, EditPatientEffect> =
+      next(model.updateGender(event.gender))
+
+  private fun onDateOfBirthFocusChanged(
       event: DateOfBirthFocusChanged
   ): Next<EditPatientModel, EditPatientEffect> {
     val showOrHideLabelEffect = if (event.hasFocus) {
@@ -119,12 +72,48 @@ class EditPatientUpdate(
     } else {
       HideDatePatternInDateOfBirthLabelEffect
     }
-    return onlyEffect(showOrHideLabelEffect)
+    return justEffect(showOrHideLabelEffect)
   }
 
-  private fun onlyEffect(
-      effect: EditPatientEffect
+  private fun onDateOfBirthChanged(
+      model: EditPatientModel,
+      event: DateOfBirthChanged
   ): Next<EditPatientModel, EditPatientEffect> {
-    return dispatch<EditPatientModel, EditPatientEffect>(setOf(effect))
+    val effects = if (event.dateOfBirth.isBlank()) {
+      setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
+    } else {
+      setOf(ShowDatePatternInDateOfBirthLabelEffect, HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
+    }
+
+    return next(
+        model.updateDateOfBirth(event.dateOfBirth),
+        effects
+    )
   }
+
+  private fun onBackClicked(
+      model: EditPatientModel
+  ): Next<EditPatientModel, EditPatientEffect> {
+    val effect = if (model.existingEntry != model.ongoingEntry) {
+      ShowDiscardChangesAlertEffect
+    } else {
+      GoBackEffect
+    }
+    return justEffect(effect)
+  }
+
+  private fun onSaveClicked(
+      model: EditPatientModel
+  ): Next<EditPatientModel, EditPatientEffect> {
+    val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator)
+    return if (validationErrors.isEmpty()) {
+      val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber) = model
+      justEffect(SavePatientEffect(model.ongoingEntry, savedPatient, savedAddress, savedPhoneNumber))
+    } else {
+      justEffect(ShowValidationErrorsEffect(validationErrors))
+    }
+  }
+
+  private fun justEffect(effect: EditPatientEffect): Next<EditPatientModel, EditPatientEffect> =
+      dispatch<EditPatientModel, EditPatientEffect>(setOf(effect))
 }

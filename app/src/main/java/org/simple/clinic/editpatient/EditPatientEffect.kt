@@ -23,3 +23,14 @@ object HideDatePatternInDateOfBirthLabelEffect : EditPatientEffect()
 object GoBackEffect : EditPatientEffect()
 
 object ShowDiscardChangesAlertEffect : EditPatientEffect()
+
+data class ShowValidationErrorsEffect(
+    val validationErrors: Set<EditPatientValidationError>
+) : EditPatientEffect()
+
+data class SavePatientEffect(
+    val ongoingEntry: OngoingEditPatientEntry,
+    val savedPatient: Patient,
+    val savedAddress: PatientAddress,
+    val savedPhoneNumber: PatientPhoneNumber?
+) : EditPatientEffect()

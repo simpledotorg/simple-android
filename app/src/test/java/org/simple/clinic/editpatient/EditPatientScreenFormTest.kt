@@ -1,11 +1,15 @@
 package org.simple.clinic.editpatient
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -32,15 +36,19 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -58,6 +66,8 @@ class EditPatientScreenFormTest {
   private val utcClock: TestUtcClock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
+  private val patientRepository: PatientRepository = mock()
+
   @Test
   @Parameters(method = "params for hiding errors on text changes")
   fun `when input changes, errors corresponding to the input must be hidden`(textChangeParams: HidingErrorsOnTextChangeParams) {
@@ -66,6 +76,9 @@ class EditPatientScreenFormTest {
     val patient = PatientMocker.patient()
     val address = PatientMocker.address()
     val phoneNumber: PatientPhoneNumber? = null
+
+    whenever(patientRepository.updatePatient(any())).doReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).doReturn(Completable.complete())
 
     screenCreated(patient, address, phoneNumber)
     uiEvents.onNext(SaveClicked)
@@ -76,19 +89,6 @@ class EditPatientScreenFormTest {
     } else {
       verify(ui, never()).hideValidationErrors(any())
     }
-  }
-
-  private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
-    val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
-        uiEvents,
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
-        EditPatientInit(patient, address, phoneNumber),
-        EditPatientUpdate(),
-        EditPatientEffectHandler.createEffectHandler(ui, TestUserClock()),
-        viewRenderer::render
-    )
-
-    fixture.start()
   }
 
   @Suppress("Unused")
@@ -766,5 +766,18 @@ class EditPatientScreenFormTest {
       }
       profile
     }
+  }
+
+  private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
+    val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
+        uiEvents,
+        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
+        EditPatientInit(patient, address, phoneNumber),
+        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(ZoneOffset.UTC, dateOfBirthFormat)),
+        EditPatientEffectHandler.createEffectHandler(ui, TestUserClock(), patientRepository, utcClock, dateOfBirthFormat),
+        viewRenderer::render
+    )
+
+    fixture.start()
   }
 }

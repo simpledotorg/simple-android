@@ -30,7 +30,7 @@ class IllustrationSync @Inject constructor(
         .flatMapCompletable { response ->
           repository.saveIllustration(
               illustrationFileName = illustration.eventId,
-              responseBody = response
+              responseStream = response.byteStream()
           )
         }
 }

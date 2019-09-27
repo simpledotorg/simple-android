@@ -1,6 +1,7 @@
 package org.simple.clinic.illustration
 
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.Before
@@ -14,6 +15,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.InputStream
 
 class HomescreenIllustrationRepositoryTest {
 
@@ -102,5 +104,20 @@ class HomescreenIllustrationRepositoryTest {
         .test()
         .assertNoValues()
         .assertNoErrors()
+  }
+
+  @Test
+  fun `verify save illustration copies contents from input stream to output stream`() {
+    whenever(fileStorage.getFile("$illustrationsFolder/$eventId")).thenReturn(GetFileResult.Success(chosenFile))
+
+    val inputStream: InputStream = mock()
+
+    repository.saveIllustration(eventId, inputStream)
+        .test()
+
+    verify(fileStorage).writeStreamToFile(
+        inputStream = inputStream,
+        file = chosenFile
+    )
   }
 }

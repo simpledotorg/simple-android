@@ -5,6 +5,8 @@ import org.simple.clinic.storage.files.ClearAllFilesResult.Failure
 import org.simple.clinic.storage.files.ClearAllFilesResult.PartiallyDeleted
 import org.simple.clinic.storage.files.ClearAllFilesResult.Success
 import java.io.File
+import java.io.InputStream
+import java.io.OutputStream
 import javax.inject.Inject
 
 class AndroidFileStorage @Inject constructor(
@@ -54,5 +56,9 @@ class AndroidFileStorage @Inject constructor(
     if (fileOperations.deleteContents(application.filesDir)) Success else PartiallyDeleted
   } catch (e: Throwable) {
     Failure(e)
+  }
+
+  override fun copyTo(inputStream: InputStream, outputStream: OutputStream, bufferSize: Int) {
+    inputStream.copyTo(outputStream, bufferSize)
   }
 }

@@ -20,9 +20,9 @@ class AndroidFileStorageAndroidTest {
   @Inject
   lateinit var fileStorage: FileStorage
 
-  lateinit var testDirectory: File
+  private lateinit var testDirectory: File
 
-  val filesDirectory by lazy { application.filesDir }
+  private val filesDirectory: File by lazy { application.filesDir }
 
   @Before
   fun setUp() {
@@ -157,5 +157,20 @@ class AndroidFileStorageAndroidTest {
     assertThat(fileNestedAtLevelSeven.exists()).isFalse()
     assertThat(filesDirectory.exists()).isTrue()
     assertThat(filesDirectory.listFiles()).isEmpty()
+  }
+
+  @Test
+  fun writing_stream_to_a_file_should_work_as_expected() {
+    val path: String = testDirectory.resolve("foo/bar/file_1.txt").path
+    val fileResult = fileStorage.getFile(path) as GetFileResult.Success
+    val file = fileResult.file
+    val fileContents = "file-contents"
+
+    fileStorage.writeStreamToFile(
+        inputStream = fileContents.byteInputStream(),
+        file = file
+    )
+
+    assertThat(file.readText()).isEqualTo(fileContents)
   }
 }

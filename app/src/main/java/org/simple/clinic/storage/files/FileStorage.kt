@@ -2,7 +2,6 @@ package org.simple.clinic.storage.files
 
 import java.io.File
 import java.io.InputStream
-import java.io.OutputStream
 
 sealed class GetFileResult {
   data class Success(val file: File) : GetFileResult()
@@ -43,5 +42,5 @@ interface FileStorage {
 
   fun clearAllFiles(): ClearAllFilesResult
 
-  fun copyTo(inputStream: InputStream, outputStream: OutputStream, bufferSize: Int = DEFAULT_BUFFER_SIZE)
+  fun writeStreamToFile(inputStream: InputStream, file: File, bufferSize: Int = DEFAULT_BUFFER_SIZE)
 }

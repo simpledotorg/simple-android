@@ -54,14 +54,10 @@ class HomescreenIllustrationRepository @Inject constructor(
       Completable.fromAction {
         val illustrationsFile = fileResult(illustrationFileName) as? GetFileResult.Success ?: return@fromAction
 
-        responseStream.use { inputStream ->
-          illustrationsFile.file.outputStream().use { outputStream ->
-            fileStorage.copyTo(
-                inputStream = inputStream,
-                outputStream = outputStream
-            )
-          }
-        }
+        fileStorage.writeStreamToFile(
+            inputStream = responseStream,
+            file = illustrationsFile.file
+        )
       }
 
   private fun fileResult(illustrationFileName: String): GetFileResult =

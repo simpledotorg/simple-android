@@ -32,7 +32,6 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -55,8 +54,6 @@ class EditPatientScreenFormTest {
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
   private val viewRenderer = EditPatientViewRenderer(ui)
-  private val patientRepository: PatientRepository = mock()
-  private lateinit var errorConsumer: (Throwable) -> Unit
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)

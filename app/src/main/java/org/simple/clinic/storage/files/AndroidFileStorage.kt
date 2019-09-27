@@ -6,7 +6,6 @@ import org.simple.clinic.storage.files.ClearAllFilesResult.PartiallyDeleted
 import org.simple.clinic.storage.files.ClearAllFilesResult.Success
 import java.io.File
 import java.io.InputStream
-import java.io.OutputStream
 import javax.inject.Inject
 
 class AndroidFileStorage @Inject constructor(
@@ -58,7 +57,11 @@ class AndroidFileStorage @Inject constructor(
     Failure(e)
   }
 
-  override fun copyTo(inputStream: InputStream, outputStream: OutputStream, bufferSize: Int) {
-    inputStream.copyTo(outputStream, bufferSize)
+  override fun writeStreamToFile(inputStream: InputStream, file: File, bufferSize: Int) {
+    inputStream.use { inputStreamSafe ->
+      file.outputStream().use { outputStream ->
+        inputStreamSafe.copyTo(outputStream, bufferSize)
+      }
+    }
   }
 }

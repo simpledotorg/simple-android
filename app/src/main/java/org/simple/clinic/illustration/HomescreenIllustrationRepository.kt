@@ -1,29 +1,44 @@
 package org.simple.clinic.illustration
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import okhttp3.ResponseBody
+import org.simple.clinic.storage.files.FileStorage
+import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toOptional
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Month
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
 class HomescreenIllustrationRepository @Inject constructor(
-    private val illustrations: List<HomescreenIllustration>,
     private val userClock: UserClock,
-    @Named("homescreen-illustration-folder") private val illustrationsFolder: File
+    private val fileStorage: FileStorage,
+    @Named("homescreen-illustration-folder") private val illustrationsFolder: String
 ) {
 
+  fun illustrations(): Observable<List<HomescreenIllustration>> = Observable.just(listOf(
+      HomescreenIllustration(
+          eventId = "valmiki-jayanti.png",
+          illustrationUrl = "https://firebasestorage.googleapis.com/v0/b/simple-org.appspot.com/o/valmiki.png?alt=media&token=15a1f9da-3712-403b-aa13-e51cba37ef88",
+          from = DayOfMonth(20, Month.SEPTEMBER),
+          to = DayOfMonth(30, Month.SEPTEMBER)
+      )
+  ))
+
   fun illustrationImageToShow(): Observable<File> =
-      Observable.just(illustrations)
+      illustrations()
           .map { pickIllustration(it) }
           .ofType<Just<HomescreenIllustration>>()
           .map { it.value }
-          .map { File(illustrationsFolder, it.eventId) }
-          .filter { it.exists() }
+          .map { fileResult(it.eventId) }
+          .ofType<GetFileResult.Success>()
+          .map { it.file }
 
   private fun pickIllustration(illustrations: List<HomescreenIllustration>): Optional<HomescreenIllustration> {
     val today = LocalDate.now(userClock)
@@ -41,4 +56,18 @@ class HomescreenIllustrationRepository @Inject constructor(
       LocalDate.now(userClock)
           .withMonth(dayOfMonth.month.value)
           .withDayOfMonth(dayOfMonth.day)
+
+  fun saveIllustration(illustrationFileName: String, responseBody: ResponseBody): Completable =
+      Completable.fromAction {
+        val illustrationsFile = fileResult(illustrationFileName) as? GetFileResult.Success ?: return@fromAction
+
+        responseBody.byteStream().use { inputStream ->
+          illustrationsFile.file.outputStream().use { outputStream ->
+            inputStream.copyTo(outputStream)
+          }
+        }
+      }
+
+  private fun fileResult(illustrationFileName: String) =
+      fileStorage.getFile("$illustrationsFolder/$illustrationFileName")
 }

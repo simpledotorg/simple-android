@@ -20,7 +20,10 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -30,6 +33,8 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
+
+typealias ValidationCheck = () -> EditPatientValidationError?
 
 @Parcelize
 data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function instead.") constructor(
@@ -112,47 +117,65 @@ data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function 
       numberValidator: PhoneNumberValidator,
       dobValidator: UserInputDateValidator
   ): Set<EditPatientValidationError> {
-    val errors = mutableSetOf<EditPatientValidationError>()
+    return getValidationChecks(alreadySavedNumber, numberValidator, ageOrDateOfBirth, dobValidator)
+        .mapNotNull { check -> check() }
+        .toSet()
+  }
 
-    if (name.isBlank()) {
-      errors.add(FULL_NAME_EMPTY)
-    }
+  private fun getValidationChecks(
+      alreadySavedNumber: PatientPhoneNumber?,
+      numberValidator: PhoneNumberValidator,
+      ageOrDateOfBirth: EitherAgeOrDateOfBirth,
+      dobValidator: UserInputDateValidator
+  ): List<ValidationCheck> {
+    return listOf(
+        nameCheck(),
+        phoneNumberCheck(alreadySavedNumber, numberValidator),
+        colonyOrVillageCheck(),
+        stateCheck(),
+        districtCheck(),
+        ageOrDateOfBirthCheck(ageOrDateOfBirth, dobValidator)
+    )
+  }
 
+  private fun nameCheck(): ValidationCheck =
+      { if (name.isBlank()) FULL_NAME_EMPTY else null }
+
+  private fun phoneNumberCheck(
+      alreadySavedNumber: PatientPhoneNumber?,
+      numberValidator: PhoneNumberValidator
+  ): ValidationCheck = {
     when (numberValidator.validate(phoneNumber, Type.LANDLINE_OR_MOBILE)) {
-      Result.LENGTH_TOO_SHORT -> errors.add(PHONE_NUMBER_LENGTH_TOO_SHORT)
-      Result.LENGTH_TOO_LONG -> errors.add(PHONE_NUMBER_LENGTH_TOO_LONG)
-      Result.BLANK -> alreadySavedNumber?.let { errors.add(PHONE_NUMBER_EMPTY) }
+      LENGTH_TOO_SHORT -> PHONE_NUMBER_LENGTH_TOO_SHORT
+      LENGTH_TOO_LONG -> PHONE_NUMBER_LENGTH_TOO_LONG
+      BLANK -> if (alreadySavedNumber != null) PHONE_NUMBER_EMPTY else null
+      VALID -> null
+    }
+  }
 
-      Result.VALID -> {
-        // Do nothing here
+  private fun colonyOrVillageCheck(): ValidationCheck =
+      { if (colonyOrVillage.isBlank()) COLONY_OR_VILLAGE_EMPTY else null }
+
+  private fun stateCheck(): ValidationCheck =
+      { if (state.isBlank()) STATE_EMPTY else null }
+
+  private fun districtCheck(): ValidationCheck =
+      { if (district.isBlank()) DISTRICT_EMPTY else null }
+
+  private fun ageOrDateOfBirthCheck(
+      ageOrDateOfBirth: EitherAgeOrDateOfBirth,
+      dobValidator: UserInputDateValidator
+  ): ValidationCheck = {
+    when (ageOrDateOfBirth) {
+      is EntryWithAge -> if (ageOrDateOfBirth.age.isBlank()) BOTH_DATEOFBIRTH_AND_AGE_ABSENT else null
+
+      is EntryWithDateOfBirth -> {
+        when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
+          InvalidPattern -> INVALID_DATE_OF_BIRTH
+          DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
+          is Valid -> null
+        }
       }
     }
-
-    if (colonyOrVillage.isBlank()) {
-      errors.add(COLONY_OR_VILLAGE_EMPTY)
-    }
-
-    if (state.isBlank()) {
-      errors.add(STATE_EMPTY)
-    }
-
-    if (district.isBlank()) {
-      errors.add(DISTRICT_EMPTY)
-    }
-
-    if (ageOrDateOfBirth is EntryWithDateOfBirth) {
-      when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
-        InvalidPattern -> errors.add(INVALID_DATE_OF_BIRTH)
-        DateIsInFuture -> errors.add(DATE_OF_BIRTH_IN_FUTURE)
-        is Valid -> { /* Nothing to do here. */ }
-      }
-
-    } else if (ageOrDateOfBirth is EntryWithAge) {
-      if (ageOrDateOfBirth.age.isBlank()) {
-        errors.add(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
-      }
-    }
-
-    return errors
   }
 }

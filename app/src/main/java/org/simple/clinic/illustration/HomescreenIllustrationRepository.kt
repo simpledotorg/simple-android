@@ -3,7 +3,6 @@ package org.simple.clinic.illustration
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import okhttp3.ResponseBody
 import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.util.Just
@@ -13,6 +12,7 @@ import org.simple.clinic.util.toOptional
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 import java.io.File
+import java.io.InputStream
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -57,11 +57,11 @@ class HomescreenIllustrationRepository @Inject constructor(
           .withMonth(dayOfMonth.month.value)
           .withDayOfMonth(dayOfMonth.day)
 
-  fun saveIllustration(illustrationFileName: String, responseBody: ResponseBody): Completable =
+  fun saveIllustration(illustrationFileName: String, responseStream: InputStream): Completable =
       Completable.fromAction {
         val illustrationsFile = fileResult(illustrationFileName) as? GetFileResult.Success ?: return@fromAction
 
-        responseBody.byteStream().use { inputStream ->
+        responseStream.use { inputStream ->
           illustrationsFile.file.outputStream().use { outputStream ->
             inputStream.copyTo(outputStream)
           }

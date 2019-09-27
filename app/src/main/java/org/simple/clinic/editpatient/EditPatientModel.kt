@@ -7,7 +7,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.threeten.bp.format.DateTimeFormatter
 
 data class EditPatientModel(
-    val savedEntry: OngoingEditPatientEntry,
+    val existingEntry: OngoingEditPatientEntry,
     val ongoingEntry: OngoingEditPatientEntry,
 
     // TODO(rj): 2019-09-27 Do we really need these properties to update

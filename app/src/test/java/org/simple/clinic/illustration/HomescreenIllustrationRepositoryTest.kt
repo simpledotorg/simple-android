@@ -25,6 +25,7 @@ class HomescreenIllustrationRepositoryTest {
   private val fileStorage: FileStorage = mock()
   private val chosenFile: File = mock()
   private val eventId = "world_heart_day"
+  private val illustrationsFolder = "illustrations-folder"
   private val illustrations = listOf(
       HomescreenIllustration(
           eventId = "event-1",
@@ -48,13 +49,14 @@ class HomescreenIllustrationRepositoryTest {
   private val repository = HomescreenIllustrationRepository(
       userClock = userClock,
       fileStorage = fileStorage,
-      illustrationsFolder = "illustrations-folder/"
+      illustrations = illustrations,
+      illustrationsFolder = illustrationsFolder
   )
 
   @Before
   fun setUp() {
     whenever(illustrationDao.illustrations()).thenReturn(Observable.just(illustrations))
-    whenever(fileStorage.getFile(eventId)).thenReturn(GetFileResult.Success(chosenFile))
+    whenever(fileStorage.getFile("$illustrationsFolder/$eventId")).thenReturn(GetFileResult.Success(chosenFile))
   }
 
   @Test
@@ -92,7 +94,7 @@ class HomescreenIllustrationRepositoryTest {
 
   @Test
   fun `verify illustration is not set when there is event today but no illustration file`() {
-    whenever(fileStorage.getFile(eventId)).thenReturn(GetFileResult.Failure(FileNotFoundException()))
+    whenever(fileStorage.getFile("$illustrationsFolder/$eventId")).thenReturn(GetFileResult.Failure(FileNotFoundException()))
 
     userClock.setDate(LocalDate.of(2019, Month.SEPTEMBER, 20))
 

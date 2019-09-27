@@ -11,18 +11,13 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   override fun render(model: EditPatientModel) {
     val ageOrDateOfBirth = model.ongoingEntry.ageOrDateOfBirth
 
-    when(ageOrDateOfBirth) {
-      is EntryWithAge -> if (ageOrDateOfBirth.age.isBlank()) {
-        ui.setDateOfBirthAndAgeVisibility(BOTH_VISIBLE)
-      } else {
-        ui.setDateOfBirthAndAgeVisibility(AGE_VISIBLE)
-      }
-
-      is EntryWithDateOfBirth -> if (ageOrDateOfBirth.dateOfBirth.isBlank()) {
-        ui.setDateOfBirthAndAgeVisibility(BOTH_VISIBLE)
-      } else {
-        ui.setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
-      }
+    val fieldToShow = when {
+      ageOrDateOfBirth.isBlank -> BOTH_VISIBLE
+      ageOrDateOfBirth is EntryWithDateOfBirth -> DATE_OF_BIRTH_VISIBLE
+      ageOrDateOfBirth is EntryWithAge -> AGE_VISIBLE
+      else -> throw IllegalStateException("Unknown condition, this shouldn't happen: $ageOrDateOfBirth")
     }
+
+    ui.setDateOfBirthAndAgeVisibility(fieldToShow)
   }
 }

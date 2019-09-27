@@ -49,11 +49,19 @@ data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function 
 ) : Parcelable {
 
   sealed class EitherAgeOrDateOfBirth : Parcelable {
-    @Parcelize
-    data class EntryWithAge(val age: String) : EitherAgeOrDateOfBirth()
+    abstract val isBlank: Boolean
 
     @Parcelize
-    data class EntryWithDateOfBirth(val dateOfBirth: String) : EitherAgeOrDateOfBirth()
+    data class EntryWithAge(val age: String) : EitherAgeOrDateOfBirth() {
+      override val isBlank: Boolean
+        get() = age.isBlank()
+    }
+
+    @Parcelize
+    data class EntryWithDateOfBirth(val dateOfBirth: String) : EitherAgeOrDateOfBirth() {
+      override val isBlank: Boolean
+        get() = dateOfBirth.isBlank()
+    }
   }
 
   companion object {

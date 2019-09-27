@@ -10,7 +10,6 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toOptional
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
 import java.io.File
 import java.io.InputStream
 import javax.inject.Inject
@@ -19,17 +18,11 @@ import javax.inject.Named
 class HomescreenIllustrationRepository @Inject constructor(
     private val userClock: UserClock,
     private val fileStorage: FileStorage,
+    private val illustrations: List<HomescreenIllustration>,
     @Named("homescreen-illustration-folder") private val illustrationsFolder: String
 ) {
 
-  fun illustrations(): Observable<List<HomescreenIllustration>> = Observable.just(listOf(
-      HomescreenIllustration(
-          eventId = "valmiki-jayanti.png",
-          illustrationUrl = "https://firebasestorage.googleapis.com/v0/b/simple-org.appspot.com/o/valmiki.png?alt=media&token=15a1f9da-3712-403b-aa13-e51cba37ef88",
-          from = DayOfMonth(20, Month.SEPTEMBER),
-          to = DayOfMonth(30, Month.SEPTEMBER)
-      )
-  ))
+  fun illustrations(): Observable<List<HomescreenIllustration>> = Observable.just(illustrations)
 
   fun illustrationImageToShow(): Observable<File> =
       illustrations()
@@ -71,6 +64,6 @@ class HomescreenIllustrationRepository @Inject constructor(
         }
       }
 
-  private fun fileResult(illustrationFileName: String) =
+  private fun fileResult(illustrationFileName: String): GetFileResult =
       fileStorage.getFile("$illustrationsFolder/$illustrationFileName")
 }

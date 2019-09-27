@@ -449,7 +449,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 3,
         numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
+        bpEditableDuration = Duration.ofSeconds(3600))
 
     val now = Instant.now(utcClock)
 

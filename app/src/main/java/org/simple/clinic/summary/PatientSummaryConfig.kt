@@ -13,12 +13,12 @@ data class PatientSummaryConfig(
   companion object {
 
     fun read(configReader: ConfigReader): Observable<PatientSummaryConfig> {
-      val bpEditableDurationConfig = configReader.long("bp_editable_duration_in_minutes", 60)
+      val bpEditableDurationConfig = configReader.long("bp_editable_duration_in_seconds", 3600)
 
       return Observable.just(PatientSummaryConfig(
           numberOfBpPlaceholders = 3,
           numberOfBpsToDisplay = 100,
-          bpEditableDuration = Duration.ofMinutes(bpEditableDurationConfig)
+          bpEditableDuration = Duration.ofSeconds(bpEditableDurationConfig)
       ))
     }
   }

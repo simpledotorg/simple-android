@@ -106,7 +106,7 @@ class EditPatientUpdate(
       }
 
       is BackClicked -> {
-        if (model.savedEntry != model.ongoingEntry) onlyEffect(ShowDiscardChangesAlertEffect) else onlyEffect(GoBackEffect)
+        if (model.existingEntry != model.ongoingEntry) onlyEffect(ShowDiscardChangesAlertEffect) else onlyEffect(GoBackEffect)
       }
     }
   }

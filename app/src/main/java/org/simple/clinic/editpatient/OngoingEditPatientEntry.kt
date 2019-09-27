@@ -76,8 +76,8 @@ data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function 
         dateOfBirthFormatter: DateTimeFormatter
     ): EitherAgeOrDateOfBirth {
       return when {
-        age != null -> EntryWithAge(age.value.toString())
         dateOfBirth != null -> EntryWithDateOfBirth(dateOfBirth.format(dateOfBirthFormatter))
+        age != null -> EntryWithAge(age.value.toString())
         else -> throw IllegalStateException("`age` or `dateOfBirth` should be present")
       }
     }

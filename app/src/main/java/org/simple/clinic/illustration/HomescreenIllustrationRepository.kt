@@ -63,7 +63,10 @@ class HomescreenIllustrationRepository @Inject constructor(
 
         responseStream.use { inputStream ->
           illustrationsFile.file.outputStream().use { outputStream ->
-            inputStream.copyTo(outputStream)
+            fileStorage.copyTo(
+                inputStream = inputStream,
+                outputStream = outputStream
+            )
           }
         }
       }

@@ -6,3 +6,6 @@ fun String?.nullIfBlank(): String? {
     else -> this
   }
 }
+
+fun String?.valueOrEmpty(): String =
+    this ?: ""

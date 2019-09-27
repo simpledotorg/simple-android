@@ -14,8 +14,13 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
+import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
-class EditPatientUpdate : Update<EditPatientModel, EditPatientEvent, EditPatientEffect> {
+class EditPatientUpdate(
+    private val numberValidator: PhoneNumberValidator,
+    private val dobValidator: UserInputDateValidator
+) : Update<EditPatientModel, EditPatientEvent, EditPatientEffect> {
   private val errorsForEventType = mapOf(
       PhoneNumberChanged::class to setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_SHORT),
       NameChanged::class to setOf(FULL_NAME_EMPTY),
@@ -91,7 +96,13 @@ class EditPatientUpdate : Update<EditPatientModel, EditPatientEvent, EditPatient
       }
 
       is SaveClicked -> {
-        TODO()
+        val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator)
+        return if (validationErrors.isEmpty()) {
+          val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber) = model
+          onlyEffect(SavePatientEffect(model.ongoingEntry, savedPatient, savedAddress, savedPhoneNumber))
+        } else {
+          onlyEffect(ShowValidationErrorsEffect(validationErrors))
+        }
       }
 
       is BackClicked -> {

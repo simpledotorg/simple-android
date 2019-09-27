@@ -15,12 +15,15 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
@@ -135,15 +138,12 @@ class EditPatientScreenCreatedTest {
   }
 
   private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
-    val editPatientInit = EditPatientInit(patient, address, phoneNumber)
-    val editPatientUpdate = EditPatientUpdate()
-
     MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         Observable.never<EditPatientEvent>(),
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
-        editPatientInit,
-        editPatientUpdate,
-        EditPatientEffectHandler.createEffectHandler(ui, TestUserClock()),
+        EditPatientInit(patient, address, phoneNumber),
+        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(ZoneOffset.UTC, dateOfBirthFormat)),
+        EditPatientEffectHandler.createEffectHandler(ui, TestUserClock(), mock(), utcClock, dateOfBirthFormat),
         { /* nothing here */ }
     ).start()
   }

@@ -8,7 +8,13 @@ import org.threeten.bp.format.DateTimeFormatter
 
 data class EditPatientModel(
     val savedEntry: OngoingEditPatientEntry,
-    val ongoingEntry: OngoingEditPatientEntry
+    val ongoingEntry: OngoingEditPatientEntry,
+
+    // TODO(rj): 2019-09-27 Do we really need these properties to update
+    // patient information? Revisit these properties after migrating the feature
+    val savedPatient: Patient,
+    val savedAddress: PatientAddress,
+    val savedPhoneNumber: PatientPhoneNumber?
 ) {
   companion object {
     fun from(
@@ -19,7 +25,7 @@ data class EditPatientModel(
     ): EditPatientModel {
       val savedEntry = OngoingEditPatientEntry.from(patient, address, phoneNumber, dateOfBirthFormatter)
       val ongoingEntry = savedEntry.copy()
-      return EditPatientModel(savedEntry, ongoingEntry)
+      return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber)
     }
   }
 

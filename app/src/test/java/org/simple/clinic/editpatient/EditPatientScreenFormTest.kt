@@ -159,16 +159,6 @@ class EditPatientScreenFormTest {
     verify(ui).setDateOfBirthAndAgeVisibility(AGE_VISIBLE)
   }
 
-  /*
-  @Test // TODO(rj): 2019-09-26 This test needs further investigation, because this test passes by default
-  fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
-    errorConsumer = { Truth.assertThat(it).isInstanceOf(AssertionError::class.java) }
-
-    uiEvents.onNext(DateOfBirthChanged("1"))
-    uiEvents.onNext(AgeChanged("1"))
-  }
-  */
-
   @Test
   @Parameters(method = "params for confirming discard changes")
   fun `when back is clicked, the confirm discard changes popup must be shown if there have been changes`(testParams: ConfirmDiscardChangesTestParams) {

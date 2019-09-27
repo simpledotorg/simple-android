@@ -14,6 +14,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
+import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -21,15 +22,17 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
+import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
 @Parcelize
-data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the constructor
+data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function instead.") constructor(
     val patientUuid: UUID,
     val name: String,
     val gender: Gender,
@@ -39,6 +42,15 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
     val state: String,
     val ageOrDateOfBirth: EitherAgeOrDateOfBirth
 ) : Parcelable {
+
+  sealed class EitherAgeOrDateOfBirth : Parcelable {
+    @Parcelize
+    data class EntryWithAge(val age: String) : EitherAgeOrDateOfBirth()
+
+    @Parcelize
+    data class EntryWithDateOfBirth(val dateOfBirth: String) : EitherAgeOrDateOfBirth()
+  }
+
   companion object {
     fun from(
         patient: Patient,
@@ -46,24 +58,54 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
         phoneNumber: PatientPhoneNumber?,
         dateOfBirthFormatter: DateTimeFormatter
     ): OngoingEditPatientEntry {
-      val ageOrDateOfBirth = when {
-        patient.age != null -> EntryWithAge(patient.age.value.toString())
-        patient.dateOfBirth != null -> EntryWithDateOfBirth(patient.dateOfBirth.format(dateOfBirthFormatter))
-        else -> throw IllegalStateException("`age` or `dateOfBirth` should be present")
-      }
-
       return OngoingEditPatientEntry(
           patientUuid = patient.uuid,
           name = patient.fullName,
           gender = patient.gender,
-          phoneNumber = phoneNumber?.number ?: "",
-          colonyOrVillage = address.colonyOrVillage ?: "",
+          phoneNumber = phoneNumber?.number.valueOrEmpty(),
+          colonyOrVillage = address.colonyOrVillage.valueOrEmpty(),
           district = address.district,
           state = address.state,
-          ageOrDateOfBirth = ageOrDateOfBirth
+          ageOrDateOfBirth = ageOrDateOfBirth(patient.age, patient.dateOfBirth, dateOfBirthFormatter)
       )
     }
+
+    private fun ageOrDateOfBirth(
+        age: Age?,
+        dateOfBirth: LocalDate?,
+        dateOfBirthFormatter: DateTimeFormatter
+    ): EitherAgeOrDateOfBirth {
+      return when {
+        age != null -> EntryWithAge(age.value.toString())
+        dateOfBirth != null -> EntryWithDateOfBirth(dateOfBirth.format(dateOfBirthFormatter))
+        else -> throw IllegalStateException("`age` or `dateOfBirth` should be present")
+      }
+    }
   }
+
+  fun updateName(name: String): OngoingEditPatientEntry =
+      copy(name = name)
+
+  fun updateGender(gender: Gender): OngoingEditPatientEntry =
+      copy(gender = gender)
+
+  fun updatePhoneNumber(phoneNumber: String): OngoingEditPatientEntry =
+      copy(phoneNumber = phoneNumber)
+
+  fun updateColonyOrVillage(colonyOrVillage: String): OngoingEditPatientEntry =
+      copy(colonyOrVillage = colonyOrVillage)
+
+  fun updateDistrict(district: String): OngoingEditPatientEntry =
+      copy(district = district)
+
+  fun updateState(state: String): OngoingEditPatientEntry =
+      copy(state = state)
+
+  fun updateAge(age: String): OngoingEditPatientEntry =
+      copy(ageOrDateOfBirth = EntryWithAge(age))
+
+  fun updateDateOfBirth(dateOfBirth: String): OngoingEditPatientEntry =
+      copy(ageOrDateOfBirth = EntryWithDateOfBirth(dateOfBirth))
 
   fun validate(
       alreadySavedNumber: PatientPhoneNumber?,
@@ -112,37 +154,5 @@ data class OngoingEditPatientEntry( // TODO(rj) 23/Sep/19 - Don't expose the con
     }
 
     return errors
-  }
-
-  fun updateName(name: String): OngoingEditPatientEntry =
-      copy(name = name)
-
-  fun updateGender(gender: Gender): OngoingEditPatientEntry =
-      copy(gender = gender)
-
-  fun updatePhoneNumber(phoneNumber: String): OngoingEditPatientEntry =
-      copy(phoneNumber = phoneNumber)
-
-  fun updateColonyOrVillage(colonyOrVillage: String): OngoingEditPatientEntry =
-      copy(colonyOrVillage = colonyOrVillage)
-
-  fun updateDistrict(district: String): OngoingEditPatientEntry =
-      copy(district = district)
-
-  fun updateState(state: String): OngoingEditPatientEntry =
-      copy(state = state)
-
-  fun updateAge(age: String): OngoingEditPatientEntry =
-      copy(ageOrDateOfBirth = EntryWithAge(age))
-
-  fun updateDateOfBirth(dateOfBirth: String): OngoingEditPatientEntry =
-      copy(ageOrDateOfBirth = EntryWithDateOfBirth(dateOfBirth))
-
-  sealed class EitherAgeOrDateOfBirth : Parcelable {
-    @Parcelize
-    data class EntryWithAge(val age: String) : EitherAgeOrDateOfBirth()
-
-    @Parcelize
-    data class EntryWithDateOfBirth(val dateOfBirth: String) : EitherAgeOrDateOfBirth()
   }
 }

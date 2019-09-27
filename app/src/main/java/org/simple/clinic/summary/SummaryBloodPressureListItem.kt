@@ -1,5 +1,7 @@
 package org.simple.clinic.summary
 
+import android.content.Context
+import android.content.res.Resources
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.View.GONE
@@ -50,6 +52,10 @@ data class SummaryBloodPressureListItem(
     val context = holder.itemView.context
     val resources = context.resources
 
+    holder.itemView.isClickable = isBpEditable
+    holder.itemView.isFocusable = isBpEditable
+    if (isBpEditable) holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
+
     val level = measurement.level
 
     holder.levelTextView.text = when (level.displayTextRes) {
@@ -57,30 +63,14 @@ data class SummaryBloodPressureListItem(
       is None -> ""
     }
 
-    val bpReading = context.resources.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)
-    holder.readingsTextView.text = bpReading
-
     val readingsTextAppearanceResId = when {
       level.isUrgent() -> R.style.Clinic_V2_TextAppearance_PatientSummary_BloodPressure_High
       else -> R.style.Clinic_V2_TextAppearance_PatientSummary_BloodPressure_Normal
     }
     holder.readingsTextView.setTextAppearanceCompat(readingsTextAppearanceResId)
+    holder.readingsTextView.text = context.resources.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)
 
-    val daysAgoText = daysAgo.displayText(context, dateFormatter)
-
-    holder.daysAgoTextView.text = if (isBpEditable) {
-      val colorSpanForEditLabel = ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.blue1, context.theme))
-      Truss()
-          .pushSpan(colorSpanForEditLabel)
-          .append(resources.getString(R.string.patientsummary_edit))
-          .popSpan()
-          .append(" ${Unicode.bullet} ")
-          .append(daysAgoText)
-          .build()
-
-    } else {
-      daysAgoText
-    }
+    holder.daysAgoTextView.text = daysAgoWithEditButton(resources, context, daysAgo)
 
     val measurementImageTint = when {
       level.isUrgent() -> R.color.patientsummary_bp_reading_high
@@ -88,28 +78,36 @@ data class SummaryBloodPressureListItem(
     }
     holder.heartImageView.imageTintList = ResourcesCompat.getColorStateList(resources, measurementImageTint, null)
 
-    if(isBpEditable) {
-      holder.itemView.isEnabled = true
-      holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
-    } else {
-      holder.itemView.isEnabled = false
-    }
-
     holder.divider.visibility = if (showDivider) VISIBLE else GONE
 
-    holder.timeTextView.visibility = when {
-      formattedTime != null -> VISIBLE
-      else -> GONE
-    }
-
-    holder.timeTextView.text = when {
-      formattedTime != null -> formattedTime
-      else -> null
-    }
+    holder.timeTextView.visibility = if (formattedTime != null) VISIBLE else GONE
+    holder.timeTextView.text = formattedTime
 
     val multipleItemsInThisGroup = formattedTime != null
     addTopPadding(holder.itemLayout, multipleItemsInThisGroup)
     addBottomPadding(holder.itemLayout, multipleItemsInThisGroup)
+  }
+
+  private fun daysAgoWithEditButton(
+      resources: Resources,
+      context: Context,
+      daysAgo: RelativeTimestamp
+  ): CharSequence {
+    val daysAgoText = daysAgo.displayText(context, dateFormatter)
+    return when {
+      isBpEditable -> {
+        val colorSpanForEditLabel = ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.blue1, context.theme))
+        Truss()
+            .pushSpan(colorSpanForEditLabel)
+            .append(resources.getString(R.string.patientsummary_edit))
+            .popSpan()
+            .append(" ${Unicode.bullet} ")
+            .append(daysAgoText)
+            .build()
+
+      }
+      else -> daysAgoText
+    }
   }
 
   private fun addTopPadding(itemLayout: ViewGroup, multipleItemsInThisGroup: Boolean) {

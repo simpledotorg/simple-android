@@ -232,6 +232,7 @@ object EditPatientEffectHandler {
     return patientRepository
         .updatePatient(updatedPatient)
         .andThen(patientRepository.updateAddressForPatient(updatedPatient.uuid, updatedAddress))
+        // Doing this because Completables are not working properly
         .toSingleDefault(true)
   }
 }

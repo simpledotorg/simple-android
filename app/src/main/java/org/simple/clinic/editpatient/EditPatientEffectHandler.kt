@@ -39,7 +39,7 @@ object EditPatientEffectHandler {
         .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java) { ui.hideDatePatternInDateOfBirthLabel() }
         .addAction(GoBackEffect::class.java) { ui.goBack() }
         .addAction(ShowDiscardChangesAlertEffect::class.java) { ui.showDiscardChangesAlert() }
-        .addTransformer(SavePatientEffect::class.java, savePatientTransformer(patientRepository, dateOfBirthFormatter, utcClock, ui))
+        .addTransformer(SavePatientEffect::class.java, savePatientTransformer(patientRepository, utcClock, dateOfBirthFormatter))
         .build()
   }
 
@@ -84,9 +84,8 @@ object EditPatientEffectHandler {
 
   private fun savePatientTransformer(
       patientRepository: PatientRepository,
-      dateOfBirthFormatter: DateTimeFormatter,
       utcClock: UtcClock,
-      ui: EditPatientUi
+      dateOfBirthFormatter: DateTimeFormatter
   ): ObservableTransformer<SavePatientEffect, EditPatientEvent> {
     return ObservableTransformer { savePatientEffects ->
       val sharedSavePatientEffects = savePatientEffects
@@ -94,26 +93,24 @@ object EditPatientEffectHandler {
 
       Observable.merge(
           createOrUpdatePhoneNumber(sharedSavePatientEffects, patientRepository),
-          savePatient(sharedSavePatientEffects, dateOfBirthFormatter, utcClock, patientRepository, ui)
+          savePatient(sharedSavePatientEffects, patientRepository, utcClock, dateOfBirthFormatter)
       )
     }
   }
 
   private fun savePatient(
       savePatientEffects: Observable<SavePatientEffect>,
-      dateOfBirthFormatter: DateTimeFormatter,
-      utcClock: UtcClock,
       patientRepository: PatientRepository,
-      ui: EditPatientUi
-  ): Observable<EditPatientEvent>? {
+      utcClock: UtcClock,
+      dateOfBirthFormatter: DateTimeFormatter
+  ): Observable<EditPatientEvent> {
     return savePatientEffects
         .map { (ongoingEditPatientEntry, patient, patientAddress, _) ->
           getUpdatedPatientAndAddress(patient, patientAddress, ongoingEditPatientEntry, utcClock, dateOfBirthFormatter)
         }.flatMapSingle { (updatedPatient, updatedAddress) ->
           savePatientAndAddress(patientRepository, updatedPatient, updatedAddress)
         }
-        .doOnNext { ui.goBack() }
-        .flatMap { Observable.never<EditPatientEvent>() }
+        .map { PatientSaved }
   }
 
   private fun getUpdatedPatientAndAddress(

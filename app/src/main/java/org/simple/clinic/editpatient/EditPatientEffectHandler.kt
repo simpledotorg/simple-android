@@ -131,22 +131,19 @@ object EditPatientEffectHandler {
       dateOfBirthFormatter: DateTimeFormatter,
       utcClock: UtcClock
   ): Patient {
-    val patientWithoutAgeOrDateOfBirth = patient.copy(
-        fullName = ongoingEntry.name,
-        gender = ongoingEntry.gender,
-        dateOfBirth = null,
-        age = null
-    )
+    val patientWithoutAgeOrDateOfBirth = patient
+        .withNameAndGender(ongoingEntry.name, ongoingEntry.gender)
+        .withoutAgeAndDateOfBirth()
 
     return when (ongoingEntry.ageOrDateOfBirth) {
       is EntryWithAge -> {
         val age = coerceAgeFrom(patient.age, ongoingEntry.ageOrDateOfBirth.age, utcClock)
-        patientWithoutAgeOrDateOfBirth.copy(age = age)
+        patientWithoutAgeOrDateOfBirth.withAge(age)
       }
 
       is EntryWithDateOfBirth -> {
         val dateOfBirth = LocalDate.parse(ongoingEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
-        patientWithoutAgeOrDateOfBirth.copy(dateOfBirth = dateOfBirth)
+        patientWithoutAgeOrDateOfBirth.withDateOfBirth(dateOfBirth)
       }
     }
   }
@@ -162,12 +159,8 @@ object EditPatientEffectHandler {
   private fun updateAddress(
       patientAddress: PatientAddress,
       ongoingEntry: EditablePatientEntry
-  ): PatientAddress {
-    return patientAddress.copy(
-        colonyOrVillage = ongoingEntry.colonyOrVillage,
-        district = ongoingEntry.district,
-        state = ongoingEntry.state
-    )
+  ): PatientAddress = with(ongoingEntry) {
+    patientAddress.withLocality(colonyOrVillage, district, state)
   }
 
   private fun createOrUpdatePhoneNumber(
@@ -202,7 +195,8 @@ object EditPatientEffectHandler {
           hasExistingPhoneNumber(existingPhoneNumber, enteredPhoneNumber)
         }
         .flatMapCompletable { (patientUuid, existingPhoneNumber, enteredPhoneNumber) ->
-          patientRepository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber!!.copy(number = enteredPhoneNumber))
+          requireNotNull(existingPhoneNumber)
+          patientRepository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.withNumber(enteredPhoneNumber))
         }
         .toObservable()
   }

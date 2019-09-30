@@ -5,10 +5,10 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RelativeLayout
-import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import kotlinx.android.synthetic.main.screen_home.view.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -19,7 +19,6 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -27,17 +26,12 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   private val rootLayout by bindView<ViewGroup>(R.id.home_root)
   private val viewPager by bindView<ViewPager>(R.id.home_viewpager)
   private val facilitySelectButton by bindView<Button>(R.id.home_facility_change_button)
-  private val toolBar by bindView<Toolbar>(R.id.home_toolbar)
 
   @Inject
   lateinit var controller: HomeScreenController
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  private val showHelpMenuItem by lazy(LazyThreadSafetyMode.NONE) {
-    toolBar.menu.findItem(R.id.home_actionhelp)
-  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -67,15 +61,8 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   private fun setupToolBar() {
-    toolBar.inflateMenu(R.menu.home)
-    toolBar.setOnMenuItemClickListener { menuItem ->
-      when (menuItem.itemId) {
-        R.id.home_actionhelp -> {
-          screenRouter.push(HelpScreenKey())
-          true
-        }
-        else -> false
-      }
+    helpButton.setOnClickListener {
+      screenRouter.push(HelpScreenKey())
     }
   }
 
@@ -91,9 +78,5 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   fun openFacilitySelection() {
     screenRouter.push(FacilityChangeScreenKey())
-  }
-
-  fun showHelpButton(isVisible: Boolean) {
-    showHelpMenuItem.visibleOrGone(isVisible)
   }
 }

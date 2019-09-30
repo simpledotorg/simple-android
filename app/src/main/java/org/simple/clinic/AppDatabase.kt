@@ -7,8 +7,6 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.illustration.DayOfMonth
-import org.simple.clinic.illustration.HomescreenIllustration
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
@@ -51,10 +49,9 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Protocol::class,
       ProtocolDrug::class,
       BusinessId::class,
-      MissingPhoneReminder::class,
-      HomescreenIllustration::class
+      MissingPhoneReminder::class
     ],
-    version = 46,
+    version = 47,
     exportSchema = true
 )
 @TypeConverters(
@@ -73,8 +70,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     Identifier.IdentifierType.RoomTypeConverter::class,
     BusinessId.MetaDataVersion.RoomTypeConverter::class,
     Appointment.AppointmentType.RoomTypeConverter::class,
-    PatientStatus.RoomTypeConverter::class,
-    DayOfMonth.MonthRoomTypeConverter::class
+    PatientStatus.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -113,8 +109,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun businessIdDao(): BusinessId.RoomDao
 
   abstract fun missingPhoneReminderDao(): MissingPhoneReminder.RoomDao
-
-  abstract fun illustrationDao(): HomescreenIllustration.RoomDao
 
   fun clearPatientData() {
     runInTransaction {

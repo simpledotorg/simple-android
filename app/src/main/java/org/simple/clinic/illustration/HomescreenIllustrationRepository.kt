@@ -18,11 +18,12 @@ import javax.inject.Named
 class HomescreenIllustrationRepository @Inject constructor(
     private val userClock: UserClock,
     private val fileStorage: FileStorage,
-    private val illustrations: List<HomescreenIllustration>,
+    private val illustrationConfigParser: IllustrationConfigParser,
     @Named("homescreen-illustration-folder") private val illustrationsFolder: String
 ) {
 
-  fun illustrations(): Observable<List<HomescreenIllustration>> = Observable.just(illustrations)
+  fun illustrations(): Observable<List<HomescreenIllustration>> =
+      Observable.fromCallable { illustrationConfigParser.illustrations() }
 
   fun illustrationImageToShow(): Observable<File> =
       illustrations()

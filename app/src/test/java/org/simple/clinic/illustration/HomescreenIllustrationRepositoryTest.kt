@@ -3,7 +3,6 @@ package org.simple.clinic.illustration
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Observable
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +22,6 @@ class HomescreenIllustrationRepositoryTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val userClock = TestUserClock()
-  private val illustrationDao: HomescreenIllustration.RoomDao = mock()
   private val fileStorage: FileStorage = mock()
   private val chosenFile: File = mock()
   private val eventId = "world_heart_day"
@@ -57,7 +55,6 @@ class HomescreenIllustrationRepositoryTest {
 
   @Before
   fun setUp() {
-    whenever(illustrationDao.illustrations()).thenReturn(Observable.just(illustrations))
     whenever(fileStorage.getFile("$illustrationsFolder/$eventId")).thenReturn(GetFileResult.Success(chosenFile))
   }
 

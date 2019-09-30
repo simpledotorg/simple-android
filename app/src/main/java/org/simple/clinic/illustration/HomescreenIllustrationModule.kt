@@ -2,16 +2,12 @@ package org.simple.clinic.illustration
 
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.AppDatabase
 import org.threeten.bp.Month
 import retrofit2.Retrofit
 import javax.inject.Named
 
 @Module
 class HomescreenIllustrationModule {
-
-  @Provides
-  fun illustrationDao(appDatabase: AppDatabase) = appDatabase.illustrationDao()
 
   @Provides
   @Named("homescreen-illustration-folder")

@@ -4,8 +4,8 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
-import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
-import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
+import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
+import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
@@ -117,36 +117,36 @@ object EditPatientEffectHandler {
   private fun getUpdatedPatientAndAddress(
       patient: Patient,
       patientAddress: PatientAddress,
-      ongoingEditPatientEntry: OngoingEditPatientEntry,
+      ongoingEntry: EditablePatientEntry,
       utcClock: UtcClock,
       dateOfBirthFormatter: DateTimeFormatter
   ): Pair<Patient, PatientAddress> {
-    val updatedPatient = updatePatient(patient, ongoingEditPatientEntry, dateOfBirthFormatter, utcClock)
-    val updatedAddress = updateAddress(patientAddress, ongoingEditPatientEntry)
+    val updatedPatient = updatePatient(patient, ongoingEntry, dateOfBirthFormatter, utcClock)
+    val updatedAddress = updateAddress(patientAddress, ongoingEntry)
     return updatedPatient to updatedAddress
   }
 
   private fun updatePatient(
       patient: Patient,
-      ongoingEditPatientEntry: OngoingEditPatientEntry,
+      ongoingEntry: EditablePatientEntry,
       dateOfBirthFormatter: DateTimeFormatter,
       utcClock: UtcClock
   ): Patient {
     val patientWithoutAgeOrDateOfBirth = patient.copy(
-        fullName = ongoingEditPatientEntry.name,
-        gender = ongoingEditPatientEntry.gender,
+        fullName = ongoingEntry.name,
+        gender = ongoingEntry.gender,
         dateOfBirth = null,
         age = null
     )
 
-    return when (ongoingEditPatientEntry.ageOrDateOfBirth) {
+    return when (ongoingEntry.ageOrDateOfBirth) {
       is EntryWithAge -> {
-        val age = coerceAgeFrom(patient.age, ongoingEditPatientEntry.ageOrDateOfBirth.age, utcClock)
+        val age = coerceAgeFrom(patient.age, ongoingEntry.ageOrDateOfBirth.age, utcClock)
         patientWithoutAgeOrDateOfBirth.copy(age = age)
       }
 
       is EntryWithDateOfBirth -> {
-        val dateOfBirth = LocalDate.parse(ongoingEditPatientEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
+        val dateOfBirth = LocalDate.parse(ongoingEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
         patientWithoutAgeOrDateOfBirth.copy(dateOfBirth = dateOfBirth)
       }
     }
@@ -162,12 +162,12 @@ object EditPatientEffectHandler {
 
   private fun updateAddress(
       patientAddress: PatientAddress,
-      ongoingEditPatientEntry: OngoingEditPatientEntry
+      ongoingEntry: EditablePatientEntry
   ): PatientAddress {
     return patientAddress.copy(
-        colonyOrVillage = ongoingEditPatientEntry.colonyOrVillage,
-        district = ongoingEditPatientEntry.district,
-        state = ongoingEditPatientEntry.state
+        colonyOrVillage = ongoingEntry.colonyOrVillage,
+        district = ongoingEntry.district,
+        state = ongoingEntry.state
     )
   }
 

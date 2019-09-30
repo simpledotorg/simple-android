@@ -7,8 +7,8 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.threeten.bp.format.DateTimeFormatter
 
 data class EditPatientModel(
-    val existingEntry: OngoingEditPatientEntry,
-    val ongoingEntry: OngoingEditPatientEntry,
+    val savedEntry: EditablePatientEntry,
+    val ongoingEntry: EditablePatientEntry,
 
     // TODO(rj): 2019-09-27 Do we really need these properties to update
     // patient information? Revisit these properties after migrating the feature
@@ -23,7 +23,7 @@ data class EditPatientModel(
         phoneNumber: PatientPhoneNumber?,
         dateOfBirthFormatter: DateTimeFormatter
     ): EditPatientModel {
-      val savedEntry = OngoingEditPatientEntry.from(patient, address, phoneNumber, dateOfBirthFormatter)
+      val savedEntry = EditablePatientEntry.from(patient, address, phoneNumber, dateOfBirthFormatter)
       val ongoingEntry = savedEntry.copy()
       return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber)
     }

@@ -12,8 +12,8 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
-import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
-import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
+import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
+import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -37,7 +37,7 @@ import java.util.UUID
 typealias ValidationCheck = () -> EditPatientValidationError?
 
 @Parcelize
-data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function instead.") constructor(
+data class EditablePatientEntry @Deprecated("Use the `from` factory function instead.") constructor(
     val patientUuid: UUID,
     val name: String,
     val gender: Gender,
@@ -70,8 +70,8 @@ data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function 
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?,
         dateOfBirthFormatter: DateTimeFormatter
-    ): OngoingEditPatientEntry {
-      return OngoingEditPatientEntry(
+    ): EditablePatientEntry {
+      return EditablePatientEntry(
           patientUuid = patient.uuid,
           name = patient.fullName,
           gender = patient.gender,
@@ -96,28 +96,28 @@ data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function 
     }
   }
 
-  fun updateName(name: String): OngoingEditPatientEntry =
+  fun updateName(name: String): EditablePatientEntry =
       copy(name = name)
 
-  fun updateGender(gender: Gender): OngoingEditPatientEntry =
+  fun updateGender(gender: Gender): EditablePatientEntry =
       copy(gender = gender)
 
-  fun updatePhoneNumber(phoneNumber: String): OngoingEditPatientEntry =
+  fun updatePhoneNumber(phoneNumber: String): EditablePatientEntry =
       copy(phoneNumber = phoneNumber)
 
-  fun updateColonyOrVillage(colonyOrVillage: String): OngoingEditPatientEntry =
+  fun updateColonyOrVillage(colonyOrVillage: String): EditablePatientEntry =
       copy(colonyOrVillage = colonyOrVillage)
 
-  fun updateDistrict(district: String): OngoingEditPatientEntry =
+  fun updateDistrict(district: String): EditablePatientEntry =
       copy(district = district)
 
-  fun updateState(state: String): OngoingEditPatientEntry =
+  fun updateState(state: String): EditablePatientEntry =
       copy(state = state)
 
-  fun updateAge(age: String): OngoingEditPatientEntry =
+  fun updateAge(age: String): EditablePatientEntry =
       copy(ageOrDateOfBirth = EntryWithAge(age))
 
-  fun updateDateOfBirth(dateOfBirth: String): OngoingEditPatientEntry =
+  fun updateDateOfBirth(dateOfBirth: String): EditablePatientEntry =
       copy(ageOrDateOfBirth = EntryWithDateOfBirth(dateOfBirth))
 
   fun validate(

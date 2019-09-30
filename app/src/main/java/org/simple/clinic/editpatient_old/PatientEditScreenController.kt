@@ -28,9 +28,9 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient.GenderChanged
 import org.simple.clinic.editpatient.NameChanged
-import org.simple.clinic.editpatient.OngoingEditPatientEntry
-import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
-import org.simple.clinic.editpatient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
+import org.simple.clinic.editpatient.EditablePatientEntry
+import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
+import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.editpatient.PhoneNumberChanged
 import org.simple.clinic.editpatient.SaveClicked
 import org.simple.clinic.editpatient.StateChanged
@@ -133,7 +133,7 @@ class PatientEditScreenController @Inject constructor(
           events.mapType<PhoneNumberChanged, String> { it.phoneNumber.trim() },
           eitherAgeOrDateOfBirthChanges
       ) { patientUuid, name, gender, colonyOrVillage, district, state, phoneNumber, ageOrDateOfBirth ->
-        OngoingEditPatientEntryChanged(OngoingEditPatientEntry(
+        OngoingEditPatientEntryChanged(EditablePatientEntry(
             patientUuid = patientUuid,
             name = name,
             gender = gender,
@@ -199,7 +199,7 @@ class PatientEditScreenController @Inject constructor(
         .map { it.patient.uuid }
 
     val entryChanges = events.ofType<OngoingEditPatientEntryChanged>()
-        .map { it.ongoingEditPatientEntry }
+        .map { it.ongoingEntry }
 
     val savedNumbers = screenCreatedStream
         .map { it.phoneNumber.toOptional() }
@@ -283,23 +283,23 @@ class PatientEditScreenController @Inject constructor(
 
   private fun patientWithEdits(
       patient: Patient,
-      ongoingEditPatientEntry: OngoingEditPatientEntry
+      ongoingEntry: EditablePatientEntry
   ): Patient {
-    return when (ongoingEditPatientEntry.ageOrDateOfBirth) {
+    return when (ongoingEntry.ageOrDateOfBirth) {
       is EntryWithAge -> {
         patient.copy(
-            fullName = ongoingEditPatientEntry.name,
-            gender = ongoingEditPatientEntry.gender,
+            fullName = ongoingEntry.name,
+            gender = ongoingEntry.gender,
             dateOfBirth = null,
-            age = coerceAgeFrom(patient.age, ongoingEditPatientEntry.ageOrDateOfBirth.age)
+            age = coerceAgeFrom(patient.age, ongoingEntry.ageOrDateOfBirth.age)
         )
       }
       is EntryWithDateOfBirth -> {
         patient.copy(
-            fullName = ongoingEditPatientEntry.name,
-            gender = ongoingEditPatientEntry.gender,
+            fullName = ongoingEntry.name,
+            gender = ongoingEntry.gender,
             age = null,
-            dateOfBirth = LocalDate.parse(ongoingEditPatientEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
+            dateOfBirth = LocalDate.parse(ongoingEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
         )
       }
     }
@@ -364,11 +364,11 @@ class PatientEditScreenController @Inject constructor(
 
   private fun closeScreenWithoutSaving(events: Observable<UiEvent>): Observable<UiChange> {
     val savedOngoingEntry = events
-        .mapType<ScreenCreated, OngoingEditPatientEntry> { OngoingEditPatientEntry.from(it.patient, it.address, it.phoneNumber, dateOfBirthFormatter) }
+        .mapType<ScreenCreated, EditablePatientEntry> { EditablePatientEntry.from(it.patient, it.address, it.phoneNumber, dateOfBirthFormatter) }
 
     val ongoingEntryChanges = events
         .ofType<OngoingEditPatientEntryChanged>()
-        .map { it.ongoingEditPatientEntry }
+        .map { it.ongoingEntry }
 
     val hasEntryChangedStream = events
         .ofType<BackClicked>()

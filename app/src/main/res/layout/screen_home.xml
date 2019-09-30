@@ -29,6 +29,18 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
       tools:text="CHC Facility Name" />
 
+    <Button
+      android:id="@+id/helpButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end"
+      android:background="@drawable/background_rounded_clearbutton"
+      android:foreground="?selectableItemBackground"
+      android:text="@string/home_help"
+      android:textAllCaps="true"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
+      tools:ignore="UnusedAttribute" />
+
   </androidx.appcompat.widget.Toolbar>
 
   <androidx.viewpager.widget.ViewPager

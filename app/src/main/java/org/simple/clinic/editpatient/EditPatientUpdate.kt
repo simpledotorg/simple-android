@@ -94,7 +94,7 @@ class EditPatientUpdate(
   private fun onBackClicked(
       model: EditPatientModel
   ): Next<EditPatientModel, EditPatientEffect> {
-    val effect = if (model.existingEntry != model.ongoingEntry) {
+    val effect = if (model.savedEntry != model.ongoingEntry) {
       ShowDiscardChangesAlertEffect
     } else {
       GoBackEffect

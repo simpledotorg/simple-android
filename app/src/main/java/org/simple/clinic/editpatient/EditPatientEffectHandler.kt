@@ -50,17 +50,19 @@ object EditPatientEffectHandler {
   ) {
     val (patient, address, phoneNumber) = prefillFormFieldsEffect
 
-    ui.setPatientName(patient.fullName)
-    ui.setGender(patient.gender)
-    ui.setState(address.state)
-    ui.setDistrict(address.district)
+    with(ui) {
+      setPatientName(patient.fullName)
+      setGender(patient.gender)
+      setState(address.state)
+      setDistrict(address.district)
 
-    if (address.colonyOrVillage.isNullOrBlank().not()) {
-      ui.setColonyOrVillage(address.colonyOrVillage!!)
-    }
+      if (address.colonyOrVillage.isNullOrBlank().not()) {
+        setColonyOrVillage(address.colonyOrVillage!!)
+      }
 
-    if (phoneNumber != null) {
-      ui.setPatientPhoneNumber(phoneNumber.number)
+      if (phoneNumber != null) {
+        setPatientPhoneNumber(phoneNumber.number)
+      }
     }
 
     val dateOfBirth = DateOfBirth.fromPatient(patient, userClock)

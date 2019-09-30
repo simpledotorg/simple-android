@@ -46,6 +46,9 @@ data class PatientPhoneNumber(
     val deletedAt: Instant?
 ) : Parcelable {
 
+  fun withNumber(number: String): PatientPhoneNumber =
+      copy(number = number)
+
   @Dao
   interface RoomDao {
 

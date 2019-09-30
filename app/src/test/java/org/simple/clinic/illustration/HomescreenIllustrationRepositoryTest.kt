@@ -46,15 +46,17 @@ class HomescreenIllustrationRepositoryTest {
           to = DayOfMonth(20, Month.OCTOBER)
       )
   )
+  private val illustrationConfigParser: IllustrationConfigParser = mock()
   private val repository = HomescreenIllustrationRepository(
       userClock = userClock,
       fileStorage = fileStorage,
-      illustrations = illustrations,
+      illustrationConfigParser = illustrationConfigParser,
       illustrationsFolder = illustrationsFolder
   )
 
   @Before
   fun setUp() {
+    whenever(illustrationConfigParser.illustrations()).thenReturn(illustrations)
     whenever(fileStorage.getFile("$illustrationsFolder/$eventId")).thenReturn(GetFileResult.Success(chosenFile))
   }
 

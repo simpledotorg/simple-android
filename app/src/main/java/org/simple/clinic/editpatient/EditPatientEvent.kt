@@ -45,6 +45,10 @@ object SaveClicked: EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Save Clicked"
 }
 
+object PatientSaved : EditPatientEvent() {
+  override val analyticsName = "Edit Patient Entry:Patient Saved"
+}
+
 object BackClicked: EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Back Clicked"
 }

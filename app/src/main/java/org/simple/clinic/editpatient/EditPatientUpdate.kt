@@ -46,6 +46,7 @@ class EditPatientUpdate(
       is DateOfBirthChanged -> onDateOfBirthChanged(model, event)
       is AgeChanged -> onTextFieldChanged(event) { model.updateAge(event.age) }
       is BackClicked -> onBackClicked(model)
+      is PatientSaved -> justEffect(GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
     }
   }
@@ -108,7 +109,7 @@ class EditPatientUpdate(
     val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator)
     return if (validationErrors.isEmpty()) {
       val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber) = model
-      justEffect(SavePatientEffect(model.ongoingEntry, savedPatient, savedAddress, savedPhoneNumber))
+      justEffect(SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber))
     } else {
       justEffect(ShowValidationErrorsEffect(validationErrors))
     }

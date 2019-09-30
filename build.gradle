@@ -47,7 +47,7 @@ buildscript {
       playServicesAuth    : '16.0.1',
       playServicesVision  : '16.2.0',
       viewPump            : '1.0.0',
-      heap                : '1.1.0',
+      heap                : '1.2.0',
       pinEntryEditText    : '2.0.6',
       fbShimmer           : '0.3.0',
       javaStringSimilarity: '1.1.0',

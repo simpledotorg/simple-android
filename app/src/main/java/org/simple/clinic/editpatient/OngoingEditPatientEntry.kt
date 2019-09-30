@@ -125,15 +125,14 @@ data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function 
       numberValidator: PhoneNumberValidator,
       dobValidator: UserInputDateValidator
   ): Set<EditPatientValidationError> {
-    return getValidationChecks(alreadySavedNumber, numberValidator, ageOrDateOfBirth, dobValidator)
-        .mapNotNull { check -> check() }
+    return getValidationChecks(alreadySavedNumber, numberValidator, dobValidator)
+        .mapNotNull { it.invoke() }
         .toSet()
   }
 
   private fun getValidationChecks(
       alreadySavedNumber: PatientPhoneNumber?,
       numberValidator: PhoneNumberValidator,
-      ageOrDateOfBirth: EitherAgeOrDateOfBirth,
       dobValidator: UserInputDateValidator
   ): List<ValidationCheck> {
     return listOf(
@@ -142,7 +141,7 @@ data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function 
         colonyOrVillageCheck(),
         stateCheck(),
         districtCheck(),
-        ageOrDateOfBirthCheck(ageOrDateOfBirth, dobValidator)
+        ageOrDateOfBirthCheck(dobValidator)
     )
   }
 
@@ -171,7 +170,6 @@ data class OngoingEditPatientEntry @Deprecated("Use the `from` factory function 
       { if (district.isBlank()) DISTRICT_EMPTY else null }
 
   private fun ageOrDateOfBirthCheck(
-      ageOrDateOfBirth: EitherAgeOrDateOfBirth,
       dobValidator: UserInputDateValidator
   ): ValidationCheck = {
     when (ageOrDateOfBirth) {

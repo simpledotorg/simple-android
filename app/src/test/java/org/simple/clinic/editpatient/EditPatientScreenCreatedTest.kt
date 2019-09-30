@@ -19,6 +19,7 @@ import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Instant
@@ -143,7 +144,7 @@ class EditPatientScreenCreatedTest {
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
         EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(ZoneOffset.UTC, dateOfBirthFormat)),
-        EditPatientEffectHandler.createEffectHandler(ui, TestUserClock(), mock(), utcClock, dateOfBirthFormat),
+        EditPatientEffectHandler.createEffectHandler(ui, TestUserClock(), mock(), utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()),
         { /* nothing here */ }
     ).start()
   }

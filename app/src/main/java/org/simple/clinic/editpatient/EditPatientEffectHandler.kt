@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
@@ -17,6 +18,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -28,18 +30,19 @@ object EditPatientEffectHandler {
       userClock: UserClock,
       patientRepository: PatientRepository,
       utcClock: UtcClock,
-      dateOfBirthFormatter: DateTimeFormatter
+      dateOfBirthFormatter: DateTimeFormatter,
+      schedulersProvider: SchedulersProvider
   ): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
-        .addConsumer(PrefillFormEffect::class.java) { prefillFormFields(it, ui, userClock) }
-        .addConsumer(ShowValidationErrorsEffect::class.java) { showValidationErrors(it, ui) }
-        .addConsumer(HideValidationErrorsEffect::class.java) { ui.hideValidationErrors(it.validationErrors) }
-        .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java) { ui.showDatePatternInDateOfBirthLabel() }
-        .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java) { ui.hideDatePatternInDateOfBirthLabel() }
-        .addAction(GoBackEffect::class.java) { ui.goBack() }
-        .addAction(ShowDiscardChangesAlertEffect::class.java) { ui.showDiscardChangesAlert() }
-        .addTransformer(SavePatientEffect::class.java, savePatientTransformer(patientRepository, utcClock, dateOfBirthFormatter))
+        .addConsumer(PrefillFormEffect::class.java, { prefillFormFields(it, ui, userClock) }, schedulersProvider.ui())
+        .addConsumer(ShowValidationErrorsEffect::class.java, { showValidationErrors(it, ui) }, schedulersProvider.ui())
+        .addConsumer(HideValidationErrorsEffect::class.java, { ui.hideValidationErrors(it.validationErrors) }, schedulersProvider.ui())
+        .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java, { ui.showDatePatternInDateOfBirthLabel() }, schedulersProvider.ui())
+        .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java, { ui.hideDatePatternInDateOfBirthLabel() }, schedulersProvider.ui())
+        .addAction(GoBackEffect::class.java, { ui.goBack() }, schedulersProvider.ui())
+        .addAction(ShowDiscardChangesAlertEffect::class.java, { ui.showDiscardChangesAlert() }, schedulersProvider.ui())
+        .addTransformer(SavePatientEffect::class.java, savePatientTransformer(patientRepository, utcClock, dateOfBirthFormatter, schedulersProvider.io()))
         .build()
   }
 
@@ -85,10 +88,12 @@ object EditPatientEffectHandler {
   private fun savePatientTransformer(
       patientRepository: PatientRepository,
       utcClock: UtcClock,
-      dateOfBirthFormatter: DateTimeFormatter
+      dateOfBirthFormatter: DateTimeFormatter,
+      scheduler: Scheduler
   ): ObservableTransformer<SavePatientEffect, EditPatientEvent> {
     return ObservableTransformer { savePatientEffects ->
       val sharedSavePatientEffects = savePatientEffects
+          .subscribeOn(scheduler)
           .share()
 
       Observable.merge(

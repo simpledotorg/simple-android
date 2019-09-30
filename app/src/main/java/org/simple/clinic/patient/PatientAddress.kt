@@ -32,6 +32,8 @@ data class PatientAddress(
 
     val deletedAt: Instant?
 ) : Parcelable {
+  fun withLocality(colonyOrVillage: String, district: String, state: String): PatientAddress =
+      copy(colonyOrVillage = colonyOrVillage, district = district, state = state)
 
   fun toPayload(): PatientAddressPayload {
     return PatientAddressPayload(

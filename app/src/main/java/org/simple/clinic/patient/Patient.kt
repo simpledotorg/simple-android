@@ -60,6 +60,18 @@ data class Patient(
     val syncStatus: SyncStatus
 ) : Parcelable {
 
+  fun withNameAndGender(fullName: String, gender: Gender): Patient =
+      copy(fullName = fullName, gender = gender)
+
+  fun withoutAgeAndDateOfBirth(): Patient =
+      copy(age = null, dateOfBirth = null)
+
+  fun withAge(age: Age): Patient =
+      copy(age = age)
+
+  fun withDateOfBirth(dateOfBirth: LocalDate): Patient =
+      copy(dateOfBirth = dateOfBirth)
+
   @Dao
   abstract class RoomDao : DaoWithUpsert<Patient>() {
 

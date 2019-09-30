@@ -29,7 +29,7 @@ data class ShowValidationErrorsEffect(
 ) : EditPatientEffect()
 
 data class SavePatientEffect(
-    val ongoingEntry: OngoingEditPatientEntry,
+    val ongoingEntry: EditablePatientEntry,
     val savedPatient: Patient,
     val savedAddress: PatientAddress,
     val savedPhoneNumber: PatientPhoneNumber?

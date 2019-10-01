@@ -483,14 +483,26 @@ class BloodPressureEntrySheetController @Inject constructor(
           }
         }
 
-    val updateBpDataStream = Observables.combineLatest(dateValidations, bpValidations, existingBpUuidStream)
-        .map { (dateResult, bpResult, bpUuid) ->
-          if (dateResult is Valid && bpResult is Success) {
-            SaveBpData.ReadyToUpdate(dateResult.parsedDate, bpResult.systolic, bpResult.diastolic, bpUuid)
-          } else {
-            SaveBpData.NeedsCorrection
-          }
-        }
+    val updateBpDataStream = Observables.combineLatest(
+        dateValidations,
+        bpValidations,
+        existingBpUuidStream,
+        loggedInUserStream,
+        currentFacilityStream
+    ) { dateResult, bpResult, bpUuid, loggedInUser, currentFacility ->
+      if (dateResult is Valid && bpResult is Success) {
+        SaveBpData.ReadyToUpdate(
+            date = dateResult.parsedDate,
+            systolic = bpResult.systolic,
+            diastolic = bpResult.diastolic,
+            bpUuid = bpUuid,
+            loggedInUser = loggedInUser,
+            currentFacility = currentFacility
+        )
+      } else {
+        SaveBpData.NeedsCorrection
+      }
+    }
 
     val saveNewBp = saveClicks
         .withLatestFrom(newBpDataStream) { _, newBp -> newBp }
@@ -526,7 +538,10 @@ class BloodPressureEntrySheetController @Inject constructor(
                 existingBp.copy(
                     systolic = updateBp.systolic,
                     diastolic = updateBp.diastolic,
-                    recordedAt = updateBp.date.toUtcInstant(userClock))
+                    recordedAt = updateBp.date.toUtcInstant(userClock),
+                    userUuid = updateBp.loggedInUser.uuid,
+                    facilityUuid = updateBp.currentFacility.uuid
+                )
               }
               .flatMapCompletable {
                 bloodPressureRepository.updateMeasurement(it)
@@ -559,7 +574,9 @@ class BloodPressureEntrySheetController @Inject constructor(
         val date: LocalDate,
         val systolic: Int,
         val diastolic: Int,
-        val bpUuid: UUID
+        val bpUuid: UUID,
+        val loggedInUser: User,
+        val currentFacility: Facility
     ) : SaveBpData()
 
     object NeedsCorrection : SaveBpData()

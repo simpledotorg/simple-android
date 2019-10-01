@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.mobius.migration.MobiusTestFixture
 
 class OnboardingScreenControllerTest {
@@ -23,12 +24,15 @@ class OnboardingScreenControllerTest {
 
   @Before
   fun setUp() {
+    val onboardingEffectHandler = OnboardingEffectHandler
+        .createEffectHandler(hasUserCompletedOnboarding, onboardingUi, TrampolineSchedulersProvider())
+
     MobiusTestFixture<OnboardingModel, OnboardingEvent, OnboardingEffect>(
         uiEvents,
         OnboardingModel,
         null,
         ::update,
-        OnboardingEffectHandler.createEffectHandler(hasUserCompletedOnboarding, onboardingUi),
+        onboardingEffectHandler,
         { /* No-op */ }
     ).start()
   }

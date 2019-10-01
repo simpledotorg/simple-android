@@ -17,7 +17,7 @@ class OnboardingScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<OnboardingUi>()
+  private val onboardingUi = mock<OnboardingUi>()
   private val hasUserCompletedOnboarding = mock<Preference<Boolean>>()
 
   private val uiEvents = PublishSubject.create<OnboardingEvent>()
@@ -31,7 +31,7 @@ class OnboardingScreenControllerTest {
 
     sharedOnboardingEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(onboardingUi) }
 
     MobiusTestFixture<OnboardingModel, OnboardingEvent, OnboardingEffect>(
         sharedOnboardingEvents,
@@ -48,6 +48,6 @@ class OnboardingScreenControllerTest {
     uiEvents.onNext(GetStartedClicked)
 
     verify(hasUserCompletedOnboarding).set(eq(true))
-    verify(screen).moveToRegistrationScreen()
+    verify(onboardingUi).moveToRegistrationScreen()
   }
 }

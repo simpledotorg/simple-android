@@ -4,7 +4,6 @@ import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
-import com.spotify.mobius.Next.noChange
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
@@ -21,24 +20,15 @@ class OnboardingScreenControllerTest {
   private val hasUserCompletedOnboarding = mock<Preference<Boolean>>()
 
   private val uiEvents = PublishSubject.create<OnboardingEvent>()
-  lateinit var controller: OnboardingScreenController
 
   @Before
   fun setUp() {
-    controller = OnboardingScreenController(hasUserCompletedOnboarding)
-
-    val sharedOnboardingEvents = uiEvents.hide().share()
-
-    sharedOnboardingEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(onboardingUi) }
-
     MobiusTestFixture<OnboardingModel, OnboardingEvent, OnboardingEffect>(
-        sharedOnboardingEvents,
+        uiEvents,
         OnboardingModel,
         null,
-        { model: OnboardingModel, event: OnboardingEvent -> noChange<OnboardingModel, OnboardingEffect>() },
-        OnboardingEffectHandler.createEffectHandler(),
+        ::update,
+        OnboardingEffectHandler.createEffectHandler(hasUserCompletedOnboarding, onboardingUi),
         { /* No-op */ }
     ).start()
   }

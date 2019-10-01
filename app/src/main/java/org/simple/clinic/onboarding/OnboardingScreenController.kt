@@ -13,7 +13,7 @@ import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = OnboardingScreen
+typealias Ui = OnboardingUi
 typealias UiChange = (Ui) -> Unit
 
 class OnboardingScreenController @Inject constructor(

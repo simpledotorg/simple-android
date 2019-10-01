@@ -20,7 +20,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
+class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), OnboardingUi {
 
   @Inject
   lateinit var router: ScreenRouter
@@ -63,7 +63,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
     return RxView.clicks(getStartedButton).map { OnboardingGetStartedClicked() }
   }
 
-  fun moveToRegistrationScreen() {
+  override fun moveToRegistrationScreen() {
     router.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.FORWARD)
   }
 }

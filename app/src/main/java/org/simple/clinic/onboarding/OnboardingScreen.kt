@@ -2,14 +2,11 @@ package org.simple.clinic.onboarding
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.widget.NestedScrollView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import kotterknife.bindView
-import org.simple.clinic.R
+import kotlinx.android.synthetic.main.screen_onboarding.view.*
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
@@ -27,10 +24,6 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
 
   @Inject
   lateinit var controller: OnboardingScreenController
-
-  private val appLogoImageView by bindView<ImageView>(R.id.onboarding_logo)
-  private val scrollView by bindView<NestedScrollView>(R.id.onboarding_scrolling_container)
-  private val getStartedButton by bindView<Button>(R.id.onboarding_get_started)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

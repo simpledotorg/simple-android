@@ -1,11 +1,16 @@
 package org.simple.clinic.illustration
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.util.RxErrorsRule
@@ -16,6 +21,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 
+@RunWith(JUnitParamsRunner::class)
 class HomescreenIllustrationRepositoryTest {
 
   @get:Rule
@@ -113,10 +119,33 @@ class HomescreenIllustrationRepositoryTest {
 
     repository.saveIllustration(eventId, inputStream)
         .test()
+        .assertComplete()
 
     verify(fileStorage).writeStreamToFile(
         inputStream = inputStream,
         file = chosenFile
+    )
+  }
+
+  @Test
+  @Parameters(method = "params for not being able to create illustration file")
+  fun `verify save illustration completes without saving file if the illustration file could not be created`(result: GetFileResult) {
+    whenever(fileStorage.getFile("$illustrationsFolder/$eventId")).thenReturn(result)
+
+    val inputStream: InputStream = mock()
+
+    repository.saveIllustration(eventId, inputStream)
+        .test()
+        .assertComplete()
+
+    verify(fileStorage, never()).writeStreamToFile(any(), any(), any())
+  }
+
+  @Suppress("Unused")
+  private fun `params for not being able to create illustration file`(): List<GetFileResult> {
+    return listOf(
+        GetFileResult.Failure(RuntimeException()),
+        GetFileResult.NotAFile("file")
     )
   }
 }

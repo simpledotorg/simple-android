@@ -3309,6 +3309,7 @@ class DatabaseMigrationAndroidTest {
         }
   }
 
+  @Test
   fun migration_to_46_should_create_table_HomescreenIllustration() {
     val db_v45 = helper.createDatabase(45)
     db_v45.assertTableDoesNotExist("HomescreenIllustration")
@@ -3317,6 +3318,30 @@ class DatabaseMigrationAndroidTest {
     db_v46.assertColumns(
         "HomescreenIllustration",
         setOf("eventId", "illustrationUrl", "from_day", "from_month", "to_day", "to_month")
+    )
+  }
+
+  @Test
+  fun migration_from_46_to_47_should_create_encounter_table() {
+    //given
+    val tableName = "Encounter"
+    val db_46 = helper.createDatabase(version = 46)
+    db_46.assertTableDoesNotExist(tableName)
+
+    //when
+    val db_47 = helper.migrateTo(version = 47)
+
+    //then
+    db_47.assertTableExists(tableName)
+    db_47.assertColumnCount(tableName, 6)
+    db_47.assertColumns(tableName, setOf(
+        "uuid",
+        "patientUuid",
+        "encounteredOn",
+        "createdAt",
+        "updatedAt",
+        "deletedAt"
+    )
     )
   }
 }

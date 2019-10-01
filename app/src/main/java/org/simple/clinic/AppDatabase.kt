@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.encounter.Encounter
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.medicalhistory.Answer
@@ -50,9 +51,10 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       Protocol::class,
       ProtocolDrug::class,
       BusinessId::class,
-      MissingPhoneReminder::class
+      MissingPhoneReminder::class,
+      Encounter::class
     ],
-    version = 48,
+    version = 49,
     exportSchema = true
 )
 @TypeConverters(

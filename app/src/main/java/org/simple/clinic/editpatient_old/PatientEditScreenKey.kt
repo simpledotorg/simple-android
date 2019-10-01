@@ -1,4 +1,4 @@
-package org.simple.clinic.editpatient
+package org.simple.clinic.editpatient_old
 
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
@@ -9,7 +9,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.router.screen.FullScreenKey
 
 @Parcelize
-data class EditPatientScreenKey(
+data class PatientEditScreenKey(
     val patient: Patient,
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?
@@ -19,13 +19,13 @@ data class EditPatientScreenKey(
         patient: Patient,
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?
-    ): EditPatientScreenKey {
-      return EditPatientScreenKey(patient, address, phoneNumber)
+    ): PatientEditScreenKey {
+      return PatientEditScreenKey(patient, address, phoneNumber)
     }
   }
 
   @IgnoredOnParcel
   override val analyticsName = "Edit Patient"
 
-  override fun layoutRes() = R.layout.screen_edit_patient
+  override fun layoutRes() = R.layout.screen_patient_edit_old
 }

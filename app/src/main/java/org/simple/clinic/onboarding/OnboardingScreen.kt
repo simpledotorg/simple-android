@@ -42,7 +42,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
     MobiusDelegate(
         OnboardingModel,
         { First.first(it) },
-        ::update,
+        ::onboardingUpdate,
         OnboardingEffectHandler.createEffectHandler(hasUserCompletedOnboarding, this, schedulersProvider),
         { /* No-op, there's nothing to render */ },
         crashReporter

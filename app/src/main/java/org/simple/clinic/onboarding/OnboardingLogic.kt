@@ -3,7 +3,7 @@ package org.simple.clinic.onboarding
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.dispatch
 
-fun update(
+fun onboardingUpdate(
     @Suppress("UNUSED_PARAMETER") model: OnboardingModel,
     event: OnboardingEvent
 ): Next<OnboardingModel, OnboardingEffect> {

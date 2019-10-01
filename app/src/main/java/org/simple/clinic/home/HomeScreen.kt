@@ -2,15 +2,10 @@ package org.simple.clinic.home
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.RelativeLayout
-import androidx.viewpager.widget.ViewPager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_home.view.*
-import kotterknife.bindView
-import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.change.FacilityChangeScreenKey
@@ -22,10 +17,6 @@ import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
-
-  private val rootLayout by bindView<ViewGroup>(R.id.home_root)
-  private val viewPager by bindView<ViewPager>(R.id.home_viewpager)
-  private val facilitySelectButton by bindView<Button>(R.id.home_facility_change_button)
 
   @Inject
   lateinit var controller: HomeScreenController

@@ -1,13 +1,17 @@
 package org.simple.clinic.illustration
 
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.mapType
 import org.simple.clinic.util.toOptional
 import org.threeten.bp.LocalDate
 import java.io.File
@@ -28,11 +32,8 @@ class HomescreenIllustrationRepository @Inject constructor(
   fun illustrationImageToShow(): Observable<File> =
       illustrations()
           .map { pickIllustration(it) }
-          .ofType<Just<HomescreenIllustration>>()
-          .map { it.value }
-          .map { fileResult(it.eventId) }
-          .ofType<GetFileResult.Success>()
-          .map { it.file }
+          .filterAndUnwrapJust()
+          .flatMapMaybe { illustrationFile(it.eventId) }
 
   private fun pickIllustration(illustrations: List<HomescreenIllustration>): Optional<HomescreenIllustration> {
     val today = LocalDate.now(userClock)
@@ -51,16 +52,21 @@ class HomescreenIllustrationRepository @Inject constructor(
           .withMonth(dayOfMonth.month.value)
           .withDayOfMonth(dayOfMonth.day)
 
-  fun saveIllustration(illustrationFileName: String, responseStream: InputStream): Completable =
-      Completable.fromAction {
-        val illustrationsFile = fileResult(illustrationFileName) as? GetFileResult.Success ?: return@fromAction
+  fun saveIllustration(illustrationFileName: String, responseStream: InputStream): Completable {
+    return illustrationFile(illustrationFileName)
+        .flatMapCompletable { illustrationsFile ->
+          Completable.fromAction {
+            fileStorage.writeStreamToFile(
+                inputStream = responseStream,
+                file = illustrationsFile
+            )
+          }
+        }
+  }
 
-        fileStorage.writeStreamToFile(
-            inputStream = responseStream,
-            file = illustrationsFile.file
-        )
-      }
-
-  private fun fileResult(illustrationFileName: String): GetFileResult =
-      fileStorage.getFile("$illustrationsFolder/$illustrationFileName")
+  private fun illustrationFile(illustrationFileName: String): Maybe<File> {
+    return Single
+        .fromCallable { fileStorage.getFile("$illustrationsFolder/$illustrationFileName") }
+        .mapType<GetFileResult.Success, File> { it.file }
+  }
 }

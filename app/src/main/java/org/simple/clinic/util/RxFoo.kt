@@ -36,3 +36,9 @@ inline fun <reified T : Any, R> Observable<in T>.mapType(
 ): Observable<R> {
   return this.ofType<T>().map { mapper(it) }
 }
+
+inline fun <reified T : Any, R> Single<in T>.mapType(
+    crossinline mapper: (T) -> R
+): Maybe<R> {
+  return this.ofType<T>().map { mapper(it) }
+}

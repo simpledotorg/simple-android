@@ -4,26 +4,57 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.core.widget.NestedScrollView
+import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding2.view.RxView
+import com.spotify.mobius.First
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_onboarding.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToController
+import org.simple.clinic.crash.CrashReporter
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.clamp
-import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
+import javax.inject.Named
 
 class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), OnboardingUi {
 
   @Inject
   lateinit var router: ScreenRouter
 
+  @field:[Inject Named("onboarding_complete")]
+  lateinit var hasUserCompletedOnboarding: Preference<Boolean>
+
   @Inject
-  lateinit var controller: OnboardingScreenController
+  lateinit var schedulersProvider: SchedulersProvider
+
+  @Inject
+  lateinit var crashReporter: CrashReporter
+
+  private val delegate by unsafeLazy {
+    MobiusDelegate(
+        OnboardingModel,
+        { First.first(it) },
+        ::update,
+        OnboardingEffectHandler.createEffectHandler(hasUserCompletedOnboarding, this, schedulersProvider),
+        { /* No-op, there's nothing to render */ },
+        crashReporter
+    )
+  }
+
+  private val events: Observable<OnboardingEvent>
+    get() = getStartedClicks()
+        .compose(ReportAnalyticsEvents())
+        .cast()
+
+  private lateinit var eventsDisposable: Disposable
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -35,13 +66,21 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
     TheActivity.component.inject(this)
 
     fadeLogoWithContentScroll()
+    delegate.prepare()
+  }
 
-    bindUiToController(
-        ui = this,
-        events = getStartedClicks(),
-        controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    )
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+    eventsDisposable = events.subscribe { delegate.eventSource.notifyEvent(it) }
+  }
+
+  override fun onDetachedFromWindow() {
+    if (::eventsDisposable.isInitialized && eventsDisposable.isDisposed.not()) {
+      eventsDisposable.dispose()
+    }
+    delegate.stop()
+    super.onDetachedFromWindow()
   }
 
   private fun fadeLogoWithContentScroll() {
@@ -52,7 +91,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
     }
   }
 
-  private fun getStartedClicks(): Observable<UiEvent> {
+  private fun getStartedClicks(): Observable<OnboardingEvent> {
     return RxView.clicks(getStartedButton).map { GetStartedClicked }
   }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.home.HomeScreen android:id="@+id/home_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.home.HomeScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context=".activity.TheActivity">
@@ -17,14 +17,14 @@
     tools:targetApi="lollipop">
 
     <Button
-      android:id="@+id/home_facility_change_button"
+      android:id="@+id/facilitySelectButton"
       style="@style/Widget.AppCompat.Button.Borderless"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:drawableEnd="@drawable/ic_keyboard_arrow_down_24dp"
+      android:drawablePadding="@dimen/spacing_4"
       android:ellipsize="end"
       android:maxLines="1"
-      android:drawablePadding="@dimen/spacing_4"
       android:padding="@dimen/spacing_8"
       android:textAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
       tools:text="CHC Facility Name" />
@@ -44,7 +44,7 @@
   </androidx.appcompat.widget.Toolbar>
 
   <androidx.viewpager.widget.ViewPager
-    android:id="@+id/home_viewpager"
+    android:id="@+id/viewPager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@id/home_toolbar">

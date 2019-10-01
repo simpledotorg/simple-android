@@ -6,8 +6,10 @@ import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
 import com.spotify.mobius.EventSource
 import com.spotify.mobius.First
+import com.spotify.mobius.Init
 import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Next
+import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.extras.Connectables
 import com.spotify.mobius.functions.Consumer
@@ -19,12 +21,28 @@ import org.simple.clinic.util.unsafeLazy
 
 class MobiusDelegate<M : Parcelable, E, F>(
     private val defaultModel: M,
-    private val initFunction: (M) -> First<M, F>,
-    private val updateFunction: (M, E) -> Next<M, F>,
+    private val init: Init<M, F>,
+    private val update: Update<M, E, F>,
     private val effectHandler: ObservableTransformer<F, E>,
     private val modelUpdateListener: (M) -> Unit,
     private val crashReporter: CrashReporter
 ) : Connectable<M, E> {
+  constructor(
+      defaultModel: M,
+      initFunction: (M) -> First<M, F>,
+      updateFunction: (M, E) -> Next<M, F>,
+      effectHandler: ObservableTransformer<F, E>,
+      modelUpdateListener: (M) -> Unit,
+      crashReporter: CrashReporter
+  ) : this(
+      defaultModel,
+      Init { model -> initFunction(model) },
+      Update { model, event -> updateFunction(model, event) },
+      effectHandler,
+      modelUpdateListener,
+      crashReporter
+  )
+
   private val modelKey = defaultModel::class.java.name
   private val viewStateKey = "ViewState_$modelKey"
 
@@ -35,10 +53,10 @@ class MobiusDelegate<M : Parcelable, E, F>(
   private val loop by unsafeLazy {
     RxMobius
         .loop(
-            { model: M, event: E -> updateFunction(model, event) },
+            { model: M, event: E -> update.update(model, event) },
             { effects -> effects.compose(effectHandler) }
         )
-        .init(initFunction)
+        .init(init)
         .eventSource(eventSource)
   }
 

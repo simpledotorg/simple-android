@@ -31,7 +31,7 @@ class OnboardingScreenControllerTest {
         uiEvents,
         OnboardingModel,
         null,
-        ::update,
+        ::onboardingUpdate,
         onboardingEffectHandler,
         { /* No-op */ }
     ).start()

@@ -10,7 +10,7 @@
     style="@style/Clinic.LoginLogoContainer">
 
     <ImageView
-      android:id="@+id/onboarding_logo"
+      android:id="@+id/appLogoImageView"
       style="@style/Clinic.V2.LogoWithType.Large"
       android:layout_gravity="center_horizontal"
       tools:ignore="ContentDescription" />
@@ -22,7 +22,7 @@
     android:layout_below="@+id/onboarding_logo_container" />
 
   <androidx.core.widget.NestedScrollView
-    android:id="@+id/onboarding_scrolling_container"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
@@ -65,7 +65,7 @@
   </androidx.core.widget.NestedScrollView>
 
   <Button
-    android:id="@+id/onboarding_get_started"
+    android:id="@+id/getStartedButton"
     style="@style/Clinic.Button.Flat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

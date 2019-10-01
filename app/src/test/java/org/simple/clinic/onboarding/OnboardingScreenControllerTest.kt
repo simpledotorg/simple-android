@@ -33,7 +33,7 @@ class OnboardingScreenControllerTest {
 
   @Test
   fun `when the onboarding action is done, it should set the preference and open the registration screen`() {
-    uiEvents.onNext(OnboardingGetStartedClicked())
+    uiEvents.onNext(GetStartedClicked)
 
     verify(hasUserCompletedOnboarding).set(eq(true))
     verify(screen).moveToRegistrationScreen()

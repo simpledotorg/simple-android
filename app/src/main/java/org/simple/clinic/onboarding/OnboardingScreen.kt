@@ -60,7 +60,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   }
 
   private fun getStartedClicks(): Observable<UiEvent> {
-    return RxView.clicks(getStartedButton).map { OnboardingGetStartedClicked() }
+    return RxView.clicks(getStartedButton).map { GetStartedClicked }
   }
 
   override fun moveToRegistrationScreen() {

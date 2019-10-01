@@ -3386,6 +3386,29 @@ class DatabaseMigrationAndroidTest {
       assertThat(it.string("reminderConsent")).isEqualTo("granted")
     }
   }
+
+  @Test
+  fun migration_from_48_to_49_should_create_encounter_table() {
+    //given
+    val encounterTable = "Encounter"
+    val db_48 = helper.createDatabase(version = 48)
+    db_48.assertTableDoesNotExist(encounterTable)
+
+    //when
+    val db_49 = helper.migrateTo(version = 49)
+
+    //then
+    db_49.assertTableExists(encounterTable)
+    db_49.assertColumnCount(encounterTable, 6)
+    db_49.assertColumns(encounterTable, setOf(
+        "uuid",
+        "patientUuid",
+        "encounteredOn",
+        "createdAt",
+        "updatedAt",
+        "deletedAt")
+    )
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

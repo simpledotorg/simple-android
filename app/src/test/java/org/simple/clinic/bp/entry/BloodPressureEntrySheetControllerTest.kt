@@ -431,7 +431,13 @@ class BloodPressureEntrySheetControllerTest {
   @Test
   fun `when save is clicked while updating a BP, date entry is active and input is valid then the updated BP measurement should be saved`() {
     val oldCreatedAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
-    val existingBp = PatientMocker.bp(systolic = 9000, diastolic = 8999, createdAt = oldCreatedAt, updatedAt = oldCreatedAt, recordedAt = oldCreatedAt)
+    val existingBp = PatientMocker.bp(
+        systolic = 9000,
+        diastolic = 8999,
+        createdAt = oldCreatedAt,
+        updatedAt = oldCreatedAt,
+        recordedAt = oldCreatedAt
+    )
 
     val newInputDate = LocalDate.of(1991, 2, 14)
     whenever(dateValidator.validate(any(), any())).thenReturn(Valid(newInputDate))
@@ -447,6 +453,17 @@ class BloodPressureEntrySheetControllerTest {
       onNext(BloodPressureSystolicTextChanged("120"))
       onNext(BloodPressureDiastolicTextChanged("110"))
       onNext(BloodPressureSaveClicked)
+    }
+
+    val newUserUuid = UUID.fromString("a726d885-b12d-40b7-9fe1-5391f3fc0f88")
+    val newFacilityUuid = UUID.fromString("d51f48fd-40b6-4daf-beae-ba3d9f4c24cd")
+    val newUser = user.copy(uuid = newUserUuid)
+
+    whenever(facilityRepository.currentFacility(newUser)).thenReturn(Observable.just(facility.copy(uuid = newFacilityUuid)))
+
+    userSubject.onNext(newUser)
+
+    uiEvents.run {
       onNext(BloodPressureScreenChanged(DATE_ENTRY))
       onNext(BloodPressureDayChanged("14"))
       onNext(BloodPressureMonthChanged("02"))
@@ -455,7 +472,14 @@ class BloodPressureEntrySheetControllerTest {
     }
 
     val newInputDateAsInstant = newInputDate.toUtcInstant(testUserClock)
-    val updatedBp = existingBp.copy(systolic = 120, diastolic = 110, updatedAt = oldCreatedAt, recordedAt = newInputDateAsInstant)
+    val updatedBp = existingBp.copy(
+        systolic = 120,
+        diastolic = 110,
+        updatedAt = oldCreatedAt,
+        recordedAt = newInputDateAsInstant,
+        userUuid = newUserUuid,
+        facilityUuid = newFacilityUuid
+    )
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
     verify(patientRepository).compareAndUpdateRecordedAt(updatedBp.patientUuid, updatedBp.recordedAt)
 
@@ -896,6 +920,14 @@ class BloodPressureEntrySheetControllerTest {
     whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).thenReturn(Completable.complete())
 
+    val newUserUuid = UUID.fromString("a726d885-b12d-40b7-9fe1-5391f3fc0f88")
+    val newFacilityUuid = UUID.fromString("d51f48fd-40b6-4daf-beae-ba3d9f4c24cd")
+    val newUser = user.copy(uuid = newUserUuid)
+
+    whenever(facilityRepository.currentFacility(newUser)).thenReturn(Observable.just(facility.copy(uuid = newFacilityUuid)))
+
+    userSubject.onNext(newUser)
+
     with(uiEvents) {
       onNext(BloodPressureEntrySheetCreated(OpenAs.Update(existingBp.uuid)))
       onNext(BloodPressureScreenChanged(BP_ENTRY))
@@ -915,7 +947,9 @@ class BloodPressureEntrySheetControllerTest {
         systolic = systolic.toInt(),
         diastolic = diastolic.toInt(),
         updatedAt = createdAt,
-        recordedAt = newInputDateAsInstant
+        recordedAt = newInputDateAsInstant,
+        userUuid = newUserUuid,
+        facilityUuid = newFacilityUuid
     )
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 

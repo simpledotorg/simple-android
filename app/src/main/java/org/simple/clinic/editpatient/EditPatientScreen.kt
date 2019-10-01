@@ -2,25 +2,18 @@ package org.simple.clinic.editpatient
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.RelativeLayout
-import android.widget.ScrollView
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
@@ -46,14 +39,12 @@ import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.exhaustive
-import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.textChanges
@@ -78,31 +69,6 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   @Inject
   lateinit var crashReporter: CrashReporter
-
-  private val formScrollView by bindView<ScrollView>(R.id.patientedit_form_scrollview)
-  private val fullNameEditText by bindView<EditText>(R.id.patientedit_full_name)
-  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patientedit_full_name_inputlayout)
-  private val phoneNumberEditText by bindView<EditText>(R.id.patientedit_phone_number)
-  private val phoneNumberInputLayout by bindView<TextInputLayout>(R.id.patientedit_phone_number_inputlayout)
-  private val colonyEditText by bindView<EditText>(R.id.patientedit_colony_or_village)
-  private val colonyOrVillageInputLayout by bindView<TextInputLayout>(R.id.patientedit_colony_or_village_inputlayout)
-  private val districtEditText by bindView<EditText>(R.id.patientedit_district)
-  private val districtInputLayout by bindView<TextInputLayout>(R.id.patientedit_district_inputlayout)
-  private val stateEditText by bindView<EditText>(R.id.patientedit_state)
-  private val stateInputLayout by bindView<TextInputLayout>(R.id.patientedit_state_inputlayout)
-  private val femaleRadioButton by bindView<RadioButton>(R.id.patientedit_gender_female)
-  private val maleRadioButton by bindView<RadioButton>(R.id.patientedit_gender_male)
-  private val transgenderRadioButton by bindView<RadioButton>(R.id.patientedit_gender_transgender)
-  private val genderRadioGroup by bindView<RadioGroup>(R.id.patientedit_gender_radiogroup)
-  private val ageEditText by bindView<EditText>(R.id.patientedit_age)
-  private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patientedit_date_of_birth)
-  private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patientedit_date_of_birth_inputlayout)
-  private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patientedit_date_of_birth_container)
-  private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patientedit_dateofbirth_and_age_separator)
-  private val ageEditTextContainer by bindView<ViewGroup>(R.id.patientedit_age_container)
-  private val backButton by bindView<ImageButton>(R.id.patientedit_back)
-  private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
-  private val ageInputLayout by bindView<TextInputLayout>(R.id.patientedit_age_inputlayout)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -163,7 +129,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun colonyTextChanges(): Observable<UiEvent> {
-    return RxTextView.textChanges(colonyEditText).map { ColonyOrVillageChanged(it.toString()) }
+    return RxTextView.textChanges(colonyOrVillageEditText).map { ColonyOrVillageChanged(it.toString()) }
   }
 
   private fun backClicks(): Observable<UiEvent> {
@@ -185,9 +151,9 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun genderChanges(): Observable<UiEvent> {
     val radioIdToGenders = mapOf(
-        R.id.patientedit_gender_female to Female,
-        R.id.patientedit_gender_male to Male,
-        R.id.patientedit_gender_transgender to Transgender)
+        R.id.femaleRadioButton to Female,
+        R.id.maleRadioButton to Male,
+        R.id.transgenderRadioButton to Transgender)
 
     return RxRadioGroup.checkedChanges(genderRadioGroup)
         .filter { it != -1 }
@@ -212,7 +178,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   override fun setColonyOrVillage(colonyOrVillage: String) {
-    colonyEditText.setTextAndCursor(colonyOrVillage)
+    colonyOrVillageEditText.setTextAndCursor(colonyOrVillage)
   }
 
   override fun setDistrict(district: String) {

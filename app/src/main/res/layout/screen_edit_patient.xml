@@ -10,7 +10,7 @@
   android:orientation="horizontal">
 
   <ImageButton
-    android:id="@+id/patientedit_back"
+    android:id="@+id/backButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackgroundBorderless"
@@ -20,11 +20,11 @@
     tools:ignore="ContentDescription" />
 
   <ScrollView
-    android:id="@+id/patientedit_form_scrollview"
+    android:id="@+id/formScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/patientedit_save"
-    android:layout_toEndOf="@+id/patientedit_back"
+    android:layout_above="@+id/saveButton"
+    android:layout_toEndOf="@+id/backButton"
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical">
 
@@ -42,13 +42,13 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/patientedit_full_name_inputlayout"
+          android:id="@+id/fullNameInputLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/patientedit_full_name"
+            android:id="@+id/fullNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_full_name"
@@ -61,7 +61,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
-          app:cleareableField="@id/patientedit_full_name" />
+          app:cleareableField="@id/fullNameEditText" />
       </FrameLayout>
 
       <FrameLayout
@@ -70,13 +70,13 @@
         android:layout_marginTop="@dimen/spacing_16">
 
         <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/patientedit_phone_number_inputlayout"
+          android:id="@+id/phoneNumberInputLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/patientedit_phone_number"
+            android:id="@+id/phoneNumberEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_phone_number"
@@ -89,7 +89,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
-          app:cleareableField="@id/patientedit_phone_number" />
+          app:cleareableField="@id/phoneNumberEditText" />
       </FrameLayout>
 
       <LinearLayout
@@ -101,19 +101,19 @@
         <!-- A background is intentionally set on these Views
              to avoid overlapping when they animate -->
         <FrameLayout
-          android:id="@+id/patientedit_age_container"
+          android:id="@+id/ageEditTextContainer"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="0.6">
 
           <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/patientedit_age_inputlayout"
+            android:id="@+id/ageInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
             <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/patientedit_age"
+              android:id="@+id/ageEditText"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:hint="@string/patientedit_age"
@@ -127,11 +127,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            app:cleareableField="@id/patientedit_age" />
+            app:cleareableField="@id/ageEditText" />
         </FrameLayout>
 
         <TextView
-          android:id="@+id/patientedit_dateofbirth_and_age_separator"
+          android:id="@+id/dateOfBirthAndAgeSeparator"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginEnd="@dimen/spacing_16"
@@ -142,19 +142,19 @@
           android:textAllCaps="true" />
 
         <FrameLayout
-          android:id="@+id/patientedit_date_of_birth_container"
+          android:id="@+id/dateOfBirthEditTextContainer"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1">
 
           <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/patientedit_date_of_birth_inputlayout"
+            android:id="@+id/dateOfBirthInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
             <org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
-              android:id="@+id/patientedit_date_of_birth"
+              android:id="@+id/dateOfBirthEditText"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:hint="@string/patientedit_date_of_birth_unfocused"
@@ -169,19 +169,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            app:cleareableField="@id/patientedit_date_of_birth" />
+            app:cleareableField="@id/dateOfBirthEditText" />
         </FrameLayout>
       </LinearLayout>
 
       <RadioGroup
-        android:id="@+id/patientedit_gender_radiogroup"
+        android:id="@+id/genderRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatRadioButton
-          android:id="@+id/patientedit_gender_female"
+          android:id="@+id/femaleRadioButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="-2dp"
@@ -190,7 +190,7 @@
           android:textColor="@color/editpatient_radio_button" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-          android:id="@+id/patientedit_gender_male"
+          android:id="@+id/maleRadioButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_16"
@@ -199,7 +199,7 @@
           android:textColor="@color/editpatient_radio_button" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-          android:id="@+id/patientedit_gender_transgender"
+          android:id="@+id/transgenderRadioButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_16"
@@ -227,13 +227,13 @@
         android:layout_marginTop="@dimen/spacing_16">
 
         <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/patientedit_colony_or_village_inputlayout"
+          android:id="@+id/colonyOrVillageInputLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/patientedit_colony_or_village"
+            android:id="@+id/colonyOrVillageEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_colony_or_village"
@@ -246,7 +246,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
-          app:cleareableField="@id/patientedit_colony_or_village" />
+          app:cleareableField="@id/colonyOrVillageEditText" />
       </FrameLayout>
 
       <LinearLayout
@@ -257,7 +257,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/patientedit_district_inputlayout"
+          android:id="@+id/districtInputLayout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginEnd="@dimen/spacing_4"
@@ -265,7 +265,7 @@
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/patientedit_district"
+            android:id="@+id/districtEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_district"
@@ -274,7 +274,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/patientedit_state_inputlayout"
+          android:id="@+id/stateInputLayout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_4"
@@ -282,7 +282,7 @@
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/patientedit_state"
+            android:id="@+id/stateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_state"
@@ -294,7 +294,7 @@
   </ScrollView>
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
-    android:id="@+id/patientedit_save"
+    android:id="@+id/saveButton"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
     android:layout_alignParentBottom="true"
     app:buttonBackgroundDisabled="@color/grey2"

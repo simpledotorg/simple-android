@@ -1,6 +1,8 @@
 package org.simple.clinic.editpatient
 
 import android.content.Context
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RadioButton
 import android.widget.RelativeLayout
@@ -13,10 +15,12 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -29,22 +33,27 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient_old.PatientEditScreenController
-import org.simple.clinic.editpatient_old.ScreenCreated
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
-import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.textChanges
@@ -65,10 +74,64 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   lateinit var dateOfBirthFormat: DateTimeFormatter
 
   @Inject
+  lateinit var numberValidator: PhoneNumberValidator
+
+  @Inject
+  lateinit var dateOfBirthValidator: UserInputDateValidator
+
+  @Inject
+  lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
+  @Inject
+  lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var schedulersProvider: SchedulersProvider
+
+  @Inject
   lateinit var activity: TheActivity
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  private val screenKey by unsafeLazy {
+    screenRouter.key<EditPatientScreenKey>(this)
+  }
+
+  private val viewRenderer = EditPatientViewRenderer(this)
+
+  private val events: Observable<EditPatientEvent>
+    get() = Observable.mergeArray(
+        saveClicks(),
+        nameTextChanges(),
+        phoneNumberTextChanges(),
+        districtTextChanges(),
+        stateTextChanges(),
+        colonyTextChanges(),
+        genderChanges(),
+        dateOfBirthTextChanges(),
+        dateOfBirthFocusChanges(),
+        ageTextChanges(),
+        backClicks()
+    ).compose(ReportAnalyticsEvents())
+        .cast()
+
+  private lateinit var eventsDisposable: Disposable
+
+  private val delegate by unsafeLazy {
+    val (patient, address, phoneNumber) = screenKey
+    MobiusDelegate(
+        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
+        EditPatientInit(patient, address, phoneNumber),
+        EditPatientUpdate(numberValidator, dateOfBirthValidator),
+        EditPatientEffectHandler.createEffectHandler(this, userClock, patientRepository, utcClock, dateOfBirthFormat, schedulersProvider),
+        viewRenderer::render,
+        crashReporter
+    )
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -78,61 +141,60 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     TheActivity.component.inject(this)
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    delegate.prepare()
 
-    bindUiToController(
-        ui = this,
-        events = Observable.mergeArray(
-            screenCreates(),
-            saveClicks(),
-            nameTextChanges(),
-            phoneNumberTextChanges(),
-            districtTextChanges(),
-            stateTextChanges(),
-            colonyTextChanges(),
-            genderChanges(),
-            dateOfBirthTextChanges(),
-            dateOfBirthFocusChanges(),
-            ageTextChanges(),
-            backClicks()
-        ),
-        controller = controller,
-        screenDestroys = screenDestroys
-    )
   }
 
-  private fun screenCreates(): Observable<UiEvent> {
-    val key = screenRouter.key<EditPatientScreenKey>(this)
-    val patientEditScreenCreated = ScreenCreated
-        .from(key.patient, key.address, key.phoneNumber)
-    return Observable.just(patientEditScreenCreated)
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+    eventsDisposable = events.subscribe { delegate.eventSource.notifyEvent(it) }
   }
 
-  private fun saveClicks(): Observable<UiEvent> {
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    if (::eventsDisposable.isInitialized && eventsDisposable.isDisposed.not()) {
+      eventsDisposable.dispose()
+    }
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state as Bundle?)).also {
+      delegate.prepare()
+    }
+  }
+
+  private fun saveClicks(): Observable<EditPatientEvent> {
     return RxView.clicks(saveButton.button).map { SaveClicked }
   }
 
-  private fun nameTextChanges(): Observable<UiEvent> {
+  private fun nameTextChanges(): Observable<EditPatientEvent> {
     return RxTextView.textChanges(fullNameEditText).map { NameChanged(it.toString()) }
   }
 
-  private fun phoneNumberTextChanges(): Observable<UiEvent> {
+  private fun phoneNumberTextChanges(): Observable<EditPatientEvent> {
     return RxTextView.textChanges(phoneNumberEditText).map { PhoneNumberChanged(it.toString()) }
   }
 
-  private fun districtTextChanges(): Observable<UiEvent> {
+  private fun districtTextChanges(): Observable<EditPatientEvent> {
     return RxTextView.textChanges(districtEditText).map { DistrictChanged(it.toString()) }
   }
 
-  private fun stateTextChanges(): Observable<UiEvent> {
+  private fun stateTextChanges(): Observable<EditPatientEvent> {
     return RxTextView.textChanges(stateEditText).map { StateChanged(it.toString()) }
   }
 
-  private fun colonyTextChanges(): Observable<UiEvent> {
+  private fun colonyTextChanges(): Observable<EditPatientEvent> {
     return RxTextView.textChanges(colonyOrVillageEditText).map { ColonyOrVillageChanged(it.toString()) }
   }
 
-  private fun backClicks(): Observable<UiEvent> {
+  private fun backClicks(): Observable<EditPatientEvent> {
     val hardwareBackKeyClicks = Observable.create<Any> { emitter ->
       val interceptor = object : BackPressInterceptor {
         override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
@@ -149,7 +211,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         .map { BackClicked }
   }
 
-  private fun genderChanges(): Observable<UiEvent> {
+  private fun genderChanges(): Observable<EditPatientEvent> {
     val radioIdToGenders = mapOf(
         R.id.femaleRadioButton to Female,
         R.id.maleRadioButton to Male,
@@ -163,11 +225,11 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         }
   }
 
-  private fun dateOfBirthTextChanges(): Observable<UiEvent> = dateOfBirthEditText.textChanges(::DateOfBirthChanged)
+  private fun dateOfBirthTextChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.textChanges(::DateOfBirthChanged)
 
-  private fun dateOfBirthFocusChanges(): Observable<UiEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
+  private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
 
-  private fun ageTextChanges(): Observable<UiEvent> = ageEditText.textChanges(::AgeChanged)
+  private fun ageTextChanges(): Observable<EditPatientEvent> = ageEditText.textChanges(::AgeChanged)
 
   override fun setPatientName(name: String) {
     fullNameEditText.setTextAndCursor(name)

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
-import com.spotify.mobius.EventSource
 import com.spotify.mobius.First
 import com.spotify.mobius.Init
 import com.spotify.mobius.MobiusLoop
@@ -60,7 +59,7 @@ class MobiusDelegate<M : Parcelable, E, F>(
         .eventSource(eventSource)
   }
 
-  val eventSource: EventSource<E> by unsafeLazy {
+  val eventSource: DeferredEventSource<E> by unsafeLazy {
     DeferredEventSource<E>(crashReporter)
   }
 

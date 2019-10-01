@@ -1,11 +1,14 @@
 package org.simple.clinic.editpatient
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.threeten.bp.format.DateTimeFormatter
 
+@Parcelize
 data class EditPatientModel(
     val savedEntry: EditablePatientEntry,
     val ongoingEntry: EditablePatientEntry,
@@ -15,7 +18,7 @@ data class EditPatientModel(
     val savedPatient: Patient,
     val savedAddress: PatientAddress,
     val savedPhoneNumber: PatientPhoneNumber?
-) {
+) : Parcelable {
   companion object {
     fun from(
         patient: Patient,

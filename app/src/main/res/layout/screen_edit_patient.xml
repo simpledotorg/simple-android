@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.editpatient_old.PatientEditScreen
+<org.simple.clinic.editpatient.EditPatientScreen
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -309,4 +309,4 @@
       android:text="@string/patientedit_save_patient"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
-</org.simple.clinic.editpatient_old.PatientEditScreen>
+</org.simple.clinic.editpatient.EditPatientScreen>

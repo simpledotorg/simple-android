@@ -19,6 +19,7 @@ import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
+import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.editpatient_old.PatientEditScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.change.FacilityChangeScreen
@@ -130,6 +131,7 @@ interface TheActivityComponent {
   fun inject(target: RegistrationLoadingScreen)
   fun inject(target: LoggedOutOfDeviceDialog)
   fun inject(target: ShortCodeSearchResultScreen)
+  fun inject(target: EditPatientScreen)
 
   @Subcomponent.Builder
   interface Builder {

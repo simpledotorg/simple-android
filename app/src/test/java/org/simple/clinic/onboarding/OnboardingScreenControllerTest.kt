@@ -16,7 +16,7 @@ class OnboardingScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<OnboardingScreen>()
+  private val screen = mock<OnboardingUi>()
   private val hasUserCompletedOnboarding = mock<Preference<Boolean>>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()

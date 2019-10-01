@@ -4,6 +4,6 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class OnboardingEvent : UiEvent
 
-class OnboardingGetStartedClicked : OnboardingEvent() {
+object GetStartedClicked : OnboardingEvent() {
   override val analyticsName = "Onboarding:Get Started Clicked"
 }

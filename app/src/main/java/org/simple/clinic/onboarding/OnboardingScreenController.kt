@@ -30,7 +30,7 @@ class OnboardingScreenController @Inject constructor(
 
   private fun getStartedClicks(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<OnboardingGetStartedClicked>()
+        .ofType<GetStartedClicked>()
         .flatMapSingle {
           Completable.fromAction { hasUserCompletedOnboarding.set(true) }
               .andThen(Single.just({ ui: Ui -> ui.moveToRegistrationScreen() }))

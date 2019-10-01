@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
 import org.junit.Test
+import org.simple.clinic.illustration.IllustrationConfigParser.Companion.EMPTY_JSON
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.threeten.bp.Month
 
@@ -35,7 +36,7 @@ class IllustrationConfigParserTest {
   ]
 }
     """
-    whenever(configReader.string("home_screen_illustration", "{}")).thenReturn(illustrationsConfig)
+    whenever(configReader.string("home_screen_illustration", EMPTY_JSON)).thenReturn(illustrationsConfig)
     val illustrations = illustrationConfigParser.illustrations()
 
     assertThat(illustrations).isEqualTo(listOf(
@@ -50,7 +51,7 @@ class IllustrationConfigParserTest {
 
   @Test
   fun `verify illustration config parsing happens when empty object is passed`() {
-    whenever(configReader.string("home_screen_illustration", "{}")).thenReturn("{}")
+    whenever(configReader.string("home_screen_illustration", EMPTY_JSON)).thenReturn(EMPTY_JSON)
     val illustrations = illustrationConfigParser.illustrations()
 
     assertThat(illustrations).isEqualTo(emptyList<HomescreenIllustration>())

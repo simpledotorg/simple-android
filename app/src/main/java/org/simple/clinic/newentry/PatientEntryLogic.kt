@@ -28,6 +28,10 @@ fun patientEntryUpdate(
     } else {
       return next(updatedModel)
     }
+  } else if (event is AgeChanged) {
+    return next(model.updateAge(event.age))
+  } else if (event is DateOfBirthChanged) {
+    return next(model.updateDateOfBirth(event.dateOfBirth))
   }
 
   return noChange()

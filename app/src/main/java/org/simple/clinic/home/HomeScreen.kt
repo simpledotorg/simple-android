@@ -6,11 +6,13 @@ import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_home.view.*
+import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.change.FacilityChangeScreenKey
 import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.settings.SettingsScreenKey
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
@@ -52,6 +54,18 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   private fun setupToolBar() {
+    home_toolbar.apply {
+      inflateMenu(R.menu.home)
+      setOnMenuItemClickListener { menuItem ->
+        when (menuItem.itemId) {
+          R.id.openSettings -> {
+            screenRouter.push(SettingsScreenKey())
+            true
+          }
+          else -> false
+        }
+      }
+    }
     helpButton.setOnClickListener {
       screenRouter.push(HelpScreenKey())
     }

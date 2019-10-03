@@ -1,7 +1,6 @@
 package org.simple.clinic.allpatientsinfacility
 
 import android.content.Context
-import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
@@ -119,7 +118,7 @@ class AllPatientsInFacilityView(
   }
 
   override fun onRestoreInstanceState(state: Parcelable?) {
-    val viewState = delegate.onRestoreInstanceState(state as Bundle?)
+    val viewState = delegate.onRestoreInstanceState(state)
     super.onRestoreInstanceState(viewState)
   }
 

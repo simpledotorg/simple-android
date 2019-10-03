@@ -36,7 +36,7 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
@@ -65,7 +65,7 @@ class PatientEntryScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val dobValidator = mock<UserInputDateValidator>()
-  private val numberValidator = mock<PhoneNumberValidator>()
+  private val numberValidator = IndianPhoneNumberValidator()
   private val patientRegisteredCount = mock<Preference<Int>>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -135,7 +135,6 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
-    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRegisteredCount.get()).thenReturn(0)
 
     with(uiEvents) {
@@ -170,7 +169,6 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
-    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRegisteredCount.get()).thenReturn(existingPatientRegisteredCount)
 
     with(uiEvents) {
@@ -232,7 +230,6 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
-    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
     with(uiEvents) {
       onNext(PatientFullNameTextChanged("Ashok"))
@@ -288,13 +285,11 @@ class PatientEntryScreenControllerTest {
       onNext(PatientEntrySaveClicked())
     }
 
-    whenever(numberValidator.validate("1234", LANDLINE_OR_MOBILE)).thenReturn(LENGTH_TOO_SHORT)
     with(uiEvents) {
       onNext(PatientPhoneNumberTextChanged("1234"))
       onNext(PatientEntrySaveClicked())
     }
 
-    whenever(numberValidator.validate("1234567890987654", LANDLINE_OR_MOBILE)).thenReturn(LENGTH_TOO_LONG)
     with(uiEvents) {
       onNext(PatientPhoneNumberTextChanged("1234567890987654"))
       onNext(PatientEntrySaveClicked())

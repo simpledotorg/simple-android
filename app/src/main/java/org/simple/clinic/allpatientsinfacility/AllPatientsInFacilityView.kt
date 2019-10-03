@@ -56,7 +56,7 @@ class AllPatientsInFacilityView(
   @Inject
   lateinit var crashReporter: CrashReporter
 
-  private val viewRenderer by unsafeLazy { AllPatientsInFacilityUiRenderer(this) }
+  private val viewRenderer = AllPatientsInFacilityUiRenderer(this)
 
   override val uiEvents: Observable<UiEvent>
     get() = Observable.merge(searchResultClicks(), listScrollEvents())

@@ -67,6 +67,7 @@ class AllPatientsInFacilityView(
         .createEffectHandler(userSession, facilityRepository, patientRepository, schedulersProvider)
 
     MobiusDelegate(
+        Observable.never(),
         AllPatientsInFacilityModel.FETCHING_PATIENTS,
         ::allPatientsInFacilityInit,
         ::allPatientsInFacilityUpdate,

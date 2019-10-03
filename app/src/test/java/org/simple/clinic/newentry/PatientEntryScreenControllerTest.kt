@@ -37,10 +37,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -49,10 +45,9 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
-import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale.ENGLISH
 
 @RunWith(JUnitParamsRunner::class)
 class PatientEntryScreenControllerTest {
@@ -64,7 +59,7 @@ class PatientEntryScreenControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
-  private val dobValidator = mock<UserInputDateValidator>()
+  private val dobValidator = UserInputDateValidator(UTC, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
   private val numberValidator = IndianPhoneNumberValidator()
   private val patientRegisteredCount = mock<Preference<Int>>()
 
@@ -85,7 +80,6 @@ class PatientEntryScreenControllerTest {
   @Before
   fun setUp() {
     whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(PatientMocker.facility()))
-    whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(UTC))
     whenever(patientRepository.ongoingEntry()).thenReturn(initialOngoingPatientEntrySubject.firstOrError())
 
     errorConsumer = { throw it }
@@ -134,7 +128,6 @@ class PatientEntryScreenControllerTest {
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
     whenever(patientRegisteredCount.get()).thenReturn(0)
 
     with(uiEvents) {
@@ -168,7 +161,6 @@ class PatientEntryScreenControllerTest {
 
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
     whenever(patientRegisteredCount.get()).thenReturn(existingPatientRegisteredCount)
 
     with(uiEvents) {
@@ -229,7 +221,6 @@ class PatientEntryScreenControllerTest {
   fun `when screen is paused then ongoing patient entry should be saved`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
 
     with(uiEvents) {
       onNext(PatientFullNameTextChanged("Ashok"))
@@ -266,20 +257,17 @@ class PatientEntryScreenControllerTest {
       onNext(PatientEntrySaveClicked())
     }
 
-    whenever(dobValidator.validate("33/33/3333")).thenReturn(Invalid.DateIsInFuture)
     with(uiEvents) {
       onNext(PatientDateOfBirthTextChanged("33/33/3333"))
       onNext(PatientEntrySaveClicked())
     }
 
-    whenever(dobValidator.validate(" ")).thenReturn(Invalid.InvalidPattern)
     with(uiEvents) {
       onNext(PatientAgeTextChanged(" "))
       onNext(PatientDateOfBirthTextChanged(""))
       onNext(PatientEntrySaveClicked())
     }
 
-    whenever(dobValidator.validate("16/07/2018")).thenReturn(Invalid.InvalidPattern)
     with(uiEvents) {
       onNext(PatientDateOfBirthTextChanged("16/07/2018"))
       onNext(PatientEntrySaveClicked())
@@ -321,20 +309,17 @@ class PatientEntryScreenControllerTest {
       onNext(PatientEntrySaveClicked())
     }
 
-    whenever(dobValidator.validate("33/33/3333")).thenReturn(Invalid.DateIsInFuture)
     with(uiEvents) {
       onNext(PatientDateOfBirthTextChanged("33/33/3333"))
       onNext(PatientEntrySaveClicked())
     }
 
-    whenever(dobValidator.validate(" ")).thenReturn(Invalid.InvalidPattern)
     with(uiEvents) {
       onNext(PatientAgeTextChanged(" "))
       onNext(PatientDateOfBirthTextChanged(""))
       onNext(PatientEntrySaveClicked())
     }
 
-    whenever(dobValidator.validate("16/07/2018")).thenReturn(Invalid.InvalidPattern)
     with(uiEvents) {
       onNext(PatientDateOfBirthTextChanged("16/07/2018"))
       onNext(PatientEntrySaveClicked())

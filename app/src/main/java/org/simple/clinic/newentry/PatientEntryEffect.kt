@@ -9,3 +9,5 @@ object FetchPatientEntry : PatientEntryEffect()
 data class PrefillFields(
     val patientEntry: OngoingNewPatientEntry
 ) : PatientEntryEffect()
+
+object ScrollFormToBottom : PatientEntryEffect()

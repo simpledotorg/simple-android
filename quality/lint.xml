@@ -13,10 +13,6 @@
 
     <!-- Heap analytics plugin adds these resources dynamically. -->
     <ignore regexp="com.heapanalytics.android.*" />
-
-    <!-- TODO vs (03 Oct 19): Remove suppression when the settings screen is integrated -->
-    <ignore regexp="settings_*"/>
-
   </issue>
 
   <!-- Ignore this for now due to time constraints. Switch to static images later. -->
@@ -25,6 +21,7 @@
     <ignore path="src/debug/res/drawable/logo_large.xml" />
     <ignore path="src/staging/res/drawable/logo_large.xml" />
     <ignore path="src/sandbox/res/drawable/logo_large.xml" />
+    <ignore path="src/main/res/drawable/ic_settings_24dp.xml" />
   </issue>
 
   <issue id="ParcelCreator" severity="informational" />
@@ -52,5 +49,6 @@
   <issue id="VectorRaster">
     <ignore path="src/main/res/drawable/ic_settings_account_24dp.xml" />
     <ignore path="src/main/res/drawable/ic_settings_phone_24dp.xml" />
+    <ignore path="src/main/res/drawable/ic_settings_24dp.xml" />
   </issue>
 </lint>

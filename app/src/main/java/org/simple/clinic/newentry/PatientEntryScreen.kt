@@ -51,7 +51,7 @@ import org.simple.clinic.widgets.textChanges
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -165,7 +165,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .map { PatientEntrySaveClicked() }
   }
 
-  fun preFillFields(entry: OngoingNewPatientEntry) {
+  override fun preFillFields(entry: OngoingNewPatientEntry) {
     fullNameEditText.setTextAndCursor(entry.personalDetails?.fullName)
     phoneNumberEditText.setTextAndCursor(entry.phoneNumber?.number)
     dateOfBirthEditText.setTextAndCursor(entry.personalDetails?.dateOfBirth)
@@ -206,11 +206,11 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     genderButton?.isChecked = true
   }
 
-  fun openMedicalHistoryEntryScreen() {
+  override fun openMedicalHistoryEntryScreen() {
     screenRouter.push(NewMedicalHistoryScreenKey())
   }
 
-  fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {
+  override fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {
     val transition = TransitionSet()
         .addTransition(ChangeBounds())
         .addTransition(Fade())
@@ -235,7 +235,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  fun setShowDatePatternInDateOfBirthLabel(showPattern: Boolean) {
+  override fun setShowDatePatternInDateOfBirthLabel(showPattern: Boolean) {
     val labelRes = when (showPattern) {
       true -> R.string.patiententry_date_of_birth_focused
       false -> R.string.patiententry_date_of_birth_unfocused
@@ -243,7 +243,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     dateOfBirthInputLayout.hint = resources.getString(labelRes)
   }
 
-  fun showEmptyFullNameError(show: Boolean) {
+  override fun showEmptyFullNameError(show: Boolean) {
     if (show) {
       fullNameInputLayout.error = resources.getString(R.string.patiententry_error_empty_fullname)
     } else {
@@ -251,7 +251,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  fun showLengthTooShortPhoneNumberError(show: Boolean) {
+  override fun showLengthTooShortPhoneNumberError(show: Boolean) {
     if (show) {
       phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_less)
     } else {
@@ -259,7 +259,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  fun showLengthTooLongPhoneNumberError(show: Boolean) {
+  override fun showLengthTooLongPhoneNumberError(show: Boolean) {
     if (show) {
       phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_more)
     } else {
@@ -267,7 +267,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  fun showMissingGenderError(show: Boolean) {
+  override fun showMissingGenderError(show: Boolean) {
     if (show) {
       genderErrorTextView.visibility = View.VISIBLE
     } else {
@@ -275,49 +275,49 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  fun showEmptyColonyOrVillageError(show: Boolean) {
+  override fun showEmptyColonyOrVillageError(show: Boolean) {
     colonyOrVillageInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_error_empty_colony_or_village)
       else -> null
     }
   }
 
-  fun showEmptyDistrictError(show: Boolean) {
+  override fun showEmptyDistrictError(show: Boolean) {
     districtInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_error_empty_district)
       else -> null
     }
   }
 
-  fun showEmptyStateError(show: Boolean) {
+  override fun showEmptyStateError(show: Boolean) {
     stateInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_error_state_empty)
       else -> null
     }
   }
 
-  fun showEmptyDateOfBirthAndAgeError(show: Boolean) {
+  override fun showEmptyDateOfBirthAndAgeError(show: Boolean) {
     ageEditTextInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_error_both_dateofbirth_and_age_empty)
       else -> null
     }
   }
 
-  fun showInvalidDateOfBirthError(show: Boolean) {
+  override fun showInvalidDateOfBirthError(show: Boolean) {
     dateOfBirthInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_error_invalid_dateofbirth)
       else -> null
     }
   }
 
-  fun showDateOfBirthIsInFutureError(show: Boolean) {
+  override fun showDateOfBirthIsInFutureError(show: Boolean) {
     dateOfBirthInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_error_dateofbirth_is_in_future)
       else -> null
     }
   }
 
-  fun scrollToFirstFieldWithError() {
+  override fun scrollToFirstFieldWithError() {
     val views = arrayOf(
         fullNameInputLayout,
         phoneNumberInputLayout,
@@ -351,17 +351,17 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     formScrollView.scrollToChild(firstFieldWithError, onScrollComplete = { firstFieldWithError.requestFocus() })
   }
 
-  fun scrollFormToBottom() {
+  override fun scrollFormToBottom() {
     formScrollView.post {
       formScrollView.smoothScrollTo(0, formScrollView.height)
     }
   }
 
-  fun showIdentifierSection() {
+  override fun showIdentifierSection() {
     identifierContainer.visibleOrGone(isVisible = true)
   }
 
-  fun hideIdentifierSection() {
+  override fun hideIdentifierSection() {
     identifierContainer.visibleOrGone(isVisible = false)
   }
 }

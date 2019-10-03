@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.util.Optional
 
 @Parcelize
@@ -25,6 +26,26 @@ data class PatientEntryModel(
             personalDetails = patientEntry.personalDetails?.copy(
                 gender = gender.toNullable()
             )
+        )
+    )
+  }
+
+  fun updateAge(age: String): PatientEntryModel {
+    val personalDetails = patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
+
+    return copy(
+        patientEntry = patientEntry?.copy(
+            personalDetails = personalDetails.copy(age = age)
+        )
+    )
+  }
+
+  fun updateDateOfBirth(dateOfBirth: String): PatientEntryModel {
+    val personalDetails = patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
+
+    return copy(
+        patientEntry = patientEntry?.copy(
+            personalDetails = personalDetails.copy(dateOfBirth = dateOfBirth)
         )
     )
   }

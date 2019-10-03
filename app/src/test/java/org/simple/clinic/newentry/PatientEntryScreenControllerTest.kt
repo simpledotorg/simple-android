@@ -195,14 +195,19 @@ class PatientEntryScreenControllerTest {
     verify(patientRegisteredCount).set(existingPatientRegisteredCount + 1)
   }
 
-  @Test // TODO: Migrate to Mobius
+  @Test
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    screenCreatedForMobius()
+
     with(uiEvents) {
       onNext(AgeChanged(""))
       onNext(DateOfBirthChanged(""))
     }
-    verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
+
+    // TODO(rj): 2019-10-03 This function gets invoked twice in Mobius because we don't have a way to do granular updates right now.
+    // TODO                 But we can live this this because it is an idempotent operation at the moment.
+    verify(ui, times(2)).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
 
     uiEvents.onNext(DateOfBirthChanged("1"))
     verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
@@ -214,7 +219,7 @@ class PatientEntryScreenControllerTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
   }
 
-  @Test // TODO: Migrate to Mobius
+  @Test
   fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     errorConsumer = { assertThat(it).isInstanceOf(AssertionError::class.java) }

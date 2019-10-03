@@ -40,9 +40,6 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import javax.inject.Inject
 import javax.inject.Named
@@ -68,7 +65,6 @@ class PatientEntryScreenController @Inject constructor(
 
     return Observable.mergeArray(
         preFillOnStart(replayedEvents),
-        switchBetweenDateOfBirthAndAge(replayedEvents),
         toggleDatePatternInDateOfBirthLabel(replayedEvents),
         saveOngoingEntry(replayedEvents),
         savePatient(replayedEvents),
@@ -92,27 +88,6 @@ class PatientEntryScreenController @Inject constructor(
                   state = facility.state))
         }
         .flatMap { Observable.never<UiChange>() }
-  }
-
-  private fun switchBetweenDateOfBirthAndAge(events: Observable<UiEvent>): Observable<UiChange> {
-    val isDateOfBirthBlanks = events
-        .ofType<DateOfBirthChanged>()
-        .map { it.dateOfBirth.isBlank() }
-
-    val isAgeBlanks = events
-        .ofType<AgeChanged>()
-        .map { it.age.isBlank() }
-
-    return Observables.combineLatest(isDateOfBirthBlanks, isAgeBlanks)
-        .distinctUntilChanged()
-        .map<UiChange> { (dateBlank, ageBlank) ->
-          when {
-            !dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE) }
-            dateBlank && !ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(AGE_VISIBLE) }
-            dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(BOTH_VISIBLE) }
-            else -> throw AssertionError("Both date-of-birth and age cannot have user input at the same time")
-          }
-        }
   }
 
   private fun toggleDatePatternInDateOfBirthLabel(events: Observable<UiEvent>): Observable<UiChange> {

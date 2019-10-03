@@ -2,6 +2,7 @@ package org.simple.clinic.newentry
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -25,16 +26,21 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
@@ -68,6 +74,18 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
+  lateinit var facilityRepository: FacilityRepository
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
+  @Inject
+  lateinit var schedulersProvider: SchedulersProvider
+
   private val allTextInputFields: List<EditText> by unsafeLazy {
     listOf(
         fullNameEditText,
@@ -86,6 +104,29 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
    * to track the fact that we've already shown it.
    **/
   private var alreadyFocusedOnEmptyTextField: Boolean = false
+
+  private val viewRenderer = PatientEntryViewRenderer(this)
+
+  private val events: Observable<UiEvent> by unsafeLazy {
+    Observable.merge(
+        screenCreates(),
+        screenPauses(),
+        formChanges(),
+        saveClicks()
+    ).share()
+  }
+
+  private val delegate by unsafeLazy {
+    MobiusDelegate(
+        events.ofType(),
+        PatientEntryModel.DEFAULT,
+        ::patientEntryInit,
+        ::patientEntryUpdate,
+        PatientEntryEffectHandler.createEffectHandler(userSession, facilityRepository, patientRepository, this, schedulersProvider),
+        viewRenderer::render,
+        crashReporter
+    )
+  }
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -116,15 +157,30 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            screenPauses(),
-            formChanges(),
-            saveClicks()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+    delegate.prepare()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    val viewState = delegate.onRestoreInstanceState(state)
+    super.onRestoreInstanceState(viewState)
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

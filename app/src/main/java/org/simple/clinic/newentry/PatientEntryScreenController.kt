@@ -50,6 +50,7 @@ import javax.inject.Named
 typealias Ui = PatientEntryUi
 typealias UiChange = (Ui) -> Unit
 
+@Deprecated("This is being replaced with a Mobius loop instead.")
 class PatientEntryScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
@@ -92,7 +93,7 @@ class PatientEntryScreenController @Inject constructor(
                   district = facility.district,
                   state = facility.state))
         }
-        .map { { ui: Ui -> ui.preFillFields(it) } }
+        .flatMap { Observable.never<UiChange>() }
   }
 
   private fun switchBetweenDateOfBirthAndAge(events: Observable<UiEvent>): Observable<UiChange> {

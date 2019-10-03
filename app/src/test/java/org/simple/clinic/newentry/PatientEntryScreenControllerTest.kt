@@ -138,15 +138,17 @@ class PatientEntryScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRegisteredCount.get()).thenReturn(0)
 
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
-    uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
-    uiEvents.onNext(PatientAgeTextChanged(""))
-    uiEvents.onNext(PatientGenderChanged(Just(Transgender)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
-    uiEvents.onNext(PatientDistrictTextChanged("district"))
-    uiEvents.onNext(PatientStateTextChanged("state"))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged("Ashok"))
+      onNext(PatientPhoneNumberTextChanged("1234567890"))
+      onNext(PatientDateOfBirthTextChanged("12/04/1993"))
+      onNext(PatientAgeTextChanged(""))
+      onNext(PatientGenderChanged(Just(Transgender)))
+      onNext(PatientColonyOrVillageTextChanged("colony"))
+      onNext(PatientDistrictTextChanged("district"))
+      onNext(PatientStateTextChanged("state"))
+      onNext(PatientEntrySaveClicked())
+    }
 
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
         personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
@@ -171,8 +173,10 @@ class PatientEntryScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRegisteredCount.get()).thenReturn(existingPatientRegisteredCount)
 
-    uiEvents.onNext(OngoingPatientEntryChanged(ongoingEntry))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(OngoingPatientEntryChanged(ongoingEntry))
+      onNext(PatientEntrySaveClicked())
+    }
 
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
     verify(patientRegisteredCount).set(existingPatientRegisteredCount + 1)
@@ -181,15 +185,19 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    uiEvents.onNext(PatientAgeTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    with(uiEvents) {
+      onNext(PatientAgeTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+    }
     verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
 
     uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
     verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
 
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged("1"))
+    with(uiEvents) {
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged("1"))
+    }
     verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
   }
 
@@ -198,18 +206,22 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     errorConsumer = { assertThat(it).isInstanceOf(AssertionError::class.java) }
 
-    uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
-    uiEvents.onNext(PatientAgeTextChanged("1"))
+    with(uiEvents) {
+      onNext(PatientDateOfBirthTextChanged("1"))
+      onNext(PatientAgeTextChanged("1"))
+    }
   }
 
   @Test
   fun `while date-of-birth has focus or has some input then date format should be shown in the label`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = false))
-    uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = true))
-    uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
-    uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = false))
+    with(uiEvents) {
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientDateOfBirthFocusChanged(hasFocus = false))
+      onNext(PatientDateOfBirthFocusChanged(hasFocus = true))
+      onNext(PatientDateOfBirthTextChanged("1"))
+      onNext(PatientDateOfBirthFocusChanged(hasFocus = false))
+    }
 
     verify(screen, times(1)).setShowDatePatternInDateOfBirthLabel(false)
     verify(screen).setShowDatePatternInDateOfBirthLabel(true)
@@ -222,16 +234,18 @@ class PatientEntryScreenControllerTest {
     whenever(dobValidator.validate(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
-    uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
-    uiEvents.onNext(PatientAgeTextChanged(""))
-    uiEvents.onNext(PatientGenderChanged(Just(Transgender)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
-    uiEvents.onNext(PatientDistrictTextChanged("district"))
-    uiEvents.onNext(PatientStateTextChanged("state"))
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged("Ashok"))
+      onNext(PatientPhoneNumberTextChanged("1234567890"))
+      onNext(PatientDateOfBirthTextChanged("12/04/1993"))
+      onNext(PatientAgeTextChanged(""))
+      onNext(PatientGenderChanged(Just(Transgender)))
+      onNext(PatientColonyOrVillageTextChanged("colony"))
+      onNext(PatientDistrictTextChanged("district"))
+      onNext(PatientStateTextChanged("state"))
 
-    uiEvents.onNext(TheActivityLifecycle.Paused())
+      onNext(TheActivityLifecycle.Paused())
+    }
 
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
         personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
@@ -243,36 +257,48 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when save is clicked then user input should be validated`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    uiEvents.onNext(PatientFullNameTextChanged(""))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged(""))
-    uiEvents.onNext(PatientGenderChanged(None))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientDistrictTextChanged(""))
-    uiEvents.onNext(PatientStateTextChanged(""))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged(""))
+      onNext(PatientPhoneNumberTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged(""))
+      onNext(PatientGenderChanged(None))
+      onNext(PatientColonyOrVillageTextChanged(""))
+      onNext(PatientDistrictTextChanged(""))
+      onNext(PatientStateTextChanged(""))
+      onNext(PatientEntrySaveClicked())
+    }
 
     whenever(dobValidator.validate("33/33/3333")).thenReturn(Invalid.DateIsInFuture)
-    uiEvents.onNext(PatientDateOfBirthTextChanged("33/33/3333"))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientDateOfBirthTextChanged("33/33/3333"))
+      onNext(PatientEntrySaveClicked())
+    }
 
     whenever(dobValidator.validate(" ")).thenReturn(Invalid.InvalidPattern)
-    uiEvents.onNext(PatientAgeTextChanged(" "))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientAgeTextChanged(" "))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientEntrySaveClicked())
+    }
 
     whenever(dobValidator.validate("16/07/2018")).thenReturn(Invalid.InvalidPattern)
-    uiEvents.onNext(PatientDateOfBirthTextChanged("16/07/2018"))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientDateOfBirthTextChanged("16/07/2018"))
+      onNext(PatientEntrySaveClicked())
+    }
 
     whenever(numberValidator.validate("1234", LANDLINE_OR_MOBILE)).thenReturn(LENGTH_TOO_SHORT)
-    uiEvents.onNext(PatientPhoneNumberTextChanged("1234"))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientPhoneNumberTextChanged("1234"))
+      onNext(PatientEntrySaveClicked())
+    }
 
     whenever(numberValidator.validate("1234567890987654", LANDLINE_OR_MOBILE)).thenReturn(LENGTH_TOO_LONG)
-    uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890987654"))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientPhoneNumberTextChanged("1234567890987654"))
+      onNext(PatientEntrySaveClicked())
+    }
 
     verify(screen, atLeastOnce()).showEmptyFullNameError(true)
     verify(screen, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
@@ -288,28 +314,36 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when input validation fails, the errors must be sent to analytics`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    uiEvents.onNext(PatientFullNameTextChanged(""))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged(""))
-    uiEvents.onNext(PatientGenderChanged(None))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientDistrictTextChanged(""))
-    uiEvents.onNext(PatientStateTextChanged(""))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged(""))
+      onNext(PatientPhoneNumberTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged(""))
+      onNext(PatientGenderChanged(None))
+      onNext(PatientColonyOrVillageTextChanged(""))
+      onNext(PatientDistrictTextChanged(""))
+      onNext(PatientStateTextChanged(""))
+      onNext(PatientEntrySaveClicked())
+    }
 
     whenever(dobValidator.validate("33/33/3333")).thenReturn(Invalid.DateIsInFuture)
-    uiEvents.onNext(PatientDateOfBirthTextChanged("33/33/3333"))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientDateOfBirthTextChanged("33/33/3333"))
+      onNext(PatientEntrySaveClicked())
+    }
 
     whenever(dobValidator.validate(" ")).thenReturn(Invalid.InvalidPattern)
-    uiEvents.onNext(PatientAgeTextChanged(" "))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientAgeTextChanged(" "))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientEntrySaveClicked())
+    }
 
     whenever(dobValidator.validate("16/07/2018")).thenReturn(Invalid.InvalidPattern)
-    uiEvents.onNext(PatientDateOfBirthTextChanged("16/07/2018"))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientDateOfBirthTextChanged("16/07/2018"))
+      onNext(PatientEntrySaveClicked())
+    }
 
     val validationErrors = reporter.receivedEvents
         .filter { it.name == "InputValidationError" }
@@ -320,18 +354,21 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `validation errors should be cleared on every input change`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
-    uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
-    uiEvents.onNext(PatientGenderChanged(Just(Transgender)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
-    uiEvents.onNext(PatientDistrictTextChanged("district"))
-    uiEvents.onNext(PatientStateTextChanged("state"))
 
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged("Ashok"))
+      onNext(PatientPhoneNumberTextChanged("1234567890"))
+      onNext(PatientDateOfBirthTextChanged("12/04/1993"))
+      onNext(PatientGenderChanged(Just(Transgender)))
+      onNext(PatientColonyOrVillageTextChanged("colony"))
+      onNext(PatientDistrictTextChanged("district"))
+      onNext(PatientStateTextChanged("state"))
+
+      onNext(PatientPhoneNumberTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged("20"))
+      onNext(PatientColonyOrVillageTextChanged(""))
+    }
 
     verify(screen).showEmptyFullNameError(false)
     verify(screen, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
@@ -350,16 +387,18 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Male)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientDistrictTextChanged("District"))
-    uiEvents.onNext(PatientStateTextChanged("State"))
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged("Ashok Kumar"))
+      onNext(PatientPhoneNumberTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged("20"))
+      onNext(PatientGenderChanged(Just(Male)))
+      onNext(PatientColonyOrVillageTextChanged(""))
+      onNext(PatientDistrictTextChanged("District"))
+      onNext(PatientStateTextChanged("State"))
 
-    uiEvents.onNext(PatientEntrySaveClicked())
+      onNext(PatientEntrySaveClicked())
+    }
 
     verify(screen, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
@@ -370,16 +409,18 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Male)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientDistrictTextChanged("District"))
-    uiEvents.onNext(PatientStateTextChanged("State"))
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged("Ashok Kumar"))
+      onNext(PatientPhoneNumberTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged("20"))
+      onNext(PatientGenderChanged(Just(Male)))
+      onNext(PatientColonyOrVillageTextChanged(""))
+      onNext(PatientDistrictTextChanged("District"))
+      onNext(PatientStateTextChanged("State"))
 
-    uiEvents.onNext(PatientEntrySaveClicked())
+      onNext(PatientEntrySaveClicked())
+    }
 
     verify(screen, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
@@ -390,16 +431,18 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(None))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientDistrictTextChanged("District"))
-    uiEvents.onNext(PatientStateTextChanged("State"))
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged("Ashok Kumar"))
+      onNext(PatientPhoneNumberTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged("20"))
+      onNext(PatientGenderChanged(None))
+      onNext(PatientColonyOrVillageTextChanged(""))
+      onNext(PatientDistrictTextChanged("District"))
+      onNext(PatientStateTextChanged("State"))
 
-    uiEvents.onNext(PatientEntrySaveClicked())
+      onNext(PatientEntrySaveClicked())
+    }
 
     verify(screen, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
@@ -411,16 +454,18 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).thenReturn(0)
 
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Female)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("Colony"))
-    uiEvents.onNext(PatientDistrictTextChanged("District"))
-    uiEvents.onNext(PatientStateTextChanged("State"))
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged("Ashok Kumar"))
+      onNext(PatientPhoneNumberTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged("20"))
+      onNext(PatientGenderChanged(Just(Female)))
+      onNext(PatientColonyOrVillageTextChanged("Colony"))
+      onNext(PatientDistrictTextChanged("District"))
+      onNext(PatientStateTextChanged("State"))
 
-    uiEvents.onNext(PatientEntrySaveClicked())
+      onNext(PatientEntrySaveClicked())
+    }
 
     verify(screen).openMedicalHistoryEntryScreen()
     verify(patientRepository).saveOngoingEntry(any())
@@ -431,9 +476,11 @@ class PatientEntryScreenControllerTest {
   @Parameters(method = "params for gender values")
   fun `when gender is selected for the first time then the form should be scrolled to bottom`(gender: Gender) {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    uiEvents.onNext(PatientGenderChanged(None))
-    uiEvents.onNext(PatientGenderChanged(Just(gender)))
-    uiEvents.onNext(PatientGenderChanged(Just(gender)))
+    with(uiEvents) {
+      onNext(PatientGenderChanged(None))
+      onNext(PatientGenderChanged(Just(gender)))
+      onNext(PatientGenderChanged(Just(gender)))
+    }
 
     verify(screen, times(1)).scrollFormToBottom()
   }
@@ -448,16 +495,18 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Transgender)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientDistrictTextChanged(""))
-    uiEvents.onNext(PatientStateTextChanged(""))
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged("Ashok Kumar"))
+      onNext(PatientPhoneNumberTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged("20"))
+      onNext(PatientGenderChanged(Just(Transgender)))
+      onNext(PatientColonyOrVillageTextChanged(""))
+      onNext(PatientDistrictTextChanged(""))
+      onNext(PatientStateTextChanged(""))
 
-    uiEvents.onNext(PatientEntrySaveClicked())
+      onNext(PatientEntrySaveClicked())
+    }
 
     // This is order dependent because finding the first field
     // with error is only possible once the errors are set.
@@ -473,15 +522,17 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).thenReturn(0)
 
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Female)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("Colony"))
-    uiEvents.onNext(PatientDistrictTextChanged("District"))
-    uiEvents.onNext(PatientStateTextChanged("State"))
-    uiEvents.onNext(PatientEntrySaveClicked())
+    with(uiEvents) {
+      onNext(PatientFullNameTextChanged("Ashok Kumar"))
+      onNext(PatientPhoneNumberTextChanged(""))
+      onNext(PatientDateOfBirthTextChanged(""))
+      onNext(PatientAgeTextChanged("20"))
+      onNext(PatientGenderChanged(Just(Female)))
+      onNext(PatientColonyOrVillageTextChanged("Colony"))
+      onNext(PatientDistrictTextChanged("District"))
+      onNext(PatientStateTextChanged("State"))
+      onNext(PatientEntrySaveClicked())
+    }
 
     val expectedSavedEntry = OngoingNewPatientEntry(
         personalDetails = PersonalDetails(

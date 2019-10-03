@@ -22,6 +22,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_manual_patient_entry.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
@@ -38,7 +39,6 @@ import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
@@ -162,7 +162,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     return RxView.clicks(saveButtonFrame.button)
         .mergeWith(stateImeClicks)
-        .map { SaveClicked() }
+        .map { SaveClicked }
   }
 
   override fun preFillFields(entry: OngoingNewPatientEntry) {

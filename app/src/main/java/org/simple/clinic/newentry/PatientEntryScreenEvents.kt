@@ -43,7 +43,7 @@ data class StateChanged(val state: String) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:State Text Changed"
 }
 
-class SaveClicked : PatientEntryEvent() {
+object SaveClicked : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Save Clicked"
 }
 

@@ -13,6 +13,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -41,10 +42,12 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale.ENGLISH
@@ -64,6 +67,7 @@ class PatientEntryScreenControllerTest {
   private val patientRegisteredCount = mock<Preference<Int>>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
+  private lateinit var fixture: MobiusTestFixture<PatientEntryModel, PatientEntryEvent, PatientEntryEffect>
   private val controller = PatientEntryScreenController(
       patientRepository,
       facilityRepository,
@@ -84,7 +88,18 @@ class PatientEntryScreenControllerTest {
 
     errorConsumer = { throw it }
 
-    uiEvents
+    val sharedEvents = uiEvents.hide().share()
+
+    fixture = MobiusTestFixture(
+        sharedEvents.ofType(),
+        PatientEntryModel,
+        ::patientEntryInit,
+        ::patientEntryUpdate,
+        PatientEntryEffectHandler.createEffectHandler(TrampolineSchedulersProvider()),
+        PatientEntryViewRenderer(ui)::render
+    ).also { it.start() }
+
+    sharedEvents
         .compose(controller)
         .subscribe({ uiChange -> uiChange(ui) }, { e -> errorConsumer(e) })
 

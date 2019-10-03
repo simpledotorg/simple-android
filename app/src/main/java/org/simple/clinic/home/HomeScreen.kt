@@ -35,6 +35,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     TheActivity.component.inject(this)
 
     setupToolBar()
+    setupHelpClicks()
 
     bindUiToController(
         ui = this,
@@ -66,6 +67,9 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
         }
       }
     }
+  }
+
+  private fun setupHelpClicks() {
     helpButton.setOnClickListener {
       screenRouter.push(HelpScreenKey())
     }

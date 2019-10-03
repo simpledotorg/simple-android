@@ -6,7 +6,8 @@ import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -30,17 +31,17 @@ class UserInputDateValidatorTest {
   fun `params for v2 validation`(): List<Any> {
     return listOf(
         listOf("24/04/1971", Valid(LocalDate.of(1971, 4, 24))),
-        listOf("24-04-1971", Invalid.InvalidPattern),
-        listOf("1971-04-24", Invalid.InvalidPattern),
-        listOf("1971-24-04", Invalid.InvalidPattern),
-        listOf("24/04", Invalid.InvalidPattern),
-        listOf(" ", Invalid.InvalidPattern))
+        listOf("24-04-1971", InvalidPattern),
+        listOf("1971-04-24", InvalidPattern),
+        listOf("1971-24-04", InvalidPattern),
+        listOf("24/04", InvalidPattern),
+        listOf(" ", InvalidPattern))
   }
 
   @Test
   fun `validate future date (v2)`() {
     val futureDateResult = validator.validate("01/01/3000", nowDate = LocalDate.parse("2018-07-16"))
 
-    assertThat(futureDateResult).isEqualTo(Invalid.DateIsInFuture)
+    assertThat(futureDateResult).isEqualTo(DateIsInFuture)
   }
 }

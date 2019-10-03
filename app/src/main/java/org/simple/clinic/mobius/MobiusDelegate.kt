@@ -88,14 +88,15 @@ class MobiusDelegate<M : Parcelable, E, F>(
     controller.stop()
   }
 
-  fun onSaveInstanceState(androidViewState: Parcelable?): Bundle {
+  fun onSaveInstanceState(androidViewState: Parcelable?): Parcelable {
     return Bundle().apply {
       putParcelable(viewStateKey, androidViewState)
       putParcelable(modelKey, controller.model)
     }
   }
 
-  fun onRestoreInstanceState(bundle: Bundle?): Parcelable? {
+  fun onRestoreInstanceState(parcelable: Parcelable?): Parcelable? {
+    val bundle = parcelable as? Bundle
     lastKnownModel = bundle?.getParcelable(modelKey) ?: defaultModel
     return bundle?.getParcelable<Parcelable?>(viewStateKey)
         .also { prepare() }

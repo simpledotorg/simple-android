@@ -1,7 +1,6 @@
 package org.simple.clinic.editpatient
 
 import android.content.Context
-import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RadioButton
@@ -157,9 +156,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 
-
   override fun onRestoreInstanceState(state: Parcelable?) {
-    val viewState = delegate.onRestoreInstanceState(state as Bundle?)
+    val viewState = delegate.onRestoreInstanceState(state)
     super.onRestoreInstanceState(viewState)
   }
 

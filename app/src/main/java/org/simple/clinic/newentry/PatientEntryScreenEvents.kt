@@ -5,46 +5,48 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
 
-data class PatientFullNameTextChanged(val fullName: String) : UiEvent {
+sealed class PatientEntryEvent : UiEvent
+
+data class PatientFullNameTextChanged(val fullName: String) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Full Name Text Changed"
 }
 
-data class PatientPhoneNumberTextChanged(val phoneNumber: String) : UiEvent {
+data class PatientPhoneNumberTextChanged(val phoneNumber: String) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Phone Number Text Changed"
 }
 
-data class PatientDateOfBirthTextChanged(val dateOfBirth: String) : UiEvent {
+data class PatientDateOfBirthTextChanged(val dateOfBirth: String) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:DOB Text Changed"
 }
 
-data class PatientDateOfBirthFocusChanged(val hasFocus: Boolean) : UiEvent {
+data class PatientDateOfBirthFocusChanged(val hasFocus: Boolean) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Focused On DOB Text Field"
 }
 
-data class PatientAgeTextChanged(val age: String) : UiEvent {
+data class PatientAgeTextChanged(val age: String) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Age Text Changed"
 }
 
-data class PatientGenderChanged(val gender: Optional<Gender>) : UiEvent {
+data class PatientGenderChanged(val gender: Optional<Gender>) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Changed Gender"
 }
 
-data class PatientColonyOrVillageTextChanged(val colonyOrVillage: String) : UiEvent {
+data class PatientColonyOrVillageTextChanged(val colonyOrVillage: String) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Colony or Village Text Changed"
 }
 
-data class PatientDistrictTextChanged(val district: String) : UiEvent {
+data class PatientDistrictTextChanged(val district: String) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:District Text Changed"
 }
 
-data class PatientStateTextChanged(val state: String) : UiEvent {
+data class PatientStateTextChanged(val state: String) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:State Text Changed"
 }
 
-class PatientEntrySaveClicked : UiEvent {
+class PatientEntrySaveClicked : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Save Clicked"
 }
 
-data class OngoingPatientEntryChanged(val entry: OngoingNewPatientEntry) : UiEvent {
+data class OngoingPatientEntryChanged(val entry: OngoingNewPatientEntry) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Ongoing Patient Entry Changed"
 }

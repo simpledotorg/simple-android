@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.screen_settings.view.*
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
@@ -27,6 +28,9 @@ class SettingsScreen(
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
 
   private val uiRenderer: SettingsUiRenderer = SettingsUiRenderer(this)
 
@@ -49,6 +53,8 @@ class SettingsScreen(
     }
 
     TheActivity.component.inject(this)
+
+    toolbar.setNavigationOnClickListener { screenRouter.pop() }
 
     delegate.prepare()
   }

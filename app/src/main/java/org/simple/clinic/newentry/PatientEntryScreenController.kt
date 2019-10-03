@@ -97,11 +97,11 @@ class PatientEntryScreenController @Inject constructor(
 
   private fun switchBetweenDateOfBirthAndAge(events: Observable<UiEvent>): Observable<UiChange> {
     val isDateOfBirthBlanks = events
-        .ofType<PatientDateOfBirthTextChanged>()
+        .ofType<DateOfBirthChanged>()
         .map { it.dateOfBirth.isBlank() }
 
     val isAgeBlanks = events
-        .ofType<PatientAgeTextChanged>()
+        .ofType<AgeChanged>()
         .map { it.age.isBlank() }
 
     return Observables.combineLatest(isDateOfBirthBlanks, isAgeBlanks)
@@ -118,11 +118,11 @@ class PatientEntryScreenController @Inject constructor(
 
   private fun toggleDatePatternInDateOfBirthLabel(events: Observable<UiEvent>): Observable<UiChange> {
     val dateFocusChanges = events
-        .ofType<PatientDateOfBirthFocusChanged>()
+        .ofType<DateOfBirthFocusChanged>()
         .map { it.hasFocus }
 
     val dateTextAvailabilities = events
-        .ofType<PatientDateOfBirthTextChanged>()
+        .ofType<DateOfBirthChanged>()
         .map { it.dateOfBirth.isNotBlank() }
 
     return Observables.combineLatest(dateFocusChanges, dateTextAvailabilities)
@@ -137,7 +137,7 @@ class PatientEntryScreenController @Inject constructor(
       val personDetailChanges = personalDetailChanges(events)
 
       val phoneNumberChanges = events
-          .ofType<PatientPhoneNumberTextChanged>()
+          .ofType<PhoneNumberChanged>()
           .map { (phoneNumber) -> if (phoneNumber.isBlank()) None else Just(PhoneNumber(phoneNumber)) }
 
       val addressChanges = addressChanges(events)
@@ -163,15 +163,15 @@ class PatientEntryScreenController @Inject constructor(
 
   private fun addressChanges(events: Observable<UiEvent>): Observable<Address> {
     val colonyOrVillageChanges = events
-        .ofType<PatientColonyOrVillageTextChanged>()
+        .ofType<ColonyOrVillageChanged>()
         .map { it.colonyOrVillage }
 
     val districtChanges = events
-        .ofType<PatientDistrictTextChanged>()
+        .ofType<DistrictChanged>()
         .map { it.district }
 
     val stateChanges = events
-        .ofType<PatientStateTextChanged>()
+        .ofType<StateChanged>()
         .map { it.state }
 
     return Observables.combineLatest(colonyOrVillageChanges, districtChanges, stateChanges, ::Address)
@@ -179,19 +179,19 @@ class PatientEntryScreenController @Inject constructor(
 
   private fun personalDetailChanges(events: Observable<UiEvent>): Observable<PersonalDetails> {
     val nameChanges = events
-        .ofType<PatientFullNameTextChanged>()
+        .ofType<FullNameChanged>()
         .map { it.fullName }
 
     val dateOfBirthChanges = events
-        .ofType<PatientDateOfBirthTextChanged>()
+        .ofType<DateOfBirthChanged>()
         .map { it.dateOfBirth }
 
     val ageChanges = events
-        .ofType<PatientAgeTextChanged>()
+        .ofType<AgeChanged>()
         .map { it.age }
 
     val genderChanges = events
-        .ofType<PatientGenderChanged>()
+        .ofType<GenderChanged>()
         .map { it.gender }
 
     return Observables.combineLatest(nameChanges, dateOfBirthChanges, ageChanges, genderChanges)
@@ -211,7 +211,7 @@ class PatientEntryScreenController @Inject constructor(
 
   private fun showValidationErrorsOnSaveClick(events: Observable<UiEvent>): Observable<UiChange> {
     val errors = events
-        .ofType<PatientEntrySaveClicked>()
+        .ofType<SaveClicked>()
         .withLatestFrom(events.ofType<OngoingPatientEntryChanged>().map { it.entry })
         .map { (_, ongoingEntry) -> ongoingEntry.validationErrors(dobValidator, numberValidator) }
         .replay(1)
@@ -252,11 +252,11 @@ class PatientEntryScreenController @Inject constructor(
 
   private fun resetValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     val nameErrorResets = events
-        .ofType<PatientFullNameTextChanged>()
+        .ofType<FullNameChanged>()
         .map { { ui: Ui -> ui.showEmptyFullNameError(false) } }
 
     val dateOfBirthErrorResets = events
-        .ofType<PatientDateOfBirthTextChanged>()
+        .ofType<DateOfBirthChanged>()
         .flatMap {
           Observable.just(
               { ui: Ui -> ui.showEmptyDateOfBirthAndAgeError(false) },
@@ -265,28 +265,28 @@ class PatientEntryScreenController @Inject constructor(
         }
 
     val ageErrorResets = events
-        .ofType<PatientAgeTextChanged>()
+        .ofType<AgeChanged>()
         .map { { ui: Ui -> ui.showEmptyDateOfBirthAndAgeError(false) } }
 
     val genderErrorResets = events
-        .ofType<PatientGenderChanged>()
+        .ofType<GenderChanged>()
         .map { { ui: Ui -> ui.showMissingGenderError(false) } }
 
-    val phoneLengthTooShortResets = events.ofType<PatientPhoneNumberTextChanged>()
+    val phoneLengthTooShortResets = events.ofType<PhoneNumberChanged>()
         .map { { ui: Ui -> ui.showLengthTooShortPhoneNumberError(false) } }
 
-    val phoneLengthTooLongResets = events.ofType<PatientPhoneNumberTextChanged>()
+    val phoneLengthTooLongResets = events.ofType<PhoneNumberChanged>()
         .map { { ui: Ui -> ui.showLengthTooLongPhoneNumberError(false) } }
 
-    val colonyErrorResets = events.ofType<PatientColonyOrVillageTextChanged>()
+    val colonyErrorResets = events.ofType<ColonyOrVillageChanged>()
         .map { { ui: Ui -> ui.showEmptyColonyOrVillageError(false) } }
 
     val districtErrorResets = events
-        .ofType<PatientDistrictTextChanged>()
+        .ofType<DistrictChanged>()
         .map { { ui: Ui -> ui.showEmptyDistrictError(false) } }
 
     val stateErrorResets = events
-        .ofType<PatientStateTextChanged>()
+        .ofType<StateChanged>()
         .map { { ui: Ui -> ui.showEmptyStateError(false) } }
 
     return Observable.mergeArray(
@@ -312,7 +312,7 @@ class PatientEntryScreenController @Inject constructor(
     val incrementPatientRegisteredCount = { patientRegisteredCount.set(patientRegisteredCount.get().plus(1)) }
 
     return events
-        .ofType<PatientEntrySaveClicked>()
+        .ofType<SaveClicked>()
         .withLatestFrom(ongoingEntryChanges, canPatientBeSaved)
         .flatMapSingle { (_, entry, canBeSaved) ->
           when {
@@ -326,7 +326,7 @@ class PatientEntryScreenController @Inject constructor(
 
   private fun scrollToBottomOnGenderSelection(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<PatientGenderChanged>()
+        .ofType<GenderChanged>()
         .filter { it.gender.isNotEmpty() }
         .take(1)
         .map { { ui: Ui -> ui.scrollFormToBottom() } }

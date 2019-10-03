@@ -90,14 +90,22 @@ class PatientEntryScreenControllerTest {
 
     val sharedEvents = uiEvents.hide().share()
 
+    val effectHandler = PatientEntryEffectHandler.createEffectHandler(
+        userSession,
+        facilityRepository,
+        patientRepository,
+        ui,
+        TrampolineSchedulersProvider()
+    )
+
     fixture = MobiusTestFixture(
         sharedEvents.ofType(),
-        PatientEntryModel,
+        PatientEntryModel.DEFAULT,
         ::patientEntryInit,
         ::patientEntryUpdate,
-        PatientEntryEffectHandler.createEffectHandler(TrampolineSchedulersProvider()),
+        effectHandler,
         PatientEntryViewRenderer(ui)::render
-    ).also { it.start() }
+    )
 
     sharedEvents
         .compose(controller)
@@ -118,7 +126,11 @@ class PatientEntryScreenControllerTest {
 
     screenCreated()
 
-    verify(ui).preFillFields(OngoingNewPatientEntry(
+    // FIXME
+    // We have changed this to `times(2)` because both implementations are invoking the same boundary.
+    // We will revert this assert this assertion back as soon as the production code also has the Mobius setup,
+    // after which we will nullify the code in the controller.
+    verify(ui, times(2)).preFillFields(OngoingNewPatientEntry(
         address = Address(
             colonyOrVillage = "",
             district = "district",
@@ -136,7 +148,11 @@ class PatientEntryScreenControllerTest {
 
     screenCreated()
 
-    verify(ui).preFillFields(OngoingNewPatientEntry(address = address))
+    // FIXME
+    // We have changed this to `times(2)` because both implementations are invoking the same boundary.
+    // We will revert this assert this assertion back as soon as the production code also has the Mobius setup,
+    // after which we will nullify the code in the controller.
+    verify(ui, times(2)).preFillFields(OngoingNewPatientEntry(address = address))
   }
 
   @Test
@@ -567,5 +583,6 @@ class PatientEntryScreenControllerTest {
 
   private fun screenCreated() {
     uiEvents.onNext(ScreenCreated())
+    fixture.start()
   }
 }

@@ -7,6 +7,8 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class PatientEntryEvent : UiEvent
 
+data class OngoingEntryFetched(val patientEntry: OngoingNewPatientEntry) : PatientEntryEvent()
+
 data class FullNameChanged(val fullName: String) : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Full Name Text Changed"
 }

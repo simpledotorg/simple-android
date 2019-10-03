@@ -20,7 +20,7 @@ data class PatientEntryModel(
       copy(patientEntry = patientEntry)
 
   // TODO(rj): 2019-10-03 Replace this with Arrow's lens or flatten the model
-  fun updateGender(gender: Optional<Gender>): PatientEntryModel {
+  fun withGender(gender: Optional<Gender>): PatientEntryModel {
     return copy(
         patientEntry = patientEntry?.copy(
             personalDetails = patientEntry.personalDetails?.copy(
@@ -30,7 +30,7 @@ data class PatientEntryModel(
     )
   }
 
-  fun updateAge(age: String): PatientEntryModel {
+  fun withAge(age: String): PatientEntryModel {
     val personalDetails = patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
 
     return copy(
@@ -40,7 +40,7 @@ data class PatientEntryModel(
     )
   }
 
-  fun updateDateOfBirth(dateOfBirth: String): PatientEntryModel {
+  fun withDateOfBirth(dateOfBirth: String): PatientEntryModel {
     val personalDetails = patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
 
     return copy(

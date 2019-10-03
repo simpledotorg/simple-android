@@ -147,7 +147,7 @@ class PatientEntryScreenControllerTest {
     verify(ui).preFillFields(OngoingNewPatientEntry(address = address))
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
@@ -173,7 +173,7 @@ class PatientEntryScreenControllerTest {
     verify(patientRegisteredCount).set(1)
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when save is clicked and patient is saved then patient registered count should be incremented`() {
     val existingPatientRegisteredCount = 5
     val ongoingEntry = OngoingNewPatientEntry(
@@ -195,7 +195,7 @@ class PatientEntryScreenControllerTest {
     verify(patientRegisteredCount).set(existingPatientRegisteredCount + 1)
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     with(uiEvents) {
@@ -214,7 +214,7 @@ class PatientEntryScreenControllerTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     errorConsumer = { assertThat(it).isInstanceOf(AssertionError::class.java) }
@@ -225,7 +225,7 @@ class PatientEntryScreenControllerTest {
     }
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `while date-of-birth has focus or has some input then date format should be shown in the label`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     with(uiEvents) {
@@ -240,7 +240,7 @@ class PatientEntryScreenControllerTest {
     verify(ui).setShowDatePatternInDateOfBirthLabel(true)
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when screen is paused then ongoing patient entry should be saved`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
@@ -265,7 +265,7 @@ class PatientEntryScreenControllerTest {
     ))
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when save is clicked then user input should be validated`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     with(uiEvents) {
@@ -317,7 +317,7 @@ class PatientEntryScreenControllerTest {
     verify(ui, atLeastOnce()).showLengthTooLongPhoneNumberError(true)
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when input validation fails, the errors must be sent to analytics`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     with(uiEvents) {
@@ -354,7 +354,7 @@ class PatientEntryScreenControllerTest {
     assertThat(validationErrors).isNotEmpty()
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `validation errors should be cleared on every input change`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
 
@@ -385,7 +385,7 @@ class PatientEntryScreenControllerTest {
 
   // TODO: Write these similarly structured regression tests in a smarter way.
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `regression test for validations 1`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
@@ -407,7 +407,7 @@ class PatientEntryScreenControllerTest {
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `regression test for validations 2`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
@@ -429,7 +429,7 @@ class PatientEntryScreenControllerTest {
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `regression test for validations 3`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
@@ -451,7 +451,7 @@ class PatientEntryScreenControllerTest {
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `regression test for validations 4`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
@@ -475,7 +475,7 @@ class PatientEntryScreenControllerTest {
     verify(patientRegisteredCount).set(any())
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   @Parameters(method = "params for gender values")
   fun `when gender is selected for the first time then the form should be scrolled to bottom`(gender: Gender) {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
@@ -493,7 +493,7 @@ class PatientEntryScreenControllerTest {
     return listOf(Male, Female, Transgender)
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when validation errors are shown then the form should be scrolled to the first field with error`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
@@ -518,7 +518,7 @@ class PatientEntryScreenControllerTest {
     inOrder.verify(ui).scrollToFirstFieldWithError()
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when the ongoing entry has an identifier it must be retained when accepting input`() {
     val identifier = Identifier(value = "id", type = BpPassport)
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry(identifier = identifier)))
@@ -555,7 +555,7 @@ class PatientEntryScreenControllerTest {
     verify(patientRepository).saveOngoingEntry(expectedSavedEntry)
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when the ongoing patient entry has an identifier, the identifier section must be shown`() {
     initialOngoingPatientEntrySubject.onNext(OngoingNewPatientEntry(identifier = Identifier("id", BpPassport)))
 
@@ -564,7 +564,7 @@ class PatientEntryScreenControllerTest {
     verify(ui).showIdentifierSection()
   }
 
-  @Test
+  @Test // TODO: Migrate to Mobius
   fun `when the ongoing patient entry does not have an identifier, the identifier section must be hidden`() {
     initialOngoingPatientEntrySubject.onNext(OngoingNewPatientEntry(identifier = null))
 

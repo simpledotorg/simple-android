@@ -126,11 +126,7 @@ class PatientEntryScreenControllerTest {
 
     screenCreated()
 
-    // FIXME
-    // We have changed this to `times(2)` because both implementations are invoking the same boundary.
-    // We will revert this assert this assertion back as soon as the production code also has the Mobius setup,
-    // after which we will nullify the code in the controller.
-    verify(ui, times(2)).preFillFields(OngoingNewPatientEntry(
+    verify(ui).preFillFields(OngoingNewPatientEntry(
         address = Address(
             colonyOrVillage = "",
             district = "district",
@@ -148,11 +144,7 @@ class PatientEntryScreenControllerTest {
 
     screenCreated()
 
-    // FIXME
-    // We have changed this to `times(2)` because both implementations are invoking the same boundary.
-    // We will revert this assert this assertion back as soon as the production code also has the Mobius setup,
-    // after which we will nullify the code in the controller.
-    verify(ui, times(2)).preFillFields(OngoingNewPatientEntry(address = address))
+    verify(ui).preFillFields(OngoingNewPatientEntry(address = address))
   }
 
   @Test

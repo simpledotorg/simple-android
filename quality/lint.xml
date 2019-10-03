@@ -13,6 +13,10 @@
 
     <!-- Heap analytics plugin adds these resources dynamically. -->
     <ignore regexp="com.heapanalytics.android.*" />
+
+    <!-- TODO vs (03 Oct 19): Remove suppression when the settings screen is integrated -->
+    <ignore regexp="settings_*"/>
+
   </issue>
 
   <!-- Ignore this for now due to time constraints. Switch to static images later. -->
@@ -39,4 +43,14 @@
 
   <!-- No plans to utilize autofill services currently -->
   <issue id="Autofill" severity="informational" />
+
+  <!--
+  Lint complains that the tag is not supported for generated images < api 24.
+
+  This was checked on a Lollipop (21) emulator and the images seem to render fine.
+  -->
+  <issue id="VectorRaster">
+    <ignore path="src/main/res/drawable/ic_settings_account_24dp.xml" />
+    <ignore path="src/main/res/drawable/ic_settings_phone_24dp.xml" />
+  </issue>
 </lint>

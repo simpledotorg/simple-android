@@ -15,7 +15,6 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
@@ -119,11 +118,10 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     ).compose(ReportAnalyticsEvents())
         .cast()
 
-  private lateinit var eventsDisposable: Disposable
-
   private val delegate by unsafeLazy {
     val (patient, address, phoneNumber) = screenKey
     MobiusDelegate(
+        events,
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
         EditPatientUpdate(numberValidator, dateOfBirthValidator),
@@ -148,14 +146,10 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
-    eventsDisposable = events.subscribe { delegate.eventSource.notifyEvent(it) }
   }
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    if (::eventsDisposable.isInitialized && eventsDisposable.isDisposed.not()) {
-      eventsDisposable.dispose()
-    }
     super.onDetachedFromWindow()
   }
 

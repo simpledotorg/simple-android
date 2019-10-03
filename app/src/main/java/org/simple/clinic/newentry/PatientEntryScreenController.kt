@@ -73,8 +73,7 @@ class PatientEntryScreenController @Inject constructor(
         saveOngoingEntry(replayedEvents),
         savePatient(replayedEvents),
         showValidationErrorsOnSaveClick(replayedEvents),
-        resetValidationErrors(replayedEvents),
-        scrollToBottomOnGenderSelection(replayedEvents))
+        resetValidationErrors(replayedEvents))
   }
 
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -322,13 +321,5 @@ class PatientEntryScreenController @Inject constructor(
             else -> Single.never()
           }
         }
-  }
-
-  private fun scrollToBottomOnGenderSelection(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<GenderChanged>()
-        .filter { it.gender.isNotEmpty() }
-        .take(1)
-        .map { { ui: Ui -> ui.scrollFormToBottom() } }
   }
 }

@@ -22,6 +22,7 @@ object PatientEntryEffectHandler {
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryEffectHandler(userSession, facilityRepository, patientRepository, schedulersProvider.io()))
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
+        .addAction(ScrollFormToBottom::class.java, { ui.scrollFormToBottom() }, schedulersProvider.ui())
         .build()
   }
 

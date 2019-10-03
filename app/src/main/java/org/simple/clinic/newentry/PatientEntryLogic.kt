@@ -20,6 +20,14 @@ fun patientEntryUpdate(
         model.patientEntryFetched(event.patientEntry),
         setOf(PrefillFields(event.patientEntry))
     )
+  } else if (event is GenderChanged) {
+    val updatedModel = model.updateGender(event.gender)
+
+    if (event.gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
+      return next(updatedModel.copy(isSelectingGenderForTheFirstTime = false), setOf(ScrollFormToBottom))
+    } else {
+      return next(updatedModel)
+    }
   }
 
   return noChange()

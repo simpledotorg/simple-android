@@ -139,7 +139,7 @@ class PatientEntryScreenControllerTest {
       onNext(ColonyOrVillageChanged("colony"))
       onNext(DistrictChanged("district"))
       onNext(StateChanged("state"))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
@@ -165,7 +165,7 @@ class PatientEntryScreenControllerTest {
 
     with(uiEvents) {
       onNext(OngoingPatientEntryChanged(ongoingEntry))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
@@ -254,33 +254,33 @@ class PatientEntryScreenControllerTest {
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     with(uiEvents) {
       onNext(DateOfBirthChanged("33/33/3333"))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     with(uiEvents) {
       onNext(AgeChanged(" "))
       onNext(DateOfBirthChanged(""))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     with(uiEvents) {
       onNext(DateOfBirthChanged("16/07/2018"))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     with(uiEvents) {
       onNext(PhoneNumberChanged("1234"))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     with(uiEvents) {
       onNext(PhoneNumberChanged("1234567890987654"))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     verify(ui, atLeastOnce()).showEmptyFullNameError(true)
@@ -306,23 +306,23 @@ class PatientEntryScreenControllerTest {
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     with(uiEvents) {
       onNext(DateOfBirthChanged("33/33/3333"))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     with(uiEvents) {
       onNext(AgeChanged(" "))
       onNext(DateOfBirthChanged(""))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     with(uiEvents) {
       onNext(DateOfBirthChanged("16/07/2018"))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     val validationErrors = reporter.receivedEvents
@@ -377,7 +377,7 @@ class PatientEntryScreenControllerTest {
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
 
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     verify(ui, never()).openMedicalHistoryEntryScreen()
@@ -399,7 +399,7 @@ class PatientEntryScreenControllerTest {
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
 
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     verify(ui, never()).openMedicalHistoryEntryScreen()
@@ -421,7 +421,7 @@ class PatientEntryScreenControllerTest {
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
 
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     verify(ui, never()).openMedicalHistoryEntryScreen()
@@ -444,7 +444,7 @@ class PatientEntryScreenControllerTest {
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
 
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     verify(ui).openMedicalHistoryEntryScreen()
@@ -485,7 +485,7 @@ class PatientEntryScreenControllerTest {
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
 
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     // This is order dependent because finding the first field
@@ -511,7 +511,7 @@ class PatientEntryScreenControllerTest {
       onNext(ColonyOrVillageChanged("Colony"))
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
-      onNext(SaveClicked())
+      onNext(SaveClicked)
     }
 
     val expectedSavedEntry = OngoingNewPatientEntry(

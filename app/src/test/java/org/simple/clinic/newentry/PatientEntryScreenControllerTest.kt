@@ -101,7 +101,7 @@ class PatientEntryScreenControllerTest {
   fun `when screen is created then existing data should be pre-filled`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
 
-    uiEvents.onNext(ScreenCreated())
+    screenCreated()
 
     verify(ui).preFillFields(OngoingNewPatientEntry(
         address = Address(
@@ -119,7 +119,7 @@ class PatientEntryScreenControllerTest {
     )
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry(address = address)))
 
-    uiEvents.onNext(ScreenCreated())
+    screenCreated()
 
     verify(ui).preFillFields(OngoingNewPatientEntry(address = address))
   }
@@ -536,7 +536,7 @@ class PatientEntryScreenControllerTest {
   fun `when the ongoing patient entry has an identifier, the identifier section must be shown`() {
     initialOngoingPatientEntrySubject.onNext(OngoingNewPatientEntry(identifier = Identifier("id", BpPassport)))
 
-    uiEvents.onNext(ScreenCreated())
+    screenCreated()
 
     verify(ui).showIdentifierSection()
   }
@@ -545,8 +545,12 @@ class PatientEntryScreenControllerTest {
   fun `when the ongoing patient entry does not have an identifier, the identifier section must be hidden`() {
     initialOngoingPatientEntrySubject.onNext(OngoingNewPatientEntry(identifier = null))
 
-    uiEvents.onNext(ScreenCreated())
+    screenCreated()
 
     verify(ui).hideIdentifierSection()
+  }
+
+  private fun screenCreated() {
+    uiEvents.onNext(ScreenCreated())
   }
 }

@@ -55,7 +55,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   private fun setupToolBar() {
-    home_toolbar.apply {
+    toolbar.apply {
       inflateMenu(R.menu.home)
       setOnMenuItemClickListener { menuItem ->
         when (menuItem.itemId) {

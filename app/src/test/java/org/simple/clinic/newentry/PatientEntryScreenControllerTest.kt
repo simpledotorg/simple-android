@@ -475,10 +475,12 @@ class PatientEntryScreenControllerTest {
     verify(patientRegisteredCount).set(any())
   }
 
-  @Test // TODO: Migrate to Mobius
+  @Test
   @Parameters(method = "params for gender values")
   fun `when gender is selected for the first time then the form should be scrolled to bottom`(gender: Gender) {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    screenCreatedForMobius()
+
     with(uiEvents) {
       onNext(GenderChanged(None))
       onNext(GenderChanged(Just(gender)))
@@ -575,6 +577,10 @@ class PatientEntryScreenControllerTest {
 
   private fun screenCreated() {
     uiEvents.onNext(ScreenCreated())
+    screenCreatedForMobius()
+  }
+
+  private fun screenCreatedForMobius() {
     fixture.start()
   }
 }

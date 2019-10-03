@@ -47,7 +47,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = PatientEntryScreen
+typealias Ui = PatientEntryUi
 typealias UiChange = (Ui) -> Unit
 
 class PatientEntryScreenController @Inject constructor(

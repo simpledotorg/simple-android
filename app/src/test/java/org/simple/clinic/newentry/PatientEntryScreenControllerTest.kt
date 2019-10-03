@@ -60,7 +60,7 @@ class PatientEntryScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<PatientEntryScreen>()
+  private val ui = mock<PatientEntryUi>()
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
@@ -92,7 +92,7 @@ class PatientEntryScreenControllerTest {
 
     uiEvents
         .compose(controller)
-        .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
+        .subscribe({ uiChange -> uiChange(ui) }, { e -> errorConsumer(e) })
 
     Analytics.addReporter(reporter)
   }
@@ -109,7 +109,7 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).preFillFields(OngoingNewPatientEntry(
+    verify(ui).preFillFields(OngoingNewPatientEntry(
         address = Address(
             colonyOrVillage = "",
             district = "district",
@@ -127,7 +127,7 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).preFillFields(OngoingNewPatientEntry(address = address))
+    verify(ui).preFillFields(OngoingNewPatientEntry(address = address))
   }
 
   @Test
@@ -189,16 +189,16 @@ class PatientEntryScreenControllerTest {
       onNext(PatientAgeTextChanged(""))
       onNext(PatientDateOfBirthTextChanged(""))
     }
-    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
+    verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
 
     uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
-    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
+    verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
 
     with(uiEvents) {
       onNext(PatientDateOfBirthTextChanged(""))
       onNext(PatientAgeTextChanged("1"))
     }
-    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+    verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
   }
 
   @Test
@@ -223,8 +223,8 @@ class PatientEntryScreenControllerTest {
       onNext(PatientDateOfBirthFocusChanged(hasFocus = false))
     }
 
-    verify(screen, times(1)).setShowDatePatternInDateOfBirthLabel(false)
-    verify(screen).setShowDatePatternInDateOfBirthLabel(true)
+    verify(ui, times(1)).setShowDatePatternInDateOfBirthLabel(false)
+    verify(ui).setShowDatePatternInDateOfBirthLabel(true)
   }
 
   @Test
@@ -300,15 +300,15 @@ class PatientEntryScreenControllerTest {
       onNext(PatientEntrySaveClicked())
     }
 
-    verify(screen, atLeastOnce()).showEmptyFullNameError(true)
-    verify(screen, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
-    verify(screen, atLeastOnce()).showInvalidDateOfBirthError(true)
-    verify(screen, atLeastOnce()).showMissingGenderError(true)
-    verify(screen, atLeastOnce()).showEmptyColonyOrVillageError(true)
-    verify(screen, atLeastOnce()).showEmptyDistrictError(true)
-    verify(screen, atLeastOnce()).showEmptyStateError(true)
-    verify(screen, atLeastOnce()).showLengthTooShortPhoneNumberError(true)
-    verify(screen, atLeastOnce()).showLengthTooLongPhoneNumberError(true)
+    verify(ui, atLeastOnce()).showEmptyFullNameError(true)
+    verify(ui, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
+    verify(ui, atLeastOnce()).showInvalidDateOfBirthError(true)
+    verify(ui, atLeastOnce()).showMissingGenderError(true)
+    verify(ui, atLeastOnce()).showEmptyColonyOrVillageError(true)
+    verify(ui, atLeastOnce()).showEmptyDistrictError(true)
+    verify(ui, atLeastOnce()).showEmptyStateError(true)
+    verify(ui, atLeastOnce()).showLengthTooShortPhoneNumberError(true)
+    verify(ui, atLeastOnce()).showLengthTooLongPhoneNumberError(true)
   }
 
   @Test
@@ -370,14 +370,14 @@ class PatientEntryScreenControllerTest {
       onNext(PatientColonyOrVillageTextChanged(""))
     }
 
-    verify(screen).showEmptyFullNameError(false)
-    verify(screen, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
-    verify(screen, atLeastOnce()).showInvalidDateOfBirthError(false)
-    verify(screen, atLeastOnce()).showDateOfBirthIsInFutureError(false)
-    verify(screen).showMissingGenderError(false)
-    verify(screen, atLeastOnce()).showEmptyColonyOrVillageError(false)
-    verify(screen).showEmptyDistrictError(false)
-    verify(screen).showEmptyStateError(false)
+    verify(ui).showEmptyFullNameError(false)
+    verify(ui, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
+    verify(ui, atLeastOnce()).showInvalidDateOfBirthError(false)
+    verify(ui, atLeastOnce()).showDateOfBirthIsInFutureError(false)
+    verify(ui).showMissingGenderError(false)
+    verify(ui, atLeastOnce()).showEmptyColonyOrVillageError(false)
+    verify(ui).showEmptyDistrictError(false)
+    verify(ui).showEmptyStateError(false)
   }
 
   // TODO: Write these similarly structured regression tests in a smarter way.
@@ -400,7 +400,7 @@ class PatientEntryScreenControllerTest {
       onNext(PatientEntrySaveClicked())
     }
 
-    verify(screen, never()).openMedicalHistoryEntryScreen()
+    verify(ui, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -422,7 +422,7 @@ class PatientEntryScreenControllerTest {
       onNext(PatientEntrySaveClicked())
     }
 
-    verify(screen, never()).openMedicalHistoryEntryScreen()
+    verify(ui, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -444,7 +444,7 @@ class PatientEntryScreenControllerTest {
       onNext(PatientEntrySaveClicked())
     }
 
-    verify(screen, never()).openMedicalHistoryEntryScreen()
+    verify(ui, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -467,7 +467,7 @@ class PatientEntryScreenControllerTest {
       onNext(PatientEntrySaveClicked())
     }
 
-    verify(screen).openMedicalHistoryEntryScreen()
+    verify(ui).openMedicalHistoryEntryScreen()
     verify(patientRepository).saveOngoingEntry(any())
     verify(patientRegisteredCount).set(any())
   }
@@ -482,7 +482,7 @@ class PatientEntryScreenControllerTest {
       onNext(PatientGenderChanged(Just(gender)))
     }
 
-    verify(screen, times(1)).scrollFormToBottom()
+    verify(ui, times(1)).scrollFormToBottom()
   }
 
   @Suppress("Unused")
@@ -510,9 +510,9 @@ class PatientEntryScreenControllerTest {
 
     // This is order dependent because finding the first field
     // with error is only possible once the errors are set.
-    val inOrder = inOrder(screen)
-    inOrder.verify(screen).showEmptyDistrictError(true)
-    inOrder.verify(screen).scrollToFirstFieldWithError()
+    val inOrder = inOrder(ui)
+    inOrder.verify(ui).showEmptyDistrictError(true)
+    inOrder.verify(ui).scrollToFirstFieldWithError()
   }
 
   @Test
@@ -558,7 +558,7 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).showIdentifierSection()
+    verify(ui).showIdentifierSection()
   }
 
   @Test
@@ -567,6 +567,6 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).hideIdentifierSection()
+    verify(ui).hideIdentifierSection()
   }
 }

@@ -14,11 +14,14 @@ import com.spotify.mobius.extras.Connectables
 import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.functions.Function
 import com.spotify.mobius.rx2.RxMobius
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import io.reactivex.disposables.Disposable
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.util.unsafeLazy
 
 class MobiusDelegate<M : Parcelable, E, F>(
+    private val events: Observable<E>,
     private val defaultModel: M,
     private val init: Init<M, F>,
     private val update: Update<M, E, F>,
@@ -27,6 +30,7 @@ class MobiusDelegate<M : Parcelable, E, F>(
     private val crashReporter: CrashReporter
 ) : Connectable<M, E> {
   constructor(
+      events: Observable<E>,
       defaultModel: M,
       initFunction: (M) -> First<M, F>,
       updateFunction: (M, E) -> Next<M, F>,
@@ -34,6 +38,7 @@ class MobiusDelegate<M : Parcelable, E, F>(
       modelUpdateListener: (M) -> Unit,
       crashReporter: CrashReporter
   ) : this(
+      events,
       defaultModel,
       Init { model -> initFunction(model) },
       Update { model, event -> updateFunction(model, event) },
@@ -56,12 +61,14 @@ class MobiusDelegate<M : Parcelable, E, F>(
             { effects -> effects.compose(effectHandler) }
         )
         .init(init)
-        .eventSource(eventSource)
+        .eventSource(mobiusEventSource)
   }
 
-  val eventSource: DeferredEventSource<E> by unsafeLazy {
+  private val mobiusEventSource by unsafeLazy {
     DeferredEventSource<E>(crashReporter)
   }
+
+  private lateinit var eventsDisposable: Disposable
 
   fun prepare() {
     controller = MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
@@ -71,9 +78,13 @@ class MobiusDelegate<M : Parcelable, E, F>(
 
   fun start() {
     controller.start()
+    eventsDisposable = events.subscribe { mobiusEventSource.notifyEvent(it) }
   }
 
   fun stop() {
+    if (::eventsDisposable.isInitialized && eventsDisposable.isDisposed.not()) {
+      eventsDisposable.dispose()
+    }
     controller.stop()
   }
 

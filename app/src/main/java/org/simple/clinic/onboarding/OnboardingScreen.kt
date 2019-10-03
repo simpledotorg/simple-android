@@ -8,7 +8,6 @@ import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding2.view.RxView
 import com.spotify.mobius.First
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_onboarding.view.*
 import org.simple.clinic.ReportAnalyticsEvents
@@ -38,8 +37,14 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  private val events: Observable<OnboardingEvent>
+    get() = getStartedClicks()
+        .compose(ReportAnalyticsEvents())
+        .cast()
+
   private val delegate by unsafeLazy {
     MobiusDelegate(
+        events,
         OnboardingModel,
         { First.first(it) },
         ::onboardingUpdate,
@@ -48,13 +53,6 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
         crashReporter
     )
   }
-
-  private val events: Observable<OnboardingEvent>
-    get() = getStartedClicks()
-        .compose(ReportAnalyticsEvents())
-        .cast()
-
-  private lateinit var eventsDisposable: Disposable
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -72,13 +70,9 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
-    eventsDisposable = events.subscribe { delegate.eventSource.notifyEvent(it) }
   }
 
   override fun onDetachedFromWindow() {
-    if (::eventsDisposable.isInitialized && eventsDisposable.isDisposed.not()) {
-      eventsDisposable.dispose()
-    }
     delegate.stop()
     super.onDetachedFromWindow()
   }

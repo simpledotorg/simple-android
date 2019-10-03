@@ -97,7 +97,8 @@ class MobiusDelegate<M : Parcelable, E, F>(
 
   fun onRestoreInstanceState(bundle: Bundle?): Parcelable? {
     lastKnownModel = bundle?.getParcelable(modelKey) ?: defaultModel
-    return bundle?.getParcelable(viewStateKey)
+    return bundle?.getParcelable<Parcelable?>(viewStateKey)
+        .also { prepare() }
   }
 
   override fun connect(output: Consumer<E>): Connection<M> {

@@ -1,5 +1,7 @@
 package org.simple.clinic.patient
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -14,6 +16,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
 import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
+import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
@@ -30,12 +33,13 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
  * Parsing of user input happens later when this data class is converted
  * into a Patient object in [PatientRepository.saveOngoingEntryAsPatient].
  */
+@Parcelize
 data class OngoingNewPatientEntry(
     val personalDetails: PersonalDetails? = null,
     val address: Address? = null,
     val phoneNumber: PhoneNumber? = null,
     val identifier: Identifier? = null
-) {
+) : Parcelable {
 
   companion object {
     fun fromFullName(fullName: String): OngoingNewPatientEntry {
@@ -120,9 +124,12 @@ data class OngoingNewPatientEntry(
    * [age] is stored as a String instead of an Int because it's easy
    * to forget that [Int.toString] will return literal "null" for null Ints.
    */
-  data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val age: String?, val gender: Gender?)
+  @Parcelize
+  data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val age: String?, val gender: Gender?) : Parcelable
 
-  data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.Mobile, val active: Boolean = true)
+  @Parcelize
+  data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = Mobile, val active: Boolean = true) : Parcelable
 
-  data class Address(val colonyOrVillage: String, val district: String, val state: String)
+  @Parcelize
+  data class Address(val colonyOrVillage: String, val district: String, val state: String): Parcelable
 }

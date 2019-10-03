@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.atLeastOnce
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -77,14 +78,13 @@ class PatientEntryScreenControllerTest {
       patientRegisteredCount
   )
   private val reporter = MockAnalyticsReporter()
-  private val initialOngoingPatientEntrySubject = PublishSubject.create<OngoingNewPatientEntry>()
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 
   @Before
   fun setUp() {
     whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(PatientMocker.facility()))
-    whenever(patientRepository.ongoingEntry()).thenReturn(initialOngoingPatientEntrySubject.firstOrError())
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
 
     errorConsumer = { throw it }
 
@@ -555,18 +555,18 @@ class PatientEntryScreenControllerTest {
     verify(patientRepository).saveOngoingEntry(expectedSavedEntry)
   }
 
-  @Test // TODO: Migrate to Mobius
+  @Test
   fun `when the ongoing patient entry has an identifier, the identifier section must be shown`() {
-    initialOngoingPatientEntrySubject.onNext(OngoingNewPatientEntry(identifier = Identifier("id", BpPassport)))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry(identifier = Identifier("id", BpPassport))))
 
     screenCreated()
 
     verify(ui).showIdentifierSection()
   }
 
-  @Test // TODO: Migrate to Mobius
+  @Test
   fun `when the ongoing patient entry does not have an identifier, the identifier section must be hidden`() {
-    initialOngoingPatientEntrySubject.onNext(OngoingNewPatientEntry(identifier = null))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry(identifier = null)))
 
     screenCreated()
 

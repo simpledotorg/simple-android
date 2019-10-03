@@ -74,8 +74,7 @@ class PatientEntryScreenController @Inject constructor(
         savePatient(replayedEvents),
         showValidationErrorsOnSaveClick(replayedEvents),
         resetValidationErrors(replayedEvents),
-        scrollToBottomOnGenderSelection(replayedEvents),
-        toggleVisibilityOfIdentifierSection(replayedEvents))
+        scrollToBottomOnGenderSelection(replayedEvents))
   }
 
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -331,28 +330,5 @@ class PatientEntryScreenController @Inject constructor(
         .filter { it.gender.isNotEmpty() }
         .take(1)
         .map { { ui: Ui -> ui.scrollFormToBottom() } }
-  }
-
-  private fun toggleVisibilityOfIdentifierSection(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreates = events
-        .ofType<ScreenCreated>()
-
-    val savedOngoingEntry = patientRepository
-        .ongoingEntry()
-        .toObservable()
-        .replay()
-        .refCount()
-
-    val showIdentifiersSection = screenCreates
-        .withLatestFrom(savedOngoingEntry) { _, entry -> entry }
-        .filter { it.identifier != null }
-        .map { { ui: Ui -> ui.showIdentifierSection() } }
-
-    val hideIdentifiersSection = screenCreates
-        .withLatestFrom(savedOngoingEntry) { _, entry -> entry }
-        .filter { it.identifier == null }
-        .map { { ui: Ui -> ui.hideIdentifierSection() } }
-
-    return showIdentifiersSection.mergeWith(hideIdentifiersSection)
   }
 }

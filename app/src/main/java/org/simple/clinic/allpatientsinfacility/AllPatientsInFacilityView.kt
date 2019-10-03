@@ -119,9 +119,8 @@ class AllPatientsInFacilityView(
   }
 
   override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state as Bundle?)).also {
-      delegate.prepare()
-    }
+    val viewState = delegate.onRestoreInstanceState(state as Bundle?)
+    super.onRestoreInstanceState(viewState)
   }
 
   private fun searchResultClicks(): Observable<UiEvent> {

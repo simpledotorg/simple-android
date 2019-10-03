@@ -133,18 +133,18 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   private fun formChanges(): Observable<UiEvent> {
     return Observable.mergeArray(
-        fullNameEditText.textChanges(::PatientFullNameTextChanged),
-        phoneNumberEditText.textChanges(::PatientPhoneNumberTextChanged),
-        dateOfBirthEditText.textChanges(::PatientDateOfBirthTextChanged),
-        dateOfBirthEditText.focusChanges.map(::PatientDateOfBirthFocusChanged),
-        ageEditText.textChanges(::PatientAgeTextChanged),
-        colonyOrVillageEditText.textChanges(::PatientColonyOrVillageTextChanged),
-        districtEditText.textChanges(::PatientDistrictTextChanged),
-        stateEditText.textChanges(::PatientStateTextChanged),
+        fullNameEditText.textChanges(::FullNameChanged),
+        phoneNumberEditText.textChanges(::PhoneNumberChanged),
+        dateOfBirthEditText.textChanges(::DateOfBirthChanged),
+        dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged),
+        ageEditText.textChanges(::AgeChanged),
+        colonyOrVillageEditText.textChanges(::ColonyOrVillageChanged),
+        districtEditText.textChanges(::DistrictChanged),
+        stateEditText.textChanges(::StateChanged),
         genderChanges())
   }
 
-  private fun genderChanges(): Observable<PatientGenderChanged> {
+  private fun genderChanges(): Observable<GenderChanged> {
     val radioIdToGenders = mapOf(
         R.id.femaleRadioButton to Female,
         R.id.maleRadioButton to Male,
@@ -153,7 +153,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     return RxRadioGroup.checkedChanges(genderRadioGroup)
         .map { checkedId ->
           val gender = radioIdToGenders[checkedId]
-          PatientGenderChanged(gender.toOptional())
+          GenderChanged(gender.toOptional())
         }
   }
 
@@ -162,7 +162,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     return RxView.clicks(saveButtonFrame.button)
         .mergeWith(stateImeClicks)
-        .map { PatientEntrySaveClicked() }
+        .map { SaveClicked() }
   }
 
   override fun preFillFields(entry: OngoingNewPatientEntry) {

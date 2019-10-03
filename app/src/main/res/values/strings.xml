@@ -16,7 +16,10 @@
   <string name="api_network_error">No internet connection</string>
 
   <string name="country_dialing_code" translatable="false">+91</string>
+
+  <!-- Home -->
   <string name="home_help">Help</string>
+  <string name="home_settings">Settings</string>
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">BP Passport</string>

@@ -1,11 +1,15 @@
 package org.simple.clinic.newentry
 
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.util.DistinctValueCallback
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 
 class PatientEntryViewRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntryModel> {
+  private val dateOfBirthAndAgeVisibilityCallback: DistinctValueCallback<DateOfBirthAndAgeVisibility> = DistinctValueCallback()
+
   override fun render(model: PatientEntryModel) {
     val patientEntry = model.patientEntry ?: return
 
@@ -19,14 +23,18 @@ class PatientEntryViewRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEnt
     val age = personalDetails.age
     val dateOfBirth = personalDetails.dateOfBirth
 
-    if (age.isNullOrBlank() && dateOfBirth.isNullOrBlank()) {
-      ui.setDateOfBirthAndAgeVisibility(BOTH_VISIBLE)
+    dateOfBirthAndAgeVisibilityCallback.pass(getVisibility(age, dateOfBirth), ui::setDateOfBirthAndAgeVisibility)
+  }
+
+  private fun getVisibility(age: String?, dateOfBirth: String?): DateOfBirthAndAgeVisibility {
+    return if (age.isNullOrBlank() && dateOfBirth.isNullOrBlank()) {
+      BOTH_VISIBLE
     } else if (age?.isNotBlank() == true && dateOfBirth?.isNotBlank() == true) {
       throw AssertionError("Both date-of-birth and age cannot have user input at the same time")
     } else if (age?.isNotBlank() == true) {
-      ui.setDateOfBirthAndAgeVisibility(AGE_VISIBLE)
-    } else if (dateOfBirth?.isNotBlank() == true) {
-      ui.setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
+      AGE_VISIBLE
+    } else {
+      DATE_OF_BIRTH_VISIBLE
     }
   }
 }

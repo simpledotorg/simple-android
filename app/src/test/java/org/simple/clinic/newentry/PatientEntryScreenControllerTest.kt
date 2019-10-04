@@ -186,20 +186,19 @@ class PatientEntryScreenControllerTest {
     whenever(patientRegisteredCount.get()).thenReturn(0)
 
     screenCreatedForMobius()
-    reset(ui, patientRegisteredCount, patientRegisteredCount) // Reset verifications after screen created event.
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok"))
-      reset(ui)
-
       onNext(PhoneNumberChanged("1234567890"))
-      verify(ui).showLengthTooShortPhoneNumberError(false)
-      verify(ui).showLengthTooLongPhoneNumberError(false)
-      // verifyNoMoreInteractions(ui)
-      // verifyZeroInteractions(patientRepository)
-      verifyZeroInteractions(patientRegisteredCount)
+      reset(ui, patientRegisteredCount, patientRegisteredCount)
 
       onNext(DateOfBirthChanged("12/04/1993"))
+      verify(ui).showEmptyDateOfBirthAndAgeError(false)
+      verify(ui).showInvalidDateOfBirthError(false)
+      verify(ui).showDateOfBirthIsInFutureError(false)
+      verify(patientRepository).ongoingEntry()
+      verifyZeroInteractions(patientRegisteredCount)
+
       onNext(AgeChanged(""))
       onNext(GenderChanged(Just(Transgender)))
       onNext(ColonyOrVillageChanged("colony"))

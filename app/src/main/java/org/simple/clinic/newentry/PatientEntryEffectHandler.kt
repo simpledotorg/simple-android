@@ -8,6 +8,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.DistinctValueCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 object PatientEntryEffectHandler {
@@ -18,6 +19,8 @@ object PatientEntryEffectHandler {
       ui: PatientEntryUi,
       schedulersProvider: SchedulersProvider
   ): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
+    val distinctShowDatePatternInLabelCallback = DistinctValueCallback<Boolean>()
+
     return RxMobius
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryEffectHandler(userSession, facilityRepository, patientRepository, schedulersProvider.io()))
@@ -31,6 +34,9 @@ object PatientEntryEffectHandler {
         .addAction(HideEmptyColonyOrVillageError::class.java, { ui.showEmptyColonyOrVillageError(false) }, schedulersProvider.ui())
         .addAction(HideEmptyDistrictError::class.java, { ui.showEmptyDistrictError(false) }, schedulersProvider.ui())
         .addAction(HideEmptyStateError::class.java, { ui.showEmptyStateError(false) }, schedulersProvider.ui())
+        .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
+          distinctShowDatePatternInLabelCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
+        }, schedulersProvider.ui())
         .build()
   }
 

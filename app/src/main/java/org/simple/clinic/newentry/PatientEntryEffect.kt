@@ -27,3 +27,5 @@ object HideEmptyColonyOrVillageError : PatientEntryEffect()
 object HideEmptyDistrictError : PatientEntryEffect()
 
 object HideEmptyStateError : PatientEntryEffect()
+
+data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryEffect()

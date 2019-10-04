@@ -19,3 +19,5 @@ object HidePhoneLengthErrors : PatientEntryEffect()
 object HideDateOfBirthErrors : PatientEntryEffect()
 
 object HideEmptyDateOfBirthAndAgeError : PatientEntryEffect()
+
+object HideMissingGenderError : PatientEntryEffect()

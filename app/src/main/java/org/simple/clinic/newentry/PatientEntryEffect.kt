@@ -23,3 +23,5 @@ object HideEmptyDateOfBirthAndAgeError : PatientEntryEffect()
 object HideMissingGenderError : PatientEntryEffect()
 
 object HideEmptyColonyOrVillageError : PatientEntryEffect()
+
+object HideEmptyDistrictError : PatientEntryEffect()

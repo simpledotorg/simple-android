@@ -199,6 +199,8 @@ class PatientEntryScreenControllerTest {
 
       onNext(DistrictChanged("district"))
       verify(ui).showEmptyDistrictError(false)
+      verify(ui).hideIdentifierSection()
+      verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
       verifyNoMoreInteractions(ui)
       verify(patientRepository).ongoingEntry()
       verifyNoMoreInteractions(patientRepository)

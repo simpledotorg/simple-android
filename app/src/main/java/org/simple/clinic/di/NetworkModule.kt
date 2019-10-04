@@ -122,8 +122,8 @@ open class NetworkModule {
   }
 
   @Provides
-  fun remoteConfigReader(firebase: FirebaseRemoteConfig): ConfigReader {
-    return FirebaseConfigReader(firebase)
+  fun remoteConfigReader(firebase: FirebaseRemoteConfig, cacheExpiration: FirebaseRemoteConfigCacheExpiration): ConfigReader {
+    return FirebaseConfigReader(firebase, cacheExpiration)
   }
 
   @Provides

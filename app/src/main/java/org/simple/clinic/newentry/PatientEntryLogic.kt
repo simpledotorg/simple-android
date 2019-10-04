@@ -15,24 +15,24 @@ fun patientEntryUpdate(
     model: PatientEntryModel,
     event: PatientEntryEvent
 ): Next<PatientEntryModel, PatientEntryEffect> {
-  if (event is OngoingEntryFetched) {
-    return next(
+  return when (event) {
+    is OngoingEntryFetched -> next(
         model.patientEntryFetched(event.patientEntry),
         setOf(PrefillFields(event.patientEntry))
     )
-  } else if (event is GenderChanged) {
-    val updatedModel = model.withGender(event.gender)
 
-    if (event.gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
-      return next(updatedModel.copy(isSelectingGenderForTheFirstTime = false), setOf(ScrollFormToBottom))
-    } else {
-      return next(updatedModel)
+    is GenderChanged -> {
+      val updatedModel = model.withGender(event.gender)
+
+      return if (event.gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
+        next(updatedModel.copy(isSelectingGenderForTheFirstTime = false), setOf(ScrollFormToBottom))
+      } else {
+        next(updatedModel)
+      }
     }
-  } else if (event is AgeChanged) {
-    return next(model.withAge(event.age))
-  } else if (event is DateOfBirthChanged) {
-    return next(model.withDateOfBirth(event.dateOfBirth))
-  }
 
-  return noChange()
+    is AgeChanged -> return next(model.withAge(event.age))
+    is DateOfBirthChanged -> return next(model.withDateOfBirth(event.dateOfBirth))
+    else -> return noChange()
+  }
 }

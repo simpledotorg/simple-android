@@ -3,6 +3,7 @@ package org.simple.clinic.newentry
 import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.dispatch
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 
@@ -41,6 +42,12 @@ fun patientEntryUpdate(
     is DistrictChanged -> next(model.withDistrict(event.district), setOf(HideEmptyDistrictError))
 
     is StateChanged -> next(model.withState(event.state), setOf(HideEmptyStateError))
+
+    is DateOfBirthFocusChanged -> {
+      val hasDateOfBirth = model.patientEntry?.personalDetails?.dateOfBirth?.isNotBlank() == true
+      // TODO(rj): 2019-10-04 Extract the justEffect function and use it instead.
+      dispatch<PatientEntryModel, PatientEntryEffect>(setOf(ShowDatePatternInDateOfBirthLabel(event.hasFocus || hasDateOfBirth)))
+    }
 
     else -> noChange()
   }

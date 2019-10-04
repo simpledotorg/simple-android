@@ -198,7 +198,6 @@ class PatientEntryScreenControllerTest {
 
       onNext(ColonyOrVillageChanged("colony"))
       verify(ui).showEmptyColonyOrVillageError(false)
-      verifyNoMoreInteractions(ui)
       verify(patientRepository).ongoingEntry()
       verifyNoMoreInteractions(patientRepository)
       verifyZeroInteractions(patientRegisteredCount)

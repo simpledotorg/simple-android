@@ -6,14 +6,12 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
@@ -34,11 +32,9 @@ import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NU
 import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.nullIfBlank
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import javax.inject.Inject
@@ -50,8 +46,6 @@ typealias UiChange = (Ui) -> Unit
 @Deprecated("This is being replaced with a Mobius loop instead.")
 class PatientEntryScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
-    private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession,
     private val dobValidator: UserInputDateValidator,
     private val numberValidator: PhoneNumberValidator,
     @Named("number_of_patients_registered") private val patientRegisteredCount: Preference<Int>
@@ -64,28 +58,9 @@ class PatientEntryScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        preFillOnStart(replayedEvents),
         saveOngoingEntry(replayedEvents),
         savePatient(replayedEvents),
         showValidationErrorsOnSaveClick(replayedEvents))
-  }
-
-  private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        .flatMapSingle {
-          Singles.zip(
-              patientRepository.ongoingEntry(),
-              facilityRepository.currentFacility(userSession).firstOrError())
-        }
-        .map { (entry, facility) ->
-          entry.takeIf { it.address != null }
-              ?: entry.copy(address = Address(
-                  colonyOrVillage = "",
-                  district = facility.district,
-                  state = facility.state))
-        }
-        .flatMap { Observable.never<UiChange>() }
   }
 
   private fun mergeWithOngoingPatientEntryUpdates(): ObservableTransformer<UiEvent, UiEvent> {

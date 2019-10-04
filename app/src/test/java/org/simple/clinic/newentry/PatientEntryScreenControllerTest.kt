@@ -195,18 +195,15 @@ class PatientEntryScreenControllerTest {
       onNext(AgeChanged(""))
       onNext(GenderChanged(Just(Transgender)))
       onNext(ColonyOrVillageChanged("colony"))
+      onNext(DistrictChanged("district"))
       reset(ui, patientRegisteredCount, patientRegisteredCount)
 
-      onNext(DistrictChanged("district"))
-      verify(ui).showEmptyDistrictError(false)
-      verify(ui).hideIdentifierSection()
-      verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
+      onNext(StateChanged("state"))
+      verify(ui).showEmptyStateError(false)
       verifyNoMoreInteractions(ui)
-      verify(patientRepository).ongoingEntry()
+      verify(patientRepository, times(2)).ongoingEntry()
       verifyNoMoreInteractions(patientRepository)
       verifyZeroInteractions(patientRegisteredCount)
-
-      onNext(StateChanged("state"))
     }
   }
 

@@ -22,7 +22,7 @@ fun patientEntryUpdate(
       val updatedModel = model.withGender(event.gender)
 
       return if (event.gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
-        next(updatedModel.copy(isSelectingGenderForTheFirstTime = false), setOf(ScrollFormToBottom))
+        next(updatedModel.copy(isSelectingGenderForTheFirstTime = false), setOf(HideMissingGenderError, ScrollFormToBottom))
       } else {
         next(updatedModel)
       }

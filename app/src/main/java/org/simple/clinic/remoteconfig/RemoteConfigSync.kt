@@ -30,19 +30,7 @@ class RemoteConfigSync @Inject constructor(
   override fun push(): Completable = Completable.complete()
 
   override fun pull(): Completable {
-    val fetch = Completable.fromAction {
-      remoteConfig.fetch(cacheExpiration.value.seconds)
-          .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-              Timber.i("Firebase remote config updated successfully")
-              remoteConfig.activateFetched()
-            } else {
-              Timber.w("Failed to update Firebase remote config")
-            }
-          }
-    }
-
-    return fetch
+    return configReader.update()
         .doOnError(logError())
         .onErrorComplete()
   }

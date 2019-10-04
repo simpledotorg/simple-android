@@ -5,6 +5,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledExcept
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
@@ -26,6 +27,7 @@ class RemoteConfigSyncTest {
     // fyi: thenThrow() doesn't work because it expects checked exceptions
     // to be declared in the function's signature.
     whenever(remoteConfig.fetch(any())).thenAnswer { throw error }
+    whenever(configReader.update()).thenReturn(Completable.error(error))
 
     val configSync = RemoteConfigSync(remoteConfig, cacheExpiration, crashReporter, configReader)
     configSync.sync()

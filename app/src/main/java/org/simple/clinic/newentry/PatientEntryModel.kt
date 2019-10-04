@@ -34,12 +34,12 @@ data class PatientEntryModel(
 
   fun withAge(age: String): PatientEntryModel {
     val personalDetails = getPersonalDetails(patientEntry)
-    return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(age = age)))
+    return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(age = if (age.isBlank()) null else age)))
   }
 
   fun withDateOfBirth(dateOfBirth: String): PatientEntryModel {
     val personalDetails = getPersonalDetails(patientEntry)
-    return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(dateOfBirth = dateOfBirth)))
+    return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(dateOfBirth = if (dateOfBirth.isBlank()) null else dateOfBirth)))
   }
 
   fun withFullName(fullName: String): PatientEntryModel {

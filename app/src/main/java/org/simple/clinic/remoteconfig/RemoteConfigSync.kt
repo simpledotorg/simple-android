@@ -21,7 +21,8 @@ import javax.inject.Inject
 class RemoteConfigSync @Inject constructor(
     private val remoteConfig: FirebaseRemoteConfig,
     private val cacheExpiration: FirebaseRemoteConfigCacheExpiration,
-    private val crashReporter: CrashReporter
+    private val crashReporter: CrashReporter,
+    private val configReader: ConfigReader
 ) : ModelSync {
 
   override fun sync(): Completable = pull()

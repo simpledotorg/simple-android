@@ -28,6 +28,7 @@ abstract class BaseViewGroupKeyChanger<T : Any>(private val keyChangeAnimator: K
       callback: TraversalCallback
   ) {
     if (!canHandleKey(incomingState.getKey())) {
+      Timber.tag("Screen Router").i("Cannot handle key")
       return
     }
 
@@ -39,6 +40,7 @@ abstract class BaseViewGroupKeyChanger<T : Any>(private val keyChangeAnimator: K
       // intentionally calls changeKey() again on onResume() with the same values.
       // See: https://github.com/square/flow/issues/173.
       if (isScreenAlreadyActive(frame.getChildAt(0), incomingKey)) {
+        Timber.tag("Screen Router").i("Same view; short circuit")
         callback.onTraversalCompleted()
         return
       }
@@ -55,12 +57,15 @@ abstract class BaseViewGroupKeyChanger<T : Any>(private val keyChangeAnimator: K
     val incomingView = inflateIncomingView(incomingContext, incomingKey, frame)
     throwIfIdIsMissing(incomingView, incomingKey)
 
+    Timber.tag("Screen Router").i("Add new view")
     frame.addView(incomingView)
+    Timber.tag("Screen Router").i("Restore incoming view state")
     incomingState.restore(incomingView)
 
     callback.onTraversalCompleted()
 
     incomingView.executeOnMeasure {
+      Timber.tag("Screen Router").i("Animate screen change")
       keyChangeAnimator.animate(
           outgoingState?.getKey(),
           outgoingView,
@@ -68,8 +73,11 @@ abstract class BaseViewGroupKeyChanger<T : Any>(private val keyChangeAnimator: K
           incomingView,
           direction,
           onCompleteListener = {
+            Timber.tag("Screen Router").i("Animate screen completed")
             outgoingView?.let {
+              Timber.tag("Screen Router").i("Save outgoing view state")
               outgoingState?.save(outgoingView)
+              Timber.tag("Screen Router").i("Remove outgoing view")
               frame.removeView(outgoingView)
             }
           }

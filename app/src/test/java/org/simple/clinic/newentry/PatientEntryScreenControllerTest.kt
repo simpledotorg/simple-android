@@ -10,6 +10,8 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -171,6 +173,33 @@ class PatientEntryScreenControllerTest {
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
     verify(patientRegisteredCount).set(1)
+  }
+
+  @Test
+  @Deprecated("""
+    This is a test that's written to capture and migrate behaviors for existing functionality,
+     will delete this test as soon as the migration for the events are complete.
+    """)
+  fun `characteristic test`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRegisteredCount.get()).thenReturn(0)
+
+    with(uiEvents) {
+      onNext(FullNameChanged("Ashok"))
+      verify(ui).showEmptyFullNameError(false)
+      verifyNoMoreInteractions(ui)
+      verifyZeroInteractions(patientRepository)
+      verifyZeroInteractions(patientRegisteredCount)
+
+      onNext(PhoneNumberChanged("1234567890"))
+      onNext(DateOfBirthChanged("12/04/1993"))
+      onNext(AgeChanged(""))
+      onNext(GenderChanged(Just(Transgender)))
+      onNext(ColonyOrVillageChanged("colony"))
+      onNext(DistrictChanged("district"))
+      onNext(StateChanged("state"))
+    }
   }
 
   @Test // TODO: Migrate to Mobius

@@ -1,4 +1,4 @@
-package org.simple.clinic.remoteconfig
+package org.simple.clinic.util
 
 import com.google.android.gms.tasks.Task
 import io.reactivex.Completable

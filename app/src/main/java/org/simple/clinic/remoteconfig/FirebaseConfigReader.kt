@@ -3,6 +3,7 @@ package org.simple.clinic.remoteconfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue
 import io.reactivex.Completable
+import org.simple.clinic.util.toCompletable
 import timber.log.Timber
 
 class FirebaseConfigReader(

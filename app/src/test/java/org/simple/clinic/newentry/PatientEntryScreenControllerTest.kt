@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -185,11 +186,14 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).thenReturn(0)
 
+    screenCreatedForMobius()
+    reset(ui, patientRegisteredCount, patientRegisteredCount) // Reset verifications after screen created event.
+
     with(uiEvents) {
       onNext(FullNameChanged("Ashok"))
       verify(ui).showEmptyFullNameError(false)
-      verifyNoMoreInteractions(ui)
-      verifyZeroInteractions(patientRepository)
+      // verifyNoMoreInteractions(ui)
+      // verifyZeroInteractions(patientRepository)
       verifyZeroInteractions(patientRegisteredCount)
 
       onNext(PhoneNumberChanged("1234567890"))
@@ -391,6 +395,7 @@ class PatientEntryScreenControllerTest {
   @Test // TODO: Migrate to Mobius
   fun `validation errors should be cleared on every input change`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    screenCreatedForMobius()
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok"))

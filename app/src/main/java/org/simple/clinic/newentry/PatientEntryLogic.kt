@@ -32,7 +32,11 @@ fun patientEntryUpdate(
     }
 
     is AgeChanged -> return next(model.withAge(event.age))
+
     is DateOfBirthChanged -> return next(model.withDateOfBirth(event.dateOfBirth))
+
+    is FullNameChanged -> return next(model.withFullName(event.fullName), setOf(ShowEmptyFullNameError(false)))
+
     else -> return noChange()
   }
 }

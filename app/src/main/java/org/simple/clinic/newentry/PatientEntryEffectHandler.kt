@@ -23,6 +23,7 @@ object PatientEntryEffectHandler {
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryEffectHandler(userSession, facilityRepository, patientRepository, schedulersProvider.io()))
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
         .addAction(ScrollFormToBottom::class.java, { ui.scrollFormToBottom() }, schedulersProvider.ui())
+        .addConsumer(ShowEmptyFullNameError::class.java, { ui.showEmptyFullNameError(it.show) }, schedulersProvider.ui())
         .build()
   }
 

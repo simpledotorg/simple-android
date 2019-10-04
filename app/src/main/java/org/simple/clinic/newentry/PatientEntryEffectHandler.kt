@@ -25,6 +25,7 @@ object PatientEntryEffectHandler {
         .addAction(ScrollFormToBottom::class.java, { ui.scrollFormToBottom() }, schedulersProvider.ui())
         .addConsumer(ShowEmptyFullNameError::class.java, { ui.showEmptyFullNameError(it.show) }, schedulersProvider.ui())
         .addAction(HidePhoneLengthErrors::class.java, { hidePhoneLengthErrors(ui) }, schedulersProvider.ui())
+        .addAction(HideDateOfBirthErrors::class.java, { hideDateOfBirthErrors(ui) }, schedulersProvider.ui())
         .build()
   }
 
@@ -56,6 +57,14 @@ object PatientEntryEffectHandler {
     with(ui) {
       showLengthTooLongPhoneNumberError(false)
       showLengthTooShortPhoneNumberError(false)
+    }
+  }
+
+  private fun hideDateOfBirthErrors(ui: PatientEntryUi) {
+    with(ui) {
+      showEmptyDateOfBirthAndAgeError(false)
+      showInvalidDateOfBirthError(false)
+      showDateOfBirthIsInFutureError(false)
     }
   }
 }

@@ -25,3 +25,5 @@ object HideMissingGenderError : PatientEntryEffect()
 object HideEmptyColonyOrVillageError : PatientEntryEffect()
 
 object HideEmptyDistrictError : PatientEntryEffect()
+
+object HideEmptyStateError : PatientEntryEffect()

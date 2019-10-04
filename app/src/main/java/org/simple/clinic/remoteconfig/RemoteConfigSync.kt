@@ -27,20 +27,18 @@ class RemoteConfigSync @Inject constructor(
 
   override fun pull(): Completable {
     return configReader.update()
-        .doOnError(logError())
+        .doOnError(::logError)
         .onErrorComplete()
   }
 
-  private fun logError() = { e: Throwable ->
-    val resolvedError = ErrorResolver.resolve(e)
+  private fun logError(error: Throwable) {
+    val resolvedError = ErrorResolver.resolve(error)
     when (resolvedError) {
       is Unexpected -> {
         crashReporter.report(resolvedError.actualCause)
         Timber.e(resolvedError.actualCause)
       }
-      is NetworkRelated, is Unauthorized -> {
-        Timber.e(e)
-      }
+      is NetworkRelated, is Unauthorized -> Timber.e(error)
     }.exhaustive()
   }
 

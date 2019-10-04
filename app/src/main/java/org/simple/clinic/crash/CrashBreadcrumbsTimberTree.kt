@@ -15,26 +15,31 @@ class CrashBreadcrumbsTimberTree(
 ) : Timber.Tree() {
 
   override fun log(priority: Int, tag: String?, message: String, error: Throwable?) {
-    val priorityEnum = when (priority) {
-      Log.VERBOSE -> VERBOSE
-      Log.DEBUG -> DEBUG
-      Log.INFO -> INFO
-      Log.WARN -> WARN
-      Log.ERROR -> ERROR
-      else -> ASSERT
-    }
+    val breadcrumbPriority = mapLogPriorityToBreadcrumbPriority(priority)
 
     val messageWithError = when (error) {
       null -> message
       else -> "$message (error: ${error.message})"
     }
 
-    if (priorityEnum >= priorityToReport) {
+    if (breadcrumbPriority >= priorityToReport) {
       val breadcrumb = Breadcrumb(
-          priority = priorityEnum,
+          priority = breadcrumbPriority,
           tag = tag,
           message = messageWithError)
       crashReporter.dropBreadcrumb(breadcrumb)
+    }
+  }
+
+  private fun mapLogPriorityToBreadcrumbPriority(priority: Int): Breadcrumb.Priority {
+    return when (priority) {
+      Log.VERBOSE -> VERBOSE
+      Log.DEBUG -> DEBUG
+      Log.INFO -> INFO
+      Log.WARN -> WARN
+      Log.ERROR -> ERROR
+      Log.ASSERT -> ASSERT
+      else -> VERBOSE
     }
   }
 }

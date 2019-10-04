@@ -9,7 +9,10 @@ import org.simple.clinic.crash.Breadcrumb.Priority.VERBOSE
 import org.simple.clinic.crash.Breadcrumb.Priority.WARN
 import timber.log.Timber
 
-class CrashBreadcrumbsTimberTree(private val crashReporter: CrashReporter) : Timber.Tree() {
+class CrashBreadcrumbsTimberTree(
+    private val crashReporter: CrashReporter,
+    private val priorityToReport: Breadcrumb.Priority = INFO
+) : Timber.Tree() {
 
   override fun log(priority: Int, tag: String?, message: String, error: Throwable?) {
     val priorityEnum = when (priority) {
@@ -25,10 +28,13 @@ class CrashBreadcrumbsTimberTree(private val crashReporter: CrashReporter) : Tim
       null -> message
       else -> "$message (error: ${error.message})"
     }
-    val breadcrumb = Breadcrumb(
-        priority = priorityEnum,
-        tag = tag,
-        message = messageWithError)
-    crashReporter.dropBreadcrumb(breadcrumb)
+
+    if (priorityEnum >= priorityToReport) {
+      val breadcrumb = Breadcrumb(
+          priority = priorityEnum,
+          tag = tag,
+          message = messageWithError)
+      crashReporter.dropBreadcrumb(breadcrumb)
+    }
   }
 }

@@ -14,6 +14,7 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
+import com.f2prateek.rx.preferences2.Preference
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
@@ -22,13 +23,14 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_manual_patient_entry.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.activity.TheActivityLifecycle
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.toInit
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -37,6 +39,7 @@ import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
@@ -44,11 +47,11 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
 import org.simple.clinic.widgets.setTextAndCursor
@@ -56,14 +59,12 @@ import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
+import javax.inject.Named
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var controller: PatientEntryScreenController
 
   @Inject
   lateinit var activityLifecycle: Observable<TheActivityLifecycle>
@@ -85,6 +86,15 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
+
+  @field:[Inject Named("number_of_patients_registered")]
+  lateinit var patientRegisteredCount: Preference<Int>
+
+  @Inject
+  lateinit var phoneNumberValidator: PhoneNumberValidator
+
+  @Inject
+  lateinit var dobValidator: UserInputDateValidator
 
   private val allTextInputFields: List<EditText> by unsafeLazy {
     listOf(
@@ -108,21 +118,27 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val viewRenderer = PatientEntryViewRenderer(this)
 
   private val events: Observable<UiEvent> by unsafeLazy {
-    Observable.merge(
-        screenCreates(),
-        screenPauses(),
-        formChanges(),
-        saveClicks()
-    ).share()
+    Observable.merge(screenCreates(), formChanges(), saveClicks())
+        .compose(ReportAnalyticsEvents())
+        .share()
   }
 
   private val delegate by unsafeLazy {
+    val effectHandler = PatientEntryEffectHandler.createEffectHandler(
+        userSession,
+        facilityRepository,
+        patientRepository,
+        patientRegisteredCount,
+        this,
+        schedulersProvider
+    )
+
     MobiusDelegate(
         events.ofType(),
         PatientEntryModel.DEFAULT,
-        ::patientEntryInit,
-        ::patientEntryUpdate,
-        PatientEntryEffectHandler.createEffectHandler(userSession, facilityRepository, patientRepository, this, schedulersProvider),
+        ::patientEntryInit.toInit(),
+        PatientEntryUpdate(phoneNumberValidator, dobValidator),
+        effectHandler,
         viewRenderer::render,
         crashReporter
     )
@@ -155,12 +171,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     // support for compound drawable tinting either, so we need to do this in code.
     identifierTextView.setCompoundDrawableStartWithTint(R.drawable.patient_id_card, R.color.grey1)
 
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    )
     delegate.prepare()
   }
 
@@ -184,8 +194,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
-
-  private fun screenPauses() = activityLifecycle.ofType<TheActivityLifecycle.Paused>()
 
   private fun formChanges(): Observable<UiEvent> {
     return Observable.mergeArray(

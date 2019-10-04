@@ -21,12 +21,13 @@ class RemoteConfigSyncTest {
     val remoteConfig = mock<FirebaseRemoteConfig>()
     val crashReporter = mock<CrashReporter>()
     val cacheExpiration = FirebaseRemoteConfigCacheExpiration.DEBUG
+    val configReader = mock<ConfigReader>()
 
     // fyi: thenThrow() doesn't work because it expects checked exceptions
     // to be declared in the function's signature.
     whenever(remoteConfig.fetch(any())).thenAnswer { throw error }
 
-    val configSync = RemoteConfigSync(remoteConfig, cacheExpiration, crashReporter)
+    val configSync = RemoteConfigSync(remoteConfig, cacheExpiration, crashReporter, configReader)
     configSync.sync()
         .test()
         .await()

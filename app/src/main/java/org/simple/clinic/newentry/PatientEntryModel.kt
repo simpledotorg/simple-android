@@ -31,22 +31,23 @@ data class PatientEntryModel(
   }
 
   fun withAge(age: String): PatientEntryModel {
-    val personalDetails = patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
+    val personalDetails = getPersonalDetails(patientEntry)
 
-    return copy(
-        patientEntry = patientEntry?.copy(
-            personalDetails = personalDetails.copy(age = age)
-        )
-    )
+    return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(age = age)))
   }
 
   fun withDateOfBirth(dateOfBirth: String): PatientEntryModel {
-    val personalDetails = patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
+    val personalDetails = getPersonalDetails(patientEntry)
 
-    return copy(
-        patientEntry = patientEntry?.copy(
-            personalDetails = personalDetails.copy(dateOfBirth = dateOfBirth)
-        )
-    )
+    return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(dateOfBirth = dateOfBirth)))
   }
+
+  fun withFullName(fullName: String): PatientEntryModel {
+    val personalDetails = getPersonalDetails(patientEntry)
+
+    return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(fullName = fullName)))
+  }
+
+  private fun getPersonalDetails(patientEntry: OngoingNewPatientEntry?): PersonalDetails =
+      patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
 }

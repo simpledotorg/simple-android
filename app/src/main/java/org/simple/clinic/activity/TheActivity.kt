@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,8 +14,6 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.crash.Breadcrumb
-import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
@@ -44,9 +42,6 @@ class TheActivity : AppCompatActivity() {
 
   @Inject
   lateinit var fullScreenKeyChangeAnimator: KeyChangeAnimator<FullScreenKey>
-
-  @Inject
-  lateinit var crashReporter: CrashReporter
 
   lateinit var screenRouter: ScreenRouter
 
@@ -96,13 +91,6 @@ class TheActivity : AppCompatActivity() {
     val outgoingScreenName = outgoing?.analyticsName ?: ""
     val incomingScreenName = incoming.analyticsName
     Analytics.reportScreenChange(outgoingScreenName, incomingScreenName)
-
-    val screenChangedBreadcrumb = Breadcrumb(
-        priority = Breadcrumb.Priority.INFO,
-        tag = "Screen Change",
-        message = "[$outgoingScreenName] -> [$incomingScreenName]"
-    )
-    crashReporter.dropBreadcrumb(screenChangedBreadcrumb)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

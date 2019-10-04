@@ -40,6 +40,8 @@ fun patientEntryUpdate(
 
     is DistrictChanged -> next(model.withDistrict(event.district), setOf(HideEmptyDistrictError))
 
+    is StateChanged -> next(model.withState(event.state), setOf(HideEmptyStateError))
+
     else -> noChange()
   }
 }

@@ -200,6 +200,8 @@ class PatientEntryScreenControllerTest {
 
       onNext(StateChanged("state"))
       verify(ui).showEmptyStateError(false)
+      verify(ui).hideIdentifierSection()
+      verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
       verifyNoMoreInteractions(ui)
       verify(patientRepository, times(2)).ongoingEntry()
       verifyNoMoreInteractions(patientRepository)

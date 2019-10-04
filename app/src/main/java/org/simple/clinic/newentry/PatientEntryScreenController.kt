@@ -68,8 +68,7 @@ class PatientEntryScreenController @Inject constructor(
         toggleDatePatternInDateOfBirthLabel(replayedEvents),
         saveOngoingEntry(replayedEvents),
         savePatient(replayedEvents),
-        showValidationErrorsOnSaveClick(replayedEvents),
-        resetValidationErrors(replayedEvents))
+        showValidationErrorsOnSaveClick(replayedEvents))
   }
 
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -222,15 +221,6 @@ class PatientEntryScreenController @Inject constructor(
         .map { { ui: Ui -> ui.scrollToFirstFieldWithError() } }
 
     return showErrors.mergeWith(scrollToFirstError)
-  }
-
-  private fun resetValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val stateErrorResets = events
-        .ofType<StateChanged>()
-        .map { { ui: Ui -> ui.showEmptyStateError(false) } }
-
-    return Observable.mergeArray(
-        stateErrorResets)
   }
 
   private fun savePatient(events: Observable<UiEvent>): Observable<UiChange> {

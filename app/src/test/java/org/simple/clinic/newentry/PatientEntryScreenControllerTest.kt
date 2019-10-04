@@ -219,9 +219,13 @@ class PatientEntryScreenControllerTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
   }
 
+  // TODO(rj): 2019-10-04 This test keeps passing no matter what, I verified if the exception is being thrown
+  // TODO                 by setting a breakpoint. Revisit this test again, this also has a related
+  // TODO                 pivotal story - https://www.pivotaltracker.com/story/show/168946268
   @Test
   fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    screenCreatedForMobius()
     errorConsumer = { assertThat(it).isInstanceOf(AssertionError::class.java) }
 
     with(uiEvents) {

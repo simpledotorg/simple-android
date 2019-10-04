@@ -12,6 +12,7 @@ import flow.Direction
 import flow.KeyChanger
 import flow.State
 import flow.TraversalCallback
+import timber.log.Timber
 
 /**
  * Coordinates changes between [FullScreenKey]s.
@@ -72,9 +73,18 @@ class FullScreenKeyChanger(
       incomingContexts: Map<Any, Context>,
       callback: TraversalCallback
   ) {
-    super.changeKey(outgoingState, incomingState, direction, incomingContexts, callback)
     val outgoingKey = outgoingState?.getKey<FullScreenKey>()
     val incomingKey = incomingState.getKey<FullScreenKey>()
+
+    val outgoingScreenName = outgoingKey?.analyticsName ?: ""
+    val incomingScreenName = incomingKey.analyticsName
+
+    Timber.tag("Screen Change").i("Change key [$outgoingScreenName] -> [$incomingScreenName]")
+
+    super.changeKey(outgoingState, incomingState, direction, incomingContexts, callback)
+
+    Timber.tag("Screen Change").i("Key changed [$outgoingScreenName] -> [$incomingScreenName]")
+
     onKeyChange(outgoingKey, incomingKey)
   }
 }

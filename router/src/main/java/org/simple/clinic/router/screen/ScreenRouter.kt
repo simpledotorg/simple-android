@@ -14,6 +14,7 @@ import flow.KeyParceler
 import io.reactivex.Observable
 import io.reactivex.exceptions.Exceptions
 import org.simple.clinic.router.ScreenResultBus
+import timber.log.Timber
 import java.util.ArrayList
 
 /**
@@ -66,18 +67,22 @@ class ScreenRouter(
   }
 
   fun push(screenKey: FullScreenKey) {
+    Timber.tag("Screen Router").i("Push: ${screenKey.analyticsName}")
     flow().set(screenKey)
   }
 
   fun clearHistoryAndPush(screenKey: FullScreenKey, direction: RouterDirection) {
+    Timber.tag("Screen Router").i("Clear history and push: ${screenKey.analyticsName}")
     flow().setHistory(History.single(screenKey), direction.flowDirection)
   }
 
   fun popAndPush(screenKey: FullScreenKey, direction: RouterDirection) {
+    Timber.tag("Screen Router").i("Pop and push: ${screenKey.analyticsName}")
     flow().replaceTop(screenKey, direction.flowDirection)
   }
 
   fun pop(): BackStackPopCallback {
+    Timber.tag("Screen Router").i("Pop")
     val popped = flow().goBack()
     return BackStackPopCallback(popped)
   }

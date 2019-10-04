@@ -234,9 +234,11 @@ class PatientEntryScreenControllerTest {
     }
   }
 
-  @Test // TODO: Migrate to Mobius
+  @Test
   fun `while date-of-birth has focus or has some input then date format should be shown in the label`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    screenCreatedForMobius()
+
     with(uiEvents) {
       onNext(DateOfBirthChanged(""))
       onNext(DateOfBirthFocusChanged(hasFocus = false))
@@ -245,7 +247,7 @@ class PatientEntryScreenControllerTest {
       onNext(DateOfBirthFocusChanged(hasFocus = false))
     }
 
-    verify(ui, times(1)).setShowDatePatternInDateOfBirthLabel(false)
+    verify(ui).setShowDatePatternInDateOfBirthLabel(false)
     verify(ui).setShowDatePatternInDateOfBirthLabel(true)
   }
 

@@ -65,7 +65,6 @@ class PatientEntryScreenController @Inject constructor(
 
     return Observable.mergeArray(
         preFillOnStart(replayedEvents),
-        toggleDatePatternInDateOfBirthLabel(replayedEvents),
         saveOngoingEntry(replayedEvents),
         savePatient(replayedEvents),
         showValidationErrorsOnSaveClick(replayedEvents))
@@ -87,21 +86,6 @@ class PatientEntryScreenController @Inject constructor(
                   state = facility.state))
         }
         .flatMap { Observable.never<UiChange>() }
-  }
-
-  private fun toggleDatePatternInDateOfBirthLabel(events: Observable<UiEvent>): Observable<UiChange> {
-    val dateFocusChanges = events
-        .ofType<DateOfBirthFocusChanged>()
-        .map { it.hasFocus }
-
-    val dateTextAvailabilities = events
-        .ofType<DateOfBirthChanged>()
-        .map { it.dateOfBirth.isNotBlank() }
-
-    return Observables.combineLatest(dateFocusChanges, dateTextAvailabilities)
-        .map { (hasFocus, hasDateOfBirth) -> hasFocus || hasDateOfBirth }
-        .distinctUntilChanged()
-        .map { showPattern -> { ui: Ui -> ui.setShowDatePatternInDateOfBirthLabel(showPattern) } }
   }
 
   private fun mergeWithOngoingPatientEntryUpdates(): ObservableTransformer<UiEvent, UiEvent> {

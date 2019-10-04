@@ -24,6 +24,7 @@ object PatientEntryEffectHandler {
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
         .addAction(ScrollFormToBottom::class.java, { ui.scrollFormToBottom() }, schedulersProvider.ui())
         .addConsumer(ShowEmptyFullNameError::class.java, { ui.showEmptyFullNameError(it.show) }, schedulersProvider.ui())
+        .addAction(HidePhoneLengthErrors::class.java, { hidePhoneLengthErrors(ui) }, schedulersProvider.ui())
         .build()
   }
 
@@ -48,6 +49,13 @@ object PatientEntryEffectHandler {
                 ?: entry.copy(address = OngoingNewPatientEntry.Address(colonyOrVillage = "", district = facility.district, state = facility.state))
           }
           .map { OngoingEntryFetched(it) }
+    }
+  }
+
+  private fun hidePhoneLengthErrors(ui: PatientEntryUi) {
+    with(ui) {
+      showLengthTooLongPhoneNumberError(false)
+      showLengthTooShortPhoneNumberError(false)
     }
   }
 }

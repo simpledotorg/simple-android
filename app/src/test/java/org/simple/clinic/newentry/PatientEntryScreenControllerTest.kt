@@ -8,11 +8,8 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -174,39 +171,6 @@ class PatientEntryScreenControllerTest {
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
     verify(patientRegisteredCount).set(1)
-  }
-
-  @Test
-  @Deprecated("""
-    This is a test that's written to capture and migrate behaviors for existing functionality,
-     will delete this test as soon as the migration for the events are complete.
-    """)
-  fun `characteristic test`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRegisteredCount.get()).thenReturn(0)
-
-    screenCreatedForMobius()
-
-    with(uiEvents) {
-      onNext(FullNameChanged("Ashok"))
-      onNext(PhoneNumberChanged("1234567890"))
-      onNext(DateOfBirthChanged("12/04/1993"))
-      onNext(AgeChanged(""))
-      onNext(GenderChanged(Just(Transgender)))
-      onNext(ColonyOrVillageChanged("colony"))
-      onNext(DistrictChanged("district"))
-      reset(ui, patientRegisteredCount, patientRegisteredCount)
-
-      onNext(StateChanged("state"))
-      verify(ui).showEmptyStateError(false)
-      verify(ui).hideIdentifierSection()
-      verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
-      verifyNoMoreInteractions(ui)
-      verify(patientRepository, times(2)).ongoingEntry()
-      verifyNoMoreInteractions(patientRepository)
-      verifyZeroInteractions(patientRegisteredCount)
-    }
   }
 
   @Test // TODO: Migrate to Mobius
@@ -395,7 +359,7 @@ class PatientEntryScreenControllerTest {
     assertThat(validationErrors).isNotEmpty()
   }
 
-  @Test // TODO: Migrate to Mobius
+  @Test
   fun `validation errors should be cleared on every input change`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     screenCreatedForMobius()

@@ -58,4 +58,9 @@ data class PatientEntryModel(
 
   private fun getPersonalDetails(patientEntry: OngoingNewPatientEntry?): PersonalDetails =
       patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
+
+  fun withDistrict(district: String): PatientEntryModel {
+    val address = patientEntry?.address ?: Address("", "", "")
+    return copy(patientEntry = patientEntry?.copy(address = address.copy(district = district)))
+  }
 }

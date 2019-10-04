@@ -38,6 +38,8 @@ fun patientEntryUpdate(
 
     is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), setOf(HideEmptyColonyOrVillageError))
 
+    is DistrictChanged -> next(model.withDistrict(event.district), setOf(HideEmptyDistrictError))
+
     else -> noChange()
   }
 }

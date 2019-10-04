@@ -1,6 +1,7 @@
 package org.simple.clinic.remoteconfig
 
 import com.google.android.gms.tasks.Task
+import io.reactivex.Completable
 import io.reactivex.CompletableEmitter
 
 class CompletableEmitterGmsTaskHandler<R> {
@@ -10,7 +11,7 @@ class CompletableEmitterGmsTaskHandler<R> {
   fun bind(
       emitter: CompletableEmitter,
       task: Task<R>,
-      onTaskUnsuccessful: ((Task<R>) -> Unit)? = null
+      onTaskUnsuccessful: (Task<R>) -> Unit = {}
   ) {
     emitter.setCancellable { unsubscribed = true }
 
@@ -19,7 +20,7 @@ class CompletableEmitterGmsTaskHandler<R> {
           if (task.isSuccessful) {
             emitter.onComplete()
           } else {
-            onTaskUnsuccessful?.invoke(task)
+            onTaskUnsuccessful.invoke(task)
           }
         }
         .addOnFailureListener {
@@ -27,5 +28,12 @@ class CompletableEmitterGmsTaskHandler<R> {
             emitter.onError(it)
           }
         }
+  }
+}
+
+fun <R> Task<R>.toCompletable(onTaskUnsuccessful: (Task<R>) -> Unit = {}): Completable {
+  return Completable.create { emitter ->
+    val handler = CompletableEmitterGmsTaskHandler<R>()
+    handler.bind(emitter, this, onTaskUnsuccessful)
   }
 }

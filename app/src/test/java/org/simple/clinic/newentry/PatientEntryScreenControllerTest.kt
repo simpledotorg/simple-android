@@ -11,6 +11,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -190,16 +191,18 @@ class PatientEntryScreenControllerTest {
     with(uiEvents) {
       onNext(FullNameChanged("Ashok"))
       onNext(PhoneNumberChanged("1234567890"))
+      onNext(DateOfBirthChanged("12/04/1993"))
       reset(ui, patientRegisteredCount, patientRegisteredCount)
 
-      onNext(DateOfBirthChanged("12/04/1993"))
+      onNext(AgeChanged(""))
       verify(ui).showEmptyDateOfBirthAndAgeError(false)
-      verify(ui).showInvalidDateOfBirthError(false)
-      verify(ui).showDateOfBirthIsInFutureError(false)
+      verify(ui).hideIdentifierSection()
+      verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
+      verifyNoMoreInteractions(ui)
+
       verify(patientRepository).ongoingEntry()
       verifyZeroInteractions(patientRegisteredCount)
 
-      onNext(AgeChanged(""))
       onNext(GenderChanged(Just(Transgender)))
       onNext(ColonyOrVillageChanged("colony"))
       onNext(DistrictChanged("district"))

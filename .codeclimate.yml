@@ -46,3 +46,4 @@ exclude_patterns:
   - "**/src/main/java/org/simple/clinic/storage/Migration_*.kt"
   - "**/build/"
   - "**/src/main/java/org/simple/clinic/widgets/OmegaCenterIconButton.java"
+  - "router/"

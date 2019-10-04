@@ -193,19 +193,16 @@ class PatientEntryScreenControllerTest {
       onNext(PhoneNumberChanged("1234567890"))
       onNext(DateOfBirthChanged("12/04/1993"))
       onNext(AgeChanged(""))
+      onNext(GenderChanged(Just(Transgender)))
       reset(ui, patientRegisteredCount, patientRegisteredCount)
 
-      onNext(GenderChanged(Just(Transgender)))
-      verify(ui).hideIdentifierSection()
-      verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
-      verify(ui).scrollFormToBottom()
-      verify(ui).showMissingGenderError(false)
+      onNext(ColonyOrVillageChanged("colony"))
+      verify(ui).showEmptyColonyOrVillageError(false)
       verifyNoMoreInteractions(ui)
       verify(patientRepository).ongoingEntry()
       verifyNoMoreInteractions(patientRepository)
       verifyZeroInteractions(patientRegisteredCount)
 
-      onNext(ColonyOrVillageChanged("colony"))
       onNext(DistrictChanged("district"))
       onNext(StateChanged("state"))
     }

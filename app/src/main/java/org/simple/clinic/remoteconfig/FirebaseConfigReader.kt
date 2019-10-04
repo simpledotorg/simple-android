@@ -1,5 +1,6 @@
 package org.simple.clinic.remoteconfig
 
+import com.google.android.gms.tasks.Task
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue
 import io.reactivex.Completable
@@ -43,15 +44,10 @@ class FirebaseConfigReader(
   }
 
   private fun fetchRemoteConfigFromFirebase(emitter: CompletableEmitter) {
-    remoteConfig
-        .fetch(cacheExpiration.value.seconds)
-        .addOnCompleteListener { task ->
-          if (task.isSuccessful) {
-            emitter.onComplete()
-          } else {
-            Timber.w("Failed to update Firebase remote config")
-          }
-        }
-        .addOnFailureListener { emitter.onError(it) }
+    val task: Task<Void> = remoteConfig.fetch(cacheExpiration.value.seconds)
+
+    val handler = CompletableEmitterGmsTaskHandler<Void>()
+
+    handler.bind(emitter, task) { Timber.w("Failed to update Firebase remote config") }
   }
 }

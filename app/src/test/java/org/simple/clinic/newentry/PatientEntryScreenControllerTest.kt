@@ -10,6 +10,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -163,12 +164,18 @@ class PatientEntryScreenControllerTest {
       onNext(SaveClicked)
     }
 
+    verify(patientRepository).ongoingEntry()
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
         personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
         address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
+    verifyNoMoreInteractions(patientRepository)
+    verify(patientRegisteredCount).get()
     verify(patientRegisteredCount).set(1)
+    verifyNoMoreInteractions(patientRegisteredCount)
+    verify(ui).openMedicalHistoryEntryScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test // TODO: Migrate to Mobius

@@ -30,7 +30,7 @@ fun patientEntryUpdate(
 
     is AgeChanged -> next(model.withAge(event.age))
 
-    is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth))
+    is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth), setOf(HideDateOfBirthErrors))
 
     is FullNameChanged -> next(model.withFullName(event.fullName), setOf(ShowEmptyFullNameError(false)))
 

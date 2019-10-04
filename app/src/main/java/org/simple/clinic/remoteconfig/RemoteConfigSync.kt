@@ -1,6 +1,5 @@
 package org.simple.clinic.remoteconfig
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -19,8 +18,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteConfigSync @Inject constructor(
-    private val remoteConfig: FirebaseRemoteConfig,
-    private val cacheExpiration: FirebaseRemoteConfigCacheExpiration,
     private val crashReporter: CrashReporter,
     private val configReader: ConfigReader
 ) : ModelSync {

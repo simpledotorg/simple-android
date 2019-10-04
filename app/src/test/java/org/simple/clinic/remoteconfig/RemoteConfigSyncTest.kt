@@ -19,17 +19,12 @@ class RemoteConfigSyncTest {
   @Test
   @Parameters(method = "errors expected during remote config sync")
   fun `all errors should be swallowed`(error: Throwable) {
-    val remoteConfig = mock<FirebaseRemoteConfig>()
     val crashReporter = mock<CrashReporter>()
-    val cacheExpiration = FirebaseRemoteConfigCacheExpiration.DEBUG
     val configReader = mock<ConfigReader>()
 
-    // fyi: thenThrow() doesn't work because it expects checked exceptions
-    // to be declared in the function's signature.
-    whenever(remoteConfig.fetch(any())).thenAnswer { throw error }
     whenever(configReader.update()).thenReturn(Completable.error(error))
 
-    val configSync = RemoteConfigSync(remoteConfig, cacheExpiration, crashReporter, configReader)
+    val configSync = RemoteConfigSync(crashReporter, configReader)
     configSync.sync()
         .test()
         .await()
@@ -41,6 +36,7 @@ class RemoteConfigSyncTest {
     return listOf(
         AssertionError("You shall not pass"),
         SocketTimeoutException(),
-        mock<FirebaseRemoteConfigFetchThrottledException>())
+        mock<FirebaseRemoteConfigFetchThrottledException>()
+    )
   }
 }

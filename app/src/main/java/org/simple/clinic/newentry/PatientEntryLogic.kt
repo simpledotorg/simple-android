@@ -36,6 +36,8 @@ fun patientEntryUpdate(
 
     is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), setOf(HidePhoneLengthErrors))
 
+    is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), setOf(HideEmptyColonyOrVillageError))
+
     else -> noChange()
   }
 }

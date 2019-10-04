@@ -28,6 +28,7 @@ object PatientEntryEffectHandler {
         .addAction(HideDateOfBirthErrors::class.java, { hideDateOfBirthErrors(ui) }, schedulersProvider.ui())
         .addAction(HideEmptyDateOfBirthAndAgeError::class.java, { ui.showEmptyDateOfBirthAndAgeError(false) }, schedulersProvider.ui())
         .addAction(HideMissingGenderError::class.java, { ui.showMissingGenderError(false) }, schedulersProvider.ui())
+        .addAction(HideEmptyColonyOrVillageError::class.java, { ui.showEmptyColonyOrVillageError(false) }, schedulersProvider.ui())
         .build()
   }
 

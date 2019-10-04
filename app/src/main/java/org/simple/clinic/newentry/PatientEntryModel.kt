@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
 import org.simple.clinic.util.Optional
@@ -49,6 +50,11 @@ data class PatientEntryModel(
 
   fun withPhoneNumber(phoneNumber: String): PatientEntryModel =
       copy(patientEntry = patientEntry?.copy(phoneNumber = if (phoneNumber.isNotBlank()) PhoneNumber(phoneNumber) else null))
+
+  fun withColonyOrVillage(colonyOrVillage: String): PatientEntryModel {
+    val address = patientEntry?.address ?: Address("", "", "")
+    return copy(patientEntry = patientEntry?.copy(address = address.copy(colonyOrVillage = colonyOrVillage)))
+  }
 
   private fun getPersonalDetails(patientEntry: OngoingNewPatientEntry?): PersonalDetails =
       patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)

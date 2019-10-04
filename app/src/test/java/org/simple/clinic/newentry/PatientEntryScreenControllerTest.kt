@@ -71,8 +71,6 @@ class PatientEntryScreenControllerTest {
   private lateinit var fixture: MobiusTestFixture<PatientEntryModel, PatientEntryEvent, PatientEntryEffect>
   private val controller = PatientEntryScreenController(
       patientRepository,
-      facilityRepository,
-      userSession,
       dobValidator,
       numberValidator,
       patientRegisteredCount

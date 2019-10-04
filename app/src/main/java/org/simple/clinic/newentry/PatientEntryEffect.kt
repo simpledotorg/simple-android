@@ -17,3 +17,5 @@ data class ShowEmptyFullNameError(val show: Boolean) : PatientEntryEffect()
 object HidePhoneLengthErrors : PatientEntryEffect()
 
 object HideDateOfBirthErrors : PatientEntryEffect()
+
+object HideEmptyDateOfBirthAndAgeError : PatientEntryEffect()

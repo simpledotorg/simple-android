@@ -26,6 +26,7 @@ object PatientEntryEffectHandler {
         .addConsumer(ShowEmptyFullNameError::class.java, { ui.showEmptyFullNameError(it.show) }, schedulersProvider.ui())
         .addAction(HidePhoneLengthErrors::class.java, { hidePhoneLengthErrors(ui) }, schedulersProvider.ui())
         .addAction(HideDateOfBirthErrors::class.java, { hideDateOfBirthErrors(ui) }, schedulersProvider.ui())
+        .addAction(HideEmptyDateOfBirthAndAgeError::class.java, { ui.showEmptyDateOfBirthAndAgeError(false) }, schedulersProvider.ui())
         .build()
   }
 

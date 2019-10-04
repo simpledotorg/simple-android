@@ -1,6 +1,5 @@
 package org.simple.clinic.remoteconfig
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.crash.CrashReporter
@@ -33,22 +32,16 @@ class RemoteConfigSync @Inject constructor(
   }
 
   private fun logError() = { e: Throwable ->
-    if (e is FirebaseRemoteConfigFetchThrottledException) {
-      // This is expected.
-      crashReporter.report(e)
-
-    } else {
-      val resolvedError = ErrorResolver.resolve(e)
-      when (resolvedError) {
-        is Unexpected -> {
-          crashReporter.report(resolvedError.actualCause)
-          Timber.e(resolvedError.actualCause)
-        }
-        is NetworkRelated, is Unauthorized -> {
-          Timber.e(e)
-        }
-      }.exhaustive()
-    }
+    val resolvedError = ErrorResolver.resolve(e)
+    when (resolvedError) {
+      is Unexpected -> {
+        crashReporter.report(resolvedError.actualCause)
+        Timber.e(resolvedError.actualCause)
+      }
+      is NetworkRelated, is Unauthorized -> {
+        Timber.e(e)
+      }
+    }.exhaustive()
   }
 
   override fun syncConfig(): Single<SyncConfig> {

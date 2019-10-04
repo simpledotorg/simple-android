@@ -1,8 +1,5 @@
 package org.simple.clinic.remoteconfig
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -35,8 +32,7 @@ class RemoteConfigSyncTest {
   fun `errors expected during remote config sync`(): List<Throwable> {
     return listOf(
         AssertionError("You shall not pass"),
-        SocketTimeoutException(),
-        mock<FirebaseRemoteConfigFetchThrottledException>()
+        SocketTimeoutException()
     )
   }
 }

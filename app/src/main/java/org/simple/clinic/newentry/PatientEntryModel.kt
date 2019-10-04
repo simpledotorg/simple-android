@@ -56,11 +56,16 @@ data class PatientEntryModel(
     return copy(patientEntry = patientEntry?.copy(address = address.copy(colonyOrVillage = colonyOrVillage)))
   }
 
-  private fun getPersonalDetails(patientEntry: OngoingNewPatientEntry?): PersonalDetails =
-      patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
-
   fun withDistrict(district: String): PatientEntryModel {
     val address = patientEntry?.address ?: Address("", "", "")
     return copy(patientEntry = patientEntry?.copy(address = address.copy(district = district)))
   }
+
+  fun withState(state: String): PatientEntryModel {
+    val address = patientEntry?.address ?: Address("", "", "")
+    return copy(patientEntry = patientEntry?.copy(address = address.copy(state = state)))
+  }
+
+  private fun getPersonalDetails(patientEntry: OngoingNewPatientEntry?): PersonalDetails =
+      patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
 }

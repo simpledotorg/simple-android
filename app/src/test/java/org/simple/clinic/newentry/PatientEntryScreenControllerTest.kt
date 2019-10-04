@@ -205,9 +205,7 @@ class PatientEntryScreenControllerTest {
       onNext(DateOfBirthChanged(""))
     }
 
-    // TODO(rj): 2019-10-03 This function gets invoked twice in Mobius because we don't have a way to do granular updates right now.
-    // TODO                 But we can live this this because it is an idempotent operation at the moment.
-    verify(ui, times(2)).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
+    verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
 
     uiEvents.onNext(DateOfBirthChanged("1"))
     verify(ui).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)

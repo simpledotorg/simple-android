@@ -225,10 +225,6 @@ class PatientEntryScreenController @Inject constructor(
   }
 
   private fun resetValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val ageErrorResets = events
-        .ofType<AgeChanged>()
-        .map { { ui: Ui -> ui.showEmptyDateOfBirthAndAgeError(false) } }
-
     val genderErrorResets = events
         .ofType<GenderChanged>()
         .map { { ui: Ui -> ui.showMissingGenderError(false) } }
@@ -245,7 +241,6 @@ class PatientEntryScreenController @Inject constructor(
         .map { { ui: Ui -> ui.showEmptyStateError(false) } }
 
     return Observable.mergeArray(
-        ageErrorResets,
         genderErrorResets,
         colonyErrorResets,
         districtErrorResets,

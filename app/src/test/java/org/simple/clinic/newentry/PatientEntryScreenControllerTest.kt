@@ -11,7 +11,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -191,12 +190,15 @@ class PatientEntryScreenControllerTest {
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok"))
-      verify(ui).showEmptyFullNameError(false)
+      reset(ui)
+
+      onNext(PhoneNumberChanged("1234567890"))
+      verify(ui).showLengthTooShortPhoneNumberError(false)
+      verify(ui).showLengthTooLongPhoneNumberError(false)
       // verifyNoMoreInteractions(ui)
       // verifyZeroInteractions(patientRepository)
       verifyZeroInteractions(patientRegisteredCount)
 
-      onNext(PhoneNumberChanged("1234567890"))
       onNext(DateOfBirthChanged("12/04/1993"))
       onNext(AgeChanged(""))
       onNext(GenderChanged(Just(Transgender)))

@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
+import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
 import org.simple.clinic.util.Optional
 
 @Parcelize
@@ -32,13 +33,11 @@ data class PatientEntryModel(
 
   fun withAge(age: String): PatientEntryModel {
     val personalDetails = getPersonalDetails(patientEntry)
-
     return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(age = age)))
   }
 
   fun withDateOfBirth(dateOfBirth: String): PatientEntryModel {
     val personalDetails = getPersonalDetails(patientEntry)
-
     return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(dateOfBirth = dateOfBirth)))
   }
 
@@ -47,6 +46,9 @@ data class PatientEntryModel(
 
     return copy(patientEntry = patientEntry?.copy(personalDetails = personalDetails.copy(fullName = fullName)))
   }
+
+  fun withPhoneNumber(phoneNumber: String): PatientEntryModel =
+      copy(patientEntry = patientEntry?.copy(phoneNumber = if (phoneNumber.isNotBlank()) PhoneNumber(phoneNumber) else null))
 
   private fun getPersonalDetails(patientEntry: OngoingNewPatientEntry?): PersonalDetails =
       patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)

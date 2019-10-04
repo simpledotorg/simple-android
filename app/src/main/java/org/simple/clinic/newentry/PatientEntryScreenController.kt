@@ -242,12 +242,6 @@ class PatientEntryScreenController @Inject constructor(
         .ofType<GenderChanged>()
         .map { { ui: Ui -> ui.showMissingGenderError(false) } }
 
-    val phoneLengthTooShortResets = events.ofType<PhoneNumberChanged>()
-        .map { { ui: Ui -> ui.showLengthTooShortPhoneNumberError(false) } }
-
-    val phoneLengthTooLongResets = events.ofType<PhoneNumberChanged>()
-        .map { { ui: Ui -> ui.showLengthTooLongPhoneNumberError(false) } }
-
     val colonyErrorResets = events.ofType<ColonyOrVillageChanged>()
         .map { { ui: Ui -> ui.showEmptyColonyOrVillageError(false) } }
 
@@ -263,8 +257,6 @@ class PatientEntryScreenController @Inject constructor(
         dateOfBirthErrorResets,
         ageErrorResets,
         genderErrorResets,
-        phoneLengthTooShortResets,
-        phoneLengthTooLongResets,
         colonyErrorResets,
         districtErrorResets,
         stateErrorResets)

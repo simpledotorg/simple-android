@@ -13,3 +13,5 @@ data class PrefillFields(
 object ScrollFormToBottom : PatientEntryEffect()
 
 data class ShowEmptyFullNameError(val show: Boolean) : PatientEntryEffect()
+
+object HidePhoneLengthErrors : PatientEntryEffect()

@@ -17,17 +17,22 @@ class CrashBreadcrumbsTimberTree(
   override fun log(priority: Int, tag: String?, message: String, error: Throwable?) {
     val breadcrumbPriority = mapLogPriorityToBreadcrumbPriority(priority)
 
-    val messageWithError = when (error) {
-      null -> message
-      else -> "$message (error: ${error.message})"
-    }
-
     if (breadcrumbPriority >= priorityToReport) {
+      val breadcrumbMessage = mergeMessageWithError(message, error)
+
       val breadcrumb = Breadcrumb(
           priority = breadcrumbPriority,
           tag = tag,
-          message = messageWithError)
+          message = breadcrumbMessage
+      )
       crashReporter.dropBreadcrumb(breadcrumb)
+    }
+  }
+
+  private fun mergeMessageWithError(message: String, error: Throwable?): String {
+    return when (error) {
+      null -> message
+      else -> "$message (error: ${error.message})"
     }
   }
 

@@ -31,13 +31,9 @@
 
     <Button
       android:id="@+id/helpButton"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      style="@style/Clinic.V2.ToolbarButton"
       android:layout_gravity="end"
-      android:background="@drawable/background_rounded_clearbutton"
-      android:foreground="?selectableItemBackground"
       android:text="@string/home_help"
-      android:textAllCaps="true"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
       tools:ignore="UnusedAttribute" />
 

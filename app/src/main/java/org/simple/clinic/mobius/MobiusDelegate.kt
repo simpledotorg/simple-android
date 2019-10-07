@@ -85,7 +85,9 @@ class MobiusDelegate<M : Parcelable, E, F>(
     if (::eventsDisposable.isInitialized && eventsDisposable.isDisposed.not()) {
       eventsDisposable.dispose()
     }
-    controller.stop()
+
+    startControllerIfNotAlreadyRunning()
+    stopAndDisconnectController()
   }
 
   fun onSaveInstanceState(androidViewState: Parcelable?): Parcelable {
@@ -116,4 +118,15 @@ class MobiusDelegate<M : Parcelable, E, F>(
 
   private fun identity(): Function<M, M> =
       Function { it }
+
+  private fun startControllerIfNotAlreadyRunning() {
+    if (controller.isRunning.not()) {
+      controller.start()
+    }
+  }
+
+  private fun stopAndDisconnectController() {
+    controller.stop()
+    controller.disconnect()
+  }
 }

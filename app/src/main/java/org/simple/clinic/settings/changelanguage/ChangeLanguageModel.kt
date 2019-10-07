@@ -9,4 +9,12 @@ data class ChangeLanguageModel(
   companion object {
     val FETCHING_LANGUAGES = ChangeLanguageModel(currentLanguage = null, supportedLanguages = emptyList())
   }
+
+  fun withCurrentLanguage(currentLanguage: Language): ChangeLanguageModel {
+    return copy(currentLanguage = currentLanguage)
+  }
+
+  fun withSupportedLanguages(supportedLanguages: List<Language>): ChangeLanguageModel {
+    return copy(supportedLanguages = supportedLanguages)
+  }
 }

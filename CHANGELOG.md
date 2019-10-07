@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## On Demo
+## 2019-10-07-5787
+### Feature
+- Limit editing of BP measurements to one hour after being recorded. This is remotely configurable.
+
+### Fixes
+- Stop opening BP entry sheet immediately after registering a new patient.
+
 ### Internal
 - Migrate AllPatientsInFacilityView to Mobius
 

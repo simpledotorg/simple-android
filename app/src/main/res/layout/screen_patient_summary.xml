@@ -29,19 +29,10 @@
 
     <Button
       android:id="@+id/patientsummary_edit"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      style="@style/Clinic.V2.ToolbarButton"
       android:layout_alignParentEnd="true"
       android:layout_marginTop="@dimen/spacing_4"
       android:layout_marginEnd="@dimen/spacing_8"
-      android:background="@drawable/background_rounded_clearbutton"
-      android:foreground="?selectableItemBackground"
-      android:minWidth="0dp"
-      android:minHeight="0dp"
-      android:paddingStart="@dimen/spacing_16"
-      android:paddingTop="@dimen/spacing_12"
-      android:paddingEnd="@dimen/spacing_16"
-      android:paddingBottom="@dimen/spacing_12"
       android:text="@string/patientsummary_edit"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
       tools:ignore="RelativeOverlap" />

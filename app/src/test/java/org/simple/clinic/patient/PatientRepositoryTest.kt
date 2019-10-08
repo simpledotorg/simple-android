@@ -27,6 +27,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchResult.PatientNameAndId
+import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
@@ -138,7 +139,9 @@ class PatientRepositoryTest {
         address = serverAddress,
         phoneNumbers = null,
         businessIds = emptyList(),
-        recordedAt = mock())
+        recordedAt = mock(),
+        reminderConsent = Granted
+    )
 
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
 
@@ -193,7 +196,9 @@ class PatientRepositoryTest {
             updatedAt = mock(),
             deletedAt = mock())),
         businessIds = emptyList(),
-        recordedAt = mock())
+        recordedAt = mock(),
+        reminderConsent = Granted
+    )
 
     repository.mergeWithLocalData(listOf(serverPatientWithPhone)).blockingAwait()
 

@@ -14,6 +14,7 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.PatientPayload
@@ -48,6 +49,7 @@ class NetworkModule {
         .add(UserStatus.MoshiTypeConverter())
         .add(Appointment.Status.MoshiTypeConverter())
         .add(PatientStatus.MoshiTypeAdapter())
+        .add(ReminderConsent.MoshiTypeAdapter())
         .add(Answer.MoshiTypeAdapter())
         .add(Gender.MoshiTypeAdapter())
         .add(PatientPhoneNumberType.MoshiTypeAdapter())

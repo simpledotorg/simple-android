@@ -19,6 +19,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.RecentPatient
+import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
@@ -51,7 +52,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       BusinessId::class,
       MissingPhoneReminder::class
     ],
-    version = 47,
+    version = 48,
     exportSchema = true
 )
 @TypeConverters(
@@ -70,7 +71,8 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
     Identifier.IdentifierType.RoomTypeConverter::class,
     BusinessId.MetaDataVersion.RoomTypeConverter::class,
     Appointment.AppointmentType.RoomTypeConverter::class,
-    PatientStatus.RoomTypeConverter::class
+    PatientStatus.RoomTypeConverter::class,
+    ReminderConsent.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

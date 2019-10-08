@@ -3329,6 +3329,63 @@ class DatabaseMigrationAndroidTest {
     val dbV47 = helper.migrateTo(47)
     dbV47.assertTableDoesNotExist("HomescreenIllustration")
   }
+
+  @Test
+  fun verify_migration_to_48_adds_granted_reminder_consent() {
+    val instant = Instant.parse("2018-01-01T00:00:00.000Z")
+
+    val patientAddressUuid = "05f9c798-1701-4379-b14a-b1b18d937a33"
+    val patientUuid = "0b18af95-e73f-43ea-9838-34abe9d7858e"
+
+    val dbV47 = helper.createDatabase(47)
+    dbV47.assertColumns(
+        "Patient",
+        setOf("uuid", "addressUuid", "fullName", "gender", "dateOfBirth", "status", "createdAt", "updatedAt", "deletedAt", "recordedAt",
+            "syncStatus", "age_value", "age_updatedAt")
+    )
+
+    dbV47.insert("PatientAddress", mapOf(
+        "uuid" to patientAddressUuid,
+        "colonyOrVillage" to "Colony",
+        "district" to "District",
+        "state" to "State",
+        "country" to "Country",
+        "createdAt" to instant.toString(),
+        "updatedAt" to instant.toString(),
+        "deletedAt" to null
+    ))
+    dbV47.insert(
+        "Patient",
+        mapOf(
+            "uuid" to patientUuid,
+            "addressUuid" to patientAddressUuid,
+            "fullName" to "Anish Acharya",
+            "gender" to "male",
+            "dateOfBirth" to "1990-01-01",
+            "age_value" to 40,
+            "age_updatedAt" to instant.toString(),
+            "status" to "active",
+            "createdAt" to instant.plusSeconds(1).toString(),
+            "updatedAt" to instant.plusSeconds(2).toString(),
+            "recordedAt" to instant.minusSeconds(1).toString(),
+            "syncStatus" to "PENDING"
+        )
+    )
+
+    val dbV48 = helper.migrateTo(48)
+    dbV48.assertColumns(
+        "Patient",
+        setOf("uuid", "addressUuid", "fullName", "gender", "dateOfBirth", "status", "createdAt", "updatedAt", "deletedAt", "recordedAt",
+            "syncStatus", "age_value", "age_updatedAt", "reminderConsent")
+    )
+    dbV48.query("""SELECT * FROM "Patient"""").use {
+      assertThat(it.count).isEqualTo(1)
+
+      it.moveToNext()
+
+      assertThat(it.string("reminderConsent")).isEqualTo("granted")
+    }
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

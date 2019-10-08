@@ -18,6 +18,7 @@ import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.SimpleVideoModule
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
 import org.simple.clinic.registration.RegistrationModule
+import org.simple.clinic.remoteconfig.RemoteConfigModule
 import org.simple.clinic.screen.KeyChangeAnimatorModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
@@ -56,7 +57,8 @@ import java.util.Locale
   DataSyncOnApprovalModule::class,
   HomescreenIllustrationModule::class,
   SimpleVideoModule::class,
-  MobiusMigrationModule::class
+  MobiusMigrationModule::class,
+  RemoteConfigModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

@@ -51,6 +51,8 @@ class PatientEntryUpdate(
           Next.dispatch(setOf(ShowValidationErrors(validationErrors)))
         }
       }
+
+      PatientEntrySaved -> Next.dispatch(setOf(OpenMedicalHistoryEntryScreen))
     }
   }
 }

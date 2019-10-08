@@ -17,11 +17,11 @@ class RemoteConfigSyncTest {
   @Parameters(method = "errors expected during remote config sync")
   fun `all errors should be swallowed`(error: Throwable) {
     val crashReporter = mock<CrashReporter>()
-    val configReader = mock<ConfigReader>()
+    val remoteConfigService = mock<RemoteConfigService>()
 
-    whenever(configReader.update()).thenReturn(Completable.error(error))
+    whenever(remoteConfigService.update()).thenReturn(Completable.error(error))
 
-    val configSync = RemoteConfigSync(crashReporter, configReader)
+    val configSync = RemoteConfigSync(crashReporter, remoteConfigService)
     configSync.sync()
         .test()
         .await()

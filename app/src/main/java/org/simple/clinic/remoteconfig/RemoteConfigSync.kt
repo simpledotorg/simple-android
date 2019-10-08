@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class RemoteConfigSync @Inject constructor(
     private val crashReporter: CrashReporter,
-    private val configReader: ConfigReader
+    private val remoteConfigService: RemoteConfigService
 ) : ModelSync {
 
   override fun sync(): Completable = pull()
@@ -26,7 +26,7 @@ class RemoteConfigSync @Inject constructor(
   override fun push(): Completable = Completable.complete()
 
   override fun pull(): Completable {
-    return configReader.update()
+    return remoteConfigService.update()
         .doOnError(::logError)
         .onErrorComplete()
   }

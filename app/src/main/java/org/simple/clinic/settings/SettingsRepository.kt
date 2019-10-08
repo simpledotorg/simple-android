@@ -1,5 +1,6 @@
 package org.simple.clinic.settings
 
+import io.reactivex.Completable
 import io.reactivex.Single
 
 class SettingsRepository {
@@ -9,6 +10,10 @@ class SettingsRepository {
   }
 
   fun getSupportedLanguages(): Single<List<Language>> {
+    TODO()
+  }
+
+  fun setCurrentSelectedLanguage(newLanguage: Language): Completable {
     TODO()
   }
 }

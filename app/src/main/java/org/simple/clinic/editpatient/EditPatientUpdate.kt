@@ -1,7 +1,6 @@
 package org.simple.clinic.editpatient
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.dispatch
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -14,6 +13,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
+import org.simple.clinic.mobius.justEffect
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
@@ -114,7 +114,4 @@ class EditPatientUpdate(
       justEffect(ShowValidationErrorsEffect(validationErrors))
     }
   }
-
-  private fun justEffect(effect: EditPatientEffect): Next<EditPatientModel, EditPatientEffect> =
-      dispatch<EditPatientModel, EditPatientEffect>(setOf(effect))
 }

@@ -16,7 +16,7 @@ import org.simple.clinic.di.DebugAppComponent
 import org.simple.clinic.di.DebugBruteForceProtectionModule
 import org.simple.clinic.di.DebugCrashReporterModule
 import org.simple.clinic.di.DebugLoginModule
-import org.simple.clinic.di.DebugNetworkModule
+import org.simple.clinic.di.DebugRemoteConfigModule
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
 import timber.log.Timber
@@ -77,7 +77,7 @@ class DebugClinicApp : ClinicApp() {
         .loginModule(DebugLoginModule())
         .crashReporterModule(DebugCrashReporterModule())
         .bruteForceProtectionModule(DebugBruteForceProtectionModule())
-        .networkModule(DebugNetworkModule())
+        .remoteConfigModule(DebugRemoteConfigModule())
         .build()
   }
 

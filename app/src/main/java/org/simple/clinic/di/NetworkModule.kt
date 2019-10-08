@@ -1,6 +1,5 @@
 package org.simple.clinic.di
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -19,7 +18,6 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.remoteconfig.FirebaseRemoteConfigCacheExpiration
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.InstantMoshiAdapter
@@ -33,7 +31,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
 @Module
-open class NetworkModule {
+class NetworkModule {
 
   @Provides
   @AppScope
@@ -112,16 +110,5 @@ open class NetworkModule {
     return commonRetrofitBuilder
         .baseUrl("$baseUrl$currentApiVersion/")
         .build()
-  }
-
-  @Provides
-  @AppScope
-  open fun remoteConfig(): FirebaseRemoteConfig {
-    return FirebaseRemoteConfig.getInstance()
-  }
-
-  @Provides
-  open fun remoteConfigCacheExpiration(): FirebaseRemoteConfigCacheExpiration {
-    return FirebaseRemoteConfigCacheExpiration.PRODUCTION
   }
 }

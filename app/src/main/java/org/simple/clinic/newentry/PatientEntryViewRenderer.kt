@@ -4,6 +4,8 @@ import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.DistinctValueCallback
+import org.simple.clinic.util.Optional
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
@@ -11,16 +13,17 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.D
 
 class PatientEntryViewRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntryModel> {
   private val distinctDateOfBirthAndAgeVisibilityCallback = DistinctValueCallback<DateOfBirthAndAgeVisibility>()
+  private val distinctIdentifierCallback = DistinctValueCallback<Optional<Identifier>>()
 
   override fun render(model: PatientEntryModel) {
-    val patientEntry = model.patientEntry ?: return
-    showOrHideIdentifier(patientEntry.identifier)
+    val patientEntry = model.patientEntry
+    distinctIdentifierCallback.pass(patientEntry.identifier.toOptional()) { renderIdentifier(patientEntry.identifier) }
 
     val personalDetails = patientEntry.personalDetails ?: return
     changeDateOfBirthAndAgeVisibility(personalDetails)
   }
 
-  private fun showOrHideIdentifier(identifier: Identifier?) {
+  private fun renderIdentifier(identifier: Identifier?) {
     if (identifier != null) {
       ui.showIdentifierSection()
     } else {

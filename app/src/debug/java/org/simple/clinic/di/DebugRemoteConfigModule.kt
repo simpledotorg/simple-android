@@ -3,8 +3,9 @@ package org.simple.clinic.di
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import org.simple.clinic.remoteconfig.FirebaseRemoteConfigCacheExpiration
+import org.simple.clinic.remoteconfig.RemoteConfigModule
 
-class DebugNetworkModule : NetworkModule() {
+class DebugRemoteConfigModule : RemoteConfigModule() {
   override fun remoteConfig(): FirebaseRemoteConfig {
     return super.remoteConfig().apply {
       // Enable developer mode so that calls are not throttled during dev.

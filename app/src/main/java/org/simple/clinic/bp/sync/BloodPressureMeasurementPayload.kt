@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.util.createUuid5
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -54,6 +55,7 @@ data class BloodPressureMeasurementPayload(
         deletedAt = deletedAt,
 
         // recordedAt should be changed here when BloodPressureMeasurementPayload starts receiving this field from server
-        recordedAt = recordedAt ?: createdAt)
+        recordedAt = recordedAt ?: createdAt,
+        encounterUuid = createUuid5(facilityUuid.toString() + patientUuid + recordedAt))
   }
 }

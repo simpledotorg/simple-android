@@ -21,8 +21,11 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.createUuid5
+import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -3343,6 +3346,61 @@ class DatabaseMigrationAndroidTest {
         "deletedAt"
     )
     )
+  }
+
+  @Test
+  fun migration_from_47_to_48_create_and_add_encounterUuid_to_BP() {
+    //given
+    val tableName = "BloodPressureMeasurement"
+
+    val facilityUuid = "0086ba86-314c-49d9-8822-2563e53bed92"
+    val patientUuid = "c4233170-feb2-3d34-8115-98fef5a68837"
+    val recordedAt = "2018-07-03T00:00:00Z"
+
+    val db_47 = helper.createDatabase(version = 47)
+    db_47.insert(tableName, mapOf(
+        "uuid" to "9427decb-d2f2-4f1d-9abb-59922225ed5f",
+        "systolic" to "120",
+        "diastolic" to "90",
+        "syncStatus" to "DONE",
+        "userUuid" to "d689285f-5c92-4735-80ef-c0e360ad3f1d",
+        "facilityUuid" to facilityUuid,
+        "patientUuid" to patientUuid,
+        "createdAt" to "createdAt",
+        "updatedAt" to "updatedAt",
+        "deletedAt" to "null",
+        "recordedAt" to recordedAt
+    ))
+
+    //when
+    val db_48 = helper.migrateTo(version = 48)
+
+    //then
+    val encounteredOn = Instant.parse(recordedAt).toLocalDateAtZone(ZoneOffset.UTC)
+    val expectedEncounterId = createUuid5(facilityUuid + patientUuid + encounteredOn).toString()
+
+    db_48.query("""SELECT * FROM '$tableName' """).use {
+      assertThat(it.count).isEqualTo(1)
+      assertThat(it.columnCount).isEqualTo(12)
+      it.moveToFirst()
+
+      assertThat(it.string("encounterUuid")).isEqualTo(expectedEncounterId)
+    }
+
+    val expectedEncounterValues = mapOf<String, String>(
+        "uuid" to expectedEncounterId,
+        "patientUuid" to patientUuid,
+        "encounteredOn" to encounteredOn.toString(),
+        "createdAt" to "createdAt",
+        "updatedAt" to "updatedAt",
+        "deletedAt" to "null"
+    )
+
+    db_48.query("""SELECT * FROM "Encounter" """).use {
+      assertThat(it.count).isEqualTo(1)
+      it.moveToFirst()
+      it.assertValues(expectedEncounterValues)
+    }
   }
 }
 

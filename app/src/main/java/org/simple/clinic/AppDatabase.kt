@@ -56,7 +56,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       HomescreenIllustration::class,
       Encounter::class
     ],
-    version = 47,
+    version = 48,
     exportSchema = true
 )
 @TypeConverters(

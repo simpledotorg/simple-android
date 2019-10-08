@@ -1,14 +1,14 @@
 package org.simple.clinic.onboarding
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.dispatch
+import org.simple.clinic.mobius.justEffect
 
 fun onboardingUpdate(
     @Suppress("UNUSED_PARAMETER") model: OnboardingModel,
     event: OnboardingEvent
 ): Next<OnboardingModel, OnboardingEffect> {
   return when (event) {
-    GetStartedClicked -> dispatch(setOf<OnboardingEffect>(CompleteOnboardingEffect))
-    OnboardingCompleted -> dispatch(setOf<OnboardingEffect>(MoveToRegistrationEffect))
+    GetStartedClicked -> justEffect(CompleteOnboardingEffect)
+    OnboardingCompleted -> justEffect(MoveToRegistrationEffect)
   }
 }

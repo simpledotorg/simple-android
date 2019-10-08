@@ -182,7 +182,6 @@ class PatientEntryScreenControllerTest {
     screenCreatedForMobius()
 
     with(uiEvents) {
-      onNext(OngoingPatientEntryChanged(ongoingEntry))
       onNext(SaveClicked)
     }
 

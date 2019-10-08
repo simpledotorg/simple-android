@@ -333,7 +333,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginTop="@dimen/spacing_24"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Center"
+        android:textColor="@color/grey0"
         tools:text="@string/patiententry_consent_first_para" />
     </LinearLayout>
   </ScrollView>

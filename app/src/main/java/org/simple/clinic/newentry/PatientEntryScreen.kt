@@ -127,7 +127,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private val delegate by unsafeLazy {
-    val effectHandler = PatientEntryEffectHandler.createEffectHandler(
+    val effectHandler = PatientEntryEffectHandler.create(
         userSession,
         facilityRepository,
         patientRepository,

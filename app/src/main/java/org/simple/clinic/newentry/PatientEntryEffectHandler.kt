@@ -2,12 +2,13 @@ package org.simple.clinic.newentry
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
-import io.reactivex.Completable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -44,7 +45,7 @@ object PatientEntryEffectHandler {
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(userSession, facilityRepository, patientRepository, schedulersProvider.io()))
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
-        .addAction(ScrollFormToBottom::class.java, { ui.scrollFormToBottom() }, schedulersProvider.ui())
+        .addAction(ScrollFormToBottom::class.java, ui::scrollFormToBottom, schedulersProvider.ui())
         .addConsumer(ShowEmptyFullNameError::class.java, { ui.showEmptyFullNameError(it.show) }, schedulersProvider.ui())
         .addAction(HidePhoneLengthErrors::class.java, { hidePhoneLengthErrors(ui) }, schedulersProvider.ui())
         .addAction(HideDateOfBirthErrors::class.java, { hideDateOfBirthErrors(ui) }, schedulersProvider.ui())
@@ -57,9 +58,10 @@ object PatientEntryEffectHandler {
           distinctShowDatePatternInLabelCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
         }, schedulersProvider.ui())
         .addTransformer(SavePatient::class.java,
-            savePatientTransformer(patientRepository, patientRegisteredCount, ui, schedulersProvider)
+            savePatientTransformer(patientRepository, patientRegisteredCount, schedulersProvider.io())
         )
         .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(ui, it.errors) }, schedulersProvider.ui())
+        .addAction(OpenMedicalHistoryEntryScreen::class.java, ui::openMedicalHistoryEntryScreen, schedulersProvider.ui())
         .build()
   }
 
@@ -104,24 +106,25 @@ object PatientEntryEffectHandler {
   private fun savePatientTransformer(
       patientRepository: PatientRepository,
       patientRegisteredCount: Preference<Int>,
-      ui: PatientEntryUi,
-      schedulersProvider: SchedulersProvider
+      scheduler: Scheduler
   ): ObservableTransformer<SavePatient, PatientEntryEvent> {
     return ObservableTransformer { savePatientEffects ->
       savePatientEffects
           .map { it.entry }
-          .subscribeOn(schedulersProvider.io())
-          .flatMapCompletable {
-            patientRepository
-                .saveOngoingEntry(it)
-                .observeOn(schedulersProvider.ui())
-                .andThen(Completable.fromAction {
-                  patientRegisteredCount.set(patientRegisteredCount.get().plus(1))
-                  ui.openMedicalHistoryEntryScreen() // TODO(rj): 2019-10-04 Split this logic and dispatch a patient saved event + threading
-                })
-          }
-          .toObservable()
+          .subscribeOn(scheduler)
+          .flatMapSingle { savePatientEntry(it, patientRepository) }
+          .doOnNext { patientRegisteredCount.set(patientRegisteredCount.get().plus(1)) }
+          .map { PatientEntrySaved }
     }
+  }
+
+  private fun savePatientEntry(
+      entry: OngoingNewPatientEntry,
+      patientRepository: PatientRepository
+  ): Single<Unit> {
+    return patientRepository
+        .saveOngoingEntry(entry)
+        .andThen(Single.just(Unit))
   }
 
   private fun showValidationErrors(

@@ -2,6 +2,7 @@ package org.simple.clinic.settings.changelanguage
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.PublishSubject
@@ -63,6 +64,22 @@ class ChangeLanguageEffectHandlerTest {
     // then
     testObserver
         .assertValue(SupportedLanguagesLoadedEvent(supportedLanguages))
+        .assertNotComplete()
+        .assertNotTerminated()
+  }
+
+  @Test
+  fun `when the update selected language effect is received, the selected language must be changed`() {
+    // given
+    val changeToLanguage = ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
+    whenever(settingsRepository.setCurrentSelectedLanguage(changeToLanguage)).thenReturn(Completable.complete())
+
+    // when
+    effectsSubject.onNext(UpdateSelectedLanguageEffect(changeToLanguage))
+
+    // then
+    testObserver
+        .assertValue(SelectedLanguageChangedEvent(changeToLanguage))
         .assertNotComplete()
         .assertNotTerminated()
   }

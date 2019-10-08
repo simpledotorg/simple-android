@@ -31,6 +31,17 @@ object ChangeLanguageEffectHandler {
               }
               .map(::SupportedLanguagesLoadedEvent)
         }
+        .addTransformer(UpdateSelectedLanguageEffect::class.java) { effectStream ->
+          effectStream
+              .map { it.newLanguage }
+              .flatMapSingle { newLanguage ->
+                settingsRepository
+                    .setCurrentSelectedLanguage(newLanguage)
+                    .subscribeOn(schedulersProvider.io())
+                    .toSingleDefault(newLanguage)
+              }
+              .map(::SelectedLanguageChangedEvent)
+        }
         .build()
   }
 }

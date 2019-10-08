@@ -29,7 +29,7 @@ class PatientEntryUpdate(
       is DistrictChanged -> next(model.withDistrict(event.district), HideEmptyDistrictError)
       is StateChanged -> next(model.withState(event.state), HideEmptyStateError)
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
-      is SaveClicked -> onSaveClicked(model.patientEntry!!)
+      is SaveClicked -> onSaveClicked(model.patientEntry)
       PatientEntrySaved -> justEffect(OpenMedicalHistoryEntryScreen)
     }
   }
@@ -50,7 +50,7 @@ class PatientEntryUpdate(
   }
 
   private fun onDateOfBirthFocusChanged(model: PatientEntryModel, hasFocus: Boolean): PatientEntryNext {
-    val hasDateOfBirth = model.patientEntry?.personalDetails?.dateOfBirth?.isNotBlank() == true
+    val hasDateOfBirth = model.patientEntry.personalDetails?.dateOfBirth?.isNotBlank() == true
     return justEffect(ShowDatePatternInDateOfBirthLabel(hasFocus || hasDateOfBirth))
   }
 

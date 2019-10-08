@@ -128,14 +128,33 @@ data class OngoingNewPatientEntry(
    * to forget that [Int.toString] will return literal "null" for null Ints.
    */
   @Parcelize
-  data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val age: String?, val gender: Gender?) : Parcelable
-
-  @Parcelize
-  data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = Mobile, val active: Boolean = true) : Parcelable
-
-  @Parcelize
-  data class Address(val colonyOrVillage: String, val district: String, val state: String): Parcelable {
+  data class PersonalDetails(
+      val fullName: String,
+      val dateOfBirth: String?,
+      val age: String?,
+      val gender: Gender?
+  ) : Parcelable {
     companion object {
+      val BLANK = PersonalDetails("", null, null, null)
+    }
+  }
+
+  @Parcelize
+  data class PhoneNumber(
+      val number: String,
+      val type: PatientPhoneNumberType = Mobile,
+      val active: Boolean = true
+  ) : Parcelable
+
+  @Parcelize
+  data class Address(
+      val colonyOrVillage: String,
+      val district: String,
+      val state: String
+  ): Parcelable {
+    companion object {
+      val BLANK = Address("", "", "")
+
       fun withDistrictAndState(district: String, state: String): Address =
           Address("", district, state)
     }

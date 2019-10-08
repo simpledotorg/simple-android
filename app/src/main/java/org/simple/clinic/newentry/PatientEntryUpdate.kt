@@ -1,58 +1,68 @@
 package org.simple.clinic.newentry
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.justEffect
+import org.simple.clinic.mobius.next
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+
+typealias PatientEntryNext = Next<PatientEntryModel, PatientEntryEffect>
 
 class PatientEntryUpdate(
     private val phoneNumberValidator: PhoneNumberValidator,
     private val dobValidator: UserInputDateValidator
 ) : Update<PatientEntryModel, PatientEntryEvent, PatientEntryEffect> {
-  override fun update(model: PatientEntryModel, event: PatientEntryEvent): Next<PatientEntryModel, PatientEntryEffect> {
+  override fun update(model: PatientEntryModel, event: PatientEntryEvent): PatientEntryNext {
     return when (event) {
-      is OngoingEntryFetched -> Next.next(model.patientEntryFetched(event.patientEntry), setOf(PrefillFields(event.patientEntry)))
-
-      is GenderChanged -> {
-        val updatedModel = model.withGender(event.gender)
-
-        return if (event.gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
-          Next.next(updatedModel.copy(isSelectingGenderForTheFirstTime = false), setOf(HideMissingGenderError, ScrollFormToBottom))
-        } else {
-          Next.next(updatedModel)
-        }
-      }
-
-      is AgeChanged -> Next.next(model.withAge(event.age), setOf(HideEmptyDateOfBirthAndAgeError))
-
-      is DateOfBirthChanged -> Next.next(model.withDateOfBirth(event.dateOfBirth), setOf(HideDateOfBirthErrors))
-
-      is FullNameChanged -> Next.next(model.withFullName(event.fullName), setOf(ShowEmptyFullNameError(false)))
-
-      is PhoneNumberChanged -> Next.next(model.withPhoneNumber(event.phoneNumber), setOf(HidePhoneLengthErrors))
-
-      is ColonyOrVillageChanged -> Next.next(model.withColonyOrVillage(event.colonyOrVillage), setOf(HideEmptyColonyOrVillageError))
-
-      is DistrictChanged -> Next.next(model.withDistrict(event.district), setOf(HideEmptyDistrictError))
-
-      is StateChanged -> Next.next(model.withState(event.state), setOf(HideEmptyStateError))
-
-      is DateOfBirthFocusChanged -> {
-        val hasDateOfBirth = model.patientEntry?.personalDetails?.dateOfBirth?.isNotBlank() == true
-        // TODO(rj): 2019-10-04 Extract the justEffect function and use it instead.
-        Next.dispatch<PatientEntryModel, PatientEntryEffect>(setOf(ShowDatePatternInDateOfBirthLabel(event.hasFocus || hasDateOfBirth)))
-      }
-
-      is SaveClicked -> {
-        val validationErrors = model.patientEntry!!.validationErrors(dobValidator, phoneNumberValidator)
-        return if (validationErrors.isEmpty()) {
-          Next.dispatch(setOf(SavePatient(model.patientEntry)))
-        } else {
-          Next.dispatch(setOf(ShowValidationErrors(validationErrors)))
-        }
-      }
-
-      PatientEntrySaved -> Next.dispatch(setOf(OpenMedicalHistoryEntryScreen))
+      is OngoingEntryFetched -> onOngoingEntryFetched(model, event.patientEntry)
+      is GenderChanged -> onGenderChanged(model, event.gender)
+      is AgeChanged -> next(model.withAge(event.age), HideEmptyDateOfBirthAndAgeError)
+      is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth), HideDateOfBirthErrors)
+      is FullNameChanged -> next(model.withFullName(event.fullName), ShowEmptyFullNameError(false))
+      is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), HidePhoneLengthErrors)
+      is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), HideEmptyColonyOrVillageError)
+      is DistrictChanged -> next(model.withDistrict(event.district), HideEmptyDistrictError)
+      is StateChanged -> next(model.withState(event.state), HideEmptyStateError)
+      is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
+      is SaveClicked -> onSaveClicked(model.patientEntry!!)
+      PatientEntrySaved -> justEffect(OpenMedicalHistoryEntryScreen)
     }
+  }
+
+  private fun onOngoingEntryFetched(
+      model: PatientEntryModel,
+      patientEntry: OngoingNewPatientEntry
+  ): PatientEntryNext =
+      next(model.patientEntryFetched(patientEntry), PrefillFields(patientEntry))
+
+  private fun onGenderChanged(model: PatientEntryModel, gender: Optional<Gender>): PatientEntryNext {
+    val updatedModel = model.withGender(gender)
+    return if (gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
+      next(updatedModel.selectedGender(), setOf(HideMissingGenderError, ScrollFormToBottom))
+    } else {
+      next(updatedModel)
+    }
+  }
+
+  private fun onDateOfBirthFocusChanged(model: PatientEntryModel, hasFocus: Boolean): PatientEntryNext {
+    val hasDateOfBirth = model.patientEntry?.personalDetails?.dateOfBirth?.isNotBlank() == true
+    return justEffect(ShowDatePatternInDateOfBirthLabel(hasFocus || hasDateOfBirth))
+  }
+
+  private fun onSaveClicked(
+      patientEntry: OngoingNewPatientEntry
+  ): PatientEntryNext {
+    val validationErrors = patientEntry.validationErrors(dobValidator, phoneNumberValidator)
+    val effect = if (validationErrors.isEmpty()) {
+      SavePatient(patientEntry)
+    } else {
+      ShowValidationErrors(validationErrors)
+    }
+    return justEffect(effect)
   }
 }

@@ -81,7 +81,7 @@ class PatientEntryScreenControllerTest {
 
     val sharedEvents = uiEvents.hide().share()
 
-    val effectHandler = PatientEntryEffectHandler.createEffectHandler(
+    val effectHandler = PatientEntryEffectHandler.create(
         userSession,
         facilityRepository,
         patientRepository,

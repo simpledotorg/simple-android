@@ -30,7 +30,7 @@ import org.simple.clinic.util.DistinctValueCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 object PatientEntryEffectHandler {
-  fun createEffectHandler(
+  fun create(
       userSession: UserSession,
       facilityRepository: FacilityRepository,
       patientRepository: PatientRepository,

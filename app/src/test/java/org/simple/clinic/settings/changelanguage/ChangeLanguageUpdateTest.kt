@@ -7,14 +7,14 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.settings.Language
+import org.simple.clinic.settings.ProvidedLanguage
 
 class ChangeLanguageUpdateTest {
 
   private val defaultModel = ChangeLanguageModel.FETCHING_LANGUAGES
 
-  private val englishIndia = Language(displayName = "English", languageCode = "en_IN")
-  private val hindiIndia = Language(displayName = "हिंदी", languageCode = "hi_IN")
+  private val englishIndia = ProvidedLanguage(displayName = "English", languageCode = "en_IN")
+  private val hindiIndia = ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
 
   private val spec = UpdateSpec<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect>(ChangeLanguageLogic::update)
 

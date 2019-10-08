@@ -6,7 +6,7 @@ import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.settings.Language
+import org.simple.clinic.settings.ProvidedLanguage
 
 class ChangeLanguageInitTest {
 
@@ -25,7 +25,7 @@ class ChangeLanguageInitTest {
 
   @Test
   fun `when the screen is restored without supported languages, the list of supported languages must be loaded`() {
-    val language = Language(displayName = "English", languageCode = "en_IN")
+    val language = ProvidedLanguage(displayName = "English", languageCode = "en_IN")
     val model = defaultModel.withCurrentLanguage(language)
 
     spec
@@ -39,8 +39,8 @@ class ChangeLanguageInitTest {
   @Test
   fun `when the screen is restored without the current selected language, the current selected language must be fetched`() {
     val supportedLanguages = listOf(
-        Language(displayName = "English", languageCode = "en_IN"),
-        Language(displayName = "हिंदी", languageCode = "hi_IN")
+        ProvidedLanguage(displayName = "English", languageCode = "en_IN"),
+        ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
     )
     val model = defaultModel.withSupportedLanguages(supportedLanguages)
 
@@ -54,10 +54,10 @@ class ChangeLanguageInitTest {
 
   @Test
   fun `when the screen is restored with the current select language and the supported languages, do nothing`() {
-    val language = Language(displayName = "English", languageCode = "en_IN")
+    val language = ProvidedLanguage(displayName = "English", languageCode = "en_IN")
     val supportedLanguages = listOf(
-        Language(displayName = "English", languageCode = "en_IN"),
-        Language(displayName = "हिंदी", languageCode = "hi_IN")
+        ProvidedLanguage(displayName = "English", languageCode = "en_IN"),
+        ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
     )
 
     val model = defaultModel

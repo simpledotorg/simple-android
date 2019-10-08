@@ -25,6 +25,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
@@ -141,7 +142,8 @@ class TestData @Inject constructor(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         recordedAt = recordedAt,
-        syncStatus = syncStatus
+        syncStatus = syncStatus,
+        reminderConsent = Granted
     )
   }
 
@@ -246,7 +248,8 @@ class TestData @Inject constructor(
         address = address,
         phoneNumbers = phoneNumbers,
         businessIds = businessIds,
-        recordedAt = recordedAt
+        recordedAt = recordedAt,
+        reminderConsent = Granted
     )
   }
 

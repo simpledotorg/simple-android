@@ -9,6 +9,8 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.ReminderConsent
+import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
@@ -59,7 +61,11 @@ data class PatientPayload(
     val businessIds: List<BusinessIdPayload>,
 
     @Json(name = "recorded_at")
-    val recordedAt: Instant
+    val recordedAt: Instant,
+
+    // TODO Make reminderConsent a non-nullable field once it is pushed to production
+    @Json(name = "reminder_consent")
+    val reminderConsent: ReminderConsent?
 ) {
 
   fun toDatabaseModel(newStatus: SyncStatus): Patient {
@@ -75,7 +81,9 @@ data class PatientPayload(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         recordedAt = recordedAt,
-        syncStatus = newStatus)
+        syncStatus = newStatus,
+        reminderConsent = reminderConsent ?: Granted
+    )
   }
 }
 

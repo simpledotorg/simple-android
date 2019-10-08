@@ -13,6 +13,7 @@ import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.protocol.ProtocolDrug
@@ -62,7 +63,9 @@ object PatientMocker {
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         recordedAt = recordedAt,
-        syncStatus = syncStatus)
+        syncStatus = syncStatus,
+        reminderConsent = Granted
+    )
   }
 
   fun address(

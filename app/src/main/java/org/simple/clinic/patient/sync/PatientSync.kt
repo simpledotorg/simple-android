@@ -73,7 +73,9 @@ class PatientSync @Inject constructor(
                 address = address.toPayload(),
                 phoneNumbers = numberPayloads,
                 businessIds = businessIdPayloads,
-                recordedAt = recordedAt)
+                recordedAt = recordedAt,
+                reminderConsent = reminderConsent
+            )
           }
         }
     )

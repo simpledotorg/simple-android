@@ -45,6 +45,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.createUuid5
 import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.randomPatientPhoneNumberType
@@ -679,7 +680,8 @@ class TestData @Inject constructor(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        recordedAt = recordedAt
+        recordedAt = recordedAt,
+        encounterUuid = createUuid5(facilityUuid.toString() + patientUuid + recordedAt)
     )
   }
 

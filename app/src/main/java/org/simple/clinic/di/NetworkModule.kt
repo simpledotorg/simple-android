@@ -19,9 +19,7 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.remoteconfig.FirebaseConfigReader
 import org.simple.clinic.remoteconfig.FirebaseRemoteConfigCacheExpiration
-import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.InstantMoshiAdapter
@@ -120,11 +118,6 @@ open class NetworkModule {
   @AppScope
   open fun remoteConfig(): FirebaseRemoteConfig {
     return FirebaseRemoteConfig.getInstance()
-  }
-
-  @Provides
-  fun remoteConfigReader(service: RemoteConfigService): ConfigReader {
-    return service.reader()
   }
 
   @Provides

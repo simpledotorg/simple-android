@@ -328,12 +328,13 @@
       </LinearLayout>
 
       <TextView
+        android:id="@+id/consentTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_24"
         android:layout_marginStart="@dimen/spacing_8"
-        android:text="@string/patiententry_consent_text"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center" />
+        android:layout_marginTop="@dimen/spacing_24"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center"
+        tools:text="@string/patiententry_consent_first_para" />
     </LinearLayout>
   </ScrollView>
 

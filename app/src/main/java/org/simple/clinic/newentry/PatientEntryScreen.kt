@@ -2,7 +2,9 @@ package org.simple.clinic.newentry
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Typeface.BOLD
 import android.os.Parcelable
+import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -42,6 +44,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Truss
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
@@ -171,7 +174,21 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     // support for compound drawable tinting either, so we need to do this in code.
     identifierTextView.setCompoundDrawableStartWithTint(R.drawable.patient_id_card, R.color.grey1)
 
+    setConsentText()
+
     delegate.prepare()
+  }
+
+  private fun setConsentText() {
+    val consentText = Truss()
+        .pushSpan(StyleSpan(BOLD))
+        .append(resources.getString(R.string.patiententry_consent_header))
+        .popSpan()
+        .append(resources.getString(R.string.patiententry_consent_first_para))
+        .append("\n\n")
+        .append(resources.getString(R.string.patiententry_consent_second_para))
+        .build()
+    consentTextView.text = consentText
   }
 
   override fun onAttachedToWindow() {

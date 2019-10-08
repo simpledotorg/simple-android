@@ -30,7 +30,7 @@ class ChangeLanguageUpdateTest {
   }
 
   @Test
-  fun `when the supported languages are loaded, the ui must be upda`() {
+  fun `when the supported languages are loaded, the ui must be updated`() {
     val supportedLanguages = listOf(englishIndia, hindiIndia)
 
     spec

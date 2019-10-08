@@ -14,4 +14,9 @@ class RemoteConfigModule {
   ): RemoteConfigService {
     return FirebaseRemoteConfigService(firebaseRemoteConfig, cacheExpiration)
   }
+
+  @Provides
+  fun remoteConfigReader(service: RemoteConfigService): ConfigReader {
+    return service.reader()
+  }
 }

@@ -62,6 +62,9 @@ data class OngoingNewPatientEntry(
     return this.copy(identifier = identifier)
   }
 
+  fun withAddress(address: Address): OngoingNewPatientEntry =
+      copy(address = address)
+
   fun validationErrors(dobValidator: UserInputDateValidator, numberValidator: PhoneNumberValidator): List<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()
 
@@ -131,5 +134,10 @@ data class OngoingNewPatientEntry(
   data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = Mobile, val active: Boolean = true) : Parcelable
 
   @Parcelize
-  data class Address(val colonyOrVillage: String, val district: String, val state: String): Parcelable
+  data class Address(val colonyOrVillage: String, val district: String, val state: String): Parcelable {
+    companion object {
+      fun withDistrictAndState(district: String, state: String): Address =
+          Address("", district, state)
+    }
+  }
 }

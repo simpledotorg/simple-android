@@ -8,7 +8,7 @@ import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Singles
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
@@ -42,7 +42,7 @@ object PatientEntryEffectHandler {
 
     return RxMobius
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
-        .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryEffectHandler(userSession, facilityRepository, patientRepository, schedulersProvider.io()))
+        .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(userSession, facilityRepository, patientRepository, schedulersProvider.io()))
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
         .addAction(ScrollFormToBottom::class.java, { ui.scrollFormToBottom() }, schedulersProvider.ui())
         .addConsumer(ShowEmptyFullNameError::class.java, { ui.showEmptyFullNameError(it.show) }, schedulersProvider.ui())
@@ -63,25 +63,24 @@ object PatientEntryEffectHandler {
         .build()
   }
 
-  private fun fetchOngoingEntryEffectHandler(
+  private fun fetchOngoingEntryTransformer(
       userSession: UserSession,
       facilityRepository: FacilityRepository,
       patientRepository: PatientRepository,
       scheduler: Scheduler
   ): ObservableTransformer<FetchPatientEntry, PatientEntryEvent> {
     return ObservableTransformer { fetchPatientEntries ->
-      val getPatientEntryAndFacility = Singles.zip(
-          patientRepository.ongoingEntry(),
-          facilityRepository.currentFacility(userSession).firstOrError()
-      )
+      val getPatientEntryAndFacility = Singles
+          .zip(
+              patientRepository.ongoingEntry(),
+              facilityRepository.currentFacility(userSession).firstOrError()
+          )
 
       fetchPatientEntries
           .flatMapSingle { getPatientEntryAndFacility }
           .subscribeOn(scheduler)
           .map { (entry, facility) ->
-            // TODO(rj): 2019-10-03 Extract as function!
-            entry.takeIf { it.address != null }
-                ?: entry.copy(address = OngoingNewPatientEntry.Address(colonyOrVillage = "", district = facility.district, state = facility.state))
+            entry.takeIf { it.address != null } ?: entry.withAddress(Address.withDistrictAndState(facility.district, facility.state))
           }
           .map { OngoingEntryFetched(it) }
     }

@@ -30,6 +30,8 @@ data class BloodPressureMeasurement(
 
     val patientUuid: UUID,
 
+    val encounterUuid: UUID,
+
     val createdAt: Instant,
 
     val updatedAt: Instant,

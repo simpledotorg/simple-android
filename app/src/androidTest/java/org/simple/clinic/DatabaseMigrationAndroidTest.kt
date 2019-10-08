@@ -21,8 +21,11 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.createUuid5
+import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -3408,6 +3411,85 @@ class DatabaseMigrationAndroidTest {
         "updatedAt",
         "deletedAt")
     )
+  }
+
+  @Test
+  fun migration_from_49_to_50_create_only_one_encounter_for_per_day_but_add_encounterUuid_to_all_BPs() {
+    //given
+    val bloodPressureMeasurementTable = "BloodPressureMeasurement"
+
+    val uuidForFirstBP = "3eb96138-5270-419c-bcdf-86db95d0bc8b"
+    val uuidForSecondBP = "a2455b0c-cf14-46c9-9f73-6e18972982b0"
+    val facilityUuid = "0086ba86-314c-49d9-8822-2563e53bed92"
+    val patientUuid = "c4233170-feb2-3d34-8115-98fef5a68837"
+    val recordedAtForFirstBP = "2018-07-03T00:00:00Z"
+    val recordedAtForSecondBP = "2018-07-03T01:30:00Z"
+    val createdAtForFirstBP = "2018-07-04T02:00:00Z"
+    val userId = "d689285f-5c92-4735-80ef-c0e360ad3f1d"
+
+    val db_49 = helper.createDatabase(version = 49)
+    db_49.insert(bloodPressureMeasurementTable, mapOf(
+        "uuid" to uuidForFirstBP,
+        "systolic" to "120",
+        "diastolic" to "90",
+        "syncStatus" to "DONE",
+        "userUuid" to userId,
+        "facilityUuid" to facilityUuid,
+        "patientUuid" to patientUuid,
+        "createdAt" to createdAtForFirstBP,
+        "updatedAt" to createdAtForFirstBP,
+        "deletedAt" to "null",
+        "recordedAt" to recordedAtForFirstBP
+    ))
+
+    db_49.insert(bloodPressureMeasurementTable, mapOf(
+        "uuid" to uuidForSecondBP,
+        "systolic" to "130",
+        "diastolic" to "60",
+        "syncStatus" to "DONE",
+        "userUuid" to userId,
+        "facilityUuid" to facilityUuid,
+        "patientUuid" to patientUuid,
+        "createdAt" to recordedAtForSecondBP,
+        "updatedAt" to recordedAtForSecondBP,
+        "deletedAt" to "null",
+        "recordedAt" to recordedAtForSecondBP
+    ))
+
+    //when
+    val db_50 = helper.migrateTo(version = 50)
+
+    //then
+    val expectedEncounteredOn = Instant.parse(recordedAtForFirstBP).toLocalDateAtZone(ZoneOffset.UTC).toString()
+    val expectedEncounterId = createUuid5(facilityUuid + patientUuid + expectedEncounteredOn).toString()
+
+    db_50.query("""SELECT * FROM '$bloodPressureMeasurementTable' """).use {
+      assertThat(it.count).isEqualTo(2)
+      assertThat(it.columnCount).isEqualTo(12)
+      it.moveToFirst()
+
+      assertThat(it.string("uuid")).isEqualTo(uuidForFirstBP)
+      assertThat(it.string("encounterUuid")).isEqualTo(expectedEncounterId)
+
+      it.moveToNext()
+      assertThat(it.string("uuid")).isEqualTo(uuidForSecondBP)
+      assertThat(it.string("encounterUuid")).isEqualTo(expectedEncounterId)
+    }
+
+    val expectedEncounterValues = mapOf(
+        "uuid" to expectedEncounterId,
+        "patientUuid" to patientUuid,
+        "encounteredOn" to expectedEncounteredOn,
+        "createdAt" to createdAtForFirstBP,
+        "updatedAt" to createdAtForFirstBP,
+        "deletedAt" to "null"
+    )
+
+    db_50.query("""SELECT * FROM "Encounter" """).use {
+      assertThat(it.count).isEqualTo(1)
+      it.moveToFirst()
+      it.assertValues(expectedEncounterValues)
+    }
   }
 }
 

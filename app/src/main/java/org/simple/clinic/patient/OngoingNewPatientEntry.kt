@@ -23,6 +23,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
+import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -61,6 +62,30 @@ data class OngoingNewPatientEntry(
   fun withIdentifier(identifier: Identifier): OngoingNewPatientEntry {
     return this.copy(identifier = identifier)
   }
+
+  fun withFullName(fullName: String): OngoingNewPatientEntry =
+      copy(personalDetails = personalDetailsOrBlank().withFullName(fullName))
+
+  fun withGender(gender: Optional<Gender>): OngoingNewPatientEntry =
+      copy(personalDetails = personalDetailsOrBlank().withGender(gender.toNullable()))
+
+  fun withAge(age: String): OngoingNewPatientEntry =
+      copy(personalDetails = personalDetailsOrBlank().withAge(age))
+
+  fun withDateOfBirth(dateOfBirth: String): OngoingNewPatientEntry =
+      copy(personalDetails = personalDetailsOrBlank().withDateOfBirth(dateOfBirth))
+
+  fun withPhoneNumber(phoneNumber: String): OngoingNewPatientEntry =
+      copy(phoneNumber = if (phoneNumber.isNotBlank()) PhoneNumber(phoneNumber) else null)
+
+  fun withColonyOrVillage(colonyOrVillage: String): OngoingNewPatientEntry =
+      copy(address = addressOrBlank().withColonyOrVillage(colonyOrVillage))
+
+  fun withDistrict(district: String): OngoingNewPatientEntry =
+      copy(address = addressOrBlank().withDistrict(district))
+
+  fun withState(state: String): OngoingNewPatientEntry =
+      copy(address = addressOrBlank().withState(state))
 
   fun withAddress(address: Address): OngoingNewPatientEntry =
       copy(address = address)
@@ -123,6 +148,12 @@ data class OngoingNewPatientEntry(
     return errors
   }
 
+  private fun personalDetailsOrBlank(): PersonalDetails =
+      personalDetails ?: PersonalDetails.BLANK
+
+  private fun addressOrBlank(): Address =
+      address ?: Address.BLANK
+
   /**
    * [age] is stored as a String instead of an Int because it's easy
    * to forget that [Int.toString] will return literal "null" for null Ints.
@@ -137,6 +168,18 @@ data class OngoingNewPatientEntry(
     companion object {
       val BLANK = PersonalDetails("", null, null, null)
     }
+
+    fun withFullName(fullName: String): PersonalDetails =
+        copy(fullName = fullName)
+
+    fun withDateOfBirth(dateOfBirth: String): PersonalDetails =
+        copy(dateOfBirth = if (dateOfBirth.isBlank()) null else dateOfBirth)
+
+    fun withAge(age: String): PersonalDetails =
+        copy(age = if (age.isBlank()) null else age)
+
+    fun withGender(gender: Gender?): PersonalDetails =
+        copy(gender = gender)
   }
 
   @Parcelize
@@ -158,5 +201,14 @@ data class OngoingNewPatientEntry(
       fun withDistrictAndState(district: String, state: String): Address =
           Address("", district, state)
     }
+
+    fun withColonyOrVillage(colonyOrVillage: String): Address =
+        copy(colonyOrVillage = colonyOrVillage)
+
+    fun withDistrict(district: String): Address =
+        copy(district = district)
+
+    fun withState(state: String): Address =
+        copy(state = state)
   }
 }

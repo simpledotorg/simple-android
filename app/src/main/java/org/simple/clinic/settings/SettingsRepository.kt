@@ -7,4 +7,8 @@ class SettingsRepository {
   fun getCurrentSelectedLanguage(): Single<Language> {
     TODO()
   }
+
+  fun getSupportedLanguages(): Single<List<Language>> {
+    TODO()
+  }
 }

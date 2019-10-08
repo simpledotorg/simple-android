@@ -2,9 +2,6 @@ package org.simple.clinic.remoteconfig
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue
-import io.reactivex.Completable
-import org.simple.clinic.util.toCompletable
-import timber.log.Timber
 
 class FirebaseConfigReader(
     private val remoteConfig: FirebaseRemoteConfig,
@@ -33,15 +30,5 @@ class FirebaseConfigReader(
 
   override fun long(name: String, default: Long): Long {
     return read(name, default) { it.asLong() }
-  }
-
-  override fun update(): Completable {
-    return remoteConfig
-        .fetch(cacheExpiration.value.seconds)
-        .toCompletable { Timber.w("Failed to update Firebase remote config") }
-        .doOnComplete {
-          Timber.i("Firebase remote config updated successfully")
-          remoteConfig.activateFetched()
-        }
   }
 }

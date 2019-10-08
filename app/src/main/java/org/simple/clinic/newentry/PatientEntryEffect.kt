@@ -34,3 +34,5 @@ data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryEf
 data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
 
 data class ShowValidationErrors(val errors: List<PatientEntryValidationError>) : PatientEntryEffect()
+
+object OpenMedicalHistoryEntryScreen : PatientEntryEffect()

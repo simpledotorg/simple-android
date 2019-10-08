@@ -326,6 +326,14 @@
             android:inputType="textPostalAddress|textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
       </LinearLayout>
+
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:text="@string/patiententry_consent_text"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center" />
     </LinearLayout>
   </ScrollView>
 

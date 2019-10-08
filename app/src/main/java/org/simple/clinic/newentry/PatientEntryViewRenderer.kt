@@ -8,7 +8,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.B
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 
 class PatientEntryViewRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntryModel> {
-  private val dateOfBirthAndAgeVisibilityCallback: DistinctValueCallback<DateOfBirthAndAgeVisibility> = DistinctValueCallback()
+  private val distinctDateOfBirthAndAgeVisibilityCallback: DistinctValueCallback<DateOfBirthAndAgeVisibility> = DistinctValueCallback()
 
   override fun render(model: PatientEntryModel) {
     val patientEntry = model.patientEntry ?: return
@@ -23,7 +23,7 @@ class PatientEntryViewRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEnt
     val age = personalDetails.age
     val dateOfBirth = personalDetails.dateOfBirth
 
-    dateOfBirthAndAgeVisibilityCallback.pass(getVisibility(age, dateOfBirth), ui::setDateOfBirthAndAgeVisibility)
+    distinctDateOfBirthAndAgeVisibilityCallback.pass(getVisibility(age, dateOfBirth), ui::setDateOfBirthAndAgeVisibility)
   }
 
   private fun getVisibility(age: String?, dateOfBirth: String?): DateOfBirthAndAgeVisibility {

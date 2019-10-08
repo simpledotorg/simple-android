@@ -22,6 +22,15 @@ object ChangeLanguageEffectHandler {
               }
               .map(::CurrentSelectedLanguageLoadedEvent)
         }
+        .addTransformer(LoadSupportedLanguagesEffect::class.java) { effectStream ->
+          effectStream
+              .flatMapSingle {
+                settingsRepository
+                    .getSupportedLanguages()
+                    .subscribeOn(schedulersProvider.io())
+              }
+              .map(::SupportedLanguagesLoadedEvent)
+        }
         .build()
   }
 }

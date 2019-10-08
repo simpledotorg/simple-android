@@ -10,3 +10,6 @@ fun <M, F> ((M) -> First<M, F>).toInit(): Init<M, F> =
 
 fun <M, F> justEffect(effect: F): Next<M, F> =
     dispatch<M, F>(setOf(effect))
+
+fun <M, F> next(model: M, effect: F): Next<M, F> =
+    Next.next(model, setOf(effect))

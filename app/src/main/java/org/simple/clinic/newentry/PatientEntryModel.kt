@@ -66,6 +66,9 @@ data class PatientEntryModel(
     return copy(patientEntry = patientEntry?.copy(address = address.copy(state = state)))
   }
 
+  fun selectedGender(): PatientEntryModel =
+      copy(isSelectingGenderForTheFirstTime = false)
+
   private fun getPersonalDetails(patientEntry: OngoingNewPatientEntry?): PersonalDetails =
       patientEntry?.personalDetails ?: PersonalDetails("", null, null, null)
 }

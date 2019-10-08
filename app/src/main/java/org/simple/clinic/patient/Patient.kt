@@ -57,7 +57,9 @@ data class Patient(
 
     val recordedAt: Instant,
 
-    val syncStatus: SyncStatus
+    val syncStatus: SyncStatus,
+
+    val reminderConsent: ReminderConsent
 ) : Parcelable {
 
   fun withNameAndGender(fullName: String, gender: Gender): Patient =
@@ -281,7 +283,7 @@ data class Patient(
           P.gender patient_gender, P.dateOfBirth patient_dateOfBirth,
           P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt, P.status patient_status,
           P.createdAt patient_createdAt, P.updatedAt patient_updatedAt, P.deletedAt patient_deletedAt,
-          P.syncStatus patient_syncStatus, P.recordedAt patient_recordedAt,
+          P.syncStatus patient_syncStatus, P.recordedAt patient_recordedAt, P.reminderConsent patient_reminderConsent,
 
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district,
           PA.state addr_state, PA.country addr_country,

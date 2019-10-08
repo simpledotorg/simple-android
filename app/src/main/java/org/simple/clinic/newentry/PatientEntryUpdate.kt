@@ -51,8 +51,6 @@ class PatientEntryUpdate(
           Next.dispatch(setOf(ShowValidationErrors(validationErrors)))
         }
       }
-
-      is OngoingPatientEntryChanged -> Next.noChange() // TODO(rj): 2019-10-04 Remove this event, it is no longer needed
     }
   }
 }

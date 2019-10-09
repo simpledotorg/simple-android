@@ -15,7 +15,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -44,8 +43,6 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
@@ -67,7 +64,7 @@ class PatientEntryScreenControllerTest {
   private val numberValidator = IndianPhoneNumberValidator()
   private val patientRegisteredCount = mock<Preference<Int>>()
 
-  private val uiEvents = PublishSubject.create<UiEvent>()
+  private val uiEvents = PublishSubject.create<PatientEntryEvent>()
   private lateinit var fixture: MobiusTestFixture<PatientEntryModel, PatientEntryEvent, PatientEntryEffect>
   private val reporter = MockAnalyticsReporter()
 
@@ -77,8 +74,6 @@ class PatientEntryScreenControllerTest {
   fun setUp() {
     whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(PatientMocker.facility()))
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
-
-    val sharedEvents = uiEvents.hide().share()
 
     val effectHandler = PatientEntryEffectHandler.create(
         userSession,
@@ -90,7 +85,7 @@ class PatientEntryScreenControllerTest {
     )
 
     fixture = MobiusTestFixture(
-        sharedEvents.ofType(),
+        uiEvents,
         PatientEntryModel.DEFAULT,
         PatientEntryInit(),
         PatientEntryUpdate(numberValidator, dobValidator),
@@ -564,7 +559,6 @@ class PatientEntryScreenControllerTest {
   }
 
   private fun screenCreated() {
-    uiEvents.onNext(ScreenCreated())
     screenCreatedForMobius()
   }
 

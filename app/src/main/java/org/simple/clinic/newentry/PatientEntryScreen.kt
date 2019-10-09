@@ -22,6 +22,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_manual_patient_entry.view.*
 import org.simple.clinic.R
@@ -48,8 +49,6 @@ import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
@@ -119,10 +118,11 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   private val viewRenderer = PatientEntryViewRenderer(this)
 
-  private val events: Observable<UiEvent> by unsafeLazy {
-    Observable.merge(screenCreates(), formChanges(), saveClicks())
+  private val events: Observable<PatientEntryEvent> by unsafeLazy {
+    Observable
+        .merge(formChanges(), saveClicks())
         .compose(ReportAnalyticsEvents())
-        .share()
+        .cast<PatientEntryEvent>()
   }
 
   private val delegate by unsafeLazy {
@@ -209,9 +209,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     super.onRestoreInstanceState(viewState)
   }
 
-  private fun screenCreates() = Observable.just(ScreenCreated())
-
-  private fun formChanges(): Observable<UiEvent> {
+  private fun formChanges(): Observable<PatientEntryEvent> {
     return Observable.mergeArray(
         fullNameEditText.textChanges(::FullNameChanged),
         phoneNumberEditText.textChanges(::PhoneNumberChanged),
@@ -237,7 +235,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         }
   }
 
-  private fun saveClicks(): Observable<UiEvent> {
+  private fun saveClicks(): Observable<PatientEntryEvent> {
     val stateImeClicks = RxTextView.editorActions(stateEditText) { it == EditorInfo.IME_ACTION_DONE }
 
     return RxView.clicks(saveButtonFrame.button)

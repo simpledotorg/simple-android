@@ -129,7 +129,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private fun sheetCreates(): Observable<UiEvent> {
     val openAs = intent.extras!!.getParcelable(KEY_OPEN_AS) as OpenAs
     return Observable
-        .just(BloodPressureEntrySheetCreated(openAs))
+        .just(SheetCreated(openAs))
         // TODO: Update: Now that we've moved to ReplayUntilScreenIsDestroyed, is this still required?
         // This delay stops the race condition (?) that happens frequently with replay().refCount()
         // in the controller. Temporary workaround until we figure out what exactly is going on.
@@ -139,30 +139,30 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   private fun systolicTextChanges() = RxTextView.textChanges(systolicEditText)
       .map(CharSequence::toString)
-      .map(::BloodPressureSystolicTextChanged)
+      .map(::SystolicChanged)
 
   private fun diastolicTextChanges() = RxTextView.textChanges(diastolicEditText)
       .map(CharSequence::toString)
-      .map(::BloodPressureDiastolicTextChanged)
+      .map(::DiastolicChanged)
 
-  private fun imeDoneClicks(): Observable<BloodPressureSaveClicked> {
+  private fun imeDoneClicks(): Observable<SaveClicked> {
     return listOf(systolicEditText, diastolicEditText, dayEditText, monthEditText, yearEditText)
         .map { RxTextView.editorActions(it) { actionId -> actionId == EditorInfo.IME_ACTION_DONE } }
         .toObservable()
         .flatMap { it }
-        .map { BloodPressureSaveClicked }
+        .map { SaveClicked }
   }
 
   private fun diastolicBackspaceClicks(): Observable<UiEvent> {
     return diastolicEditText
         .backspaceClicks
-        .map { BloodPressureDiastolicBackspaceClicked }
+        .map { DiastolicBackspaceClicked }
   }
 
   private fun removeClicks(): Observable<UiEvent> =
       RxView
           .clicks(removeBloodPressureButton)
-          .map { BloodPressureRemoveClicked }
+          .map { RemoveClicked }
 
   private fun bpDateClicks(): Observable<UiEvent> =
       RxView
@@ -172,12 +172,12 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private fun backClicks(): Observable<UiEvent> =
       RxView
           .clicks(backImageButton)
-          .map { BloodPressureShowBpClicked }
+          .map { ShowBpClicked }
 
   private fun hardwareBackPresses(): Observable<UiEvent> {
     return Observable.create { emitter ->
       val interceptor = {
-        emitter.onNext(BloodPressureBackPressed)
+        emitter.onNext(BackPressed)
       }
       emitter.setCancellable { rootLayout.backKeyPressInterceptor = null }
       rootLayout.backKeyPressInterceptor = interceptor
@@ -188,7 +188,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
       viewFlipper
           .displayedChildChanges
           .map {
-            BloodPressureScreenChanged(when (viewFlipper.displayedChildResId) {
+            ScreenChanged(when (viewFlipper.displayedChildResId) {
               R.id.bloodpressureentry_flipper_bp_entry -> BP_ENTRY
               R.id.bloodpressureentry_flipper_date_entry -> DATE_ENTRY
               else -> throw AssertionError()
@@ -198,17 +198,17 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private fun dayTextChanges() =
       RxTextView.textChanges(dayEditText)
           .map(CharSequence::toString)
-          .map(::BloodPressureDayChanged)
+          .map(::DayChanged)
 
   private fun monthTextChanges() =
       RxTextView.textChanges(monthEditText)
           .map(CharSequence::toString)
-          .map(::BloodPressureMonthChanged)
+          .map(::MonthChanged)
 
   private fun yearTextChanges() =
       RxTextView.textChanges(yearEditText)
           .map(CharSequence::toString)
-          .map(::BloodPressureYearChanged)
+          .map(::YearChanged)
 
   fun changeFocusToDiastolic() {
     diastolicEditText.requestFocus()

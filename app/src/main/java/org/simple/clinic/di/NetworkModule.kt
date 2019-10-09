@@ -20,10 +20,10 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.InstantMoshiAdapter
-import org.simple.clinic.util.LocalDateMoshiAdapter
-import org.simple.clinic.util.MoshiOptionalAdapterFactory
-import org.simple.clinic.util.UuidMoshiAdapter
+import org.simple.clinic.util.moshi.InstantMoshiAdapter
+import org.simple.clinic.util.moshi.LocalDateMoshiAdapter
+import org.simple.clinic.util.moshi.MoshiOptionalAdapterFactory
+import org.simple.clinic.util.moshi.UuidMoshiAdapter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory

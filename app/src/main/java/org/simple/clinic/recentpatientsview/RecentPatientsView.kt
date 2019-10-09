@@ -35,9 +35,6 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   lateinit var controller: RecentPatientsViewController
 
   @Inject
-  lateinit var activity: TheActivity
-
-  @Inject
   lateinit var utcClock: UtcClock
 
   @Inject
@@ -87,7 +84,7 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   }
 
   fun openPatientSummary(patientUuid: UUID) {
-    activity.screenRouter.push(
+    screenRouter.push(
         PatientSummaryScreenKey(
             patientUuid = patientUuid,
             intention = OpenIntention.ViewExistingPatient,

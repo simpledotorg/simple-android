@@ -1,6 +1,7 @@
 package org.simple.clinic.bp.entry
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -98,9 +99,9 @@ class BloodPressureEntrySheetControllerTest {
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    whenever(dateValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(testUtcClock))
-    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
+    whenever(dateValidator.dateInUserTimeZone()).doReturn(LocalDate.now(testUtcClock))
+    whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
+    whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
 
     uiEvents
         .compose(controller)
@@ -165,7 +166,7 @@ class BloodPressureEntrySheetControllerTest {
       error: BpValidator.Validation,
       uiChangeVerification: (Ui) -> Unit
   ) {
-    whenever(bpValidator.validate(any(), any())).thenReturn(error)
+    whenever(bpValidator.validate(any(), any())).doReturn(error)
 
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
     uiEvents.onNext(SheetCreated(OpenAs.New(patientUuid)))
@@ -228,8 +229,8 @@ class BloodPressureEntrySheetControllerTest {
       openAs: OpenAs,
       error: BpValidator.Validation
   ) {
-    whenever(bpValidator.validate(any(), any())).thenReturn(error)
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+    whenever(bpValidator.validate(any(), any())).doReturn(error)
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
     uiEvents.run {
       onNext(SheetCreated(openAs = openAs))
@@ -249,7 +250,7 @@ class BloodPressureEntrySheetControllerTest {
       bloodPressureMeasurement: BloodPressureMeasurement?
   ) {
     if (openAs is OpenAs.Update) {
-      whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bloodPressureMeasurement!!))
+      whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressureMeasurement!!))
     }
 
     uiEvents.onNext(SheetCreated(openAs))
@@ -280,7 +281,7 @@ class BloodPressureEntrySheetControllerTest {
       openAs: OpenAs,
       shouldShowRemoveBpButton: Boolean
   ) {
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bp()))
 
     uiEvents.onNext(SheetCreated(openAs))
 
@@ -304,7 +305,7 @@ class BloodPressureEntrySheetControllerTest {
       openAs: OpenAs,
       showEntryTitle: Boolean
   ) {
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bp()))
 
     uiEvents.onNext(SheetCreated(openAs))
 
@@ -325,7 +326,7 @@ class BloodPressureEntrySheetControllerTest {
   @Test
   fun `when the remove button is clicked, the confirmation alert must be shown`() {
     val bloodPressure = PatientMocker.bp()
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bloodPressure))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressure))
 
     uiEvents.onNext(SheetCreated(openAs = OpenAs.Update(bloodPressure.uuid)))
     uiEvents.onNext(RemoveClicked)
@@ -337,7 +338,7 @@ class BloodPressureEntrySheetControllerTest {
   fun `when a blood pressure being edited is removed, the sheet should be closed`() {
     val bloodPressure = PatientMocker.bp()
     val bloodPressureSubject = BehaviorSubject.createDefault<BloodPressureMeasurement>(bloodPressure)
-    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(bloodPressureSubject)
+    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).doReturn(bloodPressureSubject)
 
     uiEvents.onNext(SheetCreated(openAs = OpenAs.Update(bpUuid = bloodPressure.uuid)))
     verify(ui, never()).setBpSavedResultAndFinish()
@@ -353,8 +354,8 @@ class BloodPressureEntrySheetControllerTest {
       openAs: OpenAs,
       result: UserInputDateValidator.Result
   ) {
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
-    whenever(dateValidator.validate(any(), any())).thenReturn(result)
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
+    whenever(dateValidator.validate(any(), any())).doReturn(result)
 
     uiEvents.onNext(SheetCreated(openAs))
     uiEvents.onNext(ScreenChanged(DATE_ENTRY))
@@ -385,17 +386,17 @@ class BloodPressureEntrySheetControllerTest {
   @Test
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 2, 13)
-    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any()))
-        .thenReturn(Single.just(PatientMocker.bp()))
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).thenReturn(Completable.complete())
+        .doReturn(Single.just(PatientMocker.bp()))
+    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
     whenever(bpValidator.validate(any(), any()))
-        .thenReturn(ErrorSystolicEmpty)
-        .thenReturn(Success(130, 110))
+        .doReturn(ErrorSystolicEmpty)
+        .doReturn(Success(130, 110))
 
     whenever(dateValidator.validate(any(), any()))
-        .thenReturn(InvalidPattern)
-        .thenReturn(Valid(inputDate))
+        .doReturn(InvalidPattern)
+        .doReturn(Valid(inputDate))
 
     uiEvents.run {
       onNext(SheetCreated(openAs = OpenAs.New(patientUuid)))
@@ -440,12 +441,12 @@ class BloodPressureEntrySheetControllerTest {
     )
 
     val newInputDate = LocalDate.of(1991, 2, 14)
-    whenever(dateValidator.validate(any(), any())).thenReturn(Valid(newInputDate))
-    whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
-    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
-    whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp))
-    whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
-    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).thenReturn(Completable.complete())
+    whenever(dateValidator.validate(any(), any())).doReturn(Valid(newInputDate))
+    whenever(bpValidator.validate(any(), any())).doReturn(Success(120, 110))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp))
+    whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
+    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
     uiEvents.run {
       onNext(SheetCreated(openAs = OpenAs.Update(existingBp.uuid)))
@@ -459,7 +460,7 @@ class BloodPressureEntrySheetControllerTest {
     val newFacilityUuid = UUID.fromString("d51f48fd-40b6-4daf-beae-ba3d9f4c24cd")
     val newUser = user.copy(uuid = newUserUuid)
 
-    whenever(facilityRepository.currentFacility(newUser)).thenReturn(Observable.just(facility.copy(uuid = newFacilityUuid)))
+    whenever(facilityRepository.currentFacility(newUser)).doReturn(Observable.just(facility.copy(uuid = newFacilityUuid)))
 
     userSubject.onNext(newUser)
 
@@ -496,8 +497,8 @@ class BloodPressureEntrySheetControllerTest {
       errorResult: UserInputDateValidator.Result,
       uiChangeVerification: UiChange
   ) {
-    whenever(dateValidator.validate(any(), any())).thenReturn(errorResult)
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+    whenever(dateValidator.validate(any(), any())).doReturn(errorResult)
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
     uiEvents.run {
       onNext(SheetCreated(openAs = openAs))
@@ -541,8 +542,8 @@ class BloodPressureEntrySheetControllerTest {
   fun `when BP entry is active, BP readings are valid and next arrow is pressed then date entry should be shown`(
       openAs: OpenAs
   ) {
-    whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+    whenever(bpValidator.validate(any(), any())).doReturn(Success(120, 110))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
     uiEvents.run {
       onNext(SheetCreated(openAs = openAs))
@@ -561,8 +562,8 @@ class BloodPressureEntrySheetControllerTest {
       openAs: OpenAs,
       error: BpValidator.Validation
   ) {
-    whenever(bpValidator.validate(any(), any())).thenReturn(error)
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+    whenever(bpValidator.validate(any(), any())).doReturn(error)
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
     uiEvents.run {
       onNext(SheetCreated(openAs = openAs))
@@ -624,7 +625,7 @@ class BloodPressureEntrySheetControllerTest {
     val recordedAtDateAsInstant = recordedAtDate.atStartOfDay().toInstant(UTC)
     val existingBp = PatientMocker.bp(recordedAt = recordedAtDateAsInstant)
 
-    whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp, existingBp))
+    whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp, existingBp))
 
     uiEvents.onNext(SheetCreated(OpenAs.Update(existingBp.uuid)))
 
@@ -662,7 +663,7 @@ class BloodPressureEntrySheetControllerTest {
   fun `whenever the BP sheet is shown to update an existing BP, then show the BP date`() {
     val bp = PatientMocker.bp(patientUuid = patientUuid)
     val recordedDate = bp.recordedAt.toLocalDateAtZone(testUserClock.zone)
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bp))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
     uiEvents.onNext(SheetCreated(OpenAs.Update(bpUuid = bp.uuid)))
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
@@ -686,8 +687,8 @@ class BloodPressureEntrySheetControllerTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
+    whenever(bpValidator.validate(systolic, diastolic)).doReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate(eq("01/24/1991"), any())).doReturn(InvalidPattern)
 
     with(uiEvents) {
       onNext(SheetCreated(OpenAs.New(patientUuid)))
@@ -713,8 +714,8 @@ class BloodPressureEntrySheetControllerTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
+    whenever(bpValidator.validate(systolic, diastolic)).doReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate(eq("01/24/1991"), any())).doReturn(InvalidPattern)
 
     with(uiEvents) {
       onNext(SheetCreated(OpenAs.New(patientUuid)))
@@ -740,11 +741,11 @@ class BloodPressureEntrySheetControllerTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
+    whenever(bpValidator.validate(systolic, diastolic)).doReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate(eq("01/24/1991"), any())).doReturn(InvalidPattern)
 
     val bp = PatientMocker.bp(patientUuid = patientUuid)
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bp))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
     with(uiEvents) {
       onNext(SheetCreated(OpenAs.Update(bp.uuid)))
@@ -770,11 +771,11 @@ class BloodPressureEntrySheetControllerTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
+    whenever(bpValidator.validate(systolic, diastolic)).doReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate(eq("01/24/1991"), any())).doReturn(InvalidPattern)
 
     val bp = PatientMocker.bp(patientUuid = patientUuid)
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bp))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
     with(uiEvents) {
       onNext(SheetCreated(OpenAs.Update(bp.uuid)))
@@ -801,8 +802,8 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
     val localDate = LocalDate.of(2016, 5, 10)
 
-    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate(eq("10/05/1916"), any())).thenReturn(Valid(localDate))
+    whenever(bpValidator.validate(systolic, diastolic)).doReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate(eq("10/05/1916"), any())).doReturn(Valid(localDate))
 
     with(uiEvents) {
       onNext(SheetCreated(OpenAs.New(patientUuid)))
@@ -830,8 +831,8 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
     val localDate = LocalDate.of(2016, 5, 10)
 
-    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate(eq("10/05/1916"), any())).thenReturn(Valid(localDate))
+    whenever(bpValidator.validate(systolic, diastolic)).doReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate(eq("10/05/1916"), any())).doReturn(Valid(localDate))
 
     with(uiEvents) {
       onNext(SheetCreated(OpenAs.New(patientUuid)))
@@ -859,12 +860,12 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
     val inputDate = LocalDate.of(2016, 5, 10)
 
-    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate(eq("01/02/1916"), any())).thenReturn(Valid(inputDate))
+    whenever(bpValidator.validate(systolic, diastolic)).doReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate(eq("01/02/1916"), any())).doReturn(Valid(inputDate))
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any()))
-        .thenReturn(Single.just(PatientMocker.bp(patientUuid = patientUuid)))
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).thenReturn(Completable.complete())
-    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).thenReturn(Completable.complete())
+        .doReturn(Single.just(PatientMocker.bp(patientUuid = patientUuid)))
+    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
+    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
     with(uiEvents) {
       onNext(SheetCreated(OpenAs.New(patientUuid)))
@@ -912,19 +913,19 @@ class BloodPressureEntrySheetControllerTest {
 
     val newInputDate = LocalDate.of(1991, 2, 14)
 
-    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate(eq("01/02/1916"), any())).thenReturn(Valid(newInputDate))
-    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).thenReturn(Completable.complete())
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(existingBp))
+    whenever(bpValidator.validate(systolic, diastolic)).doReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate(eq("01/02/1916"), any())).doReturn(Valid(newInputDate))
+    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(existingBp))
 
-    whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
-    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).thenReturn(Completable.complete())
+    whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
+    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
     val newUserUuid = UUID.fromString("a726d885-b12d-40b7-9fe1-5391f3fc0f88")
     val newFacilityUuid = UUID.fromString("d51f48fd-40b6-4daf-beae-ba3d9f4c24cd")
     val newUser = user.copy(uuid = newUserUuid)
 
-    whenever(facilityRepository.currentFacility(newUser)).thenReturn(Observable.just(facility.copy(uuid = newFacilityUuid)))
+    whenever(facilityRepository.currentFacility(newUser)).doReturn(Observable.just(facility.copy(uuid = newFacilityUuid)))
 
     userSubject.onNext(newUser)
 

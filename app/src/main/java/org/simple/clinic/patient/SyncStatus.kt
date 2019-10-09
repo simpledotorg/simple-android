@@ -1,7 +1,7 @@
 package org.simple.clinic.patient
 
 import org.simple.clinic.patient.SyncStatus.*
-import org.simple.clinic.util.RoomEnumTypeConverter
+import org.simple.clinic.util.room.RoomEnumTypeConverter
 
 enum class SyncStatus {
   PENDING,

@@ -1,4 +1,4 @@
-package org.simple.clinic.util
+package org.simple.clinic.util.room
 
 import androidx.room.TypeConverter
 

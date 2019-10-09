@@ -29,9 +29,9 @@ import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.InstantRoomTypeConverter
-import org.simple.clinic.util.LocalDateRoomTypeConverter
-import org.simple.clinic.util.UuidRoomTypeConverter
+import org.simple.clinic.util.room.InstantRoomTypeConverter
+import org.simple.clinic.util.room.LocalDateRoomTypeConverter
+import org.simple.clinic.util.room.UuidRoomTypeConverter
 
 @Database(
     entities = [

@@ -1,4 +1,4 @@
-package org.simple.clinic.util
+package org.simple.clinic.util.room
 
 /**
  * This class is meant to provide a safe way to (de)serialise enum values from network responses

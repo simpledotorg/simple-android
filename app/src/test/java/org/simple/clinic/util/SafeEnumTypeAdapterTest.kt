@@ -5,6 +5,7 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 @RunWith(JUnitParamsRunner::class)
 class SafeEnumTypeAdapterTest {

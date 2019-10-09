@@ -26,7 +26,9 @@ import org.simple.clinic.router.screen.KeyChangeAnimator
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
+import java.util.Locale
 import javax.inject.Inject
 
 class TheActivity : AppCompatActivity() {
@@ -43,6 +45,9 @@ class TheActivity : AppCompatActivity() {
 
   @Inject
   lateinit var fullScreenKeyChangeAnimator: KeyChangeAnimator<FullScreenKey>
+
+  @Inject
+  lateinit var locale: Locale
 
   private val screenRouter: ScreenRouter by unsafeLazy {
     ScreenRouter.create(this, NestedKeyChanger(), screenResults)
@@ -68,7 +73,8 @@ class TheActivity : AppCompatActivity() {
 
   override fun attachBaseContext(baseContext: Context) {
     setupDiGraph()
-    val contextWithRouter = wrapContextWithRouter(baseContext)
+    val contextWithOverriddenLocale = LocaleOverrideContextWrapper.wrap(baseContext, locale)
+    val contextWithRouter = wrapContextWithRouter(contextWithOverriddenLocale)
     super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithRouter))
   }
 

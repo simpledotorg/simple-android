@@ -13,6 +13,7 @@ import org.simple.clinic.storage.Migration_34_35
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncWorker
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.widgets.BottomSheetActivity
 import javax.inject.Scope
 
 @AppScope
@@ -28,6 +29,7 @@ interface AppComponent {
   fun inject(target: Migration_27_28)
   fun inject(target: Migration_29_30)
   fun inject(target: Migration_34_35)
+  fun inject(target: BottomSheetActivity)
 
   fun activityComponentBuilder(): TheActivityComponent.Builder
   fun userSession(): UserSession

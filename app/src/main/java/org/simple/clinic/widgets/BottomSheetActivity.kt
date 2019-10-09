@@ -10,7 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotterknife.bindView
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.di.AppComponent
+import org.simple.clinic.util.LocaleOverrideContextWrapper
+import java.util.Locale
+import javax.inject.Inject
 
 /**
  * We're using Activities as fake bottom sheets instead of BottomSheetDialog because we want
@@ -21,6 +26,9 @@ import org.simple.clinic.R
  * TODO: Add BottomSheet behavior to dismiss the sheet by dragging it downwards.
  */
 abstract class BottomSheetActivity : AppCompatActivity() {
+
+  @Inject
+  lateinit var locale: Locale
 
   private val backgroundView by bindView<View>(R.id.bottomsheet_background)
   private val contentContainer by bindView<ViewGroup>(R.id.bottomsheet_content_container)
@@ -49,7 +57,9 @@ abstract class BottomSheetActivity : AppCompatActivity() {
   }
 
   override fun attachBaseContext(baseContext: Context) {
-    super.attachBaseContext(ViewPumpContextWrapper.wrap(baseContext))
+    ClinicApp.appComponent.inject(this)
+    val contextWithOverridenLocale = LocaleOverrideContextWrapper.wrap(baseContext, locale)
+    super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithOverridenLocale))
   }
 
   override fun finish() {

@@ -12,8 +12,8 @@ import org.simple.clinic.scheduleappointment.TimeToAppointment.Months
 import org.simple.clinic.scheduleappointment.TimeToAppointment.Weeks
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.OptionalRxPreferencesConverter
-import org.simple.clinic.util.StringPreferenceConverter
+import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
+import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.threeten.bp.Period
 import retrofit2.Retrofit
 import javax.inject.Named

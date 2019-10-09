@@ -20,8 +20,10 @@ import org.simple.clinic.overdue.AppointmentCancelReason.MovedToPrivatePractitio
 import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
+import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
@@ -40,6 +42,9 @@ class RemoveAppointmentScreen : AppCompatActivity() {
   @Inject
   lateinit var controller: RemoveAppointmentScreenController
 
+  @Inject
+  lateinit var locale: Locale
+
   private val patientAlreadyVisitedRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_already_visited)
   private val notRespondingRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_not_responding)
   private val invalidPhoneNumberRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_invalid_phone_number)
@@ -56,7 +61,6 @@ class RemoveAppointmentScreen : AppCompatActivity() {
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.screen_remove_appointment)
-    TheActivity.component.inject(this)
 
     bindUiToController(
         ui = this,
@@ -72,6 +76,11 @@ class RemoveAppointmentScreen : AppCompatActivity() {
     )
 
     toolbar.setNavigationOnClickListener { closeScreen() }
+  }
+
+  override fun attachBaseContext(base: Context) {
+    TheActivity.component.inject(this)
+    super.attachBaseContext(LocaleOverrideContextWrapper.wrap(base, locale))
   }
 
   override fun onDestroy() {

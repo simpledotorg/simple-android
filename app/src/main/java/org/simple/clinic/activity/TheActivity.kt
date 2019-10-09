@@ -26,6 +26,7 @@ import org.simple.clinic.router.screen.KeyChangeAnimator
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class TheActivity : AppCompatActivity() {
@@ -43,7 +44,9 @@ class TheActivity : AppCompatActivity() {
   @Inject
   lateinit var fullScreenKeyChangeAnimator: KeyChangeAnimator<FullScreenKey>
 
-  lateinit var screenRouter: ScreenRouter
+  private val screenRouter: ScreenRouter by unsafeLazy {
+    ScreenRouter.create(this, NestedKeyChanger(), screenResults)
+  }
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
 
@@ -64,19 +67,12 @@ class TheActivity : AppCompatActivity() {
   }
 
   override fun attachBaseContext(baseContext: Context) {
+    setupDiGraph()
     val contextWithRouter = wrapContextWithRouter(baseContext)
     super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithRouter))
   }
 
   private fun wrapContextWithRouter(baseContext: Context): Context {
-    screenRouter = ScreenRouter.create(this, NestedKeyChanger(), screenResults)
-    component = ClinicApp.appComponent
-        .activityComponentBuilder()
-        .activity(this)
-        .screenRouter(screenRouter)
-        .build()
-    component.inject(this)
-
     screenRouter.registerKeyChanger(FullScreenKeyChanger(
         activity = this,
         screenLayoutContainerRes = android.R.id.content,
@@ -85,6 +81,15 @@ class TheActivity : AppCompatActivity() {
         keyChangeAnimator = fullScreenKeyChangeAnimator
     ))
     return screenRouter.installInContext(baseContext, controller.initialScreenKey())
+  }
+
+  private fun setupDiGraph() {
+    component = ClinicApp.appComponent
+        .activityComponentBuilder()
+        .activity(this)
+        .screenRouter(screenRouter)
+        .build()
+    component.inject(this)
   }
 
   private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {

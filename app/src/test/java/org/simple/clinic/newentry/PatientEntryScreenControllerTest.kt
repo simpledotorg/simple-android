@@ -134,7 +134,7 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).thenReturn(0)
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok"))
@@ -173,7 +173,7 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).thenReturn(existingPatientRegisteredCount)
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(SaveClicked)
@@ -186,7 +186,7 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(AgeChanged(""))
@@ -211,7 +211,7 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    screenCreatedForMobius()
+    screenCreated()
     errorConsumer = { assertThat(it).isInstanceOf(AssertionError::class.java) }
 
     with(uiEvents) {
@@ -223,7 +223,7 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `while date-of-birth has focus or has some input then date format should be shown in the label`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(DateOfBirthChanged(""))
@@ -240,7 +240,7 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when save is clicked then user input should be validated`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged(""))
@@ -294,7 +294,7 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when input validation fails, the errors must be sent to analytics`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged(""))
@@ -333,7 +333,7 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `validation errors should be cleared on every input change`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok"))
@@ -366,7 +366,7 @@ class PatientEntryScreenControllerTest {
   fun `regression test for validations 1`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok Kumar"))
@@ -389,7 +389,7 @@ class PatientEntryScreenControllerTest {
   fun `regression test for validations 2`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok Kumar"))
@@ -412,7 +412,7 @@ class PatientEntryScreenControllerTest {
   fun `regression test for validations 3`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok Kumar"))
@@ -436,7 +436,7 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).thenReturn(0)
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok Kumar"))
@@ -460,7 +460,7 @@ class PatientEntryScreenControllerTest {
   @Parameters(method = "params for gender values")
   fun `when gender is selected for the first time then the form should be scrolled to bottom`(gender: Gender) {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(GenderChanged(None))
@@ -480,7 +480,7 @@ class PatientEntryScreenControllerTest {
   fun `when validation errors are shown then the form should be scrolled to the first field with error`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok Kumar"))
@@ -508,7 +508,7 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry(identifier = identifier)))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRegisteredCount.get()).thenReturn(0)
-    screenCreatedForMobius()
+    screenCreated()
 
     with(uiEvents) {
       onNext(FullNameChanged("Ashok Kumar"))
@@ -559,10 +559,6 @@ class PatientEntryScreenControllerTest {
   }
 
   private fun screenCreated() {
-    screenCreatedForMobius()
-  }
-
-  private fun screenCreatedForMobius() {
     fixture.start()
   }
 }

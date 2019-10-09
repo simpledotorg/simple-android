@@ -13,8 +13,8 @@ import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.OptionalRxPreferencesConverter
-import org.simple.clinic.util.StringPreferenceConverter
+import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
+import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit

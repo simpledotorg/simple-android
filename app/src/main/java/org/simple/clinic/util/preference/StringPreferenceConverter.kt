@@ -1,4 +1,4 @@
-package org.simple.clinic.util
+package org.simple.clinic.util.preference
 
 import com.f2prateek.rx.preferences2.Preference
 

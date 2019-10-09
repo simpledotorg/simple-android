@@ -8,8 +8,8 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.OptionalRxPreferencesConverter
-import org.simple.clinic.util.StringPreferenceConverter
+import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
+import org.simple.clinic.util.preference.StringPreferenceConverter
 import retrofit2.Retrofit
 import javax.inject.Named
 

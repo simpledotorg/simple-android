@@ -11,7 +11,7 @@ import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
-import org.simple.clinic.util.SafeEnumTypeAdapter
+import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 sealed class Gender: Parcelable {
 

@@ -94,21 +94,21 @@ class BloodPressureEntrySheetController @Inject constructor(
           || (systolicText.length == 2 && systolicText.matches("^[789].*$".toRegex()))
     }
 
-    val moveFocusToDiastolic = events.ofType<BloodPressureSystolicTextChanged>()
+    val moveFocusToDiastolic = events.ofType<SystolicChanged>()
         .distinctUntilChanged()
         .filter { isSystolicValueComplete(it.systolic) }
         .map { { ui: Ui -> ui.changeFocusToDiastolic() } }
 
     data class BloodPressure(val systolic: String, val diastolic: String)
 
-    val systolicChanges = events.ofType<BloodPressureSystolicTextChanged>().map { it.systolic }
-    val diastolicChanges = events.ofType<BloodPressureDiastolicTextChanged>().map { it.diastolic }
+    val systolicChanges = events.ofType<SystolicChanged>().map { it.systolic }
+    val diastolicChanges = events.ofType<DiastolicChanged>().map { it.diastolic }
 
     val bpChanges = Observables
         .combineLatest(systolicChanges, diastolicChanges)
         .map { (systolic, diastolic) -> BloodPressure(systolic, diastolic) }
 
-    val diastolicBackspaceClicksWithEmptyText = events.ofType<BloodPressureDiastolicBackspaceClicked>()
+    val diastolicBackspaceClicksWithEmptyText = events.ofType<DiastolicBackspaceClicked>()
         .withLatestFrom(bpChanges) { _, bp -> bp }
         .filter { bp -> bp.diastolic.isEmpty() }
 
@@ -126,8 +126,8 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun hideBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val systolicChanges = events.ofType<BloodPressureSystolicTextChanged>()
-    val diastolicChanges = events.ofType<BloodPressureDiastolicTextChanged>()
+    val systolicChanges = events.ofType<SystolicChanged>()
+    val diastolicChanges = events.ofType<DiastolicChanged>()
 
     return Observable
         .merge(systolicChanges, diastolicChanges)
@@ -136,7 +136,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun prefillBpWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<BloodPressureEntrySheetCreated>()
+        .ofType<SheetCreated>()
         .filter { it.openAs is OpenAs.Update }
         .map { it.openAs as OpenAs.Update }
         .flatMap {
@@ -158,7 +158,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun calculateDateToPrefill() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val openAsStream = events
-        .ofType<BloodPressureEntrySheetCreated>()
+        .ofType<SheetCreated>()
         .map { it.openAs }
 
     val dateForNewBp = openAsStream
@@ -173,14 +173,14 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     val prefillDateEvent = dateForNewBp
         .mergeWith(dateForExistingBp)
-        .map { BloodPressureDateToPrefillCalculated(it) }
+        .map { DateToPrefillCalculated(it) }
 
     events.mergeWith(prefillDateEvent)
   }
 
   private fun prefillDate(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<BloodPressureDateToPrefillCalculated>()
+        .ofType<DateToPrefillCalculated>()
         .map { it.date }
         .map { date ->
           { ui: Ui ->
@@ -196,7 +196,7 @@ class BloodPressureEntrySheetController @Inject constructor(
   private fun showBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     val saveClicks = Observable.merge(
         events.ofType<BloodPressureDateClicked>(),
-        events.ofType<BloodPressureSaveClicked>())
+        events.ofType<SaveClicked>())
 
     val validations = events
         .ofType<BloodPressureReadingsValidated>()
@@ -224,7 +224,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun proceedToDateEntryWhenBpEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> {
     val screenChanges = events
-        .ofType<BloodPressureScreenChanged>()
+        .ofType<ScreenChanged>()
         .map { it.type }
 
     val validations = events
@@ -240,21 +240,21 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun showBpEntry(events: Observable<UiEvent>): Observable<UiChange> {
     val screenChanges = events
-        .ofType<BloodPressureScreenChanged>()
+        .ofType<ScreenChanged>()
         .map { it.type }
 
     val backPresses = events
-        .ofType<BloodPressureBackPressed>()
+        .ofType<BackPressed>()
         .withLatestFrom(screenChanges)
         .filter { (_, screen) -> screen == DATE_ENTRY }
 
     val mergedBackClicks = Observable.merge(
-        events.ofType<BloodPressureShowBpClicked>(),
+        events.ofType<ShowBpClicked>(),
         backPresses
     )
 
     val validateDateEvents = mergedBackClicks
-        .withLatestFrom(events.ofType<BloodPressureDateValidated>()) { _, validated -> validated.result }
+        .withLatestFrom(events.ofType<DateValidated>()) { _, validated -> validated.result }
         .ofType<Valid>()
 
     return validateDateEvents
@@ -263,11 +263,11 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun dismissSheetWhenBackIsPressedOnBp(events: Observable<UiEvent>): Observable<UiChange> {
     val screenChanges = events
-        .ofType<BloodPressureScreenChanged>()
+        .ofType<ScreenChanged>()
         .map { it.type }
 
     return events
-        .ofType<BloodPressureBackPressed>()
+        .ofType<BackPressed>()
         .withLatestFrom(screenChanges)
         .filter { (_, screen) -> screen == BP_ENTRY }
         .map { { ui: Ui -> ui.finish() } }
@@ -275,15 +275,15 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val screenChanges = events
-        .ofType<BloodPressureScreenChanged>()
+        .ofType<ScreenChanged>()
         .map { it.type }
 
     val systolicChanges = events
-        .ofType<BloodPressureSystolicTextChanged>()
+        .ofType<SystolicChanged>()
         .map { it.systolic }
 
     val diastolicChanges = events
-        .ofType<BloodPressureDiastolicTextChanged>()
+        .ofType<DiastolicChanged>()
         .map { it.diastolic }
 
     val validations = Observables.combineLatest(systolicChanges, diastolicChanges, screenChanges)
@@ -296,13 +296,13 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun toggleRemoveBloodPressureButton(events: Observable<UiEvent>): Observable<UiChange> {
     val hideRemoveBpButton = events
-        .ofType<BloodPressureEntrySheetCreated>()
+        .ofType<SheetCreated>()
         .map { it.openAs }
         .ofType<OpenAs.New>()
         .map { { ui: Ui -> ui.hideRemoveBpButton() } }
 
     val showRemoveBpButton = events
-        .ofType<BloodPressureEntrySheetCreated>()
+        .ofType<SheetCreated>()
         .map { it.openAs }
         .ofType<OpenAs.Update>()
         .map { { ui: Ui -> ui.showRemoveBpButton() } }
@@ -312,7 +312,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun updateSheetTitle(events: Observable<UiEvent>): Observable<UiChange> {
     val openAsStream = events
-        .ofType<BloodPressureEntrySheetCreated>()
+        .ofType<SheetCreated>()
         .map { it.openAs }
 
     val showEnterBloodPressureTitle = openAsStream
@@ -328,12 +328,12 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun showConfirmRemoveBloodPressureDialog(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressureMeasurementUuidStream = events
-        .ofType<BloodPressureEntrySheetCreated>()
+        .ofType<SheetCreated>()
         .map { it.openAs }
         .ofType<OpenAs.Update>()
         .map { it.bpUuid }
 
-    val removeClicks = events.ofType<BloodPressureRemoveClicked>()
+    val removeClicks = events.ofType<RemoveClicked>()
 
     return removeClicks
         .withLatestFrom(bloodPressureMeasurementUuidStream)
@@ -342,7 +342,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun closeSheetWhenEditedBpIsDeleted(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressureMeasurementUuidStream = events
-        .ofType<BloodPressureEntrySheetCreated>()
+        .ofType<SheetCreated>()
         .map { it.openAs }
         .ofType<OpenAs.Update>()
         .map { it.bpUuid }
@@ -356,15 +356,15 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun combineDateInputs() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val dayChanges = events
-        .ofType<BloodPressureDayChanged>()
+        .ofType<DayChanged>()
         .map { it.day }
 
     val monthChanges = events
-        .ofType<BloodPressureMonthChanged>()
+        .ofType<MonthChanged>()
         .map { it.month }
 
     val yearChanges = events
-        .ofType<BloodPressureYearChanged>()
+        .ofType<YearChanged>()
         .map { it.twoDigitYear }
 
     val combinedDates = Observables
@@ -376,35 +376,35 @@ class BloodPressureEntrySheetController @Inject constructor(
 
           val firstTwoDigitsOfYear = LocalDate.now(userClock).year.toString().substring(0, 2)
           val paddedYyyy = firstTwoDigitsOfYear + paddedYy
-          BloodPressureDateChanged(date = "$paddedDd/$paddedMm/$paddedYyyy")
+          DateChanged(date = "$paddedDd/$paddedMm/$paddedYyyy")
         }
     events.mergeWith(combinedDates)
   }
 
   private fun validateDateInput() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val screenChanges = events
-        .ofType<BloodPressureScreenChanged>()
+        .ofType<ScreenChanged>()
 
     val dateChanges = events
-        .ofType<BloodPressureDateChanged>()
+        .ofType<DateChanged>()
         .map { it.date }
 
     val validations = Observables.combineLatest(screenChanges, dateChanges)
         .map { (_, date) ->
           val validationResult = dateValidator.validate(date)
-          BloodPressureDateValidated(date, validationResult)
+          DateValidated(date, validationResult)
         }
 
     events.mergeWith(validations)
   }
 
   private fun showDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val saveClicks = events.ofType<BloodPressureSaveClicked>()
-    val showBpClicks = events.ofType<BloodPressureShowBpClicked>()
-    val backPresses = events.ofType<BloodPressureBackPressed>()
+    val saveClicks = events.ofType<SaveClicked>()
+    val showBpClicks = events.ofType<ShowBpClicked>()
+    val backPresses = events.ofType<BackPressed>()
 
     val validations = events
-        .ofType<BloodPressureDateValidated>()
+        .ofType<DateValidated>()
         .map { it.result }
 
     return Observable
@@ -421,17 +421,17 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun hideDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<BloodPressureDateChanged>()
+        .ofType<DateChanged>()
         .map { { ui: Ui -> ui.hideDateErrorMessage() } }
   }
 
   private fun saveBpWhenDateEntryIsDone() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val openAs = events
-        .ofType<BloodPressureEntrySheetCreated>()
+        .ofType<SheetCreated>()
         .map { it.openAs }
 
     val dateValidations = events
-        .ofType<BloodPressureDateValidated>()
+        .ofType<DateValidated>()
         .map { it.result }
 
     val bpValidations = events
@@ -447,10 +447,10 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { it.bpUuid }
 
     val saveClicks = events
-        .ofType<BloodPressureSaveClicked>()
+        .ofType<SaveClicked>()
 
     val prefilledDateStream = events
-        .ofType<BloodPressureDateToPrefillCalculated>()
+        .ofType<DateToPrefillCalculated>()
         .map { it.date }
 
     val loggedInUserStream = userSession

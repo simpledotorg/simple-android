@@ -1,7 +1,6 @@
 package org.simple.clinic.util
 
 import androidx.room.TypeConverter
-import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import org.threeten.bp.Instant
@@ -36,13 +35,3 @@ class InstantMoshiAdapter {
   }
 }
 
-class InstantRxPreferencesConverter : Preference.Converter<Instant> {
-
-  override fun deserialize(value: String): Instant {
-    return Instant.parse(value)
-  }
-
-  override fun serialize(value: Instant): String {
-    return value.toString()
-  }
-}

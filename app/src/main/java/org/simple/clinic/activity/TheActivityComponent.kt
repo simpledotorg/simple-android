@@ -66,7 +66,7 @@ import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientView
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
-import org.simple.clinic.util.InstantRxPreferencesConverter
+import org.simple.clinic.util.preference.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.threeten.bp.Instant

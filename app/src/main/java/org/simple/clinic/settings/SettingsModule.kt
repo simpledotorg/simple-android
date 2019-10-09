@@ -4,7 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.util.LocalePreferenceConverter
+import org.simple.clinic.util.preference.LocalePreferenceConverter
 import java.util.Locale
 import javax.inject.Named
 

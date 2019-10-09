@@ -8,11 +8,10 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.bp.sync.BloodPressureSyncApi
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.OptionalRxPreferencesConverter
-import org.simple.clinic.util.StringPreferenceConverter
+import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
+import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import retrofit2.Retrofit
-import java.util.Locale
 import javax.inject.Named
 
 @Module

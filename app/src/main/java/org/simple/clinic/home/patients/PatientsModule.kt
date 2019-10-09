@@ -4,7 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.util.InstantRxPreferencesConverter
+import org.simple.clinic.util.preference.InstantRxPreferencesConverter
 import org.threeten.bp.Instant
 import javax.inject.Named
 

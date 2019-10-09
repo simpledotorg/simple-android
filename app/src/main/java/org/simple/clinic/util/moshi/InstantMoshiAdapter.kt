@@ -1,20 +1,20 @@
-package org.simple.clinic.util
+package org.simple.clinic.util.moshi
 
-import androidx.room.TypeConverter
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.ToJson
 import org.threeten.bp.Instant
 
-class InstantRoomTypeConverter {
+class InstantMoshiAdapter {
 
-  @TypeConverter
+  @FromJson
   fun toInstant(value: String?): Instant? {
     return value?.let {
       return Instant.parse(value)
     }
   }
 
-  @TypeConverter
+  @ToJson
   fun fromInstant(instant: Instant?): String? {
     return instant?.toString()
   }
 }
-

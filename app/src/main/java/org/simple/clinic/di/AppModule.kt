@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Vibrator
 import androidx.work.WorkManager
+import com.f2prateek.rx.preferences2.Preference
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appupdate.AppUpdateModule
@@ -21,6 +22,7 @@ import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.remoteconfig.RemoteConfigModule
 import org.simple.clinic.screen.KeyChangeAnimatorModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
+import org.simple.clinic.settings.SettingsModule
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.DataSyncOnApprovalModule
@@ -35,6 +37,7 @@ import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.ZoneId
 import java.util.Locale
+import javax.inject.Named
 
 @Module(includes = [
   SyncModule::class,
@@ -58,7 +61,8 @@ import java.util.Locale
   HomescreenIllustrationModule::class,
   SimpleVideoModule::class,
   MobiusMigrationModule::class,
-  RemoteConfigModule::class
+  RemoteConfigModule::class,
+  SettingsModule::class
 ])
 open class AppModule(private val appContext: Application) {
 
@@ -86,7 +90,9 @@ open class AppModule(private val appContext: Application) {
   open fun elapsedRealtimeClock() = ElapsedRealtimeClock()
 
   @Provides
-  fun currentLocale(): Locale = Locale.getDefault()
+  fun currentLocale(@Named("preference_user_selected_locale") userSelectedLocalePreference: Preference<Locale>): Locale {
+    return userSelectedLocalePreference.get()
+  }
 
   @Provides
   @AppScope

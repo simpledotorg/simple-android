@@ -37,8 +37,7 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class BloodPressureEntrySheet : BottomSheetActivity() {
-
+class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   @Inject
   lateinit var controller: BloodPressureEntrySheetController
 
@@ -210,91 +209,91 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
           .map(CharSequence::toString)
           .map(::YearChanged)
 
-  fun changeFocusToDiastolic() {
+  override fun changeFocusToDiastolic() {
     diastolicEditText.requestFocus()
   }
 
-  fun changeFocusToSystolic() {
+  override fun changeFocusToSystolic() {
     systolicEditText.requestFocus()
   }
 
-  fun setBpSavedResultAndFinish() {
+  override fun setBpSavedResultAndFinish() {
     val intent = Intent()
     intent.putExtra(EXTRA_WAS_BP_SAVED, true)
     setResult(Activity.RESULT_OK, intent)
     finish()
   }
 
-  fun hideBpErrorMessage() {
+  override fun hideBpErrorMessage() {
     bpErrorTextView.visibility = View.GONE
   }
 
-  fun showSystolicLessThanDiastolicError() {
+  override fun showSystolicLessThanDiastolicError() {
     bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_more)
     bpErrorTextView.visibility = View.VISIBLE
   }
 
-  fun showSystolicLowError() {
+  override fun showSystolicLowError() {
     bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_70)
     bpErrorTextView.visibility = View.VISIBLE
   }
 
-  fun showSystolicHighError() {
+  override fun showSystolicHighError() {
     bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_300)
     bpErrorTextView.visibility = View.VISIBLE
   }
 
-  fun showDiastolicLowError() {
+  override fun showDiastolicLowError() {
     bpErrorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_40)
     bpErrorTextView.visibility = View.VISIBLE
   }
 
-  fun showDiastolicHighError() {
+  override fun showDiastolicHighError() {
     bpErrorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_180)
     bpErrorTextView.visibility = View.VISIBLE
   }
 
-  fun showSystolicEmptyError() {
+  override fun showSystolicEmptyError() {
     bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_empty)
     bpErrorTextView.visibility = View.VISIBLE
   }
 
-  fun showDiastolicEmptyError() {
+  override fun showDiastolicEmptyError() {
     bpErrorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_empty)
     bpErrorTextView.visibility = View.VISIBLE
   }
 
-  fun setSystolic(systolic: String) {
+  override fun setSystolic(systolic: String) {
     systolicEditText.setTextAndCursor(systolic)
   }
 
-  fun setDiastolic(diastolic: String) {
+  override fun setDiastolic(diastolic: String) {
     diastolicEditText.setTextAndCursor(diastolic)
   }
 
-  fun showRemoveBpButton() {
+  override fun showRemoveBpButton() {
     removeBloodPressureButton.visibility = View.VISIBLE
     removeBloodPressureButton.isEnabled = true
   }
 
-  fun hideRemoveBpButton() {
+  override fun hideRemoveBpButton() {
     removeBloodPressureButton.visibility = View.GONE
     removeBloodPressureButton.isEnabled = false
   }
 
-  fun showEnterNewBloodPressureTitle() {
+  override fun showEnterNewBloodPressureTitle() {
     enterBloodPressureTitleTextView.visibility = View.VISIBLE
   }
 
-  fun showEditBloodPressureTitle() {
+  override fun showEditBloodPressureTitle() {
     editBloodPressureTitleTextView.visibility = View.VISIBLE
   }
 
-  fun showConfirmRemoveBloodPressureDialog(uuid: UUID) {
+  override fun showConfirmRemoveBloodPressureDialog(uuid: UUID) {
     ConfirmRemoveBloodPressureDialog.show(uuid, supportFragmentManager)
   }
 
-  fun showBpEntryScreen() {
+  override fun showBpEntryScreen() {
     viewFlipper.inAnimation = AnimationUtils
         .loadAnimation(this, R.anim.bloodpressureentry_bp_entry_from_left)
         .apply { interpolator = FastOutSlowInInterpolator() }
@@ -306,7 +305,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     viewFlipper.displayedChildResId = R.id.bloodpressureentry_flipper_bp_entry
   }
 
-  fun showDateEntryScreen() {
+  override fun showDateEntryScreen() {
     viewFlipper.inAnimation = AnimationUtils
         .loadAnimation(this, R.anim.bloodpressureentry_date_entry_from_right)
         .apply { interpolator = FastOutSlowInInterpolator() }
@@ -319,27 +318,31 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     yearEditText.requestFocus()
   }
 
-  fun showInvalidDateError() {
+  override fun showInvalidDateError() {
     dateErrorTextView.setText(R.string.bloodpressureentry_error_date_invalid_pattern)
     dateErrorTextView.visibility = View.VISIBLE
   }
 
-  fun showDateIsInFutureError() {
+  override fun showDateIsInFutureError() {
     dateErrorTextView.setText(R.string.bloodpressureentry_error_date_is_in_future)
     dateErrorTextView.visibility = View.VISIBLE
   }
 
-  fun hideDateErrorMessage() {
+  override fun hideDateErrorMessage() {
     dateErrorTextView.visibility = View.GONE
   }
 
-  fun setDate(dayOfMonth: String, month: String, twoDigitYear: String) {
+  override fun setDate(dayOfMonth: String, month: String, twoDigitYear: String) {
     dayEditText.setTextAndCursor(dayOfMonth)
     monthEditText.setTextAndCursor(month)
     yearEditText.setTextAndCursor(twoDigitYear)
   }
 
-  fun showDate(date: LocalDate) {
+  override fun showDate(date: LocalDate) {
     bpDateButton.text = dateFormatter.format(date)
+  }
+
+  override fun dismiss() {
+    finish()
   }
 }

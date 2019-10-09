@@ -72,16 +72,16 @@ class BloodPressureEntrySheetControllerTest {
   private val bpValidator = mock<BpValidator>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val patientUuid = UUID.randomUUID()
+  private val patientUuid = UUID.fromString("79145baf-7a5c-4442-ab30-2da564a32944")
 
   private val testUtcClock = TestUtcClock()
   private val testUserClock = TestUserClock()
   private val userSession = mock<UserSession>()
 
   private val facilityRepository = mock<FacilityRepository>()
-  private val user = PatientMocker.loggedInUser()
+  private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
 
-  private val facility = PatientMocker.facility()
+  private val facility = PatientMocker.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
   private val userSubject = PublishSubject.create<User>()
 
   private val controller = BloodPressureEntrySheetController(
@@ -268,7 +268,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Suppress("Unused")
   private fun `params for prefilling bp measurements`(): List<List<Any?>> {
-    val bpUuid = UUID.randomUUID()
+    val bpUuid = UUID.fromString("8ddd7237-f331-4d34-9ce6-a3cd0c4c8133")
     return listOf(
         listOf(OpenAs.New(patientUuid), null),
         listOf(OpenAs.Update(bpUuid), PatientMocker.bp(uuid = bpUuid, patientUuid = patientUuid))
@@ -295,8 +295,8 @@ class BloodPressureEntrySheetControllerTest {
   @Suppress("Unused")
   private fun `params for showing remove button`(): List<List<Any>> {
     return listOf(
-        listOf(OpenAs.New(UUID.randomUUID()), false),
-        listOf(OpenAs.Update(UUID.randomUUID()), true))
+        listOf(OpenAs.New(UUID.fromString("3127284e-8db4-4359-9386-57b8837573e9")), false),
+        listOf(OpenAs.Update(UUID.fromString("baac5893-3670-4d9c-a5ff-12405cbb1ad5")), true))
   }
 
   @Test
@@ -319,8 +319,8 @@ class BloodPressureEntrySheetControllerTest {
   @Suppress("Unused")
   private fun `params for setting the title of the sheet`(): List<List<Any>> {
     return listOf(
-        listOf(OpenAs.New(UUID.randomUUID()), true),
-        listOf(OpenAs.Update(UUID.randomUUID()), false))
+        listOf(OpenAs.New(UUID.fromString("1526b550-c7a1-440a-a916-043f959bc6c5")), true),
+        listOf(OpenAs.Update(UUID.fromString("66f89f1a-4d13-4491-970d-0d09c9ce4043")), false))
   }
 
   @Test
@@ -379,8 +379,8 @@ class BloodPressureEntrySheetControllerTest {
     return listOf(
         listOf(OpenAs.New(patientUuid), InvalidPattern),
         listOf(OpenAs.New(patientUuid), DateIsInFuture),
-        listOf(OpenAs.Update(UUID.randomUUID()), InvalidPattern),
-        listOf(OpenAs.Update(UUID.randomUUID()), DateIsInFuture))
+        listOf(OpenAs.Update(UUID.fromString("f6f27cad-8b82-461e-8b1e-e14c2ac63832")), InvalidPattern),
+        listOf(OpenAs.Update(UUID.fromString("3b082f5e-8e0e-4aa7-a0cb-2d99ab020a30")), DateIsInFuture))
   }
 
   @Test
@@ -518,7 +518,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Suppress("unused")
   fun `params for showing date validation errors`(): List<Any> {
-    val existingBpUuid = UUID.randomUUID()
+    val existingBpUuid = UUID.fromString("2c4eccbb-d1bc-4c7c-b1ec-60a13acfeea4")
     return listOf(
         listOf(OpenAs.New(patientUuid), InvalidPattern, { ui: Ui -> verify(ui).showInvalidDateError() }),
         listOf(OpenAs.Update(existingBpUuid), InvalidPattern, { ui: Ui -> verify(ui).showInvalidDateError() }),
@@ -578,7 +578,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Suppress("unused")
   fun `params for OpenAs and bp validation errors`(): List<Any> {
-    val bpUuid = UUID.randomUUID()
+    val bpUuid = UUID.fromString("99fed5e5-19a8-4ece-9d07-6beab70ee77c")
     return listOf(
         listOf(OpenAs.New(patientUuid), ErrorSystolicEmpty),
         listOf(OpenAs.New(patientUuid), ErrorDiastolicEmpty),
@@ -637,7 +637,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Suppress("Unused")
   private fun `params for OpenAs types`(): List<Any> {
-    return listOf(OpenAs.New(patientUuid), OpenAs.Update(UUID.randomUUID()))
+    return listOf(OpenAs.New(patientUuid), OpenAs.Update(UUID.fromString("d9d0050a-7fa1-4293-868a-7640ebc93cd8")))
   }
 
   @Test

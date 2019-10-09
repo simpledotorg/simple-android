@@ -27,7 +27,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.mobius.toInit
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -93,7 +92,7 @@ class PatientEntryScreenControllerTest {
     fixture = MobiusTestFixture(
         sharedEvents.ofType(),
         PatientEntryModel.DEFAULT,
-        ::patientEntryInit.toInit(),
+        PatientEntryInit(),
         PatientEntryUpdate(numberValidator, dobValidator),
         effectHandler,
         PatientEntryViewRenderer(ui)::render

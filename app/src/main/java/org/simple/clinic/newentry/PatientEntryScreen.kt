@@ -32,7 +32,6 @@ import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.mobius.toInit
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -139,7 +138,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     MobiusDelegate(
         events.ofType(),
         PatientEntryModel.DEFAULT,
-        ::patientEntryInit.toInit(),
+        PatientEntryInit(),
         PatientEntryUpdate(phoneNumberValidator, dobValidator),
         effectHandler,
         viewRenderer::render,

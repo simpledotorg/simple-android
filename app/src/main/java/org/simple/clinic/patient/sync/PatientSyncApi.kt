@@ -15,7 +15,7 @@ interface PatientSyncApi {
       @Body body: PatientPushRequest
   ): Single<DataPushResponse>
 
-  @Headers(value = ["X-RESYNC-TOKEN: 1"])
+  @Headers(value = ["X-RESYNC-TOKEN: 2"])
   @GET("patients/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,

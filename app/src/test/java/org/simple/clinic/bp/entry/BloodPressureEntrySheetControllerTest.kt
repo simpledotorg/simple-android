@@ -63,7 +63,7 @@ class BloodPressureEntrySheetControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val sheet = mock<BloodPressureEntrySheet>()
+  private val ui = mock<BloodPressureEntryUi>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
@@ -104,7 +104,7 @@ class BloodPressureEntrySheetControllerTest {
 
     uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(sheet) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     userSubject.onNext(user)
   }
@@ -124,8 +124,8 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
 
     when (shouldMove) {
-      true -> verify(sheet, times(2)).changeFocusToDiastolic()
-      false -> verify(sheet, never()).changeFocusToDiastolic()
+      true -> verify(ui, times(2)).changeFocusToDiastolic()
+      false -> verify(ui, never()).changeFocusToDiastolic()
     }
   }
 
@@ -153,9 +153,9 @@ class BloodPressureEntrySheetControllerTest {
 
     uiEvents.onNext(DiastolicBackspaceClicked)
 
-    verify(sheet).changeFocusToSystolic()
+    verify(ui).changeFocusToSystolic()
     if (systolicAfterBackspace.isNotEmpty()) {
-      verify(sheet).setSystolic(systolicAfterBackspace)
+      verify(ui).setSystolic(systolicAfterBackspace)
     }
   }
 
@@ -176,7 +176,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
 
-    uiChangeVerification(sheet)
+    uiChangeVerification(ui)
   }
 
   @Suppress("unused")
@@ -201,7 +201,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(DiastolicChanged("90"))
     uiEvents.onNext(DiastolicChanged("99"))
 
-    verify(sheet, times(5)).hideBpErrorMessage()
+    verify(ui, times(5)).hideBpErrorMessage()
   }
 
   @Test
@@ -219,7 +219,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(SaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(ui, never()).setBpSavedResultAndFinish()
   }
 
   @Test
@@ -239,7 +239,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(SaveClicked)
     }
 
-    verify(sheet, never()).showDateEntryScreen()
+    verify(ui, never()).showDateEntryScreen()
   }
 
   @Test
@@ -255,11 +255,11 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(SheetCreated(openAs))
 
     if (openAs is OpenAs.Update) {
-      val verify = verify(sheet)
+      val verify = verify(ui)
       verify.setSystolic(bloodPressureMeasurement!!.systolic.toString())
       verify.setDiastolic(bloodPressureMeasurement.diastolic.toString())
     } else {
-      val verify = verify(sheet, never())
+      val verify = verify(ui, never())
       verify.setSystolic(any())
       verify.setDiastolic(any())
     }
@@ -285,9 +285,9 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(SheetCreated(openAs))
 
     if (shouldShowRemoveBpButton) {
-      verify(sheet).showRemoveBpButton()
+      verify(ui).showRemoveBpButton()
     } else {
-      verify(sheet).hideRemoveBpButton()
+      verify(ui).hideRemoveBpButton()
     }
   }
 
@@ -309,9 +309,9 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(SheetCreated(openAs))
 
     if (showEntryTitle) {
-      verify(sheet).showEnterNewBloodPressureTitle()
+      verify(ui).showEnterNewBloodPressureTitle()
     } else {
-      verify(sheet).showEditBloodPressureTitle()
+      verify(ui).showEditBloodPressureTitle()
     }
   }
 
@@ -330,7 +330,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(SheetCreated(openAs = OpenAs.Update(bloodPressure.uuid)))
     uiEvents.onNext(RemoveClicked)
 
-    verify(sheet).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
+    verify(ui).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
   }
 
   @Test
@@ -340,10 +340,10 @@ class BloodPressureEntrySheetControllerTest {
     whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(bloodPressureSubject)
 
     uiEvents.onNext(SheetCreated(openAs = OpenAs.Update(bpUuid = bloodPressure.uuid)))
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(ui, never()).setBpSavedResultAndFinish()
 
     bloodPressureSubject.onNext(bloodPressure.copy(deletedAt = Instant.now()))
-    verify(sheet).setBpSavedResultAndFinish()
+    verify(ui).setBpSavedResultAndFinish()
   }
 
   @Test
@@ -369,7 +369,7 @@ class BloodPressureEntrySheetControllerTest {
       else -> throw AssertionError()
     }
 
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(ui, never()).setBpSavedResultAndFinish()
     verify(dateValidator).validate("01/04/1909")
   }
 
@@ -425,7 +425,7 @@ class BloodPressureEntrySheetControllerTest {
         recordedAt = entryDateAsInstant)
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
-    verify(sheet).setBpSavedResultAndFinish()
+    verify(ui).setBpSavedResultAndFinish()
   }
 
   @Test
@@ -485,7 +485,7 @@ class BloodPressureEntrySheetControllerTest {
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
-    verify(sheet).setBpSavedResultAndFinish()
+    verify(ui).setBpSavedResultAndFinish()
   }
 
   @Test
@@ -510,9 +510,9 @@ class BloodPressureEntrySheetControllerTest {
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(ui, never()).setBpSavedResultAndFinish()
 
-    uiChangeVerification(sheet)
+    uiChangeVerification(ui)
   }
 
   @Suppress("unused")
@@ -533,7 +533,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(YearChanged("1991"))
     }
 
-    verify(sheet).hideDateErrorMessage()
+    verify(ui).hideDateErrorMessage()
   }
 
   @Test
@@ -552,7 +552,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(BloodPressureDateClicked)
     }
 
-    verify(sheet).showDateEntryScreen()
+    verify(ui).showDateEntryScreen()
   }
 
   @Test
@@ -572,7 +572,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(BloodPressureDateClicked)
     }
 
-    verify(sheet, never()).showDateEntryScreen()
+    verify(ui, never()).showDateEntryScreen()
   }
 
   @Suppress("unused")
@@ -602,7 +602,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(BackPressed)
     }
 
-    verify(sheet).finish()
+    verify(ui).dismiss()
   }
 
   @Test
@@ -612,7 +612,7 @@ class BloodPressureEntrySheetControllerTest {
 
     uiEvents.onNext(SheetCreated(OpenAs.New(patientUuid)))
 
-    verify(sheet).setDate(
+    verify(ui).setDate(
         dayOfMonth = "23",
         month = "04",
         twoDigitYear = "18")
@@ -628,7 +628,7 @@ class BloodPressureEntrySheetControllerTest {
 
     uiEvents.onNext(SheetCreated(OpenAs.Update(existingBp.uuid)))
 
-    verify(sheet, times(1)).setDate(
+    verify(ui, times(1)).setDate(
         dayOfMonth = "23",
         month = "04",
         twoDigitYear = "18")
@@ -646,16 +646,16 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(SheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
 
-    verify(sheet).showDate(today)
+    verify(ui).showDate(today)
 
-    verify(sheet).setDate(
+    verify(ui).setDate(
         today.dayOfMonth.toString().padStart(2, '0'),
         today.month.value.toString().padStart(2, '0'),
         today.year.toString().takeLast(2)
     )
-    verify(sheet).hideRemoveBpButton()
-    verify(sheet).showEnterNewBloodPressureTitle()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).hideRemoveBpButton()
+    verify(ui).showEnterNewBloodPressureTitle()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -667,18 +667,18 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(SheetCreated(OpenAs.Update(bpUuid = bp.uuid)))
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
 
-    verify(sheet).showDate(recordedDate)
+    verify(ui).showDate(recordedDate)
 
-    verify(sheet).setDate(
+    verify(ui).setDate(
         recordedDate.dayOfMonth.toString().padStart(2, '0'),
         recordedDate.month.value.toString().padStart(2, '0'),
         recordedDate.year.toString().takeLast(2)
     )
-    verify(sheet).setSystolic(bp.systolic.toString())
-    verify(sheet).setDiastolic(bp.diastolic.toString())
-    verify(sheet).showRemoveBpButton()
-    verify(sheet).showEditBloodPressureTitle()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).setSystolic(bp.systolic.toString())
+    verify(ui).setDiastolic(bp.diastolic.toString())
+    verify(ui).showRemoveBpButton()
+    verify(ui).showEditBloodPressureTitle()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -700,12 +700,12 @@ class BloodPressureEntrySheetControllerTest {
       onNext(MonthChanged("24"))
       onNext(YearChanged("91"))
 
-      reset(sheet)
+      reset(ui)
       onNext(ShowBpClicked)
     }
 
-    verify(sheet).showInvalidDateError()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).showInvalidDateError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -727,12 +727,12 @@ class BloodPressureEntrySheetControllerTest {
       onNext(MonthChanged("24"))
       onNext(YearChanged("91"))
 
-      reset(sheet)
+      reset(ui)
       onNext(BackPressed)
     }
 
-    verify(sheet).showInvalidDateError()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).showInvalidDateError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -757,12 +757,12 @@ class BloodPressureEntrySheetControllerTest {
       onNext(MonthChanged("24"))
       onNext(YearChanged("91"))
 
-      reset(sheet)
+      reset(ui)
       onNext(ShowBpClicked)
     }
 
-    verify(sheet).showInvalidDateError()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).showInvalidDateError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -787,12 +787,12 @@ class BloodPressureEntrySheetControllerTest {
       onNext(MonthChanged("24"))
       onNext(YearChanged("91"))
 
-      reset(sheet)
+      reset(ui)
       onNext(BackPressed)
     }
 
-    verify(sheet).showInvalidDateError()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).showInvalidDateError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -815,13 +815,13 @@ class BloodPressureEntrySheetControllerTest {
       onNext(MonthChanged("5"))
       onNext(YearChanged("16"))
 
-      reset(sheet)
+      reset(ui)
       onNext(BackPressed)
     }
 
-    verify(sheet).showDate(localDate)
-    verify(sheet).showBpEntryScreen()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).showDate(localDate)
+    verify(ui).showBpEntryScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -844,13 +844,13 @@ class BloodPressureEntrySheetControllerTest {
       onNext(MonthChanged("5"))
       onNext(YearChanged("16"))
 
-      reset(sheet)
+      reset(ui)
       onNext(ShowBpClicked)
     }
 
-    verify(sheet).showDate(localDate)
-    verify(sheet).showBpEntryScreen()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).showDate(localDate)
+    verify(ui).showBpEntryScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -875,7 +875,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(MonthChanged("02"))
       onNext(YearChanged("16"))
 
-      reset(sheet)
+      reset(ui)
       onNext(SaveClicked)
     }
 
@@ -890,10 +890,10 @@ class BloodPressureEntrySheetControllerTest {
     )
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
-    verify(sheet).setBpSavedResultAndFinish()
-    verify(sheet).showDate(inputDate)
+    verify(ui).setBpSavedResultAndFinish()
+    verify(ui).showDate(inputDate)
 
-    verifyNoMoreInteractions(sheet)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -937,7 +937,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(MonthChanged("02"))
       onNext(YearChanged("16"))
 
-      reset(sheet)
+      reset(ui)
       onNext(SaveClicked)
     }
 
@@ -957,9 +957,9 @@ class BloodPressureEntrySheetControllerTest {
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
 
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
-    verify(sheet).showDate(newInputDate)
-    verify(sheet).setBpSavedResultAndFinish()
+    verify(ui).showDate(newInputDate)
+    verify(ui).setBpSavedResultAndFinish()
 
-    verifyNoMoreInteractions(sheet)
+    verifyNoMoreInteractions(ui)
   }
 }

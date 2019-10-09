@@ -41,7 +41,7 @@ import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
-typealias Ui = BloodPressureEntrySheet
+typealias Ui = BloodPressureEntryUi
 typealias UiChange = (Ui) -> Unit
 
 /**
@@ -270,7 +270,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BackPressed>()
         .withLatestFrom(screenChanges)
         .filter { (_, screen) -> screen == BP_ENTRY }
-        .map { { ui: Ui -> ui.finish() } }
+        .map { { ui: Ui -> ui.dismiss() } }
   }
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->

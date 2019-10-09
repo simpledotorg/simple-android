@@ -21,12 +21,9 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientUuid
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
@@ -38,7 +35,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
-import java.util.UUID
 import javax.inject.Inject
 
 typealias Ui = BloodPressureEntryUi
@@ -557,28 +553,5 @@ class BloodPressureEntrySheetController @Inject constructor(
     return events
         .ofType<BloodPressureSaved>()
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
-  }
-
-  sealed class SaveBpData {
-
-    data class ReadyToCreate(
-        val date: LocalDate,
-        val systolic: Int,
-        val diastolic: Int,
-        val patientUuid: PatientUuid,
-        val loggedInUser: User,
-        val currentFacility: Facility
-    ) : SaveBpData()
-
-    data class ReadyToUpdate(
-        val date: LocalDate,
-        val systolic: Int,
-        val diastolic: Int,
-        val bpUuid: UUID,
-        val loggedInUser: User,
-        val currentFacility: Facility
-    ) : SaveBpData()
-
-    object NeedsCorrection : SaveBpData()
   }
 }

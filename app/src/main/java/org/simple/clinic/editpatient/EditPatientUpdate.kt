@@ -37,7 +37,7 @@ class EditPatientUpdate(
   ): Next<EditPatientModel, EditPatientEffect> {
     return when (event) {
       is NameChanged -> onTextFieldChanged(event) { model.updateName(event.name) }
-      is GenderChanged -> onGenderChanged(model, event)
+      is GenderChanged -> next(model.updateGender(event.gender))
       is PhoneNumberChanged -> onTextFieldChanged(event) { model.updatePhoneNumber(event.phoneNumber) }
       is ColonyOrVillageChanged -> onTextFieldChanged(event) { model.updateColonyOrVillage(event.colonyOrVillage) }
       is DistrictChanged -> onTextFieldChanged(event) { model.updateDistrict(event.district) }
@@ -58,12 +58,6 @@ class EditPatientUpdate(
       modifier(),
       setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
   )
-
-  private fun onGenderChanged(
-      model: EditPatientModel,
-      event: GenderChanged
-  ): Next<EditPatientModel, EditPatientEffect> =
-      next(model.updateGender(event.gender))
 
   private fun onDateOfBirthFocusChanged(
       event: DateOfBirthFocusChanged
@@ -107,11 +101,13 @@ class EditPatientUpdate(
       model: EditPatientModel
   ): Next<EditPatientModel, EditPatientEffect> {
     val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator)
-    return if (validationErrors.isEmpty()) {
+    val effect = if (validationErrors.isEmpty()) {
       val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber) = model
-      justEffect(SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber))
+      SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber)
     } else {
-      justEffect(ShowValidationErrorsEffect(validationErrors))
+      ShowValidationErrorsEffect(validationErrors)
     }
+
+    return justEffect(effect)
   }
 }

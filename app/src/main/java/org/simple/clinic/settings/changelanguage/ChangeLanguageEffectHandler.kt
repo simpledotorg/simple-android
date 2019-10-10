@@ -10,15 +10,13 @@ object ChangeLanguageEffectHandler {
 
   fun create(
       schedulersProvider: SchedulersProvider,
-      settingsRepository: SettingsRepository,
-      activityRestarter: ActivityRestarter
+      settingsRepository: SettingsRepository
   ): ObservableTransformer<ChangeLanguageEffect, ChangeLanguageEvent> {
     return RxMobius
         .subtypeEffectHandler<ChangeLanguageEffect, ChangeLanguageEvent>()
         .addTransformer(LoadCurrentSelectedLanguageEffect::class.java, loadCurrentSelectedLanguage(settingsRepository, schedulersProvider.io()))
         .addTransformer(LoadSupportedLanguagesEffect::class.java, loadSupportedLanguages(settingsRepository, schedulersProvider.io()))
         .addTransformer(UpdateSelectedLanguageEffect::class.java, updateSelectedLanguage(settingsRepository, schedulersProvider.io()))
-        .addAction(RestartActivityEffect::class.java, activityRestarter::restart, schedulersProvider.ui())
         .build()
   }
 
@@ -67,9 +65,5 @@ object ChangeLanguageEffectHandler {
           }
           .map(::SelectedLanguageChangedEvent)
     }
-  }
-
-  interface ActivityRestarter {
-    fun restart()
   }
 }

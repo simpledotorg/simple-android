@@ -307,7 +307,7 @@ dependencies {
     because "Traceur is incompatible with the version of RxJava this artifact pulls in transitively"
   }
   testImplementation "org.threeten:threetenbp:$versions.threeTenBp"
-  implementation "com.github.f4b6a3:uuid-creator:1.4.1"
+  implementation "com.fasterxml.uuid:java-uuid-generator:$versions.uuidGenerator"
 }
 
 // This must always be present at the bottom of this file, as per:

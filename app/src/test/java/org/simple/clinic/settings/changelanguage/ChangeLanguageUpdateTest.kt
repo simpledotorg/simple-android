@@ -1,9 +1,7 @@
 package org.simple.clinic.settings.changelanguage
 
-import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
-import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -43,7 +41,7 @@ class ChangeLanguageUpdateTest {
   }
 
   @Test
-  fun `when the user selects a language, the currently selected language must be changed to the selected language`() {
+  fun `when the user selects a language, the ui must be updated`() {
     val model = defaultModel
         .withCurrentLanguage(englishIndia)
         .withSupportedLanguages(listOf(englishIndia, hindiIndia))
@@ -52,8 +50,8 @@ class ChangeLanguageUpdateTest {
         .given(model)
         .whenEvent(SelectLanguageEvent(hindiIndia))
         .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(UpdateCurrentLanguageEffect(hindiIndia) as ChangeLanguageEffect)
+            hasModel(model.withUserSelectedLanguage(hindiIndia)),
+            hasNoEffects()
         ))
   }
 

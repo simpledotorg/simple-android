@@ -12,7 +12,7 @@ class SettingsUpdateTest {
 
   @Test
   fun `the user details loaded event must update the model`() {
-    val spec = UpdateSpec<SettingsModel, SettingsEvent, SettingsEffect>(SettingsLogic::update)
+    val spec = UpdateSpec<SettingsModel, SettingsEvent, SettingsEffect>(SettingsUpdate())
     val userName = "Anish Acharya"
     val userPhoneNumber = "1234567890"
 

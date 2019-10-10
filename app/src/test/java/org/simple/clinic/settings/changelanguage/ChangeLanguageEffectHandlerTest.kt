@@ -6,11 +6,9 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.observers.TestObserver
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.settings.ProvidedLanguage
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.settings.SystemDefaultLanguage
@@ -21,19 +19,15 @@ class ChangeLanguageEffectHandlerTest {
   private val settingsRepository = mock<SettingsRepository>()
   private val uiActions = mock<UiActions>()
 
-  private val effectsSubject: Subject<ChangeLanguageEffect> = PublishSubject.create<ChangeLanguageEffect>()
-
-  private val testObserver: TestObserver<ChangeLanguageEvent> = effectsSubject
-      .compose(ChangeLanguageEffectHandler.create(
-          schedulersProvider = TrampolineSchedulersProvider(),
-          settingsRepository = settingsRepository,
-          uiActions = uiActions
-      ))
-      .test()
+  private val testCase = EffectHandlerTestCase(ChangeLanguageEffectHandler.create(
+      schedulersProvider = TrampolineSchedulersProvider(),
+      settingsRepository = settingsRepository,
+      uiActions = uiActions
+  ))
 
   @After
   fun tearDown() {
-    testObserver.dispose()
+    testCase.dispose()
   }
 
   @Test
@@ -43,13 +37,10 @@ class ChangeLanguageEffectHandlerTest {
     whenever(settingsRepository.getCurrentLanguage()).thenReturn(Single.just(selectedLanguage))
 
     // when
-    effectsSubject.onNext(LoadCurrentLanguageEffect)
+    testCase.dispatch(LoadCurrentLanguageEffect)
 
     // then
-    testObserver
-        .assertValue(CurrentLanguageLoadedEvent(selectedLanguage))
-        .assertNotComplete()
-        .assertNotTerminated()
+    testCase.assertOutgoingEvents(CurrentLanguageLoadedEvent(selectedLanguage))
   }
 
   @Test
@@ -63,13 +54,10 @@ class ChangeLanguageEffectHandlerTest {
     whenever(settingsRepository.getSupportedLanguages()).thenReturn(Single.just(supportedLanguages))
 
     // when
-    effectsSubject.onNext(LoadSupportedLanguagesEffect)
+    testCase.dispatch(LoadSupportedLanguagesEffect)
 
     // then
-    testObserver
-        .assertValue(SupportedLanguagesLoadedEvent(supportedLanguages))
-        .assertNotComplete()
-        .assertNotTerminated()
+    testCase.assertOutgoingEvents(SupportedLanguagesLoadedEvent(supportedLanguages))
   }
 
   @Test
@@ -79,25 +67,19 @@ class ChangeLanguageEffectHandlerTest {
     whenever(settingsRepository.setCurrentLanguage(changeToLanguage)).thenReturn(Completable.complete())
 
     // when
-    effectsSubject.onNext(UpdateCurrentLanguageEffect(changeToLanguage))
+    testCase.dispatch(UpdateCurrentLanguageEffect(changeToLanguage))
 
     // then
-    testObserver
-        .assertValue(CurrentLanguageChangedEvent)
-        .assertNotComplete()
-        .assertNotTerminated()
+    testCase.assertOutgoingEvents(CurrentLanguageChangedEvent)
   }
 
   @Test
   fun `when the go back to previous screen effect is received, the go back ui action must be invoked`() {
     // when
-    effectsSubject.onNext(GoBack)
+    testCase.dispatch(GoBack)
 
     // then
-    testObserver
-        .assertNoValues()
-        .assertNotComplete()
-        .assertNotTerminated()
+    testCase.assertNoOutgoingEvents()
     verify(uiActions).goBackToPreviousScreen()
     verifyNoMoreInteractions(uiActions)
   }

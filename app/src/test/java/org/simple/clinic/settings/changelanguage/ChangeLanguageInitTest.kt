@@ -10,7 +10,7 @@ import org.simple.clinic.settings.ProvidedLanguage
 
 class ChangeLanguageInitTest {
 
-  private val spec = InitSpec<ChangeLanguageModel, ChangeLanguageEffect>(ChangeLanguageLogic::init)
+  private val spec = InitSpec<ChangeLanguageModel, ChangeLanguageEffect>(ChangeLanguageInit())
   private val defaultModel = ChangeLanguageModel.FETCHING_LANGUAGES
 
   @Test

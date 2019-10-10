@@ -14,7 +14,6 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -138,20 +137,23 @@ class BloodPressureValidationTest {
   )
 
   @Test
-  @Ignore("This test should be refactored.")
   @Parameters(method = "params for OpenAs and bp validation errors")
   fun `when BP entry is active, BP readings are invalid and next arrow is pressed then date entry should not be shown`(
-      openAs: OpenAs,
-      error: Validation
+      testParams: ValidationErrorsAndDoNotGoToDateEntryParams
   ) {
-    whenever(bpValidator.validate(any(), any())).doReturn(error)
+    val (openAs, systolic, diastolic, error) = testParams
+
+    // This assertion is not necessary, it was added to stabilize this test for refactoring.
+    assertThat(bpValidator.validate(systolic, diastolic))
+        .isEqualTo(error)
+
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
     uiEvents.run {
       onNext(SheetCreated(openAs = openAs))
       onNext(ScreenChanged(BloodPressureEntrySheet.ScreenType.BP_ENTRY))
-      onNext(SystolicChanged("-"))
-      onNext(DiastolicChanged("-"))
+      onNext(SystolicChanged(systolic))
+      onNext(DiastolicChanged(diastolic))
       onNext(BloodPressureDateClicked)
     }
 
@@ -159,22 +161,30 @@ class BloodPressureValidationTest {
   }
 
   @Suppress("unused")
-  fun `params for OpenAs and bp validation errors`(): List<Any> {
+  fun `params for OpenAs and bp validation errors`(): List<ValidationErrorsAndDoNotGoToDateEntryParams> {
     val bpUuid = UUID.fromString("99fed5e5-19a8-4ece-9d07-6beab70ee77c")
     return listOf(
-        listOf(OpenAs.New(patientUuid), ErrorSystolicEmpty),
-        listOf(OpenAs.New(patientUuid), ErrorDiastolicEmpty),
-        listOf(OpenAs.New(patientUuid), ErrorSystolicTooHigh),
-        listOf(OpenAs.New(patientUuid), ErrorSystolicTooLow),
-        listOf(OpenAs.New(patientUuid), ErrorDiastolicTooHigh),
-        listOf(OpenAs.New(patientUuid), ErrorDiastolicTooLow),
-        listOf(OpenAs.New(patientUuid), ErrorSystolicLessThanDiastolic),
-        listOf(OpenAs.Update(bpUuid), ErrorSystolicEmpty),
-        listOf(OpenAs.Update(bpUuid), ErrorDiastolicEmpty),
-        listOf(OpenAs.Update(bpUuid), ErrorSystolicTooHigh),
-        listOf(OpenAs.Update(bpUuid), ErrorSystolicTooLow),
-        listOf(OpenAs.Update(bpUuid), ErrorDiastolicTooHigh),
-        listOf(OpenAs.Update(bpUuid), ErrorDiastolicTooLow),
-        listOf(OpenAs.Update(bpUuid), ErrorSystolicLessThanDiastolic))
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "", "80", ErrorSystolicEmpty),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "120", "", ErrorDiastolicEmpty),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "999", "80", ErrorSystolicTooHigh),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "0", "80", ErrorSystolicTooLow),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "120", "999", ErrorDiastolicTooHigh),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "120", "0", ErrorDiastolicTooLow),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "120", "140", ErrorSystolicLessThanDiastolic),
+
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "", "80", ErrorSystolicEmpty),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "120", "", ErrorDiastolicEmpty),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "999", "80", ErrorSystolicTooHigh),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "0", "80", ErrorSystolicTooLow),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "120", "999", ErrorDiastolicTooHigh),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "120", "0", ErrorDiastolicTooLow),
+        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "120", "140", ErrorSystolicLessThanDiastolic))
   }
+
+  data class ValidationErrorsAndDoNotGoToDateEntryParams(
+      val openAs: OpenAs,
+      val systolic: String,
+      val diastolic: String,
+      val error: Validation
+  )
 }

@@ -14,12 +14,12 @@ class ChangeLanguageInitTest {
   private val defaultModel = ChangeLanguageModel.FETCHING_LANGUAGES
 
   @Test
-  fun `when the screen is created, the current selected language and the list of supported languages must be loaded`() {
+  fun `when the screen is created, the current language and the list of supported languages must be loaded`() {
     spec
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(LoadCurrentSelectedLanguageEffect, LoadSupportedLanguagesEffect)
+            hasEffects(LoadCurrentLanguageEffect, LoadSupportedLanguagesEffect)
         ))
   }
 
@@ -37,7 +37,7 @@ class ChangeLanguageInitTest {
   }
 
   @Test
-  fun `when the screen is restored without the current selected language, the current selected language must be fetched`() {
+  fun `when the screen is restored without the current language, the current language must be fetched`() {
     val supportedLanguages = listOf(
         ProvidedLanguage(displayName = "English", languageCode = "en_IN"),
         ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
@@ -48,12 +48,12 @@ class ChangeLanguageInitTest {
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(LoadCurrentSelectedLanguageEffect as ChangeLanguageEffect)
+            hasEffects(LoadCurrentLanguageEffect as ChangeLanguageEffect)
         ))
   }
 
   @Test
-  fun `when the screen is restored with the current select language and the supported languages, do nothing`() {
+  fun `when the screen is restored with the current language and the supported languages, do nothing`() {
     val language = ProvidedLanguage(displayName = "English", languageCode = "en_IN")
     val supportedLanguages = listOf(
         ProvidedLanguage(displayName = "English", languageCode = "en_IN"),

@@ -14,24 +14,24 @@ object ChangeLanguageEffectHandler {
   ): ObservableTransformer<ChangeLanguageEffect, ChangeLanguageEvent> {
     return RxMobius
         .subtypeEffectHandler<ChangeLanguageEffect, ChangeLanguageEvent>()
-        .addTransformer(LoadCurrentSelectedLanguageEffect::class.java, loadCurrentSelectedLanguage(settingsRepository, schedulersProvider.io()))
+        .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage(settingsRepository, schedulersProvider.io()))
         .addTransformer(LoadSupportedLanguagesEffect::class.java, loadSupportedLanguages(settingsRepository, schedulersProvider.io()))
-        .addTransformer(UpdateSelectedLanguageEffect::class.java, updateSelectedLanguage(settingsRepository, schedulersProvider.io()))
+        .addTransformer(UpdateCurrentLanguageEffect::class.java, updateCurrentLanguage(settingsRepository, schedulersProvider.io()))
         .build()
   }
 
   private fun loadCurrentSelectedLanguage(
       settingsRepository: SettingsRepository,
       scheduler: Scheduler
-  ): ObservableTransformer<LoadCurrentSelectedLanguageEffect, ChangeLanguageEvent> {
+  ): ObservableTransformer<LoadCurrentLanguageEffect, ChangeLanguageEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
           .flatMapSingle {
             settingsRepository
-                .getCurrentSelectedLanguage()
+                .getCurrentLanguage()
                 .subscribeOn(scheduler)
           }
-          .map(::CurrentSelectedLanguageLoadedEvent)
+          .map(::CurrentLanguageLoadedEvent)
     }
   }
 
@@ -50,20 +50,20 @@ object ChangeLanguageEffectHandler {
     }
   }
 
-  private fun updateSelectedLanguage(
+  private fun updateCurrentLanguage(
       settingsRepository: SettingsRepository,
       scheduler: Scheduler
-  ): ObservableTransformer<UpdateSelectedLanguageEffect, ChangeLanguageEvent> {
+  ): ObservableTransformer<UpdateCurrentLanguageEffect, ChangeLanguageEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
           .map { it.newLanguage }
           .flatMapSingle { newLanguage ->
             settingsRepository
-                .setCurrentSelectedLanguage(newLanguage)
+                .setCurrentLanguage(newLanguage)
                 .subscribeOn(scheduler)
                 .toSingleDefault(newLanguage)
           }
-          .map(::SelectedLanguageChangedEvent)
+          .map(::CurrentLanguageChangedEvent)
     }
   }
 }

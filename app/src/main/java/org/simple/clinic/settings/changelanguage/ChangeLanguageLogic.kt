@@ -27,7 +27,7 @@ object ChangeLanguageLogic {
       is CurrentLanguageLoadedEvent -> next(model.withCurrentLanguage(event.language))
       is SupportedLanguagesLoadedEvent -> next(model.withSupportedLanguages(event.languages))
       is SelectLanguageEvent -> next(model.withUserSelectedLanguage(event.newLanguage))
-      is CurrentLanguageChangedEvent -> next(model.withCurrentLanguage(event.selectedLanguage))
+      is CurrentLanguageChangedEvent -> dispatch(setOf(GoBack))
     }
   }
 }

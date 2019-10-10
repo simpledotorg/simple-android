@@ -4,6 +4,7 @@ import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import org.simple.clinic.mobius.next
 
 fun allPatientsInFacilityInit(
     model: AllPatientsInFacilityModel
@@ -18,7 +19,7 @@ fun allPatientsInFacilityUpdate(
   return when (event) {
     is FacilityFetchedEvent -> {
       val facility = event.facility
-      next(model.facilityFetched(facility), setOf(FetchPatientsEffect(facility)))
+      next(model.facilityFetched(facility), FetchPatientsEffect(facility))
     }
 
     is NoPatientsInFacilityEvent -> next(model.noPatients())

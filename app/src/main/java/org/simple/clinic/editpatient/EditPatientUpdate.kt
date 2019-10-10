@@ -14,6 +14,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.mobius.justEffect
+import org.simple.clinic.mobius.next
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
@@ -56,7 +57,7 @@ class EditPatientUpdate(
       modifier: () -> EditPatientModel
   ): Next<EditPatientModel, EditPatientEffect> = next(
       modifier(),
-      setOf(HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
+      HideValidationErrorsEffect(errorsForEventType.getValue(event::class))
   )
 
   private fun onDateOfBirthFocusChanged(
@@ -80,10 +81,7 @@ class EditPatientUpdate(
       setOf(ShowDatePatternInDateOfBirthLabelEffect, HideValidationErrorsEffect(errorsForEventType.getValue(event::class)))
     }
 
-    return next(
-        model.updateDateOfBirth(event.dateOfBirth),
-        effects
-    )
+    return next(model.updateDateOfBirth(event.dateOfBirth), effects)
   }
 
   private fun onBackClicked(

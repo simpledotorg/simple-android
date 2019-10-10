@@ -11,7 +11,7 @@ class SettingsInitTest {
 
   private val defaultModel = SettingsModel.FETCHING_USER_DETAILS
 
-  private val spec = InitSpec<SettingsModel, SettingsEffect>(SettingsLogic::init)
+  private val spec = InitSpec<SettingsModel, SettingsEffect>(SettingsInit())
 
   @Test
   fun `the load user effect must be emitted when the model is created`() {

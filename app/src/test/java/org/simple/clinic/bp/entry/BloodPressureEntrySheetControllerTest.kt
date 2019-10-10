@@ -20,7 +20,6 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -158,38 +157,6 @@ class BloodPressureEntrySheetControllerTest {
     if (systolicAfterBackspace.isNotEmpty()) {
       verify(ui).setSystolic(systolicAfterBackspace)
     }
-  }
-
-  @Test
-  @Ignore("This test should be isolated and refactored.")
-  @Parameters(method = "params for bp validation errors and expected ui changes")
-  fun `when BP entry is active, and BP readings are invalid then show error`(
-      error: BpValidator.Validation,
-      uiChangeVerification: (Ui) -> Unit
-  ) {
-    uiEvents.onNext(ScreenChanged(BP_ENTRY))
-    uiEvents.onNext(SheetCreated(OpenAs.New(patientUuid)))
-    uiEvents.onNext(SystolicChanged("-"))
-    uiEvents.onNext(DiastolicChanged("-"))
-    uiEvents.onNext(SaveClicked)
-
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
-    verify(bloodPressureRepository, never()).updateMeasurement(any())
-
-    uiChangeVerification(ui)
-  }
-
-  @Suppress("unused")
-  fun `params for bp validation errors and expected ui changes`(): List<Any> {
-    return listOf(
-        listOf<Any>(ErrorSystolicEmpty, { ui: Ui -> verify(ui).showSystolicEmptyError() }),
-        listOf<Any>(ErrorDiastolicEmpty, { ui: Ui -> verify(ui).showDiastolicEmptyError() }),
-        listOf<Any>(ErrorSystolicTooHigh, { ui: Ui -> verify(ui).showSystolicHighError() }),
-        listOf<Any>(ErrorSystolicTooLow, { ui: Ui -> verify(ui).showSystolicLowError() }),
-        listOf<Any>(ErrorDiastolicTooHigh, { ui: Ui -> verify(ui).showDiastolicHighError() }),
-        listOf<Any>(ErrorDiastolicTooLow, { ui: Ui -> verify(ui).showDiastolicLowError() }),
-        listOf<Any>(ErrorSystolicLessThanDiastolic, { ui: Ui -> verify(ui).showSystolicLessThanDiastolicError() })
-    )
   }
 
   @Test
@@ -547,27 +514,6 @@ class BloodPressureEntrySheetControllerTest {
     }
 
     verify(ui).showDateEntryScreen()
-  }
-
-  @Test
-  @Ignore("This test should be isolated and refactored.")
-  @Parameters(method = "params for OpenAs and bp validation errors")
-  fun `when BP entry is active, BP readings are invalid and next arrow is pressed then date entry should not be shown`(
-      openAs: OpenAs,
-      error: BpValidator.Validation
-  ) {
-    whenever(bpValidator.validate(any(), any())).doReturn(error)
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
-
-    uiEvents.run {
-      onNext(SheetCreated(openAs = openAs))
-      onNext(ScreenChanged(BP_ENTRY))
-      onNext(SystolicChanged("-"))
-      onNext(DiastolicChanged("-"))
-      onNext(BloodPressureDateClicked)
-    }
-
-    verify(ui, never()).showDateEntryScreen()
   }
 
   @Suppress("unused")

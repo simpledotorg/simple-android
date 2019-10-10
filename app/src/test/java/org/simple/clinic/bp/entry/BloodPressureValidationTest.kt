@@ -34,11 +34,12 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -51,13 +52,12 @@ class BloodPressureValidationTest {
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
-  private val dateValidator = mock<UserInputDateValidator>()
+  private val dateValidator = UserInputDateValidator(ZoneOffset.UTC, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
   private val bpValidator = BpValidator()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val patientUuid = UUID.fromString("79145baf-7a5c-4442-ab30-2da564a32944")
 
-  private val testUtcClock = TestUtcClock()
   private val testUserClock = TestUserClock()
   private val userSession = mock<UserSession>()
 
@@ -82,7 +82,6 @@ class BloodPressureValidationTest {
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    whenever(dateValidator.dateInUserTimeZone()).doReturn(LocalDate.now(testUtcClock))
     whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
 

@@ -19,10 +19,10 @@ class ChangeLanguageUpdateTest {
   private val spec = UpdateSpec<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect>(ChangeLanguageLogic::update)
 
   @Test
-  fun `when the current selected language is loaded, the ui must be updated`() {
+  fun `when the current language is loaded, the ui must be updated`() {
     spec
         .given(defaultModel)
-        .whenEvent(CurrentSelectedLanguageLoadedEvent(englishIndia))
+        .whenEvent(CurrentLanguageLoadedEvent(englishIndia))
         .then(assertThatNext(
             hasModel(defaultModel.withCurrentLanguage(englishIndia)),
             hasNoEffects()
@@ -53,7 +53,7 @@ class ChangeLanguageUpdateTest {
         .whenEvent(SelectLanguageEvent(hindiIndia))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(UpdateSelectedLanguageEffect(hindiIndia) as ChangeLanguageEffect)
+            hasEffects(UpdateCurrentLanguageEffect(hindiIndia) as ChangeLanguageEffect)
         ))
   }
 
@@ -65,7 +65,7 @@ class ChangeLanguageUpdateTest {
 
     spec
         .given(model)
-        .whenEvent(SelectedLanguageChangedEvent(hindiIndia))
+        .whenEvent(CurrentLanguageChangedEvent(hindiIndia))
         .then(assertThatNext(
             hasModel(model.withCurrentLanguage(hindiIndia)),
             hasNoEffects()

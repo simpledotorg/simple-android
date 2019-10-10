@@ -3,8 +3,8 @@ package org.simple.clinic.newentry
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.util.DistinctValueCallback
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
@@ -12,12 +12,12 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.B
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 
 class PatientEntryViewRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntryModel> {
-  private val distinctDateOfBirthAndAgeVisibilityCallback = DistinctValueCallback<DateOfBirthAndAgeVisibility>()
-  private val distinctIdentifierCallback = DistinctValueCallback<Optional<Identifier>>()
+  private val dateOfBirthAndAgeVisibilityValueChangedCallback = ValueChangedCallback<DateOfBirthAndAgeVisibility>()
+  private val identifierValueChangedCallback = ValueChangedCallback<Optional<Identifier>>()
 
   override fun render(model: PatientEntryModel) {
     val patientEntry = model.patientEntry
-    distinctIdentifierCallback.pass(patientEntry.identifier.toOptional()) { renderIdentifier(patientEntry.identifier) }
+    identifierValueChangedCallback.pass(patientEntry.identifier.toOptional()) { renderIdentifier(patientEntry.identifier) }
 
     val personalDetails = patientEntry.personalDetails ?: return
     changeDateOfBirthAndAgeVisibility(personalDetails)
@@ -35,7 +35,7 @@ class PatientEntryViewRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEnt
     val dateOfBirth = personalDetails.dateOfBirth
     val age = personalDetails.age
 
-    distinctDateOfBirthAndAgeVisibilityCallback.pass(getVisibility(age, dateOfBirth), ui::setDateOfBirthAndAgeVisibility)
+    dateOfBirthAndAgeVisibilityValueChangedCallback.pass(getVisibility(age, dateOfBirth), ui::setDateOfBirthAndAgeVisibility)
   }
 
   private fun getVisibility(age: String?, dateOfBirth: String?): DateOfBirthAndAgeVisibility {

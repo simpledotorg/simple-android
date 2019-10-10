@@ -27,7 +27,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NU
 import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.DistinctValueCallback
+import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 object PatientEntryEffectHandler {
@@ -39,7 +39,7 @@ object PatientEntryEffectHandler {
       ui: PatientEntryUi,
       schedulersProvider: SchedulersProvider
   ): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
-    val distinctShowDatePatternInLabelCallback = DistinctValueCallback<Boolean>()
+    val showDatePatternInLabelValueChangedCallback = ValueChangedCallback<Boolean>()
 
     return RxMobius
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
@@ -55,7 +55,7 @@ object PatientEntryEffectHandler {
         .addAction(HideEmptyDistrictError::class.java, { ui.showEmptyDistrictError(false) }, schedulersProvider.ui())
         .addAction(HideEmptyStateError::class.java, { ui.showEmptyStateError(false) }, schedulersProvider.ui())
         .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
-          distinctShowDatePatternInLabelCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
+          showDatePatternInLabelValueChangedCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
         }, schedulersProvider.ui())
         .addTransformer(SavePatient::class.java,
             savePatientTransformer(patientRepository, patientRegisteredCount, schedulersProvider.io())

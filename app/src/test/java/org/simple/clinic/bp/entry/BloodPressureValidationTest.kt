@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.entry
 
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
@@ -94,16 +95,20 @@ class BloodPressureValidationTest {
   }
 
   @Test
-  @Ignore("This test should be refactored.")
   @Parameters(method = "params for bp validation errors and expected ui changes")
   fun `when BP entry is active, and BP readings are invalid then show error`(
-      error: Validation,
-      uiChangeVerification: (Ui) -> Unit
+      testParams: ValidationErrorsAndUiChangesTestParams
   ) {
+    val (systolic, diastolic, error, uiChangeVerification) = testParams
+
+    // This assertion is not necessary, it was added to stabilize this test for refactoring.
+    assertThat(bpValidator.validate(systolic, diastolic))
+        .isEqualTo(error)
+
     uiEvents.onNext(ScreenChanged(BloodPressureEntrySheet.ScreenType.BP_ENTRY))
     uiEvents.onNext(SheetCreated(OpenAs.New(patientUuid)))
-    uiEvents.onNext(SystolicChanged("-"))
-    uiEvents.onNext(DiastolicChanged("-"))
+    uiEvents.onNext(SystolicChanged(systolic))
+    uiEvents.onNext(DiastolicChanged(diastolic))
     uiEvents.onNext(SaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
@@ -113,17 +118,24 @@ class BloodPressureValidationTest {
   }
 
   @Suppress("unused")
-  fun `params for bp validation errors and expected ui changes`(): List<Any> {
+  fun `params for bp validation errors and expected ui changes`(): List<ValidationErrorsAndUiChangesTestParams> {
     return listOf(
-        listOf<Any>(ErrorSystolicEmpty, { ui: Ui -> verify(ui).showSystolicEmptyError() }),
-        listOf<Any>(ErrorDiastolicEmpty, { ui: Ui -> verify(ui).showDiastolicEmptyError() }),
-        listOf<Any>(ErrorSystolicTooHigh, { ui: Ui -> verify(ui).showSystolicHighError() }),
-        listOf<Any>(ErrorSystolicTooLow, { ui: Ui -> verify(ui).showSystolicLowError() }),
-        listOf<Any>(ErrorDiastolicTooHigh, { ui: Ui -> verify(ui).showDiastolicHighError() }),
-        listOf<Any>(ErrorDiastolicTooLow, { ui: Ui -> verify(ui).showDiastolicLowError() }),
-        listOf<Any>(ErrorSystolicLessThanDiastolic, { ui: Ui -> verify(ui).showSystolicLessThanDiastolicError() })
+        ValidationErrorsAndUiChangesTestParams("", "80", ErrorSystolicEmpty) { ui: Ui -> verify(ui).showSystolicEmptyError() },
+        ValidationErrorsAndUiChangesTestParams("120", "", ErrorDiastolicEmpty) { ui: Ui -> verify(ui).showDiastolicEmptyError() },
+        ValidationErrorsAndUiChangesTestParams("999", "80", ErrorSystolicTooHigh) { ui: Ui -> verify(ui).showSystolicHighError() },
+        ValidationErrorsAndUiChangesTestParams("0", "80", ErrorSystolicTooLow) { ui: Ui -> verify(ui).showSystolicLowError() },
+        ValidationErrorsAndUiChangesTestParams("120", "999", ErrorDiastolicTooHigh) { ui: Ui -> verify(ui).showDiastolicHighError() },
+        ValidationErrorsAndUiChangesTestParams("120", "0", ErrorDiastolicTooLow) { ui: Ui -> verify(ui).showDiastolicLowError() },
+        ValidationErrorsAndUiChangesTestParams("120", "121", ErrorSystolicLessThanDiastolic) { ui: Ui -> verify(ui).showSystolicLessThanDiastolicError() }
     )
   }
+
+  data class ValidationErrorsAndUiChangesTestParams(
+      val systolic: String,
+      val diastolic: String,
+      val error: Validation,
+      val uiChangeVerification: (Ui) -> Unit
+  )
 
   @Test
   @Ignore("This test should be refactored.")

@@ -43,7 +43,7 @@ class PatientEntryUpdate(
   private fun onGenderChanged(model: PatientEntryModel, gender: Optional<Gender>): PatientEntryNext {
     val updatedModel = model.withGender(gender)
     return if (gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
-      next(updatedModel.selectedGender(), setOf(HideMissingGenderError, ScrollFormToBottom))
+      next(updatedModel.selectedGender(), HideMissingGenderError, ScrollFormToBottom)
     } else {
       next(updatedModel)
     }

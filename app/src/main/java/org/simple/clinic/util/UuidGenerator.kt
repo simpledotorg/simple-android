@@ -9,3 +9,8 @@ fun createUuid5(name: String): UUID {
   val nameBasedGenerator = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_DNS)
   return nameBasedGenerator.generate(name)
 }
+
+fun generateEncounterUuid(facilityUuid: UUID, patientUuid: UUID, encounteredDate: LocalDate): UUID {
+  val uuidName = facilityUuid.toString() + patientUuid + encounteredDate
+  return createUuid5(uuidName)
+}

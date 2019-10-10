@@ -4,8 +4,10 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.util.createUuid5
+import org.simple.clinic.util.generateEncounterUuid
+import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)
@@ -38,7 +40,7 @@ data class BloodPressureMeasurementPayload(
     val deletedAt: Instant?,
 
     @Json(name = "recorded_at")
-    val recordedAt: Instant?
+    val recordedAt: Instant
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): BloodPressureMeasurement {
@@ -53,9 +55,8 @@ data class BloodPressureMeasurementPayload(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-
-        // recordedAt should be changed here when BloodPressureMeasurementPayload starts receiving this field from server
-        recordedAt = recordedAt ?: createdAt,
-        encounterUuid = createUuid5(facilityUuid.toString() + patientUuid + recordedAt))
+        recordedAt = recordedAt,
+        //FIXME: [Encounter] This code is throw-away. Once the Encounter API is implemented, this should be fixed.
+        encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, recordedAt.toLocalDateAtZone(ZoneOffset.UTC)))
   }
 }

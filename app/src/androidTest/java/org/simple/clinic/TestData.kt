@@ -45,10 +45,12 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.createUuid5
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.randomPatientPhoneNumberType
+import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -65,7 +67,8 @@ class TestData @Inject constructor(
     private val faker: Faker,
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
-    private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter
+    private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
+    private val userClock: TestUserClock
 ) {
 
   fun qaUser() = userSession.loggedInUserImmediate()!!
@@ -681,7 +684,7 @@ class TestData @Inject constructor(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         recordedAt = recordedAt,
-        encounterUuid = createUuid5(facilityUuid.toString() + patientUuid + recordedAt)
+        encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, recordedAt.toLocalDateAtZone(userClock.zone))
     )
   }
 

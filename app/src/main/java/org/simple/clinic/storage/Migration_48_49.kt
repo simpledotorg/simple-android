@@ -7,16 +7,16 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 class Migration_48_49 : Migration(48, 49) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
-    database.execSQL(""" 
+    database.execSQL("""
       CREATE TABLE IF NOT EXISTS "Encounter" (
-      "uuid" TEXT NOT NULL,
-      "patientUuid" TEXT NOT NULL,
-      "encounteredOn" TEXT NOT NULL,
-      "createdAt" TEXT NOT NULL,
-      "updatedAt" TEXT NOT NULL,
-      "deletedAt" TEXT,
-      PRIMARY KEY("uuid")
-      )
+        "uuid" TEXT NOT NULL,
+        "patientUuid" TEXT NOT NULL,
+        "encounteredOn" TEXT NOT NULL,
+        "createdAt" TEXT NOT NULL,
+        "updatedAt" TEXT NOT NULL,
+        "deletedAt" TEXT,
+        PRIMARY KEY("uuid")
+        )
       """)
   }
 }

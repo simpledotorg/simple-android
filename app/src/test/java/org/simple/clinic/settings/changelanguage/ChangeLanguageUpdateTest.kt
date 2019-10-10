@@ -16,7 +16,7 @@ class ChangeLanguageUpdateTest {
   private val englishIndia = ProvidedLanguage(displayName = "English", languageCode = "en_IN")
   private val hindiIndia = ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
 
-  private val spec = UpdateSpec<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect>(ChangeLanguageLogic::update)
+  private val spec = UpdateSpec<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect>(ChangeLanguageUpdate())
 
   @Test
   fun `when the current language is loaded, the ui must be updated`() {

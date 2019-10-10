@@ -36,14 +36,14 @@ class ChangeLanguageEffectHandlerTest {
   fun `the current selected language must be fetched when the load current selected effect is received`() {
     // given
     val selectedLanguage = SystemDefaultLanguage
-    whenever(settingsRepository.getCurrentSelectedLanguage()).thenReturn(Single.just(selectedLanguage))
+    whenever(settingsRepository.getCurrentLanguage()).thenReturn(Single.just(selectedLanguage))
 
     // when
-    effectsSubject.onNext(LoadCurrentSelectedLanguageEffect)
+    effectsSubject.onNext(LoadCurrentLanguageEffect)
 
     // then
     testObserver
-        .assertValue(CurrentSelectedLanguageLoadedEvent(selectedLanguage))
+        .assertValue(CurrentLanguageLoadedEvent(selectedLanguage))
         .assertNotComplete()
         .assertNotTerminated()
   }
@@ -69,17 +69,17 @@ class ChangeLanguageEffectHandlerTest {
   }
 
   @Test
-  fun `when the update selected language effect is received, the selected language must be changed`() {
+  fun `when the update current language effect is received, the current language must be changed`() {
     // given
     val changeToLanguage = ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
-    whenever(settingsRepository.setCurrentSelectedLanguage(changeToLanguage)).thenReturn(Completable.complete())
+    whenever(settingsRepository.setCurrentLanguage(changeToLanguage)).thenReturn(Completable.complete())
 
     // when
-    effectsSubject.onNext(UpdateSelectedLanguageEffect(changeToLanguage))
+    effectsSubject.onNext(UpdateCurrentLanguageEffect(changeToLanguage))
 
     // then
     testObserver
-        .assertValue(SelectedLanguageChangedEvent(changeToLanguage))
+        .assertValue(CurrentLanguageChangedEvent(changeToLanguage))
         .assertNotComplete()
         .assertNotTerminated()
   }

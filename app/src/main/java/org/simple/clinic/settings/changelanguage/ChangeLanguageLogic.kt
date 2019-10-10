@@ -10,11 +10,11 @@ object ChangeLanguageLogic {
 
   fun init(model: ChangeLanguageModel): First<ChangeLanguageModel, ChangeLanguageEffect> {
     val supportedLanguagesNotLoaded = model.supportedLanguages.isEmpty()
-    val currentSelectedLanguageNotLoaded = model.currentLanguage == null
+    val currentLanguageNotLoaded = model.currentLanguage == null
 
     val effects = when {
-      currentSelectedLanguageNotLoaded && supportedLanguagesNotLoaded -> setOf(LoadCurrentSelectedLanguageEffect, LoadSupportedLanguagesEffect)
-      currentSelectedLanguageNotLoaded -> setOf(LoadCurrentSelectedLanguageEffect)
+      currentLanguageNotLoaded && supportedLanguagesNotLoaded -> setOf(LoadCurrentLanguageEffect, LoadSupportedLanguagesEffect)
+      currentLanguageNotLoaded -> setOf(LoadCurrentLanguageEffect)
       supportedLanguagesNotLoaded -> setOf(LoadSupportedLanguagesEffect)
       else -> emptySet()
     }
@@ -24,10 +24,10 @@ object ChangeLanguageLogic {
 
   fun update(model: ChangeLanguageModel, event: ChangeLanguageEvent): Next<ChangeLanguageModel, ChangeLanguageEffect> {
     return when (event) {
-      is CurrentSelectedLanguageLoadedEvent -> next(model.withCurrentLanguage(event.language))
+      is CurrentLanguageLoadedEvent -> next(model.withCurrentLanguage(event.language))
       is SupportedLanguagesLoadedEvent -> next(model.withSupportedLanguages(event.languages))
-      is SelectLanguageEvent -> dispatch(setOf(UpdateSelectedLanguageEffect(event.newLanguage)))
-      is SelectedLanguageChangedEvent -> next(model.withCurrentLanguage(event.selectedLanguage))
+      is SelectLanguageEvent -> dispatch(setOf(UpdateCurrentLanguageEffect(event.newLanguage)))
+      is CurrentLanguageChangedEvent -> next(model.withCurrentLanguage(event.selectedLanguage))
     }
   }
 }

@@ -19,7 +19,7 @@ object ChangeLanguageLogic {
       else -> emptySet()
     }
 
-    return if(effects.isNotEmpty()) first(model, effects) else first(model)
+    return if (effects.isNotEmpty()) first(model, effects) else first(model)
   }
 
   fun update(model: ChangeLanguageModel, event: ChangeLanguageEvent): Next<ChangeLanguageModel, ChangeLanguageEffect> {
@@ -27,7 +27,7 @@ object ChangeLanguageLogic {
       is CurrentSelectedLanguageLoadedEvent -> next(model.withCurrentLanguage(event.language))
       is SupportedLanguagesLoadedEvent -> next(model.withSupportedLanguages(event.languages))
       is SelectLanguageEvent -> dispatch(setOf(UpdateSelectedLanguageEffect(event.newLanguage)))
-      is SelectedLanguageChangedEvent -> next(model.withCurrentLanguage(event.selectedLanguage), setOf(RestartActivityEffect))
+      is SelectedLanguageChangedEvent -> next(model.withCurrentLanguage(event.selectedLanguage))
     }
   }
 }

@@ -3,15 +3,23 @@ package org.simple.clinic.storage
 import android.database.Cursor
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.simple.clinic.util.createUuid5
+import org.simple.clinic.ClinicApp
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset
+import java.util.UUID
+import javax.inject.Inject
 
 @Suppress("ClassName")
 class Migration_49_50 : Migration(49, 50) {
 
+  @Inject
+  lateinit var userClock: UserClock
+
   override fun migrate(database: SupportSQLiteDatabase) {
+    ClinicApp.appComponent.inject(this)
+
     val tableName = "BloodPressureMeasurement"
 
     database.inTransaction {
@@ -27,10 +35,12 @@ class Migration_49_50 : Migration(49, 50) {
                       .map { it.string("uuid") to it }
                       .forEach { (uuid, cursorRow) ->
                         val patientUuid = cursor.string("patientUuid")
-                        val encounteredOn = Instant.parse(cursorRow.string("recordedAt")).toLocalDateAtZone(ZoneOffset.UTC)
-                        val encounterName = cursorRow.string("facilityUuid") + patientUuid + encounteredOn
-                        val encounterId = createUuid5(encounterName).toString()
-
+                        val encounteredOn = Instant.parse(cursorRow.string("recordedAt")).toLocalDateAtZone(userClock.zone)
+                        val encounterId = generateEncounterUuid(
+                            facilityUuid = UUID.fromString(cursorRow.string("facilityUuid")),
+                            patientUuid = UUID.fromString(patientUuid),
+                            encounteredDate = encounteredOn
+                        ).toString()
 
                         execSQL(""" INSERT OR IGNORE INTO "Encounter" VALUES (
                           '$encounterId',

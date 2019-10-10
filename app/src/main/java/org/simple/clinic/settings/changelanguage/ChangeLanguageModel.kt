@@ -7,6 +7,9 @@ data class ChangeLanguageModel(
     val userSelectedLanguage: Language?,
     val supportedLanguages: List<Language>
 ) {
+  val haveLanguagesBeenFetched: Boolean
+    get() = currentLanguage != null && supportedLanguages.isNotEmpty()
+
   companion object {
     val FETCHING_LANGUAGES = ChangeLanguageModel(currentLanguage = null, userSelectedLanguage = null, supportedLanguages = emptyList())
   }
@@ -26,7 +29,6 @@ data class ChangeLanguageModel(
   }
 
   private fun coerceUserSelectedLanguage(): ChangeLanguageModel {
-    val haveLanguagesBeenFetched = currentLanguage != null && supportedLanguages.isNotEmpty()
     val isCurrentLanguageInSupportedLanguages = haveLanguagesBeenFetched && currentLanguage in supportedLanguages
 
     return if (isCurrentLanguageInSupportedLanguages) copy(userSelectedLanguage = currentLanguage) else this

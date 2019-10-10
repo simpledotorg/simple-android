@@ -8,6 +8,8 @@ data class CurrentLanguageLoadedEvent(val language: Language) : ChangeLanguageEv
 
 data class SupportedLanguagesLoadedEvent(val languages: List<Language>) : ChangeLanguageEvent()
 
-data class SelectLanguageEvent(val newLanguage: Language): ChangeLanguageEvent()
+data class SelectLanguageEvent(val newLanguage: Language) : ChangeLanguageEvent()
 
 object CurrentLanguageChangedEvent : ChangeLanguageEvent()
+
+object SaveCurrentLanguageEvent : ChangeLanguageEvent()

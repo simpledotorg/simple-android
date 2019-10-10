@@ -1,8 +1,6 @@
 package org.simple.clinic.settings.changelanguage
 
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -14,21 +12,18 @@ import org.junit.Test
 import org.simple.clinic.settings.ProvidedLanguage
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.settings.SystemDefaultLanguage
-import org.simple.clinic.settings.changelanguage.ChangeLanguageEffectHandler.ActivityRestarter
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
 class ChangeLanguageEffectHandlerTest {
 
   private val settingsRepository = mock<SettingsRepository>()
-  private val activityRestarter = mock<ActivityRestarter>()
 
   private val effectsSubject: Subject<ChangeLanguageEffect> = PublishSubject.create<ChangeLanguageEffect>()
 
   private val testObserver: TestObserver<ChangeLanguageEvent> = effectsSubject
       .compose(ChangeLanguageEffectHandler.create(
           schedulersProvider = TrampolineSchedulersProvider(),
-          settingsRepository = settingsRepository,
-          activityRestarter = activityRestarter
+          settingsRepository = settingsRepository
       ))
       .test()
 
@@ -87,19 +82,5 @@ class ChangeLanguageEffectHandlerTest {
         .assertValue(SelectedLanguageChangedEvent(changeToLanguage))
         .assertNotComplete()
         .assertNotTerminated()
-  }
-
-  @Test
-  fun `when the restart activity effect is received, the activity must be recreated`() {
-    // when
-    effectsSubject.onNext(RestartActivityEffect)
-
-    // then
-    testObserver
-        .assertNoValues()
-        .assertNotComplete()
-        .assertNotTerminated()
-    verify(activityRestarter).restart()
-    verifyNoMoreInteractions(activityRestarter)
   }
 }

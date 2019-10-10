@@ -71,4 +71,20 @@ class ChangeLanguageUpdateTest {
             hasEffects(GoBack as ChangeLanguageEffect)
         ))
   }
+
+  @Test
+  fun `when the user clicks save, the current language must be set to the user selected language`() {
+    val model = defaultModel
+        .withCurrentLanguage(englishIndia)
+        .withSupportedLanguages(listOf(englishIndia, hindiIndia))
+        .withUserSelectedLanguage(hindiIndia)
+
+    spec
+        .given(model)
+        .whenEvent(SaveCurrentLanguageEvent)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(UpdateCurrentLanguageEffect(hindiIndia) as ChangeLanguageEffect)
+        ))
+  }
 }

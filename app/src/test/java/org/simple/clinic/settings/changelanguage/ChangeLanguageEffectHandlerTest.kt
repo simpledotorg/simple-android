@@ -1,6 +1,8 @@
 package org.simple.clinic.settings.changelanguage
 
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -17,13 +19,15 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 class ChangeLanguageEffectHandlerTest {
 
   private val settingsRepository = mock<SettingsRepository>()
+  private val uiActions = mock<UiActions>()
 
   private val effectsSubject: Subject<ChangeLanguageEffect> = PublishSubject.create<ChangeLanguageEffect>()
 
   private val testObserver: TestObserver<ChangeLanguageEvent> = effectsSubject
       .compose(ChangeLanguageEffectHandler.create(
           schedulersProvider = TrampolineSchedulersProvider(),
-          settingsRepository = settingsRepository
+          settingsRepository = settingsRepository,
+          uiActions = uiActions
       ))
       .test()
 
@@ -79,8 +83,22 @@ class ChangeLanguageEffectHandlerTest {
 
     // then
     testObserver
-        .assertValue(CurrentLanguageChangedEvent(changeToLanguage))
+        .assertValue(CurrentLanguageChangedEvent)
         .assertNotComplete()
         .assertNotTerminated()
+  }
+
+  @Test
+  fun `when the go back to previous screen effect is received, the go back ui action must be invoked`() {
+    // when
+    effectsSubject.onNext(GoBack)
+
+    // then
+    testObserver
+        .assertNoValues()
+        .assertNotComplete()
+        .assertNotTerminated()
+    verify(uiActions).goBackToPreviousScreen()
+    verifyNoMoreInteractions(uiActions)
   }
 }

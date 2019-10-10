@@ -10,13 +10,15 @@ object ChangeLanguageEffectHandler {
 
   fun create(
       schedulersProvider: SchedulersProvider,
-      settingsRepository: SettingsRepository
+      settingsRepository: SettingsRepository,
+      uiActions: UiActions
   ): ObservableTransformer<ChangeLanguageEffect, ChangeLanguageEvent> {
     return RxMobius
         .subtypeEffectHandler<ChangeLanguageEffect, ChangeLanguageEvent>()
         .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage(settingsRepository, schedulersProvider.io()))
         .addTransformer(LoadSupportedLanguagesEffect::class.java, loadSupportedLanguages(settingsRepository, schedulersProvider.io()))
         .addTransformer(UpdateCurrentLanguageEffect::class.java, updateCurrentLanguage(settingsRepository, schedulersProvider.io()))
+        .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
         .build()
   }
 
@@ -63,7 +65,7 @@ object ChangeLanguageEffectHandler {
                 .subscribeOn(scheduler)
                 .toSingleDefault(newLanguage)
           }
-          .map(::CurrentLanguageChangedEvent)
+          .map { CurrentLanguageChangedEvent }
     }
   }
 }

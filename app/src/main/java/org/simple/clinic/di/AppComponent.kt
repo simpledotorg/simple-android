@@ -10,6 +10,8 @@ import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
 import org.simple.clinic.storage.Migration_27_28
 import org.simple.clinic.storage.Migration_29_30
 import org.simple.clinic.storage.Migration_34_35
+import org.simple.clinic.storage.Migration_48_49
+import org.simple.clinic.storage.Migration_49_50
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncWorker
 import org.simple.clinic.user.UserSession
@@ -30,6 +32,7 @@ interface AppComponent {
   fun inject(target: Migration_29_30)
   fun inject(target: Migration_34_35)
   fun inject(target: BottomSheetActivity)
+  fun inject(target: Migration_49_50)
 
   fun activityComponentBuilder(): TheActivityComponent.Builder
   fun userSession(): UserSession

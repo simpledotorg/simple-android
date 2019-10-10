@@ -20,12 +20,12 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.createUuid5
+import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -3460,8 +3460,13 @@ class DatabaseMigrationAndroidTest {
     val db_50 = helper.migrateTo(version = 50)
 
     //then
-    val expectedEncounteredOn = Instant.parse(recordedAtForFirstBP).toLocalDateAtZone(ZoneOffset.UTC).toString()
-    val expectedEncounterId = createUuid5(facilityUuid + patientUuid + expectedEncounteredOn).toString()
+    val userClock = TestUserClock()
+    val expectedEncounteredOn = Instant.parse(recordedAtForFirstBP).toLocalDateAtZone(userClock.zone)
+    val expectedEncounterId = generateEncounterUuid(
+        facilityUuid = UUID.fromString(facilityUuid),
+        patientUuid = UUID.fromString(patientUuid),
+        encounteredDate = expectedEncounteredOn
+    ).toString()
 
     db_50.query("""SELECT * FROM '$bloodPressureMeasurementTable' """).use {
       assertThat(it.count).isEqualTo(2)
@@ -3479,7 +3484,7 @@ class DatabaseMigrationAndroidTest {
     val expectedEncounterValues = mapOf(
         "uuid" to expectedEncounterId,
         "patientUuid" to patientUuid,
-        "encounteredOn" to expectedEncounteredOn,
+        "encounteredOn" to expectedEncounteredOn.toString(),
         "createdAt" to createdAtForFirstBP,
         "updatedAt" to createdAtForFirstBP,
         "deletedAt" to "null"

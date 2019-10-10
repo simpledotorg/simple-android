@@ -13,9 +13,18 @@ data class ChangeLanguageModel(
 
   fun withCurrentLanguage(currentLanguage: Language): ChangeLanguageModel {
     return copy(currentLanguage = currentLanguage)
+        .coerceUserSelectedLanguage()
   }
 
   fun withSupportedLanguages(supportedLanguages: List<Language>): ChangeLanguageModel {
     return copy(supportedLanguages = supportedLanguages)
+        .coerceUserSelectedLanguage()
+  }
+
+  private fun coerceUserSelectedLanguage(): ChangeLanguageModel {
+    val haveLanguagesBeenFetched = currentLanguage != null && supportedLanguages.isNotEmpty()
+    val isCurrentLanguageInSupportedLanguages = haveLanguagesBeenFetched && currentLanguage in supportedLanguages
+
+    return if (isCurrentLanguageInSupportedLanguages) copy(userSelectedLanguage = currentLanguage) else this
   }
 }

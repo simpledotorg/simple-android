@@ -38,8 +38,8 @@ class SettingsScreen(
     MobiusDelegate(
         events = Observable.never(),
         defaultModel = SettingsModel.FETCHING_USER_DETAILS,
-        initFunction = SettingsLogic::init,
-        updateFunction = SettingsLogic::update,
+        init = SettingsInit(),
+        update = SettingsUpdate(),
         effectHandler = SettingsEffectHandler.create(userSession, schedulersProvider),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter

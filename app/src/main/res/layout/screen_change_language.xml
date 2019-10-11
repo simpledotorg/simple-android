@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white100"
+    app:layout_constraintTop_toTopOf="parent"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:navigationIconTint="@color/grey0"
+    app:title="@string/changelanguage_title"
+    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+
+  <org.simple.clinic.widgets.OmegaCenterIconButton
+    android:id="@+id/doneButton"
+    style="@style/Clinic.V2.Button.WithIcon.Blue1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    android:drawableStart="@drawable/ic_done_16dp"
+    android:text="@string/changelanguage_done"
+    app:layout_constraintBottom_toBottomOf="parent" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/languagesList"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/spacing_16"
+    app:layout_constraintBottom_toTopOf="@id/doneButton"
+    app:layout_constraintTop_toBottomOf="@id/toolbar"
+    tools:listitem="@layout/list_change_language_view" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

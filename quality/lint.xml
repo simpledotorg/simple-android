@@ -13,6 +13,11 @@
 
     <!-- Heap analytics plugin adds these resources dynamically. -->
     <ignore regexp="com.heapanalytics.android.*" />
+
+    <!-- TODO: Remove after the change language screen is integrated -->
+    <ignore regexp="changelanguage_*" />
+    <ignore path="src/main/res/layout/screen_change_language.xml" />
+    <ignore path="src/main/res/layout/list_change_language_view.xml" />
   </issue>
 
   <!-- Ignore this for now due to time constraints. Switch to static images later. -->

@@ -9,9 +9,9 @@ import org.simple.mobius.migration.fix.CounterEvent
 import org.simple.mobius.migration.fix.CounterEvent.Decrement
 import org.simple.mobius.migration.fix.CounterEvent.Increment
 import org.simple.mobius.migration.fix.CounterModel
+import org.simple.mobius.migration.fix.CounterUpdate
 import org.simple.mobius.migration.fix.VerifiableCounterView
 import org.simple.mobius.migration.fix.createEffectHandler
-import org.simple.mobius.migration.fix.update
 
 class MobiusTestFixtureTest {
   private val events = PublishSubject.create<CounterEvent>()
@@ -23,7 +23,7 @@ class MobiusTestFixtureTest {
       events,
       defaultModel,
       null,
-      ::update,
+      CounterUpdate(),
       effectHandler,
       modelUpdateListener
   )

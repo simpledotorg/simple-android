@@ -7,6 +7,7 @@ import androidx.core.widget.NestedScrollView
 import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding2.view.RxView
 import com.spotify.mobius.First
+import com.spotify.mobius.Init
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_onboarding.view.*
@@ -46,8 +47,8 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
     MobiusDelegate(
         events,
         OnboardingModel,
-        { First.first(it) },
-        ::onboardingUpdate,
+        Init { First.first(it) },
+        OnboardingUpdate(),
         OnboardingEffectHandler.createEffectHandler(hasUserCompletedOnboarding, this, schedulersProvider),
         { /* No-op, there's nothing to render */ },
         crashReporter

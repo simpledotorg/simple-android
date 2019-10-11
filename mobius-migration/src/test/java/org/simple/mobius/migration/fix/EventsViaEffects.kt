@@ -1,8 +1,9 @@
 package org.simple.mobius.migration.fix
 
 import com.spotify.mobius.First
+import com.spotify.mobius.Init
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.next
+import com.spotify.mobius.Update
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import org.simple.mobius.migration.fix.EveEffect.BEffect
@@ -24,17 +25,18 @@ sealed class EveEffect {
   object CEffect : EveEffect()
 }
 
-fun eveInit(model: EveModel): First<EveModel, EveEffect> {
-  return First.first(model, setOf(BEffect))
+class EveInit : Init<EveModel, EveEffect> {
+  override fun init(model: EveModel): First<EveModel, EveEffect> {
+    return First.first(model, setOf(BEffect))
+  }
 }
 
-fun eveUpdate(
-    @Suppress("UNUSED_PARAMETER") model: EveModel,
-    event: EveEvent
-): Next<EveModel, EveEffect> {
-  return when (event) {
-    BEvent -> next('b', setOf(CEffect))
-    CEvent -> next('c')
+class EveUpdate : Update<EveModel, EveEvent, EveEffect> {
+  override fun update(model: EveModel, event: EveEvent): Next<EveModel, EveEffect> {
+    return when (event) {
+      BEvent -> Next.next('b', setOf(CEffect))
+      CEvent -> Next.next('c')
+    }
   }
 }
 

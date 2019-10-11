@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
-import com.spotify.mobius.First
 import com.spotify.mobius.Init
 import com.spotify.mobius.MobiusLoop
-import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.extras.Connectables
@@ -29,24 +27,6 @@ class MobiusDelegate<M : Parcelable, E, F>(
     private val modelUpdateListener: (M) -> Unit,
     private val crashReporter: CrashReporter
 ) : Connectable<M, E> {
-  constructor(
-      events: Observable<E>,
-      defaultModel: M,
-      initFunction: (M) -> First<M, F>,
-      updateFunction: (M, E) -> Next<M, F>,
-      effectHandler: ObservableTransformer<F, E>,
-      modelUpdateListener: (M) -> Unit,
-      crashReporter: CrashReporter
-  ) : this(
-      events,
-      defaultModel,
-      Init { model -> initFunction(model) },
-      Update { model, event -> updateFunction(model, event) },
-      effectHandler,
-      modelUpdateListener,
-      crashReporter
-  )
-
   private val modelKey = defaultModel::class.java.name
   private val viewStateKey = "ViewState_$modelKey"
 

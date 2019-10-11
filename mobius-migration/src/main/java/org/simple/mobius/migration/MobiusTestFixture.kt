@@ -31,24 +31,6 @@ class MobiusTestFixture<M: Any, E, F>(
     modelUpdateListener: ModelUpdateListener<M>,
     requiresLogging: Boolean = false
 ) {
-  constructor(
-      events: Observable<E>,
-      defaultModel: M,
-      initFunction: InitFunction<M, F>?,
-      updateFunction: UpdateFunction<M, E, F>,
-      effectHandler: EffectHandler<F, E>,
-      modelUpdateListener: ModelUpdateListener<M>,
-      requiresLogging: Boolean = false
-  ) : this(
-      events,
-      defaultModel,
-      Init { initFunction?.invoke(it) ?: First.first(it) },
-      Update { model: M, event: E -> updateFunction(model, event) },
-      effectHandler,
-      modelUpdateListener,
-      requiresLogging
-  )
-
   private val eventsDisposable: Disposable
   private val controller: MobiusLoop.Controller<M, E>
 

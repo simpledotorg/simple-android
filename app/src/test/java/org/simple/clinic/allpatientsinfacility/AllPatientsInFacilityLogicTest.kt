@@ -45,8 +45,8 @@ class AllPatientsInFacilityLogicTest {
     fixture = MobiusTestFixture(
         Observable.never(),
         defaultModel,
-        ::allPatientsInFacilityInit,
-        ::allPatientsInFacilityUpdate,
+        AllPatientsInFacilityInit(),
+        AllPatientsInFacilityUpdate(),
         effectHandler,
         modelUpdates::onNext
     )

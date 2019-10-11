@@ -14,6 +14,18 @@ data class ChangeLanguageListItem(
     private val isSelected: Boolean
 ) : ItemAdapter.Item<ChangeLanguageListItem.Event> {
 
+  companion object {
+    fun from(languages: List<Language>, selectedLanguage: Language?): List<ChangeLanguageListItem> {
+      return languages
+          .filterIsInstance<ProvidedLanguage>()
+          .map { language ->
+            val isLanguageSelectedByUser = language == selectedLanguage
+
+            ChangeLanguageListItem(language, isSelected = isLanguageSelectedByUser)
+          }
+    }
+  }
+
   override fun layoutResId(): Int {
     return R.layout.list_change_language_view
   }

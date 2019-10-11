@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_change_language.view.*
@@ -16,6 +18,7 @@ import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ItemAdapter
 import javax.inject.Inject
 
 class ChangeLanguageScreen(
@@ -34,6 +37,8 @@ class ChangeLanguageScreen(
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  private val languagesAdapter = ItemAdapter(ChangeLanguageListItem.DiffCallback())
 
   private val events: Observable<ChangeLanguageEvent> by unsafeLazy {
     Observable
@@ -68,7 +73,17 @@ class ChangeLanguageScreen(
 
     TheActivity.component.inject(this)
 
+    setupLanguagesList()
+
     delegate.prepare()
+  }
+
+  private fun setupLanguagesList() {
+    languagesList.apply {
+      setHasFixedSize(true)
+      layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+      adapter = languagesAdapter
+    }
   }
 
   override fun onAttachedToWindow() {
@@ -90,6 +105,7 @@ class ChangeLanguageScreen(
   }
 
   override fun displayLanguages(supportedLanguages: List<Language>, selectedLanguage: Language?) {
+    languagesAdapter.submitList(ChangeLanguageListItem.from(supportedLanguages, selectedLanguage))
   }
 
   override fun setDoneButtonDisabled() {

@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import kotlinx.android.synthetic.main.screen_change_language.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.crash.CrashReporter
@@ -92,9 +93,11 @@ class ChangeLanguageScreen(
   }
 
   override fun setDoneButtonDisabled() {
+    doneButton.isEnabled = false
   }
 
   override fun setDoneButtonEnabled() {
+    doneButton.isEnabled = true
   }
 }
 

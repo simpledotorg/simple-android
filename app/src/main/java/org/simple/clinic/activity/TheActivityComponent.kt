@@ -60,6 +60,7 @@ import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.SearchResultsModule
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.settings.SettingsScreen
+import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
@@ -134,6 +135,7 @@ interface TheActivityComponent {
   fun inject(target: ShortCodeSearchResultScreen)
   fun inject(target: EditPatientScreen)
   fun inject(target: SettingsScreen)
+  fun inject(target: ChangeLanguageScreen)
 
   @Subcomponent.Builder
   interface Builder {

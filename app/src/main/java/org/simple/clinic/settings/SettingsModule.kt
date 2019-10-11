@@ -16,4 +16,9 @@ class SettingsModule {
   fun provideUserSelectedLocalePreference(rxSharedPreferences: RxSharedPreferences): Preference<Locale> {
     return rxSharedPreferences.getObject("preference_user_selected_locale", Locale.getDefault(), LocalePreferenceConverter())
   }
+
+  @Provides
+  fun provideSettingsRepository(): SettingsRepository {
+    return SettingsRepositoryImpl()
+  }
 }

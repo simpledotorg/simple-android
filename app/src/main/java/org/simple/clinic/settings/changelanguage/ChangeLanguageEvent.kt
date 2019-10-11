@@ -1,8 +1,9 @@
 package org.simple.clinic.settings.changelanguage
 
 import org.simple.clinic.settings.Language
+import org.simple.clinic.widgets.UiEvent
 
-sealed class ChangeLanguageEvent
+sealed class ChangeLanguageEvent: UiEvent
 
 data class CurrentLanguageLoadedEvent(val language: Language) : ChangeLanguageEvent()
 

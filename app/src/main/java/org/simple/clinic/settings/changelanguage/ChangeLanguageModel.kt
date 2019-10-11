@@ -1,12 +1,15 @@
 package org.simple.clinic.settings.changelanguage
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.settings.Language
 
+@Parcelize
 data class ChangeLanguageModel(
     val currentLanguage: Language?,
     val userSelectedLanguage: Language?,
     val supportedLanguages: List<Language>
-) {
+): Parcelable {
   val haveLanguagesBeenFetched: Boolean
     get() = currentLanguage != null && supportedLanguages.isNotEmpty()
 

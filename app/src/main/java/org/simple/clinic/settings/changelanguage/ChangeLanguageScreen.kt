@@ -6,8 +6,10 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_change_language.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
@@ -16,6 +18,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.SettingsRepository
+import org.simple.clinic.settings.changelanguage.ChangeLanguageListItem.Event.ListItemClicked
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
@@ -42,7 +45,10 @@ class ChangeLanguageScreen(
 
   private val events: Observable<ChangeLanguageEvent> by unsafeLazy {
     Observable
-        .never<ChangeLanguageEvent>()
+        .merge(
+            doneButtonClicks(),
+            languageSelections()
+        )
         .compose(ReportAnalyticsEvents())
         .cast<ChangeLanguageEvent>()
   }
@@ -74,6 +80,7 @@ class ChangeLanguageScreen(
     TheActivity.component.inject(this)
 
     setupLanguagesList()
+    toolbar.setNavigationOnClickListener { screenRouter.pop() }
 
     delegate.prepare()
   }
@@ -84,6 +91,20 @@ class ChangeLanguageScreen(
       layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
       adapter = languagesAdapter
     }
+  }
+
+  private fun languageSelections(): Observable<SelectLanguageEvent> {
+    return languagesAdapter
+        .itemEvents
+        .ofType<ListItemClicked>()
+        .map { it.language }
+        .map(::SelectLanguageEvent)
+  }
+
+  private fun doneButtonClicks(): Observable<SaveCurrentLanguageEvent> {
+    return RxView
+        .clicks(doneButton)
+        .map { SaveCurrentLanguageEvent }
   }
 
   override fun onAttachedToWindow() {

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Next release
+### Internal
+- Add remote toggle for screen change animations
+- Add instrumentation for Flow events
+
 ## 2019-10-07-5787
 ### Feature
 - Limit editing of BP measurements to one hour after being recorded. This is remotely configurable.

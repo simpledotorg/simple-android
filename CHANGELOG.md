@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Next release
+## Feature
+- Add consent text when registering a patient
+
+## Internal
+- Add remote toggle for screen change animations
+- Add instrumentation around Flow events
+- Homescreen banner illustrations are fetched remotely instead of hardcoded
+
 ## 2019-10-07-5787
 ### Feature
 - Limit editing of BP measurements to one hour after being recorded. This is remotely configurable.

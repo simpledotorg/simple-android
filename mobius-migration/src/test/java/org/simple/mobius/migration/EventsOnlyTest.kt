@@ -3,11 +3,11 @@ package org.simple.mobius.migration
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
+import org.simple.mobius.migration.fix.EveInit
 import org.simple.mobius.migration.fix.EveModel
+import org.simple.mobius.migration.fix.EveUpdate
 import org.simple.mobius.migration.fix.defaultModel
 import org.simple.mobius.migration.fix.eveEffectHandler
-import org.simple.mobius.migration.fix.eveInit
-import org.simple.mobius.migration.fix.eveUpdate
 
 class EventsOnlyTest {
   @Test
@@ -19,8 +19,8 @@ class EventsOnlyTest {
     val fixture = MobiusTestFixture(
         Observable.empty(),
         defaultModel,
-        ::eveInit,
-        ::eveUpdate,
+        EveInit(),
+        EveUpdate(),
         eveEffectHandler(),
         modelUpdatesSubject::onNext
     ).also {

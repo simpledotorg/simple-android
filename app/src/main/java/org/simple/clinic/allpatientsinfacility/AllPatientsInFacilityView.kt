@@ -68,8 +68,8 @@ class AllPatientsInFacilityView(
     MobiusDelegate(
         Observable.never(),
         AllPatientsInFacilityModel.FETCHING_PATIENTS,
-        ::allPatientsInFacilityInit,
-        ::allPatientsInFacilityUpdate,
+        AllPatientsInFacilityInit(),
+        AllPatientsInFacilityUpdate(),
         effectHandler,
         viewRenderer::render,
         crashReporter

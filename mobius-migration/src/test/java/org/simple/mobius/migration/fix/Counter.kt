@@ -2,6 +2,7 @@ package org.simple.mobius.migration.fix
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Update
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import org.simple.mobius.migration.fix.CounterEffect.NegativeNumberEffect
@@ -16,13 +17,12 @@ sealed class CounterEvent {
   object Decrement : CounterEvent()
 }
 
-fun update(
-    model: CounterModel,
-    event: CounterEvent
-): Next<CounterModel, CounterEffect> {
-  return when (event) {
-    Increment -> next<CounterModel, CounterEffect>(model + 1)
-    Decrement -> next<CounterModel, CounterEffect>(model - 1, setOf(NegativeNumberEffect))
+class CounterUpdate() : Update<CounterModel, CounterEvent, CounterEffect> {
+  override fun update(model: CounterModel, event: CounterEvent): Next<CounterModel, CounterEffect> {
+    return when (event) {
+      Increment -> next<CounterModel, CounterEffect>(model + 1)
+      Decrement -> next<CounterModel, CounterEffect>(model - 1, setOf(NegativeNumberEffect))
+    }
   }
 }
 

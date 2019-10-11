@@ -454,4 +454,8 @@
   <string name="settings_user_phone_icon_content">Settings user phone number icon</string>
   <string name="settings_name">Name</string>
   <string name="settings_number">Phone number</string>
+
+  <!-- Change language screen -->
+  <string name="changelanguage_title">Select your language</string>
+  <string name="changelanguage_done">Done</string>
 </resources>

@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next release
+## 2019-10-11-5948
 ### Internal
 - Add remote toggle for screen change animations
 - Add instrumentation for Flow events

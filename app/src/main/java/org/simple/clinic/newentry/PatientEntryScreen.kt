@@ -58,6 +58,7 @@ import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
+import org.simple.clinic.widgets.topRelativeTo
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 import javax.inject.Named
@@ -431,7 +432,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   override fun scrollFormToBottom() {
     formScrollView.post {
-      formScrollView.smoothScrollTo(0, formScrollView.height)
+      formScrollView.smoothScrollTo(0, ageEditText.topRelativeTo(patientEntryRoot))
     }
   }
 

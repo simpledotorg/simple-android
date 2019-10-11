@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.newentry.PatientEntryScreen android:id="@+id/patiententry_root"
+<org.simple.clinic.newentry.PatientEntryScreen
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patientEntryRoot"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/white100"
@@ -34,7 +35,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:paddingBottom="64dp"
+      android:paddingBottom="@dimen/spacing_32"
       android:paddingEnd="@dimen/spacing_16"
       android:paddingTop="@dimen/spacing_12"
       tools:ignore="RtlSymmetry">

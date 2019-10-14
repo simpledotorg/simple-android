@@ -29,6 +29,7 @@ import org.simple.clinic.sync.DataSyncOnApprovalModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.indicator.SyncIndicatorModule
 import org.simple.clinic.util.ElapsedRealtimeClock
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -90,8 +91,9 @@ open class AppModule(private val appContext: Application) {
   open fun elapsedRealtimeClock() = ElapsedRealtimeClock()
 
   @Provides
-  fun currentLocale(@Named("preference_user_selected_locale") userSelectedLocalePreference: Preference<Locale>): Locale {
-    return userSelectedLocalePreference.get()
+  fun currentLocale(@Named("preference_user_selected_locale") userSelectedLocalePreference: Preference<Optional<Locale>>): Locale {
+    val savedLocale = userSelectedLocalePreference.get().toNullable()
+    return savedLocale ?: Locale.getDefault()
   }
 
   @Provides

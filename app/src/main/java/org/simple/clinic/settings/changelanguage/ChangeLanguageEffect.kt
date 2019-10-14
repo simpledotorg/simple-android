@@ -11,3 +11,5 @@ object LoadSupportedLanguagesEffect : ChangeLanguageEffect()
 data class UpdateCurrentLanguageEffect(val newLanguage: Language) : ChangeLanguageEffect()
 
 object GoBack : ChangeLanguageEffect()
+
+object RestartActivity : ChangeLanguageEffect()

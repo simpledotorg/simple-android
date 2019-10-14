@@ -1,5 +1,6 @@
 package org.simple.clinic.settings.changelanguage
 
+import android.app.Activity
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
@@ -41,6 +42,9 @@ class ChangeLanguageScreen(
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  @Inject
+  lateinit var activity: TheActivity
+
   private val languagesAdapter = ItemAdapter(ChangeLanguageListItem.DiffCallback())
 
   private val events: Observable<ChangeLanguageEvent> by unsafeLazy {
@@ -64,7 +68,7 @@ class ChangeLanguageScreen(
         effectHandler = ChangeLanguageEffectHandler.create(
             schedulersProvider = schedulersProvider,
             settingsRepository = settingsRepository,
-            uiActions = ChangeLanguageScreenUiActions(screenRouter)
+            uiActions = ChangeLanguageScreenUiActions(screenRouter, activity)
         ),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter
@@ -138,9 +142,16 @@ class ChangeLanguageScreen(
   }
 }
 
-private class ChangeLanguageScreenUiActions(private val screenRouter: ScreenRouter) : UiActions {
+private class ChangeLanguageScreenUiActions(
+    private val screenRouter: ScreenRouter,
+    private val activity: Activity
+) : UiActions {
 
   override fun goBackToPreviousScreen() {
     screenRouter.pop()
+  }
+
+  override fun restartActivity() {
+    activity.recreate()
   }
 }

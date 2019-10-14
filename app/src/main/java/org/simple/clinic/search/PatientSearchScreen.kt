@@ -14,9 +14,8 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
-import org.simple.clinic.allpatientsinfacility.migration.ExposesUiEvents
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.mobius.migration.MobiusMigrationConfig
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
@@ -46,12 +45,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   @Inject
   lateinit var utcClock: UtcClock
 
-  @Inject
-  lateinit var mobiusMigrationConfig: MobiusMigrationConfig
-
-  private val allPatientsInFacilityView by unsafeLazy {
-    allPatientsViewStub.layoutResource = R.layout.view_allpatientsinfacility
-    allPatientsViewStub.inflate() as ExposesUiEvents
+  private val allPatientsInFacility by unsafeLazy {
+    allPatientsInFacilityView as AllPatientsInFacilityView
   }
 
   override fun onFinishInflate() {
@@ -100,7 +95,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   private fun patientClickEvents(): Observable<UiEvent> {
-    return allPatientsInFacilityView
+    return allPatientsInFacility
         .uiEvents
         .ofType<AllPatientsInFacilitySearchResultClicked>()
         .map { PatientItemClicked(it.patientUuid) }
@@ -108,7 +103,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   @Suppress("CheckResult")
   private fun hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys: Observable<ScreenDestroyed>) {
-    allPatientsInFacilityView
+    allPatientsInFacility
         .uiEvents
         .ofType<AllPatientsInFacilityListScrolled>()
         .takeUntil(screenDestroys)
@@ -134,11 +129,11 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun showAllPatientsInFacility() {
-    (allPatientsInFacilityView as View).visibility = View.VISIBLE
+    allPatientsInFacility.visibility = View.VISIBLE
   }
 
   fun hideAllPatientsInFacility() {
-    (allPatientsInFacilityView as View).visibility = View.GONE
+    allPatientsInFacility.visibility = View.GONE
   }
 
   fun showSearchButton() {

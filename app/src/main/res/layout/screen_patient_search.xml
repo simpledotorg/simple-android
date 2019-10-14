@@ -8,11 +8,12 @@
   android:animateLayoutChanges="true"
   android:clipChildren="false">
 
-  <ViewStub
-    android:id="@+id/allPatientsViewStub"
+  <include
+    android:id="@+id/allPatientsInFacilityView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/toolbar" />
+    android:layout_below="@+id/toolbar"
+    layout="@layout/view_allpatientsinfacility" />
 
   <!-- This is placed below the all patients view so that the shadow of the toolbar can be cast -->
   <FrameLayout

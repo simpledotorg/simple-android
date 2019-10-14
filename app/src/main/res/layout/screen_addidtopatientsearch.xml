@@ -28,11 +28,12 @@
       tools:text="Add BP Passport 512 8097 to patient" />
   </androidx.appcompat.widget.Toolbar>
 
-  <ViewStub
-    android:id="@+id/allPatientsViewStub"
+  <include
+    android:id="@+id/allPatientsInFacilityView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/enterPatientNameInputContainer" />
+    android:layout_below="@+id/enterPatientNameInputContainer"
+    layout="@layout/view_allpatientsinfacility" />
 
   <!-- This is placed below the all patients view so that the shadow of the toolbar can be cast -->
   <FrameLayout

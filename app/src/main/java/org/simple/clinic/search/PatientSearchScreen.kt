@@ -14,13 +14,9 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
-import org.simple.clinic.allpatientsinfacility.migration.AllPatientsInFacilityViewMigration
 import org.simple.clinic.allpatientsinfacility.migration.ExposesUiEvents
-import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.mobius.migration.Architecture
 import org.simple.clinic.mobius.migration.MobiusMigrationConfig
-import org.simple.clinic.mobius.migration.RevertToCommit
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
@@ -36,13 +32,6 @@ import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-@AllPatientsInFacilityViewMigration(
-    notes = "Removes toggling mechanism, just make sure the reverted layouts do not contain layouts suffixed with `_old`."
-)
-@RevertToCommit(
-    withMessage = "Make PatientSearchScreen to use AllPatientsInFacilityView (Mobius)",
-    afterCommitId = "4bd5c87cf567ec64184622a0a3699ce93675e28d"
-)
 class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   @Inject
@@ -61,15 +50,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   lateinit var mobiusMigrationConfig: MobiusMigrationConfig
 
   private val allPatientsInFacilityView by unsafeLazy {
-    val (layoutResId, architecture) = if (mobiusMigrationConfig.useAllPatientsInFacilityView) {
-      R.layout.view_allpatientsinfacility to Architecture.MOBIUS
-    } else {
-      R.layout.view_allpatientsinfacility_old to Architecture.ORIGINAL
-    }
-
-    Analytics.reportArchitectureMigration("AllPatientsInFacilityView", architecture, "PatientSearchScreen")
-
-    allPatientsViewStub.layoutResource = layoutResId
+    allPatientsViewStub.layoutResource = R.layout.view_allpatientsinfacility
     allPatientsViewStub.inflate() as ExposesUiEvents
   }
 

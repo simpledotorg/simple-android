@@ -14,6 +14,7 @@ class ChangeLanguageInit : Init<ChangeLanguageModel, ChangeLanguageEffect> {
       currentLanguageNotLoaded && supportedLanguagesNotLoaded -> setOf(LoadCurrentLanguageEffect, LoadSupportedLanguagesEffect)
       currentLanguageNotLoaded -> setOf(LoadCurrentLanguageEffect)
       supportedLanguagesNotLoaded -> setOf(LoadSupportedLanguagesEffect)
+      model.manuallyRestarted -> setOf(GoBack)
       else -> emptySet()
     }
 

@@ -32,6 +32,9 @@ class SettingsScreen(
   @Inject
   lateinit var screenRouter: ScreenRouter
 
+  @Inject
+  lateinit var settingsRepository: SettingsRepository
+
   private val uiRenderer: SettingsUiRenderer = SettingsUiRenderer(this)
 
   private val delegate: MobiusDelegate<SettingsModel, SettingsEvent, SettingsEffect> by unsafeLazy {
@@ -40,7 +43,7 @@ class SettingsScreen(
         defaultModel = SettingsModel.FETCHING_USER_DETAILS,
         init = SettingsInit(),
         update = SettingsUpdate(),
-        effectHandler = SettingsEffectHandler.create(userSession, schedulersProvider),
+        effectHandler = SettingsEffectHandler.create(userSession, settingsRepository, schedulersProvider),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter
     )

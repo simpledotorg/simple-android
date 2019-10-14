@@ -11,20 +11,36 @@ object SettingsEffectHandler {
 
   fun create(
       userSession: UserSession,
+      settingsRepository: SettingsRepository,
       schedulersProvider: SchedulersProvider
   ): ObservableTransformer<SettingsEffect, SettingsEvent> {
     return RxMobius
         .subtypeEffectHandler<SettingsEffect, SettingsEvent>()
         .addTransformer(LoadUserDetailsEffect::class.java, loadUserDetails(userSession, schedulersProvider.io()))
+        .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage(settingsRepository, schedulersProvider.io()))
         .build()
   }
 
-  private fun loadUserDetails(userSession: UserSession, scheduler: Scheduler): ObservableTransformer<LoadUserDetailsEffect, SettingsEvent> {
-    return ObservableTransformer { upstream ->
-      upstream
+  private fun loadUserDetails(
+      userSession: UserSession,
+      scheduler: Scheduler
+  ): ObservableTransformer<LoadUserDetailsEffect, SettingsEvent> {
+    return ObservableTransformer { effectStream ->
+      effectStream
           .switchMap { userSession.loggedInUser().subscribeOn(scheduler) }
           .filterAndUnwrapJust()
           .map { user -> UserDetailsLoaded(user.fullName, user.phoneNumber) }
+    }
+  }
+
+  private fun loadCurrentSelectedLanguage(
+      settingsRepository: SettingsRepository,
+      scheduler: Scheduler
+  ): ObservableTransformer<LoadCurrentLanguageEffect, SettingsEvent> {
+    return ObservableTransformer { effectStream ->
+      effectStream
+          .flatMapSingle { settingsRepository.getCurrentLanguage().subscribeOn(scheduler) }
+          .map(::CurrentLanguageLoaded)
     }
   }
 }

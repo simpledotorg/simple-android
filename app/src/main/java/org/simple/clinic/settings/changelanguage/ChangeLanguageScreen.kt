@@ -1,6 +1,5 @@
 package org.simple.clinic.settings.changelanguage
 
-import android.app.Activity
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
@@ -28,7 +27,7 @@ import javax.inject.Inject
 class ChangeLanguageScreen(
     context: Context,
     attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), ChangeLanguageUi {
+) : ConstraintLayout(context, attributeSet), ChangeLanguageUi, UiActions {
 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
@@ -68,7 +67,7 @@ class ChangeLanguageScreen(
         effectHandler = ChangeLanguageEffectHandler.create(
             schedulersProvider = schedulersProvider,
             settingsRepository = settingsRepository,
-            uiActions = ChangeLanguageScreenUiActions(screenRouter, activity)
+            uiActions = this
         ),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter
@@ -140,12 +139,6 @@ class ChangeLanguageScreen(
   override fun setDoneButtonEnabled() {
     doneButton.isEnabled = true
   }
-}
-
-private class ChangeLanguageScreenUiActions(
-    private val screenRouter: ScreenRouter,
-    private val activity: Activity
-) : UiActions {
 
   override fun goBackToPreviousScreen() {
     screenRouter.pop()

@@ -30,7 +30,7 @@ class SettingsModule {
         ProvidedLanguage(displayName = "ਪੰਜਾਬੀ", languageCode = "pa-IN")
     )
 
-    return SettingsRepositoryImpl(
+    return PreferencesSettingsRepository(
         userSelectedLocalePreference = userSelectedLocalePreference,
         supportedLanguages = supportedLanguages
     )

@@ -1,11 +1,14 @@
 # CHANGELOG
 
-## Next release
+## On Demo
 ## Feature
 - Add consent text when registering a patient
 
 ## Internal
 - Homescreen banner illustrations are fetched remotely instead of hardcoded
+- Migrate patient edit screen to Mobius
+- Migrate patient new entry screen to Mobius
+- Migrate onboarding screen to Mobius
 
 ## 2019-10-11-5948
 ### Internal

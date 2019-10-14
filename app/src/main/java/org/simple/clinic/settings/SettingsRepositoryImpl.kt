@@ -31,7 +31,7 @@ class SettingsRepositoryImpl(
   }
 
   override fun getSupportedLanguages(): Single<List<Language>> {
-    return Single.never()
+    return Single.just(supportedLanguages)
   }
 
   override fun setCurrentLanguage(newLanguage: Language): Completable {

@@ -5,9 +5,12 @@
 - Add consent text when registering a patient
 
 ## Internal
-- Add remote toggle for screen change animations
-- Add instrumentation around Flow events
 - Homescreen banner illustrations are fetched remotely instead of hardcoded
+
+## 2019-10-11-5948
+### Internal
+- Add remote toggle for screen change animations
+- Add instrumentation for Flow events
 
 ## 2019-10-07-5787
 ### Feature

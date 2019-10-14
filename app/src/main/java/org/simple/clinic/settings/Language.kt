@@ -14,6 +14,10 @@ data class ProvidedLanguage(val displayName: String, val languageCode: String) :
 
     return languageCode.equals(languageTag, ignoreCase = true)
   }
+
+  fun toLocale(): Locale {
+    return Locale.forLanguageTag(languageCode)
+  }
 }
 
 @Parcelize

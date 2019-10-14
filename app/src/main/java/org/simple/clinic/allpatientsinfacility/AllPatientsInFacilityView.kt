@@ -16,7 +16,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
-import org.simple.clinic.allpatientsinfacility.migration.ExposesUiEvents
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.MobiusDelegate
@@ -31,7 +30,7 @@ import javax.inject.Inject
 class AllPatientsInFacilityView(
     context: Context,
     attributeSet: AttributeSet
-) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi, ExposesUiEvents {
+) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi {
 
   private val searchResultsAdapter by unsafeLazy {
     AllPatientsInFacilityListAdapter(AllPatientsInFacilityListItemCallback(), locale)
@@ -57,7 +56,7 @@ class AllPatientsInFacilityView(
 
   private val viewRenderer = AllPatientsInFacilityUiRenderer(this)
 
-  override val uiEvents: Observable<UiEvent>
+  val uiEvents: Observable<UiEvent>
     get() = Observable.merge(searchResultClicks(), listScrollEvents())
         .compose(ReportAnalyticsEvents())
 

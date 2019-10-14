@@ -8,13 +8,19 @@ import org.simple.clinic.settings.Language
 data class ChangeLanguageModel(
     val currentLanguage: Language?,
     val userSelectedLanguage: Language?,
-    val supportedLanguages: List<Language>
-): Parcelable {
+    val supportedLanguages: List<Language>,
+    val manuallyRestarted: Boolean
+) : Parcelable {
   val haveLanguagesBeenFetched: Boolean
     get() = currentLanguage != null && supportedLanguages.isNotEmpty()
 
   companion object {
-    val FETCHING_LANGUAGES = ChangeLanguageModel(currentLanguage = null, userSelectedLanguage = null, supportedLanguages = emptyList())
+    val FETCHING_LANGUAGES = ChangeLanguageModel(
+        currentLanguage = null,
+        userSelectedLanguage = null,
+        supportedLanguages = emptyList(),
+        manuallyRestarted = false
+    )
   }
 
   fun withCurrentLanguage(currentLanguage: Language): ChangeLanguageModel {
@@ -35,5 +41,9 @@ data class ChangeLanguageModel(
     val isCurrentLanguageInSupportedLanguages = haveLanguagesBeenFetched && currentLanguage in supportedLanguages
 
     return if (isCurrentLanguageInSupportedLanguages) copy(userSelectedLanguage = currentLanguage) else this
+  }
+
+  fun restarted(): ChangeLanguageModel {
+    return copy(manuallyRestarted = true)
   }
 }

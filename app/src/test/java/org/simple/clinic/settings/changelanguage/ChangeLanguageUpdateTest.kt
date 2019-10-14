@@ -58,7 +58,7 @@ class ChangeLanguageUpdateTest {
   }
 
   @Test
-  fun `when the current language is changed, then go back to previous screen`() {
+  fun `when the current language is changed, then restart the activity`() {
     val model = defaultModel
         .withCurrentLanguage(englishIndia)
         .withSupportedLanguages(listOf(englishIndia, hindiIndia))
@@ -67,8 +67,8 @@ class ChangeLanguageUpdateTest {
         .given(model)
         .whenEvent(CurrentLanguageChangedEvent)
         .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoBack as ChangeLanguageEffect)
+            hasModel(model.restarted()),
+            hasEffects(RestartActivity as ChangeLanguageEffect)
         ))
   }
 

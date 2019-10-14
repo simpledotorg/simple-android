@@ -1,9 +1,9 @@
 package org.simple.clinic.settings.changelanguage
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.justEffect
+import org.simple.clinic.mobius.next
 
 class ChangeLanguageUpdate : Update<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect> {
 
@@ -12,7 +12,7 @@ class ChangeLanguageUpdate : Update<ChangeLanguageModel, ChangeLanguageEvent, Ch
       is CurrentLanguageLoadedEvent -> next(model.withCurrentLanguage(event.language))
       is SupportedLanguagesLoadedEvent -> next(model.withSupportedLanguages(event.languages))
       is SelectLanguageEvent -> next(model.withUserSelectedLanguage(event.newLanguage))
-      is CurrentLanguageChangedEvent -> justEffect(GoBack)
+      is CurrentLanguageChangedEvent -> next(model.restarted(), RestartActivity)
       is SaveCurrentLanguageEvent -> justEffect(UpdateCurrentLanguageEffect(model.userSelectedLanguage!!))
     }
   }

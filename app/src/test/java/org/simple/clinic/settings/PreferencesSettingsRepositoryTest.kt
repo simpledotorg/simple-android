@@ -11,14 +11,14 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import java.util.Locale
 
-class SettingsRepositoryImplTest {
+class PreferencesSettingsRepositoryTest {
 
   private val preference = mock<Preference<Optional<Locale>>>()
 
   private val english = ProvidedLanguage(displayName = "English", languageCode = "en-IN")
   private val kannada = ProvidedLanguage(displayName = "ಕನ್ನಡ", languageCode = "kn-IN")
 
-  private val repository = SettingsRepositoryImpl(preference, listOf(english, kannada))
+  private val repository = PreferencesSettingsRepository(preference, listOf(english, kannada))
 
   @Test
   fun `if user selected locale is not set, fetching the current language should return the default language`() {

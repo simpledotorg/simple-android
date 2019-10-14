@@ -10,7 +10,7 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.ofType
 import java.util.Locale
 
-class SettingsRepositoryImpl(
+class PreferencesSettingsRepository(
     private val userSelectedLocalePreference: Preference<Optional<Locale>>,
     private val supportedLanguages: List<Language>
 ) : SettingsRepository {

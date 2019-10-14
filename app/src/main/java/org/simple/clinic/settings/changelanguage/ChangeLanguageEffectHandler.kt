@@ -19,6 +19,7 @@ object ChangeLanguageEffectHandler {
         .addTransformer(LoadSupportedLanguagesEffect::class.java, loadSupportedLanguages(settingsRepository, schedulersProvider.io()))
         .addTransformer(UpdateCurrentLanguageEffect::class.java, updateCurrentLanguage(settingsRepository, schedulersProvider.io()))
         .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
+        .addAction(RestartActivity::class.java, uiActions::restartActivity, schedulersProvider.ui())
         .build()
   }
 

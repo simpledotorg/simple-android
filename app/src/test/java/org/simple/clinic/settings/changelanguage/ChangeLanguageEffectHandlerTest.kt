@@ -1,5 +1,6 @@
 package org.simple.clinic.settings.changelanguage
 
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -9,6 +10,7 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.ProvidedLanguage
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.settings.SystemDefaultLanguage
@@ -34,7 +36,7 @@ class ChangeLanguageEffectHandlerTest {
   fun `the current selected language must be fetched when the load current selected effect is received`() {
     // given
     val selectedLanguage = SystemDefaultLanguage
-    whenever(settingsRepository.getCurrentLanguage()).thenReturn(Single.just(selectedLanguage))
+    whenever(settingsRepository.getCurrentLanguage()).doReturn(Single.just<Language>(selectedLanguage))
 
     // when
     testCase.dispatch(LoadCurrentLanguageEffect)
@@ -51,7 +53,7 @@ class ChangeLanguageEffectHandlerTest {
         ProvidedLanguage(displayName = "English", languageCode = "en_IN"),
         ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
     )
-    whenever(settingsRepository.getSupportedLanguages()).thenReturn(Single.just(supportedLanguages))
+    whenever(settingsRepository.getSupportedLanguages()).doReturn(Single.just(supportedLanguages))
 
     // when
     testCase.dispatch(LoadSupportedLanguagesEffect)
@@ -64,7 +66,7 @@ class ChangeLanguageEffectHandlerTest {
   fun `when the update current language effect is received, the current language must be changed`() {
     // given
     val changeToLanguage = ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
-    whenever(settingsRepository.setCurrentLanguage(changeToLanguage)).thenReturn(Completable.complete())
+    whenever(settingsRepository.setCurrentLanguage(changeToLanguage)).doReturn(Completable.complete())
 
     // when
     testCase.dispatch(UpdateCurrentLanguageEffect(changeToLanguage))
@@ -81,6 +83,19 @@ class ChangeLanguageEffectHandlerTest {
     // then
     testCase.assertNoOutgoingEvents()
     verify(uiActions).goBackToPreviousScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the restart activity effect is received, the restart activity ui action must be invoked`() {
+    // given
+    testCase.dispatch(RestartActivity)
+
+    // when
+    testCase.assertNoOutgoingEvents()
+
+    // then
+    verify(uiActions).restartActivity()
     verifyNoMoreInteractions(uiActions)
   }
 }

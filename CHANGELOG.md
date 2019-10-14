@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Release
+## Internal
+- Remove old AllPatientsInFacilityView code
+
 ## On Demo
 ## Feature
 - Add consent text when registering a patient

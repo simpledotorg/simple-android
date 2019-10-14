@@ -21,7 +21,12 @@ class SettingsModule {
   }
 
   @Provides
-  fun provideSettingsRepository(): SettingsRepository {
-    return SettingsRepositoryImpl()
+  fun provideSettingsRepository(
+      @Named("preference_user_selected_locale") userSelectedLocalePreference: Preference<Optional<Locale>>
+  ): SettingsRepository {
+    return SettingsRepositoryImpl(
+        userSelectedLocalePreference = userSelectedLocalePreference,
+        supportedLanguages = emptyList()
+    )
   }
 }

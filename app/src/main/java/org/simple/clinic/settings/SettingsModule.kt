@@ -24,9 +24,15 @@ class SettingsModule {
   fun provideSettingsRepository(
       @Named("preference_user_selected_locale") userSelectedLocalePreference: Preference<Optional<Locale>>
   ): SettingsRepository {
+    val supportedLanguages = listOf<Language>(
+        ProvidedLanguage(displayName = "English", languageCode = "en-IN"),
+        ProvidedLanguage(displayName = "हिंदी", languageCode = "hi-IN"),
+        ProvidedLanguage(displayName = "ਪੰਜਾਬੀ", languageCode = "pa-IN")
+    )
+
     return SettingsRepositoryImpl(
         userSelectedLocalePreference = userSelectedLocalePreference,
-        supportedLanguages = emptyList()
+        supportedLanguages = supportedLanguages
     )
   }
 }

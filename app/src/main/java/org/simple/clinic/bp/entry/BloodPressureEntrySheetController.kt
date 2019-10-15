@@ -21,6 +21,9 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
+import org.simple.clinic.bp.entry.SaveBpData.NeedsCorrection
+import org.simple.clinic.bp.entry.SaveBpData.ReadyToCreate
+import org.simple.clinic.bp.entry.SaveBpData.ReadyToUpdate
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
@@ -468,7 +471,7 @@ class BloodPressureEntrySheetController @Inject constructor(
             currentFacilityStream
         ) { dateResult, bpResult, patientUuid, loggedInUser, currentFacility ->
           if (dateResult is Valid && bpResult is Success) {
-            SaveBpData.ReadyToCreate(
+            ReadyToCreate(
                 date = dateResult.parsedDate,
                 systolic = bpResult.systolic,
                 diastolic = bpResult.diastolic,
@@ -477,7 +480,7 @@ class BloodPressureEntrySheetController @Inject constructor(
                 currentFacility = currentFacility
             )
           } else {
-            SaveBpData.NeedsCorrection
+            NeedsCorrection
           }
         }
 
@@ -489,7 +492,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         currentFacilityStream
     ) { dateResult, bpResult, bpUuid, loggedInUser, currentFacility ->
       if (dateResult is Valid && bpResult is Success) {
-        SaveBpData.ReadyToUpdate(
+        ReadyToUpdate(
             date = dateResult.parsedDate,
             systolic = bpResult.systolic,
             diastolic = bpResult.diastolic,
@@ -498,13 +501,13 @@ class BloodPressureEntrySheetController @Inject constructor(
             currentFacility = currentFacility
         )
       } else {
-        SaveBpData.NeedsCorrection
+        NeedsCorrection
       }
     }
 
     val saveNewBp = saveClicks
         .withLatestFrom(newBpDataStream) { _, newBp -> newBp }
-        .ofType<SaveBpData.ReadyToCreate>()
+        .ofType<ReadyToCreate>()
         .withLatestFrom(prefilledDateStream)
         .flatMapSingle { (newBp, prefilledDate) ->
           bloodPressureRepository
@@ -527,7 +530,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     val updateExistingBp = saveClicks
         .withLatestFrom(updateBpDataStream) { _, updateBp -> updateBp }
-        .ofType<SaveBpData.ReadyToUpdate>()
+        .ofType<ReadyToUpdate>()
         .withLatestFrom(prefilledDateStream)
         .flatMapSingle { (updateBp, prefilledDate) ->
           bloodPressureRepository.measurement(updateBp.bpUuid)

@@ -210,8 +210,8 @@ class BloodPressureEntrySheetControllerTest {
   ) {
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
+    sheetCreated(openAs)
     uiEvents.run {
-      onNext(SheetCreated(openAs)) // TODO(rj) 15/Oct/19 - These need to be extracted into a function that can switch between new / update
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(""))
       onNext(DiastolicChanged(""))
@@ -231,7 +231,7 @@ class BloodPressureEntrySheetControllerTest {
       whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressureMeasurement!!))
     }
 
-    uiEvents.onNext(SheetCreated(openAs)) // TODO(rj) 15/Oct/19 - These need to be extracted into a function that can switch between new / update
+    sheetCreated(openAs)
 
     if (openAs is Update) {
       val verify = verify(ui)
@@ -261,7 +261,7 @@ class BloodPressureEntrySheetControllerTest {
   ) {
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bp()))
 
-    uiEvents.onNext(SheetCreated(openAs)) // TODO(rj) 15/Oct/19 - These need to be extracted into a function that can switch between new / update
+    sheetCreated(openAs)
 
     if (shouldShowRemoveBpButton) {
       verify(ui).showRemoveBpButton()
@@ -285,7 +285,7 @@ class BloodPressureEntrySheetControllerTest {
   ) {
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bp()))
 
-    uiEvents.onNext(SheetCreated(openAs)) // TODO(rj) 15/Oct/19 - These need to be extracted into a function that can switch between new / update
+    sheetCreated(openAs)
 
     if (showEntryTitle) {
       verify(ui).showEnterNewBloodPressureTitle()
@@ -333,7 +333,7 @@ class BloodPressureEntrySheetControllerTest {
   ) {
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
-    uiEvents.onNext(SheetCreated(openAs)) // TODO(rj) 15/Oct/19 - These need to be extracted into a function that can switch between new / update
+    sheetCreated(openAs)
     uiEvents.onNext(ScreenChanged(DATE_ENTRY))
     uiEvents.onNext(DayChanged("invalid"))
     uiEvents.onNext(MonthChanged("4"))
@@ -468,8 +468,8 @@ class BloodPressureEntrySheetControllerTest {
 
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
+    sheetCreated(openAs)
     uiEvents.run {
-      onNext(SheetCreated(openAs)) // TODO(rj) 15/Oct/19 - These need to be extracted into a function that can switch between new / update
       onNext(ScreenChanged(DATE_ENTRY))
       onNext(DayChanged(day))
       onNext(MonthChanged(month))
@@ -519,8 +519,8 @@ class BloodPressureEntrySheetControllerTest {
   ) {
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
+    sheetCreated(openAs)
     uiEvents.run {
-      onNext(SheetCreated(openAs)) // TODO(rj) 15/Oct/19 - These need to be extracted into a function that can switch between new / update
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged("120"))
       onNext(DiastolicChanged("110"))
@@ -905,5 +905,13 @@ class BloodPressureEntrySheetControllerTest {
 
   private fun sheetCreatedForUpdate(existingBpUuid: UUID) {
     uiEvents.onNext(SheetCreated(Update(existingBpUuid)))
+  }
+
+  private fun sheetCreated(openAs: OpenAs) {
+    when(openAs) {
+      is New -> sheetCreatedForNew(openAs.patientUuid)
+      is Update -> sheetCreatedForUpdate(openAs.bpUuid)
+      else -> throw IllegalStateException("Unknown `openAs`: $openAs")
+    }
   }
 }

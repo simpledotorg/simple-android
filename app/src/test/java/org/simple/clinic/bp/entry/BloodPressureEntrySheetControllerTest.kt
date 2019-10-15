@@ -131,7 +131,7 @@ class BloodPressureEntrySheetControllerTest {
     "44|false"
   ])
   fun `when valid systolic value is entered, move cursor to diastolic field`(sampleSystolicBp: String, shouldMove: Boolean) {
-    uiEvents.onNext(SheetCreated(New(patientUuid)))
+    sheetCreatedForNew()
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
     uiEvents.onNext(SystolicChanged(""))
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
@@ -174,7 +174,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Test
   fun `when systolic or diastolic values change, hide any error message`() {
-    uiEvents.onNext(SheetCreated(New(patientUuid)))
+    sheetCreatedForNew()
     uiEvents.onNext(SystolicChanged("12"))
     uiEvents.onNext(SystolicChanged("120"))
     uiEvents.onNext(SystolicChanged("130"))
@@ -193,7 +193,7 @@ class BloodPressureEntrySheetControllerTest {
       systolic: String,
       diastolic: String
   ) {
-    uiEvents.onNext(SheetCreated(New(patientUuid)))
+    sheetCreatedForNew()
     uiEvents.onNext(SystolicChanged(systolic))
     uiEvents.onNext(DiastolicChanged(diastolic))
     uiEvents.onNext(SaveClicked)
@@ -366,8 +366,8 @@ class BloodPressureEntrySheetControllerTest {
         .doReturn(Single.just(PatientMocker.bp()))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
+    sheetCreatedForNew()
     uiEvents.run {
-      onNext(SheetCreated(openAs = New(patientUuid)))
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged("13"))
       onNext(DiastolicChanged("11"))
@@ -565,7 +565,7 @@ class BloodPressureEntrySheetControllerTest {
     val currentDate = LocalDate.of(2018, 4, 23)
     testUserClock.advanceBy(Duration.ofSeconds(currentDate.atStartOfDay().toEpochSecond(UTC)))
 
-    uiEvents.onNext(SheetCreated(New(patientUuid)))
+    sheetCreatedForNew()
 
     verify(ui).setDate(
         dayOfMonth = "23",
@@ -589,17 +589,19 @@ class BloodPressureEntrySheetControllerTest {
         twoDigitYear = "18")
   }
 
-  // TODO(rj): 2019-10-10 This supplier has only one parameter. This can be removed and params can be made as part of the actual test.
   @Suppress("Unused")
-  private fun `params for OpenAs types`(): List<Any> {
-    return listOf(New(patientUuid), Update(UUID.fromString("d9d0050a-7fa1-4293-868a-7640ebc93cd8")))
+  private fun `params for OpenAs types`(): List<OpenAs> {
+    return listOf(
+        New(patientUuid),
+        Update(UUID.fromString("d9d0050a-7fa1-4293-868a-7640ebc93cd8"))
+    )
   }
 
   @Test
   fun `whenever the BP sheet is shown to add a new BP, then show today's date`() {
     val today = LocalDate.now(testUserClock)
 
-    uiEvents.onNext(SheetCreated(New(patientUuid)))
+    sheetCreatedForNew()
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
 
     verify(ui).showDate(today)
@@ -642,8 +644,8 @@ class BloodPressureEntrySheetControllerTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
+    sheetCreatedForNew()
     with(uiEvents) {
-      onNext(SheetCreated(New(patientUuid)))
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
       onNext(DiastolicChanged(diastolic))
@@ -666,8 +668,8 @@ class BloodPressureEntrySheetControllerTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
+    sheetCreatedForNew()
     with(uiEvents) {
-      onNext(SheetCreated(New(patientUuid)))
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
       onNext(DiastolicChanged(diastolic))
@@ -745,8 +747,8 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
     val localDate = LocalDate.of(1916, 5, 10)
 
+    sheetCreatedForNew()
     with(uiEvents) {
-      onNext(SheetCreated(New(patientUuid)))
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
       onNext(DiastolicChanged(diastolic))
@@ -771,8 +773,8 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
     val localDate = LocalDate.of(1916, 5, 10)
 
+    sheetCreatedForNew()
     with(uiEvents) {
-      onNext(SheetCreated(New(patientUuid)))
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
       onNext(DiastolicChanged(diastolic))
@@ -802,8 +804,8 @@ class BloodPressureEntrySheetControllerTest {
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
+    sheetCreatedForNew()
     with(uiEvents) {
-      onNext(SheetCreated(New(patientUuid)))
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
       onNext(DiastolicChanged(diastolic))
@@ -895,5 +897,9 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).setBpSavedResultAndFinish()
 
     verifyNoMoreInteractions(ui)
+  }
+
+  private fun sheetCreatedForNew() {
+    uiEvents.onNext(SheetCreated(New(patientUuid)))
   }
 }

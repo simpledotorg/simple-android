@@ -14,6 +14,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -48,6 +49,7 @@ import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -92,12 +94,24 @@ class BloodPressureEntrySheetControllerTest {
       userSession = userSession,
       facilityRepository = facilityRepository)
 
+  private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
+  private val viewRenderer = BloodPressureEntryViewRenderer(ui)
+
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
     whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
+
+    fixture = MobiusTestFixture(
+        uiEvents.ofType(),
+        BloodPressureEntryModel(),
+        BloodPressureEntryInit(),
+        BloodPressureEntryUpdate(),
+        BloodPressureEntryEffectHandler.create(),
+        viewRenderer::render
+    )
 
     uiEvents
         .compose(controller)

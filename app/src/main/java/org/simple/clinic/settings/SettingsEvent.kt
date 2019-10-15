@@ -1,7 +1,13 @@
 package org.simple.clinic.settings
 
-sealed class SettingsEvent
+import org.simple.clinic.widgets.UiEvent
 
-data class UserDetailsLoaded(val name: String, val phoneNumber: String): SettingsEvent()
+sealed class SettingsEvent : UiEvent
 
-data class CurrentLanguageLoaded(val language: Language): SettingsEvent()
+data class UserDetailsLoaded(val name: String, val phoneNumber: String) : SettingsEvent()
+
+data class CurrentLanguageLoaded(val language: Language) : SettingsEvent()
+
+object ChangeLanguage : SettingsEvent() {
+  override val analyticsName: String = "Settings:Change Language Clicked"
+}

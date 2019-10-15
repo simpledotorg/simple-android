@@ -31,6 +31,8 @@ import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.mobius.MobiusActivityDelegate
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -93,6 +95,12 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   }
 
   @Inject
+  lateinit var userInputDatePaddingCharacter: UserInputDatePaddingCharacter
+
+  @Inject
+  lateinit var schedulersProvider: SchedulersProvider
+
+  @Inject
   lateinit var crashReporter: CrashReporter
 
   private val viewRenderer = BloodPressureEntryViewRenderer(this)
@@ -103,12 +111,15 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
       is Update -> BloodPressureEntryModel.updateBloodPressureEntry(Update(openAs.bpUuid))
     }
 
+    val effectHandler = BloodPressureEntryEffectHandler
+        .create(this, userInputDatePaddingCharacter, schedulersProvider)
+
     MobiusActivityDelegate(
         events.ofType(),
         defaultModel,
         BloodPressureEntryInit(),
         BloodPressureEntryUpdate(),
-        BloodPressureEntryEffectHandler.create(),
+        effectHandler,
         viewRenderer::render,
         crashReporter
     )

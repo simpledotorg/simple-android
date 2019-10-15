@@ -20,6 +20,8 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
+import org.simple.clinic.bp.entry.OpenAs.New
+import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.bp.entry.SaveBpData.NeedsCorrection
 import org.simple.clinic.bp.entry.SaveBpData.ReadyToCreate
 import org.simple.clinic.bp.entry.SaveBpData.ReadyToUpdate
@@ -134,8 +136,8 @@ class BloodPressureEntrySheetController @Inject constructor(
   private fun prefillBpWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<SheetCreated>()
-        .filter { it.openAs is OpenAs.Update }
-        .map { it.openAs as OpenAs.Update }
+        .filter { it.openAs is Update }
+        .map { it.openAs as Update }
         .flatMap {
           // Subscribing on the IO scheduler should not be necessary here, but we've seen
           // occasional crashes because it sometimes runs on the main thread. This is a temp.
@@ -159,11 +161,11 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { it.openAs }
 
     val dateForNewBp = openAsStream
-        .ofType<OpenAs.New>()
+        .ofType<New>()
         .map { LocalDate.now(userClock) }
 
     val dateForExistingBp = openAsStream
-        .ofType<OpenAs.Update>()
+        .ofType<Update>()
         .flatMap { bloodPressureRepository.measurement(it.bpUuid) }
         .take(1)
         .map { it.recordedAt.atZone(userClock.zone).toLocalDate() }
@@ -295,7 +297,7 @@ class BloodPressureEntrySheetController @Inject constructor(
     return events
         .ofType<SheetCreated>()
         .map { it.openAs }
-        .ofType<OpenAs.Update>()
+        .ofType<Update>()
         .map { { ui: Ui -> ui.showRemoveBpButton() } }
   }
 
@@ -303,7 +305,7 @@ class BloodPressureEntrySheetController @Inject constructor(
     return events
         .ofType<SheetCreated>()
         .map { it.openAs }
-        .filter { it is OpenAs.Update }
+        .filter { it is Update }
         .map { { ui: Ui -> ui.showEditBloodPressureTitle() } }
   }
 
@@ -311,7 +313,7 @@ class BloodPressureEntrySheetController @Inject constructor(
     val bloodPressureMeasurementUuidStream = events
         .ofType<SheetCreated>()
         .map { it.openAs }
-        .ofType<OpenAs.Update>()
+        .ofType<Update>()
         .map { it.bpUuid }
 
     val removeClicks = events.ofType<RemoveClicked>()
@@ -325,7 +327,7 @@ class BloodPressureEntrySheetController @Inject constructor(
     val bloodPressureMeasurementUuidStream = events
         .ofType<SheetCreated>()
         .map { it.openAs }
-        .ofType<OpenAs.Update>()
+        .ofType<Update>()
         .map { it.bpUuid }
 
     return bloodPressureMeasurementUuidStream
@@ -420,11 +422,11 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { it.result }
 
     val patientUuidStream = openAs
-        .ofType<OpenAs.New>()
+        .ofType<New>()
         .map { it.patientUuid }
 
     val existingBpUuidStream = openAs
-        .ofType<OpenAs.Update>()
+        .ofType<Update>()
         .map { it.bpUuid }
 
     val saveClicks = events

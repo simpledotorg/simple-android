@@ -47,6 +47,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.UiEvent
@@ -919,12 +920,17 @@ class BloodPressureEntrySheetControllerTest {
   private fun sheetCreatedForNew(patientUuid: UUID) {
     uiEvents.onNext(SheetCreated(New(patientUuid)))
 
+    val effectHandler = BloodPressureEntryEffectHandler.create(
+        ui,
+        UserInputDatePaddingCharacter('0'),
+        TrampolineSchedulersProvider()
+    )
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
         BloodPressureEntryModel.newBloodPressureEntry(New(patientUuid)),
         BloodPressureEntryInit(),
         BloodPressureEntryUpdate(),
-        BloodPressureEntryEffectHandler.create(),
+        effectHandler,
         viewRenderer::render
     ).also { it.start() }
   }
@@ -934,7 +940,7 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   private fun sheetCreated(openAs: OpenAs) {
-    when(openAs) {
+    when (openAs) {
       is New -> sheetCreatedForNew(openAs.patientUuid)
       is Update -> sheetCreatedForUpdate(openAs.bpUuid)
       else -> throw IllegalStateException("Unknown `openAs`: $openAs")

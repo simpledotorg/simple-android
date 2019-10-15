@@ -18,6 +18,10 @@ data class SettingsModel(
     get() = name != null && phoneNumber != null
 
   fun userDetailsFetched(name: String, phoneNumber: String): SettingsModel {
-    return this.copy(name = name, phoneNumber = phoneNumber)
+    return copy(name = name, phoneNumber = phoneNumber)
+  }
+
+  fun currentLanguageFetched(language: Language): SettingsModel {
+    return copy(currentLanguage = language)
   }
 }

@@ -54,7 +54,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       MissingPhoneReminder::class,
       Encounter::class
     ],
-    version = 50,
+    version = 51,
     exportSchema = true
 )
 @TypeConverters(
@@ -113,6 +113,8 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun businessIdDao(): BusinessId.RoomDao
 
   abstract fun missingPhoneReminderDao(): MissingPhoneReminder.RoomDao
+
+  abstract fun encountersDao(): Encounter.RoomDao
 
   fun clearPatientData() {
     runInTransaction {

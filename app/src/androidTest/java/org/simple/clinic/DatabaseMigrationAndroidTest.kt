@@ -3496,6 +3496,36 @@ class DatabaseMigrationAndroidTest {
       it.assertValues(expectedEncounterValues)
     }
   }
+
+  @Test
+  fun migration_from_50_to_51_should_add_syncStatus_to_Encounter() {
+    //given
+    val db_50 = helper.createDatabase(version = 50)
+    val encounterTable = "Encounter"
+
+    db_50.assertColumns(tableName = encounterTable, expectedColumns = setOf(
+        "uuid",
+        "patientUuid",
+        "encounteredOn",
+        "createdAt",
+        "updatedAt",
+        "deletedAt"
+    ))
+
+    //when
+    val db_51 = helper.migrateTo(version = 51)
+
+    //then
+    db_51.assertColumns(tableName = encounterTable, expectedColumns = setOf(
+        "uuid",
+        "patientUuid",
+        "encounteredOn",
+        "syncStatus",
+        "createdAt",
+        "updatedAt",
+        "deletedAt"
+    ))
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

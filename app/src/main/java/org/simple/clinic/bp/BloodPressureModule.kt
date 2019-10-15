@@ -8,9 +8,9 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.bp.sync.BloodPressureSyncApi
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import org.simple.clinic.util.preference.StringPreferenceConverter
-import org.simple.clinic.util.UserInputDatePaddingCharacter
 import retrofit2.Retrofit
 import javax.inject.Named
 
@@ -35,6 +35,6 @@ open class BloodPressureModule {
 
   @Provides
   fun userInputDatePaddingCharacter(): UserInputDatePaddingCharacter {
-    return UserInputDatePaddingCharacter('0')
+    return UserInputDatePaddingCharacter.ZERO
   }
 }

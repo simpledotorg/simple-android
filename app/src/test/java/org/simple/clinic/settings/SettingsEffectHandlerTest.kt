@@ -2,6 +2,8 @@ package org.simple.clinic.settings
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -21,11 +23,13 @@ class SettingsEffectHandlerTest {
 
   private val userSession = mock<UserSession>()
   private val settingsRepository = mock<SettingsRepository>()
+  private val uiActions = mock<UiActions>()
 
   private val testCase = EffectHandlerTestCase(SettingsEffectHandler.create(
       userSession = userSession,
       settingsRepository = settingsRepository,
-      schedulersProvider = TrampolineSchedulersProvider()
+      schedulersProvider = TrampolineSchedulersProvider(),
+      uiActions = uiActions
   ))
 
   @After
@@ -80,5 +84,15 @@ class SettingsEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(CurrentLanguageLoaded(language))
+  }
+
+  @Test
+  fun `when the open language selection screen effect is received, the open language screen ui action must be invoked`() {
+    // when
+    testCase.dispatch(OpenLanguageSelectionScreenEffect)
+
+    // then
+    verify(uiActions).openLanguageSelectionScreen()
+    verifyNoMoreInteractions(uiActions)
   }
 }

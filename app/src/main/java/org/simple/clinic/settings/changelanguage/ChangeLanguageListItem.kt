@@ -11,7 +11,7 @@ import org.simple.clinic.widgets.recyclerview.ViewHolderX
 
 data class ChangeLanguageListItem(
     private val language: ProvidedLanguage,
-    private val isSelected: Boolean
+    private val isLanguageSelectedByUser: Boolean
 ) : ItemAdapter.Item<ChangeLanguageListItem.Event> {
 
   companion object {
@@ -21,7 +21,7 @@ data class ChangeLanguageListItem(
           .map { language ->
             val isLanguageSelectedByUser = language == selectedLanguage
 
-            ChangeLanguageListItem(language, isSelected = isLanguageSelectedByUser)
+            ChangeLanguageListItem(language, isLanguageSelectedByUser = isLanguageSelectedByUser)
           }
     }
   }
@@ -33,7 +33,7 @@ data class ChangeLanguageListItem(
   override fun render(holder: ViewHolderX, subject: Subject<Event>) {
     holder.languageButton.apply {
       text = language.displayName
-      isChecked = isSelected
+      isChecked = isLanguageSelectedByUser
       setOnClickListener { subject.onNext(Event.ListItemClicked(language)) }
     }
   }

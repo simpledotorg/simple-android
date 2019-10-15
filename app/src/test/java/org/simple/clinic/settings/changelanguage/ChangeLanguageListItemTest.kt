@@ -21,8 +21,8 @@ class ChangeLanguageListItemTest {
     // then
     assertThat(listItems)
         .containsExactly(
-            ChangeLanguageListItem(language = englishIndia, isSelected = false),
-            ChangeLanguageListItem(language = hindiIndia, isSelected = false)
+            ChangeLanguageListItem(language = englishIndia, isLanguageSelectedByUser = false),
+            ChangeLanguageListItem(language = hindiIndia, isLanguageSelectedByUser = false)
         )
         .inOrder()
   }
@@ -38,8 +38,8 @@ class ChangeLanguageListItemTest {
     // then
     assertThat(listItems)
         .containsExactly(
-            ChangeLanguageListItem(language = englishIndia, isSelected = false),
-            ChangeLanguageListItem(language = hindiIndia, isSelected = true)
+            ChangeLanguageListItem(language = englishIndia, isLanguageSelectedByUser = false),
+            ChangeLanguageListItem(language = hindiIndia, isLanguageSelectedByUser = true)
         )
         .inOrder()
   }
@@ -56,8 +56,8 @@ class ChangeLanguageListItemTest {
     // then
     assertThat(listItems)
         .containsExactly(
-            ChangeLanguageListItem(language = englishIndia, isSelected = false),
-            ChangeLanguageListItem(language = hindiIndia, isSelected = false)
+            ChangeLanguageListItem(language = englishIndia, isLanguageSelectedByUser = false),
+            ChangeLanguageListItem(language = hindiIndia, isLanguageSelectedByUser = false)
         )
         .inOrder()
   }

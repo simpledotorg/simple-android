@@ -32,7 +32,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
@@ -156,9 +155,7 @@ class BloodPressureValidationMockDateValidatorTest {
   @Suppress("Unused")
   private fun `params for checking valid date input`(): List<DoNotSaveBpWithInvalidDateTestParams> {
     return listOf(
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.New(patientUuid), InvalidPattern),
         DoNotSaveBpWithInvalidDateTestParams(OpenAs.New(patientUuid), DateIsInFuture),
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(existingBpUuid), InvalidPattern),
         DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(existingBpUuid), DateIsInFuture))
   }
 

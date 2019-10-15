@@ -144,8 +144,8 @@ class BloodPressureEntrySheetControllerTest {
     sheetCreatedForNew(patientUuid)
     verify(ui).hideRemoveBpButton()
     verify(ui).showEnterNewBloodPressureTitle()
-    verify(ui).setDate("01", "01", "70")
-    verify(ui).showDate(LocalDate.of(1970, 1, 1))
+    verify(ui).setDateOnInputFields("01", "01", "70")
+    verify(ui).showDateOnDateButton(LocalDate.of(1970, 1, 1))
     verify(facilityRepository).currentFacility(user)
     verifyNoMoreInteractions(ui, facilityRepository)
     verifyZeroInteractions(bloodPressureRepository, appointmentRepository, patientRepository)
@@ -593,7 +593,7 @@ class BloodPressureEntrySheetControllerTest {
 
     sheetCreatedForNew(patientUuid)
 
-    verify(ui).setDate(
+    verify(ui).setDateOnInputFields(
         dayOfMonth = "23",
         month = "04",
         twoDigitYear = "18")
@@ -609,7 +609,7 @@ class BloodPressureEntrySheetControllerTest {
 
     sheetCreatedForUpdate(existingBp.uuid)
 
-    verify(ui, times(1)).setDate(
+    verify(ui, times(1)).setDateOnInputFields(
         dayOfMonth = "23",
         month = "04",
         twoDigitYear = "18")
@@ -630,9 +630,9 @@ class BloodPressureEntrySheetControllerTest {
     sheetCreatedForNew(patientUuid)
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
 
-    verify(ui).showDate(today)
+    verify(ui).showDateOnDateButton(today)
 
-    verify(ui).setDate(
+    verify(ui).setDateOnInputFields(
         today.dayOfMonth.toString().padStart(2, '0'),
         today.month.value.toString().padStart(2, '0'),
         today.year.toString().takeLast(2)
@@ -651,9 +651,9 @@ class BloodPressureEntrySheetControllerTest {
     sheetCreatedForUpdate(bp.uuid)
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
 
-    verify(ui).showDate(recordedDate)
+    verify(ui).showDateOnDateButton(recordedDate)
 
-    verify(ui).setDate(
+    verify(ui).setDateOnInputFields(
         recordedDate.dayOfMonth.toString().padStart(2, '0'),
         recordedDate.month.value.toString().padStart(2, '0'),
         recordedDate.year.toString().takeLast(2)
@@ -788,7 +788,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(BackPressed)
     }
 
-    verify(ui).showDate(localDate)
+    verify(ui).showDateOnDateButton(localDate)
     verify(ui).showBpEntryScreen()
     verifyNoMoreInteractions(ui)
   }
@@ -814,7 +814,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(ShowBpClicked)
     }
 
-    verify(ui).showDate(localDate)
+    verify(ui).showDateOnDateButton(localDate)
     verify(ui).showBpEntryScreen()
     verifyNoMoreInteractions(ui)
   }
@@ -855,7 +855,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
     verify(ui).setBpSavedResultAndFinish()
-    verify(ui).showDate(inputDate)
+    verify(ui).showDateOnDateButton(inputDate)
 
     verifyNoMoreInteractions(ui)
   }
@@ -919,7 +919,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
 
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
-    verify(ui).showDate(newInputDate)
+    verify(ui).showDateOnDateButton(newInputDate)
     verify(ui).setBpSavedResultAndFinish()
 
     verifyNoMoreInteractions(ui)

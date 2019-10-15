@@ -313,10 +313,8 @@ class BloodPressureEntrySheetControllerTest {
   @Suppress("IMPLICIT_CAST_TO_ANY")
   @Parameters(method = "params for checking valid date input")
   fun `when save is clicked, date entry is active, but input is invalid then BP measurement should not be saved`(
-      testParams: DoNotSaveBpWithInvalidDateTestParams
+      openAs: OpenAs
   ) {
-    val (openAs) = testParams
-
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
     uiEvents.onNext(SheetCreated(openAs))
@@ -337,15 +335,12 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   @Suppress("Unused")
-  private fun `params for checking valid date input`(): List<DoNotSaveBpWithInvalidDateTestParams> {
+  private fun `params for checking valid date input`(): List<OpenAs> {
     return listOf(
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.New(patientUuid)),
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(UUID.fromString("f6f27cad-8b82-461e-8b1e-e14c2ac63832"))))
+        OpenAs.New(patientUuid),
+        OpenAs.Update(UUID.fromString("f6f27cad-8b82-461e-8b1e-e14c2ac63832"))
+    )
   }
-
-  data class DoNotSaveBpWithInvalidDateTestParams(
-      val openAs: OpenAs
-  )
 
   @Test
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {

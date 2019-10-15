@@ -12,12 +12,14 @@ object SettingsEffectHandler {
   fun create(
       userSession: UserSession,
       settingsRepository: SettingsRepository,
-      schedulersProvider: SchedulersProvider
+      schedulersProvider: SchedulersProvider,
+      uiActions: UiActions
   ): ObservableTransformer<SettingsEffect, SettingsEvent> {
     return RxMobius
         .subtypeEffectHandler<SettingsEffect, SettingsEvent>()
         .addTransformer(LoadUserDetailsEffect::class.java, loadUserDetails(userSession, schedulersProvider.io()))
         .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage(settingsRepository, schedulersProvider.io()))
+        .addAction(OpenLanguageSelectionScreenEffect::class.java, uiActions::openLanguageSelectionScreen, schedulersProvider.ui())
         .build()
   }
 

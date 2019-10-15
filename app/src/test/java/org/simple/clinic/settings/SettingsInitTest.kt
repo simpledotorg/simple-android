@@ -14,7 +14,7 @@ class SettingsInitTest {
   private val spec = InitSpec<SettingsModel, SettingsEffect>(SettingsInit())
 
   @Test
-  fun `the load user effect must be emitted when the model is created`() {
+  fun `when the screen is created, the user details must be fetched`() {
     spec
         .whenInit(defaultModel)
         .then(assertThatFirst(
@@ -24,7 +24,7 @@ class SettingsInitTest {
   }
 
   @Test
-  fun `no effect must be emitted when the model is restored`() {
+  fun `when the screen is restored with the user details, do nothing`() {
     val restoredModel = defaultModel.userDetailsFetched(name = "Anish Acharya", phoneNumber = "1234567890")
 
     spec

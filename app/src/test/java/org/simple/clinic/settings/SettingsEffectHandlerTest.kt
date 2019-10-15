@@ -5,10 +5,9 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.observers.TestObserver
-import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -22,19 +21,16 @@ class SettingsEffectHandlerTest {
 
   private val userSession = mock<UserSession>()
   private val settingsRepository = mock<SettingsRepository>()
-  private val effectsSubject = PublishSubject.create<SettingsEffect>()
 
-  private val effectHandlerTest: TestObserver<SettingsEvent> = effectsSubject
-      .compose(SettingsEffectHandler.create(
-          userSession = userSession,
-          settingsRepository = settingsRepository,
-          schedulersProvider = TrampolineSchedulersProvider()
-      ))
-      .test()
+  private val testCase = EffectHandlerTestCase(SettingsEffectHandler.create(
+      userSession = userSession,
+      settingsRepository = settingsRepository,
+      schedulersProvider = TrampolineSchedulersProvider()
+  ))
 
   @After
   fun tearDown() {
-    effectHandlerTest.dispose()
+    testCase.dispose()
   }
 
   @Test
@@ -52,16 +48,13 @@ class SettingsEffectHandlerTest {
     ))
 
     // when
-    effectsSubject.onNext(LoadUserDetailsEffect)
+    testCase.dispatch(LoadUserDetailsEffect)
 
     // then
-    effectHandlerTest
-        .assertValues(
-            UserDetailsLoaded(name = savedUser.fullName, phoneNumber = savedUser.phoneNumber),
-            UserDetailsLoaded(name = updatedUser.fullName, phoneNumber = updatedUser.phoneNumber)
-        )
-        .assertNotComplete()
-        .assertNotTerminated()
+    testCase.assertOutgoingEvents(
+        UserDetailsLoaded(name = savedUser.fullName, phoneNumber = savedUser.phoneNumber),
+        UserDetailsLoaded(name = updatedUser.fullName, phoneNumber = updatedUser.phoneNumber)
+    )
   }
 
   @Test
@@ -70,12 +63,10 @@ class SettingsEffectHandlerTest {
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(None))
 
     // when
-    effectsSubject.onNext(LoadUserDetailsEffect)
+    testCase.dispatch(LoadUserDetailsEffect)
 
     // then
-    effectHandlerTest
-        .assertNoValues()
-        .assertNoErrors()
+    testCase.assertNoOutgoingEvents()
   }
 
   @Test
@@ -85,12 +76,9 @@ class SettingsEffectHandlerTest {
     whenever(settingsRepository.getCurrentLanguage()).doReturn(Single.just<Language>(language))
 
     // when
-    effectsSubject.onNext(LoadCurrentLanguageEffect)
+    testCase.dispatch(LoadCurrentLanguageEffect)
 
     // then
-    effectHandlerTest
-        .assertValue(CurrentLanguageLoaded(language))
-        .assertNotComplete()
-        .assertNotTerminated()
+    testCase.assertOutgoingEvents(CurrentLanguageLoaded(language))
   }
 }

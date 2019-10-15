@@ -456,6 +456,8 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     val currentFacilityStream = loggedInUserStream
         .flatMap(facilityRepository::currentFacility)
+        .replay()
+        .refCount()
 
     val newBpDataStream = Observables
         .combineLatest(

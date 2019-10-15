@@ -54,7 +54,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.mobius.migration.MobiusTestFixture
-import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -98,8 +97,8 @@ class BloodPressureEntrySheetControllerTest {
       userSession = userSession,
       facilityRepository = facilityRepository)
 
-  private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
   private val viewRenderer = BloodPressureEntryViewRenderer(ui)
+  private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
 
   @Before
   fun setUp() {
@@ -133,11 +132,14 @@ class BloodPressureEntrySheetControllerTest {
     the functionality captured in this test.
     """)
   fun `when valid systolic value is entered, move cursor to diastolic field (characteristic test)`(sampleSystolicBp: String) {
+    val someDate = LocalDate.of(1970, 1, 1)
+    testUserClock.setDate(someDate, UTC)
+
     sheetCreatedForNew(patientUuid)
     verify(ui).hideRemoveBpButton()
     verify(ui).showEnterNewBloodPressureTitle()
     verify(ui).setDateOnInputFields("01", "01", "70")
-    verify(ui).showDateOnDateButton(LocalDate.of(1970, 1, 1))
+    verify(ui).showDateOnDateButton(someDate)
     verify(facilityRepository).currentFacility(user)
     verifyNoMoreInteractions(ui, facilityRepository)
     verifyZeroInteractions(bloodPressureRepository, appointmentRepository, patientRepository)
@@ -581,7 +583,7 @@ class BloodPressureEntrySheetControllerTest {
   @Test
   fun `when screen is opened for a new BP, then the date should be prefilled with the current date`() {
     val currentDate = LocalDate.of(2018, 4, 23)
-    testUserClock.advanceBy(Duration.ofSeconds(currentDate.atStartOfDay().toEpochSecond(UTC)))
+    testUserClock.setDate(currentDate, UTC)
 
     sheetCreatedForNew(patientUuid)
 
@@ -922,6 +924,7 @@ class BloodPressureEntrySheetControllerTest {
 
     val effectHandler = BloodPressureEntryEffectHandler.create(
         ui,
+        testUserClock,
         UserInputDatePaddingCharacter.ZERO,
         TrampolineSchedulersProvider()
     )

@@ -131,7 +131,7 @@ class BloodPressureEntrySheetControllerTest {
     "44|false"
   ])
   fun `when valid systolic value is entered, move cursor to diastolic field`(sampleSystolicBp: String, shouldMove: Boolean) {
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
     uiEvents.onNext(SystolicChanged(""))
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
@@ -174,7 +174,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Test
   fun `when systolic or diastolic values change, hide any error message`() {
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     uiEvents.onNext(SystolicChanged("12"))
     uiEvents.onNext(SystolicChanged("120"))
     uiEvents.onNext(SystolicChanged("130"))
@@ -193,7 +193,7 @@ class BloodPressureEntrySheetControllerTest {
       systolic: String,
       diastolic: String
   ) {
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     uiEvents.onNext(SystolicChanged(systolic))
     uiEvents.onNext(DiastolicChanged(diastolic))
     uiEvents.onNext(SaveClicked)
@@ -366,7 +366,7 @@ class BloodPressureEntrySheetControllerTest {
         .doReturn(Single.just(PatientMocker.bp()))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     uiEvents.run {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged("13"))
@@ -565,7 +565,7 @@ class BloodPressureEntrySheetControllerTest {
     val currentDate = LocalDate.of(2018, 4, 23)
     testUserClock.advanceBy(Duration.ofSeconds(currentDate.atStartOfDay().toEpochSecond(UTC)))
 
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
 
     verify(ui).setDate(
         dayOfMonth = "23",
@@ -601,7 +601,7 @@ class BloodPressureEntrySheetControllerTest {
   fun `whenever the BP sheet is shown to add a new BP, then show today's date`() {
     val today = LocalDate.now(testUserClock)
 
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
 
     verify(ui).showDate(today)
@@ -644,7 +644,7 @@ class BloodPressureEntrySheetControllerTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     with(uiEvents) {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
@@ -668,7 +668,7 @@ class BloodPressureEntrySheetControllerTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     with(uiEvents) {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
@@ -747,7 +747,7 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
     val localDate = LocalDate.of(1916, 5, 10)
 
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     with(uiEvents) {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
@@ -773,7 +773,7 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
     val localDate = LocalDate.of(1916, 5, 10)
 
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     with(uiEvents) {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
@@ -804,7 +804,7 @@ class BloodPressureEntrySheetControllerTest {
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
-    sheetCreatedForNew()
+    sheetCreatedForNew(patientUuid)
     with(uiEvents) {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
@@ -899,7 +899,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  private fun sheetCreatedForNew() {
+  private fun sheetCreatedForNew(patientUuid: UUID) {
     uiEvents.onNext(SheetCreated(New(patientUuid)))
   }
 

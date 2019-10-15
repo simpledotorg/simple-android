@@ -17,6 +17,9 @@ data class SettingsModel(
   val userDetailsQueried: Boolean
     get() = name != null && phoneNumber != null
 
+  val currentLanguageQueried: Boolean
+    get() = currentLanguage != null
+
   fun userDetailsFetched(name: String, phoneNumber: String): SettingsModel {
     return copy(name = name, phoneNumber = phoneNumber)
   }

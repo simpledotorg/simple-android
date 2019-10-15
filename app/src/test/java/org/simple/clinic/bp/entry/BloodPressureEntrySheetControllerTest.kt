@@ -123,23 +123,25 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   @Test
-  @Parameters(value = [
-    "90|true",
-    "120|true",
-    "300|true",
-    "66|false",
-    "44|false"
-  ])
-  fun `when valid systolic value is entered, move cursor to diastolic field`(sampleSystolicBp: String, shouldMove: Boolean) {
+  @Parameters(value = ["90", "120", "300"])
+  fun `when valid systolic value is entered, move cursor to diastolic field`(sampleSystolicBp: String) {
     sheetCreatedForNew(patientUuid)
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
     uiEvents.onNext(SystolicChanged(""))
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
 
-    when (shouldMove) {
-      true -> verify(ui, times(2)).changeFocusToDiastolic()
-      false -> verify(ui, never()).changeFocusToDiastolic()
-    }
+    verify(ui, times(2)).changeFocusToDiastolic()
+  }
+
+  @Test
+  @Parameters(value = ["66", "44"])
+  fun `when invalid systolic value is entered, don't move cursor to diastolic field`(sampleSystolicBp: String) {
+    sheetCreatedForNew(patientUuid)
+    uiEvents.onNext(SystolicChanged(sampleSystolicBp))
+    uiEvents.onNext(SystolicChanged(""))
+    uiEvents.onNext(SystolicChanged(sampleSystolicBp))
+
+    verify(ui, never()).changeFocusToDiastolic()
   }
 
   @Test

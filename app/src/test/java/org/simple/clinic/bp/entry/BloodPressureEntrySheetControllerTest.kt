@@ -9,6 +9,7 @@ import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -126,6 +127,29 @@ class BloodPressureEntrySheetControllerTest {
   @Parameters(value = ["90", "120", "300"])
   fun `when valid systolic value is entered, move cursor to diastolic field`(sampleSystolicBp: String) {
     sheetCreatedForNew(patientUuid)
+    uiEvents.onNext(SystolicChanged(sampleSystolicBp))
+    uiEvents.onNext(SystolicChanged(""))
+    uiEvents.onNext(SystolicChanged(sampleSystolicBp))
+
+    verify(ui, times(2)).changeFocusToDiastolic()
+  }
+
+  @Test
+  @Parameters(value = ["90", "120", "300"])
+  @Deprecated("""
+    This is a characteristic test used to build functionality into Mobius, this test will be deleted once we move
+    the functionality captured in this test.
+    """)
+  fun `when valid systolic value is entered, move cursor to diastolic field (characteristic test)`(sampleSystolicBp: String) {
+    sheetCreatedForNew(patientUuid)
+    verify(ui).hideRemoveBpButton()
+    verify(ui).showEnterNewBloodPressureTitle()
+    verify(ui).setDate("01", "01", "70")
+    verify(ui).showDate(LocalDate.of(1970, 1, 1))
+    verify(facilityRepository).currentFacility(user)
+    verifyNoMoreInteractions(ui, facilityRepository)
+    verifyZeroInteractions(bloodPressureRepository, appointmentRepository, patientRepository)
+
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
     uiEvents.onNext(SystolicChanged(""))
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))

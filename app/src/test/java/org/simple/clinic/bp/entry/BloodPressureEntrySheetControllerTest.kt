@@ -306,7 +306,7 @@ class BloodPressureEntrySheetControllerTest {
     val bloodPressure = PatientMocker.bp()
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressure))
 
-    uiEvents.onNext(SheetCreated(openAs = Update(bloodPressure.uuid)))
+    uiEvents.onNext(SheetCreated(Update(bloodPressure.uuid)))
     uiEvents.onNext(RemoveClicked)
 
     verify(ui).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
@@ -318,7 +318,7 @@ class BloodPressureEntrySheetControllerTest {
     val bloodPressureSubject = BehaviorSubject.createDefault<BloodPressureMeasurement>(bloodPressure)
     whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).doReturn(bloodPressureSubject)
 
-    uiEvents.onNext(SheetCreated(openAs = Update(bpUuid = bloodPressure.uuid)))
+    uiEvents.onNext(SheetCreated(Update(bpUuid = bloodPressure.uuid)))
     verify(ui, never()).setBpSavedResultAndFinish()
 
     bloodPressureSubject.onNext(bloodPressure.copy(deletedAt = Instant.now()))
@@ -414,7 +414,7 @@ class BloodPressureEntrySheetControllerTest {
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
     uiEvents.run {
-      onNext(SheetCreated(openAs = Update(existingBp.uuid)))
+      onNext(SheetCreated(Update(existingBp.uuid)))
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged("120"))
       onNext(DiastolicChanged("110"))

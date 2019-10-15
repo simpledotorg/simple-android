@@ -8,7 +8,6 @@ import com.spotify.mobius.First
 import com.spotify.mobius.Init
 import com.spotify.mobius.Mobius
 import com.spotify.mobius.MobiusLoop
-import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import com.spotify.mobius.runners.WorkRunner
 import com.spotify.mobius.runners.WorkRunners
@@ -17,8 +16,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
 
-typealias InitFunction<M, F> = (M) -> First<M, F>
-typealias UpdateFunction<M, E, F> = (M, E) -> Next<M, F>
 typealias ModelUpdateListener<M> = (M) -> Unit
 typealias EffectHandler<F, E> = ObservableTransformer<F, E>
 

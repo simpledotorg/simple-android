@@ -84,4 +84,12 @@ class SettingsScreen(
     userName.text = name
     userNumber.text = phoneNumber
   }
+
+  override fun displayCurrentLanguage(language: String) {
+    // TODO
+  }
+
+  override fun setChangeLanguageButtonVisible() {
+    // TODO
+  }
 }

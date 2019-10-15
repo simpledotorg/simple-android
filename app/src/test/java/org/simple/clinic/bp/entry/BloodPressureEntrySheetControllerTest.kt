@@ -94,7 +94,7 @@ class BloodPressureEntrySheetControllerTest {
       dateValidator = dateValidator,
       bpValidator = bpValidator,
       userClock = testUserClock,
-      inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'),
+      inputDatePaddingCharacter = UserInputDatePaddingCharacter.ZERO,
       userSession = userSession,
       facilityRepository = facilityRepository)
 
@@ -922,7 +922,7 @@ class BloodPressureEntrySheetControllerTest {
 
     val effectHandler = BloodPressureEntryEffectHandler.create(
         ui,
-        UserInputDatePaddingCharacter('0'),
+        UserInputDatePaddingCharacter.ZERO,
         TrampolineSchedulersProvider()
     )
     fixture = MobiusTestFixture(

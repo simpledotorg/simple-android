@@ -107,15 +107,6 @@ class BloodPressureEntrySheetControllerTest {
     whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
 
-    fixture = MobiusTestFixture(
-        uiEvents.ofType(),
-        BloodPressureEntryModel(),
-        BloodPressureEntryInit(),
-        BloodPressureEntryUpdate(),
-        BloodPressureEntryEffectHandler.create(),
-        viewRenderer::render
-    )
-
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
@@ -927,6 +918,15 @@ class BloodPressureEntrySheetControllerTest {
 
   private fun sheetCreatedForNew(patientUuid: UUID) {
     uiEvents.onNext(SheetCreated(New(patientUuid)))
+
+    fixture = MobiusTestFixture(
+        uiEvents.ofType(),
+        BloodPressureEntryModel.newBloodPressureEntry(patientUuid),
+        BloodPressureEntryInit(),
+        BloodPressureEntryUpdate(),
+        BloodPressureEntryEffectHandler.create(),
+        viewRenderer::render
+    ).also { it.start() }
   }
 
   private fun sheetCreatedForUpdate(existingBpUuid: UUID) {

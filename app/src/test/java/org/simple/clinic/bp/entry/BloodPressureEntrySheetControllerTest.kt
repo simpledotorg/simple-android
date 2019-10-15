@@ -315,7 +315,7 @@ class BloodPressureEntrySheetControllerTest {
   fun `when save is clicked, date entry is active, but input is invalid then BP measurement should not be saved`(
       testParams: DoNotSaveBpWithInvalidDateTestParams
   ) {
-    val (openAs, result) = testParams
+    val (openAs) = testParams
 
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
@@ -339,13 +339,12 @@ class BloodPressureEntrySheetControllerTest {
   @Suppress("Unused")
   private fun `params for checking valid date input`(): List<DoNotSaveBpWithInvalidDateTestParams> {
     return listOf(
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.New(patientUuid), InvalidPattern),
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(UUID.fromString("f6f27cad-8b82-461e-8b1e-e14c2ac63832")), InvalidPattern))
+        DoNotSaveBpWithInvalidDateTestParams(OpenAs.New(patientUuid)),
+        DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(UUID.fromString("f6f27cad-8b82-461e-8b1e-e14c2ac63832"))))
   }
 
   data class DoNotSaveBpWithInvalidDateTestParams(
-      val openAs: OpenAs,
-      val result: UserInputDateValidator.Result
+      val openAs: OpenAs
   )
 
   @Test

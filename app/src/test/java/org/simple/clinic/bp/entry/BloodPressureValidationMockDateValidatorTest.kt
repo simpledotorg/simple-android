@@ -62,6 +62,8 @@ class BloodPressureValidationMockDateValidatorTest {
   private val facility = PatientMocker.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
   private val userSubject = PublishSubject.create<User>()
 
+  private val existingBpUuid = UUID.fromString("2c4eccbb-d1bc-4c7c-b1ec-60a13acfeea4")
+
   private val controller = BloodPressureEntrySheetController(
       bloodPressureRepository = bloodPressureRepository,
       appointmentRepository = appointmentRepository,
@@ -118,7 +120,6 @@ class BloodPressureValidationMockDateValidatorTest {
 
   @Suppress("unused")
   fun `params for showing date validation errors`(): List<InvalidDateTestParams> {
-    val existingBpUuid = UUID.fromString("2c4eccbb-d1bc-4c7c-b1ec-60a13acfeea4")
     return listOf(
         InvalidDateTestParams(OpenAs.New(patientUuid), "01", "01", "2099", DateIsInFuture) { ui: Ui -> verify(ui).showDateIsInFutureError() },
         InvalidDateTestParams(OpenAs.Update(existingBpUuid), "01", "01", "2099", DateIsInFuture) { ui: Ui -> verify(ui).showDateIsInFutureError() })
@@ -157,8 +158,8 @@ class BloodPressureValidationMockDateValidatorTest {
     return listOf(
         DoNotSaveBpWithInvalidDateTestParams(OpenAs.New(patientUuid), InvalidPattern),
         DoNotSaveBpWithInvalidDateTestParams(OpenAs.New(patientUuid), DateIsInFuture),
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(UUID.fromString("f6f27cad-8b82-461e-8b1e-e14c2ac63832")), InvalidPattern),
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(UUID.fromString("3b082f5e-8e0e-4aa7-a0cb-2d99ab020a30")), DateIsInFuture))
+        DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(existingBpUuid), InvalidPattern),
+        DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(existingBpUuid), DateIsInFuture))
   }
 
   data class DoNotSaveBpWithInvalidDateTestParams(

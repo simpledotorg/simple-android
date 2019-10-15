@@ -27,6 +27,7 @@
     <ignore path="src/staging/res/drawable/logo_large.xml" />
     <ignore path="src/sandbox/res/drawable/logo_large.xml" />
     <ignore path="src/main/res/drawable/ic_settings_24dp.xml" />
+    <ignore path="src/main/res/drawable/ic_language_24dp.xml" />
   </issue>
 
   <issue id="ParcelCreator" severity="informational" />

@@ -452,8 +452,11 @@
   <string name="settings_title">Settings</string>
   <string name="settings_user_name_icon_content">Settings user name icon</string>
   <string name="settings_user_phone_icon_content">Settings user phone number icon</string>
+  <string name="settings_current_language_icon_content">Settings current language icon</string>
   <string name="settings_name">Name</string>
   <string name="settings_number">Phone number</string>
+  <string name="settings_language">Language</string>
+  <string name="settings_change">Change</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">Select your language</string>

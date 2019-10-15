@@ -3,6 +3,7 @@ package org.simple.clinic.settings
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.View
 import android.widget.LinearLayout
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_settings.view.*
@@ -86,10 +87,10 @@ class SettingsScreen(
   }
 
   override fun displayCurrentLanguage(language: String) {
-    // TODO
+    currentLanguage.text = language
   }
 
   override fun setChangeLanguageButtonVisible() {
-    // TODO
+    changeLanguageButton.visibility = View.VISIBLE
   }
 }

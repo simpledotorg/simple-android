@@ -114,6 +114,64 @@
         app:layout_constraintStart_toStartOf="@id/userNumberLabel"
         app:layout_constraintTop_toBottomOf="@id/userNumber" />
 
+      <!-- Language section -->
+      <ImageView
+        android:id="@+id/languageIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/settings_current_language_icon_content"
+        app:layout_constraintBottom_toBottomOf="@id/currentLanguageDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userPhoneDivider"
+        app:srcCompat="@drawable/ic_language_24dp" />
+
+      <TextView
+        android:id="@+id/currentLanguageLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/settings_section_top_margin"
+        android:lines="1"
+        android:text="@string/settings_language"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        app:layout_constraintStart_toEndOf="@id/languageIcon"
+        app:layout_constraintTop_toBottomOf="@id/userPhoneDivider" />
+
+      <TextView
+        android:id="@+id/currentLanguage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_content_top_margin"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        app:layout_constraintEnd_toStartOf="@id/changeLanguageButton"
+        app:layout_constraintStart_toStartOf="@id/currentLanguageLabel"
+        app:layout_constraintTop_toBottomOf="@id/currentLanguageLabel"
+        tools:text="हिंदी" />
+
+      <View
+        android:id="@+id/currentLanguageDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/settings_divider_top_margin"
+        android:background="@color/settings_divider_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/currentLanguageLabel"
+        app:layout_constraintTop_toBottomOf="@id/currentLanguage" />
+
+      <Button
+        android:id="@+id/changeLanguageButton"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_change"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Blue1"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/currentLanguageDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/userPhoneDivider"
+        tools:visibility="visible" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
   </ScrollView>
 

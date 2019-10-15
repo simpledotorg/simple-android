@@ -12,8 +12,8 @@ object SettingsEffectHandler {
   fun create(
       userSession: UserSession,
       settingsRepository: SettingsRepository,
-      schedulersProvider: SchedulersProvider,
-      uiActions: UiActions
+      uiActions: UiActions,
+      schedulersProvider: SchedulersProvider
   ): ObservableTransformer<SettingsEffect, SettingsEvent> {
     return RxMobius
         .subtypeEffectHandler<SettingsEffect, SettingsEvent>()

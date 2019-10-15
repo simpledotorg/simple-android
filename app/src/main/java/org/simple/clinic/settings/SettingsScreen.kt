@@ -54,7 +54,7 @@ class SettingsScreen(
         defaultModel = SettingsModel.FETCHING_USER_DETAILS,
         init = SettingsInit(),
         update = SettingsUpdate(),
-        effectHandler = SettingsEffectHandler.create(userSession, settingsRepository, schedulersProvider, this),
+        effectHandler = SettingsEffectHandler.create(userSession, settingsRepository, this, schedulersProvider),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter
     )

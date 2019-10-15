@@ -40,7 +40,15 @@ data class User(
 ) {
 
   fun withStatus(status: UserStatus, clock: UtcClock): User {
-    return this.copy(status = status, updatedAt = Instant.now(clock))
+    return copy(status = status, updatedAt = Instant.now(clock))
+  }
+
+  fun withFullName(fullName: String): User {
+    return copy(fullName = fullName)
+  }
+
+  fun withPhoneNumber(phoneNumber: String): User {
+    return copy(phoneNumber = phoneNumber)
   }
 
   enum class LoggedInStatus {

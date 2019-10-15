@@ -9,7 +9,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
@@ -65,7 +64,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .compose(validateDateInput())
         .compose(calculateDateToPrefill())
         .compose(saveBpWhenDateEntryIsDone())
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(
@@ -294,35 +292,19 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun toggleRemoveBloodPressureButton(events: Observable<UiEvent>): Observable<UiChange> {
-    val hideRemoveBpButton = events
-        .ofType<SheetCreated>()
-        .map { it.openAs }
-        .ofType<OpenAs.New>()
-        .map { { ui: Ui -> ui.hideRemoveBpButton() } }
-
-    val showRemoveBpButton = events
+    return events
         .ofType<SheetCreated>()
         .map { it.openAs }
         .ofType<OpenAs.Update>()
         .map { { ui: Ui -> ui.showRemoveBpButton() } }
-
-    return hideRemoveBpButton.mergeWith(showRemoveBpButton)
   }
 
   private fun updateSheetTitle(events: Observable<UiEvent>): Observable<UiChange> {
-    val openAsStream = events
+    return events
         .ofType<SheetCreated>()
         .map { it.openAs }
-
-    val showEnterBloodPressureTitle = openAsStream
-        .filter { it is OpenAs.New }
-        .map { { ui: Ui -> ui.showEnterNewBloodPressureTitle() } }
-
-    val showEditBloodPressureTitle = openAsStream
         .filter { it is OpenAs.Update }
         .map { { ui: Ui -> ui.showEditBloodPressureTitle() } }
-
-    return showEnterBloodPressureTitle.mergeWith(showEditBloodPressureTitle)
   }
 
   private fun showConfirmRemoveBloodPressureDialog(events: Observable<UiEvent>): Observable<UiChange> {

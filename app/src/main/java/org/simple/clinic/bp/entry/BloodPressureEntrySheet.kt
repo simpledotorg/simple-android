@@ -17,14 +17,21 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToControllerWithoutDelay
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
+import org.simple.clinic.bp.entry.OpenAs.New
+import org.simple.clinic.bp.entry.OpenAs.Update
+import org.simple.clinic.mobius.MobiusActivityDelegate
+import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -72,12 +79,12 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
 
     fun intentForNewBp(context: Context, patientUuid: UUID): Intent {
       return Intent(context, BloodPressureEntrySheet::class.java)
-          .putExtra(KEY_OPEN_AS, OpenAs.New(patientUuid))
+          .putExtra(KEY_OPEN_AS, New(patientUuid))
     }
 
     fun intentForUpdateBp(context: Context, bloodPressureMeasurementUuid: UUID): Intent {
       return Intent(context, BloodPressureEntrySheet::class.java)
-          .putExtra(KEY_OPEN_AS, OpenAs.Update(bloodPressureMeasurementUuid))
+          .putExtra(KEY_OPEN_AS, Update(bloodPressureMeasurementUuid))
     }
 
     fun wasBloodPressureSaved(data: Intent): Boolean {
@@ -85,16 +92,31 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
     }
   }
 
-  @SuppressLint("CheckResult")
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+  @Inject
+  lateinit var crashReporter: CrashReporter
 
-    setContentView(R.layout.sheet_blood_pressure_entry)
-    TheActivity.component.inject(this)
+  private val viewRenderer = BloodPressureEntryViewRenderer(this)
 
-    bindUiToControllerWithoutDelay(
-        ui = this,
-        events = Observable.mergeArray(
+  private val delegate by unsafeLazy {
+    val defaultModel = when (val openAs = intent.extras!!.getParcelable(KEY_OPEN_AS) as OpenAs) {
+      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs.patientUuid)
+      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs.bpUuid)
+    }
+
+    MobiusActivityDelegate(
+        events.ofType(),
+        defaultModel,
+        BloodPressureEntryInit(),
+        BloodPressureEntryUpdate(),
+        BloodPressureEntryEffectHandler.create(),
+        viewRenderer::render,
+        crashReporter
+    )
+  }
+
+  private val events: Observable<UiEvent> by unsafeLazy {
+    Observable
+        .mergeArray(
             sheetCreates(),
             systolicTextChanges(),
             diastolicTextChanges(),
@@ -108,10 +130,41 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
             dayTextChanges(),
             monthTextChanges(),
             yearTextChanges()
-        ),
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  @SuppressLint("CheckResult")
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    setContentView(R.layout.sheet_blood_pressure_entry)
+    TheActivity.component.inject(this)
+
+    bindUiToControllerWithoutDelay(
+        ui = this,
+        events = events,
         controller = controller,
         screenDestroys = screenDestroys
     )
+
+    delegate.onRestoreInstanceState(savedInstanceState)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle?) {
+    delegate.onSaveInstanceState(outState)
+    super.onSaveInstanceState(outState)
   }
 
   override fun onDestroy() {

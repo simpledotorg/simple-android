@@ -1,6 +1,7 @@
 package org.simple.clinic.widgets.ageanddateofbirth
 
 import androidx.annotation.VisibleForTesting
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
@@ -23,18 +24,14 @@ class UserInputDateValidator @Inject constructor(
   }
 
   fun validate(dateText: String, nowDate: LocalDate = dateInUserTimeZone()): Result {
-    try {
-      if (dateText.isBlank()) {
-        return InvalidPattern
-      }
-
+    return try {
       val parsedDate = dateOfBirthFormat.parse(dateText, LocalDate::from)
-      return when {
-        parsedDate > nowDate -> Result.Invalid.DateIsInFuture
+      when {
+        parsedDate > nowDate -> DateIsInFuture
         else -> Result.Valid(parsedDate)
       }
     } catch (dte: DateTimeParseException) {
-      return InvalidPattern
+      InvalidPattern
     }
   }
 

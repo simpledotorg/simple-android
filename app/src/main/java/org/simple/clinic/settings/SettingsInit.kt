@@ -7,9 +7,11 @@ import com.spotify.mobius.Init
 class SettingsInit : Init<SettingsModel, SettingsEffect> {
 
   override fun init(model: SettingsModel): First<SettingsModel, SettingsEffect> {
-    return when {
-      model.userDetailsQueried -> first(model)
-      else -> first(model, setOf(LoadUserDetailsEffect))
+    val effects = when {
+      model.userDetailsQueried -> setOf(LoadCurrentLanguageEffect)
+      else -> setOf(LoadUserDetailsEffect, LoadCurrentLanguageEffect)
     }
+
+    return first(model, effects)
   }
 }

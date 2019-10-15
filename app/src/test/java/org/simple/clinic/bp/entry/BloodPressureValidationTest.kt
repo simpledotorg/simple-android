@@ -18,6 +18,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BpValidator.Validation
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooHigh
@@ -26,6 +27,8 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicEmpty
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDiastolic
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
+import org.simple.clinic.bp.entry.OpenAs.New
+import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
@@ -103,8 +106,8 @@ class BloodPressureValidationTest {
     assertThat(bpValidator.validate(systolic, diastolic))
         .isEqualTo(error)
 
-    uiEvents.onNext(ScreenChanged(BloodPressureEntrySheet.ScreenType.BP_ENTRY))
-    uiEvents.onNext(SheetCreated(OpenAs.New(patientUuid)))
+    uiEvents.onNext(ScreenChanged(BP_ENTRY))
+    uiEvents.onNext(SheetCreated(New(patientUuid)))
     uiEvents.onNext(SystolicChanged(systolic))
     uiEvents.onNext(DiastolicChanged(diastolic))
     uiEvents.onNext(SaveClicked)
@@ -150,7 +153,7 @@ class BloodPressureValidationTest {
 
     uiEvents.run {
       onNext(SheetCreated(openAs = openAs))
-      onNext(ScreenChanged(BloodPressureEntrySheet.ScreenType.BP_ENTRY))
+      onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
       onNext(DiastolicChanged(diastolic))
       onNext(BloodPressureDateClicked)
@@ -163,21 +166,21 @@ class BloodPressureValidationTest {
   fun `params for OpenAs and bp validation errors`(): List<ValidationErrorsAndDoNotGoToDateEntryParams> {
     val bpUuid = UUID.fromString("99fed5e5-19a8-4ece-9d07-6beab70ee77c")
     return listOf(
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "", "80", ErrorSystolicEmpty),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "120", "", ErrorDiastolicEmpty),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "999", "80", ErrorSystolicTooHigh),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "0", "80", ErrorSystolicTooLow),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "120", "999", ErrorDiastolicTooHigh),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "120", "0", ErrorDiastolicTooLow),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.New(patientUuid), "120", "140", ErrorSystolicLessThanDiastolic),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "", "80", ErrorSystolicEmpty),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "", ErrorDiastolicEmpty),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "999", "80", ErrorSystolicTooHigh),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "0", "80", ErrorSystolicTooLow),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "999", ErrorDiastolicTooHigh),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "0", ErrorDiastolicTooLow),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "140", ErrorSystolicLessThanDiastolic),
 
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "", "80", ErrorSystolicEmpty),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "120", "", ErrorDiastolicEmpty),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "999", "80", ErrorSystolicTooHigh),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "0", "80", ErrorSystolicTooLow),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "120", "999", ErrorDiastolicTooHigh),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "120", "0", ErrorDiastolicTooLow),
-        ValidationErrorsAndDoNotGoToDateEntryParams(OpenAs.Update(bpUuid), "120", "140", ErrorSystolicLessThanDiastolic))
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "", "80", ErrorSystolicEmpty),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "", ErrorDiastolicEmpty),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "999", "80", ErrorSystolicTooHigh),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "0", "80", ErrorSystolicTooLow),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "999", ErrorDiastolicTooHigh),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "0", ErrorDiastolicTooLow),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "140", ErrorSystolicLessThanDiastolic))
   }
 
   data class ValidationErrorsAndDoNotGoToDateEntryParams(

@@ -45,7 +45,10 @@ class SettingsEffectHandlerTest {
         name = "Mahalakshmi Puri",
         phone = "1234567890"
     )
-    val updatedUser = savedUser.copy(fullName = "Mahalakshmi T Sharma", phoneNumber = "0987654321")
+    val updatedUser = savedUser
+        .withFullName("Mahalakshmi T Sharma")
+        .withPhoneNumber("0987654321")
+
     whenever(userSession.loggedInUser()).doReturn(Observable.just(
         savedUser.toOptional(),
         updatedUser.toOptional()

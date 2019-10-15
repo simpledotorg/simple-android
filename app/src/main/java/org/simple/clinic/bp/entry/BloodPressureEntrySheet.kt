@@ -332,13 +332,13 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
     dateErrorTextView.visibility = View.GONE
   }
 
-  override fun setDate(dayOfMonth: String, month: String, twoDigitYear: String) {
+  override fun setDateOnInputFields(dayOfMonth: String, month: String, twoDigitYear: String) {
     dayEditText.setTextAndCursor(dayOfMonth)
     monthEditText.setTextAndCursor(month)
     yearEditText.setTextAndCursor(twoDigitYear)
   }
 
-  override fun showDate(date: LocalDate) {
+  override fun showDateOnDateButton(date: LocalDate) {
     bpDateButton.text = dateFormatter.format(date)
   }
 

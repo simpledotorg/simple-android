@@ -77,7 +77,7 @@ class BloodPressureValidationTest {
       dateValidator = dateValidator,
       bpValidator = bpValidator,
       userClock = testUserClock,
-      inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'),
+      inputDatePaddingCharacter = UserInputDatePaddingCharacter.ZERO,
       userSession = userSession,
       facilityRepository = facilityRepository)
 

@@ -12,7 +12,7 @@ import org.threeten.bp.LocalDate
 class BloodPressureEntryEffectHandlerTest {
   private val ui = mock<BloodPressureEntryUi>()
   private val effectHandler = BloodPressureEntryEffectHandler
-      .create(ui, UserInputDatePaddingCharacter('0'), TrampolineSchedulersProvider())
+      .create(ui, UserInputDatePaddingCharacter.ZERO, TrampolineSchedulersProvider())
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After

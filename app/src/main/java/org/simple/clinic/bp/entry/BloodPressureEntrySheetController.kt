@@ -186,8 +186,8 @@ class BloodPressureEntrySheetController @Inject constructor(
             val dayString = date.dayOfMonth.toString().padStart(length = 2, padChar = inputDatePaddingCharacter.value)
             val monthString = date.monthValue.toString().padStart(length = 2, padChar = inputDatePaddingCharacter.value)
             val yearString = date.year.toString().substring(startIndex = 2, endIndex = 4)
-            ui.setDate(dayString, monthString, yearString)
-            ui.showDate(date)
+            ui.setDateOnInputFields(dayString, monthString, yearString)
+            ui.showDateOnDateButton(date)
           }
         }
   }
@@ -413,7 +413,7 @@ class BloodPressureEntrySheetController @Inject constructor(
           when (result) {
             is InvalidPattern -> { ui: Ui -> ui.showInvalidDateError() }
             is DateIsInFuture -> { ui: Ui -> ui.showDateIsInFutureError() }
-            is Valid -> { ui: Ui -> ui.showDate(result.parsedDate) }
+            is Valid -> { ui: Ui -> ui.showDateOnDateButton(result.parsedDate) }
           }
         }
   }

@@ -28,8 +28,8 @@ class SettingsEffectHandlerTest {
   private val testCase = EffectHandlerTestCase(SettingsEffectHandler.create(
       userSession = userSession,
       settingsRepository = settingsRepository,
-      schedulersProvider = TrampolineSchedulersProvider(),
-      uiActions = uiActions
+      uiActions = uiActions,
+      schedulersProvider = TrampolineSchedulersProvider()
   ))
 
   @After

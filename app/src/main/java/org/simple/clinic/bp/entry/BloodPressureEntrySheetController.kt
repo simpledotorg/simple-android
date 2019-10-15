@@ -178,9 +178,16 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun prefillDate(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+    val localDates = events
         .ofType<DateToPrefillCalculated>()
         .map { it.date }
+
+    val updates = events
+        .ofType<SheetCreated>()
+        .filter { it.openAs is Update }
+
+    return Observables
+        .combineLatest(localDates, updates) { date, _ -> date }
         .map { date ->
           { ui: Ui ->
             val dayString = date.dayOfMonth.toString().padStart(length = 2, padChar = inputDatePaddingCharacter.value)
@@ -189,7 +196,7 @@ class BloodPressureEntrySheetController @Inject constructor(
             ui.setDateOnInputFields(dayString, monthString, yearString)
             ui.showDateOnDateButton(date)
           }
-        }
+        }.take(1)
   }
 
   private fun showBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {

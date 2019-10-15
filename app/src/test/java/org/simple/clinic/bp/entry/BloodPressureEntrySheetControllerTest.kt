@@ -306,7 +306,7 @@ class BloodPressureEntrySheetControllerTest {
     val bloodPressure = PatientMocker.bp()
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressure))
 
-    sheetCreatedForUpdate(bloodPressure)
+    sheetCreatedForUpdate(bloodPressure.uuid)
     uiEvents.onNext(RemoveClicked)
 
     verify(ui).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
@@ -318,7 +318,7 @@ class BloodPressureEntrySheetControllerTest {
     val bloodPressureSubject = BehaviorSubject.createDefault<BloodPressureMeasurement>(bloodPressure)
     whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).doReturn(bloodPressureSubject)
 
-    sheetCreatedForUpdate(bloodPressure)
+    sheetCreatedForUpdate(bloodPressure.uuid)
     verify(ui, never()).setBpSavedResultAndFinish()
 
     bloodPressureSubject.onNext(bloodPressure.copy(deletedAt = Instant.now()))
@@ -413,7 +413,7 @@ class BloodPressureEntrySheetControllerTest {
     whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
-    sheetCreatedForUpdate(existingBp)
+    sheetCreatedForUpdate(existingBp.uuid)
     uiEvents.run {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged("120"))
@@ -581,7 +581,7 @@ class BloodPressureEntrySheetControllerTest {
 
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp, existingBp))
 
-    sheetCreatedForUpdate(existingBp)
+    sheetCreatedForUpdate(existingBp.uuid)
 
     verify(ui, times(1)).setDate(
         dayOfMonth = "23",
@@ -622,7 +622,7 @@ class BloodPressureEntrySheetControllerTest {
     val recordedDate = bp.recordedAt.toLocalDateAtZone(testUserClock.zone)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
-    sheetCreatedForUpdate(bp)
+    sheetCreatedForUpdate(bp.uuid)
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
 
     verify(ui).showDate(recordedDate)
@@ -695,7 +695,7 @@ class BloodPressureEntrySheetControllerTest {
     val bp = PatientMocker.bp(patientUuid = patientUuid)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
-    sheetCreatedForUpdate(bp)
+    sheetCreatedForUpdate(bp.uuid)
     with(uiEvents) {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
@@ -722,7 +722,7 @@ class BloodPressureEntrySheetControllerTest {
     val bp = PatientMocker.bp(patientUuid = patientUuid)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
-    sheetCreatedForUpdate(bp)
+    sheetCreatedForUpdate(bp.uuid)
     with(uiEvents) {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
@@ -864,7 +864,7 @@ class BloodPressureEntrySheetControllerTest {
 
     userSubject.onNext(newUser)
 
-    sheetCreatedForUpdate(existingBp)
+    sheetCreatedForUpdate(existingBp.uuid)
     with(uiEvents) {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
@@ -903,7 +903,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(SheetCreated(New(patientUuid)))
   }
 
-  private fun sheetCreatedForUpdate(existingBp: BloodPressureMeasurement) {
-    uiEvents.onNext(SheetCreated(Update(existingBp.uuid)))
+  private fun sheetCreatedForUpdate(existingBpUuid: UUID) {
+    uiEvents.onNext(SheetCreated(Update(existingBpUuid)))
   }
 }

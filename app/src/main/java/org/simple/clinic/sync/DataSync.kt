@@ -3,8 +3,8 @@ package org.simple.clinic.sync
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated

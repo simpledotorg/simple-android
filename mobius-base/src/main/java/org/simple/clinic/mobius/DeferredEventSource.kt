@@ -21,7 +21,7 @@ package org.simple.clinic.mobius
 import com.spotify.mobius.EventSource
 import com.spotify.mobius.disposables.Disposable
 import com.spotify.mobius.functions.Consumer
-import org.simple.clinic.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 

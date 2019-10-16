@@ -24,7 +24,6 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.editpatient.AgeChanged
 import org.simple.clinic.editpatient.BackClicked
 import org.simple.clinic.editpatient.ColonyOrVillageChanged
@@ -32,7 +31,6 @@ import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.DateOfBirthChanged
 import org.simple.clinic.editpatient.DateOfBirthFocusChanged
 import org.simple.clinic.editpatient.DistrictChanged
-import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.editpatient.EditPatientUi
 import org.simple.clinic.editpatient.EditPatientValidationError
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -55,6 +53,7 @@ import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter

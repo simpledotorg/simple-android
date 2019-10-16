@@ -294,13 +294,10 @@ dependencies {
   implementation "androidx.work:work-runtime:$versions.workManager"
   implementation "androidx.work:work-gcm:$versions.workManager"
 
-  implementation "com.spotify.mobius:mobius-core:$versions.mobius"
-  implementation("com.spotify.mobius:mobius-rx2:$versions.mobius") {
+  implementation(project(":mobius-base")) {
     exclude group: "io.reactivex.rxjava2"
     because "Traceur is incompatible with the version of RxJava this artifact pulls in transitively"
   }
-  implementation "com.spotify.mobius:mobius-android:$versions.mobius"
-  implementation "com.spotify.mobius:mobius-extras:$versions.mobius"
   testImplementation "com.spotify.mobius:mobius-test:$versions.mobius"
   testImplementation(project(":mobius-migration")) {
     exclude group: "io.reactivex.rxjava2"
@@ -308,6 +305,7 @@ dependencies {
   }
   testImplementation "org.threeten:threetenbp:$versions.threeTenBp"
   implementation "com.fasterxml.uuid:java-uuid-generator:$versions.uuidGenerator"
+  implementation project(":simple-platform")
 }
 
 // This must always be present at the bottom of this file, as per:

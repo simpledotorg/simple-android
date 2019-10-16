@@ -1,12 +1,14 @@
 package org.simple.clinic.crash
 
 import android.util.Log
-import org.simple.clinic.crash.Breadcrumb.Priority.ASSERT
-import org.simple.clinic.crash.Breadcrumb.Priority.DEBUG
-import org.simple.clinic.crash.Breadcrumb.Priority.ERROR
-import org.simple.clinic.crash.Breadcrumb.Priority.INFO
-import org.simple.clinic.crash.Breadcrumb.Priority.VERBOSE
-import org.simple.clinic.crash.Breadcrumb.Priority.WARN
+import org.simple.clinic.platform.crash.Breadcrumb
+import org.simple.clinic.platform.crash.Breadcrumb.Priority.ASSERT
+import org.simple.clinic.platform.crash.Breadcrumb.Priority.DEBUG
+import org.simple.clinic.platform.crash.Breadcrumb.Priority.ERROR
+import org.simple.clinic.platform.crash.Breadcrumb.Priority.INFO
+import org.simple.clinic.platform.crash.Breadcrumb.Priority.VERBOSE
+import org.simple.clinic.platform.crash.Breadcrumb.Priority.WARN
+import org.simple.clinic.platform.crash.CrashReporter
 import timber.log.Timber
 
 class CrashBreadcrumbsTimberTree(

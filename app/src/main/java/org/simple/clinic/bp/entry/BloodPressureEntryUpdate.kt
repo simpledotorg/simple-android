@@ -18,6 +18,8 @@ class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEn
         justEffect<BloodPressureEntryModel, BloodPressureEntryEffect>(HideBpErrorMessage)
       }
 
+      is DiastolicChanged -> justEffect(HideBpErrorMessage)
+
       else -> noChange()
     }
   }

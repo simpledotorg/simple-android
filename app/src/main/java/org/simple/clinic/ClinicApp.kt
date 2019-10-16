@@ -12,8 +12,8 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.AnalyticsReporter
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
-import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.di.AppComponent
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.protocol.SyncProtocolsOnLogin
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.IDataSyncOnApproval

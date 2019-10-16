@@ -11,8 +11,8 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_settings.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreenKey
 import org.simple.clinic.user.UserSession

@@ -16,10 +16,10 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
-import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy

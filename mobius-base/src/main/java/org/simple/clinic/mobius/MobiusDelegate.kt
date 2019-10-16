@@ -16,8 +16,8 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
-import org.simple.clinic.crash.CrashReporter
-import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.platform.crash.CrashReporter
+import kotlin.LazyThreadSafetyMode.NONE
 
 class MobiusDelegate<M : Parcelable, E, F>(
     private val events: Observable<E>,
@@ -35,7 +35,7 @@ class MobiusDelegate<M : Parcelable, E, F>(
 
   private var lastKnownModel: M? = null
 
-  private val loop by unsafeLazy {
+  private val loop by lazy(NONE) {
     val init = init ?: Init { first(defaultModel) }
 
     RxMobius
@@ -47,7 +47,7 @@ class MobiusDelegate<M : Parcelable, E, F>(
         .eventSource(mobiusEventSource)
   }
 
-  private val mobiusEventSource by unsafeLazy {
+  private val mobiusEventSource by lazy(NONE) {
     DeferredEventSource<E>(crashReporter)
   }
 

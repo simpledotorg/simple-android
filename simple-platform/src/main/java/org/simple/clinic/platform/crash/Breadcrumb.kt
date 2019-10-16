@@ -1,4 +1,4 @@
-package org.simple.clinic.crash
+package org.simple.clinic.platform.crash
 
 import android.util.Log
 

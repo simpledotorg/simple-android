@@ -7,7 +7,7 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.crash.CrashReporter
+import org.simple.clinic.platform.crash.CrashReporter
 import java.net.SocketTimeoutException
 
 @RunWith(JUnitParamsRunner::class)

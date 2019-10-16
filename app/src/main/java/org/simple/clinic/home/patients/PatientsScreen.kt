@@ -25,8 +25,8 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.activity.TheActivityLifecycle
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.enterotp.EnterOtpScreenKey
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey

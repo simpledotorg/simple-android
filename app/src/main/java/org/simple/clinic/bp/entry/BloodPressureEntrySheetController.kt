@@ -125,11 +125,9 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun hideBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val systolicChanges = events.ofType<SystolicChanged>()
     val diastolicChanges = events.ofType<DiastolicChanged>()
 
-    return Observable
-        .merge(systolicChanges, diastolicChanges)
+    return diastolicChanges
         .map { { ui: Ui -> ui.hideBpErrorMessage() } }
   }
 

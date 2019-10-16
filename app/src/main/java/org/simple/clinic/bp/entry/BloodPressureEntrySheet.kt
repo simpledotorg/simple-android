@@ -99,8 +99,8 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
 
   private val delegate by unsafeLazy {
     val defaultModel = when (val openAs = intent.extras!!.getParcelable(KEY_OPEN_AS) as OpenAs) {
-      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs.patientUuid)
-      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs.bpUuid)
+      is New -> BloodPressureEntryModel.newBloodPressureEntry(New(openAs.patientUuid))
+      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(Update(openAs.bpUuid))
     }
 
     MobiusActivityDelegate(

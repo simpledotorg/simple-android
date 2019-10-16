@@ -88,16 +88,6 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun automaticFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
-    val isSystolicValueComplete = { systolicText: String ->
-      (systolicText.length == 3 && systolicText.matches("^[123].*$".toRegex()))
-          || (systolicText.length == 2 && systolicText.matches("^[789].*$".toRegex()))
-    }
-
-    val moveFocusToDiastolic = events.ofType<SystolicChanged>()
-        .distinctUntilChanged()
-        .filter { isSystolicValueComplete(it.systolic) }
-        .map { { ui: Ui -> ui.changeFocusToDiastolic() } }
-
     data class BloodPressure(val systolic: String, val diastolic: String)
 
     val systolicChanges = events.ofType<SystolicChanged>().map { it.systolic }
@@ -119,8 +109,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { bp -> bp.systolic.substring(0, bp.systolic.length - 1) }
         .map { truncatedSystolic -> { ui: Ui -> ui.setSystolic(truncatedSystolic) } }
 
-    return moveFocusToDiastolic
-        .mergeWith(moveFocusBackToSystolic)
+    return moveFocusBackToSystolic
         .mergeWith(deleteLastDigitOfSystolic)
   }
 

@@ -73,7 +73,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         prefillBpWhenUpdatingABloodPressure(replayedEvents),
         prefillDate(replayedEvents),
         showBpValidationErrors(replayedEvents),
-        hideBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         showBpEntry(replayedEvents),
         dismissSheetWhenBackIsPressedOnBp(replayedEvents),
@@ -111,13 +110,6 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     return moveFocusBackToSystolic
         .mergeWith(deleteLastDigitOfSystolic)
-  }
-
-  private fun hideBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val diastolicChanges = events.ofType<DiastolicChanged>()
-
-    return diastolicChanges
-        .map { { ui: Ui -> ui.hideBpErrorMessage() } }
   }
 
   private fun prefillBpWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {

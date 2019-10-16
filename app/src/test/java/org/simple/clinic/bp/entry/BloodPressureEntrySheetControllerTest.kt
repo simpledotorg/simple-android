@@ -166,7 +166,6 @@ class BloodPressureEntrySheetControllerTest {
     }
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when systolic or diastolic values change, hide any error message`() {
     sheetCreatedForNew(patientUuid)

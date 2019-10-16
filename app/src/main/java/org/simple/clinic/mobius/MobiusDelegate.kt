@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
+import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Update
@@ -21,7 +22,7 @@ import org.simple.clinic.util.unsafeLazy
 class MobiusDelegate<M : Parcelable, E, F>(
     private val events: Observable<E>,
     private val defaultModel: M,
-    private val init: Init<M, F>,
+    private val init: Init<M, F>?,
     private val update: Update<M, E, F>,
     private val effectHandler: ObservableTransformer<F, E>,
     private val modelUpdateListener: (M) -> Unit,
@@ -35,6 +36,8 @@ class MobiusDelegate<M : Parcelable, E, F>(
   private var lastKnownModel: M? = null
 
   private val loop by unsafeLazy {
+    val init = init ?: Init { first(defaultModel) }
+
     RxMobius
         .loop(
             { model: M, event: E -> update.update(model, event) },

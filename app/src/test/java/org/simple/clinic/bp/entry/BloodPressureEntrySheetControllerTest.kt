@@ -141,10 +141,14 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).setDateOnInputFields("01", "01", "70")
     verify(ui).showDateOnDateButton(someDate)
     verify(facilityRepository).currentFacility(user)
-    verifyNoMoreInteractions(ui, facilityRepository)
-    verifyZeroInteractions(bloodPressureRepository, appointmentRepository, patientRepository)
+    verifyNoMoreInteractions(facilityRepository)
 
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
+    verify(ui).hideBpErrorMessage()
+    verify(ui).changeFocusToDiastolic()
+    verifyNoMoreInteractions(ui)
+    verifyZeroInteractions(bloodPressureRepository, appointmentRepository, patientRepository)
+
     uiEvents.onNext(SystolicChanged(""))
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
 

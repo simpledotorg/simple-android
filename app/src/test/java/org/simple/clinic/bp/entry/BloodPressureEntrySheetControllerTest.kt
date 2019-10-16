@@ -135,7 +135,6 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui, never()).changeFocusToDiastolic()
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   @Parameters(value = [
     "170, 17",
@@ -146,6 +145,9 @@ class BloodPressureEntrySheetControllerTest {
       existingSystolic: String,
       systolicAfterBackspace: String
   ) {
+    sheetCreatedForNew(patientUuid)
+    reset(ui, facilityRepository, patientRepository, appointmentRepository, bloodPressureRepository)
+
     uiEvents.onNext(SystolicChanged(existingSystolic))
     uiEvents.onNext(DiastolicChanged("142"))
 

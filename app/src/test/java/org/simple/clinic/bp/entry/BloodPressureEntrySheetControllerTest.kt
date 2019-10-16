@@ -135,6 +135,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui, never()).changeFocusToDiastolic()
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   @Parameters(value = [
     "170, 17",
@@ -165,6 +166,7 @@ class BloodPressureEntrySheetControllerTest {
     }
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when systolic or diastolic values change, hide any error message`() {
     sheetCreatedForNew(patientUuid)
@@ -177,6 +179,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui, times(5)).hideBpErrorMessage()
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   @Parameters(value = [
     ",",
@@ -195,6 +198,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui, never()).setBpSavedResultAndFinish()
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for OpenAs and bp validation errors")
   fun `when BP entry is active, BP readings are invalid and save is clicked then date entry should not be shown`(
@@ -214,6 +218,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui, never()).showDateEntryScreen()
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for prefilling bp measurements")
   fun `when screen is opened to update a blood pressure, the blood pressure must be prefilled`(
@@ -246,6 +251,7 @@ class BloodPressureEntrySheetControllerTest {
     )
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for showing remove button")
   fun `the remove BP button must be shown when the sheet is opened for update`(
@@ -270,6 +276,7 @@ class BloodPressureEntrySheetControllerTest {
         listOf(Update(UUID.fromString("baac5893-3670-4d9c-a5ff-12405cbb1ad5")), true))
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for setting the title of the sheet")
   fun `the correct title should be shown when the sheet is opened`(
@@ -294,6 +301,7 @@ class BloodPressureEntrySheetControllerTest {
         listOf(Update(UUID.fromString("66f89f1a-4d13-4491-970d-0d09c9ce4043")), false))
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when the remove button is clicked, the confirmation alert must be shown`() {
     val bloodPressure = PatientMocker.bp()
@@ -305,6 +313,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when a blood pressure being edited is removed, the sheet should be closed`() {
     val bloodPressure = PatientMocker.bp()
@@ -318,6 +327,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).setBpSavedResultAndFinish()
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   @Suppress("IMPLICIT_CAST_TO_ANY")
   @Parameters(method = "params for checking valid date input")
@@ -351,6 +361,7 @@ class BloodPressureEntrySheetControllerTest {
     )
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 2, 13)
@@ -389,6 +400,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).setBpSavedResultAndFinish()
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when save is clicked while updating a BP, date entry is active and input is valid then the updated BP measurement should be saved`() {
     val oldCreatedAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
@@ -447,6 +459,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).setBpSavedResultAndFinish()
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   @Suppress("IMPLICIT_CAST_TO_ANY")
   @Parameters(method = "params for showing date validation errors")
@@ -494,6 +507,7 @@ class BloodPressureEntrySheetControllerTest {
       val uiChangeVerification: UiChange
   )
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when date values change, hide any error message`() {
     uiEvents.run {
@@ -505,6 +519,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).hideDateErrorMessage()
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for OpenAs types")
   fun `when BP entry is active, BP readings are valid and next arrow is pressed then date entry should be shown`(
@@ -543,6 +558,7 @@ class BloodPressureEntrySheetControllerTest {
         listOf(Update(bpUuid), ErrorSystolicLessThanDiastolic))
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when BP entry is active and back is pressed then the sheet should be closed`() {
     uiEvents.run {
@@ -553,6 +569,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).dismiss()
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when screen is opened for a new BP, then the date should be prefilled with the current date`() {
     val currentDate = LocalDate.of(2018, 4, 23)
@@ -566,6 +583,7 @@ class BloodPressureEntrySheetControllerTest {
         twoDigitYear = "18")
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when screen is opened for updating an existing BP, then the date should be prefilled with the BP's recorded date`() {
     val recordedAtDate = LocalDate.of(2018, 4, 23)
@@ -609,6 +627,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `whenever the BP sheet is shown to update an existing BP, then show the BP date`() {
     val bp = PatientMocker.bp(patientUuid = patientUuid)
@@ -632,6 +651,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `whenever the BP sheet has an invalid date (new BP) and show BP button is pressed, then show date validation errors`() {
     val systolic = 120.toString()
@@ -656,6 +676,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `whenever the BP sheet has an invalid date (new BP) and back key is pressed, then show date validation errors`() {
     val systolic = 120.toString()
@@ -680,6 +701,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when the update BP sheet has an invalid date and show BP button is pressed, then show date validation errors`() {
     val systolic = 120.toString()
@@ -707,6 +729,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when the update BP sheet has an invalid date and back key is pressed, then show date validation errors`() {
     val systolic = 120.toString()
@@ -734,6 +757,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when the data entry sheet changes date and back button is pressed, then update date button in BP entry`() {
     val systolic = 120.toString()
@@ -760,6 +784,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when the data entry sheet changes date and show BP button is pressed, then update date button in BP entry`() {
     val systolic = 120.toString()
@@ -786,6 +811,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when done button is clicked in new BP entry, then save BP with entered date immediately`() {
     val systolic = 120.toString()
@@ -827,6 +853,7 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
+  // TODO Migrate logic to Mobius
   @Test
   fun `when done button is clicked in update BP entry, then save BP with entered date immediately`() {
     val systolic = 120.toString()

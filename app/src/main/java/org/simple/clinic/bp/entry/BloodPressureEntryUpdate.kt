@@ -3,8 +3,7 @@ package org.simple.clinic.bp.entry
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.mobius.justEffect
-import org.simple.clinic.mobius.justEffects
+import org.simple.clinic.mobius.next
 
 class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect> {
   override fun update(
@@ -13,12 +12,19 @@ class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEn
   ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
     return when (event) {
       is SystolicChanged -> if (isSystolicValueComplete(event.systolic)) {
-        justEffects(HideBpErrorMessage, ChangeFocusToDiastolic)
+        next(model.withSystolic(event.systolic), HideBpErrorMessage, ChangeFocusToDiastolic)
       } else {
-        justEffect<BloodPressureEntryModel, BloodPressureEntryEffect>(HideBpErrorMessage)
+        next(model.withSystolic(event.systolic), HideBpErrorMessage as BloodPressureEntryEffect)
       }
 
-      is DiastolicChanged -> justEffect(HideBpErrorMessage)
+      is DiastolicChanged -> next(model.withDiastolic(event.diastolic), HideBpErrorMessage)
+
+      is DiastolicBackspaceClicked -> if (model.diastolic.isNotEmpty()) {
+        next(model.deleteDiastolicLastDigit())
+      } else {
+        val updatedModel = model.deleteSystolicLastDigit()
+        next(updatedModel, ChangeFocusToSystolic, SetSystolic(updatedModel.systolic))
+      }
 
       else -> noChange()
     }

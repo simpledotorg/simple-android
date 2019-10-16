@@ -20,6 +20,8 @@ object BloodPressureEntryEffectHandler {
         .addAction(PrefillDateForNewEntry::class.java, { prefillDateForNewEntry(ui, userClock, inputDatePaddingCharacter) }, schedulersProvider.ui())
         .addAction(HideBpErrorMessage::class.java, ui::hideBpErrorMessage, schedulersProvider.ui())
         .addAction(ChangeFocusToDiastolic::class.java, ui::changeFocusToDiastolic, schedulersProvider.ui())
+        .addAction(ChangeFocusToSystolic::class.java, ui::changeFocusToSystolic, schedulersProvider.ui())
+        .addConsumer(SetSystolic::class.java, { ui.setSystolic(it.systolic) }, schedulersProvider.ui())
         .build()
   }
 

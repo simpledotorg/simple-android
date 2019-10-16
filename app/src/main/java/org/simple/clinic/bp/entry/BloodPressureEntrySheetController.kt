@@ -69,7 +69,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        automaticFocusChanges(replayedEvents),
         prefillBpWhenUpdatingABloodPressure(replayedEvents),
         prefillDate(replayedEvents),
         showBpValidationErrors(replayedEvents),
@@ -84,32 +83,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         hideDateValidationErrors(replayedEvents),
         dismissSheetWhenBpIsSaved(replayedEvents)
     )
-  }
-
-  private fun automaticFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
-    data class BloodPressure(val systolic: String, val diastolic: String)
-
-    val systolicChanges = events.ofType<SystolicChanged>().map { it.systolic }
-    val diastolicChanges = events.ofType<DiastolicChanged>().map { it.diastolic }
-
-    val bpChanges = Observables
-        .combineLatest(systolicChanges, diastolicChanges)
-        .map { (systolic, diastolic) -> BloodPressure(systolic, diastolic) }
-
-    val diastolicBackspaceClicksWithEmptyText = events.ofType<DiastolicBackspaceClicked>()
-        .withLatestFrom(bpChanges) { _, bp -> bp }
-        .filter { bp -> bp.diastolic.isEmpty() }
-
-    val moveFocusBackToSystolic = diastolicBackspaceClicksWithEmptyText
-        .map { { ui: Ui -> ui.changeFocusToSystolic() } }
-
-    val deleteLastDigitOfSystolic = diastolicBackspaceClicksWithEmptyText
-        .filter { bp -> bp.systolic.isNotBlank() }
-        .map { bp -> bp.systolic.substring(0, bp.systolic.length - 1) }
-        .map { truncatedSystolic -> { ui: Ui -> ui.setSystolic(truncatedSystolic) } }
-
-    return moveFocusBackToSystolic
-        .mergeWith(deleteLastDigitOfSystolic)
   }
 
   private fun prefillBpWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {

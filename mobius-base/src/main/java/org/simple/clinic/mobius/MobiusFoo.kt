@@ -11,3 +11,6 @@ fun <M, F> next(model: M, vararg effects: F): Next<M, F> = if (effects.isEmpty()
 } else {
   Next.next(model, setOf(*effects))
 }
+
+fun <M, F> justEffects(effect: F, vararg effects: F): Next<M, F> =
+    dispatch<M, F>(setOf(effect, *effects))

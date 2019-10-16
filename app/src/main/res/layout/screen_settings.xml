@@ -143,6 +143,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/settings_content_top_margin"
         android:layout_marginEnd="@dimen/spacing_8"
+        android:hint="@string/settings_language_hint"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
         app:layout_constraintEnd_toStartOf="@id/changeLanguageButton"
         app:layout_constraintStart_toStartOf="@id/currentLanguageLabel"

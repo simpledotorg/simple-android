@@ -18,6 +18,7 @@ object BloodPressureEntryEffectHandler {
     return RxMobius
         .subtypeEffectHandler<BloodPressureEntryEffect, BloodPressureEntryEvent>()
         .addAction(PrefillDateForNewEntry::class.java, { prefillDateForNewEntry(ui, userClock, inputDatePaddingCharacter) }, schedulersProvider.ui())
+        .addAction(HideBpErrorMessage::class.java, ui::hideBpErrorMessage, schedulersProvider.ui())
         .build()
   }
 

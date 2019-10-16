@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.clinic.bp.entry.OpenAs.New
 import java.util.UUID
 
 class BloodPressureEntryViewRendererTest {
@@ -15,7 +16,7 @@ class BloodPressureEntryViewRendererTest {
   fun `when the sheet is show for a new entry, then hide remove BP button and show enter new BP title`() {
     // given
     val newBloodPressureEntryModel = BloodPressureEntryModel
-        .newBloodPressureEntry(patientUuid)
+        .newBloodPressureEntry(New(patientUuid))
 
     // when
     viewRenderer.render(newBloodPressureEntryModel)

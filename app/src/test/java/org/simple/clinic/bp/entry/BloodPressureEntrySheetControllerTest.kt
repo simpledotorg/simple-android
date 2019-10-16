@@ -921,7 +921,7 @@ class BloodPressureEntrySheetControllerTest {
 
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
-        BloodPressureEntryModel.newBloodPressureEntry(patientUuid),
+        BloodPressureEntryModel.newBloodPressureEntry(New(patientUuid)),
         BloodPressureEntryInit(),
         BloodPressureEntryUpdate(),
         BloodPressureEntryEffectHandler.create(),

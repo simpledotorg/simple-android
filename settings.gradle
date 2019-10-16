@@ -1,4 +1,4 @@
-include ':app', ':router', ':spellfix', ':mobius-migration'
+include ':app', ':router', ':spellfix', ':mobius-migration', ':mobius-base'
 
 buildCache {
     local(DirectoryBuildCache) {

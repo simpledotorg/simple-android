@@ -144,16 +144,12 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(facilityRepository)
 
     uiEvents.onNext(SystolicChanged(sampleSystolicBp))
-    verify(ui).changeFocusToDiastolic()
-
     uiEvents.onNext(SystolicChanged(""))
-    verify(ui, times(2)).hideBpErrorMessage()
+    uiEvents.onNext(SystolicChanged(sampleSystolicBp))
+    verify(ui, times(3)).hideBpErrorMessage()
+    verify(ui, times(2)).changeFocusToDiastolic()
     verifyNoMoreInteractions(ui)
     verifyZeroInteractions(bloodPressureRepository, appointmentRepository, patientRepository)
-
-    uiEvents.onNext(SystolicChanged(sampleSystolicBp))
-
-    verify(ui, times(2)).changeFocusToDiastolic()
   }
 
   @Test

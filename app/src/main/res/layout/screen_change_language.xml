@@ -24,8 +24,10 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_16"
     android:drawableStart="@drawable/ic_done_16dp"
+    android:enabled="false"
     android:text="@string/changelanguage_done"
-    app:layout_constraintBottom_toBottomOf="parent" />
+    app:layout_constraintBottom_toBottomOf="parent"
+    tools:enabled="true" />
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/languagesList"

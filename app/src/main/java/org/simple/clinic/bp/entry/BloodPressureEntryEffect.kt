@@ -25,3 +25,5 @@ data class ShowConfirmRemoveBloodPressureDialog(
 ) : BloodPressureEntryEffect()
 
 object Dismiss : BloodPressureEntryEffect()
+
+object HideDateErrorMessage : BloodPressureEntryEffect()

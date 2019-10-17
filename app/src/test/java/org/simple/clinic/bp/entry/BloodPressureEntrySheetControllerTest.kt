@@ -299,7 +299,6 @@ class BloodPressureEntrySheetControllerTest {
         listOf(Update(UUID.fromString("66f89f1a-4d13-4491-970d-0d09c9ce4043")), false))
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when the remove button is clicked, the confirmation alert must be shown`() {
     val bloodPressure = PatientMocker.bp()

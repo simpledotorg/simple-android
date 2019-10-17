@@ -3,6 +3,7 @@ package org.simple.clinic.bp
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.check
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -76,7 +77,7 @@ class BloodPressureRepositoryTest {
     val bpUuid = UUID.randomUUID()
 
     val localCopy = PatientMocker.bp(bpUuid, syncStatus = syncStatusOfLocalCopy)
-    whenever(dao.getOne(bpUuid)).thenReturn(localCopy)
+    whenever(dao.getOne(bpUuid)).doReturn(localCopy)
 
     val serverBp = PatientMocker.bp(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
     repository.mergeWithLocalData(listOf(serverBp)).blockingAwait()

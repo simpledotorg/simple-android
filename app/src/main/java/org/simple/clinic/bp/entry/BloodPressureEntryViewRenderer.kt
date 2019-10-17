@@ -18,7 +18,10 @@ class BloodPressureEntryViewRenderer(
         showEnterNewBloodPressureTitle()
       }
 
-      is Update -> ui.showRemoveBpButton()
+      is Update -> with(ui) {
+        showRemoveBpButton()
+        showEditBloodPressureTitle()
+      }
     }
   }
 }

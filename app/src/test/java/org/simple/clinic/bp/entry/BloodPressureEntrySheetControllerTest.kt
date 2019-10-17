@@ -276,7 +276,6 @@ class BloodPressureEntrySheetControllerTest {
         listOf(Update(UUID.fromString("baac5893-3670-4d9c-a5ff-12405cbb1ad5")), true))
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for setting the title of the sheet")
   fun `the correct title should be shown when the sheet is opened`(

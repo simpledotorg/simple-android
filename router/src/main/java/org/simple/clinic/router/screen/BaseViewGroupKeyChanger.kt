@@ -62,28 +62,15 @@ abstract class BaseViewGroupKeyChanger<T : Any>(private val keyChangeAnimator: K
     Timber.tag("Screen Router").i("Restore incoming view state [$incomingKey]")
     incomingState.restore(incomingView)
 
-    callback.onTraversalCompleted()
-
-    incomingView.executeOnMeasure {
-      Timber.tag("Screen Router").i("Animate screen change [$incomingKey]")
+    outgoingView?.let {
       val outgoingKey = outgoingState?.getKey<T?>()
-      keyChangeAnimator.animate(
-          outgoingKey,
-          outgoingView,
-          incomingKey,
-          incomingView,
-          direction,
-          onCompleteListener = {
-            Timber.tag("Screen Router").i("Animate screen completed [$incomingKey]")
-            outgoingView?.let {
-              Timber.tag("Screen Router").i("Save outgoing view state [$outgoingKey]")
-              outgoingState?.save(outgoingView)
-              Timber.tag("Screen Router").i("Remove outgoing view [$outgoingKey]")
-              frame.removeView(outgoingView)
-            }
-          }
-      )
+      Timber.tag("Screen Router").i("Save outgoing view state [$outgoingKey]")
+      outgoingState?.save(outgoingView)
+      Timber.tag("Screen Router").i("Remove outgoing view [$outgoingKey]")
+      frame.removeView(outgoingView)
     }
+
+    callback.onTraversalCompleted()
   }
 
   open fun inflateIncomingView(incomingContext: Context, incomingKey: T, frame: ViewGroup): View {

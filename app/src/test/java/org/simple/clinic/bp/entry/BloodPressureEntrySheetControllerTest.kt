@@ -252,7 +252,6 @@ class BloodPressureEntrySheetControllerTest {
     )
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for showing remove button")
   fun `the remove BP button must be shown when the sheet is opened for update`(
@@ -921,26 +920,15 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   private fun sheetCreatedForNew(patientUuid: UUID) {
-    uiEvents.onNext(SheetCreated(New(patientUuid)))
-
-    val effectHandler = BloodPressureEntryEffectHandler.create(
-        ui,
-        testUserClock,
-        UserInputDatePaddingCharacter.ZERO,
-        TrampolineSchedulersProvider()
-    )
-    fixture = MobiusTestFixture(
-        uiEvents.ofType(),
-        BloodPressureEntryModel.newBloodPressureEntry(New(patientUuid)),
-        BloodPressureEntryInit(),
-        BloodPressureEntryUpdate(),
-        effectHandler,
-        viewRenderer::render
-    ).also { it.start() }
+    val openAsNew = New(patientUuid)
+    uiEvents.onNext(SheetCreated(openAsNew))
+    instantiateFixture(openAsNew)
   }
 
   private fun sheetCreatedForUpdate(existingBpUuid: UUID) {
-    uiEvents.onNext(SheetCreated(Update(existingBpUuid)))
+    val openAsUpdate = Update(existingBpUuid)
+    uiEvents.onNext(SheetCreated(openAsUpdate))
+    instantiateFixture(openAsUpdate)
   }
 
   private fun sheetCreated(openAs: OpenAs) {
@@ -949,5 +937,27 @@ class BloodPressureEntrySheetControllerTest {
       is Update -> sheetCreatedForUpdate(openAs.bpUuid)
       else -> throw IllegalStateException("Unknown `openAs`: $openAs")
     }
+  }
+
+  private fun instantiateFixture(openAs: OpenAs) {
+    val effectHandler = BloodPressureEntryEffectHandler.create(
+        ui,
+        testUserClock,
+        UserInputDatePaddingCharacter.ZERO,
+        TrampolineSchedulersProvider()
+    )
+    val defaultModel = when (openAs) {
+      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs)
+      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs)
+    }
+
+    fixture = MobiusTestFixture(
+        uiEvents.ofType(),
+        defaultModel,
+        BloodPressureEntryInit(),
+        BloodPressureEntryUpdate(),
+        effectHandler,
+        viewRenderer::render
+    ).also { it.start() }
   }
 }

@@ -1,6 +1,7 @@
 package org.simple.clinic.bp.entry
 
 import org.simple.clinic.bp.entry.OpenAs.New
+import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.mobius.ViewRenderer
 
 class BloodPressureEntryViewRenderer(
@@ -16,6 +17,8 @@ class BloodPressureEntryViewRenderer(
         hideRemoveBpButton()
         showEnterNewBloodPressureTitle()
       }
+
+      is Update -> ui.showRemoveBpButton()
     }
   }
 }

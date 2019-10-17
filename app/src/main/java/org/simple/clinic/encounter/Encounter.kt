@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
+import androidx.room.Query
+import io.reactivex.Completable
+import io.reactivex.Observable
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -33,6 +36,24 @@ data class Encounter(
   interface RoomDao {
 
     @Insert(onConflict = REPLACE)
-    fun save(encounters: List<Encounter>)
+    fun save(encounters: List<Encounter>): Completable
+
+    @Query("UPDATE Encounter SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
+    fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus): Completable
+
+    @Query("UPDATE Encounter SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
+    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus): Completable
+
+    @Query("SELECT * FROM Encounter WHERE syncStatus = :syncStatus")
+    fun recordsWithSyncStatus(syncStatus: SyncStatus): Observable<List<Encounter>>
+
+    @Query("SELECT COUNT(uuid) FROM Encounter")
+    fun recordCount(): Observable<Int>
+
+    @Query("SELECT COUNT(uuid) FROM Encounter WHERE syncStatus = :syncStatus")
+    fun recordCount(syncStatus: SyncStatus): Observable<Int>
+
+    @Query("SELECT * FROM Encounter WHERE uuid = :uuid")
+    fun getOne(uuid: UUID): Encounter?
   }
 }

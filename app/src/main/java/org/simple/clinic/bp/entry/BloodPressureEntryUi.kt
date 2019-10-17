@@ -3,6 +3,7 @@ package org.simple.clinic.bp.entry
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
+// TODO(rj) 17/Oct/19 - Move some of these events to a UiActions interface after migrating to Mobius?
 interface BloodPressureEntryUi {
   fun changeFocusToDiastolic()
   fun changeFocusToSystolic()

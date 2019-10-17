@@ -219,7 +219,6 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui, never()).showDateEntryScreen()
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for prefilling bp measurements")
   fun `when screen is opened to update a blood pressure, the blood pressure must be prefilled`(
@@ -943,6 +942,7 @@ class BloodPressureEntrySheetControllerTest {
         ui,
         testUserClock,
         UserInputDatePaddingCharacter.ZERO,
+        bloodPressureRepository,
         TrampolineSchedulersProvider()
     )
     val defaultModel = when (openAs) {

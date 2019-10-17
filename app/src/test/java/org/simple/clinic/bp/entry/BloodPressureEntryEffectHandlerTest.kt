@@ -15,7 +15,7 @@ class BloodPressureEntryEffectHandlerTest {
   private val ui = mock<BloodPressureEntryUi>()
   private val userClock = TestUserClock()
   private val effectHandler = BloodPressureEntryEffectHandler
-      .create(ui, userClock, UserInputDatePaddingCharacter.ZERO, TrampolineSchedulersProvider())
+      .create(ui, userClock, UserInputDatePaddingCharacter.ZERO, mock(), TrampolineSchedulersProvider())
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After

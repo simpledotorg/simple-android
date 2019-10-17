@@ -26,6 +26,18 @@ class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEn
         next(updatedModel, ChangeFocusToSystolic, SetSystolic(updatedModel.systolic))
       }
 
+      is BloodPressureMeasurementFetched -> {
+        val bloodPressureMeasurement = event.bloodPressureMeasurement
+        val systolicString = bloodPressureMeasurement.systolic.toString()
+        val diastolicString = bloodPressureMeasurement.diastolic.toString()
+
+        val modelWithSystolicAndDiastolic = model
+            .withSystolic(systolicString)
+            .withDiastolic(diastolicString)
+
+        next(modelWithSystolicAndDiastolic, SetSystolic(systolicString), SetDiastolic(diastolicString))
+      }
+
       else -> noChange()
     }
   }

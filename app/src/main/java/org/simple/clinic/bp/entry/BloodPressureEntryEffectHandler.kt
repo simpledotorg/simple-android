@@ -2,6 +2,8 @@ package org.simple.clinic.bp.entry
 
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
+import io.reactivex.Scheduler
+import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -13,6 +15,7 @@ object BloodPressureEntryEffectHandler {
       ui: BloodPressureEntryUi,
       userClock: UserClock,
       inputDatePaddingCharacter: UserInputDatePaddingCharacter,
+      bloodPressureRepository: BloodPressureRepository,
       schedulersProvider: SchedulersProvider
   ): ObservableTransformer<BloodPressureEntryEffect, BloodPressureEntryEvent> {
     return RxMobius
@@ -22,6 +25,8 @@ object BloodPressureEntryEffectHandler {
         .addAction(ChangeFocusToDiastolic::class.java, ui::changeFocusToDiastolic, schedulersProvider.ui())
         .addAction(ChangeFocusToSystolic::class.java, ui::changeFocusToSystolic, schedulersProvider.ui())
         .addConsumer(SetSystolic::class.java, { ui.setSystolic(it.systolic) }, schedulersProvider.ui())
+        .addTransformer(FetchBloodPressureMeasurement::class.java, fetchBloodPressureMeasurement(bloodPressureRepository, schedulersProvider.io()))
+        .addConsumer(SetDiastolic::class.java, { ui.setDiastolic(it.diastolic) }, schedulersProvider.ui())
         .build()
   }
 
@@ -36,5 +41,16 @@ object BloodPressureEntryEffectHandler {
     val yearString = date.year.toString().substring(startIndex = 2, endIndex = 4)
     ui.setDateOnInputFields(dayString, monthString, yearString)
     ui.showDateOnDateButton(date)
+  }
+
+  private fun fetchBloodPressureMeasurement(
+      bloodPressureRepository: BloodPressureRepository,
+      scheduler: Scheduler
+  ): ObservableTransformer<FetchBloodPressureMeasurement, BloodPressureEntryEvent> {
+    return ObservableTransformer { bloodPressureMeasurements ->
+      bloodPressureMeasurements
+          .flatMap { bloodPressureRepository.measurement(it.bpUuid).subscribeOn(scheduler).take(1) }
+          .map(::BloodPressureMeasurementFetched)
+    }
   }
 }

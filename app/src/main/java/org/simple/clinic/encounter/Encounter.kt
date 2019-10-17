@@ -36,7 +36,10 @@ data class Encounter(
   interface RoomDao {
 
     @Insert(onConflict = REPLACE)
-    fun save(encounters: List<Encounter>): Completable
+    fun save(encounters: List<Encounter>)
+
+    @Insert(onConflict = REPLACE)
+    fun save(encounter: Encounter)
 
     @Query("UPDATE Encounter SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus): Completable

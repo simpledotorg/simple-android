@@ -59,4 +59,21 @@ data class BloodPressureMeasurementPayload(
         //FIXME: [Encounter] This code is throw-away. Once the Encounter API is implemented, this should be fixed.
         encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, recordedAt.toLocalDateAtZone(ZoneOffset.UTC)))
   }
+
+  fun toDatabaseModel(syncStatus: SyncStatus, encounterUuid: UUID): BloodPressureMeasurement {
+    return BloodPressureMeasurement(
+        uuid = uuid,
+        systolic = systolic,
+        diastolic = diastolic,
+        syncStatus = syncStatus,
+        userUuid = userUuid,
+        facilityUuid = facilityUuid,
+        patientUuid = patientUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt,
+        recordedAt = recordedAt,
+        encounterUuid = encounterUuid)
+  }
+
 }

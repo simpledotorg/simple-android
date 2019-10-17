@@ -6,6 +6,9 @@ import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
+import org.simple.clinic.encounter.Encounter
+import org.simple.clinic.encounter.sync.EncounterObservationsPayload
+import org.simple.clinic.encounter.sync.EncounterPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.facility.FacilityRepository
@@ -775,6 +778,47 @@ class TestData @Inject constructor(
     return Identifier(
         value = value,
         type = type
+    )
+  }
+
+  fun encounter(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID? = null,
+      encounteredOn: LocalDate = LocalDate.now(),
+      syncStatus: SyncStatus = SyncStatus.DONE,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ): Encounter {
+    return Encounter(
+        uuid = if (facilityUuid == null) uuid else generateEncounterUuid(facilityUuid, patientUuid, encounteredOn),
+        patientUuid = patientUuid,
+        encounteredOn = encounteredOn,
+        syncStatus = syncStatus,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+  }
+
+  fun encounterPayload(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      encounteredOn: LocalDate = LocalDate.now(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
+      bpPayloads: List<BloodPressureMeasurementPayload> = listOf(bpPayload(patientUuid = patientUuid))
+  ): EncounterPayload {
+    return EncounterPayload(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        encounteredOn = encounteredOn,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt,
+        observations = EncounterObservationsPayload(bloodPressureMeasurements = bpPayloads)
     )
   }
 }

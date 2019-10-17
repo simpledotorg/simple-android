@@ -3,6 +3,7 @@ package org.simple.clinic.bp.entry
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect> {
@@ -37,6 +38,10 @@ class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEn
 
         next(modelWithSystolicAndDiastolic, SetSystolic(systolicString), SetDiastolic(diastolicString))
       }
+
+      is RemoveClicked -> dispatch(
+          ShowConfirmRemoveBloodPressureDialog((model.openAs as OpenAs.Update).bpUuid)
+      )
 
       else -> noChange()
     }

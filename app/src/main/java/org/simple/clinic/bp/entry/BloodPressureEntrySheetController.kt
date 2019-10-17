@@ -75,7 +75,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         showBpEntry(replayedEvents),
         dismissSheetWhenBackIsPressedOnBp(replayedEvents),
-        updateSheetTitle(replayedEvents),
         showConfirmRemoveBloodPressureDialog(replayedEvents),
         closeSheetWhenEditedBpIsDeleted(replayedEvents),
         showDateValidationErrors(replayedEvents),
@@ -249,14 +248,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map(::BloodPressureReadingsValidated)
 
     events.mergeWith(validations)
-  }
-
-  private fun updateSheetTitle(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<SheetCreated>()
-        .map { it.openAs }
-        .filter { it is Update }
-        .map { { ui: Ui -> ui.showEditBloodPressureTitle() } }
   }
 
   private fun showConfirmRemoveBloodPressureDialog(events: Observable<UiEvent>): Observable<UiChange> {

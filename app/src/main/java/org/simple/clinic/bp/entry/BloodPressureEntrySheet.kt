@@ -25,6 +25,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bp.entry.OpenAs.New
@@ -107,6 +108,9 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  @Inject
+  lateinit var bloodPressureRepository: BloodPressureRepository
+
   private val viewRenderer = BloodPressureEntryViewRenderer(this)
 
   private val delegate by unsafeLazy {
@@ -116,7 +120,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
     }
 
     val effectHandler = BloodPressureEntryEffectHandler
-        .create(this, userClock, userInputDatePaddingCharacter, schedulersProvider)
+        .create(this, userClock, userInputDatePaddingCharacter, bloodPressureRepository, schedulersProvider)
 
     MobiusActivityDelegate(
         events.ofType(),

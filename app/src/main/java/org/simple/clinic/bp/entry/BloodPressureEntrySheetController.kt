@@ -7,7 +7,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
@@ -69,7 +68,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        prefillBpWhenUpdatingABloodPressure(replayedEvents),
         prefillDate(replayedEvents),
         showBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
@@ -81,28 +79,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         hideDateValidationErrors(replayedEvents),
         dismissSheetWhenBpIsSaved(replayedEvents)
     )
-  }
-
-  private fun prefillBpWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<SheetCreated>()
-        .filter { it.openAs is Update }
-        .map { it.openAs as Update }
-        .flatMap {
-          // Subscribing on the IO scheduler should not be necessary here, but we've seen
-          // occasional crashes because it sometimes runs on the main thread. This is a temp.
-          // workaround until we figure out what's actually happening.
-          bloodPressureRepository
-              .measurement(it.bpUuid)
-              .subscribeOn(io())
-              .take(1L)
-        }
-        .map { bloodPressure ->
-          { ui: Ui ->
-            ui.setSystolic(bloodPressure.systolic.toString())
-            ui.setDiastolic(bloodPressure.diastolic.toString())
-          }
-        }
   }
 
   private fun calculateDateToPrefill() = ObservableTransformer<UiEvent, UiEvent> { events ->

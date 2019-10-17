@@ -13,7 +13,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
-import org.simple.clinic.mobius.justEffect
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -47,7 +47,7 @@ class EditPatientUpdate(
       is DateOfBirthChanged -> onDateOfBirthChanged(model, event)
       is AgeChanged -> onTextFieldChanged(event) { model.updateAge(event.age) }
       is BackClicked -> onBackClicked(model)
-      is PatientSaved -> justEffect(GoBackEffect)
+      is PatientSaved -> dispatch(GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
     }
   }
@@ -68,7 +68,7 @@ class EditPatientUpdate(
     } else {
       HideDatePatternInDateOfBirthLabelEffect
     }
-    return justEffect(showOrHideLabelEffect)
+    return dispatch(showOrHideLabelEffect)
   }
 
   private fun onDateOfBirthChanged(
@@ -92,7 +92,7 @@ class EditPatientUpdate(
     } else {
       GoBackEffect
     }
-    return justEffect(effect)
+    return dispatch(effect)
   }
 
   private fun onSaveClicked(
@@ -106,6 +106,6 @@ class EditPatientUpdate(
       ShowValidationErrorsEffect(validationErrors)
     }
 
-    return justEffect(effect)
+    return dispatch(effect)
   }
 }

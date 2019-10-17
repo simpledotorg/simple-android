@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.entry
 
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -61,3 +62,8 @@ object ShowBpClicked : BloodPressureEntryEvent() {
 object BackPressed : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Hardware Back Pressed"
 }
+
+// TODO(rj) 17/Oct/19 - Revisit this member property once refactoring is done. We may just need `systolic` and `diastolic`.
+data class BloodPressureMeasurementFetched(
+    val bloodPressureMeasurement: BloodPressureMeasurement
+) : BloodPressureEntryEvent()

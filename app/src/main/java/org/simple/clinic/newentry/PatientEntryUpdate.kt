@@ -3,7 +3,7 @@ package org.simple.clinic.newentry
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
-import org.simple.clinic.mobius.justEffect
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -30,7 +30,7 @@ class PatientEntryUpdate(
       is StateChanged -> next(model.withState(event.state), HideEmptyStateError)
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
       is SaveClicked -> onSaveClicked(model.patientEntry)
-      PatientEntrySaved -> justEffect(OpenMedicalHistoryEntryScreen)
+      PatientEntrySaved -> dispatch(OpenMedicalHistoryEntryScreen)
     }
   }
 
@@ -51,7 +51,7 @@ class PatientEntryUpdate(
 
   private fun onDateOfBirthFocusChanged(model: PatientEntryModel, hasFocus: Boolean): PatientEntryNext {
     val hasDateOfBirth = model.patientEntry.personalDetails?.dateOfBirth?.isNotBlank() == true
-    return justEffect(ShowDatePatternInDateOfBirthLabel(hasFocus || hasDateOfBirth))
+    return dispatch(ShowDatePatternInDateOfBirthLabel(hasFocus || hasDateOfBirth))
   }
 
   private fun onSaveClicked(
@@ -63,6 +63,6 @@ class PatientEntryUpdate(
     } else {
       ShowValidationErrors(validationErrors)
     }
-    return justEffect(effect)
+    return dispatch(effect)
   }
 }

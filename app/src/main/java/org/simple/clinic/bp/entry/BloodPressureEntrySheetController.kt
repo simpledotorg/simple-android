@@ -74,7 +74,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         showBpEntry(replayedEvents),
         closeSheetWhenEditedBpIsDeleted(replayedEvents),
         showDateValidationErrors(replayedEvents),
-        hideDateValidationErrors(replayedEvents),
         dismissSheetWhenBpIsSaved(replayedEvents)
     )
   }
@@ -289,12 +288,6 @@ class BloodPressureEntrySheetController @Inject constructor(
             is Valid -> { ui: Ui -> ui.showDateOnDateButton(result.parsedDate) }
           }
         }
-  }
-
-  private fun hideDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<DateChanged>()
-        .map { { ui: Ui -> ui.hideDateErrorMessage() } }
   }
 
   private fun saveBpWhenDateEntryIsDone() = ObservableTransformer<UiEvent, UiEvent> { events ->

@@ -52,6 +52,12 @@ class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEn
         noChange()
       }
 
+      is DayChanged -> dispatch(HideDateErrorMessage)
+
+      is MonthChanged -> dispatch(HideDateErrorMessage)
+
+      is YearChanged -> dispatch(HideDateErrorMessage)
+
       else -> noChange()
     }
   }

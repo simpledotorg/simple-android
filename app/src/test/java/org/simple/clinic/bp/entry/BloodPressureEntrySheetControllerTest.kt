@@ -555,9 +555,10 @@ class BloodPressureEntrySheetControllerTest {
         listOf(Update(bpUuid), ErrorSystolicLessThanDiastolic))
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when BP entry is active and back is pressed then the sheet should be closed`() {
+    sheetCreatedForNew(patientUuid)
+
     uiEvents.run {
       onNext(ScreenChanged(BP_ENTRY))
       onNext(BackPressed)

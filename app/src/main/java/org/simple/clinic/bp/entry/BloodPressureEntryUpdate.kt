@@ -3,6 +3,7 @@ package org.simple.clinic.bp.entry
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
@@ -42,6 +43,14 @@ class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEn
       is RemoveClicked -> dispatch(
           ShowConfirmRemoveBloodPressureDialog((model.openAs as OpenAs.Update).bpUuid)
       )
+
+      is ScreenChanged -> next(model.screenChanged(event.type))
+
+      is BackPressed -> if (model.activeScreen == BP_ENTRY) {
+        dispatch(Dismiss as BloodPressureEntryEffect)
+      } else {
+        noChange()
+      }
 
       else -> noChange()
     }

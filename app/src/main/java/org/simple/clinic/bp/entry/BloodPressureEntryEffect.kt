@@ -19,3 +19,7 @@ data class FetchBloodPressureMeasurement(
 ) : BloodPressureEntryEffect()
 
 data class SetDiastolic(val diastolic: String) : BloodPressureEntryEffect()
+
+data class ShowConfirmRemoveBloodPressureDialog(
+    val bpUuid: UUID
+) : BloodPressureEntryEffect()

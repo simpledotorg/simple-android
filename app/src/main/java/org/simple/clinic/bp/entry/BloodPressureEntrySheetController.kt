@@ -72,7 +72,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         showBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         showBpEntry(replayedEvents),
-        dismissSheetWhenBackIsPressedOnBp(replayedEvents),
         closeSheetWhenEditedBpIsDeleted(replayedEvents),
         showDateValidationErrors(replayedEvents),
         hideDateValidationErrors(replayedEvents),
@@ -190,18 +189,6 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     return validateDateEvents
         .map { { ui: Ui -> ui.showBpEntryScreen() } }
-  }
-
-  private fun dismissSheetWhenBackIsPressedOnBp(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenChanges = events
-        .ofType<ScreenChanged>()
-        .map { it.type }
-
-    return events
-        .ofType<BackPressed>()
-        .withLatestFrom(screenChanges)
-        .filter { (_, screen) -> screen == BP_ENTRY }
-        .map { { ui: Ui -> ui.dismiss() } }
   }
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->

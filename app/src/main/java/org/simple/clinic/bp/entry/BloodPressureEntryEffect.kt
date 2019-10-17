@@ -23,3 +23,5 @@ data class SetDiastolic(val diastolic: String) : BloodPressureEntryEffect()
 data class ShowConfirmRemoveBloodPressureDialog(
     val bpUuid: UUID
 ) : BloodPressureEntryEffect()
+
+object Dismiss : BloodPressureEntryEffect()

@@ -2,6 +2,7 @@ package org.simple.clinic.bp.entry
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.atLeastOnce
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -504,16 +505,17 @@ class BloodPressureEntrySheetControllerTest {
       val uiChangeVerification: UiChange
   )
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when date values change, hide any error message`() {
+    sheetCreatedForNew(patientUuid)
+
     uiEvents.run {
       onNext(DayChanged("14"))
       onNext(MonthChanged("02"))
       onNext(YearChanged("1991"))
     }
 
-    verify(ui).hideDateErrorMessage()
+    verify(ui, atLeastOnce()).hideDateErrorMessage()
   }
 
   // TODO Migrate logic to Mobius

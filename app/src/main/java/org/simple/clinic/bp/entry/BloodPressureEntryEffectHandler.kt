@@ -29,6 +29,7 @@ object BloodPressureEntryEffectHandler {
         .addConsumer(SetDiastolic::class.java, { ui.setDiastolic(it.diastolic) }, schedulersProvider.ui())
         .addConsumer(ShowConfirmRemoveBloodPressureDialog::class.java, { ui.showConfirmRemoveBloodPressureDialog(it.bpUuid) }, schedulersProvider.ui())
         .addAction(Dismiss::class.java, ui::dismiss, schedulersProvider.ui())
+        .addAction(HideDateErrorMessage::class.java, ui::hideDateErrorMessage, schedulersProvider.ui())
         .build()
   }
 

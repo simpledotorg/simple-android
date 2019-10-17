@@ -1,6 +1,7 @@
 package org.simple.clinic.bp.entry.confirmremovebloodpressure
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -27,7 +28,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
   private val dialog = mock<ConfirmRemoveBloodPressureDialog>()
   lateinit var controller: ConfirmRemoveBloodPressureDialogController
 
-  val uiEvents = PublishSubject.create<UiEvent>()
+  private val uiEvents = PublishSubject.create<UiEvent>()
 
   @Before
   fun setUp() {
@@ -43,9 +44,9 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
     val bloodPressure = PatientMocker.bp()
     val markBloodPressureDeletedCompletable = Completable.complete()
     val updatePatientRecordedAtCompletable = Completable.complete()
-    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(Observable.just(bloodPressure))
-    whenever(bloodPressureRepository.markBloodPressureAsDeleted(bloodPressure)).thenReturn(markBloodPressureDeletedCompletable)
-    whenever(patientRepository.updateRecordedAt(any())).thenReturn(updatePatientRecordedAtCompletable)
+    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).doReturn(Observable.just(bloodPressure))
+    whenever(bloodPressureRepository.markBloodPressureAsDeleted(bloodPressure)).doReturn(markBloodPressureDeletedCompletable)
+    whenever(patientRepository.updateRecordedAt(any())).doReturn(updatePatientRecordedAtCompletable)
 
     uiEvents.onNext(ConfirmRemoveBloodPressureDialogCreated(bloodPressureMeasurementUuid = bloodPressure.uuid))
     uiEvents.onNext(ConfirmRemoveBloodPressureDialogRemoveClicked)

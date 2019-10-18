@@ -570,6 +570,21 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   @Test
+  fun `when BP entry is active and BP readings are invalid and blood pressure date is clicked, then show BP validation errors`() {
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
+
+    sheetCreatedForNew(patientUuid)
+    uiEvents.run {
+      onNext(ScreenChanged(BP_ENTRY))
+      onNext(SystolicChanged(""))
+      onNext(DiastolicChanged("80"))
+      onNext(BloodPressureDateClicked)
+    }
+
+    verify(ui).showSystolicEmptyError()
+  }
+
+  @Test
   fun `when screen is opened for a new BP, then the date should be prefilled with the current date`() {
     val currentDate = LocalDate.of(2018, 4, 23)
     testUserClock.setDate(currentDate, UTC)

@@ -40,7 +40,7 @@ abstract class BaseViewGroupKeyChanger<T : Any>(private val keyChangeAnimator: K
       // intentionally calls changeKey() again on onResume() with the same values.
       // See: https://github.com/square/flow/issues/173.
       if (isScreenAlreadyActive(frame.getChildAt(0), incomingKey)) {
-        Timber.tag("Screen Router").i("Same view; short circuit")
+        Timber.tag("Screen Router").i("Same view [$incomingKey]; short circuit")
         callback.onTraversalCompleted()
         return
       }
@@ -57,27 +57,28 @@ abstract class BaseViewGroupKeyChanger<T : Any>(private val keyChangeAnimator: K
     val incomingView = inflateIncomingView(incomingContext, incomingKey, frame)
     throwIfIdIsMissing(incomingView, incomingKey)
 
-    Timber.tag("Screen Router").i("Add new view")
+    Timber.tag("Screen Router").i("Add new view [$incomingKey]")
     frame.addView(incomingView)
-    Timber.tag("Screen Router").i("Restore incoming view state")
+    Timber.tag("Screen Router").i("Restore incoming view state [$incomingKey]")
     incomingState.restore(incomingView)
 
     callback.onTraversalCompleted()
 
     incomingView.executeOnMeasure {
-      Timber.tag("Screen Router").i("Animate screen change")
+      Timber.tag("Screen Router").i("Animate screen change [$incomingKey]")
+      val outgoingKey = outgoingState?.getKey<T?>()
       keyChangeAnimator.animate(
-          outgoingState?.getKey(),
+          outgoingKey,
           outgoingView,
           incomingKey,
           incomingView,
           direction,
           onCompleteListener = {
-            Timber.tag("Screen Router").i("Animate screen completed")
+            Timber.tag("Screen Router").i("Animate screen completed [$incomingKey]")
             outgoingView?.let {
-              Timber.tag("Screen Router").i("Save outgoing view state")
+              Timber.tag("Screen Router").i("Save outgoing view state [$outgoingKey]")
               outgoingState?.save(outgoingView)
-              Timber.tag("Screen Router").i("Remove outgoing view")
+              Timber.tag("Screen Router").i("Remove outgoing view [$outgoingKey]")
               frame.removeView(outgoingView)
             }
           }

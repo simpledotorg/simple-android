@@ -17,7 +17,6 @@ import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -54,7 +53,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.mobius.migration.MobiusTestFixture
-import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
@@ -309,20 +307,6 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(RemoveClicked)
 
     verify(ui).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
-  }
-
-  // TODO Migrate logic to Mobius
-  @Test
-  fun `when a blood pressure being edited is removed, the sheet should be closed`() {
-    val bloodPressure = PatientMocker.bp()
-    val bloodPressureSubject = BehaviorSubject.createDefault<BloodPressureMeasurement>(bloodPressure)
-    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).doReturn(bloodPressureSubject)
-
-    sheetCreatedForUpdate(bloodPressure.uuid)
-    verify(ui, never()).setBpSavedResultAndFinish()
-
-    bloodPressureSubject.onNext(bloodPressure.copy(deletedAt = Instant.now()))
-    verify(ui).setBpSavedResultAndFinish()
   }
 
   // TODO Migrate logic to Mobius

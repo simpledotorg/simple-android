@@ -70,7 +70,6 @@ class BloodPressureEntrySheetController @Inject constructor(
     return Observable.mergeArray(
         showBpValidationErrors(replayedEvents),
         showBpEntry(replayedEvents),
-        closeSheetWhenEditedBpIsDeleted(replayedEvents),
         showDateValidationErrors(replayedEvents),
         dismissSheetWhenBpIsSaved(replayedEvents)
     )
@@ -165,20 +164,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map(::BloodPressureReadingsValidated)
 
     events.mergeWith(validations)
-  }
-
-  private fun closeSheetWhenEditedBpIsDeleted(events: Observable<UiEvent>): Observable<UiChange> {
-    val bloodPressureMeasurementUuidStream = events
-        .ofType<SheetCreated>()
-        .map { it.openAs }
-        .ofType<Update>()
-        .map { it.bpUuid }
-
-    return bloodPressureMeasurementUuidStream
-        .flatMap(bloodPressureRepository::measurement)
-        .filter { it.deletedAt != null }
-        .take(1)
-        .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
   }
 
   private fun combineDateInputs() = ObservableTransformer<UiEvent, UiEvent> { events ->

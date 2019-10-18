@@ -11,13 +11,6 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooHigh
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooLow
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicEmpty
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDiastolic
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
@@ -30,7 +23,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
-import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -68,7 +60,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showBpValidationErrors(replayedEvents),
         showBpEntry(replayedEvents),
         showDateValidationErrors(replayedEvents),
         dismissSheetWhenBpIsSaved(replayedEvents)
@@ -95,31 +86,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { DateToPrefillCalculated(it) }
 
     events.mergeWith(prefillDateEvent)
-  }
-
-  private fun showBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val saveClicks = events.ofType<SaveClicked>()
-
-    val validations = events
-        .ofType<BloodPressureReadingsValidated>()
-        .map { it.result }
-
-    return saveClicks
-        .withLatestFrom(validations)
-        .map { (_, result) ->
-          { ui: Ui ->
-            when (result) {
-              is ErrorSystolicLessThanDiastolic -> ui.showSystolicLessThanDiastolicError()
-              is ErrorSystolicTooHigh -> ui.showSystolicHighError()
-              is ErrorSystolicTooLow -> ui.showSystolicLowError()
-              is ErrorDiastolicTooHigh -> ui.showDiastolicHighError()
-              is ErrorDiastolicTooLow -> ui.showDiastolicLowError()
-              is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
-              is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
-              is Success -> { /* Nothing to do here. */ }
-            }.exhaustive()
-          }
-        }
   }
 
   private fun showBpEntry(events: Observable<UiEvent>): Observable<UiChange> {

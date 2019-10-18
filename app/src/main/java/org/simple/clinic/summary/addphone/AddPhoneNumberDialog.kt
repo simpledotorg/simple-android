@@ -17,7 +17,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToControllerWithoutDelay
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -95,7 +95,7 @@ class AddPhoneNumberDialog : AppCompatDialogFragment() {
   private fun setupDialog(screenDestroys: Observable<ScreenDestroyed>) {
     val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
 
-    bindUiToControllerWithoutDelay(
+    bindUiToController(
         ui = this,
         events = Observable.merge(dialogCreates(), saveClicks(saveButton)),
         controller = controller,

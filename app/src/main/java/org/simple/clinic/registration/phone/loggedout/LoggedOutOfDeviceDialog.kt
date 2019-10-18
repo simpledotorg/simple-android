@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToControllerWithoutDelay
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -76,7 +76,7 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment() {
   }
 
   private fun setupDialog() {
-    bindUiToControllerWithoutDelay(
+    bindUiToController(
         ui = this,
         events = screenCreates(),
         controller = controller,

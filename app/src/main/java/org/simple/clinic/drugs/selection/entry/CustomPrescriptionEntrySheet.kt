@@ -17,7 +17,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToControllerWithoutDelay
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -49,7 +49,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_custom_prescription_entry)
     TheActivity.component.inject(this)
 
-    bindUiToControllerWithoutDelay(
+    bindUiToController(
         ui = this,
         events = Observable.mergeArray(
             sheetCreates(),

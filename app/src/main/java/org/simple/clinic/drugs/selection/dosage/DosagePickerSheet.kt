@@ -11,7 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToControllerWithoutDelay
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -42,7 +42,7 @@ class DosagePickerSheet : BottomSheetActivity() {
     recyclerView.layoutManager = LinearLayoutManager(this)
     displayDrugName()
 
-    bindUiToControllerWithoutDelay(
+    bindUiToController(
         ui = this,
         events = Observable.merge(sheetCreates(), adapter.itemClicks),
         controller = controller,

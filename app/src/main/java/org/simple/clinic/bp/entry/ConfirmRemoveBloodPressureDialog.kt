@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToControllerWithoutDelay
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogController
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogCreated
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogRemoveClicked
@@ -79,7 +79,7 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
   }
 
   private fun setupDialog() {
-    bindUiToControllerWithoutDelay(
+    bindUiToController(
         ui = this,
         events = Observable.merge(dialogCreates(), removeClicks()),
         controller = controller,

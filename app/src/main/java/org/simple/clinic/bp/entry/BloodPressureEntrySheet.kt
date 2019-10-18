@@ -24,7 +24,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToControllerWithoutDelay
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bp.entry.OpenAs.New
@@ -157,7 +157,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
     setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
 
-    bindUiToControllerWithoutDelay(
+    bindUiToController(
         ui = this,
         events = events,
         controller = controller,

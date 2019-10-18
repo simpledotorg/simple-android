@@ -9,6 +9,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -38,8 +39,10 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
@@ -81,6 +84,9 @@ class BloodPressureValidationTest {
       userSession = userSession,
       facilityRepository = facilityRepository)
 
+  private val viewRenderer = BloodPressureEntryViewRenderer(ui)
+  private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
+
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
@@ -106,8 +112,8 @@ class BloodPressureValidationTest {
     assertThat(bpValidator.validate(systolic, diastolic))
         .isEqualTo(error)
 
+    sheetCreatedForNew(patientUuid)
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
-    uiEvents.onNext(SheetCreated(New(patientUuid)))
     uiEvents.onNext(SystolicChanged(systolic))
     uiEvents.onNext(DiastolicChanged(diastolic))
     uiEvents.onNext(SaveClicked)
@@ -151,8 +157,8 @@ class BloodPressureValidationTest {
 
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
+    sheetCreated(openAs)
     uiEvents.run {
-      onNext(SheetCreated(openAs = openAs))
       onNext(ScreenChanged(BP_ENTRY))
       onNext(SystolicChanged(systolic))
       onNext(DiastolicChanged(diastolic))
@@ -189,4 +195,47 @@ class BloodPressureValidationTest {
       val diastolic: String,
       val error: Validation
   )
+
+  private fun sheetCreatedForNew(patientUuid: UUID) {
+    val openAsNew = New(patientUuid)
+    uiEvents.onNext(SheetCreated(openAsNew))
+    instantiateFixture(openAsNew)
+  }
+
+  private fun sheetCreatedForUpdate(existingBpUuid: UUID) {
+    val openAsUpdate = Update(existingBpUuid)
+    uiEvents.onNext(SheetCreated(openAsUpdate))
+    instantiateFixture(openAsUpdate)
+  }
+
+  private fun sheetCreated(openAs: OpenAs) {
+    when (openAs) {
+      is New -> sheetCreatedForNew(openAs.patientUuid)
+      is Update -> sheetCreatedForUpdate(openAs.bpUuid)
+      else -> throw IllegalStateException("Unknown `openAs`: $openAs")
+    }
+  }
+
+  private fun instantiateFixture(openAs: OpenAs) {
+    val effectHandler = BloodPressureEntryEffectHandler.create(
+        ui,
+        testUserClock,
+        UserInputDatePaddingCharacter.ZERO,
+        bloodPressureRepository,
+        TrampolineSchedulersProvider()
+    )
+    val defaultModel = when (openAs) {
+      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs)
+      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs)
+    }
+
+    fixture = MobiusTestFixture(
+        uiEvents.ofType(),
+        defaultModel,
+        BloodPressureEntryInit(),
+        BloodPressureEntryUpdate(bpValidator),
+        effectHandler,
+        viewRenderer::render
+    ).also { it.start() }
+  }
 }

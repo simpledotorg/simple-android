@@ -168,9 +168,10 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->
-    val screenChanges = events
+    val bpEntryScreenChanges = events
         .ofType<ScreenChanged>()
         .map { it.type }
+        .filter { it == BP_ENTRY }
 
     val systolicChanges = events
         .ofType<SystolicChanged>()
@@ -180,8 +181,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<DiastolicChanged>()
         .map { it.diastolic }
 
-    val validations = Observables.combineLatest(systolicChanges, diastolicChanges, screenChanges)
-        .filter { (_, _, screen) -> screen == BP_ENTRY }
+    val validations = Observables.combineLatest(systolicChanges, diastolicChanges, bpEntryScreenChanges)
         .map { (systolic, diastolic, _) -> bpValidator.validate(systolic, diastolic) }
         .map(::BloodPressureReadingsValidated)
 

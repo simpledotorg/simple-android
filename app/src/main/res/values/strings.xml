@@ -457,7 +457,7 @@
   <string name="settings_number">Phone number</string>
   <string name="settings_language">Language</string>
   <string name="settings_change">Change</string>
-  <string name="settings_language_hint">Same as Android</string>
+  <string name="settings_language_hint">Select a language</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">Select your language</string>

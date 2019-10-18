@@ -22,7 +22,6 @@ import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.FullScreenKeyChanger
-import org.simple.clinic.router.screen.KeyChangeAnimator
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -42,9 +41,6 @@ class TheActivity : AppCompatActivity() {
 
   @Inject
   lateinit var lifecycle: Observable<TheActivityLifecycle>
-
-  @Inject
-  lateinit var fullScreenKeyChangeAnimator: KeyChangeAnimator<FullScreenKey>
 
   @Inject
   lateinit var locale: Locale
@@ -83,8 +79,7 @@ class TheActivity : AppCompatActivity() {
         activity = this,
         screenLayoutContainerRes = android.R.id.content,
         screenBackgroundRes = R.color.window_background,
-        onKeyChange = this::onScreenChanged,
-        keyChangeAnimator = fullScreenKeyChangeAnimator
+        onKeyChange = this::onScreenChanged
     ))
     return screenRouter.installInContext(baseContext, controller.initialScreenKey())
   }

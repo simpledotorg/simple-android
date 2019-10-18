@@ -41,3 +41,5 @@ object Dismiss : BloodPressureEntryEffect()
 object HideDateErrorMessage : BloodPressureEntryEffect()
 
 data class ShowBpValidationError(val result: Validation) : BloodPressureEntryEffect()
+
+object ShowDateEntryScreen : BloodPressureEntryEffect()

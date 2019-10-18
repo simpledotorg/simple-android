@@ -69,7 +69,6 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     return Observable.mergeArray(
         showBpValidationErrors(replayedEvents),
-        proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         showBpEntry(replayedEvents),
         closeSheetWhenEditedBpIsDeleted(replayedEvents),
         showDateValidationErrors(replayedEvents),
@@ -122,22 +121,6 @@ class BloodPressureEntrySheetController @Inject constructor(
             }.exhaustive()
           }
         }
-  }
-
-  private fun proceedToDateEntryWhenBpEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenChanges = events
-        .ofType<ScreenChanged>()
-        .map { it.type }
-
-    val validations = events
-        .ofType<BloodPressureReadingsValidated>()
-        .map { it.result }
-
-    return events
-        .ofType<BloodPressureDateClicked>()
-        .withLatestFrom(screenChanges, validations)
-        .filter { (_, screen, result) -> screen == BP_ENTRY && result is Success }
-        .map { Ui::showDateEntryScreen }
   }
 
   private fun showBpEntry(events: Observable<UiEvent>): Observable<UiChange> {

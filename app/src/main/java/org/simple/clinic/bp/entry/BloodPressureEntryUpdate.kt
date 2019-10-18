@@ -4,10 +4,13 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
+import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
-class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect> {
+class BloodPressureEntryUpdate(
+    private val bpValidator: BpValidator
+) : Update<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect> {
   override fun update(
       model: BloodPressureEntryModel,
       event: BloodPressureEntryEvent
@@ -62,6 +65,15 @@ class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEn
       is MonthChanged -> dispatch(HideDateErrorMessage)
 
       is YearChanged -> dispatch(HideDateErrorMessage)
+
+      is BloodPressureDateClicked -> {
+        val result = bpValidator.validate(model.systolic, model.diastolic)
+        return if (result is Success) {
+          noChange()
+        } else {
+          dispatch(ShowBpValidationError(result))
+        }
+      }
 
       else -> noChange()
     }

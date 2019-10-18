@@ -4,8 +4,17 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooHigh
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooLow
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicEmpty
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDiastolic
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
+import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
@@ -30,6 +39,7 @@ object BloodPressureEntryEffectHandler {
         .addConsumer(ShowConfirmRemoveBloodPressureDialog::class.java, { ui.showConfirmRemoveBloodPressureDialog(it.bpUuid) }, schedulersProvider.ui())
         .addAction(Dismiss::class.java, ui::dismiss, schedulersProvider.ui())
         .addAction(HideDateErrorMessage::class.java, ui::hideDateErrorMessage, schedulersProvider.ui())
+        .addConsumer(ShowBpValidationError::class.java, { showBpValidationError(ui, it) }, schedulersProvider.ui())
         .build()
   }
 
@@ -57,5 +67,21 @@ object BloodPressureEntryEffectHandler {
           .flatMap { bloodPressureRepository.measurement(it.bpUuid).subscribeOn(scheduler).take(1) }
           .map(::BloodPressureMeasurementFetched)
     }
+  }
+
+  private fun showBpValidationError(
+      ui: BloodPressureEntryUi,
+      validationError: ShowBpValidationError
+  ) {
+    when (validationError.result) {
+      is ErrorSystolicLessThanDiastolic -> ui.showSystolicLessThanDiastolicError()
+      is ErrorSystolicTooHigh -> ui.showSystolicHighError()
+      is ErrorSystolicTooLow -> ui.showSystolicLowError()
+      is ErrorDiastolicTooHigh -> ui.showDiastolicHighError()
+      is ErrorDiastolicTooLow -> ui.showDiastolicLowError()
+      is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
+      is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
+      is Success -> { /* Nothing to do here. */ }
+    }.exhaustive()
   }
 }

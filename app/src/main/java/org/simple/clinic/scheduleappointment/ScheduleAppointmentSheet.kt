@@ -13,7 +13,7 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.sheet_schedule_appointment.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToControllerWithoutDelay
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -55,7 +55,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_schedule_appointment)
     TheActivity.component.inject(this)
 
-    bindUiToControllerWithoutDelay(
+    bindUiToController(
         ui = this,
         events = Observable.mergeArray(
             screenCreates(),

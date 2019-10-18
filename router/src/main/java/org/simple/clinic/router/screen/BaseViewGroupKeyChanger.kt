@@ -18,7 +18,7 @@ import timber.log.Timber
  *
  * @param [T] Type of key that this key-changer can handle. E.g., [FullScreenKey].
  */
-abstract class BaseViewGroupKeyChanger<T : Any>(private val keyChangeAnimator: KeyChangeAnimator<T>) : KeyChanger {
+abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
 
   override fun changeKey(
       outgoingState: State?,

@@ -68,7 +68,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        prefillDate(replayedEvents),
         showBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         showBpEntry(replayedEvents),
@@ -98,28 +97,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { DateToPrefillCalculated(it) }
 
     events.mergeWith(prefillDateEvent)
-  }
-
-  private fun prefillDate(events: Observable<UiEvent>): Observable<UiChange> {
-    val localDates = events
-        .ofType<DateToPrefillCalculated>()
-        .map { it.date }
-
-    val updates = events
-        .ofType<SheetCreated>()
-        .filter { it.openAs is Update }
-
-    return Observables
-        .combineLatest(localDates, updates) { date, _ -> date }
-        .map { date ->
-          { ui: Ui ->
-            val dayString = date.dayOfMonth.toString().padStart(length = 2, padChar = inputDatePaddingCharacter.value)
-            val monthString = date.monthValue.toString().padStart(length = 2, padChar = inputDatePaddingCharacter.value)
-            val yearString = date.year.toString().substring(startIndex = 2, endIndex = 4)
-            ui.setDateOnInputFields(dayString, monthString, yearString)
-            ui.showDateOnDateButton(date)
-          }
-        }.take(1)
   }
 
   private fun showBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {

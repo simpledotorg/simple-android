@@ -569,7 +569,6 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).dismiss()
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when screen is opened for a new BP, then the date should be prefilled with the current date`() {
     val currentDate = LocalDate.of(2018, 4, 23)
@@ -583,7 +582,6 @@ class BloodPressureEntrySheetControllerTest {
         twoDigitYear = "18")
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when screen is opened for updating an existing BP, then the date should be prefilled with the BP's recorded date`() {
     val recordedAtDate = LocalDate.of(2018, 4, 23)
@@ -627,7 +625,6 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `whenever the BP sheet is shown to update an existing BP, then show the BP date`() {
     val bp = PatientMocker.bp(patientUuid = patientUuid)

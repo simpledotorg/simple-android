@@ -1,10 +1,21 @@
 package org.simple.clinic.bp.entry
 
+import org.threeten.bp.Instant
 import java.util.UUID
 
 sealed class BloodPressureEntryEffect
 
-object PrefillDateForNewEntry : BloodPressureEntryEffect()
+data class PrefillDate(val date: Instant? = null) : BloodPressureEntryEffect() {
+  companion object {
+    fun forNewEntry(): PrefillDate {
+      return PrefillDate()
+    }
+
+    fun forUpdateEntry(date: Instant): PrefillDate {
+      return PrefillDate(date)
+    }
+  }
+}
 
 object HideBpErrorMessage : BloodPressureEntryEffect()
 

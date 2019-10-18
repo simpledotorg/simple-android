@@ -518,7 +518,6 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui, atLeastOnce()).hideDateErrorMessage()
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for OpenAs types")
   fun `when BP entry is active, BP readings are valid and next arrow is pressed then date entry should be shown`(

@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.entry
 
+import org.simple.clinic.bp.entry.BpValidator.Validation
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -38,3 +39,5 @@ data class ShowConfirmRemoveBloodPressureDialog(
 object Dismiss : BloodPressureEntryEffect()
 
 object HideDateErrorMessage : BloodPressureEntryEffect()
+
+data class ShowBpValidationError(val result: Validation) : BloodPressureEntryEffect()

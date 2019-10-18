@@ -109,6 +109,9 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   lateinit var crashReporter: CrashReporter
 
   @Inject
+  lateinit var bpValidator: BpValidator
+
+  @Inject
   lateinit var bloodPressureRepository: BloodPressureRepository
 
   private val viewRenderer = BloodPressureEntryViewRenderer(this)
@@ -126,7 +129,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
         events.ofType(),
         defaultModel,
         BloodPressureEntryInit(),
-        BloodPressureEntryUpdate(),
+        BloodPressureEntryUpdate(bpValidator),
         effectHandler,
         viewRenderer::render,
         crashReporter

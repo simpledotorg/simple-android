@@ -100,9 +100,7 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun showBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val saveClicks = Observable.merge(
-        events.ofType<BloodPressureDateClicked>(),
-        events.ofType<SaveClicked>())
+    val saveClicks = events.ofType<SaveClicked>()
 
     val validations = events
         .ofType<BloodPressureReadingsValidated>()
@@ -120,9 +118,7 @@ class BloodPressureEntrySheetController @Inject constructor(
               is ErrorDiastolicTooLow -> ui.showDiastolicLowError()
               is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
               is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
-              is Success -> {
-                // Nothing to do here.
-              }
+              is Success -> { /* Nothing to do here. */ }
             }.exhaustive()
           }
         }

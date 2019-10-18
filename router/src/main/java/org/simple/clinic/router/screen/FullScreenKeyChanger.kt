@@ -23,9 +23,8 @@ class FullScreenKeyChanger(
     private val activity: Activity,
     @IdRes private val screenLayoutContainerRes: Int,
     @ColorRes private val screenBackgroundRes: Int,
-    private val onKeyChange: (FullScreenKey?, FullScreenKey) -> Unit = { _, _ -> },
-    keyChangeAnimator: KeyChangeAnimator<FullScreenKey>
-) : BaseViewGroupKeyChanger<FullScreenKey>(keyChangeAnimator), KeyChanger {
+    private val onKeyChange: (FullScreenKey?, FullScreenKey) -> Unit = { _, _ -> }
+) : BaseViewGroupKeyChanger<FullScreenKey>(), KeyChanger {
 
   private val containerIds = mutableMapOf<FullScreenKey, Int>()
 

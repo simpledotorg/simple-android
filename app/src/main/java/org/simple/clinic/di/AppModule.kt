@@ -20,7 +20,6 @@ import org.simple.clinic.patient.SimpleVideoModule
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.remoteconfig.RemoteConfigModule
-import org.simple.clinic.screen.KeyChangeAnimatorModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.settings.SettingsModule
 import org.simple.clinic.storage.StorageModule
@@ -55,7 +54,6 @@ import javax.inject.Named
   SyncIndicatorModule::class,
   UuidShortCodeCreatorModule::class,
   IdentifierDisplayAdapterModule::class,
-  KeyChangeAnimatorModule::class,
   OnboardingModule::class,
   AppUpdateModule::class,
   DataSyncOnApprovalModule::class,

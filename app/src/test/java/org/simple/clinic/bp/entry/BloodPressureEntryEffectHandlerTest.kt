@@ -28,7 +28,7 @@ class BloodPressureEntryEffectHandlerTest {
     // when
     val entryDate = LocalDate.of(1992, 6, 7)
     userClock.setDate(LocalDate.of(1992, 6, 7), UTC)
-    testCase.dispatch(PrefillDateForNewEntry)
+    testCase.dispatch(PrefillDate.forNewEntry())
 
     // then
     verify(ui).setDateOnInputFields("07", "06", "92")

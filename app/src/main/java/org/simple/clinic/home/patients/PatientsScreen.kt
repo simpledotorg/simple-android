@@ -38,8 +38,6 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
@@ -98,26 +96,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
-    homeIllustration.setImageResource(illustrationResourceId())
   }
-
-  private fun illustrationResourceId(): Int {
-    val today = LocalDate.now(userClock)
-
-    val heartDay = today.withMonth(Month.SEPTEMBER.value).withDayOfMonth(29)
-    val gandhiJayanti = today.withMonth(Month.OCTOBER.value).withDayOfMonth(2)
-    val diwaliDay = today.withMonth(Month.OCTOBER.value).withDayOfMonth(27)
-
-    return when (today) {
-      in withinWeek(heartDay) -> R.drawable.ic_homescreen_heart_day_29_sep
-      in withinWeek(gandhiJayanti) -> R.drawable.ic_homescreen_gandhi_jayanti_2_oct
-      in withinWeek(diwaliDay) -> R.drawable.ic_homescreen_diwali_27_oct
-      else -> R.drawable.ic_homescreen_default
-    }
-  }
-
-  private fun withinWeek(date: LocalDate): ClosedRange<LocalDate> =
-      date.minusDays(8)..date
 
   private fun setupApprovalStatusAnimations() {
     val entryAnimation = AnimationUtils.loadAnimation(context, R.anim.user_approval_status_entry)

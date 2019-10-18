@@ -106,8 +106,8 @@
           android:layout_height="wrap_content"
           android:adjustViewBounds="true"
           android:scaleType="fitXY"
-          tools:ignore="ContentDescription"
-          tools:src="@drawable/illustrations_homescreen" />
+          app:srcCompat="@drawable/ic_homescreen_default"
+          tools:ignore="ContentDescription" />
 
         <include
           layout="@layout/view_simple_video"

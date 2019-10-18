@@ -40,6 +40,7 @@ object BloodPressureEntryEffectHandler {
         .addAction(Dismiss::class.java, ui::dismiss, schedulersProvider.ui())
         .addAction(HideDateErrorMessage::class.java, ui::hideDateErrorMessage, schedulersProvider.ui())
         .addConsumer(ShowBpValidationError::class.java, { showBpValidationError(ui, it) }, schedulersProvider.ui())
+        .addAction(ShowDateEntryScreen::class.java, ui::showDateEntryScreen, schedulersProvider.ui())
         .build()
   }
 

@@ -69,7 +69,7 @@ class BloodPressureEntryUpdate(
       is BloodPressureDateClicked -> {
         val result = bpValidator.validate(model.systolic, model.diastolic)
         return if (result is Success) {
-          noChange()
+          dispatch(ShowDateEntryScreen)
         } else {
           dispatch(ShowBpValidationError(result))
         }

@@ -968,7 +968,7 @@ class BloodPressureEntrySheetControllerTest {
         uiEvents.ofType(),
         defaultModel,
         BloodPressureEntryInit(),
-        BloodPressureEntryUpdate(),
+        BloodPressureEntryUpdate(bpValidator),
         effectHandler,
         viewRenderer::render
     ).also { it.start() }

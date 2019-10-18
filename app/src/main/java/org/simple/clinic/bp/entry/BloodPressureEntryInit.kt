@@ -11,7 +11,7 @@ class BloodPressureEntryInit : Init<BloodPressureEntryModel, BloodPressureEntryE
       model: BloodPressureEntryModel
   ): First<BloodPressureEntryModel, BloodPressureEntryEffect> {
     return when {
-      model.openAs is New -> first(model, setOf(PrefillDateForNewEntry))
+      model.openAs is New -> first(model, setOf(PrefillDate.forNewEntry()))
       model.openAs is Update -> first(model, setOf(FetchBloodPressureMeasurement(model.openAs.bpUuid) as BloodPressureEntryEffect))
       else -> first(model)
     }

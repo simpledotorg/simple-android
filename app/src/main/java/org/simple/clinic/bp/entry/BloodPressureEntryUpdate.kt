@@ -37,7 +37,12 @@ class BloodPressureEntryUpdate : Update<BloodPressureEntryModel, BloodPressureEn
             .withSystolic(systolicString)
             .withDiastolic(diastolicString)
 
-        next(modelWithSystolicAndDiastolic, SetSystolic(systolicString), SetDiastolic(diastolicString))
+        next(
+            modelWithSystolicAndDiastolic,
+            SetSystolic(systolicString),
+            SetDiastolic(diastolicString),
+            PrefillDate.forUpdateEntry(bloodPressureMeasurement.recordedAt)
+        )
       }
 
       is RemoveClicked -> dispatch(

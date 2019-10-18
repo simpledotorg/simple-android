@@ -179,7 +179,6 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui, times(5)).hideBpErrorMessage()
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   @Parameters(value = [
     ",",
@@ -198,7 +197,6 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui, never()).setBpSavedResultAndFinish()
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   @Parameters(method = "params for OpenAs and bp validation errors")
   fun `when BP entry is active, BP readings are invalid and save is clicked then date entry should not be shown`(

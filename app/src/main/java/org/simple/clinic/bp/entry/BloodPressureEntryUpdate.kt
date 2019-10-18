@@ -75,6 +75,15 @@ class BloodPressureEntryUpdate(
         }
       }
 
+      is SaveClicked -> {
+        val result = bpValidator.validate(model.systolic, model.diastolic)
+        return if (result !is Success) {
+          dispatch(ShowBpValidationError(result))
+        } else {
+          noChange()
+        }
+      }
+
       else -> noChange()
     }
   }

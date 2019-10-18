@@ -3,6 +3,7 @@
 ## Next Release
 ## Internal
 - Remove old AllPatientsInFacilityView code
+- Make changing of screens in Flow synchronous
 
 ## On Demo
 ## Feature

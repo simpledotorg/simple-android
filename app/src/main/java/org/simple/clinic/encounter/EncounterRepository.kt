@@ -9,6 +9,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
+import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.sync.SynceableRepository
 import java.util.UUID
 import javax.inject.Inject
@@ -54,11 +55,15 @@ class EncounterRepository @Inject constructor(
 
   private fun saveMergedEncounters(records: List<EncounterAndObservations>): Completable {
     return Completable.fromAction {
-      database
-          .bloodPressureDao()
-          .save(records.flatMap { it.bloodPressures })
+      val bloodPressures = records.flatMap { it.bloodPressures }
+      val encounters = records.map { it.encounter }
 
-      database.encountersDao().save(records.map { it.encounter })
+      database.openHelper.writableDatabase.inTransaction {
+        with(database) {
+          bloodPressureDao().save(bloodPressures)
+          encountersDao().save(encounters)
+        }
+      }
     }
   }
 
@@ -70,5 +75,3 @@ class EncounterRepository @Inject constructor(
     return database.encountersDao().recordCount(syncStatus = PENDING)
   }
 }
-
-

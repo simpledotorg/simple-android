@@ -5,6 +5,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
@@ -17,7 +18,7 @@ import javax.inject.Inject
 class EncounterRepositoryAndroidTest {
 
   @Inject
-  lateinit var appDatabase: org.simple.clinic.AppDatabase
+  lateinit var appDatabase: AppDatabase
 
   @Inject
   lateinit var repository: EncounterRepository

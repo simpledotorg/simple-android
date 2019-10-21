@@ -3,6 +3,7 @@ package org.simple.clinic.settings.changelanguage
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,7 +43,7 @@ class ChangeLanguageScreen(
   lateinit var crashReporter: CrashReporter
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   private val languagesAdapter = ItemAdapter(ChangeLanguageListItem.DiffCallback())
 

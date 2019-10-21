@@ -10,6 +10,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.ScrollView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -86,7 +87,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   lateinit var dateOfBirthFormat: DateTimeFormatter
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var crashReporter: CrashReporter

@@ -2,7 +2,7 @@ package org.simple.clinic.encounter
 
 import org.simple.clinic.bp.BloodPressureMeasurement
 
-data class EncounterAndObservations (
+data class ObservationsForEncounter (
 
     val encounter: Encounter,
 

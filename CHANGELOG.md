@@ -1,11 +1,11 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ## Internal
 - Remove old AllPatientsInFacilityView code
 - Make changing of screens in Flow synchronous
 
-## On Demo
+## Pending Release
 ## Feature
 - Add consent text when registering a patient
 

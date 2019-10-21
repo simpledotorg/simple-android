@@ -1,13 +1,13 @@
 package org.simple.clinic.phone
 
+import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Completable
 import io.reactivex.Observable
-import org.simple.clinic.activity.TheActivity
 import javax.inject.Inject
 
 class PhoneCaller @Inject constructor(
     private val configProvider: Observable<PhoneNumberMaskerConfig>,
-    private val activity: TheActivity
+    private val activity: AppCompatActivity
 ) {
 
   fun normalCall(number: String, dialer: Dialer): Completable =

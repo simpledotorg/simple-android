@@ -10,6 +10,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import com.squareup.picasso.Picasso
@@ -21,9 +22,9 @@ import kotlinx.android.synthetic.main.patients_user_status_awaitingsmsverificati
 import kotlinx.android.synthetic.main.screen_patients.view.*
 import kotlinx.android.synthetic.main.view_simple_video.view.*
 import org.simple.clinic.R
-import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.enterotp.EnterOtpScreenKey
@@ -59,7 +60,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   lateinit var activityLifecycle: Observable<ActivityLifecycle>
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var userClock: UserClock

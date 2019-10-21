@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -32,7 +33,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   lateinit var controller: AppLockScreenController
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   private val facilityTextView by bindView<TextView>(R.id.applock_facility_name)
   private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)

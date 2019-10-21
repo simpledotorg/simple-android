@@ -10,7 +10,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
-import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
@@ -60,7 +59,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showBpEntry(replayedEvents),
         showDateValidationErrors(replayedEvents),
         dismissSheetWhenBpIsSaved(replayedEvents)
     )
@@ -86,24 +84,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { DateToPrefillCalculated(it) }
 
     events.mergeWith(prefillDateEvent)
-  }
-
-  private fun showBpEntry(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenChanges = events
-        .ofType<ScreenChanged>()
-        .map { it.type }
-
-    val backPresses = events
-        .ofType<BackPressed>()
-        .withLatestFrom(screenChanges)
-        .filter { (_, screen) -> screen == DATE_ENTRY }
-
-    val validateDateEvents = backPresses
-        .withLatestFrom(events.ofType<DateValidated>()) { _, validated -> validated.result }
-        .ofType<Valid>()
-
-    return validateDateEvents
-        .map { { ui: Ui -> ui.showBpEntryScreen() } }
   }
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->
@@ -173,14 +153,12 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun showDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     val saveClicks = events.ofType<SaveClicked>()
-    val backPresses = events.ofType<BackPressed>()
 
     val validations = events
         .ofType<DateValidated>()
         .map { it.result }
 
-    return Observable
-        .merge(saveClicks, backPresses)
+    return saveClicks
         .withLatestFrom(validations)
         .map { (_, result) ->
           when (result) {

@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -63,6 +64,14 @@ class BloodPressureEntryUpdate(
 
       is BackPressed -> if (model.activeScreen == BP_ENTRY) {
         dispatch(Dismiss as BloodPressureEntryEffect)
+      } else if (model.activeScreen == DATE_ENTRY) {
+        val dateText = formatToPaddedDate(model.day, model.month, model.twoDigitYear, model.year)
+        val result = dateValidator.validate(dateText, dateInUserTimeZone)
+        if (result is Valid) {
+          dispatch(ShowBpEntryScreen(result.parsedDate) as BloodPressureEntryEffect)
+        } else {
+          dispatch(ShowDateValidationError(result) as BloodPressureEntryEffect)
+        }
       } else {
         noChange()
       }

@@ -12,7 +12,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.activity.TheActivityLifecycle
+import org.simple.clinic.activity.TheActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.illustration.HomescreenIllustrationRepository
@@ -95,7 +95,7 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun refreshApprovalStatusOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenResumes = events.ofType<TheActivityLifecycle.Resumed>()
+    val screenResumes = events.ofType<Resumed>()
 
     return Observable.merge(screenCreated(events), screenResumes)
         // Depending upon the entry point of Patients screen, both screen-create

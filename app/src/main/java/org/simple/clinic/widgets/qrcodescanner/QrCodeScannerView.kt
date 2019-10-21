@@ -23,6 +23,8 @@ import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.activity.TheActivityLifecycle
+import org.simple.clinic.activity.TheActivityLifecycle.Paused
+import org.simple.clinic.activity.TheActivityLifecycle.Resumed
 import org.simple.clinic.widgets.ScreenDestroyed
 import timber.log.Timber
 import javax.inject.Inject
@@ -138,7 +140,7 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
   @SuppressLint("CheckResult")
   private fun startScanningWhenActivityIsResumed(screenDestroys: Observable<ScreenDestroyed>) {
     lifecycle
-        .ofType<TheActivityLifecycle.Resumed>()
+        .ofType<Resumed>()
         .takeUntil(screenDestroys)
         .subscribe { startScanning() }
   }
@@ -146,7 +148,7 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
   @SuppressLint("CheckResult")
   private fun stopScanningWhenActivityIsPaused(screenDestroys: Observable<ScreenDestroyed>) {
     lifecycle
-        .ofType<TheActivityLifecycle.Paused>()
+        .ofType<Paused>()
         .takeUntil(screenDestroys)
         .subscribe { stopScanning() }
   }

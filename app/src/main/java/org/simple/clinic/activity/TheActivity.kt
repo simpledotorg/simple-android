@@ -8,12 +8,13 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.activity.TheActivityLifecycle.Destroyed
+import org.simple.clinic.activity.TheActivityLifecycle.Started
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
@@ -61,10 +62,10 @@ class TheActivity : AppCompatActivity() {
     }
 
     lifecycle
-        .startWith(TheActivityLifecycle.Started("TheActivity"))
+        .startWith(Started("TheActivity"))
         .compose(controller)
         .observeOn(mainThread())
-        .takeUntil(lifecycle.ofType<TheActivityLifecycle.Destroyed>())
+        .takeUntil(lifecycle.ofType<Destroyed>())
         .subscribe { uiChange -> uiChange(this) }
   }
 

@@ -5,7 +5,7 @@
 - Remove old AllPatientsInFacilityView code
 - Make changing of screens in Flow synchronous
 
-## Pending Release
+## 2019-10-21-6057
 ## Feature
 - Add consent text when registering a patient
 

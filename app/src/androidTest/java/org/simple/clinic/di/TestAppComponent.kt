@@ -9,6 +9,7 @@ import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.encounter.EncounterRepositoryAndroidTest
+import org.simple.clinic.encounter.sync.EncounterSyncAndroidTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.help.HelpSyncAndroidTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
@@ -75,4 +76,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: ServerAuthenticationRule)
   fun inject(target: UserSessionServerIntegrationTest)
   fun inject(target: EncounterRepositoryAndroidTest)
+  fun inject(target: EncounterSyncAndroidTest)
 }

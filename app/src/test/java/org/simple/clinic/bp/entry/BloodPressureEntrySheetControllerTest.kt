@@ -694,7 +694,6 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `whenever the BP sheet has an invalid date (new BP) and back key is pressed, then show date validation errors`() {
     val systolic = 120.toString()
@@ -746,7 +745,6 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when the update BP sheet has an invalid date and back key is pressed, then show date validation errors`() {
     val systolic = 120.toString()
@@ -774,7 +772,6 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when the data entry sheet changes date and back button is pressed, then update date button in BP entry`() {
     val systolic = 120.toString()

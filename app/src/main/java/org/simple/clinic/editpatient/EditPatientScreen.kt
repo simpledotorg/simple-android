@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RadioButton
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -90,7 +91,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   lateinit var schedulersProvider: SchedulersProvider
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var crashReporter: CrashReporter

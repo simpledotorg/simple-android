@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -32,7 +33,7 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   lateinit var controller: RegistrationPhoneScreenController
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   override fun onFinishInflate() {
     super.onFinishInflate()

@@ -1,12 +1,12 @@
 package org.simple.clinic.phone
 
+import androidx.appcompat.app.AppCompatActivity
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.Observable
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.util.RxErrorsRule
 
 class PhoneDialerTest {
@@ -17,7 +17,7 @@ class PhoneDialerTest {
   private lateinit var phoneCaller: PhoneCaller
   private lateinit var config: PhoneNumberMaskerConfig
   private val dialer: Dialer = mock()
-  private val activity: TheActivity = mock()
+  private val activity: AppCompatActivity = mock()
 
   @Before
   fun setUp() {

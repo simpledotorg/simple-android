@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -40,7 +41,7 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var controller: AddIdToPatientSearchScreenController

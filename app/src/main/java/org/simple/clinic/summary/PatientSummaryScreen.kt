@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -84,7 +85,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   lateinit var controller: PatientSummaryScreenController
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var userClock: UserClock
@@ -195,7 +196,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Deprecated(message = "Old architecture")
   private fun createPatientEditScreenKey(
       patientSummaryProfile: PatientSummaryProfile
-  ) : PatientEditScreenKey {
+  ): PatientEditScreenKey {
     return PatientEditScreenKey.fromPatientData(
         patientSummaryProfile.patient,
         patientSummaryProfile.address,

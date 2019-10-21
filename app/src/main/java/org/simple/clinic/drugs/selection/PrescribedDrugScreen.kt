@@ -3,6 +3,7 @@ package org.simple.clinic.drugs.selection
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -38,7 +39,7 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
   lateinit var controller: PrescribedDrugsScreenController
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   private val toolbar by bindView<Toolbar>(R.id.prescribeddrugs_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.prescribeddrugs_recyclerview)

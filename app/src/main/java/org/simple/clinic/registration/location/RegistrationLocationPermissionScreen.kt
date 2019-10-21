@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
@@ -30,7 +31,7 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var controller: RegistrationLocationPermissionScreenController

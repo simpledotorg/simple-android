@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.ViewFlipper
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,7 +45,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   private val toolbarViewFlipper by bindView<ViewFlipper>(R.id.facilitychange_toolbar_container)
   private val toolbarViewWithSearch by bindView<Toolbar>(R.id.facilitychange_toolbar_with_search)

@@ -2,25 +2,27 @@ package org.simple.clinic.activity
 
 import org.simple.clinic.widgets.UiEvent
 
+private fun event(activityName: String?, event: String): String = activityName?.let { "$activityName:$event" } ?: ""
+
 sealed class TheActivityLifecycle : UiEvent {
 
-  class Resumed : TheActivityLifecycle() {
-    override val analyticsName = "TheActivity:Resumed"
+  class Resumed(activityName: String?) : TheActivityLifecycle() {
+    override val analyticsName = event(activityName, "Resumed")
   }
 
-  class Started : TheActivityLifecycle() {
-    override val analyticsName = "TheActivity:Started"
+  class Started(activityName: String?) : TheActivityLifecycle() {
+    override val analyticsName = event(activityName, "Started")
   }
 
-  class Paused : TheActivityLifecycle() {
-    override val analyticsName = "TheActivity:Paused"
+  class Paused(activityName: String?) : TheActivityLifecycle() {
+    override val analyticsName = event(activityName, "Paused")
   }
 
-  class Stopped : TheActivityLifecycle() {
-    override val analyticsName = "TheActivity:Stopped"
+  class Stopped(activityName: String?) : TheActivityLifecycle() {
+    override val analyticsName = event(activityName, "Stopped")
   }
 
-  class Destroyed : TheActivityLifecycle() {
-    override val analyticsName = "TheActivity:Destroyed"
+  class Destroyed(activityName: String?) : TheActivityLifecycle() {
+    override val analyticsName = event(activityName, "Destroyed")
   }
 }

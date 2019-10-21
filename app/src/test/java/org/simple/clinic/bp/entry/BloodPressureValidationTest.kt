@@ -43,6 +43,7 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
+import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
@@ -225,8 +226,8 @@ class BloodPressureValidationTest {
         TrampolineSchedulersProvider()
     )
     val defaultModel = when (openAs) {
-      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs)
-      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs)
+      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
+      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
     }
 
     fixture = MobiusTestFixture(

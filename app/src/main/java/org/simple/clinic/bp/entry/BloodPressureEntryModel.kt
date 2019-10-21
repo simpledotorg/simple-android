@@ -10,6 +10,7 @@ import org.simple.clinic.bp.entry.OpenAs.Update
 @Parcelize
 data class BloodPressureEntryModel(
     val openAs: OpenAs,
+    val year: String,
     val systolic: String = "",
     val diastolic: String = "",
     val activeScreen: ScreenType = BP_ENTRY,
@@ -18,11 +19,11 @@ data class BloodPressureEntryModel(
     val twoDigitYear: String = ""
 ) : Parcelable {
   companion object {
-    fun newBloodPressureEntry(openAsNew: New): BloodPressureEntryModel =
-        BloodPressureEntryModel(openAsNew)
+    fun newBloodPressureEntry(openAsNew: New, year: Int): BloodPressureEntryModel =
+        BloodPressureEntryModel(openAsNew, year.toString())
 
-    fun updateBloodPressureEntry(openAsUpdate: Update): BloodPressureEntryModel =
-        BloodPressureEntryModel(openAsUpdate)
+    fun updateBloodPressureEntry(openAsUpdate: Update, year: Int): BloodPressureEntryModel =
+        BloodPressureEntryModel(openAsUpdate, year.toString())
   }
 
   fun systolicChanged(systolic: String): BloodPressureEntryModel =

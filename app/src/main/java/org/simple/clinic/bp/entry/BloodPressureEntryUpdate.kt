@@ -7,9 +7,16 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
+import org.threeten.bp.LocalDate
 
 class BloodPressureEntryUpdate(
-    private val bpValidator: BpValidator
+    private val bpValidator: BpValidator,
+    private val dateValidator: UserInputDateValidator,
+    private val dateInUserTimeZone: LocalDate,
+    private val inputDatePaddingCharacter: UserInputDatePaddingCharacter
 ) : Update<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect> {
   override fun update(
       model: BloodPressureEntryModel,
@@ -93,6 +100,16 @@ class BloodPressureEntryUpdate(
         }
       }
 
+      is ShowBpClicked -> {
+        val dateText = formatToPaddedDate(model.day, model.month, model.twoDigitYear, model.year)
+        val result = dateValidator.validate(dateText, dateInUserTimeZone)
+        if (result is Valid) {
+          dispatch(ShowBpEntryScreen(result.parsedDate) as BloodPressureEntryEffect)
+        } else {
+          dispatch(ShowDateValidationError(result) as BloodPressureEntryEffect)
+        }
+      }
+
       else -> noChange()
     }
   }
@@ -100,5 +117,15 @@ class BloodPressureEntryUpdate(
   private fun isSystolicValueComplete(systolicText: String): Boolean {
     return (systolicText.length == 3 && systolicText.matches("^[123].*$".toRegex()))
         || (systolicText.length == 2 && systolicText.matches("^[789].*$".toRegex()))
+  }
+
+  private fun formatToPaddedDate(day: String, month: String, twoDigitYear: String, fourDigitYear: String): String {
+    val paddedDd = day.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
+    val paddedMm = month.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
+    val paddedYy = twoDigitYear.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
+
+    val firstTwoDigitsOfYear = fourDigitYear.substring(0, 2)
+    val paddedYyyy = firstTwoDigitsOfYear + paddedYy
+    return "$paddedDd/$paddedMm/$paddedYyyy"
   }
 }

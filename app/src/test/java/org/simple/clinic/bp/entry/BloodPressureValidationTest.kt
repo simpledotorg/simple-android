@@ -44,7 +44,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -59,7 +59,7 @@ class BloodPressureValidationTest {
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
-  private val dateValidator = UserInputDateValidator(ZoneOffset.UTC, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
+  private val dateValidator = UserInputDateValidator(UTC, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
   private val bpValidator = BpValidator()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -234,7 +234,7 @@ class BloodPressureValidationTest {
         uiEvents.ofType(),
         defaultModel,
         BloodPressureEntryInit(),
-        BloodPressureEntryUpdate(bpValidator),
+        BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(UTC), UserInputDatePaddingCharacter.ZERO),
         effectHandler,
         viewRenderer::render
     ).also { it.start() }

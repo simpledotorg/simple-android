@@ -40,9 +40,11 @@ import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -112,6 +114,12 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   lateinit var bpValidator: BpValidator
 
   @Inject
+  lateinit var userTimeZone: ZoneId
+
+  @Inject
+  lateinit var dateValidator: UserInputDateValidator
+
+  @Inject
   lateinit var bloodPressureRepository: BloodPressureRepository
 
   private val viewRenderer = BloodPressureEntryViewRenderer(this)
@@ -129,7 +137,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
         events.ofType(),
         defaultModel,
         BloodPressureEntryInit(),
-        BloodPressureEntryUpdate(bpValidator),
+        BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(userTimeZone), userInputDatePaddingCharacter),
         effectHandler,
         viewRenderer::render,
         crashReporter

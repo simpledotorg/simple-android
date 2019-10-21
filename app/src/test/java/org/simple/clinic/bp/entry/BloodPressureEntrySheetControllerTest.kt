@@ -644,7 +644,6 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `whenever the BP sheet has an invalid date (new BP) and show BP button is pressed, then show date validation errors`() {
     val systolic = 120.toString()
@@ -666,6 +665,32 @@ class BloodPressureEntrySheetControllerTest {
     }
 
     verify(ui).showInvalidDateError()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `whenever the BP sheet has a valid date (new BP) and show BP button is pressed, then show bp entry sheet`() {
+    val systolic = 120.toString()
+    val diastolic = 110.toString()
+    val bpDate = LocalDate.of(1991, 12, 1)
+
+    sheetCreatedForNew(patientUuid)
+    with(uiEvents) {
+      onNext(ScreenChanged(BP_ENTRY))
+      onNext(SystolicChanged(systolic))
+      onNext(DiastolicChanged(diastolic))
+      onNext(BloodPressureDateClicked)
+      onNext(ScreenChanged(DATE_ENTRY))
+      onNext(DayChanged(bpDate.dayOfMonth.toString()))
+      onNext(MonthChanged(bpDate.monthValue.toString()))
+      onNext(YearChanged(bpDate.year.toString().substring(2)))
+
+      reset(ui)
+      onNext(ShowBpClicked)
+    }
+
+    verify(ui).showBpEntryScreen()
+    verify(ui).showDateOnDateButton(bpDate)
     verifyNoMoreInteractions(ui)
   }
 
@@ -694,7 +719,6 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when the update BP sheet has an invalid date and show BP button is pressed, then show date validation errors`() {
     val systolic = 120.toString()
@@ -777,7 +801,6 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when the data entry sheet changes date and show BP button is pressed, then update date button in BP entry`() {
     val systolic = 120.toString()
@@ -949,7 +972,7 @@ class BloodPressureEntrySheetControllerTest {
         uiEvents.ofType(),
         defaultModel,
         BloodPressureEntryInit(),
-        BloodPressureEntryUpdate(bpValidator),
+        BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(UTC), UserInputDatePaddingCharacter.ZERO),
         effectHandler,
         viewRenderer::render
     ).also { it.start() }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
@@ -25,7 +26,7 @@ import javax.inject.Inject
 class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var screenRouter: ScreenRouter

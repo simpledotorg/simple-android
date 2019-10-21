@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
@@ -37,7 +38,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   lateinit var controller: SyncIndicatorViewController
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var activity: AppCompatActivity
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {

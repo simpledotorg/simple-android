@@ -1,9 +1,9 @@
 package org.simple.clinic.activity
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import dagger.BindsInstance
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
@@ -51,7 +51,6 @@ import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.registration.register.RegistrationLoadingScreen
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.search.PatientSearchScreen
@@ -136,13 +135,7 @@ interface TheActivityComponent {
   fun inject(target: ChangeLanguageScreen)
 
   @Subcomponent.Builder
-  interface Builder {
-
-    @BindsInstance
-    fun activity(theActivity: TheActivity): Builder
-
-    @BindsInstance
-    fun screenRouter(screenRouter: ScreenRouter): Builder
+  interface Builder : BindsActivity<Builder>, BindsScreenRouter<Builder> {
 
     fun build(): TheActivityComponent
   }
@@ -156,7 +149,7 @@ interface TheActivityComponent {
 class TheActivityModule {
 
   @Provides
-  fun theActivityLifecycle(activity: TheActivity): Observable<ActivityLifecycle> {
+  fun theActivityLifecycle(activity: AppCompatActivity): Observable<ActivityLifecycle> {
     return RxActivityLifecycle.from(activity).stream()
   }
 
@@ -167,5 +160,8 @@ class TheActivityModule {
   }
 
   @Provides
-  fun fragmentManager(activity: TheActivity): FragmentManager = activity.supportFragmentManager
+  fun fragmentManager(activity: AppCompatActivity): FragmentManager = activity.supportFragmentManager
+
+  @Provides
+  fun provideTheActivity(activity: AppCompatActivity): TheActivity = activity as TheActivity
 }

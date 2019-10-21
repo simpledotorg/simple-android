@@ -34,7 +34,7 @@ interface AppComponent {
   fun inject(target: BottomSheetActivity)
   fun inject(target: Migration_49_50)
 
-  fun activityComponentBuilder(): TheActivityComponent.Builder
+  fun theActivityComponentBuilder(): TheActivityComponent.Builder
   fun userSession(): UserSession
   fun facilitySync(): FacilitySync
 }

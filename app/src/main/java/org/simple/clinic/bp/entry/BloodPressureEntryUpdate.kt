@@ -65,8 +65,7 @@ class BloodPressureEntryUpdate(
       is BackPressed -> if (model.activeScreen == BP_ENTRY) {
         dispatch(Dismiss as BloodPressureEntryEffect)
       } else if (model.activeScreen == DATE_ENTRY) {
-        val dateText = formatToPaddedDate(model.day, model.month, model.twoDigitYear, model.year)
-        val result = dateValidator.validate(dateText, dateInUserTimeZone)
+        val result = dateValidator.validate(getDateText(model), dateInUserTimeZone)
         if (result is Valid) {
           dispatch(ShowBpEntryScreen(result.parsedDate) as BloodPressureEntryEffect)
         } else {
@@ -101,17 +100,23 @@ class BloodPressureEntryUpdate(
       }
 
       is SaveClicked -> {
-        val result = bpValidator.validate(model.systolic, model.diastolic)
-        return if (result !is Success) {
-          dispatch(ShowBpValidationError(result))
-        } else {
-          noChange()
+        val effects = mutableSetOf<BloodPressureEntryEffect>()
+
+        val bpValidationResult = bpValidator.validate(model.systolic, model.diastolic)
+        if (bpValidationResult !is Success) {
+          effects.add(ShowBpValidationError(bpValidationResult))
         }
+
+        val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
+        if (dateValidationResult !is Valid) {
+          effects.add(ShowDateValidationError(dateValidationResult))
+        }
+
+        return if (effects.isEmpty()) noChange() else Next.dispatch(effects)
       }
 
       is ShowBpClicked -> {
-        val dateText = formatToPaddedDate(model.day, model.month, model.twoDigitYear, model.year)
-        val result = dateValidator.validate(dateText, dateInUserTimeZone)
+        val result = dateValidator.validate(getDateText(model), dateInUserTimeZone)
         if (result is Valid) {
           dispatch(ShowBpEntryScreen(result.parsedDate) as BloodPressureEntryEffect)
         } else {
@@ -122,6 +127,9 @@ class BloodPressureEntryUpdate(
       else -> noChange()
     }
   }
+
+  private fun getDateText(model: BloodPressureEntryModel) =
+      formatToPaddedDate(model.day, model.month, model.twoDigitYear, model.year)
 
   private fun isSystolicValueComplete(systolicText: String): Boolean {
     return (systolicText.length == 3 && systolicText.matches("^[123].*$".toRegex()))

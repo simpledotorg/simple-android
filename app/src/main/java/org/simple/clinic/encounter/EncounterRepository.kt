@@ -46,14 +46,14 @@ class EncounterRepository @Inject constructor(
     }.flatMapCompletable(::saveMergedEncounters)
   }
 
-  private fun payloadToEncounters(payload: EncounterPayload): EncounterAndObservations {
+  private fun payloadToEncounters(payload: EncounterPayload): ObservationsForEncounter {
     val bloodPressures = payload.observations.bloodPressureMeasurements.map { bps ->
       bps.toDatabaseModel(syncStatus = DONE, encounterUuid = payload.uuid)
     }
-    return EncounterAndObservations(encounter = payload.toDatabaseModel(DONE), bloodPressures = bloodPressures)
+    return ObservationsForEncounter(encounter = payload.toDatabaseModel(DONE), bloodPressures = bloodPressures)
   }
 
-  private fun saveMergedEncounters(records: List<EncounterAndObservations>): Completable {
+  private fun saveMergedEncounters(records: List<ObservationsForEncounter>): Completable {
     return Completable.fromAction {
       val bloodPressures = records.flatMap { it.bloodPressures }
       val encounters = records.map { it.encounter }

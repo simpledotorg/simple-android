@@ -861,7 +861,6 @@ class BloodPressureEntrySheetControllerTest {
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
     verify(ui).setBpSavedResultAndFinish()
-    verify(ui).showDateOnDateButton(inputDate)
 
     verifyNoMoreInteractions(ui)
   }
@@ -926,7 +925,6 @@ class BloodPressureEntrySheetControllerTest {
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
 
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
-    verify(ui).showDateOnDateButton(newInputDate)
     verify(ui).setBpSavedResultAndFinish()
 
     verifyNoMoreInteractions(ui)

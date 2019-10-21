@@ -22,8 +22,8 @@ import kotlinx.android.synthetic.main.screen_patients.view.*
 import kotlinx.android.synthetic.main.view_simple_video.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.activity.TheActivityLifecycle
-import org.simple.clinic.activity.TheActivityLifecycle.Resumed
+import org.simple.clinic.activity.ActivityLifecycle
+import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.enterotp.EnterOtpScreenKey
@@ -56,7 +56,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   lateinit var controller: PatientsScreenController
 
   @Inject
-  lateinit var activityLifecycle: Observable<TheActivityLifecycle>
+  lateinit var activityLifecycle: Observable<ActivityLifecycle>
 
   @Inject
   lateinit var activity: TheActivity

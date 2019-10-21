@@ -22,9 +22,9 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.activity.TheActivityLifecycle
-import org.simple.clinic.activity.TheActivityLifecycle.Paused
-import org.simple.clinic.activity.TheActivityLifecycle.Resumed
+import org.simple.clinic.activity.ActivityLifecycle
+import org.simple.clinic.activity.ActivityLifecycle.Paused
+import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.widgets.ScreenDestroyed
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,7 +32,7 @@ import javax.inject.Inject
 class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
   @Inject
-  lateinit var lifecycle: Observable<TheActivityLifecycle>
+  lateinit var lifecycle: Observable<ActivityLifecycle>
 
   private val qrCodeScansValve = BehaviorSubject.createDefault(true)
 

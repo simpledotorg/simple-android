@@ -9,7 +9,7 @@ import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.activity.ActivityLifecycle.Stopped
 
-class RxTheActivityLifecycle internal constructor(private val events: Observable<ActivityLifecycle>) {
+class RxActivityLifecycle internal constructor(private val events: Observable<ActivityLifecycle>) {
 
   fun stream(): Observable<ActivityLifecycle> {
     return events
@@ -17,7 +17,7 @@ class RxTheActivityLifecycle internal constructor(private val events: Observable
 
   companion object {
 
-    fun from(theActivity: AppCompatActivity): RxTheActivityLifecycle {
+    fun from(theActivity: AppCompatActivity): RxActivityLifecycle {
       val activityName = theActivity.javaClass.simpleName
 
       val lifecycleEvents = Observable.create<ActivityLifecycle> { emitter ->
@@ -58,7 +58,7 @@ class RxTheActivityLifecycle internal constructor(private val events: Observable
         theActivity.application.registerActivityLifecycleCallbacks(callbacks)
       }
 
-      return RxTheActivityLifecycle(lifecycleEvents)
+      return RxActivityLifecycle(lifecycleEvents)
     }
   }
 }

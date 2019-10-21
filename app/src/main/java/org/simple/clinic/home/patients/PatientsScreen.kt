@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.view_simple_video.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.activity.TheActivityLifecycle
+import org.simple.clinic.activity.TheActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.enterotp.EnterOtpScreenKey
@@ -108,7 +109,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun activityStarts() = activityLifecycle.ofType<TheActivityLifecycle.Resumed>()
+  private fun activityStarts() = activityLifecycle.ofType<Resumed>()
 
   private fun searchButtonClicks() = RxView.clicks(searchPatientsButton).map { NewPatientClicked }
 

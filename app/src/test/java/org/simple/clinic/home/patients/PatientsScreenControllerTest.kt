@@ -20,7 +20,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
-import org.simple.clinic.activity.TheActivityLifecycle
+import org.simple.clinic.activity.TheActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.illustration.HomescreenIllustrationRepository
@@ -128,7 +128,7 @@ class PatientsScreenControllerTest {
 
     clearInvocations(userSession)
 
-    uiEvents.onNext(TheActivityLifecycle.Resumed(null))
+    uiEvents.onNext(Resumed(null))
     verify(userSession).refreshLoggedInUser()
   }
 

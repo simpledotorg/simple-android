@@ -941,8 +941,8 @@ class BloodPressureEntrySheetControllerTest {
         TrampolineSchedulersProvider()
     )
     val defaultModel = when (openAs) {
-      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs)
-      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs)
+      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
+      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
     }
 
     fixture = MobiusTestFixture(

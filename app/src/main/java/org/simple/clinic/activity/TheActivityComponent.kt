@@ -161,7 +161,4 @@ class TheActivityModule {
 
   @Provides
   fun fragmentManager(activity: AppCompatActivity): FragmentManager = activity.supportFragmentManager
-
-  @Provides
-  fun provideTheActivity(activity: AppCompatActivity): TheActivity = activity as TheActivity
 }

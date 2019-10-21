@@ -17,12 +17,12 @@ class BloodPressureEntryUpdate(
   ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
     return when (event) {
       is SystolicChanged -> if (isSystolicValueComplete(event.systolic)) {
-        next(model.withSystolic(event.systolic), HideBpErrorMessage, ChangeFocusToDiastolic)
+        next(model.systolicChanged(event.systolic), HideBpErrorMessage, ChangeFocusToDiastolic)
       } else {
-        next(model.withSystolic(event.systolic), HideBpErrorMessage as BloodPressureEntryEffect)
+        next(model.systolicChanged(event.systolic), HideBpErrorMessage as BloodPressureEntryEffect)
       }
 
-      is DiastolicChanged -> next(model.withDiastolic(event.diastolic), HideBpErrorMessage)
+      is DiastolicChanged -> next(model.diastolicChanged(event.diastolic), HideBpErrorMessage)
 
       is DiastolicBackspaceClicked -> if (model.diastolic.isNotEmpty()) {
         next(model.deleteDiastolicLastDigit())
@@ -37,8 +37,8 @@ class BloodPressureEntryUpdate(
         val diastolicString = bloodPressureMeasurement.diastolic.toString()
 
         val modelWithSystolicAndDiastolic = model
-            .withSystolic(systolicString)
-            .withDiastolic(diastolicString)
+            .systolicChanged(systolicString)
+            .diastolicChanged(diastolicString)
 
         next(
             modelWithSystolicAndDiastolic,

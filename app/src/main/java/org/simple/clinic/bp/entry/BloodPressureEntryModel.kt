@@ -22,12 +22,10 @@ data class BloodPressureEntryModel(
         BloodPressureEntryModel(openAsUpdate)
   }
 
-  // TODO(rj) 17/Oct/19 - Rename to `systolicChanged`
-  fun withSystolic(systolic: String): BloodPressureEntryModel =
+  fun systolicChanged(systolic: String): BloodPressureEntryModel =
       copy(systolic = systolic)
 
-  // TODO(rj) 17/Oct/19 - Rename to `diastolicChanged`
-  fun withDiastolic(diastolic: String): BloodPressureEntryModel =
+  fun diastolicChanged(diastolic: String): BloodPressureEntryModel =
       copy(diastolic = diastolic)
 
   fun deleteDiastolicLastDigit(): BloodPressureEntryModel = if (diastolic.isNotEmpty())

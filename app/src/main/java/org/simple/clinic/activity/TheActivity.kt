@@ -62,7 +62,7 @@ class TheActivity : AppCompatActivity() {
     }
 
     lifecycle
-        .startWith(Started("TheActivity"))
+        .startWith(Started(javaClass.simpleName))
         .compose(controller)
         .observeOn(mainThread())
         .takeUntil(lifecycle.ofType<Destroyed>())

@@ -98,12 +98,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .withLatestFrom(screenChanges)
         .filter { (_, screen) -> screen == DATE_ENTRY }
 
-    val mergedBackClicks = Observable.merge(
-        events.ofType<ShowBpClicked>(),
-        backPresses
-    )
-
-    val validateDateEvents = mergedBackClicks
+    val validateDateEvents = backPresses
         .withLatestFrom(events.ofType<DateValidated>()) { _, validated -> validated.result }
         .ofType<Valid>()
 
@@ -178,7 +173,6 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun showDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     val saveClicks = events.ofType<SaveClicked>()
-    val showBpClicks = events.ofType<ShowBpClicked>()
     val backPresses = events.ofType<BackPressed>()
 
     val validations = events
@@ -186,7 +180,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { it.result }
 
     return Observable
-        .merge(saveClicks, showBpClicks, backPresses)
+        .merge(saveClicks, backPresses)
         .withLatestFrom(validations)
         .map { (_, result) ->
           when (result) {

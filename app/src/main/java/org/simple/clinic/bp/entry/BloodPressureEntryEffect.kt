@@ -1,7 +1,9 @@
 package org.simple.clinic.bp.entry
 
 import org.simple.clinic.bp.entry.BpValidator.Validation
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import java.util.UUID
 
 sealed class BloodPressureEntryEffect
@@ -43,3 +45,9 @@ object HideDateErrorMessage : BloodPressureEntryEffect()
 data class ShowBpValidationError(val result: Validation) : BloodPressureEntryEffect()
 
 object ShowDateEntryScreen : BloodPressureEntryEffect()
+
+data class ShowBpEntryScreen(val date: LocalDate) : BloodPressureEntryEffect()
+
+data class ShowDateValidationError(
+    val result: Result
+) : BloodPressureEntryEffect()

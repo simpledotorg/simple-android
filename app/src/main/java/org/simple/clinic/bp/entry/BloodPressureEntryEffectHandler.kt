@@ -17,7 +17,12 @@ import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 
 object BloodPressureEntryEffectHandler {
   fun create(
@@ -41,6 +46,8 @@ object BloodPressureEntryEffectHandler {
         .addAction(HideDateErrorMessage::class.java, ui::hideDateErrorMessage, schedulersProvider.ui())
         .addConsumer(ShowBpValidationError::class.java, { showBpValidationError(ui, it) }, schedulersProvider.ui())
         .addAction(ShowDateEntryScreen::class.java, ui::showDateEntryScreen, schedulersProvider.ui())
+        .addConsumer(ShowBpEntryScreen::class.java, { showBpEntryScreen(ui, it.date) }, schedulersProvider.ui())
+        .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(ui, it.result) }, schedulersProvider.ui())
         .build()
   }
 
@@ -83,6 +90,24 @@ object BloodPressureEntryEffectHandler {
       is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
       is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
       is Success -> { /* Nothing to do here. */ }
+    }.exhaustive()
+  }
+
+  private fun showBpEntryScreen(ui: BloodPressureEntryUi, localDate: LocalDate) {
+    with(ui) {
+      showBpEntryScreen()
+      showDateOnDateButton(localDate)
+    }
+  }
+
+  private fun showDateValidationError(
+      ui: BloodPressureEntryUi,
+      result: Result
+  ) {
+    when (result) {
+      is InvalidPattern -> ui.showInvalidDateError()
+      is DateIsInFuture -> ui.showDateIsInFutureError()
+      is Valid -> throw IllegalStateException("Date validation error cannot be $result")
     }.exhaustive()
   }
 }

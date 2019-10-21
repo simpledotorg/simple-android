@@ -11,6 +11,7 @@ import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.encounter.EncounterModule
+import org.simple.clinic.encounter.sync.EncounterSync
 import org.simple.clinic.facility.FacilityModule
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.help.HelpModule
@@ -82,13 +83,14 @@ class SyncModule {
       reportsSync: ReportsSync,
       remoteConfigSync: RemoteConfigSync,
       helpSync: HelpSync,
-      illustrationSync: IllustrationSync
+      illustrationSync: IllustrationSync,
+      encountersSync: EncounterSync
   ): ArrayList<ModelSync> {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
         prescriptionSync, reportsSync, remoteConfigSync,
-        helpSync, illustrationSync
+        helpSync, illustrationSync, encountersSync
     )
   }
 

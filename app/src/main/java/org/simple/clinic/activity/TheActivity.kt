@@ -88,7 +88,7 @@ class TheActivity : AppCompatActivity() {
 
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
-        .activityComponentBuilder()
+        .theActivityComponentBuilder()
         .activity(this)
         .screenRouter(screenRouter)
         .build()

@@ -2,22 +2,22 @@ package org.simple.clinic.activity
 
 import android.app.Activity
 import io.reactivex.Observable
-import org.simple.clinic.activity.TheActivityLifecycle.Destroyed
-import org.simple.clinic.activity.TheActivityLifecycle.Paused
-import org.simple.clinic.activity.TheActivityLifecycle.Resumed
-import org.simple.clinic.activity.TheActivityLifecycle.Started
-import org.simple.clinic.activity.TheActivityLifecycle.Stopped
+import org.simple.clinic.activity.ActivityLifecycle.Destroyed
+import org.simple.clinic.activity.ActivityLifecycle.Paused
+import org.simple.clinic.activity.ActivityLifecycle.Resumed
+import org.simple.clinic.activity.ActivityLifecycle.Started
+import org.simple.clinic.activity.ActivityLifecycle.Stopped
 
-class RxTheActivityLifecycle internal constructor(private val events: Observable<TheActivityLifecycle>) {
+class RxTheActivityLifecycle internal constructor(private val events: Observable<ActivityLifecycle>) {
 
-  fun stream(): Observable<TheActivityLifecycle> {
+  fun stream(): Observable<ActivityLifecycle> {
     return events
   }
 
   companion object {
 
     fun from(theActivity: TheActivity): RxTheActivityLifecycle {
-      val lifecycleEvents = Observable.create<TheActivityLifecycle> { emitter ->
+      val lifecycleEvents = Observable.create<ActivityLifecycle> { emitter ->
         val callbacks = object : SimpleActivityLifecycleCallbacks() {
           override fun onActivityResumed(activity: Activity) {
             if (activity === theActivity) {

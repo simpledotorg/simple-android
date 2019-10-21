@@ -20,7 +20,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
-import org.simple.clinic.activity.TheActivityLifecycle.Resumed
+import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.illustration.HomescreenIllustrationRepository

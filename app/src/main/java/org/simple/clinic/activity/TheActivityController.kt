@@ -7,8 +7,8 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.activity.TheActivityLifecycle.Started
-import org.simple.clinic.activity.TheActivityLifecycle.Stopped
+import org.simple.clinic.activity.ActivityLifecycle.Started
+import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig

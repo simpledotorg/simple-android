@@ -19,8 +19,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.activity.TheActivityLifecycle.Started
-import org.simple.clinic.activity.TheActivityLifecycle.Stopped
+import org.simple.clinic.activity.ActivityLifecycle.Started
+import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig

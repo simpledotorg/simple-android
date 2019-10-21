@@ -12,7 +12,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.activity.TheActivityLifecycle.Resumed
+import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.illustration.HomescreenIllustrationRepository

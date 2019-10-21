@@ -13,8 +13,8 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.activity.TheActivityLifecycle.Destroyed
-import org.simple.clinic.activity.TheActivityLifecycle.Started
+import org.simple.clinic.activity.ActivityLifecycle.Destroyed
+import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
@@ -42,7 +42,7 @@ class TheActivity : AppCompatActivity() {
   lateinit var controller: TheActivityController
 
   @Inject
-  lateinit var lifecycle: Observable<TheActivityLifecycle>
+  lateinit var lifecycle: Observable<ActivityLifecycle>
 
   @Inject
   lateinit var locale: Locale

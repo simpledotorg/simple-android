@@ -25,8 +25,6 @@ import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
@@ -58,10 +56,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .compose(saveBpWhenDateEntryIsDone())
         .replay()
 
-    return Observable.mergeArray(
-        showDateValidationErrors(replayedEvents),
-        dismissSheetWhenBpIsSaved(replayedEvents)
-    )
+    return dismissSheetWhenBpIsSaved(replayedEvents)
   }
 
   private fun calculateDateToPrefill() = ObservableTransformer<UiEvent, UiEvent> { events ->
@@ -149,24 +144,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         }
 
     events.mergeWith(validations)
-  }
-
-  private fun showDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val saveClicks = events.ofType<SaveClicked>()
-
-    val validations = events
-        .ofType<DateValidated>()
-        .map { it.result }
-
-    return saveClicks
-        .withLatestFrom(validations)
-        .map { (_, result) ->
-          when (result) {
-            is InvalidPattern -> { ui: Ui -> ui.showInvalidDateError() }
-            is DateIsInFuture -> { ui: Ui -> ui.showDateIsInFutureError() }
-            is Valid -> { _: Ui -> /* Nothing to do. */ }
-          }
-        }
   }
 
   private fun saveBpWhenDateEntryIsDone() = ObservableTransformer<UiEvent, UiEvent> { events ->

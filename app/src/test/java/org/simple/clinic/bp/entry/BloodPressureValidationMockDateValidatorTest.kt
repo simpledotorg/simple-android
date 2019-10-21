@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -28,11 +29,14 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -74,6 +78,9 @@ class BloodPressureValidationMockDateValidatorTest {
       userSession = userSession,
       facilityRepository = facilityRepository)
 
+  private val viewRenderer = BloodPressureEntryViewRenderer(ui)
+  private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
+
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
@@ -89,7 +96,8 @@ class BloodPressureValidationMockDateValidatorTest {
     userSubject.onNext(user)
   }
 
-  // TODO(rj): 2019-10-10 There isn't a straight-forward way to set a time in the date validator as of now. We'll rely on mocks to test this code path (showDateIsInFutureError) for now.
+  // TODO(rj): 2019-10-10 There isn't a straight-forward way to set a time in the date validator as of now.
+  // TODO      We'll rely on mocks to test this code path (showDateIsInFutureError) for now.
   @Test
   @Suppress("IMPLICIT_CAST_TO_ANY")
   @Parameters(method = "params for showing date validation errors")
@@ -101,8 +109,8 @@ class BloodPressureValidationMockDateValidatorTest {
     whenever(dateValidator.validate(any(), any())).doReturn(errorResult)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
+    sheetCreated(openAs)
     uiEvents.run {
-      onNext(SheetCreated(openAs = openAs))
       onNext(ScreenChanged(BloodPressureEntrySheet.ScreenType.DATE_ENTRY))
       onNext(DayChanged(day))
       onNext(MonthChanged(month))
@@ -120,8 +128,14 @@ class BloodPressureValidationMockDateValidatorTest {
   @Suppress("unused")
   fun `params for showing date validation errors`(): List<InvalidDateTestParams> {
     return listOf(
-        InvalidDateTestParams(OpenAs.New(patientUuid), "01", "01", "2099", DateIsInFuture) { ui: Ui -> verify(ui).showDateIsInFutureError() },
-        InvalidDateTestParams(OpenAs.Update(existingBpUuid), "01", "01", "2099", DateIsInFuture) { ui: Ui -> verify(ui).showDateIsInFutureError() })
+        InvalidDateTestParams(OpenAs.New(patientUuid), "01", "01", "2099", DateIsInFuture) {
+          ui: Ui -> verify(ui).showDateIsInFutureError()
+        },
+
+        InvalidDateTestParams(OpenAs.Update(existingBpUuid), "01", "01", "2099", DateIsInFuture) {
+          ui: Ui -> verify(ui).showDateIsInFutureError()
+        }
+    )
   }
 
   @Test
@@ -135,7 +149,7 @@ class BloodPressureValidationMockDateValidatorTest {
     whenever(dateValidator.validate(any(), any())).doReturn(result)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
-    uiEvents.onNext(SheetCreated(openAs))
+    sheetCreated(openAs)
     uiEvents.onNext(ScreenChanged(BloodPressureEntrySheet.ScreenType.DATE_ENTRY))
     uiEvents.onNext(DayChanged("1"))
     uiEvents.onNext(MonthChanged("4"))
@@ -163,4 +177,47 @@ class BloodPressureValidationMockDateValidatorTest {
       val openAs: OpenAs,
       val result: Result
   )
+
+  private fun sheetCreatedForNew(patientUuid: UUID) {
+    val openAsNew = OpenAs.New(patientUuid)
+    uiEvents.onNext(SheetCreated(openAsNew))
+    instantiateFixture(openAsNew)
+  }
+
+  private fun sheetCreatedForUpdate(existingBpUuid: UUID) {
+    val openAsUpdate = OpenAs.Update(existingBpUuid)
+    uiEvents.onNext(SheetCreated(openAsUpdate))
+    instantiateFixture(openAsUpdate)
+  }
+
+  private fun sheetCreated(openAs: OpenAs) {
+    when (openAs) {
+      is OpenAs.New -> sheetCreatedForNew(openAs.patientUuid)
+      is OpenAs.Update -> sheetCreatedForUpdate(openAs.bpUuid)
+      else -> throw IllegalStateException("Unknown `openAs`: $openAs")
+    }
+  }
+
+  private fun instantiateFixture(openAs: OpenAs) {
+    val effectHandler = BloodPressureEntryEffectHandler.create(
+        ui,
+        testUserClock,
+        UserInputDatePaddingCharacter.ZERO,
+        bloodPressureRepository,
+        TrampolineSchedulersProvider()
+    )
+    val defaultModel = when (openAs) {
+      is OpenAs.New -> BloodPressureEntryModel.newBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
+      is OpenAs.Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
+    }
+
+    fixture = MobiusTestFixture(
+        uiEvents.ofType(),
+        defaultModel,
+        BloodPressureEntryInit(),
+        BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(ZoneOffset.UTC), UserInputDatePaddingCharacter.ZERO),
+        effectHandler,
+        viewRenderer::render
+    ).also { it.start() }
+  }
 }

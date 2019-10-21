@@ -307,9 +307,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
-  @Suppress("IMPLICIT_CAST_TO_ANY")
   @Parameters(method = "params for checking valid date input")
   fun `when save is clicked, date entry is active, but input is invalid then BP measurement should not be saved`(
       openAs: OpenAs
@@ -439,9 +437,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).setBpSavedResultAndFinish()
   }
 
-  // TODO Migrate logic to Mobius
   @Test
-  @Suppress("IMPLICIT_CAST_TO_ANY")
   @Parameters(method = "params for showing date validation errors")
   fun `when save is clicked, date entry is active and input is invalid then validation errors should be shown`(
       testParams: InvalidDateTestParams

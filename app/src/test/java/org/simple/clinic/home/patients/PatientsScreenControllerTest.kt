@@ -128,7 +128,7 @@ class PatientsScreenControllerTest {
 
     clearInvocations(userSession)
 
-    uiEvents.onNext(TheActivityLifecycle.Resumed())
+    uiEvents.onNext(TheActivityLifecycle.Resumed(null))
     verify(userSession).refreshLoggedInUser()
   }
 

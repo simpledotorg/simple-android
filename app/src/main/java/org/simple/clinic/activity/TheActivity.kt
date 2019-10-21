@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
@@ -60,9 +61,9 @@ class TheActivity : AppCompatActivity() {
     }
 
     lifecycle
-        .startWith(TheActivityLifecycle.Started())
+        .startWith(TheActivityLifecycle.Started("TheActivity"))
         .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(mainThread())
         .takeUntil(lifecycle.ofType<TheActivityLifecycle.Destroyed>())
         .subscribe { uiChange -> uiChange(this) }
   }

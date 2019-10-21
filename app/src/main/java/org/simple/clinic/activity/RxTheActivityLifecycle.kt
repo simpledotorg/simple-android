@@ -16,31 +16,31 @@ class RxTheActivityLifecycle internal constructor(private val events: Observable
         val callbacks = object : SimpleActivityLifecycleCallbacks() {
           override fun onActivityResumed(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(TheActivityLifecycle.Resumed())
+              emitter.onNext(TheActivityLifecycle.Resumed("TheActivity"))
             }
           }
 
           override fun onActivityStarted(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(TheActivityLifecycle.Started())
+              emitter.onNext(TheActivityLifecycle.Started("TheActivity"))
             }
           }
 
           override fun onActivityPaused(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(TheActivityLifecycle.Paused())
+              emitter.onNext(TheActivityLifecycle.Paused("TheActivity"))
             }
           }
 
           override fun onActivityStopped(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(TheActivityLifecycle.Stopped())
+              emitter.onNext(TheActivityLifecycle.Stopped("TheActivity"))
             }
           }
 
           override fun onActivityDestroyed(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(TheActivityLifecycle.Destroyed())
+              emitter.onNext(TheActivityLifecycle.Destroyed("TheActivity"))
               emitter.onComplete()
             }
           }

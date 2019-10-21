@@ -12,7 +12,10 @@ data class BloodPressureEntryModel(
     val openAs: OpenAs,
     val systolic: String = "",
     val diastolic: String = "",
-    val activeScreen: ScreenType = BP_ENTRY
+    val activeScreen: ScreenType = BP_ENTRY,
+    val day: String = "",
+    val month: String = "",
+    val twoDigitYear: String = ""
 ) : Parcelable {
   companion object {
     fun newBloodPressureEntry(openAsNew: New): BloodPressureEntryModel =
@@ -40,4 +43,16 @@ data class BloodPressureEntryModel(
 
   fun screenChanged(activeScreen: ScreenType): BloodPressureEntryModel =
       copy(activeScreen = activeScreen)
+
+  fun dayChanged(day: String): BloodPressureEntryModel {
+    return copy(day = day)
+  }
+
+  fun monthChanged(month: String): BloodPressureEntryModel {
+    return copy(month = month)
+  }
+
+  fun yearChanged(twoDigitYear: String): BloodPressureEntryModel {
+    return copy(twoDigitYear = twoDigitYear)
+  }
 }

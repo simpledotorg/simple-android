@@ -157,7 +157,7 @@ class TheActivityModule {
 
   @Provides
   fun theActivityLifecycle(activity: TheActivity): Observable<ActivityLifecycle> {
-    return RxTheActivityLifecycle.from(activity).stream()
+    return RxActivityLifecycle.from(activity).stream()
   }
 
   @Provides

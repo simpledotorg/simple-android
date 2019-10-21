@@ -156,7 +156,7 @@ interface TheActivityComponent {
 class TheActivityModule {
 
   @Provides
-  fun theActivityLifecycle(activity: TheActivity): Observable<TheActivityLifecycle> {
+  fun theActivityLifecycle(activity: TheActivity): Observable<ActivityLifecycle> {
     return RxTheActivityLifecycle.from(activity).stream()
   }
 

@@ -60,11 +60,20 @@ class BloodPressureEntryUpdate(
         noChange()
       }
 
-      is DayChanged -> dispatch(HideDateErrorMessage)
+      is DayChanged -> next(
+          model.dayChanged(event.day),
+          HideDateErrorMessage
+      )
 
-      is MonthChanged -> dispatch(HideDateErrorMessage)
+      is MonthChanged -> next(
+          model.monthChanged(event.month),
+          HideDateErrorMessage
+      )
 
-      is YearChanged -> dispatch(HideDateErrorMessage)
+      is YearChanged -> next(
+          model.yearChanged(event.twoDigitYear),
+          HideDateErrorMessage
+      )
 
       is BloodPressureDateClicked -> {
         val result = bpValidator.validate(model.systolic, model.diastolic)

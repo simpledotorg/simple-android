@@ -117,9 +117,9 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   private val viewRenderer = BloodPressureEntryViewRenderer(this)
 
   private val delegate by unsafeLazy {
-    val defaultModel = when (val openAs = intent.extras!!.getParcelable<OpenAs>(KEY_OPEN_AS)!!) {
-      is New -> BloodPressureEntryModel.newBloodPressureEntry(New(openAs.patientUuid))
-      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(Update(openAs.bpUuid))
+    val defaultModel = when (val openAs = intent.extras!!.getParcelable(KEY_OPEN_AS) as OpenAs) {
+      is New -> BloodPressureEntryModel.newBloodPressureEntry(New(openAs.patientUuid), LocalDate.now(userClock).year)
+      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(Update(openAs.bpUuid), LocalDate.now(userClock).year)
     }
 
     val effectHandler = BloodPressureEntryEffectHandler

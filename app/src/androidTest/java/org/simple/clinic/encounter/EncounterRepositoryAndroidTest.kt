@@ -44,6 +44,7 @@ class EncounterRepositoryAndroidTest {
   fun record_count_should_return_the_count_of_no_of_encounters() {
     //given
     repository.save(listOf(testData.encounter(
+        uuid = UUID.fromString("306b0298-a04d-4680-a55f-9c8696512aa1"),
         patientUuid = UUID.fromString("2ffd2254-4a22-4b1a-9abf-841f5ae5bea3"),
         facilityUuid = UUID.fromString("05e105d8-8a62-4b85-ba3a-319ad742ceb0")
     ))).blockingAwait()

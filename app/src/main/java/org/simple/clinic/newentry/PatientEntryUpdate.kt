@@ -30,6 +30,7 @@ class PatientEntryUpdate(
       is StateChanged -> next(model.withState(event.state), HideEmptyStateError)
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
       is SaveClicked -> onSaveClicked(model.patientEntry)
+      is ReminderConsentChanged -> next(model.reminderConsentChanged(event.reminderConsent))
       PatientEntrySaved -> dispatch(OpenMedicalHistoryEntryScreen)
     }
   }

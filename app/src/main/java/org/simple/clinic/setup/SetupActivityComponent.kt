@@ -6,6 +6,8 @@ import org.simple.clinic.activity.BindsActivity
 @Subcomponent
 interface SetupActivityComponent {
 
+  fun inject(target: SetupActivity)
+
   @Subcomponent.Builder
   interface Builder : BindsActivity<Builder> {
 

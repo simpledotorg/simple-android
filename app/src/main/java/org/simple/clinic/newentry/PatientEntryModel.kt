@@ -5,14 +5,12 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent
-import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.util.Optional
 
 @Parcelize
 data class PatientEntryModel(
     val patientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry(),
-    val isSelectingGenderForTheFirstTime: Boolean = true,
-    val reminderConsent: ReminderConsent = Granted
+    val isSelectingGenderForTheFirstTime: Boolean = true
 ) : Parcelable {
   companion object {
     val DEFAULT = PatientEntryModel()
@@ -49,5 +47,5 @@ data class PatientEntryModel(
       copy(patientEntry = patientEntry.withState(state))
 
   fun reminderConsentChanged(consent: ReminderConsent): PatientEntryModel =
-      copy(reminderConsent = consent)
+      copy(patientEntry = patientEntry.withConsent(consent))
 }

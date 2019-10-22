@@ -17,6 +17,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
 import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
+import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
@@ -39,7 +40,8 @@ data class OngoingNewPatientEntry(
     val personalDetails: PersonalDetails? = null,
     val address: Address? = null,
     val phoneNumber: PhoneNumber? = null,
-    val identifier: Identifier? = null
+    val identifier: Identifier? = null,
+    val reminderConsent: ReminderConsent = Granted
 ) : Parcelable {
 
   companion object {
@@ -89,6 +91,9 @@ data class OngoingNewPatientEntry(
 
   fun withAddress(address: Address): OngoingNewPatientEntry =
       copy(address = address)
+
+  fun withConsent(reminderConsent: ReminderConsent): OngoingNewPatientEntry =
+      copy(reminderConsent = reminderConsent)
 
   fun validationErrors(dobValidator: UserInputDateValidator, numberValidator: PhoneNumberValidator): List<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()

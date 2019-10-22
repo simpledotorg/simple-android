@@ -4,19 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import kotterknife.bindView
-import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
+import kotlinx.android.synthetic.main.screen_registration_confirm_pin.view.*
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
@@ -31,12 +25,6 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
 
   @Inject
   lateinit var controller: RegistrationConfirmPinScreenController
-
-  private val backButton by bindView<ImageButton>(R.id.registrationconfirmpin_back)
-  private val confirmPinEditText by bindView<EditText>(R.id.registrationconfirmpin_pin)
-  private val pinHintTextView by bindView<TextView>(R.id.registrationconfirmpin_pin_hint)
-  private val errorStateViewGroup by bindView<LinearLayout>(R.id.registrationconfirmpin_error)
-  private val resetPinButton by bindView<Button>(R.id.registrationconfirmpin_reset_pin)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

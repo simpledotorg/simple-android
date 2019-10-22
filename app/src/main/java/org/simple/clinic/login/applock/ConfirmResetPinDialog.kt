@@ -6,8 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import org.simple.clinic.R
-import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.RouterDirection

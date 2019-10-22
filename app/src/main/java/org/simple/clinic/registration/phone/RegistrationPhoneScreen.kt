@@ -12,7 +12,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_phone.view.*
 import org.simple.clinic.R
-import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.login.pin.LoginPinScreenKey
 import org.simple.clinic.registration.name.RegistrationNameScreenKey

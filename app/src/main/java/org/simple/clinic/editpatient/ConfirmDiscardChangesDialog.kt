@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import org.simple.clinic.R
-import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import javax.inject.Inject
 

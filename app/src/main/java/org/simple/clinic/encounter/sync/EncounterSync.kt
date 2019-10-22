@@ -28,7 +28,7 @@ class EncounterSync @Inject constructor(
     return canSyncData()
         .flatMapCompletable { canSync ->
           if (canSync) {
-            Completable.mergeArrayDelayError(pull())
+            Completable.mergeArrayDelayError(push(), pull())
 
           } else {
             Completable.complete()
@@ -41,9 +41,21 @@ class EncounterSync @Inject constructor(
       pushNetworkCall = { api.push(toRequest(it)) }
   )
 
-  private fun toRequest(encounters: List<ObservationsForEncounter>): EncounterPushRequest {
-    //TODO : Replace with an actual request
-    return EncounterPushRequest(listOf())
+  private fun toRequest(observationsForEncounter: List<ObservationsForEncounter>): EncounterPushRequest {
+    val encounterPayloads = observationsForEncounter.map { (encounter, bps) ->
+      val observationsPayload = EncounterObservationsPayload(bloodPressureMeasurements = bps.map { it.toPayload() })
+      EncounterPayload(
+          uuid = encounter.uuid,
+          patientUuid = encounter.patientUuid,
+          encounteredOn = encounter.encounteredOn,
+          createdAt = encounter.createdAt,
+          updatedAt = encounter.updatedAt,
+          deletedAt = encounter.deletedAt,
+          observations = observationsPayload
+      )
+    }
+
+    return EncounterPushRequest(encounters = encounterPayloads)
   }
 
   override fun pull(): Completable {

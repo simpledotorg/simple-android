@@ -11,11 +11,15 @@ class InjectorProviderContextWrapper(
   companion object {
     fun wrap(
         base: Context,
-        injectors: Map<String, Any>
-    ): Context = InjectorProviderContextWrapper(base, injectors)
+        injectors: Map<Class<*>, Any>
+    ): Context = InjectorProviderContextWrapper(base, injectors.mapKeys { it.key.name })
   }
 
   override fun getSystemService(name: String): Any? {
-    return if (name !in injectors) super.getSystemService(name) else injectors.getValue(name)
+    return if (name in injectors) injectors.getValue(name) else super.getSystemService(name)
   }
 }
+
+
+@Suppress("UNCHECKED_CAST")
+inline fun <reified T> Context.injector() = getSystemService(T::class.java.name) as T

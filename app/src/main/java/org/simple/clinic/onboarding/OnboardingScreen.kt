@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_onboarding.view.*
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
@@ -17,7 +18,6 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.clamp
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.util.service
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 import javax.inject.Named
@@ -60,7 +60,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
       return
     }
 
-    context.service<OnboardingScreenInjector>(OnboardingScreenInjector.INJECTOR_KEY).inject(this)
+    context.injector<OnboardingScreenInjector>().inject(this)
 
     fadeLogoWithContentScroll()
     delegate.prepare()

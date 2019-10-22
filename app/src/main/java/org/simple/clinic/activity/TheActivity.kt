@@ -77,7 +77,7 @@ class TheActivity : AppCompatActivity() {
     val contextWithRouter = wrapContextWithRouter(contextWithOverriddenLocale)
     val contextWithInjectorProvider = InjectorProviderContextWrapper.wrap(
         contextWithRouter,
-        mapOf(OnboardingScreenInjector.INJECTOR_KEY to component)
+        mapOf(OnboardingScreenInjector::class.java to component)
     )
     super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithInjectorProvider))
   }

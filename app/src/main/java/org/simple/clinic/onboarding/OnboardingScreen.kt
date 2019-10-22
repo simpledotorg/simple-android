@@ -1,8 +1,12 @@
 package org.simple.clinic.onboarding
 
 import android.content.Context
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding2.view.RxView
@@ -11,6 +15,7 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_onboarding.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
@@ -27,6 +32,9 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   @Inject
   lateinit var router: ScreenRouter
 
+  @Inject
+  lateinit var activity: AppCompatActivity
+
   @field:[Inject Named("onboarding_complete")]
   lateinit var hasUserCompletedOnboarding: Preference<Boolean>
 
@@ -35,6 +43,8 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  private val screenKey: OnboardingScreenKey by unsafeLazy { router.key<OnboardingScreenKey>(this) }
 
   private val events: Observable<OnboardingEvent>
     get() = getStartedClicks()
@@ -89,6 +99,14 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   }
 
   override fun moveToRegistrationScreen() {
-    router.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.FORWARD)
+    if (!screenKey.migrated) {
+      router.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.FORWARD)
+    } else {
+
+      val intent = TheActivity.newIntent(activity).apply {
+        flags = FLAG_ACTIVITY_CLEAR_TASK or FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_NO_ANIMATION
+      }
+      activity.startActivity(intent)
+    }
   }
 }

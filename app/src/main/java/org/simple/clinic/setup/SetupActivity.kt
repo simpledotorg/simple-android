@@ -8,9 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.R
+import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.onboarding.OnboardingScreenInjector
+import org.simple.clinic.onboarding.OnboardingScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
+import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -20,12 +27,10 @@ import javax.inject.Inject
 
 class SetupActivity : AppCompatActivity() {
 
-  companion object {
-    lateinit var component: SetupActivityComponent
-  }
-
   @Inject
   lateinit var locale: Locale
+
+  private lateinit var component: SetupActivityComponent
 
   private val screenResults = ScreenResultBus()
 
@@ -44,7 +49,12 @@ class SetupActivity : AppCompatActivity() {
   override fun attachBaseContext(baseContext: Context) {
     setupDiGraph()
     val contextWithOverriddenLocale = LocaleOverrideContextWrapper.wrap(baseContext, locale)
-    super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithOverriddenLocale))
+    val contextWithRouter = wrapContextWithRouter(contextWithOverriddenLocale)
+    val contextWithInjectorProvider = InjectorProviderContextWrapper.wrap(
+        contextWithRouter,
+        mapOf(OnboardingScreenInjector::class.java to component)
+    )
+    super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithInjectorProvider))
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -67,6 +77,22 @@ class SetupActivity : AppCompatActivity() {
       return
     }
     super.onBackPressed()
+  }
+
+  private fun wrapContextWithRouter(baseContext: Context): Context {
+    screenRouter.registerKeyChanger(FullScreenKeyChanger(
+        activity = this,
+        screenLayoutContainerRes = android.R.id.content,
+        screenBackgroundRes = R.color.window_background,
+        onKeyChange = this::onScreenChanged
+    ))
+    return screenRouter.installInContext(baseContext, OnboardingScreenKey(migrated = true))
+  }
+
+  private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {
+    val outgoingScreenName = outgoing?.analyticsName ?: ""
+    val incomingScreenName = incoming.analyticsName
+    Analytics.reportScreenChange(outgoingScreenName, incomingScreenName)
   }
 
   private fun setupDiGraph() {

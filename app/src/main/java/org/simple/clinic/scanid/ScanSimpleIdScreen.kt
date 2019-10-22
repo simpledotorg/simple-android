@@ -13,7 +13,7 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.SHORT_CODE_REQUIRED_LENGTH
-import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.businessid.Identifier

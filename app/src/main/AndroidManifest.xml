@@ -40,7 +40,7 @@
       android:value="true" />
 
     <activity
-      android:name=".activity.TheActivity"
+      android:name=".main.TheActivity"
       android:launchMode="singleTask"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize">

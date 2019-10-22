@@ -3,6 +3,7 @@ package org.simple.clinic.activity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider

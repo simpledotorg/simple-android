@@ -11,7 +11,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
-import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogController
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogCreated

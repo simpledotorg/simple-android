@@ -1,4 +1,4 @@
-package org.simple.clinic.activity
+package org.simple.clinic.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,6 +13,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Destroyed
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.analytics.Analytics

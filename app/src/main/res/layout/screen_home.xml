@@ -5,7 +5,7 @@
   android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".activity.TheActivity">
+  tools:context=".main.TheActivity">
 
   <androidx.appcompat.widget.Toolbar
     android:id="@+id/toolbar"

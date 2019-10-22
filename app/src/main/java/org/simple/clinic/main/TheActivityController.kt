@@ -1,4 +1,4 @@
-package org.simple.clinic.activity
+package org.simple.clinic.main
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable

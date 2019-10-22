@@ -21,7 +21,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
-import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Paused
 import org.simple.clinic.activity.ActivityLifecycle.Resumed

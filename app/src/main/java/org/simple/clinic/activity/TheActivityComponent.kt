@@ -40,7 +40,7 @@ import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.login.pin.LoginPinScreen
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.PatientEntryScreen
-import org.simple.clinic.onboarding.OnboardingScreen
+import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
@@ -73,7 +73,7 @@ import org.threeten.bp.Instant
 import javax.inject.Named
 
 @Subcomponent(modules = [TheActivityModule::class])
-interface TheActivityComponent {
+interface TheActivityComponent: OnboardingScreenInjector {
 
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
@@ -81,7 +81,6 @@ interface TheActivityComponent {
   fun inject(target: LoginPinScreen)
   fun inject(target: AppLockScreen)
   fun inject(target: OverdueScreen)
-  fun inject(target: OnboardingScreen)
   fun inject(target: PatientEntryScreen)
   fun inject(target: PatientSearchScreen)
   fun inject(target: PatientSearchResultsScreen)

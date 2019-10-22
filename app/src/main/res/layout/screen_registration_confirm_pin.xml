@@ -12,7 +12,7 @@
     style="@style/Clinic.LoginLogoContainer">
 
     <ImageButton
-      android:id="@+id/registrationconfirmpin_back"
+      android:id="@+id/backButton"
       style="@style/Clinic.LoginBackButton"
       android:src="@drawable/ic_arrow_back_24dp"
       tools:ignore="ContentDescription" />
@@ -39,11 +39,11 @@
 
       <TextView
         style="@style/Clinic.LoginCardTitle"
-        android:labelFor="@+id/registrationconfirmpin_pin"
+        android:labelFor="@+id/confirmPinEditText"
         android:text="@string/registrationconfirmpin_confirm_pin_label" />
 
       <org.simple.clinic.widgets.StaggeredEditText
-        android:id="@+id/registrationconfirmpin_pin"
+        android:id="@+id/confirmPinEditText"
         style="@style/Clinic.StaggeredEditText.Pin"
         android:layout_marginTop="@dimen/spacing_8"
         android:imeOptions="actionDone"
@@ -53,7 +53,7 @@
       </org.simple.clinic.widgets.StaggeredEditText>
 
       <TextView
-        android:id="@+id/registrationconfirmpin_pin_hint"
+        android:id="@+id/pinHintTextView"
         style="@style/Clinic.RegistrationPinHint"
         android:layout_marginBottom="@dimen/spacing_16"
         android:background="@color/white"
@@ -61,7 +61,7 @@
         android:visibility="visible" />
 
       <LinearLayout
-        android:id="@+id/registrationconfirmpin_error"
+        android:id="@+id/errorStateViewGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -75,7 +75,7 @@
           android:text="@string/registrationconfirmpin_error_pin_mismatch" />
 
         <Button
-          android:id="@+id/registrationconfirmpin_reset_pin"
+          android:id="@+id/resetPinButton"
           style="@style/Widget.AppCompat.Button.Borderless.Colored"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"

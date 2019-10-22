@@ -11,6 +11,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.util.RxErrorsRule
+import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -60,16 +61,26 @@ class EncounterRepositoryAndroidTest {
   fun encounter_payload_should_merge_correctly_with_encounter_database_model() {
     //given
     val patientUuid = UUID.fromString("c2273c6c-036b-41f0-a128-84d5551be3ce")
-    val encounterUuid = UUID.fromString("0b144e4a-ce13-431d-93f1-1d10d0639c09")
+    val encounterUuid1 = UUID.fromString("0b144e4a-ce13-431d-93f1-1d10d0639c09")
+    val encounterUuid2 = UUID.fromString("0799e067-6b14-4e45-8171-e6a9d84626fb")
 
-    val encountersPayload = testData.encounterPayload(uuid = encounterUuid, patientUuid = patientUuid)
+    val encountersPayload1 = testData.encounterPayload(uuid = encounterUuid1, patientUuid = patientUuid, updatedAt = Instant.parse("2018-02-11T00:00:00Z"))
+    val encountersPayload2 = testData.encounterPayload(uuid = encounterUuid2, patientUuid = patientUuid)
+
+    repository.save(listOf(testData.encounter(uuid = encounterUuid1, patientUuid = patientUuid, syncStatus = SyncStatus.PENDING, updatedAt = Instant.parse("2018-02-13T00:00:00Z")))).blockingAwait()
 
     //when
-    repository.mergeWithLocalData(listOf(encountersPayload)).blockingAwait()
+    repository.mergeWithLocalData(listOf(encountersPayload1, encountersPayload2)).blockingAwait()
     val encounter = repository.recordsWithSyncStatus(SyncStatus.DONE).blockingGet()
+    val encounterPending = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
 
     //then
     assertThat(encounter.size).isEqualTo(1)
-    assertThat(encounter.first().uuid).isEqualTo(encounterUuid)
+    assertThat(encounter.first().uuid).isEqualTo(encounterUuid2)
+
+    with(encounterPending.first()) {
+      assertThat(uuid).isEqualTo(encounterUuid1)
+      assertThat(updatedAt).isEqualTo(Instant.parse("2018-02-13T00:00:00Z"))
+    }
   }
 }

@@ -6,12 +6,12 @@ private fun event(activityName: String?, event: String): String = activityName?.
 
 sealed class ActivityLifecycle : UiEvent {
 
-  class Resumed(activityName: String?) : ActivityLifecycle() {
-    override val analyticsName = event(activityName, "Resumed")
-  }
-
   class Started(activityName: String?) : ActivityLifecycle() {
     override val analyticsName = event(activityName, "Started")
+  }
+
+  class Resumed(activityName: String?) : ActivityLifecycle() {
+    override val analyticsName = event(activityName, "Resumed")
   }
 
   class Paused(activityName: String?) : ActivityLifecycle() {

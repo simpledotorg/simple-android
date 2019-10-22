@@ -2,18 +2,15 @@ package org.simple.clinic.registration.location
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Button
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
-import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
+import kotlinx.android.synthetic.main.screen_registration_location_permission.view.*
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.location.LOCATION_PERMISSION
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -35,10 +32,6 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
 
   @Inject
   lateinit var controller: RegistrationLocationPermissionScreenController
-
-  private val toolbar by bindView<Toolbar>(R.id.registrationlocation_toolbar)
-  private val skipButton by bindView<Button>(R.id.registrationlocation_skip)
-  private val allowAccessButton by bindView<Button>(R.id.registrationlocation_allow_access)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

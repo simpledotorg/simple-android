@@ -41,7 +41,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -82,18 +81,13 @@ class BloodPressureEntrySheetControllerTest {
   private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
 
   private val facility = PatientMocker.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
-  private val userSubject = PublishSubject.create<User>()
 
   private val controller = BloodPressureEntrySheetController(
       bloodPressureRepository = bloodPressureRepository,
-      appointmentRepository = appointmentRepository,
-      patientRepository = patientRepository,
       dateValidator = dateValidator,
       bpValidator = bpValidator,
       userClock = testUserClock,
-      inputDatePaddingCharacter = UserInputDatePaddingCharacter.ZERO,
-      userSession = userSession,
-      facilityRepository = facilityRepository)
+      inputDatePaddingCharacter = UserInputDatePaddingCharacter.ZERO)
 
   private val viewRenderer = BloodPressureEntryViewRenderer(ui)
   private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
@@ -102,14 +96,12 @@ class BloodPressureEntrySheetControllerTest {
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
+    whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
-
-    userSubject.onNext(user)
   }
 
   @Test
@@ -339,13 +331,11 @@ class BloodPressureEntrySheetControllerTest {
     )
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 2, 13)
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
-    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any()))
-        .doReturn(Single.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(PatientMocker.bp(patientUuid = patientUuid)))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
     sheetCreatedForNew(patientUuid)
@@ -378,11 +368,12 @@ class BloodPressureEntrySheetControllerTest {
     verify(ui).setBpSavedResultAndFinish()
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when save is clicked while updating a BP, date entry is active and input is valid then the updated BP measurement should be saved`() {
     val oldCreatedAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
     val existingBp = PatientMocker.bp(
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid,
         systolic = 9000,
         diastolic = 8999,
         createdAt = oldCreatedAt,
@@ -404,14 +395,6 @@ class BloodPressureEntrySheetControllerTest {
       onNext(SaveClicked)
     }
 
-    val newUserUuid = UUID.fromString("a726d885-b12d-40b7-9fe1-5391f3fc0f88")
-    val newFacilityUuid = UUID.fromString("d51f48fd-40b6-4daf-beae-ba3d9f4c24cd")
-    val newUser = user.copy(uuid = newUserUuid)
-
-    whenever(facilityRepository.currentFacility(newUser)).doReturn(Observable.just(facility.copy(uuid = newFacilityUuid)))
-
-    userSubject.onNext(newUser)
-
     uiEvents.run {
       onNext(ScreenChanged(DATE_ENTRY))
       onNext(DayChanged("14"))
@@ -425,9 +408,7 @@ class BloodPressureEntrySheetControllerTest {
         systolic = 120,
         diastolic = 110,
         updatedAt = oldCreatedAt,
-        recordedAt = newInputDateAsInstant,
-        userUuid = newUserUuid,
-        facilityUuid = newFacilityUuid
+        recordedAt = newInputDateAsInstant
     )
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
     verify(patientRepository).compareAndUpdateRecordedAt(updatedBp.patientUuid, updatedBp.recordedAt)
@@ -820,7 +801,6 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when done button is clicked in new BP entry, then save BP with entered date immediately`() {
     val systolic = 120.toString()
@@ -861,13 +841,14 @@ class BloodPressureEntrySheetControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  // TODO Migrate logic to Mobius
   @Test
   fun `when done button is clicked in update BP entry, then save BP with entered date immediately`() {
     val systolic = 120.toString()
     val diastolic = 110.toString()
     val createdAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
     val existingBp = PatientMocker.bp(
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid,
         patientUuid = patientUuid,
         systolic = 9000,
         diastolic = 8999,
@@ -883,14 +864,6 @@ class BloodPressureEntrySheetControllerTest {
 
     whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
-
-    val newUserUuid = UUID.fromString("a726d885-b12d-40b7-9fe1-5391f3fc0f88")
-    val newFacilityUuid = UUID.fromString("d51f48fd-40b6-4daf-beae-ba3d9f4c24cd")
-    val newUser = user.copy(uuid = newUserUuid)
-
-    whenever(facilityRepository.currentFacility(newUser)).doReturn(Observable.just(facility.copy(uuid = newFacilityUuid)))
-
-    userSubject.onNext(newUser)
 
     sheetCreatedForUpdate(existingBp.uuid)
     with(uiEvents) {
@@ -911,9 +884,7 @@ class BloodPressureEntrySheetControllerTest {
         systolic = systolic.toInt(),
         diastolic = diastolic.toInt(),
         updatedAt = createdAt,
-        recordedAt = newInputDateAsInstant,
-        userUuid = newUserUuid,
-        facilityUuid = newFacilityUuid
+        recordedAt = newInputDateAsInstant
     )
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
@@ -949,9 +920,13 @@ class BloodPressureEntrySheetControllerTest {
   private fun instantiateFixture(openAs: OpenAs) {
     val effectHandler = BloodPressureEntryEffectHandler.create(
         ui,
+        userSession,
+        facilityRepository,
+        patientRepository,
+        bloodPressureRepository,
+        appointmentRepository,
         testUserClock,
         UserInputDatePaddingCharacter.ZERO,
-        bloodPressureRepository,
         TrampolineSchedulersProvider()
     )
     val defaultModel = when (openAs) {

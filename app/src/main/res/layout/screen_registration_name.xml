@@ -12,7 +12,7 @@
     style="@style/Clinic.LoginLogoContainer">
 
     <ImageButton
-      android:id="@+id/registrationname_back"
+      android:id="@+id/backButton"
       style="@style/Clinic.LoginBackButton"
       android:src="@drawable/ic_arrow_back_24dp"
       tools:ignore="ContentDescription" />
@@ -33,17 +33,17 @@
     android:layout_below="@+id/registrationname_logo_container">
 
     <LinearLayout
-      android:id="@+id/registrationname_card_content"
+      android:id="@+id/cardViewContentLayout"
       style="@style/Clinic.CardContentContainer.Login"
       android:animateLayoutChanges="true">
 
       <TextView
         style="@style/Clinic.LoginCardTitle"
-        android:labelFor="@+id/registrationname_name"
+        android:labelFor="@+id/fullNameEditText"
         android:text="@string/registrationname_name_label" />
 
       <EditText
-        android:id="@+id/registrationname_name"
+        android:id="@+id/fullNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
@@ -56,7 +56,7 @@
       </EditText>
 
       <TextView
-        android:id="@+id/registrationname_error"
+        android:id="@+id/validationErrorTextView"
         style="@style/Clinic.V2.RegistrationInputError"
         android:layout_marginTop="@dimen/spacing_8"
         android:visibility="gone"

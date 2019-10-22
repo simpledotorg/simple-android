@@ -4,16 +4,12 @@ import android.animation.LayoutTransition
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.RelativeLayout
-import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.screen_registration_name.view.*
 import org.simple.clinic.R
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
@@ -31,11 +27,6 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
 
   @Inject
   lateinit var controller: RegistrationFullNameScreenController
-
-  private val backButton by bindView<ImageButton>(R.id.registrationname_back)
-  private val cardViewContentLayout by bindView<ViewGroup>(R.id.registrationname_card_content)
-  private val fullNameEditText by bindView<EditText>(R.id.registrationname_name)
-  private val validationErrorTextView by bindView<TextView>(R.id.registrationname_error)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

@@ -4,24 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.screen_registration_facility_selection.view.*
 import org.simple.clinic.R
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
@@ -51,17 +44,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
 
   @Inject
   lateinit var activity: AppCompatActivity
-
-  private val toolbarViewFlipper by bindView<ViewFlipper>(R.id.registrationfacilities_toolbar_container)
-  private val toolbarViewWithSearch by bindView<Toolbar>(R.id.registrationfacilities_toolbar_with_search)
-  private val toolbarViewWithoutSearch by bindView<Toolbar>(R.id.registrationfacilities_toolbar_without_search)
-  private val searchEditText by bindView<EditText>(R.id.registrationfacilities_search)
-  private val facilityRecyclerView by bindView<RecyclerView>(R.id.registrationfacilities_list)
-  private val progressView by bindView<View>(R.id.registrationfacilities_progress)
-  private val errorContainer by bindView<ViewGroup>(R.id.registrationfacilities_error_container)
-  private val errorTitleTextView by bindView<TextView>(R.id.registrationfacilities_error_title)
-  private val errorMessageTextView by bindView<TextView>(R.id.registrationfacilities_error_message)
-  private val errorRetryButton by bindView<Button>(R.id.registrationfacilities_error_retry)
 
   private val recyclerViewAdapter = FacilitiesAdapter()
 
@@ -148,11 +130,11 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   }
 
   fun showToolbarWithSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.registrationfacilities_toolbar_with_search
+    toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithSearch
   }
 
   fun showToolbarWithoutSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.registrationfacilities_toolbar_without_search
+    toolbarViewFlipper.displayedChildResId = R.id.toolbarViewWithoutSearch
   }
 
   fun showNetworkError() {

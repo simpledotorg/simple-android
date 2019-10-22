@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen android:id="@+id/registrationconfirmpin_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/registrationconfirmpin_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/window_background_auth"
@@ -47,10 +47,7 @@
         style="@style/Clinic.StaggeredEditText.Pin"
         android:layout_marginTop="@dimen/spacing_8"
         android:imeOptions="actionDone"
-        android:maxLength="4">
-
-        <requestFocus />
-      </org.simple.clinic.widgets.StaggeredEditText>
+        android:maxLength="4" />
 
       <TextView
         android:id="@+id/registrationconfirmpin_pin_hint"

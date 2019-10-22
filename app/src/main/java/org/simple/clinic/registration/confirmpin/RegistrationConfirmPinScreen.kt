@@ -21,6 +21,7 @@ import org.simple.clinic.registration.location.RegistrationLocationPermissionScr
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -95,6 +96,7 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   }
 
   fun openFacilitySelectionScreen() {
+    hideKeyboard()
     screenRouter.push(RegistrationLocationPermissionScreenKey())
   }
 

@@ -2,6 +2,7 @@ package org.simple.clinic.newentry
 
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
 
@@ -51,4 +52,8 @@ object SaveClicked : PatientEntryEvent() {
 
 object PatientEntrySaved : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Patient Entry Saved"
+}
+
+data class ReminderConsentChanged(val reminderConsent: ReminderConsent) : PatientEntryEvent() {
+  override val analyticsName: String = "Create Patient Entry:Reminder Consent Changed"
 }

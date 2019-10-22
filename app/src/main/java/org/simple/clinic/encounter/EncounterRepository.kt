@@ -3,6 +3,7 @@ package org.simple.clinic.encounter
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.encounter.sync.EncounterPayload
 import org.simple.clinic.patient.SyncStatus
@@ -35,15 +36,24 @@ class EncounterRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<EncounterPayload>): Completable {
-    return Single.fromCallable {
-      payloads
-          .filter { payload ->
-            database.encountersDao()
-                .getOne(payload.uuid)
-                ?.syncStatus.canBeOverriddenByServerCopy()
-          }
-          .map(::payloadToEncounters)
-    }.flatMapCompletable(::saveMergedEncounters)
+    val payloadObservable = Observable.fromIterable(payloads)
+    val encountersCanBeOverridden = payloadObservable
+        .flatMap { canEncountersBeOverridden(it) }
+
+    return payloadObservable.zipWith(encountersCanBeOverridden)
+        .filter { (_, canBeOverridden) -> canBeOverridden }
+        .map { (payload, _) -> payload }
+        .map(::payloadToEncounters)
+        .toList()
+        .flatMapCompletable(::saveMergedEncounters)
+  }
+
+  private fun canEncountersBeOverridden(payload: EncounterPayload): Observable<Boolean> {
+    return Observable.fromCallable {
+      database.encountersDao()
+          .getOne(payload.uuid)
+          ?.syncStatus.canBeOverriddenByServerCopy()
+    }
   }
 
   private fun payloadToEncounters(payload: EncounterPayload): ObservationsForEncounter {
@@ -58,8 +68,8 @@ class EncounterRepository @Inject constructor(
       val bloodPressures = records.flatMap { it.bloodPressures }
       val encounters = records.map { it.encounter }
 
-      database.openHelper.writableDatabase.inTransaction {
-        with(database) {
+      with(database) {
+        openHelper.writableDatabase.inTransaction {
           bloodPressureDao().save(bloodPressures)
           encountersDao().save(encounters)
         }

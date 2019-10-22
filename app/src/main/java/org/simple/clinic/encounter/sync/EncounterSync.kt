@@ -3,8 +3,8 @@ package org.simple.clinic.encounter.sync
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.simple.clinic.encounter.Encounter
 import org.simple.clinic.encounter.EncounterRepository
+import org.simple.clinic.encounter.ObservationsForEncounter
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
@@ -41,10 +41,10 @@ class EncounterSync @Inject constructor(
       pushNetworkCall = { api.push(toRequest(it)) }
   )
 
-  private fun toRequest(encounters: List<Encounter>): EncounterPushRequest {
-    TODO("not implemented")
+  private fun toRequest(encounters: List<ObservationsForEncounter>): EncounterPushRequest {
+    //TODO : Replace with an actual request
+    return EncounterPushRequest(listOf())
   }
-
 
   override fun pull(): Completable {
     return configProvider

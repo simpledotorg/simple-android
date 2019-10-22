@@ -7,6 +7,7 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.encounter.Encounter
+import org.simple.clinic.encounter.ObservationsForEncounter
 import org.simple.clinic.encounter.sync.EncounterObservationsPayload
 import org.simple.clinic.encounter.sync.EncounterPayload
 import org.simple.clinic.facility.Facility
@@ -799,6 +800,16 @@ class TestData @Inject constructor(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt
+    )
+  }
+
+  fun observationsForEncounter(
+      encounter: Encounter,
+      bloodPressures: List<BloodPressureMeasurement> = listOf(bloodPressureMeasurement())
+  ): ObservationsForEncounter {
+    return ObservationsForEncounter(
+        encounter,
+        bloodPressures
     )
   }
 

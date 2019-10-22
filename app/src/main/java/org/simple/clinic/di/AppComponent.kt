@@ -3,14 +3,13 @@ package org.simple.clinic.di
 import dagger.Component
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.ReleaseClinicApp
-import org.simple.clinic.activity.TheActivityComponent
+import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
 import org.simple.clinic.storage.Migration_27_28
 import org.simple.clinic.storage.Migration_29_30
 import org.simple.clinic.storage.Migration_34_35
-import org.simple.clinic.storage.Migration_48_49
 import org.simple.clinic.storage.Migration_49_50
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncWorker

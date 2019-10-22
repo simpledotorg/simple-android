@@ -33,38 +33,38 @@ class RxActivityLifecycle internal constructor(private val events: Observable<Ac
 }
 
 private class RxActivityLifecycleCallbacks(
-    private val theActivity: AppCompatActivity,
+    private val anActivity: AppCompatActivity,
     private val emitter: ObservableEmitter<ActivityLifecycle>
 ) : SimpleActivityLifecycleCallbacks() {
 
-  private val activityName: String = theActivity.javaClass.simpleName
+  private val activityName: String = anActivity.javaClass.simpleName
 
   override fun onActivityResumed(activity: Activity) {
-    if (activity === theActivity) {
+    if (activity === anActivity) {
       emitter.onNext(Resumed(activityName))
     }
   }
 
   override fun onActivityStarted(activity: Activity) {
-    if (activity === theActivity) {
+    if (activity === anActivity) {
       emitter.onNext(Started(activityName))
     }
   }
 
   override fun onActivityPaused(activity: Activity) {
-    if (activity === theActivity) {
+    if (activity === anActivity) {
       emitter.onNext(Paused(activityName))
     }
   }
 
   override fun onActivityStopped(activity: Activity) {
-    if (activity === theActivity) {
+    if (activity === anActivity) {
       emitter.onNext(Stopped(activityName))
     }
   }
 
   override fun onActivityDestroyed(activity: Activity) {
-    if (activity === theActivity) {
+    if (activity === anActivity) {
       emitter.onNext(Destroyed(activityName))
       emitter.onComplete()
     }

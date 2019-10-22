@@ -1,4 +1,4 @@
-package org.simple.clinic.activity
+package org.simple.clinic.main
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
@@ -8,6 +8,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
 import io.reactivex.Observable
+import org.simple.clinic.activity.ActivityLifecycle
+import org.simple.clinic.activity.BindsActivity
+import org.simple.clinic.activity.BindsScreenRouter
+import org.simple.clinic.activity.RxActivityLifecycle
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView

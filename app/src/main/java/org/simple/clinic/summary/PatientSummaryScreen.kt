@@ -26,7 +26,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet

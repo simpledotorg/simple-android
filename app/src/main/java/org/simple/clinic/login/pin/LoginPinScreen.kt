@@ -11,7 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.router.screen.BackPressInterceptCallback

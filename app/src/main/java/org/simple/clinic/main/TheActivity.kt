@@ -38,6 +38,10 @@ import javax.inject.Inject
 class TheActivity : AppCompatActivity() {
 
   companion object {
+    fun newIntent(context: Context): Intent {
+      return Intent(context, TheActivity::class.java)
+    }
+
     lateinit var component: TheActivityComponent
   }
 

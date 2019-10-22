@@ -51,3 +51,19 @@ data class ShowBpEntryScreen(val date: LocalDate) : BloodPressureEntryEffect()
 data class ShowDateValidationError(
     val result: Result
 ) : BloodPressureEntryEffect()
+
+data class CreateNewBpEntry(
+    val patientUuid: UUID,
+    val systolic: Int,
+    val diastolic: Int,
+    val date: LocalDate
+) : BloodPressureEntryEffect()
+
+object SetBpSavedResultAndFinish : BloodPressureEntryEffect()
+
+data class UpdateBpEntry(
+    val bpUuid: UUID,
+    val systolic: Int,
+    val diastolic: Int,
+    val date: LocalDate
+) : BloodPressureEntryEffect()

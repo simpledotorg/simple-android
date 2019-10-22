@@ -30,8 +30,12 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.MobiusActivityDelegate
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -122,6 +126,18 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   @Inject
   lateinit var bloodPressureRepository: BloodPressureRepository
 
+  @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
+  lateinit var facilityRepository: FacilityRepository
+
+  @Inject
+  lateinit var appointmentsRepository: AppointmentRepository
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
   private val viewRenderer = BloodPressureEntryViewRenderer(this)
 
   private val delegate by unsafeLazy {
@@ -130,8 +146,17 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
       is Update -> BloodPressureEntryModel.updateBloodPressureEntry(Update(openAs.bpUuid), LocalDate.now(userClock).year)
     }
 
-    val effectHandler = BloodPressureEntryEffectHandler
-        .create(this, userClock, userInputDatePaddingCharacter, bloodPressureRepository, schedulersProvider)
+    val effectHandler = BloodPressureEntryEffectHandler.create(
+        this,
+        userSession,
+        facilityRepository,
+        patientRepository,
+        bloodPressureRepository,
+        appointmentsRepository,
+        userClock,
+        userInputDatePaddingCharacter,
+        schedulersProvider
+    )
 
     MobiusActivityDelegate(
         events.ofType(),

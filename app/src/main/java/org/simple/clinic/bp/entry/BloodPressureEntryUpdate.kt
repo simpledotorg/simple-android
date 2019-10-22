@@ -112,7 +112,19 @@ class BloodPressureEntryUpdate(
           effects.add(ShowDateValidationError(dateValidationResult))
         }
 
-        return if (effects.isEmpty()) noChange() else Next.dispatch(effects)
+        return if (effects.isEmpty()) {
+          val validResult = dateValidationResult as Valid
+          val systolic = model.systolic.toInt()
+          val diastolic = model.diastolic.toInt()
+
+          val bloodPressureEntryEffect = when (model.openAs) {
+            is OpenAs.New -> CreateNewBpEntry(model.openAs.patientUuid, systolic, diastolic, validResult.parsedDate)
+            is OpenAs.Update -> UpdateBpEntry(model.openAs.bpUuid, systolic, diastolic, validResult.parsedDate)
+          }
+          dispatch(bloodPressureEntryEffect)
+        } else {
+          Next.dispatch(effects)
+        }
       }
 
       is ShowBpClicked -> {
@@ -123,6 +135,8 @@ class BloodPressureEntryUpdate(
           dispatch(ShowDateValidationError(result) as BloodPressureEntryEffect)
         }
       }
+
+      is BloodPressureSaved -> dispatch(SetBpSavedResultAndFinish)
 
       else -> noChange()
     }

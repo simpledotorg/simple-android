@@ -76,14 +76,10 @@ class BloodPressureValidationTest {
 
   private val controller = BloodPressureEntrySheetController(
       bloodPressureRepository = bloodPressureRepository,
-      appointmentRepository = appointmentRepository,
-      patientRepository = patientRepository,
       dateValidator = dateValidator,
       bpValidator = bpValidator,
       userClock = testUserClock,
-      inputDatePaddingCharacter = UserInputDatePaddingCharacter.ZERO,
-      userSession = userSession,
-      facilityRepository = facilityRepository)
+      inputDatePaddingCharacter = UserInputDatePaddingCharacter.ZERO)
 
   private val viewRenderer = BloodPressureEntryViewRenderer(ui)
   private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
@@ -220,9 +216,13 @@ class BloodPressureValidationTest {
   private fun instantiateFixture(openAs: OpenAs) {
     val effectHandler = BloodPressureEntryEffectHandler.create(
         ui,
+        userSession,
+        facilityRepository,
+        patientRepository,
+        bloodPressureRepository,
+        appointmentRepository,
         testUserClock,
         UserInputDatePaddingCharacter.ZERO,
-        bloodPressureRepository,
         TrampolineSchedulersProvider()
     )
     val defaultModel = when (openAs) {

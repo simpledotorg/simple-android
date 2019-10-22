@@ -7,6 +7,7 @@ import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+import org.simple.clinic.setup.SetupActivityComponent
 import org.simple.clinic.storage.Migration_27_28
 import org.simple.clinic.storage.Migration_29_30
 import org.simple.clinic.storage.Migration_34_35
@@ -33,9 +34,11 @@ interface AppComponent {
   fun inject(target: BottomSheetActivity)
   fun inject(target: Migration_49_50)
 
-  fun theActivityComponentBuilder(): TheActivityComponent.Builder
   fun userSession(): UserSession
   fun facilitySync(): FacilitySync
+
+  fun theActivityComponentBuilder(): TheActivityComponent.Builder
+  fun setupActivityComponentBuilder(): SetupActivityComponent.Builder
 }
 
 @Scope

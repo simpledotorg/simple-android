@@ -16,8 +16,10 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.ActivityLifecycle.Destroyed
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
+import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
@@ -73,7 +75,11 @@ class TheActivity : AppCompatActivity() {
     setupDiGraph()
     val contextWithOverriddenLocale = LocaleOverrideContextWrapper.wrap(baseContext, locale)
     val contextWithRouter = wrapContextWithRouter(contextWithOverriddenLocale)
-    super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithRouter))
+    val contextWithInjectorProvider = InjectorProviderContextWrapper.wrap(
+        contextWithRouter,
+        mapOf(OnboardingScreenInjector.INJECTOR_KEY to component)
+    )
+    super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithInjectorProvider))
   }
 
   private fun wrapContextWithRouter(baseContext: Context): Context {

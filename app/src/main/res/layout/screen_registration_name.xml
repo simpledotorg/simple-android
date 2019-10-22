@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.registration.name.RegistrationFullNameScreen android:id="@+id/registrationname_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.registration.name.RegistrationFullNameScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/registrationname_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/window_background_auth"
@@ -50,10 +50,7 @@
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="textPersonName|textCapWords"
-        android:textAppearance="@style/Clinic.LoginInputTextAppearance">
-
-        <requestFocus />
-      </EditText>
+        android:textAppearance="@style/Clinic.LoginInputTextAppearance" />
 
       <TextView
         android:id="@+id/registrationname_error"

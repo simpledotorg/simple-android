@@ -1,12 +1,13 @@
 package org.simple.clinic.encounter.sync
 
+import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.rules.RuleChain
+import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.encounter.EncounterRepository
@@ -26,7 +27,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-@Ignore("Encounter push sync will be implemented later")
+@RunWith(AndroidJUnit4::class)
 class EncounterSyncAndroidTest : BaseSyncCoordinatorAndroidTest<ObservationsForEncounter, EncounterPayload>() {
 
   @Inject
@@ -77,7 +78,7 @@ class EncounterSyncAndroidTest : BaseSyncCoordinatorAndroidTest<ObservationsForE
   override fun generatePayload(): EncounterPayload = testData.encounterPayload()
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
-  
+
   override fun pushNetworkCall(payloads: List<EncounterPayload>): Single<DataPushResponse> =
       encounterSyncApi.push(EncounterPushRequest(payloads))
 

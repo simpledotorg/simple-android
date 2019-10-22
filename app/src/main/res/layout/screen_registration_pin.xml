@@ -47,10 +47,7 @@
         style="@style/Clinic.StaggeredEditText.Pin"
         android:layout_marginTop="@dimen/spacing_8"
         android:imeOptions="actionDone"
-        android:maxLength="4">
-
-        <requestFocus />
-      </org.simple.clinic.widgets.StaggeredEditText>
+        android:maxLength="4" />
 
       <TextView
         android:id="@+id/registrationpin_pin_hint"

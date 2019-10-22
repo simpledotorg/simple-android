@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.simple.clinic"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  package="org.simple.clinic"
   android:installLocation="preferExternal">
 
   <uses-feature
@@ -83,6 +83,10 @@
       android:name=".home.overdue.phonemask.PhoneMaskBottomSheet"
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
+
+    <activity
+      android:name=".setup.SetupActivity"
+      android:enabled="false"/>
 
     <receiver
       android:name=".login.OtpSmsReceiver"

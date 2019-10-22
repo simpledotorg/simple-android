@@ -6,7 +6,7 @@
   android:layout_height="match_parent">
 
   <androidx.appcompat.widget.Toolbar
-    android:id="@+id/registrationlocation_toolbar"
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
@@ -16,15 +16,15 @@
   <FrameLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignBottom="@+id/registrationlocation_toolbar"
+    android:layout_alignBottom="@+id/toolbar"
     android:layout_alignParentEnd="true"
-    android:layout_alignTop="@+id/registrationlocation_toolbar"
+    android:layout_alignTop="@+id/toolbar"
     android:layout_marginEnd="@dimen/spacing_12"
     android:elevation="@dimen/elevation_toolbar"
     tools:ignore="UnusedAttribute">
 
     <Button
-      android:id="@+id/registrationlocation_skip"
+      android:id="@+id/skipButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
@@ -44,7 +44,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@+id/registrationlocation_rationale_card"
-    android:layout_below="@+id/registrationlocation_toolbar"
+    android:layout_below="@+id/toolbar"
     android:layout_marginBottom="-8dp"
     android:scaleType="centerCrop"
     android:src="@drawable/illustration_location"
@@ -86,7 +86,7 @@
   </androidx.cardview.widget.CardView>
 
   <Button
-    android:id="@+id/registrationlocation_allow_access"
+    android:id="@+id/allowAccessButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_above="@id/registrationlocation_rationale_card"

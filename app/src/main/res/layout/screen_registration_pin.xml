@@ -12,7 +12,7 @@
     style="@style/Clinic.LoginLogoContainer">
 
     <ImageButton
-      android:id="@+id/registrationpin_back"
+      android:id="@+id/backButton"
       style="@style/Clinic.LoginBackButton"
       android:src="@drawable/ic_arrow_back_24dp"
       tools:ignore="ContentDescription" />
@@ -39,11 +39,11 @@
 
       <TextView
         style="@style/Clinic.LoginCardTitle"
-        android:labelFor="@+id/registrationpin_pin"
+        android:labelFor="@+id/pinEditText"
         android:text="@string/registrationpin_pin_label" />
 
       <org.simple.clinic.widgets.StaggeredEditText
-        android:id="@+id/registrationpin_pin"
+        android:id="@+id/pinEditText"
         style="@style/Clinic.StaggeredEditText.Pin"
         android:layout_marginTop="@dimen/spacing_8"
         android:imeOptions="actionDone"
@@ -53,13 +53,13 @@
       </org.simple.clinic.widgets.StaggeredEditText>
 
       <TextView
-        android:id="@+id/registrationpin_pin_hint"
+        android:id="@+id/pinHintTextView"
         style="@style/Clinic.RegistrationPinHint"
         android:layout_gravity="center_horizontal"
         android:text="@string/registrationpin_pin_hint" />
 
       <TextView
-        android:id="@+id/registrationpin_error"
+        android:id="@+id/errorTextView"
         style="@style/Clinic.V2.RegistrationInputError"
         android:layout_marginTop="@dimen/spacing_8"
         android:visibility="gone"

@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.entry
+package org.simple.clinic.bp.entry.confirmremovebloodpressure
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -12,11 +12,8 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogController
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogCreated
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogRemoveClicked
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID

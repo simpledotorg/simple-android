@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject

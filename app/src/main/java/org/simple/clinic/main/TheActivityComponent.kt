@@ -16,7 +16,7 @@ import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScr
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
-import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog
+import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.bp.entry.di.BloodPressureEntryModule
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet

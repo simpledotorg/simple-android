@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.simple.clinic.bp.BloodPressureModule
+import org.simple.clinic.bp.di.BloodPressureModule
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.PrescriptionModule

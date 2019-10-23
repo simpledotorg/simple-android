@@ -322,38 +322,31 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   }
 
   override fun showSystolicLessThanDiastolicError() {
-    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_more)
-    bpErrorTextView.visibility = View.VISIBLE
+    showBpErrorMessage(getString(R.string.bloodpressureentry_error_systolic_more))
   }
 
   override fun showSystolicLowError() {
-    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_70)
-    bpErrorTextView.visibility = View.VISIBLE
+    showBpErrorMessage(getString(R.string.bloodpressureentry_error_systolic_70))
   }
 
   override fun showSystolicHighError() {
-    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_300)
-    bpErrorTextView.visibility = View.VISIBLE
+    showBpErrorMessage(getString(R.string.bloodpressureentry_error_systolic_300))
   }
 
   override fun showDiastolicLowError() {
-    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_40)
-    bpErrorTextView.visibility = View.VISIBLE
+    showBpErrorMessage(getString(R.string.bloodpressureentry_error_diastolic_40))
   }
 
   override fun showDiastolicHighError() {
-    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_180)
-    bpErrorTextView.visibility = View.VISIBLE
+    showBpErrorMessage(getString(R.string.bloodpressureentry_error_diastolic_180))
   }
 
   override fun showSystolicEmptyError() {
-    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_empty)
-    bpErrorTextView.visibility = View.VISIBLE
+    showBpErrorMessage(getString(R.string.bloodpressureentry_error_systolic_empty))
   }
 
   override fun showDiastolicEmptyError() {
-    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_empty)
-    bpErrorTextView.visibility = View.VISIBLE
+    showBpErrorMessage(getString(R.string.bloodpressureentry_error_diastolic_empty))
   }
 
   override fun setSystolic(systolic: String) {
@@ -448,5 +441,12 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
     intent.putExtra(EXTRA_WAS_BP_SAVED, true)
     setResult(Activity.RESULT_OK, intent)
     finish()
+  }
+
+  private fun showBpErrorMessage(message: String) {
+    with(bpErrorTextView) {
+      text = message
+      visibility = View.VISIBLE
+    }
   }
 }

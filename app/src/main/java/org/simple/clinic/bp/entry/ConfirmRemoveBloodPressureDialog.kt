@@ -2,6 +2,7 @@ package org.simple.clinic.bp.entry
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
@@ -22,6 +23,9 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
+  interface RemoveBloodPressureListener {
+    fun onBloodPressureRemoved()
+  }
 
   companion object {
     private const val KEY_BP_UUID = "bloodPressureMeasurementUuid"
@@ -53,6 +57,8 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
 
   @Inject
   lateinit var controller: ConfirmRemoveBloodPressureDialogController
+
+  private var removeBloodPressureListener: RemoveBloodPressureListener? = null
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
   private val onStarts = PublishSubject.create<Any>()
@@ -90,7 +96,9 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
   private fun removeClicks(): Observable<UiEvent> {
     val button = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
 
-    return RxView.clicks(button).map { ConfirmRemoveBloodPressureDialogRemoveClicked }
+    return RxView.clicks(button)
+        .doOnNext { removeBloodPressureListener?.onBloodPressureRemoved() }
+        .map { ConfirmRemoveBloodPressureDialogRemoveClicked }
   }
 
   private fun dialogCreates(): Observable<UiEvent> {
@@ -106,5 +114,13 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     screenDestroys.onNext(ScreenDestroyed())
+  }
+
+  override fun onAttach(context: Context?) {
+    super.onAttach(context)
+    removeBloodPressureListener = context as? RemoveBloodPressureListener
+    if (removeBloodPressureListener == null) {
+      throw ClassCastException("$context must implement RemoveBloodPressureListener")
+    }
   }
 }

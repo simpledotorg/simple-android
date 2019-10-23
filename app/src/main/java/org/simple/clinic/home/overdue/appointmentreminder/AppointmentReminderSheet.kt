@@ -27,7 +27,7 @@ class AppointmentReminderSheet : BottomSheetActivity() {
 
     fun intent(context: Context, appointmentUuid: UUID) =
         Intent(context, AppointmentReminderSheet::class.java)
-            .putExtra(AppointmentReminderSheet.KEY_APPOINTMENT_UUID, appointmentUuid)!!
+            .putExtra(KEY_APPOINTMENT_UUID, appointmentUuid)!!
   }
 
   private val possibleDates = listOf(
@@ -83,7 +83,7 @@ class AppointmentReminderSheet : BottomSheetActivity() {
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
-    val uuid = intent.extras.getSerializable(AppointmentReminderSheet.KEY_APPOINTMENT_UUID) as UUID
+    val uuid = intent.extras!!.getSerializable(KEY_APPOINTMENT_UUID) as UUID
     return Observable.just(AppointmentReminderSheetCreated(initialIndex = 6, appointmentUuid = uuid))
   }
 

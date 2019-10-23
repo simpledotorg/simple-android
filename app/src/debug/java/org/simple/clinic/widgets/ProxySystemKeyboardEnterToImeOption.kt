@@ -25,7 +25,7 @@ class ProxySystemKeyboardEnterToImeOption : Interceptor {
 
   override fun intercept(chain: Interceptor.Chain): InflateResult {
     val inflateResult = chain.proceed(chain.request())
-    val inflatedView = inflateResult.view()
+    val inflatedView = inflateResult.view
 
     if (inflatedView is EditText) {
       inflatedView.setOnKeyListener(enterToImeMapper)

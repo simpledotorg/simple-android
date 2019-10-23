@@ -156,6 +156,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
 
     verify(screen).populatePatientProfile(PatientSummaryProfile(patient, address, phoneNumber, optionalBpPassport))
+    verify(screen).showEditButton()
   }
 
   @Suppress("Unused")

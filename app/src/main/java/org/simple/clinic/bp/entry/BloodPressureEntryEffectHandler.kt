@@ -110,7 +110,7 @@ class BloodPressureEntryEffectHandler(
     return ObservableTransformer { bloodPressureMeasurements ->
       bloodPressureMeasurements
           .flatMapSingle { getExistingBloodPressureMeasurement(it.bpUuid).subscribeOn(scheduler) }
-          .map(::BloodPressureMeasurementFetched)
+          .map { BloodPressureMeasurementFetched(it.systolic, it.diastolic, it.recordedAt) }
     }
   }
 

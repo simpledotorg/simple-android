@@ -40,19 +40,16 @@ class BloodPressureEntryUpdate(
       }
 
       is BloodPressureMeasurementFetched -> {
-        val bloodPressureMeasurement = event.bloodPressureMeasurement
-        val systolicString = bloodPressureMeasurement.systolic.toString()
-        val diastolicString = bloodPressureMeasurement.diastolic.toString()
-
+        val (systolic, diastolic, recordedAt) = event
         val modelWithSystolicAndDiastolic = model
-            .systolicChanged(systolicString)
-            .diastolicChanged(diastolicString)
+            .systolicChanged(systolic.toString())
+            .diastolicChanged(diastolic.toString())
 
         next(
             modelWithSystolicAndDiastolic,
-            SetSystolic(systolicString),
-            SetDiastolic(diastolicString),
-            PrefillDate.forUpdateEntry(bloodPressureMeasurement.recordedAt)
+            SetSystolic(systolic.toString()),
+            SetDiastolic(diastolic.toString()),
+            PrefillDate.forUpdateEntry(recordedAt)
         )
       }
 

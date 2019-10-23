@@ -783,8 +783,8 @@ class TestData @Inject constructor(
   }
 
   fun encounter(
-      uuid: UUID = UUID.randomUUID(),
-      patientUuid: UUID = UUID.randomUUID(),
+      uuid: UUID,
+      patientUuid: UUID,
       facilityUuid: UUID? = null,
       encounteredOn: LocalDate = LocalDate.now(),
       syncStatus: SyncStatus = SyncStatus.DONE,
@@ -814,8 +814,8 @@ class TestData @Inject constructor(
   }
 
   fun encounterPayload(
-      uuid: UUID = UUID.randomUUID(),
-      patientUuid: UUID = UUID.randomUUID(),
+      uuid: UUID,
+      patientUuid: UUID,
       encounteredOn: LocalDate = LocalDate.now(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),

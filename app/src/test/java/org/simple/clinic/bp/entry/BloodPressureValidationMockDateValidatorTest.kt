@@ -19,6 +19,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerTest.InvalidDateTestParams
+import org.simple.clinic.bp.entry.OpenAs.New
+import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
@@ -113,11 +115,11 @@ class BloodPressureValidationMockDateValidatorTest {
   @Suppress("unused")
   fun `params for showing date validation errors`(): List<InvalidDateTestParams> {
     return listOf(
-        InvalidDateTestParams(OpenAs.New(patientUuid), "01", "01", "2099", DateIsInFuture) {
+        InvalidDateTestParams(New(patientUuid), "01", "01", "2099", DateIsInFuture) {
           ui: Ui -> verify(ui).showDateIsInFutureError()
         },
 
-        InvalidDateTestParams(OpenAs.Update(existingBpUuid), "01", "01", "2099", DateIsInFuture) {
+        InvalidDateTestParams(Update(existingBpUuid), "01", "01", "2099", DateIsInFuture) {
           ui: Ui -> verify(ui).showDateIsInFutureError()
         }
     )
@@ -142,8 +144,8 @@ class BloodPressureValidationMockDateValidatorTest {
     uiEvents.onNext(SaveClicked)
 
     when (openAs) {
-      is OpenAs.New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
-      is OpenAs.Update -> verify(bloodPressureRepository, never()).updateMeasurement(any())
+      is New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+      is Update -> verify(bloodPressureRepository, never()).updateMeasurement(any())
       else -> throw AssertionError()
     }
 
@@ -154,8 +156,8 @@ class BloodPressureValidationMockDateValidatorTest {
   @Suppress("Unused")
   private fun `params for checking valid date input`(): List<DoNotSaveBpWithInvalidDateTestParams> {
     return listOf(
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.New(patientUuid), DateIsInFuture),
-        DoNotSaveBpWithInvalidDateTestParams(OpenAs.Update(existingBpUuid), DateIsInFuture))
+        DoNotSaveBpWithInvalidDateTestParams(New(patientUuid), DateIsInFuture),
+        DoNotSaveBpWithInvalidDateTestParams(Update(existingBpUuid), DateIsInFuture))
   }
 
   data class DoNotSaveBpWithInvalidDateTestParams(
@@ -164,21 +166,21 @@ class BloodPressureValidationMockDateValidatorTest {
   )
 
   private fun sheetCreatedForNew(patientUuid: UUID) {
-    val openAsNew = OpenAs.New(patientUuid)
+    val openAsNew = New(patientUuid)
     uiEvents.onNext(SheetCreated(openAsNew))
     instantiateFixture(openAsNew)
   }
 
   private fun sheetCreatedForUpdate(existingBpUuid: UUID) {
-    val openAsUpdate = OpenAs.Update(existingBpUuid)
+    val openAsUpdate = Update(existingBpUuid)
     uiEvents.onNext(SheetCreated(openAsUpdate))
     instantiateFixture(openAsUpdate)
   }
 
   private fun sheetCreated(openAs: OpenAs) {
     when (openAs) {
-      is OpenAs.New -> sheetCreatedForNew(openAs.patientUuid)
-      is OpenAs.Update -> sheetCreatedForUpdate(openAs.bpUuid)
+      is New -> sheetCreatedForNew(openAs.patientUuid)
+      is Update -> sheetCreatedForUpdate(openAs.bpUuid)
       else -> throw IllegalStateException("Unknown `openAs`: $openAs")
     }
   }
@@ -196,8 +198,8 @@ class BloodPressureValidationMockDateValidatorTest {
         TrampolineSchedulersProvider()
     )
     val defaultModel = when (openAs) {
-      is OpenAs.New -> BloodPressureEntryModel.newBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
-      is OpenAs.Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
+      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
+      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
     }
 
     fixture = MobiusTestFixture(

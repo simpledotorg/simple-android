@@ -11,6 +11,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.onboarding.OnboardingScreenKey
 import org.simple.clinic.router.ScreenResultBus
@@ -22,6 +23,7 @@ import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.wrap
 import java.util.Locale
 import javax.inject.Inject
 
@@ -48,13 +50,14 @@ class SetupActivity : AppCompatActivity() {
 
   override fun attachBaseContext(baseContext: Context) {
     setupDiGraph()
-    val contextWithOverriddenLocale = LocaleOverrideContextWrapper.wrap(baseContext, locale)
-    val contextWithRouter = wrapContextWithRouter(contextWithOverriddenLocale)
-    val contextWithInjectorProvider = InjectorProviderContextWrapper.wrap(
-        contextWithRouter,
-        mapOf(OnboardingScreenInjector::class.java to component)
-    )
-    super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithInjectorProvider))
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { wrapContextWithRouter(it) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, mapOf(OnboardingScreenInjector::class.java to TheActivity.component)) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

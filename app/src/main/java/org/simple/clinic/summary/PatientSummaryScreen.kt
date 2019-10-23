@@ -26,7 +26,6 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
@@ -34,6 +33,7 @@ import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.editpatient_old.PatientEditScreenKey
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.migration.Architecture
 import org.simple.clinic.mobius.migration.MobiusMigrationConfig
 import org.simple.clinic.patient.DateOfBirth
@@ -399,6 +399,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun hideLinkIdWithPatientView() {
     linkIdWithPatientView.hide { linkIdWithPatientView.visibility = View.GONE }
+  }
+
+  fun showEditButton() {
+    editButton.visibility = View.VISIBLE
   }
 }
 

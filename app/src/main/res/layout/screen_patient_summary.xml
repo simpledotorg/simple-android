@@ -35,6 +35,8 @@
       android:layout_marginEnd="@dimen/spacing_8"
       android:text="@string/patientsummary_edit"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
+      android:visibility="invisible"
+      tools:visibility="visible"
       tools:ignore="RelativeOverlap" />
 
     <RelativeLayout

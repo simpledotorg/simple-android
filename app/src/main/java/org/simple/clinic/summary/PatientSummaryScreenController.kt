@@ -127,7 +127,14 @@ class PatientSummaryScreenController @Inject constructor(
 
     return Observables
         .combineLatest(sharedPatients, addresses, phoneNumbers, bpPassport, ::PatientSummaryProfile)
-        .map { { ui: Ui -> ui.populatePatientProfile(it) } }
+        .map { patientSummaryProfile -> { ui: Ui -> showPatientSummaryProfile(ui, patientSummaryProfile) } }
+  }
+
+  private fun showPatientSummaryProfile(ui: Ui, patientSummaryProfile: PatientSummaryProfile) {
+    with(ui) {
+      populatePatientProfile(patientSummaryProfile)
+      showEditButton()
+    }
   }
 
   private fun mergeWithPatientSummaryChanges(): ObservableTransformer<UiEvent, UiEvent> {

@@ -73,6 +73,7 @@
   <string name="patiententry_consent_header">Consent:\u0020</string>
   <string name="patiententry_consent_first_para">By tapping below, you confirm that any patient data you enter here has been obtained under appropriate informed consent. This means that the patient knows that you are entering their personal data into the app, understands what data is being collected, and knows that they may be contacted via SMS, WhatsApp, or other methods using the phone number provided in the app.</string>
   <string name="patiententry_consent_second_para">Anyone authorized by you, or the healthcare provider for whom you work, will have access to the patient data and information you enter here. By using the app you confirm that the patient understands who will have access to the data obtained through this app and consents to that access.</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS Reminders</string>
 
   <!-- Edit patient -->
   <string name="patientedit_full_name" translatable="false">@string/patiententry_full_name</string>

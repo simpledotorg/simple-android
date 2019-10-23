@@ -125,7 +125,8 @@ object BloodPressureEntryEffectHandler {
       is ErrorDiastolicTooLow -> ui.showDiastolicLowError()
       is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
       is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
-      is Success -> { /* Nothing to do here. */
+      is Success -> {
+        /* Nothing to do here. */
       }
     }.exhaustive()
   }

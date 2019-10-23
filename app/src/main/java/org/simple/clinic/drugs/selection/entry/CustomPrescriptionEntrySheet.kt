@@ -18,7 +18,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener
+import org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed

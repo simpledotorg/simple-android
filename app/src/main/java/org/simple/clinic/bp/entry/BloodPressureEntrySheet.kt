@@ -223,7 +223,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   private fun removeClicks(): Observable<UiEvent> =
       RxView
           .clicks(removeBloodPressureButton)
-          .map { RemoveClicked }
+          .map { RemoveBloodPressureClicked }
 
   private fun bpDateClicks(): Observable<UiEvent> =
       RxView

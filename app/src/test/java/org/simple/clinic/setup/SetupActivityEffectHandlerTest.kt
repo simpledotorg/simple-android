@@ -48,4 +48,15 @@ class SetupActivityEffectHandlerTest {
     verify(uiActions).goToMainActivity()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when the show onboarding screen effect is received, the onboarding screen must be shown`() {
+    // when
+    testCase.dispatch(ShowOnboardingScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showOnboardingScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

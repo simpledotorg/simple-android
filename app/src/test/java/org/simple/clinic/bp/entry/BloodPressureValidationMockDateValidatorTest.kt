@@ -18,7 +18,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerTest.InvalidDateTestParams
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetLogicTest.InvalidDateTestParams
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository

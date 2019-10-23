@@ -62,7 +62,7 @@ typealias Ui = BloodPressureEntryUi
 typealias UiChange = (Ui) -> Unit
 
 @RunWith(JUnitParamsRunner::class)
-class BloodPressureEntrySheetControllerTest {
+class BloodPressureEntrySheetLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

@@ -69,7 +69,7 @@ class BloodPressureValidationMockDateValidatorTest {
 
   private val existingBpUuid = UUID.fromString("2c4eccbb-d1bc-4c7c-b1ec-60a13acfeea4")
 
-  private val viewRenderer = BloodPressureEntryViewRenderer(ui)
+  private val uiRenderer = BloodPressureEntryUiRenderer(ui)
   private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
 
   @Before
@@ -202,7 +202,7 @@ class BloodPressureValidationMockDateValidatorTest {
         BloodPressureEntryInit(),
         BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(ZoneOffset.UTC), UserInputDatePaddingCharacter.ZERO),
         effectHandler,
-        viewRenderer::render
+        uiRenderer::render
     ).also { it.start() }
   }
 }

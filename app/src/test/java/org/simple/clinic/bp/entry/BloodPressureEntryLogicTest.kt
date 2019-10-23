@@ -85,7 +85,7 @@ class BloodPressureEntrySheetLogicTest {
 
   private val facility = PatientMocker.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
 
-  private val viewRenderer = BloodPressureEntryViewRenderer(ui)
+  private val uiRenderer = BloodPressureEntryUiRenderer(ui)
   private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
 
   @Before
@@ -926,7 +926,7 @@ class BloodPressureEntrySheetLogicTest {
         BloodPressureEntryInit(),
         BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(UTC), UserInputDatePaddingCharacter.ZERO),
         effectHandler,
-        viewRenderer::render
+        uiRenderer::render
     ).also { it.start() }
   }
 }

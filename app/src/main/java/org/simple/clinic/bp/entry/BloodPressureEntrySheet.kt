@@ -114,7 +114,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   @Inject
   lateinit var patientRepository: PatientRepository
 
-  private val viewRenderer = BloodPressureEntryViewRenderer(this)
+  private val uiRenderer = BloodPressureEntryUiRenderer(this)
 
   private val delegate by unsafeLazy {
     val openAs = intent.extras!!.getParcelable<OpenAs>(KEY_OPEN_AS)!!
@@ -138,7 +138,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
         BloodPressureEntryInit(),
         BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(userTimeZone), userInputDatePaddingCharacter),
         effectHandler.create(),
-        viewRenderer::render,
+        uiRenderer::render,
         crashReporter
     )
   }

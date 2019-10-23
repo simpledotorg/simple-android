@@ -16,6 +16,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
+import org.simple.clinic.bp.entry.PrefillDate.UpdateEntryPrefill
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
@@ -67,7 +68,7 @@ object BloodPressureEntryEffectHandler {
 
     return RxMobius
         .subtypeEffectHandler<BloodPressureEntryEffect, BloodPressureEntryEvent>()
-        .addConsumer(PrefillDate::class.java, { prefillDate(ui, it, userClock, inputDatePaddingCharacter) }, schedulersProvider.ui())
+        .addTransformer(PrefillDate::class.java, prefillDate(ui, userClock, inputDatePaddingCharacter, schedulersProvider.ui()))
         .addAction(HideBpErrorMessage::class.java, ui::hideBpErrorMessage, schedulersProvider.ui())
         .addAction(ChangeFocusToDiastolic::class.java, ui::changeFocusToDiastolic, schedulersProvider.ui())
         .addAction(ChangeFocusToSystolic::class.java, ui::changeFocusToSystolic, schedulersProvider.ui())
@@ -89,18 +90,36 @@ object BloodPressureEntryEffectHandler {
 
   private fun prefillDate(
       ui: BloodPressureEntryUi,
-      prefillDate: PrefillDate,
       userClock: UserClock,
-      paddingCharacter: UserInputDatePaddingCharacter
-  ) {
-    val prefillInstant = if (prefillDate is PrefillDate.UpdateEntryPrefill) prefillDate.date else Instant.now(userClock)
-    val date = prefillInstant.toLocalDateAtZone(userClock.zone)
-    val dayString = date.dayOfMonth.toString().padStart(length = 2, padChar = paddingCharacter.value)
-    val monthString = date.monthValue.toString().padStart(length = 2, padChar = paddingCharacter.value)
-    val yearString = date.year.toString().substring(startIndex = 2, endIndex = 4)
-    ui.setDateOnInputFields(dayString, monthString, yearString)
-    ui.showDateOnDateButton(date)
+      paddingCharacter: UserInputDatePaddingCharacter,
+      scheduler: Scheduler
+  ): ObservableTransformer<PrefillDate, BloodPressureEntryEvent> {
+    return ObservableTransformer { prefillDates ->
+      prefillDates
+          .map { prefillDate ->
+            val prefillInstant = if (prefillDate is UpdateEntryPrefill) prefillDate.date else Instant.now(userClock)
+            prefillInstant.toLocalDateAtZone(userClock.zone)
+          }
+          .observeOn(scheduler)
+          .doOnNext { setDateOnInputFields(ui, paddingCharacter, it) }
+          .doOnNext { ui.showDateOnDateButton(it) }
+          .map { DatePrefilled(it) }
+    }
   }
+
+  private fun setDateOnInputFields(
+      ui: BloodPressureEntryUi,
+      paddingCharacter: UserInputDatePaddingCharacter,
+      date: LocalDate
+  ) {
+    ui.setDateOnInputFields(getPaddedString(date.dayOfMonth, paddingCharacter), getPaddedString(date.monthValue, paddingCharacter), getYear(date))
+  }
+
+  private fun getPaddedString(value: Int, paddingCharacter: UserInputDatePaddingCharacter): String =
+      value.toString().padStart(length = 2, padChar = paddingCharacter.value)
+
+  private fun getYear(date: LocalDate): String =
+      date.year.toString().substring(startIndex = 2, endIndex = 4)
 
   private fun fetchBloodPressureMeasurement(
       bloodPressureRepository: BloodPressureRepository,

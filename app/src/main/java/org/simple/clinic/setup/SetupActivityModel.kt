@@ -1,3 +1,7 @@
 package org.simple.clinic.setup
 
-object SetupActivityModel
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+object SetupActivityModel : Parcelable

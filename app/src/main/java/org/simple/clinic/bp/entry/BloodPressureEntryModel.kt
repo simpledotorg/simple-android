@@ -30,12 +30,12 @@ data class BloodPressureEntryModel(
       copy(diastolic = diastolic)
 
   fun deleteDiastolicLastDigit(): BloodPressureEntryModel = if (diastolic.isNotEmpty())
-    copy(diastolic = diastolic.substring(0, diastolic.length - 1))
+    copy(diastolic = diastolic.unsafeDropLastChar())
   else
     this
 
   fun deleteSystolicLastDigit(): BloodPressureEntryModel = if (systolic.isNotEmpty())
-    copy(systolic = systolic.substring(0, systolic.length - 1))
+    copy(systolic = systolic.unsafeDropLastChar())
   else
     this
 
@@ -53,4 +53,7 @@ data class BloodPressureEntryModel(
 
   fun datePrefilled(prefilledDate: LocalDate): BloodPressureEntryModel =
       copy(prefilledDate = prefilledDate)
+
+  private fun String.unsafeDropLastChar(): String =
+      this.substring(0, this.length - 1)
 }

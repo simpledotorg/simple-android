@@ -1,7 +1,6 @@
 package org.simple.clinic.bp.entry
 
 import android.content.Context
-import androidx.appcompat.widget.AppCompatEditText
 import android.text.Editable
 import android.util.AttributeSet
 import android.view.KeyEvent
@@ -9,6 +8,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputConnectionWrapper
 import android.widget.EditText
+import androidx.appcompat.widget.AppCompatEditText
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 

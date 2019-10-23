@@ -4,7 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
-import org.simple.clinic.bp.entry.OpenAs.Update
 import org.threeten.bp.LocalDate
 
 @Parcelize
@@ -20,10 +19,6 @@ data class BloodPressureEntryModel(
     val prefilledDate: LocalDate? = null
 ) : Parcelable {
   companion object {
-    @Deprecated("", replaceWith = ReplaceWith("BloodPressureEntryModel.create(openAsUpdate, year)"))
-    fun updateBloodPressureEntry(openAsUpdate: Update, year: Int): BloodPressureEntryModel =
-        BloodPressureEntryModel(openAsUpdate, year.toString())
-
     fun create(openAs: OpenAs, year: Int): BloodPressureEntryModel =
         BloodPressureEntryModel(openAs, year.toString())
   }

@@ -14,7 +14,7 @@ import org.threeten.bp.ZoneOffset.UTC
 class BloodPressureEntryEffectHandlerTest {
   private val ui = mock<BloodPressureEntryUi>()
   private val userClock = TestUserClock()
-  private val testCase = EffectHandlerTestCase(BloodPressureEntryEffectHandler.create(
+  val effectHandler = BloodPressureEntryEffectHandler(
       ui,
       mock(),
       mock(),
@@ -24,7 +24,8 @@ class BloodPressureEntryEffectHandlerTest {
       userClock,
       UserInputDatePaddingCharacter.ZERO,
       TrampolineSchedulersProvider()
-  ))
+  )
+  private val testCase = EffectHandlerTestCase(effectHandler.create())
 
   @After
   fun teardown() {

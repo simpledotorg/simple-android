@@ -119,7 +119,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
     val openAs = intent.extras!!.getParcelable<OpenAs>(KEY_OPEN_AS)!!
     val defaultModel = BloodPressureEntryModel.create(openAs, LocalDate.now(userClock).year)
 
-    val effectHandler = BloodPressureEntryEffectHandler.create(
+    val effectHandler = BloodPressureEntryEffectHandler(
         this,
         userSession,
         facilityRepository,
@@ -136,7 +136,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
         defaultModel,
         BloodPressureEntryInit(),
         BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(userTimeZone), userInputDatePaddingCharacter),
-        effectHandler,
+        effectHandler.create(),
         viewRenderer::render,
         crashReporter
     )

@@ -40,6 +40,17 @@
       android:value="true" />
 
     <activity
+      android:name=".setup.SetupActivity"
+      android:enabled="false"
+      android:launchMode="singleTask"
+      android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+
+    <activity
       android:name=".main.TheActivity"
       android:launchMode="singleTask"
       android:screenOrientation="portrait"
@@ -83,10 +94,6 @@
       android:name=".home.overdue.phonemask.PhoneMaskBottomSheet"
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
-
-    <activity
-      android:name=".setup.SetupActivity"
-      android:enabled="false"/>
 
     <receiver
       android:name=".login.OtpSmsReceiver"

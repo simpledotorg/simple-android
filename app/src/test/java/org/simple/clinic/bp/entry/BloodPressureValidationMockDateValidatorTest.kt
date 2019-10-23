@@ -67,13 +67,6 @@ class BloodPressureValidationMockDateValidatorTest {
 
   private val existingBpUuid = UUID.fromString("2c4eccbb-d1bc-4c7c-b1ec-60a13acfeea4")
 
-  private val controller = BloodPressureEntrySheetController(
-      bloodPressureRepository = bloodPressureRepository,
-      dateValidator = dateValidator,
-      bpValidator = bpValidator,
-      userClock = testUserClock,
-      inputDatePaddingCharacter = UserInputDatePaddingCharacter.ZERO)
-
   private val viewRenderer = BloodPressureEntryViewRenderer(ui)
   private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
 
@@ -84,10 +77,6 @@ class BloodPressureValidationMockDateValidatorTest {
     whenever(dateValidator.dateInUserTimeZone()).doReturn(LocalDate.now(testUtcClock))
     whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
 
     userSubject.onNext(user)
   }
@@ -158,8 +147,8 @@ class BloodPressureValidationMockDateValidatorTest {
       else -> throw AssertionError()
     }
 
+    verify(ui).showDateIsInFutureError()
     verify(ui, never()).setBpSavedResultAndFinish()
-    verify(dateValidator).validate("01/04/1909")
   }
 
   @Suppress("Unused")

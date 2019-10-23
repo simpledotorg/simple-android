@@ -1,10 +1,11 @@
-package org.simple.clinic.bp
+package org.simple.clinic.bp.di
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureSyncApi
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional

@@ -12,7 +12,6 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
@@ -46,7 +45,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, RemoveBloodPressureListener {
@@ -145,22 +143,20 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   }
 
   private val events: Observable<UiEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            sheetCreates(),
-            systolicTextChanges(),
-            diastolicTextChanges(),
-            imeDoneClicks(),
-            diastolicBackspaceClicks(),
-            removeClicks(),
-            bpDateClicks(),
-            backClicks(),
-            hardwareBackPresses(),
-            screenTypeChanges(),
-            dayTextChanges(),
-            monthTextChanges(),
-            yearTextChanges()
-        )
+    Observable.mergeArray(
+        systolicTextChanges(),
+        diastolicTextChanges(),
+        imeDoneClicks(),
+        diastolicBackspaceClicks(),
+        removeClicks(),
+        bpDateClicks(),
+        backClicks(),
+        hardwareBackPresses(),
+        screenTypeChanges(),
+        dayTextChanges(),
+        monthTextChanges(),
+        yearTextChanges()
+    )
         .compose(ReportAnalyticsEvents())
         .share()
   }
@@ -185,7 +181,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
     super.onStop()
   }
 
-  override fun onSaveInstanceState(outState: Bundle?) {
+  override fun onSaveInstanceState(outState: Bundle) {
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
   }
@@ -199,17 +195,6 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
     if (systolicEditText.text.isBlank() && diastolicEditText.text.isBlank()) {
       super.onBackgroundClick()
     }
-  }
-
-  private fun sheetCreates(): Observable<UiEvent> {
-    val openAs = intent.extras!!.getParcelable<OpenAs>(KEY_OPEN_AS)!!
-    return Observable
-        .just(SheetCreated(openAs))
-        // TODO: Update: Now that we've moved to ReplayUntilScreenIsDestroyed, is this still required?
-        // This delay stops the race condition (?) that happens frequently with replay().refCount()
-        // in the controller. Temporary workaround until we figure out what exactly is going on.
-        .delay(100L, TimeUnit.MILLISECONDS)
-        .cast()
   }
 
   private fun systolicTextChanges() = RxTextView.textChanges(systolicEditText)

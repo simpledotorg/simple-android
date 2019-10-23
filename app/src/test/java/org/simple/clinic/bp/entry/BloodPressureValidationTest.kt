@@ -184,13 +184,11 @@ class BloodPressureValidationTest {
 
   private fun sheetCreatedForNew(patientUuid: UUID) {
     val openAsNew = New(patientUuid)
-    uiEvents.onNext(SheetCreated(openAsNew))
     instantiateFixture(openAsNew)
   }
 
   private fun sheetCreatedForUpdate(existingBpUuid: UUID) {
     val openAsUpdate = Update(existingBpUuid)
-    uiEvents.onNext(SheetCreated(openAsUpdate))
     instantiateFixture(openAsUpdate)
   }
 

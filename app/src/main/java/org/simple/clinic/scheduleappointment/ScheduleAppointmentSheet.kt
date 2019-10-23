@@ -77,7 +77,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val patientUuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
+    val patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID
     return Observable.just(ScheduleAppointmentSheetCreated(
         patientUuid = patientUuid
     ))

@@ -32,7 +32,7 @@ import java.util.UUID
 import kotlin.reflect.KClass
 
 private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
-  return enumClass.java.enumConstants.asList().shuffled().first()
+  return enumClass.java.enumConstants!!.asList().shuffled().first()
 }
 
 object PatientMocker {

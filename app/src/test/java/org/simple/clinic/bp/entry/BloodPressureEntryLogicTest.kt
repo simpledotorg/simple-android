@@ -286,7 +286,7 @@ class BloodPressureEntrySheetLogicTest {
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressure))
 
     sheetCreatedForUpdate(bloodPressure.uuid)
-    uiEvents.onNext(RemoveClicked)
+    uiEvents.onNext(RemoveBloodPressureClicked)
 
     verify(ui).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
   }

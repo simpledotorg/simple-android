@@ -19,7 +19,7 @@ object SaveClicked : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Save Clicked"
 }
 
-object RemoveClicked : BloodPressureEntryEvent() {
+object RemoveBloodPressureClicked : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Remove Clicked"
 }
 

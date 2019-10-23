@@ -1,15 +1,16 @@
 package org.simple.clinic.bp.entry
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
+import org.simple.clinic.bp.entry.BpValidator.Validation
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
 
@@ -24,121 +25,147 @@ class BloodPressureEntryUpdate(
       event: BloodPressureEntryEvent
   ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
     return when (event) {
-      is SystolicChanged -> if (isSystolicValueComplete(event.systolic)) {
-        next(model.systolicChanged(event.systolic), HideBpErrorMessage, ChangeFocusToDiastolic)
-      } else {
-        next(model.systolicChanged(event.systolic), HideBpErrorMessage as BloodPressureEntryEffect)
-      }
-
-      is DiastolicChanged -> next(model.diastolicChanged(event.diastolic), HideBpErrorMessage)
-
-      is DiastolicBackspaceClicked -> if (model.diastolic.isNotEmpty()) {
-        next(model.deleteDiastolicLastDigit())
-      } else {
-        val updatedModel = model.deleteSystolicLastDigit()
-        next(updatedModel, ChangeFocusToSystolic, SetSystolic(updatedModel.systolic))
-      }
-
-      is BloodPressureMeasurementFetched -> {
-        val (systolic, diastolic, recordedAt) = event
-        val modelWithSystolicAndDiastolic = model
-            .systolicChanged(systolic.toString())
-            .diastolicChanged(diastolic.toString())
-
-        next(
-            modelWithSystolicAndDiastolic,
-            SetSystolic(systolic.toString()),
-            SetDiastolic(diastolic.toString()),
-            PrefillDate.forUpdateEntry(recordedAt)
-        )
-      }
-
-      is RemoveClicked -> dispatch(
-          ShowConfirmRemoveBloodPressureDialog((model.openAs as OpenAs.Update).bpUuid)
-      )
-
       is ScreenChanged -> next(model.screenChanged(event.type))
-
-      is BackPressed -> if (model.activeScreen == BP_ENTRY) {
-        dispatch(Dismiss as BloodPressureEntryEffect)
-      } else if (model.activeScreen == DATE_ENTRY) {
-        val result = dateValidator.validate(getDateText(model), dateInUserTimeZone)
-        if (result is Valid) {
-          dispatch(ShowBpEntryScreen(result.parsedDate) as BloodPressureEntryEffect)
-        } else {
-          dispatch(ShowDateValidationError(result) as BloodPressureEntryEffect)
-        }
-      } else {
-        noChange()
-      }
-
-      is DayChanged -> next(
-          model.dayChanged(event.day),
-          HideDateErrorMessage
-      )
-
-      is MonthChanged -> next(
-          model.monthChanged(event.month),
-          HideDateErrorMessage
-      )
-
-      is YearChanged -> next(
-          model.yearChanged(event.twoDigitYear),
-          HideDateErrorMessage
-      )
-
-      is BloodPressureDateClicked -> {
-        val result = bpValidator.validate(model.systolic, model.diastolic)
-        return if (result is Success) {
-          dispatch(ShowDateEntryScreen)
-        } else {
-          dispatch(ShowBpValidationError(result))
-        }
-      }
-
-      is SaveClicked -> {
-        val effects = mutableSetOf<BloodPressureEntryEffect>()
-
-        val bpValidationResult = bpValidator.validate(model.systolic, model.diastolic)
-        if (bpValidationResult !is Success) {
-          effects.add(ShowBpValidationError(bpValidationResult))
-        }
-
-        val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
-        if (dateValidationResult !is Valid) {
-          effects.add(ShowDateValidationError(dateValidationResult))
-        }
-
-        return if (effects.isEmpty()) {
-          val validResult = dateValidationResult as Valid
-          val systolic = model.systolic.toInt()
-          val diastolic = model.diastolic.toInt()
-          val parsedDateFromForm = validResult.parsedDate
-          val prefilledDate = model.prefilledDate!!
-
-          val bloodPressureEntryEffect = when (model.openAs) {
-            is OpenAs.New -> CreateNewBpEntry(model.openAs.patientUuid, systolic, diastolic, parsedDateFromForm, prefilledDate)
-            is OpenAs.Update -> UpdateBpEntry(model.openAs.bpUuid, systolic, diastolic, parsedDateFromForm, prefilledDate)
-          }
-          dispatch(bloodPressureEntryEffect)
-        } else {
-          Next.dispatch(effects)
-        }
-      }
-
-      is ShowBpClicked -> {
-        val result = dateValidator.validate(getDateText(model), dateInUserTimeZone)
-        if (result is Valid) {
-          dispatch(ShowBpEntryScreen(result.parsedDate) as BloodPressureEntryEffect)
-        } else {
-          dispatch(ShowDateValidationError(result) as BloodPressureEntryEffect)
-        }
-      }
-
+      is SystolicChanged -> onSystolicChanged(model, event)
+      is DiastolicChanged -> next(model.diastolicChanged(event.diastolic), HideBpErrorMessage)
+      is DiastolicBackspaceClicked -> onDiastolicBackSpaceClicked(model)
+      is BloodPressureMeasurementFetched -> onBloodPressureMeasurementFetched(model, event)
+      is RemoveBloodPressureClicked -> dispatch(ShowConfirmRemoveBloodPressureDialog((model.openAs as OpenAs.Update).bpUuid))
+      is BackPressed -> onBackPressed(model)
+      is DayChanged -> onDateChanged(model.dayChanged(event.day))
+      is MonthChanged -> onDateChanged(model.monthChanged(event.month))
+      is YearChanged -> onDateChanged(model.yearChanged(event.twoDigitYear))
+      is BloodPressureDateClicked -> onBloodPressureDateClicked(model)
+      is SaveClicked -> onSaveClicked(model)
+      is ShowBpClicked -> showBpClicked(model)
       is BloodPressureSaved -> dispatch(SetBpSavedResultAndFinish)
-
       is DatePrefilled -> next(model.datePrefilled(event.prefilledDate))
     }
+  }
+
+  private fun onSystolicChanged(
+      model: BloodPressureEntryModel,
+      event: SystolicChanged
+  ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
+    val updatedSystolicModel = model.systolicChanged(event.systolic)
+    val effects = if (isSystolicValueComplete(event.systolic)) {
+      setOf(HideBpErrorMessage, ChangeFocusToDiastolic)
+    } else {
+      setOf(HideBpErrorMessage)
+    }
+    return next(updatedSystolicModel, *effects.toTypedArray())
+  }
+
+  private fun onDiastolicBackSpaceClicked(
+      model: BloodPressureEntryModel
+  ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
+    return if (model.diastolic.isNotEmpty()) {
+      next(model.deleteDiastolicLastDigit())
+    } else {
+      val deleteSystolicLastDigitModel = model.deleteSystolicLastDigit()
+      next(deleteSystolicLastDigitModel, ChangeFocusToSystolic, SetSystolic(deleteSystolicLastDigitModel.systolic))
+    }
+  }
+
+  private fun onBloodPressureMeasurementFetched(
+      model: BloodPressureEntryModel,
+      event: BloodPressureMeasurementFetched
+  ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
+    val (systolic, diastolic, recordedAt) = event
+    val modelWithSystolicAndDiastolic = model
+        .systolicChanged(systolic.toString())
+        .diastolicChanged(diastolic.toString())
+
+    return next(
+        modelWithSystolicAndDiastolic,
+        SetSystolic(systolic.toString()),
+        SetDiastolic(diastolic.toString()),
+        PrefillDate.forUpdateEntry(recordedAt)
+    )
+  }
+
+  private fun onBackPressed(
+      model: BloodPressureEntryModel
+  ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
+    return when (model.activeScreen) {
+      BP_ENTRY -> dispatch(Dismiss as BloodPressureEntryEffect)
+      DATE_ENTRY -> showBpClicked(model)
+    }
+  }
+
+  private fun onDateChanged(
+      updatedModel: BloodPressureEntryModel
+  ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> =
+      next(updatedModel, HideDateErrorMessage)
+
+  private fun onBloodPressureDateClicked(
+      model: BloodPressureEntryModel
+  ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
+    val result = bpValidator.validate(model.systolic, model.diastolic)
+    val effect = if (result is Success) {
+      ShowDateEntryScreen
+    } else {
+      ShowBpValidationError(result)
+    }
+    return dispatch(effect)
+  }
+
+  private fun onSaveClicked(
+      model: BloodPressureEntryModel
+  ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
+    val bpValidationResult = bpValidator.validate(model.systolic, model.diastolic)
+    val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
+    val validationErrorEffects = getValidationErrorEffects(bpValidationResult, dateValidationResult)
+
+    return if (validationErrorEffects.isNotEmpty()) {
+      Next.dispatch(validationErrorEffects)
+
+    } else {
+      dispatch(getCreateOrUpdateEntryEffect(model, dateValidationResult))
+    }
+  }
+
+  private fun showBpClicked(
+      model: BloodPressureEntryModel
+  ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
+    val result = dateValidator.validate(getDateText(model), dateInUserTimeZone)
+    val effect = if (result is Valid) {
+      ShowBpEntryScreen(result.parsedDate)
+    } else {
+      ShowDateValidationError(result)
+    }
+    return dispatch(effect)
+  }
+
+  private fun getCreateOrUpdateEntryEffect(
+      model: BloodPressureEntryModel,
+      dateValidationResult: Result
+  ): BloodPressureEntryEffect {
+    val systolic = model.systolic.toInt()
+    val diastolic = model.diastolic.toInt()
+    val parsedDateFromForm = (dateValidationResult as Valid).parsedDate
+    val prefilledDate = model.prefilledDate!!
+
+    return when (val openAs = model.openAs) {
+      is OpenAs.New -> CreateNewBpEntry(openAs.patientUuid, systolic, diastolic, parsedDateFromForm, prefilledDate)
+      is OpenAs.Update -> UpdateBpEntry(openAs.bpUuid, systolic, diastolic, parsedDateFromForm, prefilledDate)
+    }
+  }
+
+  private fun getValidationErrorEffects(
+      bpValidationResult: Validation,
+      dateValidationResult: Result
+  ): Set<BloodPressureEntryEffect> {
+    val validationErrorEffects = mutableSetOf<BloodPressureEntryEffect>()
+
+    if (bpValidationResult !is Success) {
+      validationErrorEffects.add(ShowBpValidationError(bpValidationResult))
+    }
+
+    if (dateValidationResult !is Valid) {
+      validationErrorEffects.add(ShowDateValidationError(dateValidationResult))
+    }
+    return validationErrorEffects.toSet()
   }
 
   private fun getDateText(model: BloodPressureEntryModel) =

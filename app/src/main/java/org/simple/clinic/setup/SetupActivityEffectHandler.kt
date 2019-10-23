@@ -18,6 +18,7 @@ object SetupActivityEffectHandler {
         .subtypeEffectHandler<SetupActivityEffect, SetupActivityEvent>()
         .addTransformer(FetchUserDetails::class.java, fetchUserDetails(onboardingCompletePreference, schedulersProvider.io()))
         .addAction(GoToMainActivity::class.java, uiActions::goToMainActivity, schedulersProvider.ui())
+        .addAction(ShowOnboardingScreen::class.java, uiActions::showOnboardingScreen, schedulersProvider.ui())
         .build()
   }
 

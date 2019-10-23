@@ -141,8 +141,6 @@ class BloodPressureEntryUpdate(
       is BloodPressureSaved -> dispatch(SetBpSavedResultAndFinish)
 
       is DatePrefilled -> next(model.datePrefilled(event.prefilledDate))
-
-      else -> noChange()
     }
   }
 

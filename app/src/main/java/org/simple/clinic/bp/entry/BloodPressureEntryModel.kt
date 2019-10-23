@@ -45,15 +45,12 @@ data class BloodPressureEntryModel(
   fun screenChanged(activeScreen: ScreenType): BloodPressureEntryModel =
       copy(activeScreen = activeScreen)
 
-  fun dayChanged(day: String): BloodPressureEntryModel {
-    return copy(day = day)
-  }
+  fun dayChanged(day: String): BloodPressureEntryModel =
+      copy(day = day)
 
-  fun monthChanged(month: String): BloodPressureEntryModel {
-    return copy(month = month)
-  }
+  fun monthChanged(month: String): BloodPressureEntryModel =
+      copy(month = month)
 
-  fun yearChanged(twoDigitYear: String): BloodPressureEntryModel {
-    return copy(twoDigitYear = twoDigitYear)
-  }
+  fun yearChanged(twoDigitYear: String): BloodPressureEntryModel =
+      copy(twoDigitYear = twoDigitYear)
 }

@@ -79,15 +79,17 @@ class BloodPressureEntryEffectHandler(
   private fun prefillDate(scheduler: Scheduler): ObservableTransformer<PrefillDate, BloodPressureEntryEvent> {
     return ObservableTransformer { prefillDates ->
       prefillDates
-          .map { prefillDate ->
-            val instant = if (prefillDate is UpdateEntryPrefill) prefillDate.date else Instant.now(userClock)
-            instant.toLocalDateAtZone(userClock.zone)
-          }
+          .map(::convertToLocalDate)
           .observeOn(scheduler)
           .doOnNext { setDateOnInputFields(it) }
           .doOnNext { ui.showDateOnDateButton(it) }
           .map { DatePrefilled(it) }
     }
+  }
+
+  private fun convertToLocalDate(prefillDate: PrefillDate): LocalDate {
+    val instant = if (prefillDate is UpdateEntryPrefill) prefillDate.date else Instant.now(userClock)
+    return instant.toLocalDateAtZone(userClock.zone)
   }
 
   private fun setDateOnInputFields(dateToSet: LocalDate) {

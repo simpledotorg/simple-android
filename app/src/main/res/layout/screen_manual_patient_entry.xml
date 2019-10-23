@@ -337,6 +337,26 @@
         android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Center"
         android:textColor="@color/grey0"
         tools:text="@string/patiententry_consent_first_para" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:orientation="horizontal">
+
+        <Switch
+          android:id="@+id/consentSwitch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:checked="true" />
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_8"
+          android:text="@string/patiententry_consent_whatsapp_sms_reminders"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Center" />
+      </LinearLayout>
     </LinearLayout>
   </ScrollView>
 

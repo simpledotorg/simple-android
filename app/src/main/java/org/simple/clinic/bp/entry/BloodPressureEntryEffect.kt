@@ -32,15 +32,11 @@ object ChangeFocusToSystolic : BloodPressureEntryEffect()
 
 data class SetSystolic(val systolic: String) : BloodPressureEntryEffect()
 
-data class FetchBloodPressureMeasurement(
-    val bpUuid: UUID
-) : BloodPressureEntryEffect()
+data class FetchBloodPressureMeasurement(val bpUuid: UUID) : BloodPressureEntryEffect()
 
 data class SetDiastolic(val diastolic: String) : BloodPressureEntryEffect()
 
-data class ShowConfirmRemoveBloodPressureDialog(
-    val bpUuid: UUID
-) : BloodPressureEntryEffect()
+data class ShowConfirmRemoveBloodPressureDialog(val bpUuid: UUID) : BloodPressureEntryEffect()
 
 object Dismiss : BloodPressureEntryEffect()
 
@@ -52,9 +48,7 @@ object ShowDateEntryScreen : BloodPressureEntryEffect()
 
 data class ShowBpEntryScreen(val date: LocalDate) : BloodPressureEntryEffect()
 
-data class ShowDateValidationError(
-    val result: Result
-) : BloodPressureEntryEffect()
+data class ShowDateValidationError(val result: Result) : BloodPressureEntryEffect()
 
 data class CreateNewBpEntry(
     val patientUuid: UUID,

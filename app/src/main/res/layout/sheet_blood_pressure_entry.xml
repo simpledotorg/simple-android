@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener
+<org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -116,7 +116,7 @@
           app:layout_constraintStart_toEndOf="@+id/systolicEditText"
           app:layout_constraintTop_toTopOf="@+id/systolicEditText" />
 
-        <org.simple.clinic.bp.entry.EditTextWithBackspaceListener
+        <org.simple.clinic.widgets.EditTextWithBackspaceListener
           android:id="@+id/diastolicEditText"
           style="@style/Clinic.V2.BloodPressureInput.BpReading"
           android:imeOptions="actionDone"
@@ -288,4 +288,4 @@
       </LinearLayout>
     </FrameLayout>
   </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
-</org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener>
+</org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener>

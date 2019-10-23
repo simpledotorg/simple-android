@@ -74,13 +74,6 @@ class BloodPressureValidationTest {
   private val facility = PatientMocker.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
   private val userSubject = PublishSubject.create<User>()
 
-  private val controller = BloodPressureEntrySheetController(
-      bloodPressureRepository = bloodPressureRepository,
-      dateValidator = dateValidator,
-      bpValidator = bpValidator,
-      userClock = testUserClock,
-      inputDatePaddingCharacter = UserInputDatePaddingCharacter.ZERO)
-
   private val viewRenderer = BloodPressureEntryViewRenderer(ui)
   private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
 
@@ -90,10 +83,6 @@ class BloodPressureValidationTest {
 
     whenever(userSession.requireLoggedInUser()).doReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
 
     userSubject.onNext(user)
   }

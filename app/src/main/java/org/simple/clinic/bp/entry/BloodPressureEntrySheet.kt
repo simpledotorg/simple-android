@@ -23,14 +23,13 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.main.TheActivity
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusActivityDelegate
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
@@ -55,9 +54,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
-  @Inject
-  lateinit var controller: BloodPressureEntrySheetController
-
   @Inject
   lateinit var dateFormatter: DateTimeFormatter
 
@@ -141,7 +137,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   private val viewRenderer = BloodPressureEntryViewRenderer(this)
 
   private val delegate by unsafeLazy {
-    val defaultModel = when (val openAs = intent.extras!!.getParcelable(KEY_OPEN_AS) as OpenAs) {
+    val defaultModel = when (val openAs = intent.extras!!.getParcelable<OpenAs>(KEY_OPEN_AS)!!) {
       is New -> BloodPressureEntryModel.newBloodPressureEntry(New(openAs.patientUuid), LocalDate.now(userClock).year)
       is Update -> BloodPressureEntryModel.updateBloodPressureEntry(Update(openAs.bpUuid), LocalDate.now(userClock).year)
     }
@@ -196,13 +192,6 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
 
     setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = screenDestroys
-    )
 
     delegate.onRestoreInstanceState(savedInstanceState)
   }

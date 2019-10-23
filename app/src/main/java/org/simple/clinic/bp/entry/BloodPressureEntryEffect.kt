@@ -8,16 +8,20 @@ import java.util.UUID
 
 sealed class BloodPressureEntryEffect
 
-data class PrefillDate(val date: Instant? = null) : BloodPressureEntryEffect() {
+sealed class PrefillDate : BloodPressureEntryEffect() {
   companion object {
     fun forNewEntry(): PrefillDate {
-      return PrefillDate()
+      return NewEntryPrefill
     }
 
     fun forUpdateEntry(date: Instant): PrefillDate {
-      return PrefillDate(date)
+      return UpdateEntryPrefill(date)
     }
   }
+
+  object NewEntryPrefill : PrefillDate()
+
+  data class UpdateEntryPrefill(val date: Instant) : PrefillDate()
 }
 
 object HideBpErrorMessage : BloodPressureEntryEffect()

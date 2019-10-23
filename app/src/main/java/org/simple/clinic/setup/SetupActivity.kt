@@ -9,10 +9,10 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.activity.PlaceholderScreenKey
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.onboarding.OnboardingScreenInjector
-import org.simple.clinic.onboarding.OnboardingScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -88,7 +88,7 @@ class SetupActivity : AppCompatActivity() {
         screenBackgroundRes = R.color.window_background,
         onKeyChange = this::onScreenChanged
     ))
-    return screenRouter.installInContext(baseContext, OnboardingScreenKey(migrated = true))
+    return screenRouter.installInContext(baseContext, PlaceholderScreenKey())
   }
 
   private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {

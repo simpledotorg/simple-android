@@ -8,10 +8,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -20,7 +16,7 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.sheet_blood_pressure_entry.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
@@ -43,7 +39,6 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
@@ -57,21 +52,6 @@ import javax.inject.Inject
 class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, RemoveBloodPressureListener {
   @Inject
   lateinit var dateFormatter: DateTimeFormatter
-
-  private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
-  private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
-  private val diastolicEditText by bindView<EditTextWithBackspaceListener>(R.id.bloodpressureentry_diastolic)
-  private val bpErrorTextView by bindView<TextView>(R.id.bloodpressureentry_bp_error)
-  private val bpDateButton by bindView<Button>(R.id.bloodpressureentry_bp_date)
-  private val backImageButton by bindView<ImageButton>(R.id.bloodpressureentry_back_button)
-  private val enterBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_enter_blood_pressure)
-  private val editBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_edit_blood_pressure)
-  private val removeBloodPressureButton by bindView<Button>(R.id.bloodpressureentry_remove)
-  private val dayEditText by bindView<EditText>(R.id.bloodpressureentry_day)
-  private val monthEditText by bindView<EditText>(R.id.bloodpressureentry_month)
-  private val yearEditText by bindView<EditText>(R.id.bloodpressureentry_year)
-  private val viewFlipper by bindView<ViewFlipperWithLayoutEditorPreview>(R.id.bloodpressureentry_view_flipper)
-  private val dateErrorTextView by bindView<TextView>(R.id.bloodpressureentry_date_error)
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 

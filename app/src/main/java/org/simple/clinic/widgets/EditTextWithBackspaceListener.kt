@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.entry
+package org.simple.clinic.widgets
 
 import android.content.Context
 import android.text.Editable

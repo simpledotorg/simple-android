@@ -19,6 +19,7 @@ import androidx.transition.TransitionSet
 import com.f2prateek.rx.preferences2.Preference
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -38,6 +39,8 @@ import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.ReminderConsent.Denied
+import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -117,7 +120,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   private val events: Observable<PatientEntryEvent> by unsafeLazy {
     Observable
-        .merge(formChanges(), saveClicks())
+        .merge(formChanges(), saveClicks(), consentChanges())
         .compose(ReportAnalyticsEvents())
         .cast<PatientEntryEvent>()
   }
@@ -239,6 +242,11 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .mergeWith(stateImeClicks)
         .map { SaveClicked }
   }
+
+  private fun consentChanges(): Observable<PatientEntryEvent> =
+      RxCompoundButton.checkedChanges(consentSwitch)
+          .map { checked -> if (checked) Granted else Denied }
+          .map(::ReminderConsentChanged)
 
   override fun preFillFields(entry: OngoingNewPatientEntry) {
     fullNameEditText.setTextAndCursor(entry.personalDetails?.fullName)

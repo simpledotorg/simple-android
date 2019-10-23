@@ -26,6 +26,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
+import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog.RemoveBloodPressureListener
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
@@ -53,7 +54,7 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
+class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, RemoveBloodPressureListener {
   @Inject
   lateinit var dateFormatter: DateTimeFormatter
 
@@ -313,10 +314,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   }
 
   override fun setBpSavedResultAndFinish() {
-    val intent = Intent()
-    intent.putExtra(EXTRA_WAS_BP_SAVED, true)
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    markBpAsSavedAndFinish()
   }
 
   override fun hideBpErrorMessage() {
@@ -438,6 +436,17 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   }
 
   override fun dismiss() {
+    finish()
+  }
+
+  override fun onBloodPressureRemoved() {
+    markBpAsSavedAndFinish()
+  }
+
+  private fun markBpAsSavedAndFinish() {
+    val intent = Intent()
+    intent.putExtra(EXTRA_WAS_BP_SAVED, true)
+    setResult(Activity.RESULT_OK, intent)
     finish()
   }
 }

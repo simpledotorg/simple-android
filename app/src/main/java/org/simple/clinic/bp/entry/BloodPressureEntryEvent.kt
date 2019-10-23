@@ -7,8 +7,6 @@ import org.threeten.bp.LocalDate
 
 sealed class BloodPressureEntryEvent : UiEvent
 
-data class SheetCreated(val openAs: OpenAs) : BloodPressureEntryEvent()
-
 data class SystolicChanged(val systolic: String) : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Systolic Text Changed"
 }

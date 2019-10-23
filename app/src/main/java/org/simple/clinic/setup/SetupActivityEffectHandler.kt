@@ -11,11 +11,13 @@ object SetupActivityEffectHandler {
 
   fun create(
       onboardingCompletePreference: Preference<Boolean>,
+      uiActions: UiActions,
       schedulersProvider: SchedulersProvider
   ): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
     return RxMobius
         .subtypeEffectHandler<SetupActivityEffect, SetupActivityEvent>()
         .addTransformer(FetchUserDetails::class.java, fetchUserDetails(onboardingCompletePreference, schedulersProvider.io()))
+        .addAction(GoToMainActivity::class.java, uiActions::goToMainActivity, schedulersProvider.ui())
         .build()
   }
 

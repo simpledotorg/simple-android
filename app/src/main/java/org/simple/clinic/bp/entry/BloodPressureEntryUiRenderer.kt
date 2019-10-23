@@ -5,7 +5,7 @@ import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.util.ValueChangedCallback
 
-class BloodPressureEntryViewRenderer(
+class BloodPressureEntryUiRenderer(
     val ui: BloodPressureEntryUi
 ) : ViewRenderer<BloodPressureEntryModel> {
   private val openAsValueChangedCallback = ValueChangedCallback<OpenAs>()

@@ -18,7 +18,7 @@ class BloodPressureEntryViewRendererTest {
   fun `when the sheet is show for a new entry, then hide remove BP button and show enter new BP title`() {
     // given
     val newBloodPressureEntryModel = BloodPressureEntryModel
-        .newBloodPressureEntry(New(patientUuid), LocalDate.now(TestUserClock()).year)
+        .create(New(patientUuid), LocalDate.now(TestUserClock()).year)
 
     // when
     viewRenderer.render(newBloodPressureEntryModel)

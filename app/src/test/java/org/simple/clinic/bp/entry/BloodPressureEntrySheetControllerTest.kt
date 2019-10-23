@@ -921,14 +921,10 @@ class BloodPressureEntrySheetControllerTest {
         UserInputDatePaddingCharacter.ZERO,
         TrampolineSchedulersProvider()
     )
-    val defaultModel = when (openAs) {
-      is New -> BloodPressureEntryModel.newBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
-      is Update -> BloodPressureEntryModel.updateBloodPressureEntry(openAs, LocalDate.now(testUserClock).year)
-    }
 
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
-        defaultModel,
+        BloodPressureEntryModel.create(openAs, LocalDate.now(testUserClock).year),
         BloodPressureEntryInit(),
         BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(UTC), UserInputDatePaddingCharacter.ZERO),
         effectHandler,

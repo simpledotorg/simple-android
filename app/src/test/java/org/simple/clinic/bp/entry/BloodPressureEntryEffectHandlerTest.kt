@@ -41,6 +41,6 @@ class BloodPressureEntryEffectHandlerTest {
     // then
     verify(ui).setDateOnInputFields("07", "06", "92")
     verify(ui).showDateOnDateButton(entryDate)
-    testCase.assertNoOutgoingEvents()
+    testCase.assertOutgoingEvents(DatePrefilled(entryDate))
   }
 }

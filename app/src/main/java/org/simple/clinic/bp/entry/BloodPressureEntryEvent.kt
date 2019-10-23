@@ -3,6 +3,7 @@ package org.simple.clinic.bp.entry
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.LocalDate
 
 sealed class BloodPressureEntryEvent : UiEvent
 
@@ -57,3 +58,5 @@ object BackPressed : BloodPressureEntryEvent() {
 data class BloodPressureMeasurementFetched(
     val bloodPressureMeasurement: BloodPressureMeasurement
 ) : BloodPressureEntryEvent()
+
+data class DatePrefilled(val prefilledDate: LocalDate) : BloodPressureEntryEvent()

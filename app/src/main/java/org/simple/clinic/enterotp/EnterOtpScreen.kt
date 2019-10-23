@@ -22,6 +22,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.StaggeredEditText
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -90,6 +91,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   }
 
   fun goBack() {
+    hideKeyboard()
     screenRouter.pop()
   }
 

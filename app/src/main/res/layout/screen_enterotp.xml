@@ -13,8 +13,8 @@
     android:layout_height="wrap_content"
     android:background="?colorPrimary"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/spacing_16"
-    android:paddingTop="@dimen/spacing_4">
+    android:paddingTop="@dimen/spacing_4"
+    android:paddingBottom="@dimen/spacing_16">
 
     <ImageButton
       android:id="@+id/enterotp_back"
@@ -83,10 +83,7 @@
         android:inputType="number"
         android:maxLength="6"
         app:pinCharacterMask="@null"
-        tools:text="123456">
-
-        <requestFocus />
-      </org.simple.clinic.widgets.StaggeredEditText>
+        tools:text="123456" />
 
       <TextView
         android:id="@+id/enterotp_error"

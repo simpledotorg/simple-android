@@ -11,7 +11,6 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.onboarding.OnboardingScreenKey
 import org.simple.clinic.router.ScreenResultBus
@@ -54,7 +53,7 @@ class SetupActivity : AppCompatActivity() {
     val wrappedContext = baseContext
         .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { wrapContextWithRouter(it) }
-        .wrap { InjectorProviderContextWrapper.wrap(it, mapOf(OnboardingScreenInjector::class.java to TheActivity.component)) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, mapOf(OnboardingScreenInjector::class.java to component)) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)

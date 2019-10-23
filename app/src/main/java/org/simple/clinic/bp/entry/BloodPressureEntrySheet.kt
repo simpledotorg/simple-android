@@ -117,7 +117,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   private val viewRenderer = BloodPressureEntryViewRenderer(this)
 
   private val delegate by unsafeLazy {
-    val defaultModel = when (val openAs = intent.extras!!.getParcelable(KEY_OPEN_AS) as OpenAs) {
+    val defaultModel = when (val openAs = intent.extras!!.getParcelable<OpenAs>(KEY_OPEN_AS)!!) {
       is New -> BloodPressureEntryModel.newBloodPressureEntry(New(openAs.patientUuid))
       is Update -> BloodPressureEntryModel.updateBloodPressureEntry(Update(openAs.bpUuid))
     }
@@ -201,7 +201,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi {
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
-    val openAs = intent.extras!!.getParcelable(KEY_OPEN_AS) as OpenAs
+    val openAs = intent.extras!!.getParcelable<OpenAs>(KEY_OPEN_AS)!!
     return Observable
         .just(SheetCreated(openAs))
         // TODO: Update: Now that we've moved to ReplayUntilScreenIsDestroyed, is this still required?

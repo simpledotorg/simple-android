@@ -5,7 +5,9 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.zipWith
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
@@ -37,6 +39,8 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 
 object BloodPressureEntryEffectHandler {
+  private val reportAnalyticsEvents = ReportAnalyticsEvents()
+
   fun create(
       ui: BloodPressureEntryUi,
       userSession: UserSession,
@@ -186,11 +190,13 @@ object BloodPressureEntryEffectHandler {
                 .flatMap { bloodPressureMeasurement ->
                   appointmentsRepository
                       .markAppointmentsCreatedBeforeTodayAsVisited(bloodPressureMeasurement.patientUuid)
-                      .andThen(patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, createNewBpEntry.date.toUtcInstant(userClock)))
+                      .andThen(patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, createNewBpEntry.parsedDateFromForm.toUtcInstant(userClock)))
                       .toSingleDefault(bloodPressureMeasurement)
                 }
+                .map { BloodPressureSaved(createNewBpEntry.wasDateChanged) }
           }
-          .map { BloodPressureSaved(false) } // TODO(rj) Revisit this and fix (1. Analytics, 2. Prefill date information)
+          .compose(reportAnalyticsEvents)
+          .cast()
     }
   }
 
@@ -221,17 +227,20 @@ object BloodPressureEntryEffectHandler {
                   existingBp.copy(
                       systolic = updateBpEntry.systolic,
                       diastolic = updateBpEntry.diastolic,
-                      recordedAt = updateBpEntry.date.toUtcInstant(userClock),
+                      recordedAt = updateBpEntry.parsedDateFromForm.toUtcInstant(userClock),
                       userUuid = user.uuid,
                       facilityUuid = facility.uuid
                   )
                 }
+                .map { it to updateBpEntry }
           }
-          .flatMapSingle {
-            bloodPressureRepository.updateMeasurement(it)
-                .andThen(patientRepository.compareAndUpdateRecordedAt(it.patientUuid, it.recordedAt))
-                .toSingleDefault(BloodPressureSaved(false) as BloodPressureEntryEvent)
+          .flatMapSingle { (bloodPressureMeasurement, updateBpEntry) ->
+            bloodPressureRepository.updateMeasurement(bloodPressureMeasurement)
+                .andThen(patientRepository.compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, bloodPressureMeasurement.recordedAt))
+                .toSingleDefault(BloodPressureSaved(updateBpEntry.wasDateChanged))
           }
+          .compose(reportAnalyticsEvents)
+          .cast()
     }
   }
 

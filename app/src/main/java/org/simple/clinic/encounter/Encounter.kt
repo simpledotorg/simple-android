@@ -59,12 +59,19 @@ data class Encounter(
     @Query("SELECT * FROM Encounter WHERE uuid = :uuid")
     fun getOne(uuid: UUID): Encounter?
 
-    @Query("""
-      UPDATE Encounter SET syncStatus = :syncStatus, deletedAt = :deletedAt WHERE uuid = :encounterUuid
-    """)
-    fun deleteEncounter(encounterUuid: UUID, deletedAt: Instant?, syncStatus: SyncStatus = SyncStatus.PENDING): Completable
-
     @Query("SELECT * FROM Encounter WHERE uuid = :encounterUuid")
     fun encounter(encounterUuid: UUID): Observable<Encounter>
+
+    @Query("""
+      UPDATE Encounter 
+      SET syncStatus = :syncStatus, deletedAt = :deletedAt, updatedAt = :updatedAt 
+      WHERE uuid  = :encounterUuid AND uuid NOT IN (SELECT encounterUuid FROM BloodPressureMeasurement)
+    """)
+    fun deleteEncounter(
+        encounterUuid: UUID,
+        deletedAt: Instant,
+        syncStatus: SyncStatus = SyncStatus.PENDING,
+        updatedAt: Instant
+    )
   }
 }

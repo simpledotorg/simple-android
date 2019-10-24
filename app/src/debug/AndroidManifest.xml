@@ -10,5 +10,10 @@
     tools:replace="android:name,android:icon">
 
     <receiver android:name=".DebugNotificationActionReceiver" />
+
+    <activity
+      android:name=".playground.AwaitActivity"
+      android:exported="true"
+      />
   </application>
 </manifest>

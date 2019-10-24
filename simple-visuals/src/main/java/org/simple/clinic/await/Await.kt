@@ -21,9 +21,10 @@ class Await<T>(
 ) {
   fun events(): Observable<T> {
     val initialValue: Pair<Checkpoint<T?>, Delay> = Checkpoint(null as T?, 0) to 0
+    val sortedCheckpoints = checkpoints.sortedBy { it.timing }
 
     return Observable
-        .fromIterable(checkpoints)
+        .fromIterable(sortedCheckpoints)
         .scan(initialValue, { elapsedDelayPair, checkpoint ->
           val (previousCheckpoint, _) = elapsedDelayPair
           checkpoint as Checkpoint<T?> to checkpoint.timing - previousCheckpoint.timing

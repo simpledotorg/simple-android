@@ -86,4 +86,20 @@ class AwaitTest {
         .assertNoErrors()
         .assertTerminated()
   }
+
+  @Test
+  fun `it does not terminate if all events are not emitted`() {
+    // given
+    val await = Await(listOf(100, 200, 300), scheduler)
+    val testObserver = await.events().test()
+
+    // when
+    scheduler.advanceTimeBy(250, MILLISECONDS)
+
+    // then
+    testObserver
+        .assertValueCount(2)
+        .assertNoErrors()
+        .assertNotTerminated()
+  }
 }

@@ -70,4 +70,20 @@ class AwaitTest {
         .assertNoErrors()
         .assertTerminated()
   }
+
+  @Test
+  fun `it terminates if all events are emitted`() {
+    // given
+    val await = Await(listOf(100, 200, 300), scheduler)
+    val testObserver = await.events().test()
+
+    // when
+    scheduler.advanceTimeBy(300, MILLISECONDS)
+
+    // then
+    testObserver
+        .assertValueCount(3)
+        .assertNoErrors()
+        .assertTerminated()
+  }
 }

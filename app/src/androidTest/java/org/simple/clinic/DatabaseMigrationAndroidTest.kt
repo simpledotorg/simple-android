@@ -3427,6 +3427,16 @@ class DatabaseMigrationAndroidTest {
     val facilityUuid = UUID.fromString("0086ba86-314c-49d9-8822-2563e53bed92")
     val patientUuid = UUID.fromString("c4233170-feb2-3d34-8115-98fef5a68837")
 
+    val earliestBpWhichIsDeleted = testData.bloodPressureMeasurement(
+        uuid = UUID.fromString("3094fe79-41b8-4158-bb64-4043efd82475"),
+        facilityUuid = facilityUuid,
+        patientUuid = patientUuid,
+        createdAt = Instant.parse("2018-07-04T01:59:59Z"),
+        updatedAt = Instant.parse("2018-07-04T01:59:59Z"),
+        recordedAt = Instant.parse("2018-07-03T00:00:00Z"),
+        deletedAt = Instant.parse("2018-07-04T02:00:00Z"),
+        userUuid = userUuid
+    )
     val firstBp = testData.bloodPressureMeasurement(
         uuid = UUID.fromString("3eb96138-5270-419c-bcdf-86db95d0bc8b"),
         facilityUuid = facilityUuid,
@@ -3445,7 +3455,7 @@ class DatabaseMigrationAndroidTest {
         recordedAt = Instant.parse("2018-07-03T01:30:00Z"),
         userUuid = userUuid
     )
-    val testRecords = listOf(firstBp, secondBp)
+    val testRecords = listOf(earliestBpWhichIsDeleted, firstBp, secondBp)
 
     val db_49 = helper.createDatabase(version = 49)
 
@@ -3480,10 +3490,13 @@ class DatabaseMigrationAndroidTest {
     )
 
     db_50.query("""SELECT * FROM '$bloodPressureMeasurementTable' """).use {
-      assertThat(it.count).isEqualTo(2)
+      assertThat(it.count).isEqualTo(3)
       assertThat(it.columnCount).isEqualTo(12)
       it.moveToFirst()
+      assertThat(it.uuid("uuid")).isEqualTo(earliestBpWhichIsDeleted.uuid)
+      assertThat(it.uuid("encounterUuid")).isEqualTo(expectedEncounterId)
 
+      it.moveToNext()
       assertThat(it.uuid("uuid")).isEqualTo(firstBp.uuid)
       assertThat(it.uuid("encounterUuid")).isEqualTo(expectedEncounterId)
 

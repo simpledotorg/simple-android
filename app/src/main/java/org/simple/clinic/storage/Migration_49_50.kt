@@ -42,21 +42,39 @@ class Migration_49_50 : Migration(49, 50) {
                             encounteredDate = encounteredOn
                         ).toString()
 
-                        // TODO(vs): 2019-10-24 Add a migration for fixing the "null" BP deleted at
-                        val bpDeletedAtClause = when (val bpDeletedAt = cursorRow.string("deletedAt")) {
-                          null -> "NULL"
-                          else -> "'$bpDeletedAt'"
-                        }
+                        // This migration was edited after it went to production. The first version
+                        // of the migration had a bug where BPs which were deleted would end up
+                        // generating migrations where the deletedAt property was set to the string
+                        // "null" instead of SQL NULL value.
+                        //
+                        // We fixed this migration, but some users did end up running this migration
+                        // and would have encounters which should technically be deleted, but still
+                        // show up in the UI because the deletedAt field is non-null.
+                        //
+                        // We need to add another migration to delete those encounters.
+                        // TODO(vs): 2019-10-24 Add a migration for deleting the encounters with "null" deletedAt
 
-                        execSQL(""" INSERT OR IGNORE INTO "Encounter" VALUES (
-                          '$encounterId',
-                          '$patientUuid',
-                          '$encounteredOn',
-                          '${cursorRow.string("createdAt")}',
-                          '${cursorRow.string("updatedAt")}',
-                          $bpDeletedAtClause
-                          )"""
-                        )
+                        val bpDeletedAt = cursorRow.string("deletedAt")
+
+                        // Technically, we should generate an encounter with deletedAt != null for a
+                        // deleted BP. However, these will never be show in the UI and the server
+                        // will eventually send those encounters to us when we sync.
+                        //
+                        // For convenience, we can skip generating these encounters for us.
+                        if (bpDeletedAt == null) {
+                          execSQL("""
+                            INSERT OR IGNORE INTO "Encounter" 
+                            VALUES (
+                              '$encounterId',
+                              '$patientUuid',
+                              '$encounteredOn',
+                              '${cursorRow.string("createdAt")}',
+                              '${cursorRow.string("updatedAt")}',
+                              NULL
+                            )
+                            """
+                          )
+                        }
 
                         statement.bindString(1, encounterId)
                         statement.bindString(2, uuid)

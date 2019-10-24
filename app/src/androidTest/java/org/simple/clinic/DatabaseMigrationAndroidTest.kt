@@ -23,12 +23,15 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.generateEncounterUuid
+import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+
+private val dateConverter = LocalDateRoomTypeConverter()
 
 @Suppress("LocalVariableName")
 @RunWith(AndroidJUnit4::class)
@@ -3418,14 +3421,14 @@ class DatabaseMigrationAndroidTest {
     //given
     val bloodPressureMeasurementTable = "BloodPressureMeasurement"
 
-    val uuidForFirstBP = "3eb96138-5270-419c-bcdf-86db95d0bc8b"
-    val uuidForSecondBP = "a2455b0c-cf14-46c9-9f73-6e18972982b0"
-    val facilityUuid = "0086ba86-314c-49d9-8822-2563e53bed92"
-    val patientUuid = "c4233170-feb2-3d34-8115-98fef5a68837"
-    val recordedAtForFirstBP = "2018-07-03T00:00:00Z"
-    val recordedAtForSecondBP = "2018-07-03T01:30:00Z"
-    val createdAtForFirstBP = "2018-07-04T02:00:00Z"
-    val userId = "d689285f-5c92-4735-80ef-c0e360ad3f1d"
+    val uuidForFirstBP = UUID.fromString("3eb96138-5270-419c-bcdf-86db95d0bc8b")
+    val uuidForSecondBP = UUID.fromString("a2455b0c-cf14-46c9-9f73-6e18972982b0")
+    val facilityUuid = UUID.fromString("0086ba86-314c-49d9-8822-2563e53bed92")
+    val patientUuid = UUID.fromString("c4233170-feb2-3d34-8115-98fef5a68837")
+    val recordedAtForFirstBP = Instant.parse("2018-07-03T00:00:00Z")
+    val recordedAtForSecondBP = Instant.parse("2018-07-03T01:30:00Z")
+    val createdAtForFirstBP = Instant.parse("2018-07-04T02:00:00Z")
+    val userId = UUID.fromString("d689285f-5c92-4735-80ef-c0e360ad3f1d")
 
     val db_49 = helper.createDatabase(version = 49)
     db_49.insert(bloodPressureMeasurementTable, mapOf(
@@ -3461,30 +3464,30 @@ class DatabaseMigrationAndroidTest {
 
     //then
     val userClock = TestUserClock()
-    val expectedEncounteredOn = Instant.parse(recordedAtForFirstBP).toLocalDateAtZone(userClock.zone)
+    val expectedEncounteredOn = recordedAtForFirstBP.toLocalDateAtZone(userClock.zone)
     val expectedEncounterId = generateEncounterUuid(
-        facilityUuid = UUID.fromString(facilityUuid),
-        patientUuid = UUID.fromString(patientUuid),
+        facilityUuid = facilityUuid,
+        patientUuid = patientUuid,
         encounteredDate = expectedEncounteredOn
-    ).toString()
+    )
 
     db_50.query("""SELECT * FROM '$bloodPressureMeasurementTable' """).use {
       assertThat(it.count).isEqualTo(2)
       assertThat(it.columnCount).isEqualTo(12)
       it.moveToFirst()
 
-      assertThat(it.string("uuid")).isEqualTo(uuidForFirstBP)
-      assertThat(it.string("encounterUuid")).isEqualTo(expectedEncounterId)
+      assertThat(it.uuid("uuid")).isEqualTo(uuidForFirstBP)
+      assertThat(it.uuid("encounterUuid")).isEqualTo(expectedEncounterId)
 
       it.moveToNext()
-      assertThat(it.string("uuid")).isEqualTo(uuidForSecondBP)
-      assertThat(it.string("encounterUuid")).isEqualTo(expectedEncounterId)
+      assertThat(it.uuid("uuid")).isEqualTo(uuidForSecondBP)
+      assertThat(it.uuid("encounterUuid")).isEqualTo(expectedEncounterId)
     }
 
     val expectedEncounterValues = mapOf(
         "uuid" to expectedEncounterId,
         "patientUuid" to patientUuid,
-        "encounteredOn" to expectedEncounteredOn.toString(),
+        "encounteredOn" to expectedEncounteredOn,
         "createdAt" to createdAtForFirstBP,
         "updatedAt" to createdAtForFirstBP,
         "deletedAt" to "null"
@@ -3534,6 +3537,9 @@ private fun Cursor.integer(columnName: String): Int? = getInt(getColumnIndex(col
 private fun Cursor.long(columnName: String): Long = getLong(getColumnIndex(columnName))
 private fun Cursor.double(columnName: String): Double = getDouble(getColumnIndex(columnName))
 private fun Cursor.float(columnName: String): Float = getFloat(getColumnIndex(columnName))
+private fun Cursor.uuid(columnName: String): UUID? = string(columnName)?.let { UUID.fromString(it) }
+private fun Cursor.instant(columnName: String): Instant? = string(columnName)?.let { Instant.parse(it) }
+private fun Cursor.localDate(columnName: String): LocalDate? = string(columnName).let(dateConverter::toLocalDate)
 
 private fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedCount: Int) {
   this.query("""
@@ -3580,6 +3586,9 @@ private fun SupportSQLiteDatabase.insert(tableName: String, valuesMap: Map<Strin
           is Double -> values.put(key, value)
           is Boolean -> values.put(key, value)
           is String -> values.put(key, value)
+          is UUID -> values.put(key, value.toString())
+          is Instant -> values.put(key, value.toString())
+          is LocalDate -> values.put(key, dateConverter.fromLocalDate(value))
           else -> throw IllegalArgumentException("Unknown type (${value.javaClass.name}) for key: $key")
         }
 
@@ -3602,6 +3611,9 @@ private fun Cursor.assertValues(valuesMap: Map<String, Any?>) {
           is Double -> withMessage.that(double(key)).isEqualTo(value)
           is Boolean -> withMessage.that(boolean(key)).isEqualTo(value)
           is String -> withMessage.that(string(key)).isEqualTo(value)
+          is UUID -> withMessage.that(uuid(key)).isEqualTo(value)
+          is Instant -> withMessage.that(instant(key)).isEqualTo(value)
+          is LocalDate -> withMessage.that(localDate(key)).isEqualTo(value)
           else -> throw IllegalArgumentException("Unknown type (${value.javaClass.name}) for key: $key")
         }
       }

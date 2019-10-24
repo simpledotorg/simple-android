@@ -125,4 +125,26 @@ class AwaitTest {
         .assertNoErrors()
         .assertTerminated()
   }
+
+  @Test
+  fun `it can sort items if they are not scheduled in order`() {
+    // given
+    val checkpoints = listOf(
+        Checkpoint("One", 1),
+        Checkpoint("Five", 5),
+        Checkpoint("Three", 3),
+        Checkpoint("Twelve", 12)
+    )
+    val await = Await(checkpoints, scheduler)
+    val testObserver = await.events().test()
+
+    // when
+    scheduler.advanceTimeBy(12, MILLISECONDS)
+
+    // then
+    testObserver
+        .assertValues("One", "Three", "Five", "Twelve")
+        .assertNoErrors()
+        .assertTerminated()
+  }
 }

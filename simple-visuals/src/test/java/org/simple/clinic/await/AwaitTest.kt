@@ -10,7 +10,8 @@ class AwaitTest {
   @Test
   fun `it does not emit until the time is elapsed`() {
     // given
-    val await = Await(listOf(10), scheduler)
+    val singleCheckpoint = listOf(Checkpoint.unit(10))
+    val await = Await(singleCheckpoint, scheduler)
     val testObserver = await.events().test()
 
     // when
@@ -26,7 +27,8 @@ class AwaitTest {
   @Test
   fun `it emits immediately after the first delay`() {
     // given
-    val await = Await(listOf(10), scheduler)
+    val singleCheckpoint = listOf(Checkpoint.unit(10))
+    val await = Await(singleCheckpoint, scheduler)
     val testObserver = await.events().test()
 
     // when
@@ -42,7 +44,8 @@ class AwaitTest {
   @Test
   fun `it can take in two delays`() {
     // given
-    val await = Await(listOf(10, 20), scheduler)
+    val checkpoints = listOf(Checkpoint.unit(10), Checkpoint.unit(20))
+    val await = Await(checkpoints, scheduler)
     val testObserver = await.events().test()
 
     // when
@@ -58,7 +61,8 @@ class AwaitTest {
   @Test
   fun `it emits immediately if the delay is 0`() {
     // given
-    val await = Await(listOf(0), scheduler)
+    val singleCheckpoint = listOf(Checkpoint.unit(0))
+    val await = Await(singleCheckpoint, scheduler)
     val testObserver = await.events().test()
 
     // when
@@ -74,7 +78,8 @@ class AwaitTest {
   @Test
   fun `it terminates if all events are emitted`() {
     // given
-    val await = Await(listOf(100, 200, 300), scheduler)
+    val checkpoints = listOf(Checkpoint.unit(100), Checkpoint.unit(200), Checkpoint.unit(300))
+    val await = Await(checkpoints, scheduler)
     val testObserver = await.events().test()
 
     // when
@@ -90,7 +95,8 @@ class AwaitTest {
   @Test
   fun `it does not terminate if all events are not emitted`() {
     // given
-    val await = Await(listOf(100, 200, 300), scheduler)
+    val checkpoints = listOf(Checkpoint.unit(100), Checkpoint.unit(200), Checkpoint.unit(300))
+    val await = Await(checkpoints, scheduler)
     val testObserver = await.events().test()
 
     // when
@@ -101,5 +107,22 @@ class AwaitTest {
         .assertValueCount(2)
         .assertNoErrors()
         .assertNotTerminated()
+  }
+
+  @Test
+  fun `it can emit items of any type`() {
+    // given
+    val checkpoints = listOf(Checkpoint("Fifty", 50), Checkpoint("Hundred", 100))
+    val await = Await(checkpoints, scheduler)
+    val testObserver = await.events().test()
+
+    // when
+    scheduler.advanceTimeBy(100, MILLISECONDS)
+
+    // then
+    testObserver
+        .assertValues("Fifty", "Hundred")
+        .assertNoErrors()
+        .assertTerminated()
   }
 }

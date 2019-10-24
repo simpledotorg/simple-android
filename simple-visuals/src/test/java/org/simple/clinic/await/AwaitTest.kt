@@ -12,7 +12,7 @@ class AwaitTest {
     // given
     val singleCheckpoint = listOf(Checkpoint.unit(10))
     val await = Await(singleCheckpoint, scheduler)
-    val testObserver = await.events().test()
+    val testObserver = await.items().test()
 
     // when
     scheduler.advanceTimeBy(9, MILLISECONDS)
@@ -29,7 +29,7 @@ class AwaitTest {
     // given
     val singleCheckpoint = listOf(Checkpoint.unit(10))
     val await = Await(singleCheckpoint, scheduler)
-    val testObserver = await.events().test()
+    val testObserver = await.items().test()
 
     // when
     scheduler.advanceTimeBy(10, MILLISECONDS)
@@ -46,7 +46,7 @@ class AwaitTest {
     // given
     val checkpoints = listOf(Checkpoint.unit(10), Checkpoint.unit(20))
     val await = Await(checkpoints, scheduler)
-    val testObserver = await.events().test()
+    val testObserver = await.items().test()
 
     // when
     scheduler.advanceTimeBy(20, MILLISECONDS)
@@ -63,7 +63,7 @@ class AwaitTest {
     // given
     val singleCheckpoint = listOf(Checkpoint.unit(0))
     val await = Await(singleCheckpoint, scheduler)
-    val testObserver = await.events().test()
+    val testObserver = await.items().test()
 
     // when
     scheduler.triggerActions()
@@ -80,7 +80,7 @@ class AwaitTest {
     // given
     val checkpoints = listOf(Checkpoint.unit(100), Checkpoint.unit(200), Checkpoint.unit(300))
     val await = Await(checkpoints, scheduler)
-    val testObserver = await.events().test()
+    val testObserver = await.items().test()
 
     // when
     scheduler.advanceTimeBy(300, MILLISECONDS)
@@ -97,7 +97,7 @@ class AwaitTest {
     // given
     val checkpoints = listOf(Checkpoint.unit(100), Checkpoint.unit(200), Checkpoint.unit(300))
     val await = Await(checkpoints, scheduler)
-    val testObserver = await.events().test()
+    val testObserver = await.items().test()
 
     // when
     scheduler.advanceTimeBy(250, MILLISECONDS)
@@ -114,7 +114,7 @@ class AwaitTest {
     // given
     val checkpoints = listOf(Checkpoint("Fifty", 50), Checkpoint("Hundred", 100))
     val await = Await(checkpoints, scheduler)
-    val testObserver = await.events().test()
+    val testObserver = await.items().test()
 
     // when
     scheduler.advanceTimeBy(100, MILLISECONDS)
@@ -136,7 +136,7 @@ class AwaitTest {
         Checkpoint("Twelve", 12)
     )
     val await = Await(checkpoints, scheduler)
-    val testObserver = await.events().test()
+    val testObserver = await.items().test()
 
     // when
     scheduler.advanceTimeBy(12, MILLISECONDS)

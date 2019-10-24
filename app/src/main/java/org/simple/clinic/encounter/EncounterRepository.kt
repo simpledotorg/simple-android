@@ -13,13 +13,16 @@ import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UserClock
-import org.threeten.bp.LocalDate
+import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toLocalDateAtZone
+import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
 class EncounterRepository @Inject constructor(
     private val database: AppDatabase,
-    private val userClock: UserClock
+    private val userClock: UserClock,
+    private val utcClock: UtcClock
 ) : SynceableRepository<ObservationsForEncounter, EncounterPayload> {
 
   override fun save(records: List<ObservationsForEncounter>): Completable {
@@ -89,14 +92,13 @@ class EncounterRepository @Inject constructor(
   }
 
   fun saveBloodPressureMeasurement(
-      bloodPressureMeasurement: BloodPressureMeasurement,
-      encounteredDate: LocalDate
+      bloodPressureMeasurement: BloodPressureMeasurement
   ): Completable {
     val encounter = with(bloodPressureMeasurement) {
       Encounter(
           uuid = encounterUuid,
           patientUuid = patientUuid,
-          encounteredOn = encounteredDate,
+          encounteredOn = recordedAt.toLocalDateAtZone(userClock.zone),
           createdAt = createdAt,
           updatedAt = updatedAt,
           deletedAt = deletedAt,
@@ -108,5 +110,27 @@ class EncounterRepository @Inject constructor(
         encounter = encounter,
         bloodPressures = listOf(bloodPressureMeasurement)
     )))
+  }
+
+  fun updateBloodPressure(updatedMeasurement: BloodPressureMeasurement): Completable {
+    val encounterUuid = updatedMeasurement.encounterUuid
+    val encounteredOn = updatedMeasurement.recordedAt.toLocalDateAtZone(userClock.zone)
+
+    val encounter = database.encountersDao().encounter(encounterUuid).take(1)
+
+    return with(database) {
+      val bpSave = Completable.fromAction { bloodPressureDao().save(listOf(updatedMeasurement)) }
+      encounter.filter { it.encounteredOn == encounteredOn }
+          .flatMapCompletable { updateEncounter(it).andThen(bpSave) }
+    }
+  }
+
+  private fun updateEncounter(encounter: Encounter): Completable {
+    return Completable.fromAction {
+      val updatedEncounter = encounter.copy(
+          syncStatus = PENDING,
+          updatedAt = Instant.now(utcClock))
+      database.encountersDao().save(updatedEncounter)
+    }
   }
 }

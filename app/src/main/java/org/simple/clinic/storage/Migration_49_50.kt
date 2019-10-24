@@ -41,7 +41,7 @@ class Migration_49_50 : Migration(49, 50) {
             database.compileStatement("""UPDATE $tableName SET "encounterUuid" = ? WHERE "uuid" = ?  """)
                 .use { updateBpWithEncounter ->
 
-                  query(""" SELECT * FROM $tableName """)
+                  query(""" SELECT "uuid", "patientUuid", "facilityUuid", "createdAt", "updatedAt", "deletedAt", "recordedAt" FROM $tableName """)
                       .use { cursor ->
 
                         generateSequence { cursor.takeIf { it.moveToNext() } }

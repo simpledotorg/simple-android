@@ -306,6 +306,7 @@ dependencies {
   testImplementation "org.threeten:threetenbp:$versions.threeTenBp"
   implementation "com.fasterxml.uuid:java-uuid-generator:$versions.uuidGenerator"
   implementation project(":simple-platform")
+  implementation project(":simple-visuals")
 }
 
 // This must always be present at the bottom of this file, as per:

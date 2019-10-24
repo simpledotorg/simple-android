@@ -6,8 +6,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.generateEncounterUuid
+import org.simple.clinic.util.room.InstantRoomTypeConverter
+import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.toLocalDateAtZone
-import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -16,6 +17,12 @@ class Migration_49_50 : Migration(49, 50) {
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var instantConverter: InstantRoomTypeConverter
+
+  @Inject
+  lateinit var localDateConverter: LocalDateRoomTypeConverter
 
   override fun migrate(database: SupportSQLiteDatabase) {
     ClinicApp.appComponent.inject(this)
@@ -35,7 +42,10 @@ class Migration_49_50 : Migration(49, 50) {
                       .map { it.string("uuid") to it }
                       .forEach { (uuid, cursorRow) ->
                         val patientUuid = cursor.string("patientUuid")
-                        val encounteredOn = Instant.parse(cursorRow.string("recordedAt")).toLocalDateAtZone(userClock.zone)
+
+                        val bpRecordedAt = instantConverter.toInstant(cursorRow.string("recordedAt"))!!
+                        val encounteredOn = bpRecordedAt.toLocalDateAtZone(userClock.zone)
+
                         val encounterId = generateEncounterUuid(
                             facilityUuid = UUID.fromString(cursorRow.string("facilityUuid")),
                             patientUuid = UUID.fromString(patientUuid),
@@ -67,7 +77,7 @@ class Migration_49_50 : Migration(49, 50) {
                             VALUES (
                               '$encounterId',
                               '$patientUuid',
-                              '$encounteredOn',
+                              '${localDateConverter.fromLocalDate(encounteredOn)}',
                               '${cursorRow.string("createdAt")}',
                               '${cursorRow.string("updatedAt")}',
                               NULL

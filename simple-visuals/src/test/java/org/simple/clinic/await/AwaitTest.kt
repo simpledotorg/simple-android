@@ -54,4 +54,20 @@ class AwaitTest {
         .assertNoErrors()
         .assertTerminated()
   }
+
+  @Test
+  fun `it emits immediately if the delay is 0`() {
+    // given
+    val await = Await(listOf(0), scheduler)
+    val testObserver = await.events().test()
+
+    // when
+    scheduler.triggerActions()
+
+    // then
+    testObserver
+        .assertValues(Unit)
+        .assertNoErrors()
+        .assertTerminated()
+  }
 }

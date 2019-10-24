@@ -19,7 +19,7 @@ class Await<T>(
     private val checkpoints: List<Checkpoint<T>>,
     private val scheduler: Scheduler = Schedulers.computation()
 ) {
-  fun events(): Observable<T> {
+  fun items(): Observable<T> {
     val initialValue: Pair<Checkpoint<T?>, Delay> = Checkpoint(null as T?, 0) to 0
     val sortedCheckpoints = checkpoints.sortedBy { it.timing }
 

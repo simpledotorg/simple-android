@@ -57,6 +57,9 @@ class DatabaseMigrationAndroidTest {
   @Inject
   lateinit var clock: TestUtcClock
 
+  @Inject
+  lateinit var testData: TestData
+
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
@@ -3420,51 +3423,56 @@ class DatabaseMigrationAndroidTest {
   fun migration_from_49_to_50_create_only_one_encounter_for_per_day_but_add_encounterUuid_to_all_BPs() {
     //given
     val bloodPressureMeasurementTable = "BloodPressureMeasurement"
-
-    val uuidForFirstBP = UUID.fromString("3eb96138-5270-419c-bcdf-86db95d0bc8b")
-    val uuidForSecondBP = UUID.fromString("a2455b0c-cf14-46c9-9f73-6e18972982b0")
+    val userUuid = UUID.fromString("8c1cfd1a-10bc-4aaf-a648-3d477527a444")
     val facilityUuid = UUID.fromString("0086ba86-314c-49d9-8822-2563e53bed92")
     val patientUuid = UUID.fromString("c4233170-feb2-3d34-8115-98fef5a68837")
-    val recordedAtForFirstBP = Instant.parse("2018-07-03T00:00:00Z")
-    val recordedAtForSecondBP = Instant.parse("2018-07-03T01:30:00Z")
-    val createdAtForFirstBP = Instant.parse("2018-07-04T02:00:00Z")
-    val userId = UUID.fromString("d689285f-5c92-4735-80ef-c0e360ad3f1d")
+
+    val firstBp = testData.bloodPressureMeasurement(
+        uuid = UUID.fromString("3eb96138-5270-419c-bcdf-86db95d0bc8b"),
+        facilityUuid = facilityUuid,
+        patientUuid = patientUuid,
+        createdAt = Instant.parse("2018-07-04T02:00:00Z"),
+        updatedAt = Instant.parse("2018-07-04T02:00:00Z"),
+        recordedAt = Instant.parse("2018-07-03T00:00:00Z"),
+        userUuid = userUuid
+    )
+    val secondBp = testData.bloodPressureMeasurement(
+        uuid = UUID.fromString("a2455b0c-cf14-46c9-9f73-6e18972982b0"),
+        facilityUuid = facilityUuid,
+        patientUuid = patientUuid,
+        createdAt = Instant.parse("2018-07-03T01:30:00Z"),
+        updatedAt = Instant.parse("2018-07-03T01:30:00Z"),
+        recordedAt = Instant.parse("2018-07-03T01:30:00Z"),
+        userUuid = userUuid
+    )
+    val testRecords = listOf(firstBp, secondBp)
 
     val db_49 = helper.createDatabase(version = 49)
-    db_49.insert(bloodPressureMeasurementTable, mapOf(
-        "uuid" to uuidForFirstBP,
-        "systolic" to "120",
-        "diastolic" to "90",
-        "syncStatus" to "DONE",
-        "userUuid" to userId,
-        "facilityUuid" to facilityUuid,
-        "patientUuid" to patientUuid,
-        "createdAt" to createdAtForFirstBP,
-        "updatedAt" to createdAtForFirstBP,
-        "deletedAt" to "null",
-        "recordedAt" to recordedAtForFirstBP
-    ))
 
-    db_49.insert(bloodPressureMeasurementTable, mapOf(
-        "uuid" to uuidForSecondBP,
-        "systolic" to "130",
-        "diastolic" to "60",
-        "syncStatus" to "DONE",
-        "userUuid" to userId,
-        "facilityUuid" to facilityUuid,
-        "patientUuid" to patientUuid,
-        "createdAt" to recordedAtForSecondBP,
-        "updatedAt" to recordedAtForSecondBP,
-        "deletedAt" to "null",
-        "recordedAt" to recordedAtForSecondBP
-    ))
+    testRecords
+        .map {
+          mapOf(
+              "uuid" to it.uuid,
+              "systolic" to it.systolic,
+              "diastolic" to it.diastolic,
+              "syncStatus" to "DONE",
+              "userUuid" to it.userUuid,
+              "facilityUuid" to it.facilityUuid,
+              "patientUuid" to it.patientUuid,
+              "createdAt" to it.createdAt,
+              "updatedAt" to it.updatedAt,
+              "deletedAt" to it.deletedAt,
+              "recordedAt" to it.recordedAt
+          )
+        }
+        .forEach { db_49.insert(bloodPressureMeasurementTable, it) }
 
     //when
     val db_50 = helper.migrateTo(version = 50)
 
     //then
     val userClock = TestUserClock()
-    val expectedEncounteredOn = recordedAtForFirstBP.toLocalDateAtZone(userClock.zone)
+    val expectedEncounteredOn = firstBp.recordedAt.toLocalDateAtZone(userClock.zone)
     val expectedEncounterId = generateEncounterUuid(
         facilityUuid = facilityUuid,
         patientUuid = patientUuid,
@@ -3476,11 +3484,11 @@ class DatabaseMigrationAndroidTest {
       assertThat(it.columnCount).isEqualTo(12)
       it.moveToFirst()
 
-      assertThat(it.uuid("uuid")).isEqualTo(uuidForFirstBP)
+      assertThat(it.uuid("uuid")).isEqualTo(firstBp.uuid)
       assertThat(it.uuid("encounterUuid")).isEqualTo(expectedEncounterId)
 
       it.moveToNext()
-      assertThat(it.uuid("uuid")).isEqualTo(uuidForSecondBP)
+      assertThat(it.uuid("uuid")).isEqualTo(secondBp.uuid)
       assertThat(it.uuid("encounterUuid")).isEqualTo(expectedEncounterId)
     }
 
@@ -3488,9 +3496,9 @@ class DatabaseMigrationAndroidTest {
         "uuid" to expectedEncounterId,
         "patientUuid" to patientUuid,
         "encounteredOn" to expectedEncounteredOn,
-        "createdAt" to createdAtForFirstBP,
-        "updatedAt" to createdAtForFirstBP,
-        "deletedAt" to "null"
+        "createdAt" to firstBp.createdAt,
+        "updatedAt" to firstBp.createdAt,
+        "deletedAt" to null
     )
 
     db_50.query("""SELECT * FROM "Encounter" """).use {

@@ -42,14 +42,21 @@ class Migration_49_50 : Migration(49, 50) {
                             encounteredDate = encounteredOn
                         ).toString()
 
+                        // TODO(vs): 2019-10-24 Add a migration for fixing the "null" BP deleted at
+                        val bpDeletedAtClause = when (val bpDeletedAt = cursorRow.string("deletedAt")) {
+                          null -> "NULL"
+                          else -> "'$bpDeletedAt'"
+                        }
+
                         execSQL(""" INSERT OR IGNORE INTO "Encounter" VALUES (
                           '$encounterId',
                           '$patientUuid',
                           '$encounteredOn',
                           '${cursorRow.string("createdAt")}',
                           '${cursorRow.string("updatedAt")}',
-                          '${cursorRow.string("deletedAt")}'
-                          )""")
+                          $bpDeletedAtClause
+                          )"""
+                        )
 
                         statement.bindString(1, encounterId)
                         statement.bindString(2, uuid)

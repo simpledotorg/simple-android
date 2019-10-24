@@ -674,7 +674,8 @@ class TestData @Inject constructor(
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      recordedAt: Instant = Instant.now(),
+      encounterUuid: UUID = generateEncounterUuid(facilityUuid, patientUuid, recordedAt.toLocalDateAtZone(userClock.zone))
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(
         uuid = uuid,
@@ -688,7 +689,7 @@ class TestData @Inject constructor(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         recordedAt = recordedAt,
-        encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, recordedAt.toLocalDateAtZone(userClock.zone))
+        encounterUuid = encounterUuid
     )
   }
 

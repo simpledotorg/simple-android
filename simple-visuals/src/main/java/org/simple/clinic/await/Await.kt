@@ -5,25 +5,34 @@ import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-private typealias Elapsed = Int
 private typealias Delay = Int
+typealias Timing = Int
 
-class Await(
-    private val delayMillis: List<Int>,
+data class Checkpoint<T>(val item: T, val timing: Timing) {
+  companion object {
+    fun unit(timing: Timing): Checkpoint<Unit> =
+        Checkpoint(Unit, timing)
+  }
+}
+
+class Await<T>(
+    private val checkpoints: List<Checkpoint<T>>,
     private val scheduler: Scheduler = Schedulers.computation()
 ) {
-  fun events(): Observable<Unit> {
-    val initialElapsedDelay: Pair<Elapsed, Delay> = 0 to 0
+  fun events(): Observable<T> {
+    val initialValue: Pair<Checkpoint<T?>, Delay> = Checkpoint(null as T?, 0) to 0
 
     return Observable
-        .fromIterable(delayMillis)
-        .scan(initialElapsedDelay, { elapsedDelayPair, itemDelay ->
-          val (elapsed, _) = elapsedDelayPair
-          itemDelay to itemDelay - elapsed
+        .fromIterable(checkpoints)
+        .scan(initialValue, { elapsedDelayPair, checkpoint ->
+          val (previousCheckpoint, _) = elapsedDelayPair
+          checkpoint as Checkpoint<T?> to checkpoint.timing - previousCheckpoint.timing
         })
-        .map { (_, delay) -> delay }
         .skip(1)
-        .map { it.toLong() }
-        .concatMap { delay -> Observable.timer(delay, TimeUnit.MILLISECONDS, scheduler).map { Unit } }
+        .concatMap { (checkpoint, delay) ->
+          Observable
+              .timer(delay.toLong(), TimeUnit.MILLISECONDS, scheduler)
+              .map { checkpoint.item }
+        }
   }
 }

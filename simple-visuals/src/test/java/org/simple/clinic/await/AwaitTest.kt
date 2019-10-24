@@ -147,4 +147,15 @@ class AwaitTest {
         .assertNoErrors()
         .assertTerminated()
   }
+
+  @Test(expected = IllegalArgumentException::class)
+  fun `it can throw an exception if there are duplicates in timing`() {
+    val checkpoints = listOf(
+        Checkpoint.unit(10),
+        Checkpoint.unit(20),
+        Checkpoint.unit(30),
+        Checkpoint.unit(30)
+    )
+    Await(checkpoints).items()
+  }
 }

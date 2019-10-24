@@ -22,6 +22,7 @@ class Await<T>(
   fun items(): Observable<T> {
     val initialValue: Pair<Checkpoint<T?>, Delay> = Checkpoint(null as T?, 0) to 0
     val sortedCheckpoints = checkpoints.sortedBy { it.timing }
+    assertNoDuplicateTimings(sortedCheckpoints)
 
     return Observable
         .fromIterable(sortedCheckpoints)
@@ -34,6 +35,18 @@ class Await<T>(
           Observable
               .timer(delay.toLong(), TimeUnit.MILLISECONDS, scheduler)
               .map { checkpoint.item }
+        }
+  }
+
+  private fun assertNoDuplicateTimings(checkpoints: List<Checkpoint<T>>) {
+    checkpoints
+        .map { it.timing }
+        .foldRightIndexed(0) { index, timing, previousTiming ->
+          if (timing == previousTiming && index != 0) {
+            throw IllegalArgumentException("Found duplicate timing '$timing'. Duplicate timing values are not allowed.")
+          } else {
+            timing
+          }
         }
   }
 }

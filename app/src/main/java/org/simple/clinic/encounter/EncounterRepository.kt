@@ -5,17 +5,21 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.encounter.sync.EncounterPayload
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
+import org.simple.clinic.util.UserClock
+import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
 class EncounterRepository @Inject constructor(
-    private val database: AppDatabase
+    private val database: AppDatabase,
+    private val userClock: UserClock
 ) : SynceableRepository<ObservationsForEncounter, EncounterPayload> {
 
   override fun save(records: List<ObservationsForEncounter>): Completable {
@@ -55,13 +59,6 @@ class EncounterRepository @Inject constructor(
     }
   }
 
-  private fun payloadToEncounters(payload: EncounterPayload): ObservationsForEncounter {
-    val bloodPressures = payload.observations.bloodPressureMeasurements.map { bps ->
-      bps.toDatabaseModel(syncStatus = DONE, encounterUuid = payload.uuid)
-    }
-    return ObservationsForEncounter(encounter = payload.toDatabaseModel(DONE), bloodPressures = bloodPressures)
-  }
-
   private fun saveObservationsForEncounters(records: List<ObservationsForEncounter>): Completable {
     return Completable.fromAction {
       val bloodPressures = records.flatMap { it.bloodPressures }
@@ -69,11 +66,18 @@ class EncounterRepository @Inject constructor(
 
       with(database) {
         runInTransaction {
-          bloodPressureDao().save(bloodPressures)
           encountersDao().save(encounters)
+          bloodPressureDao().save(bloodPressures)
         }
       }
     }
+  }
+
+  private fun payloadToEncounters(payload: EncounterPayload): ObservationsForEncounter {
+    val bloodPressures = payload.observations.bloodPressureMeasurements.map { bps ->
+      bps.toDatabaseModel(syncStatus = DONE, encounterUuid = payload.uuid)
+    }
+    return ObservationsForEncounter(encounter = payload.toDatabaseModel(DONE), bloodPressures = bloodPressures)
   }
 
   override fun recordCount(): Observable<Int> {
@@ -82,5 +86,27 @@ class EncounterRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return database.encountersDao().recordCount(syncStatus = PENDING)
+  }
+
+  fun saveBloodPressureMeasurement(
+      bloodPressureMeasurement: BloodPressureMeasurement,
+      encounteredDate: LocalDate
+  ): Completable {
+    val encounter = with(bloodPressureMeasurement) {
+      Encounter(
+          uuid = encounterUuid,
+          patientUuid = patientUuid,
+          encounteredOn = encounteredDate,
+          createdAt = createdAt,
+          updatedAt = updatedAt,
+          deletedAt = deletedAt,
+          syncStatus = PENDING
+      )
+    }
+
+    return saveObservationsForEncounters(listOf(ObservationsForEncounter(
+        encounter = encounter,
+        bloodPressures = listOf(bloodPressureMeasurement)
+    )))
   }
 }

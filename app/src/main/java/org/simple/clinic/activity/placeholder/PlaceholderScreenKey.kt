@@ -1,4 +1,4 @@
-package org.simple.clinic.activity
+package org.simple.clinic.activity.placeholder
 
 import android.app.Activity
 import kotlinx.android.parcel.IgnoredOnParcel

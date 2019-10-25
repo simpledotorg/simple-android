@@ -54,7 +54,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       MissingPhoneReminder::class,
       Encounter::class
     ],
-    version = 51,
+    version = 52,
     exportSchema = true
 )
 @TypeConverters(

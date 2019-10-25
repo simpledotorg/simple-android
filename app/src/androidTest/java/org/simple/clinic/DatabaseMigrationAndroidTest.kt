@@ -3881,6 +3881,81 @@ class DatabaseMigrationAndroidTest {
         "deletedAt"
     ))
   }
+
+  @Test
+  fun migration_from_51_to_52_should_set_the_deletedAt_to_null_for_encounters_with_deletedAt_set_to_string_null() {
+    fun readEncounters(database: SupportSQLiteDatabase): Set<Pair<UUID, String?>> {
+      return database.query(""" SELECT "uuid", "deletedAt" FROM "Encounter" """)
+          .use { cursor ->
+            generateSequence { cursor.takeIf { it.moveToNext() } }
+                .map { it.uuid("uuid")!! to it.string("deletedAt") }
+                .toSet()
+          }
+    }
+
+    // given
+    val db_51 = helper.createDatabase(51)
+
+    val deletedEncounterUuid = UUID.fromString("e321da68-c015-4da4-8796-529c08c8bf4f")
+    val deletedEncounterDeletedAt = Instant.parse("2018-01-01T00:00:01Z")
+
+    val nullStringDeletedAtEncounterUuid = UUID.fromString("372e633c-e02d-403c-86e4-7a0cebfc5f21")
+    val notDeletedEncounterUuid = UUID.fromString("92fcc816-93be-48ce-9fbd-679dbe56bf4c")
+
+    val patientUuid = UUID.fromString("6d05b15c-f7e3-4159-a04c-21151b1bee07")
+
+    with(db_51) {
+      val encounterTable = "Encounter"
+
+      insert(encounterTable, mapOf(
+          "uuid" to deletedEncounterUuid,
+          "patientUuid" to patientUuid,
+          "encounteredOn" to LocalDate.parse("2018-01-01"),
+          "syncStatus" to "DONE",
+          "createdAt" to Instant.parse("2018-01-01T00:00:00Z"),
+          "updatedAt" to Instant.parse("2018-01-01T00:00:00Z"),
+          "deletedAt" to deletedEncounterDeletedAt
+      ))
+
+      insert(encounterTable, mapOf(
+          "uuid" to nullStringDeletedAtEncounterUuid,
+          "patientUuid" to patientUuid,
+          "encounteredOn" to LocalDate.parse("2018-01-01"),
+          "syncStatus" to "DONE",
+          "createdAt" to Instant.parse("2018-01-01T00:00:00Z"),
+          "updatedAt" to Instant.parse("2018-01-01T00:00:00Z"),
+          "deletedAt" to "null"
+      ))
+
+      insert(encounterTable, mapOf(
+          "uuid" to notDeletedEncounterUuid,
+          "patientUuid" to patientUuid,
+          "encounteredOn" to LocalDate.parse("2018-01-01"),
+          "syncStatus" to "DONE",
+          "createdAt" to Instant.parse("2018-01-01T00:00:00Z"),
+          "updatedAt" to Instant.parse("2018-01-01T00:00:00Z"),
+          "deletedAt" to null
+      ))
+    }
+
+    assertThat(readEncounters(db_51))
+        .containsExactly(
+            deletedEncounterUuid to deletedEncounterDeletedAt.toString(),
+            nullStringDeletedAtEncounterUuid to "null",
+            notDeletedEncounterUuid to null
+        )
+
+    // when
+    val db_52 = helper.migrateTo(52)
+
+    // then
+    assertThat(readEncounters(db_52))
+        .containsExactly(
+            deletedEncounterUuid to deletedEncounterDeletedAt.toString(),
+            nullStringDeletedAtEncounterUuid to null,
+            notDeletedEncounterUuid to null
+        )
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

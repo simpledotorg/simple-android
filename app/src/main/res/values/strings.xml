@@ -463,4 +463,8 @@
   <!-- Change language screen -->
   <string name="changelanguage_title">Select your language</string>
   <string name="changelanguage_done">Done</string>
+
+  <!-- Placeholder -->
+  <string name="placeholder_loading_title">Please wait…</string>
+  <string name="placeholder_loading_message">Database maintenance in progress. This will only take a minute.</string>
 </resources>

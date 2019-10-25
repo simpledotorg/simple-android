@@ -54,6 +54,8 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
     cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGE_APPEARING, 0)
     cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGE_DISAPPEARING, 0)
     cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGING, 0)
+
+    post { fullNameEditText.requestFocus() }
   }
 
   private fun screenCreates() = Observable.just(RegistrationFullNameScreenCreated())

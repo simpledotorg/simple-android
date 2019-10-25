@@ -50,6 +50,8 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+
+    post { pinEditText.requestFocus() }
   }
 
   private fun screenCreates() = Observable.just(RegistrationPinScreenCreated())

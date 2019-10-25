@@ -55,6 +55,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
 import org.simple.clinic.widgets.setTextAndCursor
@@ -290,6 +291,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   override fun openMedicalHistoryEntryScreen() {
+    hideKeyboard()
     screenRouter.push(NewMedicalHistoryScreenKey())
   }
 

@@ -9,7 +9,7 @@ import org.junit.Test
 class SetupActivityInitTest {
 
   @Test
-  fun `when the screen is created, the user details must be loaded`() {
+  fun `when the screen is created, the database must be initialized`() {
     // given
     val spec = InitSpec(SetupActivityInit())
 
@@ -17,7 +17,7 @@ class SetupActivityInitTest {
         .whenInit(SetupActivityModel)
         .then(assertThatFirst(
             hasModel(SetupActivityModel),
-            hasEffects(FetchUserDetails as SetupActivityEffect)
+            hasEffects(InitializeDatabase as SetupActivityEffect)
         ))
   }
 }

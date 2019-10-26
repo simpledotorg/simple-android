@@ -7,3 +7,5 @@ object FetchUserDetails : SetupActivityEffect()
 object GoToMainActivity : SetupActivityEffect()
 
 object ShowOnboardingScreen : SetupActivityEffect()
+
+object InitializeDatabase: SetupActivityEffect()

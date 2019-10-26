@@ -32,4 +32,17 @@ class SetupActivityUpdateTest {
             hasEffects(ShowOnboardingScreen as SetupActivityEffect)
         ))
   }
+
+  @Test
+  fun `when the database completes initialization, the user details must be fetched`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DatabaseInitialized)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(FetchUserDetails as SetupActivityEffect)
+            )
+        )
+  }
 }

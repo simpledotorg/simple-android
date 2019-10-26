@@ -41,7 +41,6 @@
 
     <activity
       android:name=".setup.SetupActivity"
-      android:enabled="false"
       android:launchMode="singleTask"
       android:screenOrientation="portrait">
       <intent-filter>
@@ -52,14 +51,8 @@
 
     <activity
       android:name=".main.TheActivity"
-      android:launchMode="singleTask"
       android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
+      android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".drugs.selection.entry.CustomPrescriptionEntrySheet"

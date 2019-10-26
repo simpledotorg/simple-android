@@ -143,7 +143,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun showOnboardingScreen() {
-    screenRouter.popAndPush(OnboardingScreenKey(migrated = true), RouterDirection.FORWARD)
+    screenRouter.popAndPush(OnboardingScreenKey(), RouterDirection.FORWARD)
   }
 
   private fun wrapContextWithRouter(baseContext: Context): Context {

@@ -6,10 +6,7 @@ import org.simple.clinic.R
 import org.simple.clinic.router.screen.FullScreenKey
 
 @Parcelize
-class OnboardingScreenKey(
-    // TODO(vs): 2019-10-22 Remove after migrating onboarding to SetupActivity
-    val migrated: Boolean = false
-) : FullScreenKey {
+class OnboardingScreenKey : FullScreenKey {
 
   @IgnoredOnParcel
   override val analyticsName = "Onboarding"

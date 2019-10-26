@@ -10,6 +10,7 @@ class SetupActivityUpdate : Update<SetupActivityModel, SetupActivityEvent, Setup
   override fun update(model: SetupActivityModel, event: SetupActivityEvent): Next<SetupActivityModel, SetupActivityEffect> {
     val effect = when (event) {
       is UserDetailsFetched -> if (event.hasUserCompletedOnboarding) GoToMainActivity else ShowOnboardingScreen
+      is DatabaseInitialized -> FetchUserDetails
       else -> null
     }
 

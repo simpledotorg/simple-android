@@ -21,12 +21,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.activity.ActivityLifecycle.Stopped
-import org.simple.clinic.main.TheActivity
-import org.simple.clinic.main.TheActivityController
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.onboarding.OnboardingScreenKey
+import org.simple.clinic.main.TheActivity
+import org.simple.clinic.main.TheActivityController
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
@@ -58,7 +57,6 @@ class TheActivityControllerTest {
   private val activity = mock<TheActivity>()
   private val userSession = mock<UserSession>()
   private val lockAfterTimestamp = mock<Preference<Instant>>()
-  private val hasUserCompletedOnboarding = mock<Preference<Boolean>>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val userSubject = PublishSubject.create<Optional<User>>()
   private val userUnauthorizedSubject = PublishSubject.create<Boolean>()
@@ -66,8 +64,7 @@ class TheActivityControllerTest {
   private val controller = TheActivityController(
       userSession = userSession,
       appLockConfig = Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))),
-      lockAfterTimestamp = lockAfterTimestamp,
-      hasUserCompletedOnboarding = hasUserCompletedOnboarding
+      lockAfterTimestamp = lockAfterTimestamp
   )
 
   @Before
@@ -199,14 +196,11 @@ class TheActivityControllerTest {
   @Test
   @Parameters(method = "params for local user initial screen key")
   fun `when a local user exists, the appropriate initial key must be returned based on the logged in status`(
-      hasCompletedOnboarding: Boolean,
       loggedInStatus: User.LoggedInStatus,
       expectedKeyType: Class<FullScreenKey>
   ) {
     val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-
-    whenever(hasUserCompletedOnboarding.get()).thenReturn(hasCompletedOnboarding)
 
     assertThat(controller.initialScreenKey()).isInstanceOf(expectedKeyType)
   }
@@ -214,95 +208,45 @@ class TheActivityControllerTest {
   @Suppress("Unused")
   private fun `params for local user initial screen key`(): Array<Array<Any>> {
     fun testCase(
-        hasCompletedOnboarding: Boolean,
         loggedInStatus: User.LoggedInStatus,
         expectedKeyType: Class<*>
     ): Array<Any> {
-      return arrayOf(hasCompletedOnboarding, loggedInStatus, expectedKeyType)
+      return arrayOf(loggedInStatus, expectedKeyType)
     }
 
     return arrayOf(
         testCase(
-            hasCompletedOnboarding = true,
             loggedInStatus = NOT_LOGGED_IN,
             expectedKeyType = RegistrationPhoneScreenKey::class.java
         ),
         testCase(
-            hasCompletedOnboarding = true,
             loggedInStatus = OTP_REQUESTED,
             expectedKeyType = HomeScreenKey::class.java
         ),
         testCase(
-            hasCompletedOnboarding = true,
             loggedInStatus = RESET_PIN_REQUESTED,
             expectedKeyType = HomeScreenKey::class.java
         ),
         testCase(
-            hasCompletedOnboarding = true,
             loggedInStatus = RESETTING_PIN,
             expectedKeyType = ForgotPinCreateNewPinScreenKey::class.java
         ),
         testCase(
-            hasCompletedOnboarding = true,
             loggedInStatus = LOGGED_IN,
             expectedKeyType = HomeScreenKey::class.java
         ),
         testCase(
-            hasCompletedOnboarding = true,
             loggedInStatus = UNAUTHORIZED,
             expectedKeyType = RegistrationPhoneScreenKey::class.java
-        ),
-        testCase(
-            hasCompletedOnboarding = false,
-            loggedInStatus = NOT_LOGGED_IN,
-            expectedKeyType = OnboardingScreenKey::class.java
-        ),
-        testCase(
-            hasCompletedOnboarding = false,
-            loggedInStatus = OTP_REQUESTED,
-            expectedKeyType = HomeScreenKey::class.java
-        ),
-        testCase(
-            hasCompletedOnboarding = false,
-            loggedInStatus = RESET_PIN_REQUESTED,
-            expectedKeyType = HomeScreenKey::class.java
-        ),
-        testCase(
-            hasCompletedOnboarding = false,
-            loggedInStatus = RESETTING_PIN,
-            expectedKeyType = OnboardingScreenKey::class.java
-        ),
-        testCase(
-            hasCompletedOnboarding = false,
-            loggedInStatus = LOGGED_IN,
-            expectedKeyType = HomeScreenKey::class.java
-        ),
-        testCase(
-            hasCompletedOnboarding = false,
-            loggedInStatus = UNAUTHORIZED,
-            expectedKeyType = OnboardingScreenKey::class.java
         )
     )
   }
 
   @Test
-  @Parameters(method = "params for missing user initial screen key")
-  fun `when a local user does not exist, the appropriate initial key must be returned based on the onboarding flag`(
-      hasCompletedOnboarding: Boolean,
-      expectedKeyType: Class<FullScreenKey>
-  ) {
+  fun `when a local user does not exist, the registration screen must be opened`() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(None))
-    whenever(hasUserCompletedOnboarding.get()).thenReturn(hasCompletedOnboarding)
 
-    assertThat(controller.initialScreenKey()).isInstanceOf(expectedKeyType)
-  }
-
-  @Suppress("Unused")
-  private fun `params for missing user initial screen key`(): Array<Array<Any>> {
-    return arrayOf(
-        arrayOf<Any>(true, RegistrationPhoneScreenKey()::class.java),
-        arrayOf<Any>(false, OnboardingScreenKey()::class.java)
-    )
+    assertThat(controller.initialScreenKey()).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
 
   data class RedirectToSignInParams(

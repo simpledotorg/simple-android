@@ -18,9 +18,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
-import org.simple.clinic.router.screen.RouterDirection
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.clamp
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
@@ -28,9 +25,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), OnboardingUi {
-
-  @Inject
-  lateinit var router: ScreenRouter
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -43,8 +37,6 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
 
   @Inject
   lateinit var crashReporter: CrashReporter
-
-  private val screenKey: OnboardingScreenKey by unsafeLazy { router.key<OnboardingScreenKey>(this) }
 
   private val events: Observable<OnboardingEvent>
     get() = getStartedClicks()
@@ -99,15 +91,14 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   }
 
   override fun moveToRegistrationScreen() {
-    if (!screenKey.migrated) {
-      router.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.FORWARD)
-    } else {
-
-      val intent = TheActivity.newIntent(activity).apply {
-        flags = FLAG_ACTIVITY_CLEAR_TASK or FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_NO_ANIMATION
-      }
-      activity.startActivity(intent)
-      activity.overridePendingTransition(0, 0)
+    // This navigation should not be done here, we need a way to publish
+    // an event to the parent activity (maybe via the screen router's
+    // event bus?) and handle the navigation there.
+    // TODO(vs): 2019-10-26 Move this to an event that is subscribed in the parent activity
+    val intent = TheActivity.newIntent(activity).apply {
+      flags = FLAG_ACTIVITY_CLEAR_TASK or FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_NO_ANIMATION
     }
+    activity.startActivity(intent)
+    activity.overridePendingTransition(0, 0)
   }
 }

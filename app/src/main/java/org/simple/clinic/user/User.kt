@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Transaction
 import io.reactivex.Flowable
+import io.reactivex.Single
 import org.simple.clinic.util.room.RoomEnumTypeConverter
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
@@ -119,5 +120,8 @@ data class User(
       userFacilityMappingDao.deleteMappingsForUser(user.uuid)
       deleteUser(user)
     }
+
+    @Query("SELECT COUNT(uuid) FROM LoggedInUser")
+    abstract fun userCount(): Single<Int>
   }
 }

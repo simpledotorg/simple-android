@@ -12,7 +12,6 @@ import org.simple.clinic.activity.ActivityLifecycle.Stopped
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.onboarding.OnboardingScreenKey
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.user.NewlyVerifiedUser
@@ -36,8 +35,7 @@ typealias UiChange = (Ui) -> Unit
 class TheActivityController @Inject constructor(
     private val userSession: UserSession,
     private val appLockConfig: Single<AppLockConfig>,
-    @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>,
-    @Named("onboarding_complete") private val hasUserCompletedOnboarding: Preference<Boolean>
+    @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private val showAppLockForUserStates = setOf(OTP_REQUESTED, LOGGED_IN, RESET_PIN_REQUESTED)
@@ -114,7 +112,6 @@ class TheActivityController @Inject constructor(
 
     return when {
       canMoveToHomeScreen -> HomeScreenKey()
-      hasUserCompletedOnboarding.get().not() -> OnboardingScreenKey()
       else -> {
         return if (localUser?.loggedInStatus == RESETTING_PIN) {
           ForgotPinCreateNewPinScreenKey()

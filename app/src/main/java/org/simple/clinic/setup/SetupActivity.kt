@@ -27,6 +27,7 @@ import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.User
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
@@ -49,6 +50,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  @Inject
+  lateinit var userDao: User.RoomDao
+
   private lateinit var component: SetupActivityComponent
 
   private val screenResults = ScreenResultBus()
@@ -58,7 +62,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private val delegate by unsafeLazy {
-    val effectHandler = SetupActivityEffectHandler.create(onboardingCompletePreference, this, schedulersProvider)
+    val effectHandler = SetupActivityEffectHandler.create(onboardingCompletePreference, this, userDao, schedulersProvider)
 
     MobiusActivityDelegate(
         events = Observable.never<SetupActivityEvent>(),

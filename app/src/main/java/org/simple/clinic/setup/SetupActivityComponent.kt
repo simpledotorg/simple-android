@@ -5,8 +5,8 @@ import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.activity.BindsScreenRouter
 import org.simple.clinic.onboarding.OnboardingScreenInjector
 
-@Subcomponent
-interface SetupActivityComponent: OnboardingScreenInjector {
+@Subcomponent(modules = [SetupActivityModule::class])
+interface SetupActivityComponent : OnboardingScreenInjector {
 
   fun inject(target: SetupActivity)
 

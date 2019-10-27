@@ -1,9 +1,14 @@
 # CHANGELOG
 
 ## On Demo
+## Feature
+- Add a loading screen when the app database is being migrated after an update
+
 ## Internal
 - Remove old AllPatientsInFacilityView code
 - Make changing of screens in Flow synchronous
+- Introduce an alternate activity (SetupActivity) as the launcher activity
+- Move onboarding screen to the SetupActivity
 
 ## 2019-10-21-6057
 ## Feature

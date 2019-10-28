@@ -14,10 +14,7 @@ import org.simple.clinic.encounter.EncounterRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.generateEncounterUuid
-import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -172,12 +169,13 @@ class BloodPressureRepositoryAndroidTest {
   fun marking_a_blood_pressure_as_deleted_should_work_correctly() {
     val now = Instant.now(clock)
     val bloodPressure = testData.bloodPressureMeasurement(
+        recordedAt = now,
         createdAt = now,
         updatedAt = now,
         deletedAt = null,
         syncStatus = SyncStatus.DONE)
 
-    appDatabase.bloodPressureDao().save(listOf(bloodPressure))
+    encounterRepository.saveBloodPressureMeasurement(bloodPressure).blockingAwait()
 
     val durationToAdvanceBy = Duration.ofMinutes(15L)
     clock.advanceBy(durationToAdvanceBy)
@@ -191,8 +189,10 @@ class BloodPressureRepositoryAndroidTest {
         syncStatus = SyncStatus.PENDING)
 
     val savedBloodPressure = appDatabase.bloodPressureDao().getOne(expected.uuid)!!
+    val encounter = appDatabase.encountersDao().getOne(expected.encounterUuid)!!
 
     assertThat(savedBloodPressure).isEqualTo(expected)
+    assertThat(encounter.deletedAt).isEqualTo(timeAtWhichBpWasDeleted)
   }
 
   @Test

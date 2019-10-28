@@ -104,6 +104,7 @@ class UserSessionTest {
   private val prescriptionPullToken = mock<Preference<Optional<String>>>()
   private val bpPullToken = mock<Preference<Optional<String>>>()
   private val patientPullToken = mock<Preference<Optional<String>>>()
+  private val encounterPullToken = mock<Preference<Optional<String>>>()
   private val fileStorage = mock<FileStorage>()
   private val reportPendingRecords = mock<ReportPendingRecordsToAnalytics>()
   private val onboardingCompletePreference = mock<Preference<Boolean>>()
@@ -128,6 +129,7 @@ class UserSessionTest {
       prescriptionSyncPullToken = prescriptionPullToken,
       appointmentSyncPullToken = appointmentPullToken,
       medicalHistorySyncPullToken = medicalHistoryPullToken,
+      encounterSyncPullToken = encounterPullToken,
       onboardingComplete = onboardingCompletePreference,
       schedulersProvider = TrampolineSchedulersProvider()
   )

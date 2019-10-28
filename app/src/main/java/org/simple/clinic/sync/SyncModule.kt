@@ -5,12 +5,11 @@ import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.bp.di.BloodPressureModule
-import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.encounter.EncounterModule
+import org.simple.clinic.encounter.EncounterRepository
 import org.simple.clinic.encounter.sync.EncounterSync
 import org.simple.clinic.facility.FacilityModule
 import org.simple.clinic.facility.FacilitySync
@@ -76,7 +75,6 @@ class SyncModule {
       facilitySync: FacilitySync,
       protocolSync: ProtocolSync,
       patientSync: PatientSync,
-      bloodPressureSync: BloodPressureSync,
       medicalHistorySync: MedicalHistorySync,
       appointmentSync: AppointmentSync,
       prescriptionSync: PrescriptionSync,
@@ -88,7 +86,7 @@ class SyncModule {
   ): ArrayList<ModelSync> {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
-        bloodPressureSync, medicalHistorySync, appointmentSync,
+        medicalHistorySync, appointmentSync,
         prescriptionSync, reportsSync, remoteConfigSync,
         helpSync, illustrationSync, encountersSync
     )
@@ -98,17 +96,17 @@ class SyncModule {
   @Named("frequently_syncing_repositories")
   fun frequentlySyncingRepositories(
       patientSyncRepository: PatientRepository,
-      bloodPressureSyncRepository: BloodPressureRepository,
       medicalHistorySyncRepository: MedicalHistoryRepository,
       appointmentSyncRepository: AppointmentRepository,
-      prescriptionSyncRepository: PrescriptionRepository
+      prescriptionSyncRepository: PrescriptionRepository,
+      encounterRepository: EncounterRepository
   ): ArrayList<SynceableRepository<*, *>> {
     return arrayListOf(
         patientSyncRepository,
-        bloodPressureSyncRepository,
         medicalHistorySyncRepository,
         appointmentSyncRepository,
-        prescriptionSyncRepository
+        prescriptionSyncRepository,
+        encounterRepository
     )
   }
 

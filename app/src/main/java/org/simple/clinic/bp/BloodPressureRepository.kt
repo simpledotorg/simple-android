@@ -124,7 +124,7 @@ class BloodPressureRepository @Inject constructor(
           syncStatus = SyncStatus.PENDING)
 
       dao.save(listOf(deletedBloodPressureMeasurement))
-    }
+    }.andThen(encounterRepository.deleteEncounter(bloodPressureMeasurement.encounterUuid))
   }
 
   fun bloodPressureCount(patientUuid: UUID): Observable<Int> {

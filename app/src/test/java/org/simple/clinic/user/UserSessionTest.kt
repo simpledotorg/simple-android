@@ -102,7 +102,6 @@ class UserSessionTest {
   private val medicalHistoryPullToken = mock<Preference<Optional<String>>>()
   private val appointmentPullToken = mock<Preference<Optional<String>>>()
   private val prescriptionPullToken = mock<Preference<Optional<String>>>()
-  private val bpPullToken = mock<Preference<Optional<String>>>()
   private val patientPullToken = mock<Preference<Optional<String>>>()
   private val encounterPullToken = mock<Preference<Optional<String>>>()
   private val fileStorage = mock<FileStorage>()
@@ -123,15 +122,14 @@ class UserSessionTest {
       bruteForceProtection = bruteForceProtection,
       fileStorage = fileStorage,
       reportPendingRecords = reportPendingRecords,
+      schedulersProvider = TrampolineSchedulersProvider(),
       accessTokenPreference = accessTokenPref,
       patientSyncPullToken = patientPullToken,
-      bpSyncPullToken = bpPullToken,
       prescriptionSyncPullToken = prescriptionPullToken,
       appointmentSyncPullToken = appointmentPullToken,
       medicalHistorySyncPullToken = medicalHistoryPullToken,
       encounterSyncPullToken = encounterPullToken,
-      onboardingComplete = onboardingCompletePreference,
-      schedulersProvider = TrampolineSchedulersProvider()
+      onboardingComplete = onboardingCompletePreference
   )
 
   @Before
@@ -425,7 +423,7 @@ class UserSessionTest {
     userSession.syncAndClearData(patientRepository).blockingAwait()
 
     verify(patientPullToken).delete()
-    verify(bpPullToken).delete()
+    verify(encounterPullToken).delete()
     verify(appointmentPullToken).delete()
     verify(medicalHistoryPullToken).delete()
     verify(prescriptionPullToken).delete()

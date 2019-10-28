@@ -72,7 +72,6 @@ class UserSession @Inject constructor(
     private val schedulersProvider: SchedulersProvider,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
     @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<String>>,
-    @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<String>>,
     @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<String>>,
     @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<String>>,
     @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<String>>,
@@ -435,7 +434,6 @@ class UserSession @Inject constructor(
 
     val clearStoredPullTokens = Completable.fromAction {
       patientSyncPullToken.delete()
-      bpSyncPullToken.delete()
       prescriptionSyncPullToken.delete()
       appointmentSyncPullToken.delete()
       medicalHistorySyncPullToken.delete()

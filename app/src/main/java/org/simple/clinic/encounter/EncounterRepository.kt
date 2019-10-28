@@ -137,7 +137,7 @@ class EncounterRepository @Inject constructor(
     }
   }
 
-  private fun deleteEncounter(encounterUuid: UUID): Completable {
+  fun deleteEncounter(encounterUuid: UUID): Completable {
     return Completable.fromAction {
       val now = Instant.now(utcClock)
       database.encountersDao().deleteEncounter(

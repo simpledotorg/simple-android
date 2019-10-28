@@ -314,4 +314,35 @@ class EncounterRepositoryAndroidTest {
       assertThat(encounter.deletedAt).isNull()
     }
   }
+
+  @Test
+  fun deleting_an_encounter_should_check_for_any_associated_active_observations(){
+    //given
+    val patientUuid = UUID.fromString("6f725ffd-7008-4018-9e7c-33346964a0c1")
+    val facilityUuid = UUID.fromString("22bdeedb-061e-4a17-8739-e946a4206593")
+    val bpUuid = UUID.fromString("2edd4c06-e2de-4a18-a8e7-43e2e30c9aba")
+    val encounteredDate = LocalDate.parse("2018-01-01")
+
+    val encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, encounteredDate)
+    val bloodPressureMeasurement = testData.bloodPressureMeasurement(
+        uuid = bpUuid,
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = PENDING,
+        encounterUuid = encounterUuid
+    )
+    repository.saveBloodPressureMeasurement(bloodPressureMeasurement).blockingAwait()
+
+    //when
+    repository.deleteEncounter(encounterUuid).blockingAwait()
+
+    //then
+    val encounter = appDatabase.encountersDao().getOne(encounterUuid)!!
+
+    assertThat(encounter.deletedAt).isNotNull()
+  }
 }

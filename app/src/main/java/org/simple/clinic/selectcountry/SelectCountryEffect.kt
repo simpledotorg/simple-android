@@ -1,3 +1,5 @@
 package org.simple.clinic.selectcountry
 
-class SelectCountryEffect
+sealed class SelectCountryEffect
+
+object FetchManifest : SelectCountryEffect()

@@ -3,6 +3,7 @@
 ## Next Release
 ### Internal
 - Remove old edit patient screen
+- Add and sync Encounters for all recorded BPs
 
 ## On Demo
 ### Internal

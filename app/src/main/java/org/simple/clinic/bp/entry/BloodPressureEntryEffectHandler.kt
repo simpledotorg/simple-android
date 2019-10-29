@@ -40,7 +40,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-class BloodPressureEntryEffectHandler(
+class BloodPressureEntryEffectHandler private constructor(
     private val ui: BloodPressureEntryUi,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
@@ -53,7 +53,32 @@ class BloodPressureEntryEffectHandler(
 ) {
   private val reportAnalyticsEvents = ReportAnalyticsEvents()
 
-  fun create(): ObservableTransformer<BloodPressureEntryEffect, BloodPressureEntryEvent> {
+  companion object {
+    fun create(
+        ui: BloodPressureEntryUi,
+        userSession: UserSession,
+        facilityRepository: FacilityRepository,
+        patientRepository: PatientRepository,
+        bloodPressureRepository: BloodPressureRepository,
+        appointmentsRepository: AppointmentRepository,
+        userClock: UserClock,
+        paddingCharacter: UserInputDatePaddingCharacter,
+        schedulersProvider: SchedulersProvider
+    ): ObservableTransformer<BloodPressureEntryEffect, BloodPressureEntryEvent> {
+      return BloodPressureEntryEffectHandler(ui,
+          userSession,
+          facilityRepository,
+          patientRepository,
+          bloodPressureRepository,
+          appointmentsRepository,
+          userClock,
+          paddingCharacter,
+          schedulersProvider
+      ).buildEffectHandler()
+    }
+  }
+
+  private fun buildEffectHandler(): ObservableTransformer<BloodPressureEntryEffect, BloodPressureEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<BloodPressureEntryEffect, BloodPressureEntryEvent>()
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))

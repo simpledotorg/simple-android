@@ -70,7 +70,7 @@ class BloodPressureEntryEffectHandler(
         .addAction(ShowDateEntryScreen::class.java, ui::showDateEntryScreen, schedulersProvider.ui())
         .addConsumer(ShowBpEntryScreen::class.java, { showBpEntryScreen(it.date) }, schedulersProvider.ui())
         .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
-        .addTransformer(CreateNewBpEntry::class.java, createNewBpEntryTransformer(schedulersProvider.io()))
+        .addTransformer(CreateNewBpEntry::class.java, createNewBpEntryTransformer())
         .addAction(SetBpSavedResultAndFinish::class.java, ui::setBpSavedResultAndFinish, schedulersProvider.ui())
         .addTransformer(UpdateBpEntry::class.java, updateBpEntryTransformer())
         .build()
@@ -146,10 +146,9 @@ class BloodPressureEntryEffectHandler(
     }.exhaustive()
   }
 
-  private fun createNewBpEntryTransformer(scheduler: Scheduler): ObservableTransformer<CreateNewBpEntry, BloodPressureEntryEvent> {
+  private fun createNewBpEntryTransformer(): ObservableTransformer<CreateNewBpEntry, BloodPressureEntryEvent> {
     return ObservableTransformer { createNewBpEntries ->
       createNewBpEntries
-          .subscribeOn(scheduler)
           .flatMapSingle { createNewBpEntry ->
             userAndCurrentFacility()
                 .flatMap { (user, facility) -> storeNewBloodPressureMeasurement(user, facility, createNewBpEntry) }

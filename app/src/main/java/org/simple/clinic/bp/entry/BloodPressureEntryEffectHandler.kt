@@ -188,7 +188,7 @@ class BloodPressureEntryEffectHandler private constructor(
       createNewBpEntry: CreateNewBpEntry,
       bloodPressureMeasurement: BloodPressureMeasurement
   ): Single<BloodPressureSaved> {
-    val entryDate = createNewBpEntry.parsedDateFromForm.toUtcInstant(userClock)
+    val entryDate = createNewBpEntry.userEnteredDate.toUtcInstant(userClock)
     val compareAndUpdateRecordedAt = patientRepository
         .compareAndUpdateRecordedAt(bloodPressureMeasurement.patientUuid, entryDate)
 

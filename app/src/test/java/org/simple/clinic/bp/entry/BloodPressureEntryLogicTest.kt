@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.atLeastOnce
 import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
@@ -52,6 +53,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.mobius.migration.MobiusTestFixture
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
@@ -878,6 +880,133 @@ class BloodPressureEntrySheetLogicTest {
         updatedAt = createdAt,
         recordedAt = newInputDateAsInstant
     )
+    verify(bloodPressureRepository).updateMeasurement(updatedBp)
+
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+    verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
+
+    verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
+    verify(ui).setBpSavedResultAndFinish()
+
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when a different user clicks on save while updating a BP, then the updated BP measurement should be saved with the user's ID and the corresponding facility ID`() {
+    // given
+    reset(userSession, facilityRepository)
+    val userFromDifferentFacility = PatientMocker.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
+    val differentFacility = PatientMocker.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
+
+    whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(userFromDifferentFacility))
+    whenever(facilityRepository.currentFacility(userFromDifferentFacility)).doReturn(Observable.just(differentFacility))
+
+    val oldCreatedAt = Instant.parse("1990-01-13T00:00:00Z")
+    val patientUuid = UUID.fromString("af92b081-0131-4f91-9c28-98da5737945b")
+    val existingBp = PatientMocker.bp(
+        uuid = patientUuid,
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid,
+        systolic = 9000,
+        diastolic = 8999,
+        createdAt = oldCreatedAt,
+        updatedAt = oldCreatedAt,
+        recordedAt = oldCreatedAt
+    )
+
+    whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp))
+    whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
+    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
+
+    sheetCreatedForUpdate(existingBp.uuid)
+    uiEvents.run {
+      onNext(ScreenChanged(BP_ENTRY))
+      onNext(SystolicChanged("120"))
+      onNext(DiastolicChanged("110"))
+      onNext(SaveClicked)
+    }
+
+    uiEvents.run {
+      onNext(ScreenChanged(DATE_ENTRY))
+      onNext(DayChanged("14"))
+      onNext(MonthChanged("02"))
+      onNext(YearChanged("91"))
+      onNext(SaveClicked)
+    }
+
+    val newInputDate = LocalDate.parse("1991-02-14")
+    val newInputDateAsInstant = newInputDate.toUtcInstant(testUserClock)
+    val updatedBp = existingBp.copy(
+        systolic = 120,
+        diastolic = 110,
+        updatedAt = oldCreatedAt,
+        recordedAt = newInputDateAsInstant,
+        userUuid = userFromDifferentFacility.uuid,
+        facilityUuid = differentFacility.uuid
+    )
+    verify(bloodPressureRepository).updateMeasurement(updatedBp)
+    verify(patientRepository).compareAndUpdateRecordedAt(updatedBp.patientUuid, updatedBp.recordedAt)
+
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+    verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
+    verify(ui).setBpSavedResultAndFinish()
+  }
+
+  @Test
+  fun `when done button is clicked by a user from a different facility in update BP entry, then save BP with entered date immediately`() {
+    // given
+    reset(userSession, facilityRepository)
+    val userFromDifferentFacility = PatientMocker.loggedInUser(uuid = UUID.fromString("e246c4fb-5a8d-418a-b80a-9e9d12ca1a8c"))
+    val differentFacility = PatientMocker.facility(uuid = UUID.fromString("d9ea6458-fbe2-4d59-b1ac-7dc77b234486"))
+
+    whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(userFromDifferentFacility))
+    whenever(facilityRepository.currentFacility(userFromDifferentFacility)).doReturn(Observable.just(differentFacility))
+
+    val systolic = 120.toString()
+    val diastolic = 110.toString()
+    val createdAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
+    val existingBp = PatientMocker.bp(
+        uuid = UUID.fromString("20d6aba0-80a9-4ab1-b0b6-5261a53f5fe5"),
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid,
+        patientUuid = patientUuid,
+        systolic = 9000,
+        diastolic = 8999,
+        createdAt = createdAt,
+        updatedAt = createdAt,
+        recordedAt = createdAt
+    )
+
+    val newInputDate = LocalDate.of(1991, 2, 14)
+    val newInputDateAsInstant = newInputDate.toUtcInstant(testUserClock)
+    val updatedBp = existingBp.copy(
+        systolic = systolic.toInt(),
+        diastolic = diastolic.toInt(),
+        userUuid = userFromDifferentFacility.uuid,
+        facilityUuid = differentFacility.uuid,
+        recordedAt = newInputDateAsInstant
+    )
+
+    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(existingBp))
+
+    whenever(bloodPressureRepository.updateMeasurement(updatedBp)).doReturn(Completable.complete())
+    whenever(patientRepository.compareAndUpdateRecordedAt(eq(patientUuid), any())).doReturn(Completable.complete())
+
+    sheetCreatedForUpdate(existingBp.uuid)
+    with(uiEvents) {
+      onNext(ScreenChanged(BP_ENTRY))
+      onNext(SystolicChanged(systolic))
+      onNext(DiastolicChanged(diastolic))
+      onNext(DayChanged(newInputDate.dayOfMonth.toString()))
+      onNext(MonthChanged(newInputDate.monthValue.toString()))
+      onNext(YearChanged(newInputDate.year.toString().takeLast(2)))
+
+      reset(ui)
+      onNext(SaveClicked)
+    }
+
+    val entryDateAsInstant = newInputDate.toUtcInstant(testUserClock)
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())

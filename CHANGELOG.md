@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## On Demo
+## 2019-10-29-6197
 ## Feature
 - Add a loading screen when the app database is being migrated after an update
 

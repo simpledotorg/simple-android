@@ -320,9 +320,8 @@ class AppointmentRepositoryAndroidTest {
         )
     )
 
-    bpRepository
+    database.bloodPressureDao()
         .save(bpsForPatientWithNoBpsDeleted + bpsForPatientWithLatestBpDeleted + bpsForPatientWithOldestBpNotDeleted + bpsForPatientWithAllBpsDeleted)
-        .blockingAwait()
 
     val today = LocalDate.now(clock)
     val appointmentsScheduledFor = today.minusDays(1L)
@@ -542,7 +541,7 @@ class AppointmentRepositoryAndroidTest {
             updatedAt = bpTimestamp
         )
       }
-      bpRepository.save(bloodPressureMeasurements).blockingAwait()
+      database.bloodPressureDao().save(bloodPressureMeasurements)
 
       medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
           hasHadStroke = hasHadStroke,
@@ -941,7 +940,12 @@ class AppointmentRepositoryAndroidTest {
         recordedAt = Instant.parse("2018-01-01T00:00:01Z")
     )
 
-    bpRepository.save(listOf(laterRecordedBpForFirstPatient, earlierRecordedBpForFirstPatient, earlierRecordedBpForSecondPatient, laterRecordedBpForSecondPatient)).blockingAwait()
+    database.bloodPressureDao().save(listOf(
+        laterRecordedBpForFirstPatient,
+        earlierRecordedBpForFirstPatient,
+        earlierRecordedBpForSecondPatient,
+        laterRecordedBpForSecondPatient
+    ))
 
     val appointmentUuidForFirstPatient = UUID.fromString("d9fd734d-13b8-43e3-a2d7-b40341699050")
     val appointmentUuidForSecondPatient = UUID.fromString("979e4a13-ae73-4dcf-a1e0-31465dff5512")
@@ -981,7 +985,7 @@ class AppointmentRepositoryAndroidTest {
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bpRepository.save(listOf(bp)).blockingAwait()
+      database.bloodPressureDao().save(listOf(bp))
 
       val appointment = testData.appointment(
           patientUuid = patientUuid,
@@ -1032,7 +1036,7 @@ class AppointmentRepositoryAndroidTest {
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bpRepository.save(listOf(bp)).blockingAwait()
+      database.bloodPressureDao().save(listOf(bp))
 
       val appointment = testData.appointment(
           patientUuid = patientUuid,
@@ -1138,7 +1142,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     listOf(oneWeekBeforeCurrentDate, oneDayBeforeCurrentDate, onCurrentDate, afterCurrentDate)
-        .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
+        .forEach { it.save(patientRepository, database, appointmentRepository) }
 
     // when
     val overdueAppointments = appointmentRepository
@@ -1222,7 +1226,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     listOf(remindOneWeekBeforeCurrentDate, remindOneDayBeforeCurrentDate, remindOnCurrentDate, remindAfterCurrentDate)
-        .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
+        .forEach { it.save(patientRepository, database, appointmentRepository) }
 
     // when
     val overdueAppointments = appointmentRepository
@@ -1300,7 +1304,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     listOf(withPhoneNumber, withDeletedPhoneNumber, withoutPhoneNumber)
-        .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
+        .forEach { it.save(patientRepository, database, appointmentRepository) }
 
     // when
     val overdueAppointments = appointmentRepository
@@ -1366,7 +1370,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     listOf(withBloodPressure, withoutBloodPressure)
-        .forEach { it.save(patientRepository, bpRepository, appointmentRepository) }
+        .forEach { it.save(patientRepository, database, appointmentRepository) }
 
     // when
     val overdueAppointments = appointmentRepository
@@ -1394,11 +1398,11 @@ class AppointmentRepositoryAndroidTest {
   ) {
     fun save(
         patientRepository: PatientRepository,
-        bloodPressureRepository: BloodPressureRepository,
+        database: AppDatabase,
         appointmentRepository: AppointmentRepository
     ) {
       val saveBp = if (bloodPressureMeasurement != null) {
-        bloodPressureRepository.save(listOf(bloodPressureMeasurement))
+        Completable.fromAction { database.bloodPressureDao().save(listOf(bloodPressureMeasurement)) }
       } else Completable.complete()
 
       patientRepository.save(listOf(patientProfile))

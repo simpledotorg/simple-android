@@ -19,7 +19,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
-import org.simple.clinic.bp.entry.PrefillDate.UpdateEntryPrefill
+import org.simple.clinic.bp.entry.PrefillDate.PrefillSpecificDate
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
@@ -113,7 +113,7 @@ class BloodPressureEntryEffectHandler private constructor(
   }
 
   private fun convertToLocalDate(prefillDate: PrefillDate): LocalDate {
-    val instant = if (prefillDate is UpdateEntryPrefill) prefillDate.date else Instant.now(userClock)
+    val instant = if (prefillDate is PrefillSpecificDate) prefillDate.date else Instant.now(userClock)
     return instant.toLocalDateAtZone(userClock.zone)
   }
 

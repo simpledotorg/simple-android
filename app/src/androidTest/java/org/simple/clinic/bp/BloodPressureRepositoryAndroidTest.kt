@@ -227,7 +227,7 @@ class BloodPressureRepositoryAndroidTest {
     }
 
     fun setBpSyncStatusToDone(bpUuid: UUID) {
-      repository.setSyncStatus(listOf(bpUuid), SyncStatus.DONE).blockingAwait()
+      appDatabase.bloodPressureDao().updateSyncStatus(listOf(bpUuid), SyncStatus.DONE)
     }
 
     val patientUuid = UUID.randomUUID()
@@ -252,7 +252,7 @@ class BloodPressureRepositoryAndroidTest {
         updatedAt = now
     )
 
-    repository.save(listOf(bp1ForPatient, bp2ForPatient, bpForSomeOtherPatient)).blockingAwait()
+    appDatabase.bloodPressureDao().save(listOf(bp1ForPatient, bp2ForPatient, bpForSomeOtherPatient))
     assertThat(haveBpsForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
     assertThat(haveBpsForPatientChangedSince(patientUuid, now)).isTrue()
     assertThat(haveBpsForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isTrue()

@@ -1,3 +1,16 @@
 package org.simple.clinic.selectcountry
 
-object SelectCountryModel
+data class SelectCountryModel(
+    val supportedCountries: List<Country>?
+) {
+
+  fun hasFetchedCountries() = supportedCountries != null
+
+  fun withSupportedCountries(countries: List<Country>): SelectCountryModel {
+    return copy(supportedCountries = countries)
+  }
+
+  companion object {
+    val FETCHING = SelectCountryModel(null)
+  }
+}

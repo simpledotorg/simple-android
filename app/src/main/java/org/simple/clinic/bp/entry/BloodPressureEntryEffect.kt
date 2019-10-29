@@ -11,17 +11,17 @@ sealed class BloodPressureEntryEffect
 sealed class PrefillDate : BloodPressureEntryEffect() {
   companion object {
     fun forNewEntry(): PrefillDate {
-      return NewEntryPrefill
+      return PrefillCurrentDate
     }
 
     fun forUpdateEntry(date: Instant): PrefillDate {
-      return UpdateEntryPrefill(date)
+      return PrefillSpecificDate(date)
     }
   }
 
-  object NewEntryPrefill : PrefillDate()
+  object PrefillCurrentDate : PrefillDate()
 
-  data class UpdateEntryPrefill(val date: Instant) : PrefillDate()
+  data class PrefillSpecificDate(val date: Instant) : PrefillDate()
 }
 
 object HideBpErrorMessage : BloodPressureEntryEffect()

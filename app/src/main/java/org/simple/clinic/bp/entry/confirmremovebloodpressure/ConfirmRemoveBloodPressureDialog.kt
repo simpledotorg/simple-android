@@ -20,10 +20,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
-  interface RemoveBloodPressureListener {
-    fun onBloodPressureRemoved()
-  }
-
   companion object {
     private const val KEY_BP_UUID = "bloodPressureMeasurementUuid"
 
@@ -81,6 +77,24 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
     return dialog
   }
 
+  override fun onStart() {
+    super.onStart()
+    onStarts.onNext(Any())
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    screenDestroys.onNext(ScreenDestroyed())
+  }
+
+  override fun onAttach(context: Context?) {
+    super.onAttach(context)
+    removeBloodPressureListener = context as? RemoveBloodPressureListener
+    if (removeBloodPressureListener == null) {
+      throw ClassCastException("$context must implement RemoveBloodPressureListener")
+    }
+  }
+
   private fun setupDialog() {
     bindUiToController(
         ui = this,
@@ -103,21 +117,7 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
     return Observable.just(ConfirmRemoveBloodPressureDialogCreated(bloodPressureMeasurementUuid))
   }
 
-  override fun onStart() {
-    super.onStart()
-    onStarts.onNext(Any())
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    screenDestroys.onNext(ScreenDestroyed())
-  }
-
-  override fun onAttach(context: Context?) {
-    super.onAttach(context)
-    removeBloodPressureListener = context as? RemoveBloodPressureListener
-    if (removeBloodPressureListener == null) {
-      throw ClassCastException("$context must implement RemoveBloodPressureListener")
-    }
+  interface RemoveBloodPressureListener {
+    fun onBloodPressureRemoved()
   }
 }

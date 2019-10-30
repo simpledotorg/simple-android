@@ -21,7 +21,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSearchUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -69,7 +69,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
           .clicks(newPatientButton)
           .map { RegisterNewPatientClicked }
 
-  fun updateSearchResults(
+  override fun updateSearchResults(
       results: PatientSearchResults
   ) {
     loader.visibleOrGone(isVisible = false)
@@ -88,7 +88,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
     }
   }
 
-  fun searchResultClicked(searchResultClickedEvent: SearchResultClicked) {
+  override fun searchResultClicked(searchResultClickedEvent: SearchResultClicked) {
     upstreamUiEvents.onNext(searchResultClickedEvent)
   }
 
@@ -105,7 +105,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
     })
   }
 
-  fun registerNewPatient(registerNewPatientEvent: RegisterNewPatient) {
+  override fun registerNewPatient(registerNewPatientEvent: RegisterNewPatient) {
     upstreamUiEvents.onNext(registerNewPatientEvent)
   }
 }

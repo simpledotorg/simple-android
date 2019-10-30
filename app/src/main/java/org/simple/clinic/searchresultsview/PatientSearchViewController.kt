@@ -14,7 +14,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = PatientSearchView
+typealias Ui = PatientSearchUi
 typealias UiChange = (Ui) -> Unit
 
 class PatientSearchViewController @Inject constructor(

@@ -38,4 +38,15 @@ class SelectCountryUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when the manifest fetch fails, then update the error`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(ManifestFetchFailed(NetworkError))
+        .then(assertThatNext(
+            hasModel(defaultModel.manifestFetchError(NetworkError)),
+            hasNoEffects()
+        ))
+  }
 }

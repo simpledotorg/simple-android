@@ -9,6 +9,7 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
   override fun update(model: SelectCountryModel, event: SelectCountryEvent): Next<SelectCountryModel, SelectCountryEffect> {
     return when (event) {
       is ManifestFetched -> next(model.withCountries(event.countries))
+      is ManifestFetchFailed -> next(model.manifestFetchError(event.error))
     }
   }
 }

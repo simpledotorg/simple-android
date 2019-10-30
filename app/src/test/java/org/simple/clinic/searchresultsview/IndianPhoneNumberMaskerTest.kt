@@ -11,9 +11,9 @@ import org.simple.clinic.util.Unicode.hairSpace
 private const val mask = "$bullet$hairSpace"
 
 @RunWith(JUnitParamsRunner::class)
-class IndianPhoneNumberObfuscatorTest {
+class IndianPhoneNumberMaskerTest {
 
-  private val obfuscator = IndianPhoneNumberObfuscator()
+  private val masker = IndianPhoneNumberMasker()
 
   @Test
   @Parameters(value = [
@@ -29,10 +29,10 @@ class IndianPhoneNumberObfuscatorTest {
     "9811111365|98$hairSpace$mask$mask$mask$mask${mask}365",
     "98111113659811111365|981111136598$hairSpace$mask$mask$mask$mask${mask}365"
   ])
-  fun `should obfuscate correctly`(
+  fun `should mask correctly`(
       inputNumber: String,
       expected: String
   ) {
-    assertThat(obfuscator.obfuscate(inputNumber)).isEqualTo(expected)
+    assertThat(masker.mask(inputNumber)).isEqualTo(expected)
   }
 }

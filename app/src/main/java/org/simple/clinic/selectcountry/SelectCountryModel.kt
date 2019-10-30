@@ -2,7 +2,8 @@ package org.simple.clinic.selectcountry
 
 data class SelectCountryModel(
     val countries: List<Country>?,
-    val manifestFetchError: ManifestFetchError?
+    val manifestFetchError: ManifestFetchError?,
+    val selectedCountry: Country?
 ) {
 
   fun hasFetchedCountries(): Boolean = countries != null
@@ -15,10 +16,15 @@ data class SelectCountryModel(
     return copy(manifestFetchError = manifestFetchError)
   }
 
+  fun countryChosen(country: Country): SelectCountryModel {
+    return copy(selectedCountry = country)
+  }
+
   companion object {
     val FETCHING = SelectCountryModel(
         countries = null,
-        manifestFetchError = null
+        manifestFetchError = null,
+        selectedCountry = null
     )
   }
 }

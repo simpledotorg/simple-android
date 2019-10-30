@@ -13,23 +13,24 @@ class SelectCountryUpdateTest {
 
   private val spec = UpdateSpec(SelectCountryUpdate())
 
+  val india = Country(
+      code = "IN",
+      endpoint = URI("https://in.simple.org"),
+      displayName = "India",
+      isdCode = "91"
+  )
+
+  private val bangladesh = Country(
+      code = "BD",
+      endpoint = URI("https://bd.simple.org"),
+      displayName = "Bangladesh",
+      isdCode = "880"
+  )
+
+  private val countries = listOf(india, bangladesh)
+
   @Test
   fun `when the manifest is fetched, then update the countries list`() {
-    val countries = listOf(
-        Country(
-            code = "IN",
-            endpoint = URI("https://in.simple.org"),
-            displayName = "India",
-            isdCode = "91"
-        ),
-        Country(
-            code = "BD",
-            endpoint = URI("https://bd.simple.org"),
-            displayName = "Bangladesh",
-            isdCode = "880"
-        )
-    )
-
     spec
         .given(defaultModel)
         .whenEvent(ManifestFetched(countries))
@@ -46,6 +47,20 @@ class SelectCountryUpdateTest {
         .whenEvent(ManifestFetchFailed(NetworkError))
         .then(assertThatNext(
             hasModel(defaultModel.manifestFetchError(NetworkError)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when country has been chosen, then update the selected country`() {
+    val model = defaultModel
+        .manifestFetched(countries)
+
+    spec
+        .given(model)
+        .whenEvent(CountryChosen(bangladesh))
+        .then(assertThatNext(
+            hasModel(model.countryChosen(bangladesh)),
             hasNoEffects()
         ))
   }

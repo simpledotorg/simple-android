@@ -81,4 +81,19 @@ class SelectCountryUpdateTest {
             hasEffects(SaveCountryEffect(country = bangladesh) as SelectCountryEffect)
         ))
   }
+
+  @Test
+  fun `when country is saved, then go to next screen`() {
+    val model = defaultModel
+        .manifestFetched(countries)
+        .countryChosen(bangladesh)
+
+    spec
+        .given(model)
+        .whenEvent(CountrySaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToNextScreen as SelectCountryEffect)
+        ))
+  }
 }

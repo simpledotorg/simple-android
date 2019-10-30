@@ -9,3 +9,5 @@ data class ManifestFetchFailed(val error: ManifestFetchError) : SelectCountryEve
 data class CountryChosen(val country: Country) : SelectCountryEvent()
 
 object NextClicked : SelectCountryEvent()
+
+object CountrySaved : SelectCountryEvent()

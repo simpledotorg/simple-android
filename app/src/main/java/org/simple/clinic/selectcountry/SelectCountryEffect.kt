@@ -5,3 +5,5 @@ sealed class SelectCountryEffect
 object FetchManifest : SelectCountryEffect()
 
 data class SaveCountryEffect(val country: Country) : SelectCountryEffect()
+
+object GoToNextScreen : SelectCountryEffect()

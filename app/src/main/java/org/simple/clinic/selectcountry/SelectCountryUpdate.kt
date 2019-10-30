@@ -13,6 +13,7 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
       is ManifestFetchFailed -> next(model.manifestFetchError(event.error))
       is CountryChosen -> next(model.countryChosen(event.country))
       NextClicked -> dispatch(SaveCountryEffect(model.selectedCountry!!))
+      CountrySaved -> dispatch(GoToNextScreen)
     }
   }
 }

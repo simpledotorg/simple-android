@@ -7,7 +7,7 @@ data class SelectCountryModel(
 
   fun hasFetchedCountries(): Boolean = countries != null
 
-  fun withCountries(countries: List<Country>): SelectCountryModel {
+  fun manifestFetched(countries: List<Country>): SelectCountryModel {
     return copy(countries = countries)
   }
 

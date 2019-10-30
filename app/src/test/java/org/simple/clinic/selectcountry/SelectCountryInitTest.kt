@@ -41,7 +41,7 @@ class SelectCountryInitTest {
         )
     )
 
-    val model = defaultModel.withCountries(countries)
+    val model = defaultModel.manifestFetched(countries)
 
     spec
         .whenInit(model)

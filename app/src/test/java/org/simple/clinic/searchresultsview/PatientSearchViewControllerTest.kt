@@ -34,7 +34,7 @@ class PatientSearchViewControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<PatientSearchView>()
+  private val ui = mock<PatientSearchUi>()
   private val patientRepository = mock<PatientRepository>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -63,7 +63,7 @@ class PatientSearchViewControllerTest {
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(currentFacility))
     whenever(patientRepository.search(Name(patientName))).doReturn(Observable.never())
     whenever(patientRepository.search(PhoneNumber(phoneNumber))).doReturn(Observable.never())
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+    uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
   }
 
   @Test
@@ -72,7 +72,7 @@ class PatientSearchViewControllerTest {
     val searchResultClicked = SearchResultClicked(searchResult.uuid)
     uiEvents.onNext(searchResultClicked)
 
-    verify(screen).searchResultClicked(searchResultClicked)
+    verify(ui).searchResultClicked(searchResultClicked)
   }
 
   @Test
@@ -82,7 +82,7 @@ class PatientSearchViewControllerTest {
     uiEvents.onNext(SearchPatientWithCriteria(criteria))
     uiEvents.onNext(RegisterNewPatientClicked)
 
-    verify(screen).registerNewPatient(RegisterNewPatient(criteria))
+    verify(ui).registerNewPatient(RegisterNewPatient(criteria))
   }
 
   @Test
@@ -141,7 +141,7 @@ class PatientSearchViewControllerTest {
         notVisitedCurrentFacility = listOf(searchResult2InOtherFacility, searchResult1InOtherFacility),
         currentFacility = currentFacility
     )
-    verify(screen).updateSearchResults(expectedSearchResults)
+    verify(ui).updateSearchResults(expectedSearchResults)
   }
 
   @Suppress("Unused")

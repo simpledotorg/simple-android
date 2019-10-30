@@ -40,7 +40,9 @@ class DeferredEventSource<E>(
             eventConsumer.accept(event)
           }
         } catch (e: Throwable) {
-          crashReporter.report(e)
+          if (e !is InterruptedException) {
+            crashReporter.report(e)
+          }
         }
       }
     }

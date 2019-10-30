@@ -1,5 +1,6 @@
 package org.simple.clinic.searchresultsview
 
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -58,10 +59,10 @@ class PatientSearchViewControllerTest {
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
-    whenever(patientRepository.search(Name(patientName))).thenReturn(Observable.never())
-    whenever(patientRepository.search(PhoneNumber(phoneNumber))).thenReturn(Observable.never())
+    whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(user))
+    whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(currentFacility))
+    whenever(patientRepository.search(Name(patientName))).doReturn(Observable.never())
+    whenever(patientRepository.search(PhoneNumber(phoneNumber))).doReturn(Observable.never())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
@@ -126,9 +127,9 @@ class PatientSearchViewControllerTest {
     )
 
     whenever(bloodPressureDao.patientToFacilityIds(patientUuids))
-        .thenReturn(Flowable.just(patientAndFacilityIdsToReturn))
+        .doReturn(Flowable.just(patientAndFacilityIdsToReturn))
     whenever(patientRepository.search(searchCriteria))
-        .thenReturn(Observable.just(allSearchResults))
+        .doReturn(Observable.just(allSearchResults))
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)

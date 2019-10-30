@@ -14,7 +14,7 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.searchresultsview.PhoneNumberObfuscator
+import org.simple.clinic.searchresultsview.PhoneNumberMasker
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.LocalDate
@@ -29,7 +29,7 @@ class PatientSearchResultItemView(
 ) : CardView(context, attributeSet) {
 
   @field:Inject
-  lateinit var phoneObfuscator: PhoneNumberObfuscator
+  lateinit var phoneMasker: PhoneNumberMasker
 
   @field:[Inject Named("date_for_search_results")]
   lateinit var dateTimeFormatter: DateTimeFormatter
@@ -83,7 +83,7 @@ class PatientSearchResultItemView(
       phoneNumberLabel.visibility = View.GONE
     } else {
       phoneNumberLabel.visibility = View.VISIBLE
-      phoneNumberLabel.text = phoneObfuscator.obfuscate(phoneNumber)
+      phoneNumberLabel.text = phoneMasker.mask(phoneNumber)
     }
   }
 

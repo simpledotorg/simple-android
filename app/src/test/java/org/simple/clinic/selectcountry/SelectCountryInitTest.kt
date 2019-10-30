@@ -27,8 +27,18 @@ class SelectCountryInitTest {
   @Test
   fun `when the screen is restored with the list of supported countries, do nothing`() {
     val countries = listOf(
-        Country("IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91"),
-        Country("BD", endpoint = URI("https://bd.simple.org"), displayName = "Bangladesh", isdCode = "880")
+        Country(
+            code = "IN",
+            endpoint = URI("https://in.simple.org"),
+            displayName = "India",
+            isdCode = "91"
+        ),
+        Country(
+            code = "BD",
+            endpoint = URI("https://bd.simple.org"),
+            displayName = "Bangladesh",
+            isdCode = "880"
+        )
     )
 
     val model = defaultModel.withSupportedCountries(countries)

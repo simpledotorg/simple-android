@@ -96,4 +96,18 @@ class SelectCountryUpdateTest {
             hasEffects(GoToNextScreen as SelectCountryEffect)
         ))
   }
+
+  @Test
+  fun `when retry is clicked, then fetch manifest`() {
+    val model = defaultModel
+        .manifestFetchError(NetworkError)
+
+    spec
+        .given(model)
+        .whenEvent(RetryClicked)
+        .then(assertThatNext(
+            hasModel(SelectCountryModel.FETCHING),
+            hasEffects(FetchManifest as SelectCountryEffect)
+        ))
+  }
 }

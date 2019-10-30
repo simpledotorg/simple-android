@@ -11,3 +11,5 @@ data class CountryChosen(val country: Country) : SelectCountryEvent()
 object NextClicked : SelectCountryEvent()
 
 object CountrySaved : SelectCountryEvent()
+
+object RetryClicked : SelectCountryEvent()

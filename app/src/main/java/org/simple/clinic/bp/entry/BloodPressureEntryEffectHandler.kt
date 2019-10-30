@@ -48,7 +48,6 @@ class BloodPressureEntryEffectHandler private constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val appointmentsRepository: AppointmentRepository,
     private val userClock: UserClock,
-    private val paddingCharacter: UserInputDatePaddingCharacter,
     private val schedulersProvider: SchedulersProvider
 ) {
   private val reportAnalyticsEvents = ReportAnalyticsEvents()
@@ -72,7 +71,6 @@ class BloodPressureEntryEffectHandler private constructor(
           bloodPressureRepository,
           appointmentsRepository,
           userClock,
-          paddingCharacter,
           schedulersProvider
       ).buildEffectHandler()
     }
@@ -119,14 +117,11 @@ class BloodPressureEntryEffectHandler private constructor(
 
   private fun setDateOnInputFields(dateToSet: LocalDate) {
     ui.setDateOnInputFields(
-        getPaddedString(dateToSet.dayOfMonth),
-        getPaddedString(dateToSet.monthValue),
+        dateToSet.dayOfMonth.toString(),
+        dateToSet.monthValue.toString(),
         getYear(dateToSet)
     )
   }
-
-  private fun getPaddedString(value: Int): String =
-      value.toString().padStart(length = 2, padChar = paddingCharacter.value)
 
   private fun getYear(date: LocalDate): String =
       date.year.toString().substring(startIndex = 2, endIndex = 4)

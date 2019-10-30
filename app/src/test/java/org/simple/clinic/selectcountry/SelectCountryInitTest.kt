@@ -41,7 +41,7 @@ class SelectCountryInitTest {
         )
     )
 
-    val model = defaultModel.withSupportedCountries(countries)
+    val model = defaultModel.withCountries(countries)
 
     spec
         .whenInit(model)

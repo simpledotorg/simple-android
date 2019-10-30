@@ -545,7 +545,7 @@ class BloodPressureEntrySheetLogicTest {
 
     verify(ui).setDateOnInputFields(
         dayOfMonth = "23",
-        month = "04",
+        month = "4",
         twoDigitYear = "18")
   }
 
@@ -561,7 +561,7 @@ class BloodPressureEntrySheetLogicTest {
 
     verify(ui, times(1)).setDateOnInputFields(
         dayOfMonth = "23",
-        month = "04",
+        month = "4",
         twoDigitYear = "18")
   }
 
@@ -583,8 +583,8 @@ class BloodPressureEntrySheetLogicTest {
     verify(ui).showDateOnDateButton(today)
 
     verify(ui).setDateOnInputFields(
-        today.dayOfMonth.toString().padStart(2, '0'),
-        today.month.value.toString().padStart(2, '0'),
+        today.dayOfMonth.toString(),
+        today.month.value.toString(),
         today.year.toString().takeLast(2)
     )
     verify(ui).hideRemoveBpButton()

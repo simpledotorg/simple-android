@@ -385,8 +385,8 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   }
 
   override fun setDateOnInputFields(dayOfMonth: String, month: String, twoDigitYear: String) {
-    dayEditText.setTextAndCursor(dayOfMonth)
-    monthEditText.setTextAndCursor(month)
+    dayEditText.setTextAndCursor(getPaddedString(dayOfMonth))
+    monthEditText.setTextAndCursor(getPaddedString(month))
     yearEditText.setTextAndCursor(twoDigitYear)
   }
 
@@ -415,4 +415,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
       visibility = View.VISIBLE
     }
   }
+
+  private fun getPaddedString(value: String): String =
+      value.padStart(length = 2, padChar = userInputDatePaddingCharacter.value)
 }

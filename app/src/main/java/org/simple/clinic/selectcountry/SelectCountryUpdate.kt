@@ -3,6 +3,7 @@ package org.simple.clinic.selectcountry
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 
 class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, SelectCountryEffect> {
 
@@ -11,6 +12,7 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
       is ManifestFetched -> next(model.manifestFetched(event.countries))
       is ManifestFetchFailed -> next(model.manifestFetchError(event.error))
       is CountryChosen -> next(model.countryChosen(event.country))
+      NextClicked -> dispatch(SaveCountryEffect(model.selectedCountry!!))
     }
   }
 }

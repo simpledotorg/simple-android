@@ -7,7 +7,7 @@ import dagger.Provides
 class SearchResultsModule {
 
   @Provides
-  fun phoneNumberObfuscator(): PhoneNumberObfuscator {
-    return IndianPhoneNumberObfuscator()
+  fun phoneNumberMasker(): PhoneNumberMasker {
+    return IndianPhoneNumberMasker()
   }
 }

@@ -11,6 +11,6 @@ data class SelectCountryModel(
   }
 
   companion object {
-    val FETCHING = SelectCountryModel(null)
+    val FETCHING = SelectCountryModel(supportedCountries = null)
   }
 }

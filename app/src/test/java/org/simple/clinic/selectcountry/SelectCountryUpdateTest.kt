@@ -34,7 +34,7 @@ class SelectCountryUpdateTest {
         .given(defaultModel)
         .whenEvent(ManifestFetched(countries))
         .then(assertThatNext(
-            hasModel(defaultModel.withSupportedCountries(countries)),
+            hasModel(defaultModel.withCountries(countries)),
             hasNoEffects()
         ))
   }

@@ -1,7 +1,9 @@
 package org.simple.clinic.selectcountry
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -62,6 +64,21 @@ class SelectCountryUpdateTest {
         .then(assertThatNext(
             hasModel(model.countryChosen(bangladesh)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when next is clicked, then save country`() {
+    val model = defaultModel
+        .manifestFetched(countries)
+        .countryChosen(bangladesh)
+
+    spec
+        .given(model)
+        .whenEvent(NextClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveCountryEffect(country = bangladesh) as SelectCountryEffect)
         ))
   }
 }

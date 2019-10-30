@@ -78,7 +78,7 @@ class PatientSearchViewControllerTest {
   @Test
   @Parameters(method = "params for search criteria")
   fun `when register new patient clicked then RegisterNewPatient event should be emitted`(criteria: PatientSearchCriteria) {
-    uiEvents.onNext(SearchResultsViewCreated)
+    screenCreated()
     uiEvents.onNext(SearchPatientWithCriteria(criteria))
     uiEvents.onNext(RegisterNewPatientClicked)
 
@@ -132,7 +132,7 @@ class PatientSearchViewControllerTest {
         .doReturn(Observable.just(allSearchResults))
 
     // when
-    uiEvents.onNext(SearchResultsViewCreated)
+    screenCreated()
     uiEvents.onNext(SearchPatientWithCriteria(searchCriteria))
 
     // then
@@ -149,4 +149,8 @@ class PatientSearchViewControllerTest {
       Name(patientName = patientName),
       PhoneNumber(phoneNumber = phoneNumber)
   )
+
+  private fun screenCreated() {
+    uiEvents.onNext(SearchResultsViewCreated)
+  }
 }

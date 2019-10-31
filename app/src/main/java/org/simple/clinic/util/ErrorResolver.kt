@@ -4,6 +4,7 @@ import io.reactivex.exceptions.CompositeException
 import okhttp3.internal.http2.ConnectionShutdownException
 import okhttp3.internal.http2.StreamResetException
 import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthorized
 import org.simple.clinic.util.ResolvedError.Unexpected
 import retrofit2.HttpException
@@ -31,7 +32,7 @@ object ErrorResolver {
 
     return when {
       actualCause::class in KNOWN_NETWORK_ERRORS -> NetworkRelated(actualCause)
-      actualCause is HttpException && actualCause.code() == 401 -> Unauthorized(actualCause)
+      actualCause is HttpException -> mapHttpExceptionToResolvedError(actualCause)
       else -> Unexpected(actualCause)
     }
   }
@@ -46,6 +47,14 @@ object ErrorResolver {
     // This place may identify more wrapped errors
     // like UndeliverableException, etc. in the future.
     return actualError
+  }
+
+  private fun mapHttpExceptionToResolvedError(actualCause: HttpException): ResolvedError {
+    return when (actualCause.code()) {
+      401 -> Unauthorized(actualCause)
+      in 500..599 -> ServerError(actualCause)
+      else -> Unexpected(actualCause)
+    }
   }
 }
 

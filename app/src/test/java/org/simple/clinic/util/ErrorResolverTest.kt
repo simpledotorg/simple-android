@@ -14,6 +14,7 @@ import okhttp3.internal.http2.StreamResetException
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthorized
 import org.simple.clinic.util.ResolvedError.Unexpected
 import retrofit2.HttpException
@@ -105,7 +106,7 @@ class ErrorResolverTest {
   }
 
   @Test
-  fun `http unauthorized errors must be identified correctly`() {
+  fun `http unauthorized errors must be identified`() {
     // given
     val exception = httpException(401)
 
@@ -120,8 +121,8 @@ class ErrorResolverTest {
   }
 
   @Test
-  @Parameters(value = ["403", "404", "500", "502"])
-  fun `other http errors must be changed to unexpected errors`(responseCode: Int) {
+  @Parameters(value = ["403", "404", "499"])
+  fun `other http errors must be identified as unexpected errors`(responseCode: Int) {
     // given
     val exception = httpException(responseCode)
 
@@ -131,6 +132,22 @@ class ErrorResolverTest {
     // then
     with(resolvedError) {
       assertThat(this::class).isSameAs(Unexpected::class)
+      assertThat(actualCause).isSameAs(exception)
+    }
+  }
+
+  @Test
+  @Parameters(value = ["500", "501", "502", "599"])
+  fun `http server errors must be identified`(responseCode: Int) {
+    // given
+    val exception = httpException(responseCode)
+
+    // when
+    val resolvedError = ErrorResolver.resolve(exception)
+
+    // then
+    with(resolvedError) {
+      assertThat(this::class).isSameAs(ServerError::class)
       assertThat(actualCause).isSameAs(exception)
     }
   }

@@ -115,27 +115,27 @@ class ErrorResolverTest {
 
   @Suppress("Unused")
   private fun `params for http unauthorized errors`(): List<List<Any>> {
-    fun exception(responseCode: Int): HttpException {
-      val response = Response.error<String>(
-          responseCode,
-          ResponseBody.create(MediaType.parse("text/plain"), "FAIL")
-      )
-      return HttpException(response)
-    }
-
     return listOf(
-        exception(401).let { httpException ->
+        httpException(401).let { httpException ->
           listOf(httpException, Unauthorized(httpException))
         },
-        exception(404).let { httpException ->
+        httpException(404).let { httpException ->
           listOf(httpException, Unexpected(httpException))
         },
-        exception(500).let { httpException ->
+        httpException(500).let { httpException ->
           listOf(httpException, Unexpected(httpException))
         },
-        exception(502).let { httpException ->
+        httpException(502).let { httpException ->
           listOf(httpException, Unexpected(httpException))
         }
     )
+  }
+
+  private fun httpException(responseCode: Int): HttpException {
+    val response = Response.error<String>(
+        responseCode,
+        ResponseBody.create(MediaType.parse("text/plain"), "FAIL")
+    )
+    return HttpException(response)
   }
 }

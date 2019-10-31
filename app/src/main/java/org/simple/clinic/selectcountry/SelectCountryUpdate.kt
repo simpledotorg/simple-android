@@ -4,7 +4,6 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
-import org.simple.clinic.selectcountry.SelectCountryModel.Companion.FETCHING
 
 class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, SelectCountryEffect> {
 
@@ -15,7 +14,7 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
       is CountryChosen -> next(model.countryChosen(event.country))
       NextClicked -> dispatch(SaveCountryEffect(model.selectedCountry!!))
       CountrySaved -> dispatch(GoToNextScreen)
-      RetryClicked -> next(FETCHING, setOf(FetchManifest))
+      RetryClicked -> next(model.fetching(), setOf(FetchManifest))
     }
   }
 }

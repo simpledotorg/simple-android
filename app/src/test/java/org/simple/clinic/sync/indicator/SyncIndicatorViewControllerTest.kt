@@ -30,6 +30,7 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthorized
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.RxErrorsRule
@@ -158,6 +159,7 @@ class SyncIndicatorViewControllerTest {
         ShowFailureDialogParams(NetworkRelated(UnknownHostException()), true),
         ShowFailureDialogParams(NetworkRelated(UnknownHostException()), true),
         ShowFailureDialogParams(Unexpected(RuntimeException()), true),
+        ShowFailureDialogParams(ServerError(RuntimeException()), true),
         ShowFailureDialogParams(Unauthorized(RuntimeException()), false)
     )
   }

@@ -3,7 +3,9 @@ package org.simple.clinic.util
 import io.reactivex.exceptions.CompositeException
 import okhttp3.internal.http2.ConnectionShutdownException
 import okhttp3.internal.http2.StreamResetException
-import org.simple.clinic.util.ResolvedError.*
+import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unexpected
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.ConnectException
@@ -54,4 +56,6 @@ sealed class ResolvedError(val actualCause: Throwable) {
   class Unexpected(actualCause: Throwable) : ResolvedError(actualCause)
 
   class Unauthorized(actualCause: Throwable) : ResolvedError(actualCause)
+
+  class ServerError(actualCause: Throwable) : ResolvedError(actualCause)
 }

@@ -131,6 +131,22 @@ class ErrorResolverTest {
     )
   }
 
+  @Test
+  @Parameters(value = ["403", "404", "500", "502"])
+  fun `other http errors must be changed to unexpected errors`(responseCode: Int) {
+    // given
+    val exception = httpException(responseCode)
+
+    // when
+    val resolvedError = ErrorResolver.resolve(exception)
+
+    // then
+    with(resolvedError) {
+      assertThat(this::class).isSameAs(Unexpected::class)
+      assertThat(actualCause).isSameAs(exception)
+    }
+  }
+
   private fun httpException(responseCode: Int): HttpException {
     val response = Response.error<String>(
         responseCode,

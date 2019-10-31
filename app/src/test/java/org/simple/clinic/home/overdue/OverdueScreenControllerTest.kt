@@ -64,7 +64,7 @@ class OverdueScreenControllerTest {
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 
-    configStream.onNext(PhoneNumberMaskerConfig(proxyPhoneNumber = "0123456789"))
+    configStream.onNext(PhoneNumberMaskerConfig(proxyPhoneNumber = "0123456789", phoneMaskingFeatureEnabled = false))
 
     Analytics.addReporter(reporter)
   }

@@ -1,11 +1,11 @@
 package org.simple.clinic.phone
 
 import io.reactivex.Observable
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.remoteconfig.ConfigReader
 
 data class PhoneNumberMaskerConfig(
-    val proxyPhoneNumber: String
+    val proxyPhoneNumber: String,
+    val phoneMaskingFeatureEnabled: Boolean
 ) {
 
   companion object {
@@ -13,7 +13,8 @@ data class PhoneNumberMaskerConfig(
     fun read(reader: ConfigReader): Observable<PhoneNumberMaskerConfig> {
       return Observable.fromCallable {
         PhoneNumberMaskerConfig(
-            proxyPhoneNumber = reader.string("phonenumbermasker_proxy_phone_number", default = BuildConfig.MASKED_PHONE_NUMBER))
+            proxyPhoneNumber = reader.string("phonenumbermasker_proxy_phone_number", default = ""),
+            phoneMaskingFeatureEnabled = reader.boolean("phonenumbermasker_masking_enabled", default = false))
       }
     }
   }

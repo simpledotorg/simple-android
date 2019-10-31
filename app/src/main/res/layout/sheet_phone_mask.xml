@@ -62,7 +62,9 @@
       android:drawableStart="@drawable/ic_phone_locked_24dp"
       android:text="@string/phonemasking_call_secure"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100"
-      app:drawableTint="@color/white" />
+      app:drawableTint="@color/white"
+      android:visibility="gone"
+      tools:visibility="visible" />
   </LinearLayout>
 
   <TextView

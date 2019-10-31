@@ -22,6 +22,10 @@ data class SelectCountryModel(
     return copy(selectedCountry = country)
   }
 
+  fun fetching(): SelectCountryModel {
+    return copy(countries = null, manifestFetchError = null)
+  }
+
   companion object {
     val FETCHING = SelectCountryModel(
         countries = null,

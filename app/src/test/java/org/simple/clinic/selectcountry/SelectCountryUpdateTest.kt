@@ -107,7 +107,7 @@ class SelectCountryUpdateTest {
         .given(model)
         .whenEvent(RetryClicked)
         .then(assertThatNext(
-            hasModel(SelectCountryModel.FETCHING),
+            hasModel(model.fetching()),
             hasEffects(FetchManifest as SelectCountryEffect)
         ))
   }

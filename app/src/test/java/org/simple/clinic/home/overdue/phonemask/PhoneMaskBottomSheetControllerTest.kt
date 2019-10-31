@@ -3,6 +3,7 @@ package org.simple.clinic.home.overdue.phonemask
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
@@ -22,6 +23,7 @@ import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.Dialer.Automatic
 import org.simple.clinic.phone.Dialer.Manual
 import org.simple.clinic.phone.PhoneCaller
+import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
@@ -167,14 +169,50 @@ class PhoneMaskBottomSheetControllerTest {
     verify(screen).setupView(expectedPatientDetails)
   }
 
-  private fun sheetCreated() {
+  @Test
+  fun `when the phone masking feature is disabled, the secure call button must not be shown`() {
+    // when
+    sheetCreated()
+
+    // then
+    verify(screen, never()).showSecureCallButton()
+  }
+
+  @Test
+  fun `when the phone masking feature is enabled, the secure call button must be shown`() {
+    // given
+    val config = PhoneNumberMaskerConfig(proxyPhoneNumber = "123456", phoneMaskingFeatureEnabled = true)
+
+    // when
+    sheetCreated(config)
+
+    // then
+    verify(screen).showSecureCallButton()
+  }
+
+  @Test
+  fun `when the phone masking feature is enabled but the proxy number is not set, the secure call button must not be shown`() {
+    // given
+    val config = PhoneNumberMaskerConfig(proxyPhoneNumber = "", phoneMaskingFeatureEnabled = true)
+
+    // when
+    sheetCreated(config)
+
+    // then
+    verify(screen, never()).showSecureCallButton()
+  }
+
+  private fun sheetCreated(
+      config: PhoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber = "123456", phoneMaskingFeatureEnabled = false)
+  ) {
     whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(patient.toOptional()))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just(phoneNumber.toOptional()))
 
     controller = PhoneMaskBottomSheetController(
         phoneCaller = phoneCaller,
         patientRepository = patientRepository,
-        clock = clock
+        clock = clock,
+        config = Observable.just(config)
     )
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }

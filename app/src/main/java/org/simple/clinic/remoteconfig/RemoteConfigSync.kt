@@ -10,6 +10,7 @@ import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthorized
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.exhaustive
@@ -34,7 +35,7 @@ class RemoteConfigSync @Inject constructor(
   private fun logError(error: Throwable) {
     val resolvedError = ErrorResolver.resolve(error)
     when (resolvedError) {
-      is Unexpected -> {
+      is Unexpected, is ServerError -> {
         crashReporter.report(resolvedError.actualCause)
         Timber.e(resolvedError.actualCause)
       }

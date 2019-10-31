@@ -22,7 +22,9 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
-import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.ServerError
+import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
@@ -43,8 +45,9 @@ class SyncIndicatorViewController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private val errorTypesToShowErrorFor = setOf(
-      ResolvedError.NetworkRelated::class,
-      ResolvedError.Unexpected::class
+      NetworkRelated::class,
+      Unexpected::class,
+      ServerError::class
   )
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {

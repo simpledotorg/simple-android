@@ -1,5 +1,7 @@
 package org.simple.clinic.selectcountry
 
+import org.simple.clinic.appconfig.Country
+
 data class SelectCountryModel(
     val countries: List<Country>?,
     val manifestFetchError: ManifestFetchError?,

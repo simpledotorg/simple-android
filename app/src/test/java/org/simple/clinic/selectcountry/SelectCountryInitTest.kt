@@ -6,6 +6,7 @@ import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
+import org.simple.clinic.appconfig.Country
 import java.net.URI
 
 class SelectCountryInitTest {

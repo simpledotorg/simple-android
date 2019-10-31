@@ -1,4 +1,4 @@
-package org.simple.clinic.selectcountry
+package org.simple.clinic.appconfig
 
 import java.net.URI
 

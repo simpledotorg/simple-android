@@ -13,7 +13,9 @@ import okhttp3.internal.http2.ErrorCode
 import okhttp3.internal.http2.StreamResetException
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.util.ResolvedError.*
+import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unexpected
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.SocketException
@@ -103,32 +105,18 @@ class ErrorResolverTest {
   }
 
   @Test
-  @Parameters(method = "params for http unauthorized errors")
-  fun `http unauthorized errors must be identified correctly`(
-      httpException: HttpException,
-      expectedResolvedError: ResolvedError
-  ) {
-    val resolvedError = ErrorResolver.resolve(httpException)
-    assertThat(resolvedError::class).isSameAs(expectedResolvedError::class)
-    assertThat(resolvedError.actualCause).isSameAs(httpException)
-  }
+  fun `http unauthorized errors must be identified correctly`() {
+    // given
+    val exception = httpException(401)
 
-  @Suppress("Unused")
-  private fun `params for http unauthorized errors`(): List<List<Any>> {
-    return listOf(
-        httpException(401).let { httpException ->
-          listOf(httpException, Unauthorized(httpException))
-        },
-        httpException(404).let { httpException ->
-          listOf(httpException, Unexpected(httpException))
-        },
-        httpException(500).let { httpException ->
-          listOf(httpException, Unexpected(httpException))
-        },
-        httpException(502).let { httpException ->
-          listOf(httpException, Unexpected(httpException))
-        }
-    )
+    // when
+    val resolvedError = ErrorResolver.resolve(exception)
+
+    // then
+    with(resolvedError) {
+      assertThat(this::class).isSameAs(Unauthorized::class)
+      assertThat(actualCause).isSameAs(exception)
+    }
   }
 
   @Test

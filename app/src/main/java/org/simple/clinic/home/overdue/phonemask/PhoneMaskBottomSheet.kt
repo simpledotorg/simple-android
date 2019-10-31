@@ -6,11 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.sheet_phone_mask.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
@@ -36,11 +35,6 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val permissionResults = PublishSubject.create<ActivityPermissionResult>()
-
-  private val normalCallButton by bindView<View>(R.id.phonemask_normal_call_button)
-  private val secureCallButton by bindView<View>(R.id.phonemask_secure_call_button)
-  private val nameTextView by bindView<TextView>(R.id.phonemask_name)
-  private val phoneNumberTextView by bindView<TextView>(R.id.phonemask_phone_number)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

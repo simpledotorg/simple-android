@@ -9,7 +9,7 @@
   android:orientation="vertical">
 
   <TextView
-    android:id="@+id/phonemask_name"
+    android:id="@+id/nameTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/spacing_16"
@@ -19,7 +19,7 @@
     tools:text="Anish Acharya, M, 43" />
 
   <TextView
-    android:id="@+id/phonemask_phone_number"
+    android:id="@+id/phoneNumberTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/spacing_16"
@@ -41,7 +41,7 @@
     tools:ignore="RtlSymmetry">
 
     <org.simple.clinic.widgets.OmegaCenterIconButton
-      android:id="@+id/phonemask_normal_call_button"
+      android:id="@+id/normalCallButton"
       style="@style/Clinic.V2.Button.WithIcon.Green3"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
       app:drawableTint="@color/green1" />
 
     <org.simple.clinic.widgets.OmegaCenterIconButton
-      android:id="@+id/phonemask_secure_call_button"
+      android:id="@+id/secureCallButton"
       style="@style/Clinic.V2.Button.WithIcon.Green1"
       android:layout_width="0dp"
       android:layout_height="wrap_content"

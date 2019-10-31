@@ -11,22 +11,17 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.Male
-import org.simple.clinic.patient.Gender.Transgender
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.Dialer.Automatic
 import org.simple.clinic.phone.Dialer.Manual
 import org.simple.clinic.phone.PhoneCaller
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
@@ -36,8 +31,6 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Month
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -53,46 +46,33 @@ class PhoneMaskBottomSheetControllerTest {
   private val patientRepository: PatientRepository = mock()
   private val clock = TestUserClock()
 
-  private val controller = PhoneMaskBottomSheetController(
-      phoneCaller = phoneCaller,
-      patientRepository = patientRepository,
-      clock = clock
+  private val patient = PatientMocker.patient(
+      uuid = patientUuid,
+      fullName = "Anish Acharya",
+      gender = Male,
+      age = Age(30, updatedAt = Instant.now(clock)),
+      dateOfBirth = null
+  )
+  private val phoneNumber = PatientMocker.phoneNumber(
+      uuid = UUID.fromString("fe364a55-118a-4f0f-bb64-b7b0ca2e8282"),
+      patientUuid = patientUuid,
+      number = "1234567890"
   )
 
-  @Before
-  fun setUp() {
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
-  }
+  private lateinit var controller: PhoneMaskBottomSheetController
 
   @Test
   @Parameters(method = "params for types of call")
   fun `when any call button is clicked, call permission should be requested`(callTypeEvent: UiEvent) {
-    val phoneNumber = "1234567890"
-    val name = "Kumar Verma"
-    val gender = Transgender
-    val age = 32
-
-    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(PatientMocker.patient(
-        uuid = patientUuid,
-        fullName = name,
-        gender = gender,
-        age = Age(age, Instant.now(clock)),
-        dateOfBirth = null
-    ).toOptional()))
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just(PatientMocker.phoneNumber(
-        uuid = patientUuid,
-        number = phoneNumber
-    ).toOptional()))
-
-    uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
+    sheetCreated()
     uiEvents.onNext(callTypeEvent)
 
     verify(screen).requestCallPermission()
     verify(screen).setupView(PatientDetails(
-        phoneNumber = phoneNumber,
-        name = name,
-        gender = gender,
-        age = age
+        phoneNumber = phoneNumber.number,
+        name = patient.fullName,
+        gender = patient.gender,
+        age = patient.age!!.value
     ))
     verifyNoMoreInteractions(screen)
   }
@@ -108,37 +88,20 @@ class PhoneMaskBottomSheetControllerTest {
       permission: RuntimePermissionResult,
       dialer: Dialer
   ) {
-    val number = "1234567890"
-    val name = "Kumar Verma"
-    val gender = Transgender
-    val age = 32
-
-    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(PatientMocker.patient(
-        uuid = patientUuid,
-        fullName = name,
-        gender = gender,
-        age = Age(age, Instant.now(clock)),
-        dateOfBirth = null
-    ).toOptional()))
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just(PatientMocker.phoneNumber(
-        uuid = patientUuid,
-        number = number
-    ).toOptional()))
-
     var isCompletableSubscribed = false
     val normalCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
-    whenever(phoneCaller.normalCall(number, dialer)).doReturn(normalCallCompletable)
+    whenever(phoneCaller.normalCall(phoneNumber.number, dialer)).doReturn(normalCallCompletable)
 
-    uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
+    sheetCreated()
     uiEvents.onNext(callTypeEvent)
     uiEvents.onNext(CallPhonePermissionChanged(permission))
 
     assertThat(isCompletableSubscribed).isTrue()
     verify(screen).setupView(PatientDetails(
-        phoneNumber = number,
-        name = name,
-        gender = gender,
-        age = age
+        phoneNumber = phoneNumber.number,
+        name = patient.fullName,
+        gender = patient.gender,
+        age = patient.age!!.value
     ))
     verify(screen).requestCallPermission()
     verify(screen).closeSheet()
@@ -152,37 +115,20 @@ class PhoneMaskBottomSheetControllerTest {
       permission: RuntimePermissionResult,
       dialer: Dialer
   ) {
-    val number = "1234567890"
-    val name = "Kumar Verma"
-    val gender = Transgender
-    val age = 32
-
-    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(PatientMocker.patient(
-        uuid = patientUuid,
-        fullName = name,
-        gender = gender,
-        age = Age(age, Instant.now(clock)),
-        dateOfBirth = null
-    ).toOptional()))
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just(PatientMocker.phoneNumber(
-        uuid = patientUuid,
-        number = number
-    ).toOptional()))
-
     var isCompletableSubscribed = false
     val secureCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
-    whenever(phoneCaller.secureCall(number, dialer)).doReturn(secureCallCompletable)
+    whenever(phoneCaller.secureCall(phoneNumber.number, dialer)).doReturn(secureCallCompletable)
 
-    uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
+    sheetCreated()
     uiEvents.onNext(callTypeEvent)
     uiEvents.onNext(CallPhonePermissionChanged(permission))
 
     assertThat(isCompletableSubscribed).isTrue()
     verify(screen).setupView(PatientDetails(
-        phoneNumber = number,
-        name = name,
-        gender = gender,
-        age = age
+        phoneNumber = phoneNumber.number,
+        name = patient.fullName,
+        gender = patient.gender,
+        age = patient.age!!.value
     ))
     verify(screen).requestCallPermission()
     verify(screen).closeSheet()
@@ -207,42 +153,32 @@ class PhoneMaskBottomSheetControllerTest {
 
   @Test
   fun `when the screen is created, the patient details must be populated`() {
-    // given
-    val patientSubject = PublishSubject.create<Optional<Patient>>()
-    val patientPhoneNumberSubject = PublishSubject.create<Optional<PatientPhoneNumber>>()
-    whenever(patientRepository.patient(patientUuid)).doReturn(patientSubject)
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(patientPhoneNumberSubject)
-
-    val patientName = "Anish Acharya"
-    val gender = Male
-    val number = "1234567890"
-
-    val patient = PatientMocker.patient(
-        uuid = patientUuid,
-        fullName = patientName,
-        gender = gender,
-        dateOfBirth = LocalDate.of(1940, Month.JANUARY, 1),
-        age = null
-    )
-    val phoneNumber = PatientMocker.phoneNumber(
-        uuid = UUID.fromString("fe364a55-118a-4f0f-bb64-b7b0ca2e8282"),
-        patientUuid = patientUuid,
-        number = number
-    )
-
     // when
-    uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
-    patientSubject.onNext(patient.toOptional())
-    patientPhoneNumberSubject.onNext(phoneNumber.toOptional())
+    sheetCreated()
 
     // then
     val expectedPatientDetails = PatientDetails(
-        phoneNumber = number,
-        name = patientName,
-        gender = gender,
+        phoneNumber = phoneNumber.number,
+        name = patient.fullName,
+        gender = patient.gender,
         // Test UTC clock is set to EPOCH
         age = 30
     )
     verify(screen).setupView(expectedPatientDetails)
+  }
+
+  private fun sheetCreated() {
+    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(patient.toOptional()))
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just(phoneNumber.toOptional()))
+
+    controller = PhoneMaskBottomSheetController(
+        phoneCaller = phoneCaller,
+        patientRepository = patientRepository,
+        clock = clock
+    )
+
+    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
   }
 }

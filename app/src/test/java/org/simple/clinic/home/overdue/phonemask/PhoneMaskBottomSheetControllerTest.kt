@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue.phonemask
 
 import com.google.common.truth.Truth.assertThat
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -32,7 +33,6 @@ import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -72,14 +72,14 @@ class PhoneMaskBottomSheetControllerTest {
     val gender = Transgender
     val age = 32
 
-    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(PatientMocker.patient(
+    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(PatientMocker.patient(
         uuid = patientUuid,
         fullName = name,
         gender = gender,
         age = Age(age, Instant.now(clock)),
         dateOfBirth = null
     ).toOptional()))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just(PatientMocker.phoneNumber(
         uuid = patientUuid,
         number = phoneNumber
     ).toOptional()))
@@ -113,21 +113,21 @@ class PhoneMaskBottomSheetControllerTest {
     val gender = Transgender
     val age = 32
 
-    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(PatientMocker.patient(
+    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(PatientMocker.patient(
         uuid = patientUuid,
         fullName = name,
         gender = gender,
         age = Age(age, Instant.now(clock)),
         dateOfBirth = null
     ).toOptional()))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just(PatientMocker.phoneNumber(
         uuid = patientUuid,
         number = number
     ).toOptional()))
 
     var isCompletableSubscribed = false
     val normalCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
-    whenever(phoneCaller.normalCall(number, dialer)).thenReturn(normalCallCompletable)
+    whenever(phoneCaller.normalCall(number, dialer)).doReturn(normalCallCompletable)
 
     uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
     uiEvents.onNext(callTypeEvent)
@@ -157,21 +157,21 @@ class PhoneMaskBottomSheetControllerTest {
     val gender = Transgender
     val age = 32
 
-    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(PatientMocker.patient(
+    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(PatientMocker.patient(
         uuid = patientUuid,
         fullName = name,
         gender = gender,
         age = Age(age, Instant.now(clock)),
         dateOfBirth = null
     ).toOptional()))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just(PatientMocker.phoneNumber(
         uuid = patientUuid,
         number = number
     ).toOptional()))
 
     var isCompletableSubscribed = false
     val secureCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
-    whenever(phoneCaller.secureCall(number, dialer)).thenReturn(secureCallCompletable)
+    whenever(phoneCaller.secureCall(number, dialer)).doReturn(secureCallCompletable)
 
     uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
     uiEvents.onNext(callTypeEvent)
@@ -210,8 +210,8 @@ class PhoneMaskBottomSheetControllerTest {
     // given
     val patientSubject = PublishSubject.create<Optional<Patient>>()
     val patientPhoneNumberSubject = PublishSubject.create<Optional<PatientPhoneNumber>>()
-    whenever(patientRepository.patient(patientUuid)).thenReturn(patientSubject)
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(patientPhoneNumberSubject)
+    whenever(patientRepository.patient(patientUuid)).doReturn(patientSubject)
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(patientPhoneNumberSubject)
 
     val patientName = "Anish Acharya"
     val gender = Male

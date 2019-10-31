@@ -1,7 +1,6 @@
 package org.simple.clinic.appconfig
 
 import org.simple.clinic.BuildConfig
-import org.simple.clinic.selectcountry.Country
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import java.net.URI

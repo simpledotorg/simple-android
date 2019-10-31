@@ -17,6 +17,10 @@ import org.junit.runner.RunWith
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.ServerError
+import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.toOptional
 
 @RunWith(JUnitParamsRunner::class)
@@ -64,10 +68,11 @@ class UnauthorizeUserTest {
     }
 
     return listOf(
-        testCase(error = ResolvedError.Unauthorized(RuntimeException()), shouldUnauthorizeUser = true),
-        testCase(error = ResolvedError.Unauthorized(NullPointerException()), shouldUnauthorizeUser = true),
-        testCase(error = ResolvedError.NetworkRelated(RuntimeException()), shouldUnauthorizeUser = false),
-        testCase(error = ResolvedError.Unexpected(RuntimeException()), shouldUnauthorizeUser = false)
+        testCase(error = Unauthorized(RuntimeException()), shouldUnauthorizeUser = true),
+        testCase(error = Unauthorized(NullPointerException()), shouldUnauthorizeUser = true),
+        testCase(error = NetworkRelated(RuntimeException()), shouldUnauthorizeUser = false),
+        testCase(error = Unexpected(RuntimeException()), shouldUnauthorizeUser = false),
+        testCase(error = ServerError(RuntimeException()), shouldUnauthorizeUser = false)
     )
   }
 }

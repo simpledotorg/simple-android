@@ -14,8 +14,8 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
@@ -23,6 +23,7 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
 import org.simple.clinic.sync.indicator.dialog.SyncIndicatorFailureDialog
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthorized
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -95,7 +96,8 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   fun showErrorDialog(errorType: ResolvedError) {
     val message = when (errorType) {
       is NetworkRelated -> context.getString(R.string.syncindicator_dialog_error_network)
-      is Unexpected, is Unauthorized -> context.getString(R.string.syncindicator_dialog_error_server)
+      // TODO(vs): 2019-10-31 Add a separate error message for server errors
+      is Unexpected, is Unauthorized, is ServerError -> context.getString(R.string.syncindicator_dialog_error_server)
     }
     SyncIndicatorFailureDialog.show(fragmentManager = activity.supportFragmentManager, message = message)
   }

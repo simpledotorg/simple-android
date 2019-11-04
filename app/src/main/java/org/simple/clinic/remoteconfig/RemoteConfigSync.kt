@@ -11,7 +11,7 @@ import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
-import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.exhaustive
 import timber.log.Timber
@@ -39,7 +39,7 @@ class RemoteConfigSync @Inject constructor(
         crashReporter.report(resolvedError.actualCause)
         Timber.e(resolvedError.actualCause)
       }
-      is NetworkRelated, is Unauthorized -> Timber.e(error)
+      is NetworkRelated, is Unauthenticated -> Timber.e(error)
     }.exhaustive()
   }
 

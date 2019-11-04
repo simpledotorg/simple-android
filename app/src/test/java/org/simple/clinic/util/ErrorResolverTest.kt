@@ -15,7 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
-import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import retrofit2.HttpException
 import retrofit2.Response
@@ -115,7 +115,7 @@ class ErrorResolverTest {
 
     // then
     with(resolvedError) {
-      assertThat(this::class).isSameAs(Unauthorized::class)
+      assertThat(this::class).isSameAs(Unauthenticated::class)
       assertThat(actualCause).isSameAs(exception)
     }
   }

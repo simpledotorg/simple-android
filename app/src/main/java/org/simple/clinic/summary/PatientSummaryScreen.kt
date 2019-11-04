@@ -26,16 +26,12 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.EditPatientScreenKey
-import org.simple.clinic.editpatient_old.PatientEditScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.mobius.migration.Architecture
-import org.simple.clinic.mobius.migration.MobiusMigrationConfig
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -122,9 +118,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private var linkIdWithPatientShown: Boolean = false
 
-  @Inject
-  lateinit var mobiusMigrationConfig: MobiusMigrationConfig
-
   override fun onSaveInstanceState(): Parcelable {
     return PatientSummaryScreenSavedState(
         super.onSaveInstanceState(),
@@ -171,14 +164,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private fun setupEditButtonClicks() {
     editButton.setOnClickListener {
-      val (key, architecture) = if (mobiusMigrationConfig.useEditPatientScreen) {
-        createEditPatientScreenKey(patientSummaryProfile!!) to Architecture.MOBIUS
-      } else {
-        createPatientEditScreenKey(patientSummaryProfile!!) to Architecture.ORIGINAL
-      }
-      Analytics.reportArchitectureMigration("EditPatientScreen", architecture, null)
-
-      screenRouter.push(key)
+      screenRouter.push(createEditPatientScreenKey(patientSummaryProfile!!))
     }
   }
 
@@ -186,18 +172,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       patientSummaryProfile: PatientSummaryProfile
   ): EditPatientScreenKey {
     return EditPatientScreenKey.fromPatientData(
-        patientSummaryProfile.patient,
-        patientSummaryProfile.address,
-        patientSummaryProfile.phoneNumber.toNullable()
-    )
-  }
-
-  @Suppress("DeprecatedCallableAddReplaceWith")
-  @Deprecated(message = "Old architecture")
-  private fun createPatientEditScreenKey(
-      patientSummaryProfile: PatientSummaryProfile
-  ): PatientEditScreenKey {
-    return PatientEditScreenKey.fromPatientData(
         patientSummaryProfile.patient,
         patientSummaryProfile.address,
         patientSummaryProfile.phoneNumber.toNullable()

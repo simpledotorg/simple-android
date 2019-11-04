@@ -24,7 +24,6 @@ import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
-import org.simple.clinic.editpatient_old.PatientEditScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
@@ -107,7 +106,6 @@ interface TheActivityComponent: OnboardingScreenInjector {
   fun inject(target: RemoveAppointmentScreen)
   fun inject(target: NewMedicalHistoryScreen)
   fun inject(target: PinEntryCardView)
-  fun inject(target: PatientEditScreen)
   fun inject(target: ConfirmDiscardChangesDialog)
   fun inject(target: UpdatePhoneNumberDialog)
   fun inject(target: ConfirmRemoveBloodPressureDialog)

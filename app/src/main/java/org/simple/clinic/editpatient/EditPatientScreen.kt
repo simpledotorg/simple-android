@@ -19,7 +19,6 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -30,7 +29,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
-import org.simple.clinic.editpatient_old.PatientEditScreenController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
@@ -62,9 +61,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class EditPatientScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), EditPatientUi {
-
-  @Inject
-  lateinit var controller: PatientEditScreenController
 
   @Inject
   lateinit var screenRouter: ScreenRouter

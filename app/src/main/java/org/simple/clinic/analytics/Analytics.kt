@@ -8,7 +8,6 @@ import android.net.NetworkCapabilities.TRANSPORT_LOWPAN
 import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
-import org.simple.clinic.mobius.migration.Architecture
 import org.simple.clinic.user.User
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -130,21 +129,6 @@ object Analytics {
     )
 
     reporters.forEach { it.createEvent("DataCleared", props) }
-  }
-
-  fun reportArchitectureMigration(
-      screen: String,
-      architecture: Architecture,
-      hostScreen: String? = null
-  ) {
-    val props = mutableMapOf(
-        "screen" to screen,
-        "architecture" to architecture.analyticsName
-    )
-
-    hostScreen?.let { props["hostedScreen"] = hostScreen }
-
-    reporters.onEach { it.createEvent("ArchitectureMigration", props) }
   }
 
   enum class NetworkTransportType {

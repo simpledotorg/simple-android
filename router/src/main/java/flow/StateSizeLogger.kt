@@ -1,5 +1,7 @@
 package flow
 
+import android.os.Bundle
+import android.os.Parcelable
 import java.lang.reflect.Modifier
 
 /**
@@ -20,4 +22,16 @@ private fun getKeyManagerUnsafe(flow: Flow): KeyManager {
   }
 
   return keyManagerField.get(flow) as KeyManager
+}
+
+/**
+ * Repurposed from [InternalLifecycleIntegration.save]
+ **/
+private fun parcelables(keyManager: KeyManager, parceler: KeyParceler, history: History): List<Bundle> {
+  return history
+      .reverseIterator<Any>()
+      .asSequence()
+      .filterNot { it.javaClass.isAnnotationPresent(NotPersistent::class.java) }
+      .map { keyManager.getState(it).toBundle(parceler) }
+      .toList()
 }

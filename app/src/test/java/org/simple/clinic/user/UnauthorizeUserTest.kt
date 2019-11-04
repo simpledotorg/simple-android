@@ -19,7 +19,7 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
-import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.toOptional
 
@@ -68,8 +68,8 @@ class UnauthorizeUserTest {
     }
 
     return listOf(
-        testCase(error = Unauthorized(RuntimeException()), shouldUnauthorizeUser = true),
-        testCase(error = Unauthorized(NullPointerException()), shouldUnauthorizeUser = true),
+        testCase(error = Unauthenticated(RuntimeException()), shouldUnauthorizeUser = true),
+        testCase(error = Unauthenticated(NullPointerException()), shouldUnauthorizeUser = true),
         testCase(error = NetworkRelated(RuntimeException()), shouldUnauthorizeUser = false),
         testCase(error = Unexpected(RuntimeException()), shouldUnauthorizeUser = false),
         testCase(error = ServerError(RuntimeException()), shouldUnauthorizeUser = false)

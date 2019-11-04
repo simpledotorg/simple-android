@@ -30,6 +30,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 
 @Module
 class NetworkModule {
@@ -105,6 +106,7 @@ class NetworkModule {
 
   @Provides
   @AppScope
+  @Named("for_country")
   fun retrofit(commonRetrofitBuilder: Retrofit.Builder): Retrofit {
     val baseUrl = BuildConfig.API_ENDPOINT
     val currentApiVersion = "v3"

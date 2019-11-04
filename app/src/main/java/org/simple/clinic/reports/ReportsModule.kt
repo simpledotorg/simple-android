@@ -8,7 +8,7 @@ import javax.inject.Named
 @Module
 class ReportsModule {
   @Provides
-  fun reportsApi(retrofit: Retrofit): ReportsApi = retrofit.create(ReportsApi::class.java)
+  fun reportsApi(@Named("for_country") retrofit: Retrofit): ReportsApi = retrofit.create(ReportsApi::class.java)
 
   @Provides
   @Named("reports_file_path")

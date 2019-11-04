@@ -16,7 +16,7 @@ import javax.inject.Named
 class EncounterModule {
 
   @Provides
-  fun syncApi(retrofit: Retrofit): EncounterSyncApi {
+  fun syncApi(@Named("for_country") retrofit: Retrofit): EncounterSyncApi {
     return retrofit.create(EncounterSyncApi::class.java)
   }
 

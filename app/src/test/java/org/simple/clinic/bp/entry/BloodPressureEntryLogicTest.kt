@@ -604,8 +604,8 @@ class BloodPressureEntrySheetLogicTest {
     verify(ui).showDateOnDateButton(recordedDate)
 
     verify(ui).setDateOnInputFields(
-        recordedDate.dayOfMonth.toString().padStart(2, '0'),
-        recordedDate.month.value.toString().padStart(2, '0'),
+        recordedDate.dayOfMonth.toString(),
+        recordedDate.month.value.toString(),
         recordedDate.year.toString().takeLast(2)
     )
     verify(ui).setSystolic(bp.systolic.toString())

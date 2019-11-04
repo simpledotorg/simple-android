@@ -98,6 +98,7 @@ android {
       applicationIdSuffix ".qa"
       versionNameSuffix "-qa"
       buildConfigField "String", "API_ENDPOINT", "\"" + qaApiEndpoint + "\""
+      buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + qaManifestEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + qaMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
@@ -107,6 +108,7 @@ android {
       applicationIdSuffix ".staging"
       versionNameSuffix "-demo"
       buildConfigField "String", "API_ENDPOINT", "\"" + stagingApiEndpoint + "\""
+      buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + stagingManifestEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + stagingMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
@@ -116,6 +118,7 @@ android {
       applicationIdSuffix ".sandbox"
       versionNameSuffix "-sandbox"
       buildConfigField "String", "API_ENDPOINT", "\"" + sandboxApiEndpoint + "\""
+      buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + sandboxManifestEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + sandboxMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
@@ -123,6 +126,7 @@ android {
     production {
       dimension 'track'
       buildConfigField "String", "API_ENDPOINT", "\"" + productionApiEndpoint + "\""
+      buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + productionManifestEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + productionMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
     }

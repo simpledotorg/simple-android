@@ -13,5 +13,5 @@ class HomescreenIllustrationModule {
   fun illustrationsFolder() = "homescreen-illustrations"
 
   @Provides
-  fun fileDownloadService(retrofit: Retrofit): FileDownloadService = retrofit.create(FileDownloadService::class.java)
+  fun fileDownloadService(@Named("for_country") retrofit: Retrofit): FileDownloadService = retrofit.create(FileDownloadService::class.java)
 }

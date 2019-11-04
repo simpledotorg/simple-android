@@ -9,7 +9,7 @@ import javax.inject.Named
 class HelpModule {
 
   @Provides
-  fun helpApi(retrofit: Retrofit): HelpApi = retrofit.create(HelpApi::class.java)
+  fun helpApi(@Named("for_country") retrofit: Retrofit): HelpApi = retrofit.create(HelpApi::class.java)
 
   @Provides
   @Named("help_file_path")

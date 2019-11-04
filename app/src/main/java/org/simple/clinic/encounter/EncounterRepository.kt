@@ -52,7 +52,7 @@ class EncounterRepository @Inject constructor(
         .map { (payload, _) -> payload }
         .map(::payloadToEncounters)
         .toList()
-        .flatMapCompletable(::saveObservationsForEncounters)
+        .flatMapCompletable { saveObservationsForEncounters(it) }
   }
 
   private fun canEncountersBeOverridden(payload: EncounterPayload): Observable<Boolean> {
@@ -63,16 +63,32 @@ class EncounterRepository @Inject constructor(
     }
   }
 
-  private fun saveObservationsForEncounters(records: List<ObservationsForEncounter>): Completable {
+  /**
+   * @param observations A list of observations.
+   * @param useTransaction By default we want to save then encounters and associated blood pressures within
+   * a transaction. Since, SQLite does not support nested transactions yet, if this function is called
+   * from another function that has a transaction, then we want to run queries within the top-level transaction
+   * instead.
+   */
+  private fun saveObservationsForEncounters(
+      observations: List<ObservationsForEncounter>,
+      useTransaction: Boolean = true
+  ): Completable {
     return Completable.fromAction {
-      val bloodPressures = records.flatMap { it.bloodPressures }
-      val encounters = records.map { it.encounter }
+      val bloodPressures = observations.flatMap { it.bloodPressures }
+      val encounters = observations.map { it.encounter }
 
-      with(database) {
-        runInTransaction {
-          encountersDao().save(encounters)
-          bloodPressureDao().save(bloodPressures)
+      val saveEncountersAndBloodPressures = {
+        database.encountersDao().save(encounters)
+        database.bloodPressureDao().save(bloodPressures)
+      }
+
+      if (useTransaction) {
+        database.runInTransaction {
+          saveEncountersAndBloodPressures()
         }
+      } else {
+        saveEncountersAndBloodPressures()
       }
     }
   }
@@ -92,9 +108,7 @@ class EncounterRepository @Inject constructor(
     return database.encountersDao().recordCount(syncStatus = PENDING)
   }
 
-  fun saveBloodPressureMeasurement(
-      bloodPressureMeasurement: BloodPressureMeasurement
-  ): Completable {
+  fun saveBloodPressureMeasurement(bloodPressureMeasurement: BloodPressureMeasurement): Completable {
     val encounter = with(bloodPressureMeasurement) {
       Encounter(
           uuid = encounterUuid,
@@ -107,10 +121,10 @@ class EncounterRepository @Inject constructor(
       )
     }
 
-    return saveObservationsForEncounters(listOf(ObservationsForEncounter(
-        encounter = encounter,
-        bloodPressures = listOf(bloodPressureMeasurement)
-    )))
+    val records = listOf(
+        ObservationsForEncounter(encounter = encounter, bloodPressures = listOf(bloodPressureMeasurement))
+    )
+    return saveObservationsForEncounters(records, useTransaction = false)
   }
 
   fun updateBloodPressure(measurement: BloodPressureMeasurement): Completable {
@@ -124,16 +138,14 @@ class EncounterRepository @Inject constructor(
         updatedAt = Instant.now(utcClock),
         syncStatus = PENDING
     )
-    val bpSave = Completable.fromAction {
-      database.bloodPressureDao().save(listOf(updatedMeasurement))
-    }
 
-    return when (oldEncounterUuid == newEncounterUuid) {
-      true -> database.encountersDao()
-          .encounter(oldEncounterUuid)
-          .take(1)
-          .flatMapCompletable { updateEncounter(it).andThen(bpSave) }
-      false -> saveBloodPressureMeasurement(updatedMeasurement).andThen(deleteEncounter(oldEncounterUuid))
+    return database.runInTransaction<Completable> {
+      if (oldEncounterUuid == newEncounterUuid) {
+        updateEncounterWithBloodPressure(oldEncounterUuid, updatedMeasurement)
+      } else {
+        saveBloodPressureMeasurement(updatedMeasurement)
+            .andThen(deleteEncounter(oldEncounterUuid))
+      }
     }
   }
 
@@ -156,5 +168,18 @@ class EncounterRepository @Inject constructor(
           updatedAt = Instant.now(utcClock))
       database.encountersDao().save(updatedEncounter)
     }
+  }
+
+  private fun updateEncounterWithBloodPressure(
+      encounterUuid: UUID,
+      updatedMeasurement: BloodPressureMeasurement
+  ): Completable {
+    return database.encountersDao()
+        .encounter(encounterUuid)
+        .take(1)
+        .flatMapCompletable { encounter ->
+          val bpSave = Completable.fromAction { database.bloodPressureDao().save(listOf(updatedMeasurement)) }
+          updateEncounter(encounter).andThen(bpSave)
+        }
   }
 }

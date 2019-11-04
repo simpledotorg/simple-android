@@ -55,6 +55,9 @@ class TheActivity : AppCompatActivity() {
   @Inject
   lateinit var locale: Locale
 
+  @Inject
+  lateinit var config: TheActivityConfig
+
   private val screenRouter: ScreenRouter by unsafeLazy {
     ScreenRouter.create(this, NestedKeyChanger(), screenResults)
   }
@@ -134,6 +137,13 @@ class TheActivity : AppCompatActivity() {
       return
     }
     super.onBackPressed()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    if (config.shouldLogSavedStateSizes) {
+      screenRouter.logSizesOfSavedStates()
+    }
+    super.onSaveInstanceState(outState)
   }
 
   fun showAppLockScreen() {

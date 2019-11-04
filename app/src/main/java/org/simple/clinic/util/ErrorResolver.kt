@@ -5,7 +5,7 @@ import okhttp3.internal.http2.ConnectionShutdownException
 import okhttp3.internal.http2.StreamResetException
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
-import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import retrofit2.HttpException
 import java.io.IOException
@@ -51,7 +51,7 @@ object ErrorResolver {
 
   private fun mapHttpExceptionToResolvedError(actualCause: HttpException): ResolvedError {
     return when (actualCause.code()) {
-      401 -> Unauthorized(actualCause)
+      401 -> Unauthenticated(actualCause)
       in 500..599 -> ServerError(actualCause)
       else -> Unexpected(actualCause)
     }
@@ -64,7 +64,7 @@ sealed class ResolvedError(val actualCause: Throwable) {
 
   class Unexpected(actualCause: Throwable) : ResolvedError(actualCause)
 
-  class Unauthorized(actualCause: Throwable) : ResolvedError(actualCause)
+  class Unauthenticated(actualCause: Throwable) : ResolvedError(actualCause)
 
   class ServerError(actualCause: Throwable) : ResolvedError(actualCause)
 }

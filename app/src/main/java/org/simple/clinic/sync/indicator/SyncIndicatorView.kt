@@ -24,7 +24,7 @@ import org.simple.clinic.sync.indicator.dialog.SyncIndicatorFailureDialog
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
-import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setCompoundDrawableStart
@@ -97,7 +97,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
     val message = when (errorType) {
       is NetworkRelated -> context.getString(R.string.syncindicator_dialog_error_network)
       // TODO(vs): 2019-10-31 Add a separate error message for server errors
-      is Unexpected, is Unauthorized, is ServerError -> context.getString(R.string.syncindicator_dialog_error_server)
+      is Unexpected, is Unauthenticated, is ServerError -> context.getString(R.string.syncindicator_dialog_error_server)
     }
     SyncIndicatorFailureDialog.show(fragmentManager = activity.supportFragmentManager, message = message)
   }

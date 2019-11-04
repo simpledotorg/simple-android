@@ -1,21 +1,29 @@
 # CHANGELOG
 
+## Next Release
+### Internal
+- Remove old edit patient screen
+
+## On Demo
+### Internal
+- Move Blood Pressure Entry sheet to Mobius
+
 ## 2019-10-29-6197
-## Feature
+### Feature
 - Add a loading screen when the app database is being migrated after an update
 
-## Internal
+### Internal
 - Remove old AllPatientsInFacilityView code
 - Make changing of screens in Flow synchronous
 - Introduce an alternate activity (SetupActivity) as the launcher activity
 - Move onboarding screen to the SetupActivity
 
 ## 2019-10-21-6057
-## Feature
+### Feature
 - Add consent text when registering a patient
 
-## Internal
-- Homescreen banner illustrations are fetched remotely instead of hardcoded
+### Internal
+- Home screen banner illustrations are fetched remotely instead of hardcoded
 - Migrate patient edit screen to Mobius
 - Migrate patient new entry screen to Mobius
 - Migrate onboarding screen to Mobius

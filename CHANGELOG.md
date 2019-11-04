@@ -4,6 +4,8 @@
 ### Internal
 - Remove old edit patient screen
 - Add and sync Encounters for all recorded BPs
+- Disable phone masking feature by default
+- Add a feature toggle for the phone masking feature
 
 ## On Demo
 ### Internal

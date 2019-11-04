@@ -17,7 +17,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.Male
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.Dialer.Automatic
@@ -184,7 +186,7 @@ class PhoneMaskBottomSheetControllerTest {
     val config = PhoneNumberMaskerConfig(proxyPhoneNumber = "123456", phoneMaskingFeatureEnabled = true)
 
     // when
-    sheetCreated(config)
+    sheetCreated(config = config)
 
     // then
     verify(screen).showSecureCallButton()
@@ -196,13 +198,15 @@ class PhoneMaskBottomSheetControllerTest {
     val config = PhoneNumberMaskerConfig(proxyPhoneNumber = "", phoneMaskingFeatureEnabled = true)
 
     // when
-    sheetCreated(config)
+    sheetCreated(config = config)
 
     // then
     verify(screen, never()).showSecureCallButton()
   }
 
   private fun sheetCreated(
+      patient: Patient = this.patient,
+      phoneNumber: PatientPhoneNumber = this.phoneNumber,
       config: PhoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber = "123456", phoneMaskingFeatureEnabled = false)
   ) {
     whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(patient.toOptional()))

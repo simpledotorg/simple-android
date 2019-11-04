@@ -30,6 +30,8 @@ class ScreenRouter(
 
   private var flowInstalled: Boolean = false
 
+  private val keyParceler: KeyParceler = DefaultKeyParceler()
+
   companion object {
     fun create(activity: Activity, nestedKeyChanger: NestedKeyChanger, resultBus: ScreenResultBus): ScreenRouter {
       val flowSupplier = object : Supplier<Flow> {
@@ -49,7 +51,7 @@ class ScreenRouter(
     return Flow.configure(baseContext, activity)
         .defaultKey(initialScreen)
         .dispatcher(keyDispatcher)
-        .keyParceler(DefaultKeyParceler())
+        .keyParceler(keyParceler)
         .install()
   }
 

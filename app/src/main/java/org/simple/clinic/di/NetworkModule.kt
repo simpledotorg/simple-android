@@ -24,6 +24,7 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.moshi.InstantMoshiAdapter
 import org.simple.clinic.util.moshi.LocalDateMoshiAdapter
 import org.simple.clinic.util.moshi.MoshiOptionalAdapterFactory
+import org.simple.clinic.util.moshi.URIMoshiAdapter
 import org.simple.clinic.util.moshi.UuidMoshiAdapter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -55,6 +56,7 @@ class NetworkModule {
         .add(Gender.MoshiTypeAdapter())
         .add(PatientPhoneNumberType.MoshiTypeAdapter())
         .add(DayOfMonth.MoshiTypeAdapter)
+        .add(URIMoshiAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

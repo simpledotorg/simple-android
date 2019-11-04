@@ -4,6 +4,7 @@
 ### Internal
 - Remove old edit patient screen
 - Add and sync Encounters for all recorded BPs
+- Add breadcrumbs for tracking sizes of view saved states
 
 ## On Demo
 ### Internal

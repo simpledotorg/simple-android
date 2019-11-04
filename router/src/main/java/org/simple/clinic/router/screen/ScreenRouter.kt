@@ -11,6 +11,7 @@ import flow.History
 import flow.KeyChanger
 import flow.KeyDispatcher
 import flow.KeyParceler
+import flow.logSavedStateSizes
 import io.reactivex.Observable
 import io.reactivex.exceptions.Exceptions
 import org.simple.clinic.router.ScreenResultBus
@@ -115,6 +116,15 @@ class ScreenRouter(
       }
     }
     return callback
+  }
+
+  fun logSizesOfSavedStates() {
+    try {
+      logSavedStateSizes(flow(), keyParceler, activity.resources)
+    } catch (e: Throwable) {
+      // This is meant to get analytics, don't crash the app if something goes wrong here
+      Timber.e(e)
+    }
   }
 
   private fun flow(): Flow {

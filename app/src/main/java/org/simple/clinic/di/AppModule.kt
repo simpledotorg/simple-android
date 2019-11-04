@@ -13,7 +13,6 @@ import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
-import org.simple.clinic.mobius.migration.MobiusMigrationModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.SimpleVideoModule
@@ -59,7 +58,6 @@ import javax.inject.Named
   DataSyncOnApprovalModule::class,
   HomescreenIllustrationModule::class,
   SimpleVideoModule::class,
-  MobiusMigrationModule::class,
   RemoteConfigModule::class,
   SettingsModule::class
 ])

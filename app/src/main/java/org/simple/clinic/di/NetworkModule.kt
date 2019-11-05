@@ -117,4 +117,13 @@ class NetworkModule {
         .baseUrl("$baseUrl$currentApiVersion/")
         .build()
   }
+
+  @Provides
+  @AppScope
+  @Named("for_config")
+  fun configurationRetrofit(commonRetrofitBuilder: Retrofit.Builder): Retrofit {
+    return commonRetrofitBuilder
+        .baseUrl(BuildConfig.MANIFEST_ENDPOINT)
+        .build()
+  }
 }

@@ -270,7 +270,9 @@ class PatientRepository @Inject constructor(
           with(it) {
             PatientAddress(
                 uuid = addressUuid,
+                streetAddress = null, // TODO(rj) 8-Nov-19: Get these from the `Address` object and save it into the database.
                 colonyOrVillage = address!!.colonyOrVillage,
+                zone = null,
                 district = address.district,
                 state = address.state,
                 country = facility.country,

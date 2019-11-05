@@ -177,8 +177,10 @@ class TestData @Inject constructor(
 
   fun patientAddress(
       uuid: UUID = UUID.randomUUID(),
-      colonyOrVilage: String? = faker.address.streetAddress(),
+      streetAddress: String? = faker.address.streetName(),
+      colonyOrVillage: String? = faker.address.streetAddress(),
       district: String = faker.address.city(),
+      zone: String? = faker.address.secondaryAddress(),
       state: String = faker.address.state(),
       country: String? = faker.address.country(),
       createdAt: Instant = Instant.now(),
@@ -186,7 +188,9 @@ class TestData @Inject constructor(
       deletedAt: Instant? = null
   ) = PatientAddress(
       uuid = uuid,
-      colonyOrVillage = colonyOrVilage,
+      streetAddress = streetAddress,
+      colonyOrVillage = colonyOrVillage,
+      zone = zone,
       district = district,
       state = state,
       country = country,
@@ -195,7 +199,7 @@ class TestData @Inject constructor(
       deletedAt = deletedAt
   )
 
-  fun businessIdMetadata(
+  private fun businessIdMetadata(
       metaData: BusinessIdMetaData = BusinessIdMetaData.BpPassportMetaDataV1(qaUserUuid(), qaUserFacilityUuid()),
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1
   ): String = businessIdMetaDataAdapter.serialize(metaData, metaDataVersion)
@@ -263,8 +267,10 @@ class TestData @Inject constructor(
 
   fun addressPayload(
       uuid: UUID = UUID.randomUUID(),
+      streetAddress: String? = faker.address.streetName(),
       colonyOrVillage: String? = faker.address.streetAddress(),
       district: String = faker.address.city(),
+      zone: String? = faker.address.secondaryAddress(),
       state: String = faker.address.state(),
       country: String? = faker.address.country(),
       createdAt: Instant = Instant.now(),
@@ -274,7 +280,9 @@ class TestData @Inject constructor(
     return PatientAddressPayload(
         uuid = uuid,
         colonyOrVillage = colonyOrVillage,
+        streetAddress = streetAddress,
         district = district,
+        zone = zone,
         state = state,
         country = country,
         createdAt = createdAt,

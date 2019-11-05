@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -22,6 +23,7 @@ import java.net.URI
 class SelectCountryEffectHandlerTest {
 
   private val repository = mock<AppConfigRepository>()
+  private val uiActions = mock<UiActions>()
 
   private val india = Country(
       code = "IN",
@@ -30,7 +32,7 @@ class SelectCountryEffectHandlerTest {
       isdCode = "91"
   )
 
-  private val effectHandler = SelectCountryEffectHandler.create(repository, TrampolineSchedulersProvider())
+  private val effectHandler = SelectCountryEffectHandler.create(repository, uiActions, TrampolineSchedulersProvider())
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After
@@ -50,6 +52,7 @@ class SelectCountryEffectHandlerTest {
     verify(repository).fetchAppManifest()
     verifyNoMoreInteractions(repository)
     testCase.assertNoOutgoingEvents()
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -63,6 +66,7 @@ class SelectCountryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(ManifestFetched(countries))
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -76,6 +80,7 @@ class SelectCountryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(ManifestFetchFailed(NetworkError))
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -90,5 +95,18 @@ class SelectCountryEffectHandlerTest {
     verify(repository).saveCurrentCountry(india)
     verifyNoMoreInteractions(repository)
     testCase.assertOutgoingEvents(CountrySaved)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the go to next screen effect is received, the next screen must be opened`() {
+    // when
+    testCase.dispatch(GoToNextScreen)
+
+    // then
+    verifyZeroInteractions(repository)
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).goToNextScreen()
+    verifyNoMoreInteractions(uiActions)
   }
 }

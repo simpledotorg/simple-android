@@ -6,7 +6,7 @@
 - Update the `variantFilter` closure to remove the unnecessary build for the new variant. 
   - For e.g.: we don't want the ability to create debug variants of flavors like Demo and Production.
 - Add the API endpoint in `gradle.properties` and add this as the `API_ENDPOINT` build config field when defining the product flavour in `app/build.gradle`. This might need to be overriden on Bitrise based on the needs of the build flavour.
-- Add the Heap ID in `gradle.properties` and add this as the `HEAP_ID` build config field when defining the product flavour in `app/build.gradle`. This might need to be overriden on the Bitrise based on the needs of the build flavour.
+- Add the Mixpanel project token in `gradle.properties` and add this as the `MIXPANEL_TOKEN` build config field when defining the product flavour in `app/build.gradle`. This might need to be overriden on the Bitrise based on the needs of the build flavour.
 - Update the `applicationIdSuffix` and `versionNameSuffix` when defining the product flavour.
 - Update the `afterEvaluate` closure at the end of the `android` block in `app/build.gradle` to include the build tasks for the new variant (only needed if you have enabled proguard for the build).
   - For e.g.: We only use Proguard to minify source files and not to obfuscate them. However, Proguard still creates empty `mapping.txt` files. We use the `afterEvaluate` block to delete those empty `mapping.txt` files.

@@ -6,7 +6,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
-apply plugin: 'com.heapanalytics.android'
 
 apply from: "../quality/install-git-hook.gradle"
 
@@ -71,7 +70,6 @@ android {
 
   buildTypes {
     debug {
-      ext.heapEnabled = false
       applicationIdSuffix ".debug"
       minifyEnabled false
       useProguard false
@@ -80,10 +78,6 @@ android {
 
     release {
       debuggable false
-      ext {
-        heapEnabled = true
-        heapAutoInit = false
-      }
       if (runProguard.equalsIgnoreCase("true")) {
         minifyEnabled true
         shrinkResources true
@@ -267,7 +261,6 @@ dependencies {
 
   implementation "com.google.android.gms:play-services-auth:$versions.playServicesAuth"
   implementation "io.github.inflationx:viewpump:$versions.viewPump"
-  implementation "com.heapanalytics.android:heap-android-client:$versions.heap"
   implementation "com.facebook.shimmer:shimmer:$versions.fbShimmer"
   implementation "com.alimuzaffar.lib:pinentryedittext:$versions.pinEntryEditText"
   implementation "info.debatty:java-string-similarity:$versions.javaStringSimilarity"

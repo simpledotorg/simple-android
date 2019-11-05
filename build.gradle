@@ -47,7 +47,6 @@ buildscript {
       playServicesAuth    : '16.0.1',
       playServicesVision  : '16.2.0',
       viewPump            : '2.0.3',
-      heap                : '1.2.0',
       pinEntryEditText    : '2.0.6',
       fbShimmer           : '0.3.0',
       javaStringSimilarity: '1.1.0',
@@ -79,7 +78,6 @@ buildscript {
     classpath 'com.android.tools.build:gradle:3.5.1'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
     classpath "io.sentry:sentry-android-gradle-plugin:$versions.sentry"
-    classpath "com.heapanalytics.android:heap-android-gradle:$versions.heap"
     classpath "com.google.gms:google-services:$versions.googleServices"
   }
 }

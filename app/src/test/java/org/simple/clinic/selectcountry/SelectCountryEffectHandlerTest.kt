@@ -7,13 +7,14 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
 import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.FetchError
+import org.simple.clinic.appconfig.FetchSucceeded
 import org.simple.clinic.appconfig.ManifestFetchResult
-import org.simple.clinic.appconfig.ManifestFetchSucceeded
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.net.URI
 
@@ -52,12 +53,25 @@ class SelectCountryEffectHandlerTest {
         displayName = "India",
         isdCode = "91"
     ))
-    whenever(repository.fetchAppManifest()) doReturn Single.just<ManifestFetchResult>(ManifestFetchSucceeded(countries))
+    whenever(repository.fetchAppManifest()) doReturn Single.just<ManifestFetchResult>(FetchSucceeded(countries))
 
     // when
     testCase.dispatch(FetchManifest)
 
     // then
     testCase.assertOutgoingEvents(ManifestFetched(countries))
+  }
+
+  @Test
+  fun `when fetching the app manifest fails, the manifest fetch failed event must be emitted`() {
+    // given
+    val error = NetworkRelated(RuntimeException())
+    whenever(repository.fetchAppManifest()) doReturn Single.just<ManifestFetchResult>(FetchError(error))
+
+    // when
+    testCase.dispatch(FetchManifest)
+
+    // then
+    testCase.assertOutgoingEvents(ManifestFetchFailed(NetworkError))
   }
 }

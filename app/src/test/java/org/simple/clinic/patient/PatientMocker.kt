@@ -72,8 +72,10 @@ object PatientMocker {
 
   fun address(
       uuid: UUID = UUID.randomUUID(),
+      streetAddress: String? = "street address",
       colonyOrVillage: String? = "colony/village",
       district: String = "district",
+      zone: String? = "zone",
       state: String = "state",
       country: String = "India",
       createdAt: Instant = Instant.now(),
@@ -82,7 +84,9 @@ object PatientMocker {
   ): PatientAddress {
     return PatientAddress(
         uuid = uuid,
+        streetAddress = streetAddress,
         colonyOrVillage = colonyOrVillage,
+        zone = zone,
         district = district,
         state = state,
         country = country,
@@ -377,7 +381,7 @@ object PatientMocker {
         status = PatientStatus.Active,
         createdAt = mock(),
         updatedAt = mock(),
-        address = PatientMocker.address(),
+        address = address(),
         syncStatus = mock(),
         phoneNumber = phoneNumber,
         phoneType = mock(),

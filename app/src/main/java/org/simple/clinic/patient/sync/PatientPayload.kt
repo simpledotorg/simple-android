@@ -92,11 +92,17 @@ data class PatientAddressPayload(
     @Json(name = "id")
     val uuid: UUID,
 
+    @Json(name = "street_address")
+    val streetAddress: String?,
+
     @Json(name = "village_or_colony")
     val colonyOrVillage: String?,
 
     @Json(name = "district")
     val district: String,
+
+    @Json(name = "zone")
+    val zone: String?,
 
     @Json(name = "state")
     val state: String,
@@ -117,7 +123,9 @@ data class PatientAddressPayload(
   fun toDatabaseModel(): PatientAddress {
     return PatientAddress(
         uuid = uuid,
+        streetAddress = streetAddress,
         colonyOrVillage = colonyOrVillage,
+        zone = zone,
         district = district,
         state = state,
         country = country,

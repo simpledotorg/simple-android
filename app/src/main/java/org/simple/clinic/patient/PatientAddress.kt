@@ -18,7 +18,11 @@ data class PatientAddress(
     @PrimaryKey
     val uuid: UUID,
 
+    val streetAddress: String?,
+
     val colonyOrVillage: String?,
+
+    val zone: String?,
 
     val district: String,
 
@@ -38,8 +42,10 @@ data class PatientAddress(
   fun toPayload(): PatientAddressPayload {
     return PatientAddressPayload(
         uuid = uuid,
+        streetAddress = streetAddress,
         colonyOrVillage = colonyOrVillage,
         district = district,
+        zone = zone,
         state = state,
         country = country,
         createdAt = createdAt,

@@ -3956,6 +3956,25 @@ class DatabaseMigrationAndroidTest {
             notDeletedEncounterUuid to null
         )
   }
+
+  @Test
+  fun migration_from_52_to_53_should_add_house_address_and_zone_columns() {
+    val db_52 = helper.createDatabase(52)
+    val selectAllPatientAddressesQuery = "SELECT * FROM PatientAddress"
+    db_52.query(selectAllPatientAddressesQuery).use {
+      assertThat(it.columnCount)
+          .isEqualTo(8)
+    }
+
+    val db_53 = helper.migrateTo(53)
+    db_53.query(selectAllPatientAddressesQuery).use {
+      assertThat(it.columnCount)
+          .isEqualTo(10)
+
+      val columns = setOf("uuid", "streetAddress", "colonyOrVillage", "zone", "district", "state", "country", "createdAt", "updatedAt", "deletedAt")
+      db_53.assertColumns("PatientAddress", columns)
+    }
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

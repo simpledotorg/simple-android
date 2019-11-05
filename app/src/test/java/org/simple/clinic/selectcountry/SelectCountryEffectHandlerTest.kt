@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
@@ -21,6 +22,13 @@ import java.net.URI
 class SelectCountryEffectHandlerTest {
 
   private val repository = mock<AppConfigRepository>()
+
+  private val india = Country(
+      code = "IN",
+      endpoint = URI("https://in.simple.org"),
+      displayName = "India",
+      isdCode = "91"
+  )
 
   private val effectHandler = SelectCountryEffectHandler.create(repository, TrampolineSchedulersProvider())
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -47,12 +55,7 @@ class SelectCountryEffectHandlerTest {
   @Test
   fun `when fetching the app manifest succeeds, the manifest fetched event must be emitted`() {
     // given
-    val countries = listOf(Country(
-        code = "IN",
-        endpoint = URI("https://in.simple.org"),
-        displayName = "India",
-        isdCode = "91"
-    ))
+    val countries = listOf(india)
     whenever(repository.fetchAppManifest()) doReturn Single.just<ManifestFetchResult>(FetchSucceeded(countries))
 
     // when
@@ -73,5 +76,19 @@ class SelectCountryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(ManifestFetchFailed(NetworkError))
+  }
+
+  @Test
+  fun `when the save country effect is received, the country must be saved locally`() {
+    // given
+    whenever(repository.saveCurrentCountry(india)) doReturn Completable.complete()
+
+    // when
+    testCase.dispatch(SaveCountryEffect(india))
+
+    // then
+    verify(repository).saveCurrentCountry(india)
+    verifyNoMoreInteractions(repository)
+    testCase.assertOutgoingEvents(CountrySaved)
   }
 }

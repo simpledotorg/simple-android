@@ -1,5 +1,6 @@
 package org.simple.clinic.appconfig
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.util.Just
@@ -32,6 +33,10 @@ class AppConfigRepository @Inject constructor() {
   }
 
   fun fetchAppManifest(): Single<ManifestFetchResult> {
+    TODO("not implemented")
+  }
+
+  fun saveCurrentCountry(country: Country): Completable {
     TODO("not implemented")
   }
 }

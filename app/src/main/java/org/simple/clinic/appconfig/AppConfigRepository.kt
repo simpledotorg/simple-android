@@ -1,5 +1,6 @@
 package org.simple.clinic.appconfig
 
+import io.reactivex.Single
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
@@ -28,5 +29,9 @@ class AppConfigRepository @Inject constructor() {
         displayName = "India",
         isdCode = "91"
     ))
+  }
+
+  fun fetchAppManifest(): Single<ManifestFetchResult> {
+    TODO("not implemented")
   }
 }

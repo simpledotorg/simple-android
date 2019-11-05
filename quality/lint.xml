@@ -11,9 +11,6 @@
     <ignore path="src/main/res/drawable/ic_patient_male.xml" />
     <ignore path="src/main/res/drawable/ic_patient_transgender.xml" />
 
-    <!-- Heap analytics plugin adds these resources dynamically. -->
-    <ignore regexp="com.heapanalytics.android.*" />
-
     <!-- TODO: Remove after the change language screen is integrated -->
     <ignore regexp="changelanguage_*" />
     <ignore path="src/main/res/layout/screen_change_language.xml" />

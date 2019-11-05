@@ -196,7 +196,7 @@ data class OngoingNewPatientEntry(
 
   @Parcelize
   data class Address(
-      val colonyOrVillage: String,
+      val colonyOrVillage: String, // TODO (rj) 8-Nov-19: Add `streetAddress` and `zone` fields.
       val district: String,
       val state: String
   ): Parcelable {

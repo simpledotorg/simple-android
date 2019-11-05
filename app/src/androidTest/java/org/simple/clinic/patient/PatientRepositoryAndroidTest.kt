@@ -642,7 +642,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun when_patient_address_is_updated_the_address_must_be_saved() {
     val addressToSave = testData.patientAddress(
-        colonyOrVilage = "Old Colony",
+        colonyOrVillage = "Old Colony",
         district = "Old District",
         state = "Old State",
         createdAt = Instant.now(clock),
@@ -698,7 +698,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun when_patient_is_updated_the_patient_must_be_saved() {
     val addressToSave = testData.patientAddress(
-        colonyOrVilage = "Old Colony",
+        colonyOrVillage = "Old Colony",
         district = "Old District",
         state = "Old State"
     )
@@ -2474,8 +2474,10 @@ class PatientRepositoryAndroidTest {
     // then
     val expectedPatientAddress = testData.patientAddress(
         uuid = savedPatient.addressUuid,
-        colonyOrVilage = userEnteredPatientColony,
+        streetAddress = null,
+        colonyOrVillage = userEnteredPatientColony,
         district = userEnteredPatientDistrict,
+        zone = null,
         state = userEnteredPatientState,
         country = facilityCountry,
         createdAt = Instant.now(clock),

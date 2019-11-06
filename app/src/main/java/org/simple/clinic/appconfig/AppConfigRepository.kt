@@ -18,7 +18,7 @@ import javax.inject.Inject
  * - Fetching the list of supported countries from the server
  * - Updating the current selected country
  **/
-class AppConfigRepository @Inject constructor(private val api: ManifestFetchApi) {
+class AppConfigRepository @Inject constructor(private val manifestFetchApi: ManifestFetchApi) {
 
   fun currentCountry(): Optional<Country> {
 
@@ -35,7 +35,7 @@ class AppConfigRepository @Inject constructor(private val api: ManifestFetchApi)
   }
 
   fun fetchAppManifest(): Single<ManifestFetchResult> {
-    return api
+    return manifestFetchApi
         .fetchManifest()
         .map(::FetchSucceeded)
         .cast(ManifestFetchResult::class.java)

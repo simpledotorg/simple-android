@@ -15,9 +15,9 @@ import java.net.URI
 
 class AppConfigRepositoryTest {
 
-  private val api = mock<ManifestFetchApi>()
+  private val manifestFetchApi = mock<ManifestFetchApi>()
 
-  private val repository = AppConfigRepository(api)
+  private val repository = AppConfigRepository(manifestFetchApi)
 
   @Test
   fun `successful network calls to fetch the app manifest should return the app manifest`() {
@@ -26,7 +26,7 @@ class AppConfigRepositoryTest {
         Country(code = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91"),
         Country(code = "BD", endpoint = URI("https://bd.simple.org"), displayName = "Bangladesh", isdCode = "880")
     )
-    whenever(api.fetchManifest()).thenReturn(Single.just(countries))
+    whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.just(countries))
 
     // then
 
@@ -41,7 +41,7 @@ class AppConfigRepositoryTest {
   fun `failed network calls to fetch the app manifest to return an appropriate failure result`() {
     // given
     val cause = ConnectException()
-    whenever(api.fetchManifest()).thenReturn(Single.error(cause))
+    whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.error(cause))
 
     // then
     repository
@@ -55,7 +55,7 @@ class AppConfigRepositoryTest {
   fun `server errors when fetching the app manifest should return an appropriate failure result`() {
     // given
     val cause = httpException(500)
-    whenever(api.fetchManifest()).thenReturn(Single.error(cause))
+    whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.error(cause))
 
     // then
     repository
@@ -69,7 +69,7 @@ class AppConfigRepositoryTest {
   fun `unauthenticated errors when fetching the app manifest should return an appropriate failure result`() {
     // given
     val cause = httpException(401)
-    whenever(api.fetchManifest()).thenReturn(Single.error(cause))
+    whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.error(cause))
 
     // then
     repository
@@ -83,7 +83,7 @@ class AppConfigRepositoryTest {
   fun `any other http error when fetching the app manifest should return an unexpected error`() {
     // given
     val cause = httpException(400)
-    whenever(api.fetchManifest()).thenReturn(Single.error(cause))
+    whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.error(cause))
 
     // then
     repository
@@ -97,7 +97,7 @@ class AppConfigRepositoryTest {
   fun `any other error when fetching the app manifest should return an unexpected error`() {
     // given
     val cause = RuntimeException()
-    whenever(api.fetchManifest()).thenReturn(Single.error(cause))
+    whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.error(cause))
 
     // then
     repository

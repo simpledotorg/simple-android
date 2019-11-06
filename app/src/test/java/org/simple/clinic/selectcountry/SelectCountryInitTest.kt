@@ -29,13 +29,13 @@ class SelectCountryInitTest {
   fun `when the screen is restored with the list of supported countries, do nothing`() {
     val countries = listOf(
         Country(
-            code = "IN",
+            isoCountryCode = "IN",
             endpoint = URI("https://in.simple.org"),
             displayName = "India",
             isdCode = "91"
         ),
         Country(
-            code = "BD",
+            isoCountryCode = "BD",
             endpoint = URI("https://bd.simple.org"),
             displayName = "Bangladesh",
             isdCode = "880"

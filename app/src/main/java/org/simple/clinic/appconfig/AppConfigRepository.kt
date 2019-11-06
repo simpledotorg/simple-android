@@ -1,5 +1,6 @@
 package org.simple.clinic.appconfig
 
+import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.BuildConfig
@@ -18,7 +19,10 @@ import javax.inject.Inject
  * - Fetching the list of supported countries from the server
  * - Updating the current selected country
  **/
-class AppConfigRepository @Inject constructor(private val manifestFetchApi: ManifestFetchApi) {
+class AppConfigRepository @Inject constructor(
+    private val manifestFetchApi: ManifestFetchApi,
+    private val selectedCountryPreference: Preference<Optional<Country>>
+) {
 
   fun currentCountry(): Optional<Country> {
 
@@ -43,6 +47,6 @@ class AppConfigRepository @Inject constructor(private val manifestFetchApi: Mani
   }
 
   fun saveCurrentCountry(country: Country): Completable {
-    TODO("not implemented")
+    return Completable.fromAction { selectedCountryPreference.set(Just(country)) }
   }
 }

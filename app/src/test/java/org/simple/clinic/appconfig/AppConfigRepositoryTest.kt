@@ -1,12 +1,17 @@
 package org.simple.clinic.appconfig
 
+import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.Test
 import org.simple.clinic.appconfig.api.ManifestFetchApi
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ResolvedError
 import retrofit2.HttpException
 import retrofit2.Response
@@ -16,8 +21,9 @@ import java.net.URI
 class AppConfigRepositoryTest {
 
   private val manifestFetchApi = mock<ManifestFetchApi>()
+  private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
 
-  private val repository = AppConfigRepository(manifestFetchApi)
+  private val repository = AppConfigRepository(manifestFetchApi, selectedCountryPreference)
 
   @Test
   fun `successful network calls to fetch the app manifest should return the app manifest`() {
@@ -115,4 +121,18 @@ class AppConfigRepositoryTest {
     return HttpException(response)
   }
 
+  @Test
+  fun `saving the country must save it to local persistence`() {
+    // given
+    val country = Country(code = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91")
+
+    // then
+    repository
+        .saveCurrentCountry(country)
+        .test()
+        .assertNoErrors()
+        .assertComplete()
+    verify(selectedCountryPreference).set(Just(country))
+    verifyNoMoreInteractions(selectedCountryPreference)
+  }
 }

@@ -8,12 +8,17 @@ class SelectCountryUiRenderer(private val ui: SelectCountryUi) : ViewRenderer<Se
     when {
       model.hasFetchedCountries() -> {
         ui.hideProgress()
+        ui.hideErrorMessages()
         ui.displaySupportedCountries(model.countries!!, model.selectedCountry)
         if (model.hasSelectedACountry()) {
           ui.showNextButton()
         }
       }
-      model.isFetching() -> ui.showProgress()
+      model.isFetching() -> {
+        ui.showProgress()
+        ui.hideRetryButton()
+        ui.hideErrorMessages()
+      }
       model.hasFailedToFetchCountries() -> {
         ui.hideProgress()
         when (model.manifestFetchError!!) {

@@ -113,6 +113,8 @@ class ProtocolRepository @Inject constructor(
         .toObservable()
   }
 
+  fun protocol(protocolUuid: UUID): Observable<Protocol> = protocolDao.protocolStream(protocolUuid)
+
   @VisibleForTesting
   fun defaultProtocolDrugs(): List<ProtocolDrugAndDosages> {
     val protocolDrug = { uuid: UUID, name: String, dosage: String ->

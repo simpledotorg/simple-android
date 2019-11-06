@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -53,5 +54,8 @@ data class Protocol(
 
     @Query("SELECT * FROM Protocol WHERE uuid = :uuid")
     fun getOne(uuid: UUID): Protocol?
+
+    @Query("SELECT * FROM Protocol WHERE uuid = :uuid")
+    fun protocolStream(uuid: UUID): Observable<Protocol>
   }
 }

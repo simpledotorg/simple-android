@@ -8,12 +8,15 @@ class SelectCountryUiRenderer(private val ui: SelectCountryUi) : ViewRenderer<Se
     when {
       model.hasFetchedCountries() -> {
         ui.hideProgress()
-        ui.displaySupportedCountries(model.countries!!)
+        ui.displaySupportedCountries(model.countries!!, model.selectedCountry)
+        if (model.hasSelectedACountry()) {
+          ui.showNextButton()
+        }
       }
       model.isFetching() -> ui.showProgress()
       model.hasFailedToFetchCountries() -> {
         ui.hideProgress()
-        when(model.manifestFetchError!!) {
+        when (model.manifestFetchError!!) {
           NetworkError -> ui.displayNetworkErrorMessage()
           ServerError -> ui.displayServerErrorMessage()
           UnexpectedError -> ui.displayGenericErrorMessage()

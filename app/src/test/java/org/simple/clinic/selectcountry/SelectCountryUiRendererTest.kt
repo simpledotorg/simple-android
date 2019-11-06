@@ -48,7 +48,7 @@ class SelectCountryUiRendererTest {
 
     // then
     verify(ui).hideProgress()
-    verify(ui).displaySupportedCountries(countries)
+    verify(ui).displaySupportedCountries(countries, null)
     verifyNoMoreInteractions(ui)
   }
 
@@ -94,6 +94,23 @@ class SelectCountryUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).displayGenericErrorMessage()
     verify(ui).showRetryButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the user has chosen a country, show the next button`() {
+    // given
+    val model = defaultModel
+        .manifestFetched(countries)
+        .countryChosen(bangladesh)
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).displaySupportedCountries(countries, bangladesh)
+    verify(ui).showNextButton()
     verifyNoMoreInteractions(ui)
   }
 }

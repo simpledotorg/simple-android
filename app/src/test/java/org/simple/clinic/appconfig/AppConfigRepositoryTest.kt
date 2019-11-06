@@ -44,7 +44,7 @@ class AppConfigRepositoryTest {
   }
 
   @Test
-  fun `failed network calls to fetch the app manifest to return an appropriate failure result`() {
+  fun `failed network calls to fetch the app manifest should return network related failure result`() {
     // given
     val cause = ConnectException()
     whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.error(cause))
@@ -58,7 +58,7 @@ class AppConfigRepositoryTest {
   }
 
   @Test
-  fun `server errors when fetching the app manifest should return an appropriate failure result`() {
+  fun `server errors when fetching the app manifest should return failure result as server error`() {
     // given
     val cause = httpException(500)
     whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.error(cause))
@@ -72,7 +72,7 @@ class AppConfigRepositoryTest {
   }
 
   @Test
-  fun `unauthenticated errors when fetching the app manifest should return an appropriate failure result`() {
+  fun `http 401 errors when fetching the app manifest should return failure result as unauthenticated`() {
     // given
     val cause = httpException(401)
     whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.error(cause))

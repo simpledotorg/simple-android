@@ -29,8 +29,8 @@ class AppConfigRepositoryTest {
   fun `successful network calls to fetch the app manifest should return the app manifest`() {
     // given
     val countries = listOf(
-        Country(code = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91"),
-        Country(code = "BD", endpoint = URI("https://bd.simple.org"), displayName = "Bangladesh", isdCode = "880")
+        Country(isoCountryCode = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91"),
+        Country(isoCountryCode = "BD", endpoint = URI("https://bd.simple.org"), displayName = "Bangladesh", isdCode = "880")
     )
     whenever(manifestFetchApi.fetchManifest()).thenReturn(Single.just(countries))
 
@@ -124,7 +124,7 @@ class AppConfigRepositoryTest {
   @Test
   fun `saving the country must save it to local persistence`() {
     // given
-    val country = Country(code = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91")
+    val country = Country(isoCountryCode = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91")
 
     // then
     repository

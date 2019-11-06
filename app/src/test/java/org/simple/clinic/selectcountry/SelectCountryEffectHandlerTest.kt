@@ -26,7 +26,7 @@ class SelectCountryEffectHandlerTest {
   private val uiActions = mock<UiActions>()
 
   private val india = Country(
-      code = "IN",
+      isoCountryCode = "IN",
       endpoint = URI("https://in.simple.org"),
       displayName = "India",
       isdCode = "91"

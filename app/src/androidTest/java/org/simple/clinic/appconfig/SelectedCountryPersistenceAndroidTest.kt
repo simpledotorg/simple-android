@@ -46,7 +46,7 @@ class SelectedCountryPersistenceAndroidTest {
         .commit()
 
     val expectedSavedCountry = Country(
-        code = "IN",
+        isoCountryCode = "IN",
         endpoint = URI.create("https://in.simple.org/"),
         displayName = "India",
         isdCode = "91"

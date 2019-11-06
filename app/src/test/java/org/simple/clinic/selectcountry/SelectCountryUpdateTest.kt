@@ -17,14 +17,14 @@ class SelectCountryUpdateTest {
   private val spec = UpdateSpec(SelectCountryUpdate())
 
   val india = Country(
-      code = "IN",
+      isoCountryCode = "IN",
       endpoint = URI("https://in.simple.org"),
       displayName = "India",
       isdCode = "91"
   )
 
   private val bangladesh = Country(
-      code = "BD",
+      isoCountryCode = "BD",
       endpoint = URI("https://bd.simple.org"),
       displayName = "Bangladesh",
       isdCode = "880"

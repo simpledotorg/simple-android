@@ -31,7 +31,7 @@ class AppConfigRepository @Inject constructor(
     // This hardcoding will get replaced later when that feature is completed.
     // TODO(vs): 2019-10-31 Read this from storage instead of hardcoding
     return Just(Country(
-        code = "IN",
+        isoCountryCode = "IN",
         endpoint = URI(BuildConfig.API_ENDPOINT),
         displayName = "India",
         isdCode = "91"

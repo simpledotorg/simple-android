@@ -8,7 +8,7 @@ import java.net.URI
 data class Country(
 
     @Json(name = "country_code")
-    val code: String,
+    val isoCountryCode: String,
 
     @Json(name = "endpoint")
     val endpoint: URI,

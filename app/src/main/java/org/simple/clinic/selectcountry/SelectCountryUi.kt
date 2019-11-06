@@ -10,5 +10,7 @@ interface SelectCountryUi {
   fun displayServerErrorMessage()
   fun displayGenericErrorMessage()
   fun showRetryButton()
+  fun hideRetryButton()
   fun showNextButton()
+  fun hideErrorMessages()
 }

@@ -3,6 +3,7 @@ package org.simple.clinic.appconfig
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import java.net.URI
@@ -16,7 +17,7 @@ import javax.inject.Inject
  * - Fetching the list of supported countries from the server
  * - Updating the current selected country
  **/
-class AppConfigRepository @Inject constructor() {
+class AppConfigRepository @Inject constructor(private val api: ManifestFetchApi) {
 
   fun currentCountry(): Optional<Country> {
 
@@ -33,7 +34,9 @@ class AppConfigRepository @Inject constructor() {
   }
 
   fun fetchAppManifest(): Single<ManifestFetchResult> {
-    TODO("not implemented")
+    return api
+        .fetchManifest()
+        .map(::FetchSucceeded)
   }
 
   fun saveCurrentCountry(country: Country): Completable {

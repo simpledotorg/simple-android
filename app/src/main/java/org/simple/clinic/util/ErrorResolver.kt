@@ -60,11 +60,11 @@ object ErrorResolver {
 
 sealed class ResolvedError(val actualCause: Throwable) {
 
-  class NetworkRelated(actualCause: Throwable) : ResolvedError(actualCause)
+  data class NetworkRelated(private val _actualCause: Throwable) : ResolvedError(_actualCause)
 
-  class Unexpected(actualCause: Throwable) : ResolvedError(actualCause)
+  data class Unexpected(private val _actualCause: Throwable) : ResolvedError(_actualCause)
 
-  class Unauthenticated(actualCause: Throwable) : ResolvedError(actualCause)
+  data class Unauthenticated(private val _actualCause: Throwable) : ResolvedError(_actualCause)
 
-  class ServerError(actualCause: Throwable) : ResolvedError(actualCause)
+  data class ServerError(private val _actualCause: Throwable) : ResolvedError(_actualCause)
 }

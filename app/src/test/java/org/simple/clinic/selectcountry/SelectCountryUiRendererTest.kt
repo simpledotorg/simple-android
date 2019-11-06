@@ -47,7 +47,53 @@ class SelectCountryUiRendererTest {
     renderer.render(model)
 
     // then
+    verify(ui).hideProgress()
     verify(ui).displaySupportedCountries(countries)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the manifest fails to fetch with a network error, display the network error message and show the retry button`() {
+    // given
+    val model = defaultModel.manifestFetchError(NetworkError)
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).displayNetworkErrorMessage()
+    verify(ui).showRetryButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the manifest fails to fetch with a server error, display the server error message and show the retry button`() {
+    // given
+    val model = defaultModel.manifestFetchError(ServerError)
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).displayServerErrorMessage()
+    verify(ui).showRetryButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the manifest fails to fetch with any other error, display a generic error message and show the retry button`() {
+    // given
+    val model = defaultModel.manifestFetchError(UnexpectedError)
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).displayGenericErrorMessage()
+    verify(ui).showRetryButton()
     verifyNoMoreInteractions(ui)
   }
 }

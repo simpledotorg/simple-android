@@ -10,12 +10,16 @@ data class SelectCountryModel(
 
   fun hasFetchedCountries(): Boolean = countries != null
 
+  fun hasFailedToFetchCountries(): Boolean = manifestFetchError != null
+
+  fun isFetching(): Boolean = countries == null && manifestFetchError == null
+
   fun manifestFetched(countries: List<Country>): SelectCountryModel {
-    return copy(countries = countries)
+    return copy(countries = countries, manifestFetchError = null)
   }
 
   fun manifestFetchError(manifestFetchError: ManifestFetchError): SelectCountryModel {
-    return copy(manifestFetchError = manifestFetchError)
+    return copy(manifestFetchError = manifestFetchError, countries = null)
   }
 
   fun countryChosen(country: Country): SelectCountryModel {

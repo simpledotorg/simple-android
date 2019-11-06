@@ -35,6 +35,8 @@ class SelectCountryUiRendererTest {
 
     // then
     verify(ui).showProgress()
+    verify(ui).hideRetryButton()
+    verify(ui).hideErrorMessages()
     verifyNoMoreInteractions(ui)
   }
 
@@ -48,6 +50,7 @@ class SelectCountryUiRendererTest {
 
     // then
     verify(ui).hideProgress()
+    verify(ui).hideErrorMessages()
     verify(ui).displaySupportedCountries(countries, null)
     verifyNoMoreInteractions(ui)
   }
@@ -109,8 +112,26 @@ class SelectCountryUiRendererTest {
 
     // then
     verify(ui).hideProgress()
+    verify(ui).hideErrorMessages()
     verify(ui).displaySupportedCountries(countries, bangladesh)
     verify(ui).showNextButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when fetching the manifest is being retried, show the progress bar`() {
+    // given
+    val model = defaultModel
+        .manifestFetchError(NetworkError)
+        .fetching()
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).showProgress()
+    verify(ui).hideRetryButton()
+    verify(ui).hideErrorMessages()
     verifyNoMoreInteractions(ui)
   }
 }

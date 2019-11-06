@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.appconfig.api.ManifestFetchApi
+import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import java.net.URI
@@ -37,6 +38,8 @@ class AppConfigRepository @Inject constructor(private val api: ManifestFetchApi)
     return api
         .fetchManifest()
         .map(::FetchSucceeded)
+        .cast(ManifestFetchResult::class.java)
+        .onErrorReturn { cause -> FetchError(ErrorResolver.resolve(cause)) }
   }
 
   fun saveCurrentCountry(country: Country): Completable {

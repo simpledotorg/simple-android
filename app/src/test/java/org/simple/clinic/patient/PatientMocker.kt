@@ -17,6 +17,7 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
@@ -227,6 +228,16 @@ object PatientMocker {
         updatedAt = updatedAt,
         deletedAt = deletedAt)
   }
+
+  fun protocol(uuid: UUID, followUpDays: Int) = Protocol(
+      uuid = uuid,
+      name = "name",
+      followUpDays = followUpDays,
+      createdAt = Instant.now(),
+      updatedAt = Instant.now(),
+      syncStatus = SyncStatus.DONE,
+      deletedAt = null
+  )
 
   fun protocolDrug(
       uuid: UUID = UUID.randomUUID(),

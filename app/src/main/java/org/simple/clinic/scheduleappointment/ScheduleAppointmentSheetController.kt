@@ -16,11 +16,14 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.scheduleappointment.TimeToAppointment.Days
 import org.simple.clinic.scheduleappointment.TimeToAppointment.Months
 import org.simple.clinic.scheduleappointment.TimeToAppointment.Weeks
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
@@ -36,7 +39,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
     private val configProvider: Observable<AppointmentConfig>,
     private val clock: UserClock,
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    private val protocolRepository: ProtocolRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private val latestAppointmentDateScheduledSubject = BehaviorSubject.create<PotentialAppointmentDate>()
@@ -119,9 +123,17 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<PotentialAppointmentDate> {
-    return events
-        .ofType<ScheduleAppointmentSheetCreated>()
-        .withLatestFrom(configProvider) { _, config -> config.defaultTimeToAppointment }
+    val protocolStream = currentFacilityStream()
+        .map { it.protocolUuid.toOptional() }
+        .filterAndUnwrapJust()
+        .switchMap(protocolRepository::protocol)
+
+    return Observables.combineLatest(
+        events.ofType<ScheduleAppointmentSheetCreated>(),
+        protocolStream
+    ) { _, protocol ->
+      Days(protocol.followUpDays)
+    }
         .map(::generatePotentialAppointmentDate)
   }
 

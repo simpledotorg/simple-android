@@ -6,6 +6,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
+import org.simple.clinic.util.preference.MoshiPreferenceConverter
 import org.threeten.bp.Duration
 
 @Module
@@ -18,7 +19,7 @@ open class BruteForceProtectionModule {
 
   @Provides
   fun state(rxSharedPrefs: RxSharedPreferences, moshi: Moshi): Preference<BruteForceProtectionState> {
-    val typeConverter = BruteForceProtectionState.RxPreferencesConverter(moshi)
+    val typeConverter = MoshiPreferenceConverter(moshi, BruteForceProtectionState::class.java)
     return rxSharedPrefs.getObject("brute_force_state_v1", BruteForceProtectionState(), typeConverter)
   }
 }

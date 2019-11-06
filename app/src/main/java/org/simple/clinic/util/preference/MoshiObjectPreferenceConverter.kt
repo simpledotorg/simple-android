@@ -3,7 +3,7 @@ package org.simple.clinic.util.preference
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
 
-class MoshiPreferenceConverter<T>(
+class MoshiObjectPreferenceConverter<T>(
     moshi: Moshi,
     clazz: Class<T>
 ) : Preference.Converter<T> {

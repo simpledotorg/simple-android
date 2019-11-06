@@ -4,6 +4,7 @@ import dagger.Component
 import org.simple.clinic.DatabaseMigrationAndroidTest
 import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
@@ -75,4 +76,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: UserSessionServerIntegrationTest)
   fun inject(target: EncounterRepositoryAndroidTest)
   fun inject(target: EncounterSyncAndroidTest)
+  fun inject(target: SelectedCountryPersistenceAndroidTest)
 }

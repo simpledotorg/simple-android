@@ -8,6 +8,7 @@ import androidx.work.WorkManager
 import com.f2prateek.rx.preferences2.Preference
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.facility.change.FacilityChangeModule
@@ -59,7 +60,8 @@ import javax.inject.Named
   HomescreenIllustrationModule::class,
   SimpleVideoModule::class,
   RemoteConfigModule::class,
-  SettingsModule::class
+  SettingsModule::class,
+  AppConfigModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

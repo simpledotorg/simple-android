@@ -1,8 +1,10 @@
 package org.simple.clinic.selectcountry
 
 import android.content.Context
+import android.content.Intent
 import android.os.Parcelable
 import android.util.AttributeSet
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
@@ -16,6 +18,7 @@ import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
 import org.simple.clinic.di.injector
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.selectcountry.adapter.Event
@@ -43,6 +46,9 @@ class SelectCountryScreen(
 
   @Inject
   lateinit var countryDisplayNameFetcher: CountryDisplayNameFetcher
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   private val uiRenderer = SelectCountryUiRenderer(this)
 
@@ -171,6 +177,14 @@ class SelectCountryScreen(
   }
 
   override fun goToNextScreen() {
-    // TODO(vs): 2019-11-07 Open TheActivity
+    // This navigation should not be done here, we need a way to publish
+    // an event to the parent activity (maybe via the screen router's
+    // event bus?) and handle the navigation there.
+    // TODO(vs): 2019-11-07 Move this to an event that is subscribed in the parent activity
+    val intent = TheActivity.newIntent(activity).apply {
+      flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
+    }
+    activity.startActivity(intent)
+    activity.overridePendingTransition(0, 0)
   }
 }

@@ -468,7 +468,7 @@ class PatientEntryScreenLogicTest {
       onNext(GenderChanged(Just(gender)))
     }
 
-    verify(ui, times(1)).scrollFormToBottom()
+    verify(ui, times(1)).scrollFormOnGenderSelection()
   }
 
   @Suppress("Unused")

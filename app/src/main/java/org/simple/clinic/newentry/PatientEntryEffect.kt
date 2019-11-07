@@ -11,7 +11,7 @@ data class PrefillFields(
     val patientEntry: OngoingNewPatientEntry
 ) : PatientEntryEffect()
 
-object ScrollFormToBottom : PatientEntryEffect()
+object ScrollFormOnGenderSelection : PatientEntryEffect()
 
 object HideEmptyDateOfBirthAndAgeError : PatientEntryEffect()
 

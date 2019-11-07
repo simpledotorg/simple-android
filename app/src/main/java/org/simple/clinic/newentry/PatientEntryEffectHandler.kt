@@ -30,25 +30,45 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
-object PatientEntryEffectHandler {
-  fun create(
-      userSession: UserSession,
-      facilityRepository: FacilityRepository,
-      patientRepository: PatientRepository,
-      patientRegisteredCount: Preference<Int>,
-      ui: PatientEntryUi,
-      schedulersProvider: SchedulersProvider
-  ): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
+class PatientEntryEffectHandler(
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
+    private val patientRepository: PatientRepository,
+    private val patientRegisteredCount: Preference<Int>,
+    private val ui: PatientEntryUi,
+    private val schedulersProvider: SchedulersProvider
+) {
+  companion object {
+    fun create(
+        userSession: UserSession,
+        facilityRepository: FacilityRepository,
+        patientRepository: PatientRepository,
+        patientRegisteredCount: Preference<Int>,
+        ui: PatientEntryUi,
+        schedulersProvider: SchedulersProvider
+    ): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
+      return PatientEntryEffectHandler(
+          userSession,
+          facilityRepository,
+          patientRepository,
+          patientRegisteredCount,
+          ui,
+          schedulersProvider
+      ).build()
+    }
+  }
+
+  private fun build(): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
     val showDatePatternInLabelValueChangedCallback = ValueChangedCallback<Boolean>()
 
     return RxMobius
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
-        .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(userSession, facilityRepository, patientRepository, schedulersProvider.io()))
+        .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(schedulersProvider.io()))
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
         .addAction(ScrollFormToBottom::class.java, ui::scrollFormToBottom, schedulersProvider.ui())
         .addConsumer(ShowEmptyFullNameError::class.java, { ui.showEmptyFullNameError(it.show) }, schedulersProvider.ui())
-        .addAction(HidePhoneLengthErrors::class.java, { hidePhoneLengthErrors(ui) }, schedulersProvider.ui())
-        .addAction(HideDateOfBirthErrors::class.java, { hideDateOfBirthErrors(ui) }, schedulersProvider.ui())
+        .addAction(HidePhoneLengthErrors::class.java, { hidePhoneLengthErrors() }, schedulersProvider.ui())
+        .addAction(HideDateOfBirthErrors::class.java, { hideDateOfBirthErrors() }, schedulersProvider.ui())
         .addAction(HideEmptyDateOfBirthAndAgeError::class.java, { ui.showEmptyDateOfBirthAndAgeError(false) }, schedulersProvider.ui())
         .addAction(HideMissingGenderError::class.java, { ui.showMissingGenderError(false) }, schedulersProvider.ui())
         .addAction(HideEmptyColonyOrVillageError::class.java, { ui.showEmptyColonyOrVillageError(false) }, schedulersProvider.ui())
@@ -57,20 +77,13 @@ object PatientEntryEffectHandler {
         .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
           showDatePatternInLabelValueChangedCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
         }, schedulersProvider.ui())
-        .addTransformer(SavePatient::class.java,
-            savePatientTransformer(patientRepository, patientRegisteredCount, schedulersProvider.io())
-        )
-        .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(ui, it.errors) }, schedulersProvider.ui())
+        .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
+        .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
         .addAction(OpenMedicalHistoryEntryScreen::class.java, ui::openMedicalHistoryEntryScreen, schedulersProvider.ui())
         .build()
   }
 
-  private fun fetchOngoingEntryTransformer(
-      userSession: UserSession,
-      facilityRepository: FacilityRepository,
-      patientRepository: PatientRepository,
-      scheduler: Scheduler
-  ): ObservableTransformer<FetchPatientEntry, PatientEntryEvent> {
+  private fun fetchOngoingEntryTransformer(scheduler: Scheduler): ObservableTransformer<FetchPatientEntry, PatientEntryEvent> {
     return ObservableTransformer { fetchPatientEntries ->
       val getPatientEntryAndFacility = Singles
           .zip(
@@ -88,14 +101,14 @@ object PatientEntryEffectHandler {
     }
   }
 
-  private fun hidePhoneLengthErrors(ui: PatientEntryUi) {
+  private fun hidePhoneLengthErrors() {
     with(ui) {
       showLengthTooLongPhoneNumberError(false)
       showLengthTooShortPhoneNumberError(false)
     }
   }
 
-  private fun hideDateOfBirthErrors(ui: PatientEntryUi) {
+  private fun hideDateOfBirthErrors() {
     with(ui) {
       showEmptyDateOfBirthAndAgeError(false)
       showInvalidDateOfBirthError(false)
@@ -103,34 +116,24 @@ object PatientEntryEffectHandler {
     }
   }
 
-  private fun savePatientTransformer(
-      patientRepository: PatientRepository,
-      patientRegisteredCount: Preference<Int>,
-      scheduler: Scheduler
-  ): ObservableTransformer<SavePatient, PatientEntryEvent> {
+  private fun savePatientTransformer(scheduler: Scheduler): ObservableTransformer<SavePatient, PatientEntryEvent> {
     return ObservableTransformer { savePatientEffects ->
       savePatientEffects
           .map { it.entry }
           .subscribeOn(scheduler)
-          .flatMapSingle { savePatientEntry(it, patientRepository) }
+          .flatMapSingle { savePatientEntry(it) }
           .doOnNext { patientRegisteredCount.set(patientRegisteredCount.get().plus(1)) }
           .map { PatientEntrySaved }
     }
   }
 
-  private fun savePatientEntry(
-      entry: OngoingNewPatientEntry,
-      patientRepository: PatientRepository
-  ): Single<Unit> {
+  private fun savePatientEntry(entry: OngoingNewPatientEntry): Single<Unit> {
     return patientRepository
         .saveOngoingEntry(entry)
         .andThen(Single.just(Unit))
   }
 
-  private fun showValidationErrors(
-      ui: PatientEntryUi,
-      errors: List<PatientEntryValidationError>
-  ) {
+  private fun showValidationErrors(errors: List<PatientEntryValidationError>) {
     errors
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {

@@ -11,6 +11,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.Field.ColonyOrVillage
 import org.simple.clinic.newentry.Field.DateOfBirth
 import org.simple.clinic.newentry.Field.District
+import org.simple.clinic.newentry.Field.FullName
 import org.simple.clinic.newentry.Field.Gender
 import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.newentry.Field.State
@@ -72,9 +73,9 @@ class PatientEntryEffectHandler(
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(schedulersProvider.io()))
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
         .addAction(ScrollFormToBottom::class.java, ui::scrollFormToBottom, schedulersProvider.ui())
-        .addConsumer(ShowEmptyFullNameError::class.java, { ui.showEmptyFullNameError(it.show) }, schedulersProvider.ui())
         .addConsumer(HideError::class.java, {
           when(it.field) {
+            FullName -> ui.showEmptyFullNameError(false)
             PhoneNumber -> hidePhoneLengthErrors()
             DateOfBirth -> hideDateOfBirthErrors()
             Gender -> ui.showMissingGenderError(false)
@@ -84,7 +85,6 @@ class PatientEntryEffectHandler(
           }
         }, schedulersProvider.ui())
         .addAction(HideEmptyDateOfBirthAndAgeError::class.java, { ui.showEmptyDateOfBirthAndAgeError(false) }, schedulersProvider.ui())
-        // .addAction(HideMissingGenderError::class.java, { ui.showMissingGenderError(false) }, schedulersProvider.ui())
         .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
           showDatePatternInLabelValueChangedCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
         }, schedulersProvider.ui())

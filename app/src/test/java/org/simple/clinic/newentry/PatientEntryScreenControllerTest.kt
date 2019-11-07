@@ -72,8 +72,8 @@ class PatientEntryScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(PatientMocker.facility()))
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
+    whenever(facilityRepository.currentFacility(userSession)).doReturn(Observable.just(PatientMocker.facility()))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.never())
 
     val effectHandler = PatientEntryEffectHandler.create(
         userSession,
@@ -104,7 +104,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when screen is created then existing data should be pre-filled`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
 
     screenCreated()
 
@@ -122,7 +122,7 @@ class PatientEntryScreenControllerTest {
         district = "district 2",
         state = "state 3"
     )
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry(address = address)))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry(address = address)))
 
     screenCreated()
 
@@ -131,9 +131,9 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when save button is clicked then a patient record should be created from the form input`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRegisteredCount.get()).thenReturn(0)
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
+    whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
     with(uiEvents) {
@@ -170,9 +170,9 @@ class PatientEntryScreenControllerTest {
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     )
 
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRegisteredCount.get()).thenReturn(existingPatientRegisteredCount)
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(ongoingEntry))
+    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
+    whenever(patientRegisteredCount.get()).doReturn(existingPatientRegisteredCount)
     screenCreated()
 
     with(uiEvents) {
@@ -185,7 +185,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
     screenCreated()
 
     with(uiEvents) {
@@ -210,7 +210,7 @@ class PatientEntryScreenControllerTest {
   //                      pivotal story - https://www.pivotaltracker.com/story/show/168946268
   @Test
   fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
     screenCreated()
     errorConsumer = { assertThat(it).isInstanceOf(AssertionError::class.java) }
 
@@ -222,7 +222,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `while date-of-birth has focus or has some input then date format should be shown in the label`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
     screenCreated()
 
     with(uiEvents) {
@@ -239,7 +239,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when save is clicked then user input should be validated`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
     screenCreated()
 
     with(uiEvents) {
@@ -293,7 +293,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when input validation fails, the errors must be sent to analytics`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
     screenCreated()
 
     with(uiEvents) {
@@ -332,7 +332,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `validation errors should be cleared on every input change`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
     screenCreated()
 
     with(uiEvents) {
@@ -364,8 +364,8 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `regression test for validations 1`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     screenCreated()
 
     with(uiEvents) {
@@ -387,8 +387,8 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `regression test for validations 2`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     screenCreated()
 
     with(uiEvents) {
@@ -410,8 +410,8 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `regression test for validations 3`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     screenCreated()
 
     with(uiEvents) {
@@ -433,9 +433,9 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `regression test for validations 4`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRegisteredCount.get()).thenReturn(0)
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
+    whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
     with(uiEvents) {
@@ -459,7 +459,7 @@ class PatientEntryScreenControllerTest {
   @Test
   @Parameters(method = "params for gender values")
   fun `when gender is selected for the first time then the form should be scrolled to bottom`(gender: Gender) {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
     screenCreated()
 
     with(uiEvents) {
@@ -478,8 +478,8 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when validation errors are shown then the form should be scrolled to the first field with error`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
     screenCreated()
 
     with(uiEvents) {
@@ -505,9 +505,9 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when the ongoing entry has an identifier it must be retained when accepting input`() {
     val identifier = Identifier(value = "id", type = BpPassport)
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry(identifier = identifier)))
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRegisteredCount.get()).thenReturn(0)
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry(identifier = identifier)))
+    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
+    whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
     with(uiEvents) {

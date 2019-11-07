@@ -15,6 +15,18 @@ data class SelectableCountryItem(
     val showDivider: Boolean
 ) : ItemAdapter.Item<Event> {
 
+  companion object {
+    fun from(countries: List<Country>, chosenCountry: Country?): List<SelectableCountryItem> {
+      return countries
+          .mapIndexed { index, country ->
+            val isLastCountryInList = index == countries.lastIndex
+            val hasUserChosenCountry = country == chosenCountry
+
+            SelectableCountryItem(country = country, isSelected = hasUserChosenCountry, showDivider = !isLastCountryInList)
+          }
+    }
+  }
+
   override fun layoutResId() = R.layout.list_selectcountry_country_view
 
   override fun render(holder: ViewHolderX, subject: Subject<Event>) {
@@ -26,5 +38,4 @@ data class SelectableCountryItem(
       setOnClickListener { subject.onNext(CountryClicked(country)) }
     }
   }
-
 }

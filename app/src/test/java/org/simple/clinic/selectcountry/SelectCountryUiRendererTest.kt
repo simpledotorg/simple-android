@@ -35,8 +35,6 @@ class SelectCountryUiRendererTest {
 
     // then
     verify(ui).showProgress()
-    verify(ui).hideRetryButton()
-    verify(ui).hideErrorMessages()
     verifyNoMoreInteractions(ui)
   }
 
@@ -49,8 +47,6 @@ class SelectCountryUiRendererTest {
     renderer.render(model)
 
     // then
-    verify(ui).hideProgress()
-    verify(ui).hideErrorMessages()
     verify(ui).displaySupportedCountries(countries, null)
     verifyNoMoreInteractions(ui)
   }
@@ -64,9 +60,7 @@ class SelectCountryUiRendererTest {
     renderer.render(model)
 
     // then
-    verify(ui).hideProgress()
     verify(ui).displayNetworkErrorMessage()
-    verify(ui).showRetryButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -79,9 +73,7 @@ class SelectCountryUiRendererTest {
     renderer.render(model)
 
     // then
-    verify(ui).hideProgress()
     verify(ui).displayServerErrorMessage()
-    verify(ui).showRetryButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -94,9 +86,7 @@ class SelectCountryUiRendererTest {
     renderer.render(model)
 
     // then
-    verify(ui).hideProgress()
     verify(ui).displayGenericErrorMessage()
-    verify(ui).showRetryButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -111,8 +101,6 @@ class SelectCountryUiRendererTest {
     renderer.render(model)
 
     // then
-    verify(ui).hideProgress()
-    verify(ui).hideErrorMessages()
     verify(ui).displaySupportedCountries(countries, bangladesh)
     verify(ui).showNextButton()
     verifyNoMoreInteractions(ui)
@@ -130,8 +118,6 @@ class SelectCountryUiRendererTest {
 
     // then
     verify(ui).showProgress()
-    verify(ui).hideRetryButton()
-    verify(ui).hideErrorMessages()
     verifyNoMoreInteractions(ui)
   }
 }

@@ -4,13 +4,9 @@ import org.simple.clinic.appconfig.Country
 
 interface SelectCountryUi {
   fun showProgress()
-  fun hideProgress()
   fun displaySupportedCountries(countries: List<Country>, chosenCountry: Country?)
   fun displayNetworkErrorMessage()
   fun displayServerErrorMessage()
   fun displayGenericErrorMessage()
-  fun showRetryButton()
-  fun hideRetryButton()
   fun showNextButton()
-  fun hideErrorMessages()
 }

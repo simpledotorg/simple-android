@@ -11,8 +11,12 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.User
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import java.util.UUID
 
 class SetupActivityEffectHandlerTest {
 
@@ -34,15 +38,16 @@ class SetupActivityEffectHandlerTest {
   }
 
   @Test
-  fun `the user details must be fetched when the fetch user details effect is received`() {
+  fun `the user onboarding status must be fetched when the fetch user details effect is received`() {
     // given
-    whenever(onboardingCompletePreference.get()).doReturn(true)
+    whenever(onboardingCompletePreference.get()) doReturn true
+    whenever(userDao.userImmediate()).doReturn<User?>(null)
 
     // when
     testCase.dispatch(FetchUserDetails)
 
     // then
-    testCase.assertOutgoingEvents(UserDetailsFetched(hasUserCompletedOnboarding = true))
+    testCase.assertOutgoingEvents(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None))
     verifyZeroInteractions(uiActions)
   }
 
@@ -71,13 +76,29 @@ class SetupActivityEffectHandlerTest {
   @Test
   fun `when the initialize database screen effect is received, the database must be initialized`() {
     // given
-    whenever(userDao.userCount()).doReturn(Single.just(0))
+    whenever(userDao.userCount()) doReturn Single.just(0)
 
     // when
     testCase.dispatch(InitializeDatabase)
 
     // then
     testCase.assertOutgoingEvents(DatabaseInitialized)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `the logged in user must be fetched when the fetch user details effect is received`() {
+    // given
+    whenever(onboardingCompletePreference.get()) doReturn false
+    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("426d2eb9-ebf7-4a62-b157-1de221c7c3d0"))
+    whenever(userDao.userImmediate()).doReturn(user)
+
+    // when
+    testCase.dispatch(FetchUserDetails)
+
+    // then
+    val expected = UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = Just(user))
+    testCase.assertOutgoingEvents(expected)
     verifyZeroInteractions(uiActions)
   }
 }

@@ -101,4 +101,15 @@ class SetupActivityEffectHandlerTest {
     testCase.assertOutgoingEvents(expected)
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `the country selection screen must be opened when the show country selection effect is received`() {
+    // when
+    testCase.dispatch(ShowCountrySelectionScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showCountrySelectionScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

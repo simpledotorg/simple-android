@@ -8,4 +8,6 @@ object GoToMainActivity : SetupActivityEffect()
 
 object ShowOnboardingScreen : SetupActivityEffect()
 
-object InitializeDatabase: SetupActivityEffect()
+object InitializeDatabase : SetupActivityEffect()
+
+object ShowCountrySelectionScreen : SetupActivityEffect()

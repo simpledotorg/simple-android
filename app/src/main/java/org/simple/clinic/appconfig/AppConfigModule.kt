@@ -6,6 +6,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.api.ManifestFetchApi
+import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcherModule
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.preference.MoshiObjectPreferenceConverter
@@ -13,7 +14,7 @@ import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import retrofit2.Retrofit
 import javax.inject.Named
 
-@Module
+@Module(includes = [CountryDisplayNameFetcherModule::class])
 class AppConfigModule {
 
   @Provides

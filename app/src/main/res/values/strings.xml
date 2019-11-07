@@ -17,6 +17,11 @@
 
   <string name="country_dialing_code" translatable="false">+91</string>
 
+  <!-- Country names -->
+  <string name="country_india">India</string>
+  <string name="country_bangladesh">Bangladesh</string>
+  <string name="country_ethiopia">Ethiopia</string>
+
   <!-- Home -->
   <string name="home_help">Help</string>
   <string name="home_settings">Settings</string>

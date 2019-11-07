@@ -467,4 +467,13 @@
   <!-- Placeholder -->
   <string name="placeholder_loading_title">Please wait…</string>
   <string name="placeholder_loading_message">Database maintenance in progress. This will only take a minute.</string>
+
+  <!-- Select Country Screen -->
+  <string name="selectcountry_logo_contentdescription">Simple Logo</string>
+  <string name="selectcountry_next">Next</string>
+  <string name="selectcountry_title">Select Your Country</string>
+  <string name="selectcountry_networkerror">No internet connection!</string>
+  <string name="selectcountry_servererror">Server error! Please try again later!</string>
+  <string name="selectcountry_genericerror">Something went wrong! Please try again later!</string>
+  <string name="selectcountry_retry">Try Again</string>
 </resources>

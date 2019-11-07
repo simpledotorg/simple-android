@@ -1,9 +1,6 @@
 package org.simple.clinic.onboarding
 
 import android.content.Context
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -15,9 +12,11 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_onboarding.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.router.screen.RouterDirection
+import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.selectcountry.SelectCountryScreenKey
 import org.simple.clinic.util.clamp
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
@@ -37,6 +36,9 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
 
   private val events: Observable<OnboardingEvent>
     get() = getStartedClicks()
@@ -91,14 +93,6 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   }
 
   override fun moveToRegistrationScreen() {
-    // This navigation should not be done here, we need a way to publish
-    // an event to the parent activity (maybe via the screen router's
-    // event bus?) and handle the navigation there.
-    // TODO(vs): 2019-10-26 Move this to an event that is subscribed in the parent activity
-    val intent = TheActivity.newIntent(activity).apply {
-      flags = FLAG_ACTIVITY_CLEAR_TASK or FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_NO_ANIMATION
-    }
-    activity.startActivity(intent)
-    activity.overridePendingTransition(0, 0)
+    screenRouter.clearHistoryAndPush(SelectCountryScreenKey(), RouterDirection.FORWARD)
   }
 }

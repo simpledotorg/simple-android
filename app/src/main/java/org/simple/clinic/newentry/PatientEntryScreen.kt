@@ -28,8 +28,8 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_manual_patient_entry.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.Gender
@@ -117,7 +117,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
    **/
   private var alreadyFocusedOnEmptyTextField: Boolean = false
 
-  private val viewRenderer = PatientEntryViewRenderer(this)
+  private val uiRenderer = PatientEntryUiRenderer(this)
 
   private val events: Observable<PatientEntryEvent> by unsafeLazy {
     Observable
@@ -142,7 +142,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         PatientEntryInit(),
         PatientEntryUpdate(phoneNumberValidator, dobValidator),
         effectHandler,
-        viewRenderer::render,
+        uiRenderer::render,
         crashReporter
     )
   }

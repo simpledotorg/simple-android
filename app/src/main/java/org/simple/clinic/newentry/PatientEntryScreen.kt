@@ -436,7 +436,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     formScrollView.scrollToChild(firstFieldWithError, onScrollComplete = { firstFieldWithError.requestFocus() })
   }
 
-  override fun scrollFormToBottom() {
+  override fun scrollFormOnGenderSelection() {
     formScrollView.post {
       formScrollView.smoothScrollTo(0, ageEditText.topRelativeTo(patientEntryRoot))
     }

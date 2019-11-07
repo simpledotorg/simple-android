@@ -5,6 +5,7 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.newentry.Field.DateOfBirth
 import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -23,7 +24,7 @@ class PatientEntryUpdate(
       is OngoingEntryFetched -> onOngoingEntryFetched(model, event.patientEntry)
       is GenderChanged -> onGenderChanged(model, event.gender)
       is AgeChanged -> next(model.withAge(event.age), HideEmptyDateOfBirthAndAgeError)
-      is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth), HideDateOfBirthErrors)
+      is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth), HideError(DateOfBirth))
       is FullNameChanged -> next(model.withFullName(event.fullName), ShowEmptyFullNameError(false))
       is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), HideError(PhoneNumber))
       is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), HideEmptyColonyOrVillageError)

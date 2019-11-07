@@ -15,8 +15,6 @@ object ScrollFormToBottom : PatientEntryEffect()
 
 data class ShowEmptyFullNameError(val show: Boolean) : PatientEntryEffect()
 
-object HideDateOfBirthErrors : PatientEntryEffect()
-
 object HideEmptyDateOfBirthAndAgeError : PatientEntryEffect()
 
 object HideMissingGenderError : PatientEntryEffect()
@@ -38,5 +36,5 @@ object OpenMedicalHistoryEntryScreen : PatientEntryEffect()
 data class HideError(val field: Field) : PatientEntryEffect()
 
 enum class Field {
-  PhoneNumber
+  PhoneNumber, DateOfBirth
 }

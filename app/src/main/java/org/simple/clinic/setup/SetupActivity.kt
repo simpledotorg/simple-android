@@ -26,6 +26,7 @@ import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.selectcountry.SelectCountryScreenKey
 import org.simple.clinic.user.User
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -143,6 +144,10 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   override fun showOnboardingScreen() {
     screenRouter.popAndPush(OnboardingScreenKey(), RouterDirection.FORWARD)
+  }
+
+  override fun showCountrySelectionScreen() {
+    screenRouter.popAndPush(SelectCountryScreenKey(), RouterDirection.FORWARD)
   }
 
   private fun wrapContextWithRouter(baseContext: Context): Context {

@@ -8,6 +8,7 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.newentry.Field.ColonyOrVillage
 import org.simple.clinic.newentry.Field.DateOfBirth
 import org.simple.clinic.newentry.Field.District
+import org.simple.clinic.newentry.Field.FullName
 import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.patient.Gender
@@ -28,7 +29,7 @@ class PatientEntryUpdate(
       is GenderChanged -> onGenderChanged(model, event.gender)
       is AgeChanged -> next(model.withAge(event.age), HideEmptyDateOfBirthAndAgeError)
       is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth), HideError(DateOfBirth))
-      is FullNameChanged -> next(model.withFullName(event.fullName), ShowEmptyFullNameError(false))
+      is FullNameChanged -> next(model.withFullName(event.fullName), HideError(FullName))
       is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), HideError(PhoneNumber))
       is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), HideError(ColonyOrVillage))
       is DistrictChanged -> next(model.withDistrict(event.district), HideError(District))

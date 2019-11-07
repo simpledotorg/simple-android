@@ -35,6 +35,7 @@ object SetupActivityEffectHandler {
         // In this case, it might be better to have this as an explicit
         // effect so that the intention is clear.
         .addTransformer(InitializeDatabase::class.java, initializeDatabase(userDao, schedulersProvider.io()))
+        .addAction(ShowCountrySelectionScreen::class.java, uiActions::showCountrySelectionScreen, schedulersProvider.ui())
         .build()
   }
 

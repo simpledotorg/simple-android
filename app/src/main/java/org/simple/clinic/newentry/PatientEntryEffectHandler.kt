@@ -73,17 +73,7 @@ class PatientEntryEffectHandler(
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(schedulersProvider.io()))
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
         .addAction(ScrollFormToBottom::class.java, ui::scrollFormToBottom, schedulersProvider.ui())
-        .addConsumer(HideError::class.java, {
-          when(it.field) {
-            FullName -> ui.showEmptyFullNameError(false)
-            PhoneNumber -> hidePhoneLengthErrors()
-            DateOfBirth -> hideDateOfBirthErrors()
-            Gender -> ui.showMissingGenderError(false)
-            ColonyOrVillage -> ui.showEmptyColonyOrVillageError(false)
-            District -> ui.showEmptyDistrictError(false)
-            State -> ui.showEmptyStateError(false)
-          }
-        }, schedulersProvider.ui())
+        .addConsumer(HideValidationError::class.java, { hideValidationError(it.field) }, schedulersProvider.ui())
         .addAction(HideEmptyDateOfBirthAndAgeError::class.java, { ui.showEmptyDateOfBirthAndAgeError(false) }, schedulersProvider.ui())
         .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
           showDatePatternInLabelValueChangedCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
@@ -109,6 +99,18 @@ class PatientEntryEffectHandler(
             entry.takeIf { it.address != null } ?: entry.withAddress(Address.withDistrictAndState(facility.district, facility.state))
           }
           .map { OngoingEntryFetched(it) }
+    }
+  }
+
+  private fun hideValidationError(field: Field) {
+    when (field) {
+      FullName -> ui.showEmptyFullNameError(false)
+      PhoneNumber -> hidePhoneLengthErrors()
+      DateOfBirth -> hideDateOfBirthErrors()
+      Gender -> ui.showMissingGenderError(false)
+      ColonyOrVillage -> ui.showEmptyColonyOrVillageError(false)
+      District -> ui.showEmptyDistrictError(false)
+      State -> ui.showEmptyStateError(false)
     }
   }
 

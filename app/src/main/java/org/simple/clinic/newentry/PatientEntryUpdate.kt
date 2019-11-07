@@ -28,12 +28,12 @@ class PatientEntryUpdate(
       is OngoingEntryFetched -> onOngoingEntryFetched(model, event.patientEntry)
       is GenderChanged -> onGenderChanged(model, event.gender)
       is AgeChanged -> next(model.withAge(event.age), HideEmptyDateOfBirthAndAgeError)
-      is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth), HideError(DateOfBirth))
-      is FullNameChanged -> next(model.withFullName(event.fullName), HideError(FullName))
-      is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), HideError(PhoneNumber))
-      is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), HideError(ColonyOrVillage))
-      is DistrictChanged -> next(model.withDistrict(event.district), HideError(District))
-      is StateChanged -> next(model.withState(event.state), HideError(State))
+      is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth), HideValidationError(DateOfBirth))
+      is FullNameChanged -> next(model.withFullName(event.fullName), HideValidationError(FullName))
+      is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), HideValidationError(PhoneNumber))
+      is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), HideValidationError(ColonyOrVillage))
+      is DistrictChanged -> next(model.withDistrict(event.district), HideValidationError(District))
+      is StateChanged -> next(model.withState(event.state), HideValidationError(State))
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
       is SaveClicked -> onSaveClicked(model.patientEntry)
       is ReminderConsentChanged -> next(model.reminderConsentChanged(event.reminderConsent))
@@ -50,7 +50,7 @@ class PatientEntryUpdate(
   private fun onGenderChanged(model: PatientEntryModel, gender: Optional<Gender>): PatientEntryNext {
     val updatedModel = model.withGender(gender)
     return if (gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
-      next(updatedModel, HideError(Field.Gender), ScrollFormToBottom)
+      next(updatedModel, HideValidationError(Field.Gender), ScrollFormToBottom)
     } else {
       next(updatedModel)
     }

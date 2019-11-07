@@ -38,7 +38,7 @@ class PatientEntryEffectHandlerTest {
     ))
 
     // when
-    testCase.dispatch(HideError(PhoneNumber))
+    testCase.dispatch(HideValidationError(PhoneNumber))
 
     // then
     testCase.assertNoOutgoingEvents()

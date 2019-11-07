@@ -23,7 +23,7 @@ data class ShowValidationErrors(val errors: List<PatientEntryValidationError>) :
 
 object OpenMedicalHistoryEntryScreen : PatientEntryEffect()
 
-data class HideError(val field: Field) : PatientEntryEffect()
+data class HideValidationError(val field: Field) : PatientEntryEffect()
 
 enum class Field {
   FullName, PhoneNumber, DateOfBirth, Gender, ColonyOrVillage, District, State

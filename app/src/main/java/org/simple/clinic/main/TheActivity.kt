@@ -20,7 +20,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
-import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
@@ -86,7 +85,7 @@ class TheActivity : AppCompatActivity() {
     val wrappedContext = baseContext
         .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { wrapContextWithRouter(it) }
-        .wrap { InjectorProviderContextWrapper.wrap(it, mapOf(OnboardingScreenInjector::class.java to component)) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)

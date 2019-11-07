@@ -10,6 +10,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.Field.DateOfBirth
 import org.simple.clinic.newentry.Field.PhoneNumber
+import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
@@ -73,13 +74,13 @@ class PatientEntryEffectHandler(
           when(it.field) {
             PhoneNumber -> hidePhoneLengthErrors()
             DateOfBirth -> hideDateOfBirthErrors()
+            State -> ui.showEmptyStateError(false)
           }
         }, schedulersProvider.ui())
         .addAction(HideEmptyDateOfBirthAndAgeError::class.java, { ui.showEmptyDateOfBirthAndAgeError(false) }, schedulersProvider.ui())
         .addAction(HideMissingGenderError::class.java, { ui.showMissingGenderError(false) }, schedulersProvider.ui())
         .addAction(HideEmptyColonyOrVillageError::class.java, { ui.showEmptyColonyOrVillageError(false) }, schedulersProvider.ui())
         .addAction(HideEmptyDistrictError::class.java, { ui.showEmptyDistrictError(false) }, schedulersProvider.ui())
-        .addAction(HideEmptyStateError::class.java, { ui.showEmptyStateError(false) }, schedulersProvider.ui())
         .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
           showDatePatternInLabelValueChangedCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
         }, schedulersProvider.ui())

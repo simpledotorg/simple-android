@@ -5,9 +5,13 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_selectcountry.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.injector
@@ -38,9 +42,20 @@ class SelectCountryScreen(
 
   private val uiRenderer = SelectCountryUiRenderer(this)
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            nextClicks(),
+            retryClicks(),
+            countrySelectionChanges()
+        )
+        .compose(ReportAnalyticsEvents())
+        .cast<SelectCountryEvent>()
+  }
+
   private val delegate by unsafeLazy {
     MobiusDelegate(
-        events = Observable.never<SelectCountryEvent>(),
+        events = events,
         defaultModel = SelectCountryModel.FETCHING,
         init = SelectCountryInit(),
         update = SelectCountryUpdate(),
@@ -84,6 +99,25 @@ class SelectCountryScreen(
       layoutManager = LinearLayoutManager(context)
       adapter = supportedCountriesAdapter
     }
+  }
+
+  private fun countrySelectionChanges(): Observable<CountryChosen> {
+    return supportedCountriesAdapter
+        .itemEvents
+        .ofType<Event.CountryClicked>()
+        .map { CountryChosen(it.country) }
+  }
+
+  private fun retryClicks(): Observable<RetryClicked> {
+    return RxView
+        .clicks(tryAgain)
+        .map { RetryClicked }
+  }
+
+  private fun nextClicks(): Observable<NextClicked> {
+    return RxView
+        .clicks(nextButton)
+        .map { NextClicked }
   }
 
   override fun onAttachedToWindow() {

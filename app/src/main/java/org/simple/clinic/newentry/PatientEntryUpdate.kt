@@ -6,6 +6,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.newentry.Field.DateOfBirth
+import org.simple.clinic.newentry.Field.District
 import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.patient.Gender
@@ -29,7 +30,7 @@ class PatientEntryUpdate(
       is FullNameChanged -> next(model.withFullName(event.fullName), ShowEmptyFullNameError(false))
       is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), HideError(PhoneNumber))
       is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), HideEmptyColonyOrVillageError)
-      is DistrictChanged -> next(model.withDistrict(event.district), HideEmptyDistrictError)
+      is DistrictChanged -> next(model.withDistrict(event.district), HideError(District))
       is StateChanged -> next(model.withState(event.state), HideError(State))
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
       is SaveClicked -> onSaveClicked(model.patientEntry)

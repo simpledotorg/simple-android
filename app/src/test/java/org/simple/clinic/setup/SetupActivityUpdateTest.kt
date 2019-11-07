@@ -5,6 +5,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.util.None
 
 class SetupActivityUpdateTest {
 
@@ -15,7 +16,7 @@ class SetupActivityUpdateTest {
   fun `if the user has completed onboarding, the main activity must be opened`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true))
+        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoToMainActivity as SetupActivityEffect)
@@ -26,7 +27,7 @@ class SetupActivityUpdateTest {
   fun `if the user has not completed onboarding, the onboarding screen must be shown`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = false))
+        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowOnboardingScreen as SetupActivityEffect)

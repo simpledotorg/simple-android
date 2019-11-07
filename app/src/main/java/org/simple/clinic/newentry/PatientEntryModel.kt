@@ -19,11 +19,14 @@ data class PatientEntryModel(
   fun patientEntryFetched(patientEntry: OngoingNewPatientEntry): PatientEntryModel =
       copy(patientEntry = patientEntry)
 
-  fun selectedGender(): PatientEntryModel =
-      copy(isSelectingGenderForTheFirstTime = false)
-
-  fun withGender(gender: Optional<Gender>): PatientEntryModel =
-      copy(patientEntry = patientEntry.withGender(gender))
+  fun withGender(gender: Optional<Gender>): PatientEntryModel {
+    val patientEntryWithUpdatedGender = patientEntry.withGender(gender)
+    return if (gender.isNotEmpty()) {
+      copy(patientEntry = patientEntryWithUpdatedGender, isSelectingGenderForTheFirstTime = false)
+    } else {
+      copy(patientEntry = patientEntryWithUpdatedGender)
+    }
+  }
 
   fun withAge(age: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withAge(age))

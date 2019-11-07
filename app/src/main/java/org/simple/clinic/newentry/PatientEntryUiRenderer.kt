@@ -11,7 +11,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.A
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 
-class PatientEntryViewRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntryModel> {
+class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntryModel> {
   private val dateOfBirthAndAgeVisibilityValueChangedCallback = ValueChangedCallback<DateOfBirthAndAgeVisibility>()
   private val identifierValueChangedCallback = ValueChangedCallback<Optional<Identifier>>()
 

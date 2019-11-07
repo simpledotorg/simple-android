@@ -90,7 +90,7 @@ class PatientEntryScreenControllerTest {
         PatientEntryInit(),
         PatientEntryUpdate(numberValidator, dobValidator),
         effectHandler,
-        PatientEntryViewRenderer(ui)::render
+        PatientEntryUiRenderer(ui)::render
     )
 
     Analytics.addReporter(reporter)

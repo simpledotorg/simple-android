@@ -21,8 +21,6 @@ object HideMissingGenderError : PatientEntryEffect()
 
 object HideEmptyColonyOrVillageError : PatientEntryEffect()
 
-object HideEmptyDistrictError : PatientEntryEffect()
-
 data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryEffect()
 
 data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
@@ -34,5 +32,5 @@ object OpenMedicalHistoryEntryScreen : PatientEntryEffect()
 data class HideError(val field: Field) : PatientEntryEffect()
 
 enum class Field {
-  PhoneNumber, DateOfBirth, State
+  PhoneNumber, DateOfBirth, District, State
 }

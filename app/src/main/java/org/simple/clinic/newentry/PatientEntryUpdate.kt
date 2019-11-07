@@ -5,6 +5,7 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -24,7 +25,7 @@ class PatientEntryUpdate(
       is AgeChanged -> next(model.withAge(event.age), HideEmptyDateOfBirthAndAgeError)
       is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth), HideDateOfBirthErrors)
       is FullNameChanged -> next(model.withFullName(event.fullName), ShowEmptyFullNameError(false))
-      is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), HidePhoneLengthErrors)
+      is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), HideError(PhoneNumber))
       is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), HideEmptyColonyOrVillageError)
       is DistrictChanged -> next(model.withDistrict(event.district), HideEmptyDistrictError)
       is StateChanged -> next(model.withState(event.state), HideEmptyStateError)

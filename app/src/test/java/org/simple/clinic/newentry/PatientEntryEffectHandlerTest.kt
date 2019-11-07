@@ -11,6 +11,7 @@ import io.reactivex.Single
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
@@ -37,7 +38,7 @@ class PatientEntryEffectHandlerTest {
     ))
 
     // when
-    testCase.dispatch(HidePhoneLengthErrors)
+    testCase.dispatch(HideError(PhoneNumber))
 
     // then
     testCase.assertNoOutgoingEvents()

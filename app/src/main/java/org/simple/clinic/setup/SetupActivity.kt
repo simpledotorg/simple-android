@@ -16,7 +16,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusActivityDelegate
-import org.simple.clinic.onboarding.OnboardingScreenInjector
 import org.simple.clinic.onboarding.OnboardingScreenKey
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
@@ -106,7 +105,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
     val wrappedContext = baseContext
         .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { wrapContextWithRouter(it) }
-        .wrap { InjectorProviderContextWrapper.wrap(it, mapOf(OnboardingScreenInjector::class.java to component)) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)

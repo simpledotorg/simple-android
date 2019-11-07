@@ -51,7 +51,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale.ENGLISH
 
 @RunWith(JUnitParamsRunner::class)
-class PatientEntryScreenControllerTest {
+class PatientEntryScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

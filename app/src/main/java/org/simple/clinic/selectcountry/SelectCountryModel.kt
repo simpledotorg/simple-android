@@ -1,12 +1,15 @@
 package org.simple.clinic.selectcountry
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.appconfig.Country
 
+@Parcelize
 data class SelectCountryModel(
     val countries: List<Country>?,
     val manifestFetchError: ManifestFetchError?,
     val selectedCountry: Country?
-) {
+) : Parcelable {
 
   fun hasFetchedCountries(): Boolean = countries != null
 

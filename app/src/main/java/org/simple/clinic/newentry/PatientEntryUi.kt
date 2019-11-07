@@ -19,7 +19,7 @@ interface PatientEntryUi {
   fun showInvalidDateOfBirthError(show: Boolean)
   fun showDateOfBirthIsInFutureError(show: Boolean)
   fun scrollToFirstFieldWithError()
-  fun scrollFormToBottom()
+  fun scrollFormOnGenderSelection()
   fun showIdentifierSection()
   fun hideIdentifierSection()
 }

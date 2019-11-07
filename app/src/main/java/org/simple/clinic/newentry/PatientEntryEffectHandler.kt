@@ -72,7 +72,7 @@ class PatientEntryEffectHandler(
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(schedulersProvider.io()))
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
-        .addAction(ScrollFormToBottom::class.java, ui::scrollFormToBottom, schedulersProvider.ui())
+        .addAction(ScrollFormOnGenderSelection::class.java, ui::scrollFormOnGenderSelection, schedulersProvider.ui())
         .addConsumer(HideValidationError::class.java, { hideValidationError(it.field) }, schedulersProvider.ui())
         .addAction(HideEmptyDateOfBirthAndAgeError::class.java, { ui.showEmptyDateOfBirthAndAgeError(false) }, schedulersProvider.ui())
         .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {

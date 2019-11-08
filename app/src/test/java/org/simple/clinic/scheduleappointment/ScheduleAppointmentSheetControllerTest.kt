@@ -83,7 +83,7 @@ class ScheduleAppointmentSheetControllerTest {
     val periodsToScheduleAppointmentsIn = listOf(defaultTimeToAppointment)
 
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn, defaultTimeToAppointment),
+        config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn),
         protocol = PatientMocker.protocol(protocolUuid, 31)
     )
 
@@ -131,7 +131,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn, Days(2)),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
         protocol = PatientMocker.protocol(protocolUuid, 2)
     )
 
@@ -150,11 +150,10 @@ class ScheduleAppointmentSheetControllerTest {
         Days(2),
         Days(7)
     )
-    val defaultTimeToAppointment = Days(2)
 
     // when
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn, defaultTimeToAppointment),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
         protocol = PatientMocker.protocol(protocolUuid, 2)
     )
 
@@ -179,11 +178,10 @@ class ScheduleAppointmentSheetControllerTest {
         Days(2),
         Days(7)
     )
-    val defaultTimeToAppointment = Days(2)
 
     // when
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn, defaultTimeToAppointment),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
         protocol = PatientMocker.protocol(protocolUuid, 2)
     )
 
@@ -209,10 +207,9 @@ class ScheduleAppointmentSheetControllerTest {
         Days(3),
         Days(4)
     )
-    val defaultTimeToAppointment = Days(2)
 
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn, defaultTimeToAppointment),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
         protocol = PatientMocker.protocol(protocolUuid, 2)
     )
 
@@ -245,11 +242,10 @@ class ScheduleAppointmentSheetControllerTest {
         Days(2),
         Weeks(1)
     )
-    val scheduleAppointmentInByDefault = Days(2)
 
     // when
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn, scheduleAppointmentInByDefault),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
         protocol = PatientMocker.protocol(protocolUuid, 2)
     )
 
@@ -289,11 +285,10 @@ class ScheduleAppointmentSheetControllerTest {
         Weeks(2),
         Days(14)
     )
-    val defaultTimeToAppointment = Days(1)
 
     // when
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn, defaultTimeToAppointment),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
         protocol = PatientMocker.protocol(protocolUuid, 1)
     )
 
@@ -334,11 +329,10 @@ class ScheduleAppointmentSheetControllerTest {
         Weeks(2),
         Days(14)
     )
-    val defaultTimeToAppointment = Days(1)
 
     // when
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn, defaultTimeToAppointment),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
         protocol = PatientMocker.protocol(protocolUuid, 1)
     )
 
@@ -379,10 +373,9 @@ class ScheduleAppointmentSheetControllerTest {
         Days(21),
         Months(2)
     )
-    val defaultTimeToAppointment = Days(2)
 
     // when
-    sheetCreated(config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn, defaultTimeToAppointment))
+    sheetCreated(config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn))
 
     // then
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-02")))
@@ -458,12 +451,6 @@ class ScheduleAppointmentSheetControllerTest {
   }
 }
 
-private fun AppointmentConfig.withScheduledAppointments(
-    scheduleAppointmentsIn: List<TimeToAppointment>,
-    defaultTimeToAppointment: TimeToAppointment
-): AppointmentConfig {
-  return this.copy(
-      scheduleAppointmentsIn = scheduleAppointmentsIn,
-      defaultTimeToAppointment = defaultTimeToAppointment
-  )
+private fun AppointmentConfig.withScheduledAppointments(scheduleAppointmentsIn: List<TimeToAppointment>): AppointmentConfig {
+  return this.copy(scheduleAppointmentsIn = scheduleAppointmentsIn)
 }

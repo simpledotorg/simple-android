@@ -3,26 +3,20 @@ package org.simple.clinic.enterotp
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ProgressBar
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_enterotp.view.*
-import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -34,6 +28,9 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var country: Country
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -75,7 +72,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   fun showUserPhoneNumber(phoneNumber: String) {
     val phoneNumberWithCountryCode = resources.getString(
         R.string.enterotp_phonenumber,
-        resources.getString(R.string.country_dialing_code),
+        country.isdCode,
         phoneNumber
     )
 

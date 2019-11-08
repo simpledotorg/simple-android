@@ -28,4 +28,13 @@ class AppConfigModule {
     return rxSharedPreferences
         .getObject("preference_selected_country_v1", None, OptionalRxPreferencesConverter(countryPreferenceConverter))
   }
+
+  @Provides
+  fun providesCountry(appConfigRepository: AppConfigRepository): Country {
+    val selectedCountry = appConfigRepository.currentCountry().toNullable()
+
+    requireNotNull(selectedCountry) { "There is no stored country available!" }
+
+    return selectedCountry
+  }
 }

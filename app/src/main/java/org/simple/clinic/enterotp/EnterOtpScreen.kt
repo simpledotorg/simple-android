@@ -14,6 +14,7 @@ import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import kotlinx.android.synthetic.main.screen_enterotp.view.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.main.TheActivity
@@ -33,15 +34,6 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  private val userPhoneNumberTextView by bindView<TextView>(R.id.enterotp_phonenumber)
-  private val otpEntryEditText by bindView<StaggeredEditText>(R.id.enterotp_otp)
-  private val backButton by bindView<ImageButton>(R.id.enterotp_back)
-  private val errorTextView by bindView<TextView>(R.id.enterotp_error)
-  private val smsSentTextView by bindView<TextView>(R.id.enterotp_sms_sent)
-  private val validateOtpProgressBar by bindView<ProgressBar>(R.id.enterotp_progress)
-  private val otpEntryContainer by bindView<ViewGroup>(R.id.enterotp_otp_container)
-  private val resendSmsButton by bindView<Button>(R.id.enterotp_resendsms)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

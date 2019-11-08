@@ -11,3 +11,5 @@ object ShowOnboardingScreen : SetupActivityEffect()
 object InitializeDatabase : SetupActivityEffect()
 
 object ShowCountrySelectionScreen : SetupActivityEffect()
+
+object SetFallbackCountryAsCurrentCountry: SetupActivityEffect()

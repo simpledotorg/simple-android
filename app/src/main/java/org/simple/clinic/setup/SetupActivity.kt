@@ -14,6 +14,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.placeholder.PlaceholderScreenKey
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.appconfig.AppConfigRepository
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusActivityDelegate
@@ -57,6 +58,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
   @Inject
   lateinit var appConfigRepository: AppConfigRepository
 
+  @field:[Inject Named("fallback")]
+  lateinit var fallbackCountry: Country
+
   private lateinit var component: SetupActivityComponent
 
   private val screenResults = ScreenResultBus()
@@ -66,7 +70,14 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private val delegate by unsafeLazy {
-    val effectHandler = SetupActivityEffectHandler.create(onboardingCompletePreference, this, userDao, appConfigRepository, schedulersProvider)
+    val effectHandler = SetupActivityEffectHandler.create(
+        onboardingCompletePreference = onboardingCompletePreference,
+        uiActions = this,
+        userDao = userDao,
+        appConfigRepository = appConfigRepository,
+        fallbackCountry = fallbackCountry,
+        schedulersProvider = schedulersProvider
+    )
 
     MobiusActivityDelegate(
         events = Observable.never<SetupActivityEvent>(),

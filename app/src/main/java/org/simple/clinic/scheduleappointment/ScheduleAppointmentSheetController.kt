@@ -128,11 +128,22 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .filterAndUnwrapJust()
         .switchMap(protocolRepository::protocol)
 
+    val configTimeToAppointment = configProvider
+        .map { it.defaultTimeToAppointment }
+        .singleElement()
+        .toObservable()
+
+    val protocolTimeToAppointment = protocolStream.map { Days(it.followUpDays) }
+
+    val timeToAppointments = Observable.concatArrayEager(configTimeToAppointment, protocolTimeToAppointment)
+        .doOnNext { println(it) }
+
     return Observables.combineLatest(
         events.ofType<ScheduleAppointmentSheetCreated>(),
-        protocolStream
-    ) { _, protocol ->
-      Days(protocol.followUpDays)
+        timeToAppointments
+    ) { _, timeToAppointment ->
+      println(timeToAppointment)
+      timeToAppointment
     }
         .map(::generatePotentialAppointmentDate)
   }

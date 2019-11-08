@@ -201,7 +201,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     // when
     configStream.onNext(appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn, defaultTimeToAppointment))
-    protocolStream.onNext(PatientMocker.protocol(protocolUuid, 2))
+    protocolStream.onNext(PatientMocker.protocol(protocolUuid, followUpDays = 2))
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     //then

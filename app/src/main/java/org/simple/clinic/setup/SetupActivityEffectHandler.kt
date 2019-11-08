@@ -5,8 +5,11 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.rxkotlin.zipWith
+import io.reactivex.rxkotlin.Singles
+import org.simple.clinic.appconfig.AppConfigRepository
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 
@@ -16,11 +19,12 @@ object SetupActivityEffectHandler {
       onboardingCompletePreference: Preference<Boolean>,
       uiActions: UiActions,
       userDao: User.RoomDao,
+      appConfigRepository: AppConfigRepository,
       schedulersProvider: SchedulersProvider
   ): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
     return RxMobius
         .subtypeEffectHandler<SetupActivityEffect, SetupActivityEvent>()
-        .addTransformer(FetchUserDetails::class.java, fetchUserDetails(onboardingCompletePreference, userDao, schedulersProvider.io()))
+        .addTransformer(FetchUserDetails::class.java, fetchUserDetails(onboardingCompletePreference, userDao, appConfigRepository, schedulersProvider.io()))
         .addAction(GoToMainActivity::class.java, uiActions::goToMainActivity, schedulersProvider.ui())
         .addAction(ShowOnboardingScreen::class.java, uiActions::showOnboardingScreen, schedulersProvider.ui())
         // We could technically also implicitly wait on the database to
@@ -42,20 +46,31 @@ object SetupActivityEffectHandler {
   private fun fetchUserDetails(
       onboardingCompletePreference: Preference<Boolean>,
       userDao: User.RoomDao,
+      appConfigRepository: AppConfigRepository,
       scheduler: Scheduler
   ): ObservableTransformer<FetchUserDetails, SetupActivityEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
-          .flatMapSingle {
-            val hasUserCompletedOnboarding = Single.fromCallable { onboardingCompletePreference.get() }
-            val loggedInUser = Single.fromCallable { userDao.userImmediate().toOptional() }
-
-            hasUserCompletedOnboarding
-                .zipWith(loggedInUser)
-                .subscribeOn(scheduler)
+          .flatMapSingle { readUserDetailsFromStorage(onboardingCompletePreference, userDao, appConfigRepository, scheduler) }
+          .map { (hasUserCompletedOnboarding, loggedInUser, userSelectedCountry) ->
+            UserDetailsFetched(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
           }
-          .map { (hasUserCompletedOnboarding, loggedInUser) -> UserDetailsFetched(hasUserCompletedOnboarding, loggedInUser) }
     }
+  }
+
+  private fun readUserDetailsFromStorage(
+      onboardingCompletePreference: Preference<Boolean>,
+      userDao: User.RoomDao,
+      appConfigRepository: AppConfigRepository,
+      scheduler: Scheduler
+  ): Single<Triple<Boolean, Optional<User>, Optional<Country>>> {
+    val hasUserCompletedOnboarding = Single.fromCallable { onboardingCompletePreference.get() }
+    val loggedInUser = Single.fromCallable { userDao.userImmediate().toOptional() }
+    val userSelectedCountry = Single.fromCallable { appConfigRepository.currentCountry() }
+
+    return Singles
+        .zip(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
+        .subscribeOn(scheduler)
   }
 
   private fun initializeDatabase(

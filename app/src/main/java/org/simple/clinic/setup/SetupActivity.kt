@@ -13,6 +13,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.activity.placeholder.PlaceholderScreenKey
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusActivityDelegate
@@ -53,6 +54,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
   @Inject
   lateinit var userDao: User.RoomDao
 
+  @Inject
+  lateinit var appConfigRepository: AppConfigRepository
+
   private lateinit var component: SetupActivityComponent
 
   private val screenResults = ScreenResultBus()
@@ -62,7 +66,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private val delegate by unsafeLazy {
-    val effectHandler = SetupActivityEffectHandler.create(onboardingCompletePreference, this, userDao, schedulersProvider)
+    val effectHandler = SetupActivityEffectHandler.create(onboardingCompletePreference, this, userDao, appConfigRepository, schedulersProvider)
 
     MobiusActivityDelegate(
         events = Observable.never<SetupActivityEvent>(),

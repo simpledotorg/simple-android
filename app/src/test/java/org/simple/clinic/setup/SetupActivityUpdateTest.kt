@@ -1,6 +1,7 @@
 package org.simple.clinic.setup
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -17,22 +18,30 @@ class SetupActivityUpdateTest {
 
   @Test
   fun `if the user has not logged in, the country selection screen must be shown`() {
+    val expectedModel = defaultModel
+        .withLoggedInUser(None)
+        .withSelectedCountry(None)
+
     updateSpec
         .given(defaultModel)
         .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(expectedModel),
             hasEffects(ShowCountrySelectionScreen as SetupActivityEffect)
         ))
   }
 
   @Test
   fun `if the user has not completed onboarding, the onboarding screen must be shown`() {
+    val expectedModel = defaultModel
+        .withLoggedInUser(None)
+        .withSelectedCountry(None)
+
     updateSpec
         .given(defaultModel)
         .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(expectedModel),
             hasEffects(ShowOnboardingScreen as SetupActivityEffect)
         ))
   }
@@ -53,11 +62,15 @@ class SetupActivityUpdateTest {
   @Test
   fun `if the user has logged in, go to home screen`() {
     val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
+    val expectedModel = defaultModel
+        .withLoggedInUser(user.toOptional())
+        .withSelectedCountry(None)
+
     updateSpec
         .given(defaultModel)
         .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = user.toOptional()))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(expectedModel),
             hasEffects(GoToMainActivity as SetupActivityEffect)
         ))
   }

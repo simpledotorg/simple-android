@@ -4,20 +4,27 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.mobius.next
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 
 class SetupActivityUpdate : Update<SetupActivityModel, SetupActivityEvent, SetupActivityEffect> {
 
   override fun update(model: SetupActivityModel, event: SetupActivityEvent): Next<SetupActivityModel, SetupActivityEffect> {
-    val effect = when (event) {
-      is UserDetailsFetched -> initialScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding)
-      is DatabaseInitialized -> FetchUserDetails
-      else -> null
-    }
+    return when (event) {
+      is UserDetailsFetched -> {
+        val updatedModel = model
+            .withLoggedInUser(event.loggedInUser)
+            .withSelectedCountry(None)
+        val effect = initialScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding)
 
-    return if (effect == null) noChange() else dispatch(effect)
+        next(updatedModel, effect)
+      }
+      is DatabaseInitialized -> dispatch(FetchUserDetails)
+      else -> noChange()
+    }
   }
 
   private fun initialScreenEffect(

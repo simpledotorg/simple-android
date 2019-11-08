@@ -14,9 +14,9 @@ class SetupActivityInitTest {
     val spec = InitSpec(SetupActivityInit())
 
     spec
-        .whenInit(SetupActivityModel)
+        .whenInit(SetupActivityModel.SETTING_UP)
         .then(assertThatFirst(
-            hasModel(SetupActivityModel),
+            hasModel(SetupActivityModel.SETTING_UP),
             hasEffects(InitializeDatabase as SetupActivityEffect)
         ))
   }

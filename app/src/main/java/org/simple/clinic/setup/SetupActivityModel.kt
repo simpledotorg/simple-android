@@ -2,6 +2,10 @@ package org.simple.clinic.setup
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.appconfig.Country
+import org.simple.clinic.user.User
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 
 @Parcelize
 data class SetupActivityModel(
@@ -17,5 +21,13 @@ data class SetupActivityModel(
 
   companion object {
     val SETTING_UP = SetupActivityModel(isUserLoggedIn = null, hasUserSelectedACountry = null)
+  }
+
+  fun withLoggedInUser(user: Optional<User>): SetupActivityModel {
+    return copy(isUserLoggedIn = user is Just)
+  }
+
+  fun withSelectedCountry(country: Optional<Country>): SetupActivityModel {
+    return copy(hasUserSelectedACountry = country is Just)
   }
 }

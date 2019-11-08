@@ -42,6 +42,7 @@
         android:paddingTop="@dimen/spacing_8">
 
         <EditText
+          android:id="@+id/isdCodeEditText"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:clickable="false"
@@ -49,9 +50,9 @@
           android:focusable="false"
           android:focusableInTouchMode="false"
           android:inputType="none"
-          android:text="@string/country_dialing_code"
           android:textAppearance="@style/Clinic.LoginInputTextAppearance"
-          tools:ignore="Deprecated,LabelFor" />
+          tools:ignore="Deprecated,LabelFor"
+          tools:text="+880"/>
 
         <EditText
           android:id="@id/phoneNumberEditText"

@@ -3,12 +3,10 @@ package org.simple.clinic.appconfig
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
-import java.net.URI
 import javax.inject.Inject
 
 /**
@@ -25,17 +23,7 @@ class AppConfigRepository @Inject constructor(
 ) {
 
   fun currentCountry(): Optional<Country> {
-
-    // This has been temporarily hardcoded to build features which need access to the current
-    // selected country in parallel while the country selection feature is being implemented.
-    // This hardcoding will get replaced later when that feature is completed.
-    // TODO(vs): 2019-10-31 Read this from storage instead of hardcoding
-    return Just(Country(
-        isoCountryCode = "IN",
-        endpoint = URI(BuildConfig.API_ENDPOINT),
-        displayName = "India",
-        isdCode = "91"
-    ))
+    return selectedCountryPreference.get()
   }
 
   fun fetchAppManifest(): Single<ManifestFetchResult> {

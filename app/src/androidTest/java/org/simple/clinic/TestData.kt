@@ -1,6 +1,7 @@
 package org.simple.clinic
 
 import io.bloco.faker.Faker
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
@@ -58,6 +59,7 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
+import java.net.URI
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -839,6 +841,20 @@ class TestData @Inject constructor(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         observations = EncounterObservationsPayload(bloodPressureMeasurements = bpPayloads)
+    )
+  }
+
+  fun country(
+      isoCountryCode: String = "IN",
+      endpoint: String = "https://simple.org",
+      displayName: String = "India",
+      isdCode: String = "91"
+  ): Country {
+    return Country(
+        isoCountryCode = isoCountryCode,
+        endpoint = URI.create(endpoint),
+        displayName = displayName,
+        isdCode = isdCode
     )
   }
 }

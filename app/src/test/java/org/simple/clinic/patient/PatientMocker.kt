@@ -1,6 +1,7 @@
 package org.simple.clinic.patient
 
 import com.nhaarman.mockito_kotlin.mock
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
@@ -27,6 +28,7 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
+import java.net.URI
 import java.util.Random
 import java.util.UUID
 import kotlin.reflect.KClass
@@ -486,6 +488,20 @@ object PatientMocker {
         address = address(uuid = addressUuid),
         phoneNumbers = emptyList(),
         businessIds = emptyList()
+    )
+  }
+
+  fun country(
+      isoCountryCode: String = "IN",
+      endpoint: String = "https://simple.org",
+      displayName: String = "India",
+      isdCode: String = "91"
+  ): Country {
+    return Country(
+        isoCountryCode = isoCountryCode,
+        endpoint = URI.create(endpoint),
+        displayName = displayName,
+        isdCode = isdCode
     )
   }
 }

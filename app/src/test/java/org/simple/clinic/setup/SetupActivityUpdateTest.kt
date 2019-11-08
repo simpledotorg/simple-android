@@ -24,7 +24,7 @@ class SetupActivityUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None))
+        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None, userSelectedCountry = None))
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(ShowCountrySelectionScreen as SetupActivityEffect)
@@ -39,7 +39,7 @@ class SetupActivityUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None))
+        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None, userSelectedCountry = None))
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(ShowOnboardingScreen as SetupActivityEffect)
@@ -68,7 +68,7 @@ class SetupActivityUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = user.toOptional()))
+        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = user.toOptional(), userSelectedCountry = None))
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(GoToMainActivity as SetupActivityEffect)

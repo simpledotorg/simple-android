@@ -3,7 +3,6 @@ package org.simple.clinic.setup
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
-import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import org.simple.clinic.appconfig.AppConfigRepository
@@ -13,19 +12,39 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 
-object SetupActivityEffectHandler {
+class SetupActivityEffectHandler(
+    private val onboardingCompletePreference: Preference<Boolean>,
+    private val uiActions: UiActions,
+    private val userDao: User.RoomDao,
+    private val appConfigRepository: AppConfigRepository,
+    private val fallbackCountry: Country,
+    private val schedulersProvider: SchedulersProvider
+) {
 
-  fun create(
-      onboardingCompletePreference: Preference<Boolean>,
-      uiActions: UiActions,
-      userDao: User.RoomDao,
-      appConfigRepository: AppConfigRepository,
-      fallbackCountry: Country,
-      schedulersProvider: SchedulersProvider
-  ): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
+  companion object {
+    fun create(
+        onboardingCompletePreference: Preference<Boolean>,
+        uiActions: UiActions,
+        userDao: User.RoomDao,
+        appConfigRepository: AppConfigRepository,
+        fallbackCountry: Country,
+        schedulersProvider: SchedulersProvider
+    ): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
+      return SetupActivityEffectHandler(
+          onboardingCompletePreference = onboardingCompletePreference,
+          uiActions = uiActions,
+          userDao = userDao,
+          appConfigRepository = appConfigRepository,
+          fallbackCountry = fallbackCountry,
+          schedulersProvider = schedulersProvider
+      ).build()
+    }
+  }
+
+  private fun build(): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
     return RxMobius
         .subtypeEffectHandler<SetupActivityEffect, SetupActivityEvent>()
-        .addTransformer(FetchUserDetails::class.java, fetchUserDetails(onboardingCompletePreference, userDao, appConfigRepository, schedulersProvider.io()))
+        .addTransformer(FetchUserDetails::class.java, fetchUserDetails())
         .addAction(GoToMainActivity::class.java, uiActions::goToMainActivity, schedulersProvider.ui())
         .addAction(ShowOnboardingScreen::class.java, uiActions::showOnboardingScreen, schedulersProvider.ui())
         // We could technically also implicitly wait on the database to
@@ -39,58 +58,41 @@ object SetupActivityEffectHandler {
 
         // In this case, it might be better to have this as an explicit
         // effect so that the intention is clear.
-        .addTransformer(InitializeDatabase::class.java, initializeDatabase(userDao, schedulersProvider.io()))
+        .addTransformer(InitializeDatabase::class.java, initializeDatabase())
         .addAction(ShowCountrySelectionScreen::class.java, uiActions::showCountrySelectionScreen, schedulersProvider.ui())
-        .addTransformer(SetFallbackCountryAsCurrentCountry::class.java, setFallbackCountryAsSelected(appConfigRepository, fallbackCountry, schedulersProvider))
+        .addTransformer(SetFallbackCountryAsCurrentCountry::class.java, setFallbackCountryAsSelected())
         .build()
   }
 
-  private fun fetchUserDetails(
-      onboardingCompletePreference: Preference<Boolean>,
-      userDao: User.RoomDao,
-      appConfigRepository: AppConfigRepository,
-      scheduler: Scheduler
-  ): ObservableTransformer<FetchUserDetails, SetupActivityEvent> {
+  private fun fetchUserDetails(): ObservableTransformer<FetchUserDetails, SetupActivityEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
-          .flatMapSingle { readUserDetailsFromStorage(onboardingCompletePreference, userDao, appConfigRepository, scheduler) }
+          .flatMapSingle { readUserDetailsFromStorage() }
           .map { (hasUserCompletedOnboarding, loggedInUser, userSelectedCountry) ->
             UserDetailsFetched(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
           }
     }
   }
 
-  private fun readUserDetailsFromStorage(
-      onboardingCompletePreference: Preference<Boolean>,
-      userDao: User.RoomDao,
-      appConfigRepository: AppConfigRepository,
-      scheduler: Scheduler
-  ): Single<Triple<Boolean, Optional<User>, Optional<Country>>> {
+  private fun readUserDetailsFromStorage(): Single<Triple<Boolean, Optional<User>, Optional<Country>>> {
     val hasUserCompletedOnboarding = Single.fromCallable { onboardingCompletePreference.get() }
     val loggedInUser = Single.fromCallable { userDao.userImmediate().toOptional() }
     val userSelectedCountry = Single.fromCallable { appConfigRepository.currentCountry() }
 
     return Singles
         .zip(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
-        .subscribeOn(scheduler)
+        .subscribeOn(schedulersProvider.io())
   }
 
-  private fun initializeDatabase(
-      userDao: User.RoomDao,
-      scheduler: Scheduler
-  ): ObservableTransformer<InitializeDatabase, SetupActivityEvent> {
+  private fun initializeDatabase(): ObservableTransformer<InitializeDatabase, SetupActivityEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
-          .flatMapSingle { userDao.userCount().subscribeOn(scheduler) }
+          .flatMapSingle { userDao.userCount().subscribeOn(schedulersProvider.io()) }
           .map { DatabaseInitialized }
     }
   }
 
-  private fun setFallbackCountryAsSelected(
-      appConfigRepository: AppConfigRepository,
-      fallbackCountry: Country,
-      schedulersProvider: SchedulersProvider
-  ): ObservableTransformer<SetFallbackCountryAsCurrentCountry, SetupActivityEvent> {
+  private fun setFallbackCountryAsSelected(): ObservableTransformer<SetFallbackCountryAsCurrentCountry, SetupActivityEvent> {
     return ObservableTransformer { effectStream ->
       effectStream.flatMapSingle {
         appConfigRepository

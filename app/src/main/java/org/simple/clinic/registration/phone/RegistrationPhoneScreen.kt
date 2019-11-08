@@ -12,9 +12,10 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_phone.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.login.pin.LoginPinScreenKey
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.name.RegistrationNameScreenKey
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.router.screen.ScreenRouter
@@ -34,6 +35,9 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  @Inject
+  lateinit var country: Country
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -69,6 +73,7 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
           .map { RegistrationPhoneDoneClicked() }
 
   fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
+    isdCodeEditText.setText(resources.getString(R.string.registrationphone_country_code, country.isdCode))
     phoneNumberEditText.setTextAndCursor(ongoingEntry.phoneNumber)
   }
 

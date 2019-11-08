@@ -5,7 +5,9 @@ import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.doThrow
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -31,6 +33,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
@@ -60,6 +63,7 @@ import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.assertLatestValue
@@ -107,6 +111,7 @@ class UserSessionTest {
   private val fileStorage = mock<FileStorage>()
   private val reportPendingRecords = mock<ReportPendingRecordsToAnalytics>()
   private val onboardingCompletePreference = mock<Preference<Boolean>>()
+  private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
 
   private val userSession = UserSession(
@@ -123,6 +128,7 @@ class UserSessionTest {
       fileStorage = fileStorage,
       reportPendingRecords = reportPendingRecords,
       schedulersProvider = TrampolineSchedulersProvider(),
+      selectedCountryPreference = selectedCountryPreference,
       accessTokenPreference = accessTokenPref,
       patientSyncPullToken = patientPullToken,
       prescriptionSyncPullToken = prescriptionPullToken,
@@ -735,6 +741,9 @@ class UserSessionTest {
     val preferencesEditor = mock<SharedPreferences.Editor>()
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+    whenever(preferencesEditor.putString(eq("key"), any())) doReturn preferencesEditor
+    whenever(selectedCountryPreference.key()) doReturn "key"
+    whenever(sharedPrefs.getString(eq("key"), any())) doReturn ""
     var pendingRecordsReported = false
     whenever(reportPendingRecords.report()).thenReturn(Completable.complete().doOnSubscribe { pendingRecordsReported = true })
 
@@ -763,6 +772,9 @@ class UserSessionTest {
     val preferencesEditor = mock<SharedPreferences.Editor>()
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+    whenever(preferencesEditor.putString(eq("key"), any())) doReturn preferencesEditor
+    whenever(selectedCountryPreference.key()) doReturn "key"
+    whenever(sharedPrefs.getString(eq("key"), any())) doReturn ""
 
     val result = userSession.logout().blockingGet()
 
@@ -777,6 +789,9 @@ class UserSessionTest {
     val preferencesEditor = mock<SharedPreferences.Editor>()
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+    whenever(preferencesEditor.putString(eq("key"), any())) doReturn preferencesEditor
+    whenever(selectedCountryPreference.key()) doReturn "key"
+    whenever(sharedPrefs.getString(eq("key"), any())) doReturn ""
 
     val result = userSession.logout().blockingGet()
 
@@ -797,6 +812,9 @@ class UserSessionTest {
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(preferencesEditor.apply()).thenThrow(cause)
     whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+    whenever(preferencesEditor.putString(eq("key"), any())) doReturn preferencesEditor
+    whenever(selectedCountryPreference.key()) doReturn "key"
+    whenever(sharedPrefs.getString(eq("key"), any())) doReturn ""
 
     val result = userSession.logout().blockingGet()
 
@@ -836,6 +854,9 @@ class UserSessionTest {
     val preferencesEditor = mock<SharedPreferences.Editor>()
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+    whenever(preferencesEditor.putString(eq("key"), any())) doReturn preferencesEditor
+    whenever(selectedCountryPreference.key()) doReturn "key"
+    whenever(sharedPrefs.getString(eq("key"), any())) doReturn ""
 
     val result = userSession.logout().blockingGet()
 

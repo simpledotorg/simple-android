@@ -28,7 +28,7 @@
     android:gravity="center"
     android:maxLines="1"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
-    tools:text="+91 9876543210" />
+    tools:text="9876543210" />
 
   <LinearLayout
     android:layout_width="match_parent"

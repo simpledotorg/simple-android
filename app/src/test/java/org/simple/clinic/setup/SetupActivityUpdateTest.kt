@@ -60,8 +60,31 @@ class SetupActivityUpdateTest {
   }
 
   @Test
-  fun `if the user has logged in, go to home screen`() {
+  fun `if the user has logged in and a country is selected, go to home screen`() {
+    // given
     val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
+    val country = PatientMocker.country()
+
+    //then
+    val expectedModel = defaultModel
+        .withLoggedInUser(user.toOptional())
+        .withSelectedCountry(country.toOptional())
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = user.toOptional(), userSelectedCountry = country.toOptional()))
+        .then(assertThatNext(
+            hasModel(expectedModel),
+            hasEffects(GoToMainActivity as SetupActivityEffect)
+        ))
+  }
+
+  @Test
+  fun `if the user has logged in and a country is not selected, set the fallback country as the selected country`() {
+    // given
+    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
+
+    // then
     val expectedModel = defaultModel
         .withLoggedInUser(user.toOptional())
         .withSelectedCountry(None)
@@ -71,6 +94,24 @@ class SetupActivityUpdateTest {
         .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = user.toOptional(), userSelectedCountry = None))
         .then(assertThatNext(
             hasModel(expectedModel),
+            hasEffects(SetFallbackCountryAsCurrentCountry as SetupActivityEffect)
+        ))
+  }
+
+  @Test
+  fun `when the fallback country is set as the selected country, go to home screen`() {
+    // given
+    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
+    val model = defaultModel
+        .withLoggedInUser(user.toOptional())
+        .withSelectedCountry(None)
+
+    // then
+    updateSpec
+        .given(model)
+        .whenEvent(FallbackCountrySetAsSelected)
+        .then(assertThatNext(
+            hasNoModel(),
             hasEffects(GoToMainActivity as SetupActivityEffect)
         ))
   }

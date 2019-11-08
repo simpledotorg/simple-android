@@ -3,6 +3,7 @@ package org.simple.clinic.setup
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.user.User
@@ -17,22 +18,28 @@ class SetupActivityUpdate : Update<SetupActivityModel, SetupActivityEvent, Setup
       is UserDetailsFetched -> {
         val updatedModel = model
             .withLoggedInUser(event.loggedInUser)
-            .withSelectedCountry(None)
-        val effect = initialScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding)
+            .withSelectedCountry(event.userSelectedCountry)
+        val effect = initialScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding, event.userSelectedCountry)
 
         next(updatedModel, effect)
       }
       is DatabaseInitialized -> dispatch(FetchUserDetails)
+      is FallbackCountrySetAsSelected -> dispatch(GoToMainActivity)
       else -> noChange()
     }
   }
 
   private fun initialScreenEffect(
       loggedInUser: Optional<User>,
-      hasUserCompletedOnboarding: Boolean
+      hasUserCompletedOnboarding: Boolean,
+      selectedCountry: Optional<Country>
   ): SetupActivityEffect {
+    val hasUserLoggedInCompletely = loggedInUser is Just && selectedCountry is Just
+    val userPresentButCountryNotSelected = loggedInUser is Just && selectedCountry is None
+
     return when {
-      loggedInUser is Just -> GoToMainActivity
+      hasUserLoggedInCompletely -> GoToMainActivity
+      userPresentButCountryNotSelected -> SetFallbackCountryAsCurrentCountry
       hasUserCompletedOnboarding.not() -> ShowOnboardingScreen
       else -> ShowCountrySelectionScreen
     }

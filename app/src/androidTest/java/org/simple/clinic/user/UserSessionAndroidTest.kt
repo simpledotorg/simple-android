@@ -1,6 +1,7 @@
 package org.simple.clinic.user
 
 import androidx.test.runner.AndroidJUnit4
+import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -8,13 +9,16 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import javax.inject.Inject
@@ -33,6 +37,9 @@ class UserSessionAndroidTest {
 
   @Inject
   lateinit var facilityRepository: FacilityRepository
+
+  @Inject
+  lateinit var selectedCountryPreference: Preference<Optional<Country>>
 
   @get:Rule
   val ruleChain = RuleChain
@@ -97,5 +104,15 @@ class UserSessionAndroidTest {
     userSession.unauthorize().blockingAwait()
 
     assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(UNAUTHORIZED)
+  }
+
+  @Test
+  fun when_user_is_logged_out_then_the_selected_country_preference_must_not_be_removed() {
+    val country = testData.country()
+    selectedCountryPreference.set(country.toOptional())
+
+    userSession.logout().blockingGet()
+
+    assertThat(selectedCountryPreference.get()).isEqualTo(Just(country))
   }
 }

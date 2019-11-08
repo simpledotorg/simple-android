@@ -324,7 +324,7 @@
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">Check SMS sent to</string>
-  <string name="enterotp_phonenumber" translatable="false">%1$s %2$s</string>
+  <string name="enterotp_phonenumber" translatable="false">+%1$s %2$s</string>
   <string name="enterotp_enter_verification_code">Enter verification code</string>
   <string name="enterotp_incorrect_code">Incorrect code, please try again</string>
   <string name="enterotp_resend_sms">Resend SMS</string>

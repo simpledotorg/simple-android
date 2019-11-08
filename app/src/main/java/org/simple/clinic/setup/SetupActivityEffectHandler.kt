@@ -20,6 +20,7 @@ object SetupActivityEffectHandler {
       uiActions: UiActions,
       userDao: User.RoomDao,
       appConfigRepository: AppConfigRepository,
+      fallbackCountry: Country,
       schedulersProvider: SchedulersProvider
   ): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
     return RxMobius
@@ -40,6 +41,7 @@ object SetupActivityEffectHandler {
         // effect so that the intention is clear.
         .addTransformer(InitializeDatabase::class.java, initializeDatabase(userDao, schedulersProvider.io()))
         .addAction(ShowCountrySelectionScreen::class.java, uiActions::showCountrySelectionScreen, schedulersProvider.ui())
+        .addTransformer(SetFallbackCountryAsCurrentCountry::class.java, setFallbackCountryAsSelected(appConfigRepository, fallbackCountry, schedulersProvider))
         .build()
   }
 
@@ -81,6 +83,21 @@ object SetupActivityEffectHandler {
       effectStream
           .flatMapSingle { userDao.userCount().subscribeOn(scheduler) }
           .map { DatabaseInitialized }
+    }
+  }
+
+  private fun setFallbackCountryAsSelected(
+      appConfigRepository: AppConfigRepository,
+      fallbackCountry: Country,
+      schedulersProvider: SchedulersProvider
+  ): ObservableTransformer<SetFallbackCountryAsCurrentCountry, SetupActivityEvent> {
+    return ObservableTransformer { effectStream ->
+      effectStream.flatMapSingle {
+        appConfigRepository
+            .saveCurrentCountry(fallbackCountry)
+            .subscribeOn(schedulersProvider.io())
+            .toSingleDefault(FallbackCountrySetAsSelected)
+      }
     }
   }
 }

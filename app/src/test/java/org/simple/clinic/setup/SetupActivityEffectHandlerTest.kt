@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
@@ -26,12 +27,14 @@ class SetupActivityEffectHandlerTest {
   private val uiActions = mock<UiActions>()
   private val userDao = mock<User.RoomDao>()
   private val appConfigRepository = mock<AppConfigRepository>()
+  private val fallbackCountry = PatientMocker.country()
 
   private val effectHandler = SetupActivityEffectHandler.create(
       onboardingCompletePreference,
       uiActions,
       userDao,
       appConfigRepository,
+      fallbackCountry,
       TrampolineSchedulersProvider())
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -132,6 +135,19 @@ class SetupActivityEffectHandlerTest {
     // then
     val expected = UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None, userSelectedCountry = country.toOptional())
     testCase.assertOutgoingEvents(expected)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `the fallback country must be set as the selected country when the set fallback country as selected effect is received`() {
+    // given
+    whenever(appConfigRepository.saveCurrentCountry(fallbackCountry)) doReturn Completable.complete()
+
+    // when
+    testCase.dispatch(SetFallbackCountryAsCurrentCountry)
+
+    // then
+    testCase.assertOutgoingEvents(FallbackCountrySetAsSelected)
     verifyZeroInteractions(uiActions)
   }
 }

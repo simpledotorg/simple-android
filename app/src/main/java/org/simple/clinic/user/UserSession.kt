@@ -12,6 +12,7 @@ import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
@@ -70,6 +71,7 @@ class UserSession @Inject constructor(
     private val fileStorage: FileStorage,
     private val reportPendingRecords: ReportPendingRecordsToAnalytics,
     private val schedulersProvider: SchedulersProvider,
+    private val selectedCountryPreference: Preference<Optional<Country>>,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
     @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<String>>,
     @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<String>>,
@@ -363,6 +365,9 @@ class UserSession @Inject constructor(
 
   private fun clearSharedPreferences(): Completable {
     return Completable.fromAction {
+      // Retain the saved country when clearing the shared preferences
+      val savedCountryData = sharedPreferences.getString(selectedCountryPreference.key(), "")
+
       sharedPreferences.edit().clear().apply()
       // When we clear all shared preferences, we also end up clearing the flag that states whether
       // the user has completed the onboarding flow or not. This means that if the user opens the
@@ -370,6 +375,7 @@ class UserSession @Inject constructor(
       // screen instead of the Registration phone screen. This is a workaround that sets the flag
       // again after clearing the shared preferences to fix this.
       onboardingComplete.set(true)
+      sharedPreferences.edit().putString(selectedCountryPreference.key(), savedCountryData).apply()
     }
   }
 

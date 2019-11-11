@@ -14,14 +14,9 @@ import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.protocol.SyncProtocolsOnLogin
-import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.IDataSyncOnApproval
-import org.simple.clinic.sync.SyncScheduler
-import org.simple.clinic.sync.indicator.SyncIndicatorStatusCalculator
+import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.util.AppArchTaskExecutorDelegate
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,31 +30,16 @@ abstract class ClinicApp : Application() {
   lateinit var updateAnalyticsUserId: UpdateAnalyticsUserId
 
   @Inject
-  lateinit var syncProtocolsOnLogin: SyncProtocolsOnLogin
-
-  @Inject
   lateinit var crashReporter: CrashReporter
 
   @Inject
   lateinit var unauthorizeUser: UnauthorizeUser
 
   @Inject
-  lateinit var dataSyncOnApproval: IDataSyncOnApproval
-
-  @Inject
   lateinit var closeActivitiesWhenUserIsUnauthorized: CloseActivitiesWhenUserIsUnauthorized
 
   @Inject
-  lateinit var syncScheduler: SyncScheduler
-
-  @Inject
-  lateinit var syncIndicatorStatusCalculator: SyncIndicatorStatusCalculator
-
-  @Inject
-  lateinit var dataSync: DataSync
-
-  @Inject
-  lateinit var schedulersProvider: SchedulersProvider
+  lateinit var syncSetup: SyncSetup
 
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
@@ -92,8 +72,6 @@ abstract class ClinicApp : Application() {
     }
 
     updateAnalyticsUserId.listen()
-    syncProtocolsOnLogin.listen()
-    dataSyncOnApproval.sync()
     unauthorizeUser.listen(Schedulers.io())
 
     registerActivityLifecycleCallbacks(closeActivitiesWhenUserIsUnauthorized)
@@ -103,8 +81,6 @@ abstract class ClinicApp : Application() {
   abstract fun buildDaggerGraph(): AppComponent
 
   protected fun setupSync() {
-    syncScheduler.schedule().subscribe()
-    syncIndicatorStatusCalculator.updateSyncResults()
-    dataSync.syncTheWorld().subscribeOn(schedulersProvider.io()).subscribe()
+    syncSetup.run()
   }
 }

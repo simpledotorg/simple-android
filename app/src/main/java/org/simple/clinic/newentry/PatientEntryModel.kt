@@ -19,7 +19,7 @@ data class PatientEntryModel(
   fun patientEntryFetched(patientEntry: OngoingNewPatientEntry): PatientEntryModel =
       copy(patientEntry = patientEntry)
 
-  fun withGender(gender: Optional<Gender>): PatientEntryModel {
+  fun genderChanged(gender: Optional<Gender>): PatientEntryModel {
     val patientEntryWithUpdatedGender = patientEntry.withGender(gender)
     return if (gender.isNotEmpty()) {
       copy(patientEntry = patientEntryWithUpdatedGender, isSelectingGenderForTheFirstTime = false)
@@ -28,25 +28,25 @@ data class PatientEntryModel(
     }
   }
 
-  fun withAge(age: String): PatientEntryModel =
+  fun ageChanged(age: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withAge(age))
 
-  fun withDateOfBirth(dateOfBirth: String): PatientEntryModel =
+  fun dateOfBirthChanged(dateOfBirth: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withDateOfBirth(dateOfBirth))
 
-  fun withFullName(fullName: String): PatientEntryModel =
+  fun fullNameChanged(fullName: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withFullName(fullName))
 
-  fun withPhoneNumber(phoneNumber: String): PatientEntryModel =
+  fun phoneNumberChanged(phoneNumber: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withPhoneNumber(phoneNumber))
 
-  fun withColonyOrVillage(colonyOrVillage: String): PatientEntryModel =
+  fun colonyOrVillageChanged(colonyOrVillage: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withColonyOrVillage(colonyOrVillage))
 
-  fun withDistrict(district: String): PatientEntryModel =
+  fun districtChanged(district: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withDistrict(district))
 
-  fun withState(state: String): PatientEntryModel =
+  fun stateChanged(state: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withState(state))
 
   fun reminderConsentChanged(consent: ReminderConsent): PatientEntryModel =

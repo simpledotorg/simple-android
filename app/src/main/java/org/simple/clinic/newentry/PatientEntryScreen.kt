@@ -249,7 +249,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
           .map { checked -> if (checked) Granted else Denied }
           .map(::ReminderConsentChanged)
 
-  override fun preFillFields(entry: OngoingNewPatientEntry) {
+  override fun prefillFields(entry: OngoingNewPatientEntry) {
     fullNameEditText.setTextAndCursor(entry.personalDetails?.fullName)
     phoneNumberEditText.setTextAndCursor(entry.phoneNumber?.number)
     dateOfBirthEditText.setTextAndCursor(entry.personalDetails?.dateOfBirth)

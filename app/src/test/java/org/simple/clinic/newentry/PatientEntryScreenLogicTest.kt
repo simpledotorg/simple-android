@@ -108,7 +108,7 @@ class PatientEntryScreenLogicTest {
 
     screenCreated()
 
-    verify(ui).preFillFields(OngoingNewPatientEntry(
+    verify(ui).prefillFields(OngoingNewPatientEntry(
         address = Address(
             colonyOrVillage = "",
             district = "district",
@@ -126,7 +126,7 @@ class PatientEntryScreenLogicTest {
 
     screenCreated()
 
-    verify(ui).preFillFields(OngoingNewPatientEntry(address = address))
+    verify(ui).prefillFields(OngoingNewPatientEntry(address = address))
   }
 
   @Test

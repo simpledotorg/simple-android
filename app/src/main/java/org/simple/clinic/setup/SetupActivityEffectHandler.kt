@@ -3,6 +3,7 @@ package org.simple.clinic.setup
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
+import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import org.simple.clinic.appconfig.AppConfigRepository
@@ -44,7 +45,7 @@ class SetupActivityEffectHandler(
   private fun build(): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
     return RxMobius
         .subtypeEffectHandler<SetupActivityEffect, SetupActivityEvent>()
-        .addTransformer(FetchUserDetails::class.java, fetchUserDetails())
+        .addTransformer(FetchUserDetails::class.java, fetchUserDetails(schedulersProvider.io()))
         .addAction(GoToMainActivity::class.java, uiActions::goToMainActivity, schedulersProvider.ui())
         .addAction(ShowOnboardingScreen::class.java, uiActions::showOnboardingScreen, schedulersProvider.ui())
         // We could technically also implicitly wait on the database to
@@ -58,46 +59,46 @@ class SetupActivityEffectHandler(
 
         // In this case, it might be better to have this as an explicit
         // effect so that the intention is clear.
-        .addTransformer(InitializeDatabase::class.java, initializeDatabase())
+        .addTransformer(InitializeDatabase::class.java, initializeDatabase(schedulersProvider.io()))
         .addAction(ShowCountrySelectionScreen::class.java, uiActions::showCountrySelectionScreen, schedulersProvider.ui())
-        .addTransformer(SetFallbackCountryAsCurrentCountry::class.java, setFallbackCountryAsSelected())
+        .addTransformer(SetFallbackCountryAsCurrentCountry::class.java, setFallbackCountryAsSelected(schedulersProvider.io()))
         .build()
   }
 
-  private fun fetchUserDetails(): ObservableTransformer<FetchUserDetails, SetupActivityEvent> {
+  private fun fetchUserDetails(scheduler: Scheduler): ObservableTransformer<FetchUserDetails, SetupActivityEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
-          .flatMapSingle { readUserDetailsFromStorage() }
+          .flatMapSingle { readUserDetailsFromStorage(scheduler) }
           .map { (hasUserCompletedOnboarding, loggedInUser, userSelectedCountry) ->
             UserDetailsFetched(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
           }
     }
   }
 
-  private fun readUserDetailsFromStorage(): Single<Triple<Boolean, Optional<User>, Optional<Country>>> {
+  private fun readUserDetailsFromStorage(scheduler: Scheduler): Single<Triple<Boolean, Optional<User>, Optional<Country>>> {
     val hasUserCompletedOnboarding = Single.fromCallable { onboardingCompletePreference.get() }
     val loggedInUser = Single.fromCallable { userDao.userImmediate().toOptional() }
     val userSelectedCountry = Single.fromCallable { appConfigRepository.currentCountry() }
 
     return Singles
         .zip(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
-        .subscribeOn(schedulersProvider.io())
+        .subscribeOn(scheduler)
   }
 
-  private fun initializeDatabase(): ObservableTransformer<InitializeDatabase, SetupActivityEvent> {
+  private fun initializeDatabase(scheduler: Scheduler): ObservableTransformer<InitializeDatabase, SetupActivityEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
-          .flatMapSingle { userDao.userCount().subscribeOn(schedulersProvider.io()) }
+          .flatMapSingle { userDao.userCount().subscribeOn(scheduler) }
           .map { DatabaseInitialized }
     }
   }
 
-  private fun setFallbackCountryAsSelected(): ObservableTransformer<SetFallbackCountryAsCurrentCountry, SetupActivityEvent> {
+  private fun setFallbackCountryAsSelected(scheduler: Scheduler): ObservableTransformer<SetFallbackCountryAsCurrentCountry, SetupActivityEvent> {
     return ObservableTransformer { effectStream ->
       effectStream.flatMapSingle {
         appConfigRepository
             .saveCurrentCountry(fallbackCountry)
-            .subscribeOn(schedulersProvider.io())
+            .subscribeOn(scheduler)
             .toSingleDefault(FallbackCountrySetAsSelected)
       }
     }

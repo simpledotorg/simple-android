@@ -8,6 +8,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.newentry.Field.Age
 import org.simple.clinic.newentry.Field.ColonyOrVillage
 import org.simple.clinic.newentry.Field.DateOfBirth
 import org.simple.clinic.newentry.Field.District
@@ -74,7 +75,6 @@ class PatientEntryEffectHandler(
         .addConsumer(PrefillFields::class.java, { ui.preFillFields(it.patientEntry) }, schedulersProvider.ui())
         .addAction(ScrollFormOnGenderSelection::class.java, ui::scrollFormOnGenderSelection, schedulersProvider.ui())
         .addConsumer(HideValidationError::class.java, { hideValidationError(it.field) }, schedulersProvider.ui())
-        .addAction(HideEmptyDateOfBirthAndAgeError::class.java, { ui.showEmptyDateOfBirthAndAgeError(false) }, schedulersProvider.ui())
         .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
           showDatePatternInLabelValueChangedCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
         }, schedulersProvider.ui())
@@ -106,7 +106,7 @@ class PatientEntryEffectHandler(
     when (field) {
       FullName -> ui.showEmptyFullNameError(false)
       PhoneNumber -> hidePhoneLengthErrors()
-      DateOfBirth -> hideDateOfBirthErrors()
+      Age, DateOfBirth -> hideDateOfBirthErrors()
       Gender -> ui.showMissingGenderError(false)
       ColonyOrVillage -> ui.showEmptyColonyOrVillageError(false)
       District -> ui.showEmptyDistrictError(false)

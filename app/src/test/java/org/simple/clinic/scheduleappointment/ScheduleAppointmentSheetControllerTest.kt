@@ -79,9 +79,14 @@ class ScheduleAppointmentSheetControllerTest {
     val defaultTimeToAppointment = Months(1)
     val periodsToScheduleAppointmentsIn = listOf(defaultTimeToAppointment)
 
+    val protocol = PatientMocker.protocol(protocolUuid, 31)
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn),
-        protocol = PatientMocker.protocol(protocolUuid, 31)
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol),
+        config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn)
     )
 
     uiEvents.onNext(AppointmentDone)
@@ -102,7 +107,13 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(isPatientDefaulter))
     whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
-    sheetCreated()
+    sheetCreated(
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol)
+    )
     uiEvents.onNext(SchedulingSkipped)
 
     if (shouldAutomaticAppointmentBeScheduled) {
@@ -127,9 +138,14 @@ class ScheduleAppointmentSheetControllerTest {
         Days(3)
     )
 
+    val protocol = PatientMocker.protocol(protocolUuid, 2)
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
-        protocol = PatientMocker.protocol(protocolUuid, 2)
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
@@ -149,9 +165,14 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
+    val protocol = PatientMocker.protocol(protocolUuid, 2)
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
-        protocol = PatientMocker.protocol(protocolUuid, 2)
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
     // then
@@ -177,9 +198,14 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
+    val protocol = PatientMocker.protocol(protocolUuid, 2)
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
-        protocol = PatientMocker.protocol(protocolUuid, 2)
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
     //then
@@ -205,9 +231,14 @@ class ScheduleAppointmentSheetControllerTest {
         Days(4)
     )
 
+    val protocol = PatientMocker.protocol(protocolUuid, 2)
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
-        protocol = PatientMocker.protocol(protocolUuid, 2)
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
@@ -241,9 +272,14 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
+    val protocol = PatientMocker.protocol(protocolUuid, 2)
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
-        protocol = PatientMocker.protocol(protocolUuid, 2)
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
     // then
@@ -284,9 +320,14 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
+    val protocol = PatientMocker.protocol(protocolUuid, 1)
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
-        protocol = PatientMocker.protocol(protocolUuid, 1)
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
     // then
@@ -328,9 +369,14 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
+    val protocol = PatientMocker.protocol(protocolUuid, 1)
     sheetCreated(
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn),
-        protocol = PatientMocker.protocol(protocolUuid, 1)
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
     // then
@@ -372,7 +418,14 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
-    sheetCreated(config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn))
+    sheetCreated(
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
+    )
 
     // then
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-02")))
@@ -425,7 +478,8 @@ class ScheduleAppointmentSheetControllerTest {
       patientUuid: UUID = this.patientUuid,
       user: User = this.user,
       facility: Facility = this.facility,
-      protocol: Protocol = this.protocol,
+      protocolUuid: UUID = this.protocol.uuid,
+      protocol: Observable<Protocol> = Observable.just(this.protocol),
       config: AppointmentConfig = this.appointmentConfig
   ) {
     controller = ScheduleAppointmentSheetController(
@@ -440,7 +494,8 @@ class ScheduleAppointmentSheetControllerTest {
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
-    whenever(protocolRepository.protocol(protocol.uuid)).thenReturn(Observable.just(protocol))
+
+    whenever(protocolRepository.protocol(protocolUuid)).thenReturn(protocol)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
 

@@ -5,6 +5,7 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.newentry.Field.Age
 import org.simple.clinic.newentry.Field.ColonyOrVillage
 import org.simple.clinic.newentry.Field.DateOfBirth
 import org.simple.clinic.newentry.Field.District
@@ -27,7 +28,7 @@ class PatientEntryUpdate(
     return when (event) {
       is FullNameChanged -> onFieldChanged(model.fullNameChanged(event.fullName), FullName)
       is PhoneNumberChanged -> onFieldChanged(model.phoneNumberChanged(event.phoneNumber), PhoneNumber)
-      is AgeChanged -> next(model.ageChanged(event.age), HideEmptyDateOfBirthAndAgeError)
+      is AgeChanged -> onFieldChanged(model.ageChanged(event.age), Age)
       is DateOfBirthChanged -> onFieldChanged(model.dateOfBirthChanged(event.dateOfBirth), DateOfBirth)
       is ColonyOrVillageChanged -> onFieldChanged(model.colonyOrVillageChanged(event.colonyOrVillage), ColonyOrVillage)
       is DistrictChanged -> onFieldChanged(model.districtChanged(event.district), District)

@@ -13,8 +13,6 @@ data class PrefillFields(
 
 object ScrollFormOnGenderSelection : PatientEntryEffect()
 
-object HideEmptyDateOfBirthAndAgeError : PatientEntryEffect()
-
 data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryEffect()
 
 data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
@@ -26,5 +24,5 @@ object OpenMedicalHistoryEntryScreen : PatientEntryEffect()
 data class HideValidationError(val field: Field) : PatientEntryEffect()
 
 enum class Field {
-  FullName, PhoneNumber, DateOfBirth, Gender, ColonyOrVillage, District, State
+  FullName, PhoneNumber, Age, DateOfBirth, Gender, ColonyOrVillage, District, State
 }

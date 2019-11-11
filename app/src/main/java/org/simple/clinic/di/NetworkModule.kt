@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
+import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.illustration.DayOfMonth
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
@@ -109,12 +110,19 @@ class NetworkModule {
   @Provides
   @AppScope
   @Named("for_country")
-  fun retrofit(commonRetrofitBuilder: Retrofit.Builder): Retrofit {
-    val baseUrl = BuildConfig.API_ENDPOINT
-    val currentApiVersion = "v3"
+  fun retrofit(
+      commonRetrofitBuilder: Retrofit.Builder,
+      // TODO(vs): 2019-11-11 Replace this with the actual country injection once #939 gets merged
+      appConfigRepository: AppConfigRepository
+  ): Retrofit {
+    val selectedCountry = appConfigRepository.currentCountry().toNullable()
+
+    requireNotNull(selectedCountry) { "Cannot create the Retrofit instance without a saved country!" }
+
+    val apiEndpoint = selectedCountry.endpoint.resolve("v3/")
 
     return commonRetrofitBuilder
-        .baseUrl("$baseUrl$currentApiVersion/")
+        .baseUrl(apiEndpoint.toString())
         .build()
   }
 

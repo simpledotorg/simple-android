@@ -1,5 +1,6 @@
 package org.simple.clinic.rules
 
+import android.content.SharedPreferences
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -25,6 +26,9 @@ class LocalAuthenticationRule : TestRule {
   @Inject
   lateinit var appDatabase: AppDatabase
 
+  @Inject
+  lateinit var sharedPreferences: SharedPreferences
+
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
@@ -36,6 +40,7 @@ class LocalAuthenticationRule : TestRule {
 
         } finally {
           appDatabase.clearAllTables()
+          sharedPreferences.edit().clear().commit()
         }
       }
     }

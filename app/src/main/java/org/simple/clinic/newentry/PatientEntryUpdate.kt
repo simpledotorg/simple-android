@@ -25,21 +25,24 @@ class PatientEntryUpdate(
 ) : Update<PatientEntryModel, PatientEntryEvent, PatientEntryEffect> {
   override fun update(model: PatientEntryModel, event: PatientEntryEvent): PatientEntryNext {
     return when (event) {
-      is OngoingEntryFetched -> onOngoingEntryFetched(model, event.patientEntry)
-      is GenderChanged -> onGenderChanged(model, event.gender)
+      is FullNameChanged -> onFieldChanged(model.fullNameChanged(event.fullName), FullName)
+      is PhoneNumberChanged -> onFieldChanged(model.phoneNumberChanged(event.phoneNumber), PhoneNumber)
       is AgeChanged -> next(model.ageChanged(event.age), HideEmptyDateOfBirthAndAgeError)
-      is DateOfBirthChanged -> next(model.dateOfBirthChanged(event.dateOfBirth), HideValidationError(DateOfBirth))
-      is FullNameChanged -> next(model.fullNameChanged(event.fullName), HideValidationError(FullName))
-      is PhoneNumberChanged -> next(model.phoneNumberChanged(event.phoneNumber), HideValidationError(PhoneNumber))
-      is ColonyOrVillageChanged -> next(model.colonyOrVillageChanged(event.colonyOrVillage), HideValidationError(ColonyOrVillage))
-      is DistrictChanged -> next(model.districtChanged(event.district), HideValidationError(District))
-      is StateChanged -> next(model.stateChanged(event.state), HideValidationError(State))
+      is DateOfBirthChanged -> onFieldChanged(model.dateOfBirthChanged(event.dateOfBirth), DateOfBirth)
+      is ColonyOrVillageChanged -> onFieldChanged(model.colonyOrVillageChanged(event.colonyOrVillage), ColonyOrVillage)
+      is DistrictChanged -> onFieldChanged(model.districtChanged(event.district), District)
+      is StateChanged -> onFieldChanged(model.stateChanged(event.state), State)
+      is GenderChanged -> onGenderChanged(model, event.gender)
+      is OngoingEntryFetched -> onOngoingEntryFetched(model, event.patientEntry)
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
-      is SaveClicked -> onSaveClicked(model.patientEntry)
       is ReminderConsentChanged -> next(model.reminderConsentChanged(event.reminderConsent))
-      PatientEntrySaved -> dispatch(OpenMedicalHistoryEntryScreen)
+      is SaveClicked -> onSaveClicked(model.patientEntry)
+      is PatientEntrySaved -> dispatch(OpenMedicalHistoryEntryScreen)
     }
   }
+
+  private fun onFieldChanged(updatedModel: PatientEntryModel, changedField: Field): PatientEntryNext =
+      next(updatedModel, HideValidationError(changedField))
 
   private fun onOngoingEntryFetched(
       model: PatientEntryModel,

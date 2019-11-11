@@ -6,7 +6,10 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.user.User
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.toOptional
 import java.util.UUID
@@ -24,7 +27,7 @@ class SetupActivityUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None, userSelectedCountry = None))
+        .whenEvent(onboardedUserWithoutLoggingIn())
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(ShowCountrySelectionScreen as SetupActivityEffect)
@@ -39,7 +42,7 @@ class SetupActivityUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None, userSelectedCountry = None))
+        .whenEvent(completelyNewUser())
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(ShowOnboardingScreen as SetupActivityEffect)
@@ -72,7 +75,7 @@ class SetupActivityUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = user.toOptional(), userSelectedCountry = country.toOptional()))
+        .whenEvent(loggedInUser(user, country))
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(GoToMainActivity as SetupActivityEffect)
@@ -80,7 +83,7 @@ class SetupActivityUpdateTest {
   }
 
   @Test
-  fun `if the user has logged in and a country is not selected, set the fallback country as the selected country`() {
+  fun `if a logged in user has updated the app without selecting a country, set the fallback country as the selected country`() {
     // given
     val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
 
@@ -91,7 +94,7 @@ class SetupActivityUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = user.toOptional(), userSelectedCountry = None))
+        .whenEvent(previouslyLoggedInUser(user))
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(SetFallbackCountryAsCurrentCountry as SetupActivityEffect)
@@ -114,5 +117,21 @@ class SetupActivityUpdateTest {
             hasNoModel(),
             hasEffects(GoToMainActivity as SetupActivityEffect)
         ))
+  }
+
+  private fun previouslyLoggedInUser(user: User): UserDetailsFetched {
+    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = None)
+  }
+
+  private fun onboardedUserWithoutLoggingIn(): UserDetailsFetched {
+    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None, userSelectedCountry = None)
+  }
+
+  private fun completelyNewUser(): UserDetailsFetched {
+    return UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None, userSelectedCountry = None)
+  }
+
+  private fun loggedInUser(user: User, country: Country): UserDetailsFetched {
+    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = Just(country))
   }
 }

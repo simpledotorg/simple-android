@@ -27,13 +27,13 @@ class PatientEntryUpdate(
     return when (event) {
       is OngoingEntryFetched -> onOngoingEntryFetched(model, event.patientEntry)
       is GenderChanged -> onGenderChanged(model, event.gender)
-      is AgeChanged -> next(model.withAge(event.age), HideEmptyDateOfBirthAndAgeError)
-      is DateOfBirthChanged -> next(model.withDateOfBirth(event.dateOfBirth), HideValidationError(DateOfBirth))
-      is FullNameChanged -> next(model.withFullName(event.fullName), HideValidationError(FullName))
-      is PhoneNumberChanged -> next(model.withPhoneNumber(event.phoneNumber), HideValidationError(PhoneNumber))
-      is ColonyOrVillageChanged -> next(model.withColonyOrVillage(event.colonyOrVillage), HideValidationError(ColonyOrVillage))
-      is DistrictChanged -> next(model.withDistrict(event.district), HideValidationError(District))
-      is StateChanged -> next(model.withState(event.state), HideValidationError(State))
+      is AgeChanged -> next(model.ageChanged(event.age), HideEmptyDateOfBirthAndAgeError)
+      is DateOfBirthChanged -> next(model.dateOfBirthChanged(event.dateOfBirth), HideValidationError(DateOfBirth))
+      is FullNameChanged -> next(model.fullNameChanged(event.fullName), HideValidationError(FullName))
+      is PhoneNumberChanged -> next(model.phoneNumberChanged(event.phoneNumber), HideValidationError(PhoneNumber))
+      is ColonyOrVillageChanged -> next(model.colonyOrVillageChanged(event.colonyOrVillage), HideValidationError(ColonyOrVillage))
+      is DistrictChanged -> next(model.districtChanged(event.district), HideValidationError(District))
+      is StateChanged -> next(model.stateChanged(event.state), HideValidationError(State))
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
       is SaveClicked -> onSaveClicked(model.patientEntry)
       is ReminderConsentChanged -> next(model.reminderConsentChanged(event.reminderConsent))
@@ -48,7 +48,7 @@ class PatientEntryUpdate(
       next(model.patientEntryFetched(patientEntry), PrefillFields(patientEntry))
 
   private fun onGenderChanged(model: PatientEntryModel, gender: Optional<Gender>): PatientEntryNext {
-    val updatedModel = model.withGender(gender)
+    val updatedModel = model.genderChanged(gender)
     return if (gender.isNotEmpty() && model.isSelectingGenderForTheFirstTime) {
       next(updatedModel, HideValidationError(Field.Gender), ScrollFormOnGenderSelection)
     } else {

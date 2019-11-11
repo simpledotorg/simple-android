@@ -16,7 +16,6 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.util.UUID
@@ -44,17 +43,25 @@ class SetupActivityEffectHandlerTest {
   }
 
   @Test
-  fun `the user onboarding status must be fetched when the fetch user details effect is received`() {
+  fun `the user details must be fetched when the fetch user details effect is received`() {
     // given
     whenever(onboardingCompletePreference.get()) doReturn true
-    whenever(userDao.userImmediate()).doReturn<User?>(null)
-    whenever(appConfigRepository.currentCountry()) doReturn None
+
+    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("426d2eb9-ebf7-4a62-b157-1de221c7c3d0"))
+    whenever(userDao.userImmediate()).doReturn(user)
+
+    val country = PatientMocker.country()
+    whenever(appConfigRepository.currentCountry()) doReturn country.toOptional()
 
     // when
     testCase.dispatch(FetchUserDetails)
 
     // then
-    testCase.assertOutgoingEvents(UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None, userSelectedCountry = None))
+    testCase.assertOutgoingEvents(UserDetailsFetched(
+        hasUserCompletedOnboarding = true,
+        loggedInUser = Just(user),
+        userSelectedCountry = Just(country)
+    ))
     verifyZeroInteractions(uiActions)
   }
 
@@ -94,23 +101,6 @@ class SetupActivityEffectHandlerTest {
   }
 
   @Test
-  fun `the logged in user must be fetched when the fetch user details effect is received`() {
-    // given
-    whenever(onboardingCompletePreference.get()) doReturn false
-    whenever(appConfigRepository.currentCountry()) doReturn None
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("426d2eb9-ebf7-4a62-b157-1de221c7c3d0"))
-    whenever(userDao.userImmediate()).doReturn(user)
-
-    // when
-    testCase.dispatch(FetchUserDetails)
-
-    // then
-    val expected = UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = Just(user), userSelectedCountry = None)
-    testCase.assertOutgoingEvents(expected)
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
   fun `the country selection screen must be opened when the show country selection effect is received`() {
     // when
     testCase.dispatch(ShowCountrySelectionScreen)
@@ -119,23 +109,6 @@ class SetupActivityEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).showCountrySelectionScreen()
     verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `the user selected country must be fetched when the fetch user details effect is received`() {
-    // given
-    whenever(onboardingCompletePreference.get()) doReturn false
-    whenever(userDao.userImmediate()).doReturn<User?>(null)
-    val country = PatientMocker.country()
-    whenever(appConfigRepository.currentCountry()) doReturn country.toOptional()
-
-    // when
-    testCase.dispatch(FetchUserDetails)
-
-    // then
-    val expected = UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None, userSelectedCountry = country.toOptional())
-    testCase.assertOutgoingEvents(expected)
-    verifyZeroInteractions(uiActions)
   }
 
   @Test

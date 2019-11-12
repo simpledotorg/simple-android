@@ -76,7 +76,7 @@ import javax.inject.Named
   HttpInterceptorsModule::class,
   RetrofitModule::class
 ])
-open class AppModule(private val appContext: Application) {
+class AppModule(private val appContext: Application) {
 
   @Provides
   fun appContext(): Application {
@@ -91,15 +91,15 @@ open class AppModule(private val appContext: Application) {
 
   @Provides
   @AppScope
-  open fun utcClock() = UtcClock()
+  fun utcClock() = UtcClock()
 
   @Provides
   @AppScope
-  open fun userClock(userTimeZone: ZoneId): UserClock = RealUserClock(userTimeZone)
+  fun userClock(userTimeZone: ZoneId): UserClock = RealUserClock(userTimeZone)
 
   @Provides
   @AppScope
-  open fun elapsedRealtimeClock() = ElapsedRealtimeClock()
+  fun elapsedRealtimeClock() = ElapsedRealtimeClock()
 
   @Provides
   fun currentLocale(@Named("preference_user_selected_locale") userSelectedLocalePreference: Preference<Optional<Locale>>): Locale {

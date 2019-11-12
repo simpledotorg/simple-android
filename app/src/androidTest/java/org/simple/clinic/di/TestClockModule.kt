@@ -12,18 +12,30 @@ import org.simple.clinic.util.UtcClock
 @Module
 class TestClockModule {
 
+  @AppScope
   @Provides
-  fun testUtcClock(utcClock: UtcClock): TestUtcClock {
-    return utcClock as TestUtcClock
+  fun testUtcClock(): TestUtcClock {
+    return TestUtcClock()
+  }
+
+  @AppScope
+  @Provides
+  fun testUserClock(): TestUserClock {
+    return TestUserClock()
+  }
+
+  @AppScope
+  @Provides
+  fun testElapsedRealtimeClock(): TestElapsedRealtimeClock {
+    return TestElapsedRealtimeClock()
   }
 
   @Provides
-  fun testUserClock(userClock: UserClock): TestUserClock {
-    return userClock as TestUserClock
-  }
+  fun utcClock(testUtcClock: TestUtcClock): UtcClock = testUtcClock
 
   @Provides
-  fun testElapsedRealtimeClock(elapsedRealtimeClock: ElapsedRealtimeClock): TestElapsedRealtimeClock {
-    return elapsedRealtimeClock as TestElapsedRealtimeClock
-  }
+  fun userClock(testUserClock: TestUserClock): UserClock = testUserClock
+
+  @Provides
+  fun elapsedRealtimeClock(): ElapsedRealtimeClock = TestElapsedRealtimeClock()
 }

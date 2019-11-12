@@ -24,9 +24,6 @@ interface AppComponent {
   fun inject(target: DataSync)
   fun inject(target: BottomSheetActivity)
 
-  fun userSession(): UserSession
-  fun facilitySync(): FacilitySync
-
   fun theActivityComponentBuilder(): TheActivityComponent.Builder
   fun setupActivityComponentBuilder(): SetupActivityComponent.Builder
 }

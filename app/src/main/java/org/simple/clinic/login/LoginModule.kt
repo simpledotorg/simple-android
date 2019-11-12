@@ -1,6 +1,5 @@
 package org.simple.clinic.login
 
-import android.app.Application
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
@@ -13,12 +12,11 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
 import org.simple.clinic.util.preference.StringPreferenceConverter
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import retrofit2.Retrofit
 import javax.inject.Named
 
 @Module(includes = [AppLockConfigModule::class])
-open class LoginModule {
+class LoginModule {
 
   @Provides
   fun loginApi(@Named("for_country") retrofit: Retrofit): LoginApi {
@@ -34,11 +32,6 @@ open class LoginModule {
   @Provides
   fun passwordHasher(): PasswordHasher {
     return BCryptPasswordHasher()
-  }
-
-  @Provides
-  open fun loginSmsListener(app: Application, schedulersProvider: SchedulersProvider): LoginOtpSmsListener {
-    return LoginOtpSmsListenerImpl(app, schedulersProvider)
   }
 
   @Provides

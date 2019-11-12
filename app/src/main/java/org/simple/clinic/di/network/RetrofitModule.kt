@@ -6,14 +6,13 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.di.CountryRetrofitModule
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Named
 
-@Module(includes = [CountryRetrofitModule::class])
+@Module
 class RetrofitModule {
 
   @Provides
@@ -33,6 +32,18 @@ class RetrofitModule {
   fun configurationRetrofit(commonRetrofitBuilder: Retrofit.Builder): Retrofit {
     return commonRetrofitBuilder
         .baseUrl(BuildConfig.MANIFEST_ENDPOINT)
+        .build()
+  }
+
+  @Provides
+  @AppScope
+  @Named("for_country")
+  fun retrofit(commonRetrofitBuilder: Retrofit.Builder): Retrofit {
+    val baseUrl = BuildConfig.API_ENDPOINT
+    val currentApiVersion = "v3"
+
+    return commonRetrofitBuilder
+        .baseUrl("$baseUrl$currentApiVersion/")
         .build()
   }
 }

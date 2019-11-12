@@ -57,6 +57,7 @@ class PatientEntryScreenLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<PatientEntryUi>()
+  private val validationActions = mock<PatientEntryValidationActions>()
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
@@ -81,6 +82,7 @@ class PatientEntryScreenLogicTest {
         patientRepository,
         patientRegisteredCount,
         ui,
+        validationActions,
         TrampolineSchedulersProvider()
     )
 
@@ -280,15 +282,15 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(ui, atLeastOnce()).showEmptyFullNameError(true)
-    verify(ui, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
-    verify(ui, atLeastOnce()).showInvalidDateOfBirthError(true)
-    verify(ui, atLeastOnce()).showMissingGenderError(true)
-    verify(ui, atLeastOnce()).showEmptyColonyOrVillageError(true)
-    verify(ui, atLeastOnce()).showEmptyDistrictError(true)
-    verify(ui, atLeastOnce()).showEmptyStateError(true)
-    verify(ui, atLeastOnce()).showLengthTooShortPhoneNumberError(true)
-    verify(ui, atLeastOnce()).showLengthTooLongPhoneNumberError(true)
+    verify(validationActions, atLeastOnce()).showEmptyFullNameError(true)
+    verify(validationActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
+    verify(validationActions, atLeastOnce()).showInvalidDateOfBirthError(true)
+    verify(validationActions, atLeastOnce()).showMissingGenderError(true)
+    verify(validationActions, atLeastOnce()).showEmptyColonyOrVillageError(true)
+    verify(validationActions, atLeastOnce()).showEmptyDistrictError(true)
+    verify(validationActions, atLeastOnce()).showEmptyStateError(true)
+    verify(validationActions, atLeastOnce()).showLengthTooShortPhoneNumberError(true)
+    verify(validationActions, atLeastOnce()).showLengthTooLongPhoneNumberError(true)
   }
 
   @Test
@@ -350,14 +352,14 @@ class PatientEntryScreenLogicTest {
       onNext(ColonyOrVillageChanged(""))
     }
 
-    verify(ui).showEmptyFullNameError(false)
-    verify(ui, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
-    verify(ui, atLeastOnce()).showInvalidDateOfBirthError(false)
-    verify(ui, atLeastOnce()).showDateOfBirthIsInFutureError(false)
-    verify(ui).showMissingGenderError(false)
-    verify(ui, atLeastOnce()).showEmptyColonyOrVillageError(false)
-    verify(ui).showEmptyDistrictError(false)
-    verify(ui).showEmptyStateError(false)
+    verify(validationActions).showEmptyFullNameError(false)
+    verify(validationActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
+    verify(validationActions, atLeastOnce()).showInvalidDateOfBirthError(false)
+    verify(validationActions, atLeastOnce()).showDateOfBirthIsInFutureError(false)
+    verify(validationActions).showMissingGenderError(false)
+    verify(validationActions, atLeastOnce()).showEmptyColonyOrVillageError(false)
+    verify(validationActions).showEmptyDistrictError(false)
+    verify(validationActions).showEmptyStateError(false)
   }
 
   // TODO: Write these similarly structured regression tests in a smarter way.
@@ -497,8 +499,8 @@ class PatientEntryScreenLogicTest {
 
     // This is order dependent because finding the first field
     // with error is only possible once the errors are set.
-    val inOrder = inOrder(ui)
-    inOrder.verify(ui).showEmptyDistrictError(true)
+    val inOrder = inOrder(ui, validationActions)
+    inOrder.verify(validationActions).showEmptyDistrictError(true)
     inOrder.verify(ui).scrollToFirstFieldWithError()
   }
 

@@ -3,7 +3,7 @@ package org.simple.clinic.newentry
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 
-interface PatientEntryUi : PatientEntryValidationActions {
+interface PatientEntryUi {
   fun prefillFields(entry: OngoingNewPatientEntry)
   fun openMedicalHistoryEntryScreen()
   fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility)

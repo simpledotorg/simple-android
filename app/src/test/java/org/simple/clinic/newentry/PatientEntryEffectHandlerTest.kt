@@ -21,10 +21,10 @@ class PatientEntryEffectHandlerTest {
   @Test
   fun `it hides phone length errors when hide phone validation errors is dispatched`() {
     // given
-    val patientEntryUi = mock<PatientEntryUi>()
     val userSession = mock<UserSession>()
     val facilityRepository = mock<FacilityRepository>()
     val patientRepository = mock<PatientRepository>()
+    val validationActions = mock<PatientEntryValidationActions>()
     whenever(facilityRepository.currentFacility(any<UserSession>())).doReturn(Observable.never())
     whenever(patientRepository.ongoingEntry()).doReturn(Single.never<OngoingNewPatientEntry>())
 
@@ -33,7 +33,8 @@ class PatientEntryEffectHandlerTest {
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
         patientRegisteredCount = mock(),
-        ui = patientEntryUi,
+        ui = mock(),
+        validationActions = validationActions,
         schedulersProvider = TrampolineSchedulersProvider()
     ))
 
@@ -42,8 +43,8 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(patientEntryUi).showLengthTooShortPhoneNumberError(false)
-    verify(patientEntryUi).showLengthTooLongPhoneNumberError(false)
-    verifyNoMoreInteractions(patientEntryUi)
+    verify(validationActions).showLengthTooShortPhoneNumberError(false)
+    verify(validationActions).showLengthTooLongPhoneNumberError(false)
+    verifyNoMoreInteractions(validationActions)
   }
 }

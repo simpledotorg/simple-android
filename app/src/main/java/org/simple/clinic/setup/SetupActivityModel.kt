@@ -24,10 +24,10 @@ data class SetupActivityModel(
   }
 
   fun withLoggedInUser(user: Optional<User>): SetupActivityModel {
-    return copy(isUserLoggedIn = user is Just)
+    return copy(isUserLoggedIn = user.isNotEmpty())
   }
 
   fun withSelectedCountry(country: Optional<Country>): SetupActivityModel {
-    return copy(hasUserSelectedACountry = country is Just)
+    return copy(hasUserSelectedACountry = country.isNotEmpty())
   }
 }

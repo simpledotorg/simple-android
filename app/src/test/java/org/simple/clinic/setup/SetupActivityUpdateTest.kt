@@ -11,7 +11,6 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.simple.clinic.util.toOptional
 import java.util.UUID
 
 class SetupActivityUpdateTest {
@@ -21,13 +20,11 @@ class SetupActivityUpdateTest {
 
   @Test
   fun `if the user has not logged in, the country selection screen must be shown`() {
-    val expectedModel = defaultModel
-        .withLoggedInUser(None)
-        .withSelectedCountry(None)
+    val expectedModel = defaultModel.completelyNewUser()
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(onboardedUserWithoutLoggingIn())
+        .whenEvent(onboardedUserWithoutLoggingInFetched())
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(ShowCountrySelectionScreen as SetupActivityEffect)
@@ -36,13 +33,11 @@ class SetupActivityUpdateTest {
 
   @Test
   fun `if the user has not completed onboarding, the onboarding screen must be shown`() {
-    val expectedModel = defaultModel
-        .withLoggedInUser(None)
-        .withSelectedCountry(None)
+    val expectedModel = defaultModel.completelyNewUser()
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(completelyNewUser())
+        .whenEvent(completelyNewUserFetched())
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(ShowOnboardingScreen as SetupActivityEffect)
@@ -69,13 +64,11 @@ class SetupActivityUpdateTest {
     val country = PatientMocker.country()
 
     //then
-    val expectedModel = defaultModel
-        .withLoggedInUser(user.toOptional())
-        .withSelectedCountry(country.toOptional())
+    val expectedModel = defaultModel.loggedInUser(user, country)
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(loggedInUser(user, country))
+        .whenEvent(loggedInUserFetched(user, country))
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(GoToMainActivity as SetupActivityEffect)
@@ -88,13 +81,11 @@ class SetupActivityUpdateTest {
     val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
 
     // then
-    val expectedModel = defaultModel
-        .withLoggedInUser(user.toOptional())
-        .withSelectedCountry(None)
+    val expectedModel = defaultModel.previouslyLoggedInUser(user)
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(previouslyLoggedInUser(user))
+        .whenEvent(previouslyLoggedInUserFetched(user))
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(SetFallbackCountryAsCurrentCountry as SetupActivityEffect)
@@ -105,9 +96,7 @@ class SetupActivityUpdateTest {
   fun `when the fallback country is set as the selected country, go to home screen`() {
     // given
     val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
-    val model = defaultModel
-        .withLoggedInUser(user.toOptional())
-        .withSelectedCountry(None)
+    val model = defaultModel.previouslyLoggedInUser(user)
 
     // then
     updateSpec
@@ -119,19 +108,37 @@ class SetupActivityUpdateTest {
         ))
   }
 
-  private fun previouslyLoggedInUser(user: User): UserDetailsFetched {
+  private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
     return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = None)
   }
 
-  private fun onboardedUserWithoutLoggingIn(): UserDetailsFetched {
+  private fun onboardedUserWithoutLoggingInFetched(): UserDetailsFetched {
     return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = None, userSelectedCountry = None)
   }
 
-  private fun completelyNewUser(): UserDetailsFetched {
+  private fun completelyNewUserFetched(): UserDetailsFetched {
     return UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = None, userSelectedCountry = None)
   }
 
-  private fun loggedInUser(user: User, country: Country): UserDetailsFetched {
+  private fun loggedInUserFetched(user: User, country: Country): UserDetailsFetched {
     return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Just(user), userSelectedCountry = Just(country))
   }
+}
+
+private fun SetupActivityModel.previouslyLoggedInUser(user: User): SetupActivityModel {
+  return this
+      .withLoggedInUser(Just(user))
+      .withSelectedCountry(None)
+}
+
+private fun SetupActivityModel.completelyNewUser(): SetupActivityModel {
+  return this
+      .withLoggedInUser(None)
+      .withSelectedCountry(None)
+}
+
+private fun SetupActivityModel.loggedInUser(user: User, country: Country): SetupActivityModel {
+  return this
+      .withLoggedInUser(Just(user))
+      .withSelectedCountry(Just(country))
 }

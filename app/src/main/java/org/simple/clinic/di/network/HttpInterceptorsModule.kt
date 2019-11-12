@@ -1,4 +1,4 @@
-package org.simple.clinic.di
+package org.simple.clinic.di.network
 
 import dagger.Module
 import dagger.Provides

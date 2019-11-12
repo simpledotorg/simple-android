@@ -44,6 +44,7 @@ class PatientEntryEffectHandler(
     private val patientRepository: PatientRepository,
     private val patientRegisteredCount: Preference<Int>,
     private val ui: PatientEntryUi,
+    private val validationActions: PatientEntryValidationActions,
     private val schedulersProvider: SchedulersProvider
 ) {
   companion object {
@@ -53,6 +54,7 @@ class PatientEntryEffectHandler(
         patientRepository: PatientRepository,
         patientRegisteredCount: Preference<Int>,
         ui: PatientEntryUi,
+        validationActions: PatientEntryValidationActions,
         schedulersProvider: SchedulersProvider
     ): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
       return PatientEntryEffectHandler(
@@ -61,6 +63,7 @@ class PatientEntryEffectHandler(
           patientRepository,
           patientRegisteredCount,
           ui,
+          validationActions,
           schedulersProvider
       ).build()
     }
@@ -104,25 +107,25 @@ class PatientEntryEffectHandler(
 
   private fun hideValidationError(field: Field) {
     when (field) {
-      FullName -> ui.showEmptyFullNameError(false)
+      FullName -> validationActions.showEmptyFullNameError(false)
       PhoneNumber -> hidePhoneLengthErrors()
       Age, DateOfBirth -> hideDateOfBirthErrors()
-      Gender -> ui.showMissingGenderError(false)
-      ColonyOrVillage -> ui.showEmptyColonyOrVillageError(false)
-      District -> ui.showEmptyDistrictError(false)
-      State -> ui.showEmptyStateError(false)
+      Gender -> validationActions.showMissingGenderError(false)
+      ColonyOrVillage -> validationActions.showEmptyColonyOrVillageError(false)
+      District -> validationActions.showEmptyDistrictError(false)
+      State -> validationActions.showEmptyStateError(false)
     }
   }
 
   private fun hidePhoneLengthErrors() {
-    with(ui) {
+    with(validationActions) {
       showLengthTooLongPhoneNumberError(false)
       showLengthTooShortPhoneNumberError(false)
     }
   }
 
   private fun hideDateOfBirthErrors() {
-    with(ui) {
+    with(validationActions) {
       showEmptyDateOfBirthAndAgeError(false)
       showInvalidDateOfBirthError(false)
       showDateOfBirthIsInFutureError(false)
@@ -151,16 +154,16 @@ class PatientEntryEffectHandler(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
-            FULL_NAME_EMPTY -> ui.showEmptyFullNameError(true)
-            PHONE_NUMBER_LENGTH_TOO_SHORT -> ui.showLengthTooShortPhoneNumberError(true)
-            PHONE_NUMBER_LENGTH_TOO_LONG -> ui.showLengthTooLongPhoneNumberError(true)
-            BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> ui.showEmptyDateOfBirthAndAgeError(true)
-            INVALID_DATE_OF_BIRTH -> ui.showInvalidDateOfBirthError(true)
-            DATE_OF_BIRTH_IN_FUTURE -> ui.showDateOfBirthIsInFutureError(true)
-            MISSING_GENDER -> ui.showMissingGenderError(true)
-            COLONY_OR_VILLAGE_EMPTY -> ui.showEmptyColonyOrVillageError(true)
-            DISTRICT_EMPTY -> ui.showEmptyDistrictError(true)
-            STATE_EMPTY -> ui.showEmptyStateError(true)
+            FULL_NAME_EMPTY -> validationActions.showEmptyFullNameError(true)
+            PHONE_NUMBER_LENGTH_TOO_SHORT -> validationActions.showLengthTooShortPhoneNumberError(true)
+            PHONE_NUMBER_LENGTH_TOO_LONG -> validationActions.showLengthTooLongPhoneNumberError(true)
+            BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> validationActions.showEmptyDateOfBirthAndAgeError(true)
+            INVALID_DATE_OF_BIRTH -> validationActions.showInvalidDateOfBirthError(true)
+            DATE_OF_BIRTH_IN_FUTURE -> validationActions.showDateOfBirthIsInFutureError(true)
+            MISSING_GENDER -> validationActions.showMissingGenderError(true)
+            COLONY_OR_VILLAGE_EMPTY -> validationActions.showEmptyColonyOrVillageError(true)
+            DISTRICT_EMPTY -> validationActions.showEmptyDistrictError(true)
+            STATE_EMPTY -> validationActions.showEmptyStateError(true)
 
             EMPTY_ADDRESS_DETAILS,
             PHONE_NUMBER_NON_NULL_BUT_BLANK,

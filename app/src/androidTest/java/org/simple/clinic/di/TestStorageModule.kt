@@ -1,20 +1,39 @@
 package org.simple.clinic.di
 
 import android.app.Application
-import androidx.room.migration.Migration
+import androidx.room.Room
 import androidx.sqlite.db.SupportSQLiteOpenHelper
+import dagger.Module
+import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.storage.StorageModule
+import org.simple.clinic.patient.PatientModule
+import org.simple.clinic.storage.FileStorageModule
+import org.simple.clinic.storage.RoomMigrationsModule
+import org.simple.clinic.storage.SharedPreferencesModule
+import org.simple.clinic.summary.PatientSummaryModule
 
-/*
-* We have moved the in-memory database configuration to the sqlite openhelper factory
-* but we still have to provide a non-empty name for Room, otherwise it complains.
-*/
-class TestStorageModule : StorageModule(databaseName = "ignored", runDatabaseQueriesOnMainThread = true) {
-  override fun sqliteOpenHelperFactory() = AppSqliteOpenHelperFactory(inMemory = true)
+@Module(includes = [
+  RoomMigrationsModule::class,
+  SharedPreferencesModule::class,
+  PatientModule::class,
+  FileStorageModule::class,
+  PatientSummaryModule::class
+])
+class TestStorageModule {
 
-  override fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory, migrations: ArrayList<Migration>): AppDatabase {
-    return super.appDatabase(appContext, factory, migrations)
-        .apply { openHelper.writableDatabase.setForeignKeyConstraintsEnabled(true) }
+  @Provides
+  fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory(inMemory = true)
+
+  @AppScope
+  @Provides
+  fun appDatabase(
+      appContext: Application,
+      factory: SupportSQLiteOpenHelper.Factory
+  ): AppDatabase {
+
+    return Room.databaseBuilder(appContext, AppDatabase::class.java, "test-db")
+        .openHelperFactory(factory)
+        .apply { allowMainThreadQueries() }
+        .build()
   }
 }

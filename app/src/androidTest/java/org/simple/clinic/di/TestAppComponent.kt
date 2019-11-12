@@ -38,12 +38,11 @@ import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterAndroidT
 @AppScope
 @Component(
     modules = [
-      AppModule::class,
-      FakerModule::class,
-      TestClockModule::class
+      TestAppModule::class,
+      FakerModule::class
     ]
 )
-interface TestAppComponent : AppComponent {
+interface TestAppComponent {
 
   fun inject(target: TestClinicApp)
   fun inject(target: UserSessionAndroidTest)

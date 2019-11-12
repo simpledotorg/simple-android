@@ -1,26 +1,24 @@
 package org.simple.clinic.user
 
+import dagger.Lazy
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.facility.FacilityRepository
 import java.util.UUID
 import javax.inject.Inject
 
 class LoggedInUserHttpInterceptor @Inject constructor(
-    val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    // TODO(vs): 2019-11-12 Fix this when creating multiple dagger scopes
+    private val userSession: Lazy<UserSession>
 ) : Interceptor {
-
-  // Ugly hack to avoid a cyclic dependency between this class and UserSession.
-  private val userSession
-    get() = ClinicApp.appComponent.userSession()
 
   override fun intercept(chain: Interceptor.Chain?): Response {
     val originalRequest = chain!!.request()
 
-    val user = userSession.loggedInUserImmediate()
-    val (accessToken) = userSession.accessToken()
+    val user = userSession.get().loggedInUserImmediate()
+    val (accessToken) = userSession.get().accessToken()
 
     var facilityUuid: UUID? = null
     if (user != null) {

@@ -4,7 +4,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Suppress("ClassName")
-class Migration_4_5 : Migration(4, 5) {
+class Migration_4_5 @javax.inject.Inject constructor() : Migration(4, 5) {
 
   /**
    * [Regex] for stripping patient names and search queries of white spaces and punctuation

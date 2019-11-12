@@ -8,7 +8,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
  * Adds [MedicalHistory.diagnosedWithHypertension] column.
  */
 @Suppress("ClassName")
-class Migration_14_15 : Migration(14, 15) {
+class Migration_14_15 @javax.inject.Inject constructor() : Migration(14, 15) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.execSQL("""

@@ -15,7 +15,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * This migration exists to change the deletedAt property for those encounters to be an SQL NULL.
  **/
 @Suppress("ClassName")
-class Migration_51_52 : Migration(51, 52) {
+class Migration_51_52 @javax.inject.Inject constructor() : Migration(51, 52) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.execSQL(""" UPDATE "Encounter" SET "deletedAt" = NULL WHERE "deletedAt" = 'null' """)

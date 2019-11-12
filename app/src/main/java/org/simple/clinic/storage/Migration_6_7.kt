@@ -7,7 +7,7 @@ import androidx.room.migration.Migration
  * Adds [LoggedInUserFacilityMapping] table.
  */
 @Suppress("ClassName")
-class Migration_6_7 : Migration(6, 7) {
+class Migration_6_7 @javax.inject.Inject constructor() : Migration(6, 7) {
   override fun migrate(database: SupportSQLiteDatabase) {
     database.inTransaction {
       database.execSQL("""

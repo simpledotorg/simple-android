@@ -3,30 +3,21 @@ package org.simple.clinic.storage
 import android.database.Cursor
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.toLocalDateAtZone
 import java.util.UUID
-import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_49_50 : Migration(49, 50) {
-
-  @Inject
-  lateinit var userClock: UserClock
-
-  @Inject
-  lateinit var instantConverter: InstantRoomTypeConverter
-
-  @Inject
-  lateinit var localDateConverter: LocalDateRoomTypeConverter
+class Migration_49_50 @javax.inject.Inject constructor(
+    val userClock: UserClock,
+    val instantConverter: InstantRoomTypeConverter,
+    val localDateConverter: LocalDateRoomTypeConverter
+) : Migration(49, 50) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
-    ClinicApp.appComponent.inject(this)
-
     val tableName = "BloodPressureMeasurement"
 
     database.inTransaction {

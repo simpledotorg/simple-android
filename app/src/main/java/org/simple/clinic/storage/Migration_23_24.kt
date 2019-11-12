@@ -4,7 +4,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
 
 @Suppress("ClassName")
-class Migration_23_24 : Migration(23, 24) {
+class Migration_23_24 @javax.inject.Inject constructor() : Migration(23, 24) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     val createAlterTableStatement = { tableName: String ->

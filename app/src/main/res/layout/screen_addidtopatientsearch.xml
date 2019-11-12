@@ -81,7 +81,7 @@
         style="@style/Clinic.V2.ClearEditTextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cleareableField="@id/searchQueryEditText" />
+        app:clearableField="@id/searchQueryEditText" />
     </LinearLayout>
   </FrameLayout>
 

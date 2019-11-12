@@ -27,7 +27,7 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
 
   init {
     val attributes = context.obtainStyledAttributes(attrs, R.styleable.ClearFieldImageButton)
-    fieldId = attributes.getResourceId(R.styleable.ClearFieldImageButton_cleareableField, 0)
+    fieldId = attributes.getResourceId(R.styleable.ClearFieldImageButton_clearableField, 0)
     attributes.recycle()
 
     if (fieldId == 0) {
@@ -60,7 +60,7 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
 
     fieldOriginalPaddingEnd = field.paddingEnd
 
-    Observable.merge(cleareableFieldTextChanges(), cleareableFieldFocusChanges())
+    Observable.merge(clearableFieldTextChanges(), clearableFieldFocusChanges())
         .compose(controller)
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
@@ -68,21 +68,21 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
     setOnClickListener { field.text = null }
   }
 
-  private fun cleareableFieldFocusChanges(): Observable<CleareableFieldFocusChanged> {
+  private fun clearableFieldFocusChanges(): Observable<ClearableFieldFocusChanged> {
     return if (field is MultipleFocusChangeListeners) {
       (field as MultipleFocusChangeListeners)
           .focusChanges
-          .map { hasFocus -> CleareableFieldFocusChanged(hasFocus, fieldName) }
+          .map { hasFocus -> ClearableFieldFocusChanged(hasFocus, fieldName) }
     } else {
       RxView
           .focusChanges(field)
-          .map { hasFocus -> CleareableFieldFocusChanged(hasFocus, fieldName) }
+          .map { hasFocus -> ClearableFieldFocusChanged(hasFocus, fieldName) }
     }
   }
 
-  private fun cleareableFieldTextChanges() = RxTextView.textChanges(field)
+  private fun clearableFieldTextChanges() = RxTextView.textChanges(field)
       .map(CharSequence::toString)
-      .map { text -> CleareableFieldTextChanged(text, fieldName) }
+      .map { text -> ClearableFieldTextChanged(text, fieldName) }
 
   fun setVisible(visible: Boolean) {
     visibility = when (visible) {

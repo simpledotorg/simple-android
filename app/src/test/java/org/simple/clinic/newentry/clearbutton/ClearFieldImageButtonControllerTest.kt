@@ -32,12 +32,12 @@ class ClearFieldImageButtonControllerTest {
   @Test
   fun `clear button should remain visible only while the associated field is focused and is not blank`() {
     with(uiEvents) {
-      onNext(CleareableFieldFocusChanged(hasFocus = false))
-      onNext(CleareableFieldTextChanged(""))
-      onNext(CleareableFieldFocusChanged(hasFocus = true))
-      onNext(CleareableFieldTextChanged("A"))
-      onNext(CleareableFieldTextChanged("AB"))
-      onNext(CleareableFieldFocusChanged(hasFocus = false))
+      onNext(ClearableFieldFocusChanged(hasFocus = false))
+      onNext(ClearableFieldTextChanged(""))
+      onNext(ClearableFieldFocusChanged(hasFocus = true))
+      onNext(ClearableFieldTextChanged("A"))
+      onNext(ClearableFieldTextChanged("AB"))
+      onNext(ClearableFieldFocusChanged(hasFocus = false))
     }
 
     verify(button, times(2)).setVisible(false)

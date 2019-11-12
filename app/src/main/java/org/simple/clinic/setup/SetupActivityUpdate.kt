@@ -19,7 +19,7 @@ class SetupActivityUpdate : Update<SetupActivityModel, SetupActivityEvent, Setup
         val updatedModel = model
             .withLoggedInUser(event.loggedInUser)
             .withSelectedCountry(event.userSelectedCountry)
-        val effect = initialScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding, event.userSelectedCountry)
+        val effect = goToNextScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding, event.userSelectedCountry)
 
         next(updatedModel, effect)
       }
@@ -29,7 +29,7 @@ class SetupActivityUpdate : Update<SetupActivityModel, SetupActivityEvent, Setup
     }
   }
 
-  private fun initialScreenEffect(
+  private fun goToNextScreenEffect(
       loggedInUser: Optional<User>,
       hasUserCompletedOnboarding: Boolean,
       selectedCountry: Optional<Country>

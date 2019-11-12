@@ -4,7 +4,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Suppress("ClassName")
-class Migration_44_45 : Migration(44, 45) {
+class Migration_44_45 @javax.inject.Inject constructor() : Migration(44, 45) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.beginTransaction()

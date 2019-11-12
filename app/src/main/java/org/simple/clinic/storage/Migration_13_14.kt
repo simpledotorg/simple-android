@@ -10,7 +10,7 @@ import java.util.UUID
  * Adds an empty [MedicalHistory] for all patients.
  */
 @Suppress("ClassName")
-class Migration_13_14 : Migration(13, 14) {
+class Migration_13_14 @javax.inject.Inject constructor() : Migration(13, 14) {
 
   override fun migrate(db: SupportSQLiteDatabase) {
     db.execSQL("DELETE FROM `MedicalHistory`")

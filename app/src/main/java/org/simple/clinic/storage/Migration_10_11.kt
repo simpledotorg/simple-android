@@ -8,7 +8,7 @@ import org.simple.clinic.overdue.Appointment
  * Renames 'id' -> 'uuid' in [Appointment] and [Communication]
  */
 @Suppress("ClassName")
-class Migration_10_11 : Migration(10, 11) {
+class Migration_10_11 @javax.inject.Inject constructor() : Migration(10, 11) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.execSQL("ALTER TABLE `Appointment` RENAME TO `Appointment_v10`")

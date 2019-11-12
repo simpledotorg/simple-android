@@ -2,20 +2,15 @@ package org.simple.clinic.storage
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
-import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_34_35 : Migration(34, 35) {
-
-  @Inject
-  lateinit var utcClock : UtcClock
+class Migration_34_35 @javax.inject.Inject constructor(
+    private val utcClock: UtcClock
+) : Migration(34, 35) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
-    ClinicApp.appComponent.inject(this)
-
     val createAlterTableStatement = { tableName: String ->
       """
         ALTER TABLE $tableName ADD COLUMN "recordedAt" TEXT NOT NULL DEFAULT '0'

@@ -7,7 +7,7 @@ import androidx.room.migration.Migration
  * Updates the [Appointment] and [Communication] models
  */
 @Suppress("ClassName")
-class Migration_12_13 : Migration(12, 13) {
+class Migration_12_13 @javax.inject.Inject constructor() : Migration(12, 13) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.execSQL("ALTER TABLE `Appointment` RENAME TO `Appointment_v12`")

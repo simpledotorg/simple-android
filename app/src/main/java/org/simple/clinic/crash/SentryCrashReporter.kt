@@ -17,10 +17,11 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
 import java.util.Date
+import javax.inject.Inject
 
 typealias SentryBreadcrumbLevel = io.sentry.event.Breadcrumb.Level
 
-class SentryCrashReporter(
+class SentryCrashReporter @Inject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository
 ) : CrashReporter {

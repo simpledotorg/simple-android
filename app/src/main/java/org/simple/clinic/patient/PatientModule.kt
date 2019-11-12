@@ -9,26 +9,11 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaData
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.MoshiBusinessIdMetaDataAdapter
-import org.simple.clinic.patient.filter.SearchPatientByName
-import org.simple.clinic.patient.filter.SortByWeightedNameParts
-import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.remoteconfig.ConfigReader
 
 @Module
-open class PatientModule {
-
-  @Provides
-  open fun provideFilterPatientByName(): SearchPatientByName = WeightedLevenshteinSearch(
-      minimumSearchTermLength = 3,
-      maximumAllowedEditDistance = 350F,
-
-      // Values are taken from what sqlite spellfix uses internally.
-      characterSubstitutionCost = 150F,
-      characterDeletionCost = 100F,
-      characterInsertionCost = 100F,
-
-      resultsComparator = SortByWeightedNameParts())
+class PatientModule {
 
   @Provides
   fun providePatientConfig(configReader: ConfigReader) = PatientConfig.read(configReader)

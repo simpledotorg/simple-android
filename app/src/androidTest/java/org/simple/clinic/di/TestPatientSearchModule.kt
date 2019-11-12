@@ -1,14 +1,17 @@
 package org.simple.clinic.di
 
+import dagger.Module
+import dagger.Provides
 import io.reactivex.Single
-import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.filter.SearchPatientByName
 import java.util.UUID
 
-class TestPatientModule : PatientModule() {
+@Module
+class TestPatientSearchModule {
 
-  override fun provideFilterPatientByName(): SearchPatientByName {
+  @Provides
+  fun provideFilterPatientByName(): SearchPatientByName {
     return object : SearchPatientByName {
       override fun search(searchTerm: String, names: List<PatientSearchResult.PatientNameAndId>): Single<List<UUID>> {
         val results = names

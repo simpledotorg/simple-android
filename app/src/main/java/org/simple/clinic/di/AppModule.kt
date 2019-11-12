@@ -17,9 +17,11 @@ import org.simple.clinic.di.network.RetrofitModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
+import org.simple.clinic.login.LoginOtpSmsListenerModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.SimpleVideoModule
+import org.simple.clinic.patient.filter.PatientSearchModule
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.remoteconfig.RemoteConfigModule
@@ -68,7 +70,11 @@ import javax.inject.Named
   AppConfigModule::class,
   HttpInterceptorsModule::class,
   RetrofitModule::class,
-  FirebaseRemoteConfigModule::class
+  FirebaseRemoteConfigModule::class,
+  PatientSearchModule::class,
+  LoginOtpSmsListenerModule::class,
+  HttpInterceptorsModule::class,
+  RetrofitModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

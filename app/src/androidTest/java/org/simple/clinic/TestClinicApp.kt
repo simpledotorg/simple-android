@@ -1,27 +1,25 @@
 package org.simple.clinic
 
+import android.app.Application
+import com.gabrielittner.threetenbp.LazyThreeTen
 import com.tspoon.traceur.Traceur
 import org.simple.clinic.TestClinicApp.Companion.appComponent
-import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.DaggerTestAppComponent
 import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.di.TestAppModule
-import org.simple.clinic.di.TestCrashReporterModule
-import org.simple.clinic.di.TestDataSyncOnApprovalModule
-import org.simple.clinic.di.TestLoginModule
-import org.simple.clinic.di.TestPatientModule
-import org.simple.clinic.di.TestStorageModule
 import timber.log.Timber
 
 /**
  * This application class makes it possible to inject Android tests with their dependencies.
  * Using [appComponent] in a test's @Before function is a good place to start.
  */
-class TestClinicApp : ClinicApp() {
+class TestClinicApp : Application() {
 
   companion object {
+    private lateinit var appComponent: TestAppComponent
+
     fun appComponent(): TestAppComponent {
-      return appComponent as TestAppComponent
+      return appComponent
     }
   }
 
@@ -30,18 +28,14 @@ class TestClinicApp : ClinicApp() {
 
     Timber.plant(Timber.DebugTree())
     Traceur.enableLogging()
+    LazyThreeTen.init(this)
 
-    appComponent().inject(this)
+    appComponent = buildDaggerGraph()
   }
 
-  override fun buildDaggerGraph(): AppComponent {
+  private fun buildDaggerGraph(): TestAppComponent {
     return DaggerTestAppComponent.builder()
-        .appModule(TestAppModule(this))
-        .storageModule(TestStorageModule())
-        .patientModule(TestPatientModule())
-        .crashReporterModule(TestCrashReporterModule())
-        .loginModule(TestLoginModule())
-        .dataSyncOnApprovalModule(TestDataSyncOnApprovalModule())
+        .testAppModule(TestAppModule(this))
         .build()
   }
 }

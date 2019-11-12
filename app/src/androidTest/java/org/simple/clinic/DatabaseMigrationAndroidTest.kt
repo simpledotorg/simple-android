@@ -44,7 +44,7 @@ class DatabaseMigrationAndroidTest {
   val expectedException = ExpectedException.none()
 
   @Inject
-  lateinit var migrations: ArrayList<Migration>
+  lateinit var migrations: List<@JvmSuppressWildcards Migration>
 
   @Inject
   @field:Named("last_facility_pull_token")

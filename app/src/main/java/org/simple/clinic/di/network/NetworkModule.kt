@@ -26,7 +26,7 @@ import org.simple.clinic.util.moshi.URIMoshiAdapter
 import org.simple.clinic.util.moshi.UuidMoshiAdapter
 import java.util.concurrent.TimeUnit
 
-@Module(includes = [HttpInterceptorsModule::class, RetrofitModule::class])
+@Module
 class NetworkModule {
 
   @Provides

@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import javax.inject.Named
 
 @Module
-open class RegistrationModule {
+class RegistrationModule {
 
   @Provides
   fun api(@Named("for_country") retrofit: Retrofit): RegistrationApi {
@@ -19,7 +19,7 @@ open class RegistrationModule {
   }
 
   @Provides
-  open fun config(): Single<RegistrationConfig> {
+  fun config(): Single<RegistrationConfig> {
     return Single.just(RegistrationConfig(
         locationListenerExpiry = Duration.ofSeconds(5),
         locationUpdateInterval = Duration.ofSeconds(1),
@@ -28,7 +28,7 @@ open class RegistrationModule {
   }
 
   @Provides
-  open fun phoneNumberValidator(): PhoneNumberValidator {
+  fun phoneNumberValidator(): PhoneNumberValidator {
     // In the future, we will want to return a validator depending upon the location.
     return IndianPhoneNumberValidator()
   }

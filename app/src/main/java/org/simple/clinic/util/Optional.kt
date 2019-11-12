@@ -34,6 +34,10 @@ sealed class Optional<out T : Any> {
     return this is Just
   }
 
+  fun isEmpty(): Boolean {
+    return this is None
+  }
+
   companion object {
 
     /**

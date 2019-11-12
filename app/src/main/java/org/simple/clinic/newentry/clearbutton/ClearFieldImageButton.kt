@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.newentry.MultipleFocusChangeListeners
@@ -24,6 +25,7 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
   private var fieldName: String
   private lateinit var field: EditText
   private var fieldOriginalPaddingEnd: Int = 0
+  private lateinit var disposable: Disposable
 
   init {
     val attributes = context.obtainStyledAttributes(attrs, R.styleable.ClearFieldImageButton)
@@ -60,12 +62,19 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
 
     fieldOriginalPaddingEnd = field.paddingEnd
 
-    Observable.merge(clearableFieldTextChanges(), clearableFieldFocusChanges())
+    disposable = Observable.merge(clearableFieldTextChanges(), clearableFieldFocusChanges())
         .compose(controller)
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
 
     setOnClickListener { field.text = null }
+  }
+
+  override fun onDetachedFromWindow() {
+    if (::disposable.isInitialized && !disposable.isDisposed) {
+      disposable.dispose()
+    }
+    super.onDetachedFromWindow()
   }
 
   private fun clearableFieldFocusChanges(): Observable<ClearableFieldFocusChanged> {

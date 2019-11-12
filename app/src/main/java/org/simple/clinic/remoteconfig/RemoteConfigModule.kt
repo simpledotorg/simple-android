@@ -3,32 +3,23 @@ package org.simple.clinic.remoteconfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.di.AppScope
+import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigService
+import org.threeten.bp.Duration
+import javax.inject.Named
 
 @Module
-open class RemoteConfigModule {
+class RemoteConfigModule {
 
   @Provides
   fun provideRemoteConfigService(
       firebaseRemoteConfig: FirebaseRemoteConfig,
-      cacheExpiration: FirebaseRemoteConfigCacheExpiration
+      @Named("firebase_cache_expiration_duration") cacheExpirationDuration: Duration
   ): RemoteConfigService {
-    return FirebaseRemoteConfigService(firebaseRemoteConfig, cacheExpiration)
+    return FirebaseRemoteConfigService(firebaseRemoteConfig, cacheExpirationDuration)
   }
 
   @Provides
   fun remoteConfigReader(service: RemoteConfigService): ConfigReader {
     return service.reader()
-  }
-
-  @Provides
-  @AppScope
-  open fun remoteConfig(): FirebaseRemoteConfig {
-    return FirebaseRemoteConfig.getInstance()
-  }
-
-  @Provides
-  open fun remoteConfigCacheExpiration(): FirebaseRemoteConfigCacheExpiration {
-    return FirebaseRemoteConfigCacheExpiration.PRODUCTION
   }
 }

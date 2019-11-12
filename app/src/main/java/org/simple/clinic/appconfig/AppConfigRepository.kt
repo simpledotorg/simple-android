@@ -29,6 +29,7 @@ class AppConfigRepository @Inject constructor(
   fun fetchAppManifest(): Single<ManifestFetchResult> {
     return manifestFetchApi
         .fetchManifest()
+        .map { it.supportedCountries }
         .map(::FetchSucceeded)
         .cast(ManifestFetchResult::class.java)
         .onErrorReturn { cause -> FetchError(ErrorResolver.resolve(cause)) }

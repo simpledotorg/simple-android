@@ -12,7 +12,6 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
-import org.simple.clinic.di.DebugCrashReporterModule
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
@@ -71,7 +70,6 @@ class DebugClinicApp : ClinicApp() {
   override fun buildDaggerGraph(): AppComponent {
     return DaggerDebugAppComponent.builder()
         .appModule(AppModule(this))
-        .crashReporterModule(DebugCrashReporterModule())
         .build()
   }
 

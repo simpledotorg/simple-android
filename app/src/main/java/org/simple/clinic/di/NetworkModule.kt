@@ -3,10 +3,9 @@ package org.simple.clinic.di
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
-import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.illustration.DayOfMonth
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
@@ -19,7 +18,6 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.moshi.InstantMoshiAdapter
 import org.simple.clinic.util.moshi.LocalDateMoshiAdapter
@@ -33,7 +31,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 
-@Module
+@Module(includes = [HttpInterceptorsModule::class])
 class NetworkModule {
 
   @Provides
@@ -70,22 +68,12 @@ class NetworkModule {
   @Provides
   @AppScope
   fun okHttpClient(
-      loggedInInterceptor: LoggedInUserHttpInterceptor,
-      appInfoHttpInterceptor: AppInfoHttpInterceptor,
-      networkAnalyticsInterceptor: NetworkAnalyticsInterceptor,
+      interceptors: List<@JvmSuppressWildcards Interceptor>,
       configReader: ConfigReader
   ): OkHttpClient {
     return OkHttpClient.Builder()
         .apply {
-          addInterceptor(appInfoHttpInterceptor)
-          addInterceptor(loggedInInterceptor)
-          addInterceptor(networkAnalyticsInterceptor)
-
-          if (BuildConfig.DEBUG) {
-            val loggingInterceptor = HttpLoggingInterceptor()
-            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-            addInterceptor(loggingInterceptor)
-          }
+          interceptors.forEach { addInterceptor(it) }
 
           // When syncing large amounts of data, the default read timeout(10s) has been seen to
           // timeout frequently for larger models. Through trial and error, 15s was found to be a

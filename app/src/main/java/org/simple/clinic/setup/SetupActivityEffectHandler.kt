@@ -5,7 +5,6 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
@@ -68,21 +67,19 @@ class SetupActivityEffectHandler(
   private fun fetchUserDetails(scheduler: Scheduler): ObservableTransformer<FetchUserDetails, SetupActivityEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
-          .flatMapSingle { readUserDetailsFromStorage(scheduler) }
+          .flatMapSingle { Single.fromCallable(::readUserDetailsFromStorage).subscribeOn(scheduler) }
           .map { (hasUserCompletedOnboarding, loggedInUser, userSelectedCountry) ->
             UserDetailsFetched(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
           }
     }
   }
 
-  private fun readUserDetailsFromStorage(scheduler: Scheduler): Single<Triple<Boolean, Optional<User>, Optional<Country>>> {
-    val hasUserCompletedOnboarding = Single.fromCallable { onboardingCompletePreference.get() }
-    val loggedInUser = Single.fromCallable { userDao.userImmediate().toOptional() }
-    val userSelectedCountry = Single.fromCallable { appConfigRepository.currentCountry() }
+  private fun readUserDetailsFromStorage(): Triple<Boolean, Optional<User>, Optional<Country>> {
+    val hasUserCompletedOnboarding = onboardingCompletePreference.get()
+    val loggedInUser = userDao.userImmediate().toOptional()
+    val userSelectedCountry = appConfigRepository.currentCountry()
 
-    return Singles
-        .zip(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
-        .subscribeOn(scheduler)
+    return Triple(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
   }
 
   private fun initializeDatabase(scheduler: Scheduler): ObservableTransformer<InitializeDatabase, SetupActivityEvent> {

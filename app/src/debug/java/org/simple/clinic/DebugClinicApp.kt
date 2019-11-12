@@ -8,15 +8,14 @@ import com.squareup.leakcanary.LeakCanary
 import com.tspoon.traceur.Traceur
 import io.github.inflationx.viewpump.ViewPump
 import org.simple.clinic.activity.SimpleActivityLifecycleCallbacks
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
-import org.simple.clinic.di.DebugBruteForceProtectionModule
 import org.simple.clinic.di.DebugCrashReporterModule
 import org.simple.clinic.di.DebugLoginModule
 import org.simple.clinic.di.DebugRemoteConfigModule
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
 import timber.log.Timber
@@ -76,7 +75,6 @@ class DebugClinicApp : ClinicApp() {
         .appModule(AppModule(this))
         .loginModule(DebugLoginModule())
         .crashReporterModule(DebugCrashReporterModule())
-        .bruteForceProtectionModule(DebugBruteForceProtectionModule())
         .remoteConfigModule(DebugRemoteConfigModule())
         .build()
   }

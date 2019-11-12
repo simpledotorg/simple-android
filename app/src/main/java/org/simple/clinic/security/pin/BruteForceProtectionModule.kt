@@ -5,17 +5,10 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Observable
 import org.simple.clinic.util.preference.MoshiObjectPreferenceConverter
-import org.threeten.bp.Duration
 
-@Module
+@Module(includes = [BruteForceProtectionConfigModule::class])
 open class BruteForceProtectionModule {
-
-  @Provides
-  open fun config(): Observable<BruteForceProtectionConfig> {
-    return Observable.just(BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20)))
-  }
 
   @Provides
   fun state(rxSharedPrefs: RxSharedPreferences, moshi: Moshi): Preference<BruteForceProtectionState> {

@@ -61,7 +61,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
-          app:cleareableField="@id/fullNameEditText" />
+          app:clearableField="@id/fullNameEditText" />
       </FrameLayout>
 
       <FrameLayout
@@ -89,7 +89,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
-          app:cleareableField="@id/phoneNumberEditText" />
+          app:clearableField="@id/phoneNumberEditText" />
       </FrameLayout>
 
       <LinearLayout
@@ -127,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            app:cleareableField="@id/ageEditText" />
+            app:clearableField="@id/ageEditText" />
         </FrameLayout>
 
         <TextView
@@ -169,7 +169,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            app:cleareableField="@id/dateOfBirthEditText" />
+            app:clearableField="@id/dateOfBirthEditText" />
         </FrameLayout>
       </LinearLayout>
 
@@ -246,7 +246,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
-          app:cleareableField="@id/colonyOrVillageEditText" />
+          app:clearableField="@id/colonyOrVillageEditText" />
       </FrameLayout>
 
       <LinearLayout

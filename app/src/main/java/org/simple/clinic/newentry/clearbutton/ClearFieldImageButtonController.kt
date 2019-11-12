@@ -18,11 +18,11 @@ class ClearFieldImageButtonController @Inject constructor() : ObservableTransfor
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
 
     val textChanges = replayedEvents
-        .ofType<CleareableFieldTextChanged>()
+        .ofType<ClearableFieldTextChanged>()
         .map { it.text.isNotBlank() }
 
     val focusChanges = replayedEvents
-        .ofType<CleareableFieldFocusChanged>()
+        .ofType<ClearableFieldFocusChanged>()
         .map { it.hasFocus }
 
     return Observables.combineLatest(textChanges, focusChanges)

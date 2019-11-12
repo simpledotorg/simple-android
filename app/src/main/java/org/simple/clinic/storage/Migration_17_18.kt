@@ -9,7 +9,7 @@ import org.simple.clinic.drugs.PrescribedDrug
  * Removes foreign key references to Facility ID from [BloodPressureMeasurement] and [PrescribedDrug].
  */
 @Suppress("ClassName")
-class Migration_17_18 : Migration(17, 18) {
+class Migration_17_18 @javax.inject.Inject constructor() : Migration(17, 18) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     migrateBloodPressureMeasurement(database)

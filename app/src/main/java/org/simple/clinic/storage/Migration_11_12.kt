@@ -8,7 +8,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
  * Adds [MedicalHistory]
  */
 @Suppress("ClassName")
-class Migration_11_12 : Migration(11, 12) {
+class Migration_11_12 @javax.inject.Inject constructor() : Migration(11, 12) {
 
   override fun migrate(db: SupportSQLiteDatabase) {
     db.execSQL("""

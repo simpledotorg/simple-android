@@ -3,19 +3,16 @@ package org.simple.clinic.storage
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.f2prateek.rx.preferences2.Preference
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.util.Optional
-import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("ClassName")
-class Migration_29_30 : Migration(29, 30) {
-
-  @field:[Inject Named("last_patient_pull_token")]
-  lateinit var lastPatientPullToken: Preference<Optional<String>>
+class Migration_29_30 @javax.inject.Inject constructor(
+    @Named("last_patient_pull_token")
+    private val lastPatientPullToken: Preference<Optional<String>>
+) : Migration(29, 30) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
-    ClinicApp.appComponent.inject(this)
     lastPatientPullToken.delete()
 
     database.inTransaction {

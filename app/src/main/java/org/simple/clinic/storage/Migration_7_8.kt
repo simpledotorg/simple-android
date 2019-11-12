@@ -7,7 +7,7 @@ import androidx.room.migration.Migration
  * Adds the column `loggedInStatus` to the `LoggedInUser` table
  **/
 @Suppress("ClassName")
-class Migration_7_8 : Migration(7, 8) {
+class Migration_7_8 @javax.inject.Inject constructor() : Migration(7, 8) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.inTransaction {

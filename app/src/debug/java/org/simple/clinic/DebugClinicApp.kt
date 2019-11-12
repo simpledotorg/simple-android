@@ -13,7 +13,6 @@ import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
 import org.simple.clinic.di.DebugCrashReporterModule
-import org.simple.clinic.di.DebugLoginModule
 import org.simple.clinic.di.DebugRemoteConfigModule
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.AppSignature
@@ -73,7 +72,6 @@ class DebugClinicApp : ClinicApp() {
   override fun buildDaggerGraph(): AppComponent {
     return DaggerDebugAppComponent.builder()
         .appModule(AppModule(this))
-        .loginModule(DebugLoginModule())
         .crashReporterModule(DebugCrashReporterModule())
         .remoteConfigModule(DebugRemoteConfigModule())
         .build()

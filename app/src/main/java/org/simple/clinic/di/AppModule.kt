@@ -11,7 +11,9 @@ import dagger.Provides
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.crash.CrashReporterModule
+import org.simple.clinic.di.network.HttpInterceptorsModule
 import org.simple.clinic.di.network.NetworkModule
+import org.simple.clinic.di.network.RetrofitModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
@@ -21,6 +23,7 @@ import org.simple.clinic.patient.SimpleVideoModule
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.remoteconfig.RemoteConfigModule
+import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.settings.SettingsModule
 import org.simple.clinic.storage.StorageModule
@@ -62,7 +65,10 @@ import javax.inject.Named
   SimpleVideoModule::class,
   RemoteConfigModule::class,
   SettingsModule::class,
-  AppConfigModule::class
+  AppConfigModule::class,
+  HttpInterceptorsModule::class,
+  RetrofitModule::class,
+  FirebaseRemoteConfigModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

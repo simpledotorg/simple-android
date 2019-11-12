@@ -1,12 +1,10 @@
-package org.simple.clinic.remoteconfig
+package org.simple.clinic.remoteconfig.firebase
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue
+import org.simple.clinic.remoteconfig.ConfigReader
 
-class FirebaseConfigReader(
-    private val remoteConfig: FirebaseRemoteConfig,
-    private val cacheExpiration: FirebaseRemoteConfigCacheExpiration
-) : ConfigReader {
+class FirebaseConfigReader(private val remoteConfig: FirebaseRemoteConfig) : ConfigReader {
 
   private inline fun <T : Any> read(name: String, default: T, converter: (FirebaseRemoteConfigValue) -> T): T {
     val remoteValue = remoteConfig.getValue(name)

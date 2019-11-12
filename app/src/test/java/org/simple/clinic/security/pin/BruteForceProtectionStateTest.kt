@@ -2,7 +2,7 @@ package org.simple.clinic.security.pin
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.di.NetworkModule
+import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.util.Just
 import org.threeten.bp.Instant
 

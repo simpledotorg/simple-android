@@ -1,10 +1,11 @@
-package org.simple.clinic.di
+package org.simple.clinic.di.network
 
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import org.simple.clinic.di.AppScope
 import org.simple.clinic.illustration.DayOfMonth
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment

@@ -2,10 +2,9 @@ package org.simple.clinic.di
 
 import dagger.Component
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.ReleaseClinicApp
-import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.OtpSmsReceiver
+import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
 import org.simple.clinic.setup.SetupActivityComponent
 import org.simple.clinic.storage.Migration_27_28
@@ -23,7 +22,6 @@ import javax.inject.Scope
 interface AppComponent {
 
   fun inject(target: ClinicApp)
-  fun inject(target: ReleaseClinicApp)
   fun inject(target: SyncWorker)
   fun inject(target: ClearFieldImageButton)
   fun inject(target: OtpSmsReceiver)

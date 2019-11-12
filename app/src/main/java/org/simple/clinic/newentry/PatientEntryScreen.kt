@@ -66,7 +66,7 @@ import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi {
+class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi, PatientEntryValidationActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -132,6 +132,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         facilityRepository,
         patientRepository,
         patientRegisteredCount,
+        this,
         this,
         schedulersProvider
     )

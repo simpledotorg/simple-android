@@ -8,7 +8,7 @@ import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.storage.FileStorageModule
-import org.simple.clinic.storage.RoomMigrationsModule
+import org.simple.clinic.storage.migrations.RoomMigrationsModule
 import org.simple.clinic.storage.SharedPreferencesModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.user.User

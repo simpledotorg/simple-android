@@ -48,7 +48,7 @@ data class Encounter(
     fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus): Completable
 
     @Query("SELECT * FROM Encounter WHERE syncStatus = :syncStatus")
-    fun recordsWithSyncStatus(syncStatus: SyncStatus): Observable<List<ObservationsForEncounter>>
+    fun recordsWithSyncStatus(syncStatus: SyncStatus): Observable<List<Encounter>>
 
     @Query("SELECT COUNT(uuid) FROM Encounter")
     fun recordCount(): Observable<Int>

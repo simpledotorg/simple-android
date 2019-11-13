@@ -75,10 +75,7 @@ class EncounterSyncAndroidTest : BaseSyncCoordinatorAndroidTest<ObservationsForE
     ))
   }
 
-  override fun generatePayload(): EncounterPayload = testData.encounterPayload(
-      uuid = UUID.randomUUID(),
-      patientUuid = UUID.randomUUID()
-  )
+  override fun generatePayload(): EncounterPayload = testData.encounterPayload()
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 

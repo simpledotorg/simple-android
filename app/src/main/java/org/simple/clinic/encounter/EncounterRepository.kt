@@ -10,19 +10,20 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
+import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.sync.SynceableRepository
 import java.util.UUID
 import javax.inject.Inject
 
 class EncounterRepository @Inject constructor(
     private val database: AppDatabase
-) : SynceableRepository<ObservationsForEncounter, EncounterPayload> {
+) : SynceableRepository<Encounter, EncounterPayload> {
 
-  override fun save(records: List<ObservationsForEncounter>): Completable {
-    return saveMergedEncounters(records)
+  override fun save(records: List<Encounter>): Completable {
+    return Completable.fromAction { database.encountersDao().save(encounters = records) }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<ObservationsForEncounter>> {
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Encounter>> {
     return database.encountersDao().recordsWithSyncStatus(syncStatus).firstOrError()
   }
 
@@ -68,7 +69,7 @@ class EncounterRepository @Inject constructor(
       val encounters = records.map { it.encounter }
 
       with(database) {
-        runInTransaction {
+        openHelper.writableDatabase.inTransaction {
           bloodPressureDao().save(bloodPressures)
           encountersDao().save(encounters)
         }

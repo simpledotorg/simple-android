@@ -9,8 +9,8 @@ import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.encounter.Encounter
 import org.simple.clinic.encounter.EncounterRepository
-import org.simple.clinic.encounter.ObservationsForEncounter
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
@@ -22,12 +22,11 @@ import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-@Ignore("Encounter push sync will be implemented later")
-class EncounterSyncAndroidTest : BaseSyncCoordinatorAndroidTest<ObservationsForEncounter, EncounterPayload>() {
+@Ignore
+class EncounterSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Encounter, EncounterPayload>() {
 
   @Inject
   lateinit var encounterSync: EncounterSync
@@ -64,15 +63,9 @@ class EncounterSyncAndroidTest : BaseSyncCoordinatorAndroidTest<ObservationsForE
 
   override fun pull(): Completable = encounterSync.pull()
 
-  override fun repository(): SynceableRepository<ObservationsForEncounter, EncounterPayload> = repository
+  override fun repository(): SynceableRepository<Encounter, EncounterPayload> = repository
 
-  override fun generateRecord(syncStatus: SyncStatus): ObservationsForEncounter {
-    return testData.observationsForEncounter(encounter = testData.encounter(
-        uuid = UUID.randomUUID(),
-        patientUuid = UUID.randomUUID(),
-        syncStatus = syncStatus
-    ))
-  }
+  override fun generateRecord(syncStatus: SyncStatus): Encounter = testData.encounter(syncStatus = syncStatus)
 
   override fun generatePayload(): EncounterPayload = testData.encounterPayload()
 

@@ -41,7 +41,6 @@ class DebugClinicApp : ClinicApp() {
 
     Timber.plant(Timber.DebugTree())
     Stetho.initializeWithDefaults(this)
-    setupSync()
     showDebugNotification()
 
     ViewPump.init(ViewPump.builder()

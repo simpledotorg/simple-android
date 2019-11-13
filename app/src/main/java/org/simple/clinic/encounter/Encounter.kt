@@ -75,8 +75,5 @@ data class Encounter(
         syncStatus: SyncStatus = SyncStatus.PENDING,
         updatedAt: Instant
     )
-
-    @Query("DELETE FROM Encounter")
-    fun clear()
   }
 }

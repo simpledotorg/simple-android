@@ -16,7 +16,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
-import org.simple.clinic.encounter.sync.EncounterSync
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.overdue.AppointmentSync
@@ -118,18 +117,8 @@ class ModelSyncTest {
                   lastPullToken = mock(),
                   configProvider = syncConfigProvider)
             },
-            setOf(PULL)),
-        listOf<Any>(
-            { syncCoordinator: SyncCoordinator, userSession: UserSession ->
-              EncounterSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  api = mock(),
-                  userSession = userSession,
-                  lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
-            },
-            setOf(PUSH, PULL))
+            setOf(PULL)
+        )
     )
   }
 
@@ -304,18 +293,8 @@ class ModelSyncTest {
                   lastPullToken = mock(),
                   configProvider = syncConfigProvider)
             },
-            shouldPushHappen = false),
-        testCase(
-            modelSyncProvider = { syncCoordinator, userSession ->
-              EncounterSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  api = mock(),
-                  userSession = userSession,
-                  lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
-            },
-            shouldPushHappen = false)
+            shouldPushHappen = false
+        )
     )
   }
 
@@ -432,18 +411,8 @@ class ModelSyncTest {
                   lastPullToken = mock(),
                   configProvider = syncConfigProvider)
             },
-            shouldPullHappen = true),
-        testCase(
-            modelSyncProvider = { syncCoordinator, userSession ->
-              EncounterSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  api = mock(),
-                  userSession = userSession,
-                  lastPullToken = mock(),
-                  configProvider = syncConfigProvider)
-            },
-            shouldPullHappen = false)
+            shouldPullHappen = true
+        )
     )
   }
 

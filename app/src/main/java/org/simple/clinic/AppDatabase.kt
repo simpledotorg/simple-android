@@ -125,7 +125,6 @@ abstract class AppDatabase : RoomDatabase() {
       prescriptionDao().clearData()
       appointmentDao().clear()
       medicalHistoryDao().clear()
-      encountersDao().clear()
     }
   }
 }

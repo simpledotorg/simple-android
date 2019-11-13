@@ -14,7 +14,6 @@ import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.util.AppArchTaskExecutorDelegate
 import timber.log.Timber
@@ -37,9 +36,6 @@ abstract class ClinicApp : Application() {
 
   @Inject
   lateinit var closeActivitiesWhenUserIsUnauthorized: CloseActivitiesWhenUserIsUnauthorized
-
-  @Inject
-  lateinit var syncSetup: SyncSetup
 
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
@@ -79,8 +75,4 @@ abstract class ClinicApp : Application() {
   }
 
   abstract fun buildDaggerGraph(): AppComponent
-
-  protected fun setupSync() {
-    syncSetup.run()
-  }
 }

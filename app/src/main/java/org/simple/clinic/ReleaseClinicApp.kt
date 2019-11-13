@@ -15,11 +15,6 @@ class ReleaseClinicApp : ClinicApp() {
     listOf(MixpanelAnalyticsReporter(this).swallowErrors())
   }
 
-  override fun onCreate() {
-    super.onCreate()
-    setupSync()
-  }
-
   override fun buildDaggerGraph(): AppComponent {
     return DaggerAppComponent.builder()
         .appModule(AppModule(this))

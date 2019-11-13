@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
@@ -29,6 +30,7 @@ import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
@@ -57,6 +59,11 @@ class TheActivity : AppCompatActivity() {
   @Inject
   lateinit var config: TheActivityConfig
 
+  @Inject
+  lateinit var syncSetup: SyncSetup
+
+  private val disposables = CompositeDisposable()
+
   private val screenRouter: ScreenRouter by unsafeLazy {
     ScreenRouter.create(this, NestedKeyChanger(), screenResults)
   }
@@ -69,6 +76,10 @@ class TheActivity : AppCompatActivity() {
     @Suppress("ConstantConditionIf")
     if (BuildConfig.DISABLE_SCREENSHOT) {
       window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    }
+
+    if (savedInstanceState == null) {
+      disposables.add(syncSetup.run())
     }
 
     lifecycle
@@ -143,6 +154,11 @@ class TheActivity : AppCompatActivity() {
       screenRouter.logSizesOfSavedStates()
     }
     super.onSaveInstanceState(outState)
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    disposables.clear()
   }
 
   fun showAppLockScreen() {

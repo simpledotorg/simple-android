@@ -9,6 +9,7 @@ import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
+import org.simple.clinic.storage.migrations.RoomMigrationsModule
 import org.simple.clinic.user.User
 
 @Module(includes = [

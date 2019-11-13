@@ -43,7 +43,7 @@ checks:
 exclude_patterns:
   - "**/androidTest/"
   - "**/test/"
-  - "**/src/main/java/org/simple/clinic/storage/Migration_*.kt"
+  - "**/src/main/java/org/simple/clinic/storage/migrations/Migration_*.kt"
   - "**/build/"
   - "**/src/main/java/org/simple/clinic/widgets/OmegaCenterIconButton.java"
   - "router/"

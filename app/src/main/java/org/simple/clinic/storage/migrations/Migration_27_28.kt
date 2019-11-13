@@ -4,10 +4,11 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.f2prateek.rx.preferences2.Preference
 import org.simple.clinic.util.Optional
+import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("ClassName")
-class Migration_27_28 @javax.inject.Inject constructor(
+class Migration_27_28 @Inject constructor(
     @Named("last_facility_pull_token")
     val lastPullToken: Preference<Optional<String>>
 ) : Migration(27, 28) {

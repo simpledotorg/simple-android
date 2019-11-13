@@ -1,10 +1,11 @@
 package org.simple.clinic.storage.migrations
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_23_24 @javax.inject.Inject constructor() : Migration(23, 24) {
+class Migration_23_24 @Inject constructor() : Migration(23, 24) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     val createAlterTableStatement = { tableName: String ->

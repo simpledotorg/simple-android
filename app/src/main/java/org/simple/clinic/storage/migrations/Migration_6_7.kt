@@ -1,14 +1,15 @@
 package org.simple.clinic.storage.migrations
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.storage.inTransaction
+import javax.inject.Inject
 
 /**
  * Adds [LoggedInUserFacilityMapping] table.
  */
 @Suppress("ClassName")
-class Migration_6_7 @javax.inject.Inject constructor() : Migration(6, 7) {
+class Migration_6_7 @Inject constructor() : Migration(6, 7) {
   override fun migrate(database: SupportSQLiteDatabase) {
     database.inTransaction {
       database.execSQL("""

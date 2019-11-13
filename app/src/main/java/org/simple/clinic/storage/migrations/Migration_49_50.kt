@@ -10,9 +10,10 @@ import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.toLocalDateAtZone
 import java.util.UUID
+import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_49_50 @javax.inject.Inject constructor(
+class Migration_49_50 @Inject constructor(
     val userClock: UserClock,
     val instantConverter: InstantRoomTypeConverter,
     val localDateConverter: LocalDateRoomTypeConverter

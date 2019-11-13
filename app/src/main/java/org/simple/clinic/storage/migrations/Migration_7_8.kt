@@ -1,14 +1,15 @@
 package org.simple.clinic.storage.migrations
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.storage.inTransaction
+import javax.inject.Inject
 
 /**
  * Adds the column `loggedInStatus` to the `LoggedInUser` table
  **/
 @Suppress("ClassName")
-class Migration_7_8 @javax.inject.Inject constructor() : Migration(7, 8) {
+class Migration_7_8 @Inject constructor() : Migration(7, 8) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.inTransaction {

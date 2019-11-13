@@ -1,16 +1,17 @@
 package org.simple.clinic.storage.migrations
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.threeten.bp.Instant
 import java.util.UUID
+import javax.inject.Inject
 
 /**
  * Adds an empty [MedicalHistory] for all patients.
  */
 @Suppress("ClassName")
-class Migration_13_14 @javax.inject.Inject constructor() : Migration(13, 14) {
+class Migration_13_14 @Inject constructor() : Migration(13, 14) {
 
   override fun migrate(db: SupportSQLiteDatabase) {
     db.execSQL("DELETE FROM `MedicalHistory`")

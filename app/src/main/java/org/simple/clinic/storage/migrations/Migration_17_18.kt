@@ -1,15 +1,16 @@
 package org.simple.clinic.storage.migrations
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
+import javax.inject.Inject
 
 /**
  * Removes foreign key references to Facility ID from [BloodPressureMeasurement] and [PrescribedDrug].
  */
 @Suppress("ClassName")
-class Migration_17_18 @javax.inject.Inject constructor() : Migration(17, 18) {
+class Migration_17_18 @Inject constructor() : Migration(17, 18) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     migrateBloodPressureMeasurement(database)

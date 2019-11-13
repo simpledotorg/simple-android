@@ -67,7 +67,17 @@ class BloodPressureRepository @Inject constructor(
   }
 
   fun updateMeasurement(measurement: BloodPressureMeasurement): Completable {
-    return encounterRepository.updateBloodPressure(measurement)
+    val updatedMeasurement = measurement.copy(
+        updatedAt = Instant.now(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+    //TODO [Encounter] Uncomment to enable
+
+    //return encounterRepository.updateBloodPressure(updatedMeasurement)
+
+    return Completable.fromAction {
+      dao.save(listOf(updatedMeasurement))
+    }
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<BloodPressureMeasurement>> {

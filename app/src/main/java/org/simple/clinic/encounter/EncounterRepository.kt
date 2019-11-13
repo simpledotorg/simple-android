@@ -14,7 +14,6 @@ import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -113,39 +112,16 @@ class EncounterRepository @Inject constructor(
     )))
   }
 
-  fun updateBloodPressure(measurement: BloodPressureMeasurement): Completable {
-    val oldEncounterUuid = measurement.encounterUuid
-    val newEncounterUuid = with(measurement) {
-      generateEncounterUuid(facilityUuid, patientUuid, recordedAt.toLocalDateAtZone(userClock.zone))
-    }
+  fun updateBloodPressure(updatedMeasurement: BloodPressureMeasurement): Completable {
+    val encounterUuid = updatedMeasurement.encounterUuid
+    val encounteredOn = updatedMeasurement.recordedAt.toLocalDateAtZone(userClock.zone)
 
-    val updatedMeasurement = measurement.copy(
-        encounterUuid = newEncounterUuid,
-        updatedAt = Instant.now(utcClock),
-        syncStatus = PENDING
-    )
-    val bpSave = Completable.fromAction {
-      database.bloodPressureDao().save(listOf(updatedMeasurement))
-    }
+    val encounter = database.encountersDao().encounter(encounterUuid).take(1)
 
-    return when (oldEncounterUuid == newEncounterUuid) {
-      true -> database.encountersDao()
-          .encounter(oldEncounterUuid)
-          .take(1)
+    return with(database) {
+      val bpSave = Completable.fromAction { bloodPressureDao().save(listOf(updatedMeasurement)) }
+      encounter.filter { it.encounteredOn == encounteredOn }
           .flatMapCompletable { updateEncounter(it).andThen(bpSave) }
-      false -> saveBloodPressureMeasurement(updatedMeasurement).andThen(deleteEncounter(oldEncounterUuid))
-    }
-  }
-
-  private fun deleteEncounter(encounterUuid: UUID): Completable {
-    return Completable.fromAction {
-      val now = Instant.now(utcClock)
-      database.encountersDao().deleteEncounter(
-          encounterUuid = encounterUuid,
-          deletedAt = now,
-          updatedAt = now,
-          syncStatus = PENDING
-      )
     }
   }
 

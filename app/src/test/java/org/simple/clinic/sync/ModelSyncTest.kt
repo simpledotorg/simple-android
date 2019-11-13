@@ -14,6 +14,7 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.encounter.sync.EncounterSync
 import org.simple.clinic.facility.FacilitySync
@@ -52,6 +53,17 @@ class ModelSyncTest {
                   lastPullToken = mock(),
                   configProvider = syncConfigProvider
               )
+            },
+            setOf(PUSH, PULL)),
+        listOf<Any>(
+            { syncCoordinator: SyncCoordinator, userSession: UserSession ->
+              BloodPressureSync(
+                  syncCoordinator = syncCoordinator,
+                  api = mock(),
+                  repository = mock(),
+                  userSession = userSession,
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
             },
             setOf(PUSH, PULL)),
         listOf<Any>(
@@ -231,6 +243,17 @@ class ModelSyncTest {
             shouldPushHappen = false),
         testCase(
             modelSyncProvider = { syncCoordinator, userSession ->
+              BloodPressureSync(
+                  syncCoordinator = syncCoordinator,
+                  api = mock(),
+                  repository = mock(),
+                  userSession = userSession,
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
+            },
+            shouldPushHappen = false),
+        testCase(
+            modelSyncProvider = { syncCoordinator, userSession ->
               PrescriptionSync(
                   syncCoordinator = syncCoordinator,
                   api = mock(),
@@ -344,6 +367,17 @@ class ModelSyncTest {
                   lastPullToken = mock(),
                   configProvider = syncConfigProvider
               )
+            },
+            shouldPullHappen = false),
+        testCase(
+            modelSyncProvider = { syncCoordinator, userSession ->
+              BloodPressureSync(
+                  syncCoordinator = syncCoordinator,
+                  api = mock(),
+                  repository = mock(),
+                  userSession = userSession,
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
             },
             shouldPullHappen = false),
         testCase(

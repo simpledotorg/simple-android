@@ -19,7 +19,6 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.toLocalDateAtZone
-import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -237,7 +236,6 @@ class EncounterRepositoryAndroidTest {
 
     //when
     val updatedMeasurement = bloodPressureMeasurement.copy(systolic = 200)
-    testUtcClock.advanceBy(Duration.ofMinutes(10))
     repository.updateBloodPressure(updatedMeasurement).blockingAwait()
 
     //then
@@ -246,11 +244,7 @@ class EncounterRepositoryAndroidTest {
 
     assertThat(encounters.size).isEqualTo(1)
     with(encounters.first()) {
-      with(bloodPressures.first()) {
-        assertThat(systolic).isEqualTo(updatedMeasurement.systolic)
-        assertThat(syncStatus).isEqualTo(PENDING)
-        assertThat(updatedAt).isEqualTo(Instant.now(testUtcClock))
-      }
+      assertThat(bloodPressures.first()).isEqualTo(updatedMeasurement)
 
       with(encounter) {
         assertThat(encounteredOn).isEqualTo(encounteredDate)
@@ -259,59 +253,6 @@ class EncounterRepositoryAndroidTest {
         assertThat(deletedAt).isEqualTo(updatedBp.deletedAt)
         assertThat(syncStatus).isEqualTo(PENDING)
       }
-    }
-  }
-
-  @Test
-  fun when_bp_recorded_date_is_changed_then_encounterId_should_get_updated_and_old_encounter_should_be_deleted() {
-    //given
-    val patientUuid = UUID.fromString("6f725ffd-7008-4018-9e7c-33346964a0c1")
-    val facilityUuid = UUID.fromString("22bdeedb-061e-4a17-8739-e946a4206593")
-    val bpUuid = UUID.fromString("2edd4c06-e2de-4a18-a8e7-43e2e30c9aba")
-    val encounteredDate = LocalDate.parse("2018-01-01")
-
-    val encounterUuidForOldBp = generateEncounterUuid(facilityUuid, patientUuid, encounteredDate)
-    val bloodPressureMeasurement = testData.bloodPressureMeasurement(
-        uuid = bpUuid,
-        patientUuid = patientUuid,
-        facilityUuid = facilityUuid,
-        recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
-        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        deletedAt = null,
-        syncStatus = PENDING,
-        encounterUuid = encounterUuidForOldBp
-    )
-    repository.saveBloodPressureMeasurement(bloodPressureMeasurement).blockingAwait()
-
-    //when
-    val newRecordedAt = Instant.parse("2018-02-01T00:00:00Z")
-    val updatedMeasurement = bloodPressureMeasurement.copy(recordedAt = newRecordedAt)
-    repository.updateBloodPressure(updatedMeasurement).blockingAwait()
-
-    //then
-    val updatedBp = appDatabase.bloodPressureDao().bloodPressure(bpUuid).blockingFirst()
-    val encounters = appDatabase.encountersDao().recordsWithSyncStatus(PENDING).blockingFirst()
-    val expectedEncounterUuid = generateEncounterUuid(facilityUuid, patientUuid, LocalDate.parse("2018-02-01"))
-
-    with(updatedBp) {
-      assertThat(uuid).isEqualTo(bpUuid)
-      assertThat(encounterUuid).isEqualTo(expectedEncounterUuid)
-      assertThat(recordedAt).isEqualTo(newRecordedAt)
-      assertThat(syncStatus).isEqualTo(PENDING)
-    }
-
-    assertThat(encounters.size).isEqualTo(2)
-    with(encounters[0]) {
-      assertThat(encounter.uuid).isEqualTo(encounterUuidForOldBp)
-      assertThat(encounter.encounteredOn).isEqualTo(LocalDate.parse("2018-01-01"))
-      assertThat(encounter.deletedAt).isNotNull()
-    }
-
-    with(encounters[1]) {
-      assertThat(encounter.uuid).isEqualTo(expectedEncounterUuid)
-      assertThat(encounter.encounteredOn).isEqualTo(LocalDate.parse("2018-02-01"))
-      assertThat(encounter.deletedAt).isNull()
     }
   }
 }

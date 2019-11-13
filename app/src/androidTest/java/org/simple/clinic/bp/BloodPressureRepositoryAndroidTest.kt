@@ -10,14 +10,10 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.encounter.EncounterRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.generateEncounterUuid
-import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -37,9 +33,6 @@ class BloodPressureRepositoryAndroidTest {
 
   @Inject
   lateinit var repository: BloodPressureRepository
-
-  @Inject
-  lateinit var encounterRepository: EncounterRepository
 
   @Inject
   lateinit var testData: TestData
@@ -86,10 +79,9 @@ class BloodPressureRepositoryAndroidTest {
         diastolic = 80,
         createdAt = Instant.now(clock),
         updatedAt = Instant.now(clock),
-        recordedAt = Instant.now(clock),
         syncStatus = SyncStatus.DONE)
 
-    encounterRepository.saveBloodPressureMeasurement(bloodPressure).blockingAwait()
+    appDatabase.bloodPressureDao().save(listOf(bloodPressure))
 
     val durationToAdvanceBy = Duration.ofMinutes(15L)
     clock.advanceBy(durationToAdvanceBy)

@@ -144,19 +144,19 @@ class EncounterRepository @Inject constructor(
         updateEncounterWithBloodPressure(oldEncounterUuid, updatedMeasurement)
       } else {
         saveBloodPressureMeasurement(updatedMeasurement)
-            .andThen(deleteEncounter(encounterUuid = oldEncounterUuid))
+            .andThen(deleteEncounter(oldEncounterUuid))
       }
     }
   }
 
   fun deleteEncounter(encounterUuid: UUID): Completable {
-    val now = Instant.now(utcClock)
     return Completable.fromAction {
-      database.encountersDao().deleteEncounterIfRequired(
+      val now = Instant.now(utcClock)
+      database.encountersDao().deleteEncounter(
           encounterUuid = encounterUuid,
           deletedAt = now,
-          syncStatus = PENDING,
-          updatedAt = now
+          updatedAt = now,
+          syncStatus = PENDING
       )
     }
   }

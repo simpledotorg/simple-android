@@ -10,7 +10,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
@@ -37,9 +36,6 @@ class EncounterRepositoryAndroidTest {
 
   @Inject
   lateinit var repository: EncounterRepository
-
-  @Inject
-  lateinit var bloodPressureRepository: BloodPressureRepository
 
   @Inject
   lateinit var testData: TestData
@@ -340,52 +336,5 @@ class EncounterRepositoryAndroidTest {
     val encounter = appDatabase.encountersDao().getOne(encounterUuid)!!
 
     assertThat(encounter.deletedAt).isNotNull()
-  }
-
-  @Test
-  fun encounter_should_be_marked_as_sync_pending_even_when_a_bp_is_deleted_but_that_encounter_is_not() {
-    //given
-    val patientUuid = UUID.fromString("6f725ffd-7008-4018-9e7c-33346964a0c1")
-    val facilityUuid = UUID.fromString("22bdeedb-061e-4a17-8739-e946a4206593")
-    val bpUuid1 = UUID.fromString("2edd4c06-e2de-4a18-a8e7-43e2e30c9aba")
-    val bpUuid2 = UUID.fromString("da8d6348-24de-4259-bcd7-849f6052661f")
-    val encounteredDate = LocalDate.parse("2018-01-01")
-
-    val encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, encounteredDate)
-    val bloodPressureMeasurement1 = testData.bloodPressureMeasurement(
-        uuid = bpUuid1,
-        patientUuid = patientUuid,
-        facilityUuid = facilityUuid,
-        recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
-        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        deletedAt = null,
-        syncStatus = DONE,
-        encounterUuid = encounterUuid
-    )
-
-    val bloodPressureMeasurement2 = testData.bloodPressureMeasurement(
-        uuid = bpUuid2,
-        patientUuid = patientUuid,
-        facilityUuid = facilityUuid,
-        recordedAt = Instant.parse("2018-01-01T00:02:00Z"),
-        createdAt = Instant.parse("2018-01-01T00:02:00Z"),
-        updatedAt = Instant.parse("2018-01-01T00:02:00Z"),
-        deletedAt = null,
-        syncStatus = DONE,
-        encounterUuid = encounterUuid
-    )
-    repository.saveBloodPressureMeasurement(bloodPressureMeasurement1).blockingAwait()
-    repository.saveBloodPressureMeasurement(bloodPressureMeasurement2).blockingAwait()
-
-    //when
-    repository.setSyncStatus(listOf(encounterUuid), DONE).blockingAwait()
-    bloodPressureRepository.markBloodPressureAsDeleted(bloodPressureMeasurement1).blockingAwait()
-
-    //then
-    val encounter = appDatabase.encountersDao().getOne(encounterUuid)!!
-
-    assertThat(encounter.syncStatus).isEqualTo(PENDING)
-    assertThat(encounter.deletedAt).isNull()
   }
 }

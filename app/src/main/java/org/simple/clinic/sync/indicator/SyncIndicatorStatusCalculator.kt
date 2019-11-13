@@ -1,7 +1,7 @@
 package org.simple.clinic.sync.indicator
 
-import android.annotation.SuppressLint
 import com.f2prateek.rx.preferences2.Preference
+import io.reactivex.disposables.Disposable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
@@ -12,6 +12,7 @@ import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import javax.annotation.CheckReturnValue
 import javax.inject.Inject
 
 @AppScope
@@ -22,13 +23,13 @@ class SyncIndicatorStatusCalculator @Inject constructor(
     private val schedulersProvider: SchedulersProvider
 ) {
 
-  @SuppressLint("CheckResult")
-  fun updateSyncResults() {
+  @CheckReturnValue
+  fun updateSyncResults(): Disposable {
     val syncResultsStream = dataSync
         .streamSyncResults()
         .distinctUntilChanged()
 
-    syncResultsStream
+    return syncResultsStream
         .subscribeOn(schedulersProvider.io())
         .filter { it.syncGroup == FREQUENT }
         .map { it.syncProgress }

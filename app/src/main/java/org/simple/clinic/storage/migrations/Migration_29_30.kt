@@ -5,10 +5,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.f2prateek.rx.preferences2.Preference
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.util.Optional
+import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("ClassName")
-class Migration_29_30 @javax.inject.Inject constructor(
+class Migration_29_30 @Inject constructor(
     @Named("last_patient_pull_token")
     private val lastPatientPullToken: Preference<Optional<String>>
 ) : Migration(29, 30) {

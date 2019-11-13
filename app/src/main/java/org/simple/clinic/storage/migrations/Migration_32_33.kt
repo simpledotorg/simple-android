@@ -2,9 +2,10 @@ package org.simple.clinic.storage.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_32_33 @javax.inject.Inject constructor() : Migration(32, 33) {
+class Migration_32_33 @Inject constructor() : Migration(32, 33) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.execSQL("""

@@ -1,11 +1,12 @@
 package org.simple.clinic.storage.migrations
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.storage.inTransaction
+import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_20_21 @javax.inject.Inject constructor() : Migration(20, 21) {
+class Migration_20_21 @Inject constructor() : Migration(20, 21) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.inTransaction {

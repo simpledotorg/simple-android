@@ -4,9 +4,10 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
+import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_34_35 @javax.inject.Inject constructor(
+class Migration_34_35 @Inject constructor(
     private val utcClock: UtcClock
 ) : Migration(34, 35) {
 

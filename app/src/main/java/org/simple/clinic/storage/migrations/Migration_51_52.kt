@@ -2,6 +2,7 @@ package org.simple.clinic.storage.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import javax.inject.Inject
 
 /**
  * An earlier migration, [Migration_49_50], had a bug where where BPs which were not deleted would
@@ -15,7 +16,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * This migration exists to change the deletedAt property for those encounters to be an SQL NULL.
  **/
 @Suppress("ClassName")
-class Migration_51_52 @javax.inject.Inject constructor() : Migration(51, 52) {
+class Migration_51_52 @Inject constructor() : Migration(51, 52) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.execSQL(""" UPDATE "Encounter" SET "deletedAt" = NULL WHERE "deletedAt" = 'null' """)

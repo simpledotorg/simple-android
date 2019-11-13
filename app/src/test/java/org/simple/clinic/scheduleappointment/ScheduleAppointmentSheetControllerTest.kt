@@ -222,6 +222,30 @@ class ScheduleAppointmentSheetControllerTest {
   }
 
   @Test
+  fun `when protocol is not provided, then config default follow up days must be set`() {
+    // given
+    val scheduleAppointmentsIn = listOf(
+        Days(1),
+        Days(2),
+        Days(7)
+    )
+
+    // when
+    val protocol = PatientMocker.protocol(protocolUuid, 2)
+    sheetCreated(
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.never(),
+        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
+    )
+
+    //then
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
+  }
+
+  @Test
   fun `when date is selected and date is incremented, the nearest date should be chosen`() {
     // given
     val scheduleAppointmentsIn = listOf(
@@ -478,7 +502,7 @@ class ScheduleAppointmentSheetControllerTest {
       patientUuid: UUID = this.patientUuid,
       user: User = this.user,
       facility: Facility = this.facility,
-      protocolUuid: UUID = this.protocol.uuid,
+      protocolUuid: UUID = this.protocolUuid,
       protocol: Observable<Protocol> = Observable.just(this.protocol),
       config: AppointmentConfig = this.appointmentConfig
   ) {

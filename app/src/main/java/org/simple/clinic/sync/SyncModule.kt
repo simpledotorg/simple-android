@@ -10,7 +10,6 @@ import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.sync.PrescriptionSync
-import org.simple.clinic.encounter.EncounterModule
 import org.simple.clinic.facility.FacilityModule
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.help.HelpModule
@@ -43,8 +42,7 @@ import javax.inject.Named
   MedicalHistoryModule::class,
   ProtocolModule::class,
   ReportsModule::class,
-  HelpModule::class,
-  EncounterModule::class])
+  HelpModule::class])
 class SyncModule {
 
   @Provides

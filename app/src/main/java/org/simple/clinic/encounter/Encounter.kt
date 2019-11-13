@@ -65,10 +65,8 @@ data class Encounter(
     @Query("""
       UPDATE Encounter 
       SET syncStatus = :syncStatus, deletedAt = :deletedAt, updatedAt = :updatedAt 
-      WHERE uuid  = :encounterUuid AND uuid NOT IN (
-        SELECT encounterUuid FROM BloodPressureMeasurement WHERE deletedAt IS NULL
-       )
-      """)
+      WHERE uuid  = :encounterUuid AND uuid NOT IN (SELECT encounterUuid FROM BloodPressureMeasurement)
+    """)
     fun deleteEncounter(
         encounterUuid: UUID,
         deletedAt: Instant,

@@ -74,4 +74,28 @@ class BloodPressureRepositoryTest {
       assertThat(measurement.userUuid).isEqualTo(loggedInUser.uuid)
     })
   }
+
+  @Test
+  @Parameters(value = [
+    "PENDING, false",
+    "INVALID, true",
+    "DONE, true"])
+  fun `when merging measurements with server records, ignore records that already exist locally and are syncing or pending-sync`(
+      syncStatusOfLocalCopy: SyncStatus,
+      serverRecordExpectedToBeSaved: Boolean
+  ) {
+    val bpUuid = UUID.randomUUID()
+
+    val localCopy = PatientMocker.bp(bpUuid, syncStatus = syncStatusOfLocalCopy)
+    whenever(dao.getOne(bpUuid)).doReturn(localCopy)
+
+    val serverBp = PatientMocker.bp(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
+    repository.mergeWithLocalData(listOf(serverBp)).blockingAwait()
+
+    if (serverRecordExpectedToBeSaved) {
+      verify(dao).save(argThat { isNotEmpty() })
+    } else {
+      verify(dao).save(argThat { isEmpty() })
+    }
+  }
 }

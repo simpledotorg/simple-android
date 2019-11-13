@@ -58,7 +58,7 @@ class BloodPressureRepository @Inject constructor(
         recordedAt = recordedAt,
         encounterUuid = encounterUuid)
 
-    return encounterRepository.saveBloodPressureMeasurement(bloodPressureMeasurement)
+    return encounterRepository.saveBloodPressureMeasurement(bloodPressureMeasurement, encounteredDate)
         .toSingleDefault(bloodPressureMeasurement)
   }
 
@@ -67,15 +67,12 @@ class BloodPressureRepository @Inject constructor(
   }
 
   fun updateMeasurement(measurement: BloodPressureMeasurement): Completable {
-    val updatedMeasurement = measurement.copy(
-        updatedAt = Instant.now(utcClock),
-        syncStatus = SyncStatus.PENDING
-    )
-    //TODO [Encounter] Uncomment to enable
-
-    //return encounterRepository.updateBloodPressure(updatedMeasurement)
-
     return Completable.fromAction {
+      val updatedMeasurement = measurement.copy(
+          updatedAt = Instant.now(utcClock),
+          syncStatus = SyncStatus.PENDING
+      )
+
       dao.save(listOf(updatedMeasurement))
     }
   }

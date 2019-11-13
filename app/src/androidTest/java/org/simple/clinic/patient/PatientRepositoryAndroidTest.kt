@@ -15,7 +15,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.encounter.EncounterRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer
@@ -85,9 +84,6 @@ class PatientRepositoryAndroidTest {
 
   @Inject
   lateinit var reportsRepository: ReportsRepository
-
-  @Inject
-  lateinit var encounterRepository: EncounterRepository
 
   @Inject
   lateinit var database: AppDatabase
@@ -357,8 +353,9 @@ class PatientRepositoryAndroidTest {
         createBp(UUID.fromString("eeeb56bd-a191-4dbb-8d0d-a811b246e856"), patientWithLatestBpDeleted.patientUuid, recordedAt = now),
         createBp(UUID.fromString("6e6be627-2b76-4acc-b932-342cd693663e"), patientWithLatestBpDeleted.patientUuid, recordedAt = now.plusSeconds(5L), deletedAt = now)
     )
-    patientRepository.save(listOf(patientWithLatestBpDeleted)).blockingAwait()
-    database.bloodPressureDao().save(bpsForPatientWithLatestBpDeleted)
+    patientRepository.save(listOf(patientWithLatestBpDeleted))
+        .andThen(bloodPressureRepository.save(bpsForPatientWithLatestBpDeleted))
+        .blockingAwait()
 
     val patientWithOneDeletedBp = createPatientProfile(
         patientUuid = UUID.fromString("bc6116a5-4417-4f0e-869b-c01039aa1b67"),
@@ -367,8 +364,9 @@ class PatientRepositoryAndroidTest {
     val bpsForPatientWithOneDeletedBp = listOf(
         createBp(UUID.fromString("08e5c49c-88f7-4612-9d79-0b994af80036"), patientWithOneDeletedBp.patientUuid, recordedAt = now, deletedAt = now)
     )
-    patientRepository.save(listOf(patientWithOneDeletedBp)).blockingAwait()
-    database.bloodPressureDao().save(bpsForPatientWithOneDeletedBp)
+    patientRepository.save(listOf(patientWithOneDeletedBp))
+        .andThen(bloodPressureRepository.save(bpsForPatientWithOneDeletedBp))
+        .blockingAwait()
 
     val patientWithTwoDeletedBps = createPatientProfile(
         patientUuid = UUID.fromString("8d8419bf-205f-4ccf-8262-e29eb42ba437"),
@@ -378,8 +376,9 @@ class PatientRepositoryAndroidTest {
         createBp(UUID.fromString("37c0ae26-f91e-4845-8c5b-3ac4550902f3"), patientWithTwoDeletedBps.patientUuid, recordedAt = now, deletedAt = now),
         createBp(UUID.fromString("d40861d5-bf3a-4418-a7e5-0f5bedcb416d"), patientWithTwoDeletedBps.patientUuid, recordedAt = now.plusSeconds(1L), deletedAt = now)
     )
-    patientRepository.save(listOf(patientWithTwoDeletedBps)).blockingAwait()
-    database.bloodPressureDao().save(bpsForPatientWithTwoDeletedBps)
+    patientRepository.save(listOf(patientWithTwoDeletedBps))
+        .andThen(bloodPressureRepository.save(bpsForPatientWithTwoDeletedBps))
+        .blockingAwait()
 
     val patientWithNoBps = createPatientProfile(
         patientUuid = UUID.fromString("83b29eae-3600-420a-9289-7997571bf623"),
@@ -427,7 +426,6 @@ class PatientRepositoryAndroidTest {
 
     val rangeOfRecords = 1..4
     val bloodPressurePayloads = rangeOfRecords.map { testData.bpPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
-    val encounterPayload = rangeOfRecords.map { testData.encounterPayload(patientUuid = patientUuid, uuid = UUID.randomUUID(), bpPayloads = bloodPressurePayloads) }
     val prescriptionPayloads = rangeOfRecords.map { testData.prescriptionPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
     val appointmentPayloads = rangeOfRecords.map { testData.appointmentPayload(patientUuid = patientUuid) }
 
@@ -436,10 +434,10 @@ class PatientRepositoryAndroidTest {
 
     Completable.mergeArray(
         patientRepository.mergeWithLocalData(patientPayloads),
+        bloodPressureRepository.mergeWithLocalData(bloodPressurePayloads),
         prescriptionRepository.mergeWithLocalData(prescriptionPayloads),
         appointmentRepository.mergeWithLocalData(appointmentPayloads),
-        medicalHistoryRepository.mergeWithLocalData(medicalHistoryPayloads),
-        encounterRepository.mergeWithLocalData(encounterPayload)
+        medicalHistoryRepository.mergeWithLocalData(medicalHistoryPayloads)
     ).blockingAwait()
 
     reportsRepository.updateReports("test reports!").blockingAwait()
@@ -459,7 +457,6 @@ class PatientRepositoryAndroidTest {
     assertThat(database.userFacilityMappingDao().mappingsForUser(user.uuid).blockingFirst()).isNotEmpty()
     assertThat(database.appointmentDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isGreaterThan(0)
-    assertThat(database.encountersDao().recordCount().blockingFirst()).isGreaterThan(0)
     assertThat(reportsFile!!.exists()).isTrue()
 
     patientRepository.clearPatientData().blockingAwait()
@@ -1362,12 +1359,12 @@ class PatientRepositoryAndroidTest {
           .uuid
 
       bpMeasurement?.forEach {
-        database.bloodPressureDao().save(listOf(testData.bloodPressureMeasurement(
+        bloodPressureRepository.save(listOf(testData.bloodPressureMeasurement(
             patientUuid = patientUuid,
             systolic = it.systolic,
             diastolic = it.diastolic,
             recordedAt = it.recordedAt
-        )))
+        ))).blockingAwait()
       }
       medicalHistoryRepository.save(listOf(testData.medicalHistory(
           patientUuid = patientUuid,
@@ -1646,11 +1643,11 @@ class PatientRepositoryAndroidTest {
         recordedAt = patientCreatedDate.plus(1, ChronoUnit.MINUTES)
     )
 
-    database.bloodPressureDao().save(listOf(
+    bloodPressureRepository.save(listOf(
         bpRecordedTwoDaysBeforePatientCreated,
         bpRecordedOneDayBeforePatientCreated,
         bpRecordedOneMinuteAfterPatientCreated
-    ))
+    )).blockingAwait()
     patientRepository.updateRecordedAt(patientUuid).blockingAwait()
     loadPatient(patientUuid).let { savedPatient ->
       val expectedRecordedAt = bpRecordedTwoDaysBeforePatientCreated.recordedAt
@@ -1778,7 +1775,7 @@ class PatientRepositoryAndroidTest {
       val bp = testData.bloodPressureMeasurement(patientUuid = patientUuid, facilityUuid = facility.uuid)
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
-      database.bloodPressureDao().save(listOf(bp))
+      bloodPressureRepository.save(listOf(bp)).blockingAwait()
     }
 
     // given
@@ -1868,7 +1865,7 @@ class PatientRepositoryAndroidTest {
     fun recordBp(uuid: UUID, patientUuid: UUID, facilityUuid: UUID, recordedAt: Instant) {
       val bp = testData.bloodPressureMeasurement(uuid = uuid, patientUuid = patientUuid, facilityUuid = facilityUuid, recordedAt = recordedAt)
 
-      database.bloodPressureDao().save(listOf(bp))
+      bloodPressureRepository.save(listOf(bp)).blockingAwait()
     }
 
     // given
@@ -2138,7 +2135,7 @@ class PatientRepositoryAndroidTest {
           }
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
-      database.bloodPressureDao().save(bpMeasurements)
+      bloodPressureRepository.save(bpMeasurements).blockingAwait()
     }
 
     fun searchResults(phoneNumber: String): Map<UUID, Optional<LastBp>> {
@@ -2378,7 +2375,7 @@ class PatientRepositoryAndroidTest {
       val bp = testData.bloodPressureMeasurement(patientUuid = patientUuid, facilityUuid = facility.uuid)
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
-      database.bloodPressureDao().save(listOf(bp))
+      bloodPressureRepository.save(listOf(bp)).blockingAwait()
     }
 
     //given

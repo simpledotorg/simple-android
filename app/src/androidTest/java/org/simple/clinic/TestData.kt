@@ -816,7 +816,7 @@ class TestData @Inject constructor(
 
   fun observationsForEncounter(
       encounter: Encounter,
-      bloodPressures: List<BloodPressureMeasurement> = listOf(bloodPressureMeasurement(encounterUuid = encounter.uuid))
+      bloodPressures: List<BloodPressureMeasurement> = listOf(bloodPressureMeasurement())
   ): ObservationsForEncounter {
     return ObservationsForEncounter(
         encounter,

@@ -1,5 +1,6 @@
 package org.simple.clinic.sync
 
+import io.reactivex.disposables.Disposable
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -20,7 +21,7 @@ class SyncDataOnApproval @Inject constructor(
    * of the changes in the user status and we can explicitly check for the case where a user
    * becomes `ApprovedForSyncing` from some other state.
    **/
-  override fun sync() {
+  override fun sync(): Disposable {
     val syncSignal = userSession
         .loggedInUser()
         .filterAndUnwrapJust()
@@ -29,7 +30,7 @@ class SyncDataOnApproval @Inject constructor(
         .filter { (previousStatus, currentStatus) -> currentStatus == ApprovedForSyncing && previousStatus != ApprovedForSyncing }
         .map { Unit }
 
-    syncSignal
+    return syncSignal
         .observeOn(schedulersProvider.io())
         .flatMapCompletable { dataSync.syncTheWorld() }
         .subscribe()

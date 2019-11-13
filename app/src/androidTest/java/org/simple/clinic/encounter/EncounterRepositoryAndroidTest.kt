@@ -137,20 +137,26 @@ class EncounterRepositoryAndroidTest {
 
     //then
     val bps = appDatabase.bloodPressureDao().bloodPressure(bpUuid).blockingFirst()
-    val observationsForEncounters = appDatabase.encountersDao().recordsWithSyncStatus(PENDING).blockingFirst().first()
+    val encounters = appDatabase.encountersDao().recordsWithSyncStatus(PENDING).blockingFirst()
 
-    with(observationsForEncounters.encounter) {
-      assertThat(encounteredOn).isEqualTo(encounteredDate)
-      assertThat(createdAt).isEqualTo(bps.createdAt)
-      assertThat(updatedAt).isEqualTo(bps.updatedAt)
-      assertThat(deletedAt).isEqualTo(bps.deletedAt)
-      assertThat(syncStatus).isEqualTo(bps.syncStatus)
-    }
+    assertThat(encounters).isNotEmpty()
 
-    with(observationsForEncounters.bloodPressures.first()) {
-      assertThat(bps).isEqualTo(this)
-      assertThat(bps.patientUuid).isEqualTo(patientUuid)
-      assertThat(bps.encounterUuid).isEqualTo(observationsForEncounters.encounter.uuid)
+    with(encounters.first()) {
+
+      with(encounter) {
+        assertThat(encounteredOn).isEqualTo(encounteredDate)
+        assertThat(createdAt).isEqualTo(bps.createdAt)
+        assertThat(updatedAt).isEqualTo(bps.updatedAt)
+        assertThat(deletedAt).isEqualTo(bps.deletedAt)
+        assertThat(syncStatus).isEqualTo(bps.syncStatus)
+      }
+
+      assertThat(bps).isEqualTo(bloodPressures.first())
+
+      with(bps) {
+        assertThat(this.patientUuid).isEqualTo(patientUuid)
+        assertThat(encounterUuid).isEqualTo(encounter.uuid)
+      }
     }
   }
 
@@ -211,13 +217,12 @@ class EncounterRepositoryAndroidTest {
   }
 
   @Test
-  fun when_a_bp_is_updated_then_its_encounter_should_also_get_updated_correctly() {
+  fun when_a_bp_is_updated_then_its_encounter_should_also_get_updated() {
     //given
     val patientUuid = UUID.fromString("6f725ffd-7008-4018-9e7c-33346964a0c1")
     val facilityUuid = UUID.fromString("22bdeedb-061e-4a17-8739-e946a4206593")
     val bpUuid = UUID.fromString("2edd4c06-e2de-4a18-a8e7-43e2e30c9aba")
     val encounteredDate = LocalDate.parse("2018-01-01")
-
     val bloodPressureMeasurement = testData.bloodPressureMeasurement(
         uuid = bpUuid,
         patientUuid = patientUuid,
@@ -237,20 +242,23 @@ class EncounterRepositoryAndroidTest {
 
     //then
     val updatedBp = appDatabase.bloodPressureDao().bloodPressure(bpUuid).blockingFirst()
-    val observationsForEncounter = appDatabase.encountersDao().recordsWithSyncStatus(PENDING).blockingFirst().first()
+    val encounters = appDatabase.encountersDao().recordsWithSyncStatus(PENDING).blockingFirst()
 
-    with(observationsForEncounter.bloodPressures.first()) {
-      assertThat(systolic).isEqualTo(updatedMeasurement.systolic)
-      assertThat(syncStatus).isEqualTo(PENDING)
-      assertThat(updatedAt).isEqualTo(Instant.now(testUtcClock))
-    }
+    assertThat(encounters.size).isEqualTo(1)
+    with(encounters.first()) {
+      with(bloodPressures.first()) {
+        assertThat(systolic).isEqualTo(updatedMeasurement.systolic)
+        assertThat(syncStatus).isEqualTo(PENDING)
+        assertThat(updatedAt).isEqualTo(Instant.now(testUtcClock))
+      }
 
-    with(observationsForEncounter.encounter) {
-      assertThat(encounteredOn).isEqualTo(encounteredDate)
-      assertThat(createdAt).isEqualTo(bloodPressureMeasurement.createdAt)
-      assertThat(updatedAt).isEqualTo(updatedBp.updatedAt)
-      assertThat(deletedAt).isEqualTo(bloodPressureMeasurement.deletedAt)
-      assertThat(syncStatus).isEqualTo(PENDING)
+      with(encounter) {
+        assertThat(encounteredOn).isEqualTo(encounteredDate)
+        assertThat(createdAt).isEqualTo(updatedBp.createdAt)
+        assertThat(updatedAt).isEqualTo(updatedBp.updatedAt)
+        assertThat(deletedAt).isEqualTo(updatedBp.deletedAt)
+        assertThat(syncStatus).isEqualTo(PENDING)
+      }
     }
   }
 
@@ -308,7 +316,7 @@ class EncounterRepositoryAndroidTest {
   }
 
   @Test
-  fun encounter_should_only_be_deleted_if_there_are_no_associated_active_observations() {
+  fun deleting_an_encounter_should_check_for_any_associated_active_observations(){
     //given
     val patientUuid = UUID.fromString("6f725ffd-7008-4018-9e7c-33346964a0c1")
     val facilityUuid = UUID.fromString("22bdeedb-061e-4a17-8739-e946a4206593")

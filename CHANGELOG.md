@@ -3,7 +3,6 @@
 ## Next Release
 ### Internal
 - Remove old edit patient screen
-- Add and sync Encounters for all recorded BPs
 - Add a feature toggle for the phone masking feature
 - Disable phone masking feature by default
 - Remove Heap analytics

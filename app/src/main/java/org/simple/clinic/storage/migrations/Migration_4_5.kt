@@ -3,9 +3,10 @@ package org.simple.clinic.storage.migrations
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.storage.inTransaction
+import javax.inject.Inject
 
 @Suppress("ClassName")
-class Migration_4_5 @javax.inject.Inject constructor() : Migration(4, 5) {
+class Migration_4_5 @Inject constructor() : Migration(4, 5) {
 
   /**
    * [Regex] for stripping patient names and search queries of white spaces and punctuation

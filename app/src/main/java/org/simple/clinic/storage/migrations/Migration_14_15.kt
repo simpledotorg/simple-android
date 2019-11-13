@@ -1,14 +1,15 @@
 package org.simple.clinic.storage.migrations
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.medicalhistory.MedicalHistory
+import javax.inject.Inject
 
 /**
  * Adds [MedicalHistory.diagnosedWithHypertension] column.
  */
 @Suppress("ClassName")
-class Migration_14_15 @javax.inject.Inject constructor() : Migration(14, 15) {
+class Migration_14_15 @Inject constructor() : Migration(14, 15) {
 
   override fun migrate(database: SupportSQLiteDatabase) {
     database.execSQL("""

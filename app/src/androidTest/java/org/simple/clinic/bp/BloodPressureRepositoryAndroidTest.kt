@@ -7,7 +7,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
@@ -29,7 +28,7 @@ class BloodPressureRepositoryAndroidTest {
   lateinit var clock: TestUtcClock
 
   @Inject
-  lateinit var appDatabase: AppDatabase
+  lateinit var appDatabase: org.simple.clinic.AppDatabase
 
   @Inject
   lateinit var repository: BloodPressureRepository

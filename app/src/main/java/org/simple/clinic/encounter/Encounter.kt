@@ -64,27 +64,19 @@ data class Encounter(
 
     @Query("""
       UPDATE Encounter 
-      SET syncStatus = :syncStatus, updatedAt = :updatedAt,
-      deletedAt = CASE WHEN :encounterUuid NOT IN (
+      SET syncStatus = :syncStatus, deletedAt = :deletedAt, updatedAt = :updatedAt 
+      WHERE uuid  = :encounterUuid AND uuid NOT IN (
         SELECT encounterUuid FROM BloodPressureMeasurement WHERE deletedAt IS NULL
-       ) THEN :deletedAt ELSE deletedAt END
-        WHERE uuid = :encounterUuid
+       )
       """)
-    fun deleteEncounterIfRequired(
+    fun deleteEncounter(
         encounterUuid: UUID,
         deletedAt: Instant,
-        syncStatus: SyncStatus,
+        syncStatus: SyncStatus = SyncStatus.PENDING,
         updatedAt: Instant
     )
 
     @Query("DELETE FROM Encounter")
     fun clear()
-
-    @Query("""
-      UPDATE Encounter 
-      SET syncStatus = :syncStatus, updatedAt = :updatedAt 
-      WHERE uuid = :encounterUuid
-    """)
-    fun markEncounterForSyncing(encounterUuid: UUID, syncStatus: SyncStatus, updatedAt: Instant)
   }
 }

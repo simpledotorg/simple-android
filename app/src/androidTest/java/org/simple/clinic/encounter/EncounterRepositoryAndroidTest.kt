@@ -1,22 +1,17 @@
 package org.simple.clinic.encounter
 
-import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.SyncStatus.DONE
-import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
@@ -24,14 +19,10 @@ import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
 class EncounterRepositoryAndroidTest {
 
   @Inject
   lateinit var appDatabase: AppDatabase
-
-  @Inject
-  lateinit var testUtcClock: TestUtcClock
 
   @Inject
   lateinit var repository: EncounterRepository
@@ -51,7 +42,6 @@ class EncounterRepositoryAndroidTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-    testUtcClock.setDate(LocalDate.parse("2018-01-01"))
   }
 
   @Test
@@ -87,7 +77,7 @@ class EncounterRepositoryAndroidTest {
     val encounter1 = testData.encounter(
         uuid = encounterUuid1,
         patientUuid = patientUuid,
-        syncStatus = PENDING,
+        syncStatus = SyncStatus.PENDING,
         updatedAt = Instant.parse("2018-02-13T00:00:00Z")
     )
     repository.save(listOf(testData.observationsForEncounter(
@@ -97,7 +87,7 @@ class EncounterRepositoryAndroidTest {
     //when
     repository.mergeWithLocalData(listOf(encountersPayload1, encountersPayload2)).blockingAwait()
     val observationsForEncounters = repository.recordsWithSyncStatus(SyncStatus.DONE).blockingGet()
-    val pendingObservationsForEncounters = repository.recordsWithSyncStatus(PENDING).blockingGet()
+    val pendingObservationsForEncounters = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
 
     //then
     assertThat(observationsForEncounters.size).isEqualTo(1)
@@ -127,16 +117,16 @@ class EncounterRepositoryAndroidTest {
         recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
         createdAt = Instant.parse("2018-01-01T00:00:00Z"),
         updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = PENDING,
+        syncStatus = SyncStatus.PENDING,
         encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, encounteredDate)
     )
 
     //when
-    repository.saveBloodPressureMeasurement(bloodPressureMeasurement).blockingAwait()
+    repository.saveBloodPressureMeasurement(bloodPressureMeasurement, encounteredDate).blockingAwait()
 
     //then
     val bps = appDatabase.bloodPressureDao().bloodPressure(bpUuid).blockingFirst()
-    val encounters = appDatabase.encountersDao().recordsWithSyncStatus(PENDING).blockingFirst()
+    val encounters = appDatabase.encountersDao().recordsWithSyncStatus(SyncStatus.PENDING).blockingFirst()
 
     assertThat(encounters).isNotEmpty()
 
@@ -175,7 +165,7 @@ class EncounterRepositoryAndroidTest {
         recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
         createdAt = Instant.parse("2018-01-01T00:00:00Z"),
         updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = PENDING,
+        syncStatus = SyncStatus.PENDING,
         encounterUuid = encounterUuid
     )
 
@@ -194,65 +184,24 @@ class EncounterRepositoryAndroidTest {
     )
 
     //when
-    repository.saveBloodPressureMeasurement(alreadySavedBloodPressure).blockingAwait()
-    repository.saveBloodPressureMeasurement(bloodPressureToBeSaved).blockingAwait()
+    repository.saveBloodPressureMeasurement(alreadySavedBloodPressure, encounteredDateForAlreadySavedBp).blockingAwait()
+    repository.saveBloodPressureMeasurement(bloodPressureToBeSaved, encounteredDate).blockingAwait()
 
     //then
-    val updatedBp = appDatabase.bloodPressureDao().bloodPressure(bpUuid).blockingFirst()
-    val encounters = appDatabase.encountersDao().recordsWithSyncStatus(PENDING).blockingFirst()
+    val savedBp = appDatabase.bloodPressureDao().bloodPressure(bpUuid).blockingFirst()
+    val encounters = appDatabase.encountersDao().recordsWithSyncStatus(SyncStatus.PENDING).blockingFirst()
 
     assertThat(encounters.size).isEqualTo(1)
 
     with(encounters.first()) {
       with(encounter) {
         assertThat(encounteredOn).isEqualTo(encounteredDate)
-        assertThat(createdAt).isEqualTo(updatedBp.createdAt)
-        assertThat(updatedAt).isEqualTo(updatedBp.updatedAt)
-        assertThat(deletedAt).isEqualTo(updatedBp.deletedAt)
-        assertThat(syncStatus).isEqualTo(updatedBp.syncStatus)
+        assertThat(createdAt).isEqualTo(savedBp.createdAt)
+        assertThat(updatedAt).isEqualTo(savedBp.updatedAt)
+        assertThat(deletedAt).isEqualTo(savedBp.deletedAt)
+        assertThat(syncStatus).isEqualTo(savedBp.syncStatus)
       }
       assertThat(bloodPressures).isEqualTo(listOf(alreadySavedBloodPressure, bloodPressureToBeSaved))
-    }
-  }
-
-  @Test
-  fun when_a_bp_is_updated_then_its_encounter_should_also_get_updated() {
-    //given
-    val patientUuid = UUID.fromString("6f725ffd-7008-4018-9e7c-33346964a0c1")
-    val facilityUuid = UUID.fromString("22bdeedb-061e-4a17-8739-e946a4206593")
-    val bpUuid = UUID.fromString("2edd4c06-e2de-4a18-a8e7-43e2e30c9aba")
-    val encounteredDate = LocalDate.parse("2018-01-01")
-    val bloodPressureMeasurement = testData.bloodPressureMeasurement(
-        uuid = bpUuid,
-        patientUuid = patientUuid,
-        facilityUuid = facilityUuid,
-        recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
-        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = DONE,
-        encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, encounteredDate)
-    )
-    repository.saveBloodPressureMeasurement(bloodPressureMeasurement).blockingAwait()
-
-    //when
-    val updatedMeasurement = bloodPressureMeasurement.copy(systolic = 200)
-    repository.updateBloodPressure(updatedMeasurement).blockingAwait()
-
-    //then
-    val updatedBp = appDatabase.bloodPressureDao().bloodPressure(bpUuid).blockingFirst()
-    val encounters = appDatabase.encountersDao().recordsWithSyncStatus(PENDING).blockingFirst()
-
-    assertThat(encounters.size).isEqualTo(1)
-    with(encounters.first()) {
-      assertThat(bloodPressures.first()).isEqualTo(updatedMeasurement)
-
-      with(encounter) {
-        assertThat(encounteredOn).isEqualTo(encounteredDate)
-        assertThat(createdAt).isEqualTo(updatedBp.createdAt)
-        assertThat(updatedAt).isEqualTo(updatedBp.updatedAt)
-        assertThat(deletedAt).isEqualTo(updatedBp.deletedAt)
-        assertThat(syncStatus).isEqualTo(PENDING)
-      }
     }
   }
 }

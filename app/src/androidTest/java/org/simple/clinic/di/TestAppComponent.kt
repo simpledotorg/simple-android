@@ -6,6 +6,7 @@ import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
+import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.encounter.EncounterRepositoryAndroidTest
@@ -48,6 +49,7 @@ interface TestAppComponent : AppComponent {
   fun inject(target: TestClinicApp)
   fun inject(target: UserSessionAndroidTest)
   fun inject(target: PrescriptionSyncAndroidTest)
+  fun inject(target: BloodPressureSyncAndroidTest)
   fun inject(target: ProtocolSyncAndroidTest)
   fun inject(target: PatientRepositoryAndroidTest)
   fun inject(target: PrescriptionRepositoryAndroidTest)

@@ -9,6 +9,7 @@ import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
+import org.simple.clinic.user.User
 
 @Module(includes = [
   RoomMigrationsModule::class,
@@ -32,4 +33,9 @@ class StorageModule {
 
   @Provides
   fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory()
+
+  @Provides
+  fun userDao(appDatabase: AppDatabase): User.RoomDao {
+    return appDatabase.userDao()
+  }
 }

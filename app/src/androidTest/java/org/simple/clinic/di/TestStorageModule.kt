@@ -11,6 +11,7 @@ import org.simple.clinic.storage.FileStorageModule
 import org.simple.clinic.storage.RoomMigrationsModule
 import org.simple.clinic.storage.SharedPreferencesModule
 import org.simple.clinic.summary.PatientSummaryModule
+import org.simple.clinic.user.User
 
 @Module(includes = [
   RoomMigrationsModule::class,
@@ -35,5 +36,10 @@ class TestStorageModule {
         .openHelperFactory(factory)
         .apply { allowMainThreadQueries() }
         .build()
+  }
+
+  @Provides
+  fun userDao(appDatabase: AppDatabase): User.RoomDao {
+    return appDatabase.userDao()
   }
 }

@@ -63,7 +63,6 @@ import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.assertLatestValue
@@ -103,6 +102,7 @@ class UserSessionTest {
       }"""
 
   private val dataSync = mock<DataSync>()
+  private val dataSyncLazy = dagger.Lazy { dataSync }
   private val medicalHistoryPullToken = mock<Preference<Optional<String>>>()
   private val appointmentPullToken = mock<Preference<Optional<String>>>()
   private val prescriptionPullToken = mock<Preference<Optional<String>>>()
@@ -113,21 +113,31 @@ class UserSessionTest {
   private val onboardingCompletePreference = mock<Preference<Boolean>>()
   private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
+  private val schedulersProvider = TrampolineSchedulersProvider()
 
+  private val loginUserWithOtp = LoginUserWithOtp(
+      loginApi = loginApi,
+      dataSync = dataSyncLazy,
+      userDao = userDao,
+      facilityRepository = facilityRepository,
+      schedulersProvider = schedulersProvider,
+      moshi = moshi,
+      accessTokenPreference = accessTokenPref
+  )
   private val userSession = UserSession(
+      loginUserWithOtp = loginUserWithOtp,
       loginApi = loginApi,
       registrationApi = registrationApi,
-      moshi = moshi,
       facilityRepository = facilityRepository,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,
       passwordHasher = passwordHasher,
-      dataSync = dagger.Lazy { dataSync },
+      dataSync = dataSyncLazy,
       ongoingLoginEntryRepository = ongoingLoginEntryRepository,
       bruteForceProtection = bruteForceProtection,
       fileStorage = fileStorage,
       reportPendingRecords = reportPendingRecords,
-      schedulersProvider = TrampolineSchedulersProvider(),
+      schedulersProvider = schedulersProvider,
       selectedCountryPreference = selectedCountryPreference,
       accessTokenPreference = accessTokenPref,
       patientSyncPullToken = patientPullToken,
@@ -173,7 +183,8 @@ class UserSessionTest {
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser(userUuid))))
+    val user = PatientMocker.loggedInUser(userUuid)
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
     val result = userSession.loginWithOtp("000000").blockingGet()
 
@@ -203,7 +214,9 @@ class UserSessionTest {
     whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete().doOnComplete { syncInvoked = true })
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser(userUuid))))
+    whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
+    val user = PatientMocker.loggedInUser(userUuid)
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
     userSession.loginWithOtp("000000").blockingGet()
 
@@ -238,7 +251,8 @@ class UserSessionTest {
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser(userUuid))))
+    val user = PatientMocker.loggedInUser(userUuid)
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
     assertThat(userSession.loginWithOtp("000000").blockingGet()).isEqualTo(LoginResult.Success)
   }
@@ -644,7 +658,8 @@ class UserSessionTest {
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.entry())
         .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser(userUuid))))
+    val user = PatientMocker.loggedInUser(userUuid)
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
     userSession.loginWithOtp("000000").blockingGet()
 

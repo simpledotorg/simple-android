@@ -3,7 +3,6 @@ package org.simple.clinic.user
 import android.content.SharedPreferences
 import androidx.annotation.WorkerThread
 import com.f2prateek.rx.preferences2.Preference
-import com.squareup.moshi.Moshi
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -18,11 +17,8 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
-import org.simple.clinic.login.LoginErrorResponse
-import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.login.UserPayload
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApi
@@ -52,13 +48,12 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.reflect.KClass
 
 @AppScope
 class UserSession @Inject constructor(
+    private val loginUserWithOtp: LoginUserWithOtp,
     private val loginApi: LoginApi,
     private val registrationApi: RegistrationApi,
-    private val moshi: Moshi,
     private val facilityRepository: FacilityRepository,
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
@@ -98,49 +93,12 @@ class UserSession @Inject constructor(
   fun loginWithOtp(otp: String): Single<LoginResult> {
     return ongoingLoginEntry()
         .doOnSubscribe { Timber.i("Logging in with OTP") }
-        .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, otp)) }
-        .flatMap { loginApi.login(it) }
-        .flatMap {
-          storeUserAndAccessToken(it)
-              .toSingleDefault(LoginResult.Success as LoginResult)
-        }
-        .flatMap { result ->
-          reportUserLoggedInToAnalytics()
-              .toSingleDefault(result)
-        }
-        .doOnSuccess { syncOnLoginResult() }
-        .doOnSuccess { clearOngoingLoginEntry().subscribe() }
-        .onErrorReturn { error ->
-          when {
-            error is IOException -> LoginResult.NetworkError
-            error is HttpException && error.code() == 401 -> {
-              val errorResponse = readErrorResponseJson(error, LoginErrorResponse::class)
-              LoginResult.ServerError(errorResponse.firstError())
-            }
-            else -> {
-              Timber.e(error)
-              LoginResult.UnexpectedError
-            }
+        .flatMap { loginUserWithOtp.loginWithOtp(it.phoneNumber!!, it.pin!!, otp) }
+        .doOnSuccess {
+          if (it is LoginResult.Success) {
+            clearOngoingLoginEntry().subscribe()
           }
         }
-        .doOnSuccess { Timber.i("Login result: $it") }
-  }
-
-  private fun reportUserLoggedInToAnalytics(): Completable {
-    return loggedInUser()
-        .firstOrError()
-        .flatMapCompletable { (user) ->
-          Completable.fromAction { Analytics.setLoggedInUser(user!!) }
-        }
-  }
-
-  private fun syncOnLoginResult() {
-    dataSync
-        .get()
-        .syncTheWorld()
-        .subscribeOn(schedulersProvider.io())
-        .onErrorComplete()
-        .subscribe()
   }
 
   fun saveOngoingRegistrationEntryAsUser(): Completable {
@@ -326,11 +284,6 @@ class UserSession @Inject constructor(
     return Completable
         .fromAction { appDatabase.userDao().createOrUpdate(user) }
         .doOnSubscribe { Timber.i("Updating user") }
-  }
-
-  private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {
-    val jsonAdapter = moshi.adapter(clazz.java)
-    return jsonAdapter.fromJson(error.response().errorBody()!!.source())!!
   }
 
   fun clearLoggedInUser(): Completable {

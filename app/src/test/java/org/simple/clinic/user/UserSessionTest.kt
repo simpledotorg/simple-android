@@ -12,7 +12,6 @@ import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
 import io.reactivex.BackpressureStrategy
@@ -38,10 +37,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
-import org.simple.clinic.login.LoginRequest
-import org.simple.clinic.login.LoginResponse
-import org.simple.clinic.login.LoginResult
-import org.simple.clinic.login.UserPayload
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
@@ -67,7 +62,6 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.assertLatestValue
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.threeten.bp.Instant
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -169,92 +163,6 @@ class UserSessionTest {
   private fun <T> unauthorizedHttpError(): HttpException {
     val error = Response.error<T>(401, ResponseBody.create(MediaType.parse("text"), unauthorizedErrorResponseJson))
     return HttpException(error)
-  }
-
-  @Test
-  @Parameters(method = "params for mapping network response for login")
-  fun `login should correctly map network response to result`(
-      response: Single<LoginResponse>,
-      expectedResultType: Class<LoginResult>
-  ) {
-    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(loginApi.login(any())).thenReturn(response)
-    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
-    whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
-    whenever(ongoingLoginEntryRepository.entry())
-        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
-    val user = PatientMocker.loggedInUser(userUuid)
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    val result = userSession.loginWithOtp("000000").blockingGet()
-
-    assertThat(result).isInstanceOf(expectedResultType)
-  }
-
-  @Suppress("Unused")
-  private fun `params for mapping network response for login`(): List<List<Any>> {
-    return listOf(
-        listOf(Single.just(LoginResponse("accessToken", loggedInUserPayload)), LoginResult.Success::class.java),
-        listOf(Single.error<LoginResponse>(NullPointerException()), LoginResult.UnexpectedError::class.java),
-        listOf(Single.error<LoginResponse>(unauthorizedHttpError<LoginResponse>()), LoginResult.ServerError::class.java),
-        listOf(Single.error<LoginResponse>(IOException()), LoginResult.NetworkError::class.java)
-    )
-  }
-
-  @Test
-  @Parameters(method = "parameters for triggering sync on login")
-  fun `sync should only be triggered on successful login`(
-      response: Single<LoginResponse>,
-      shouldTriggerSync: Boolean
-  ) {
-    var syncInvoked = false
-
-    whenever(loginApi.login(any())).thenReturn(response)
-    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete().doOnComplete { syncInvoked = true })
-    whenever(ongoingLoginEntryRepository.entry())
-        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
-    whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
-    val user = PatientMocker.loggedInUser(userUuid)
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    userSession.loginWithOtp("000000").blockingGet()
-
-    if (shouldTriggerSync) {
-      assertThat(syncInvoked).isTrue()
-    } else {
-      verifyZeroInteractions(dataSync)
-    }
-  }
-
-  @Suppress("Unused")
-  private fun `parameters for triggering sync on login`(): List<List<Any>> {
-    return listOf(
-        listOf(Single.just(LoginResponse("accessToken", loggedInUserPayload)), true),
-        listOf(Single.error<LoginResponse>(NullPointerException()), false),
-        listOf(Single.error<LoginResponse>(unauthorizedHttpError<LoginResponse>()), false),
-        listOf(Single.error<LoginResponse>(IOException()), false)
-    )
-  }
-
-  @Test
-  @Parameters(value = [
-    "true",
-    "false"
-  ])
-  fun `error in sync should not affect login result`(syncWillFail: Boolean) {
-    whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", PatientMocker.loggedInUserPayload())))
-    whenever(dataSync.syncTheWorld()).thenAnswer {
-      if (syncWillFail) Completable.error(RuntimeException()) else Completable.complete()
-    }
-    whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
-    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(ongoingLoginEntryRepository.entry())
-        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
-    val user = PatientMocker.loggedInUser(userUuid)
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    assertThat(userSession.loginWithOtp("000000").blockingGet()).isEqualTo(LoginResult.Success)
   }
 
   @Test
@@ -645,42 +553,6 @@ class UserSessionTest {
   }
 
   @Test
-  @Parameters(method = "parameters for clearing login entry")
-  fun `ongoing login entry should be cleared only on successful login`(
-      response: Single<LoginResponse>,
-      shouldClearLoginEntry: Boolean
-  ) {
-    var entryCleared = false
-
-    whenever(loginApi.login(any())).thenReturn(response)
-    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
-    whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete().doOnComplete { entryCleared = true })
-    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(ongoingLoginEntryRepository.entry())
-        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
-    val user = PatientMocker.loggedInUser(userUuid)
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    userSession.loginWithOtp("000000").blockingGet()
-
-    if (shouldClearLoginEntry) {
-      assertThat(entryCleared).isTrue()
-    } else {
-      assertThat(entryCleared).isFalse()
-    }
-  }
-
-  @Suppress("Unused")
-  private fun `parameters for clearing login entry`(): List<List<Any>> {
-    return listOf(
-        listOf(Single.just(LoginResponse("accessToken", loggedInUserPayload)), true),
-        listOf(Single.error<LoginResponse>(NullPointerException()), false),
-        listOf(Single.error<LoginResponse>(unauthorizedHttpError<LoginResponse>()), false),
-        listOf(Single.error<LoginResponse>(IOException()), false)
-    )
-  }
-
-  @Test
   fun `user approved for syncing changes should be notified correctly`() {
     fun createUser(loggedInStatus: User.LoggedInStatus, userStatus: UserStatus): List<User> {
       return listOf(PatientMocker.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus))
@@ -993,78 +865,6 @@ class UserSessionTest {
             expectedIsUnauthorized = listOf(false, true, false, true)
         )
     )
-  }
-
-  @Test
-  fun `when the login happens, set the user information in analytics`() {
-    // given
-    val userUuid = UUID.fromString("48b2b280-0e03-4978-a380-b2aebb8c9328")
-    val facilityUuid = UUID.fromString("d838af0f-c480-49b4-b386-d6588ec1dea7")
-    val phoneNumber = "1234567890"
-    val fullName = "Anish Acharya"
-    val pinDigest = "pin digest"
-    val status = ApprovedForSyncing
-    val now = Instant.now()
-    val otp = "000000"
-    val pin = "1111"
-
-    val user = PatientMocker.loggedInUser(
-        uuid = userUuid,
-        name = fullName,
-        phone = phoneNumber,
-        pinDigest = pinDigest,
-        status = status,
-        loggedInStatus = LOGGED_IN,
-        createdAt = now,
-        updatedAt = now
-    )
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    val ongoingLoginEntry = OngoingLoginEntry(
-        uuid = userUuid,
-        phoneNumber = phoneNumber,
-        pin = pin,
-        fullName = fullName,
-        pinDigest = pinDigest,
-        registrationFacilityUuid = facilityUuid,
-        status = ApprovedForSyncing,
-        createdAt = now,
-        updatedAt = now
-    )
-    whenever(ongoingLoginEntryRepository.entry())
-        .thenReturn(Single.just(ongoingLoginEntry))
-
-    val userPayload = UserPayload(
-        phoneNumber = phoneNumber,
-        pin = pin,
-        otp = otp
-    )
-    val loggedInUserPayload = LoggedInUserPayload(
-        uuid = userUuid,
-        fullName = fullName,
-        phoneNumber = phoneNumber,
-        pinDigest = pinDigest,
-        registrationFacilityId = facilityUuid,
-        status = ApprovedForSyncing,
-        createdAt = now,
-        updatedAt = now
-    )
-    whenever(loginApi.login(LoginRequest(userPayload)))
-        .thenReturn(Single.just(LoginResponse("accessToken", loggedInUserPayload)))
-
-    whenever(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), facilityUuid))
-        .thenReturn(Completable.complete())
-    whenever(ongoingLoginEntryRepository.clearLoginEntry())
-        .thenReturn(Completable.complete())
-    assertThat(reporter.user).isNull()
-    assertThat(reporter.isANewRegistration).isNull()
-
-    // when
-    userSession.loginWithOtp(otp).blockingGet()
-
-    // then
-    assertThat(reporter.user).isEqualTo(user)
-    assertThat(reporter.isANewRegistration).isFalse()
   }
 
   @Test

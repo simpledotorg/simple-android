@@ -109,17 +109,7 @@ class UserSessionTest {
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
   private val schedulersProvider = TrampolineSchedulersProvider()
 
-  private val loginUserWithOtp = LoginUserWithOtp(
-      loginApi = loginApi,
-      dataSync = dataSyncLazy,
-      userDao = userDao,
-      facilityRepository = facilityRepository,
-      schedulersProvider = schedulersProvider,
-      moshi = moshi,
-      accessTokenPreference = accessTokenPref
-  )
   private val userSession = UserSession(
-      loginUserWithOtp = loginUserWithOtp,
       loginApi = loginApi,
       registrationApi = registrationApi,
       facilityRepository = facilityRepository,

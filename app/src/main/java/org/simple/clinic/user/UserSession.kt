@@ -18,7 +18,6 @@ import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.login.LoginResponse
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApi
@@ -51,7 +50,6 @@ import javax.inject.Named
 
 @AppScope
 class UserSession @Inject constructor(
-    private val loginUserWithOtp: LoginUserWithOtp,
     private val loginApi: LoginApi,
     private val registrationApi: RegistrationApi,
     private val facilityRepository: FacilityRepository,
@@ -88,17 +86,6 @@ class UserSession @Inject constructor(
 
   fun clearOngoingLoginEntry() {
     ongoingLoginEntryRepository.clearLoginEntry()
-  }
-
-  fun loginWithOtp(otp: String): Single<LoginResult> {
-    return ongoingLoginEntry()
-        .doOnSubscribe { Timber.i("Logging in with OTP") }
-        .flatMap { loginUserWithOtp.loginWithOtp(it.phoneNumber!!, it.pin!!, otp) }
-        .doOnSuccess {
-          if (it is LoginResult.Success) {
-            clearOngoingLoginEntry()
-          }
-        }
   }
 
   fun saveOngoingRegistrationEntryAsUser(): Completable {
@@ -247,15 +234,6 @@ class UserSession @Inject constructor(
 
   fun isOngoingRegistrationEntryPresent(): Single<Boolean> =
       Single.fromCallable { ongoingRegistrationEntry != null }
-
-  fun storeUserAndAccessToken(response: LoginResponse): Completable {
-    Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
-    accessTokenPreference.set(Just(response.accessToken))
-    return storeUser(
-        userFromPayload(response.loggedInUser, LOGGED_IN),
-        response.loggedInUser.registrationFacilityId
-    )
-  }
 
   fun storeUserAndAccessToken(userPayload: LoggedInUserPayload, accessToken: String): Completable {
     accessTokenPreference.set(Just(accessToken))

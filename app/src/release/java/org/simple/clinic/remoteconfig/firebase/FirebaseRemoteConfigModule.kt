@@ -4,6 +4,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.di.AppScope
+import org.threeten.bp.Duration
+import javax.inject.Named
 
 @Module
 class FirebaseRemoteConfigModule {

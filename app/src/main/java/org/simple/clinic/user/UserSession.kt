@@ -253,7 +253,16 @@ class UserSession @Inject constructor(
     accessTokenPreference.set(Just(response.accessToken))
     return storeUser(
         userFromPayload(response.loggedInUser, LOGGED_IN),
-        response.loggedInUser.registrationFacilityId)
+        response.loggedInUser.registrationFacilityId
+    )
+  }
+
+  fun storeUserAndAccessToken(userPayload: LoggedInUserPayload, accessToken: String): Completable {
+    accessTokenPreference.set(Just(accessToken))
+    return storeUser(
+        userFromPayload(userPayload, LOGGED_IN),
+        userPayload.registrationFacilityId
+    )
   }
 
   private fun storeUserAndAccessToken(response: ForgotPinResponse): Completable {

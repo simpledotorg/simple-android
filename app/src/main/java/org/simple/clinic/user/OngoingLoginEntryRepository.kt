@@ -23,9 +23,7 @@ class OngoingLoginEntryRepository @Inject constructor(
 
   }
 
-  fun clearLoginEntry(): Completable {
-    return Completable.fromAction {
-      dao.delete()
-    }
+  fun clearLoginEntry() {
+    dao.delete()
   }
 }

@@ -107,7 +107,6 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `when back is clicked, the local ongoing login entry must be cleared`() {
-    whenever(userSession.clearOngoingLoginEntry()).thenReturn(Completable.complete())
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PinBackClicked())

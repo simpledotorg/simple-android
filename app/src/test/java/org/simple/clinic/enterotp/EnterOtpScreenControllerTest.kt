@@ -2,9 +2,11 @@ package org.simple.clinic.enterotp
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -16,7 +18,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
@@ -29,6 +30,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -45,6 +47,7 @@ class EnterOtpScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val requestLoginOtp = mock<RequestLoginOtp>()
 
+  private val otp = "111111"
   private val loggedInUserUuid = UUID.fromString("13e563ba-a148-4b5d-838d-e38d42dca72c")
 
   private val controller = EnterOtpScreenController(userSession, requestLoginOtp)
@@ -59,8 +62,8 @@ class EnterOtpScreenControllerTest {
   @Test
   fun `when the screen is created, the logged in users phone number must be shown`() {
     val user = PatientMocker.loggedInUser(phone = "1111111111")
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(user))
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -88,11 +91,12 @@ class EnterOtpScreenControllerTest {
       otp: String,
       shouldShowError: Boolean
   ) {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(Success))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     if (shouldShowError) {
+      verifyZeroInteractions(userSession)
       verify(screen).showIncorrectOtpError()
     } else {
       verify(screen, never()).showIncorrectOtpError()
@@ -113,92 +117,94 @@ class EnterOtpScreenControllerTest {
       otp: String,
       shouldLogin: Boolean
   ) {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(Success))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     if (shouldLogin) {
       verify(userSession).loginWithOtp(otp)
     } else {
+      verifyZeroInteractions(userSession)
       verify(userSession, never()).loginWithOtp(otp)
     }
   }
 
   @Test
   fun `when the otp is submitted, the login call must be made`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(Success))
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
 
-    verify(userSession).loginWithOtp("111111")
+    verify(userSession).loginWithOtp(otp)
   }
 
   @Test
   fun `when the login call succeeds, the screen must be closed`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(Success))
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).goBack()
   }
 
   @Test
   fun `when the login call fails unexpectedly, the generic error must be shown`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(UnexpectedError))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showUnexpectedError()
   }
 
   @Test
   fun `when the login call fails with a network error, the network error must be shown`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(NetworkError))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showNetworkError()
   }
 
   @Test
   fun `when the login call fails with a server error, the server error must be shown`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(ServerError("Error")))
+    val errorMessage = "Error"
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(ServerError(errorMessage)))
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
 
-    verify(screen).showServerError("Error")
+    verify(screen).showServerError(errorMessage)
   }
 
   @Test
   fun `when the login call fails unexpectedly, the PIN should be cleared`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(UnexpectedError))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).clearPin()
   }
 
   @Test
   fun `when the login call fails with a network error, the PIN should be cleared`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(NetworkError))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).clearPin()
   }
 
   @Test
   fun `when the login call fails with a server error, the PIN should be cleared`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(ServerError("Error")))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(ServerError("Error")))
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).clearPin()
   }
 
   @Test
   fun `when the OTP changes and meets the otp length, the login call should be made`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just<LoginResult>(Success))
 
     uiEvents.onNext(EnterOtpTextChanges("1111"))
     uiEvents.onNext(EnterOtpTextChanges("11111"))
@@ -210,9 +216,9 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call is made, the network progress must be shown`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.never<LoginResult>())
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.never<LoginResult>())
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showProgress()
     verify(screen, never()).hideProgress()
@@ -221,9 +227,9 @@ class EnterOtpScreenControllerTest {
   @Test
   @Parameters(method = "params for login call progress test")
   fun `when the login call succeeds or fails, the network progress must be hidden`(loginResult: LoginResult) {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(loginResult))
+    whenever(userSession.loginWithOtp(otp)).doReturn(Single.just(loginResult))
 
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    uiEvents.onNext(EnterOtpSubmitted(otp))
     verify(screen).hideProgress()
   }
 
@@ -246,19 +252,19 @@ class EnterOtpScreenControllerTest {
       shouldCloseScreen: Boolean
   ) {
     val user = PatientMocker.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-    whenever(userSession.loggedInUser()).thenReturn(
-        Observable.just(
+    whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(user))
+    whenever(userSession.loggedInUser()).doReturn(
+        Observable.just<Optional<User>>(
             Just(user),
             Just(user.copy(loggedInStatus = curLoggedInStatus)))
     )
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(userSession.refreshLoggedInUser()).doReturn(Completable.complete())
     uiEvents.onNext(ScreenCreated())
 
     if (shouldCloseScreen) {
-      Mockito.verify(screen).goBack()
+      verify(screen).goBack()
     } else {
-      Mockito.verify(screen, never()).goBack()
+      verify(screen, never()).goBack()
     }
   }
 
@@ -269,9 +275,9 @@ class EnterOtpScreenControllerTest {
         .just(Result.Success as Result)
         .doOnSubscribe { otpRequested = true }
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .thenReturn(requestOtpSingle)
+        .doReturn(requestOtpSingle)
     whenever(userSession.requireLoggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -281,9 +287,9 @@ class EnterOtpScreenControllerTest {
   @Test
   fun `when the resend sms call is made, the progress must be shown`() {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .thenReturn(Single.just(Result.Success as Result))
+        .doReturn(Single.just(Result.Success as Result))
     whenever(userSession.requireLoggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -293,9 +299,9 @@ class EnterOtpScreenControllerTest {
   @Test
   fun `when the resend sms call is made, any error must be hidden`() {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .thenReturn(Single.just(Result.Success as Result))
+        .doReturn(Single.just(Result.Success as Result))
     whenever(userSession.requireLoggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -308,9 +314,9 @@ class EnterOtpScreenControllerTest {
       result: Result
   ) {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .thenReturn(Single.just(result))
+        .doReturn(Single.just(result))
     whenever(userSession.requireLoggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -332,9 +338,9 @@ class EnterOtpScreenControllerTest {
   @Parameters(method = "params for showing SMS sent message")
   fun `when the resend sms call succeeds, the sms sent message must be shown`(params: SmsSendShowMessageTestParams) {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .thenReturn(Single.just(params.result))
+        .doReturn(Single.just(params.result))
     whenever(userSession.requireLoggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -361,9 +367,9 @@ class EnterOtpScreenControllerTest {
   @Parameters(method = "params for show error on request otp")
   fun `when the resend sms call completes, the error must be shown`(params: SmsSendShowErrorParams) {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .thenReturn(Single.just(params.result))
+        .doReturn(Single.just(params.result))
     whenever(userSession.requireLoggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -406,9 +412,9 @@ class EnterOtpScreenControllerTest {
   @Parameters(method = "params for clear PIN on request otp")
   fun `when the resend sms call fails, the PIN must be cleared`(result: Result) {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .thenReturn(Single.just(result))
+        .doReturn(Single.just(result))
     whenever(userSession.requireLoggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 

@@ -52,25 +52,4 @@ class OngoingLoginEntryRepositoryTest {
       assertThat(this.pin).isEqualTo(pin)
     }
   }
-
-  @Test
-  fun when_clearing_entry_it_should_get_deleted_from_db() {
-    val userId = UUID.randomUUID()
-    val phone = "998877665"
-    val pin = "9090"
-
-    repository.saveLoginEntry(OngoingLoginEntry(uuid = userId, phoneNumber = phone, pin = pin)).blockingAwait()
-
-    val savedEntry = repository.entry().blockingGet()
-    savedEntry.apply {
-      assertThat(this.uuid).isEqualTo(userId)
-    }
-
-    repository.clearLoginEntry().blockingAwait()
-
-    expectedException.expect(IllegalStateException::class.java)
-    expectedException.expectMessage("User not present")
-
-    repository.entry().blockingGet()
-  }
 }

@@ -86,8 +86,8 @@ class UserSession @Inject constructor(
     return ongoingLoginEntryRepository.entry()
   }
 
-  fun clearOngoingLoginEntry(): Completable {
-    return ongoingLoginEntryRepository.clearLoginEntry()
+  fun clearOngoingLoginEntry() {
+    ongoingLoginEntryRepository.clearLoginEntry()
   }
 
   fun loginWithOtp(otp: String): Single<LoginResult> {
@@ -96,7 +96,7 @@ class UserSession @Inject constructor(
         .flatMap { loginUserWithOtp.loginWithOtp(it.phoneNumber!!, it.pin!!, otp) }
         .doOnSuccess {
           if (it is LoginResult.Success) {
-            clearOngoingLoginEntry().subscribe()
+            clearOngoingLoginEntry()
           }
         }
   }

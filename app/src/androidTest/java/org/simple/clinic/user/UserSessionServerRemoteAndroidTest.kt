@@ -1,19 +1,16 @@
 package org.simple.clinic.user
 
-import android.content.SharedPreferences
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySyncApi
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.RegistrationResult
+import org.simple.clinic.rules.ServerAuthenticationRule
 import javax.inject.Inject
 
 class UserSessionServerIntegrationTest {
@@ -28,12 +25,6 @@ class UserSessionServerIntegrationTest {
   lateinit var appDatabase: AppDatabase
 
   @Inject
-  lateinit var sharedPreferences: SharedPreferences
-
-  @Inject
-  lateinit var facilityRepository: FacilityRepository
-
-  @Inject
   lateinit var facilityApi: FacilitySyncApi
 
   @get:Rule
@@ -42,27 +33,6 @@ class UserSessionServerIntegrationTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-  }
-
-  @Test
-  fun when_correct_login_params_are_given_then_login_should_happen_and_session_data_should_be_persisted() {
-    val ongoingLoginEntry = userSession.requireLoggedInUser()
-        .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
-        .blockingFirst()
-
-    val loginResult = userSession
-        .saveOngoingLoginEntry(ongoingLoginEntry)
-        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
-        .blockingGet()
-
-    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
-    val (accessToken) = userSession.accessToken()
-    assertThat(accessToken).isNotNull()
-
-    val (loggedInUser) = userSession.loggedInUser().blockingFirst()
-    assertThat(userSession.isUserLoggedIn()).isTrue()
-    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.ApprovedForSyncing)
-    assertThat(loggedInUser.loggedInStatus).isEqualTo(User.LoggedInStatus.LOGGED_IN)
   }
 
   @Test
@@ -90,6 +60,5 @@ class UserSessionServerIntegrationTest {
 
   private fun clearLocalDatabase() {
     appDatabase.clearAllTables()
-    sharedPreferences.edit().clear().commit()
   }
 }

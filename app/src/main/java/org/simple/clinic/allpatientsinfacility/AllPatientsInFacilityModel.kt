@@ -1,6 +1,7 @@
 package org.simple.clinic.allpatientsinfacility
 
 import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Age
@@ -9,26 +10,50 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientSearchResult.LastBp
 import org.threeten.bp.LocalDate
+import java.util.Objects
 import java.util.UUID
 
 @Parcelize
 data class AllPatientsInFacilityModel(
     val patientsQueried: Boolean,
-    val facilityUiState: FacilityUiState? = null,
-    val patients: List<PatientSearchResultUiState> = emptyList()
+    val facilityUiState: FacilityUiState? = null
 ) : Parcelable {
   companion object {
     val FETCHING_PATIENTS = AllPatientsInFacilityModel(false)
   }
 
+  @IgnoredOnParcel
+  var patients: List<PatientSearchResultUiState> = emptyList()
+
   fun facilityFetched(facility: Facility): AllPatientsInFacilityModel =
       copy(facilityUiState = FacilityUiState(facility.uuid, facility.name))
 
   fun noPatients(): AllPatientsInFacilityModel =
-      copy(patients = emptyList(), patientsQueried = true)
+      copy(patientsQueried = true).apply { patients = emptyList() }
 
   fun hasPatients(patientSearchResults: List<PatientSearchResultUiState>): AllPatientsInFacilityModel =
-      copy(patients = patientSearchResults, patientsQueried = true)
+      copy(patientsQueried = true).apply { patients = patientSearchResults }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as AllPatientsInFacilityModel
+
+    if (patientsQueried != other.patientsQueried) return false
+    if (facilityUiState != other.facilityUiState) return false
+    if (patients != other.patients) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    return Objects.hash(patientsQueried, facilityUiState, patients)
+  }
+
+  override fun toString(): String {
+    return "AllPatientsInFacilityModel(patientsQueried=$patientsQueried, facilityUiState=$facilityUiState, patients=$patients)"
+  }
 }
 
 @Parcelize

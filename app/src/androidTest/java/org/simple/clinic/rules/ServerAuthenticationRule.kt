@@ -130,7 +130,7 @@ class ServerAuthenticationRule : TestRule {
         // a user has been consumed when we make the login call.
         .requestLoginOtp(userUuid)
         .andThen(loginApi.login(loginRequest))
-        .flatMapCompletable(userSession::storeUserAndAccessToken)
+        .flatMapCompletable { userSession.storeUserAndAccessToken(it.loggedInUser, it.accessToken) }
         .blockingAwait()
 
     verifyAccessTokenIsPresent()

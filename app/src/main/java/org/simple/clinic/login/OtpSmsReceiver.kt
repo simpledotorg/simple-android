@@ -4,16 +4,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.StringRes
 import android.widget.Toast
+import androidx.annotation.StringRes
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.user.LoginUserWithOtp
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -31,6 +31,14 @@ class OtpSmsReceiver : BroadcastReceiver() {
   @Inject
   lateinit var userSession: UserSession
 
+  // This is intentionally lazy so that the country specific retrofit endpoint
+  // is not instantiated until the SMS is received.
+  @Inject
+  lateinit var loginUserWithOtp: dagger.Lazy<LoginUserWithOtp>
+
+  @Inject
+  lateinit var schedulersProvider: SchedulersProvider
+
   init {
     ClinicApp.appComponent.inject(this)
   }
@@ -45,9 +53,15 @@ class OtpSmsReceiver : BroadcastReceiver() {
 
         val otp = message.substring(OTP_START_INDEX, OTP_START_INDEX + OTP_LENGTH)
 
-        userSession.loginWithOtp(otp)
-            .subscribeOn(io())
-            .observeOn(mainThread())
+        userSession.ongoingLoginEntry()
+            .flatMap { entry -> loginUserWithOtp.get().loginWithOtp(entry.phoneNumber!!, entry.pin!!, otp) }
+            .doOnSuccess { loginResult ->
+              if (loginResult is LoginResult.Success) {
+                userSession.clearOngoingLoginEntry()
+              }
+            }
+            .subscribeOn(schedulersProvider.io())
+            .observeOn(schedulersProvider.ui())
             .subscribe({
               when (it) {
                 is LoginResult.UnexpectedError -> showToast(context, R.string.api_unexpected_error)

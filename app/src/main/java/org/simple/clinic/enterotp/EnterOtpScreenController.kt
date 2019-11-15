@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.user.LoginUserWithOtp
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.UserSession
@@ -22,7 +23,8 @@ private const val OTP_LENGTH = 6
 
 class EnterOtpScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val requestLoginOtp: RequestLoginOtp
+    private val requestLoginOtp: RequestLoginOtp,
+    private val loginUserWithOtp: LoginUserWithOtp
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -73,11 +75,19 @@ class EnterOtpScreenController @Inject constructor(
 
     return Observable.merge(otpFromSubmitted, otpFromTextChanges)
         .flatMap { otp ->
-          userSession.loginWithOtp(otp)
+          userSession
+              .ongoingLoginEntry()
+              .flatMap { entry -> loginUserWithOtp.loginWithOtp(entry.phoneNumber!!, entry.pin!!, otp) }
+              .doOnSuccess { loginResult ->
+                if (loginResult is LoginResult.Success) {
+                  userSession.clearOngoingLoginEntry()
+                }
+              }
               .flatMapObservable { loginResult ->
                 Observable.merge(
                     handleLoginResult(loginResult),
-                    Observable.just({ ui: Ui -> ui.hideProgress() }))
+                    Observable.just(Ui::hideProgress)
+                )
               }
               .startWith { ui: Ui -> ui.showProgress() }
         }

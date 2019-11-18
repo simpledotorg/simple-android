@@ -1,4 +1,4 @@
-package org.simple.clinic.registration
+package org.simple.clinic.user.finduser
 
 import org.simple.clinic.user.LoggedInUserPayload
 

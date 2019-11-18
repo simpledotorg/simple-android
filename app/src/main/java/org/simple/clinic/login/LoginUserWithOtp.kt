@@ -1,4 +1,4 @@
-package org.simple.clinic.user
+package org.simple.clinic.login
 
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
@@ -7,13 +7,9 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.login.LoginApi
-import org.simple.clinic.login.LoginErrorResponse
-import org.simple.clinic.login.LoginRequest
-import org.simple.clinic.login.LoginResponse
-import org.simple.clinic.login.LoginResult
-import org.simple.clinic.login.UserPayload
 import org.simple.clinic.sync.DataSync
+import org.simple.clinic.user.LoggedInUserPayload
+import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider

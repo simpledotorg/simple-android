@@ -8,7 +8,6 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -37,6 +36,7 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
+import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RuntimePermissionResult
@@ -67,6 +67,7 @@ class PatientsScreenControllerTest {
   private val utcClock = TestUtcClock()
   private val userClock = TestUserClock()
   private val numberOfPatientsRegisteredPref = mock<Preference<Int>>()
+  private val refreshCurrentUser = mock<RefreshCurrentUser>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
@@ -88,6 +89,7 @@ class PatientsScreenControllerTest {
         utcClock = utcClock,
         userClock = userClock,
         homescreenIllustrationRepository = homescreenIllustrationRepository,
+        refreshCurrentUser = refreshCurrentUser,
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
@@ -95,7 +97,7 @@ class PatientsScreenControllerTest {
     )
 
     whenever(userSession.canSyncData()).doReturn(canSyncStream)
-    whenever(userSession.refreshLoggedInUser()).doReturn(Completable.never())
+    whenever(refreshCurrentUser.refresh()).doReturn(Completable.never())
     whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
     whenever(numberOfPatientsRegisteredPref.get()).doReturn(0)
     whenever(homescreenIllustrationRepository.illustrationImageToShow()).doReturn(Observable.empty())
@@ -121,18 +123,18 @@ class PatientsScreenControllerTest {
   ) {
     val user = PatientMocker.loggedInUser(status = status)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
-    whenever(userSession.refreshLoggedInUser()).doReturn(Completable.complete())
+    whenever(refreshCurrentUser.refresh()).doReturn(Completable.complete())
     whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     uiEvents.onNext(ScreenCreated())
-    verify(userSession).refreshLoggedInUser()
+    verify(refreshCurrentUser).refresh()
 
-    clearInvocations(userSession)
+    clearInvocations(refreshCurrentUser)
 
     uiEvents.onNext(Resumed(null))
-    verify(userSession).refreshLoggedInUser()
+    verify(refreshCurrentUser).refresh()
   }
 
   @Suppress("unused")
@@ -224,13 +226,13 @@ class PatientsScreenControllerTest {
     val user = PatientMocker.loggedInUser(status = WaitingForApproval)
     whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
-    whenever(userSession.refreshLoggedInUser()).doReturn(Completable.error(SocketTimeoutException()))
+    whenever(refreshCurrentUser.refresh()).doReturn(Completable.error(SocketTimeoutException()))
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(userSession).refreshLoggedInUser()
+    verify(refreshCurrentUser).refresh()
     verify(approvalStatusApprovedAt).set(any())
   }
 

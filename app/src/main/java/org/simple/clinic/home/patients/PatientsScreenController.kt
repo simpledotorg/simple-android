@@ -27,6 +27,7 @@ import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.Unknown
 import org.simple.clinic.user.UserStatus.WaitingForApproval
+import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -49,6 +50,7 @@ class PatientsScreenController @Inject constructor(
     private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val homescreenIllustrationRepository: HomescreenIllustrationRepository,
+    private val refreshCurrentUser: RefreshCurrentUser,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
@@ -124,7 +126,8 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun refreshUserStatus() {
-    userSession.refreshLoggedInUser()
+    refreshCurrentUser
+        .refresh()
         .subscribeOn(io())
         .onErrorComplete()
         .doOnComplete { approvalStatusUpdatedAtPref.set(Instant.now()) }

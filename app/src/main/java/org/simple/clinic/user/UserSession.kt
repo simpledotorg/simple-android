@@ -33,8 +33,6 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
-import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -52,7 +50,6 @@ import javax.inject.Named
 class UserSession @Inject constructor(
     private val loginApi: LoginApi,
     private val registrationApi: RegistrationApi,
-    private val refreshCurrentUser: RefreshCurrentUser,
     private val facilityRepository: FacilityRepository,
     private val sharedPreferences: SharedPreferences,
     // This is Lazy to work around a cyclic dependency between
@@ -107,10 +104,6 @@ class UserSession @Inject constructor(
               loggedInStatus = NOT_LOGGED_IN)
           storeUser(user, entry.facilityId!!)
         }
-  }
-
-  fun refreshLoggedInUser(): Completable {
-    return refreshCurrentUser.refresh()
   }
 
   fun register(): Single<RegistrationResult> {

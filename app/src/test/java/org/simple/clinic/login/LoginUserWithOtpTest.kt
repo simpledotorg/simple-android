@@ -26,13 +26,14 @@ import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.toUser
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -88,7 +89,7 @@ class LoginUserWithOtpTest {
   fun `when the login call is successful, the access token must be saved`() {
     // given
     whenever(loginApi.login(loginRequest)) doReturn Single.just(loginResponse)
-    whenever(facilityRepository.associateUserWithFacilities(loggedInUserPayload.toUser(), listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.associateUserWithFacilities(loggedInUserPayload.toUser(LOGGED_IN), listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
 
     // when
@@ -103,7 +104,7 @@ class LoginUserWithOtpTest {
   fun `when the login call is successful, the user must be saved`() {
     // given
     whenever(loginApi.login(loginRequest)) doReturn Single.just(loginResponse)
-    val user = loggedInUserPayload.toUser()
+    val user = loggedInUserPayload.toUser(LOGGED_IN)
     whenever(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
 
@@ -119,7 +120,7 @@ class LoginUserWithOtpTest {
   fun `when the login call is successful, the user must be reported to analytics`() {
     // given
     whenever(loginApi.login(loginRequest)) doReturn Single.just(loginResponse)
-    val user = loggedInUserPayload.toUser()
+    val user = loggedInUserPayload.toUser(LOGGED_IN)
     whenever(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
 
@@ -136,7 +137,7 @@ class LoginUserWithOtpTest {
     // given
     var allDataSynced = false
     whenever(loginApi.login(loginRequest)) doReturn Single.just(loginResponse)
-    val user = loggedInUserPayload.toUser()
+    val user = loggedInUserPayload.toUser(LOGGED_IN)
     whenever(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
     whenever(dataSync.syncTheWorld()) doReturn Completable.fromAction { allDataSynced = true }
 
@@ -205,18 +206,5 @@ class LoginUserWithOtpTest {
     verifyZeroInteractions(facilityRepository)
     assertThat(analyticsReporter.user).isNull()
     assertThat(loginResult).isEqualTo(UnexpectedError)
-  }
-
-  private fun LoggedInUserPayload.toUser(): User {
-    return User(
-        uuid = uuid,
-        fullName = fullName,
-        phoneNumber = phoneNumber,
-        pinDigest = pinDigest,
-        status = status,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        loggedInStatus = User.LoggedInStatus.LOGGED_IN
-    )
   }
 }

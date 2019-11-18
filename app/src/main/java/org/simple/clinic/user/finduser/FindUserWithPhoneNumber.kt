@@ -9,8 +9,11 @@ import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
-class FindUserWithPhoneNumber(private val registrationApi: RegistrationApi) {
+class FindUserWithPhoneNumber @Inject constructor(
+    private val registrationApi: RegistrationApi
+) {
 
   fun find(phoneNumber: String): Single<FindUserResult> {
     Timber.i("Finding user with phone number")

@@ -56,6 +56,7 @@ import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
+import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -106,12 +107,12 @@ class UserSessionTest {
   private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
   private val schedulersProvider = TrampolineSchedulersProvider()
-  private val findUserWithPhoneNumber = FindUserWithPhoneNumber(registrationApi)
+  private val refreshCurrentUser = RefreshCurrentUser(userDao, FindUserWithPhoneNumber(registrationApi))
 
   private val userSession = UserSession(
       loginApi = loginApi,
       registrationApi = registrationApi,
-      findUserWithPhoneNumber = findUserWithPhoneNumber,
+      refreshCurrentUser = refreshCurrentUser,
       facilityRepository = facilityRepository,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,
@@ -167,7 +168,7 @@ class UserSessionTest {
 
     whenever(registrationApi.findUser(loggedInUserPayload.phoneNumber)).thenReturn(Single.just(refreshedUserPayload))
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(loggedInUser)))
+    whenever(userDao.userImmediate()).thenReturn(loggedInUser)
 
     userSession.refreshLoggedInUser().blockingAwait()
 

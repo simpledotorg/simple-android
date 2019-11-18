@@ -13,8 +13,9 @@ import org.simple.clinic.user.finduser.FindUserResult.Found
 import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
 import org.simple.clinic.util.mapType
 import timber.log.Timber
+import javax.inject.Inject
 
-class RefreshCurrentUser(
+class RefreshCurrentUser @Inject constructor(
     private val userDao: RoomDao,
     private val findUserWithPhoneNumber: FindUserWithPhoneNumber
 ) {

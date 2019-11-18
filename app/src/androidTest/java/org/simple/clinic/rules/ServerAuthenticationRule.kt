@@ -19,7 +19,7 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.UserPayload
-import org.simple.clinic.registration.RegistrationResult
+import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus

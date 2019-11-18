@@ -4,9 +4,9 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.registration.RegistrationResult.NetworkError
-import org.simple.clinic.registration.RegistrationResult.Success
-import org.simple.clinic.registration.RegistrationResult.UnexpectedError
+import org.simple.clinic.user.registeruser.RegistrationResult.NetworkError
+import org.simple.clinic.user.registeruser.RegistrationResult.Success
+import org.simple.clinic.user.registeruser.RegistrationResult.UnexpectedError
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent

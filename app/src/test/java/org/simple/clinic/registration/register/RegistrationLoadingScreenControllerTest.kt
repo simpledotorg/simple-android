@@ -12,10 +12,10 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.registration.RegistrationResult
-import org.simple.clinic.registration.RegistrationResult.NetworkError
-import org.simple.clinic.registration.RegistrationResult.Success
-import org.simple.clinic.registration.RegistrationResult.UnexpectedError
+import org.simple.clinic.user.registeruser.RegistrationResult
+import org.simple.clinic.user.registeruser.RegistrationResult.NetworkError
+import org.simple.clinic.user.registeruser.RegistrationResult.Success
+import org.simple.clinic.user.registeruser.RegistrationResult.UnexpectedError
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent

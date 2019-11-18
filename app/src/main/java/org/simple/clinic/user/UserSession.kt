@@ -21,7 +21,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
-import org.simple.clinic.registration.RegistrationResult
+import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult

@@ -1,4 +1,4 @@
-package org.simple.clinic.registration
+package org.simple.clinic.user.registeruser
 
 sealed class RegistrationResult {
 

@@ -11,7 +11,6 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.user.LoginUserWithOtp
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import timber.log.Timber

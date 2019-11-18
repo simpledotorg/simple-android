@@ -1,4 +1,4 @@
-package org.simple.clinic.user
+package org.simple.clinic.login
 
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
@@ -8,8 +8,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.rules.ServerAuthenticationRule
+import org.simple.clinic.user.User
+import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserStatus
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)

@@ -7,7 +7,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.user.LoginUserWithOtp
+import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.UserSession

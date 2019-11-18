@@ -24,7 +24,7 @@ import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.user.LoginUserWithOtp
+import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.RequestLoginOtp.Result

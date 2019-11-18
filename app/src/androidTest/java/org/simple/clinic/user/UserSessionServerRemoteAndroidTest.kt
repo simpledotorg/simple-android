@@ -9,7 +9,7 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilitySyncApi
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.registration.RegistrationResult
+import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.rules.ServerAuthenticationRule
 import javax.inject.Inject
 

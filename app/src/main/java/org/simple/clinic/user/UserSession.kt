@@ -19,9 +19,6 @@ import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.RegistrationApi
-import org.simple.clinic.registration.RegistrationRequest
-import org.simple.clinic.registration.RegistrationResponse
-import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult
@@ -33,6 +30,8 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
+import org.simple.clinic.user.registeruser.RegisterUser
+import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -49,11 +48,11 @@ import javax.inject.Named
 @AppScope
 class UserSession @Inject constructor(
     private val loginApi: LoginApi,
-    private val registrationApi: RegistrationApi,
     private val facilityRepository: FacilityRepository,
-    private val sharedPreferences: SharedPreferences,
+    private val registerUser: RegisterUser,
     // This is Lazy to work around a cyclic dependency between
     // DataSync, UserSession, and PatientRepository.
+    private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
     private val dataSync: Lazy<DataSync>,
@@ -108,56 +107,15 @@ class UserSession @Inject constructor(
 
   fun register(): Single<RegistrationResult> {
     val user: Single<User> = loggedInUser()
-        .map { (user) -> user!! }
+        .filterAndUnwrapJust()
         .firstOrError()
         .cache()
 
     val currentFacility = user
-        .flatMap { facilityRepository.facilityUuidsForUser(it).firstOrError() }
+        .flatMap { facilityRepository.currentFacility(it).firstOrError() }
 
     return Singles.zip(user, currentFacility)
-        .doOnSubscribe { Timber.i("Registering user") }
-        .map { (user, facilityUuids) -> userToPayload(user, facilityUuids) }
-        .map(::RegistrationRequest)
-        .flatMap { registrationApi.createUser(it) }
-        .flatMap { response ->
-          storeUserAndAccessToken(response)
-              .toSingleDefault(RegistrationResult.Success as RegistrationResult)
-        }
-        .flatMap { result ->
-          reportUserRegisteredToAnalytics()
-              .toSingleDefault(result)
-        }
-        .onErrorReturn { e ->
-          Timber.e(e)
-          when (e) {
-            is IOException -> RegistrationResult.NetworkError
-            else -> RegistrationResult.UnexpectedError
-          }
-        }
-        .doOnSuccess { Timber.i("Registration result: $it") }
-  }
-
-  private fun reportUserRegisteredToAnalytics(): Completable {
-    return loggedInUser()
-        .firstOrError()
-        .flatMapCompletable { (user) ->
-          Completable.fromAction { Analytics.setNewlyRegisteredUser(user!!) }
-        }
-  }
-
-  private fun userToPayload(user: User, facilityUuids: List<UUID>): LoggedInUserPayload {
-    return user.run {
-      LoggedInUserPayload(
-          uuid = uuid,
-          fullName = fullName,
-          phoneNumber = phoneNumber,
-          pinDigest = pinDigest,
-          registrationFacilityId = facilityUuids.first(),
-          status = status,
-          createdAt = createdAt,
-          updatedAt = updatedAt)
-    }
+        .flatMap { (user, facility) -> registerUser.registerUserAtFacility(user, facility) }
   }
 
   private fun userFromPayload(payload: LoggedInUserPayload, status: User.LoggedInStatus): User {
@@ -207,14 +165,6 @@ class UserSession @Inject constructor(
 
     val user = userFromPayload(response.loggedInUser, RESET_PIN_REQUESTED)
     return storeUser(user, response.loggedInUser.registrationFacilityId)
-  }
-
-  private fun storeUserAndAccessToken(response: RegistrationResponse): Completable {
-    Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
-    accessTokenPreference.set(Just(response.accessToken))
-
-    val user = userFromPayload(response.userPayload, LOGGED_IN)
-    return storeUser(user, response.userPayload.registrationFacilityId)
   }
 
   fun storeUser(user: User, facilityUuid: UUID): Completable {

@@ -17,9 +17,10 @@ import org.simple.clinic.util.Optional
 import timber.log.Timber
 import java.io.IOException
 import java.util.UUID
+import javax.inject.Inject
 import javax.inject.Named
 
-class RegisterUser(
+class RegisterUser @Inject constructor(
     private val registrationApi: RegistrationApi,
     private val userDao: User.RoomDao,
     private val facilityRepository: FacilityRepository,

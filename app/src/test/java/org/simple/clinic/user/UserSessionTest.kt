@@ -54,6 +54,7 @@ import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
+import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -104,10 +105,12 @@ class UserSessionTest {
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
   private val schedulersProvider = TrampolineSchedulersProvider()
 
+  private val registerUser = RegisterUser(registrationApi, userDao, facilityRepository, accessTokenPref)
+
   private val userSession = UserSession(
       loginApi = loginApi,
-      registrationApi = registrationApi,
       facilityRepository = facilityRepository,
+      registerUser = registerUser,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,
       passwordHasher = passwordHasher,
@@ -802,10 +805,11 @@ class UserSessionTest {
     // given
     val user = PatientMocker.loggedInUser(uuid = userUuid)
     val facilityUuid = UUID.fromString("2aa4ccc3-5e4f-4c32-8df3-1304a56ae8b3")
+    val facility = PatientMocker.facility(facilityUuid)
 
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-    whenever(facilityRepository.facilityUuidsForUser(user))
-        .thenReturn(Observable.just(listOf(facilityUuid)))
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
+
     val payload = LoggedInUserPayload(
         uuid = userUuid,
         fullName = user.fullName,

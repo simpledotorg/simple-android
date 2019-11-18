@@ -110,10 +110,6 @@ class UserSession @Inject constructor(
         }
   }
 
-  fun findExistingUser(phoneNumber: String): Single<FindUserResult> {
-    return findUserWithPhoneNumber.find(phoneNumber)
-  }
-
   fun refreshLoggedInUser(): Completable {
     return requireLoggedInUser()
         .firstOrError()

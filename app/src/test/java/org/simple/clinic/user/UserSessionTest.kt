@@ -13,7 +13,6 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.squareup.moshi.Moshi
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -39,7 +38,6 @@ import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
@@ -86,7 +84,6 @@ class UserSessionTest {
   private val reporter = MockAnalyticsReporter()
   private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
   private var bruteForceProtection = mock<BruteForceProtection>()
-  private val moshi = Moshi.Builder().build()
   private val loggedInUserPayload = PatientMocker.loggedInUserPayload()
   private val unauthorizedErrorResponseJson = """{
         "errors": {
@@ -156,31 +153,6 @@ class UserSessionTest {
   private fun <T> unauthorizedHttpError(): HttpException {
     val error = Response.error<T>(401, ResponseBody.create(MediaType.parse("text"), unauthorizedErrorResponseJson))
     return HttpException(error)
-  }
-
-  @Test
-  @Parameters(method = "params for mapping network response for find user")
-  fun `when find existing user then the network response should correctly be mapped to results`(
-      response: Single<LoggedInUserPayload>,
-      expectedResultType: Class<FindUserResult>
-  ) {
-    whenever(registrationApi.findUser(any())).thenReturn(response)
-
-    val result = userSession.findExistingUser("1234567890").blockingGet()
-    assertThat(result).isInstanceOf(expectedResultType)
-  }
-
-  @Suppress("Unused")
-  private fun `params for mapping network response for find user`(): List<List<Any>> {
-    val notFoundHttpError = mock<HttpException>()
-    whenever(notFoundHttpError.code()).thenReturn(404)
-
-    return listOf(
-        listOf(Single.just(PatientMocker.loggedInUserPayload()), FindUserResult.Found::class.java),
-        listOf(Single.error<LoggedInUserPayload>(IOException()), FindUserResult.NetworkError::class.java),
-        listOf(Single.error<LoggedInUserPayload>(NullPointerException()), FindUserResult.UnexpectedError::class.java),
-        listOf(Single.error<LoggedInUserPayload>(notFoundHttpError), FindUserResult.NotFound::class.java)
-    )
   }
 
   @Test

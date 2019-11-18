@@ -8,7 +8,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -23,8 +22,8 @@ import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
-import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.login.LoginUserWithOtp
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.RequestLoginOtp.Result
@@ -288,7 +287,6 @@ class EnterOtpScreenControllerTest {
             Just(user),
             Just(user.copy(loggedInStatus = curLoggedInStatus)))
     )
-    whenever(userSession.refreshLoggedInUser()).doReturn(Completable.complete())
     uiEvents.onNext(ScreenCreated())
 
     if (shouldCloseScreen) {

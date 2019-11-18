@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.doThrow
 import com.nhaarman.mockito_kotlin.eq
@@ -55,8 +54,6 @@ import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
-import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -85,7 +82,6 @@ class UserSessionTest {
   private val reporter = MockAnalyticsReporter()
   private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
   private var bruteForceProtection = mock<BruteForceProtection>()
-  private val loggedInUserPayload = PatientMocker.loggedInUserPayload()
   private val unauthorizedErrorResponseJson = """{
         "errors": {
           "user": [
@@ -107,12 +103,10 @@ class UserSessionTest {
   private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
   private val schedulersProvider = TrampolineSchedulersProvider()
-  private val refreshCurrentUser = RefreshCurrentUser(userDao, FindUserWithPhoneNumber(registrationApi))
 
   private val userSession = UserSession(
       loginApi = loginApi,
       registrationApi = registrationApi,
-      refreshCurrentUser = refreshCurrentUser,
       facilityRepository = facilityRepository,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,
@@ -155,52 +149,6 @@ class UserSessionTest {
     val error = Response.error<T>(401, ResponseBody.create(MediaType.parse("text"), unauthorizedErrorResponseJson))
     return HttpException(error)
   }
-
-  @Test
-  @Parameters(method = "params for checking login status")
-  fun `when refreshing the logged in user then the user details should be fetched from the server and login status must be updated`(
-      olderLoggedInStatus: User.LoggedInStatus,
-      userStatus: UserStatus,
-      newerLoggedInStatus: User.LoggedInStatus
-  ) {
-    val loggedInUser = PatientMocker.loggedInUser(uuid = loggedInUserPayload.uuid, loggedInStatus = olderLoggedInStatus)
-    val refreshedUserPayload = loggedInUserPayload.copy(status = userStatus)
-
-    whenever(registrationApi.findUser(loggedInUserPayload.phoneNumber)).thenReturn(Single.just(refreshedUserPayload))
-    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(userDao.userImmediate()).thenReturn(loggedInUser)
-
-    userSession.refreshLoggedInUser().blockingAwait()
-
-    verify(registrationApi).findUser(loggedInUserPayload.phoneNumber)
-    verify(userDao).createOrUpdate(check {
-      assertThat(it.uuid).isEqualTo(loggedInUserPayload.uuid)
-      assertThat(it.status).isEqualTo(userStatus)
-      assertThat(it.loggedInStatus).isEqualTo(newerLoggedInStatus)
-    })
-  }
-
-  @Suppress("unused")
-  private fun `params for checking login status`() =
-      listOf(
-          listOf(NOT_LOGGED_IN, WaitingForApproval, NOT_LOGGED_IN),
-          listOf(OTP_REQUESTED, WaitingForApproval, OTP_REQUESTED),
-          listOf(LOGGED_IN, WaitingForApproval, LOGGED_IN),
-          listOf(RESETTING_PIN, WaitingForApproval, RESETTING_PIN),
-          listOf(RESET_PIN_REQUESTED, WaitingForApproval, RESET_PIN_REQUESTED),
-
-          listOf(NOT_LOGGED_IN, ApprovedForSyncing, NOT_LOGGED_IN),
-          listOf(OTP_REQUESTED, ApprovedForSyncing, OTP_REQUESTED),
-          listOf(LOGGED_IN, ApprovedForSyncing, LOGGED_IN),
-          listOf(RESETTING_PIN, ApprovedForSyncing, RESETTING_PIN),
-          listOf(RESET_PIN_REQUESTED, ApprovedForSyncing, LOGGED_IN),
-
-          listOf(NOT_LOGGED_IN, DisapprovedForSyncing, NOT_LOGGED_IN),
-          listOf(OTP_REQUESTED, DisapprovedForSyncing, OTP_REQUESTED),
-          listOf(LOGGED_IN, DisapprovedForSyncing, LOGGED_IN),
-          listOf(RESETTING_PIN, DisapprovedForSyncing, RESETTING_PIN),
-          listOf(RESET_PIN_REQUESTED, DisapprovedForSyncing, RESET_PIN_REQUESTED)
-      )
 
   @Test
   fun `when ongoing registration entry is cleared then isOngoingRegistrationEntryPresent() should emit false`() {

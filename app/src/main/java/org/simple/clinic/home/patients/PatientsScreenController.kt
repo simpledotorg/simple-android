@@ -9,7 +9,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
@@ -31,6 +30,7 @@ import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -51,6 +51,7 @@ class PatientsScreenController @Inject constructor(
     private val userClock: UserClock,
     private val homescreenIllustrationRepository: HomescreenIllustrationRepository,
     private val refreshCurrentUser: RefreshCurrentUser,
+    private val schedulersProvider: SchedulersProvider,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
@@ -128,7 +129,7 @@ class PatientsScreenController @Inject constructor(
   private fun refreshUserStatus() {
     refreshCurrentUser
         .refresh()
-        .subscribeOn(io())
+        .subscribeOn(schedulersProvider.io())
         .onErrorComplete()
         .doOnComplete { approvalStatusUpdatedAtPref.set(Instant.now()) }
         .subscribe()

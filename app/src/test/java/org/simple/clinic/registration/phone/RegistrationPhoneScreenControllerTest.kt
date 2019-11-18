@@ -31,6 +31,7 @@ import org.simple.clinic.user.finduser.FindUserResult.Found
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
+import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
@@ -43,11 +44,13 @@ class RegistrationPhoneScreenControllerTest {
   private val screen = mock<RegistrationPhoneScreen>()
   private val userSession = mock<UserSession>()
   private val numberValidator = mock<PhoneNumberValidator>()
+  private val findUserWithPhoneNumber = mock<FindUserWithPhoneNumber>()
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create<UiEvent>()
 
   private val controller: RegistrationPhoneScreenController = RegistrationPhoneScreenController(
       userSession = userSession,
+      findUserWithPhoneNumber = findUserWithPhoneNumber,
       numberValidator = numberValidator
   )
 
@@ -103,7 +106,7 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).doReturn(Completable.complete())
     whenever(numberValidator.validate(validNumber, MOBILE)).doReturn(VALID)
-    whenever(userSession.findExistingUser(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
+    whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(validNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
@@ -118,7 +121,7 @@ class RegistrationPhoneScreenControllerTest {
     val validNumber = "1234567890"
     whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).doReturn(Completable.complete())
-    whenever(userSession.findExistingUser(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
+    whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
 
     whenever(numberValidator.validate(invalidNumber, MOBILE)).doReturn(LENGTH_TOO_SHORT)
     whenever(numberValidator.validate(validNumber, MOBILE)).doReturn(VALID)
@@ -156,21 +159,21 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when proceed is clicked with a valid phone number then a network call should be made to check if the phone number belongs to an existing user`() {
     val inputNumber = "1234567890"
-    whenever(userSession.findExistingUser(inputNumber)).doReturn(Single.never())
+    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.never())
     whenever(numberValidator.validate(inputNumber, MOBILE)).doReturn(VALID)
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     verify(screen).showProgressIndicator()
-    verify(userSession).findExistingUser(inputNumber)
+    verify(findUserWithPhoneNumber).find(inputNumber)
   }
 
   @Test
   fun `when the network call for checking phone number fails then an error should be shown`() {
     val inputNumber = "1234567890"
 
-    whenever(userSession.findExistingUser(inputNumber))
+    whenever(findUserWithPhoneNumber.find(inputNumber))
         .doReturn(Single.just<FindUserResult>(UnexpectedError))
         .doReturn(Single.just<FindUserResult>(NetworkError))
 
@@ -191,7 +194,7 @@ class RegistrationPhoneScreenControllerTest {
     val inputNumber = "1234567890"
     val userPayload = PatientMocker.loggedInUserPayload(phone = inputNumber)
 
-    whenever(userSession.findExistingUser(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
+    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
     whenever(numberValidator.validate(inputNumber, MOBILE)).doReturn(VALID)
     whenever(userSession.saveOngoingLoginEntry(any())).doReturn(Completable.complete())
     whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
@@ -220,7 +223,7 @@ class RegistrationPhoneScreenControllerTest {
     val inputNumber = "1234567890"
     val userPayload = PatientMocker.loggedInUserPayload(phone = inputNumber)
 
-    whenever(userSession.findExistingUser(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
+    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
     whenever(numberValidator.validate(inputNumber, MOBILE)).doReturn(VALID)
     whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
     whenever(userSession.saveOngoingLoginEntry(any())).doReturn(Completable.error(RuntimeException()))
@@ -247,7 +250,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `when proceed is clicked then any existing error should be cleared`() {
     val inputNumber = "1234567890"
     whenever(numberValidator.validate(inputNumber, MOBILE)).doReturn(VALID)
-    whenever(userSession.findExistingUser(inputNumber)).doReturn(Single.never())
+    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.never())
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())

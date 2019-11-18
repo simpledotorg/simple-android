@@ -33,13 +33,12 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
+import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.util.mapType
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import retrofit2.HttpException
 import timber.log.Timber
@@ -53,12 +52,12 @@ import javax.inject.Named
 class UserSession @Inject constructor(
     private val loginApi: LoginApi,
     private val registrationApi: RegistrationApi,
-    private val findUserWithPhoneNumber: FindUserWithPhoneNumber,
+    private val refreshCurrentUser: RefreshCurrentUser,
     private val facilityRepository: FacilityRepository,
     private val sharedPreferences: SharedPreferences,
-    private val appDatabase: AppDatabase,
     // This is Lazy to work around a cyclic dependency between
     // DataSync, UserSession, and PatientRepository.
+    private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
     private val dataSync: Lazy<DataSync>,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
@@ -111,28 +110,7 @@ class UserSession @Inject constructor(
   }
 
   fun refreshLoggedInUser(): Completable {
-    return requireLoggedInUser()
-        .firstOrError()
-        .doOnSuccess { Timber.i("Refreshing logged-in user") }
-        .flatMapCompletable { loggedInUser ->
-          findUserWithPhoneNumber.find(loggedInUser.phoneNumber)
-              .mapType<FindUserResult.Found, LoggedInUserPayload> { it.user }
-              .flatMapCompletable { userPayload ->
-                // TODO: This was added to handle the case where the user logged in status will
-                // not get set to LOGGED_IN when the PIN reset request is approved. See if it can
-                // be done in a better way since there are many places where this sort of logic is
-                // littered all over the app currently.
-                val finalLoggedInStatus = if (loggedInUser.loggedInStatus == RESET_PIN_REQUESTED && userPayload.status == ApprovedForSyncing) {
-                  LOGGED_IN
-
-                } else {
-                  loggedInUser.loggedInStatus
-                }
-
-                val user = userFromPayload(userPayload, finalLoggedInStatus)
-                updateUser(user)
-              }
-        }
+    return refreshCurrentUser.refresh()
   }
 
   fun register(): Single<RegistrationResult> {
@@ -252,12 +230,6 @@ class UserSession @Inject constructor(
         .doOnSubscribe { Timber.i("Storing user") }
         .andThen(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), currentFacility = facilityUuid))
         .doOnError { Timber.e(it) }
-  }
-
-  fun updateUser(user: User): Completable {
-    return Completable
-        .fromAction { appDatabase.userDao().createOrUpdate(user) }
-        .doOnSubscribe { Timber.i("Updating user") }
   }
 
   fun clearLoggedInUser(): Completable {

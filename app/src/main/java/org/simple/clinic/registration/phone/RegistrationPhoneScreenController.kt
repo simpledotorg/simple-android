@@ -8,10 +8,10 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.registration.FindUserResult.Found
-import org.simple.clinic.registration.FindUserResult.NetworkError
-import org.simple.clinic.registration.FindUserResult.NotFound
-import org.simple.clinic.registration.FindUserResult.UnexpectedError
+import org.simple.clinic.user.finduser.FindUserResult.Found
+import org.simple.clinic.user.finduser.FindUserResult.NetworkError
+import org.simple.clinic.user.finduser.FindUserResult.NotFound
+import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
 import org.simple.clinic.user.LoggedInUserPayload

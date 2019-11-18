@@ -39,7 +39,7 @@ import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.FindUserResult
+import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse

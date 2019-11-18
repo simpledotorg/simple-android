@@ -12,13 +12,13 @@ import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.readErrorResponseJson
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.reflect.KClass
 
 class LoginUserWithOtp @Inject constructor(
     private val loginApi: LoginApi,
@@ -72,7 +72,7 @@ class LoginUserWithOtp @Inject constructor(
     return when {
       error is IOException -> LoginResult.NetworkError
       error is HttpException && error.code() == 401 -> {
-        val errorResponse = readErrorResponseJson(error, LoginErrorResponse::class)
+        val errorResponse = readErrorResponseJson<LoginErrorResponse>(error, moshi)
         LoginResult.ServerError(errorResponse.firstError())
       }
       else -> {
@@ -93,10 +93,5 @@ class LoginUserWithOtp @Inject constructor(
         .subscribeOn(schedulersProvider.io())
         .onErrorComplete()
         .subscribe()
-  }
-
-  private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {
-    val jsonAdapter = moshi.adapter(clazz.java)
-    return jsonAdapter.fromJson(error.response().errorBody()!!.source())!!
   }
 }

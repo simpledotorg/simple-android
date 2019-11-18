@@ -43,6 +43,7 @@ import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -78,10 +79,6 @@ class PatientsScreenControllerTest {
 
   @Before
   fun setUp() {
-    // This is needed because we manually subscribe to the refresh user status
-    // operation on the IO thread, which was causing flakiness in this test.
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
     controller = PatientsScreenController(
         userSession = userSession,
         configProvider = configEmitter,
@@ -90,6 +87,7 @@ class PatientsScreenControllerTest {
         userClock = userClock,
         homescreenIllustrationRepository = homescreenIllustrationRepository,
         refreshCurrentUser = refreshCurrentUser,
+        schedulersProvider = TrampolineSchedulersProvider(),
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,

@@ -57,6 +57,7 @@ import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
+import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -108,10 +109,12 @@ class UserSessionTest {
   private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
   private val schedulersProvider = TrampolineSchedulersProvider()
+  private val findUserWithPhoneNumber = FindUserWithPhoneNumber(registrationApi)
 
   private val userSession = UserSession(
       loginApi = loginApi,
       registrationApi = registrationApi,
+      findUserWithPhoneNumber = findUserWithPhoneNumber,
       facilityRepository = facilityRepository,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,

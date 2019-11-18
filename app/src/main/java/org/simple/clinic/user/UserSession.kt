@@ -18,7 +18,6 @@ import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
@@ -34,10 +33,13 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
+import org.simple.clinic.user.finduser.FindUserResult
+import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.mapType
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import retrofit2.HttpException
 import timber.log.Timber
@@ -51,12 +53,13 @@ import javax.inject.Named
 class UserSession @Inject constructor(
     private val loginApi: LoginApi,
     private val registrationApi: RegistrationApi,
+    private val findUserWithPhoneNumber: FindUserWithPhoneNumber,
     private val facilityRepository: FacilityRepository,
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
-    private val passwordHasher: PasswordHasher,
     // This is Lazy to work around a cyclic dependency between
     // DataSync, UserSession, and PatientRepository.
+    private val passwordHasher: PasswordHasher,
     private val dataSync: Lazy<DataSync>,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val bruteForceProtection: BruteForceProtection,
@@ -108,19 +111,7 @@ class UserSession @Inject constructor(
   }
 
   fun findExistingUser(phoneNumber: String): Single<FindUserResult> {
-    Timber.i("Finding user with phone number")
-    return registrationApi.findUser(phoneNumber)
-        .map { user -> FindUserResult.Found(user) as FindUserResult }
-        .onErrorReturn { e ->
-          when {
-            e is IOException -> FindUserResult.NetworkError
-            e is HttpException && e.code() == 404 -> FindUserResult.NotFound
-            else -> {
-              Timber.e(e)
-              FindUserResult.UnexpectedError
-            }
-          }
-        }
+    return findUserWithPhoneNumber.find(phoneNumber)
   }
 
   fun refreshLoggedInUser(): Completable {
@@ -128,7 +119,8 @@ class UserSession @Inject constructor(
         .firstOrError()
         .doOnSuccess { Timber.i("Refreshing logged-in user") }
         .flatMapCompletable { loggedInUser ->
-          registrationApi.findUser(loggedInUser.phoneNumber)
+          findUserWithPhoneNumber.find(loggedInUser.phoneNumber)
+              .mapType<FindUserResult.Found, LoggedInUserPayload> { it.user }
               .flatMapCompletable { userPayload ->
                 // TODO: This was added to handle the case where the user logged in status will
                 // not get set to LOGGED_IN when the PIN reset request is approved. See if it can

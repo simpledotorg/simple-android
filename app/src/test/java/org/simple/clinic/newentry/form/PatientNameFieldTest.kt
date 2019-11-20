@@ -2,7 +2,7 @@ package org.simple.clinic.newentry.form
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.newentry.form.ValidationError.FieldIsBlankEmpty
+import org.simple.clinic.newentry.form.ValidationError.MissingValue
 
 class PatientNameFieldTest {
   @Test
@@ -16,7 +16,7 @@ class PatientNameFieldTest {
   fun `it returns an error when the field is empty`() {
     val validationErrors = PatientNameField().validate("")
     assertThat(validationErrors)
-        .containsExactly(FieldIsBlankEmpty)
+        .containsExactly(MissingValue)
         .inOrder()
   }
 
@@ -24,7 +24,7 @@ class PatientNameFieldTest {
   fun `it returns an error when the field is blank`() {
     val validationErrors = PatientNameField().validate("    ")
     assertThat(validationErrors)
-        .containsExactly(FieldIsBlankEmpty)
+        .containsExactly(MissingValue)
         .inOrder()
   }
 }

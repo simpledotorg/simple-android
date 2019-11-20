@@ -88,9 +88,6 @@ data class LoggedInUserFacilityMapping(
     """)
     abstract fun currentFacilityUuid(userUuid: UUID): UUID?
 
-    @Query("SELECT facilityUuid FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid")
-    abstract fun facilityUuids(userUuid: UUID): Flowable<List<UUID>>
-
     @Query("SELECT * FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid")
     abstract fun mappingsForUser(userUuid: UUID): Flowable<List<LoggedInUserFacilityMapping>>
 

@@ -91,12 +91,6 @@ class FacilityRepository @Inject constructor(
     return userFacilityMappingDao.currentFacilityUuid(user.uuid)
   }
 
-  fun facilityUuidsForUser(user: User): Observable<List<UUID>> {
-    return userFacilityMappingDao
-        .facilityUuids(user.uuid)
-        .toObservable()
-  }
-
   override fun mergeWithLocalData(payloads: List<FacilityPayload>): Completable {
     return payloads
         .toObservable()

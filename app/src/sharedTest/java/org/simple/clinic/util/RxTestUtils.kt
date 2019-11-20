@@ -8,6 +8,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.threeten.bp.Duration
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 fun <T> TestObserver<T>.assertLatestValue(value: T) {
@@ -41,5 +42,18 @@ fun LoggedInUserPayload.toUser(loggedInStatus: User.LoggedInStatus): User {
       createdAt = createdAt,
       updatedAt = updatedAt,
       loggedInStatus = loggedInStatus
+  )
+}
+
+fun User.toPayload(registrationFacilityUuid: UUID): LoggedInUserPayload {
+  return LoggedInUserPayload(
+      uuid = uuid,
+      fullName = fullName,
+      phoneNumber = phoneNumber,
+      pinDigest = pinDigest,
+      registrationFacilityId = registrationFacilityUuid,
+      status = status,
+      createdAt = createdAt,
+      updatedAt = updatedAt
   )
 }

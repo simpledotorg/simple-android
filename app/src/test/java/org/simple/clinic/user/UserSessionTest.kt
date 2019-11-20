@@ -15,7 +15,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -38,8 +37,6 @@ import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.RegistrationApi
-import org.simple.clinic.registration.RegistrationRequest
-import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult
@@ -72,7 +69,6 @@ class UserSessionTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val loginApi = mock<LoginApi>()
-  private val registrationApi = mock<RegistrationApi>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
@@ -105,12 +101,9 @@ class UserSessionTest {
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
   private val schedulersProvider = TrampolineSchedulersProvider()
 
-  private val registerUser = RegisterUser(registrationApi, userDao, facilityRepository, accessTokenPref)
-
   private val userSession = UserSession(
       loginApi = loginApi,
       facilityRepository = facilityRepository,
-      registerUser = registerUser,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,
       passwordHasher = passwordHasher,
@@ -798,41 +791,5 @@ class UserSessionTest {
 
     // then
     assertThat(reporter.user).isNull()
-  }
-
-  @Test
-  fun `when user registers, set the registered user in analytics`() {
-    // given
-    val user = PatientMocker.loggedInUser(uuid = userUuid)
-    val facilityUuid = UUID.fromString("2aa4ccc3-5e4f-4c32-8df3-1304a56ae8b3")
-    val facility = PatientMocker.facility(facilityUuid)
-
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
-
-    val payload = LoggedInUserPayload(
-        uuid = userUuid,
-        fullName = user.fullName,
-        phoneNumber = user.phoneNumber,
-        pinDigest = user.pinDigest,
-        registrationFacilityId = facilityUuid,
-        status = user.status,
-        createdAt = user.createdAt,
-        updatedAt = user.updatedAt
-    )
-    whenever(registrationApi.createUser(RegistrationRequest(payload)))
-        .thenReturn(Single.just(RegistrationResponse("accessToken", payload)))
-    whenever(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), facilityUuid))
-        .thenReturn(Completable.complete())
-
-    assertThat(reporter.user).isNull()
-    assertThat(reporter.isANewRegistration).isNull()
-
-    // when
-    userSession.register().blockingGet()
-
-    // then
-    assertThat(reporter.user).isEqualTo(user)
-    assertThat(reporter.isANewRegistration).isTrue()
   }
 }

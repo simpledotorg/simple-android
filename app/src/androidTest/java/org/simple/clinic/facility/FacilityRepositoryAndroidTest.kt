@@ -83,12 +83,6 @@ class FacilityRepositoryAndroidTest {
     repository.setCurrentFacility(user, facility3).blockingAwait()
     repository.setCurrentFacility(user, facility4).blockingAwait()
 
-    // 1. Check facilities for this user.
-    val facilityUuidsForUser = repository.facilityUuidsForUser(user).blockingFirst()
-    assertThat(facilityUuidsForUser).hasSize(facilities.size)
-    assertThat(facilityUuidsForUser).containsAllIn(facilities.map { it.uuid })
-
-    // 2. Check current facility for this user.
     val currentFacility = repository.currentFacility(user).blockingFirst()
     assertThat(currentFacility).isEqualTo(facility4)
   }

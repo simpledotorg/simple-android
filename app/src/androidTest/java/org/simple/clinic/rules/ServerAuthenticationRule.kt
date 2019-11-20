@@ -19,10 +19,12 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.UserPayload
-import org.simple.clinic.user.registeruser.RegistrationResult
+import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.user.registeruser.RegisterUser
+import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.util.unsafeLazy
 import java.io.File
 import java.util.UUID
@@ -64,6 +66,12 @@ class ServerAuthenticationRule : TestRule {
 
   @Inject
   lateinit var moshi: Moshi
+
+  @Inject
+  lateinit var registerUser: RegisterUser
+
+  @Inject
+  lateinit var passwordHasher: PasswordHasher
 
   private val cachedUserInformationAdapter by unsafeLazy { moshi.adapter(CachedUserInformation::class.java) }
 
@@ -165,15 +173,12 @@ class ServerAuthenticationRule : TestRule {
   }
 
   private fun registerUserAtFacility(facility: Facility): RegistrationResult {
-    val registrationEntry = testData.ongoingRegistrationEntry(
-        phoneNumber = faker.number.number(10),
-        pin = testData.qaUserPin(),
-        registrationFacility = facility)
+    val user = testData.loggedInUser(
+        phone = faker.phoneNumber.phoneNumber(),
+        pinDigest = passwordHasher.hash(testData.qaUserPin()).blockingGet()
+    )
 
-    return userSession.saveOngoingRegistrationEntry(registrationEntry)
-        .andThen(userSession.saveOngoingRegistrationEntryAsUser())
-        .andThen(userSession.register())
-        .blockingGet()
+    return registerUser.registerUserAtFacility(user, facility).blockingGet()
   }
 
   private fun verifyAccessTokenIsPresent() {

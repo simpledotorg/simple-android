@@ -9,7 +9,7 @@ class GenderFieldTest {
   private val genderField = GenderField()
 
   @Test
-  fun `it returns an error if gender is absent`() {
+  fun `it returns a missing value error if gender is absent`() {
     assertThat(genderField.validate(null))
         .containsExactly(MissingValue)
         .inOrder()

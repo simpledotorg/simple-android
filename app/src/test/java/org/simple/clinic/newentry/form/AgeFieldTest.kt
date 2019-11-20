@@ -11,7 +11,6 @@ class AgeFieldTest {
   fun `it returns a missing value error when the field is empty`() {
     assertThat(ageField.validate(""))
         .containsExactly(MissingValue)
-        .inOrder()
   }
 
   @Test

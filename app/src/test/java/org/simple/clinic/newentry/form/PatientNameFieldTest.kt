@@ -17,13 +17,11 @@ class PatientNameFieldTest {
   fun `it returns a missing value error when the field is empty`() {
     assertThat(patientNameField.validate(""))
         .containsExactly(MissingValue)
-        .inOrder()
   }
 
   @Test
   fun `it returns a missing value error when the field is blank`() {
     assertThat(patientNameField.validate("    "))
         .containsExactly(MissingValue)
-        .inOrder()
   }
 }

@@ -18,7 +18,7 @@ import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
+import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -28,7 +28,7 @@ typealias UiChange = (Ui) -> Unit
 
 class RegistrationPhoneScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val findUserWithPhoneNumber: FindUserWithPhoneNumber,
+    private val userLookup: UserLookup,
     private val numberValidator: PhoneNumberValidator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -97,7 +97,7 @@ class RegistrationPhoneScreenController @Inject constructor(
         .withLatestFrom(phoneNumberTextChanges)
         .filter { (_, number) -> numberValidator.validate(number, MOBILE) == VALID }
         .flatMap { (_, number) ->
-          val cachedUserFindResult = findUserWithPhoneNumber.find(number)
+          val cachedUserFindResult = userLookup.find(number)
               .cache()
               .toObservable()
 

@@ -19,7 +19,7 @@ import retrofit2.Response
 import java.io.IOException
 import java.util.UUID
 
-class FindUserWithPhoneNumberTest {
+class UserLookupTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -28,7 +28,7 @@ class FindUserWithPhoneNumberTest {
 
   private val registrationApi = mock<RegistrationApi>()
 
-  private val findUserWithPhoneNumber = FindUserWithPhoneNumber(registrationApi)
+  private val findUserWithPhoneNumber = UserLookup(registrationApi)
 
   @Test
   fun `when the find user call is successful, the user payload must be returned in the result`() {

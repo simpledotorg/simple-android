@@ -31,7 +31,7 @@ import org.simple.clinic.user.finduser.FindUserResult.Found
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
-import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
+import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
@@ -44,13 +44,13 @@ class RegistrationPhoneScreenControllerTest {
   private val screen = mock<RegistrationPhoneScreen>()
   private val userSession = mock<UserSession>()
   private val numberValidator = mock<PhoneNumberValidator>()
-  private val findUserWithPhoneNumber = mock<FindUserWithPhoneNumber>()
+  private val findUserWithPhoneNumber = mock<UserLookup>()
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create<UiEvent>()
 
   private val controller: RegistrationPhoneScreenController = RegistrationPhoneScreenController(
       userSession = userSession,
-      findUserWithPhoneNumber = findUserWithPhoneNumber,
+      userLookup = findUserWithPhoneNumber,
       numberValidator = numberValidator
   )
 

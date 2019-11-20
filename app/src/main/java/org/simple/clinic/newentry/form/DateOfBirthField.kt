@@ -14,13 +14,15 @@ class DateOfBirthField(
   override fun validate(value: String): List<ValidationError> {
     if (value.isBlank()) return listOf(MissingValue)
 
-    try {
+    return try {
       val parsedDate = LocalDate.parse(value, dateTimeFormatter)
-      if (parsedDate > today) return listOf(DateIsInFuture)
+      if (parsedDate > today) {
+        listOf(DateIsInFuture)
+      } else {
+        emptyList()
+      }
     } catch (e: DateTimeParseException) {
-      return listOf(InvalidDateFormat)
+      listOf(InvalidDateFormat)
     }
-
-    TODO()
   }
 }

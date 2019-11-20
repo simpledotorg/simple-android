@@ -12,7 +12,6 @@ class GenderFieldTest {
   fun `it returns a missing value error if gender is absent`() {
     assertThat(genderField.validate(null))
         .containsExactly(MissingValue)
-        .inOrder()
   }
 
   @Test

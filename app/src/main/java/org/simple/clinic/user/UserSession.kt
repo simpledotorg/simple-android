@@ -7,7 +7,6 @@ import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
@@ -18,7 +17,6 @@ import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult
@@ -30,8 +28,6 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import org.simple.clinic.user.registeruser.RegisterUser
-import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -49,10 +45,9 @@ import javax.inject.Named
 class UserSession @Inject constructor(
     private val loginApi: LoginApi,
     private val facilityRepository: FacilityRepository,
-    private val registerUser: RegisterUser,
+    private val sharedPreferences: SharedPreferences,
     // This is Lazy to work around a cyclic dependency between
     // DataSync, UserSession, and PatientRepository.
-    private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
     private val dataSync: Lazy<DataSync>,
@@ -103,19 +98,6 @@ class UserSession @Inject constructor(
               loggedInStatus = NOT_LOGGED_IN)
           storeUser(user, entry.facilityId!!)
         }
-  }
-
-  fun register(): Single<RegistrationResult> {
-    val user: Single<User> = loggedInUser()
-        .filterAndUnwrapJust()
-        .firstOrError()
-        .cache()
-
-    val currentFacility = user
-        .flatMap { facilityRepository.currentFacility(it).firstOrError() }
-
-    return Singles.zip(user, currentFacility)
-        .flatMap { (user, facility) -> registerUser.registerUserAtFacility(user, facility) }
   }
 
   private fun userFromPayload(payload: LoggedInUserPayload, status: User.LoggedInStatus): User {

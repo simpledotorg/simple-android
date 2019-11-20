@@ -2,7 +2,7 @@ package org.simple.clinic.newentry.form
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.newentry.form.ValidationError.FieldIsBlankEmpty
+import org.simple.clinic.newentry.form.ValidationError.MissingValue
 import org.simple.clinic.patient.Gender.Female
 
 class GenderFieldTest {
@@ -11,7 +11,7 @@ class GenderFieldTest {
   @Test
   fun `it returns an error if gender is absent`() {
     assertThat(genderField.validate(null))
-        .containsExactly(FieldIsBlankEmpty)
+        .containsExactly(MissingValue)
         .inOrder()
   }
 

@@ -33,7 +33,7 @@ import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest
-import org.simple.clinic.user.UserSessionServerIntegrationTest
+import org.simple.clinic.user.RegisterUserServerIntegrationTest
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterAndroidTest
 
 @AppScope
@@ -74,7 +74,7 @@ interface TestAppComponent {
   fun inject(target: HelpSyncAndroidTest)
   fun inject(target: IdentifierDisplayAdapterAndroidTest)
   fun inject(target: ServerAuthenticationRule)
-  fun inject(target: UserSessionServerIntegrationTest)
+  fun inject(target: RegisterUserServerIntegrationTest)
   fun inject(target: EncounterRepositoryAndroidTest)
   fun inject(target: SelectedCountryPersistenceAndroidTest)
   fun inject(target: LoginUserWithOtpServerIntegrationTest)

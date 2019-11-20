@@ -14,7 +14,7 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.user.finduser.FindUserResult.Found
-import org.simple.clinic.user.finduser.FindUserWithPhoneNumber
+import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toUser
 import java.util.UUID
@@ -28,7 +28,7 @@ class RefreshCurrentUserTest {
   private val phone = "1234567890"
 
   private val userDao = mock<User.RoomDao>()
-  private val findUserWithPhoneNumber = mock<FindUserWithPhoneNumber>()
+  private val findUserWithPhoneNumber = mock<UserLookup>()
 
   private val refreshCurrentUser = RefreshCurrentUser(userDao, findUserWithPhoneNumber)
 

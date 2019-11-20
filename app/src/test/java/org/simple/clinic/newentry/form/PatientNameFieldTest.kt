@@ -5,25 +5,24 @@ import org.junit.Test
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
 
 class PatientNameFieldTest {
+  private val patientNameField = PatientNameField()
+
   @Test
   fun `it returns an empty list when the field is non-empty`() {
-    val validationErrors = PatientNameField().validate("Ajay")
-    assertThat(validationErrors)
+    assertThat(patientNameField.validate("Ajay"))
         .isEmpty()
   }
 
   @Test
   fun `it returns an error when the field is empty`() {
-    val validationErrors = PatientNameField().validate("")
-    assertThat(validationErrors)
+    assertThat(patientNameField.validate(""))
         .containsExactly(MissingValue)
         .inOrder()
   }
 
   @Test
   fun `it returns an error when the field is blank`() {
-    val validationErrors = PatientNameField().validate("    ")
-    assertThat(validationErrors)
+    assertThat(patientNameField.validate("    "))
         .containsExactly(MissingValue)
         .inOrder()
   }

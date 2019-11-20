@@ -9,9 +9,10 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
 class DateOfBirthFieldTest {
+  private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
   private val dateOfBirthField = DateOfBirthField(
-      DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-      LocalDate.of(2019, 11, 20)
+      dateTimeFormatter,
+      LocalDate.parse("20/11/2019", dateTimeFormatter)
   )
 
   @Test
@@ -30,5 +31,17 @@ class DateOfBirthFieldTest {
   fun `it returns date is in future when date of birth is in the future`() {
     assertThat(dateOfBirthField.validate("21/11/2019"))
         .containsExactly(DateIsInFuture)
+  }
+
+  @Test
+  fun `it returns an empty list when date of birth is less than the current date`() {
+    assertThat(dateOfBirthField.validate("19/11/2019"))
+        .isEmpty()
+  }
+
+  @Test
+  fun `it returns an empty list when date of birth is same as the current date`() {
+    assertThat(dateOfBirthField.validate("20/11/2019"))
+        .isEmpty()
   }
 }

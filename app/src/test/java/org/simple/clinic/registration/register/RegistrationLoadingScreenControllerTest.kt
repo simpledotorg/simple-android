@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.register
 
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -12,11 +13,11 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.user.registeruser.RegistrationResult.NetworkError
 import org.simple.clinic.user.registeruser.RegistrationResult.Success
 import org.simple.clinic.user.registeruser.RegistrationResult.UnexpectedError
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
@@ -41,8 +42,8 @@ class RegistrationLoadingScreenControllerTest {
   @Parameters(method = "params for testing user registration")
   @Test
   fun `when screen is created then user registration api should be called`(results: RegistrationResult) {
-    whenever(userSession.register()).thenReturn(Single.just(results))
-    whenever(userSession.clearOngoingRegistrationEntry()).thenReturn(Completable.complete())
+    whenever(userSession.register()).doReturn(Single.just(results))
+    whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
 
     uiEvents.onNext(ScreenCreated())
 
@@ -68,8 +69,8 @@ class RegistrationLoadingScreenControllerTest {
 
   @Test
   fun `when retry button is clicked in error state then loader should show and register api should be called`() {
-    whenever(userSession.register()).thenReturn(Single.just(Success))
-    whenever(userSession.clearOngoingRegistrationEntry()).thenReturn(Completable.never())
+    whenever(userSession.register()).doReturn(Single.just<RegistrationResult>(Success))
+    whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.never())
 
     uiEvents.onNext(RegisterErrorRetryClicked)
 

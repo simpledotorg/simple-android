@@ -12,6 +12,9 @@ import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.registeruser.RegistrationResult.NetworkError
+import org.simple.clinic.user.registeruser.RegistrationResult.Success
+import org.simple.clinic.user.registeruser.RegistrationResult.UnexpectedError
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import timber.log.Timber
@@ -28,25 +31,30 @@ class RegisterUser @Inject constructor(
 ) {
 
   fun registerUserAtFacility(user: User, facility: Facility): Single<RegistrationResult> {
-    return Single.fromCallable { userToPayload(user, facility.uuid) }
+    val registrationRequest = RegistrationRequest(userToPayload(user, facility.uuid))
+
+    return registrationApi
+        .createUser(registrationRequest)
         .doOnSubscribe { Timber.i("Registering user") }
-        .map(::RegistrationRequest)
-        .flatMap(registrationApi::createUser)
         .flatMap(::storeUserAndAccessToken)
         .doOnSuccess(Analytics::setNewlyRegisteredUser)
-        .map { RegistrationResult.Success as RegistrationResult }
+        .map { Success as RegistrationResult }
+        .doOnError(::reportErrors)
         .onErrorReturn(::mapErrorToRegistrationResult)
         .doOnSuccess { Timber.i("Registration result: $it") }
 
   }
 
+  private fun reportErrors(error: Throwable) {
+    if (error !is IOException) {
+      Timber.e(error)
+    }
+  }
+
   private fun mapErrorToRegistrationResult(e: Throwable): RegistrationResult {
     return when (e) {
-      is IOException -> RegistrationResult.NetworkError
-      else -> {
-        Timber.e(e)
-        RegistrationResult.UnexpectedError
-      }
+      is IOException -> NetworkError
+      else -> UnexpectedError
     }
   }
 

@@ -36,7 +36,6 @@ import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult
@@ -51,7 +50,7 @@ import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import org.simple.clinic.user.registeruser.RegisterUser
+import org.simple.clinic.user.resetpin.ForgotPinResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule

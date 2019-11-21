@@ -10,11 +10,10 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.ForgotPinResult.NetworkError
-import org.simple.clinic.user.ForgotPinResult.Success
-import org.simple.clinic.user.ForgotPinResult.UnexpectedError
-import org.simple.clinic.user.ForgotPinResult.UserNotFound
-import org.simple.clinic.user.User
+import org.simple.clinic.user.resetpin.ForgotPinResult.NetworkError
+import org.simple.clinic.user.resetpin.ForgotPinResult.Success
+import org.simple.clinic.user.resetpin.ForgotPinResult.UnexpectedError
+import org.simple.clinic.user.resetpin.ForgotPinResult.UserNotFound
 import org.simple.clinic.user.User.LoggedInStatus.*
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent

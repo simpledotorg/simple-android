@@ -1,4 +1,4 @@
-package org.simple.clinic.user
+package org.simple.clinic.user.resetpin
 
 sealed class ForgotPinResult {
   object Success : ForgotPinResult()

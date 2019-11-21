@@ -28,6 +28,8 @@ import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.user.resetpin.ResetUserPin
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -64,8 +66,8 @@ class ForgotPinConfirmPinScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(userSession.requireLoggedInUser()) doReturn Observable.just(loggedInUser)
-    whenever(facilityRepository.currentFacility(any<User>())) doReturn Observable.just(facility)
+    whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(loggedInUser))
+    whenever(facilityRepository.currentFacility(loggedInUser)) doReturn Observable.just(facility)
 
     uiEvents
         .compose(controller)

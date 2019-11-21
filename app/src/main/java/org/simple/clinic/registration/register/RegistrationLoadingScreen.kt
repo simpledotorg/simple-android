@@ -67,7 +67,7 @@ class RegistrationLoadingScreen(context: Context, attrs: AttributeSet) : LinearL
     viewSwitcher.showNext()
   }
 
-  fun showLoader() {
+  private fun showLoader() {
     viewSwitcher.showNext()
   }
 }

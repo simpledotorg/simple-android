@@ -13,8 +13,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.forgotpin.ForgotPinResponse
-import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.PasswordHasher
@@ -24,19 +22,17 @@ import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.resetpin.ResetPinResult
+import org.simple.clinic.user.resetpin.ResetUserPin
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import retrofit2.HttpException
 import timber.log.Timber
-import java.io.IOException
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -140,14 +136,6 @@ class UserSession @Inject constructor(
         userFromPayload(userPayload, LOGGED_IN),
         userPayload.registrationFacilityId
     )
-  }
-
-  private fun storeUserAndAccessToken(response: ForgotPinResponse): Completable {
-    Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
-    accessTokenPreference.set(Just(response.accessToken))
-
-    val user = userFromPayload(response.loggedInUser, RESET_PIN_REQUESTED)
-    return storeUser(user, response.loggedInUser.registrationFacilityId)
   }
 
   fun storeUser(user: User, facilityUuid: UUID): Completable {
@@ -284,27 +272,7 @@ class UserSession @Inject constructor(
   }
 
   fun resetPin(pin: String): Single<ResetPinResult> {
-    val resetPasswordCall = passwordHasher.hash(pin)
-        .map { ResetPinRequest(it) }
-        .flatMap { loginApi.resetPin(it) }
-        .doOnSubscribe { Timber.i("Resetting PIN") }
-
-    val updateUserOnSuccess = resetPasswordCall
-        .flatMapCompletable { storeUserAndAccessToken(it) }
-        .toSingleDefault(ResetPinResult.Success as ResetPinResult)
-
-    return updateUserOnSuccess
-        .onErrorReturn {
-          when (it) {
-            is IOException -> ResetPinResult.NetworkError
-            is HttpException -> if (it.code() == 401) {
-              ResetPinResult.UserNotFound
-            } else {
-              ResetPinResult.UnexpectedError(it)
-            }
-            else -> ResetPinResult.UnexpectedError(it)
-          }
-        }
+    return ResetUserPin(passwordHasher, loginApi, accessTokenPreference, appDatabase.userDao(), facilityRepository).resetPin(pin)
   }
 
   fun canSyncData(): Observable<Boolean> {

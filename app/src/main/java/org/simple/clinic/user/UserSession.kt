@@ -28,7 +28,7 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import org.simple.clinic.user.resetpin.ForgotPinResult
+import org.simple.clinic.user.resetpin.ResetPinResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -283,7 +283,7 @@ class UserSession @Inject constructor(
         .andThen(bruteForceProtection.resetFailedAttempts())
   }
 
-  fun resetPin(pin: String): Single<ForgotPinResult> {
+  fun resetPin(pin: String): Single<ResetPinResult> {
     val resetPasswordCall = passwordHasher.hash(pin)
         .map { ResetPinRequest(it) }
         .flatMap { loginApi.resetPin(it) }
@@ -291,18 +291,18 @@ class UserSession @Inject constructor(
 
     val updateUserOnSuccess = resetPasswordCall
         .flatMapCompletable { storeUserAndAccessToken(it) }
-        .toSingleDefault(ForgotPinResult.Success as ForgotPinResult)
+        .toSingleDefault(ResetPinResult.Success as ResetPinResult)
 
     return updateUserOnSuccess
         .onErrorReturn {
           when (it) {
-            is IOException -> ForgotPinResult.NetworkError
+            is IOException -> ResetPinResult.NetworkError
             is HttpException -> if (it.code() == 401) {
-              ForgotPinResult.UserNotFound
+              ResetPinResult.UserNotFound
             } else {
-              ForgotPinResult.UnexpectedError(it)
+              ResetPinResult.UnexpectedError(it)
             }
-            else -> ForgotPinResult.UnexpectedError(it)
+            else -> ResetPinResult.UnexpectedError(it)
           }
         }
   }

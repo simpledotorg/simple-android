@@ -50,7 +50,7 @@ import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import org.simple.clinic.user.resetpin.ForgotPinResult
+import org.simple.clinic.user.resetpin.ResetPinResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -300,14 +300,14 @@ class UserSessionTest {
     whenever(passwordHasher.hash(any())).thenReturn(Single.error(exception))
 
     val result = userSession.resetPin("0000").blockingGet()
-    assertThat(result).isEqualTo(ForgotPinResult.UnexpectedError(exception))
+    assertThat(result).isEqualTo(ResetPinResult.UnexpectedError(exception))
   }
 
   @Test
   @Parameters(method = "params for forgot pin api")
   fun `the appropriate result must be returned when the reset pin call finishes`(
       apiResult: Single<ForgotPinResponse>,
-      expectedResult: ForgotPinResult
+      expectedResult: ResetPinResult
   ) {
     val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
@@ -323,9 +323,9 @@ class UserSessionTest {
   private fun `params for forgot pin api`(): Array<Array<Any>> {
     val exception = RuntimeException()
     return arrayOf(
-        arrayOf(Single.error<ForgotPinResponse>(IOException()), ForgotPinResult.NetworkError),
-        arrayOf(Single.error<ForgotPinResponse>(unauthorizedHttpError<Any>()), ForgotPinResult.UserNotFound),
-        arrayOf(Single.error<ForgotPinResponse>(exception), ForgotPinResult.UnexpectedError(exception))
+        arrayOf(Single.error<ForgotPinResponse>(IOException()), ResetPinResult.NetworkError),
+        arrayOf(Single.error<ForgotPinResponse>(unauthorizedHttpError<Any>()), ResetPinResult.UserNotFound),
+        arrayOf(Single.error<ForgotPinResponse>(exception), ResetPinResult.UnexpectedError(exception))
     )
   }
 
@@ -423,7 +423,7 @@ class UserSessionTest {
   @Parameters(method = "params for saving user after reset pin")
   fun `the appropriate response must be returned when saving the user after reset PIN call succeeds`(
       errorToThrow: Throwable?,
-      expectedResult: ForgotPinResult
+      expectedResult: ResetPinResult
   ) {
     val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
@@ -456,8 +456,8 @@ class UserSessionTest {
   private fun `params for saving user after reset pin`(): Array<Array<Any?>> {
     val exception = java.lang.RuntimeException()
     return arrayOf(
-        arrayOf<Any?>(null, ForgotPinResult.Success),
-        arrayOf<Any?>(exception, ForgotPinResult.UnexpectedError(exception))
+        arrayOf<Any?>(null, ResetPinResult.Success),
+        arrayOf<Any?>(exception, ResetPinResult.UnexpectedError(exception))
     )
   }
 

@@ -23,7 +23,6 @@ import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
@@ -39,19 +38,21 @@ import java.util.UUID
 @RunWith(JUnitParamsRunner::class)
 class ResetUserPinTest {
 
-  private val passwordHasher = mock<PasswordHasher>()
+  private val passwordHasher = JavaHashPasswordHasher()
   private val loginApi = mock<LoginApi>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userDao = mock<User.RoomDao>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
 
-  private val newPin = "1234"
   private val currentUser = PatientMocker.loggedInUser(
       uuid = UUID.fromString("36f6072c-0757-43e6-9a09-2bb9971cc7d3"),
-      pinDigest = "old-digest",
+      pinDigest = hash("0000"),
       loggedInStatus = RESETTING_PIN
   )
   private val facilityUuid = UUID.fromString("4ffa1d2b-f023-4239-91ad-7fb7ddfddaab")
+  private val newPin = "1234"
+  private val newPinDigest = hash(newPin)
+  private val updatedUser = currentUser.afterPinResetRequested(newPinDigest)
 
   private val unauthorizedErrorResponseJson = """{
         "errors": {
@@ -69,14 +70,10 @@ class ResetUserPinTest {
       errorToThrow: Throwable?,
       expectedResult: ResetPinResult
   ) {
-    val newPinDigest = "new-digest"
-    val updatedUser = currentUser.afterPinResetRequested(newPinDigest)
     whenever(facilityRepository.associateUserWithFacilities(updatedUser, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
 
     errorToThrow?.let { whenever(userDao.createOrUpdate(updatedUser)) doThrow it }
-
-    whenever(passwordHasher.hash(newPin)) doReturn Single.just(newPinDigest)
 
     val response = ForgotPinResponse(
         loggedInUser = updatedUser.toPayload(facilityUuid),
@@ -106,8 +103,7 @@ class ResetUserPinTest {
   ) {
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
 
-    val newPinDigest = "hashed"
-    whenever(passwordHasher.hash(newPin)) doReturn Single.just(newPinDigest)
+    val newPinDigest = hash(newPin)
     whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn apiResult
 
     val result = resetUserPin.resetPin(newPin).blockingGet()
@@ -126,18 +122,16 @@ class ResetUserPinTest {
 
   @Test
   @Parameters(value = [
-    "0000|password-1",
-    "1111|password-2"
+    "0000",
+    "1111"
   ])
-  fun `when reset PIN request is raised, the network call must be made with the hashed PIN`(
-      pin: String,
-      hashed: String
-  ) {
+  fun `when reset PIN request is raised, the network call must be made with the hashed PIN`(pin: String) {
+    val hashed = hash(pin)
     val updatedUser = currentUser.afterPinResetRequested(hashed)
 
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
     whenever(facilityRepository.associateUserWithFacilities(updatedUser, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
-    whenever(passwordHasher.hash(pin)) doReturn Single.just(hashed)
+
     whenever(loginApi.resetPin(ResetPinRequest(hashed))) doReturn Single.just(ForgotPinResponse(
         accessToken = "",
         loggedInUser = updatedUser.toPayload(facilityUuid)
@@ -149,22 +143,9 @@ class ResetUserPinTest {
   }
 
   @Test
-  fun `when the password hashing fails on resetting PIN, an expected error must be thrown`() {
-    whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
-
-    val exception = RuntimeException()
-    whenever(passwordHasher.hash(newPin)) doReturn Single.error(exception)
-
-    val result = resetUserPin.resetPin(newPin).blockingGet()
-    assertThat(result).isEqualTo(ResetPinResult.UnexpectedError(exception))
-  }
-
-  @Test
   fun `whenever the forgot pin api call fails, the access token must not be updated`() {
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
 
-    val newPinDigest = "hashed"
-    whenever(passwordHasher.hash(newPin)) doReturn Single.just(newPinDigest)
     whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.error<ForgotPinResponse>(RuntimeException())
 
     resetUserPin.resetPin(newPin).blockingGet()
@@ -175,9 +156,6 @@ class ResetUserPinTest {
   @Test
   fun `whenever the forgot pin api call fails, the logged in user must not be updated`() {
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
-
-    val newPinDigest = "hashed"
-    whenever(passwordHasher.hash(newPin)) doReturn Single.just(newPinDigest)
     whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.error<ForgotPinResponse>(RuntimeException())
 
     resetUserPin.resetPin(newPin).blockingGet()
@@ -187,13 +165,10 @@ class ResetUserPinTest {
 
   @Test
   fun `whenever the forgot pin api succeeds, the access token must be updated`() {
-    val newPinDigest = "new-digest"
     val updatedAccessToken = "new_access_token"
-    val updatedUser = currentUser.afterPinResetRequested(newPinDigest)
 
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
     whenever(facilityRepository.associateUserWithFacilities(updatedUser, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
-    whenever(passwordHasher.hash(newPin)) doReturn Single.just(newPinDigest)
 
     val response = ForgotPinResponse(
         loggedInUser = updatedUser.toPayload(facilityUuid),
@@ -208,12 +183,8 @@ class ResetUserPinTest {
 
   @Test
   fun `whenever the forgot pin api succeeds, the logged in users password digest and logged in status must be updated`() {
-    val newPinDigest = "new-digest"
-    val updatedUser = currentUser.afterPinResetRequested(newPinDigest)
-
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
     whenever(facilityRepository.associateUserWithFacilities(updatedUser, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
-    whenever(passwordHasher.hash(newPin)) doReturn Single.just(newPinDigest)
 
     val response = ForgotPinResponse(
         loggedInUser = updatedUser.toPayload(facilityUuid),
@@ -225,6 +196,8 @@ class ResetUserPinTest {
 
     verify(userDao).createOrUpdate(updatedUser)
   }
+
+  private fun hash(pin: String): String = passwordHasher.hash(pin).blockingGet()
 
   private fun <T> unauthorizedHttpError(): HttpException {
     val error = Response.error<T>(401, ResponseBody.create(MediaType.parse("text"), unauthorizedErrorResponseJson))

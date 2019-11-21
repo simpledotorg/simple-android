@@ -2,6 +2,7 @@ package org.simple.clinic.user.resetpin
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth
+import com.google.common.truth.Truth.*
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.doThrow
@@ -81,7 +82,7 @@ class ResetUserPinTest {
 
     val result = resetUserPin.resetPin("0000").blockingGet()
 
-    Truth.assertThat(result).isEqualTo(expectedResult)
+    assertThat(result).isEqualTo(expectedResult)
   }
 
   @Suppress("Unused")
@@ -106,7 +107,7 @@ class ResetUserPinTest {
     whenever(loginApi.resetPin(any())) doReturn apiResult
 
     val result = resetUserPin.resetPin("0000").blockingGet()
-    Truth.assertThat(result).isEqualTo(expectedResult)
+    assertThat(result).isEqualTo(expectedResult)
   }
 
   @Suppress("Unused")
@@ -151,7 +152,7 @@ class ResetUserPinTest {
     whenever(passwordHasher.hash(any())) doReturn Single.error(exception)
 
     val result = resetUserPin.resetPin("0000").blockingGet()
-    Truth.assertThat(result).isEqualTo(ResetPinResult.UnexpectedError(exception))
+    assertThat(result).isEqualTo(ResetPinResult.UnexpectedError(exception))
   }
 
   @Test

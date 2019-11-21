@@ -272,7 +272,7 @@ class UserSession @Inject constructor(
   }
 
   fun resetPin(pin: String): Single<ResetPinResult> {
-    return ResetUserPin(passwordHasher, loginApi, accessTokenPreference, appDatabase.userDao(), facilityRepository).resetPin(pin)
+    return ResetUserPin(passwordHasher, loginApi, appDatabase.userDao(), facilityRepository, accessTokenPreference).resetPin(pin)
   }
 
   fun canSyncData(): Observable<Boolean> {

@@ -16,6 +16,7 @@ import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.user.User.LoggedInStatus.*
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.resetpin.ResetUserPin
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -25,7 +26,8 @@ typealias UiChange = (Ui) -> Unit
 class ForgotPinConfirmPinScreenController @Inject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val patientRepository: PatientRepository
+    private val patientRepository: PatientRepository,
+    private val resetUserPin: ResetUserPin
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -97,7 +99,7 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
     val makeResetPinCall = validPin
         .flatMapSingle { newPin -> syncAndClearPatientData().toSingleDefault(newPin) }
         .flatMapSingle { newPin -> setUserLoggedInStatusToResettingPin().toSingleDefault(newPin) }
-        .flatMapSingle(userSession::resetPin)
+        .flatMapSingle(resetUserPin::resetPin)
         .onErrorReturn(::UnexpectedError)
         .share()
 

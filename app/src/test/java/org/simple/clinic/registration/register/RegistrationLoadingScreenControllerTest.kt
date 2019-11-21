@@ -57,8 +57,8 @@ class RegistrationLoadingScreenControllerTest {
   fun `when retry button is clicked, then register api should be called`() {
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
-    whenever(registerUser.registerUserAtFacility(user, facility)).doReturn(Single.just<RegistrationResult>(Success))
-    whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
+    whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
+    whenever(userSession.clearOngoingRegistrationEntry()) doReturn Completable.complete()
 
     uiEvents.onNext(RegisterErrorRetryClicked)
 

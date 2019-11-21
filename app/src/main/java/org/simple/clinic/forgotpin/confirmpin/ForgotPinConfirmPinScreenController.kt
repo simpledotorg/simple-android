@@ -17,6 +17,7 @@ import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.user.User.LoggedInStatus.*
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.resetpin.ResetUserPin
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -47,13 +48,15 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
 
   private fun showUserNameOnScreenStarted(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<ForgotPinConfirmPinScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
+        .flatMap { userSession.loggedInUser() }
+        .filterAndUnwrapJust()
         .map { user -> { ui: Ui -> ui.showUserName(user.fullName) } }
   }
 
   private fun showFacilityOnScreenCreated(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<ForgotPinConfirmPinScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
+        .flatMap { userSession.loggedInUser() }
+        .filterAndUnwrapJust()
         .switchMap { facilityRepository.currentFacility(it) }
         .map { facility -> { ui: Ui -> ui.showFacility(facility.name) } }
   }
@@ -125,7 +128,8 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
 
   private fun setUserLoggedInStatusToResettingPin(): Completable {
     return userSession
-        .requireLoggedInUser()
+        .loggedInUser()
+        .filterAndUnwrapJust()
         .firstOrError()
         .flatMapCompletable { user -> userSession.updateLoggedInStatusForUser(user.uuid, RESETTING_PIN) }
   }

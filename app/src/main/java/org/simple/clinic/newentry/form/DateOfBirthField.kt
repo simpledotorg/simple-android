@@ -11,18 +11,18 @@ class DateOfBirthField(
     private val dateTimeFormatter: DateTimeFormatter,
     private val today: LocalDate
 ) : InputField<String>() {
-  override fun validate(value: String): List<ValidationError> {
-    if (value.isBlank()) return listOf(MissingValue)
+  override fun validate(value: String): Set<ValidationError> {
+    if (value.isBlank()) return setOf(MissingValue)
 
     return try {
       val parsedDate = LocalDate.parse(value, dateTimeFormatter)
       if (parsedDate > today) {
-        listOf(DateIsInFuture)
+        setOf(DateIsInFuture)
       } else {
-        emptyList()
+        emptySet()
       }
     } catch (e: DateTimeParseException) {
-      listOf(InvalidDateFormat)
+      setOf(InvalidDateFormat)
     }
   }
 }

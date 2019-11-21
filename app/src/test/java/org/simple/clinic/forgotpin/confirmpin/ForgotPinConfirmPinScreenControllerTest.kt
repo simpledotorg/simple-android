@@ -19,10 +19,10 @@ import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.resetpin.ForgotPinResult.NetworkError
-import org.simple.clinic.user.resetpin.ForgotPinResult.Success
-import org.simple.clinic.user.resetpin.ForgotPinResult.UnexpectedError
-import org.simple.clinic.user.resetpin.ForgotPinResult.UserNotFound
+import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
+import org.simple.clinic.user.resetpin.ResetPinResult.Success
+import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
+import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule

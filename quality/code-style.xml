@@ -5,32 +5,10 @@
     </value>
   </option>
   <option name="LINE_SEPARATOR" value="&#xA;" />
-  <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="9999" />
-  <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="9999" />
-  <option name="IMPORT_LAYOUT_TABLE">
-    <value>
-      <package name="" withSubpackages="true" static="true" />
-      <emptyLine />
-      <package name="android" withSubpackages="true" static="false" />
-      <emptyLine />
-      <package name="com" withSubpackages="true" static="false" />
-      <emptyLine />
-      <package name="junit" withSubpackages="true" static="false" />
-      <emptyLine />
-      <package name="net" withSubpackages="true" static="false" />
-      <emptyLine />
-      <package name="org" withSubpackages="true" static="false" />
-      <emptyLine />
-      <package name="java" withSubpackages="true" static="false" />
-      <package name="javax" withSubpackages="true" static="false" />
-      <emptyLine />
-      <package name="" withSubpackages="true" static="false" />
-    </value>
-  </option>
   <option name="RIGHT_MARGIN" value="150" />
-  <option name="JD_DO_NOT_WRAP_ONE_LINE_COMMENTS" value="true" />
+  <option name="SOFT_MARGINS" value="100" />
   <AndroidXmlCodeStyleSettings>
-    <option name="USE_CUSTOM_SETTINGS" value="true" />
+    <option name="ARRANGEMENT_SETTINGS_MIGRATED_TO_191" value="true" />
   </AndroidXmlCodeStyleSettings>
   <JavaCodeStyleSettings>
     <option name="CLASS_NAMES_IN_JAVADOC" value="3" />
@@ -67,13 +45,7 @@
     <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="2147483647" />
     <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="2147483647" />
   </JetCodeStyleSettings>
-  <MarkdownNavigatorCodeStyleSettings>
-    <option name="RIGHT_MARGIN" value="72" />
-  </MarkdownNavigatorCodeStyleSettings>
   <XML>
-    <option name="XML_KEEP_LINE_BREAKS" value="false" />
-    <option name="XML_ALIGN_ATTRIBUTES" value="false" />
-    <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="true" />
     <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
   </XML>
   <codeStyleSettings language="Groovy">
@@ -124,7 +96,8 @@
             <match>
               <AND>
                 <NAME>xmlns:android</NAME>
-                <XML_NAMESPACE>Namespace:</XML_NAMESPACE>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>^$</XML_NAMESPACE>
               </AND>
             </match>
           </rule>
@@ -134,7 +107,8 @@
             <match>
               <AND>
                 <NAME>xmlns:.*</NAME>
-                <XML_NAMESPACE>Namespace:</XML_NAMESPACE>
+                <XML_ATTRIBUTE />
+                <XML_NAMESPACE>^$</XML_NAMESPACE>
               </AND>
             </match>
             <order>BY_NAME</order>
@@ -145,6 +119,7 @@
             <match>
               <AND>
                 <NAME>.*:id</NAME>
+                <XML_ATTRIBUTE />
                 <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
               </AND>
             </match>
@@ -155,6 +130,7 @@
             <match>
               <AND>
                 <NAME>.*:name</NAME>
+                <XML_ATTRIBUTE />
                 <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
               </AND>
             </match>
@@ -165,6 +141,7 @@
             <match>
               <AND>
                 <NAME>name</NAME>
+                <XML_ATTRIBUTE />
                 <XML_NAMESPACE>^$</XML_NAMESPACE>
               </AND>
             </match>
@@ -175,6 +152,7 @@
             <match>
               <AND>
                 <NAME>style</NAME>
+                <XML_ATTRIBUTE />
                 <XML_NAMESPACE>^$</XML_NAMESPACE>
               </AND>
             </match>
@@ -185,6 +163,7 @@
             <match>
               <AND>
                 <NAME>.*</NAME>
+                <XML_ATTRIBUTE />
                 <XML_NAMESPACE>^$</XML_NAMESPACE>
               </AND>
             </match>
@@ -195,53 +174,12 @@
           <rule>
             <match>
               <AND>
-                <NAME>.*:layout_width</NAME>
+                <NAME>.*</NAME>
+                <XML_ATTRIBUTE />
                 <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
               </AND>
             </match>
-          </rule>
-        </section>
-        <section>
-          <rule>
-            <match>
-              <AND>
-                <NAME>.*:layout_height</NAME>
-                <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-              </AND>
-            </match>
-          </rule>
-        </section>
-        <section>
-          <rule>
-            <match>
-              <AND>
-                <NAME>.*:layout_.*</NAME>
-                <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-              </AND>
-            </match>
-            <order>BY_NAME</order>
-          </rule>
-        </section>
-        <section>
-          <rule>
-            <match>
-              <AND>
-                <NAME>.*:width</NAME>
-                <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-              </AND>
-            </match>
-            <order>BY_NAME</order>
-          </rule>
-        </section>
-        <section>
-          <rule>
-            <match>
-              <AND>
-                <NAME>.*:height</NAME>
-                <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-              </AND>
-            </match>
-            <order>BY_NAME</order>
+            <order>ANDROID_ATTRIBUTE_ORDER</order>
           </rule>
         </section>
         <section>
@@ -249,17 +187,7 @@
             <match>
               <AND>
                 <NAME>.*</NAME>
-                <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-              </AND>
-            </match>
-            <order>BY_NAME</order>
-          </rule>
-        </section>
-        <section>
-          <rule>
-            <match>
-              <AND>
-                <NAME>.*</NAME>
+                <XML_ATTRIBUTE />
                 <XML_NAMESPACE>.*</XML_NAMESPACE>
               </AND>
             </match>

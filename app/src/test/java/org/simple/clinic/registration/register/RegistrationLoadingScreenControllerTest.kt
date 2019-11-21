@@ -94,6 +94,7 @@ class RegistrationLoadingScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     // then
+    verify(userSession).clearOngoingRegistrationEntry()
     verify(screen).openHomeScreen()
     verifyNoMoreInteractions(screen)
   }

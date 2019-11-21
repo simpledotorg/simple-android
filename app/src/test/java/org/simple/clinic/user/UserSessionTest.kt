@@ -57,7 +57,6 @@ class UserSessionTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val loginApi = mock<LoginApi>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
@@ -84,7 +83,6 @@ class UserSessionTest {
   private val schedulersProvider = TrampolineSchedulersProvider()
 
   private val userSession = UserSession(
-      loginApi = loginApi,
       facilityRepository = facilityRepository,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,

@@ -13,7 +13,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
@@ -25,8 +24,6 @@ import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import org.simple.clinic.user.resetpin.ResetPinResult
-import org.simple.clinic.user.resetpin.ResetUserPin
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -40,13 +37,12 @@ import javax.inject.Named
 
 @AppScope
 class UserSession @Inject constructor(
-    private val loginApi: LoginApi,
     private val facilityRepository: FacilityRepository,
     private val sharedPreferences: SharedPreferences,
-    // This is Lazy to work around a cyclic dependency between
-    // DataSync, UserSession, and PatientRepository.
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
+    // This is Lazy to work around a cyclic dependency between
+    // DataSync, UserSession, and PatientRepository.
     private val dataSync: Lazy<DataSync>,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val bruteForceProtection: BruteForceProtection,
@@ -269,10 +265,6 @@ class UserSession @Inject constructor(
         .andThen(patientRepository.clearPatientData())
         .andThen(clearStoredPullTokens)
         .andThen(bruteForceProtection.resetFailedAttempts())
-  }
-
-  fun resetPin(pin: String): Single<ResetPinResult> {
-    return ResetUserPin(passwordHasher, loginApi, appDatabase.userDao(), facilityRepository, accessTokenPreference).resetPin(pin)
   }
 
   fun canSyncData(): Observable<Boolean> {

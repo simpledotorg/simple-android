@@ -1,6 +1,7 @@
 package org.simple.clinic.forgotpin.confirmpin
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -11,12 +12,9 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
@@ -34,7 +32,6 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-@RunWith(JUnitParamsRunner::class)
 class ForgotPinConfirmPinScreenControllerTest {
 
   @get:Rule
@@ -93,32 +90,22 @@ class ForgotPinConfirmPinScreenControllerTest {
   }
 
   @Test
-  @Parameters(value = [
-    "0000|000|0000|false",
-    "0000|000|001|true",
-    "0000|0000|000|false"
-  ])
-  fun `when submitting a PIN that does not match the previous PIN, an error should be shown`(
-      originalPin: String,
-      submittedPin1: String,
-      submittedPin2: String,
-      bothAreFailures: Boolean
-  ) {
+  fun `when submitting a PIN that does not match the previous PIN, an error should be shown`() {
     // given
+    val originalPin = "0000"
     whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
     whenever(resetUserPin.resetPin(originalPin)) doReturn Single.just<ResetPinResult>(Success)
 
-    // when
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(originalPin))
-    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(submittedPin1))
-    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(submittedPin2))
-
     // then
-    if (bothAreFailures) {
-      verify(screen, times(2)).showPinMismatchedError()
-    } else {
-      verify(screen).showPinMismatchedError()
-    }
+    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(originalPin))
+
+    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
+    verify(screen).showPinMismatchedError()
+
+    clearInvocations(screen)
+
+    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("5678"))
+    verify(screen).showPinMismatchedError()
   }
 
   @Test
@@ -161,32 +148,31 @@ class ForgotPinConfirmPinScreenControllerTest {
   }
 
   @Test
-  @Parameters(value = [
-    "0|false",
-    "00|false",
-    "000|false",
-    "0000|true",
-    "00000|false"
-  ])
-  fun `when a valid PIN is submitted and sync succeeds, it must raise the Reset PIN request`(
-      pin: String,
-      shouldRaiseRequest: Boolean
-  ) {
+  fun `when a valid PIN is submitted and sync succeeds, it must raise the Reset PIN request`() {
     // given
+    val pin = "0000"
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(Success)
     whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
     whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)) doReturn Completable.complete()
 
     // when
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
+    uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    if (shouldRaiseRequest) {
-      verify(resetUserPin).resetPin(pin)
-    } else {
-      verify(resetUserPin, never()).resetPin(any())
-    }
+    verify(userSession).syncAndClearData(any(), any(), any())
+    verify(resetUserPin).resetPin(pin)
+  }
+
+  @Test
+  fun `when an invalid PIN is submitted, it must not attempt to raise the Reset PIN request`() {
+    // when
+    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
+    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("1234"))
+
+    // then
+    verify(resetUserPin, never()).resetPin(any())
+    verify(userSession, never()).syncAndClearData(any(), any(), any())
   }
 
   @Test

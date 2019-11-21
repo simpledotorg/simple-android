@@ -17,14 +17,16 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 import java.util.UUID
+import javax.inject.Inject
+import javax.inject.Named
 
-class ResetUserPin(
+class ResetUserPin @Inject constructor(
     private val passwordHasher: PasswordHasher,
     // TODO(vs): 2019-11-21 Unify the LoginApi and RegistrationApi into a single UserApi
     private val loginApi: LoginApi,
-    private val accessTokenPreference: Preference<Optional<String>>,
     private val userDao: User.RoomDao,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
 ) {
 
   fun resetPin(pin: String): Single<ResetPinResult> {

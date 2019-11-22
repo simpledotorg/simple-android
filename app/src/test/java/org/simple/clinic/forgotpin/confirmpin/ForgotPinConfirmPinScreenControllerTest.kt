@@ -17,7 +17,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
@@ -42,7 +41,6 @@ class ForgotPinConfirmPinScreenControllerTest {
 
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val patientRepository = mock<PatientRepository>()
   private val screen = mock<ForgotPinConfirmPinScreen>()
   private val resetUserPin = mock<ResetUserPin>()
   private val syncAndClearPatientData = mock<SyncAndClearPatientData>()
@@ -53,7 +51,6 @@ class ForgotPinConfirmPinScreenControllerTest {
   private val controller = ForgotPinConfirmPinScreenController(
       userSession = userSession,
       facilityRepository = facilityRepository,
-      patientRepository = patientRepository,
       resetUserPin = resetUserPin,
       syncAndClearPatientData = syncAndClearPatientData
   )
@@ -96,7 +93,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   fun `when submitting a PIN that does not match the previous PIN, an error should be shown`() {
     // given
     val originalPin = "0000"
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
+    whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
     whenever(resetUserPin.resetPin(originalPin)) doReturn Single.just<ResetPinResult>(Success)
 
     // then
@@ -126,20 +123,20 @@ class ForgotPinConfirmPinScreenControllerTest {
   fun `when a valid PIN is submitted, the local patient data must be synced and then cleared`() {
     // given
     val pin = "0000"
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
+    whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
 
     // when
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(userSession).syncAndClearData(any(), any(), any())
+    verify(syncAndClearPatientData).run()
   }
 
   @Test
   fun `when the sync fails, it must show an unexpected error`() {
     // given
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.error(RuntimeException())
+    whenever(syncAndClearPatientData.run()) doReturn Completable.error(RuntimeException())
 
     // when
     val pin = "0000"
@@ -155,7 +152,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     // given
     val pin = "0000"
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(Success)
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
+    whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
     whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)) doReturn Completable.complete()
 
     // when
@@ -163,7 +160,7 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
 
     // then
-    verify(userSession).syncAndClearData(any(), any(), any())
+    verify(syncAndClearPatientData).run()
     verify(resetUserPin).resetPin(pin)
   }
 
@@ -175,14 +172,14 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     // then
     verify(resetUserPin, never()).resetPin(any())
-    verify(userSession, never()).syncAndClearData(any(), any(), any())
+    verify(syncAndClearPatientData, never()).run()
   }
 
   @Test
   fun `when a valid PIN is submitted, the progress must be shown`() {
     // when
     val pin = "0000"
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
+    whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
 
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated(pin))
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
@@ -195,7 +192,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   fun `when the forgot PIN call fails with a network error, the error must be shown`() {
     // given
     val pin = "0000"
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
+    whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
     whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)) doReturn Completable.complete()
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(NetworkError)
 
@@ -211,7 +208,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   fun `when the forgot PIN call fails with an unexpected error, the error must be shown`() {
     // given
     val pin = "0000"
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
+    whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(UnexpectedError(RuntimeException()))
 
     // when
@@ -226,7 +223,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   fun `when the forgot PIN call fails with a user not found error, the error must be shown`() {
     // given
     val pin = "0000"
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
+    whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(UserNotFound)
 
     // when
@@ -241,7 +238,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   fun `when the forgot PIN call succeeds, the home screen must be opened`() {
     // given
     val pin = "0000"
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
+    whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
     whenever(userSession.updateLoggedInStatusForUser(loggedInUser.uuid, User.LoggedInStatus.RESETTING_PIN)) doReturn Completable.complete()
     whenever(resetUserPin.resetPin(pin)) doReturn Single.just<ResetPinResult>(Success)
 
@@ -256,7 +253,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   @Test
   fun `when resetting the PIN and data gets cleared, the user logged in status must be set to RESETTING_PIN`() {
     // given
-    whenever(userSession.syncAndClearData(any(), any(), any())) doReturn Completable.complete()
+    whenever(syncAndClearPatientData.run()) doReturn Completable.complete()
 
     // when
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))

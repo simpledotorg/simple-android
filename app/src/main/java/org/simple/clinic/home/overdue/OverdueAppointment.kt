@@ -6,6 +6,7 @@ import androidx.room.Ignore
 import androidx.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
@@ -112,6 +113,7 @@ data class OverdueAppointment(
             AND A.facilityUuid = :facilityUuid
             AND A.status = :scheduledStatus
             AND A.scheduledDate < :scheduledBefore
+            AND A.scheduledDate > :scheduledAfter
             AND PPN.number IS NOT NULL
             AND (A.remindOn < :scheduledBefore OR A.remindOn IS NULL)
 
@@ -122,6 +124,7 @@ data class OverdueAppointment(
         facilityUuid: UUID,
         scheduledStatus: Appointment.Status,
         scheduledBefore: LocalDate,
+        scheduledAfter: LocalDate,
         yesAnswer: Answer = Answer.Yes,
         minimumOverdueDateForHighRisk: LocalDate,
         overdueDateForLowestRiskLevel: LocalDate

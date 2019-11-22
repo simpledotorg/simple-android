@@ -20,7 +20,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGH
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGHEST
-import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.LOW
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.NONE
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.REGULAR
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.VERY_HIGH
@@ -494,7 +493,7 @@ class AppointmentRepositoryAndroidTest {
       assertThat(updatedAt).isEqualTo(appointmentUpdatedAtTimestamp)
     }
   }
-  
+
   @Test
   fun high_risk_patients_should_be_present_at_the_top_when_loading_overdue_appointments() {
     data class BP(val systolic: Int, val diastolic: Int)
@@ -555,7 +554,7 @@ class AppointmentRepositoryAndroidTest {
 
     // given
     val thirtyDays = Duration.ofDays(30)
-    val threeSixtyFiveDays = Duration.ofDays(366)
+    val threeFiftyDays = Duration.ofDays(350)
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("0620c310-0248-4d05-b7c4-8134bd7335e8"),
@@ -608,7 +607,7 @@ class AppointmentRepositoryAndroidTest {
         hasHadHeartAttack = Yes,
         hasHadKidneyDisease = Yes,
         hasDiabetes = Yes,
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+        appointmentHasBeenOverdueFor = threeFiftyDays
     )
 
     savePatientAndAppointment(
@@ -622,7 +621,7 @@ class AppointmentRepositoryAndroidTest {
         patientUuid = UUID.fromString("f50082f5-c7be-430e-998e-9d052735da36"),
         fullName = "Systolic > 180, overdue > 30 days",
         bps = listOf(BP(systolic = 9000, diastolic = 100)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+        appointmentHasBeenOverdueFor = threeFiftyDays
     )
 
     savePatientAndAppointment(
@@ -636,7 +635,7 @@ class AppointmentRepositoryAndroidTest {
         patientUuid = UUID.fromString("00dbcd51-a434-4a25-a1cf-1da66600082d"),
         fullName = "Diastolic > 110, overdue > 30 days",
         bps = listOf(BP(systolic = 100, diastolic = 9000)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+        appointmentHasBeenOverdueFor = threeFiftyDays
     )
 
     savePatientAndAppointment(
@@ -711,23 +710,23 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("7742babb-10ca-4dce-9eae-59895251284d"),
-        fullName = "BP == 139/89, overdue == 366 days",
+        fullName = "BP == 139/89, overdue == 350 days",
         bps = listOf(BP(systolic = 139, diastolic = 89)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+        appointmentHasBeenOverdueFor = threeFiftyDays
     )
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("234cbcb8-c3b1-4b7c-be34-7ac3691c1df7"),
-        fullName = "BP == 141/91, overdue == 366 days",
+        fullName = "BP == 141/91, overdue == 350 days",
         bps = listOf(BP(systolic = 141, diastolic = 91)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+        appointmentHasBeenOverdueFor = threeFiftyDays
     )
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("6fe996ee-5792-4114-93dd-b79577600369"),
-        fullName = "BP == 110/80, overdue == 366 days",
+        fullName = "BP == 110/80, overdue == 350 days",
         bps = listOf(BP(systolic = 110, diastolic = 80)),
-        appointmentHasBeenOverdueFor = threeSixtyFiveDays
+        appointmentHasBeenOverdueFor = threeFiftyDays
     )
 
     savePatientAndAppointment(
@@ -765,18 +764,66 @@ class AppointmentRepositoryAndroidTest {
         "Systolic == 140, overdue == 30 days" to REGULAR,
         "Diastolic == 99, overdue == 30 days" to REGULAR,
         "Diastolic == 90, overdue == 30 days" to REGULAR,
-        "BP == 141/91, overdue == 366 days" to REGULAR,
-        "BP == 139/89, overdue == 366 days" to LOW,
-        "BP == 110/80, overdue == 366 days" to LOW,
+        "BP == 141/91, overdue == 350 days" to REGULAR,
         "Diastolic > 110, overdue == 3 days" to NONE,
         "Overdue == 3 days" to NONE,
         "Systolic > 180, overdue == 4 days" to NONE,
         "Has had a stroke, overdue == 20 days" to NONE,
         "Has diabetes, overdue == 27 days" to NONE,
-        "BP == 110/80, overdue between 30 days and 1 year" to NONE
+        "BP == 110/80, overdue between 30 days and 1 year" to NONE,
+        "BP == 139/89, overdue == 350 days" to NONE,
+        "BP == 110/80, overdue == 350 days" to NONE
     ))
   }
 
+  @Test
+  fun when_fetching_overdue_appointments_it_should_exclude_appointments_more_than_a_year_overdue() {
+    fun createOverdueAppointment(
+        patientUuid: UUID,
+        scheduledDate: LocalDate,
+        facilityUuid: UUID
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          generatePhoneNumber = true
+      )
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      val bp = testData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid
+      )
+      bpRepository.save(listOf(bp)).blockingAwait()
+
+      val appointment = testData.appointment(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          scheduledDate = scheduledDate,
+          status = Scheduled,
+          cancelReason = null
+      )
+      appointmentRepository.save(listOf(appointment)).blockingAwait()
+    }
+
+    //given
+    val patientWithOneDayOverdue = UUID.fromString("9b794e72-6ebb-48c3-a8d7-69751ffeecc2")
+    val patientWithTenDaysOverdue = UUID.fromString("0fc57e45-7018-4c03-9218-f90f6fc0f268")
+    val patientWithOverAnYearDaysOverdue = UUID.fromString("51467803-f588-4a65-8def-7a15f41bdd13")
+
+    val now = LocalDate.now(clock)
+    val facilityUuid = UUID.fromString("ccc66ec1-5029-455b-bf92-caa6d90a9a79")
+
+    createOverdueAppointment(patientWithOneDayOverdue, now.minusDays(1), facilityUuid)
+    createOverdueAppointment(patientWithTenDaysOverdue, now.minusDays(10), facilityUuid)
+    createOverdueAppointment(patientWithOverAnYearDaysOverdue, now.minusDays(370), facilityUuid)
+
+    //when
+    val overduePatientUuids = appointmentRepository.overdueAppointments(since = now, facility = testData.facility(uuid = facilityUuid)).blockingFirst().map { it.appointment.patientUuid }
+
+    //then
+    assertThat(overduePatientUuids).containsExactly(patientWithOneDayOverdue, patientWithTenDaysOverdue)
+    assertThat(overduePatientUuids).doesNotContain(patientWithOverAnYearDaysOverdue)
+  }
 
   @Test
   fun when_fetching_appointment_for_patient_it_should_return_the_last_created_appointment() {

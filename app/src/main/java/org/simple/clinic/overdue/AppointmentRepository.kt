@@ -133,6 +133,7 @@ class AppointmentRepository @Inject constructor(
                   facilityUuid = facility.uuid,
                   scheduledStatus = Scheduled,
                   scheduledBefore = since,
+                  scheduledAfter = since.minusMonths(12),
                   minimumOverdueDateForHighRisk = since.minus(appointmentConfig.minimumOverduePeriodForHighRisk),
                   overdueDateForLowestRiskLevel = since.minus(appointmentConfig.overduePeriodForLowestRiskLevel)
               ).toObservable()

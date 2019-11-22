@@ -494,7 +494,7 @@ class AppointmentRepositoryAndroidTest {
       assertThat(updatedAt).isEqualTo(appointmentUpdatedAtTimestamp)
     }
   }
-
+  
   @Test
   fun high_risk_patients_should_be_present_at_the_top_when_loading_overdue_appointments() {
     data class BP(val systolic: Int, val diastolic: Int)
@@ -749,33 +749,34 @@ class AppointmentRepositoryAndroidTest {
 
     // then
     assertThat(appointments.map { it.fullName to it.riskLevel }).isEqualTo(listOf(
-        "Systolic > 180, overdue > 30 days" to HIGHEST,
-        "Diastolic > 110, overdue > 30 days" to HIGHEST,
         "Systolic > 180, overdue == 30 days" to HIGHEST,
         "Diastolic > 110, overdue == 30 days" to HIGHEST,
-        "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days" to VERY_HIGH,
+        "Systolic > 180, overdue > 30 days" to HIGHEST,
+        "Diastolic > 110, overdue > 30 days" to HIGHEST,
         "Has had a heart attack, overdue == 30 days" to VERY_HIGH,
         "Has had a kidney disease, overdue == 30 days" to VERY_HIGH,
         "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days" to VERY_HIGH,
+        "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days" to VERY_HIGH,
         "Systolic == 179, overdue == 30 days" to HIGH,
         "Systolic == 160, overdue == 30 days" to HIGH,
         "Diastolic == 109, overdue == 30 days" to HIGH,
         "Diastolic == 100, overdue == 30 days" to HIGH,
-        "BP == 141/91, overdue == 366 days" to REGULAR,
         "Systolic == 159, overdue == 30 days" to REGULAR,
         "Systolic == 140, overdue == 30 days" to REGULAR,
         "Diastolic == 99, overdue == 30 days" to REGULAR,
         "Diastolic == 90, overdue == 30 days" to REGULAR,
+        "BP == 141/91, overdue == 366 days" to REGULAR,
         "BP == 139/89, overdue == 366 days" to LOW,
         "BP == 110/80, overdue == 366 days" to LOW,
-        "BP == 110/80, overdue between 30 days and 1 year" to NONE,
-        "Has diabetes, overdue == 27 days" to NONE,
-        "Has had a stroke, overdue == 20 days" to NONE,
-        "Systolic > 180, overdue == 4 days" to NONE,
         "Diastolic > 110, overdue == 3 days" to NONE,
-        "Overdue == 3 days" to NONE
+        "Overdue == 3 days" to NONE,
+        "Systolic > 180, overdue == 4 days" to NONE,
+        "Has had a stroke, overdue == 20 days" to NONE,
+        "Has diabetes, overdue == 27 days" to NONE,
+        "BP == 110/80, overdue between 30 days and 1 year" to NONE
     ))
   }
+
 
   @Test
   fun when_fetching_appointment_for_patient_it_should_return_the_last_created_appointment() {

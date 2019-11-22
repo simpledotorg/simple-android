@@ -11,7 +11,7 @@ import org.threeten.bp.Duration
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class ClearPatientData(
+class SyncAndClearPatientData(
     private val dataSync: DataSync,
     private val syncRetryCount: Int,
     private val syncTimeout: Duration,

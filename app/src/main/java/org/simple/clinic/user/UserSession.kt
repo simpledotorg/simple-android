@@ -24,14 +24,15 @@ import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
+import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.threeten.bp.Duration
 import timber.log.Timber
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -245,26 +246,19 @@ class UserSession @Inject constructor(
   }
 
   fun syncAndClearData(patientRepository: PatientRepository, syncRetryCount: Int = 0, timeoutSeconds: Long = 15L): Completable {
-    Timber.i("Syncing and clearing all patient related data")
-
-    val clearStoredPullTokens = Completable.fromAction {
-      patientSyncPullToken.delete()
-      bpSyncPullToken.delete()
-      prescriptionSyncPullToken.delete()
-      appointmentSyncPullToken.delete()
-      medicalHistorySyncPullToken.delete()
-    }
-
-    return dataSync
-        .get()
-        .syncTheWorld()
-        .subscribeOn(schedulersProvider.io())
-        .retry(syncRetryCount.toLong())
-        .timeout(timeoutSeconds, TimeUnit.SECONDS)
-        .onErrorComplete()
-        .andThen(patientRepository.clearPatientData())
-        .andThen(clearStoredPullTokens)
-        .andThen(bruteForceProtection.resetFailedAttempts())
+    return SyncAndClearPatientData(
+        dataSync = dataSync.get(),
+        syncRetryCount = syncRetryCount,
+        syncTimeout = Duration.ofSeconds(timeoutSeconds),
+        bruteForceProtection = bruteForceProtection,
+        patientRepository = patientRepository,
+        schedulersProvider = schedulersProvider,
+        patientSyncPullToken = patientSyncPullToken,
+        bpSyncPullToken = bpSyncPullToken,
+        prescriptionSyncPullToken = prescriptionSyncPullToken,
+        appointmentSyncPullToken = appointmentSyncPullToken,
+        medicalHistorySyncPullToken = medicalHistorySyncPullToken
+    ).run()
   }
 
   fun canSyncData(): Observable<Boolean> {

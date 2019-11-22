@@ -1,7 +1,7 @@
 package org.simple.clinic.user.clearpatientdata
 
 import com.f2prateek.rx.preferences2.Preference
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -66,7 +66,7 @@ class SyncAndClearPatientDataTest {
     verify(appointmentPullToken).delete()
     verify(medicalHistoryPullToken).delete()
     verify(prescriptionPullToken).delete()
-    Truth.assertThat(bruteForceReset).isTrue()
+    assertThat(bruteForceReset).isTrue()
   }
 
   @Test

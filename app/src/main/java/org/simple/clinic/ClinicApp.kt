@@ -37,12 +37,6 @@ abstract class ClinicApp : Application() {
   @SuppressLint("RestrictedApi")
   override fun onCreate() {
     super.onCreate()
-
-    @Suppress("ConstantConditionIf")
-    if (BuildConfig.API_ENDPOINT == "null") {
-      throw AssertionError("API endpoint cannot be null!")
-    }
-
     // Room uses the architecture components executor for doing IO work,
     // which is limited to two threads. This causes thread starvation in some
     // cases, especially when syncs are ongoing. This changes the thread pool

@@ -1,11 +1,15 @@
 package org.simple.clinic.newentry.form
 
 import com.google.common.truth.Truth.assertThat
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.newentry.form.ValidationError.LengthTooLong
 import org.simple.clinic.newentry.form.ValidationError.LengthTooShort
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
 
+@RunWith(JUnitParamsRunner::class)
 class LandlineOrMobileFieldTest {
   private val landlineOrMobileField = LandlineOrMobileField()
 
@@ -22,8 +26,9 @@ class LandlineOrMobileFieldTest {
   }
 
   @Test
-  fun `it returns an empty set if the number is valid`() {
-    assertThat(landlineOrMobileField.validate("1234567890"))
+  @Parameters("123456", "1234567890", "123456789012")
+  fun `it returns an empty set if the number is valid`(number: String) {
+    assertThat(landlineOrMobileField.validate(number))
         .isEmpty()
   }
 

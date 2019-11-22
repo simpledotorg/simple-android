@@ -33,6 +33,7 @@ import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.DataSyncOnApprovalModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.indicator.SyncIndicatorModule
+import org.simple.clinic.user.clearpatientdata.ClearPatientDataModule
 import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RealUserClock
@@ -74,7 +75,8 @@ import javax.inject.Named
   PatientSearchModule::class,
   LoginOtpSmsListenerModule::class,
   HttpInterceptorsModule::class,
-  RetrofitModule::class
+  RetrofitModule::class,
+  ClearPatientDataModule::class
 ])
 class AppModule(private val appContext: Application) {
 

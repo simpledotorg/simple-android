@@ -10,19 +10,21 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Duration
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Named
 
-class SyncAndClearPatientData(
+class SyncAndClearPatientData @Inject constructor(
     private val dataSync: DataSync,
-    private val syncRetryCount: Int,
-    private val syncTimeout: Duration,
     private val bruteForceProtection: BruteForceProtection,
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
-    private val patientSyncPullToken: Preference<Optional<String>>,
-    private val bpSyncPullToken: Preference<Optional<String>>,
-    private val prescriptionSyncPullToken: Preference<Optional<String>>,
-    private val appointmentSyncPullToken: Preference<Optional<String>>,
-    private val medicalHistorySyncPullToken: Preference<Optional<String>>
+    @Named("clear_patient_data_sync_retry_count") private val syncRetryCount: Int,
+    @Named("clear_patient_data_sync_timeout") private val syncTimeout: Duration,
+    @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<String>>,
+    @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<String>>,
+    @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<String>>,
+    @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<String>>,
+    @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<String>>
 ) {
 
   fun run(): Completable {

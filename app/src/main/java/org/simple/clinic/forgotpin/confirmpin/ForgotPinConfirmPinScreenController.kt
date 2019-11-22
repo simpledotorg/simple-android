@@ -16,6 +16,7 @@ import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.user.User.LoggedInStatus.*
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
 import org.simple.clinic.user.resetpin.ResetUserPin
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -28,7 +29,8 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
-    private val resetUserPin: ResetUserPin
+    private val resetUserPin: ResetUserPin,
+    private val syncAndClearPatientData: SyncAndClearPatientData
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {

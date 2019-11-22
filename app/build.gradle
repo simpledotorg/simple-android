@@ -97,7 +97,6 @@ android {
       dimension 'track'
       applicationIdSuffix ".qa"
       versionNameSuffix "-qa"
-      buildConfigField "String", "API_ENDPOINT", "\"" + qaApiEndpoint + "\""
       buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + qaManifestEndpoint + "\""
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + qaFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + qaMixpanelToken + "\""
@@ -108,7 +107,6 @@ android {
       dimension 'track'
       applicationIdSuffix ".staging"
       versionNameSuffix "-demo"
-      buildConfigField "String", "API_ENDPOINT", "\"" + stagingApiEndpoint + "\""
       buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + stagingManifestEndpoint + "\""
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + stagingFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + stagingMixpanelToken + "\""
@@ -119,7 +117,6 @@ android {
       dimension 'track'
       applicationIdSuffix ".sandbox"
       versionNameSuffix "-sandbox"
-      buildConfigField "String", "API_ENDPOINT", "\"" + sandboxApiEndpoint + "\""
       buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + sandboxManifestEndpoint + "\""
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + sandboxFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + sandboxMixpanelToken + "\""
@@ -128,7 +125,6 @@ android {
 
     production {
       dimension 'track'
-      buildConfigField "String", "API_ENDPOINT", "\"" + productionApiEndpoint + "\""
       buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + productionManifestEndpoint + "\""
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + productionFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + productionMixpanelToken + "\""

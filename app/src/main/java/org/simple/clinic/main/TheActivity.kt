@@ -31,6 +31,7 @@ import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.sync.SyncSetup
+import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
@@ -62,6 +63,9 @@ class TheActivity : AppCompatActivity() {
   @Inject
   lateinit var syncSetup: SyncSetup
 
+  @Inject
+  lateinit var unauthorizeUser: UnauthorizeUser
+
   private val disposables = CompositeDisposable()
 
   private val screenRouter: ScreenRouter by unsafeLazy {
@@ -79,7 +83,10 @@ class TheActivity : AppCompatActivity() {
     }
 
     if (savedInstanceState == null) {
-      disposables.add(syncSetup.run())
+      disposables.addAll(
+          syncSetup.run(),
+          unauthorizeUser.listen()
+      )
     }
 
     lifecycle

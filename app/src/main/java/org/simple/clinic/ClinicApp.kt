@@ -13,7 +13,6 @@ import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.util.AppArchTaskExecutorDelegate
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,9 +28,6 @@ abstract class ClinicApp : Application() {
 
   @Inject
   lateinit var crashReporter: CrashReporter
-
-  @Inject
-  lateinit var unauthorizeUser: UnauthorizeUser
 
   @Inject
   lateinit var closeActivitiesWhenUserIsUnauthorized: CloseActivitiesWhenUserIsUnauthorized
@@ -67,7 +63,6 @@ abstract class ClinicApp : Application() {
     }
 
     updateAnalyticsUserId.listen()
-    unauthorizeUser.listen()
 
     registerActivityLifecycleCallbacks(closeActivitiesWhenUserIsUnauthorized)
     closeActivitiesWhenUserIsUnauthorized.listen()

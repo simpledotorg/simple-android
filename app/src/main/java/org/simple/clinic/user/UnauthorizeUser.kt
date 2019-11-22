@@ -1,5 +1,6 @@
 package org.simple.clinic.user
 
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.ResolvedError.Unauthenticated
@@ -12,8 +13,8 @@ class UnauthorizeUser @Inject constructor(
     private val schedulersProvider: SchedulersProvider
 ) {
 
-  fun listen() {
-    dataSync
+  fun listen(): Disposable {
+    return dataSync
         .streamSyncErrors()
         .observeOn(schedulersProvider.io())
         .ofType<Unauthenticated>()

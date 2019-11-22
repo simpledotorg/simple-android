@@ -248,11 +248,11 @@ class UserSession @Inject constructor(
   fun syncAndClearData(patientRepository: PatientRepository, syncRetryCount: Int = 0, timeoutSeconds: Long = 15L): Completable {
     return SyncAndClearPatientData(
         dataSync = dataSync.get(),
-        syncRetryCount = syncRetryCount,
-        syncTimeout = Duration.ofSeconds(timeoutSeconds),
         bruteForceProtection = bruteForceProtection,
         patientRepository = patientRepository,
         schedulersProvider = schedulersProvider,
+        syncRetryCount = syncRetryCount,
+        syncTimeout = Duration.ofSeconds(timeoutSeconds),
         patientSyncPullToken = patientSyncPullToken,
         bpSyncPullToken = bpSyncPullToken,
         prescriptionSyncPullToken = prescriptionSyncPullToken,

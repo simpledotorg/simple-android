@@ -20,6 +20,7 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
 import org.simple.clinic.user.resetpin.ResetPinResult
 import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
 import org.simple.clinic.user.resetpin.ResetPinResult.Success
@@ -44,6 +45,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val screen = mock<ForgotPinConfirmPinScreen>()
   private val resetUserPin = mock<ResetUserPin>()
+  private val syncAndClearPatientData = mock<SyncAndClearPatientData>()
 
   private val loggedInUser = PatientMocker.loggedInUser(uuid = UUID.fromString("324d7648-e2a5-4192-831f-533b81181dc2"))
   private val facility = PatientMocker.facility()
@@ -52,7 +54,8 @@ class ForgotPinConfirmPinScreenControllerTest {
       userSession = userSession,
       facilityRepository = facilityRepository,
       patientRepository = patientRepository,
-      resetUserPin = resetUserPin
+      resetUserPin = resetUserPin,
+      syncAndClearPatientData = syncAndClearPatientData
   )
 
   // FIXME 02-08-2019 : Fix tests with unexpected errors are passing even when stubs are not passed

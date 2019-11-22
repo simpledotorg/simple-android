@@ -3,7 +3,6 @@ package org.simple.clinic.user
 import android.content.SharedPreferences
 import androidx.annotation.WorkerThread
 import com.f2prateek.rx.preferences2.Preference
-import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -13,24 +12,18 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult
 import org.simple.clinic.storage.files.FileStorage
-import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.threeten.bp.Duration
 import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
@@ -42,21 +35,11 @@ class UserSession @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
-    // This is Lazy to work around a cyclic dependency between
-    // DataSync, UserSession, and PatientRepository.
-    private val dataSync: Lazy<DataSync>,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
-    private val bruteForceProtection: BruteForceProtection,
     private val fileStorage: FileStorage,
     private val reportPendingRecords: ReportPendingRecordsToAnalytics,
-    private val schedulersProvider: SchedulersProvider,
     private val selectedCountryPreference: Preference<Optional<Country>>,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
-    @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<String>>,
-    @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<String>>,
-    @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<String>>,
-    @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<String>>,
-    @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<String>>,
     @Named("onboarding_complete") private val onboardingComplete: Preference<Boolean>
 ) {
 
@@ -243,22 +226,6 @@ class UserSession @Inject constructor(
 
   fun accessToken(): Optional<String> {
     return accessTokenPreference.get()
-  }
-
-  fun syncAndClearData(patientRepository: PatientRepository, syncRetryCount: Int = 0, timeoutSeconds: Long = 15L): Completable {
-    return SyncAndClearPatientData(
-        dataSync = dataSync.get(),
-        bruteForceProtection = bruteForceProtection,
-        patientRepository = patientRepository,
-        schedulersProvider = schedulersProvider,
-        syncRetryCount = syncRetryCount,
-        syncTimeout = Duration.ofSeconds(timeoutSeconds),
-        patientSyncPullToken = patientSyncPullToken,
-        bpSyncPullToken = bpSyncPullToken,
-        prescriptionSyncPullToken = prescriptionSyncPullToken,
-        appointmentSyncPullToken = appointmentSyncPullToken,
-        medicalHistorySyncPullToken = medicalHistorySyncPullToken
-    ).run()
   }
 
   fun canSyncData(): Observable<Boolean> {

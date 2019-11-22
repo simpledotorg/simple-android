@@ -33,7 +33,6 @@ import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult
 import org.simple.clinic.storage.files.FileStorage
-import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
@@ -46,7 +45,6 @@ import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.assertLatestValue
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.io.IOException
 import java.util.UUID
 
@@ -67,38 +65,22 @@ class UserSessionTest {
   private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
   private var bruteForceProtection = mock<BruteForceProtection>()
 
-  private val dataSync = mock<DataSync>()
-  private val dataSyncLazy = dagger.Lazy { dataSync }
-  private val medicalHistoryPullToken = mock<Preference<Optional<String>>>()
-  private val appointmentPullToken = mock<Preference<Optional<String>>>()
-  private val prescriptionPullToken = mock<Preference<Optional<String>>>()
-  private val bpPullToken = mock<Preference<Optional<String>>>()
-  private val patientPullToken = mock<Preference<Optional<String>>>()
   private val fileStorage = mock<FileStorage>()
   private val reportPendingRecords = mock<ReportPendingRecordsToAnalytics>()
   private val onboardingCompletePreference = mock<Preference<Boolean>>()
   private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
-  private val schedulersProvider = TrampolineSchedulersProvider()
 
   private val userSession = UserSession(
       facilityRepository = facilityRepository,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,
       passwordHasher = passwordHasher,
-      dataSync = dataSyncLazy,
       ongoingLoginEntryRepository = ongoingLoginEntryRepository,
-      bruteForceProtection = bruteForceProtection,
       fileStorage = fileStorage,
       reportPendingRecords = reportPendingRecords,
-      schedulersProvider = schedulersProvider,
       selectedCountryPreference = selectedCountryPreference,
       accessTokenPreference = accessTokenPref,
-      patientSyncPullToken = patientPullToken,
-      bpSyncPullToken = bpPullToken,
-      prescriptionSyncPullToken = prescriptionPullToken,
-      appointmentSyncPullToken = appointmentPullToken,
-      medicalHistorySyncPullToken = medicalHistoryPullToken,
       onboardingComplete = onboardingCompletePreference
   )
 

@@ -8,10 +8,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.pin.BruteForceProtection
@@ -20,8 +17,9 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.threeten.bp.Duration
+import java.io.IOException
+import java.net.SocketTimeoutException
 
-@RunWith(JUnitParamsRunner::class)
 class SyncAndClearPatientDataTest {
 
   private val dataSync = mock<DataSync>()
@@ -56,43 +54,40 @@ class SyncAndClearPatientDataTest {
   }
 
   @Test
-  @Parameters(value = ["0", "1", "2"])
-  fun `if the sync fails when resetting PIN, it should be retried and complete if all retries fail`(retryCount: Int) {
-    val emissionsAfterFirst: Array<Completable> = (0 until retryCount)
-        .map { Completable.error(RuntimeException()) }.toTypedArray()
-
+  fun `if the sync fails when resetting PIN, it should be retried and complete if all retries fail`() {
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()).doReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
+    whenever(dataSync.syncTheWorld()).doReturn(
+        Completable.error(RuntimeException()),
+        Completable.error(IOException()),
+        Completable.error(SocketTimeoutException())
+    )
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
-    createTestInstance().run()
+    createTestInstance(syncRetryCount = 2)
+        .run()
         .test()
         .await()
         .assertComplete()
   }
 
   @Test
-  @Parameters(value = ["0", "1", "2"])
-  fun `if the sync fails when resetting PIN, it should be retried and complete if any retry succeeds`(retryCount: Int) {
-    // Mockito doesn't have a way to specify a vararg for all invocations and expects
-    // the first emission to be explicitly provided. This dynamically constructs the
-    // rest of the emissions and ensures that the last one succeeds.
-    val emissionsAfterFirst: Array<Completable> = (0 until retryCount)
-        .map { retryIndex ->
-          if (retryIndex == retryCount - 1) Completable.complete() else Completable.error(RuntimeException())
-        }.toTypedArray()
-
+  fun `if the sync fails when resetting PIN, it should be retried and complete if any retry succeeds`() {
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()).doReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
+    whenever(dataSync.syncTheWorld()).doReturn(
+        Completable.error(RuntimeException()),
+        Completable.error(IOException()),
+        Completable.complete()
+    )
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
-    createTestInstance().run()
+    createTestInstance(syncRetryCount = 2)
+        .run()
         .test()
         .await()
         .assertComplete()
@@ -144,13 +139,15 @@ class SyncAndClearPatientDataTest {
     verify(dataSync).syncTheWorld()
   }
 
-  private fun createTestInstance(): SyncAndClearPatientData {
+  private fun createTestInstance(
+      syncRetryCount: Int = 0
+  ): SyncAndClearPatientData {
     return SyncAndClearPatientData(
         dataSync = dataSync,
         bruteForceProtection = bruteForceProtection,
         patientRepository = patientRepository,
         schedulersProvider = TrampolineSchedulersProvider(),
-        syncRetryCount = 0,
+        syncRetryCount = syncRetryCount,
         syncTimeout = Duration.ofSeconds(1),
         patientSyncPullToken = patientPullToken,
         bpSyncPullToken = bpPullToken,

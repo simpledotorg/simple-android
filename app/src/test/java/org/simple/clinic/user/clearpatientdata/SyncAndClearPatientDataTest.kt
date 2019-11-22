@@ -34,20 +34,6 @@ class SyncAndClearPatientDataTest {
   private val prescriptionPullToken = mock<Preference<Optional<String>>>()
   private val medicalHistoryPullToken = mock<Preference<Optional<String>>>()
 
-  private val syncAndClearPatientData = SyncAndClearPatientData(
-      dataSync = dataSync,
-      bruteForceProtection = bruteForceProtection,
-      patientRepository = patientRepository,
-      schedulersProvider = TrampolineSchedulersProvider(),
-      syncRetryCount = 0,
-      syncTimeout = Duration.ofSeconds(1),
-      patientSyncPullToken = patientPullToken,
-      bpSyncPullToken = bpPullToken,
-      prescriptionSyncPullToken = prescriptionPullToken,
-      appointmentSyncPullToken = appointmentPullToken,
-      medicalHistorySyncPullToken = medicalHistoryPullToken
-  )
-
   @Test
   fun `after clearing patient related data during forgot PIN flow, the sync timestamps must be cleared`() {
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
@@ -59,7 +45,7 @@ class SyncAndClearPatientDataTest {
     var bruteForceReset = false
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.fromAction { bruteForceReset = true }
 
-    syncAndClearPatientData.run().blockingAwait()
+    createTestInstance().run().blockingAwait()
 
     verify(patientPullToken).delete()
     verify(bpPullToken).delete()
@@ -82,7 +68,7 @@ class SyncAndClearPatientDataTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
-    syncAndClearPatientData.run()
+    createTestInstance().run()
         .test()
         .await()
         .assertComplete()
@@ -106,7 +92,7 @@ class SyncAndClearPatientDataTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
-    syncAndClearPatientData.run()
+    createTestInstance().run()
         .test()
         .await()
         .assertComplete()
@@ -121,7 +107,7 @@ class SyncAndClearPatientDataTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
-    syncAndClearPatientData.run()
+    createTestInstance().run()
         .test()
         .await()
 
@@ -137,7 +123,7 @@ class SyncAndClearPatientDataTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
-    syncAndClearPatientData.run()
+    createTestInstance().run()
         .test()
         .await()
 
@@ -153,8 +139,24 @@ class SyncAndClearPatientDataTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
-    syncAndClearPatientData.run()
+    createTestInstance().run()
 
     verify(dataSync).syncTheWorld()
+  }
+
+  private fun createTestInstance(): SyncAndClearPatientData {
+    return SyncAndClearPatientData(
+        dataSync = dataSync,
+        bruteForceProtection = bruteForceProtection,
+        patientRepository = patientRepository,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        syncRetryCount = 0,
+        syncTimeout = Duration.ofSeconds(1),
+        patientSyncPullToken = patientPullToken,
+        bpSyncPullToken = bpPullToken,
+        prescriptionSyncPullToken = prescriptionPullToken,
+        appointmentSyncPullToken = appointmentPullToken,
+        medicalHistorySyncPullToken = medicalHistoryPullToken
+    )
   }
 }

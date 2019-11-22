@@ -8,7 +8,6 @@ import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers.trampoline
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -21,6 +20,7 @@ import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 
 @RunWith(JUnitParamsRunner::class)
@@ -41,9 +41,9 @@ class UnauthorizeUserTest {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(PatientMocker.loggedInUser().toOptional()))
     whenever(userSession.unauthorize()).thenReturn(Completable.fromAction { unauthorizeCompleted = true })
 
-    val unauthorizeUser = UnauthorizeUser(userSession = userSession, dataSync = dataSync)
+    val unauthorizeUser = UnauthorizeUser(userSession = userSession, dataSync = dataSync, schedulersProvider = TrampolineSchedulersProvider())
 
-    unauthorizeUser.listen(trampoline())
+    unauthorizeUser.listen()
 
     verifyZeroInteractions(userSession)
 

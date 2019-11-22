@@ -8,5 +8,6 @@ data class AppointmentConfig(
     val overduePeriodForLowestRiskLevel: Period,
     val appointmentDuePeriodForDefaulters: Period,
     val scheduleAppointmentsIn: List<TimeToAppointment>,
-    val defaultTimeToAppointment: TimeToAppointment
+    val defaultTimeToAppointment: TimeToAppointment,
+    val periodForIncludingOverdueAppointments: Period
 )

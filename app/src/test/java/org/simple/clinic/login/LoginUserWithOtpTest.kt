@@ -8,7 +8,6 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
-import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.MediaType
@@ -46,7 +45,6 @@ class LoginUserWithOtpTest {
 
   private val loginApi: LoginApi = mock()
   private val dataSync: DataSync = mock()
-  private val dataSyncLazy: Lazy<DataSync> = Lazy { dataSync }
   private val userDao: User.RoomDao = mock()
   private val facilityRepository = mock<FacilityRepository>()
   private val schedulersProvider: SchedulersProvider = TrampolineSchedulersProvider()
@@ -67,7 +65,7 @@ class LoginUserWithOtpTest {
 
   private val loginUserWithOtp = LoginUserWithOtp(
       loginApi = loginApi,
-      dataSync = dataSyncLazy,
+      dataSync = dataSync,
       userDao = userDao,
       facilityRepository = facilityRepository,
       schedulersProvider = schedulersProvider,

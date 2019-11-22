@@ -27,7 +27,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.login.LoginApi
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.PasswordHasher
@@ -129,118 +128,6 @@ class UserSessionTest {
         .test()
         .await()
         .assertValue(false)
-  }
-
-  @Test
-  fun `when performing sync and clear data, the sync must be triggered`() {
-    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
-    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
-
-    val user = PatientMocker.loggedInUser()
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    userSession.syncAndClearData(patientRepository).blockingAwait()
-
-    verify(dataSync).syncTheWorld()
-  }
-
-  @Test
-  @Parameters(value = ["0", "1", "2"])
-  fun `if the sync fails when resetting PIN, it should be retried and complete if any retry succeeds`(retryCount: Int) {
-    // Mockito doesn't have a way to specify a vararg for all invocations and expects
-    // the first emission to be explicitly provided. This dynamically constructs the
-    // rest of the emissions and ensures that the last one succeeds.
-    val emissionsAfterFirst: Array<Completable> = (0 until retryCount)
-        .map { retryIndex ->
-          if (retryIndex == retryCount - 1) Completable.complete() else Completable.error(RuntimeException())
-        }.toTypedArray()
-
-    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(dataSync.syncTheWorld())
-        .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
-    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
-
-    val user = PatientMocker.loggedInUser()
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    userSession.syncAndClearData(patientRepository, retryCount)
-        .test()
-        .await()
-        .assertComplete()
-  }
-
-  @Test
-  @Parameters(value = ["0", "1", "2"])
-  fun `if the sync fails when resetting PIN, it should be retried and complete if all retries fail`(retryCount: Int) {
-    val emissionsAfterFirst: Array<Completable> = (0 until retryCount)
-        .map { Completable.error(RuntimeException()) }.toTypedArray()
-
-    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(dataSync.syncTheWorld())
-        .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
-    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
-
-    val user = PatientMocker.loggedInUser()
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    userSession.syncAndClearData(patientRepository, retryCount)
-        .test()
-        .await()
-        .assertComplete()
-  }
-
-  @Test
-  fun `if the sync succeeds when resetting the PIN, it should clear the patient related data`() {
-    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
-    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
-
-    val user = PatientMocker.loggedInUser()
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    userSession.syncAndClearData(patientRepository)
-        .test()
-        .await()
-
-    verify(patientRepository).clearPatientData()
-  }
-
-  @Test
-  fun `if the sync fails when resetting the PIN, it should clear the patient related data`() {
-    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
-    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
-
-    val user = PatientMocker.loggedInUser()
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    userSession.syncAndClearData(patientRepository)
-        .test()
-        .await()
-
-    verify(patientRepository).clearPatientData()
-  }
-
-  @Test
-  fun `after clearing patient related data during forgot PIN flow, the sync timestamps must be cleared`() {
-    whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())
-    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-
-    val user = PatientMocker.loggedInUser()
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    var bruteForceReset = false
-    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.fromAction { bruteForceReset = true })
-
-    userSession.syncAndClearData(patientRepository).blockingAwait()
-
-    verify(patientPullToken).delete()
-    verify(bpPullToken).delete()
-    verify(appointmentPullToken).delete()
-    verify(medicalHistoryPullToken).delete()
-    verify(prescriptionPullToken).delete()
-    assertThat(bruteForceReset).isTrue()
   }
 
   @Test

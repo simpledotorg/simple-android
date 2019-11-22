@@ -53,7 +53,8 @@ class AppointmentModule {
             Months(11),
             Months(12)
         ),
-        defaultTimeToAppointment = Months(1)
+        defaultTimeToAppointment = Months(1),
+        periodForIncludingOverdueAppointments = Period.ofMonths(12)
     ))
   }
 

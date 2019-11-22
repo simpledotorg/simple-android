@@ -2,12 +2,16 @@ package org.simple.clinic.util
 
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler
+import okhttp3.MediaType
+import okhttp3.ResponseBody
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.threeten.bp.Duration
+import retrofit2.HttpException
+import retrofit2.Response
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -56,4 +60,13 @@ fun User.toPayload(registrationFacilityUuid: UUID): LoggedInUserPayload {
       createdAt = createdAt,
       updatedAt = updatedAt
   )
+}
+
+fun httpErrorResponse(
+    code: Int,
+    contentType: String = "text/plain",
+    body: String = ""
+): HttpException {
+  val error = Response.error<Any>(code, ResponseBody.create(MediaType.parse(contentType), body))
+  return HttpException(error)
 }

@@ -11,6 +11,10 @@ import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
+import org.simple.clinic.user.resetpin.ResetPinResult.Success
+import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
+import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
@@ -30,27 +34,21 @@ class ResetUserPin @Inject constructor(
 ) {
 
   fun resetPin(pin: String): Single<ResetPinResult> {
-    val resetPasswordCall = passwordHasher.hash(pin)
-        .map { ResetPinRequest(it) }
-        .flatMap { loginApi.resetPin(it) }
+    return passwordHasher.hash(pin)
         .doOnSubscribe { Timber.i("Resetting PIN") }
+        .map(::ResetPinRequest)
+        .flatMap(loginApi::resetPin)
+        .flatMapCompletable(::storeUserAndAccessToken)
+        .toSingleDefault(Success as ResetPinResult)
+        .onErrorReturn(::mapErrorToResetPinResult)
+  }
 
-    val updateUserOnSuccess = resetPasswordCall
-        .flatMapCompletable { storeUserAndAccessToken(it) }
-        .toSingleDefault(ResetPinResult.Success as ResetPinResult)
-
-    return updateUserOnSuccess
-        .onErrorReturn {
-          when (it) {
-            is IOException -> ResetPinResult.NetworkError
-            is HttpException -> if (it.code() == 401) {
-              ResetPinResult.UserNotFound
-            } else {
-              ResetPinResult.UnexpectedError(it)
-            }
-            else -> ResetPinResult.UnexpectedError(it)
-          }
-        }
+  private fun mapErrorToResetPinResult(error: Throwable): ResetPinResult {
+    return when (error) {
+      is IOException -> NetworkError
+      is HttpException -> if (error.code() == 401) UserNotFound else UnexpectedError(error)
+      else -> UnexpectedError(error)
+    }
   }
 
   private fun storeUserAndAccessToken(response: ForgotPinResponse): Completable {

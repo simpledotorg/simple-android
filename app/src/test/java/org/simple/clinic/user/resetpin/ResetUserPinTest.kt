@@ -29,6 +29,7 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.httpErrorResponse
 import org.simple.clinic.util.toPayload
 import retrofit2.HttpException
 import retrofit2.Response
@@ -65,6 +66,7 @@ class ResetUserPinTest {
   private val resetUserPin = ResetUserPin(passwordHasher, loginApi, userDao, facilityRepository, accessTokenPref)
 
   @Test
+  @Deprecated("replaced by alternate test")
   @Parameters(method = "params for saving user after reset pin")
   fun `the appropriate response must be returned when saving the user after reset PIN call succeeds`(
       errorToThrow: Throwable?,
@@ -97,6 +99,7 @@ class ResetUserPinTest {
 
   @Test
   @Parameters(method = "params for forgot pin api")
+  @Deprecated("replaced by alternate test")
   fun `the appropriate result must be returned when the reset pin call finishes`(
       apiResult: Single<ForgotPinResponse>,
       expectedResult: ResetPinResult
@@ -121,25 +124,21 @@ class ResetUserPinTest {
   }
 
   @Test
-  @Parameters(value = [
-    "0000",
-    "1111"
-  ])
-  fun `when reset PIN request is raised, the network call must be made with the hashed PIN`(pin: String) {
-    val hashed = hash(pin)
-    val updatedUser = currentUser.afterPinResetRequested(hashed)
+  fun `when reset PIN request is raised, the network call must be made with the hashed PIN`() {
+    val newPinDigest = hash(newPin)
+    val updatedUser = currentUser.afterPinResetRequested(newPinDigest)
 
     whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
     whenever(facilityRepository.associateUserWithFacilities(updatedUser, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
 
-    whenever(loginApi.resetPin(ResetPinRequest(hashed))) doReturn Single.just(ForgotPinResponse(
+    whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.just(ForgotPinResponse(
         accessToken = "",
         loggedInUser = updatedUser.toPayload(facilityUuid)
     ))
 
-    resetUserPin.resetPin(pin).blockingGet()
+    resetUserPin.resetPin(newPin).blockingGet()
 
-    verify(loginApi).resetPin(ResetPinRequest(hashed))
+    verify(loginApi).resetPin(ResetPinRequest(newPinDigest))
   }
 
   @Test
@@ -195,6 +194,90 @@ class ResetUserPinTest {
     resetUserPin.resetPin(newPin).blockingGet()
 
     verify(userDao).createOrUpdate(updatedUser)
+  }
+
+  @Test
+  fun `when the reset PIN call succeeds, the success result must be returned`() {
+    // given
+    whenever(facilityRepository.associateUserWithFacilities(updatedUser, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
+    whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
+
+    val response = ForgotPinResponse(
+        loggedInUser = updatedUser.toPayload(facilityUuid),
+        accessToken = "new_access_token"
+    )
+    whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.just(response)
+
+    // when
+    val result = resetUserPin.resetPin(newPin).blockingGet()
+
+    // then
+    assertThat(result).isEqualTo(ResetPinResult.Success)
+  }
+
+  @Test
+  fun `when the reset PIN api call fails with a network error, the network error result must be returned`() {
+    // given
+    whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
+
+    val newPinDigest = hash(newPin)
+    whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.error<ForgotPinResponse>(IOException())
+
+    // when
+    val result = resetUserPin.resetPin(newPin).blockingGet()
+
+    // then
+    assertThat(result).isEqualTo(ResetPinResult.NetworkError)
+  }
+
+  @Test
+  fun `when the reset PIN api call fails with 401 unauthenticated, the user not found result must be returned`() {
+    // given
+    whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
+
+    val newPinDigest = hash(newPin)
+    // TODO(vs): 2019-11-22 This is coupled to the implementation. Refactor later.
+    val httpException = httpErrorResponse(401)
+    whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.error<ForgotPinResponse>(httpException)
+
+    // when
+    val result = resetUserPin.resetPin(newPin).blockingGet()
+
+    // then
+    assertThat(result).isEqualTo(ResetPinResult.UserNotFound)
+  }
+
+  @Test
+  fun `when the reset PIN api call fails with a server error, the unexpected error result must be returned`() {
+    // given
+    whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
+
+    val newPinDigest = hash(newPin)
+    // TODO(vs): 2019-11-22 This is coupled to the implementation. Refactor later.
+    val httpException = httpErrorResponse(500)
+    whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.error<ForgotPinResponse>(httpException)
+
+    // when
+    val result = resetUserPin.resetPin(newPin).blockingGet()
+
+    // then
+    assertThat(result).isEqualTo(ResetPinResult.UnexpectedError(httpException))
+  }
+
+  @Test
+  fun `when the reset PIN api call fails with any other error, the unexpected error result must be returned`() {
+    // given
+    whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
+
+    val newPinDigest = hash(newPin)
+    val exception = RuntimeException()
+    whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.error<ForgotPinResponse>(exception)
+
+    // when
+    val result = resetUserPin.resetPin(newPin).blockingGet()
+
+    // then
+    assertThat(result).isEqualTo(ResetPinResult.UnexpectedError(exception))
   }
 
   private fun hash(pin: String): String = passwordHasher.hash(pin).blockingGet()

@@ -28,7 +28,6 @@ typealias UiChange = (Ui) -> Unit
 class ForgotPinConfirmPinScreenController @Inject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val patientRepository: PatientRepository,
     private val resetUserPin: ResetUserPin,
     private val syncAndClearPatientData: SyncAndClearPatientData
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -102,7 +101,7 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .share()
 
     val makeResetPinCall = validPin
-        .flatMapSingle { newPin -> syncAndClearPatientData().toSingleDefault(newPin) }
+        .flatMapSingle { newPin -> syncAndClearPatientData.run().toSingleDefault(newPin) }
         .flatMapSingle { newPin -> setUserLoggedInStatusToResettingPin().toSingleDefault(newPin) }
         .flatMapSingle(resetUserPin::resetPin)
         .onErrorReturn(::UnexpectedError)
@@ -134,9 +133,5 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .filterAndUnwrapJust()
         .firstOrError()
         .flatMapCompletable { user -> userSession.updateLoggedInStatusForUser(user.uuid, RESETTING_PIN) }
-  }
-
-  private fun syncAndClearPatientData(): Completable {
-    return userSession.syncAndClearData(patientRepository, syncRetryCount = 1)
   }
 }

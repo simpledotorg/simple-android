@@ -6,7 +6,6 @@ import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.gabrielittner.threetenbp.LazyThreeTen
-import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.AnalyticsReporter
@@ -68,7 +67,7 @@ abstract class ClinicApp : Application() {
     }
 
     updateAnalyticsUserId.listen()
-    unauthorizeUser.listen(Schedulers.io())
+    unauthorizeUser.listen()
 
     registerActivityLifecycleCallbacks(closeActivitiesWhenUserIsUnauthorized)
     closeActivitiesWhenUserIsUnauthorized.listen()

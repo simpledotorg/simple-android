@@ -22,7 +22,7 @@ import javax.inject.Named
 
 class LoginUserWithOtp @Inject constructor(
     private val loginApi: LoginApi,
-    private val dataSync: Lazy<DataSync>,
+    private val dataSync: DataSync,
     private val userDao: User.RoomDao,
     private val facilityRepository: FacilityRepository,
     private val schedulersProvider: SchedulersProvider,
@@ -88,7 +88,6 @@ class LoginUserWithOtp @Inject constructor(
 
   private fun syncOnLoginResult() {
     dataSync
-        .get()
         .syncTheWorld()
         .subscribeOn(schedulersProvider.io())
         .onErrorComplete()

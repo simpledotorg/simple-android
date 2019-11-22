@@ -4,7 +4,6 @@ import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.doThrow
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -12,12 +11,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
-import okhttp3.MediaType
-import okhttp3.ResponseBody
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
@@ -27,16 +21,17 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserStatus.WaitingForApproval
+import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
+import org.simple.clinic.user.resetpin.ResetPinResult.Success
+import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
+import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.httpErrorResponse
 import org.simple.clinic.util.toPayload
-import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOException
 import java.util.UUID
 
-@RunWith(JUnitParamsRunner::class)
 class ResetUserPinTest {
 
   private val passwordHasher = JavaHashPasswordHasher()
@@ -55,73 +50,7 @@ class ResetUserPinTest {
   private val newPinDigest = hash(newPin)
   private val updatedUser = currentUser.afterPinResetRequested(newPinDigest)
 
-  private val unauthorizedErrorResponseJson = """{
-        "errors": {
-          "user": [
-            "user is not present"
-          ]
-        }
-      }"""
-
   private val resetUserPin = ResetUserPin(passwordHasher, loginApi, userDao, facilityRepository, accessTokenPref)
-
-  @Test
-  @Deprecated("replaced by alternate test")
-  @Parameters(method = "params for saving user after reset pin")
-  fun `the appropriate response must be returned when saving the user after reset PIN call succeeds`(
-      errorToThrow: Throwable?,
-      expectedResult: ResetPinResult
-  ) {
-    whenever(facilityRepository.associateUserWithFacilities(updatedUser, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
-    whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
-
-    errorToThrow?.let { whenever(userDao.createOrUpdate(updatedUser)) doThrow it }
-
-    val response = ForgotPinResponse(
-        loggedInUser = updatedUser.toPayload(facilityUuid),
-        accessToken = "new_access_token"
-    )
-    whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn Single.just(response)
-
-    val result = resetUserPin.resetPin(newPin).blockingGet()
-
-    assertThat(result).isEqualTo(expectedResult)
-  }
-
-  @Suppress("Unused")
-  private fun `params for saving user after reset pin`(): Array<Array<Any?>> {
-    val exception = java.lang.RuntimeException()
-    return arrayOf(
-        arrayOf<Any?>(null, ResetPinResult.Success),
-        arrayOf<Any?>(exception, ResetPinResult.UnexpectedError(exception))
-    )
-  }
-
-  @Test
-  @Parameters(method = "params for forgot pin api")
-  @Deprecated("replaced by alternate test")
-  fun `the appropriate result must be returned when the reset pin call finishes`(
-      apiResult: Single<ForgotPinResponse>,
-      expectedResult: ResetPinResult
-  ) {
-    whenever(userDao.user()) doReturn Flowable.just(listOf(currentUser))
-
-    val newPinDigest = hash(newPin)
-    whenever(loginApi.resetPin(ResetPinRequest(newPinDigest))) doReturn apiResult
-
-    val result = resetUserPin.resetPin(newPin).blockingGet()
-    assertThat(result).isEqualTo(expectedResult)
-  }
-
-  @Suppress("Unused")
-  private fun `params for forgot pin api`(): Array<Array<Any>> {
-    val exception = RuntimeException()
-    return arrayOf(
-        arrayOf(Single.error<ForgotPinResponse>(IOException()), ResetPinResult.NetworkError),
-        arrayOf(Single.error<ForgotPinResponse>(unauthorizedHttpError<Any>()), ResetPinResult.UserNotFound),
-        arrayOf(Single.error<ForgotPinResponse>(exception), ResetPinResult.UnexpectedError(exception))
-    )
-  }
 
   @Test
   fun `when reset PIN request is raised, the network call must be made with the hashed PIN`() {
@@ -212,7 +141,7 @@ class ResetUserPinTest {
     val result = resetUserPin.resetPin(newPin).blockingGet()
 
     // then
-    assertThat(result).isEqualTo(ResetPinResult.Success)
+    assertThat(result).isEqualTo(Success)
   }
 
   @Test
@@ -227,7 +156,7 @@ class ResetUserPinTest {
     val result = resetUserPin.resetPin(newPin).blockingGet()
 
     // then
-    assertThat(result).isEqualTo(ResetPinResult.NetworkError)
+    assertThat(result).isEqualTo(NetworkError)
   }
 
   @Test
@@ -244,7 +173,7 @@ class ResetUserPinTest {
     val result = resetUserPin.resetPin(newPin).blockingGet()
 
     // then
-    assertThat(result).isEqualTo(ResetPinResult.UserNotFound)
+    assertThat(result).isEqualTo(UserNotFound)
   }
 
   @Test
@@ -261,7 +190,7 @@ class ResetUserPinTest {
     val result = resetUserPin.resetPin(newPin).blockingGet()
 
     // then
-    assertThat(result).isEqualTo(ResetPinResult.UnexpectedError(httpException))
+    assertThat(result).isEqualTo(UnexpectedError(httpException))
   }
 
   @Test
@@ -277,15 +206,10 @@ class ResetUserPinTest {
     val result = resetUserPin.resetPin(newPin).blockingGet()
 
     // then
-    assertThat(result).isEqualTo(ResetPinResult.UnexpectedError(exception))
+    assertThat(result).isEqualTo(UnexpectedError(exception))
   }
 
   private fun hash(pin: String): String = passwordHasher.hash(pin).blockingGet()
-
-  private fun <T> unauthorizedHttpError(): HttpException {
-    val error = Response.error<T>(401, ResponseBody.create(MediaType.parse("text"), unauthorizedErrorResponseJson))
-    return HttpException(error)
-  }
 
   private fun User.afterPinResetRequested(updatedPinDigest: String): User {
     return copy(pinDigest = updatedPinDigest, status = WaitingForApproval, loggedInStatus = RESET_PIN_REQUESTED)

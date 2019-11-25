@@ -83,11 +83,14 @@ data class BusinessId(
 
     object BpPassportMetaDataV1 : MetaDataVersion()
 
+    object BangladeshNationalIdMetaDataV1 : MetaDataVersion()
+
     data class Unknown(val actual: String) : MetaDataVersion()
 
     object TypeAdapter : SafeEnumTypeAdapter<MetaDataVersion>(
         knownMappings = mapOf(
-            BpPassportMetaDataV1 to "org.simple.bppassport.meta.v1"
+            BpPassportMetaDataV1 to "org.simple.bppassport.meta.v1",
+            BangladeshNationalIdMetaDataV1 to "org.simple.bangladesh_national_id.meta.v1"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

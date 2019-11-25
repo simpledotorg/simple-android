@@ -13,4 +13,13 @@ sealed class BusinessIdMetaData {
       @Json(name = "assigning_facility_id")
       val assigningFacilityUuid: UUID
   ) : BusinessIdMetaData()
+
+  data class BangladeshNationalIdMetaDataV1(
+
+      @Json(name = "assigning_user_id")
+      val assigningUserUuid: UUID,
+
+      @Json(name = "assigning_facility_id")
+      val assigningFacilityUuid: UUID
+  ) : BusinessIdMetaData()
 }

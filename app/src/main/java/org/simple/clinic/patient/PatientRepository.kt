@@ -16,10 +16,14 @@ import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
+import org.simple.clinic.patient.businessid.BusinessIdMetaData.BangladeshNationalIdMetaDataV1
 import org.simple.clinic.patient.businessid.BusinessIdMetaData.BpPassportMetaDataV1
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreator
 import org.simple.clinic.patient.sync.PatientPayload
@@ -510,19 +514,26 @@ class PatientRepository @Inject constructor(
   }
 
   private fun createBusinessIdMetaDataForIdentifier(
-      identifierType: Identifier.IdentifierType,
+      identifierType: IdentifierType,
       assigningUser: User,
       assigningFacility: Facility
   ): Single<BusinessIdMetaAndVersion> {
     return when (identifierType) {
       BpPassport -> createBpPassportMetaData(assigningUser, assigningFacility)
-      else -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
+      BangladeshNationalId -> createBangladeshNationalIdMetadata(assigningUser, assigningFacility)
+      is Unknown -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
     }
   }
 
   private fun createBpPassportMetaData(assigningUser: User, assigningFacility: Facility): Single<BusinessIdMetaAndVersion> {
     return Single.just(BpPassportMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningFacility.uuid))
         .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.BpPassportMetaDataV1) to MetaDataVersion.BpPassportMetaDataV1 }
+        .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
+  }
+
+  private fun createBangladeshNationalIdMetadata(assigningUser: User, assigningFacility: Facility): Single<BusinessIdMetaAndVersion> {
+    return Single.just(BangladeshNationalIdMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningFacility.uuid))
+        .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.BangladeshNationalIdMetaDataV1) to MetaDataVersion.BangladeshNationalIdMetaDataV1 }
         .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
   }
 

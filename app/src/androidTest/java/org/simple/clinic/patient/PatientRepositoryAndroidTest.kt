@@ -43,6 +43,7 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaData
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.protocol.ProtocolDrug
@@ -1180,7 +1181,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun saving_an_identifier_for_a_patient_must_work_as_expected() {
+  fun saving_a_bp_identifier_for_a_patient_must_work_as_expected() {
     val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
@@ -1210,6 +1211,46 @@ class PatientRepositoryAndroidTest {
 
     val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BpPassportMetaDataV1)
     val expectedSavedMeta = BusinessIdMetaData.BpPassportMetaDataV1(
+        assigningUserUuid = loggedInUser.uuid,
+        assigningFacilityUuid = currentFacility.uuid
+    )
+    assertThat(savedMeta).isEqualTo(expectedSavedMeta)
+
+    val (updatedPatient) = patientRepository.patient(patientProfile.patient.uuid).blockingFirst() as Just
+    assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
+  }
+
+  @Test
+  fun saving_bangladesh_national_identifier_for_a_patient_must_work_as_expected() {
+    val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val nationalId = "33ed3fb2-cfcc-48f8-9b7d-079c02146076"
+    val now = Instant.now(clock)
+
+    val duration = Duration.ofDays(1L)
+    clock.advanceBy(duration)
+
+    val savedBusinessId = patientRepository
+        .addIdentifierToPatient(
+            patientUuid = patientProfile.patient.uuid,
+            identifier = Identifier(nationalId, BangladeshNationalId),
+            assigningUser = loggedInUser,
+            assigningFacility = currentFacility
+        )
+        .blockingGet()
+
+    assertThat(savedBusinessId.uuid).isNotEqualTo(nationalId)
+    assertThat(savedBusinessId.patientUuid).isEqualTo(patientProfile.patient.uuid)
+    assertThat(savedBusinessId.identifier)
+        .isEqualTo(Identifier(value = nationalId, type = BangladeshNationalId))
+    assertThat(savedBusinessId.metaDataVersion).isEqualTo(BusinessId.MetaDataVersion.BangladeshNationalIdMetaDataV1)
+    assertThat(savedBusinessId.createdAt).isEqualTo(now.plus(duration))
+    assertThat(savedBusinessId.updatedAt).isEqualTo(now.plus(duration))
+    assertThat(savedBusinessId.deletedAt).isNull()
+
+    val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BangladeshNationalIdMetaDataV1)
+    val expectedSavedMeta = BusinessIdMetaData.BangladeshNationalIdMetaDataV1(
         assigningUserUuid = loggedInUser.uuid,
         assigningFacilityUuid = currentFacility.uuid
     )

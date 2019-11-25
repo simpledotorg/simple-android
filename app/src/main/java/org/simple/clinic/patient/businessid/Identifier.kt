@@ -25,11 +25,15 @@ data class Identifier(
     object BpPassport : IdentifierType()
 
     @Parcelize
+    object BangladeshNationalId : IdentifierType()
+
+    @Parcelize
     data class Unknown(val actual: String) : IdentifierType()
 
     object TypeAdapter : SafeEnumTypeAdapter<IdentifierType>(
         knownMappings = mapOf(
-            BpPassport to "simple_bp_passport"
+            BpPassport to "simple_bp_passport",
+            BangladeshNationalId to "bangladesh_national_id"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

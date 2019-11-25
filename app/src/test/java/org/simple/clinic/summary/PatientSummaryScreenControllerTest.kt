@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -1091,13 +1092,13 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
     whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
     whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
         openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(utcClock)
     ))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).goToPreviousScreen()
@@ -1190,13 +1191,13 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
     whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
     whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
         openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(utcClock)
     ))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
@@ -1291,13 +1292,13 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
     whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
     whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
         openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(utcClock)
     ))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
@@ -1318,13 +1319,13 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
     whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
     whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
         openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(utcClock)
     ))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
@@ -1348,13 +1349,13 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
     whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
     whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
         openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(utcClock)
     ))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     verify(screen).showScheduleAppointmentSheet(patientUuid)
@@ -1451,13 +1452,13 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
     whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
     whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
         openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(utcClock)
     ))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)

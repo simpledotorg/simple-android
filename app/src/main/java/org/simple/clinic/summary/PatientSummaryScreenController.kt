@@ -6,6 +6,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.Singles
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
@@ -72,7 +73,6 @@ class PatientSummaryScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(mergeWithPatientSummaryChanges())
-        .compose(mergeWithAllBloodPressuresDeleted())
         .compose(ReportAnalyticsEvents())
         .replay()
 
@@ -206,18 +206,6 @@ class PatientSummaryScreenController @Inject constructor(
     }
   }
 
-  private fun mergeWithAllBloodPressuresDeleted(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { events ->
-      val allBloodPressuresDeleted = events
-          .ofType<PatientSummaryScreenCreated>()
-          .map { it.patientUuid }
-          .switchMap(bpRepository::bloodPressureCount)
-          .map { recordedBpCount -> PatientSummaryAllBloodPressuresDeleted(recordedBpCount == 0) }
-
-      events.mergeWith(allBloodPressuresDeleted)
-    }
-  }
-
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
         .map { it ->
@@ -307,13 +295,18 @@ class PatientSummaryScreenController @Inject constructor(
 
     val patientUuids = screenCreatedEvents.map { it.patientUuid }
 
-    val hasSummaryItemChangedStream = events.ofType<PatientSummaryBackClicked>()
+    val backClicks = events.ofType<PatientSummaryBackClicked>()
+    val doneClicks = events.ofType<PatientSummaryDoneClicked>()
+
+    val hasSummaryItemChangedStream = backClicks
         .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid to screenCreated.screenCreatedTimestamp }
         .map { (patientUuid, screenCreatedAt) -> hasPatientDataChangedSince(patientUuid, screenCreatedAt) }
 
-    val allBpsForPatientDeletedStream = events
-        .ofType<PatientSummaryAllBloodPressuresDeleted>()
-        .map { it.allBloodPressuresDeleted }
+    val allBpsForPatientDeletedStream = backClicks
+        .cast<UiEvent>()
+        .mergeWith(doneClicks.cast())
+        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid }
+        .map(::doesNotHaveBloodPressures)
 
     val shouldShowScheduleAppointmentSheetOnBackClicksStream = Observables
         .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)
@@ -321,14 +314,12 @@ class PatientSummaryScreenController @Inject constructor(
           if (allBpsForPatientDeleted) false else hasSummaryItemChanged
         }
 
-    val showScheduleAppointmentSheetOnBackClicks = events
-        .ofType<PatientSummaryBackClicked>()
+    val showScheduleAppointmentSheetOnBackClicks = backClicks
         .withLatestFrom(shouldShowScheduleAppointmentSheetOnBackClicksStream, patientUuids)
         .filter { (_, shouldShowScheduleAppointmentSheet, _) -> shouldShowScheduleAppointmentSheet }
         .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
 
-    val showScheduleAppointmentSheetOnDoneClicks = events
-        .ofType<PatientSummaryDoneClicked>()
+    val showScheduleAppointmentSheetOnDoneClicks = doneClicks
         .withLatestFrom(allBpsForPatientDeletedStream, patientUuids)
         .filter { (_, allBpsForPatientDeleted, _) -> allBpsForPatientDeleted.not() }
         .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
@@ -352,9 +343,9 @@ class PatientSummaryScreenController @Inject constructor(
 
     val openIntentions = screenCreatedEvents.map { it.openIntention }
 
-    val allBpsForPatientDeletedStream = events
-        .ofType<PatientSummaryAllBloodPressuresDeleted>()
-        .map { it.allBloodPressuresDeleted }
+    val allBpsForPatientDeletedStream = events.ofType<PatientSummaryBackClicked>()
+        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid }
+        .map(::doesNotHaveBloodPressures)
 
     val hasSummaryItemChangedStream = events.ofType<PatientSummaryBackClicked>()
         .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid to screenCreated.screenCreatedTimestamp }
@@ -385,9 +376,9 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun goToHomeOnDoneClick(events: Observable<UiEvent>): Observable<UiChange> {
-    val allBpsForPatientDeletedStream = events
-        .ofType<PatientSummaryAllBloodPressuresDeleted>()
-        .map { it.allBloodPressuresDeleted }
+    val allBpsForPatientDeletedStream = events.ofType<PatientSummaryDoneClicked>()
+        .zipWith(events.ofType<PatientSummaryScreenCreated>()) { _, screenCreated -> screenCreated.patientUuid }
+        .map(::doesNotHaveBloodPressures)
 
     return events
         .ofType<PatientSummaryDoneClicked>()
@@ -543,5 +534,15 @@ class PatientSummaryScreenController @Inject constructor(
           .or(prescriptionChangedSince)
           .or(medicalHistoryChangedSince)
     }.blockingGet()
+  }
+
+  @WorkerThread
+  private fun doesNotHaveBloodPressures(patientUuid: UUID): Boolean {
+    // TODO(vs): 2019-11-25 Remove the Rx conversion to blocking call
+    return bpRepository
+        .bloodPressureCount(patientUuid)
+        .firstOrError()
+        .map { numberOfBloodPressures -> numberOfBloodPressures == 0 }
+        .blockingGet()
   }
 }

@@ -1,9 +1,11 @@
 package org.simple.clinic.summary
 
+import androidx.annotation.WorkerThread
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
@@ -71,7 +73,6 @@ class PatientSummaryScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(mergeWithPatientSummaryChanges())
         .compose(mergeWithAllBloodPressuresDeleted())
-        .compose(mergeWithHasPatientDataChangedSinceScreenCreated())
         .compose(ReportAnalyticsEvents())
         .replay()
 
@@ -217,50 +218,6 @@ class PatientSummaryScreenController @Inject constructor(
     }
   }
 
-  private fun mergeWithHasPatientDataChangedSinceScreenCreated(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { events ->
-      val patientUuidToScreenCreatedTimeStream = events
-          .ofType<PatientSummaryScreenCreated>()
-          .map { it.patientUuid to it.screenCreatedTimestamp }
-
-      val patientChangedSinceStream = patientUuidToScreenCreatedTimeStream
-          .switchMap { (patientUuid, screenCreatedAt) ->
-            patientRepository.hasPatientChangedSince(patientUuid, screenCreatedAt)
-          }
-
-      val bpsChangedSinceStream = patientUuidToScreenCreatedTimeStream
-          .switchMap { (patientUuid, screenCreatedAt) ->
-            bpRepository.haveBpsForPatientChangedSince(patientUuid, screenCreatedAt)
-          }
-
-      val prescriptionsChangedSinceStream = patientUuidToScreenCreatedTimeStream
-          .switchMap { (patientUuid, screenCreatedAt) ->
-            prescriptionRepository.hasPrescriptionForPatientChangedSince(patientUuid, screenCreatedAt)
-          }
-
-      val medicalHistoryChangedSinceStream = patientUuidToScreenCreatedTimeStream
-          .switchMap { (patientUuid, screenCreatedAt) ->
-            medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, screenCreatedAt)
-          }
-
-      val patientDataChangedSinceScreenCreatedStream = Observables
-          .combineLatest(
-              patientChangedSinceStream,
-              bpsChangedSinceStream,
-              prescriptionsChangedSinceStream,
-              medicalHistoryChangedSinceStream
-          ) { patientChangedSince, bpsChangedSince, prescriptionChangedSince, medicalHistoryChangedSince ->
-            PatientDataChangedSinceScreenCreated(hasChanged = patientChangedSince
-                .or(bpsChangedSince)
-                .or(prescriptionChangedSince)
-                .or(medicalHistoryChangedSince)
-            )
-          }
-
-      events.mergeWith(patientDataChangedSinceScreenCreatedStream)
-    }
-  }
-
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
         .map { it ->
@@ -346,13 +303,13 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun showScheduleAppointmentSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuids = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
+    val screenCreatedEvents = events.ofType<PatientSummaryScreenCreated>()
 
-    val hasSummaryItemChangedStream = events
-        .ofType<PatientDataChangedSinceScreenCreated>()
-        .map { it.hasChanged }
+    val patientUuids = screenCreatedEvents.map { it.patientUuid }
+
+    val hasSummaryItemChangedStream = events.ofType<PatientSummaryBackClicked>()
+        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid to screenCreated.screenCreatedTimestamp }
+        .map { (patientUuid, screenCreatedAt) -> hasPatientDataChangedSince(patientUuid, screenCreatedAt) }
 
     val allBpsForPatientDeletedStream = events
         .ofType<PatientSummaryAllBloodPressuresDeleted>()
@@ -391,17 +348,17 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun goBackWhenBackClicked(events: Observable<UiEvent>): Observable<UiChange> {
-    val openIntentions = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.openIntention }
+    val screenCreatedEvents = events.ofType<PatientSummaryScreenCreated>()
+
+    val openIntentions = screenCreatedEvents.map { it.openIntention }
 
     val allBpsForPatientDeletedStream = events
         .ofType<PatientSummaryAllBloodPressuresDeleted>()
         .map { it.allBloodPressuresDeleted }
 
-    val hasSummaryItemChangedStream = events
-        .ofType<PatientDataChangedSinceScreenCreated>()
-        .map { it.hasChanged }
+    val hasSummaryItemChangedStream = events.ofType<PatientSummaryBackClicked>()
+        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid to screenCreated.screenCreatedTimestamp }
+        .map { (patientUuid, screenCreatedAt) -> hasPatientDataChangedSince(patientUuid, screenCreatedAt) }
 
     val shouldGoBackStream = Observables
         .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)
@@ -561,5 +518,30 @@ class PatientSummaryScreenController @Inject constructor(
     val durationSinceBpCreated = Duration.between(createdAt, now)
 
     return durationSinceBpCreated <= bpEditableFor
+  }
+
+  @WorkerThread
+  private fun hasPatientDataChangedSince(patientUuid: UUID, timestamp: Instant): Boolean {
+
+    val patientChangedSinceStream = patientRepository.hasPatientChangedSince(patientUuid, timestamp).firstOrError()
+
+    val bpsChangedSinceStream = bpRepository.haveBpsForPatientChangedSince(patientUuid, timestamp).firstOrError()
+
+    val prescriptionsChangedSinceStream = prescriptionRepository.hasPrescriptionForPatientChangedSince(patientUuid, timestamp).firstOrError()
+
+    val medicalHistoryChangedSinceStream = medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, timestamp).firstOrError()
+
+    // TODO(vs): 2019-11-25 Remove the Rx conversion to blocking call
+    return Singles.zip(
+        patientChangedSinceStream,
+        bpsChangedSinceStream,
+        prescriptionsChangedSinceStream,
+        medicalHistoryChangedSinceStream
+    ) { patientChangedSince, bpsChangedSince, prescriptionChangedSince, medicalHistoryChangedSince ->
+      patientChangedSince
+          .or(bpsChangedSince)
+          .or(prescriptionChangedSince)
+          .or(medicalHistoryChangedSince)
+    }.blockingGet()
   }
 }

@@ -34,13 +34,14 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
 
     val frame = screenLayoutContainer()
     val incomingKey = incomingState.getKey<T>()
+    val incomingKeyTag = incomingKey.javaClass.name
 
     if (outgoingState == null && direction == flow.Direction.REPLACE) {
       // Short circuit if we would just be showing the same view again. Flow
       // intentionally calls changeKey() again on onResume() with the same values.
       // See: https://github.com/square/flow/issues/173.
       if (isScreenAlreadyActive(frame.getChildAt(0), incomingKey)) {
-        Timber.tag("Screen Router").i("Same view [$incomingKey]; short circuit")
+        Timber.tag("Screen Router").i("Same view [$incomingKeyTag]; short circuit")
         callback.onTraversalCompleted()
         return
       }
@@ -57,16 +58,17 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
     val incomingView = inflateIncomingView(incomingContext, incomingKey, frame)
     throwIfIdIsMissing(incomingView, incomingKey)
 
-    Timber.tag("Screen Router").i("Add new view [$incomingKey]")
+    Timber.tag("Screen Router").i("Add new view [$incomingKeyTag]")
     frame.addView(incomingView)
-    Timber.tag("Screen Router").i("Restore incoming view state [$incomingKey]")
+    Timber.tag("Screen Router").i("Restore incoming view state [$incomingKeyTag]")
     incomingState.restore(incomingView)
 
     outgoingView?.let {
       val outgoingKey = outgoingState?.getKey<T?>()
-      Timber.tag("Screen Router").i("Save outgoing view state [$outgoingKey]")
+      val outgoingKeyTag = outgoingKey?.javaClass?.name
+      Timber.tag("Screen Router").i("Save outgoing view state [$outgoingKeyTag]")
       outgoingState?.save(outgoingView)
-      Timber.tag("Screen Router").i("Remove outgoing view [$outgoingKey]")
+      Timber.tag("Screen Router").i("Remove outgoing view [$outgoingKeyTag]")
       frame.removeView(outgoingView)
     }
 

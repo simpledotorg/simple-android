@@ -38,13 +38,17 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientMocker.medicalHistory
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
@@ -54,6 +58,7 @@ import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScre
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RelativeTimestamp.Today
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
@@ -116,19 +121,19 @@ class PatientSummaryScreenControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
 
-    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.never())
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.never())
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.never())
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.never())
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(1))
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
-    whenever(patientRepository.bpPassportForPatient(patientUuid)).thenReturn(Observable.never())
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.never())
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.never())
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.never())
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.never())
+    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.never())
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).doReturn(Observable.never())
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.never())
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.never())
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
+    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
+    whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(Observable.never())
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.never())
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.never())
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.never())
 
     Analytics.addReporter(reporter)
   }
@@ -148,11 +153,11 @@ class PatientSummaryScreenControllerTest {
     val phoneNumber = None
     val optionalBpPassport = bpPassport.toOptional()
 
-    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
-    whenever(patientRepository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
-    whenever(patientRepository.bpPassportForPatient(patientUuid)).thenReturn(Observable.just(optionalBpPassport))
+    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just<Optional<Patient>>(Just(patient)))
+    whenever(patientRepository.address(addressUuid)).doReturn(Observable.just<Optional<PatientAddress>>(Just(address)))
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).doReturn(Observable.never())
+    whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.just(optionalBpPassport))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
 
@@ -183,9 +188,9 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Amlodipine", dosage = "10mg"),
         PatientMocker.prescription(name = "Telmisartan", dosage = "9000mg"),
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(prescriptions))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
 
@@ -206,9 +211,9 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95, recordedAt = Instant.now(utcClock).minusSeconds(30L)),
         PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90, recordedAt = Instant.now(utcClock).minusSeconds(45L)))
 
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bloodPressureMeasurements))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewNewPatient, screenCreatedTimestamp = Instant.now(utcClock)))
 
@@ -235,9 +240,9 @@ class PatientSummaryScreenControllerTest {
         bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bloodPressureMeasurements))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
 
@@ -470,9 +475,9 @@ class PatientSummaryScreenControllerTest {
         )
     )
 
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bps))
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bps))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
     //when
     configSubject.onNext(config)
@@ -514,9 +519,9 @@ class PatientSummaryScreenControllerTest {
         )
     )
 
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bps))
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bps))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
     //when
     configSubject.onNext(config)
@@ -541,11 +546,11 @@ class PatientSummaryScreenControllerTest {
         bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(emptyList()))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(emptyList()))
 
     val medicalHistory = medicalHistory(updatedAt = Instant.now(utcClock))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
 
@@ -603,8 +608,8 @@ class PatientSummaryScreenControllerTest {
         hasHadKidneyDisease = Unanswered,
         hasDiabetes = Unanswered,
         updatedAt = Instant.now())
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
-    whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).thenReturn(Completable.complete())
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
+    whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).doReturn(Completable.complete())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
@@ -655,9 +660,9 @@ class PatientSummaryScreenControllerTest {
         bpEditableDuration = Duration.ofMinutes(60))
     configSubject.onNext(config)
 
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bloodPressureMeasurements))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
 
@@ -788,12 +793,13 @@ class PatientSummaryScreenControllerTest {
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = PatientMocker.appointment(status = Cancelled, cancelReason = cancelReason)
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(Just(canceledAppointment)))
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid))
+        .doReturn(Observable.just<Optional<Appointment>>(Just(canceledAppointment)))
 
     val phoneNumber = PatientMocker.phoneNumber(
         patientUuid = patientUuid,
         updatedAt = canceledAppointment.updatedAt - Duration.ofHours(2))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
@@ -817,12 +823,13 @@ class PatientSummaryScreenControllerTest {
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = PatientMocker.appointment(status = Cancelled, cancelReason = cancelReason)
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(Just(canceledAppointment)))
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid))
+        .doReturn(Observable.just<Optional<Appointment>>(Just(canceledAppointment)))
 
     val phoneNumber = PatientMocker.phoneNumber(
         patientUuid = patientUuid,
         updatedAt = canceledAppointment.updatedAt + Duration.ofHours(2))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
@@ -845,7 +852,7 @@ class PatientSummaryScreenControllerTest {
         None,
         Just(PatientMocker.appointment(cancelReason = null)),
         Just(PatientMocker.appointment(cancelReason = cancelReason)))
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(appointmentStream)
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
@@ -872,7 +879,7 @@ class PatientSummaryScreenControllerTest {
     val appointmentStream = Observable.just(
         None,
         Just(PatientMocker.appointment(status = Scheduled, cancelReason = null)))
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(appointmentStream)
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
@@ -887,8 +894,8 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when a new patient is missing a phone number, then avoid showing update phone dialog`() {
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(None))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.just<Optional<Appointment>>(None))
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
@@ -906,9 +913,9 @@ class PatientSummaryScreenControllerTest {
   fun `when an existing patient is missing a phone number, a BP is recorded, and the user has never been reminded, then add phone dialog should be shown`(
       openIntention: OpenIntention
   ) {
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
-    whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
+    whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
     uiEvents.onNext(PatientSummaryBloodPressureSaved)
@@ -922,9 +929,9 @@ class PatientSummaryScreenControllerTest {
   fun `when an existing patient is missing a phone number, a BP hasn't been recorded yet, and the user has never been reminded, then add phone dialog should not be shown`(
       openIntention: OpenIntention
   ) {
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
-    whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
+    whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
@@ -937,8 +944,8 @@ class PatientSummaryScreenControllerTest {
   fun `when an existing patient is missing a phone number, and the user has been reminded before, then add phone dialog should not be shown`(
       openIntention: OpenIntention
   ) {
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(true))
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(true))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
@@ -950,8 +957,8 @@ class PatientSummaryScreenControllerTest {
   @Parameters(method = "patient summary open intentions except new patient")
   fun `when an existing patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
@@ -963,8 +970,8 @@ class PatientSummaryScreenControllerTest {
   @Parameters(method = "patient summary open intentions except new patient")
   fun `when a new patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
@@ -975,8 +982,8 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions except new patient")
   fun `when a new patient is missing a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
+    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
@@ -1088,10 +1095,10 @@ class PatientSummaryScreenControllerTest {
       medicalHistoryChanged: Boolean,
       prescribedDrugsChanged: Boolean
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(patientChanged))
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(Observable.just(patientChanged))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(bpsChanged))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(medicalHistoryChanged))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(prescribedDrugsChanged))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1187,10 +1194,10 @@ class PatientSummaryScreenControllerTest {
       medicalHistoryChanged: Boolean,
       prescribedDrugsChanged: Boolean
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(patientChanged))
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(Observable.just(patientChanged))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(bpsChanged))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(medicalHistoryChanged))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(prescribedDrugsChanged))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1288,10 +1295,10 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(Observable.just(false))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1315,10 +1322,10 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(Observable.just(false))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1345,10 +1352,10 @@ class PatientSummaryScreenControllerTest {
       medicalHistoryChanged: Boolean,
       prescribedDrugsChanged: Boolean
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(patientChanged))
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(Observable.just(patientChanged))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(bpsChanged))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(medicalHistoryChanged))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(prescribedDrugsChanged))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1448,10 +1455,10 @@ class PatientSummaryScreenControllerTest {
       medicalHistoryChanged: Boolean,
       prescribedDrugsChanged: Boolean
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(patientChanged))
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(Observable.just(patientChanged))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(bpsChanged))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(medicalHistoryChanged))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(prescribedDrugsChanged))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(

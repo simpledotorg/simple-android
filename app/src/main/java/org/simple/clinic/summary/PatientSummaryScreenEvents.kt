@@ -44,5 +44,3 @@ object PatientSummaryBloodPressureSaved : UiEvent
 object PatientSummaryLinkIdCancelled : UiEvent
 
 object PatientSummaryLinkIdCompleted : UiEvent
-
-data class PatientDataChangedSinceScreenCreated(val hasChanged: Boolean) : UiEvent

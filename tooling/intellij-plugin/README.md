@@ -13,7 +13,8 @@ The plugin contains,
 1. Go to Preferences (`Cmd + ,`) or Android Studio → Preferences
 2. Search for `Plugins` in the Preferences Dialog
 3. Click on the `Cog Icon` and Choose `Install Plugin from Disk…`
-4. Choose the latest release (`yyyy-mm-dd` format) from the `releases` directory
+4. Choose the latest release (`yyyy-mm-dd` format) from the `tooling/intellij-plugin/releases` directory
+5. Restart IDE
 
 ## Releases
 To make changes and release a new version of the plugin, do the following.

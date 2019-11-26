@@ -5,12 +5,12 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
@@ -18,7 +18,7 @@ import java.util.Locale
 class UserInputDateValidatorTest {
 
   private val validator = UserInputDateValidator(
-      userTimeZone = UTC,
+      userClock = TestUserClock(LocalDate.parse("2018-01-01")),
       dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
 
   @Test

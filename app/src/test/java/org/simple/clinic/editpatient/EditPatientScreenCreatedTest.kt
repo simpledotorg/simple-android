@@ -24,7 +24,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
@@ -36,6 +35,7 @@ class EditPatientScreenCreatedTest {
 
   private val ui: EditPatientUi = mock()
   private val utcClock: TestUtcClock = TestUtcClock()
+  private val userClock: TestUserClock = TestUserClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   @Test
@@ -143,7 +143,7 @@ class EditPatientScreenCreatedTest {
         Observable.never<EditPatientEvent>(),
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
-        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(ZoneOffset.UTC, dateOfBirthFormat)),
+        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat)),
         EditPatientEffectHandler.createEffectHandler(ui, TestUserClock(), mock(), utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()),
         { /* nothing here */ }
     ).start()

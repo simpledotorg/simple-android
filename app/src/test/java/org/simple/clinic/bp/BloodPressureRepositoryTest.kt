@@ -35,7 +35,7 @@ class BloodPressureRepositoryTest {
 
   @Before
   fun setUp() {
-    repository = BloodPressureRepository(dao, testClock, userClock)
+    repository = BloodPressureRepository(dao, testClock, userClock, mock())
   }
 
   @Test

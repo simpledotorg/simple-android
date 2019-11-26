@@ -123,6 +123,6 @@ data class BloodPressureMeasurement(
         patientUuid: UUID,
         instantToCompare: Instant,
         pendingStatus: SyncStatus
-    ): Flowable<Boolean>
+    ): Boolean
   }
 }

@@ -46,7 +46,6 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -63,6 +62,7 @@ class EditPatientScreenSaveTest {
   private val patientRepository: PatientRepository = mock()
 
   private val utcClock: TestUtcClock = TestUtcClock()
+  private val userClock: TestUserClock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val nextYear = LocalDate.now().year + 1
 
@@ -889,7 +889,7 @@ class EditPatientScreenSaveTest {
         uiEvents,
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
-        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(ZoneOffset.UTC, dateOfBirthFormat)),
+        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat)),
         EditPatientEffectHandler.createEffectHandler(ui, TestUserClock(), patientRepository, utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()),
         viewRenderer::render
     )

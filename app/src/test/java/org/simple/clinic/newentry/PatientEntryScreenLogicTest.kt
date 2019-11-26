@@ -42,11 +42,13 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
-import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale.ENGLISH
 
@@ -61,7 +63,8 @@ class PatientEntryScreenLogicTest {
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
-  private val dobValidator = UserInputDateValidator(UTC, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
+  private val userClock: UserClock = TestUserClock(LocalDate.parse("2018-01-01"))
+  private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
   private val numberValidator = IndianPhoneNumberValidator()
   private val patientRegisteredCount = mock<Preference<Int>>()
 

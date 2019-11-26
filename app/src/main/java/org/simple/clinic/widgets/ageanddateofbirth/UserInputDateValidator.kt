@@ -1,6 +1,7 @@
 package org.simple.clinic.widgets.ageanddateofbirth
 
 import androidx.annotation.VisibleForTesting
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.threeten.bp.LocalDate
@@ -11,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class UserInputDateValidator @Inject constructor(
-    val userTimeZone: ZoneId,
+    private val userClock: UserClock,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) {
 
@@ -37,6 +38,6 @@ class UserInputDateValidator @Inject constructor(
 
   @VisibleForTesting
   fun dateInUserTimeZone(): LocalDate {
-    return LocalDate.now(userTimeZone)
+    return LocalDate.now(userClock)
   }
 }

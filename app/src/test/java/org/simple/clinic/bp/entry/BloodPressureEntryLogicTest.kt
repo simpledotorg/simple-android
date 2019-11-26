@@ -73,13 +73,13 @@ class BloodPressureEntrySheetLogicTest {
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
-  private val dateValidator = UserInputDateValidator(UTC, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
+  private val testUserClock = TestUserClock()
+  private val dateValidator = UserInputDateValidator(testUserClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
   private val bpValidator = BpValidator()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val patientUuid = UUID.fromString("79145baf-7a5c-4442-ab30-2da564a32944")
 
-  private val testUserClock = TestUserClock()
   private val userSession = mock<UserSession>()
 
   private val facilityRepository = mock<FacilityRepository>()

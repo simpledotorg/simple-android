@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class BloodPressureRepository @Inject constructor(
     private val dao: BloodPressureMeasurement.RoomDao,
     private val utcClock: UtcClock,
-    private val userClock: UserClock
+    private val userClock: UserClock,
+    private val patientRepository: PatientRepository
 ) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
   fun saveMeasurement(
@@ -145,12 +147,6 @@ class BloodPressureRepository @Inject constructor(
   }
 
   fun haveBpsForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
-    return dao
-        .haveBpsForPatientChangedSince(
-            patientUuid = patientUuid,
-            instantToCompare = instant,
-            pendingStatus = SyncStatus.PENDING
-        )
-        .toObservable()
+    return Observable.fromCallable { patientRepository.haveBpsForPatientChangedSince(patientUuid, instant) }
   }
 }

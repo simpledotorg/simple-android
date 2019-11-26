@@ -160,7 +160,7 @@ class PatientRepository @Inject constructor(
           .updatePatientStatus(
               uuid = patientUuid,
               newStatus = PatientStatus.Dead,
-              newSyncStatus = SyncStatus.PENDING,
+              newSyncStatus = PENDING,
               newUpdatedAt = Instant.now(utcClock))
     }
   }
@@ -608,6 +608,19 @@ class PatientRepository @Inject constructor(
 
     return shortCodeSearchResult
         .flatMapSingle { database.patientSearchDao().searchByIds(it, PatientStatus.Active) }
+  }
+
+  @Suppress("DeprecatedCallableAddReplaceWith")
+  @Deprecated(message = "temporarily added for refactoring, remove later")
+  // TODO(vs): 2019-11-26 Remove this once the refactoring to move data changed since time method to the patient repository
+  fun haveBpsForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
+    return database
+        .bloodPressureDao()
+        .haveBpsForPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = instant,
+            pendingStatus = PENDING
+        )
   }
 
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)

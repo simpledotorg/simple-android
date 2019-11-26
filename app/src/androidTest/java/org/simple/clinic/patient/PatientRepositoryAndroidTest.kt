@@ -2529,4 +2529,51 @@ class PatientRepositoryAndroidTest {
     )
     assertThat(savedPatientAddress).isEqualTo(expectedPatientAddress)
   }
+
+  @Test
+  fun querying_whether_blood_pressures_for_patient_have_change_should_work_as_expected() {
+    fun setBpSyncStatusToDone(bpUuid: UUID) {
+      database.bloodPressureDao().updateSyncStatus(listOf(bpUuid), DONE)
+    }
+
+    val patientUuid = UUID.randomUUID()
+    val now = Instant.now(clock)
+    val oneSecondEarlier = now.minus(Duration.ofSeconds(1))
+    val fiftyNineSecondsLater = now.plus(Duration.ofSeconds(59))
+    val oneMinuteLater = now.plus(Duration.ofMinutes(1))
+
+    val bp1ForPatient = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+    val bp2ForPatient = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = oneMinuteLater
+    )
+    val bpForSomeOtherPatient = testData.bloodPressureMeasurement(
+        patientUuid = UUID.randomUUID(),
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+
+    database.bloodPressureDao().save(listOf(bp1ForPatient, bp2ForPatient, bpForSomeOtherPatient))
+
+    assertThat(patientRepository.haveBpsForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+    assertThat(patientRepository.haveBpsForPatientChangedSince(patientUuid, now)).isTrue()
+    assertThat(patientRepository.haveBpsForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isTrue()
+    assertThat(patientRepository.haveBpsForPatientChangedSince(patientUuid, oneMinuteLater)).isFalse()
+
+    setBpSyncStatusToDone(bp2ForPatient.uuid)
+    assertThat(patientRepository.haveBpsForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isFalse()
+    assertThat(patientRepository.haveBpsForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+
+    setBpSyncStatusToDone(bp1ForPatient.uuid)
+    assertThat(patientRepository.haveBpsForPatientChangedSince(patientUuid, oneSecondEarlier)).isFalse()
+    assertThat(patientRepository.haveBpsForPatientChangedSince(bpForSomeOtherPatient.patientUuid, oneSecondEarlier)).isTrue()
+
+    setBpSyncStatusToDone(bpForSomeOtherPatient.uuid)
+    assertThat(patientRepository.haveBpsForPatientChangedSince(bpForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
+  }
 }

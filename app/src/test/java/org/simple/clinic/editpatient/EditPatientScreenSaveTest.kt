@@ -63,8 +63,8 @@ class EditPatientScreenSaveTest {
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val userClock: TestUserClock = TestUserClock(LocalDate.parse("2018-01-01"))
+  private val nextYear = "2019"
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val nextYear = LocalDate.now().year + 1
 
   @Test
   fun `when save is clicked, patient name should be validated`() {

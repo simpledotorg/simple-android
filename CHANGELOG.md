@@ -1,11 +1,18 @@
 # CHANGELOG
 
+## Next Release
+### Internal
+- Use the selected country for connecting to the server
+
 ## On Demo
 ### Internal
 - Remove old edit patient screen
 - Add a feature toggle for the phone masking feature
 - Disable phone masking feature by default
 - Remove Heap analytics
+
+### Feature
+- Add a country selection screen during the registration
 
 ## 2019-11-18-6468
 ### Internal

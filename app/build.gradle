@@ -296,7 +296,6 @@ dependencies {
     exclude group: "io.reactivex.rxjava2"
     because "Traceur is incompatible with the version of RxJava this artifact pulls in transitively"
   }
-  testImplementation "org.threeten:threetenbp:$versions.threeTenBp"
   implementation "com.fasterxml.uuid:java-uuid-generator:$versions.uuidGenerator"
   implementation project(":simple-platform")
   implementation project(":simple-visuals")

@@ -13,6 +13,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.threeten.bp.LocalDate
@@ -41,7 +42,7 @@ class OngoingNewPatientEntryTest {
         phoneNumber = PhoneNumber(""))
 
     val dobValidator = UserInputDateValidator(
-        userTimeZone = UTC,
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
         dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
 
     val numValidator = mock<PhoneNumberValidator>()

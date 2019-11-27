@@ -12,7 +12,6 @@ import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.Answer
@@ -42,8 +41,6 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -151,29 +148,19 @@ class PatientSummaryScreenController @Inject constructor(
           .replay(1)
           .refCount()
 
-      val displayTime = { instant: Instant ->
-        instant.atZone(zoneId).format(timeFormatterForBp)
-      }
-
       val bloodPressureItems = bloodPressures
           .map { bps ->
-            val measurementsByDate = bps.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
-            measurementsByDate.mapValues { (_, measurementList) ->
-              measurementList.map { measurement ->
-                val timestamp = timestampGenerator.generate(measurement.recordedAt, userClock)
-                SummaryBloodPressureListItem(
-                    measurement = measurement,
-                    showDivider = measurement == measurementList.last(),
-                    formattedTime = if (measurementList.size > 1) displayTime(measurement.recordedAt) else null,
-                    addTopPadding = measurement == measurementList.first(),
-                    daysAgo = timestamp,
-                    dateFormatter = exactDateFormatter,
-                    isBpEditable = isBpEditable(measurement, config.bpEditableDuration)
-                )
-              }
-            }
+            SummaryBloodPressureListItem.from(
+                bloodPressures = bps,
+                timestampGenerator = timestampGenerator,
+                dateFormatter = exactDateFormatter,
+                canEditFor = config.bpEditableDuration,
+                bpTimeFormatter = timeFormatterForBp,
+                zoneId = zoneId,
+                utcClock = utcClock,
+                userClock = userClock
+            )
           }
-          .map { it.values.flatten() }
 
       val medicalHistoryItems = patientUuids.flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
 
@@ -489,16 +476,6 @@ class PatientSummaryScreenController @Inject constructor(
     return events
         .ofType<PatientSummaryLinkIdCompleted>()
         .map { Ui::hideLinkIdWithPatientView }
-  }
-
-
-  private fun isBpEditable(bloodPressureMeasurement: BloodPressureMeasurement, bpEditableFor: Duration): Boolean {
-    val now = Instant.now(utcClock)
-    val createdAt = bloodPressureMeasurement.createdAt
-
-    val durationSinceBpCreated = Duration.between(createdAt, now)
-
-    return durationSinceBpCreated <= bpEditableFor
   }
 
   @WorkerThread

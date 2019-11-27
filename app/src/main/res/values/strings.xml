@@ -60,6 +60,7 @@
   <string name="patiententry_gender_male" translatable="false">@string/gender_male</string>
   <string name="patiententry_gender_transgender" translatable="false">@string/gender_transgender</string>
   <string name="patiententry_colony_or_village">Colony / Village / Ward</string>
+  <string name="patiententry_zone">Zone</string>
   <string name="patiententry_district">District</string>
   <string name="patiententry_state">State</string>
   <string name="patiententry_save_patient">Next</string>

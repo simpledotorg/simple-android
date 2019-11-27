@@ -285,6 +285,37 @@
           app:clearableField="@id/colonyOrVillageEditText" />
       </FrameLayout>
 
+      <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:paddingStart="@dimen/spacing_4"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/zoneInputLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/zoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_zone"
+            android:imeOptions="flagNoFullscreen"
+            android:inputType="textPostalAddress|textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+          style="@style/Clinic.Button.ClearEditText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          app:clearableField="@id/zoneEditText" />
+      </FrameLayout>
+
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

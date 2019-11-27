@@ -112,6 +112,7 @@ class PatientSummaryScreenControllerTest {
       userClock = userClock,
       zoneId = zoneId,
       configProvider = configSubject,
+      config = PatientSummaryConfig(0, 0, Duration.ZERO),
       timeFormatterForBp = timeFormatter,
       exactDateFormatter = dateFormatter
   )

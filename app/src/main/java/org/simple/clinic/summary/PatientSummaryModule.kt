@@ -15,5 +15,10 @@ class PatientSummaryModule {
   }
 
   @Provides
+  fun providesSummaryConfigSync(configReader: ConfigReader): PatientSummaryConfig {
+    return PatientSummaryConfig.read(configReader).blockingFirst()
+  }
+
+  @Provides
   fun missingPhoneReminderDao(appDatabase: AppDatabase) = appDatabase.missingPhoneReminderDao()
 }

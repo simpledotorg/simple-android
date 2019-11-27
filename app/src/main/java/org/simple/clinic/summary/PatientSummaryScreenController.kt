@@ -64,6 +64,7 @@ class PatientSummaryScreenController @Inject constructor(
     private val userClock: UserClock,
     private val zoneId: ZoneId,
     private val configProvider: Observable<PatientSummaryConfig>,
+    private val config: PatientSummaryConfig,
     @Named("time_for_bps_recorded") private val timeFormatterForBp: DateTimeFormatter,
     @Named("exact_date") private val exactDateFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {

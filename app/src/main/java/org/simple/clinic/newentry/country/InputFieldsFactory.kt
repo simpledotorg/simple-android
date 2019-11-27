@@ -16,13 +16,11 @@ import org.simple.clinic.newentry.form.ZoneField
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
-// TODO 1. Convert to class and take in the date formatter and today, just pass in the country object.
-object InputFieldsFactory {
-  fun fields(
-      dateTimeFormatter: DateTimeFormatter,
-      today: LocalDate,
-      country: Country
-  ): List<InputField<*>> {
+class InputFieldsFactory(
+    private val dateTimeFormatter: DateTimeFormatter,
+    private val today: LocalDate
+) {
+  fun fieldsFor(country: Country): List<InputField<*>> {
     return when (country.isoCountryCode) {
       "IN" -> formFieldsForIndia(dateTimeFormatter, today)
       "BD" -> formFieldsForBangladesh(dateTimeFormatter, today)

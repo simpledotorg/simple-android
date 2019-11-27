@@ -26,7 +26,7 @@ class PrescriptionRepositoryTest {
   private val dao = mock<PrescribedDrug.RoomDao>()
   private val testClock = TestUtcClock()
 
-  private val repository = PrescriptionRepository(database, dao, testClock)
+  private val repository = PrescriptionRepository(database, dao, testClock, mock())
 
   @Test
   @Parameters(value = [

@@ -512,11 +512,6 @@ class PatientSummaryScreenController @Inject constructor(
 
   @WorkerThread
   private fun doesNotHaveBloodPressures(patientUuid: UUID): Boolean {
-    // TODO(vs): 2019-11-25 Remove the Rx conversion to blocking call
-    return bpRepository
-        .bloodPressureCount(patientUuid)
-        .firstOrError()
-        .map { numberOfBloodPressures -> numberOfBloodPressures == 0 }
-        .blockingGet()
+    return bpRepository.bloodPressureCount(patientUuid) == 0
   }
 }

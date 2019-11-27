@@ -19,6 +19,7 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -1087,18 +1088,11 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for showing schedule appointment sheet when clicking back when there is at least one BP")
+  @Parameters(method = "patient summary open intentions")
   fun `when there are patient summary changes and at least one BP is present, clicking on back must show the schedule appointment sheet`(
-      openIntention: OpenIntention,
-      patientChanged: Boolean,
-      bpsChanged: Boolean,
-      medicalHistoryChanged: Boolean,
-      prescribedDrugsChanged: Boolean
+      openIntention: OpenIntention
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(Observable.just(patientChanged))
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(bpsChanged))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(medicalHistoryChanged))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(prescribedDrugsChanged))
+    whenever(patientRepository.hasPatientDataChangedSince(any(), any())).doReturn(true)
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1111,77 +1105,6 @@ class PatientSummaryScreenControllerTest {
     verify(screen, never()).goToPreviousScreen()
     verify(screen, never()).goToHomeScreen()
     verify(screen).showScheduleAppointmentSheet(patientUuid)
-  }
-
-  @Suppress("Unused")
-  private fun `params for showing schedule appointment sheet when clicking back when there is at least one BP`(): List<List<Any>> {
-    fun testCase(
-        patientChanged: Boolean,
-        bpsChanged: Boolean,
-        medicalHistoryChanged: Boolean,
-        prescribedDrugsChanged: Boolean
-    ): List<List<Any>> {
-      return listOf(
-          listOf(
-              OpenIntention.ViewExistingPatient,
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          ),
-          listOf(
-              OpenIntention.ViewNewPatient,
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          ),
-          listOf(
-              OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)),
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          )
-      )
-    }
-
-    return testCase(
-        patientChanged = true,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = true,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = true,
-        bpsChanged = true,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = true,
-        bpsChanged = true,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = true
-    )
   }
 
   @Test
@@ -1548,5 +1471,4 @@ class PatientSummaryScreenControllerTest {
         prescribedDrugsChanged = false
     )
   }
-
 }

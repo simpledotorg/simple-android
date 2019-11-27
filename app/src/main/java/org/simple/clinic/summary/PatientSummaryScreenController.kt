@@ -64,7 +64,6 @@ class PatientSummaryScreenController @Inject constructor(
     private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val zoneId: ZoneId,
-    private val configProvider: Observable<PatientSummaryConfig>,
     private val config: PatientSummaryConfig,
     @Named("time_for_bps_recorded") private val timeFormatterForBp: DateTimeFormatter,
     @Named("exact_date") private val exactDateFormatter: DateTimeFormatter
@@ -147,8 +146,8 @@ class PatientSummaryScreenController @Inject constructor(
 
       val prescribedDrugsStream = patientUuids.flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
 
-      val bloodPressures = Observables.combineLatest(patientUuids, configProvider)
-          .flatMap { (patientUuid, configProvider) -> bpRepository.newestMeasurementsForPatient(patientUuid, configProvider.numberOfBpsToDisplay) }
+      val bloodPressures = patientUuids
+          .flatMap { patientUuid -> bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay) }
           .replay(1)
           .refCount()
 
@@ -157,8 +156,7 @@ class PatientSummaryScreenController @Inject constructor(
       }
 
       val bloodPressureItems = bloodPressures
-          .withLatestFrom(configProvider) { measurements, config -> measurements to config.bpEditableDuration }
-          .map { (bps, bpEditableDuration) ->
+          .map { bps ->
             val measurementsByDate = bps.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
             measurementsByDate.mapValues { (_, measurementList) ->
               measurementList.map { measurement ->
@@ -170,7 +168,7 @@ class PatientSummaryScreenController @Inject constructor(
                     addTopPadding = measurement == measurementList.first(),
                     daysAgo = timestamp,
                     dateFormatter = exactDateFormatter,
-                    isBpEditable = isBpEditable(measurement, bpEditableDuration)
+                    isBpEditable = isBpEditable(measurement, config.bpEditableDuration)
                 )
               }
             }
@@ -206,8 +204,7 @@ class PatientSummaryScreenController @Inject constructor(
           bpList.groupBy { item -> item.measurement.createdAt.atZone(utcClock.zone).toLocalDate() }
         }
         .map { it.size }
-        .withLatestFrom(configProvider)
-        .map { (numberOfBloodPressures, config) ->
+        .map { numberOfBloodPressures ->
           val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodPressures)
 
           (1..numberOfPlaceholders).map { placeholderNumber ->

@@ -81,7 +81,7 @@ class PatientSummaryScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<PatientSummaryScreen>()
+  private val ui = mock<PatientSummaryScreenUi>()
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
@@ -119,7 +119,7 @@ class PatientSummaryScreenControllerTest {
   fun setUp() {
     uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     whenever(patientRepository.patient(patientUuid)).doReturn(Observable.never())
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
@@ -156,8 +156,8 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(screen).populatePatientProfile(PatientSummaryProfile(patient, address, phoneNumber, optionalBpPassport))
-    verify(screen).showEditButton()
+    verify(ui).populatePatientProfile(PatientSummaryProfile(patient, address, phoneNumber, optionalBpPassport))
+    verify(ui).showEditButton()
   }
 
   @Suppress("Unused")
@@ -189,7 +189,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(screen).populateList(eq(SummaryPrescribedDrugsItem(prescriptions, dateFormatter, userClock)), any(), any(), any())
+    verify(ui).populateList(eq(SummaryPrescribedDrugsItem(prescriptions, dateFormatter, userClock)), any(), any(), any())
   }
 
   @Test
@@ -212,7 +212,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewNewPatient, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(screen).populateList(
+    verify(ui).populateList(
         any(),
         any(),
         check {
@@ -241,7 +241,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(screen).populateList(
+    verify(ui).populateList(
         prescribedDrugsItem = any(),
         measurementPlaceholderItems = eq(expectedPlaceholderItems),
         measurementItems = check {
@@ -478,7 +478,7 @@ class PatientSummaryScreenControllerTest {
     configSubject.onNext(config)
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewExistingPatient, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(screen).populateList(
+    verify(ui).populateList(
         prescribedDrugsItem = any(),
         measurementPlaceholderItems = any(),
         measurementItems = check {
@@ -522,7 +522,7 @@ class PatientSummaryScreenControllerTest {
     configSubject.onNext(config)
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewExistingPatient, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(screen).populateList(
+    verify(ui).populateList(
         prescribedDrugsItem = any(),
         measurementPlaceholderItems = any(),
         measurementItems = check {
@@ -549,7 +549,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(screen).populateList(any(), any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today, dateFormatter)))
+    verify(ui).populateList(any(), any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today, dateFormatter)))
   }
 
   @Test
@@ -558,7 +558,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
-    verify(screen, times(1)).showBloodPressureEntrySheet(patientUuid)
+    verify(ui, times(1)).showBloodPressureEntrySheet(patientUuid)
   }
 
   @Test
@@ -573,7 +573,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
-    verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
+    verify(ui).showUpdatePrescribedDrugsScreen(patientUuid)
   }
 
   @Test
@@ -639,7 +639,7 @@ class PatientSummaryScreenControllerTest {
     val bloodPressureMeasurement = PatientMocker.bp()
     uiEvents.onNext(PatientSummaryBpClicked(bloodPressureMeasurement))
 
-    verify(screen).showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
+    verify(ui).showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
   }
 
   @Test
@@ -661,7 +661,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(screen).populateList(
+    verify(ui).populateList(
         prescribedDrugsItem = any(),
         measurementPlaceholderItems = any(),
         measurementItems = check {
@@ -805,9 +805,9 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
     if (cancelReason == InvalidPhoneNumber) {
-      verify(screen).showUpdatePhoneDialog(patientUuid)
+      verify(ui).showUpdatePhoneDialog(patientUuid)
     } else {
-      verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+      verify(ui, never()).showUpdatePhoneDialog(patientUuid)
     }
   }
 
@@ -834,7 +834,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
-    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+    verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Test
@@ -857,7 +857,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
-    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+    verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Suppress("unused")
@@ -884,7 +884,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
-    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+    verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Test
@@ -900,7 +900,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))
 
-    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+    verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Test
@@ -915,7 +915,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
     uiEvents.onNext(PatientSummaryBloodPressureSaved)
 
-    verify(screen).showAddPhoneDialog(patientUuid)
+    verify(ui).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository).markReminderAsShownFor(patientUuid)
   }
 
@@ -930,7 +930,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
-    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -944,7 +944,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
-    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -957,7 +957,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
-    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -970,7 +970,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
-    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -982,7 +982,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
-    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -1038,9 +1038,9 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
 
     if (shouldShowLinkIdSheet) {
-      verify(screen).showLinkIdWithPatientView(patientUuid, identifier!!)
+      verify(ui).showLinkIdWithPatientView(patientUuid, identifier!!)
     } else {
-      verify(screen, never()).showLinkIdWithPatientView(any(), any())
+      verify(ui, never()).showLinkIdWithPatientView(any(), any())
     }
   }
 
@@ -1062,7 +1062,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryLinkIdCancelled)
 
-    verify(screen).goToPreviousScreen()
+    verify(ui).goToPreviousScreen()
   }
 
   @Test
@@ -1072,8 +1072,8 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryLinkIdCompleted)
 
-    verify(screen).hideLinkIdWithPatientView()
-    verify(screen, never()).goToPreviousScreen()
+    verify(ui).hideLinkIdWithPatientView()
+    verify(ui, never()).goToPreviousScreen()
   }
 
   enum class GoBackToScreen {
@@ -1096,9 +1096,9 @@ class PatientSummaryScreenControllerTest {
     ))
     uiEvents.onNext(PatientSummaryBackClicked())
 
-    verify(screen, never()).goToPreviousScreen()
-    verify(screen, never()).goToHomeScreen()
-    verify(screen).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).goToPreviousScreen()
+    verify(ui, never()).goToHomeScreen()
+    verify(ui).showScheduleAppointmentSheet(patientUuid)
   }
 
   @Test
@@ -1120,11 +1120,11 @@ class PatientSummaryScreenControllerTest {
     ))
     uiEvents.onNext(PatientSummaryBackClicked())
 
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
     if (goBackToScreen == HOME) {
-      verify(screen).goToHomeScreen()
+      verify(ui).goToHomeScreen()
     } else {
-      verify(screen).goToPreviousScreen()
+      verify(ui).goToPreviousScreen()
     }
   }
 
@@ -1217,11 +1217,11 @@ class PatientSummaryScreenControllerTest {
     ))
     uiEvents.onNext(PatientSummaryBackClicked())
 
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
     if (goBackToScreen == HOME) {
-      verify(screen).goToHomeScreen()
+      verify(ui).goToHomeScreen()
     } else {
-      verify(screen).goToPreviousScreen()
+      verify(ui).goToPreviousScreen()
     }
   }
 
@@ -1240,11 +1240,11 @@ class PatientSummaryScreenControllerTest {
     ))
     uiEvents.onNext(PatientSummaryBackClicked())
 
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
     if (goBackToScreen == HOME) {
-      verify(screen).goToHomeScreen()
+      verify(ui).goToHomeScreen()
     } else {
-      verify(screen).goToPreviousScreen()
+      verify(ui).goToPreviousScreen()
     }
   }
 
@@ -1266,9 +1266,9 @@ class PatientSummaryScreenControllerTest {
     ))
     uiEvents.onNext(PatientSummaryDoneClicked())
 
-    verify(screen).showScheduleAppointmentSheet(patientUuid)
-    verify(screen, never()).goToHomeScreen()
-    verify(screen, never()).goToPreviousScreen()
+    verify(ui).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).goToHomeScreen()
+    verify(ui, never()).goToPreviousScreen()
   }
 
   @Suppress("Unused")
@@ -1365,9 +1365,9 @@ class PatientSummaryScreenControllerTest {
     ))
     uiEvents.onNext(PatientSummaryDoneClicked())
 
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    verify(screen, never()).goToPreviousScreen()
-    verify(screen).goToHomeScreen()
+    verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).goToPreviousScreen()
+    verify(ui).goToHomeScreen()
   }
 
   @Suppress("Unused")

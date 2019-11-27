@@ -22,8 +22,7 @@ import javax.inject.Inject
 class PrescriptionRepository @Inject constructor(
     private val database: AppDatabase,
     private val dao: PrescribedDrug.RoomDao,
-    private val utcClock: UtcClock,
-    private val patientRepository: PatientRepository
+    private val utcClock: UtcClock
 ) : SynceableRepository<PrescribedDrug, PrescribedDrugPayload> {
 
   fun savePrescription(
@@ -144,9 +143,5 @@ class PrescriptionRepository @Inject constructor(
     return dao
         .count(SyncStatus.PENDING)
         .toObservable()
-  }
-
-  fun hasPrescriptionForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
-    return Observable.fromCallable { patientRepository.hasPrescriptionForPatientChangedSince(patientUuid, instant) }
   }
 }

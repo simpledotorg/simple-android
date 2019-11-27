@@ -18,6 +18,7 @@ import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListenerModule
+import org.simple.clinic.newentry.PatientEntryModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.SimpleVideoModule
@@ -76,7 +77,8 @@ import javax.inject.Named
   LoginOtpSmsListenerModule::class,
   HttpInterceptorsModule::class,
   RetrofitModule::class,
-  ClearPatientDataModule::class
+  ClearPatientDataModule::class,
+  PatientEntryModule::class
 ])
 class AppModule(private val appContext: Application) {
 

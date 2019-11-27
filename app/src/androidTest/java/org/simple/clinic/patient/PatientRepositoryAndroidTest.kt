@@ -2624,4 +2624,51 @@ class PatientRepositoryAndroidTest {
     assertThat(patientRepository.hasPrescriptionForPatientChangedSince(prescribedDrugForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
   }
 
+  @Test
+  fun querying_whether_medical_history_for_patient_has_changed_should_work_as_expected() {
+    fun setMedicalHistorySyncStatusToDone(medicalHistoryUuid: UUID) {
+      database.medicalHistoryDao().updateSyncStatus(listOf(medicalHistoryUuid), DONE)
+    }
+
+    val patientUuid = UUID.randomUUID()
+    val now = Instant.now(clock)
+    val oneSecondEarlier = now.minus(Duration.ofSeconds(1))
+    val fiftyNineSecondsLater = now.plus(Duration.ofSeconds(59))
+    val oneMinuteLater = now.plus(Duration.ofMinutes(1))
+
+    val medicalHistory1ForPatient = testData.medicalHistory(
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+    val medicalHistory2ForPatient = testData.medicalHistory(
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = oneMinuteLater
+    )
+    val medicalHistoryForSomeOtherPatient = testData.medicalHistory(
+        patientUuid = UUID.randomUUID(),
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+
+    database.medicalHistoryDao().save(listOf(medicalHistory1ForPatient, medicalHistory2ForPatient, medicalHistoryForSomeOtherPatient))
+
+    assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+    assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, now)).isTrue()
+    assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isTrue()
+    assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, oneMinuteLater)).isFalse()
+
+    setMedicalHistorySyncStatusToDone(medicalHistory2ForPatient.uuid)
+    assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isFalse()
+    assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+
+    setMedicalHistorySyncStatusToDone(medicalHistory1ForPatient.uuid)
+    assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, oneSecondEarlier)).isFalse()
+    assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(medicalHistoryForSomeOtherPatient.patientUuid, oneSecondEarlier)).isTrue()
+
+    setMedicalHistorySyncStatusToDone(medicalHistoryForSomeOtherPatient.uuid)
+    assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(medicalHistoryForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
+  }
+
 }

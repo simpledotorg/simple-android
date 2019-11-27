@@ -17,8 +17,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
 // TODO 1. Convert to class and take in the date formatter and today, just pass in the country object.
-// TODO 2. Rename to InputFieldsFactory.
-object FormFieldFactory {
+object InputFieldsFactory {
   fun fields(
       dateTimeFormatter: DateTimeFormatter,
       today: LocalDate,

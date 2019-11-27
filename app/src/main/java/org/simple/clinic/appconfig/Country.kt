@@ -21,4 +21,11 @@ data class Country(
 
     @Json(name = "isd_code")
     val isdCode: String
-) : Parcelable
+) : Parcelable {
+
+    companion object {
+        const val INDIA = "IN"
+        const val BANGLADESH = "BD"
+        const val ETHIOPIA = "ET"
+    }
+}

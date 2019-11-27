@@ -67,7 +67,7 @@ import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 import javax.inject.Inject
 
-class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
 
   companion object {
     const val REQCODE_BP_ENTRY = 1
@@ -228,7 +228,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   @SuppressLint("SetTextI18n")
-  fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
+  override fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
     val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
 
@@ -292,7 +292,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     bloodPressureSection.setHeader(newBpItem)
   }
 
-  fun populateList(
+  override fun populateList(
       prescribedDrugsItem: SummaryPrescribedDrugsItem,
       measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       measurementItems: List<SummaryBloodPressureListItem>,
@@ -328,42 +328,42 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
-  fun showBloodPressureEntrySheet(patientUuid: UUID) {
+  override fun showBloodPressureEntrySheet(patientUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
     activity.startActivityForResult(intent, REQCODE_BP_ENTRY)
   }
 
-  fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {
+  override fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bloodPressureMeasurementUuid)
     activity.startActivity(intent)
   }
 
-  fun showScheduleAppointmentSheet(patientUuid: UUID) {
+  override fun showScheduleAppointmentSheet(patientUuid: UUID) {
     val intent = ScheduleAppointmentSheet.intent(context, patientUuid)
     activity.startActivityForResult(intent, REQCODE_SCHEDULE_APPOINTMENT)
   }
 
-  fun goToPreviousScreen() {
+  override fun goToPreviousScreen() {
     screenRouter.pop()
   }
 
-  fun goToHomeScreen() {
+  override fun goToHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreenKey(), direction = BACKWARD)
   }
 
-  fun showUpdatePhoneDialog(patientUuid: UUID) {
+  override fun showUpdatePhoneDialog(patientUuid: UUID) {
     UpdatePhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
   }
 
-  fun showAddPhoneDialog(patientUuid: UUID) {
+  override fun showAddPhoneDialog(patientUuid: UUID) {
     AddPhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
   }
 
-  fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
+  override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
     screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
   }
 
-  fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
+  override fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
     if (!linkIdWithPatientShown) {
       linkIdWithPatientShown = true
       linkIdWithPatientView.downstreamUiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
@@ -371,11 +371,11 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
-  fun hideLinkIdWithPatientView() {
+  override fun hideLinkIdWithPatientView() {
     linkIdWithPatientView.hide { linkIdWithPatientView.visibility = View.GONE }
   }
 
-  fun showEditButton() {
+  override fun showEditButton() {
     editButton.visibility = View.VISIBLE
   }
 }

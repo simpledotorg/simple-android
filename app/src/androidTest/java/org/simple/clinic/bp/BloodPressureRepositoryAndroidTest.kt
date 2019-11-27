@@ -207,7 +207,7 @@ class BloodPressureRepositoryAndroidTest {
     appDatabase.bloodPressureDao().save(bpsForPatientWithOnlyDeletedBloodPressures + bpsForPatientWithBloodPressures)
     assertThat(appDatabase.bloodPressureDao().count().blockingFirst()).isEqualTo(6)
 
-    assertThat(repository.bloodPressureCount(patientUuidWithOnlyDeletedBloodPressures).blockingFirst()).isEqualTo(0)
-    assertThat(repository.bloodPressureCount(patientUuidWithBloodPressures).blockingFirst()).isEqualTo(1)
+    assertThat(repository.bloodPressureCount(patientUuidWithOnlyDeletedBloodPressures)).isEqualTo(0)
+    assertThat(repository.bloodPressureCount(patientUuidWithBloodPressures)).isEqualTo(1)
   }
 }

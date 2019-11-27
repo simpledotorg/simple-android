@@ -90,7 +90,7 @@ data class BloodPressureMeasurement(
       FROM bloodpressuremeasurement
       WHERE patientUuid = :patientUuid AND deletedAt IS NULL
     """)
-    fun recordedBloodPressureCountForPatient(patientUuid: UUID): Flowable<Int>
+    fun recordedBloodPressureCountForPatient(patientUuid: UUID): Int
 
     @Query("""
       SELECT * FROM bloodpressuremeasurement

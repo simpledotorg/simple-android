@@ -24,10 +24,11 @@ import kotlinx.android.synthetic.main.view_simple_video.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.enterotp.EnterOtpScreenKey
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -68,6 +69,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  @Inject
+  lateinit var country: Country
+
   @field:[Inject Named("training_video_youtube_id")]
   lateinit var youTubeVideoId: String
 
@@ -98,7 +102,17 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+
+    homeIllustration.setImageResource(illustrationResourceId())
   }
+
+  private fun illustrationResourceId(): Int =
+      when (country.isoCountryCode) {
+        Country.INDIA -> R.drawable.ic_homescreen_india
+        Country.BANGLADESH -> R.drawable.ic_homescreen_bangladesh
+        Country.ETHIOPIA -> R.drawable.ic_homescreen_ethiopia
+        else -> R.drawable.ic_homescreen_default
+      }
 
   private fun setupApprovalStatusAnimations() {
     val entryAnimation = AnimationUtils.loadAnimation(context, R.anim.user_approval_status_entry)

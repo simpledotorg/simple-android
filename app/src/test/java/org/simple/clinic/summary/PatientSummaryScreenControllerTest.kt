@@ -14,7 +14,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -95,7 +94,6 @@ class PatientSummaryScreenControllerTest {
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val configSubject = BehaviorSubject.create<PatientSummaryConfig>()
   private val reporter = MockAnalyticsReporter()
   private val timeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
@@ -1133,7 +1131,6 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
     createController(config)
 
-    configSubject.onNext(config)
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, screenCreatedTimestamp))
   }
 
@@ -1144,8 +1141,6 @@ class PatientSummaryScreenControllerTest {
   ) {
     val config = PatientSummaryConfig(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
     createController(config)
-
-    configSubject.onNext(config)
   }
 
   private fun createController(config: PatientSummaryConfig) {
@@ -1160,7 +1155,6 @@ class PatientSummaryScreenControllerTest {
         utcClock = utcClock,
         userClock = userClock,
         zoneId = zoneId,
-        configProvider = configSubject,
         config = config,
         timeFormatterForBp = timeFormatter,
         exactDateFormatter = dateFormatter

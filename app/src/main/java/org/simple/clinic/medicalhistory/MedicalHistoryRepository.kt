@@ -17,8 +17,7 @@ import javax.inject.Inject
 
 class MedicalHistoryRepository @Inject constructor(
     private val dao: MedicalHistory.RoomDao,
-    private val utcClock: UtcClock,
-    private val patientRepository: PatientRepository
+    private val utcClock: UtcClock
 ) : SynceableRepository<MedicalHistory, MedicalHistoryPayload> {
 
   fun historyForPatientOrDefault(patientUuid: PatientUuid): Observable<MedicalHistory> {
@@ -139,9 +138,5 @@ class MedicalHistoryRepository @Inject constructor(
     return dao
         .count(SyncStatus.PENDING)
         .toObservable()
-  }
-
-  fun hasMedicalHistoryForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
-    return Observable.fromCallable { patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, instant) }
   }
 }

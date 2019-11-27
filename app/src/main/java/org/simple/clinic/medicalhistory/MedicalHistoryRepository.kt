@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 class MedicalHistoryRepository @Inject constructor(
     private val dao: MedicalHistory.RoomDao,
-    private val utcClock: UtcClock
+    private val utcClock: UtcClock,
+    private val patientRepository: PatientRepository
 ) : SynceableRepository<MedicalHistory, MedicalHistoryPayload> {
 
   fun historyForPatientOrDefault(patientUuid: PatientUuid): Observable<MedicalHistory> {
@@ -140,12 +142,6 @@ class MedicalHistoryRepository @Inject constructor(
   }
 
   fun hasMedicalHistoryForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
-    return dao
-        .hasMedicalHistoryForPatientChangedSince(
-            patientUuid = patientUuid,
-            instantToCompare = instant,
-            pendingStatus = SyncStatus.PENDING
-        )
-        .toObservable()
+    return Observable.fromCallable { patientRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, instant) }
   }
 }

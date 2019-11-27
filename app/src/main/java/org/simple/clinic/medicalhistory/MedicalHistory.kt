@@ -87,6 +87,6 @@ data class MedicalHistory(
         patientUuid: UUID,
         instantToCompare: Instant,
         pendingStatus: SyncStatus
-    ): Flowable<Boolean>
+    ): Boolean
   }
 }

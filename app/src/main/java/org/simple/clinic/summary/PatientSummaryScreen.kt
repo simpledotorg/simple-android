@@ -28,6 +28,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.home.HomeScreenKey
@@ -64,8 +65,10 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
 
@@ -88,6 +91,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @Inject
   lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
+
+  @field:[Inject Named("exact_date")]
+  lateinit var exactDateFormatter: DateTimeFormatter
 
   @Deprecated("""
     ~ DOA ~
@@ -326,6 +332,20 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     if (isFirstUpdate) {
       recyclerViewAdapter.add(medicalHistorySection)
     }
+  }
+
+  override fun populateList(
+      prescribedDrugs: List<PrescribedDrug>,
+      measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
+      measurementItems: List<SummaryBloodPressureListItem>,
+      medicalHistoryItem: SummaryMedicalHistoryItem
+  ) {
+    populateList(
+        prescribedDrugsItem = SummaryPrescribedDrugsItem(prescribedDrugs, exactDateFormatter, userClock),
+        measurementPlaceholderItems = measurementPlaceholderItems,
+        measurementItems = measurementItems,
+        medicalHistoryItem = medicalHistoryItem
+    )
   }
 
   override fun showBloodPressureEntrySheet(patientUuid: UUID) {

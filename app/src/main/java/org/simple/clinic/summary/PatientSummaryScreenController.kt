@@ -143,9 +143,7 @@ class PatientSummaryScreenController @Inject constructor(
           .map { it.patientUuid }
           .distinctUntilChanged()
 
-      val prescriptionItems = patientUuids
-          .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
-          .map { prescriptions -> SummaryPrescribedDrugsItem(prescriptions, exactDateFormatter, userClock) }
+      val prescribedDrugsStream = patientUuids.flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
 
       val bloodPressures = Observables.combineLatest(patientUuids, configProvider)
           .flatMap { (patientUuid, configProvider) -> bpRepository.newestMeasurementsForPatient(patientUuid, configProvider.numberOfBpsToDisplay) }
@@ -188,12 +186,12 @@ class PatientSummaryScreenController @Inject constructor(
       // is dispatched in one go instead of them appearing one after another on the UI.
       val summaryItemChanges = Observables
           .combineLatest(
-              prescriptionItems,
+              prescribedDrugsStream,
               bloodPressures,
               bloodPressureItems,
-              medicalHistoryItems) { prescriptions, _, bpSummary, history ->
+              medicalHistoryItems) { prescribedDrugs, _, bpSummary, history ->
             PatientSummaryItemChanged(PatientSummaryItems(
-                prescriptionItems = prescriptions,
+                prescription = prescribedDrugs,
                 bloodPressureListItems = bpSummary,
                 medicalHistoryItems = history
             ))
@@ -228,7 +226,7 @@ class PatientSummaryScreenController @Inject constructor(
         patientSummaryListItem,
         bloodPressurePlaceholders) { patientSummary, placeHolders ->
       { ui: Ui ->
-        ui.populateList(patientSummary.prescriptionItems, placeHolders, patientSummary.bloodPressureListItems, patientSummary.medicalHistoryItems)
+        ui.populateList(patientSummary.prescription, placeHolders, patientSummary.bloodPressureListItems, patientSummary.medicalHistoryItems)
       }
     }
   }

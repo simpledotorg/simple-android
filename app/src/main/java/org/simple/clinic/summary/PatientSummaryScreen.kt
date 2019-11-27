@@ -33,6 +33,7 @@ import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -56,6 +57,7 @@ import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
@@ -94,6 +96,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @field:[Inject Named("exact_date")]
   lateinit var exactDateFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var timestampGenerator: RelativeTimestampGenerator
 
   @Deprecated("""
     ~ DOA ~
@@ -338,13 +343,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       prescribedDrugs: List<PrescribedDrug>,
       measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       measurementItems: List<SummaryBloodPressureListItem>,
-      medicalHistoryItem: SummaryMedicalHistoryItem
+      medicalHistory: MedicalHistory
   ) {
     populateList(
-        prescribedDrugsItem = SummaryPrescribedDrugsItem(prescribedDrugs, exactDateFormatter, userClock),
-        measurementPlaceholderItems = measurementPlaceholderItems,
-        measurementItems = measurementItems,
-        medicalHistoryItem = medicalHistoryItem
+        SummaryPrescribedDrugsItem(prescribedDrugs, exactDateFormatter, userClock),
+        measurementPlaceholderItems,
+        measurementItems,
+        SummaryMedicalHistoryItem(medicalHistory, timestampGenerator.generate(medicalHistory.updatedAt, userClock), exactDateFormatter)
     )
   }
 

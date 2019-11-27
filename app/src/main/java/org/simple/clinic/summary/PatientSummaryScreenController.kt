@@ -49,7 +49,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = PatientSummaryScreen
+typealias Ui = PatientSummaryScreenUi
 typealias UiChange = (Ui) -> Unit
 
 class PatientSummaryScreenController @Inject constructor(

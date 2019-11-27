@@ -2576,4 +2576,52 @@ class PatientRepositoryAndroidTest {
     setBpSyncStatusToDone(bpForSomeOtherPatient.uuid)
     assertThat(patientRepository.haveBpsForPatientChangedSince(bpForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
   }
+
+  @Test
+  fun querying_whether_prescription_for_patient_has_changed_should_work_as_expected() {
+    fun setPrescribedDrugSyncStatusToDone(prescribedDrug: UUID) {
+      database.prescriptionDao().updateSyncStatus(listOf(prescribedDrug), DONE)
+    }
+
+    val patientUuid = UUID.randomUUID()
+    val now = Instant.now(clock)
+    val oneSecondEarlier = now.minus(Duration.ofSeconds(1))
+    val fiftyNineSecondsLater = now.plus(Duration.ofSeconds(59))
+    val oneMinuteLater = now.plus(Duration.ofMinutes(1))
+
+    val prescribedDrug1ForPatient = testData.prescription(
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+    val prescribedDrug2ForPatient = testData.prescription(
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = oneMinuteLater
+    )
+    val prescribedDrugForSomeOtherPatient = testData.prescription(
+        patientUuid = UUID.randomUUID(),
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+
+    database.prescriptionDao().save(listOf(prescribedDrug1ForPatient, prescribedDrug2ForPatient, prescribedDrugForSomeOtherPatient))
+
+    assertThat(patientRepository.hasPrescriptionForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+    assertThat(patientRepository.hasPrescriptionForPatientChangedSince(patientUuid, now)).isTrue()
+    assertThat(patientRepository.hasPrescriptionForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isTrue()
+    assertThat(patientRepository.hasPrescriptionForPatientChangedSince(patientUuid, oneMinuteLater)).isFalse()
+
+    setPrescribedDrugSyncStatusToDone(prescribedDrug2ForPatient.uuid)
+    assertThat(patientRepository.hasPrescriptionForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isFalse()
+    assertThat(patientRepository.hasPrescriptionForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+
+    setPrescribedDrugSyncStatusToDone(prescribedDrug1ForPatient.uuid)
+    assertThat(patientRepository.hasPrescriptionForPatientChangedSince(patientUuid, oneSecondEarlier)).isFalse()
+    assertThat(patientRepository.hasPrescriptionForPatientChangedSince(prescribedDrugForSomeOtherPatient.patientUuid, oneSecondEarlier)).isTrue()
+
+    setPrescribedDrugSyncStatusToDone(prescribedDrugForSomeOtherPatient.uuid)
+    assertThat(patientRepository.hasPrescriptionForPatientChangedSince(prescribedDrugForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
+  }
+
 }

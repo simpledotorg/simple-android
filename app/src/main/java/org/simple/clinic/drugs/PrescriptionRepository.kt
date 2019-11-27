@@ -8,6 +8,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.ProtocolDrug
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class PrescriptionRepository @Inject constructor(
     private val database: AppDatabase,
     private val dao: PrescribedDrug.RoomDao,
-    private val utcClock: UtcClock
+    private val utcClock: UtcClock,
+    private val patientRepository: PatientRepository
 ) : SynceableRepository<PrescribedDrug, PrescribedDrugPayload> {
 
   fun savePrescription(
@@ -145,12 +147,6 @@ class PrescriptionRepository @Inject constructor(
   }
 
   fun hasPrescriptionForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
-    return dao
-        .hasPrescriptionForPatientChangedSince(
-            patientUuid = patientUuid,
-            instantToCompare = instant,
-            pendingStatus = SyncStatus.PENDING
-        )
-        .toObservable()
+    return Observable.fromCallable { patientRepository.hasPrescriptionForPatientChangedSince(patientUuid, instant) }
   }
 }

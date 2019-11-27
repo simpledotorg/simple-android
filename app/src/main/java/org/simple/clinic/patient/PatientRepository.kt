@@ -575,17 +575,6 @@ class PatientRepository @Inject constructor(
         ).toObservable()
   }
 
-  fun hasPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
-    return database
-        .patientDao()
-        .hasPatientChangedSince(
-            patientUuid = patientUuid,
-            instantToCompare = instant,
-            pendingStatus = PENDING
-        )
-        .toObservable()
-  }
-
   fun allPatientsInFacility(facility: Facility): Observable<List<PatientSearchResult>> {
     return database
         .patientSearchDao()
@@ -653,25 +642,31 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  @WorkerThread
-  fun hasPatientDataChangedSince(patientUuid: UUID, timestamp: Instant): Boolean {
-    val patientChangedSinceStream = hasPatientChangedSince(patientUuid, timestamp).firstOrError()
-
-    // TODO(vs): 2019-11-27 Remove the Rx conversion to blocking call
-    return patientChangedSinceStream
-        .map { patientChangedSince ->
-          val bpsChangedSince = haveBpsForPatientChangedSince(patientUuid, timestamp)
-          val prescriptionsChangedSince = hasPrescriptionForPatientChangedSince(patientUuid, timestamp)
-          val medicalHistoryChangedSince = hasMedicalHistoryForPatientChangedSince(patientUuid, timestamp)
-
-          patientChangedSince
-              .or(bpsChangedSince)
-              .or(prescriptionsChangedSince)
-              .or(medicalHistoryChangedSince)
-        }
-        .blockingGet()
+  @Suppress("DeprecatedCallableAddReplaceWith")
+  @Deprecated(message = "temporarily added for refactoring, remove later")
+  // TODO(vs): 2019-11-27 Remove this once the refactoring to move data changed since time method to the patient repository
+  fun hasPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
+    return database
+        .patientDao()
+        .hasPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = instant,
+            pendingStatus = PENDING
+        )
   }
 
+  @WorkerThread
+  fun hasPatientDataChangedSince(patientUuid: UUID, timestamp: Instant): Boolean {
+    val patientChangedSince = hasPatientChangedSince(patientUuid, timestamp)
+    val bpsChangedSince = haveBpsForPatientChangedSince(patientUuid, timestamp)
+    val prescriptionsChangedSince = hasPrescriptionForPatientChangedSince(patientUuid, timestamp)
+    val medicalHistoryChangedSince = hasMedicalHistoryForPatientChangedSince(patientUuid, timestamp)
+
+    return patientChangedSince
+        .or(bpsChangedSince)
+        .or(prescriptionsChangedSince)
+        .or(medicalHistoryChangedSince)
+  }
 
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
 }

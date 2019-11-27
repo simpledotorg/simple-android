@@ -19,7 +19,6 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -131,9 +130,6 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.never())
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.never())
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.never())
 
     Analytics.addReporter(reporter)
   }
@@ -1117,9 +1113,6 @@ class PatientSummaryScreenControllerTest {
       prescribedDrugsChanged: Boolean
   ) {
     whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(patientChanged)
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(bpsChanged))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(medicalHistoryChanged))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(prescribedDrugsChanged))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1218,9 +1211,6 @@ class PatientSummaryScreenControllerTest {
       goBackToScreen: GoBackToScreen
   ) {
     whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(false)
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1245,9 +1235,6 @@ class PatientSummaryScreenControllerTest {
       goBackToScreen: GoBackToScreen
   ) {
     whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(false)
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(false))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1275,9 +1262,6 @@ class PatientSummaryScreenControllerTest {
       prescribedDrugsChanged: Boolean
   ) {
     whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(patientChanged)
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(bpsChanged))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(medicalHistoryChanged))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(prescribedDrugsChanged))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1378,9 +1362,6 @@ class PatientSummaryScreenControllerTest {
       prescribedDrugsChanged: Boolean
   ) {
     whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(patientChanged)
-    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).doReturn(Observable.just(bpsChanged))
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).doReturn(Observable.just(medicalHistoryChanged))
-    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).doReturn(Observable.just(prescribedDrugsChanged))
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(

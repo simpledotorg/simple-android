@@ -24,8 +24,7 @@ import javax.inject.Inject
 class BloodPressureRepository @Inject constructor(
     private val dao: BloodPressureMeasurement.RoomDao,
     private val utcClock: UtcClock,
-    private val userClock: UserClock,
-    private val patientRepository: PatientRepository
+    private val userClock: UserClock
 ) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
   fun saveMeasurement(
@@ -144,9 +143,5 @@ class BloodPressureRepository @Inject constructor(
     return dao
         .count(SyncStatus.PENDING)
         .toObservable()
-  }
-
-  fun haveBpsForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
-    return Observable.fromCallable { patientRepository.haveBpsForPatientChangedSince(patientUuid, instant) }
   }
 }

@@ -1112,7 +1112,6 @@ class PatientSummaryScreenControllerTest {
       medicalHistoryChanged: Boolean,
       prescribedDrugsChanged: Boolean
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(patientChanged)
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1210,7 +1209,6 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(false)
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1234,7 +1232,6 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(false)
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1261,7 +1258,6 @@ class PatientSummaryScreenControllerTest {
       medicalHistoryChanged: Boolean,
       prescribedDrugsChanged: Boolean
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(patientChanged)
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(1))
 
     uiEvents.onNext(PatientSummaryScreenCreated(
@@ -1361,7 +1357,6 @@ class PatientSummaryScreenControllerTest {
       medicalHistoryChanged: Boolean,
       prescribedDrugsChanged: Boolean
   ) {
-    whenever(patientRepository.hasPatientChangedSince(any(), any())).doReturn(patientChanged)
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(Observable.just(0))
 
     uiEvents.onNext(PatientSummaryScreenCreated(

@@ -13,6 +13,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -88,7 +89,7 @@ class PatientSummaryScreenControllerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
-  private val patientUuid = UUID.randomUUID()
+  private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
   private val utcClock = TestUtcClock()
   private val userClock = TestUserClock()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
@@ -99,33 +100,15 @@ class PatientSummaryScreenControllerTest {
   private val timeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
   private val zoneId = UTC
+  private val bpDisplayLimit = 100
 
-  private val controller: PatientSummaryScreenController = PatientSummaryScreenController(
-      patientRepository = patientRepository,
-      bpRepository = bpRepository,
-      prescriptionRepository = prescriptionRepository,
-      medicalHistoryRepository = medicalHistoryRepository,
-      appointmentRepository = appointmentRepository,
-      missingPhoneReminderRepository = missingPhoneReminderRepository,
-      timestampGenerator = RelativeTimestampGenerator(),
-      utcClock = utcClock,
-      userClock = userClock,
-      zoneId = zoneId,
-      configProvider = configSubject,
-      config = PatientSummaryConfig(0, 0, Duration.ZERO),
-      timeFormatterForBp = timeFormatter,
-      exactDateFormatter = dateFormatter
-  )
+  private lateinit var controllerSubscription: Disposable
 
   @Before
   fun setUp() {
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     whenever(patientRepository.patient(patientUuid)).doReturn(Observable.never())
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).doReturn(Observable.never())
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.never())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.never())
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
@@ -139,6 +122,7 @@ class PatientSummaryScreenControllerTest {
   fun tearDown() {
     Analytics.clearReporters()
     reporter.clear()
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -156,7 +140,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).doReturn(Observable.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.just(optionalBpPassport))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(intention)
 
     verify(ui).populatePatientProfile(PatientSummaryProfile(patient, address, phoneNumber, optionalBpPassport))
     verify(ui).showEditButton()
@@ -175,21 +159,15 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions")
   fun `patient's prescription summary should be populated`(intention: OpenIntention) {
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
     val prescriptions = listOf(
         PatientMocker.prescription(name = "Amlodipine", dosage = "10mg"),
         PatientMocker.prescription(name = "Telmisartan", dosage = "9000mg"),
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(prescriptions))
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(emptyList()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(intention)
 
     verify(ui).populateList(eq(prescriptions), any(), any(), any())
   }
@@ -197,22 +175,16 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions")
   fun `patient's blood pressure history should be populated`(intention: OpenIntention) {
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
     val bloodPressureMeasurements = listOf(
         PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85, recordedAt = Instant.now(utcClock).minusSeconds(15L)),
         PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95, recordedAt = Instant.now(utcClock).minusSeconds(30L)),
         PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90, recordedAt = Instant.now(utcClock).minusSeconds(45L)))
 
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bloodPressureMeasurements))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewNewPatient, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(intention)
 
     verify(ui).populateList(
         any<List<PrescribedDrug>>(),
@@ -231,17 +203,11 @@ class PatientSummaryScreenControllerTest {
       expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
   ) {
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 3,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bloodPressureMeasurements))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(intention, numberOfBpPlaceholders = 3)
 
     verify(ui).populateList(
         prescribedDrugs = any(),
@@ -450,11 +416,6 @@ class PatientSummaryScreenControllerTest {
   @Test
   fun `when a bp is created then it should be editable till a fixed config duration`() {
     //given
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 3,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofSeconds(3600))
-
     val now = Instant.now(utcClock)
 
     val bps = listOf(
@@ -472,13 +433,18 @@ class PatientSummaryScreenControllerTest {
         )
     )
 
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bps))
+    val numberOfBpsToDisplay = 3
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, numberOfBpsToDisplay)).doReturn(Observable.just(bps))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
     //when
-    configSubject.onNext(config)
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewExistingPatient, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(
+        openIntention = OpenIntention.ViewExistingPatient,
+        numberOfBpsToDisplay = numberOfBpsToDisplay,
+        bpEditableDuration = Duration.ofSeconds(3600),
+        screenCreatedTimestamp = now
+    )
 
     verify(ui).populateList(
         prescribedDrugs = any(),
@@ -494,11 +460,6 @@ class PatientSummaryScreenControllerTest {
   fun `when a bp is created more than the fixed config duration ago then it should not be editable`() {
     //given
     val permittedDuration = Duration.ofMinutes(60)
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 3,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = permittedDuration)
-
     val now = Instant.now(utcClock)
 
     val bps = listOf(
@@ -516,13 +477,16 @@ class PatientSummaryScreenControllerTest {
         )
     )
 
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bps))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(bps))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
     //when
-    configSubject.onNext(config)
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewExistingPatient, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(
+        openIntention = OpenIntention.ViewExistingPatient,
+        bpEditableDuration = permittedDuration,
+        screenCreatedTimestamp = now
+    )
 
     verify(ui).populateList(
         prescribedDrugs = any(),
@@ -537,19 +501,13 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions")
   fun `patient's medical history should be populated`(openIntention: OpenIntention) {
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(emptyList()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(emptyList()))
 
     val medicalHistory = medicalHistory(updatedAt = Instant.now(utcClock))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui).populateList(any(), any(), any(), eq(medicalHistory))
   }
@@ -557,7 +515,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions")
   fun `when new-BP is clicked then BP entry sheet should be shown`(openIntention: OpenIntention) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
     verify(ui, times(1)).showBloodPressureEntrySheet(patientUuid)
@@ -566,13 +524,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions")
   fun `when update medicines is clicked then BP medicines screen should be shown`(openIntention: OpenIntention) {
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
     verify(ui).showUpdatePrescribedDrugsScreen(patientUuid)
@@ -581,7 +533,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions")
   fun `when the screen is opened, the viewed patient analytics event must be sent`(openIntention: OpenIntention) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     val expectedEvent = MockAnalyticsReporter.Event("ViewedPatient", mapOf(
         "patientId" to patientUuid.toString(),
@@ -608,7 +560,7 @@ class PatientSummaryScreenControllerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
     whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).doReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
     val updatedMedicalHistory = medicalHistory.copy(
@@ -638,6 +590,8 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when blood pressure is clicked for editing, blood pressure update sheet should show up`() {
+    setupControllerWithoutScreenCreated()
+
     val bloodPressureMeasurement = PatientMocker.bp()
     uiEvents.onNext(PatientSummaryBpClicked(bloodPressureMeasurement))
 
@@ -651,17 +605,11 @@ class PatientSummaryScreenControllerTest {
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
   ) {
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).doReturn(Observable.just(bloodPressureMeasurements))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui).populateList(
         prescribedDrugs = any(),
@@ -798,13 +746,7 @@ class PatientSummaryScreenControllerTest {
         updatedAt = canceledAppointment.updatedAt - Duration.ofHours(2))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
 
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     if (cancelReason == InvalidPhoneNumber) {
       verify(ui).showUpdatePhoneDialog(patientUuid)
@@ -828,13 +770,7 @@ class PatientSummaryScreenControllerTest {
         updatedAt = canceledAppointment.updatedAt + Duration.ofHours(2))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
 
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -851,13 +787,7 @@ class PatientSummaryScreenControllerTest {
         Just(PatientMocker.appointment(cancelReason = cancelReason)))
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
 
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -878,13 +808,7 @@ class PatientSummaryScreenControllerTest {
         Just(PatientMocker.appointment(status = Scheduled, cancelReason = null)))
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
 
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -894,13 +818,7 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.just<Optional<Appointment>>(None))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
 
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        bpEditableDuration = Duration.ofMinutes(60))
-    configSubject.onNext(config)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(OpenIntention.ViewNewPatient)
 
     verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -914,7 +832,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryBloodPressureSaved)
 
     verify(ui).showAddPhoneDialog(patientUuid)
@@ -930,7 +848,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -944,7 +862,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(true))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -957,7 +875,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -970,7 +888,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -982,7 +900,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -1037,7 +955,7 @@ class PatientSummaryScreenControllerTest {
       shouldShowLinkIdSheet: Boolean,
       identifier: Identifier?
   ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     if (shouldShowLinkIdSheet) {
       verify(ui).showLinkIdWithPatientView(patientUuid, identifier!!)
@@ -1060,7 +978,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   fun `when the link id with patient is cancelled, the patient summary screen must be closed`() {
     val openIntention = OpenIntention.LinkIdWithPatient(identifier = Identifier("id", BpPassport))
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     uiEvents.onNext(PatientSummaryLinkIdCancelled)
 
@@ -1070,7 +988,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   fun `when the link id with patient is completed, the link id screen must be closed`() {
     val openIntention = OpenIntention.LinkIdWithPatient(identifier = Identifier("id", BpPassport))
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(utcClock)))
+    setupControllerWithScreenCreated(openIntention)
 
     uiEvents.onNext(PatientSummaryLinkIdCompleted)
 
@@ -1091,11 +1009,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(any(), any())).doReturn(true)
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(ui, never()).goToPreviousScreen()
@@ -1115,11 +1029,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
@@ -1212,11 +1122,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
@@ -1235,11 +1141,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
@@ -1261,11 +1163,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     verify(ui).showScheduleAppointmentSheet(patientUuid)
@@ -1360,11 +1258,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(utcClock)
-    ))
+    setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
@@ -1446,5 +1340,54 @@ class PatientSummaryScreenControllerTest {
         medicalHistoryChanged = false,
         prescribedDrugsChanged = false
     )
+  }
+
+  private fun setupControllerWithScreenCreated(
+      openIntention: OpenIntention,
+      patientUuid: UUID = this.patientUuid,
+      screenCreatedTimestamp: Instant = Instant.now(utcClock),
+      numberOfBpPlaceholders: Int = 0,
+      numberOfBpsToDisplay: Int = this.bpDisplayLimit,
+      bpEditableDuration: Duration = Duration.ofMinutes(60)
+  ) {
+    val config = PatientSummaryConfig(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
+    createController(config)
+
+    configSubject.onNext(config)
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, screenCreatedTimestamp))
+  }
+
+  private fun setupControllerWithoutScreenCreated(
+      numberOfBpPlaceholders: Int = 0,
+      numberOfBpsToDisplay: Int = this.bpDisplayLimit,
+      bpEditableDuration: Duration = Duration.ofMinutes(60)
+  ) {
+    val config = PatientSummaryConfig(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
+    createController(config)
+
+    configSubject.onNext(config)
+  }
+
+  private fun createController(config: PatientSummaryConfig) {
+    val controller = PatientSummaryScreenController(
+        patientRepository = patientRepository,
+        bpRepository = bpRepository,
+        prescriptionRepository = prescriptionRepository,
+        medicalHistoryRepository = medicalHistoryRepository,
+        appointmentRepository = appointmentRepository,
+        missingPhoneReminderRepository = missingPhoneReminderRepository,
+        timestampGenerator = RelativeTimestampGenerator(),
+        utcClock = utcClock,
+        userClock = userClock,
+        zoneId = zoneId,
+        configProvider = configSubject,
+        config = config,
+        timeFormatterForBp = timeFormatter,
+        exactDateFormatter = dateFormatter
+    )
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(ui) }
   }
 }

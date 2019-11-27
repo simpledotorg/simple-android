@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
@@ -8,6 +9,13 @@ interface PatientSummaryScreenUi {
 
   fun populateList(
       prescribedDrugsItem: SummaryPrescribedDrugsItem,
+      measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
+      measurementItems: List<SummaryBloodPressureListItem>,
+      medicalHistoryItem: SummaryMedicalHistoryItem
+  )
+
+  fun populateList(
+      prescribedDrugs: List<PrescribedDrug>,
       measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       measurementItems: List<SummaryBloodPressureListItem>,
       medicalHistoryItem: SummaryMedicalHistoryItem

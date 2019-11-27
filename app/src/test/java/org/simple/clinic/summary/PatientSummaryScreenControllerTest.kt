@@ -26,6 +26,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -189,7 +190,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(ui).populateList(eq(SummaryPrescribedDrugsItem(prescriptions, dateFormatter, userClock)), any(), any(), any())
+    verify(ui).populateList(eq(prescriptions), any(), any(), any())
   }
 
   @Test
@@ -213,7 +214,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewNewPatient, screenCreatedTimestamp = Instant.now(utcClock)))
 
     verify(ui).populateList(
-        any(),
+        any<List<PrescribedDrug>>(),
         any(),
         check {
           it.forEachIndexed { i, item -> assertThat(item.measurement).isEqualTo(bloodPressureMeasurements[i]) }
@@ -242,7 +243,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(utcClock)))
 
     verify(ui).populateList(
-        prescribedDrugsItem = any(),
+        prescribedDrugs = any(),
         measurementPlaceholderItems = eq(expectedPlaceholderItems),
         measurementItems = check {
           it.forEachIndexed { index, item -> assertThat(item.measurement).isEqualTo(expectedBloodPressureMeasurementItems[index].measurement) }
@@ -479,7 +480,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewExistingPatient, screenCreatedTimestamp = Instant.now(utcClock)))
 
     verify(ui).populateList(
-        prescribedDrugsItem = any(),
+        prescribedDrugs = any(),
         measurementPlaceholderItems = any(),
         measurementItems = check {
           it.forEachIndexed { index, item -> assertThat(item.isBpEditable).isTrue() }
@@ -523,7 +524,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewExistingPatient, screenCreatedTimestamp = Instant.now(utcClock)))
 
     verify(ui).populateList(
-        prescribedDrugsItem = any(),
+        prescribedDrugs = any(),
         measurementPlaceholderItems = any(),
         measurementItems = check {
           it.forEachIndexed { index, item -> assertThat(item.isBpEditable).isFalse() }
@@ -549,7 +550,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(ui).populateList(any(), any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today, dateFormatter)))
+    verify(ui).populateList(any<List<PrescribedDrug>>(), any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today, dateFormatter)))
   }
 
   @Test
@@ -662,7 +663,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
 
     verify(ui).populateList(
-        prescribedDrugsItem = any(),
+        prescribedDrugs = any(),
         measurementPlaceholderItems = any(),
         measurementItems = check {
           it.forEachIndexed { index, item ->

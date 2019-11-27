@@ -113,6 +113,6 @@ data class PrescribedDrug(
         patientUuid: UUID,
         instantToCompare: Instant,
         pendingStatus: SyncStatus
-    ): Flowable<Boolean>
+    ): Boolean
   }
 }

@@ -623,5 +623,18 @@ class PatientRepository @Inject constructor(
         )
   }
 
+  @Suppress("DeprecatedCallableAddReplaceWith")
+  @Deprecated(message = "temporarily added for refactoring, remove later")
+  // TODO(vs): 2019-11-27 Remove this once the refactoring to move data changed since time method to the patient repository
+  fun hasPrescriptionForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
+    return database
+        .prescriptionDao()
+        .hasPrescriptionForPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = instant,
+            pendingStatus = PENDING
+        )
+  }
+
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
 }

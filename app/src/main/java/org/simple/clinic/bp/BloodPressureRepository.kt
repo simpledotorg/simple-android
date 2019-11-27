@@ -1,5 +1,6 @@
 package org.simple.clinic.bp
 
+import androidx.annotation.WorkerThread
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -7,7 +8,6 @@ import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
@@ -133,11 +133,8 @@ class BloodPressureRepository @Inject constructor(
     }
   }
 
-  fun bloodPressureCount(patientUuid: UUID): Observable<Int> {
-    return dao
-        .recordedBloodPressureCountForPatient(patientUuid)
-        .toObservable()
-  }
+  @WorkerThread
+  fun bloodPressureCount(patientUuid: UUID): Int = dao.recordedBloodPressureCountForPatient(patientUuid)
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao

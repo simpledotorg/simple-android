@@ -273,7 +273,7 @@ data class Patient(
         patientUuid: UUID,
         instantToCompare: Instant,
         pendingStatus: SyncStatus
-    ): Flowable<Boolean>
+    ): Boolean
 
     companion object {
       @Language("RoomSql")

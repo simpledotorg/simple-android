@@ -176,12 +176,7 @@ class PatientSummaryScreenController @Inject constructor(
           }
           .map { it.values.flatten() }
 
-      val medicalHistoryItems = patientUuids
-          .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
-          .map { history ->
-            val lastSyncTimestamp = timestampGenerator.generate(history.updatedAt, userClock)
-            SummaryMedicalHistoryItem(history, lastSyncTimestamp, exactDateFormatter)
-          }
+      val medicalHistoryItems = patientUuids.flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
 
       // combineLatest() is important here so that the first data-set for the list
       // is dispatched in one go instead of them appearing one after another on the UI.
@@ -194,7 +189,7 @@ class PatientSummaryScreenController @Inject constructor(
             PatientSummaryItemChanged(PatientSummaryItems(
                 prescription = prescribedDrugs,
                 bloodPressureListItems = bpSummary,
-                medicalHistoryItems = history
+                medicalHistory = history
             ))
           }
           .distinctUntilChanged()
@@ -227,7 +222,7 @@ class PatientSummaryScreenController @Inject constructor(
         patientSummaryListItem,
         bloodPressurePlaceholders) { patientSummary, placeHolders ->
       { ui: Ui ->
-        ui.populateList(patientSummary.prescription, placeHolders, patientSummary.bloodPressureListItems, patientSummary.medicalHistoryItems)
+        ui.populateList(patientSummary.prescription, placeHolders, patientSummary.bloodPressureListItems, patientSummary.medicalHistory)
       }
     }
   }

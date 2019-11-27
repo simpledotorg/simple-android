@@ -248,7 +248,7 @@ class PatientSummaryScreenControllerTest {
         measurementItems = check {
           it.forEachIndexed { index, item -> assertThat(item.measurement).isEqualTo(expectedBloodPressureMeasurementItems[index].measurement) }
         },
-        medicalHistoryItem = any()
+        medicalHistory = any()
     )
   }
 
@@ -485,7 +485,7 @@ class PatientSummaryScreenControllerTest {
         measurementItems = check {
           it.forEachIndexed { index, item -> assertThat(item.isBpEditable).isTrue() }
         },
-        medicalHistoryItem = any()
+        medicalHistory = any()
     )
   }
 
@@ -529,7 +529,7 @@ class PatientSummaryScreenControllerTest {
         measurementItems = check {
           it.forEachIndexed { index, item -> assertThat(item.isBpEditable).isFalse() }
         },
-        medicalHistoryItem = any()
+        medicalHistory = any()
     )
   }
 
@@ -550,7 +550,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(utcClock)))
 
-    verify(ui).populateList(any<List<PrescribedDrug>>(), any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today, dateFormatter)))
+    verify(ui).populateList(any(), any(), any(), eq(medicalHistory))
   }
 
   @Test
@@ -673,7 +673,7 @@ class PatientSummaryScreenControllerTest {
             assertThat(item.dateFormatter).isSameAs(dateFormatter)
           }
         },
-        medicalHistoryItem = any()
+        medicalHistory = any()
     )
   }
 

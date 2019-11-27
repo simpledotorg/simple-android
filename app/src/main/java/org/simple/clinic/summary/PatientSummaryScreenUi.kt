@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
@@ -18,7 +19,7 @@ interface PatientSummaryScreenUi {
       prescribedDrugs: List<PrescribedDrug>,
       measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       measurementItems: List<SummaryBloodPressureListItem>,
-      medicalHistoryItem: SummaryMedicalHistoryItem
+      medicalHistory: MedicalHistory
   )
 
   fun showBloodPressureEntrySheet(patientUuid: UUID)

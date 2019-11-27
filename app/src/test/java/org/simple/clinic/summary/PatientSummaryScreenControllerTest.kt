@@ -128,7 +128,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "params for patient summary populating profile")
   fun `patient's profile should be populated`(intention: OpenIntention, bpPassport: BusinessId?) {
-    val addressUuid = UUID.randomUUID()
+    val addressUuid = UUID.fromString("471253db-11d7-42ae-9e92-1415abd7a418")
     val patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid)
     val address = PatientMocker.address(uuid = addressUuid)
     val phoneNumber = None
@@ -152,8 +152,8 @@ class PatientSummaryScreenControllerTest {
       listOf(OpenIntention.ViewExistingPatient, null),
       listOf(OpenIntention.ViewNewPatient, PatientMocker.businessId(patientUuid = patientUuid)),
       listOf(OpenIntention.ViewNewPatient, null),
-      listOf(OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)), PatientMocker.businessId(patientUuid = patientUuid)),
-      listOf(OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)), null)
+      listOf(OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), PatientMocker.businessId(patientUuid = patientUuid)),
+      listOf(OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), null)
   )
 
   @Test
@@ -912,7 +912,7 @@ class PatientSummaryScreenControllerTest {
   private fun `patient summary open intentions`() = listOf(
       OpenIntention.ViewExistingPatient,
       OpenIntention.ViewNewPatient,
-      OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport))
+      OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport))
   )
 
   @Suppress("Unused")
@@ -924,19 +924,19 @@ class PatientSummaryScreenControllerTest {
     return listOf(
         testCase(openIntention = OpenIntention.ViewExistingPatient, goBackToScreen = PREVIOUS),
         testCase(openIntention = OpenIntention.ViewNewPatient, goBackToScreen = HOME),
-        testCase(openIntention = OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)), goBackToScreen = HOME)
+        testCase(openIntention = OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), goBackToScreen = HOME)
     )
   }
 
   @Suppress("Unused")
   private fun `patient summary open intentions except new patient`() = listOf(
       OpenIntention.ViewExistingPatient,
-      OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport))
+      OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport))
   )
 
   @Suppress("Unused")
   private fun `patient summary open intentions and summary item changed`(): List<List<Any>> {
-    val identifier = Identifier(UUID.randomUUID().toString(), BpPassport)
+    val identifier = Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)
 
     return listOf(
         listOf(OpenIntention.ViewExistingPatient, true),
@@ -966,7 +966,7 @@ class PatientSummaryScreenControllerTest {
 
   @Suppress("Unused")
   private fun `params for testing link id with patient bottom sheet`(): List<Any> {
-    val identifier = Identifier(UUID.randomUUID().toString(), BpPassport)
+    val identifier = Identifier("1f79f976-f1bc-4c8a-8a53-ad646ce09fdb", BpPassport)
 
     return listOf(
         listOf(OpenIntention.LinkIdWithPatient(identifier), true, identifier),
@@ -1021,11 +1021,7 @@ class PatientSummaryScreenControllerTest {
   @Parameters(method = "params for going back or home when clicking back when there are no BPs")
   fun `when there are patient summary changes and all bps are deleted, clicking on back must go back`(
       openIntention: OpenIntention,
-      goBackToScreen: GoBackToScreen,
-      patientChanged: Boolean,
-      bpsChanged: Boolean,
-      medicalHistoryChanged: Boolean,
-      prescribedDrugsChanged: Boolean
+      goBackToScreen: GoBackToScreen
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
@@ -1042,75 +1038,19 @@ class PatientSummaryScreenControllerTest {
 
   @Suppress("Unused")
   private fun `params for going back or home when clicking back when there are no BPs`(): List<List<Any>> {
-    fun testCase(
-        patientChanged: Boolean,
-        bpsChanged: Boolean,
-        medicalHistoryChanged: Boolean,
-        prescribedDrugsChanged: Boolean
-    ): List<List<Any>> {
-      return listOf(
-          listOf(
-              OpenIntention.ViewExistingPatient,
-              PREVIOUS,
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          ),
-          listOf(
-              OpenIntention.ViewNewPatient,
-              HOME,
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          ),
-          listOf(
-              OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)),
-              HOME,
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          )
-      )
-    }
-
-    return testCase(
-        patientChanged = true,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = true,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = true,
-        bpsChanged = true,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = true,
-        bpsChanged = true,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = true
+    return listOf(
+        listOf(
+            OpenIntention.ViewExistingPatient,
+            PREVIOUS
+        ),
+        listOf(
+            OpenIntention.ViewNewPatient,
+            HOME
+        ),
+        listOf(
+            OpenIntention.LinkIdWithPatient(Identifier("1f79f976-f1bc-4c8a-8a53-ad646ce09fdb", BpPassport)),
+            HOME
+        )
     )
   }
 
@@ -1153,13 +1093,9 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for showing schedule appointment sheet on hitting save")
+  @Parameters(method = "patient summary open intentions")
   fun `when all bps are not deleted, clicking on save must show the schedule appointment sheet regardless of summary changes`(
-      openIntention: OpenIntention,
-      patientChanged: Boolean,
-      bpsChanged: Boolean,
-      medicalHistoryChanged: Boolean,
-      prescribedDrugsChanged: Boolean
+      openIntention: OpenIntention
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
 
@@ -1171,90 +1107,10 @@ class PatientSummaryScreenControllerTest {
     verify(ui, never()).goToPreviousScreen()
   }
 
-  @Suppress("Unused")
-  private fun `params for showing schedule appointment sheet on hitting save`(): List<List<Any>> {
-    fun testCase(
-        patientChanged: Boolean,
-        bpsChanged: Boolean,
-        medicalHistoryChanged: Boolean,
-        prescribedDrugsChanged: Boolean
-    ): List<List<Any>> {
-      return listOf(
-          listOf(
-              OpenIntention.ViewExistingPatient,
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          ),
-          listOf(
-              OpenIntention.ViewNewPatient,
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          ),
-          listOf(
-              OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)),
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          )
-      )
-    }
-
-    return testCase(
-        patientChanged = true,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = true,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = true,
-        bpsChanged = true,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = true,
-        bpsChanged = true,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    )
-  }
-
   @Test
-  @Parameters(method = "params for going to home screen on hitting save")
+  @Parameters(method = "patient summary open intentions")
   fun `when all bps are deleted, clicking on save must go to the home screen regardless of summary changes`(
-      openIntention: OpenIntention,
-      patientChanged: Boolean,
-      bpsChanged: Boolean,
-      medicalHistoryChanged: Boolean,
-      prescribedDrugsChanged: Boolean
+      openIntention: OpenIntention
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
@@ -1264,82 +1120,6 @@ class PatientSummaryScreenControllerTest {
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
     verify(ui, never()).goToPreviousScreen()
     verify(ui).goToHomeScreen()
-  }
-
-  @Suppress("Unused")
-  private fun `params for going to home screen on hitting save`(): List<List<Any>> {
-    fun testCase(
-        patientChanged: Boolean,
-        bpsChanged: Boolean,
-        medicalHistoryChanged: Boolean,
-        prescribedDrugsChanged: Boolean
-    ): List<List<Any>> {
-      return listOf(
-          listOf(
-              OpenIntention.ViewExistingPatient,
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          ),
-          listOf(
-              OpenIntention.ViewNewPatient,
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          ),
-          listOf(
-              OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)),
-              patientChanged,
-              bpsChanged,
-              medicalHistoryChanged,
-              prescribedDrugsChanged
-          )
-      )
-    }
-
-    return testCase(
-        patientChanged = true,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = true,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = true,
-        bpsChanged = true,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = true,
-        bpsChanged = true,
-        medicalHistoryChanged = true,
-        prescribedDrugsChanged = true
-    ) + testCase(
-        patientChanged = false,
-        bpsChanged = false,
-        medicalHistoryChanged = false,
-        prescribedDrugsChanged = false
-    )
   }
 
   private fun setupControllerWithScreenCreated(

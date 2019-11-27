@@ -19,8 +19,10 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.net.URI
 
 class InputFieldsFactoryTest {
-  private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-  private val today = LocalDate.parse("20/11/2019", dateTimeFormatter)
+  private val inputFieldsFactory = InputFieldsFactory(
+      DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+      LocalDate.parse("20/11/2019", DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+  )
 
   @Test
   fun `it returns fields that are specific to India`() {
@@ -31,8 +33,10 @@ class InputFieldsFactoryTest {
         isdCode = "91"
     )
 
-    val fields = InputFieldsFactory.fields(dateTimeFormatter, today, india)
-    assertThat(fields.map { it::class })
+    val inputFieldClasses = inputFieldsFactory
+        .fieldsFor(india)
+        .map { it::class }
+    assertThat(inputFieldClasses)
         .containsExactly(
             PatientNameField::class,
             AgeField::class,
@@ -55,8 +59,10 @@ class InputFieldsFactoryTest {
         isdCode = "880"
     )
 
-    val fields = InputFieldsFactory.fields(dateTimeFormatter, today, bangladesh)
-    assertThat(fields.map { it::class })
+    val inputFieldClasses = inputFieldsFactory
+        .fieldsFor(bangladesh)
+        .map { it::class }
+    assertThat(inputFieldClasses)
         .containsExactly(
             PatientNameField::class,
             AgeField::class,

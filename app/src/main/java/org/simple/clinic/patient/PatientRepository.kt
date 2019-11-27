@@ -1,5 +1,6 @@
 package org.simple.clinic.patient
 
+import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -600,10 +601,8 @@ class PatientRepository @Inject constructor(
         .flatMapSingle { database.patientSearchDao().searchByIds(it, PatientStatus.Active) }
   }
 
-  @Suppress("DeprecatedCallableAddReplaceWith")
-  @Deprecated(message = "temporarily added for refactoring, remove later")
-  // TODO(vs): 2019-11-26 Remove this once the refactoring to move data changed since time method to the patient repository
   @WorkerThread
+  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun haveBpsForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
         .bloodPressureDao()
@@ -614,10 +613,8 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  @Suppress("DeprecatedCallableAddReplaceWith")
-  @Deprecated(message = "temporarily added for refactoring, remove later")
-  // TODO(vs): 2019-11-27 Remove this once the refactoring to move data changed since time method to the patient repository
   @WorkerThread
+  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun hasPrescriptionForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
         .prescriptionDao()
@@ -628,10 +625,8 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  @Suppress("DeprecatedCallableAddReplaceWith")
-  @Deprecated(message = "temporarily added for refactoring, remove later")
-  // TODO(vs): 2019-11-27 Remove this once the refactoring to move data changed since time method to the patient repository
   @WorkerThread
+  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun hasMedicalHistoryForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
         .medicalHistoryDao()
@@ -642,9 +637,8 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  @Suppress("DeprecatedCallableAddReplaceWith")
-  @Deprecated(message = "temporarily added for refactoring, remove later")
-  // TODO(vs): 2019-11-27 Remove this once the refactoring to move data changed since time method to the patient repository
+  @WorkerThread
+  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun hasPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
         .patientDao()

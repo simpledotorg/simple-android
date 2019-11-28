@@ -34,17 +34,12 @@ import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.simple.clinic.util.RelativeTimestampGenerator
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.ZoneId
-import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Named
 
 typealias Ui = PatientSummaryScreenUi
 typealias UiChange = (Ui) -> Unit
@@ -159,19 +154,8 @@ class PatientSummaryScreenController @Inject constructor(
 
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
-        .map {
-          val bpList = it.patientSummaryItems.bloodPressures
-          bpList.groupBy { item -> item.createdAt.atZone(utcClock.zone).toLocalDate() }
-        }
-        .map { it.size }
-        .map { numberOfBloodPressures ->
-          val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodPressures)
-
-          (1..numberOfPlaceholders).map { placeholderNumber ->
-            val shouldShowHint = numberOfBloodPressures == 0 && placeholderNumber == 1
-            SummaryBloodPressurePlaceholderListItem(placeholderNumber, shouldShowHint)
-          }
-        }
+        .map { it.patientSummaryItems.bloodPressures }
+        .map { SummaryBloodPressurePlaceholderListItem.from(it, utcClock, config.numberOfBpPlaceholders) }
 
     val patientSummaryListItem = events.ofType<PatientSummaryItemChanged>()
         .map { it.patientSummaryItems }

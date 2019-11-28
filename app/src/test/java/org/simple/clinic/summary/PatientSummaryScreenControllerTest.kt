@@ -6,7 +6,6 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -149,11 +148,12 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(prescriptions))
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
+    val medicalHistory = medicalHistory()
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
 
     setupControllerWithScreenCreated(intention)
 
-    verify(ui).populateList(eq(prescriptions), any(), any())
+    verify(ui).populateList(prescriptions, emptyList(), medicalHistory)
   }
 
   @Test
@@ -166,15 +166,12 @@ class PatientSummaryScreenControllerTest {
 
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
+    val medicalHistory = medicalHistory()
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
 
     setupControllerWithScreenCreated(intention)
 
-    verify(ui).populateList(
-        any(),
-        eq(bloodPressureMeasurements),
-        any()
-    )
+    verify(ui).populateList(emptyList(), bloodPressureMeasurements, medicalHistory)
   }
 
   @Test
@@ -188,7 +185,7 @@ class PatientSummaryScreenControllerTest {
 
     setupControllerWithScreenCreated(openIntention)
 
-    verify(ui).populateList(any(), any(), eq(medicalHistory))
+    verify(ui).populateList(emptyList(), emptyList(), medicalHistory)
   }
 
   @Test
@@ -197,7 +194,7 @@ class PatientSummaryScreenControllerTest {
     setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
-    verify(ui, times(1)).showBloodPressureEntrySheet(patientUuid)
+    verify(ui).showBloodPressureEntrySheet(patientUuid)
   }
 
   @Test
@@ -676,9 +673,7 @@ class PatientSummaryScreenControllerTest {
       numberOfBpsToDisplay: Int = this.bpDisplayLimit,
       bpEditableDuration: Duration = Duration.ofMinutes(60)
   ) {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
-    createController(config)
-
+    setupControllerWithoutScreenCreated(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, screenCreatedTimestamp))
   }
 

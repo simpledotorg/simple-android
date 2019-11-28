@@ -52,6 +52,7 @@
   <string name="patiententry_contentdescription_up_button">Go back to search</string>
   <string name="patiententry_full_name">Patient\'s name</string>
   <string name="patiententry_phone_number">Phone number</string>
+  <string name="patiententry_business_identifier">BP Passport</string>
   <string name="patiententry_date_of_birth_unfocused">Date of birth</string>
   <string name="patiententry_date_of_birth_focused">D.O.B: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">Or</string>
@@ -59,6 +60,7 @@
   <string name="patiententry_gender_female" translatable="false">@string/gender_female</string>
   <string name="patiententry_gender_male" translatable="false">@string/gender_male</string>
   <string name="patiententry_gender_transgender" translatable="false">@string/gender_transgender</string>
+  <string name="patiententry_street_address">House number and street</string>
   <string name="patiententry_colony_or_village">Colony / Village / Ward</string>
   <string name="patiententry_zone">Zone</string>
   <string name="patiententry_district">District</string>

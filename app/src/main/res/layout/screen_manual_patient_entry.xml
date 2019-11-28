@@ -68,64 +68,6 @@
           app:clearableField="@id/fullNameEditText" />
       </FrameLayout>
 
-      <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:paddingStart="@dimen/spacing_4">
-
-        <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/phoneNumberInputLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
-
-          <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/phoneNumberEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/patiententry_phone_number"
-            android:imeOptions="flagNoFullscreen"
-            android:inputType="phone|textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-          style="@style/Clinic.Button.ClearEditText"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="end"
-          app:clearableField="@id/phoneNumberEditText" />
-      </FrameLayout>
-
-      <LinearLayout
-        android:id="@+id/identifierContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:orientation="vertical">
-
-        <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:paddingStart="@dimen/spacing_4"
-          android:text="@string/patiententry_identifier"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1" />
-
-        <TextView
-          android:id="@+id/identifierTextView"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_4"
-          android:background="@drawable/background_patiententry_identifier"
-          android:drawablePadding="@dimen/spacing_12"
-          android:padding="@dimen/spacing_4"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0"
-          tools:drawableStart="@drawable/patient_id_card"
-          tools:drawableTint="@color/grey1"
-          tools:text="123 4567" />
-
-      </LinearLayout>
-
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -207,6 +149,34 @@
         </FrameLayout>
       </LinearLayout>
 
+      <LinearLayout
+        android:id="@+id/identifierContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:orientation="vertical">
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingStart="@dimen/spacing_4"
+          android:text="@string/patiententry_identifier"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1" />
+
+        <TextView
+          android:id="@+id/identifierTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/spacing_4"
+          android:background="@drawable/background_patiententry_identifier"
+          android:drawablePadding="@dimen/spacing_12"
+          android:padding="@dimen/spacing_4"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0"
+          tools:drawableStart="@drawable/patient_id_card"
+          tools:drawableTint="@color/grey1"
+          tools:text="123 4567" />
+      </LinearLayout>
+
       <RadioGroup
         android:id="@+id/genderRadioGroup"
         android:layout_width="match_parent"
@@ -255,6 +225,35 @@
         android:textColor="@color/textinputlayout_error"
         android:textSize="@dimen/textsize_12"
         android:visibility="gone" />
+
+      <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:paddingStart="@dimen/spacing_4">
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/phoneNumberInputLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/phoneNumberEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_phone_number"
+            android:imeOptions="flagNoFullscreen"
+            android:inputType="phone|textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+          style="@style/Clinic.Button.ClearEditText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          app:clearableField="@id/phoneNumberEditText" />
+      </FrameLayout>
 
       <FrameLayout
         android:layout_width="match_parent"

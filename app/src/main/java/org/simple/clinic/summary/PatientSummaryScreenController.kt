@@ -56,13 +56,8 @@ class PatientSummaryScreenController @Inject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val appointmentRepository: AppointmentRepository,
     private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
-    private val timestampGenerator: RelativeTimestampGenerator,
     private val utcClock: UtcClock,
-    private val userClock: UserClock,
-    private val zoneId: ZoneId,
-    private val config: PatientSummaryConfig,
-    @Named("time_for_bps_recorded") private val timeFormatterForBp: DateTimeFormatter,
-    @Named("exact_date") private val exactDateFormatter: DateTimeFormatter
+    private val config: PatientSummaryConfig
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -142,38 +137,17 @@ class PatientSummaryScreenController @Inject constructor(
 
       val prescribedDrugsStream = patientUuids.flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
 
-      val bloodPressures = patientUuids
-          .flatMap { patientUuid -> bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay) }
-          .replay(1)
-          .refCount()
-
-      val bloodPressureItems = bloodPressures
-          .map { bps ->
-            SummaryBloodPressureListItem.from(
-                bloodPressures = bps,
-                timestampGenerator = timestampGenerator,
-                dateFormatter = exactDateFormatter,
-                canEditFor = config.bpEditableDuration,
-                bpTimeFormatter = timeFormatterForBp,
-                zoneId = zoneId,
-                utcClock = utcClock,
-                userClock = userClock
-            )
-          }
+      val bloodPressures = patientUuids.flatMap { patientUuid -> bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay) }
 
       val medicalHistoryItems = patientUuids.flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
 
       // combineLatest() is important here so that the first data-set for the list
       // is dispatched in one go instead of them appearing one after another on the UI.
       val summaryItemChanges = Observables
-          .combineLatest(
-              prescribedDrugsStream,
-              bloodPressures,
-              bloodPressureItems,
-              medicalHistoryItems) { prescribedDrugs, _, bpSummary, history ->
+          .combineLatest(prescribedDrugsStream, bloodPressures, medicalHistoryItems) { prescribedDrugs, bloodPressureMeasurements, history ->
             PatientSummaryItemChanged(PatientSummaryItems(
                 prescription = prescribedDrugs,
-                bloodPressureListItems = bpSummary,
+                bloodPressures = bloodPressureMeasurements,
                 medicalHistory = history
             ))
           }
@@ -185,9 +159,9 @@ class PatientSummaryScreenController @Inject constructor(
 
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
-        .map { it ->
-          val bpList = it.patientSummaryItems.bloodPressureListItems
-          bpList.groupBy { item -> item.measurement.createdAt.atZone(utcClock.zone).toLocalDate() }
+        .map {
+          val bpList = it.patientSummaryItems.bloodPressures
+          bpList.groupBy { item -> item.createdAt.atZone(utcClock.zone).toLocalDate() }
         }
         .map { it.size }
         .map { numberOfBloodPressures ->
@@ -206,7 +180,7 @@ class PatientSummaryScreenController @Inject constructor(
         patientSummaryListItem,
         bloodPressurePlaceholders) { patientSummary, placeHolders ->
       { ui: Ui ->
-        ui.populateList(patientSummary.prescription, placeHolders, patientSummary.bloodPressureListItems, patientSummary.medicalHistory)
+        ui.populateList(patientSummary.prescription, placeHolders, patientSummary.bloodPressures, patientSummary.medicalHistory)
       }
     }
   }

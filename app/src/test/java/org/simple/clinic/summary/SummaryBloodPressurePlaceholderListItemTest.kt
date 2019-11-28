@@ -17,9 +17,9 @@ class SummaryBloodPressurePlaceholderListItemTest {
     // given
     val now = Instant.parse("2018-01-01T00:00:00Z")
     val bps = listOf(
-        PatientMocker.bp(createdAt = now),
-        PatientMocker.bp(createdAt = now),
-        PatientMocker.bp(createdAt = now.minus(1, DAYS))
+        PatientMocker.bp(recordedAt = now),
+        PatientMocker.bp(recordedAt = now),
+        PatientMocker.bp(recordedAt = now.minus(1, DAYS))
     )
 
     // when
@@ -54,9 +54,9 @@ class SummaryBloodPressurePlaceholderListItemTest {
     // given
     val now = Instant.parse("2018-01-01T00:00:00Z")
     val bps = listOf(
-        PatientMocker.bp(createdAt = now),
-        PatientMocker.bp(createdAt = now.minus(1, DAYS)),
-        PatientMocker.bp(createdAt = now.minus(2, DAYS))
+        PatientMocker.bp(recordedAt = now),
+        PatientMocker.bp(recordedAt = now.minus(1, DAYS)),
+        PatientMocker.bp(recordedAt = now.minus(2, DAYS))
     )
 
     // when
@@ -71,10 +71,10 @@ class SummaryBloodPressurePlaceholderListItemTest {
     // given
     val now = Instant.parse("2018-01-01T00:00:00Z")
     val bps = listOf(
-        PatientMocker.bp(createdAt = now),
-        PatientMocker.bp(createdAt = now.minus(1, DAYS)),
-        PatientMocker.bp(createdAt = now.minus(2, DAYS)),
-        PatientMocker.bp(createdAt = now.minus(3, DAYS))
+        PatientMocker.bp(recordedAt = now),
+        PatientMocker.bp(recordedAt = now.minus(1, DAYS)),
+        PatientMocker.bp(recordedAt = now.minus(2, DAYS)),
+        PatientMocker.bp(recordedAt = now.minus(3, DAYS))
     )
 
     // when

@@ -51,7 +51,6 @@ class PatientSummaryScreenController @Inject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val appointmentRepository: AppointmentRepository,
     private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
-    private val utcClock: UtcClock,
     private val config: PatientSummaryConfig
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -153,20 +152,12 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
-    val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItems.bloodPressures }
-        .map { SummaryBloodPressurePlaceholderListItem.from(it, utcClock, config.numberOfBpPlaceholders) }
-
-    val patientSummaryListItem = events.ofType<PatientSummaryItemChanged>()
+    return events
+        .ofType<PatientSummaryItemChanged>()
         .map { it.patientSummaryItems }
-
-    return Observables.combineLatest(
-        patientSummaryListItem,
-        bloodPressurePlaceholders) { patientSummary, placeHolders ->
-      { ui: Ui ->
-        ui.populateList(patientSummary.prescription, placeHolders, patientSummary.bloodPressures, patientSummary.medicalHistory)
-      }
-    }
+        .map { patientSummary ->
+          { ui: Ui -> ui.populateList(patientSummary.prescription, patientSummary.bloodPressures, patientSummary.medicalHistory) }
+        }
   }
 
   private fun updateMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {

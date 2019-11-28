@@ -98,12 +98,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   @Inject
   lateinit var dobValidator: UserInputDateValidator
 
+  // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
     listOf(
         fullNameEditText,
-        phoneNumberEditText,
         ageEditText,
         dateOfBirthEditText,
+        phoneNumberEditText,
         colonyOrVillageEditText,
         districtEditText,
         stateEditText
@@ -404,12 +405,16 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   override fun scrollToFirstFieldWithError() {
+    // FIXME This is temporally coupled to the layout and changes whenever the order of the fields change.
+    //       This should be automatically retrieved from the inflated XML.
+    //       Also, we need to add all the input fields and scroll to the ones that are 'visible' and not the
+    //       ones that are 'gone'.
     val views = arrayOf(
         fullNameInputLayout,
-        phoneNumberInputLayout,
         ageEditTextInputLayout,
         dateOfBirthInputLayout,
         genderErrorTextView,
+        phoneNumberInputLayout,
         colonyOrVillageInputLayout,
         districtInputLayout,
         stateInputLayout)

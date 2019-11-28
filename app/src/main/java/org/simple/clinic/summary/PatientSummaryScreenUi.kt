@@ -10,15 +10,7 @@ interface PatientSummaryScreenUi {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
 
   fun populateList(
-      prescribedDrugsItem: SummaryPrescribedDrugsItem,
-      measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
-      measurementItems: List<SummaryBloodPressureListItem>,
-      medicalHistoryItem: SummaryMedicalHistoryItem
-  )
-
-  fun populateList(
       prescribedDrugs: List<PrescribedDrug>,
-      measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       medicalHistory: MedicalHistory
   )

@@ -318,7 +318,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     bloodPressureSection.setHeader(newBpItem)
   }
 
-  override fun populateList(
+  private fun updateSummaryList(
       prescribedDrugsItem: SummaryPrescribedDrugsItem,
       measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       measurementItems: List<SummaryBloodPressureListItem>,
@@ -356,17 +356,20 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   override fun populateList(
       prescribedDrugs: List<PrescribedDrug>,
-      measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       medicalHistory: MedicalHistory
   ) {
-    populateList(
+    updateSummaryList(
         SummaryPrescribedDrugsItem(
             prescriptions = prescribedDrugs,
             dateFormatter = exactDateFormatter,
             userClock = userClock
         ),
-        measurementPlaceholderItems,
+        SummaryBloodPressurePlaceholderListItem.from(
+            bloodPressureMeasurements = bloodPressureMeasurements,
+            utcClock = utcClock,
+            placeholderLimit = config.numberOfBpPlaceholders
+        ),
         SummaryBloodPressureListItem.from(
             bloodPressures = bloodPressureMeasurements,
             timestampGenerator = timestampGenerator,

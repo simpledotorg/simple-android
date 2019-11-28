@@ -154,7 +154,7 @@ class PatientSummaryScreenControllerTest {
 
     setupControllerWithScreenCreated(intention)
 
-    verify(ui).populateList(eq(prescriptions), any(), any(), any())
+    verify(ui).populateList(eq(prescriptions), any(), any())
   }
 
   @Test
@@ -173,9 +173,9 @@ class PatientSummaryScreenControllerTest {
 
     verify(ui).populateList(
         any(),
-        any(),
         eq(bloodPressureMeasurements),
-        any())
+        any()
+    )
   }
 
   @Test
@@ -189,7 +189,7 @@ class PatientSummaryScreenControllerTest {
 
     setupControllerWithScreenCreated(openIntention)
 
-    verify(ui).populateList(any(), any(), any(), eq(medicalHistory))
+    verify(ui).populateList(any(), any(), eq(medicalHistory))
   }
 
   @Test
@@ -700,7 +700,6 @@ class PatientSummaryScreenControllerTest {
         medicalHistoryRepository = medicalHistoryRepository,
         appointmentRepository = appointmentRepository,
         missingPhoneReminderRepository = missingPhoneReminderRepository,
-        utcClock = utcClock,
         config = config
     )
 

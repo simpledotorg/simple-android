@@ -24,7 +24,7 @@ data class SummaryBloodPressurePlaceholderListItem(
         placeholderLimit: Int
     ): List<SummaryBloodPressurePlaceholderListItem> {
       return Observable.just(bloodPressureMeasurements)
-          .map { bpList -> bpList.groupBy { item -> item.createdAt.atZone(utcClock.zone).toLocalDate() } }
+          .map { bpList -> bpList.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() } }
           .map { it.size }
           .map { numberOfBloodPressures ->
             val numberOfPlaceholders = 0.coerceAtLeast(placeholderLimit - numberOfBloodPressures)

@@ -23,7 +23,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
-import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.Answer
@@ -65,7 +64,6 @@ import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import org.simple.clinic.summary.PatientSummaryScreenController as PatientSummaryScreenController1
 
@@ -178,100 +176,6 @@ class PatientSummaryScreenControllerTest {
         any(),
         eq(bloodPressureMeasurements),
         any())
-  }
-
-  @Test
-  @Parameters(method = "params for placeholder bp items")
-  fun `the placeholder blood pressure items must be shown`(
-      intention: OpenIntention,
-      bloodPressureMeasurements: List<BloodPressureMeasurement>,
-      expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>
-  ) {
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(bloodPressureMeasurements))
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
-
-    setupControllerWithScreenCreated(intention, numberOfBpPlaceholders = 3)
-
-    verify(ui).populateList(
-        prescribedDrugs = any(),
-        measurementPlaceholderItems = eq(expectedPlaceholderItems),
-        bloodPressureMeasurements = eq(bloodPressureMeasurements),
-        medicalHistory = any()
-    )
-  }
-
-  @Suppress("Unused")
-  private fun `params for placeholder bp items`(): List<List<Any>> {
-    val bpsForTest1 = emptyList<BloodPressureMeasurement>()
-    val bpsForTest2 = listOf(PatientMocker.bp(patientUuid))
-    val bpsForTest3 = listOf(
-        PatientMocker.bp(patientUuid),
-        PatientMocker.bp(patientUuid)
-    )
-    val bpsForTest4 = listOf(
-        PatientMocker.bp(patientUuid),
-        PatientMocker.bp(patientUuid),
-        PatientMocker.bp(patientUuid)
-    )
-    val bpsForTest5 = listOf(
-        PatientMocker.bp(patientUuid, createdAt = Instant.now(utcClock).minus(1, ChronoUnit.DAYS)),
-        PatientMocker.bp(patientUuid),
-        PatientMocker.bp(patientUuid)
-    )
-    val bpsForTest6 = listOf(
-        PatientMocker.bp(patientUuid, createdAt = Instant.now(utcClock).minus(2, ChronoUnit.DAYS)),
-        PatientMocker.bp(patientUuid, createdAt = Instant.now(utcClock).minus(1, ChronoUnit.DAYS)),
-        PatientMocker.bp(patientUuid)
-    )
-
-    // We won't be verifying the relative timestamps and showDivider in the test this is used in,
-    // so we can just set it to a static value.
-    return listOf(
-        listOf(
-            randomPatientSummaryOpenIntention(),
-            bpsForTest1,
-            listOf(
-                SummaryBloodPressurePlaceholderListItem(1, true),
-                SummaryBloodPressurePlaceholderListItem(2),
-                SummaryBloodPressurePlaceholderListItem(3)
-            )
-        ),
-        listOf(
-            randomPatientSummaryOpenIntention(),
-            bpsForTest2,
-            listOf(
-                SummaryBloodPressurePlaceholderListItem(1),
-                SummaryBloodPressurePlaceholderListItem(2)
-            )
-        ),
-        listOf(
-            randomPatientSummaryOpenIntention(),
-            bpsForTest3,
-            listOf(
-                SummaryBloodPressurePlaceholderListItem(1),
-                SummaryBloodPressurePlaceholderListItem(2)
-            )
-        ),
-        listOf(
-            randomPatientSummaryOpenIntention(),
-            bpsForTest4,
-            listOf(
-                SummaryBloodPressurePlaceholderListItem(1),
-                SummaryBloodPressurePlaceholderListItem(2)
-            )
-        ),
-        listOf(
-            randomPatientSummaryOpenIntention(),
-            bpsForTest5,
-            listOf(SummaryBloodPressurePlaceholderListItem(1))
-        ),
-        listOf(
-            randomPatientSummaryOpenIntention(),
-            bpsForTest6,
-            emptyList<SummaryBloodPressurePlaceholderListItem>()
-        )
-    )
   }
 
   @Test

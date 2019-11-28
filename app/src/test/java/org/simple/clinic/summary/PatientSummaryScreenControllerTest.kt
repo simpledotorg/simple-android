@@ -2,7 +2,6 @@ package org.simple.clinic.summary
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
@@ -26,7 +25,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -60,20 +58,14 @@ import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.RelativeTimestamp.Today
-import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset.UTC
-import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
-import java.util.Locale
 import java.util.UUID
 import org.simple.clinic.summary.PatientSummaryScreenController as PatientSummaryScreenController1
 
@@ -91,14 +83,10 @@ class PatientSummaryScreenControllerTest {
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
   private val utcClock = TestUtcClock()
-  private val userClock = TestUserClock()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockAnalyticsReporter()
-  private val timeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)
-  private val dateFormatter = DateTimeFormatter.ISO_INSTANT
-  private val zoneId = UTC
   private val bpDisplayLimit = 100
 
   private lateinit var controllerSubscription: Disposable
@@ -186,11 +174,9 @@ class PatientSummaryScreenControllerTest {
     setupControllerWithScreenCreated(intention)
 
     verify(ui).populateList(
-        any<List<PrescribedDrug>>(),
         any(),
-        check {
-          it.forEachIndexed { i, item -> assertThat(item.measurement).isEqualTo(bloodPressureMeasurements[i]) }
-        },
+        any(),
+        eq(bloodPressureMeasurements),
         any())
   }
 
@@ -199,8 +185,7 @@ class PatientSummaryScreenControllerTest {
   fun `the placeholder blood pressure items must be shown`(
       intention: OpenIntention,
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
-      expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
-      expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
+      expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>
   ) {
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
@@ -211,9 +196,7 @@ class PatientSummaryScreenControllerTest {
     verify(ui).populateList(
         prescribedDrugs = any(),
         measurementPlaceholderItems = eq(expectedPlaceholderItems),
-        measurementItems = check {
-          it.forEachIndexed { index, item -> assertThat(item.measurement).isEqualTo(expectedBloodPressureMeasurementItems[index].measurement) }
-        },
+        bloodPressureMeasurements = eq(bloodPressureMeasurements),
         medicalHistory = any()
     )
   }
@@ -242,8 +225,6 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.bp(patientUuid)
     )
 
-    val displayTime = "12:00 PM"
-
     // We won't be verifying the relative timestamps and showDivider in the test this is used in,
     // so we can just set it to a static value.
     return listOf(
@@ -254,8 +235,7 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressurePlaceholderListItem(1, true),
                 SummaryBloodPressurePlaceholderListItem(2),
                 SummaryBloodPressurePlaceholderListItem(3)
-            ),
-            emptyList<SummaryBloodPressureListItem>()
+            )
         ),
         listOf(
             randomPatientSummaryOpenIntention(),
@@ -263,17 +243,6 @@ class PatientSummaryScreenControllerTest {
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
                 SummaryBloodPressurePlaceholderListItem(2)
-            ),
-            listOf(
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest2[0],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                )
             )
         ),
         listOf(
@@ -282,26 +251,6 @@ class PatientSummaryScreenControllerTest {
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
                 SummaryBloodPressurePlaceholderListItem(2)
-            ),
-            listOf(
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest3[0],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                ),
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest3[1],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                )
             )
         ),
         listOf(
@@ -310,104 +259,17 @@ class PatientSummaryScreenControllerTest {
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
                 SummaryBloodPressurePlaceholderListItem(2)
-            ),
-            listOf(
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest4[0],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                ),
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest4[1],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                ),
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest4[2],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                )
             )
         ),
         listOf(
             randomPatientSummaryOpenIntention(),
             bpsForTest5,
-            listOf(SummaryBloodPressurePlaceholderListItem(1)),
-            listOf(
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest5[0],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                ),
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest5[1],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                ),
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest5[2],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                )
-            )
+            listOf(SummaryBloodPressurePlaceholderListItem(1))
         ),
         listOf(
             randomPatientSummaryOpenIntention(),
             bpsForTest6,
-            emptyList<SummaryBloodPressurePlaceholderListItem>(),
-            listOf(
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest6[0],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                ),
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest6[1],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                ),
-                SummaryBloodPressureListItem(
-                    measurement = bpsForTest6[2],
-                    showDivider = true,
-                    formattedTime = displayTime,
-                    addTopPadding = false,
-                    daysAgo = Today,
-                    dateFormatter = dateFormatter,
-                    isBpEditable = false
-                )
-            )
+            emptyList<SummaryBloodPressurePlaceholderListItem>()
         )
     )
   }
@@ -934,13 +796,8 @@ class PatientSummaryScreenControllerTest {
         medicalHistoryRepository = medicalHistoryRepository,
         appointmentRepository = appointmentRepository,
         missingPhoneReminderRepository = missingPhoneReminderRepository,
-        timestampGenerator = RelativeTimestampGenerator(),
         utcClock = utcClock,
-        userClock = userClock,
-        zoneId = zoneId,
-        config = config,
-        timeFormatterForBp = timeFormatter,
-        exactDateFormatter = dateFormatter
+        config = config
     )
 
     controllerSubscription = uiEvents

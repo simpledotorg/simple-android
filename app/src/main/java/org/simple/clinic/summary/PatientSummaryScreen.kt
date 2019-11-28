@@ -27,6 +27,7 @@ import kotlinx.android.parcel.Parcelize
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
@@ -61,12 +62,14 @@ import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -99,6 +102,18 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @Inject
   lateinit var timestampGenerator: RelativeTimestampGenerator
+
+  @Inject
+  lateinit var config: PatientSummaryConfig
+
+  @Inject
+  lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var zoneId: ZoneId
+
+  @field:[Inject Named("time_for_bps_recorded")]
+  lateinit var timeFormatterForBp: DateTimeFormatter
 
   @Deprecated("""
     ~ DOA ~
@@ -342,14 +357,31 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   override fun populateList(
       prescribedDrugs: List<PrescribedDrug>,
       measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
-      measurementItems: List<SummaryBloodPressureListItem>,
+      bloodPressureMeasurements: List<BloodPressureMeasurement>,
       medicalHistory: MedicalHistory
   ) {
     populateList(
-        SummaryPrescribedDrugsItem(prescribedDrugs, exactDateFormatter, userClock),
+        SummaryPrescribedDrugsItem(
+            prescriptions = prescribedDrugs,
+            dateFormatter = exactDateFormatter,
+            userClock = userClock
+        ),
         measurementPlaceholderItems,
-        measurementItems,
-        SummaryMedicalHistoryItem(medicalHistory, timestampGenerator.generate(medicalHistory.updatedAt, userClock), exactDateFormatter)
+        SummaryBloodPressureListItem.from(
+            bloodPressures = bloodPressureMeasurements,
+            timestampGenerator = timestampGenerator,
+            dateFormatter = exactDateFormatter,
+            canEditFor = config.bpEditableDuration,
+            bpTimeFormatter = timeFormatterForBp,
+            zoneId = zoneId,
+            utcClock = utcClock,
+            userClock = userClock
+        ),
+        SummaryMedicalHistoryItem(
+            medicalHistory = medicalHistory,
+            lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
+            dateFormatter = exactDateFormatter
+        )
     )
   }
 

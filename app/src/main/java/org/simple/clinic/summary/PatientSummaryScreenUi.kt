@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.patient.businessid.Identifier
@@ -18,7 +19,7 @@ interface PatientSummaryScreenUi {
   fun populateList(
       prescribedDrugs: List<PrescribedDrug>,
       measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
-      measurementItems: List<SummaryBloodPressureListItem>,
+      bloodPressureMeasurements: List<BloodPressureMeasurement>,
       medicalHistory: MedicalHistory
   )
 

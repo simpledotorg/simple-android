@@ -150,11 +150,12 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(prescriptions))
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
+    val medicalHistory = medicalHistory()
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
 
     setupControllerWithScreenCreated(intention)
 
-    verify(ui).populateList(eq(prescriptions), any(), any())
+    verify(ui).populateList(prescriptions, emptyList(), medicalHistory)
   }
 
   @Test
@@ -167,15 +168,12 @@ class PatientSummaryScreenControllerTest {
 
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory()))
+    val medicalHistory = medicalHistory()
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
 
     setupControllerWithScreenCreated(intention)
 
-    verify(ui).populateList(
-        any(),
-        eq(bloodPressureMeasurements),
-        any()
-    )
+    verify(ui).populateList(emptyList(), bloodPressureMeasurements, medicalHistory)
   }
 
   @Test
@@ -189,7 +187,7 @@ class PatientSummaryScreenControllerTest {
 
     setupControllerWithScreenCreated(openIntention)
 
-    verify(ui).populateList(any(), any(), eq(medicalHistory))
+    verify(ui).populateList(emptyList(), emptyList(), medicalHistory)
   }
 
   @Test
@@ -198,7 +196,7 @@ class PatientSummaryScreenControllerTest {
     setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
-    verify(ui, times(1)).showBloodPressureEntrySheet(patientUuid)
+    verify(ui).showBloodPressureEntrySheet(patientUuid)
   }
 
   @Test

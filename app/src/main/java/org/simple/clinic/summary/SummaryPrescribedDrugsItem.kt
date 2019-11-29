@@ -33,11 +33,7 @@ data class SummaryPrescribedDrugsItem(
   override fun getLayout() = R.layout.list_patientsummary_prescriptions
 
   override fun createViewHolder(itemView: View): DrugsSummaryViewHolder {
-    val holder = DrugsSummaryViewHolder(itemView)
-    holder.updateButton.setOnClickListener {
-      uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
-    }
-    return holder
+    return DrugsSummaryViewHolder(itemView) { uiEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
   }
 
   override fun bind(holder: DrugsSummaryViewHolder, position: Int) {
@@ -66,7 +62,14 @@ data class SummaryPrescribedDrugsItem(
     }
   }
 
-  class DrugsSummaryViewHolder(override val containerView: View) : ViewHolder(containerView), LayoutContainer {
+  class DrugsSummaryViewHolder(
+      override val containerView: View,
+      private val onUpdateClicked: () -> Unit
+  ) : ViewHolder(containerView), LayoutContainer {
+
+    init {
+      updateButton.setOnClickListener { onUpdateClicked() }
+    }
 
     fun inflateRowForDrug(): DrugViewHolder {
       val drugViewHolder = DrugViewHolder.create(drugsSummaryContainer)

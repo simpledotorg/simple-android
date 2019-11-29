@@ -18,7 +18,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.format.DateTimeFormatter
-import timber.log.Timber
 
 data class SummaryPrescribedDrugsItem(
     val prescriptions: List<PrescribedDrug>,
@@ -37,29 +36,7 @@ data class SummaryPrescribedDrugsItem(
   }
 
   override fun bind(holder: DrugsSummaryViewHolder, position: Int) {
-    holder.summaryViewGroup.visibleOrGone(prescriptions.isNotEmpty())
-
-    holder.setButtonText(prescriptions)
-
-    holder.removeAllDrugViews()
-
-    if (prescriptions.isNotEmpty()) {
-      prescriptions.forEach { drug ->
-        val drugViewHolder = holder.inflateRowForDrug()
-        drugViewHolder.bind(drug)
-      }
-
-      val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt }!!
-
-      Timber.i("Last updated prescribedDrug: ${lastUpdatedPrescription.name}: ${lastUpdatedPrescription.updatedAt}")
-
-      val lastUpdatedTimestamp = relativeTimestampGenerator.generate(lastUpdatedPrescription.updatedAt, userClock)
-
-      holder.lastUpdatedTimestampTextView.text = holder.itemView.resources.getString(
-          R.string.patientsummary_prescriptions_last_updated,
-          lastUpdatedTimestamp.displayText(holder.itemView.context, dateFormatter)
-      )
-    }
+    holder.bind(prescriptions, dateFormatter, relativeTimestampGenerator, userClock)
   }
 
   class DrugsSummaryViewHolder(
@@ -71,17 +48,46 @@ data class SummaryPrescribedDrugsItem(
       updateButton.setOnClickListener { onUpdateClicked() }
     }
 
-    fun inflateRowForDrug(): DrugViewHolder {
+    fun bind(
+        prescriptions: List<PrescribedDrug>,
+        dateFormatter: DateTimeFormatter,
+        timestampGenerator: RelativeTimestampGenerator,
+        userClock: UserClock
+    ) {
+      summaryViewGroup.visibleOrGone(prescriptions.isNotEmpty())
+
+      setButtonText(prescriptions)
+
+      removeAllDrugViews()
+
+      if (prescriptions.isNotEmpty()) {
+        prescriptions.forEach { drug ->
+          val drugViewHolder = inflateRowForDrug()
+          drugViewHolder.bind(drug)
+        }
+
+        val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt }!!
+
+        val lastUpdatedTimestamp = timestampGenerator.generate(lastUpdatedPrescription.updatedAt, userClock)
+
+        lastUpdatedTimestampTextView.text = itemView.resources.getString(
+            R.string.patientsummary_prescriptions_last_updated,
+            lastUpdatedTimestamp.displayText(itemView.context, dateFormatter)
+        )
+      }
+    }
+
+    private fun inflateRowForDrug(): DrugViewHolder {
       val drugViewHolder = DrugViewHolder.create(drugsSummaryContainer)
       drugsSummaryContainer.addView(drugViewHolder.itemView, drugsSummaryContainer.childCount - 1)
       return drugViewHolder
     }
 
-    fun removeAllDrugViews() {
+    private fun removeAllDrugViews() {
       drugsSummaryContainer.removeAllViews()
     }
 
-    fun setButtonText(prescriptions: List<PrescribedDrug>) {
+    private fun setButtonText(prescriptions: List<PrescribedDrug>) {
       updateButton.text =
           if (prescriptions.isEmpty()) {
             itemView.context.getString(R.string.patientsummary_prescriptions_add)
@@ -89,29 +95,29 @@ data class SummaryPrescribedDrugsItem(
             itemView.context.getString(R.string.patientsummary_prescriptions_update)
           }
     }
-  }
 
-  class DrugViewHolder(val itemView: View) {
-    private val drugTextView = itemView as TextView
+    class DrugViewHolder(val itemView: View) {
+      private val drugTextView = itemView as TextView
 
-    fun bind(drug: PrescribedDrug) {
-      val summaryBuilder = Truss()
-      summaryBuilder.append(drug.name)
-      if (drug.dosage.isNullOrBlank().not()) {
-        val dosageTextAppearance = TextAppearanceWithLetterSpacingSpan(itemView.context, R.style.Clinic_V2_TextAppearance_Body1Left_Grey1)
-        summaryBuilder
-            .pushSpan(dosageTextAppearance)
-            .append("  ${drug.dosage}")
-            .popSpan()
+      fun bind(drug: PrescribedDrug) {
+        val summaryBuilder = Truss()
+        summaryBuilder.append(drug.name)
+        if (drug.dosage.isNullOrBlank().not()) {
+          val dosageTextAppearance = TextAppearanceWithLetterSpacingSpan(itemView.context, R.style.Clinic_V2_TextAppearance_Body1Left_Grey1)
+          summaryBuilder
+              .pushSpan(dosageTextAppearance)
+              .append("  ${drug.dosage}")
+              .popSpan()
+        }
+        drugTextView.text = summaryBuilder.build()
       }
-      drugTextView.text = summaryBuilder.build()
-    }
 
-    companion object {
-      fun create(parent: ViewGroup): DrugViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val itemLayout = inflater.inflate(R.layout.list_patientsummary_prescription_drug, parent, false)
-        return DrugViewHolder(itemLayout)
+      companion object {
+        fun create(parent: ViewGroup): DrugViewHolder {
+          val inflater = LayoutInflater.from(parent.context)
+          val itemLayout = inflater.inflate(R.layout.list_patientsummary_prescription_drug, parent, false)
+          return DrugViewHolder(itemLayout)
+        }
       }
     }
   }

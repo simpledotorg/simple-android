@@ -19,7 +19,7 @@
     android:orientation="vertical">
 
     <org.simple.clinic.widgets.OmegaCenterIconButton
-      android:id="@+id/patientsummary_prescriptions_update"
+      android:id="@+id/updateButton"
       style="@style/Clinic.V2.Button.WithIcon.Blue2"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:layout_width="match_parent"
@@ -28,7 +28,7 @@
       tools:text="@string/patientsummary_prescriptions_update" />
 
     <LinearLayout
-      android:id="@+id/patientsummary_prescriptions_summary_container"
+      android:id="@+id/summaryViewGroup"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_4"
@@ -37,7 +37,7 @@
       android:orientation="vertical">
 
       <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/patientsummary_prescriptions_container"
+        android:id="@+id/drugsSummaryContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -46,7 +46,7 @@
         app:flexWrap="wrap" />
 
       <TextView
-        android:id="@+id/patientsummary_prescriptions_last_updated_timestamp"
+        android:id="@+id/lastUpdatedTimestampTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"

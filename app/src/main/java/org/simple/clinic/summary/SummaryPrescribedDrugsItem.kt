@@ -3,11 +3,11 @@ package org.simple.clinic.summary
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
-import kotterknife.bindView
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.list_patientsummary_prescriptions.*
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.summary.SummaryListAdapterIds.PRESCRIBED_DRUGS
@@ -66,11 +66,7 @@ data class SummaryPrescribedDrugsItem(
     }
   }
 
-  class DrugsSummaryViewHolder(rootView: View) : ViewHolder(rootView) {
-    val summaryViewGroup by bindView<ViewGroup>(R.id.patientsummary_prescriptions_summary_container)
-    val drugsSummaryContainer by bindView<ViewGroup>(R.id.patientsummary_prescriptions_container)
-    val lastUpdatedTimestampTextView by bindView<TextView>(R.id.patientsummary_prescriptions_last_updated_timestamp)
-    val updateButton by bindView<Button>(R.id.patientsummary_prescriptions_update)
+  class DrugsSummaryViewHolder(override val containerView: View) : ViewHolder(containerView), LayoutContainer {
 
     fun inflateRowForDrug(): DrugViewHolder {
       val drugViewHolder = DrugViewHolder.create(drugsSummaryContainer)

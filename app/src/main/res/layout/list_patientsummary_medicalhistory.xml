@@ -1,62 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="@dimen/spacing_8"
-  android:layout_marginEnd="@dimen/spacing_8"
   android:layout_marginStart="@dimen/spacing_8"
   android:layout_marginTop="@dimen/spacing_8"
-  tools:ignore="MissingPrefix">
-
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/spacing_16"
-    android:paddingTop="@dimen/spacing_24">
-
-    <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_16"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:text="@string/patientsummary_medicalhistory_title"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
-
-    <TextView
-      android:id="@+id/lastUpdatedAtTextView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_8"
-      android:layout_marginEnd="@dimen/spacing_16"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:layout_marginTop="@dimen/spacing_4"
-      android:text="@string/patientsummary_medicalhistory_last_updated"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
-
-    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/diagnosedForHypertensionQuestionView"
-      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
-
-    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/treatmentForHypertensionQuestionView"
-      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
-
-    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/heartAttackQuestionView"
-      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
-
-    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/strokeQuestionView"
-      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
-
-    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/kidneyDiseaseQuestionView"
-      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
-
-    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/diabetesQuestionView"
-      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
-  </LinearLayout>
-</androidx.cardview.widget.CardView>
+  android:layout_marginEnd="@dimen/spacing_8"
+  android:layout_marginBottom="@dimen/spacing_8"
+  tools:ignore="MissingPrefix" />

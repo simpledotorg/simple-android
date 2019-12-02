@@ -1,12 +1,10 @@
 package org.simple.clinic.summary
 
 import android.view.View
-import android.widget.TextView
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.list_patientsummary_medicalhistory.*
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.patientsummary_medicalhistoryview_content.*
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory

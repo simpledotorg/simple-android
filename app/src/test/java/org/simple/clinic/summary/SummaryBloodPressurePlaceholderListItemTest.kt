@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.summary.bloodpressures.SummaryBloodPressurePlaceholderListItem
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit.DAYS

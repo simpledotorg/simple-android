@@ -1,11 +1,9 @@
-package org.simple.clinic.summary
+package org.simple.clinic.summary.bloodpressures
 
 import android.content.Context
 import android.content.res.Resources
 import android.text.style.ForegroundColorSpan
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -14,10 +12,14 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.content.res.ResourcesCompat
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
+import io.reactivex.Observable
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.summary.GroupieItemWithUiEvents
+import org.simple.clinic.summary.PatientSummaryBpClicked
+import org.simple.clinic.summary.SummaryListAdapterIds
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RelativeTimestamp
@@ -35,6 +37,51 @@ import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 
+sealed class SummaryBpItem<VH : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<VH>(adapterId)
+
+data class SummaryBloodPressurePlaceholderListItem(
+    private val placeholderNumber: Int,
+    private val showHint: Boolean = false
+) : SummaryBpItem<SummaryBloodPressurePlaceholderListItem.BpPlaceholderViewHolder>(adapterId = SummaryListAdapterIds.BP_PLACEHOLDER(placeholderNumber)) {
+
+  companion object {
+    fun from(
+        bloodPressureMeasurements: List<BloodPressureMeasurement>,
+        utcClock: UtcClock,
+        placeholderLimit: Int
+    ): List<SummaryBloodPressurePlaceholderListItem> {
+      return Observable.just(bloodPressureMeasurements)
+          .map { bpList -> bpList.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() } }
+          .map { it.size }
+          .map { numberOfBloodPressures ->
+            val numberOfPlaceholders = 0.coerceAtLeast(placeholderLimit - numberOfBloodPressures)
+
+            (1..numberOfPlaceholders).map { placeholderNumber ->
+              val shouldShowHint = numberOfBloodPressures == 0 && placeholderNumber == 1
+              SummaryBloodPressurePlaceholderListItem(placeholderNumber, shouldShowHint)
+            }
+          }
+          .blockingFirst()
+    }
+  }
+
+  override lateinit var uiEvents: Subject<UiEvent>
+
+  override fun getLayout() = R.layout.list_patientsummary_bp_placeholder
+
+  override fun createViewHolder(itemView: View): BpPlaceholderViewHolder {
+    return BpPlaceholderViewHolder(itemView)
+  }
+
+  override fun bind(holder: BpPlaceholderViewHolder, position: Int) {
+    holder.placeHolderMessageTextView.visibility = if (showHint) View.VISIBLE else View.INVISIBLE
+  }
+
+  class BpPlaceholderViewHolder(rootView: View) : ViewHolder(rootView) {
+    val placeHolderMessageTextView by bindView<TextView>(R.id.patientsummary_item_bp_placeholder)
+  }
+}
+
 data class SummaryBloodPressureListItem(
     val measurement: BloodPressureMeasurement,
     val showDivider: Boolean,
@@ -44,7 +91,7 @@ data class SummaryBloodPressureListItem(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val dateFormatter: DateTimeFormatter,
     val isBpEditable: Boolean
-) : GroupieItemWithUiEvents<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
+) : SummaryBpItem<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   companion object {
     fun from(
@@ -133,9 +180,9 @@ data class SummaryBloodPressureListItem(
     }
     holder.heartImageView.imageTintList = ResourcesCompat.getColorStateList(resources, measurementImageTint, null)
 
-    holder.divider.visibility = if (showDivider) VISIBLE else GONE
+    holder.divider.visibility = if (showDivider) View.VISIBLE else View.GONE
 
-    holder.timeTextView.visibility = if (formattedTime != null) VISIBLE else GONE
+    holder.timeTextView.visibility = if (formattedTime != null) View.VISIBLE else View.GONE
     holder.timeTextView.text = formattedTime
 
     val multipleItemsInThisGroup = formattedTime != null
@@ -201,3 +248,5 @@ data class SummaryBloodPressureListItem(
     val itemLayout by bindView<LinearLayout>(R.id.patientsummary_item_layout)
   }
 }
+
+

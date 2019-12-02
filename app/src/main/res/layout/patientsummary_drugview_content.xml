@@ -8,8 +8,7 @@
   android:layout_marginTop="@dimen/spacing_8"
   android:layout_marginEnd="@dimen/spacing_8"
   android:layout_marginBottom="@dimen/spacing_16"
-  android:orientation="vertical"
-  tools:showIn="@layout/list_patientsummary_prescriptions">
+  android:orientation="vertical">
 
   <org.simple.clinic.widgets.OmegaCenterIconButton
     android:id="@+id/updateButton"

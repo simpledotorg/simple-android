@@ -115,7 +115,7 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
       <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -123,6 +123,17 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:nestedScrollingEnabled="false" />
+
+      <org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryView
+        android:id="@+id/medicalHistorySummaryView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:layout_marginBottom="@dimen/spacing_8"
+        android:visibility="gone"
+        tools:visibility="visible" />
     </LinearLayout>
   </androidx.core.widget.NestedScrollView>
 

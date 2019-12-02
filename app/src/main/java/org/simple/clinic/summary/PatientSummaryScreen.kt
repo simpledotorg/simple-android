@@ -121,7 +121,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
   private val bloodPressureSection = Section()
-  private val medicalHistorySection = Section()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
   private var linkIdWithPatientShown: Boolean = false
@@ -302,8 +301,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private fun updateSummaryList(
       measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
-      measurementItems: List<SummaryBloodPressureListItem>,
-      medicalHistoryItem: SummaryMedicalHistoryItem
+      measurementItems: List<SummaryBloodPressureListItem>
   ) {
     // Skip item animations on the first update.
     val isFirstUpdate = recyclerViewAdapter.itemCount == 0
@@ -316,16 +314,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     // Not the best way for registering click listeners,
     // but Groupie doesn't seem to have a better option.
     measurementItems.forEach { it.uiEvents = adapterUiEvents }
-    medicalHistoryItem.uiEvents = adapterUiEvents
 
     bloodPressureSection.update(measurementItems + measurementPlaceholderItems)
     if (isFirstUpdate) {
       recyclerViewAdapter.add(bloodPressureSection)
-    }
-
-    medicalHistorySection.update(listOf(medicalHistoryItem))
-    if (isFirstUpdate) {
-      recyclerViewAdapter.add(medicalHistorySection)
     }
   }
 
@@ -334,8 +326,25 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       medicalHistory: MedicalHistory
   ) {
-    drugSummaryView.bind(prescribedDrugs, exactDateFormatter, userClock) { adapterUiEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
-    drugSummaryView.visibility = VISIBLE
+    with(drugSummaryView) {
+      bind(
+          prescriptions = prescribedDrugs,
+          dateFormatter = exactDateFormatter,
+          userClock = userClock
+      ) { adapterUiEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
+      visibility = VISIBLE
+    }
+
+    with(medicalHistorySummaryView) {
+      bind(
+          medicalHistory = medicalHistory,
+          lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
+          dateFormatter = exactDateFormatter
+      ) { question, newAnswer ->
+        adapterUiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, newAnswer))
+      }
+      visibility = VISIBLE
+    }
 
     updateSummaryList(
         SummaryBloodPressurePlaceholderListItem.from(
@@ -352,11 +361,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             zoneId = zoneId,
             utcClock = utcClock,
             userClock = userClock
-        ),
-        SummaryMedicalHistoryItem(
-            medicalHistory = medicalHistory,
-            lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
-            dateFormatter = exactDateFormatter
         )
     )
   }

@@ -39,7 +39,39 @@ import org.threeten.bp.format.DateTimeFormatter
 
 abstract class SummaryBpViewHolder(rootView: View) : ViewHolder(rootView)
 
-sealed class SummaryBpItem(adapterId: Long) : GroupieItemWithUiEvents<SummaryBpViewHolder>(adapterId)
+sealed class SummaryBpItem(adapterId: Long) : GroupieItemWithUiEvents<SummaryBpViewHolder>(adapterId) {
+  companion object {
+    fun from(
+        bloodPressureMeasurements: List<BloodPressureMeasurement>,
+        utcClock: UtcClock,
+        timestampGenerator: RelativeTimestampGenerator,
+        dateFormatter: DateTimeFormatter,
+        canEditFor: Duration,
+        bpTimeFormatter: DateTimeFormatter,
+        zoneId: ZoneId,
+        userClock: UserClock,
+        placeholderLimit: Int
+    ): List<SummaryBpItem> {
+      val bpListItems = SummaryBloodPressureListItem.from(
+          bloodPressures = bloodPressureMeasurements,
+          timestampGenerator = timestampGenerator,
+          dateFormatter = dateFormatter,
+          canEditFor = canEditFor,
+          bpTimeFormatter = bpTimeFormatter,
+          zoneId = zoneId,
+          utcClock = utcClock,
+          userClock = userClock
+      )
+      val placeholderListItems = SummaryBloodPressurePlaceholderListItem.from(
+          bloodPressureMeasurements = bloodPressureMeasurements,
+          utcClock = utcClock,
+          placeholderLimit = placeholderLimit
+      )
+
+      return bpListItems + placeholderListItems
+    }
+  }
+}
 
 data class SummaryBloodPressurePlaceholderListItem(
     private val placeholderNumber: Int,

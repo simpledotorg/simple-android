@@ -5,6 +5,7 @@ import org.junit.Test
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.summary.bloodpressures.SummaryBloodPressureListItem
+import org.simple.clinic.summary.bloodpressures.SummaryBpItem
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -52,16 +53,17 @@ class SummaryBloodPressureListItemTest {
 
 
     // when
-    val listItems = SummaryBloodPressureListItem.from(
-        bloodPressures = bps,
+    val listItems = SummaryBpItem.from(
+        bloodPressureMeasurements = bps,
         timestampGenerator = timestampGenerator,
         dateFormatter = dateFormatter,
         canEditFor = bpEditableDuration,
         bpTimeFormatter = timeFormatter,
         zoneId = zoneId,
         utcClock = utcClock,
-        userClock = userClock
-    )
+        userClock = userClock,
+        placeholderLimit = 0
+    ).filterIsInstance<SummaryBloodPressureListItem>()
 
     // then
     assertThat(listItems.map { it.isBpEditable }).containsExactly(true, false, true).inOrder()
@@ -79,16 +81,18 @@ class SummaryBloodPressureListItemTest {
     )
 
     // when
-    val listItems = SummaryBloodPressureListItem.from(
-        bloodPressures = bps,
-        timestampGenerator = timestampGenerator,
-        dateFormatter = dateFormatter,
-        canEditFor = Duration.ZERO,
-        bpTimeFormatter = timeFormatter,
-        zoneId = zoneId,
-        utcClock = utcClock,
-        userClock = userClock
-    )
+    val listItems = SummaryBpItem
+        .from(
+            bloodPressureMeasurements = bps,
+            timestampGenerator = timestampGenerator,
+            dateFormatter = dateFormatter,
+            canEditFor = Duration.ZERO,
+            bpTimeFormatter = timeFormatter,
+            zoneId = zoneId,
+            utcClock = utcClock,
+            userClock = userClock,
+            placeholderLimit = 0
+        ).filterIsInstance<SummaryBloodPressureListItem>()
 
     // then
     assertThat(listItems.map { it.showDivider }).containsExactly(false, true, false, true, true).inOrder()
@@ -106,16 +110,17 @@ class SummaryBloodPressureListItemTest {
     )
 
     // when
-    val listItems = SummaryBloodPressureListItem.from(
-        bloodPressures = bps,
+    val listItems = SummaryBpItem.from(
+        bloodPressureMeasurements = bps,
         timestampGenerator = timestampGenerator,
         dateFormatter = dateFormatter,
         canEditFor = Duration.ZERO,
         bpTimeFormatter = timeFormatter,
         zoneId = zoneId,
         utcClock = utcClock,
-        userClock = userClock
-    )
+        userClock = userClock,
+        placeholderLimit = 0
+    ).filterIsInstance<SummaryBloodPressureListItem>()
 
     // then
     assertThat(listItems.map { it.formattedTime }).containsExactly(
@@ -175,16 +180,17 @@ class SummaryBloodPressureListItemTest {
     )
 
     // when
-    val listItems = SummaryBloodPressureListItem.from(
-        bloodPressures = bps,
+    val listItems = SummaryBpItem.from(
+        bloodPressureMeasurements = bps,
         timestampGenerator = timestampGenerator,
         dateFormatter = dateFormatter,
         canEditFor = Duration.ZERO,
         bpTimeFormatter = timeFormatter,
         zoneId = zoneId,
         utcClock = utcClock,
-        userClock = userClock
-    )
+        userClock = userClock,
+        placeholderLimit = 0
+    ).filterIsInstance<SummaryBloodPressureListItem>()
 
     // then
     assertThat(listItems)

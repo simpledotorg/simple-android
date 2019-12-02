@@ -45,8 +45,7 @@ import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
-import org.simple.clinic.summary.bloodpressures.SummaryBloodPressureListItem
-import org.simple.clinic.summary.bloodpressures.SummaryBloodPressurePlaceholderListItem
+import org.simple.clinic.summary.bloodpressures.SummaryBpItem
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
@@ -301,10 +300,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     bloodPressureSection.setHeader(newBpItem)
   }
 
-  private fun updateSummaryList(
-      measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
-      measurementItems: List<SummaryBloodPressureListItem>
-  ) {
+  private fun updateSummaryList(bpItems: List<SummaryBpItem>) {
     // Skip item animations on the first update.
     val isFirstUpdate = recyclerViewAdapter.itemCount == 0
     if (isFirstUpdate.not()) {
@@ -315,9 +311,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     // Not the best way for registering click listeners,
     // but Groupie doesn't seem to have a better option.
-    measurementItems.forEach { it.uiEvents = adapterUiEvents }
+    bpItems.forEach { it.uiEvents = adapterUiEvents }
 
-    bloodPressureSection.update(measurementItems + measurementPlaceholderItems)
+    bloodPressureSection.update(bpItems)
     if (isFirstUpdate) {
       recyclerViewAdapter.add(bloodPressureSection)
     }
@@ -349,20 +345,16 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
 
     updateSummaryList(
-        SummaryBloodPressurePlaceholderListItem.from(
+        SummaryBpItem.from(
             bloodPressureMeasurements = bloodPressureMeasurements,
             utcClock = utcClock,
-            placeholderLimit = config.numberOfBpPlaceholders
-        ),
-        SummaryBloodPressureListItem.from(
-            bloodPressures = bloodPressureMeasurements,
             timestampGenerator = timestampGenerator,
             dateFormatter = exactDateFormatter,
             canEditFor = config.bpEditableDuration,
             bpTimeFormatter = timeFormatterForBp,
             zoneId = zoneId,
-            utcClock = utcClock,
-            userClock = userClock
+            userClock = userClock,
+            placeholderLimit = config.numberOfBpPlaceholders
         )
     )
   }

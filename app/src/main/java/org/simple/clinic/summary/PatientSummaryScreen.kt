@@ -6,15 +6,10 @@ import android.os.Parcelable
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
@@ -24,7 +19,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -52,7 +47,6 @@ import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
-import org.simple.clinic.summary.linkId.LinkIdWithPatientView
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
@@ -64,7 +58,6 @@ import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
-import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -126,16 +119,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     """)
   private var patientSummaryProfile: PatientSummaryProfile? = null
 
-  private val rootLayout by bindView<ViewGroup>(R.id.patientsummary_root)
-  private val backButton by bindView<ImageButton>(R.id.patientsummary_back)
-  private val fullNameTextView by bindView<TextView>(R.id.patientsummary_fullname)
-  private val addressTextView by bindView<TextView>(R.id.patientsummary_address)
-  private val contactTextView by bindView<TextView>(R.id.patientsummary_contact)
-  private val recyclerView by bindView<RecyclerView>(R.id.patientsummary_recyclerview)
-  private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsummary_done)
-  private val editButton by bindView<Button>(R.id.patientsummary_edit)
-  private val bpPassportTextView by bindView<TextView>(R.id.patientsummary_bp_passport)
-  private val linkIdWithPatientView by bindView<LinkIdWithPatientView>(R.id.patientsummary_linkidwithpatient)
   private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
   private val prescriptionSection = Section()
   private val bloodPressureSection = Section()

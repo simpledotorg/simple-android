@@ -4,6 +4,8 @@ import android.view.View
 import android.widget.TextView
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.list_patientsummary_medicalhistory.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.Answer
@@ -61,14 +63,7 @@ data class SummaryMedicalHistoryItem(
     }
   }
 
-  class HistoryViewHolder(rootView: View) : ViewHolder(rootView) {
-    val lastUpdatedAtTextView by bindView<TextView>(R.id.patientsummary_medicalhistory_last_update_timestamp)
-    val diagnosedForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_diagnosed_for_hypertension)
-    val treatmentForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_treatment_for_hypertension)
-    val heartAttackQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_heartattack)
-    val strokeQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_stroke)
-    val kidneyDiseaseQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_kidney)
-    val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_diabetes)
+  class HistoryViewHolder(override val containerView: View) : ViewHolder(containerView), LayoutContainer {
 
     init {
       diabetesQuestionView.hideDivider()

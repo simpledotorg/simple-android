@@ -25,7 +25,7 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
     <TextView
-      android:id="@+id/patientsummary_medicalhistory_last_update_timestamp"
+      android:id="@+id/lastUpdatedAtTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_8"
@@ -36,27 +36,27 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/patientsummary_medicalhistory_question_diagnosed_for_hypertension"
+      android:id="@+id/diagnosedForHypertensionQuestionView"
       style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/patientsummary_medicalhistory_question_treatment_for_hypertension"
+      android:id="@+id/treatmentForHypertensionQuestionView"
       style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/patientsummary_medicalhistory_question_heartattack"
+      android:id="@+id/heartAttackQuestionView"
       style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/patientsummary_medicalhistory_question_stroke"
+      android:id="@+id/strokeQuestionView"
       style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/patientsummary_medicalhistory_question_kidney"
+      android:id="@+id/kidneyDiseaseQuestionView"
       style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/patientsummary_medicalhistory_question_diabetes"
+      android:id="@+id/diabetesQuestionView"
       style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
   </LinearLayout>
 </androidx.cardview.widget.CardView>

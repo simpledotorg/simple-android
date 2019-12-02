@@ -36,8 +36,8 @@
       android:text="@string/patientsummary_edit"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
       android:visibility="invisible"
-      tools:visibility="visible"
-      tools:ignore="RelativeOverlap" />
+      tools:ignore="RelativeOverlap"
+      tools:visibility="visible" />
 
     <RelativeLayout
       android:layout_width="match_parent"
@@ -95,13 +95,36 @@
     </RelativeLayout>
   </RelativeLayout>
 
-  <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/recyclerView"
+  <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/doneButtonFrame"
     android:layout_below="@+id/patientsummary_header"
-    android:clipToPadding="false" />
+    android:clipToPadding="false">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <org.simple.clinic.summary.prescribeddrugs.DrugSummaryView
+        android:id="@+id/drugSummaryView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+      <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:nestedScrollingEnabled="false" />
+    </LinearLayout>
+  </androidx.core.widget.NestedScrollView>
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
     android:id="@+id/doneButtonFrame"

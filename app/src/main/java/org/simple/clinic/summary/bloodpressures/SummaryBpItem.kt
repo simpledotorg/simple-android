@@ -37,12 +37,14 @@ import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 
-sealed class SummaryBpItem<VH : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<VH>(adapterId)
+abstract class SummaryBpViewHolder(rootView: View) : ViewHolder(rootView)
+
+sealed class SummaryBpItem(adapterId: Long) : GroupieItemWithUiEvents<SummaryBpViewHolder>(adapterId)
 
 data class SummaryBloodPressurePlaceholderListItem(
     private val placeholderNumber: Int,
     private val showHint: Boolean = false
-) : SummaryBpItem<SummaryBloodPressurePlaceholderListItem.BpPlaceholderViewHolder>(adapterId = SummaryListAdapterIds.BP_PLACEHOLDER(placeholderNumber)) {
+) : SummaryBpItem(adapterId = SummaryListAdapterIds.BP_PLACEHOLDER(placeholderNumber)) {
 
   companion object {
     fun from(
@@ -69,15 +71,15 @@ data class SummaryBloodPressurePlaceholderListItem(
 
   override fun getLayout() = R.layout.list_patientsummary_bp_placeholder
 
-  override fun createViewHolder(itemView: View): BpPlaceholderViewHolder {
+  override fun createViewHolder(itemView: View): SummaryBpViewHolder {
     return BpPlaceholderViewHolder(itemView)
   }
 
-  override fun bind(holder: BpPlaceholderViewHolder, position: Int) {
-    holder.placeHolderMessageTextView.visibility = if (showHint) View.VISIBLE else View.INVISIBLE
+  override fun bind(holder: SummaryBpViewHolder, position: Int) {
+    (holder as BpPlaceholderViewHolder).placeHolderMessageTextView.visibility = if (showHint) View.VISIBLE else View.INVISIBLE
   }
 
-  class BpPlaceholderViewHolder(rootView: View) : ViewHolder(rootView) {
+  class BpPlaceholderViewHolder(rootView: View) : SummaryBpViewHolder(rootView) {
     val placeHolderMessageTextView by bindView<TextView>(R.id.patientsummary_item_bp_placeholder)
   }
 }
@@ -91,7 +93,7 @@ data class SummaryBloodPressureListItem(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val dateFormatter: DateTimeFormatter,
     val isBpEditable: Boolean
-) : SummaryBpItem<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
+) : SummaryBpItem(measurement.uuid.hashCode().toLong()) {
 
   companion object {
     fun from(
@@ -146,48 +148,50 @@ data class SummaryBloodPressureListItem(
 
   override fun getLayout() = R.layout.list_patientsummary_bp_measurement
 
-  override fun createViewHolder(itemView: View): BpViewHolder {
+  override fun createViewHolder(itemView: View): SummaryBpViewHolder {
     return BpViewHolder(itemView)
   }
 
-  override fun bind(holder: BpViewHolder, position: Int) {
-    val context = holder.itemView.context
-    val resources = context.resources
+  override fun bind(holder: SummaryBpViewHolder, position: Int) {
+    with(holder as BpViewHolder) {
+      val context = itemView.context
+      val resources = context.resources
 
-    holder.itemView.isClickable = isBpEditable
-    holder.itemView.isFocusable = isBpEditable
-    if (isBpEditable) holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
+      itemView.isClickable = isBpEditable
+      itemView.isFocusable = isBpEditable
+      if (isBpEditable) itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
 
-    val level = measurement.level
+      val level = measurement.level
 
-    holder.levelTextView.text = when (level.displayTextRes) {
-      is Just -> context.getString(level.displayTextRes.value)
-      is None -> ""
+      levelTextView.text = when (level.displayTextRes) {
+        is Just -> context.getString(level.displayTextRes.value)
+        is None -> ""
+      }
+
+      val readingsTextAppearanceResId = when {
+        level.isUrgent() -> R.style.Clinic_V2_TextAppearance_PatientSummary_BloodPressure_High
+        else -> R.style.Clinic_V2_TextAppearance_PatientSummary_BloodPressure_Normal
+      }
+      readingsTextView.setTextAppearanceCompat(readingsTextAppearanceResId)
+      readingsTextView.text = context.resources.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)
+
+      daysAgoTextView.text = daysAgoWithEditButton(resources, context, daysAgo)
+
+      val measurementImageTint = when {
+        level.isUrgent() -> R.color.patientsummary_bp_reading_high
+        else -> R.color.patientsummary_bp_reading_normal
+      }
+      heartImageView.imageTintList = ResourcesCompat.getColorStateList(resources, measurementImageTint, null)
+
+      divider.visibility = if (showDivider) View.VISIBLE else View.GONE
+
+      timeTextView.visibility = if (formattedTime != null) View.VISIBLE else View.GONE
+      timeTextView.text = formattedTime
+
+      val multipleItemsInThisGroup = formattedTime != null
+      addTopPadding(itemLayout, multipleItemsInThisGroup)
+      addBottomPadding(itemLayout, multipleItemsInThisGroup)
     }
-
-    val readingsTextAppearanceResId = when {
-      level.isUrgent() -> R.style.Clinic_V2_TextAppearance_PatientSummary_BloodPressure_High
-      else -> R.style.Clinic_V2_TextAppearance_PatientSummary_BloodPressure_Normal
-    }
-    holder.readingsTextView.setTextAppearanceCompat(readingsTextAppearanceResId)
-    holder.readingsTextView.text = context.resources.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)
-
-    holder.daysAgoTextView.text = daysAgoWithEditButton(resources, context, daysAgo)
-
-    val measurementImageTint = when {
-      level.isUrgent() -> R.color.patientsummary_bp_reading_high
-      else -> R.color.patientsummary_bp_reading_normal
-    }
-    holder.heartImageView.imageTintList = ResourcesCompat.getColorStateList(resources, measurementImageTint, null)
-
-    holder.divider.visibility = if (showDivider) View.VISIBLE else View.GONE
-
-    holder.timeTextView.visibility = if (formattedTime != null) View.VISIBLE else View.GONE
-    holder.timeTextView.text = formattedTime
-
-    val multipleItemsInThisGroup = formattedTime != null
-    addTopPadding(holder.itemLayout, multipleItemsInThisGroup)
-    addBottomPadding(holder.itemLayout, multipleItemsInThisGroup)
   }
 
   private fun daysAgoWithEditButton(
@@ -238,7 +242,7 @@ data class SummaryBloodPressureListItem(
     return this == other
   }
 
-  class BpViewHolder(rootView: View) : ViewHolder(rootView) {
+  class BpViewHolder(rootView: View) : SummaryBpViewHolder(rootView) {
     val readingsTextView by bindView<TextView>(R.id.patientsummary_item_bp_readings)
     val heartImageView by bindView<ImageView>(R.id.patientsummary_bp_reading_heart)
     val levelTextView by bindView<TextView>(R.id.patientsummary_item_bp_level)

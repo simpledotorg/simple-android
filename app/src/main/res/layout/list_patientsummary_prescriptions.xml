@@ -1,58 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.summary.prescribeddrugs.DrugSummaryView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:clipChildren="false"
-  android:layout_marginEnd="@dimen/spacing_8"
   android:layout_marginStart="@dimen/spacing_8"
-  android:layout_marginTop="@dimen/spacing_8">
-
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_8"
-    android:layout_marginStart="@dimen/spacing_8"
-    android:layout_marginTop="@dimen/spacing_8"
-    android:orientation="vertical">
-
-    <org.simple.clinic.widgets.OmegaCenterIconButton
-      android:id="@+id/updateButton"
-      style="@style/Clinic.V2.Button.WithIcon.Blue2"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:drawableStart="@drawable/ic_add_medicines"
-      tools:text="@string/patientsummary_prescriptions_update" />
-
-    <LinearLayout
-      android:id="@+id/summaryViewGroup"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_4"
-      android:layout_marginTop="@dimen/spacing_16"
-      android:baselineAligned="false"
-      android:orientation="vertical">
-
-      <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/drugsSummaryContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        app:alignContent="stretch"
-        app:alignItems="stretch"
-        app:flexWrap="wrap" />
-
-      <TextView
-        android:id="@+id/lastUpdatedTimestampTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:gravity="center"
-        android:textColor="@color/grey1"
-        tools:text="Updated today" />
-    </LinearLayout>
-  </LinearLayout>
-</org.simple.clinic.summary.prescribeddrugs.DrugSummaryView>
+  android:layout_marginTop="@dimen/spacing_8"
+  android:layout_marginEnd="@dimen/spacing_8"
+  android:clipChildren="false" />

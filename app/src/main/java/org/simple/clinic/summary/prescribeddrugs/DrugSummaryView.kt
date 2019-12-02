@@ -2,8 +2,9 @@ package org.simple.clinic.summary.prescribeddrugs
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
-import kotlinx.android.synthetic.main.list_patientsummary_prescriptions.view.*
+import kotlinx.android.synthetic.main.patientsummary_drugview_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.util.RelativeTimestampGenerator
@@ -12,6 +13,10 @@ import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.format.DateTimeFormatter
 
 class DrugSummaryView(context: Context, attributeSet: AttributeSet) : CardView(context, attributeSet) {
+
+  init {
+    LayoutInflater.from(context).inflate(R.layout.patientsummary_drugview_content, this, true)
+  }
 
   private val timestampGenerator = RelativeTimestampGenerator()
 

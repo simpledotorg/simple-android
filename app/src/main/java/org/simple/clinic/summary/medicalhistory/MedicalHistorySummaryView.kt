@@ -42,21 +42,20 @@ class MedicalHistorySummaryView(
         updatedAtDisplayText
     )
 
-    renderQuestionView(diagnosedForHypertensionQuestionView, DIAGNOSED_WITH_HYPERTENSION, medicalHistory.diagnosedWithHypertension, answerToggled)
-    renderQuestionView(treatmentForHypertensionQuestionView, IS_ON_TREATMENT_FOR_HYPERTENSION, medicalHistory.isOnTreatmentForHypertension, answerToggled)
-    renderQuestionView(heartAttackQuestionView, HAS_HAD_A_HEART_ATTACK, medicalHistory.hasHadHeartAttack, answerToggled)
-    renderQuestionView(strokeQuestionView, HAS_HAD_A_STROKE, medicalHistory.hasHadStroke, answerToggled)
-    renderQuestionView(kidneyDiseaseQuestionView, HAS_HAD_A_KIDNEY_DISEASE, medicalHistory.hasHadKidneyDisease, answerToggled)
-    renderQuestionView(diabetesQuestionView, HAS_DIABETES, medicalHistory.hasDiabetes, answerToggled)
+    diagnosedForHypertensionQuestionView.render(DIAGNOSED_WITH_HYPERTENSION, medicalHistory.diagnosedWithHypertension, answerToggled)
+    treatmentForHypertensionQuestionView.render(IS_ON_TREATMENT_FOR_HYPERTENSION, medicalHistory.isOnTreatmentForHypertension, answerToggled)
+    heartAttackQuestionView.render(HAS_HAD_A_HEART_ATTACK, medicalHistory.hasHadHeartAttack, answerToggled)
+    strokeQuestionView.render(HAS_HAD_A_STROKE, medicalHistory.hasHadStroke, answerToggled)
+    kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE, medicalHistory.hasHadKidneyDisease, answerToggled)
+    diabetesQuestionView.render(HAS_DIABETES, medicalHistory.hasDiabetes, answerToggled)
   }
 
-  private fun renderQuestionView(
-      view: MedicalHistoryQuestionView,
+  private fun MedicalHistoryQuestionView.render(
       question: MedicalHistoryQuestion,
       answer: Answer,
       answerToggled: (MedicalHistoryQuestion, Answer) -> Unit
   ) {
-    view.render(question, answer)
-    view.answerChangeListener = { newAnswer -> answerToggled(question, newAnswer) }
+    render(question, answer)
+    answerChangeListener = { newAnswer -> answerToggled(question, newAnswer) }
   }
 }

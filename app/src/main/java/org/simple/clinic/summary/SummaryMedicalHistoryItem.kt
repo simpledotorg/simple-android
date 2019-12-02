@@ -25,6 +25,8 @@ data class SummaryMedicalHistoryItem(
   }
 
   override fun bind(holder: ViewHolder, position: Int) {
-    (holder.itemView as MedicalHistorySummaryView).bind(medicalHistory, lastUpdatedAt, dateFormatter, uiEvents)
+    (holder.itemView as MedicalHistorySummaryView).bind(medicalHistory, lastUpdatedAt, dateFormatter) { question, newAnswer ->
+      uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, newAnswer))
+    }
   }
 }

@@ -2,7 +2,7 @@
 <org.simple.clinic.summary.PatientSummaryScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/patientsummary_root"
+  android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
@@ -16,7 +16,7 @@
     tools:ignore="UnusedAttribute">
 
     <ImageButton
-      android:id="@+id/patientsummary_back"
+      android:id="@+id/backButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentStart="true"
@@ -28,7 +28,7 @@
       android:tint="@color/white" />
 
     <Button
-      android:id="@+id/patientsummary_edit"
+      android:id="@+id/editButton"
       style="@style/Clinic.V2.ToolbarButton"
       android:layout_alignParentEnd="true"
       android:layout_marginTop="@dimen/spacing_4"
@@ -42,13 +42,13 @@
     <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@id/patientsummary_back"
+      android:layout_below="@id/backButton"
       android:paddingStart="@dimen/spacing_16"
       android:paddingEnd="@dimen/spacing_16"
       android:paddingBottom="@dimen/spacing_16">
 
       <TextView
-        android:id="@+id/patientsummary_fullname"
+        android:id="@+id/fullNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -58,21 +58,21 @@
         tools:text="Anish Acharya, M, 43" />
 
       <TextView
-        android:id="@+id/patientsummary_address"
+        android:id="@+id/addressTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/patientsummary_fullname"
-        android:layout_alignStart="@id/patientsummary_fullname"
+        android:layout_below="@id/fullNameTextView"
+        android:layout_alignStart="@id/fullNameTextView"
         android:layout_marginTop="@dimen/spacing_4"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.White72"
         tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar, Bathinda, Punjab" />
 
       <TextView
-        android:id="@+id/patientsummary_contact"
+        android:id="@+id/contactTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/patientsummary_address"
-        android:layout_alignStart="@id/patientsummary_address"
+        android:layout_below="@id/addressTextView"
+        android:layout_alignStart="@id/addressTextView"
         android:layout_marginTop="@dimen/spacing_4"
         android:layout_marginEnd="@dimen/spacing_8"
         android:drawableStart="@drawable/ic_call_16dp"
@@ -84,27 +84,27 @@
         tools:visibility="visible" />
 
       <TextView
-        android:id="@+id/patientsummary_bp_passport"
+        android:id="@+id/bpPassportTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/patientsummary_address"
+        android:layout_below="@id/addressTextView"
         android:layout_marginTop="@dimen/spacing_4"
-        android:layout_toEndOf="@id/patientsummary_contact"
+        android:layout_toEndOf="@id/contactTextView"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.White72"
         tools:text="\u2022 BP Passport: 512 9856" />
     </RelativeLayout>
   </RelativeLayout>
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/patientsummary_recyclerview"
+    android:id="@+id/recyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/patientsummary_done"
+    android:layout_above="@+id/doneButtonFrame"
     android:layout_below="@+id/patientsummary_header"
     android:clipToPadding="false" />
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
-    android:id="@+id/patientsummary_done"
+    android:id="@+id/doneButtonFrame"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
     android:layout_alignParentBottom="true"
     app:buttonBackgroundDisabled="@color/grey2"
@@ -123,7 +123,7 @@
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 
   <org.simple.clinic.summary.linkId.LinkIdWithPatientView
-    android:id="@+id/patientsummary_linkidwithpatient"
+    android:id="@+id/linkIdWithPatientView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="@dimen/patientsummary_elevation_linkidwithpatient"

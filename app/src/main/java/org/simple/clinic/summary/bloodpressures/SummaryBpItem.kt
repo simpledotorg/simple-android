@@ -14,6 +14,9 @@ import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.subjects.Subject
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.list_patientsummary_bp_measurement.*
+import kotlinx.android.synthetic.main.list_patientsummary_bp_placeholder.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -111,9 +114,7 @@ data class SummaryBloodPressurePlaceholderListItem(
     (holder as BpPlaceholderViewHolder).placeHolderMessageTextView.visibility = if (showHint) View.VISIBLE else View.INVISIBLE
   }
 
-  class BpPlaceholderViewHolder(rootView: View) : SummaryBpViewHolder(rootView) {
-    val placeHolderMessageTextView by bindView<TextView>(R.id.patientsummary_item_bp_placeholder)
-  }
+  class BpPlaceholderViewHolder(override val containerView: View) : SummaryBpViewHolder(containerView), LayoutContainer
 }
 
 data class SummaryBloodPressureListItem(
@@ -274,15 +275,7 @@ data class SummaryBloodPressureListItem(
     return this == other
   }
 
-  class BpViewHolder(rootView: View) : SummaryBpViewHolder(rootView) {
-    val readingsTextView by bindView<TextView>(R.id.patientsummary_item_bp_readings)
-    val heartImageView by bindView<ImageView>(R.id.patientsummary_bp_reading_heart)
-    val levelTextView by bindView<TextView>(R.id.patientsummary_item_bp_level)
-    val daysAgoTextView by bindView<TextView>(R.id.patientsummary_item_bp_days_ago)
-    val divider by bindView<View>(R.id.patientsummary_item_bp_divider)
-    val timeTextView by bindView<TextView>(R.id.patientsummary_item_bp_time)
-    val itemLayout by bindView<LinearLayout>(R.id.patientsummary_item_layout)
-  }
+  class BpViewHolder(override val containerView: View) : SummaryBpViewHolder(containerView), LayoutContainer
 }
 
 

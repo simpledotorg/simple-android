@@ -120,7 +120,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private var patientSummaryProfile: PatientSummaryProfile? = null
 
   private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
-  private val prescriptionSection = Section()
   private val bloodPressureSection = Section()
   private val medicalHistorySection = Section()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
@@ -302,7 +301,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   private fun updateSummaryList(
-      prescribedDrugsItem: SummaryPrescribedDrugsItem,
       measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       measurementItems: List<SummaryBloodPressureListItem>,
       medicalHistoryItem: SummaryMedicalHistoryItem
@@ -317,14 +315,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     // Not the best way for registering click listeners,
     // but Groupie doesn't seem to have a better option.
-    prescribedDrugsItem.uiEvents = adapterUiEvents
     measurementItems.forEach { it.uiEvents = adapterUiEvents }
     medicalHistoryItem.uiEvents = adapterUiEvents
-
-    prescriptionSection.update(listOf(prescribedDrugsItem))
-    if (isFirstUpdate) {
-      recyclerViewAdapter.add(prescriptionSection)
-    }
 
     bloodPressureSection.update(measurementItems + measurementPlaceholderItems)
     if (isFirstUpdate) {
@@ -342,12 +334,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       medicalHistory: MedicalHistory
   ) {
+    drugSummaryView.bind(prescribedDrugs, exactDateFormatter, userClock) { adapterUiEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
+    drugSummaryView.visibility = VISIBLE
+
     updateSummaryList(
-        SummaryPrescribedDrugsItem(
-            prescriptions = prescribedDrugs,
-            dateFormatter = exactDateFormatter,
-            userClock = userClock
-        ),
         SummaryBloodPressurePlaceholderListItem.from(
             bloodPressureMeasurements = bloodPressureMeasurements,
             utcClock = utcClock,

@@ -27,7 +27,8 @@ class SettingsModule {
     val supportedLanguages = listOf<Language>(
         ProvidedLanguage(displayName = "English", languageCode = "en-IN"),
         ProvidedLanguage(displayName = "हिंदी", languageCode = "hi-IN"),
-        ProvidedLanguage(displayName = "ਪੰਜਾਬੀ", languageCode = "pa-IN")
+        ProvidedLanguage(displayName = "ਪੰਜਾਬੀ", languageCode = "pa-IN"),
+        ProvidedLanguage(displayName = "ትግርኛ", languageCode = "ti-ET")
     )
 
     return PreferencesSettingsRepository(

@@ -2,6 +2,8 @@ package org.simple.clinic.setup
 
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -11,15 +13,21 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
+import javax.inject.Named
 
-class SetupActivityEffectHandler(
-    private val onboardingCompletePreference: Preference<Boolean>,
-    private val uiActions: UiActions,
+class SetupActivityEffectHandler @AssistedInject constructor(
+    @Named("onboarding_complete") private val onboardingCompletePreference: Preference<Boolean>,
+    @Assisted private val uiActions: UiActions,
     private val userDao: User.RoomDao,
     private val appConfigRepository: AppConfigRepository,
-    private val fallbackCountry: Country,
+    @Named("fallback") private val fallbackCountry: Country,
     private val schedulersProvider: SchedulersProvider
 ) {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(uiActions: UiActions): SetupActivityEffectHandler
+  }
 
   companion object {
     fun create(
@@ -41,7 +49,7 @@ class SetupActivityEffectHandler(
     }
   }
 
-  private fun build(): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
+  fun build(): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
     return RxMobius
         .subtypeEffectHandler<SetupActivityEffect, SetupActivityEvent>()
         .addTransformer(FetchUserDetails::class.java, fetchUserDetails(schedulersProvider.io()))

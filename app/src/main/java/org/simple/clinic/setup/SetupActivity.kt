@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.f2prateek.rx.preferences2.Preference
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
@@ -13,8 +12,6 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.activity.placeholder.PlaceholderScreenKey
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.appconfig.AppConfigRepository
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusActivityDelegate
@@ -29,39 +26,24 @@ import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.selectcountry.SelectCountryScreenKey
-import org.simple.clinic.user.User
 import org.simple.clinic.util.LocaleOverrideContextWrapper
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import java.util.Locale
 import javax.inject.Inject
-import javax.inject.Named
 
 class SetupActivity : AppCompatActivity(), UiActions {
 
   @Inject
   lateinit var locale: Locale
 
-  @field:[Inject Named("onboarding_complete")]
-  lateinit var onboardingCompletePreference: Preference<Boolean>
-
-  @Inject
-  lateinit var schedulersProvider: SchedulersProvider
-
   @Inject
   lateinit var crashReporter: CrashReporter
 
-  @Inject
-  lateinit var userDao: User.RoomDao
-
-  @Inject
-  lateinit var appConfigRepository: AppConfigRepository
-
-  @field:[Inject Named("fallback")]
-  lateinit var fallbackCountry: Country
-
   private lateinit var component: SetupActivityComponent
+
+  @Inject
+  lateinit var effectHandlerFactory: SetupActivityEffectHandler.Factory
 
   private val screenResults = ScreenResultBus()
 
@@ -70,21 +52,12 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private val delegate by unsafeLazy {
-    val effectHandler = SetupActivityEffectHandler.create(
-        onboardingCompletePreference = onboardingCompletePreference,
-        uiActions = this,
-        userDao = userDao,
-        appConfigRepository = appConfigRepository,
-        fallbackCountry = fallbackCountry,
-        schedulersProvider = schedulersProvider
-    )
-
     MobiusActivityDelegate(
         events = Observable.never<SetupActivityEvent>(),
         defaultModel = SetupActivityModel.SETTING_UP,
         init = SetupActivityInit(),
         update = SetupActivityUpdate(),
-        effectHandler = effectHandler,
+        effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = { /* Nothing to do here */ },
         crashReporter = crashReporter
     )

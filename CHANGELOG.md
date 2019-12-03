@@ -4,7 +4,7 @@
 ### Internal
 - Use the selected country for connecting to the server
 
-## On Demo
+## 2019-12-03-6640
 ### Internal
 - Remove old edit patient screen
 - Add a feature toggle for the phone masking feature

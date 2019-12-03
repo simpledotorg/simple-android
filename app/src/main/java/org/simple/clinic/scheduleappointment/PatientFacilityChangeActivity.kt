@@ -14,10 +14,10 @@ class PatientFacilityChangeActivity : AppCompatActivity() {
 
   @Inject
   lateinit var locale: Locale
-
+  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.screen_facility_change)
+    setContentView(R.layout.screen_patient_facility_change)
   }
 
   override fun attachBaseContext(baseContext: Context) {

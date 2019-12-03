@@ -5,7 +5,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-import org.simple.clinic.scheduleappointment.PatientFacilityChangeActivity
+import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityChangeActivity
 import org.simple.clinic.setup.SetupActivityComponent
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncWorker

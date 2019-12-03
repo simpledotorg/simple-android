@@ -5,7 +5,7 @@ import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.subjects.Subject
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.list_patientsummary_bp_placeholder.*
+import kotlinx.android.synthetic.main.patientsummary_bpplaceholderitem_content.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.summary.SummaryListAdapterIds.BP_PLACEHOLDER

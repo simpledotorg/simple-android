@@ -29,26 +29,6 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     fun create(uiActions: UiActions): SetupActivityEffectHandler
   }
 
-  companion object {
-    fun create(
-        onboardingCompletePreference: Preference<Boolean>,
-        uiActions: UiActions,
-        userDao: User.RoomDao,
-        appConfigRepository: AppConfigRepository,
-        fallbackCountry: Country,
-        schedulersProvider: SchedulersProvider
-    ): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
-      return SetupActivityEffectHandler(
-          onboardingCompletePreference = onboardingCompletePreference,
-          uiActions = uiActions,
-          userDao = userDao,
-          appConfigRepository = appConfigRepository,
-          fallbackCountry = fallbackCountry,
-          schedulersProvider = schedulersProvider
-      ).build()
-    }
-  }
-
   fun build(): ObservableTransformer<SetupActivityEffect, SetupActivityEvent> {
     return RxMobius
         .subtypeEffectHandler<SetupActivityEffect, SetupActivityEvent>()

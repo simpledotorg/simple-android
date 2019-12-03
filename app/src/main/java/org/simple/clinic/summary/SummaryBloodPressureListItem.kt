@@ -15,6 +15,8 @@ import androidx.core.content.res.ResourcesCompat
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.list_patientsummary_bp_measurement.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -191,13 +193,5 @@ data class SummaryBloodPressureListItem(
     return this == other
   }
 
-  class BpViewHolder(rootView: View) : ViewHolder(rootView) {
-    val readingsTextView by bindView<TextView>(R.id.patientsummary_item_bp_readings)
-    val heartImageView by bindView<ImageView>(R.id.patientsummary_bp_reading_heart)
-    val levelTextView by bindView<TextView>(R.id.patientsummary_item_bp_level)
-    val daysAgoTextView by bindView<TextView>(R.id.patientsummary_item_bp_days_ago)
-    val divider by bindView<View>(R.id.patientsummary_item_bp_divider)
-    val timeTextView by bindView<TextView>(R.id.patientsummary_item_bp_time)
-    val itemLayout by bindView<LinearLayout>(R.id.patientsummary_item_layout)
-  }
+  class BpViewHolder(override val containerView: View) : ViewHolder(containerView), LayoutContainer
 }

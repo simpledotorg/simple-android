@@ -11,7 +11,7 @@
   android:foreground="?selectableItemBackground">
 
   <LinearLayout
-    android:id="@+id/patientsummary_item_layout"
+    android:id="@+id/itemLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/spacing_16"
@@ -19,7 +19,7 @@
     android:orientation="horizontal">
 
     <ImageView
-      android:id="@+id/patientsummary_bp_reading_heart"
+      android:id="@+id/heartImageView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
@@ -28,7 +28,7 @@
       tools:ignore="ContentDescription" />
 
     <org.simple.clinic.widgets.TintableCompoundDrawableTextView
-      android:id="@+id/patientsummary_item_bp_readings"
+      android:id="@+id/readingsTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
@@ -37,7 +37,7 @@
       tools:text="164 / 95" />
 
     <TextView
-      android:id="@+id/patientsummary_item_bp_level"
+      android:id="@+id/levelTextView"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
@@ -55,14 +55,14 @@
       android:orientation="vertical">
 
       <TextView
-        android:id="@+id/patientsummary_item_bp_days_ago"
+        android:id="@+id/daysAgoTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
         tools:text="Edit \u2022 Today" />
 
       <TextView
-        android:id="@+id/patientsummary_item_bp_time"
+        android:id="@+id/timeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
@@ -72,7 +72,7 @@
   </LinearLayout>
 
   <View
-    android:id="@+id/patientsummary_item_bp_divider"
+    android:id="@+id/divider"
     style="@style/Clinic.Separator.VerticalContent"
     android:layout_gravity="bottom"
     android:layout_marginEnd="@dimen/spacing_8"

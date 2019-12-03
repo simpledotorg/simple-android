@@ -8,10 +8,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
-import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
@@ -299,23 +297,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     bloodPressureSection.setHeader(newBpItem)
   }
 
-  private fun updateSummaryList(
-      measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
-      measurementItems: List<SummaryBloodPressureListItem>
-  ) {
+  private fun updateSummaryList() {
     // Skip item animations on the first update.
     val isFirstUpdate = recyclerViewAdapter.itemCount == 0
-    if (isFirstUpdate.not()) {
-      val animator = SlideUpAlphaAnimator().withInterpolator(FastOutSlowInInterpolator())
-      animator.supportsChangeAnimations = false
-      recyclerView.itemAnimator = animator
-    }
 
-    // Not the best way for registering click listeners,
-    // but Groupie doesn't seem to have a better option.
-    measurementItems.forEach { it.uiEvents = adapterUiEvents }
-
-    bloodPressureSection.update(measurementItems + measurementPlaceholderItems)
+    // Required for adding the "Add new BP" button since that is defined as its own recyclerview
+    // item.
+    // TODO(vs): 2019-12-03 Move the "Add new BP" button into the BloodPressureSummaryView
     if (isFirstUpdate) {
       recyclerViewAdapter.add(bloodPressureSection)
     }
@@ -346,23 +334,24 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       visibility = VISIBLE
     }
 
-    updateSummaryList(
-        SummaryBloodPressurePlaceholderListItem.from(
-            bloodPressureMeasurements = bloodPressureMeasurements,
-            utcClock = utcClock,
-            placeholderLimit = config.numberOfBpPlaceholders
-        ),
-        SummaryBloodPressureListItem.from(
-            bloodPressures = bloodPressureMeasurements,
-            timestampGenerator = timestampGenerator,
-            dateFormatter = exactDateFormatter,
-            canEditFor = config.bpEditableDuration,
-            bpTimeFormatter = timeFormatterForBp,
-            zoneId = zoneId,
-            utcClock = utcClock,
-            userClock = userClock
-        )
-    )
+    with(bloodPressureSummaryView) {
+      render(
+          bloodPressureMeasurements = bloodPressureMeasurements,
+          utcClock = utcClock,
+          placeholderLimit = config.numberOfBpPlaceholders,
+          timestampGenerator = timestampGenerator,
+          dateFormatter = exactDateFormatter,
+          canEditFor = config.bpEditableDuration,
+          bpTimeFormatter = timeFormatterForBp,
+          zoneId = zoneId,
+          userClock = userClock
+      ) { clickedMeasurement ->
+        adapterUiEvents.onNext(PatientSummaryBpClicked(clickedMeasurement))
+      }
+      visibility = VISIBLE
+    }
+
+    updateSummaryList()
   }
 
   override fun showBloodPressureEntrySheet(patientUuid: UUID) {

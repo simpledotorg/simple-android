@@ -344,14 +344,14 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
           canEditFor = config.bpEditableDuration,
           bpTimeFormatter = timeFormatterForBp,
           zoneId = zoneId,
-          userClock = userClock
-      ) { clickedMeasurement ->
-        adapterUiEvents.onNext(PatientSummaryBpClicked(clickedMeasurement))
-      }
+          userClock = userClock,
+          editMeasurementClicked = { clickedMeasurement ->
+            adapterUiEvents.onNext(PatientSummaryBpClicked(clickedMeasurement))
+          },
+          newBpClicked = { adapterUiEvents.onNext(PatientSummaryNewBpClicked()) }
+      )
       visibility = VISIBLE
     }
-
-    updateSummaryList()
   }
 
   override fun showBloodPressureEntrySheet(patientUuid: UUID) {

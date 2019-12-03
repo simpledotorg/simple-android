@@ -8,11 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Section
-import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -117,8 +113,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     """)
   private var patientSummaryProfile: PatientSummaryProfile? = null
 
-  private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
-  private val bloodPressureSection = Section()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
   private var linkIdWithPatientShown: Boolean = false
@@ -147,7 +141,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
 
-    setupSummaryList()
     setupEditButtonClicks()
 
     bindUiToController(
@@ -285,27 +278,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
         if (isPhoneNumberVisible) "${Unicode.bullet}  $formattedIdentifier" else formattedIdentifier
       }
-    }
-  }
-
-  private fun setupSummaryList() {
-    recyclerView.layoutManager = LinearLayoutManager(context)
-    recyclerView.adapter = recyclerViewAdapter
-
-    val newBpItem = SummaryAddNewBpListItem()
-    newBpItem.uiEvents = adapterUiEvents
-    bloodPressureSection.setHeader(newBpItem)
-  }
-
-  private fun updateSummaryList() {
-    // Skip item animations on the first update.
-    val isFirstUpdate = recyclerViewAdapter.itemCount == 0
-
-    // Required for adding the "Add new BP" button since that is defined as its own recyclerview
-    // item.
-    // TODO(vs): 2019-12-03 Move the "Add new BP" button into the BloodPressureSummaryView
-    if (isFirstUpdate) {
-      recyclerViewAdapter.add(bloodPressureSection)
     }
   }
 

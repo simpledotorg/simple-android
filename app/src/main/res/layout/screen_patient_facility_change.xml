@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:animateLayoutChanges="true"
+  android:background="@color/grey4"
+  android:orientation="vertical"
+  tools:ignore="Overdraw">
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/facilityList"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/searchToolbar"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/spacing_8"
+    android:scrollbarStyle="insideOverlay"
+    android:scrollbars="vertical"
+    tools:listitem="@layout/list_facility_selection_option" />
+
+  <include
+    android:id="@+id/progress"
+    layout="@layout/screen_registration_facility_selection_progress_state"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/searchToolbar"
+    android:visibility="gone" />
+
+  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
+    android:id="@+id/searchToolbar"
+    style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
+
+    <EditText
+      android:id="@+id/facilitychange_search"
+      style="@style/Clinic.V2.FacilitySelection.SearchField"
+      android:hint="@string/facilitychange_search_hint"
+      android:importantForAutofill="no"
+      tools:ignore="UnusedAttribute" />
+  </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
+
+</RelativeLayout>

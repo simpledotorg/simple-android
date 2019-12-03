@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
+import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import kotlinx.android.synthetic.main.patientsummary_bpitem_content.view.*
 import org.simple.clinic.R
@@ -24,7 +24,7 @@ import org.threeten.bp.format.DateTimeFormatter
 class BloodPressureItemView(
     context: Context,
     attributeSet: AttributeSet
-) : CardView(context, attributeSet) {
+) : FrameLayout(context, attributeSet) {
 
   init {
     LayoutInflater.from(context).inflate(R.layout.patientsummary_bpitem_content, this, true)

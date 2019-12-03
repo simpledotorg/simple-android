@@ -4,7 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
+import androidx.cardview.widget.CardView
+import kotlinx.android.synthetic.main.patientsummary_bpsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.util.RelativeTimestampGenerator
@@ -18,10 +19,10 @@ import org.threeten.bp.format.DateTimeFormatter
 class BloodPressureSummaryView(
     context: Context,
     attributeSet: AttributeSet
-) : LinearLayout(context, attributeSet) {
+) : CardView(context, attributeSet) {
 
   init {
-    orientation = VERTICAL
+    LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_content, this, true)
   }
 
   fun render(
@@ -34,13 +35,16 @@ class BloodPressureSummaryView(
       bpTimeFormatter: DateTimeFormatter,
       zoneId: ZoneId,
       userClock: UserClock,
-      editMeasurementClicked: (BloodPressureMeasurement) -> Unit
+      editMeasurementClicked: (BloodPressureMeasurement) -> Unit,
+      newBpClicked: () -> Unit
   ) {
+    newBp.setOnClickListener { newBpClicked() }
+
     val placeholderViews = generatePlaceholders(bloodPressureMeasurements, utcClock, placeholderLimit)
     val listItemViews = generateBpViews(bloodPressureMeasurements, timestampGenerator, userClock, zoneId, bpTimeFormatter, dateFormatter, canEditFor, utcClock, editMeasurementClicked)
 
-    removeAllViews()
-    (listItemViews + placeholderViews).forEach(::addView)
+    bpItemContainer.removeAllViews()
+    (listItemViews + placeholderViews).forEach(bpItemContainer::addView)
   }
 
   private fun generatePlaceholders(

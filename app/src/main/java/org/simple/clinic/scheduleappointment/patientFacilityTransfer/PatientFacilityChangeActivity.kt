@@ -1,4 +1,4 @@
-package org.simple.clinic.scheduleappointment
+package org.simple.clinic.scheduleappointment.patientFacilityTransfer
 
 import android.content.Context
 import android.os.Bundle

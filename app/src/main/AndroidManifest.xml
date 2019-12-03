@@ -87,7 +87,7 @@
       android:name=".home.overdue.phonemask.PhoneMaskBottomSheet"
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
-    <activity android:name=".scheduleappointment.PatientFacilityChangeActivity" />
+    <activity android:name=".scheduleappointment.patientFacilityTransfer.PatientFacilityChangeActivity" />
 
     <receiver
       android:name=".login.OtpSmsReceiver"

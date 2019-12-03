@@ -1,29 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
+<org.simple.clinic.summary.bloodpressures.BloodPressurePlaceholderItemView xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginEnd="@dimen/spacing_8"
   android:layout_marginStart="@dimen/spacing_8"
-  android:background="@color/white100">
-
-  <TextView
-    android:id="@+id/placeHolderMessageTextView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_marginBottom="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_24"
-    android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/spacing_16"
-    android:text="@string/patientsummary_bp_none_added"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
-    android:visibility="invisible"
-    tools:visibility="visible" />
-
-  <View
-    style="@style/Clinic.Separator.VerticalContent"
-    android:layout_gravity="bottom"
-    android:layout_marginEnd="@dimen/spacing_24"
-    android:layout_marginStart="@dimen/spacing_24" />
-</androidx.cardview.widget.CardView>
+  android:layout_marginEnd="@dimen/spacing_8"
+  android:background="@color/white100" />

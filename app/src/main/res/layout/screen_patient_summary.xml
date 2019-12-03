@@ -124,6 +124,13 @@
         android:clipToPadding="false"
         android:nestedScrollingEnabled="false" />
 
+      <org.simple.clinic.summary.bloodpressures.BloodPressureSummaryView
+        android:id="@+id/bloodPressureSummaryView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
       <org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryView
         android:id="@+id/medicalHistorySummaryView"
         android:layout_width="match_parent"

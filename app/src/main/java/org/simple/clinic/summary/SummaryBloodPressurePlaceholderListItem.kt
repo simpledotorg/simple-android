@@ -4,18 +4,17 @@ import android.view.View
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.subjects.Subject
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.patientsummary_bpplaceholderitem_content.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.summary.SummaryListAdapterIds.BP_PLACEHOLDER
+import org.simple.clinic.summary.bloodpressures.BloodPressurePlaceholderItemView
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 
 data class SummaryBloodPressurePlaceholderListItem(
     private val placeholderNumber: Int,
     private val showHint: Boolean = false
-) : GroupieItemWithUiEvents<SummaryBloodPressurePlaceholderListItem.BpPlaceholderViewHolder>(adapterId = BP_PLACEHOLDER(placeholderNumber)) {
+) : GroupieItemWithUiEvents<ViewHolder>(adapterId = BP_PLACEHOLDER(placeholderNumber)) {
 
   companion object {
     fun from(
@@ -42,13 +41,12 @@ data class SummaryBloodPressurePlaceholderListItem(
 
   override fun getLayout() = R.layout.list_patientsummary_bp_placeholder
 
-  override fun createViewHolder(itemView: View): BpPlaceholderViewHolder {
-    return BpPlaceholderViewHolder(itemView)
+  override fun createViewHolder(itemView: View): ViewHolder {
+    return ViewHolder(itemView)
   }
 
-  override fun bind(holder: BpPlaceholderViewHolder, position: Int) {
-    holder.placeHolderMessageTextView.visibility = if (showHint) View.VISIBLE else View.INVISIBLE
+  override fun bind(holder: ViewHolder, position: Int) {
+    // TODO(vs): 2019-12-03 Hide the divider on the last placeholder item
+    (holder.itemView as BloodPressurePlaceholderItemView).render(showHint = showHint, showDivider = true)
   }
-
-  class BpPlaceholderViewHolder(override val containerView: View) : ViewHolder(containerView), LayoutContainer
 }

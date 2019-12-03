@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
+import kotlinx.android.synthetic.main.patientsummary_bpplaceholderitem_content.view.*
 import org.simple.clinic.R
 
 class BloodPressurePlaceholderItemView(
@@ -13,5 +14,10 @@ class BloodPressurePlaceholderItemView(
 
   init {
     LayoutInflater.from(context).inflate(R.layout.patientsummary_bpplaceholderitem_content, this, true)
+  }
+
+  fun render(showHint: Boolean, showDivider: Boolean) {
+    placeHolderMessageTextView.visibility = if (showHint) VISIBLE else INVISIBLE
+    placeholderDivider.visibility = if (showDivider) VISIBLE else INVISIBLE
   }
 }

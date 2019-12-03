@@ -28,6 +28,8 @@ class SettingsModule {
         ProvidedLanguage(displayName = "English", languageCode = "en-IN"),
         ProvidedLanguage(displayName = "हिंदी", languageCode = "hi-IN"),
         ProvidedLanguage(displayName = "ਪੰਜਾਬੀ", languageCode = "pa-IN"),
+        ProvidedLanguage(displayName = "বাংলা", languageCode = "bn-BD"),
+        ProvidedLanguage(displayName = "বাঙালি", languageCode = "bn-IN"),
         ProvidedLanguage(displayName = "ትግርኛ", languageCode = "ti-ET")
     )
 

@@ -28,13 +28,15 @@ class SetupActivityEffectHandlerTest {
   private val appConfigRepository = mock<AppConfigRepository>()
   private val fallbackCountry = PatientMocker.country()
 
-  private val effectHandler = SetupActivityEffectHandler.create(
+  private val effectHandler = SetupActivityEffectHandler(
       onboardingCompletePreference,
       uiActions,
       userDao,
       appConfigRepository,
       fallbackCountry,
-      TrampolineSchedulersProvider())
+      TrampolineSchedulersProvider()
+  ).build()
+
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After

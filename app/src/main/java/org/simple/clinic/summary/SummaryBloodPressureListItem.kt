@@ -89,14 +89,13 @@ data class SummaryBloodPressureListItem(
   override fun bind(holder: ViewHolder, position: Int) {
     (holder.itemView as BloodPressureItemView).render(
         isBpEditable = isBpEditable,
-        uiEvents = uiEvents,
         measurement = measurement,
         daysAgo = daysAgo,
         showDivider = showDivider,
         formattedTime = formattedTime,
         dateFormatter = dateFormatter,
         addTopPadding = addTopPadding
-    )
+    ) { measurement -> uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
   }
 
   override fun isSameAs(other: Item<*>?): Boolean {

@@ -8,17 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
-import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.patientsummary_bpitem_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.summary.PatientSummaryBpClicked
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RelativeTimestamp
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.setPaddingTop
 import org.simple.clinic.widgets.setTextAppearanceCompat
@@ -35,17 +32,17 @@ class BloodPressureItemView(
 
   fun render(
       isBpEditable: Boolean,
-      uiEvents: Subject<UiEvent>,
       measurement: BloodPressureMeasurement,
       daysAgo: RelativeTimestamp,
       showDivider: Boolean,
       formattedTime: String?,
       dateFormatter: DateTimeFormatter,
-      addTopPadding: Boolean
+      addTopPadding: Boolean,
+      editMeasurementClicked: (BloodPressureMeasurement) -> Unit
   ) {
     isClickable = isBpEditable
     isFocusable = isBpEditable
-    if (isBpEditable) setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
+    if (isBpEditable) setOnClickListener { editMeasurementClicked(measurement) }
 
     renderBpReading(measurement)
     renderBpLevel(measurement)

@@ -5,7 +5,6 @@ import androidx.annotation.VisibleForTesting
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
-import kotlinx.android.extensions.LayoutContainer
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.summary.bloodpressures.BloodPressureItemView
@@ -28,7 +27,7 @@ data class SummaryBloodPressureListItem(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val dateFormatter: DateTimeFormatter,
     val isBpEditable: Boolean
-) : GroupieItemWithUiEvents<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
+) : GroupieItemWithUiEvents<ViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   companion object {
     fun from(
@@ -83,11 +82,11 @@ data class SummaryBloodPressureListItem(
 
   override fun getLayout() = R.layout.list_patientsummary_bp_measurement
 
-  override fun createViewHolder(itemView: View): BpViewHolder {
-    return BpViewHolder(itemView)
+  override fun createViewHolder(itemView: View): ViewHolder {
+    return ViewHolder(itemView)
   }
 
-  override fun bind(holder: BpViewHolder, position: Int) {
+  override fun bind(holder: ViewHolder, position: Int) {
     (holder.itemView as BloodPressureItemView).render(
         isBpEditable = isBpEditable,
         uiEvents = uiEvents,
@@ -103,6 +102,4 @@ data class SummaryBloodPressureListItem(
   override fun isSameAs(other: Item<*>?): Boolean {
     return this == other
   }
-
-  class BpViewHolder(override val containerView: View) : ViewHolder(containerView), LayoutContainer
 }

@@ -295,6 +295,9 @@ dependencies {
   implementation "com.fasterxml.uuid:java-uuid-generator:$versions.uuidGenerator"
   implementation project(":simple-platform")
   implementation project(":simple-visuals")
+
+  compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$versions.assistedInject"
+  kapt "com.squareup.inject:assisted-inject-processor-dagger2:$versions.assistedInject"
 }
 
 // This must always be present at the bottom of this file, as per:

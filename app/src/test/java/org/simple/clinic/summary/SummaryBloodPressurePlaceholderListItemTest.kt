@@ -27,7 +27,7 @@ class SummaryBloodPressurePlaceholderListItemTest {
 
     // then
     assertThat(placeholders)
-        .containsExactly(SummaryBloodPressurePlaceholderListItem(1, false))
+        .containsExactly(SummaryBloodPressurePlaceholderListItem(placeholderNumber = 1, showHint = false, showDivider = false))
         .inOrder()
   }
 
@@ -42,9 +42,9 @@ class SummaryBloodPressurePlaceholderListItemTest {
     // then
     assertThat(placeholders)
         .containsExactly(
-            SummaryBloodPressurePlaceholderListItem(1, true),
-            SummaryBloodPressurePlaceholderListItem(2, false),
-            SummaryBloodPressurePlaceholderListItem(3, false)
+            SummaryBloodPressurePlaceholderListItem(placeholderNumber = 1, showHint = true, showDivider = true),
+            SummaryBloodPressurePlaceholderListItem(placeholderNumber = 2, showHint = false, showDivider = true),
+            SummaryBloodPressurePlaceholderListItem(placeholderNumber = 3, showHint = false, showDivider = false)
         )
         .inOrder()
   }

@@ -13,7 +13,8 @@ import org.simple.clinic.widgets.UiEvent
 
 data class SummaryBloodPressurePlaceholderListItem(
     private val placeholderNumber: Int,
-    private val showHint: Boolean = false
+    private val showHint: Boolean,
+    private val showDivider: Boolean
 ) : GroupieItemWithUiEvents<ViewHolder>(adapterId = BP_PLACEHOLDER(placeholderNumber)) {
 
   companion object {
@@ -30,7 +31,9 @@ data class SummaryBloodPressurePlaceholderListItem(
 
             (1..numberOfPlaceholders).map { placeholderNumber ->
               val shouldShowHint = numberOfBloodPressures == 0 && placeholderNumber == 1
-              SummaryBloodPressurePlaceholderListItem(placeholderNumber, shouldShowHint)
+              val shouldShowDivider = placeholderNumber != numberOfPlaceholders
+
+              SummaryBloodPressurePlaceholderListItem(placeholderNumber, shouldShowHint, shouldShowDivider)
             }
           }
           .blockingFirst()
@@ -46,7 +49,6 @@ data class SummaryBloodPressurePlaceholderListItem(
   }
 
   override fun bind(holder: ViewHolder, position: Int) {
-    // TODO(vs): 2019-12-03 Hide the divider on the last placeholder item
-    (holder.itemView as BloodPressurePlaceholderItemView).render(showHint = showHint, showDivider = true)
+    (holder.itemView as BloodPressurePlaceholderItemView).render(showHint = showHint, showDivider = showDivider)
   }
 }

@@ -17,8 +17,7 @@ class BloodPressurePlaceholderItemView(
     LayoutInflater.from(context).inflate(R.layout.patientsummary_bpplaceholderitem_content, this, true)
   }
 
-  fun render(showHint: Boolean, showDivider: Boolean) {
+  fun render(showHint: Boolean) {
     placeHolderMessageTextView.visibility = if (showHint) VISIBLE else INVISIBLE
-    placeholderDivider.visibility = GONE
   }
 }

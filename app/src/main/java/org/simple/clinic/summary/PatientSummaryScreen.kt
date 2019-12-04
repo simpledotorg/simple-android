@@ -154,7 +154,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
             identifierLinkCancelledEvents(),
-            updateDrugsClicks()
+            updateDrugsClicks(),
+            cvHistoryAnswerToggles()
         ),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
@@ -234,6 +235,14 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
+  private fun cvHistoryAnswerToggles(): Observable<UiEvent> {
+    return Observable.create { emitter ->
+      medicalHistorySummaryView.answerToggled = { question, newAnswer -> emitter.onNext(SummaryMedicalHistoryAnswerToggled(question, newAnswer)) }
+
+      emitter.setCancellable { medicalHistorySummaryView.answerToggled = null }
+    }
+  }
+
   @SuppressLint("SetTextI18n")
   override fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
@@ -305,9 +314,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         medicalHistory = medicalHistory,
         lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
         dateFormatter = exactDateFormatter
-    ) { question, newAnswer ->
-      adapterUiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, newAnswer))
-    }
+    )
 
     bloodPressureSummaryView.render(
         bloodPressureMeasurements = bloodPressureMeasurements,

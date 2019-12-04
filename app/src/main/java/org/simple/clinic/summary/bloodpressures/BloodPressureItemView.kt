@@ -34,7 +34,6 @@ class BloodPressureItemView(
       isBpEditable: Boolean,
       measurement: BloodPressureMeasurement,
       daysAgo: RelativeTimestamp,
-      showDivider: Boolean,
       formattedTime: String?,
       dateFormatter: DateTimeFormatter,
       addTopPadding: Boolean,
@@ -48,24 +47,19 @@ class BloodPressureItemView(
     renderBpLevel(measurement)
     renderRelativeTimestampWithEditButton(daysAgo, dateFormatter, isBpEditable)
     setIconTint(measurement)
-    renderDivider(showDivider)
     renderTimeOfDay(formattedTime)
-    addPadding(formattedTime, addTopPadding, showDivider)
+    addPadding(formattedTime, addTopPadding)
   }
 
-  private fun addPadding(formattedTime: String?, addTopPadding: Boolean, showDivider: Boolean) {
+  private fun addPadding(formattedTime: String?, addTopPadding: Boolean) {
     val multipleItemsInThisGroup = formattedTime != null
     addTopPadding(itemLayout = itemLayout, multipleItemsInThisGroup = multipleItemsInThisGroup, addTopPadding = addTopPadding)
-    addBottomPadding(itemLayout = itemLayout, multipleItemsInThisGroup = multipleItemsInThisGroup, showDivider = showDivider)
+    addBottomPadding(itemLayout = itemLayout, multipleItemsInThisGroup = multipleItemsInThisGroup)
   }
 
   private fun renderTimeOfDay(formattedTime: String?) {
     timeTextView.visibility = if (formattedTime != null) View.VISIBLE else View.GONE
     timeTextView.text = formattedTime
-  }
-
-  private fun renderDivider(showDivider: Boolean) {
-    divider.visibility = GONE
   }
 
   private fun setIconTint(measurement: BloodPressureMeasurement) {
@@ -132,16 +126,14 @@ class BloodPressureItemView(
 
   private fun addBottomPadding(
       itemLayout: ViewGroup,
-      multipleItemsInThisGroup: Boolean,
-      showDivider: Boolean
+      multipleItemsInThisGroup: Boolean
   ) {
-    if (multipleItemsInThisGroup) {
-      itemLayout.setPaddingBottom(when {
-        showDivider -> R.dimen.patientsummary_bp_list_item_last_in_group_bottom_padding
-        else -> R.dimen.patientsummary_bp_list_item_multiple_in_group_bp_bottom_padding
-      })
+    val paddingResourceId = if (multipleItemsInThisGroup) {
+      R.dimen.patientsummary_bp_list_item_multiple_in_group_bp_bottom_padding
     } else {
-      itemLayout.setPaddingBottom(R.dimen.patientsummary_bp_list_item_single_group_padding)
+      R.dimen.patientsummary_bp_list_item_single_group_padding
     }
+
+    itemLayout.setPaddingBottom(paddingResourceId)
   }
 }

@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/placeHolderMessageTextView"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:orientation="vertical"
-  tools:showIn="@layout/list_patientsummary_bp_placeholder">
+  android:gravity="center"
+  android:layout_marginStart="@dimen/spacing_24"
+  android:layout_marginTop="@dimen/spacing_16"
+  android:layout_marginEnd="@dimen/spacing_24"
+  android:layout_marginBottom="@dimen/spacing_16"
+  android:text="@string/patientsummary_bp_none_added"
+  android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
+  android:visibility="invisible"
+  tools:showIn="@layout/list_patientsummary_bp_placeholder"
+  tools:visibility="visible" />
 
-  <TextView
-    android:id="@+id/placeHolderMessageTextView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_24"
-    android:layout_marginBottom="@dimen/spacing_16"
-    android:text="@string/patientsummary_bp_none_added"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
-    android:visibility="invisible"
-    tools:visibility="visible" />
-
-  <include
-    android:id="@+id/placeholderDivider"
-    layout="@layout/patientsummary_bpsummary_divider" />
-</LinearLayout>

@@ -63,10 +63,9 @@ class BloodPressureSummaryView(
 
     return (1..numberOfPlaceholders).map { placeholderNumber ->
       val shouldShowHint = numberOfBloodPressureGroups == 0 && placeholderNumber == 1
-      val shouldShowDivider = placeholderNumber != numberOfPlaceholders
 
       val placeholderItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bp_placeholder, this, false) as BloodPressurePlaceholderItemView
-      placeholderItemView.render(showHint = shouldShowHint, showDivider = shouldShowDivider)
+      placeholderItemView.render(showHint = shouldShowHint)
 
       placeholderItemView
     }
@@ -91,7 +90,6 @@ class BloodPressureSummaryView(
         val bloodPressureItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bp_measurement, this, false) as BloodPressureItemView
         bloodPressureItemView.render(
             measurement = measurement,
-            showDivider = measurement == measurementList.last(),
             formattedTime = if (measurementList.size > 1) displayTime(measurement.recordedAt, zoneId, bpTimeFormatter) else null,
             addTopPadding = measurement == measurementList.first(),
             daysAgo = timestamp,

@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import androidx.annotation.WorkerThread
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -510,7 +509,6 @@ class PatientSummaryScreenController @Inject constructor(
     return durationSinceBpCreated <= bpEditableFor
   }
 
-  @WorkerThread
   private fun doesNotHaveBloodPressures(patientUuid: UUID): Boolean {
     return bpRepository.bloodPressureCount(patientUuid) == 0
   }

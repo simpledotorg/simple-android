@@ -1,7 +1,6 @@
 package org.simple.clinic.user
 
 import android.content.SharedPreferences
-import androidx.annotation.WorkerThread
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -215,7 +214,6 @@ class UserSession @Inject constructor(
   // This was added because we needed to call it from the OkHttp Interceptor
   // in a synchronous fashion because the Rx - blocking() call used earlier
   // was causing a deadlock in the Room threads when data sync happened
-  @WorkerThread
   fun loggedInUserImmediate() = appDatabase.userDao().userImmediate()
 
   fun isUserLoggedIn(): Boolean {

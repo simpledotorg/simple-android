@@ -16,6 +16,9 @@ import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 
+private typealias EditMeasurementClicked = (BloodPressureMeasurement) -> Unit
+private typealias NewBpClicked = () -> Unit
+
 class BloodPressureSummaryView(
     context: Context,
     attributeSet: AttributeSet
@@ -24,6 +27,9 @@ class BloodPressureSummaryView(
   init {
     LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_content, this, true)
   }
+
+  var editMeasurementClicked: EditMeasurementClicked? = null
+  var newBpClicked: NewBpClicked? = null
 
   fun render(
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
@@ -34,14 +40,12 @@ class BloodPressureSummaryView(
       canEditFor: Duration,
       bpTimeFormatter: DateTimeFormatter,
       zoneId: ZoneId,
-      userClock: UserClock,
-      editMeasurementClicked: (BloodPressureMeasurement) -> Unit,
-      newBpClicked: () -> Unit
+      userClock: UserClock
   ) {
-    newBp.setOnClickListener { newBpClicked() }
+    newBp.setOnClickListener { newBpClicked?.invoke() }
 
     val placeholderViews = generatePlaceholders(bloodPressureMeasurements, utcClock, placeholderLimit)
-    val listItemViews = generateBpViews(bloodPressureMeasurements, timestampGenerator, userClock, zoneId, bpTimeFormatter, dateFormatter, canEditFor, utcClock, editMeasurementClicked)
+    val listItemViews = generateBpViews(bloodPressureMeasurements, timestampGenerator, userClock, zoneId, bpTimeFormatter, dateFormatter, canEditFor, utcClock)
 
     bpItemContainer.removeAllViews()
     (listItemViews + placeholderViews).forEach(bpItemContainer::addView)
@@ -76,8 +80,7 @@ class BloodPressureSummaryView(
       bpTimeFormatter: DateTimeFormatter,
       dateFormatter: DateTimeFormatter,
       canEditFor: Duration,
-      utcClock: UtcClock,
-      editMeasurementClicked: (BloodPressureMeasurement) -> Unit
+      utcClock: UtcClock
   ): List<View> {
     val measurementsByDate = bloodPressureMeasurements.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
 
@@ -93,9 +96,8 @@ class BloodPressureSummaryView(
             addTopPadding = measurement == measurementList.first(),
             daysAgo = timestamp,
             dateFormatter = dateFormatter,
-            isBpEditable = isBpEditable(measurement, canEditFor, utcClock),
-            editMeasurementClicked = editMeasurementClicked
-        )
+            isBpEditable = isBpEditable(measurement, canEditFor, utcClock)
+        ) { clickedMeasurement -> editMeasurementClicked?.invoke(clickedMeasurement) }
 
         bloodPressureItemView
       }

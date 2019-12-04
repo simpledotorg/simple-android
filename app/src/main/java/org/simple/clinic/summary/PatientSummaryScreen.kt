@@ -286,44 +286,35 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       medicalHistory: MedicalHistory
   ) {
-    with(drugSummaryView) {
-      bind(
-          prescriptions = prescribedDrugs,
-          dateFormatter = exactDateFormatter,
-          userClock = userClock
-      ) { adapterUiEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
-      visibility = VISIBLE
+    drugSummaryView.bind(
+        prescriptions = prescribedDrugs,
+        dateFormatter = exactDateFormatter,
+        userClock = userClock
+    ) { adapterUiEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
+
+    medicalHistorySummaryView.bind(
+        medicalHistory = medicalHistory,
+        lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
+        dateFormatter = exactDateFormatter
+    ) { question, newAnswer ->
+      adapterUiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, newAnswer))
     }
 
-    with(medicalHistorySummaryView) {
-      bind(
-          medicalHistory = medicalHistory,
-          lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
-          dateFormatter = exactDateFormatter
-      ) { question, newAnswer ->
-        adapterUiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, newAnswer))
-      }
-      visibility = VISIBLE
-    }
-
-    with(bloodPressureSummaryView) {
-      render(
-          bloodPressureMeasurements = bloodPressureMeasurements,
-          utcClock = utcClock,
-          placeholderLimit = config.numberOfBpPlaceholders,
-          timestampGenerator = timestampGenerator,
-          dateFormatter = exactDateFormatter,
-          canEditFor = config.bpEditableDuration,
-          bpTimeFormatter = timeFormatterForBp,
-          zoneId = zoneId,
-          userClock = userClock,
-          editMeasurementClicked = { clickedMeasurement ->
-            adapterUiEvents.onNext(PatientSummaryBpClicked(clickedMeasurement))
-          },
-          newBpClicked = { adapterUiEvents.onNext(PatientSummaryNewBpClicked()) }
-      )
-      visibility = VISIBLE
-    }
+    bloodPressureSummaryView.render(
+        bloodPressureMeasurements = bloodPressureMeasurements,
+        utcClock = utcClock,
+        placeholderLimit = config.numberOfBpPlaceholders,
+        timestampGenerator = timestampGenerator,
+        dateFormatter = exactDateFormatter,
+        canEditFor = config.bpEditableDuration,
+        bpTimeFormatter = timeFormatterForBp,
+        zoneId = zoneId,
+        userClock = userClock,
+        editMeasurementClicked = { clickedMeasurement ->
+          adapterUiEvents.onNext(PatientSummaryBpClicked(clickedMeasurement))
+        },
+        newBpClicked = { adapterUiEvents.onNext(PatientSummaryNewBpClicked()) }
+    )
   }
 
   override fun showBloodPressureEntrySheet(patientUuid: UUID) {

@@ -1,6 +1,5 @@
 package org.simple.clinic.bp
 
-import androidx.annotation.WorkerThread
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -133,7 +132,6 @@ class BloodPressureRepository @Inject constructor(
     }
   }
 
-  @WorkerThread
   fun bloodPressureCount(patientUuid: UUID): Int = dao.recordedBloodPressureCountForPatient(patientUuid)
 
   override fun pendingSyncRecordCount(): Observable<Int> {

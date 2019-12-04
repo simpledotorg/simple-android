@@ -20,10 +20,7 @@
     android:visibility="invisible"
     tools:visibility="visible" />
 
-  <View
+  <include
     android:id="@+id/placeholderDivider"
-    style="@style/Clinic.Separator.VerticalContent"
-    android:layout_gravity="bottom"
-    android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginEnd="@dimen/spacing_24" />
+    layout="@layout/patientsummary_bpsummary_divider" />
 </LinearLayout>

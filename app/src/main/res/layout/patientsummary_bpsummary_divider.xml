@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  style="@style/Clinic.Separator.VerticalContent"
+  android:layout_marginStart="@dimen/spacing_8"
+  android:layout_marginEnd="@dimen/spacing_8"
+  tools:showIn="@layout/patientsummary_bpplaceholderitem_content" />

@@ -216,7 +216,7 @@ class PhoneMaskBottomSheetControllerTest {
         phoneCaller = phoneCaller,
         patientRepository = patientRepository,
         clock = clock,
-        config = Observable.just(config)
+        config = config
     )
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }

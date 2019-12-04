@@ -21,7 +21,6 @@ import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -33,7 +32,7 @@ class PhoneMaskBottomSheetController @Inject constructor(
     private val phoneCaller: PhoneCaller,
     private val patientRepository: PatientRepository,
     private val clock: UserClock,
-    private val config: Observable<PhoneNumberMaskerConfig>
+    private val config: PhoneNumberMaskerConfig
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -135,11 +134,14 @@ class PhoneMaskBottomSheetController @Inject constructor(
 
   private fun enableSecureCallButton(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreates = events.ofType<PhoneMaskBottomSheetCreated>()
-    val phoneMaskFeatureEnabled = config.map { it.phoneMaskingFeatureEnabled && !it.proxyPhoneNumber.isBlank() }
+    val phoneMaskFeatureEnabled = config.phoneMaskingFeatureEnabled && !config.proxyPhoneNumber.isBlank()
 
-    return Observables
-        .combineLatest(screenCreates, phoneMaskFeatureEnabled) { _, enabled -> enabled }
-        .filterTrue()
-        .map { { ui: Ui -> ui.showSecureCallButton() } }
+    return screenCreates.map {
+      { ui: Ui ->
+        if (phoneMaskFeatureEnabled) {
+          ui.showSecureCallButton()
+        }
+      }
+    }
   }
 }

@@ -36,16 +36,12 @@ import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
@@ -75,22 +71,13 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   lateinit var dateOfBirthValidator: UserInputDateValidator
 
   @Inject
-  lateinit var userClock: UserClock
-
-  @Inject
-  lateinit var patientRepository: PatientRepository
-
-  @Inject
-  lateinit var utcClock: UtcClock
-
-  @Inject
-  lateinit var schedulersProvider: SchedulersProvider
-
-  @Inject
   lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  @Inject
+  lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
 
   private val screenKey by unsafeLazy {
     screenRouter.key<EditPatientScreenKey>(this)
@@ -116,13 +103,13 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private val delegate by unsafeLazy {
     val (patient, address, phoneNumber) = screenKey
-    val effectHandler = EditPatientEffectHandler.createEffectHandler(this, userClock, patientRepository, utcClock, dateOfBirthFormat, schedulersProvider)
+
     MobiusDelegate(
         events,
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
         EditPatientUpdate(numberValidator, dateOfBirthValidator),
-        effectHandler,
+        effectHandlerFactory.create(this).build(),
         viewRenderer::render,
         crashReporter
     )

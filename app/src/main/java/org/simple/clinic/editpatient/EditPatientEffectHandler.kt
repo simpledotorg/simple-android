@@ -1,6 +1,8 @@
 package org.simple.clinic.editpatient
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -24,14 +26,19 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
-class EditPatientEffectHandler(
-    private val ui: EditPatientUi,
+class EditPatientEffectHandler @AssistedInject constructor(
+    @Assisted private val ui: EditPatientUi,
     private val userClock: UserClock,
     private val patientRepository: PatientRepository,
     private val utcClock: UtcClock,
     private val dateOfBirthFormatter: DateTimeFormatter,
     private val schedulersProvider: SchedulersProvider
 ) {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(ui: EditPatientUi): EditPatientEffectHandler
+  }
 
   companion object {
     fun createEffectHandler(

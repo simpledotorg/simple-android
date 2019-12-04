@@ -1,7 +1,6 @@
 package org.simple.clinic.patient
 
 import androidx.annotation.VisibleForTesting
-import androidx.annotation.WorkerThread
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -601,7 +600,6 @@ class PatientRepository @Inject constructor(
         .flatMapSingle { database.patientSearchDao().searchByIds(it, PatientStatus.Active) }
   }
 
-  @WorkerThread
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun haveBpsForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
@@ -613,7 +611,6 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  @WorkerThread
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun hasPrescriptionForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
@@ -625,7 +622,6 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  @WorkerThread
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun hasMedicalHistoryForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
@@ -637,7 +633,6 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  @WorkerThread
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun hasPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
@@ -649,7 +644,6 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  @WorkerThread
   fun hasPatientDataChangedSince(patientUuid: UUID, timestamp: Instant): Boolean {
     val patientChangedSince = hasPatientChangedSince(patientUuid, timestamp)
     val bpsChangedSince = haveBpsForPatientChangedSince(patientUuid, timestamp)

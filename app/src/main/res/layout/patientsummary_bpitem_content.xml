@@ -68,10 +68,7 @@
 
   </LinearLayout>
 
-  <View
+  <include
     android:id="@+id/divider"
-    style="@style/Clinic.Separator.VerticalContent"
-    android:layout_marginStart="@dimen/spacing_8"
-    android:layout_marginEnd="@dimen/spacing_8" />
-
+    layout="@layout/patientsummary_bpsummary_divider" />
 </LinearLayout>

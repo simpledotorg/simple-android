@@ -24,15 +24,29 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
-object EditPatientEffectHandler {
-  fun createEffectHandler(
-      ui: EditPatientUi,
-      userClock: UserClock,
-      patientRepository: PatientRepository,
-      utcClock: UtcClock,
-      dateOfBirthFormatter: DateTimeFormatter,
-      schedulersProvider: SchedulersProvider
-  ): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
+class EditPatientEffectHandler(
+    private val ui: EditPatientUi,
+    private val userClock: UserClock,
+    private val patientRepository: PatientRepository,
+    private val utcClock: UtcClock,
+    private val dateOfBirthFormatter: DateTimeFormatter,
+    private val schedulersProvider: SchedulersProvider
+) {
+
+  companion object {
+    fun createEffectHandler(
+        ui: EditPatientUi,
+        userClock: UserClock,
+        patientRepository: PatientRepository,
+        utcClock: UtcClock,
+        dateOfBirthFormatter: DateTimeFormatter,
+        schedulersProvider: SchedulersProvider
+    ): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
+      return EditPatientEffectHandler(ui, userClock, patientRepository, utcClock, dateOfBirthFormatter, schedulersProvider).build()
+    }
+  }
+
+  fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
         .addConsumer(PrefillFormEffect::class.java, { prefillFormFields(it, ui, userClock) }, schedulersProvider.ui())

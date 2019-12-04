@@ -116,12 +116,13 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private val delegate by unsafeLazy {
     val (patient, address, phoneNumber) = screenKey
+    val effectHandler = EditPatientEffectHandler.createEffectHandler(this, userClock, patientRepository, utcClock, dateOfBirthFormat, schedulersProvider)
     MobiusDelegate(
         events,
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
         EditPatientUpdate(numberValidator, dateOfBirthValidator),
-        EditPatientEffectHandler.createEffectHandler(this, userClock, patientRepository, utcClock, dateOfBirthFormat, schedulersProvider),
+        effectHandler,
         viewRenderer::render,
         crashReporter
     )

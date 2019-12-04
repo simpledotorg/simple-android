@@ -144,7 +144,7 @@ class EditPatientScreenCreatedTest {
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
         EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat)),
-        EditPatientEffectHandler.createEffectHandler(ui, TestUserClock(), mock(), utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()),
+        EditPatientEffectHandler(ui, TestUserClock(), mock(), utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()).build(),
         { /* nothing here */ }
     ).start()
   }

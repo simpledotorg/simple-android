@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/rootLayout"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -12,7 +14,7 @@
     android:id="@+id/facilityList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/searchToolbar"
+    android:layout_below="@+id/toolbarContainer"
     android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_8"
     android:scrollbarStyle="insideOverlay"
@@ -24,19 +26,30 @@
     layout="@layout/screen_registration_facility_selection_progress_state"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/searchToolbar"
+    android:layout_below="@+id/toolbarContainer"
     android:visibility="gone" />
 
-  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-    android:id="@+id/searchToolbar"
-    style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
+  <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
+    android:id="@+id/toolbarContainer"
+    style="@style/Clinic.V2.FacilitySelection.ToolbarFlipper"
+    app:debug_displayedChild="0">
 
-    <EditText
-      android:id="@+id/facilitychange_search"
-      style="@style/Clinic.V2.FacilitySelection.SearchField"
-      android:hint="@string/facilitychange_search_hint"
-      android:importantForAutofill="no"
-      tools:ignore="UnusedAttribute" />
-  </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
+    <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbarWithoutSearch"
+      style="@style/Clinic.V2.FacilitySelection.ToolbarWithoutSearch"
+      app:title="@string/changefacility_screen_title" />
+
+    <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
+      android:id="@+id/toolbarWithSearch"
+      style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
+
+      <EditText
+        android:id="@+id/searchQueryEditText"
+        style="@style/Clinic.V2.FacilitySelection.SearchField"
+        android:hint="@string/facilitychange_search_hint"
+        android:importantForAutofill="no"
+        tools:ignore="UnusedAttribute" />
+    </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
+  </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
 </RelativeLayout>

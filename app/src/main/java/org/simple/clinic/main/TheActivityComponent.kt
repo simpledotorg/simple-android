@@ -18,6 +18,7 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.bp.entry.di.BloodPressureEntryModule
+import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
@@ -146,7 +147,8 @@ interface TheActivityComponent : OnboardingScreenInjector {
 @Module(includes = [
   PatientsModule::class,
   SearchResultsModule::class,
-  BloodPressureEntryModule::class
+  BloodPressureEntryModule::class,
+  AssistedInjectModule::class
 ])
 class TheActivityModule {
 

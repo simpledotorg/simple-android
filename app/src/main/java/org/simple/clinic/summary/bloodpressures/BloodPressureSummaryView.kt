@@ -48,7 +48,7 @@ class BloodPressureSummaryView(
     val listItemViews = generateBpViews(bloodPressureMeasurements, timestampGenerator, userClock, zoneId, bpTimeFormatter, dateFormatter, canEditFor, utcClock)
 
     bpItemContainer.removeAllViews()
-    (listItemViews + placeholderViews).forEach(bpItemContainer::addView)
+    withDividers(listItemViews + placeholderViews).forEach(bpItemContainer::addView)
   }
 
   private fun generatePlaceholders(
@@ -121,5 +121,17 @@ class BloodPressureSummaryView(
     val durationSinceBpCreated = Duration.between(createdAt, now)
 
     return durationSinceBpCreated <= bpEditableFor
+  }
+
+  private fun inflateDividerView() = LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_divider, this, false)
+
+  private fun withDividers(views: List<View>): List<View> {
+    return views
+        .mapIndexed { index: Int, view: View ->
+          val isLastViewInList = index == views.lastIndex
+
+          if (isLastViewInList) listOf(view) else listOf(view, inflateDividerView())
+        }
+        .flatten()
   }
 }

@@ -65,7 +65,7 @@ class BloodPressureItemView(
   }
 
   private fun renderDivider(showDivider: Boolean) {
-    divider.visibility = if (showDivider) View.VISIBLE else View.GONE
+    divider.visibility = GONE
   }
 
   private fun setIconTint(measurement: BloodPressureMeasurement) {

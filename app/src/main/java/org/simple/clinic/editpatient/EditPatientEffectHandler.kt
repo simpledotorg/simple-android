@@ -40,19 +40,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
     fun create(ui: EditPatientUi): EditPatientEffectHandler
   }
 
-  companion object {
-    fun createEffectHandler(
-        ui: EditPatientUi,
-        userClock: UserClock,
-        patientRepository: PatientRepository,
-        utcClock: UtcClock,
-        dateOfBirthFormatter: DateTimeFormatter,
-        schedulersProvider: SchedulersProvider
-    ): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
-      return EditPatientEffectHandler(ui, userClock, patientRepository, utcClock, dateOfBirthFormatter, schedulersProvider).build()
-    }
-  }
-
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()

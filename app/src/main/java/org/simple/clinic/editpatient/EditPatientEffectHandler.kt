@@ -49,22 +49,18 @@ class EditPatientEffectHandler(
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
-        .addConsumer(PrefillFormEffect::class.java, { prefillFormFields(it, ui, userClock) }, schedulersProvider.ui())
-        .addConsumer(ShowValidationErrorsEffect::class.java, { showValidationErrors(it, ui) }, schedulersProvider.ui())
+        .addConsumer(PrefillFormEffect::class.java, ::prefillFormFields, schedulersProvider.ui())
+        .addConsumer(ShowValidationErrorsEffect::class.java, ::showValidationErrors, schedulersProvider.ui())
         .addConsumer(HideValidationErrorsEffect::class.java, { ui.hideValidationErrors(it.validationErrors) }, schedulersProvider.ui())
-        .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java, { ui.showDatePatternInDateOfBirthLabel() }, schedulersProvider.ui())
-        .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java, { ui.hideDatePatternInDateOfBirthLabel() }, schedulersProvider.ui())
-        .addAction(GoBackEffect::class.java, { ui.goBack() }, schedulersProvider.ui())
-        .addAction(ShowDiscardChangesAlertEffect::class.java, { ui.showDiscardChangesAlert() }, schedulersProvider.ui())
-        .addTransformer(SavePatientEffect::class.java, savePatientTransformer(patientRepository, utcClock, dateOfBirthFormatter, schedulersProvider.io()))
+        .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java, ui::showDatePatternInDateOfBirthLabel, schedulersProvider.ui())
+        .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java, ui::hideDatePatternInDateOfBirthLabel, schedulersProvider.ui())
+        .addAction(GoBackEffect::class.java, ui::goBack, schedulersProvider.ui())
+        .addAction(ShowDiscardChangesAlertEffect::class.java, ui::showDiscardChangesAlert, schedulersProvider.ui())
+        .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
         .build()
   }
 
-  private fun prefillFormFields(
-      prefillFormFieldsEffect: PrefillFormEffect,
-      ui: EditPatientUi,
-      userClock: UserClock
-  ) {
+  private fun prefillFormFields(prefillFormFieldsEffect: PrefillFormEffect) {
     val (patient, address, phoneNumber) = prefillFormFieldsEffect
 
     with(ui) {
@@ -89,45 +85,32 @@ class EditPatientEffectHandler(
     }
   }
 
-  private fun showValidationErrors(
-      effect: ShowValidationErrorsEffect,
-      ui: EditPatientUi
-  ) {
+  private fun showValidationErrors(effect: ShowValidationErrorsEffect) {
     with(ui) {
       showValidationErrors(effect.validationErrors)
       scrollToFirstFieldWithError()
     }
   }
 
-  private fun savePatientTransformer(
-      patientRepository: PatientRepository,
-      utcClock: UtcClock,
-      dateOfBirthFormatter: DateTimeFormatter,
-      scheduler: Scheduler
-  ): ObservableTransformer<SavePatientEffect, EditPatientEvent> {
+  private fun savePatientTransformer(scheduler: Scheduler): ObservableTransformer<SavePatientEffect, EditPatientEvent> {
     return ObservableTransformer { savePatientEffects ->
       val sharedSavePatientEffects = savePatientEffects
           .subscribeOn(scheduler)
           .share()
 
       Observable.merge(
-          createOrUpdatePhoneNumber(sharedSavePatientEffects, patientRepository),
-          savePatient(sharedSavePatientEffects, patientRepository, utcClock, dateOfBirthFormatter)
+          createOrUpdatePhoneNumber(sharedSavePatientEffects),
+          savePatient(sharedSavePatientEffects)
       )
     }
   }
 
-  private fun savePatient(
-      savePatientEffects: Observable<SavePatientEffect>,
-      patientRepository: PatientRepository,
-      utcClock: UtcClock,
-      dateOfBirthFormatter: DateTimeFormatter
-  ): Observable<EditPatientEvent> {
+  private fun savePatient(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
         .map { (ongoingEditPatientEntry, patient, patientAddress, _) ->
-          getUpdatedPatientAndAddress(patient, patientAddress, ongoingEditPatientEntry, utcClock, dateOfBirthFormatter)
+          getUpdatedPatientAndAddress(patient, patientAddress, ongoingEditPatientEntry)
         }.flatMapSingle { (updatedPatient, updatedAddress) ->
-          savePatientAndAddress(patientRepository, updatedPatient, updatedAddress)
+          savePatientAndAddress(updatedPatient, updatedAddress)
         }
         .map { PatientSaved }
   }
@@ -135,20 +118,16 @@ class EditPatientEffectHandler(
   private fun getUpdatedPatientAndAddress(
       patient: Patient,
       patientAddress: PatientAddress,
-      ongoingEntry: EditablePatientEntry,
-      utcClock: UtcClock,
-      dateOfBirthFormatter: DateTimeFormatter
+      ongoingEntry: EditablePatientEntry
   ): Pair<Patient, PatientAddress> {
-    val updatedPatient = updatePatient(patient, ongoingEntry, dateOfBirthFormatter, utcClock)
+    val updatedPatient = updatePatient(patient, ongoingEntry)
     val updatedAddress = updateAddress(patientAddress, ongoingEntry)
     return updatedPatient to updatedAddress
   }
 
   private fun updatePatient(
       patient: Patient,
-      ongoingEntry: EditablePatientEntry,
-      dateOfBirthFormatter: DateTimeFormatter,
-      utcClock: UtcClock
+      ongoingEntry: EditablePatientEntry
   ): Patient {
     val patientWithoutAgeOrDateOfBirth = patient
         .withNameAndGender(ongoingEntry.name, ongoingEntry.gender)
@@ -156,7 +135,7 @@ class EditPatientEffectHandler(
 
     return when (ongoingEntry.ageOrDateOfBirth) {
       is EntryWithAge -> {
-        val age = coerceAgeFrom(patient.age, ongoingEntry.ageOrDateOfBirth.age, utcClock)
+        val age = coerceAgeFrom(patient.age, ongoingEntry.ageOrDateOfBirth.age)
         patientWithoutAgeOrDateOfBirth.withAge(age)
       }
 
@@ -167,7 +146,7 @@ class EditPatientEffectHandler(
     }
   }
 
-  private fun coerceAgeFrom(alreadySavedAge: Age?, enteredAge: String, utcClock: UtcClock): Age {
+  private fun coerceAgeFrom(alreadySavedAge: Age?, enteredAge: String): Age {
     val enteredAgeValue = enteredAge.toInt()
     return when {
       alreadySavedAge != null && alreadySavedAge.value == enteredAgeValue -> alreadySavedAge
@@ -182,10 +161,7 @@ class EditPatientEffectHandler(
     patientAddress.withLocality(colonyOrVillage, district, state)
   }
 
-  private fun createOrUpdatePhoneNumber(
-      savePatientEffects: Observable<SavePatientEffect>,
-      patientRepository: PatientRepository
-  ): Observable<EditPatientEvent> {
+  private fun createOrUpdatePhoneNumber(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     fun isPhoneNumberPresent(existingPhoneNumber: PatientPhoneNumber?, enteredPhoneNumber: String): Boolean =
         existingPhoneNumber != null || enteredPhoneNumber.isNotBlank()
 
@@ -197,14 +173,13 @@ class EditPatientEffectHandler(
         .share()
 
     return Observable.merge(
-        createPhoneNumber(effectsWithPhoneNumber, patientRepository),
-        updatePhoneNumber(effectsWithPhoneNumber, patientRepository)
+        createPhoneNumber(effectsWithPhoneNumber),
+        updatePhoneNumber(effectsWithPhoneNumber)
     )
   }
 
   private fun updatePhoneNumber(
-      phoneNumbers: Observable<Triple<UUID, PatientPhoneNumber?, String>>,
-      patientRepository: PatientRepository
+      phoneNumbers: Observable<Triple<UUID, PatientPhoneNumber?, String>>
   ): Observable<EditPatientEvent> {
     fun hasExistingPhoneNumber(existingPhoneNumber: PatientPhoneNumber?, enteredPhoneNumber: String): Boolean =
         existingPhoneNumber != null && enteredPhoneNumber.isNotBlank()
@@ -221,8 +196,7 @@ class EditPatientEffectHandler(
   }
 
   private fun createPhoneNumber(
-      phoneNumbers: Observable<Triple<UUID, PatientPhoneNumber?, String>>,
-      patientRepository: PatientRepository
+      phoneNumbers: Observable<Triple<UUID, PatientPhoneNumber?, String>>
   ): Observable<EditPatientEvent> {
     fun noExistingPhoneNumberButHasEnteredPhoneNumber(existingPhoneNumber: PatientPhoneNumber?, enteredPhoneNumber: String): Boolean =
         existingPhoneNumber == null && enteredPhoneNumber.isNotBlank()
@@ -237,7 +211,6 @@ class EditPatientEffectHandler(
   }
 
   private fun savePatientAndAddress(
-      patientRepository: PatientRepository,
       updatedPatient: Patient,
       updatedAddress: PatientAddress
   ): Single<Boolean> {

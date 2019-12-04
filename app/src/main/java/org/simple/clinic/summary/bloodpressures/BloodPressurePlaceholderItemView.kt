@@ -3,6 +3,7 @@ package org.simple.clinic.summary.bloodpressures
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.patientsummary_bpplaceholderitem_content.view.*
 import org.simple.clinic.R
@@ -18,6 +19,6 @@ class BloodPressurePlaceholderItemView(
 
   fun render(showHint: Boolean, showDivider: Boolean) {
     placeHolderMessageTextView.visibility = if (showHint) VISIBLE else INVISIBLE
-    placeholderDivider.visibility = if (showDivider) VISIBLE else INVISIBLE
+    placeholderDivider.visibility = GONE
   }
 }

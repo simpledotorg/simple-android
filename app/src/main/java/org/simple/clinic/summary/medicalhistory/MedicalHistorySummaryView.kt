@@ -19,6 +19,8 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.util.RelativeTimestamp
 import org.threeten.bp.format.DateTimeFormatter
 
+private typealias AnswerToggled = (MedicalHistoryQuestion, Answer) -> Unit
+
 class MedicalHistorySummaryView(
     context: Context,
     attributeSet: AttributeSet
@@ -29,11 +31,12 @@ class MedicalHistorySummaryView(
     diabetesQuestionView.hideDivider()
   }
 
+  var answerToggled: AnswerToggled? = null
+
   fun bind(
       medicalHistory: MedicalHistory,
       lastUpdatedAt: RelativeTimestamp,
-      dateFormatter: DateTimeFormatter,
-      answerToggled: (MedicalHistoryQuestion, Answer) -> Unit
+      dateFormatter: DateTimeFormatter
   ) {
     val updatedAtDisplayText = lastUpdatedAt.displayText(context, dateFormatter)
 
@@ -53,9 +56,9 @@ class MedicalHistorySummaryView(
   private fun MedicalHistoryQuestionView.render(
       question: MedicalHistoryQuestion,
       answer: Answer,
-      answerToggled: (MedicalHistoryQuestion, Answer) -> Unit
+      answerToggled: AnswerToggled?
   ) {
     render(question, answer)
-    answerChangeListener = { newAnswer -> answerToggled(question, newAnswer) }
+    answerChangeListener = { newAnswer -> answerToggled?.invoke(question, newAnswer) }
   }
 }

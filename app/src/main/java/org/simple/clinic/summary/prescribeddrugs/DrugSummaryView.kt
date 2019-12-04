@@ -12,6 +12,8 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.format.DateTimeFormatter
 
+private typealias UpdateClicked = () -> Unit
+
 class DrugSummaryView(context: Context, attributeSet: AttributeSet) : CardView(context, attributeSet) {
 
   init {
@@ -20,13 +22,14 @@ class DrugSummaryView(context: Context, attributeSet: AttributeSet) : CardView(c
 
   private val timestampGenerator = RelativeTimestampGenerator()
 
+  var updateClicked: UpdateClicked? = null
+
   fun bind(
       prescriptions: List<PrescribedDrug>,
       dateFormatter: DateTimeFormatter,
-      userClock: UserClock,
-      updateClicked: () -> Unit
+      userClock: UserClock
   ) {
-    updateButton.setOnClickListener { updateClicked() }
+    updateButton.setOnClickListener { updateClicked?.invoke() }
 
     summaryViewGroup.visibleOrGone(prescriptions.isNotEmpty())
 

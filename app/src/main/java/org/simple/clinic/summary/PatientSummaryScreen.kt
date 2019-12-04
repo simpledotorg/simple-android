@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
@@ -113,8 +112,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     """)
   private var patientSummaryProfile: PatientSummaryProfile? = null
 
-  private val adapterUiEvents = PublishSubject.create<UiEvent>()
-
   private var linkIdWithPatientShown: Boolean = false
 
   override fun onSaveInstanceState(): Parcelable {
@@ -149,13 +146,14 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             screenCreates(),
             backClicks(),
             doneClicks(),
-            adapterUiEvents,
             bloodPressureSaves(),
             appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
             identifierLinkCancelledEvents(),
             updateDrugsClicks(),
-            cvHistoryAnswerToggles()
+            cvHistoryAnswerToggles(),
+            editMeasurementClicks(),
+            newBpClicks()
         ),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
@@ -243,6 +241,22 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
+  private fun editMeasurementClicks(): Observable<UiEvent> {
+    return Observable.create { emitter ->
+      bloodPressureSummaryView.editMeasurementClicked = { measurement -> emitter.onNext(PatientSummaryBpClicked(measurement)) }
+
+      emitter.setCancellable { bloodPressureSummaryView.editMeasurementClicked = null }
+    }
+  }
+
+  private fun newBpClicks(): Observable<UiEvent> {
+    return Observable.create { emitter ->
+      bloodPressureSummaryView.newBpClicked = { emitter.onNext(PatientSummaryNewBpClicked()) }
+
+      emitter.setCancellable { bloodPressureSummaryView.newBpClicked = null }
+    }
+  }
+
   @SuppressLint("SetTextI18n")
   override fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
@@ -325,11 +339,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         canEditFor = config.bpEditableDuration,
         bpTimeFormatter = timeFormatterForBp,
         zoneId = zoneId,
-        userClock = userClock,
-        editMeasurementClicked = { clickedMeasurement ->
-          adapterUiEvents.onNext(PatientSummaryBpClicked(clickedMeasurement))
-        },
-        newBpClicked = { adapterUiEvents.onNext(PatientSummaryNewBpClicked()) }
+        userClock = userClock
     )
   }
 

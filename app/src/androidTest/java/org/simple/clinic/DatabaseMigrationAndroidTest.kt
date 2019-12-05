@@ -1,15 +1,11 @@
 package org.simple.clinic
 
-import android.content.ContentValues
-import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
-import android.database.sqlite.SQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import com.google.common.truth.Truth.assertWithMessage
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,15 +19,12 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.generateEncounterUuid
-import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
-
-private val dateConverter = LocalDateRoomTypeConverter()
 
 @Suppress("LocalVariableName")
 @RunWith(AndroidJUnit4::class)
@@ -4079,92 +4072,4 @@ class DatabaseMigrationAndroidTest {
     // then
     db_v54.assertTableDoesNotExist("Encounter")
   }
-}
-
-private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
-private fun Cursor.boolean(column: String): Boolean? = getInt(getColumnIndex(column)) == 1
-private fun Cursor.integer(columnName: String): Int? = getInt(getColumnIndex(columnName))
-private fun Cursor.long(columnName: String): Long = getLong(getColumnIndex(columnName))
-private fun Cursor.double(columnName: String): Double = getDouble(getColumnIndex(columnName))
-private fun Cursor.float(columnName: String): Float = getFloat(getColumnIndex(columnName))
-private fun Cursor.uuid(columnName: String): UUID? = string(columnName)?.let { UUID.fromString(it) }
-private fun Cursor.instant(columnName: String): Instant? = string(columnName)?.let { Instant.parse(it) }
-private fun Cursor.localDate(columnName: String): LocalDate? = string(columnName).let(dateConverter::toLocalDate)
-
-private fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedCount: Int) {
-  this.query("""
-      SELECT * FROM "$tableName"
-    """).use {
-    assertWithMessage("With table [$tableName]").that(it.columnCount).isEqualTo(expectedCount)
-  }
-}
-
-private fun SupportSQLiteDatabase.assertTableDoesNotExist(tableName: String) {
-  query("""
-    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$tableName'
-    """).use {
-    assertWithMessage("Expected that [$tableName] does not exist, but found it exists").that(it.count).isEqualTo(0)
-  }
-}
-
-private fun SupportSQLiteDatabase.assertTableExists(tableName: String) {
-  query("""
-    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$tableName'
-    """).use {
-    assertWithMessage("Expected that [$tableName] exists, but found it does not exist").that(it.count).isEqualTo(1)
-  }
-}
-
-private fun SupportSQLiteDatabase.assertColumns(tableName: String, expectedColumns: Set<String>) {
-  query("""
-    SELECT * FROM "$tableName" LIMIT 0
-  """).use { cursor ->
-    val columnsPresentInDatabase = cursor.columnNames.toSet()
-    assertThat(columnsPresentInDatabase).isEqualTo(expectedColumns)
-  }
-}
-
-private fun SupportSQLiteDatabase.insert(tableName: String, valuesMap: Map<String, Any?>) {
-  val contentValues = valuesMap
-      .entries
-      .fold(ContentValues()) { values, (key, value) ->
-        when (value) {
-          null -> values.putNull(key)
-          is Int -> values.put(key, value)
-          is Long -> values.put(key, value)
-          is Float -> values.put(key, value)
-          is Double -> values.put(key, value)
-          is Boolean -> values.put(key, value)
-          is String -> values.put(key, value)
-          is UUID -> values.put(key, value.toString())
-          is Instant -> values.put(key, value.toString())
-          is LocalDate -> values.put(key, dateConverter.fromLocalDate(value))
-          else -> throw IllegalArgumentException("Unknown type (${value.javaClass.name}) for key: $key")
-        }
-
-        values
-      }
-
-  insert(tableName, SQLiteDatabase.CONFLICT_ABORT, contentValues)
-}
-
-private fun Cursor.assertValues(valuesMap: Map<String, Any?>) {
-  assertThat(columnNames.toSet()).containsExactlyElementsIn(valuesMap.keys)
-  valuesMap
-      .forEach { (key, value) ->
-        val withMessage = assertWithMessage("For column [$key]: ")
-        when (value) {
-          null -> withMessage.that(isNull(getColumnIndex(key))).isTrue()
-          is Int -> withMessage.that(integer(key)).isEqualTo(value)
-          is Long -> withMessage.that(long(key)).isEqualTo(value)
-          is Float -> withMessage.that(float(key)).isEqualTo(value)
-          is Double -> withMessage.that(double(key)).isEqualTo(value)
-          is Boolean -> withMessage.that(boolean(key)).isEqualTo(value)
-          is String -> withMessage.that(string(key)).isEqualTo(value)
-          is UUID -> withMessage.that(uuid(key)).isEqualTo(value)
-          is Instant -> withMessage.that(instant(key)).isEqualTo(value)
-          is LocalDate -> withMessage.that(localDate(key)).isEqualTo(value)
-          else -> throw IllegalArgumentException("Unknown type (${value.javaClass.name}) for key: $key")
-        }
-      }
 }

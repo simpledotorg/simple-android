@@ -46,7 +46,7 @@ class PhoneMaskBottomSheetController @Inject constructor(
         requestCallPermissionForSecureCalls(replayedEvents),
         makeNormalCall(replayedEvents),
         makeSecureCall(replayedEvents),
-        enableSecureCallButton(replayedEvents)
+        hideSecureCallButton(replayedEvents)
     )
   }
 
@@ -132,14 +132,14 @@ class PhoneMaskBottomSheetController @Inject constructor(
         .map { it.number }
   }
 
-  private fun enableSecureCallButton(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun hideSecureCallButton(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreates = events.ofType<PhoneMaskBottomSheetCreated>()
     val phoneMaskFeatureEnabled = config.phoneMaskingFeatureEnabled && !config.proxyPhoneNumber.isBlank()
 
     return screenCreates.map {
       { ui: Ui ->
-        if (phoneMaskFeatureEnabled) {
-          ui.showSecureCallButton()
+        if (!phoneMaskFeatureEnabled) {
+          ui.hideSecureCallButton()
         }
       }
     }

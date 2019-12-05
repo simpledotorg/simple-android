@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Fixes
+- Fixed the broken UI on the phone call sheet (https://www.pivotaltracker.com/story/show/169860653)
+
 ### Internal
 - Use the selected country for connecting to the server
 

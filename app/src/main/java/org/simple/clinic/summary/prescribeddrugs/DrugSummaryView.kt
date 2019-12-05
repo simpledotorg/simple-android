@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
-import kotlinx.android.synthetic.main.patientsummary_drugview_content.view.*
+import kotlinx.android.synthetic.main.drugs_summary_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.util.RelativeTimestampGenerator
@@ -15,7 +15,7 @@ import org.threeten.bp.format.DateTimeFormatter
 class DrugSummaryView(context: Context, attributeSet: AttributeSet) : CardView(context, attributeSet) {
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_drugview_content, this, true)
+    LayoutInflater.from(context).inflate(R.layout.drugs_summary_view, this, true)
   }
 
   private val timestampGenerator = RelativeTimestampGenerator()
@@ -36,7 +36,7 @@ class DrugSummaryView(context: Context, attributeSet: AttributeSet) : CardView(c
 
     if (prescriptions.isNotEmpty()) {
       prescriptions
-          .map { drug -> DrugView.create(drugsSummaryContainer, drug) }
+          .map { drug -> DrugSummaryItemView.create(drugsSummaryContainer, drug) }
           .forEach { drugView -> drugsSummaryContainer.addView(drugView, drugsSummaryContainer.childCount - 1) }
 
       val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt }!!

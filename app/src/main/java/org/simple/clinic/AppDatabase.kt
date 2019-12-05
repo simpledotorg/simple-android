@@ -3,6 +3,7 @@ package org.simple.clinic
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
@@ -51,9 +52,10 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       Protocol::class,
       ProtocolDrug::class,
       BusinessId::class,
-      MissingPhoneReminder::class
+      MissingPhoneReminder::class,
+      BloodSugarMeasurement::class
     ],
-    version = 54,
+    version = 55,
     exportSchema = true
 )
 @TypeConverters(

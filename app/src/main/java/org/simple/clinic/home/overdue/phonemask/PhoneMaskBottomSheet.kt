@@ -25,7 +25,7 @@ import javax.inject.Inject
 private const val REQUESTCODE_CALL_PHONE_PERMISSION = 21
 private const val CALL_PHONE_PERMISSION = Manifest.permission.CALL_PHONE
 
-class PhoneMaskBottomSheet : BottomSheetActivity() {
+class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -56,7 +56,7 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
   }
 
   @SuppressLint("SetTextI18n")
-  fun setupView(patient: PatientDetails) {
+  override fun setupView(patient: PatientDetails) {
     patient.apply {
       val genderLetter = resources.getString(gender.displayLetterRes)
       nameTextView.text = "$name, $genderLetter, $age"
@@ -85,15 +85,15 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
     super.onDestroy()
   }
 
-  fun requestCallPermission() {
+  override fun requestCallPermission() {
     RuntimePermissions.request(this, CALL_PHONE_PERMISSION, REQUESTCODE_CALL_PHONE_PERMISSION)
   }
 
-  fun closeSheet() {
+  override fun closeSheet() {
     finish()
   }
 
-  fun showSecureCallButton() {
+  override fun showSecureCallButton() {
     secureCallButton.visibility = View.VISIBLE
   }
 

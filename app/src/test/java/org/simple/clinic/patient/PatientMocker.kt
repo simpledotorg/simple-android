@@ -22,10 +22,8 @@ import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomPatientPhoneNumberType
-import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -122,8 +120,7 @@ object PatientMocker {
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        recordedAt = recordedAt,
-        encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, recordedAt.toLocalDateAtZone(UTC))
+        recordedAt = recordedAt
     )
   }
 

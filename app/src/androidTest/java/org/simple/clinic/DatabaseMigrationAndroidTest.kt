@@ -3975,6 +3975,110 @@ class DatabaseMigrationAndroidTest {
       db_53.assertColumns("PatientAddress", columns)
     }
   }
+
+  @Test
+  fun migration_to_54_should_remove_the_encounterUuid_column_from_the_BloodPressureMeasurement_table() {
+    // given
+    val db_v53 = helper.createDatabase(53)
+    db_v53.insert("BloodPressureMeasurement", mapOf(
+        "uuid" to UUID.fromString("99e9a490-deaa-4eab-b3c4-f63f1566e76c"),
+        "systolic" to 120,
+        "diastolic" to 80,
+        "syncStatus" to "DONE",
+        "userUuid" to UUID.fromString("ae1515fe-b68e-47e1-ac3d-28b581e8c749"),
+        "facilityUuid" to UUID.fromString("1b2ec11b-4bf0-4ca3-aebd-9c6ca618ea24"),
+        "patientUuid" to UUID.fromString("1462d918-c778-42d9-bb8e-545682156530"),
+        "encounterUuid" to UUID.fromString("aaffec4b-3aa9-4332-80f8-7718875c81ee"),
+        "createdAt" to Instant.parse("2018-01-01T00:00:00Z"),
+        "updatedAt" to Instant.parse("2018-01-01T00:00:01Z"),
+        "deletedAt" to null,
+        "recordedAt" to Instant.parse("2017-12-31T00:00:00Z")
+    ))
+    db_v53.insert("BloodPressureMeasurement", mapOf(
+        "uuid" to UUID.fromString("84618efe-7aef-4871-9309-9ff5d8fef764"),
+        "systolic" to 140,
+        "diastolic" to 90,
+        "syncStatus" to "PENDING",
+        "userUuid" to UUID.fromString("ae1515fe-b68e-47e1-ac3d-28b581e8c749"),
+        "facilityUuid" to UUID.fromString("1b2ec11b-4bf0-4ca3-aebd-9c6ca618ea24"),
+        "patientUuid" to UUID.fromString("dfb647d5-c780-4324-bca6-4d07a01bbcb9"),
+        "encounterUuid" to UUID.fromString("66d01c35-0996-492f-9bf4-f9817f73f968"),
+        "createdAt" to Instant.parse("2018-01-02T00:00:00Z"),
+        "updatedAt" to Instant.parse("2018-01-02T00:00:01Z"),
+        "deletedAt" to Instant.parse("2018-01-02T00:00:02Z"),
+        "recordedAt" to Instant.parse("2018-01-01T00:00:00Z")
+    ))
+
+    // when
+    val db_v54 = helper.migrateTo(54)
+
+    // then
+    db_v54.assertColumns(
+        "BloodPressureMeasurement",
+        setOf(
+            "uuid",
+            "systolic",
+            "diastolic",
+            "syncStatus",
+            "userUuid",
+            "facilityUuid",
+            "patientUuid",
+            "createdAt",
+            "updatedAt",
+            "deletedAt",
+            "recordedAt"
+        )
+    )
+    db_v54.query(""" SELECT * from "BloodPressureMeasurement" """).use { cursor ->
+
+      with(cursor) {
+        assertThat(count).isEqualTo(2)
+
+        moveToNext()
+        assertValues(mapOf(
+            "uuid" to UUID.fromString("99e9a490-deaa-4eab-b3c4-f63f1566e76c"),
+            "systolic" to 120,
+            "diastolic" to 80,
+            "syncStatus" to "DONE",
+            "userUuid" to UUID.fromString("ae1515fe-b68e-47e1-ac3d-28b581e8c749"),
+            "facilityUuid" to UUID.fromString("1b2ec11b-4bf0-4ca3-aebd-9c6ca618ea24"),
+            "patientUuid" to UUID.fromString("1462d918-c778-42d9-bb8e-545682156530"),
+            "createdAt" to Instant.parse("2018-01-01T00:00:00Z"),
+            "updatedAt" to Instant.parse("2018-01-01T00:00:01Z"),
+            "deletedAt" to null,
+            "recordedAt" to Instant.parse("2017-12-31T00:00:00Z")
+        ))
+
+        moveToNext()
+        assertValues(mapOf(
+            "uuid" to UUID.fromString("84618efe-7aef-4871-9309-9ff5d8fef764"),
+            "systolic" to 140,
+            "diastolic" to 90,
+            "syncStatus" to "PENDING",
+            "userUuid" to UUID.fromString("ae1515fe-b68e-47e1-ac3d-28b581e8c749"),
+            "facilityUuid" to UUID.fromString("1b2ec11b-4bf0-4ca3-aebd-9c6ca618ea24"),
+            "patientUuid" to UUID.fromString("dfb647d5-c780-4324-bca6-4d07a01bbcb9"),
+            "createdAt" to Instant.parse("2018-01-02T00:00:00Z"),
+            "updatedAt" to Instant.parse("2018-01-02T00:00:01Z"),
+            "deletedAt" to Instant.parse("2018-01-02T00:00:02Z"),
+            "recordedAt" to Instant.parse("2018-01-01T00:00:00Z")
+        ))
+      }
+    }
+  }
+
+  @Test
+  fun migration_to_54_should_drop_the_Encounter_table() {
+    // given
+    val db_v53 = helper.createDatabase(53)
+    db_v53.assertTableExists("Encounter")
+
+    // when
+    val db_v54 = helper.migrateTo(54)
+
+    // then
+    db_v54.assertTableDoesNotExist("Encounter")
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

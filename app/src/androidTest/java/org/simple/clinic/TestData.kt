@@ -696,8 +696,7 @@ class TestData @Inject constructor(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        recordedAt = recordedAt,
-        encounterUuid = generateEncounterUuid(facilityUuid, patientUuid, recordedAt.toLocalDateAtZone(userClock.zone))
+        recordedAt = recordedAt
     )
   }
 

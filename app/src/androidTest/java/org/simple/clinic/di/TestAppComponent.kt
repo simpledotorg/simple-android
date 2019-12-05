@@ -1,7 +1,6 @@
 package org.simple.clinic.di
 
 import dagger.Component
-import org.simple.clinic.DatabaseMigrationAndroidTest
 import org.simple.clinic.DateOfBirthHintUnfocusedAndroidTest
 import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
@@ -29,6 +28,7 @@ import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.storage.files.AndroidFileStorageAndroidTest
+import org.simple.clinic.storage.migrations.DatabaseMigrationAndroidTest
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.RegisterUserServerIntegrationTest

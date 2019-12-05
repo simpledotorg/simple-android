@@ -1,4 +1,4 @@
-package org.simple.clinic
+package org.simple.clinic.storage.migrations
 
 import android.database.sqlite.SQLiteConstraintException
 import androidx.room.migration.Migration
@@ -11,7 +11,20 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
+import org.simple.clinic.MigrationTestHelperWithForeignKeyConstraints
+import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
+import org.simple.clinic.assertColumnCount
+import org.simple.clinic.assertColumns
+import org.simple.clinic.assertTableDoesNotExist
+import org.simple.clinic.assertTableExists
+import org.simple.clinic.assertValues
+import org.simple.clinic.boolean
+import org.simple.clinic.double
+import org.simple.clinic.insert
+import org.simple.clinic.integer
 import org.simple.clinic.storage.inTransaction
+import org.simple.clinic.string
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -20,6 +33,7 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.toLocalDateAtZone
+import org.simple.clinic.uuid
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID

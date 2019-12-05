@@ -10,7 +10,6 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
@@ -31,23 +30,18 @@ import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.reports.ReportsRepository
-import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityChangeClicked
 import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityLocationPermissionChanged
 import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilitySearchQueryChanged
 import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityUserLocationUpdated
-import org.simple.clinic.storage.files.DeleteFileResult
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestElapsedRealtimeClock
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
-import java.io.File
 import java.util.concurrent.TimeUnit
 
 @RunWith(JUnitParamsRunner::class)
@@ -59,9 +53,7 @@ class FacilitySelectionActivityControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()!!
   private val screen = mock<FacilitySelectionActivity>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val reportsRepository = mock<ReportsRepository>()
   private val userSession = mock<UserSession>()
-  private val reportsSync = mock<ReportsSync>()
   private val locationRepository = mock<LocationRepository>()
   private val listItemBuilder = mock<FacilityListItemBuilder>()
   private val testComputationScheduler = TestScheduler()
@@ -87,9 +79,7 @@ class FacilitySelectionActivityControllerTest {
 
     controller = FacilitySelectionActivityController(
         facilityRepository = facilityRepository,
-        reportsRepository = reportsRepository,
         userSession = userSession,
-        reportsSync = reportsSync,
         locationRepository = locationRepository,
         configProvider = configProvider,
         elapsedRealtimeClock = elapsedRealtimeClock,
@@ -150,10 +140,6 @@ class FacilitySelectionActivityControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
     whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
-    whenever(reportsRepository.reportsFile()).thenReturn(Observable.just(File("").toOptional()))
-
-    whenever(reportsRepository.deleteReportsFile()).thenReturn(Single.just(DeleteFileResult.Success))
-    whenever(reportsSync.sync()).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFacilityChangeClicked(newFacility))
 
@@ -161,34 +147,6 @@ class FacilitySelectionActivityControllerTest {
     inOrder.verify(facilityRepository).associateUserWithFacility(user, newFacility)
     inOrder.verify(screen).goBack()
   }
-
-  @Test
-  @Parameters(method = "params for when a facility is changed then the report has to be deleted and synced")
-  fun `when a facility is changed then the report has to be deleted and synced`(
-      deleteReport: Single<DeleteFileResult>,
-      reportsSyncCompletable: Completable
-  ) {
-    val newFacility = PatientMocker.facility()
-    whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
-    whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
-    whenever(reportsRepository.deleteReportsFile()).thenReturn(deleteReport)
-    whenever(reportsSync.sync()).thenReturn(reportsSyncCompletable)
-
-    uiEvents.onNext(PatientFacilityChangeClicked(newFacility))
-
-    deleteReport.test().assertSubscribed()
-    reportsSyncCompletable.test().assertSubscribed()
-    verify(screen).goBack()
-  }
-
-  @Suppress("Unused")
-  private fun `params for when a facility is changed then the report has to be deleted and synced`(): List<List<Any>> =
-      listOf(
-          listOf(Single.just(DeleteFileResult.Success), Completable.complete()),
-          listOf(Single.just(DeleteFileResult.Success), Completable.error(Exception())),
-          listOf(Single.just(DeleteFileResult.Failure(Exception())), Completable.complete()),
-          listOf(Single.just(DeleteFileResult.Failure(Exception())), Completable.error(Exception()))
-      )
 
   @Test
   fun `when screen is started and location permission is available then location should be fetched`() {

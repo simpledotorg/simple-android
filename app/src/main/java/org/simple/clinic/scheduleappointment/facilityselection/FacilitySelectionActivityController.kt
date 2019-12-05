@@ -16,8 +16,6 @@ import org.simple.clinic.facility.change.FacilityChangeConfig
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
-import org.simple.clinic.reports.ReportsRepository
-import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityChangeClicked
 import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityLocationPermissionChanged
 import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilitySearchQueryChanged
@@ -35,9 +33,7 @@ typealias UiChange = (Ui) -> Unit
 
 class FacilitySelectionActivityController @Inject constructor(
     private val facilityRepository: FacilityRepository,
-    private val reportsRepository: ReportsRepository,
     private val userSession: UserSession,
-    private val reportsSync: ReportsSync,
     private val locationRepository: LocationRepository,
     private val configProvider: Observable<FacilityChangeConfig>,
     private val elapsedRealtimeClock: ElapsedRealtimeClock,
@@ -184,17 +180,7 @@ class FacilitySelectionActivityController @Inject constructor(
                     .associateUserWithFacility(it, facility)
                     .andThen(facilityRepository.setCurrentFacility(it, facility))
               }
-              .doOnComplete { clearAndSyncReports() }
               .andThen(Single.just(Ui::goBack))
         }
-  }
-
-  private fun clearAndSyncReports() {
-    reportsRepository
-        .deleteReportsFile()
-        .toCompletable()
-        .andThen(reportsSync.sync().onErrorComplete())
-        .subscribeOn(Schedulers.io())
-        .subscribe()
   }
 }

@@ -4,5 +4,5 @@ interface PhoneMaskBottomSheetUi {
   fun setupView(patient: PatientDetails)
   fun requestCallPermission()
   fun closeSheet()
-  fun showSecureCallButton()
+  fun hideSecureCallButton()
 }

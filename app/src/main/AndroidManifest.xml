@@ -89,7 +89,7 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".scheduleappointment.patientFacilityTransfer.PatientFacilityChangeActivity"
+      android:name=".scheduleappointment.facilityselection.PatientFacilityChangeActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <receiver

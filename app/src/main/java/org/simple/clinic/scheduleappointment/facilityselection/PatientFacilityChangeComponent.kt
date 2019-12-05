@@ -1,4 +1,4 @@
-package org.simple.clinic.scheduleappointment.patientFacilityTransfer
+package org.simple.clinic.scheduleappointment.facilityselection
 
 import dagger.Subcomponent
 import org.simple.clinic.activity.BindsActivity

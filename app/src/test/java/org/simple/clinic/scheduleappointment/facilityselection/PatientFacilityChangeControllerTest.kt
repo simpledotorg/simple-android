@@ -1,4 +1,4 @@
-package org.simple.clinic.scheduleappointment.patientFacilityTransfer
+package org.simple.clinic.scheduleappointment.facilityselection
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq

@@ -11,10 +11,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.generateEncounterUuid
-import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -22,8 +19,7 @@ import javax.inject.Inject
 @AppScope
 class BloodPressureRepository @Inject constructor(
     private val dao: BloodPressureMeasurement.RoomDao,
-    private val utcClock: UtcClock,
-    private val userClock: UserClock
+    private val utcClock: UtcClock
 ) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
   fun saveMeasurement(

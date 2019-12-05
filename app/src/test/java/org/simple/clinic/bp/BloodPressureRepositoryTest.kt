@@ -29,13 +29,12 @@ class BloodPressureRepositoryTest {
 
   private val dao = mock<BloodPressureMeasurement.RoomDao>()
   private val testClock = TestUtcClock()
-  private val userClock = TestUserClock()
 
   private lateinit var repository: BloodPressureRepository
 
   @Before
   fun setUp() {
-    repository = BloodPressureRepository(dao, testClock, userClock)
+    repository = BloodPressureRepository(dao, testClock)
   }
 
   @Test

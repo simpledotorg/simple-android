@@ -24,11 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilitiesUpdateType
-import org.simple.clinic.facility.change.FacilityChangeClicked
 import org.simple.clinic.facility.change.FacilityChangeConfig
-import org.simple.clinic.facility.change.FacilityChangeLocationPermissionChanged
-import org.simple.clinic.facility.change.FacilityChangeSearchQueryChanged
-import org.simple.clinic.facility.change.FacilityChangeUserLocationUpdated
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.Coordinates
@@ -37,6 +33,10 @@ import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
+import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityChangeClicked
+import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityLocationPermissionChanged
+import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilitySearchQueryChanged
+import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityUserLocationUpdated
 import org.simple.clinic.storage.files.DeleteFileResult
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
@@ -113,8 +113,8 @@ class FacilitySelectionActivityControllerTest {
     val facilityListItems = emptyList<FacilityListItem>()
     whenever(listItemBuilder.build(any(), any(), any(), any())).thenReturn(facilityListItems)
 
-    uiEvents.onNext(FacilityChangeUserLocationUpdated(LocationUpdate.Unavailable))
-    uiEvents.onNext(FacilityChangeSearchQueryChanged(searchQuery))
+    uiEvents.onNext(PatientFacilityUserLocationUpdated(LocationUpdate.Unavailable))
+    uiEvents.onNext(PatientFacilitySearchQueryChanged(searchQuery))
 
     verify(listItemBuilder, times(2)).build(
         facilities = facilities,
@@ -133,10 +133,10 @@ class FacilitySelectionActivityControllerTest {
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), eq(user))).thenReturn(Observable.just(facilities))
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeUserLocationUpdated(LocationUpdate.Unavailable))
-    uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "F"))
-    uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "Fa"))
-    uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "Fac"))
+    uiEvents.onNext(PatientFacilityUserLocationUpdated(LocationUpdate.Unavailable))
+    uiEvents.onNext(PatientFacilitySearchQueryChanged(query = "F"))
+    uiEvents.onNext(PatientFacilitySearchQueryChanged(query = "Fa"))
+    uiEvents.onNext(PatientFacilitySearchQueryChanged(query = "Fac"))
 
     verify(facilityRepository).facilitiesInCurrentGroup(searchQuery = "F", user = user)
     verify(facilityRepository).facilitiesInCurrentGroup(searchQuery = "Fa", user = user)
@@ -155,7 +155,7 @@ class FacilitySelectionActivityControllerTest {
     whenever(reportsRepository.deleteReportsFile()).thenReturn(Single.just(DeleteFileResult.Success))
     whenever(reportsSync.sync()).thenReturn(Completable.complete())
 
-    uiEvents.onNext(FacilityChangeClicked(newFacility))
+    uiEvents.onNext(PatientFacilityChangeClicked(newFacility))
 
     val inOrder = inOrder(facilityRepository, screen)
     inOrder.verify(facilityRepository).associateUserWithFacility(user, newFacility)
@@ -174,7 +174,7 @@ class FacilitySelectionActivityControllerTest {
     whenever(reportsRepository.deleteReportsFile()).thenReturn(deleteReport)
     whenever(reportsSync.sync()).thenReturn(reportsSyncCompletable)
 
-    uiEvents.onNext(FacilityChangeClicked(newFacility))
+    uiEvents.onNext(PatientFacilityChangeClicked(newFacility))
 
     deleteReport.test().assertSubscribed()
     reportsSyncCompletable.test().assertSubscribed()
@@ -196,7 +196,7 @@ class FacilitySelectionActivityControllerTest {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+    uiEvents.onNext(PatientFacilityLocationPermissionChanged(RuntimePermissionResult.GRANTED))
 
     verify(locationRepository).streamUserLocation(updateInterval = eq(Duration.ofDays(5)), updateScheduler = any())
   }
@@ -213,8 +213,8 @@ class FacilitySelectionActivityControllerTest {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeSearchQueryChanged(""))
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(deniedResult))
+    uiEvents.onNext(PatientFacilitySearchQueryChanged(""))
+    uiEvents.onNext(PatientFacilityLocationPermissionChanged(deniedResult))
 
     verify(locationRepository, never()).streamUserLocation(any(), any())
     verify(screen).updateFacilities(any(), any())
@@ -242,8 +242,8 @@ class FacilitySelectionActivityControllerTest {
             LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded)))
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeSearchQueryChanged(""))
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+    uiEvents.onNext(PatientFacilitySearchQueryChanged(""))
+    uiEvents.onNext(PatientFacilityLocationPermissionChanged(RuntimePermissionResult.GRANTED))
 
     testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)
 
@@ -263,8 +263,8 @@ class FacilitySelectionActivityControllerTest {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(locationUpdates)
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeSearchQueryChanged(""))
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+    uiEvents.onNext(PatientFacilitySearchQueryChanged(""))
+    uiEvents.onNext(PatientFacilityLocationPermissionChanged(RuntimePermissionResult.GRANTED))
 
     val locationOlderThanStaleThreshold = LocationUpdate.Available(
         location = Coordinates(0.0, 0.0),
@@ -299,7 +299,7 @@ class FacilitySelectionActivityControllerTest {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+    uiEvents.onNext(PatientFacilityLocationPermissionChanged(RuntimePermissionResult.GRANTED))
     verify(screen).showProgressIndicator()
 
     testComputationScheduler.advanceTimeBy(secondsSpentWaitingForLocation, TimeUnit.SECONDS)
@@ -311,8 +311,8 @@ class FacilitySelectionActivityControllerTest {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(RuntimePermissionResult.GRANTED))
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+    uiEvents.onNext(PatientFacilityLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+    uiEvents.onNext(PatientFacilityLocationPermissionChanged(RuntimePermissionResult.GRANTED))
 
     verify(screen, times(1)).showProgressIndicator()
   }
@@ -325,7 +325,7 @@ class FacilitySelectionActivityControllerTest {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(deniedResult))
+    uiEvents.onNext(PatientFacilityLocationPermissionChanged(deniedResult))
 
     verify(screen, never()).showProgressIndicator()
   }
@@ -338,7 +338,7 @@ class FacilitySelectionActivityControllerTest {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(locationUpdate))
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+    uiEvents.onNext(PatientFacilityLocationPermissionChanged(RuntimePermissionResult.GRANTED))
 
     verify(screen).hideProgressIndicator()
   }
@@ -363,8 +363,8 @@ class FacilitySelectionActivityControllerTest {
 
     uiEvents.run {
       onNext(ScreenCreated())
-      onNext(FacilityChangeSearchQueryChanged(""))
-      onNext(FacilityChangeLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+      onNext(PatientFacilitySearchQueryChanged(""))
+      onNext(PatientFacilityLocationPermissionChanged(RuntimePermissionResult.GRANTED))
     }
     verify(screen, never()).updateFacilities(any(), any())
 
@@ -384,8 +384,8 @@ class FacilitySelectionActivityControllerTest {
 
     uiEvents.run {
       onNext(ScreenCreated())
-      onNext(FacilityChangeSearchQueryChanged("f"))
-      onNext(FacilityChangeLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+      onNext(PatientFacilitySearchQueryChanged("f"))
+      onNext(PatientFacilityLocationPermissionChanged(RuntimePermissionResult.GRANTED))
     }
     verify(screen, never()).updateFacilities(any(), any())
 
@@ -403,7 +403,7 @@ class FacilitySelectionActivityControllerTest {
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showToolbarWithoutSearchField()
 
-    uiEvents.onNext(FacilityChangeUserLocationUpdated(LocationUpdate.Unavailable))
+    uiEvents.onNext(PatientFacilityUserLocationUpdated(LocationUpdate.Unavailable))
     inOrder.verify(screen).showToolbarWithSearchField()
   }
 

@@ -1,6 +1,8 @@
 package org.simple.clinic.scheduleappointment.facilityselection
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +33,10 @@ import java.util.UUID
 import javax.inject.Inject
 
 class FacilitySelectionActivity : AppCompatActivity() {
+
+  companion object {
+    const val EXTRA_SELECTED_FACILITY_UUID = "selected_facility_uuid"
+  }
 
   @Inject
   lateinit var locale: Locale
@@ -131,6 +137,9 @@ class FacilitySelectionActivity : AppCompatActivity() {
   }
 
   fun sendSelectedFacility(selectedFacilityUuid: UUID) {
-    TODO("not implemented")
+    val intent = Intent()
+    intent.putExtra(EXTRA_SELECTED_FACILITY_UUID, selectedFacilityUuid.toString())
+    setResult(Activity.RESULT_OK, intent)
+    finish()
   }
 }

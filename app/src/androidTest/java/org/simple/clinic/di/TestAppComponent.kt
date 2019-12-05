@@ -2,6 +2,7 @@ package org.simple.clinic.di
 
 import dagger.Component
 import org.simple.clinic.DatabaseMigrationAndroidTest
+import org.simple.clinic.DateOfBirthHintUnfocusedAndroidTest
 import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
@@ -12,6 +13,7 @@ import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.encounter.EncounterRepositoryAndroidTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.help.HelpSyncAndroidTest
+import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.medicalhistory.MedicalHistorySyncAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
@@ -29,11 +31,10 @@ import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.storage.files.AndroidFileStorageAndroidTest
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidTest
-import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
+import org.simple.clinic.user.RegisterUserServerIntegrationTest
 import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest
-import org.simple.clinic.user.RegisterUserServerIntegrationTest
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterAndroidTest
 
 @AppScope
@@ -78,4 +79,5 @@ interface TestAppComponent {
   fun inject(target: EncounterRepositoryAndroidTest)
   fun inject(target: SelectedCountryPersistenceAndroidTest)
   fun inject(target: LoginUserWithOtpServerIntegrationTest)
+  fun inject(target: DateOfBirthHintUnfocusedAndroidTest)
 }

@@ -8,7 +8,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
@@ -134,18 +133,12 @@ class FacilitySelectionActivityControllerTest {
   }
 
   @Test
-  fun `when a facility is selected then the user's facility should be changed and the screen should be closed`() {
+  fun `when facility is selected then it should be passed back as result`() {
     val newFacility = PatientMocker.facility()
-    val user = PatientMocker.loggedInUser()
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-    whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
-    whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFacilityChangeClicked(newFacility))
 
-    val inOrder = inOrder(facilityRepository, screen)
-    inOrder.verify(facilityRepository).associateUserWithFacility(user, newFacility)
-    inOrder.verify(screen).goBack()
+    verify(screen).sendSelectedFacility(newFacility.uuid)
   }
 
   @Test

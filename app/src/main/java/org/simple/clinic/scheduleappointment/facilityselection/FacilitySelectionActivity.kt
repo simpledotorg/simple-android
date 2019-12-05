@@ -1,7 +1,6 @@
 package org.simple.clinic.scheduleappointment.facilityselection
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -15,16 +14,12 @@ import kotlinx.android.synthetic.main.screen_patient_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilityChangeLocationPermissionChanged
 import org.simple.clinic.facility.change.FacilityChangeSearchQueryChanged
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.location.LOCATION_PERMISSION
 import org.simple.clinic.registration.facility.FacilitiesAdapter
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityPermissionResult
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.wrap
@@ -46,8 +41,6 @@ class FacilitySelectionActivity : AppCompatActivity() {
   private val recyclerViewAdapter = FacilitiesAdapter()
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
-
-  private val screenResults = ScreenResultBus()
 
   private lateinit var component: FacilitySelectionActivityComponent
 
@@ -77,7 +70,6 @@ class FacilitySelectionActivity : AppCompatActivity() {
 
     val wrappedContext = baseContext
         .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
@@ -86,16 +78,6 @@ class FacilitySelectionActivity : AppCompatActivity() {
   override fun onDestroy() {
     onDestroys.onNext(ScreenDestroyed())
     super.onDestroy()
-  }
-
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    super.onActivityResult(requestCode, resultCode, data)
-    screenResults.send(ActivityResult(requestCode, resultCode, data))
-  }
-
-  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    screenResults.send(ActivityPermissionResult(requestCode))
   }
 
   private fun screenCreates() = Observable.just<UiEvent>(ScreenCreated())

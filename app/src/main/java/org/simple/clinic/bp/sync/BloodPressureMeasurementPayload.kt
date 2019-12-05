@@ -4,10 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.util.generateEncounterUuid
-import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)

@@ -1,4 +1,4 @@
-package org.simple.clinic.scheduleappointment.patientFacilityTransfer
+package org.simple.clinic.scheduleappointment.facilityselection
 
 import android.annotation.SuppressLint
 import io.reactivex.Observable

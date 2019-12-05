@@ -1,80 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/phonemask_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/phonemask_root"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginTop="@dimen/spacing_24"
-  android:orientation="vertical">
+  android:layout_marginTop="@dimen/spacing_24">
 
   <TextView
     android:id="@+id/nameTextView"
-    android:layout_width="match_parent"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
     android:gravity="center"
     android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
     tools:text="Anish Acharya, M, 43" />
 
   <TextView
     android:id="@+id/phoneNumberTextView"
-    android:layout_width="match_parent"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_24"
     android:gravity="center"
     android:maxLines="1"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/nameTextView"
     tools:text="9876543210" />
 
-  <LinearLayout
-    android:layout_width="match_parent"
+  <org.simple.clinic.widgets.OmegaCenterIconButton
+    android:id="@+id/normalCallButton"
+    style="@style/Clinic.V2.Button.WithIcon.Green3"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_32"
-    android:clipToPadding="false"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/spacing_12"
-    android:paddingEnd="@dimen/spacing_16"
-    tools:ignore="RtlSymmetry">
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_8"
+    android:drawableStart="@drawable/ic_phone_black_24dp"
+    android:text="@string/phonemasking_call_normal"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Green1"
+    app:drawableTint="@color/green1"
+    app:layout_constraintEnd_toStartOf="@id/secureCallButton"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/phoneNumberTextView" />
 
-    <org.simple.clinic.widgets.OmegaCenterIconButton
-      android:id="@+id/normalCallButton"
-      style="@style/Clinic.V2.Button.WithIcon.Green3"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:layout_weight="1"
-      android:drawableStart="@drawable/ic_phone_black_24dp"
-      android:text="@string/phonemasking_call_normal"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Green1"
-      app:drawableTint="@color/green1" />
-
-    <org.simple.clinic.widgets.OmegaCenterIconButton
-      android:id="@+id/secureCallButton"
-      style="@style/Clinic.V2.Button.WithIcon.Green1"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:layout_weight="1"
-      android:drawableStart="@drawable/ic_phone_locked_24dp"
-      android:text="@string/phonemasking_call_secure"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100"
-      app:drawableTint="@color/white"
-      android:visibility="gone"
-      tools:visibility="visible" />
-  </LinearLayout>
+  <org.simple.clinic.widgets.OmegaCenterIconButton
+    android:id="@+id/secureCallButton"
+    style="@style/Clinic.V2.Button.WithIcon.Green1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:drawableStart="@drawable/ic_phone_locked_24dp"
+    android:text="@string/phonemasking_call_secure"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100"
+    android:visibility="gone"
+    app:drawableTint="@color/white"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/normalCallButton"
+    app:layout_constraintTop_toTopOf="@id/normalCallButton"
+    tools:visibility="visible" />
 
   <TextView
-    android:layout_width="match_parent"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_12"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_16"
     android:gravity="center"
     android:text="@string/phonemasking_help_text"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1" />
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/normalCallButton" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

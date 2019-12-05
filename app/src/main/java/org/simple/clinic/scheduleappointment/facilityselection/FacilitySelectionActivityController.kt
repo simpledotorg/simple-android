@@ -12,16 +12,16 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilitiesUpdateType
-import org.simple.clinic.facility.change.FacilityChangeClicked
 import org.simple.clinic.facility.change.FacilityChangeConfig
-import org.simple.clinic.facility.change.FacilityChangeLocationPermissionChanged
-import org.simple.clinic.facility.change.FacilityChangeSearchQueryChanged
-import org.simple.clinic.facility.change.FacilityChangeUserLocationUpdated
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
+import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityChangeClicked
+import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityLocationPermissionChanged
+import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilitySearchQueryChanged
+import org.simple.clinic.scheduleappointment.patientFacilityTransfer.PatientFacilityUserLocationUpdated
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RuntimePermissionResult
@@ -59,7 +59,7 @@ class FacilitySelectionActivityController @Inject constructor(
 
   private fun locationUpdates() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val locationPermissionChanges = events
-        .ofType<FacilityChangeLocationPermissionChanged>()
+        .ofType<PatientFacilityLocationPermissionChanged>()
         .map { it.result }
 
     val locationUpdates = Observables
@@ -71,7 +71,7 @@ class FacilitySelectionActivityController @Inject constructor(
           }
         }
         .take(1)
-        .map { FacilityChangeUserLocationUpdated(it) }
+        .map { PatientFacilityUserLocationUpdated(it) }
 
     events.mergeWith(locationUpdates)
   }
@@ -106,7 +106,7 @@ class FacilitySelectionActivityController @Inject constructor(
   private fun showProgressForReadingLocation(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreations = events.ofType<ScreenCreated>()
     val locationPermissionChanges = events
-        .ofType<FacilityChangeLocationPermissionChanged>()
+        .ofType<PatientFacilityLocationPermissionChanged>()
         .map { it.result }
 
     val showProgressWhenPermissionIsAvailable = Observables.combineLatest(screenCreations, locationPermissionChanges)
@@ -115,7 +115,7 @@ class FacilitySelectionActivityController @Inject constructor(
         .map { { ui: Ui -> ui.showProgressIndicator() } }
 
     val hideProgress = events
-        .ofType<FacilityChangeUserLocationUpdated>()
+        .ofType<PatientFacilityUserLocationUpdated>()
         .map { { ui: Ui -> ui.hideProgressIndicator() } }
 
     return showProgressWhenPermissionIsAvailable.mergeWith(hideProgress)
@@ -123,11 +123,11 @@ class FacilitySelectionActivityController @Inject constructor(
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
     val searchQueryChanges = events
-        .ofType<FacilityChangeSearchQueryChanged>()
+        .ofType<PatientFacilitySearchQueryChanged>()
         .map { it.query }
 
     val locationUpdates = events
-        .ofType<FacilityChangeUserLocationUpdated>()
+        .ofType<PatientFacilityUserLocationUpdated>()
         .map { it.location }
 
     val filteredFacilityListItems = Observables
@@ -167,14 +167,14 @@ class FacilitySelectionActivityController @Inject constructor(
 
   private fun toggleSearchFieldInToolbar(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<FacilityChangeUserLocationUpdated>()
+        .ofType<PatientFacilityUserLocationUpdated>()
         .map { { ui: Ui -> ui.showToolbarWithSearchField() } }
         .startWith(Observable.just({ ui: Ui -> ui.showToolbarWithoutSearchField() }))
   }
 
   private fun changeFacilityAndExit(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<FacilityChangeClicked>()
+        .ofType<PatientFacilityChangeClicked>()
         .map { it.facility }
         .flatMapSingle { facility ->
           userSession.requireLoggedInUser()
@@ -197,6 +197,4 @@ class FacilitySelectionActivityController @Inject constructor(
         .subscribeOn(Schedulers.io())
         .subscribe()
   }
-
-
 }

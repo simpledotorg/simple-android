@@ -43,7 +43,7 @@ class PhoneMaskBottomSheetControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<PhoneMaskBottomSheet>()
+  private val ui = mock<PhoneMaskBottomSheetUi>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val phoneCaller = mock<PhoneCaller>()
   private val patientUuid: UUID = UUID.fromString("90d20a06-6e8b-4f26-b317-1ac18441765d")
@@ -71,14 +71,14 @@ class PhoneMaskBottomSheetControllerTest {
     sheetCreated()
     uiEvents.onNext(callTypeEvent)
 
-    verify(screen).requestCallPermission()
-    verify(screen).setupView(PatientDetails(
+    verify(ui).requestCallPermission()
+    verify(ui).setupView(PatientDetails(
         phoneNumber = phoneNumber.number,
         name = patient.fullName,
         gender = patient.gender,
         age = patient.age!!.value
     ))
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Suppress("Unused")
@@ -101,15 +101,15 @@ class PhoneMaskBottomSheetControllerTest {
     uiEvents.onNext(CallPhonePermissionChanged(permission))
 
     assertThat(isCompletableSubscribed).isTrue()
-    verify(screen).setupView(PatientDetails(
+    verify(ui).setupView(PatientDetails(
         phoneNumber = phoneNumber.number,
         name = patient.fullName,
         gender = patient.gender,
         age = patient.age!!.value
     ))
-    verify(screen).requestCallPermission()
-    verify(screen).closeSheet()
-    verifyNoMoreInteractions(screen)
+    verify(ui).requestCallPermission()
+    verify(ui).closeSheet()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -128,15 +128,15 @@ class PhoneMaskBottomSheetControllerTest {
     uiEvents.onNext(CallPhonePermissionChanged(permission))
 
     assertThat(isCompletableSubscribed).isTrue()
-    verify(screen).setupView(PatientDetails(
+    verify(ui).setupView(PatientDetails(
         phoneNumber = phoneNumber.number,
         name = patient.fullName,
         gender = patient.gender,
         age = patient.age!!.value
     ))
-    verify(screen).requestCallPermission()
-    verify(screen).closeSheet()
-    verifyNoMoreInteractions(screen)
+    verify(ui).requestCallPermission()
+    verify(ui).closeSheet()
+    verifyNoMoreInteractions(ui)
   }
 
   @Suppress("Unused")
@@ -168,7 +168,7 @@ class PhoneMaskBottomSheetControllerTest {
         // Test UTC clock is set to EPOCH
         age = 30
     )
-    verify(screen).setupView(expectedPatientDetails)
+    verify(ui).setupView(expectedPatientDetails)
   }
 
   @Test
@@ -177,7 +177,7 @@ class PhoneMaskBottomSheetControllerTest {
     sheetCreated()
 
     // then
-    verify(screen, never()).showSecureCallButton()
+    verify(ui, never()).showSecureCallButton()
   }
 
   @Test
@@ -189,7 +189,7 @@ class PhoneMaskBottomSheetControllerTest {
     sheetCreated(config = config)
 
     // then
-    verify(screen).showSecureCallButton()
+    verify(ui).showSecureCallButton()
   }
 
   @Test
@@ -201,7 +201,7 @@ class PhoneMaskBottomSheetControllerTest {
     sheetCreated(config = config)
 
     // then
-    verify(screen, never()).showSecureCallButton()
+    verify(ui, never()).showSecureCallButton()
   }
 
   private fun sheetCreated(
@@ -219,7 +219,7 @@ class PhoneMaskBottomSheetControllerTest {
         config = config
     )
 
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+    uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
   }

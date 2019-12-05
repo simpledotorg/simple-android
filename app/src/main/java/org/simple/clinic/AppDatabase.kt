@@ -3,6 +3,7 @@ package org.simple.clinic
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
@@ -72,7 +73,8 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
     BusinessId.MetaDataVersion.RoomTypeConverter::class,
     Appointment.AppointmentType.RoomTypeConverter::class,
     PatientStatus.RoomTypeConverter::class,
-    ReminderConsent.RoomTypeConverter::class
+    ReminderConsent.RoomTypeConverter::class,
+    BloodSugarMeasurementType.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

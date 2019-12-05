@@ -51,13 +51,13 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 @RunWith(JUnitParamsRunner::class)
-class PatientFacilityChangeControllerTest {
+class FacilitySelectionActivityControllerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()!!
-  private val screen = mock<PatientFacilityChangeActivity>()
+  private val screen = mock<FacilitySelectionActivity>()
   private val facilityRepository = mock<FacilityRepository>()
   private val reportsRepository = mock<ReportsRepository>()
   private val userSession = mock<UserSession>()
@@ -75,7 +75,7 @@ class PatientFacilityChangeControllerTest {
       staleLocationThreshold = Duration.ofSeconds(0))
   private val configProvider = BehaviorSubject.createDefault(configTemplate)
 
-  private lateinit var controller: PatientFacilityChangeController
+  private lateinit var controller: FacilitySelectionActivityController
 
   @Before
   fun setUp() {
@@ -85,7 +85,7 @@ class PatientFacilityChangeControllerTest {
     // Location updates are listened on a background thread.
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    controller = PatientFacilityChangeController(
+    controller = FacilitySelectionActivityController(
         facilityRepository = facilityRepository,
         reportsRepository = reportsRepository,
         userSession = userSession,

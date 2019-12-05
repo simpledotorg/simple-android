@@ -4,13 +4,13 @@ import dagger.Subcomponent
 import org.simple.clinic.activity.BindsActivity
 
 @Subcomponent
-interface PatientFacilityChangeComponent {
+interface FacilitySelectionActivityComponent {
 
-  fun inject(activity: PatientFacilityChangeActivity)
+  fun inject(activity: FacilitySelectionActivity)
 
   @Subcomponent.Builder
   interface Builder : BindsActivity<Builder> {
 
-    fun build(): PatientFacilityChangeComponent
+    fun build(): FacilitySelectionActivityComponent
   }
 }

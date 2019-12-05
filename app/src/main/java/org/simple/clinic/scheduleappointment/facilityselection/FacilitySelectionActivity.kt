@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
@@ -15,8 +16,6 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.change.FacilitiesUpdateType
-import org.simple.clinic.facility.change.FacilityChangeLocationPermissionChanged
-import org.simple.clinic.facility.change.FacilityChangeSearchQueryChanged
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.location.LOCATION_PERMISSION
 import org.simple.clinic.registration.facility.FacilitiesAdapter
@@ -39,11 +38,11 @@ class FacilitySelectionActivity : AppCompatActivity() {
   @Inject
   lateinit var controller: FacilitySelectionActivityController
 
-  private val recyclerViewAdapter = FacilitiesAdapter()
-
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   private lateinit var component: FacilitySelectionActivityComponent
+
+  private val recyclerViewAdapter = FacilitiesAdapter()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -54,11 +53,15 @@ class FacilitySelectionActivity : AppCompatActivity() {
         events = Observable.merge(
             screenCreates(),
             searchQueryChanges(),
-            locationPermissionChanges()
+            locationPermissionChanges(),
+            facilityClicks()
         ),
         controller = controller,
         screenDestroys = onDestroys
     )
+
+    facilityList.layoutManager = LinearLayoutManager(this)
+    facilityList.adapter = recyclerViewAdapter
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -86,12 +89,17 @@ class FacilitySelectionActivity : AppCompatActivity() {
   private fun searchQueryChanges() =
       RxTextView
           .textChanges(searchQueryEditText)
-          .map { text -> FacilityChangeSearchQueryChanged(text.toString()) }
+          .map { text -> FacilitySelectionSearchQueryChanged(text.toString()) }
 
   private fun locationPermissionChanges(): Observable<UiEvent> {
     val permissionResult = RuntimePermissions.check(this, LOCATION_PERMISSION)
-    return Observable.just(FacilityChangeLocationPermissionChanged(permissionResult))
+    return Observable.just(FacilitySelectionLocationPermissionChanged(permissionResult))
   }
+
+  private fun facilityClicks() =
+      recyclerViewAdapter
+          .facilityClicks
+          .map { FacilitySelected(it) }
 
   fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
     // Avoid animating the items on their first entry.

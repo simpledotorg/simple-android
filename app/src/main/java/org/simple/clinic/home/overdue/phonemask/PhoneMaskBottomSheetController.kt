@@ -25,7 +25,7 @@ import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-private typealias Ui = PhoneMaskBottomSheet
+private typealias Ui = PhoneMaskBottomSheetUi
 private typealias UiChange = (Ui) -> Unit
 
 class PhoneMaskBottomSheetController @Inject constructor(

@@ -46,7 +46,7 @@ class PatientFacilityChangeController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(fetchLocation())
+        .compose(locationUpdates())
         .compose(ReportAnalyticsEvents())
         .replay()
 
@@ -57,12 +57,27 @@ class PatientFacilityChangeController @Inject constructor(
         changeFacilityAndExit(replayedEvents))
   }
 
-  @SuppressLint("MissingPermission")
-  private fun fetchLocation() = ObservableTransformer<UiEvent, UiEvent> { events ->
+  private fun locationUpdates() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val locationPermissionChanges = events
         .ofType<FacilityChangeLocationPermissionChanged>()
         .map { it.result }
 
+    val locationUpdates = Observables
+        .combineLatest(events.ofType<ScreenCreated>(), locationPermissionChanges)
+        .switchMap { (_, permissionResult) ->
+          when (permissionResult!!) {
+            RuntimePermissionResult.GRANTED -> fetchLocation()
+            RuntimePermissionResult.DENIED, RuntimePermissionResult.NEVER_ASK_AGAIN -> Observable.just(LocationUpdate.Unavailable)
+          }
+        }
+        .take(1)
+        .map { FacilityChangeUserLocationUpdated(it) }
+
+    events.mergeWith(locationUpdates)
+  }
+
+  @SuppressLint("MissingPermission")
+  private fun fetchLocation(): Observable<LocationUpdate> {
     val locationWaitExpiry = {
       configProvider
           .flatMap { Observables.timer(it.locationListenerExpiry) }
@@ -78,19 +93,7 @@ class PatientFacilityChangeController @Inject constructor(
           }
           .onErrorResumeNext(Observable.empty())
     }
-
-    val locationUpdates = Observables
-        .combineLatest(events.ofType<ScreenCreated>(), locationPermissionChanges)
-        .switchMap { (_, permissionResult) ->
-          when (permissionResult!!) {
-            RuntimePermissionResult.GRANTED -> Observable.merge(locationWaitExpiry(), fetchLocation())
-            RuntimePermissionResult.DENIED, RuntimePermissionResult.NEVER_ASK_AGAIN -> Observable.just(LocationUpdate.Unavailable)
-          }
-        }
-        .take(1)
-        .map { FacilityChangeUserLocationUpdated(it) }
-
-    events.mergeWith(locationUpdates)
+    return Observable.merge(locationWaitExpiry(), fetchLocation())
   }
 
   private fun isRecentLocation(update: LocationUpdate, config: FacilityChangeConfig): Boolean {

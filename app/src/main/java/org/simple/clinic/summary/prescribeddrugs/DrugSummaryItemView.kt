@@ -4,23 +4,22 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 
-class DrugView(
+class DrugSummaryItemView(
     context: Context,
     attributeSet: AttributeSet
 ) : AppCompatTextView(context, attributeSet) {
 
   companion object {
-    fun create(parent: ViewGroup, drug: PrescribedDrug): DrugView {
+    fun create(parent: ViewGroup, drug: PrescribedDrug): DrugSummaryItemView {
       val inflater = LayoutInflater.from(parent.context)
 
-      val view =  inflater.inflate(R.layout.list_patientsummary_prescription_drug, parent, false) as DrugView
+      val view =  inflater.inflate(R.layout.list_patientsummary_prescription_drug, parent, false) as DrugSummaryItemView
 
       view.bind(drug)
 

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
@@ -171,16 +170,7 @@ class FacilitySelectionActivityController @Inject constructor(
   private fun changeFacilityAndExit(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<PatientFacilityChangeClicked>()
-        .map { it.facility }
-        .flatMapSingle { facility ->
-          userSession.requireLoggedInUser()
-              .take(1)
-              .flatMapCompletable {
-                facilityRepository
-                    .associateUserWithFacility(it, facility)
-                    .andThen(facilityRepository.setCurrentFacility(it, facility))
-              }
-              .andThen(Single.just(Ui::goBack))
-        }
+        .map { it.facility.uuid }
+        .map { { ui: Ui -> ui.sendSelectedFacility(it) } }
   }
 }

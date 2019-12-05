@@ -28,6 +28,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 class FacilitySelectionActivity : AppCompatActivity() {
@@ -113,15 +114,15 @@ class FacilitySelectionActivity : AppCompatActivity() {
     toolbarContainer.displayedChildResId = toolbarWithoutSearch.id
   }
 
-  fun goBack() {
-    TODO("not implemented")
-  }
-
   fun showProgressIndicator() {
     progress.visibility = RelativeLayout.VISIBLE
   }
 
   fun hideProgressIndicator() {
     progress.visibility = RelativeLayout.GONE
+  }
+
+  fun sendSelectedFacility(selectedFacilityUuid: UUID) {
+    TODO("not implemented")
   }
 }

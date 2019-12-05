@@ -15,6 +15,7 @@ import org.simple.clinic.sync.SynceableRepository
 import java.util.UUID
 import javax.inject.Inject
 
+// TODO(vs): 2019-12-05 Delete this file
 class EncounterRepository @Inject constructor(
     private val database: AppDatabase
 ) : SynceableRepository<Encounter, EncounterPayload> {
@@ -58,7 +59,7 @@ class EncounterRepository @Inject constructor(
 
   private fun payloadToEncounters(payload: EncounterPayload): ObservationsForEncounter {
     val bloodPressures = payload.observations.bloodPressureMeasurements.map { bps ->
-      bps.toDatabaseModel(syncStatus = DONE, encounterUuid = payload.uuid)
+      bps.toDatabaseModel(syncStatus = DONE)
     }
     return ObservationsForEncounter(encounter = payload.toDatabaseModel(DONE), bloodPressures = bloodPressures)
   }

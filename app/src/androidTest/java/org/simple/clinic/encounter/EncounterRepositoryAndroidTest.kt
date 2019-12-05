@@ -2,6 +2,7 @@ package org.simple.clinic.encounter
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -15,7 +16,7 @@ import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-
+@Ignore("scheduled to be removed in next commit")
 class EncounterRepositoryAndroidTest {
 
   @Inject

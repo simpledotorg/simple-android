@@ -5,6 +5,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.storage.inTransaction
 import javax.inject.Inject
 
+@Suppress("ClassName")
 class Migration_52_53 @Inject constructor() : Migration(52, 53) {
   override fun migrate(database: SupportSQLiteDatabase) {
     with(database) {

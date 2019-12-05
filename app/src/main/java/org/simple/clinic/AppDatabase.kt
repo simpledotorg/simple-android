@@ -3,6 +3,8 @@ package org.simple.clinic
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import io.reactivex.Completable
+import io.reactivex.Observable
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.encounter.Encounter
@@ -34,6 +36,7 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
+import java.util.UUID
 
 @Database(
     entities = [
@@ -51,10 +54,9 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       Protocol::class,
       ProtocolDrug::class,
       BusinessId::class,
-      MissingPhoneReminder::class,
-      Encounter::class
+      MissingPhoneReminder::class
     ],
-    version = 53,
+    version = 54,
     exportSchema = true
 )
 @TypeConverters(
@@ -114,7 +116,40 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun missingPhoneReminderDao(): MissingPhoneReminder.RoomDao
 
-  abstract fun encountersDao(): Encounter.RoomDao
+  // TODO(vs): 2019-12-05 Remove the encounter model and room DAO
+  fun encountersDao(): Encounter.RoomDao {
+    return object : Encounter.RoomDao {
+      override fun save(encounters: List<Encounter>) {
+      }
+
+      override fun save(encounter: Encounter) {
+      }
+
+      override fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus): Completable {
+        return Completable.complete()
+      }
+
+      override fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus): Completable {
+        return Completable.complete()
+      }
+
+      override fun recordsWithSyncStatus(syncStatus: SyncStatus): Observable<List<Encounter>> {
+        return Observable.empty()
+      }
+
+      override fun recordCount(): Observable<Int> {
+        return Observable.empty()
+      }
+
+      override fun recordCount(syncStatus: SyncStatus): Observable<Int> {
+        return Observable.empty()
+      }
+
+      override fun getOne(uuid: UUID): Encounter? {
+        return null
+      }
+    }
+  }
 
   fun clearPatientData() {
     runInTransaction {

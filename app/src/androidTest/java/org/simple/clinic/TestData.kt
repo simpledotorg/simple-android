@@ -7,9 +7,6 @@ import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
-import org.simple.clinic.encounter.Encounter
-import org.simple.clinic.encounter.sync.EncounterObservationsPayload
-import org.simple.clinic.encounter.sync.EncounterPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.facility.FacilityRepository
@@ -50,11 +47,9 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.randomPatientPhoneNumberType
-import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -787,47 +782,6 @@ class TestData @Inject constructor(
     return Identifier(
         value = value,
         type = type
-    )
-  }
-
-  fun encounter(
-      uuid: UUID,
-      patientUuid: UUID,
-      facilityUuid: UUID? = null,
-      encounteredOn: LocalDate = LocalDate.now(),
-      syncStatus: SyncStatus = SyncStatus.DONE,
-      createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
-  ): Encounter {
-    return Encounter(
-        uuid = if (facilityUuid == null) uuid else generateEncounterUuid(facilityUuid, patientUuid, encounteredOn),
-        patientUuid = patientUuid,
-        encounteredOn = encounteredOn,
-        syncStatus = syncStatus,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt
-    )
-  }
-
-  fun encounterPayload(
-      uuid: UUID,
-      patientUuid: UUID,
-      encounteredOn: LocalDate = LocalDate.now(),
-      createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      bpPayloads: List<BloodPressureMeasurementPayload> = listOf(bpPayload(patientUuid = patientUuid))
-  ): EncounterPayload {
-    return EncounterPayload(
-        uuid = uuid,
-        patientUuid = patientUuid,
-        encounteredOn = encounteredOn,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        observations = EncounterObservationsPayload(bloodPressureMeasurements = bpPayloads)
     )
   }
 

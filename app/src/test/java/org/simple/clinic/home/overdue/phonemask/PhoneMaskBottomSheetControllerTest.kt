@@ -78,6 +78,7 @@ class PhoneMaskBottomSheetControllerTest {
         gender = patient.gender,
         age = patient.age!!.value
     ))
+    verify(ui).hideSecureCallButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -109,6 +110,7 @@ class PhoneMaskBottomSheetControllerTest {
     ))
     verify(ui).requestCallPermission()
     verify(ui).closeSheet()
+    verify(ui).hideSecureCallButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -136,6 +138,7 @@ class PhoneMaskBottomSheetControllerTest {
     ))
     verify(ui).requestCallPermission()
     verify(ui).closeSheet()
+    verify(ui).hideSecureCallButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -172,16 +175,16 @@ class PhoneMaskBottomSheetControllerTest {
   }
 
   @Test
-  fun `when the phone masking feature is disabled, the secure call button must not be shown`() {
+  fun `when the phone masking feature is disabled, the secure call button must be hidden`() {
     // when
     sheetCreated()
 
     // then
-    verify(ui, never()).showSecureCallButton()
+    verify(ui).hideSecureCallButton()
   }
 
   @Test
-  fun `when the phone masking feature is enabled, the secure call button must be shown`() {
+  fun `when the phone masking feature is enabled, the secure call button must not be hidden`() {
     // given
     val config = PhoneNumberMaskerConfig(proxyPhoneNumber = "123456", phoneMaskingFeatureEnabled = true)
 
@@ -189,11 +192,11 @@ class PhoneMaskBottomSheetControllerTest {
     sheetCreated(config = config)
 
     // then
-    verify(ui).showSecureCallButton()
+    verify(ui, never()).hideSecureCallButton()
   }
 
   @Test
-  fun `when the phone masking feature is enabled but the proxy number is not set, the secure call button must not be shown`() {
+  fun `when the phone masking feature is enabled but the proxy number is not set, the secure call button must be hidden`() {
     // given
     val config = PhoneNumberMaskerConfig(proxyPhoneNumber = "", phoneMaskingFeatureEnabled = true)
 
@@ -201,7 +204,7 @@ class PhoneMaskBottomSheetControllerTest {
     sheetCreated(config = config)
 
     // then
-    verify(ui, never()).showSecureCallButton()
+    verify(ui).hideSecureCallButton()
   }
 
   private fun sheetCreated(

@@ -35,13 +35,13 @@ import org.simple.clinic.widgets.displayedChildResId
 import java.util.Locale
 import javax.inject.Inject
 
-class PatientFacilityChangeActivity : AppCompatActivity() {
+class FacilitySelectionActivity : AppCompatActivity() {
 
   @Inject
   lateinit var locale: Locale
 
   @Inject
-  lateinit var controller: PatientFacilityChangeController
+  lateinit var controller: FacilitySelectionActivityController
 
   private val recyclerViewAdapter = FacilitiesAdapter()
 
@@ -49,7 +49,7 @@ class PatientFacilityChangeActivity : AppCompatActivity() {
 
   private val screenResults = ScreenResultBus()
 
-  private lateinit var component: PatientFacilityChangeComponent
+  private lateinit var component: FacilitySelectionActivityComponent
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

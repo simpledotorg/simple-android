@@ -1,4 +1,4 @@
-# ADR: Using Activity for bottom sheets instead of Fragment
+# ADR 002: Using Activity for bottom sheets instead of Fragment
 
 ## Status
 Accepted

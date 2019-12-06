@@ -1,4 +1,4 @@
-# ADR: Weak references (no foreign keys) between SQLite tables
+# ADR 003: Weak references (no foreign keys) between SQLite tables
 
 ## Status
 

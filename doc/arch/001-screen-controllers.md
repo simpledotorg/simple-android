@@ -1,8 +1,8 @@
-# ADR: Screen Controllers
+# ADR 001: Screen Controllers
 
 ## Status
 
-Accepted
+Superceded by [007](007-screen-architecture-v2.md) on 2019-07-03
 
 ## Context
 

@@ -1,4 +1,4 @@
-# ADR: Forward compatibility for persistable enums from Server responses
+# ADR 006: Forward compatibility for persistable enums from Server responses
 
 
 ## Status

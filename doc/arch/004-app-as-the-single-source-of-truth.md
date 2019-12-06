@@ -1,4 +1,4 @@
-# ADR: treating the client app as the source of truth
+# ADR 004: treating the client app as the source of truth
 
 ## Status
 

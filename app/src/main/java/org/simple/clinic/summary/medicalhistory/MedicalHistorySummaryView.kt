@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
-import kotlinx.android.synthetic.main.patientsummary_medicalhistoryview_content.view.*
+import kotlinx.android.synthetic.main.medicalhistory_summary_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -25,7 +25,7 @@ class MedicalHistorySummaryView(
 ) : CardView(context, attributeSet) {
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_medicalhistoryview_content, this, true)
+    LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
     diabetesQuestionView.hideDivider()
   }
 

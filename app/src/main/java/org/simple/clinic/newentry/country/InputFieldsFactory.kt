@@ -22,16 +22,13 @@ class InputFieldsFactory(
 ) {
   fun fieldsFor(country: Country): List<InputField<*>> {
     return when (country.isoCountryCode) {
-      Country.INDIA -> formFieldsForIndia(dateTimeFormatter, today)
-      Country.BANGLADESH -> formFieldsForBangladesh(dateTimeFormatter, today)
+      Country.INDIA -> formFieldsForIndia()
+      Country.BANGLADESH -> formFieldsForBangladesh()
       else -> throw IllegalArgumentException("Unknown country code: ${country.isoCountryCode}")
     }
   }
 
-  private fun formFieldsForIndia(
-      dateTimeFormatter: DateTimeFormatter,
-      today: LocalDate
-  ): List<InputField<*>> {
+  private fun formFieldsForIndia(): List<InputField<*>> {
     return listOf(
         PatientNameField(),
         AgeField(),
@@ -44,10 +41,7 @@ class InputFieldsFactory(
     )
   }
 
-  private fun formFieldsForBangladesh(
-      dateTimeFormatter: DateTimeFormatter,
-      today: LocalDate
-  ): List<InputField<*>> {
+  private fun formFieldsForBangladesh(): List<InputField<*>> {
     return listOf(
         PatientNameField(),
         AgeField(),

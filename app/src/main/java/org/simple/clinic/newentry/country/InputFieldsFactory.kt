@@ -22,8 +22,8 @@ class InputFieldsFactory(
 ) {
   fun fieldsFor(country: Country): List<InputField<*>> {
     return when (country.isoCountryCode) {
-      "IN" -> formFieldsForIndia(dateTimeFormatter, today)
-      "BD" -> formFieldsForBangladesh(dateTimeFormatter, today)
+      Country.INDIA -> formFieldsForIndia(dateTimeFormatter, today)
+      Country.BANGLADESH -> formFieldsForBangladesh(dateTimeFormatter, today)
       else -> throw IllegalArgumentException("Unknown country code: ${country.isoCountryCode}")
     }
   }

@@ -41,6 +41,7 @@ data class OngoingNewPatientEntry(
     val address: Address? = null,
     val phoneNumber: PhoneNumber? = null,
     val identifier: Identifier? = null,
+    val bangladeshNationalId: Identifier? = null,
     val reminderConsent: ReminderConsent = Granted
 ) : Parcelable {
 

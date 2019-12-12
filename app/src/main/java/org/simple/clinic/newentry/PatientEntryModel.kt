@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.Optional
 
 @Parcelize
@@ -51,4 +52,7 @@ data class PatientEntryModel(
 
   fun reminderConsentChanged(consent: ReminderConsent): PatientEntryModel =
       copy(patientEntry = patientEntry.withConsent(consent))
+
+  fun bangladeshNationalIdChanged(bangladeshNationalId: Identifier): PatientEntryModel =
+      copy(patientEntry = patientEntry.withBangladeshNationalId(bangladeshNationalId))
 }

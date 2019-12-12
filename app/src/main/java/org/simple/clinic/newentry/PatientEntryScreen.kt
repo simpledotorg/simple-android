@@ -222,7 +222,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         colonyOrVillageEditText.textChanges(::ColonyOrVillageChanged),
         districtEditText.textChanges(::DistrictChanged),
         stateEditText.textChanges(::StateChanged),
-        genderChanges())
+        genderChanges()
+    )
   }
 
   private fun genderChanges(): Observable<GenderChanged> {

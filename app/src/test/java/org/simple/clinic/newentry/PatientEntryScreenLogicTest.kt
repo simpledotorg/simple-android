@@ -36,6 +36,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.user.UserSession
@@ -158,6 +159,42 @@ class PatientEntryScreenLogicTest {
         personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
         address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
+    ))
+    verifyNoMoreInteractions(patientRepository)
+    verify(patientRegisteredCount).get()
+    verify(patientRegisteredCount).set(1)
+    verifyNoMoreInteractions(patientRegisteredCount)
+    verify(ui).openMedicalHistoryEntryScreen()
+  }
+
+  @Test
+  fun `when bangladesh national id is entered and save is clicked then patient should get registered`() {
+    val bangladeshNationalId = Identifier("123456789012", BangladeshNationalId)
+
+    whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry()))
+    whenever(patientRepository.saveOngoingEntry(any())).doReturn(Completable.complete())
+    whenever(patientRegisteredCount.get()).doReturn(0)
+    screenCreated()
+
+    with(uiEvents) {
+      onNext(FullNameChanged("Ashok"))
+      onNext(PhoneNumberChanged("1234567890"))
+      onNext(BangladeshNationalIdChanged(bangladeshNationalId))
+      onNext(DateOfBirthChanged("12/04/1993"))
+      onNext(AgeChanged(""))
+      onNext(GenderChanged(Just(Transgender)))
+      onNext(ColonyOrVillageChanged("colony"))
+      onNext(DistrictChanged("district"))
+      onNext(StateChanged("state"))
+      onNext(SaveClicked)
+    }
+
+    verify(patientRepository).ongoingEntry()
+    verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
+        personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
+        address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
+        phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890"),
+        bangladeshNationalId = bangladeshNationalId
     ))
     verifyNoMoreInteractions(patientRepository)
     verify(patientRegisteredCount).get()

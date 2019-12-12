@@ -8,5 +8,6 @@ enum class Field {
   Gender,
   ColonyOrVillage,
   District,
-  State
+  State,
+  BangladeshNationalId
 }

@@ -96,6 +96,9 @@ data class OngoingNewPatientEntry(
   fun withConsent(reminderConsent: ReminderConsent): OngoingNewPatientEntry =
       copy(reminderConsent = reminderConsent)
 
+  fun withBangladeshNationalId(bangladeshNationalId: Identifier): OngoingNewPatientEntry =
+      copy(bangladeshNationalId = bangladeshNationalId)
+
   fun validationErrors(dobValidator: UserInputDateValidator, numberValidator: PhoneNumberValidator): List<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()
 

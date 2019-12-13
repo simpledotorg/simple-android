@@ -32,6 +32,18 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.newentry.form.AgeField
+import org.simple.clinic.newentry.form.BusinessIdentifierField
+import org.simple.clinic.newentry.form.DateOfBirthField
+import org.simple.clinic.newentry.form.DistrictField
+import org.simple.clinic.newentry.form.GenderField
+import org.simple.clinic.newentry.form.LandlineOrMobileField
+import org.simple.clinic.newentry.form.PatientNameField
+import org.simple.clinic.newentry.form.StateField
+import org.simple.clinic.newentry.form.StreetAddressField
+import org.simple.clinic.newentry.form.VillageOrColonyField
+import org.simple.clinic.newentry.form.ZoneField
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -98,6 +110,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var dobValidator: UserInputDateValidator
+
+  @Inject
+  lateinit var inputFields: InputFields
 
   // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
@@ -180,6 +195,30 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     setConsentText()
 
     delegate.prepare()
+
+    showOrHideInputFields()
+  }
+
+  private fun showOrHideInputFields() {
+    val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
+        PatientNameField::class.java to fullNameTextContainer,
+        AgeField::class.java to ageEditTextContainer,
+        DateOfBirthField::class.java to dateOfBirthEditTextContainer,
+        LandlineOrMobileField::class.java to phoneNumberTextContainer,
+        GenderField::class.java to genderRadioGroup,
+        BusinessIdentifierField::class.java to businessIdentifierLayout,
+        StreetAddressField::class.java to streetAddressLayout,
+        VillageOrColonyField::class.java to colonyOrVillageInputContainer,
+        ZoneField::class.java to zoneLayout,
+        DistrictField::class.java to districtInputLayout,
+        StateField::class.java to stateInputLayout
+    )
+
+    val receivedTypesOfInputFields = inputFields.inputFields.map { it::class.java }
+
+    allTypesOfInputFields.forEach { (clazz, view) ->
+      view.visibleOrGone(clazz in receivedTypesOfInputFields)
+    }
   }
 
   private fun setConsentText() {

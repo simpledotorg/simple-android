@@ -3,8 +3,8 @@ package org.simple.clinic.newentry
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.newentry.form.InputField
 import org.simple.clinic.util.UserClock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -19,6 +19,6 @@ class PatientEntryModule {
   ) = InputFieldsFactory(dateTimeFormatter, LocalDate.now(userClock))
 
   @Provides
-  fun formFields(inputFieldsFactory: InputFieldsFactory, country: Country): List<InputField<*>> =
-      inputFieldsFactory.fieldsFor(country)
+  fun formFields(inputFieldsFactory: InputFieldsFactory, country: Country): InputFields =
+      InputFields(inputFieldsFactory.fieldsFor(country))
 }

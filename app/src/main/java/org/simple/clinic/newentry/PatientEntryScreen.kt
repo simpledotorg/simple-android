@@ -42,6 +42,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.ScreenRouter
@@ -222,7 +223,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         colonyOrVillageEditText.textChanges(::ColonyOrVillageChanged),
         districtEditText.textChanges(::DistrictChanged),
         stateEditText.textChanges(::StateChanged),
-        genderChanges()
+        genderChanges(),
+        bangladeshNationalIdEditText.textChanges { BangladeshNationalIdChanged(Identifier(it, BangladeshNationalId)) }
     )
   }
 

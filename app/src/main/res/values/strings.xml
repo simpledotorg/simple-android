@@ -52,6 +52,7 @@
   <string name="patiententry_contentdescription_up_button">Go back to search</string>
   <string name="patiententry_full_name">Patient\'s name</string>
   <string name="patiententry_phone_number">Phone number</string>
+  <string name="patiententry_bangladesh_national_id">National ID number</string>
   <string name="patiententry_business_identifier">BP Passport</string>
   <string name="patiententry_date_of_birth_unfocused">Date of birth</string>
   <string name="patiententry_date_of_birth_focused">D.O.B: DD/MM/YYYY</string>

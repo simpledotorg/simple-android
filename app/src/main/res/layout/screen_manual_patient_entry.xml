@@ -41,6 +41,7 @@
       tools:ignore="RtlSymmetry">
 
       <FrameLayout
+        android:id="@+id/fullNameTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/spacing_4">
@@ -227,6 +228,7 @@
         android:visibility="gone" />
 
       <FrameLayout
+        android:id="@+id/phoneNumberTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
@@ -347,6 +349,7 @@
       </FrameLayout>
 
       <FrameLayout
+        android:id="@+id/colonyOrVillageInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"

@@ -2,6 +2,7 @@ package org.simple.clinic.newentry.country
 
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.newentry.form.AgeField
+import org.simple.clinic.newentry.form.BangladeshNationalIdField
 import org.simple.clinic.newentry.form.BusinessIdentifierField
 import org.simple.clinic.newentry.form.DateOfBirthField
 import org.simple.clinic.newentry.form.DistrictField
@@ -35,6 +36,7 @@ class InputFieldsFactory(
         DateOfBirthField(dateTimeFormatter, today),
         LandlineOrMobileField(),
         GenderField(),
+        BusinessIdentifierField(),
         VillageOrColonyField(),
         DistrictField(),
         StateField()
@@ -48,7 +50,7 @@ class InputFieldsFactory(
         DateOfBirthField(dateTimeFormatter, today),
         LandlineOrMobileField(),
         GenderField(),
-        BusinessIdentifierField(),
+        BangladeshNationalIdField(),
         StreetAddressField(),
         VillageOrColonyField(),
         ZoneField(),

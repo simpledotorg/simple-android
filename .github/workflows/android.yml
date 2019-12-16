@@ -1,0 +1,138 @@
+name: CI
+
+on:
+  pull_request:
+    branches: 
+      - master
+
+jobs:
+  qa_lint:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/caches/jars-3
+          key: ${{ runner.os }}-gradle-jars-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-jars-
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/caches/modules-2
+          key: ${{ runner.os }}-gradle-modules-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-modules-
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/wrapper/dists
+          key: ${{ runner.os }}-gradle-dists-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-dists-
+
+      - name: QA Lint
+        run: ./gradlew lintQaDebug
+
+  qa_unit_tests:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/caches/jars-3
+          key: ${{ runner.os }}-gradle-jars-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-jars-
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/caches/modules-2
+          key: ${{ runner.os }}-gradle-modules-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-modules-
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/wrapper/dists
+          key: ${{ runner.os }}-gradle-dists-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-dists-
+
+      - name: QA Unit Tests
+        run: ./gradlew testQaDebugUnitTest
+
+  qa_android_tests:
+    runs-on: [macos-latest]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/wrapper/dists
+          key: ${{ runner.os }}-gradle-dists-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-dists-
+
+      - name: QA Android Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedQaDebugAndroidTest
+
+  qa_build_apk:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/caches/jars-3
+          key: ${{ runner.os }}-gradle-jars-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-jars-
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/caches/modules-2
+          key: ${{ runner.os }}-gradle-modules-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-modules-
+
+      - uses: actions/cache@v1.0.3
+        with:
+          path: ~/.gradle/wrapper/dists
+          key: ${{ runner.os }}-gradle-dists-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-dists-
+
+      - name: QA Debug Build
+        run: ./gradlew assembleQaDebug
+        
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: app_qa_debug
+          path: app/build/outputs/apk/qa/debug/app-qa-debug.apk

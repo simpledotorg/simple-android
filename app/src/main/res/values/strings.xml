@@ -486,4 +486,8 @@
   <string name="selectcountry_retry">Try Again</string>
   <string name="scheduleappointment_at">at</string>
   <string name="scheduleappointment_change">Change</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">Select a measure</string>
+  <string name="bloodsugartype_picker_desc">Choose ‘RBS’ if you are not sure.</string>
 </resources>

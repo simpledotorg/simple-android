@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+-?
+
+## 2019-12-16-6732
 ### Fixes
 - Fixed the broken UI on the phone call sheet (https://www.pivotaltracker.com/story/show/169860653)
 

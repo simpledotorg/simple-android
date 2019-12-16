@@ -34,6 +34,7 @@ import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
+import org.simple.clinic.newentry.form.BangladeshNationalIdField
 import org.simple.clinic.newentry.form.BusinessIdentifierField
 import org.simple.clinic.newentry.form.DateOfBirthField
 import org.simple.clinic.newentry.form.DistrictField
@@ -207,6 +208,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         LandlineOrMobileField::class.java to phoneNumberTextContainer,
         GenderField::class.java to genderRadioGroup,
         BusinessIdentifierField::class.java to businessIdentifierLayout,
+        BangladeshNationalIdField::class.java to bangladeshNationalIdInputContainer,
         StreetAddressField::class.java to streetAddressLayout,
         VillageOrColonyField::class.java to colonyOrVillageInputContainer,
         ZoneField::class.java to zoneLayout,

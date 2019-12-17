@@ -149,7 +149,7 @@ class ScheduleAppointmentSheetControllerTest {
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
-    verify(sheet).showCurrentFacility(facility.name)
+    verify(sheet).showPatientFacility(facility.name)
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(sheet).enableIncrementButton(true)
     verify(sheet).enableDecrementButton(true)
@@ -282,7 +282,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     uiEvents.onNext(AppointmentDateIncremented)
 
-    verify(sheet).showCurrentFacility(facility.name)
+    verify(sheet).showPatientFacility(facility.name)
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-05"), Days(4))
     verify(sheet).enableIncrementButton(false)
 
@@ -507,7 +507,7 @@ class ScheduleAppointmentSheetControllerTest {
     sheetCreated()
 
     //then
-    verify(sheet).showCurrentFacility(facility.name)
+    verify(sheet).showPatientFacility(facility.name)
   }
 
   @Test

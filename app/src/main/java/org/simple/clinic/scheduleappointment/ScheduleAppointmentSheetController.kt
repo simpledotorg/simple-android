@@ -60,7 +60,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         showManualAppointmentDateSelector(replayedEvents),
         scheduleAutomaticAppointmentForDefaulters(replayedEvents),
         scheduleAppointment(replayedEvents),
-        showCurrentFacility(replayedEvents)
+        showPatientDefaultFacility(replayedEvents)
     )
   }
 
@@ -248,10 +248,10 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .map { Ui::closeSheet }
   }
 
-  private fun showCurrentFacility(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun showPatientDefaultFacility(events: Observable<UiEvent>): Observable<UiChange> {
     val creates = events
         .ofType<ScheduleAppointmentSheetCreated>()
-    return Observables.combineLatest(creates, currentFacilityStream()) { _, facility -> { ui: Ui -> ui.showCurrentFacility(facility.name) } }
+    return Observables.combineLatest(creates, currentFacilityStream()) { _, facility -> { ui: Ui -> ui.showPatientFacility(facility.name) } }
   }
 
   private fun scheduleAppointmentForPatient(

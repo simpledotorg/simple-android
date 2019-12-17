@@ -11,6 +11,8 @@ import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Optional
+import org.simple.clinic.util.toOptional
 import java.util.UUID
 import javax.inject.Inject
 
@@ -129,5 +131,9 @@ class FacilityRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return facilityDao.count(SyncStatus.PENDING).toObservable()
+  }
+
+  fun facility(uuid: UUID): Optional<Facility> {
+    return facilityDao.getOne(uuid).toOptional()
   }
 }

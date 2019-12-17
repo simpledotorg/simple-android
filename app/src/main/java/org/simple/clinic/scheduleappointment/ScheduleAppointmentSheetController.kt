@@ -24,6 +24,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
@@ -60,7 +61,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
         showManualAppointmentDateSelector(replayedEvents),
         scheduleAutomaticAppointmentForDefaulters(replayedEvents),
         scheduleAppointment(replayedEvents),
-        showPatientDefaultFacility(replayedEvents)
+        showPatientDefaultFacility(replayedEvents),
+        showPatientSelectedFacility(replayedEvents)
     )
   }
 
@@ -252,6 +254,14 @@ class ScheduleAppointmentSheetController @Inject constructor(
     val creates = events
         .ofType<ScheduleAppointmentSheetCreated>()
     return Observables.combineLatest(creates, currentFacilityStream()) { _, facility -> { ui: Ui -> ui.showPatientFacility(facility.name) } }
+  }
+
+  private fun showPatientSelectedFacility(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientFacilityChanged>()
+        .map { facilityRepository.facility(it.facilityUuid) }
+        .unwrapJust()
+        .map { { ui: Ui -> ui.showPatientFacility(it.name) } }
   }
 
   private fun scheduleAppointmentForPatient(

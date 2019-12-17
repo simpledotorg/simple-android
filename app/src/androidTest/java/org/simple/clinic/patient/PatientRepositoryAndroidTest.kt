@@ -1429,7 +1429,7 @@ class PatientRepositoryAndroidTest {
             patientUuid = patientUuid,
             appointmentDate = it,
             appointmentType = Manual,
-            currentFacility = testData.qaFacility()
+            facilityUuid = testData.qaFacility().uuid
         ).blockingGet()
       }
 

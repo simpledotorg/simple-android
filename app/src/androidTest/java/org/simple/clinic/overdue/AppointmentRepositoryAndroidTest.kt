@@ -115,7 +115,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = appointmentUuid,
         appointmentDate = appointmentDate,
         appointmentType = Manual,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
 
     // then
@@ -142,7 +142,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = firstAppointmentUuid,
         appointmentDate = scheduledDateOfFirstAppointment,
         appointmentType = Manual,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
     markAppointmentSyncStatusAsDone(firstAppointmentUuid)
 
@@ -158,7 +158,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = secondAppointmentUuid,
         appointmentDate = scheduleDateOfSecondAppointment,
         appointmentType = Manual,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
 
     // then
@@ -376,7 +376,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = appointmentUuid,
         appointmentDate = appointmentDate,
         appointmentType = Manual,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
@@ -410,7 +410,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = appointmentUuid,
         appointmentDate = appointmentScheduleDate,
         appointmentType = Manual,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
@@ -442,7 +442,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = appointmentUuid,
         appointmentDate = appointmentScheduleDate,
         appointmentType = Manual,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
@@ -474,7 +474,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = appointmentUuid,
         appointmentDate = appointmentScheduleDate,
         appointmentType = Manual,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
@@ -523,7 +523,7 @@ class AppointmentRepositoryAndroidTest {
           appointmentUuid = appointmentUuid,
           appointmentDate = scheduledDate,
           appointmentType = Manual,
-          currentFacility = facility
+          facilityUuid = facility.uuid
       ).blockingGet()
 
       val bloodPressureMeasurements = bps.mapIndexed { index, (systolic, diastolic) ->
@@ -834,7 +834,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = UUID.fromString("faa8cd6c-4aca-41c9-983a-1a10b6704466"),
         appointmentDate = scheduledDateForFirstAppointment,
         appointmentType = Manual,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
 
     clock.advanceBy(Duration.ofDays(1))
@@ -845,7 +845,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = UUID.fromString("634b4807-d3a8-42a9-8411-7c921ed57f49"),
         appointmentDate = scheduledDateForSecondAppointment,
         appointmentType = Manual,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
 
     // when
@@ -923,7 +923,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = appointmentUuid,
         appointmentDate = appointmentScheduleDate,
         appointmentType = Automatic,
-        currentFacility = facility
+        facilityUuid = facility.uuid
     ).blockingGet()
 
     // then
@@ -955,7 +955,7 @@ class AppointmentRepositoryAndroidTest {
           appointmentUuid = appointmentUuid,
           appointmentDate = LocalDate.parse("2017-12-30"),
           appointmentType = Manual,
-          currentFacility = facility
+          facilityUuid = facility.uuid
       )
     }
 

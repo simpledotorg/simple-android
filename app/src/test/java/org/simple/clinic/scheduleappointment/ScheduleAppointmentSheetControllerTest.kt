@@ -92,7 +92,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     uiEvents.onNext(AppointmentDone)
 
-    verify(repository).schedule(eq(patientUuid), any(), eq(date), eq(Manual), eq(facility))
+    verify(repository).schedule(eq(patientUuid), any(), eq(date), eq(Manual), eq(facility.uuid))
     verify(sheet).closeSheet()
   }
 
@@ -123,7 +123,7 @@ class ScheduleAppointmentSheetControllerTest {
           appointmentUuid = any(),
           appointmentDate = eq(LocalDate.now(clock).plus(Period.ofDays(30))),
           appointmentType = eq(Automatic),
-          currentFacility = eq(facility)
+          facilityUuid = eq(facility.uuid)
       )
     } else {
       verify(repository, never()).schedule(any(), any(), any(), any(), any())

@@ -213,7 +213,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
           scheduleAppointmentForPatient(
               uuid = patientUuid,
               date = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
-              currentFacility = currentFacility,
+              facilityUuid = currentFacility.uuid,
               appointmentType = Appointment.AppointmentType.Automatic
           )
         }
@@ -236,7 +236,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         ) { _, lastScheduledAppointmentDate, uuid, currentFacility ->
           Triple(lastScheduledAppointmentDate, uuid, currentFacility)
         }
-        .flatMapSingle { (date, uuid, currentFacility) -> scheduleAppointmentForPatient(uuid, date.scheduledFor, currentFacility, Manual) }
+        .flatMapSingle { (date, uuid, currentFacility) -> scheduleAppointmentForPatient(uuid, date.scheduledFor, currentFacility.uuid, Manual) }
         .map { Ui::closeSheet }
   }
 
@@ -249,7 +249,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
   private fun scheduleAppointmentForPatient(
       uuid: UUID,
       date: LocalDate,
-      currentFacility: Facility,
+      facilityUuid: UUID,
       appointmentType: Appointment.AppointmentType
   ): Single<Appointment> {
     return appointmentRepository
@@ -258,7 +258,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
             appointmentUuid = UUID.randomUUID(),
             appointmentDate = date,
             appointmentType = appointmentType,
-            currentFacility = currentFacility
+            facilityUuid = facilityUuid
         )
   }
 

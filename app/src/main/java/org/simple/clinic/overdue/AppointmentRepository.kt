@@ -35,12 +35,12 @@ class AppointmentRepository @Inject constructor(
       appointmentUuid: UUID,
       appointmentDate: LocalDate,
       appointmentType: AppointmentType,
-      currentFacility: Facility
+      facilityUuid: UUID
   ): Single<Appointment> {
     val newAppointmentStream = Single.just(Appointment(
         uuid = appointmentUuid,
         patientUuid = patientUuid,
-        facilityUuid = currentFacility.uuid,
+        facilityUuid = facilityUuid,
         scheduledDate = appointmentDate,
         status = Scheduled,
         cancelReason = null,

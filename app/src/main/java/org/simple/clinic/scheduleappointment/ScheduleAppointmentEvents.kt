@@ -31,3 +31,7 @@ data class AppointmentCalendarDateSelected(val selectedDate: LocalDate) : UiEven
 object SchedulingSkipped : UiEvent {
   override val analyticsName = "Schedule Appointment:Scheduling skipped"
 }
+
+data class PatientFacilityChanged(val facilityUuid: UUID) : UiEvent {
+  override val analyticsName = "Schedule Appointment: Patient facility changed"
+}

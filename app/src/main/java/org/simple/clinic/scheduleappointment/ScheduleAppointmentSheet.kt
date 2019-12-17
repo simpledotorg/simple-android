@@ -150,7 +150,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
         .toEpochMilli()
   }
 
-  fun showCurrentFacility(facilityName: String) {
+  fun showPatientFacility(facilityName: String) {
     //TODO: Implement when the layout is added for patient transfer
   }
 }

@@ -149,6 +149,7 @@ class ScheduleAppointmentSheetControllerTest {
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
+    verify(sheet).showCurrentFacility(facility.name)
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(sheet).enableIncrementButton(true)
     verify(sheet).enableDecrementButton(true)
@@ -281,6 +282,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     uiEvents.onNext(AppointmentDateIncremented)
 
+    verify(sheet).showCurrentFacility(facility.name)
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-05"), Days(4))
     verify(sheet).enableIncrementButton(false)
 
@@ -497,6 +499,15 @@ class ScheduleAppointmentSheetControllerTest {
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-03-01")))
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-03-01"), Months(2))
     reset(sheet)
+  }
+
+  @Test
+  fun `when sheet is opened then user's current facility should be displayed`() {
+    //when
+    sheetCreated()
+
+    //then
+    verify(sheet).showCurrentFacility(facility.name)
   }
 
   private fun sheetCreated(

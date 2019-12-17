@@ -510,6 +510,41 @@ class ScheduleAppointmentSheetControllerTest {
     verify(sheet).showCurrentFacility(facility.name)
   }
 
+  @Test
+  fun `when patient facility is changed then appointment should be scheduled in the changed facility`() {
+    //given
+    val updatedFacilityUuid = PatientMocker.facility().uuid
+    val appointment = PatientMocker.appointment()
+
+    whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
+
+    //when
+    sheetCreated()
+    uiEvents.onNext(PatientFacilityChanged(updatedFacilityUuid))
+    uiEvents.onNext(AppointmentDone)
+
+    //then
+    verify(repository).schedule(eq(patientUuid), any(), any(), any(), eq(updatedFacilityUuid))
+    verify(sheet).closeSheet()
+  }
+
+  @Test
+  fun `when patient facility is not changed then appointment should be scheduled in the current facility`() {
+    //given
+    val appointment = PatientMocker.appointment()
+
+    whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
+
+    //when
+    sheetCreated()
+    uiEvents.onNext(AppointmentDone)
+
+    //then
+    verify(repository).schedule(eq(patientUuid), any(), any(), any(), eq(facility.uuid))
+    verify(sheet).closeSheet()
+  }
+
+
   private fun sheetCreated(
       patientUuid: UUID = this.patientUuid,
       user: User = this.user,

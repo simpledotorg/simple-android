@@ -490,4 +490,7 @@
   <!-- BloodSugar type picker -->
   <string name="bloodsugartype_picker_title">Select a measure</string>
   <string name="bloodsugartype_picker_desc">Choose ‘RBS’ if you are not sure.</string>
+  <string name="bloodsugartype_rbs">Random blood sugar (RBS)</string>
+  <string name="bloodsugartype_fbs">Fasting blood sugar (FBS)</string>
+  <string name="bloodsugartype_ppbs">Post prandial blood sugar (PPBS)</string>
 </resources>

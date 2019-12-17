@@ -227,16 +227,24 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun scheduleAppointment(events: Observable<UiEvent>): Observable<UiChange> {
+    val facilityChanged = events
+        .ofType<PatientFacilityChanged>()
+        .map { it.facilityUuid }
+
+    val currentFacility = currentFacilityStream().map { it.uuid }
+
+    val patientFacilityUuidStream = currentFacility.mergeWith(facilityChanged)
+
     return events
         .ofType<AppointmentDone>()
         .withLatestFrom(
             latestAppointmentDateScheduledSubject,
             patientUuid(events),
-            currentFacilityStream()
-        ) { _, lastScheduledAppointmentDate, uuid, currentFacility ->
-          Triple(lastScheduledAppointmentDate, uuid, currentFacility)
+            patientFacilityUuidStream
+        ) { _, lastScheduledAppointmentDate, uuid, patientFacilityUuid ->
+          Triple(lastScheduledAppointmentDate, uuid, patientFacilityUuid)
         }
-        .flatMapSingle { (date, uuid, currentFacility) -> scheduleAppointmentForPatient(uuid, date.scheduledFor, currentFacility.uuid, Manual) }
+        .flatMapSingle { (date, uuid, patientFacilityUuid) -> scheduleAppointmentForPatient(uuid, date.scheduledFor, patientFacilityUuid, Manual) }
         .map { Ui::closeSheet }
   }
 

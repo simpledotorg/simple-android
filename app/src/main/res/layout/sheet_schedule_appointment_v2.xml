@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:ignore="MissingPrefix">
+
+  <TextView
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:text="@string/scheduleappointment_next_visit_in">
+
+    <requestFocus />
+  </TextView>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:layout_marginEnd="44dp"
+    android:layout_marginStart="44dp"
+    android:layout_marginTop="@dimen/spacing_32"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageButton
+      android:id="@+id/decrementDateButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_12"
+      android:src="@drawable/ic_remove_circle_outline_32dp"
+      android:tint="@color/scheduleappointment_increment_decrement_date"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      android:id="@+id/currentDateTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:textColor="@color/black_opacity_80"
+      android:textSize="@dimen/textsize_34"
+      tools:text="4 weeks" />
+
+    <ImageButton
+      android:id="@+id/incrementDateButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_12"
+      android:src="@drawable/ic_add_circle_outline_32dp"
+      android:tint="@color/scheduleappointment_increment_decrement_date"
+      tools:ignore="ContentDescription" />
+
+  </LinearLayout>
+
+  <Button
+    android:id="@+id/currentAppointmentDate"
+    style="@style/Clinic.V2.NoBackgroundRippleButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
+    tools:text="Calendar" />
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/grey3"
+    android:layout_margin="@dimen/spacing_16"
+    />
+
+  <TextView
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:text="@string/scheduleappointment_at"/>
+
+  <TextView
+    android:id="@+id/selectedFacilityName"
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    android:ellipsize="end"
+    android:gravity="center"
+    tools:text="PHC Bhatinda"/>
+
+  <Button
+    android:id="@+id/changeFacilityButton"
+    style="@style/Clinic.V2.NoBackgroundRippleButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
+    android:text="@string/scheduleappointment_change" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_12"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:gravity="center_vertical">
+
+    <Button
+      android:id="@+id/notNowButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_4"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:background="@drawable/button_outline_ripple_blue1"
+      android:gravity="center"
+      android:text="@string/scheduleappointment_not_now"
+      android:textColor="?colorAccent"
+      tools:ignore="ButtonStyle" />
+
+    <Button
+      android:id="@+id/doneButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_4"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:gravity="center"
+      android:paddingBottom="21dp"
+      android:paddingTop="21dp"
+      android:text="@string/scheduleappointment_done"
+      android:textColor="@color/white"
+      app:backgroundTint="?colorAccent"
+      tools:ignore="ButtonStyle" />
+  </LinearLayout>
+</LinearLayout>

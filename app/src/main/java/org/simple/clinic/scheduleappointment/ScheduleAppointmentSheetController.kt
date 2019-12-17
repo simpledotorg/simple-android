@@ -59,7 +59,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
         enableDecrements(configuredAppointmentDatesStream),
         showManualAppointmentDateSelector(replayedEvents),
         scheduleAutomaticAppointmentForDefaulters(replayedEvents),
-        scheduleAppointment(replayedEvents)
+        scheduleAppointment(replayedEvents),
+        showCurrentFacility(replayedEvents)
     )
   }
 
@@ -237,6 +238,12 @@ class ScheduleAppointmentSheetController @Inject constructor(
         }
         .flatMapSingle { (date, uuid, currentFacility) -> scheduleAppointmentForPatient(uuid, date.scheduledFor, currentFacility, Manual) }
         .map { Ui::closeSheet }
+  }
+
+  private fun showCurrentFacility(events: Observable<UiEvent>): Observable<UiChange> {
+    val creates = events
+        .ofType<ScheduleAppointmentSheetCreated>()
+    return Observables.combineLatest(creates, currentFacilityStream()) { _, facility -> { ui: Ui -> ui.showCurrentFacility(facility.name) } }
   }
 
   private fun scheduleAppointmentForPatient(

@@ -12,8 +12,8 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.sheet_schedule_appointment.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -148,5 +148,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
         .plus(period)
         .toUtcInstant(userClock)
         .toEpochMilli()
+  }
+
+  fun showCurrentFacility(facilityName: String) {
+    //TODO: Implement when the layout is added for patient transfer
   }
 }

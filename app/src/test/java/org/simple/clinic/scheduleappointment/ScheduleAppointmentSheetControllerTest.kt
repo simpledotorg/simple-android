@@ -2,6 +2,7 @@ package org.simple.clinic.scheduleappointment
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
@@ -31,6 +32,7 @@ import org.simple.clinic.scheduleappointment.TimeToAppointment.Months
 import org.simple.clinic.scheduleappointment.TimeToAppointment.Weeks
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.UiEvent
@@ -516,6 +518,7 @@ class ScheduleAppointmentSheetControllerTest {
     val updatedFacilityUuid = PatientMocker.facility().uuid
     val appointment = PatientMocker.appointment()
 
+    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(PatientMocker.facility(uuid = updatedFacilityUuid)))
     whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
 
     //when
@@ -542,6 +545,24 @@ class ScheduleAppointmentSheetControllerTest {
     //then
     verify(repository).schedule(eq(patientUuid), any(), any(), any(), eq(facility.uuid))
     verify(sheet).closeSheet()
+  }
+
+  @Test
+  fun `when patient facility is changed then show selected facility`() {
+    //given
+    val updatedFacilityUuid = UUID.fromString("60b32059-fe85-4b90-8a5d-984e56f9b001")
+    val updatedFacility = PatientMocker.facility(uuid = updatedFacilityUuid, name = "new facility")
+
+    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(updatedFacility))
+
+    //when
+    sheetCreated()
+    uiEvents.onNext(PatientFacilityChanged(updatedFacilityUuid))
+
+    //then
+    val inOrder = inOrder(sheet)
+    inOrder.verify(sheet).showPatientFacility(facility.name)
+    inOrder.verify(sheet).showPatientFacility(updatedFacility.name)
   }
 
 

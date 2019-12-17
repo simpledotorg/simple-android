@@ -484,4 +484,6 @@
   <string name="selectcountry_servererror">Server error! Please try again later!</string>
   <string name="selectcountry_genericerror">Something went wrong! Please try again later!</string>
   <string name="selectcountry_retry">Try Again</string>
+  <string name="scheduleappointment_at">at</string>
+  <string name="scheduleappointment_change">Change</string>
 </resources>

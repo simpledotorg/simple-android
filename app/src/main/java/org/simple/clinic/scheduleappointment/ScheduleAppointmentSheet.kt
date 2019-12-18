@@ -14,6 +14,8 @@ import kotlinx.android.synthetic.main.sheet_schedule_appointment.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
+import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity.Companion.selectedFacilityUuid
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -30,6 +32,7 @@ private typealias DatePickerDialogListener = (view: DatePicker, year: Int, month
 class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   companion object {
+    private const val REQCODE_FACILITY_SELECT = 100
     private const val KEY_PATIENT_UUID = "patientUuid"
 
     fun intent(context: Context, patientUuid: UUID): Intent =
@@ -48,6 +51,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
+  private val facilityChanges: Subject<PatientFacilityChanged> = PublishSubject.create()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -64,16 +68,28 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
             notNowClicks(),
             doneClicks(),
             appointmentDateClicks(),
-            calendarDateSelectedEvents
+            calendarDateSelectedEvents,
+            facilityChanges
         ),
         controller = controller,
         screenDestroys = onDestroys
     )
+
+    changeFacilityButton.setOnClickListener {
+      openFacilitySelection()
+    }
   }
 
   override fun onDestroy() {
     onDestroys.onNext(ScreenDestroyed())
     super.onDestroy()
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (requestCode == REQCODE_FACILITY_SELECT && resultCode == Activity.RESULT_OK && data != null) {
+      facilityChanges.onNext(PatientFacilityChanged(selectedFacilityUuid(data!!)))
+    }
   }
 
   private fun screenCreates(): Observable<UiEvent> {
@@ -92,6 +108,10 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentDone }
 
   private fun appointmentDateClicks() = RxView.clicks(currentAppointmentDate).map { ManuallySelectAppointmentDateClicked }
+
+  private fun openFacilitySelection() {
+    startActivityForResult(Intent(this, FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)
+  }
 
   fun closeSheet() {
     setResult(Activity.RESULT_OK)
@@ -151,6 +171,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   fun showPatientFacility(facilityName: String) {
-    //TODO: Implement when the layout is added for patient transfer
+    selectedFacilityName.text = facilityName
   }
 }

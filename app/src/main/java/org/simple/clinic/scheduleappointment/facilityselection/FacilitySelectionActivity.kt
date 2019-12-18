@@ -36,6 +36,10 @@ class FacilitySelectionActivity : AppCompatActivity() {
 
   companion object {
     const val EXTRA_SELECTED_FACILITY_UUID = "selected_facility_uuid"
+
+    fun selectedFacilityUuid(data: Intent): UUID {
+      return data.getSerializableExtra(EXTRA_SELECTED_FACILITY_UUID) as UUID
+    }
   }
 
   @Inject
@@ -138,7 +142,7 @@ class FacilitySelectionActivity : AppCompatActivity() {
 
   fun sendSelectedFacility(selectedFacilityUuid: UUID) {
     val intent = Intent()
-    intent.putExtra(EXTRA_SELECTED_FACILITY_UUID, selectedFacilityUuid.toString())
+    intent.putExtra(EXTRA_SELECTED_FACILITY_UUID, selectedFacilityUuid)
     setResult(Activity.RESULT_OK, intent)
     finish()
   }

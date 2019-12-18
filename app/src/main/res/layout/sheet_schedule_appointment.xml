@@ -74,13 +74,49 @@
     android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
     tools:text="Calendar" />
 
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/grey3"
+    android:layout_margin="@dimen/spacing_16"
+    />
+
+  <TextView
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:text="@string/scheduleappointment_at"/>
+
+  <TextView
+    android:id="@+id/selectedFacilityName"
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    android:ellipsize="end"
+    android:gravity="center"
+    tools:text="PHC Bhatinda"/>
+
+  <Button
+    android:id="@+id/changeFacilityButton"
+    style="@style/Clinic.V2.NoBackgroundRippleButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
+    android:text="@string/scheduleappointment_change" />
+
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_12"
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginTop="@dimen/spacing_24"
     android:gravity="center_vertical">
 
     <Button

@@ -70,6 +70,13 @@ class FacilitySelectionActivity : AppCompatActivity() {
         screenDestroys = onDestroys
     )
 
+    toolbarWithSearch.setNavigationOnClickListener {
+      finish()
+    }
+    toolbarWithoutSearch.setNavigationOnClickListener {
+      finish()
+    }
+
     facilityList.layoutManager = LinearLayoutManager(this)
     facilityList.adapter = recyclerViewAdapter
   }

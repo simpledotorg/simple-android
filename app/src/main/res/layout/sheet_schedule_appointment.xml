@@ -24,7 +24,6 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
     android:layout_marginEnd="44dp"
     android:layout_marginStart="44dp"
     android:layout_marginTop="@dimen/spacing_32"
@@ -65,14 +64,26 @@
 
   </LinearLayout>
 
-  <Button
+  <TextView
     android:id="@+id/currentAppointmentDate"
+    style="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_8"
+    android:ellipsize="end"
+    android:gravity="center"
+    tools:text = "12-Nov-2019"/>
+
+  <Button
+    android:id="@+id/changeAppointmentDate"
     style="@style/Clinic.V2.NoBackgroundRippleButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
-    tools:text="Calendar" />
+    android:text="@string/scheduleappointment_change" />
 
   <View
     android:layout_width="match_parent"

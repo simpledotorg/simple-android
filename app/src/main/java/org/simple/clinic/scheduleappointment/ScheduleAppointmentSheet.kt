@@ -26,6 +26,7 @@ import org.threeten.bp.Period
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 private typealias DatePickerDialogListener = (view: DatePicker, year: Int, month: Int, dayOfMonth: Int) -> Unit
 
@@ -46,7 +47,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   @Inject
   lateinit var userClock: UserClock
 
-  @Inject
+  @field:[Inject Named("date_for_search_results")]
   lateinit var dateFormatter: DateTimeFormatter
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
@@ -107,7 +108,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentDone }
 
-  private fun appointmentDateClicks() = RxView.clicks(currentAppointmentDate).map { ManuallySelectAppointmentDateClicked }
+  private fun appointmentDateClicks() = RxView.clicks(changeAppointmentDate).map { ManuallySelectAppointmentDateClicked }
 
   private fun openFacilitySelection() {
     startActivityForResult(Intent(this, FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)

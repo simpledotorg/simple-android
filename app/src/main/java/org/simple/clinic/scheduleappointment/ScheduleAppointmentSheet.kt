@@ -88,8 +88,10 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == REQCODE_FACILITY_SELECT && resultCode == Activity.RESULT_OK && data != null) {
-      facilityChanges.onNext(PatientFacilityChanged(selectedFacilityUuid(data!!)))
+    if (requestCode == REQCODE_FACILITY_SELECT && resultCode == Activity.RESULT_OK) {
+      if (data != null) {
+        facilityChanges.onNext(PatientFacilityChanged(selectedFacilityUuid(data!!)))
+      }
     }
   }
 

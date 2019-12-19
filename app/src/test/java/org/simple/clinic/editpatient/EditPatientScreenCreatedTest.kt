@@ -10,22 +10,19 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.*
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.Locale
+import java.util.*
 
 @RunWith(JUnitParamsRunner::class)
 class EditPatientScreenCreatedTest {
@@ -143,7 +140,7 @@ class EditPatientScreenCreatedTest {
         Observable.never<EditPatientEvent>(),
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
-        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat)),
+            EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
         EditPatientEffectHandler(ui, TestUserClock(), mock(), utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()).build(),
         { /* nothing here */ }
     ).start()

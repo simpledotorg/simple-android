@@ -286,7 +286,8 @@ object PatientMocker {
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        creationFacilityUuid = null
     )
   }
 

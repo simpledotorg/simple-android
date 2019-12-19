@@ -24,18 +24,18 @@ data class Timestamps(
 
   companion object {
 
-    fun now(clock: UtcClock): Timestamps {
+    fun create(clock: UtcClock): Timestamps {
       val instant = Instant.now(clock)
 
       return Timestamps(createdAt = instant, updatedAt = instant, deletedAt = null)
     }
   }
 
-  fun updated(clock: UtcClock): Timestamps {
+  fun update(clock: UtcClock): Timestamps {
     return copy(updatedAt = Instant.now(clock))
   }
 
-  fun deleted(clock: UtcClock): Timestamps {
+  fun delete(clock: UtcClock): Timestamps {
     val instant = Instant.now(clock)
     return copy(updatedAt = instant, deletedAt = instant)
   }

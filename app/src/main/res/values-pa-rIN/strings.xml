@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">ਸਿਮਪਾਲ</string>
+  <string name="app_name">ਸਧਾਰਨ</string>
 
   <!-- Common -->
   <string name="gender_female">ਇਸਤਰੀ</string>
-  <string name="gender_male">ਪੁਰਖ਼</string>
+  <string name="gender_male">ਮਰਦ</string>
   <string name="gender_transgender">ਟਰਾਂਸਜੈਂਡਰ</string>
   <!--suppress UnusedResources -->
   <string name="gender_male_letter">ਮ</string>
@@ -25,6 +25,7 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">ਬੀਪੀ ਪਾਸਪੋਰਟ</string>
+  <string name="identifiertype_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
   <string name="identifiertype_unknown">ਆਈਡੀ</string>
 
   <!-- Patient search -->
@@ -48,21 +49,23 @@
   <string name="patiententry_full_name">ਮਰੀਜ਼ ਦਾ ਨਾਮ</string>
   <string name="patiententry_phone_number">ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="patiententry_date_of_birth_unfocused">ਜਨਮ ਮਿਤੀ</string>
-  <string name="patiententry_date_of_birth_focused">ਦਿਨ/ਮਹੀਨਾ/ਸਾਲ</string>
+  <string name="patiententry_date_of_birth_focused">D.O.B (ਜਨਮ ਮਿਤੀ): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">ਜਾਂ</string>
   <string name="patiententry_age">ਉਮਰ</string>
+  <string name="patiententry_street_address">ਮਕਾਨ ਸੰਖਿਆ ਅਤੇ ਗਲੀ</string>
   <string name="patiententry_colony_or_village">ਕੋਲੋਨੀ/ਪਿੰਡ/ਵਾਰਡ</string>
+  <string name="patiententry_zone">ਖੇਤਰ/ਜ਼ੋਨ</string>
   <string name="patiententry_district">ਜਿਲ੍ਹਾ</string>
   <string name="patiententry_state">ਰਾਜ</string>
-  <string name="patiententry_save_patient">ਮਰੀਜ਼ ਦੀ ਜਾਣਕਾਰੀ ਨੂੰ ਸੰਭਾਲੋ</string>
-  <string name="patiententry_error_empty_fullname">ਨਾਮ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
-  <string name="patiententry_error_empty_gender">ਲਿੰਗ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
+  <string name="patiententry_save_patient">ਅਗਲਾ</string>
+  <string name="patiententry_error_empty_fullname">ਮਰੀਜ਼ ਦਾ ਪੂਰਾ ਨਾਮ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="patiententry_error_empty_gender">ਮਰੀਜ਼ ਦਾ ਲਿੰਗ ਚੁਣੋ</string>
   <string name="patiententry_error_empty_colony_or_village">ਕੋਲੋਨੀ/ਪਿੰਡ/ਵਾਰਡ ਦਾਖ਼ਲ ਕਰੋ</string>
-  <string name="patiententry_error_empty_district">ਜਿਲ੍ਹਾ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
-  <string name="patiententry_error_state_empty">ਰਾਜ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
+  <string name="patiententry_error_empty_district">ਮਰੀਜ਼ ਦਾ ਜ਼ਿਲ੍ਹਾ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="patiententry_error_state_empty">ਮਰੀਜ਼ ਦਾ ਰਾਜ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">ਮਰੀਜ਼ ਦੀ ਉਮਰ ਦਾਖ਼ਲ ਕਰੋ</string>
-  <string name="patiententry_error_invalid_dateofbirth">ਜਨਮ ਮਿਤੀ ਗਲਤ ਹੈ</string>
-  <string name="patiententry_error_dateofbirth_is_in_future">ਦਰਜ ਕੀਤਾ ਜਨਮ ਮਿਤੀ ਗਲਤ ਹੈ</string>
+  <string name="patiententry_error_invalid_dateofbirth">ਮਰੀਜ਼ ਦੀ ਜਨਮ ਮਿਤੀ ਨੂੰ DD/MM/YYYY ਵਿੱਚ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">ਮਰੀਜ਼ ਦੀ ਜਨਮ ਮਿਤੀ ਸਹੀ ਕਰੋ</string>
   <string name="patiententry_error_phonenumber_length_less">ਫ਼ੋਨ ਨੰਬਰ 6 ਅੰਕਾਂ ਤੋਂ ਛੋਟਾ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
   <string name="patiententry_error_phonenumber_length_more">ਫ਼ੋਨ ਨੰਬਰ 12 ਅੰਕਾਂ ਤੋਂ ਵੱਡਾ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
   <string name="patiententry_identifier">ਬੀਪੀ ਪਾਸਪੋਰਟ</string>
@@ -81,11 +84,11 @@
   <!--suppress UnusedResources -->
   <string name="tab_patient">ਮਰੀਜ਼</string>
   <!--suppress UnusedResources -->
-  <string name="tab_overdue">ਕਾਲ ਸੂਚੀ</string>
+  <string name="tab_overdue">ਓਵਰਡਿਊ</string>
   <!--suppress UnusedResources -->
   <string name="tab_progress">ਤਰੱਕੀ</string>
 
-  <string name="home_search_patient_name_phone">ਮਰੀਜ਼ ਦਾ ਨਾਮ ਤੇ ਫ਼ੋਨ ਨੰਬਰ ਭਰੋ</string>
+  <string name="home_search_patient_name_phone">ਮਰੀਜ਼ ਦਾ ਨਾਮ ਦਾਖਲ ਕਰੋ</string>
   <string name="patients_user_awaiting_approval_title">ਮਨਜ਼ੂਰੀ ਦੀ ਉਡੀਕ ਵਿੱਚ</string>
   <string name="patients_user_awaiting_approval_message">ਇੱਕ ਵਾਰ ਮਨਜ਼ੂਰੀ ਮਿਲ ਜਾਵੇ, ਤੁਹਾਡੀ ਆਪਣੇ ਕਲੀਨਿਕ ਤੋਂ ਮਰੀਜ਼ ਰਿਕਾਰਡਾਂ ਤਕ ਪਹੁੰਚ ਹੋਵੇਗੀ।</string>
   <string name="patients_user_approved_title">ਤੁਹਾਨੂੰ ਮਨਜ਼ੂਰੀ ਦਿੱਤੀ ਗਈ ਹੈ!</string>
@@ -95,7 +98,7 @@
   <string name="patients_dismiss_user_approved_status">ਸਮਝ ਗਏ</string>
   <string name="patients_enter_code">ਕੋਡ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patients_you_are_now_logged_in">ਤਸਦੀਕੀ ਸਫ਼ਲ ਹੋਈ! ਮਰੀਜ਼ ਰਿਕਾਰਡ ਹੁਣ ਦਿਖਣ-ਯੋਗ ਹਨ।</string>
-  <string name="patients_loggedoutalert_title">ਤੁਹਾਨੂੰ ਇੱਕ ਸਮੇਂ \&apos;ਤੇ ਸਿਰਫ਼ ਇੱਕ ਡਿਵਾਈਸ \&apos;ਤੇ ਲੌਗ ਇਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ</string>
+  <string name="patients_loggedoutalert_title">ਤੁਹਾਨੂੰ ਇੱਕ ਸਮੇਂ \'ਤੇ ਸਿਰਫ਼ ਇੱਕ ਡਿਵਾਈਸ \'ਤੇ ਲੌਗ ਇਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ</string>
   <string name="patients_loggedoutalert_message">ਤੁਹਾਨੂੰ ਤੁਹਾਡੇ ਪੁਰਾਣੇ ਡਿਵਾਈਸ ਤੋਂ ਲੌਗ ਆਉਟ ਕੀਤਾ ਗਿਆ ਹੈ।</string>
   <string name="patients_loggedoutalert_dismiss">ਸਮਝ ਗਏ</string>
   <string name="patients_scan_simple_card">ਬੀਪੀ ਪਾਸਪੋਰਟ ਸਕੈਨ ਕਰੋ</string>
@@ -129,10 +132,10 @@
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">ਵਾਪਸ ਜਾਓ</string>
   <string name="patientsummary_prescriptions_last_updated">ਅਪਡੇਟ ਹੋਇਆ %s</string>
-  <string name="patientsummary_prescriptions_add">ਨਵੀਂ ਦਵਾਈ</string>
-  <string name="patientsummary_prescriptions_update">ਅਪਡੇਟ</string>
+  <string name="patientsummary_prescriptions_add">ਸਾਰੀਆਂ ਦਵਾਈਆਂ</string>
+  <string name="patientsummary_prescriptions_update">ਦਵਾਈਆਂ ਅੱਪਡੇਟ ਕਰੋ</string>
   <string name="patientsummary_bp_add_new">ਨਵਾਂ ਬੀ ਪੀ</string>
-  <string name="patientsummary_finish_saving_patient">ਹੋ ਗਿਆ</string>
+  <string name="patientsummary_finish_saving_patient">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="patientsummary_medicalhistory_title">ਕਾਰਡੀਓਵੈਸਕਿਉਲਰ ਇਤਿਹਾਸ</string>
   <string name="patientsummary_medicalhistory_last_updated">ਅੱਪਡੇਟ ਕੀਤਾ ਗਿਆ %s</string>
   <string name="patientsummary_bp_none_added">ਕੋਈ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਨਹੀਂ ਜੋੜੇ ਗਏ</string>
@@ -162,9 +165,9 @@
   <string name="patient_prescribeddrugs_screen_title">ਬੀ ਪੀ ਦੀਆਂ ਦਵਾਈਆਂ</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">ਹੋਰ ਦਵਾਈ ਜੋੜੋ</string>
 
-  <string name="customprescription_enter_medicine">ਹੋਰ ਦਵਾਈ ਜੋੜੋ</string>
+  <string name="customprescription_enter_medicine">ਦਵਾਈ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="customprescription_edit_medicine">ਦਵਾਈ ਦਾ ਸੰਪਾਦਨ ਕਰੋ</string>
-  <string name="customprescription_save_drug">ਡਰੱਗ ਸੰਭਾਲੋ</string>
+  <string name="customprescription_save_drug">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="customprescription_drug_name_hint">ਦਵਾਈ ਦਾ ਨਾਮ</string>
   <string name="customprescription_drug_dosage_hint">ਦਵਾਈ ਦੀ ਮਾਤਰਾ</string>
 
@@ -340,7 +343,7 @@
   <string name="syncindicator_status_synced">%d ਮਿੰ ਪਹਿਲਾਂ ਸਿੰਕ ਕੀਤਾ</string>
   <string name="syncindicator_dialog_error_network">ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਮਰੀਜ਼ ਦੇ ਰਿਕਾਰਡਾਂ ਨੂੰ ਸਿੰਕ ਕਰਨ ਲਈ ਤੁਹਾਡੇ ਕੋਲ ਕਾਰਜਸ਼ੀਲ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਹੈ।</string>
   <string name="syncindicator_dialog_button_text">ਠੀਕ ਹੈ</string>
-  <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ \&apos;ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>
+  <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ \'ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>
 
   <!-- Help Screen -->
   <string name="help_title">ਮਦਦ</string>
@@ -372,7 +375,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰੋ</string>
-  <string name="appupdatedialog_body">ਸਿੰਪਲ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਪਲੇ ਸਟੋਰ \&apos;ਤੇ ਲਿਜਾਇਆ ਜਾਵੇਗਾ</string>
+  <string name="appupdatedialog_body">ਸਿੰਪਲ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਪਲੇ ਸਟੋਰ \'ਤੇ ਲਿਜਾਇਆ ਜਾਵੇਗਾ</string>
   <string name="appupdatedialog_positive_button_text">ਅੱਪਡੇਟ ਕਰੋ</string>
   <string name="appupdatedialog_negative_button_text">ਹੁਣੇ ਨਹੀਂ</string>
 

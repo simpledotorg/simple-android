@@ -30,14 +30,14 @@ class UserInputAgeValidator @Inject constructor(
     }
 
 
-    fun ageValidator(age: Int): Result {
+    fun invalidAgeValidator(age: Int): Result {
         return when {
             age > 120 -> AgeIsInvalid
             else -> AgeIsValid(age)
         }
     }
 
-    fun dateValidator(dateText: String, nowDate: LocalDate = dateInUserTimeZone()): Result {
+    fun invalidDateValidator(dateText: String, nowDate: LocalDate = dateInUserTimeZone()): Result {
         val parsedDate = dateOfBirthFormat.parse(dateText, LocalDate::from)
         return when {
             parsedDate < nowDate.minusYears(120) -> DateIsInvalid

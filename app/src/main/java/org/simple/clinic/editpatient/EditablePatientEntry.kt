@@ -2,37 +2,23 @@ package org.simple.clinic.editpatient
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.INVALID_DATE_OF_BIRTH
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
-import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
-import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.*
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.*
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.*
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.AgeIsInvalid
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.UUID
+import java.util.*
 
 typealias ValidationCheck = () -> EditPatientValidationError?
 
@@ -121,19 +107,21 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       copy(ageOrDateOfBirth = EntryWithDateOfBirth(dateOfBirth))
 
   fun validate(
-      alreadySavedNumber: PatientPhoneNumber?,
-      numberValidator: PhoneNumberValidator,
-      dobValidator: UserInputDateValidator
+          alreadySavedNumber: PatientPhoneNumber?,
+          numberValidator: PhoneNumberValidator,
+          dobValidator: UserInputDateValidator,
+          ageValidator: UserInputAgeValidator
   ): Set<EditPatientValidationError> {
-    return getValidationChecks(alreadySavedNumber, numberValidator, dobValidator)
+    return getValidationChecks(alreadySavedNumber, numberValidator, dobValidator, ageValidator)
         .mapNotNull { it.invoke() }
         .toSet()
   }
 
   private fun getValidationChecks(
-      alreadySavedNumber: PatientPhoneNumber?,
-      numberValidator: PhoneNumberValidator,
-      dobValidator: UserInputDateValidator
+          alreadySavedNumber: PatientPhoneNumber?,
+          numberValidator: PhoneNumberValidator,
+          dobValidator: UserInputDateValidator,
+          ageValidator: UserInputAgeValidator
   ): List<ValidationCheck> {
     return listOf(
         nameCheck(),
@@ -141,7 +129,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
         colonyOrVillageCheck(),
         stateCheck(),
         districtCheck(),
-        ageOrDateOfBirthCheck(dobValidator)
+            ageOrDateOfBirthCheck(dobValidator, ageValidator)
     )
   }
 
@@ -170,10 +158,19 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       { if (district.isBlank()) DISTRICT_EMPTY else null }
 
   private fun ageOrDateOfBirthCheck(
-      dobValidator: UserInputDateValidator
+          dobValidator: UserInputDateValidator,
+          ageValidator: UserInputAgeValidator
   ): ValidationCheck = {
     when (ageOrDateOfBirth) {
-      is EntryWithAge -> if (ageOrDateOfBirth.age.isBlank()) BOTH_DATEOFBIRTH_AND_AGE_ABSENT else null
+      is EntryWithAge -> {
+        when {
+          (ageOrDateOfBirth.age.isBlank()) -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+          else -> when (ageValidator.invalidAgeValidator(ageOrDateOfBirth.age.toInt())) {
+            AgeIsInvalid -> AGE_IS_INVALID
+            else -> null
+          }
+        }
+      }
 
       is EntryWithDateOfBirth -> {
         when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {

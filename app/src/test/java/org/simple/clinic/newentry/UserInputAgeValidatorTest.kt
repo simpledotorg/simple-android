@@ -24,7 +24,7 @@ class UserInputAgeValidatorTest {
         val age = 123
 
         //when
-        val expectedResult = validator.ageValidator(age)
+        val expectedResult = validator.invalidAgeValidator(age)
 
         //then
         assertThat(expectedResult).isEqualTo(AgeIsInvalid)
@@ -36,7 +36,7 @@ class UserInputAgeValidatorTest {
         val age = 98
 
         //when
-        val expectedResult = validator.ageValidator(age)
+        val expectedResult = validator.invalidAgeValidator(age)
 
         //then
         assertThat(expectedResult).isEqualTo(AgeIsValid(age))
@@ -48,7 +48,7 @@ class UserInputAgeValidatorTest {
         val age = 120
 
         //when
-        val expectedResult = validator.ageValidator(age)
+        val expectedResult = validator.invalidAgeValidator(age)
 
         //then
         assertThat(expectedResult).isEqualTo(AgeIsValid(age))
@@ -60,7 +60,7 @@ class UserInputAgeValidatorTest {
         val dateText = "12/03/1810"
 
         //when
-        val validation = validator.dateValidator(dateText)
+        val validation = validator.invalidDateValidator(dateText)
 
         //then
         assertThat(validation).isEqualTo(DateIsInvalid)
@@ -72,7 +72,7 @@ class UserInputAgeValidatorTest {
         val dateText = "15/12/2019"
 
         //when
-        val validation = validator.dateValidator(dateText)
+        val validation = validator.invalidDateValidator(dateText)
 
         //then
         assertThat(validation).isEqualTo(DateIsValid(LocalDate.of(2019, 12, 15)))
@@ -84,7 +84,7 @@ class UserInputAgeValidatorTest {
         val dateText = "17/12/1899"
 
         //when
-        val validation = validator.dateValidator(dateText)
+        val validation = validator.invalidDateValidator(dateText)
 
         //then
         assertThat(validation).isEqualTo(DateIsValid(LocalDate.of(1899, 12, 17)))

@@ -31,7 +31,9 @@ data class Appointment(
     val syncStatus: SyncStatus,
     val createdAt: Instant,
     val updatedAt: Instant,
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+    //TODO: [Sanchita] Populate the value for this field correctly
+    val creationFacilityUuid: UUID?
 ) {
 
   sealed class Status {

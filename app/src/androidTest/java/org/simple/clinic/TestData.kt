@@ -554,7 +554,8 @@ class TestData @Inject constructor(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        creationFacilityUuid = null)
   }
 
   fun appointmentPayload(

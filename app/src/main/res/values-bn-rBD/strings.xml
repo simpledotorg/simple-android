@@ -25,6 +25,7 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">বিপি পাসপোর্ট</string>
+  <string name="identifiertype_bangladesh_national_id">জাতীয় পরিচয়পত্র নম্বর</string>
   <string name="identifiertype_unknown">আইডি</string>
 
   <!-- Patient search -->
@@ -51,7 +52,9 @@
   <string name="patiententry_date_of_birth_focused">জন্মতারিখ: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">অথবা</string>
   <string name="patiententry_age">বয়স</string>
+  <string name="patiententry_street_address">বাড়ির নম্বর এবং রাস্তা</string>
   <string name="patiententry_colony_or_village">কলোনি / গ্রাম / ওয়ার্ড</string>
+  <string name="patiententry_zone">অঞ্চল</string>
   <string name="patiententry_district">জেলা</string>
   <string name="patiententry_state">উপজেলা</string>
   <string name="patiententry_save_patient">পরবর্তী</string>
@@ -232,7 +235,7 @@
   <string name="overdue_empty_desc">যে রোগীরা ফলো আপ রক্তচাপ মাপার জন্য তাদের পূর্বনির্ধারিত সাক্ষাৎকার মিস করেছে আপনি সেই রোগীদের ফোন করতে পারবেন।</string>
   <plurals name="overdue_list_item_patient_bp">
     <item quantity="one">%1$d/%2$d, %3$d দিন আগে</item>
-    <item quantity="other">%1$d/%2$d/ %3$d/.......... দিন আগে</item>
+    <item quantity="other">%1$d/%2$d, %3$d দিন আগে</item>
   </plurals>
   <plurals name="overdue_list_item_overdue_days">
     <item quantity="one">%d দিন সময়াতীত</item>

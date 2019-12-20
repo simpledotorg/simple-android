@@ -12,6 +12,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.AgeIsInvalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.DateIsInvalid
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -176,7 +177,10 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
         when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
           InvalidPattern -> INVALID_DATE_OF_BIRTH
           DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
-          is Valid -> null
+          is Valid -> when (ageValidator.invalidDateValidator(ageOrDateOfBirth.dateOfBirth)) {
+            DateIsInvalid -> DATE_OF_BIRTH_IS_INVALID_AGE
+            else -> null
+          }
         }
       }
     }

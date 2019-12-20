@@ -282,6 +282,10 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         AGE_IS_INVALID -> {
           showAgeIsInvalidError()
         }
+
+        DATE_OF_BIRTH_IS_INVALID_AGE -> {
+          showDateOfBirthIsInvalidError()
+        }
       }.exhaustive()
     }
   }
@@ -315,7 +319,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
           showAgeEmptyError(false)
         }
 
-        INVALID_DATE_OF_BIRTH, DATE_OF_BIRTH_IN_FUTURE -> {
+        INVALID_DATE_OF_BIRTH, DATE_OF_BIRTH_IN_FUTURE, DATE_OF_BIRTH_IS_INVALID_AGE -> {
           hideDateOfBirthError()
         }
       }.exhaustive()
@@ -375,6 +379,10 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun showAgeIsInvalidError() {
     ageInputLayout.error = resources.getString(R.string.patiententry_invalid_age_error)
+  }
+
+  private fun showDateOfBirthIsInvalidError() {
+    dateOfBirthInputLayout.error = resources.getString(R.string.patiententry_invalid_age_error)
   }
 
   private fun hideDateOfBirthError() {

@@ -215,7 +215,7 @@ class AppointmentRepository @Inject constructor(
           createdAt = createdAt,
           updatedAt = updatedAt,
           deletedAt = deletedAt,
-          creationFacilityUuid = null)
+          creationFacilityUuid = creationFacilityUuid)
     }
   }
 

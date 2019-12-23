@@ -53,6 +53,7 @@ class AppointmentSync @Inject constructor(
                 uuid = uuid,
                 patientUuid = patientUuid,
                 facilityUuid = facilityUuid,
+                creationFacilityUuid = creationFacilityUuid,
                 date = scheduledDate,
                 status = status,
                 cancelReason = cancelReason,

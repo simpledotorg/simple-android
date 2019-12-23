@@ -247,7 +247,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     return RxRadioGroup.checkedChanges(genderRadioGroup)
         .filter { it != -1 }
         .map { checkedId ->
-          val gender = radioIdToGenders[checkedId]!!
+          val gender = radioIdToGenders.getValue(checkedId)
           GenderChanged(gender)
         }
   }

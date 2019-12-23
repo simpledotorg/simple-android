@@ -288,38 +288,6 @@
       </FrameLayout>
 
       <FrameLayout
-        android:id="@+id/businessIdentifierLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:paddingStart="@dimen/spacing_4"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/businessIdentifierInputLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
-
-          <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/businessIdentifierEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/patiententry_business_identifier"
-            android:imeOptions="flagNoFullscreen"
-            android:inputType="phone|textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-          style="@style/Clinic.Button.ClearEditText"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="end"
-          app:clearableField="@id/businessIdentifierEditText" />
-      </FrameLayout>
-
-      <FrameLayout
         android:id="@+id/streetAddressLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

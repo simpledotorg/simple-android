@@ -1,7 +1,8 @@
 # CHANGELOG
 
 ## Next Release
--?
+### Feature
+- Transfer patients to a different facility for follow-up 
 
 ## 2019-12-16-6732
 ### Fixes

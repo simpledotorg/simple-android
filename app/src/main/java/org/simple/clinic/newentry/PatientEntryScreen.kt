@@ -65,6 +65,7 @@ import org.simple.clinic.widgets.*
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import javax.inject.Inject
 import javax.inject.Named
@@ -100,6 +101,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var dobValidator: UserInputDateValidator
+
+  @Inject
+  lateinit var ageValidator: UserInputAgeValidator
 
   @Inject
   lateinit var inputFields: InputFields
@@ -148,7 +152,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         events.ofType(),
         PatientEntryModel.DEFAULT,
         PatientEntryInit(),
-        PatientEntryUpdate(phoneNumberValidator, dobValidator),
+        PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator),
         effectHandler,
         uiRenderer::render,
         crashReporter

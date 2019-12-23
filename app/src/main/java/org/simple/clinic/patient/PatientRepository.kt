@@ -38,6 +38,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -62,7 +63,8 @@ class PatientRepository @Inject constructor(
     private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
     private val schedulersProvider: SchedulersProvider,
     private val uuidShortCodeCreator: UuidShortCodeCreator,
-    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
+    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter,
+    private val ageValidator: UserInputAgeValidator
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
@@ -260,7 +262,7 @@ class PatientRepository @Inject constructor(
 
     val validation = cachedOngoingEntry
         .flatMapCompletable {
-          val validationErrors = it.validationErrors(dobValidator, numberValidator)
+          val validationErrors = it.validationErrors(dobValidator, numberValidator, ageValidator)
           if (validationErrors.isEmpty()) {
             Completable.complete()
           } else {

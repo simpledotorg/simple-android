@@ -145,7 +145,7 @@ class PatientEntryEffectHandler(
             COLONY_OR_VILLAGE_EMPTY -> validationActions.showEmptyColonyOrVillageError(true)
             DISTRICT_EMPTY -> validationActions.showEmptyDistrictError(true)
             STATE_EMPTY -> validationActions.showEmptyStateError(true)
-              INVALID_AGE -> validationActions.showInvalidAgeError(true)
+            INVALID_AGE -> validationActions.showInvalidAgeError(true)
 
             EMPTY_ADDRESS_DETAILS,
             PHONE_NUMBER_NON_NULL_BUT_BLANK,

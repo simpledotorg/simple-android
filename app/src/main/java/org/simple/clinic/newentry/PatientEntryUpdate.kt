@@ -10,13 +10,15 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Optional
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
 typealias PatientEntryNext = Next<PatientEntryModel, PatientEntryEffect>
 
 class PatientEntryUpdate(
     private val phoneNumberValidator: PhoneNumberValidator,
-    private val dobValidator: UserInputDateValidator
+    private val dobValidator: UserInputDateValidator,
+    private val ageValidator: UserInputAgeValidator
 ) : Update<PatientEntryModel, PatientEntryEvent, PatientEntryEffect> {
   override fun update(model: PatientEntryModel, event: PatientEntryEvent): PatientEntryNext {
     return when (event) {
@@ -63,7 +65,7 @@ class PatientEntryUpdate(
   private fun onSaveClicked(
       patientEntry: OngoingNewPatientEntry
   ): PatientEntryNext {
-    val validationErrors = patientEntry.validationErrors(dobValidator, phoneNumberValidator)
+    val validationErrors = patientEntry.validationErrors(dobValidator, phoneNumberValidator, ageValidator)
     val effect = if (validationErrors.isEmpty()) {
       SavePatient(patientEntry)
     } else {

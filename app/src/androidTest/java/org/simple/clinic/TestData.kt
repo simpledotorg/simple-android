@@ -657,11 +657,13 @@ class TestData @Inject constructor(
       colony: String = faker.address.streetName(),
       district: String = faker.address.city(),
       state: String = faker.address.state(),
+      streetAddress: String? = faker.address.streetAddress(),
+      zone: String? = "Zone-" + faker.address.city(),
       phone: String? = faker.number.number(10),
       identifier: Identifier? = null
   ): OngoingNewPatientEntry {
     val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails(fullName, dateOfBirth, age, gender)
-    val ongoingAddress = OngoingNewPatientEntry.Address(colony, district, state)
+    val ongoingAddress = OngoingNewPatientEntry.Address(colony, district, state, streetAddress, zone)
     val ongoingPhoneNumber = phone?.let {
       OngoingNewPatientEntry.PhoneNumber(phone, PatientPhoneNumberType.Mobile, active = true)
     }

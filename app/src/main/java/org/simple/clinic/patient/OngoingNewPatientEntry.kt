@@ -225,15 +225,17 @@ data class OngoingNewPatientEntry(
 
   @Parcelize
   data class Address(
-      val colonyOrVillage: String, // TODO (rj) 8-Nov-19: Add `streetAddress` and `zone` fields.
+      val colonyOrVillage: String,
       val district: String,
-      val state: String
+      val state: String,
+      val streetAddress: String?,
+      val zone: String?
   ) : Parcelable {
     companion object {
-      val BLANK = Address("", "", "")
+      val BLANK = Address("", "", "", "", "")
 
       fun withDistrictAndState(district: String, state: String): Address =
-          Address("", district, state)
+          Address("", district, state, "", "")
     }
 
     fun withColonyOrVillage(colonyOrVillage: String): Address =

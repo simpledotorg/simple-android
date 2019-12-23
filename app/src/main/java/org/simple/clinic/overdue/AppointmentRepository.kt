@@ -35,12 +35,13 @@ class AppointmentRepository @Inject constructor(
       appointmentUuid: UUID,
       appointmentDate: LocalDate,
       appointmentType: AppointmentType,
-      facilityUuid: UUID
+      appointmentFacilityUuid: UUID,
+      creationFacilityUuid: UUID
   ): Single<Appointment> {
     val newAppointmentStream = Single.just(Appointment(
         uuid = appointmentUuid,
         patientUuid = patientUuid,
-        facilityUuid = facilityUuid,
+        facilityUuid = appointmentFacilityUuid,
         scheduledDate = appointmentDate,
         status = Scheduled,
         cancelReason = null,
@@ -51,7 +52,7 @@ class AppointmentRepository @Inject constructor(
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
         deletedAt = null,
-        creationFacilityUuid = null)
+        creationFacilityUuid = creationFacilityUuid)
     ).flatMap { appointment ->
       save(listOf(appointment)).andThen(Single.just(appointment))
     }

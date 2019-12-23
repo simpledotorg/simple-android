@@ -1425,11 +1425,12 @@ class PatientRepositoryAndroidTest {
 
       appointmentDate?.let {
         appointmentRepository.schedule(
-            appointmentUuid = UUID.fromString("cf002164-3032-4a91-8dbe-15c0b029db51"),
             patientUuid = patientUuid,
+            appointmentUuid = UUID.fromString("cf002164-3032-4a91-8dbe-15c0b029db51"),
             appointmentDate = it,
             appointmentType = Manual,
-            facilityUuid = testData.qaFacility().uuid
+            appointmentFacilityUuid = testData.qaFacility().uuid,
+            creationFacilityUuid = testData.qaFacility().uuid
         ).blockingGet()
       }
 

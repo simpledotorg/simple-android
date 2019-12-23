@@ -497,4 +497,13 @@
   <string name="bloodsugartype_rbs">Random blood sugar (RBS)</string>
   <string name="bloodsugartype_fbs">Fasting blood sugar (FBS)</string>
   <string name="bloodsugartype_ppbs">Post prandial blood sugar (PPBS)</string>
+
+  <!-- Blood sugar entry -->
+  <string name="bloodsugarentry_md_dl">mg/dl</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">Date of visit</string>
+  <string name="bloodsugarentry_day">Day</string>
+  <string name="bloodsugarentry_month">Month</string>
+  <string name="bloodsugarentry_year">Year</string>
+  <string name="bloodsugarentry_error_lower_limit">Value cannot be less than 30 mg/dl</string>
+  <string name="bloodsugarentry_error_date_is_in_future">Date cannot be in the future</string>
 </resources>

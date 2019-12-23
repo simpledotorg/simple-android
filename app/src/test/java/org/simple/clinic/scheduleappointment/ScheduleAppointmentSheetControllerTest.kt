@@ -76,7 +76,7 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
-    whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
+    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     val date = LocalDate.now(clock).plus(1, ChronoUnit.MONTHS)
     val defaultTimeToAppointment = Months(1)
@@ -94,7 +94,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     uiEvents.onNext(AppointmentDone)
 
-    verify(repository).schedule(eq(patientUuid), any(), eq(date), eq(Manual), eq(facility.uuid))
+    verify(repository).schedule(eq(patientUuid), any(), eq(date), eq(Manual), eq(facility.uuid), eq(facility.uuid))
     verify(sheet).closeSheet()
   }
 
@@ -108,7 +108,7 @@ class ScheduleAppointmentSheetControllerTest {
       shouldAutomaticAppointmentBeScheduled: Boolean
   ) {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(isPatientDefaulter))
-    whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
+    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     sheetCreated(
         patientUuid = patientUuid,
@@ -125,10 +125,11 @@ class ScheduleAppointmentSheetControllerTest {
           appointmentUuid = any(),
           appointmentDate = eq(LocalDate.now(clock).plus(Period.ofDays(30))),
           appointmentType = eq(Automatic),
-          facilityUuid = eq(facility.uuid)
+          appointmentFacilityUuid = eq(facility.uuid),
+          creationFacilityUuid = eq(facility.uuid)
       )
     } else {
-      verify(repository, never()).schedule(any(), any(), any(), any(), any())
+      verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
     }
     verify(sheet).closeSheet()
   }
@@ -519,7 +520,7 @@ class ScheduleAppointmentSheetControllerTest {
     val appointment = PatientMocker.appointment()
 
     whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(PatientMocker.facility(uuid = updatedFacilityUuid)))
-    whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
+    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
 
     //when
     sheetCreated()
@@ -527,7 +528,7 @@ class ScheduleAppointmentSheetControllerTest {
     uiEvents.onNext(AppointmentDone)
 
     //then
-    verify(repository).schedule(eq(patientUuid), any(), any(), any(), eq(updatedFacilityUuid))
+    verify(repository).schedule(eq(patientUuid), any(), any(), any(), eq(updatedFacilityUuid), eq(facility.uuid))
     verify(sheet).closeSheet()
   }
 
@@ -536,14 +537,14 @@ class ScheduleAppointmentSheetControllerTest {
     //given
     val appointment = PatientMocker.appointment()
 
-    whenever(repository.schedule(any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
+    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
 
     //when
     sheetCreated()
     uiEvents.onNext(AppointmentDone)
 
     //then
-    verify(repository).schedule(eq(patientUuid), any(), any(), any(), eq(facility.uuid))
+    verify(repository).schedule(eq(patientUuid), any(), any(), any(), eq(facility.uuid), eq(facility.uuid))
     verify(sheet).closeSheet()
   }
 

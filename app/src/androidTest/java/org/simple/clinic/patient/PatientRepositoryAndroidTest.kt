@@ -140,7 +140,13 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_a_patient_with_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
-    val ongoingAddress = OngoingNewPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
+    val ongoingAddress = OngoingNewPatientEntry.Address(
+        colonyOrVillage = "HSR Layout",
+        district = "Bangalore South",
+        state = "Karnataka",
+        streetAddress = "Street Address",
+        zone = "Zone"
+    )
     val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Ashok Kumar", "08/04/1985", null, Gender.Transgender)
     val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber(number = "227788", type = PatientPhoneNumberType.Landline)
 
@@ -263,7 +269,13 @@ class PatientRepositoryAndroidTest {
   @Test
   fun when_patients_are_present_then_search_should_correctly_find_them() {
     val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Abhay Kumar", "15/08/1950", null, Gender.Transgender)
-    val ongoingAddress = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val ongoingAddress = OngoingNewPatientEntry.Address(
+        colonyOrVillage = "Arambol",
+        district = "Arambol",
+        state = "Goa",
+        streetAddress = "Street Address",
+        zone = "Zone"
+    )
     val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.Mobile, active = true)
     val ongoingPatientEntry = OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
     val abhayKumar = patientRepository.saveOngoingEntry(ongoingPatientEntry)
@@ -271,7 +283,13 @@ class PatientRepositoryAndroidTest {
         .blockingGet()
 
     val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.Transgender)
-    val opa2 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val opa2 = OngoingNewPatientEntry.Address(
+        colonyOrVillage = "Arambol",
+        district = "Arambol",
+        state = "Goa",
+        streetAddress = "Street Address",
+        zone = "Zone"
+    )
     val opn2 = OngoingNewPatientEntry.PhoneNumber("3418959", PatientPhoneNumberType.Mobile, active = true)
     val ope2 = OngoingNewPatientEntry(opd2, opa2, opn2)
     patientRepository.saveOngoingEntry(ope2)
@@ -279,7 +297,13 @@ class PatientRepositoryAndroidTest {
         .blockingGet()
 
     val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "68", Gender.Transgender)
-    val opa3 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val opa3 = OngoingNewPatientEntry.Address(
+        colonyOrVillage = "Arambol",
+        district = "Arambol",
+        state = "Goa",
+        streetAddress = "Street Address",
+        zone = "Zone"
+    )
     val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.Mobile, active = true)
     val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)
     val abhishekKumar = patientRepository.saveOngoingEntry(ope3)
@@ -287,7 +311,13 @@ class PatientRepositoryAndroidTest {
         .blockingGet()
 
     val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "67", Gender.Transgender)
-    val opa4 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val opa4 = OngoingNewPatientEntry.Address(
+        colonyOrVillage = "Arambol",
+        district = "Arambol",
+        state = "Goa",
+        streetAddress = "Street Address",
+        zone = "Zone"
+    )
     val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.Mobile, active = true)
     val ope4 = OngoingNewPatientEntry(opd4, opa4, opn4)
     val abshotKumar = patientRepository.saveOngoingEntry(ope4)
@@ -2494,6 +2524,8 @@ class PatientRepositoryAndroidTest {
     val userEnteredPatientColony = "Test Colony"
     val userEnteredPatientDistrict = "Test District"
     val userEnteredPatientState = "Test State"
+    val userEnteredPatientStreetAddress = "Street Address"
+    val userEnteredPatientZone = "Zone"
 
     val facilityToSavePatientAt = testData.facility(
         uuid = UUID.fromString("d10f34d5-f16c-4095-b345-0867cccf8d06"),
@@ -2502,7 +2534,9 @@ class PatientRepositoryAndroidTest {
     val ongoingPatientEntry = testData.ongoingPatientEntry(
         colony = userEnteredPatientColony,
         district = userEnteredPatientDistrict,
-        state = userEnteredPatientState
+        state = userEnteredPatientState,
+        streetAddress = userEnteredPatientStreetAddress,
+        zone = userEnteredPatientZone
     )
     patientRepository.saveOngoingEntry(ongoingPatientEntry).blockingAwait()
 
@@ -2513,10 +2547,10 @@ class PatientRepositoryAndroidTest {
     // then
     val expectedPatientAddress = testData.patientAddress(
         uuid = savedPatient.addressUuid,
-        streetAddress = null,
+        streetAddress = userEnteredPatientStreetAddress,
         colonyOrVillage = userEnteredPatientColony,
         district = userEnteredPatientDistrict,
-        zone = null,
+        zone = userEnteredPatientZone,
         state = userEnteredPatientState,
         country = facilityCountry,
         createdAt = Instant.now(clock),

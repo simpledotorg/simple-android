@@ -271,7 +271,8 @@ object PatientMocker {
       appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      creationFacilityUuid: UUID? = null
   ): Appointment {
     return Appointment(
         uuid = uuid,
@@ -287,7 +288,7 @@ object PatientMocker {
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        creationFacilityUuid = null
+        creationFacilityUuid = creationFacilityUuid
     )
   }
 

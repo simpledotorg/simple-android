@@ -441,11 +441,18 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
     override fun showInvalidAgeError(show: Boolean) {
-        ageEditTextInputLayout.error = when {
-            show -> resources.getString(R.string.patiententry_invalid_age_error)
-            else -> null
-        }
+      ageEditTextInputLayout.error = when {
+        show -> resources.getString(R.string.patiententry_invalid_age_error)
+        else -> null
+      }
     }
+
+  override fun showInvalidDateOfBirthAgeError(show: Boolean) {
+    dateOfBirthInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_invalid_age_error)
+      else -> null
+    }
+  }
 
   override fun scrollToFirstFieldWithError() {
     // FIXME This is temporally coupled to the layout and changes whenever the order of the fields change.

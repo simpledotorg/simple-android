@@ -14,6 +14,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_O
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.AgeIsInvalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.DateIsInvalid
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -107,7 +108,10 @@ data class OngoingNewPatientEntry(
         errors += when (dobValidationResult) {
           InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
           DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
-          is Valid -> emptyList()
+          is Valid -> when (ageValidator.invalidDateValidator(dateOfBirth)) {
+            DateIsInvalid -> listOf(INVALID_AGE_DATE_OF_BIRTH)
+            else -> emptyList()
+          }
         }
       } else if (age!=null) {
         val ageValidatorResult = ageValidator.invalidAgeValidator(age.toInt())

@@ -110,6 +110,7 @@ class PatientEntryEffectHandler(
       showInvalidDateOfBirthError(false)
       showDateOfBirthIsInFutureError(false)
         showInvalidAgeError(false)
+      showInvalidDateOfBirthAgeError(false)
     }
   }
 
@@ -146,6 +147,7 @@ class PatientEntryEffectHandler(
             DISTRICT_EMPTY -> validationActions.showEmptyDistrictError(true)
             STATE_EMPTY -> validationActions.showEmptyStateError(true)
             INVALID_AGE -> validationActions.showInvalidAgeError(true)
+            INVALID_AGE_DATE_OF_BIRTH -> validationActions.showInvalidDateOfBirthAgeError(true)
 
             EMPTY_ADDRESS_DETAILS,
             PHONE_NUMBER_NON_NULL_BUT_BLANK,

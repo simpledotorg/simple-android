@@ -12,4 +12,5 @@ interface PatientEntryValidationActions {
   fun showInvalidDateOfBirthError(show: Boolean)
   fun showDateOfBirthIsInFutureError(show: Boolean)
   fun showInvalidAgeError(show: Boolean)
+  fun showInvalidDateOfBirthAgeError(show: Boolean)
 }

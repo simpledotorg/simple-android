@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Feature
 - Transfer patients to a different facility for follow-up 
 

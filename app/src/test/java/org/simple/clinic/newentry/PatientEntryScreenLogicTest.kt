@@ -47,6 +47,7 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.LocalDate
@@ -68,6 +69,7 @@ class PatientEntryScreenLogicTest {
   private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
   private val numberValidator = IndianPhoneNumberValidator()
   private val patientRegisteredCount = mock<Preference<Int>>()
+  private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
 
   private val uiEvents = PublishSubject.create<PatientEntryEvent>()
   private lateinit var fixture: MobiusTestFixture<PatientEntryModel, PatientEntryEvent, PatientEntryEffect>
@@ -94,7 +96,7 @@ class PatientEntryScreenLogicTest {
         uiEvents,
         PatientEntryModel.DEFAULT,
         PatientEntryInit(),
-        PatientEntryUpdate(numberValidator, dobValidator),
+        PatientEntryUpdate(numberValidator, dobValidator, ageValidator),
         effectHandler,
         PatientEntryUiRenderer(ui)::render
     )

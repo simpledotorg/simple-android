@@ -14,6 +14,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.threeten.bp.LocalDate
@@ -45,10 +46,15 @@ class OngoingNewPatientEntryTest {
         userClock = TestUserClock(LocalDate.parse("2018-01-01")),
         dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
 
+    val ageValidator = UserInputAgeValidator(
+            userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+            dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+    )
+
     val numValidator = mock<PhoneNumberValidator>()
     whenever(numValidator.validate("", LANDLINE_OR_MOBILE)).thenReturn(phoneValidationResult)
 
-    assertThat(entry.validationErrors(dobValidator, numValidator)).apply {
+    assertThat(entry.validationErrors(dobValidator, numValidator, ageValidator)).apply {
       if (isValid) {
         isEmpty()
       } else {
@@ -77,13 +83,14 @@ class OngoingNewPatientEntryTest {
         phoneNumber = PhoneNumber("phone-number"))
 
     val mockDobValidator = mock<UserInputDateValidator>()
+    val mockAgeValidator = mock<UserInputAgeValidator>()
     whenever(mockDobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(UTC))
     whenever(mockDobValidator.validate("01/01/3000")).thenReturn(DateIsInFuture)
 
     val mockNumValidator = mock<PhoneNumberValidator>()
     whenever(mockNumValidator.validate("phone-number", LANDLINE_OR_MOBILE)).thenReturn(VALID)
 
-    val validationErrors = entry.validationErrors(mockDobValidator, mockNumValidator)
+    val validationErrors = entry.validationErrors(mockDobValidator, mockNumValidator, mockAgeValidator)
 
     assertThat(validationErrors).hasSize(1)
     assertThat(validationErrors).contains(PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE)

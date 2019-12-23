@@ -10,6 +10,7 @@ import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
@@ -18,7 +19,8 @@ class PatientEntryUpdateTest {
   private val phoneNumberValidator = IndianPhoneNumberValidator()
   private val userClock: UserClock = TestUserClock()
   private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
-  private val update = PatientEntryUpdate(phoneNumberValidator, dobValidator)
+  private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
+  private val update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
   private val updateSpec = UpdateSpec(update)
 
   @Test

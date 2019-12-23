@@ -18,6 +18,9 @@ data class AppointmentPayload(
     @Json(name = "facility_id")
     val facilityUuid: UUID,
 
+    @Json(name = "creation_facility_id")
+    val creationFacilityUuid: UUID?,
+
     @Json(name = "scheduled_date")
     val date: LocalDate,
 

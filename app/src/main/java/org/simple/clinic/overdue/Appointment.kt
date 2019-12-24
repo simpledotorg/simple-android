@@ -32,7 +32,6 @@ data class Appointment(
     val createdAt: Instant,
     val updatedAt: Instant,
     val deletedAt: Instant?,
-    //TODO: [Sanchita] Populate the value for this field correctly
     val creationFacilityUuid: UUID?
 ) {
 

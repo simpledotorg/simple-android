@@ -26,7 +26,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="44dp"
     android:layout_marginStart="44dp"
-    android:layout_marginTop="@dimen/spacing_32"
+    android:layout_marginTop="@dimen/spacing_24"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -74,14 +74,15 @@
     android:layout_marginBottom="@dimen/spacing_8"
     android:ellipsize="end"
     android:gravity="center"
-    tools:text = "12-Nov-2019"/>
+    tools:text="12-Nov-2019"/>
 
   <Button
     android:id="@+id/changeAppointmentDate"
-    style="@style/Clinic.V2.NoBackgroundRippleButton"
+    style="@style/Clinic.V2.TextOnlyButtonRipple"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="@dimen/spacing_4"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
     android:text="@string/scheduleappointment_change" />
 
@@ -107,14 +108,15 @@
     style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginBottom="8dp"
     android:ellipsize="end"
     android:gravity="center"
     tools:text="PHC Bhatinda"/>
 
   <Button
     android:id="@+id/changeFacilityButton"
-    style="@style/Clinic.V2.NoBackgroundRippleButton"
+    style="@style/Clinic.V2.TextOnlyButtonRipple"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"

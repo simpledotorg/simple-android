@@ -1,9 +1,11 @@
 package org.simple.clinic.editpatient
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -15,6 +17,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -38,11 +41,14 @@ class EditPatientScreenCreatedTest {
   private val utcClock: TestUtcClock = TestUtcClock()
   private val userClock: TestUserClock = TestUserClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val patientRepository = mock<PatientRepository>()
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
   fun `when screen is created then the existing patient data must be prefilled`(patientFormTestParams: PatientFormTestParams) {
     val (patient, address, phoneNumber) = patientFormTestParams
+
+    whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, address, phoneNumber)
 
@@ -145,7 +151,7 @@ class EditPatientScreenCreatedTest {
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
         EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
-        EditPatientEffectHandler(ui, TestUserClock(), mock(), utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()).build(),
+        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()).build(),
         { /* nothing here */ }
     ).start()
   }

@@ -1,5 +1,6 @@
 package org.simple.clinic.patient.businessid
 
+import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.room.ColumnInfo
 import androidx.room.Dao
@@ -16,6 +17,7 @@ import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.sync.BusinessIdPayload
@@ -38,6 +40,7 @@ import java.util.UUID
       Index("identifier")
     ]
 )
+@Parcelize
 data class BusinessId(
     @PrimaryKey val uuid: UUID,
 
@@ -56,7 +59,7 @@ data class BusinessId(
     val updatedAt: Instant,
 
     val deletedAt: Instant?
-) {
+) : Parcelable {
 
   fun toPayload(): BusinessIdPayload {
     return BusinessIdPayload(
@@ -71,7 +74,7 @@ data class BusinessId(
     )
   }
 
-  sealed class MetaDataVersion {
+  sealed class MetaDataVersion : Parcelable {
 
     companion object {
       @VisibleForTesting(otherwise = VisibleForTesting.NONE)
@@ -81,10 +84,13 @@ data class BusinessId(
       fun values() = TypeAdapter.knownMappings.keys
     }
 
+    @Parcelize
     object BpPassportMetaDataV1 : MetaDataVersion()
 
+    @Parcelize
     object BangladeshNationalIdMetaDataV1 : MetaDataVersion()
 
+    @Parcelize
     data class Unknown(val actual: String) : MetaDataVersion()
 
     object TypeAdapter : SafeEnumTypeAdapter<MetaDataVersion>(

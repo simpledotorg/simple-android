@@ -18,10 +18,9 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -63,12 +62,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
       ObservableTransformer<FetchBangladeshNationalIdEffect, EditPatientEvent> { effectStream ->
         effectStream
             .flatMap { patientRepository.bangladeshNationalIdForPatient(it.patient.uuid).subscribeOn(scheduler) }
-            .map {
-              when (it) {
-                is Just -> it.value.identifier.value
-                None -> ""
-              }
-            }
+            .filterAndUnwrapJust()
             .map { bangladeshNationalId -> NationalIdPrefilled(bangladeshNationalId) }
       }
 
@@ -112,7 +106,8 @@ class EditPatientEffectHandler @AssistedInject constructor(
 
       Observable.merge(
           createOrUpdatePhoneNumber(sharedSavePatientEffects),
-          savePatient(sharedSavePatientEffects)
+          savePatient(sharedSavePatientEffects),
+          saveBangladeshNationalId(sharedSavePatientEffects)
       )
     }
   }
@@ -188,6 +183,15 @@ class EditPatientEffectHandler @AssistedInject constructor(
         createPhoneNumber(effectsWithPhoneNumber),
         updatePhoneNumber(effectsWithPhoneNumber)
     )
+  }
+
+  private fun saveBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
+    return savePatientEffects
+        .filter { it.bangladeshNationalId != null }
+        .flatMapCompletable {
+          patientRepository.saveBusinessId(it.bangladeshNationalId!!)
+        }
+        .toObservable()
   }
 
   private fun updatePhoneNumber(

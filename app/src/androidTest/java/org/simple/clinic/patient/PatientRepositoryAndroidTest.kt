@@ -1429,8 +1429,8 @@ class PatientRepositoryAndroidTest {
             appointmentUuid = UUID.fromString("cf002164-3032-4a91-8dbe-15c0b029db51"),
             appointmentDate = it,
             appointmentType = Manual,
-            appointmentFacilityUuid = testData.qaFacility().uuid,
-            creationFacilityUuid = testData.qaFacility().uuid
+            appointmentFacilityUuid = currentFacility.uuid,
+            creationFacilityUuid = currentFacility.uuid
         ).blockingGet()
       }
 
@@ -2189,8 +2189,8 @@ class PatientRepositoryAndroidTest {
     }
 
     // given
-    val facilityUuid = testData.qaFacility().uuid
-    val facilityName = testData.qaFacility().name
+    val facilityUuid = currentFacility.uuid
+    val facilityName = currentFacility.name
 
     val instant = Instant.parse("2019-01-01T00:00:00Z")
 
@@ -2422,14 +2422,13 @@ class PatientRepositoryAndroidTest {
     }
 
     //given
-    val facility = testData.qaFacility()
     val deletedPatientId = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff")
-    recordPatientAtFacility(deletedPatientId, facility, isDeleted = true)
+    recordPatientAtFacility(deletedPatientId, currentFacility, isDeleted = true)
     val notDeletedPatientId = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d")
-    recordPatientAtFacility(notDeletedPatientId, facility, isDeleted = false)
+    recordPatientAtFacility(notDeletedPatientId, currentFacility, isDeleted = false)
 
     //when
-    val allPatientsInFacility = patientRepository.allPatientsInFacility(facility).blockingFirst()
+    val allPatientsInFacility = patientRepository.allPatientsInFacility(currentFacility).blockingFirst()
 
     //then
     assertThat(allPatientsInFacility).hasSize(1)

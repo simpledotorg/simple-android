@@ -13,6 +13,9 @@ class EditPatientInit(
     private val phoneNumber: PatientPhoneNumber?
 ) : Init<EditPatientModel, EditPatientEffect> {
   override fun init(model: EditPatientModel): First<EditPatientModel, EditPatientEffect> {
-    return first(model, setOf(PrefillFormEffect(patient, address, phoneNumber)))
+    return first(
+        model,
+        setOf(PrefillFormEffect(patient, address, phoneNumber), FetchBangladeshNationalIdEffect(patient))
+    )
   }
 }

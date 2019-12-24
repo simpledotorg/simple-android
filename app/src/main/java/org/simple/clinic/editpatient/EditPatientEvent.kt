@@ -52,3 +52,7 @@ object PatientSaved : EditPatientEvent() {
 object BackClicked: EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Back Clicked"
 }
+
+data class NationalIdPrefilled(val bangladeshNationalId: String) : EditPatientEvent() {
+  override val analyticsName: String = "Edit Patient Entry: Prefill form Bangladesh National ID fetched"
+}

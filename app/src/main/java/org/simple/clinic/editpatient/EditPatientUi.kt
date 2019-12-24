@@ -13,6 +13,7 @@ interface EditPatientUi {
   fun setGender(gender: Gender)
   fun setPatientAge(age: Int)
   fun setPatientDateOfBirth(dateOfBirth: LocalDate)
+  fun setBangladeshNationalId(nationalId: String)
   fun showValidationErrors(errors: Set<EditPatientValidationError>)
   fun hideValidationErrors(errors: Set<EditPatientValidationError>)
   fun scrollToFirstFieldWithError()

@@ -10,6 +10,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -81,6 +82,7 @@ class EditPatientScreenFormTest {
 
     whenever(patientRepository.updatePatient(any())).doReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).doReturn(Completable.complete())
+    whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, address, phoneNumber)
     uiEvents.onNext(SaveClicked)
@@ -119,7 +121,10 @@ class EditPatientScreenFormTest {
 
   @Test
   fun `when data of birth has focus, the date format should be shown in the label`() {
-    screenCreated(PatientMocker.patient(), PatientMocker.address(), null)
+    val patient = PatientMocker.patient()
+    whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+
+    screenCreated(patient, PatientMocker.address(), null)
 
     uiEvents.onNext(DateOfBirthChanged(""))
     uiEvents.onNext(DateOfBirthFocusChanged(hasFocus = true))
@@ -133,7 +138,10 @@ class EditPatientScreenFormTest {
 
   @Test
   fun `when date of birth text changes, the date format should be shown in the label`() {
-    screenCreated(PatientMocker.patient(), PatientMocker.address(), null)
+    val patient = PatientMocker.patient()
+    whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+
+    screenCreated(patient, PatientMocker.address(), null)
 
     uiEvents.onNext(DateOfBirthFocusChanged(hasFocus = false))
     uiEvents.onNext(DateOfBirthChanged("01/01/1990"))
@@ -146,7 +154,10 @@ class EditPatientScreenFormTest {
 
   @Test
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
-    screenCreated(PatientMocker.patient(), PatientMocker.address(), null)
+    val patient = PatientMocker.patient()
+    whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+
+    screenCreated(patient, PatientMocker.address(), null)
     reset(ui)
 
     uiEvents.onNext(DateOfBirthChanged(""))
@@ -170,6 +181,7 @@ class EditPatientScreenFormTest {
         inputEvents,
         shouldShowConfirmDiscardChangesPopup
     ) = testParams
+    whenever(patientRepository.bangladeshNationalIdForPatient(existingSavedPatient.uuid)) doReturn Observable.never()
 
     screenCreated(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber)
     inputEvents.forEach { uiEvents.onNext(it) }

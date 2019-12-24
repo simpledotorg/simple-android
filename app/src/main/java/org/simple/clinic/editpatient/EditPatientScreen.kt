@@ -120,7 +120,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         dateOfBirthTextChanges(),
         dateOfBirthFocusChanges(),
         ageTextChanges(),
-        backClicks()
+        backClicks(),
+        bangladeshNationalIdChanges()
     ).compose(ReportAnalyticsEvents())
         .cast()
 
@@ -210,6 +211,10 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun stateTextChanges(): Observable<EditPatientEvent> {
     return RxTextView.textChanges(stateEditText).map { StateChanged(it.toString()) }
+  }
+
+  private fun bangladeshNationalIdChanges(): Observable<EditPatientEvent> {
+    return RxTextView.textChanges(bangladeshNationalIdEditText).map { BangladeshNationalIdChanged(it.toString()) }
   }
 
   private fun colonyTextChanges(): Observable<EditPatientEvent> {

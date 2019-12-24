@@ -520,7 +520,7 @@ class PatientRepository @Inject constructor(
         .flatMap { businessId -> setSyncStatus(listOf(patientUuid), PENDING).toSingleDefault(businessId) }
   }
 
-  private fun saveBusinessId(businessId: BusinessId): Completable {
+  fun saveBusinessId(businessId: BusinessId): Completable {
     return Completable.fromAction {
       database.businessIdDao().save(listOf(businessId))
     }

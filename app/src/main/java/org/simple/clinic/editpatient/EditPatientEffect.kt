@@ -6,6 +6,10 @@ import org.simple.clinic.patient.PatientPhoneNumber
 
 sealed class EditPatientEffect
 
+data class FetchBangladeshNationalIdEffect(val patient: Patient) : EditPatientEffect()
+
+data class PrefillBangladeshNationalIdEffect(val bangladeshNationalId: String) : EditPatientEffect()
+
 data class PrefillFormEffect(
     val patient: Patient,
     val address: PatientAddress,

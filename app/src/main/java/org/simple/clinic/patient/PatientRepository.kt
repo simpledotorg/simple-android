@@ -579,6 +579,20 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
+  fun bangladeshNationalIdForPatient(patientUuid: UUID): Observable<Optional<BusinessId>> {
+    return database
+        .businessIdDao()
+        .latestForPatientByType(patientUuid, BangladeshNationalId)
+        .map { bangladeshNationalId ->
+          if (bangladeshNationalId.isEmpty()) {
+            None
+          } else {
+            bangladeshNationalId.first().toOptional()
+          }
+        }
+        .toObservable()
+  }
+
   fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {
     return database
         .patientDao()

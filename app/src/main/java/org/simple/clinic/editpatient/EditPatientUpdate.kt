@@ -51,6 +51,7 @@ class EditPatientUpdate(
       is BackClicked -> onBackClicked(model)
       is PatientSaved -> dispatch(GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
+      is NationalIdPrefilled -> dispatch(PrefillBangladeshNationalIdEffect(event.bangladeshNationalId))
     }
   }
 

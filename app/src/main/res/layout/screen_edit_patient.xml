@@ -256,8 +256,7 @@
         android:id="@+id/streetAddressLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:paddingStart="@dimen/spacing_4">
+        android:layout_marginTop="@dimen/spacing_16">
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/streetAddressInputLayout"
@@ -316,7 +315,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
-        android:paddingStart="@dimen/spacing_4"
         android:visibility="gone"
         tools:visibility="visible">
 

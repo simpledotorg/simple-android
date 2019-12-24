@@ -18,6 +18,8 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -43,6 +45,9 @@ class EditPatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
+        .addTransformer(FetchBangladeshNationalIdEffect::class.java, fetchAllPrefillForm(schedulersProvider.io()))
+        .addConsumer(PrefillBangladeshNationalIdEffect::class.java, { ui.setBangladeshNationalId(it.bangladeshNationalId) },
+            schedulersProvider.ui())
         .addConsumer(PrefillFormEffect::class.java, ::prefillFormFields, schedulersProvider.ui())
         .addConsumer(ShowValidationErrorsEffect::class.java, ::showValidationErrors, schedulersProvider.ui())
         .addConsumer(HideValidationErrorsEffect::class.java, { ui.hideValidationErrors(it.validationErrors) }, schedulersProvider.ui())
@@ -53,6 +58,19 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
         .build()
   }
+
+  private fun fetchAllPrefillForm(scheduler: Scheduler) =
+      ObservableTransformer<FetchBangladeshNationalIdEffect, EditPatientEvent> { effectStream ->
+        effectStream
+            .flatMap { patientRepository.bangladeshNationalIdForPatient(it.patient.uuid).subscribeOn(scheduler) }
+            .map {
+              when (it) {
+                is Just -> it.value.identifier.value
+                None -> ""
+              }
+            }
+            .map { bangladeshNationalId -> NationalIdPrefilled(bangladeshNationalId) }
+      }
 
   private fun prefillFormFields(prefillFormFieldsEffect: PrefillFormEffect) {
     val (patient, address, phoneNumber) = prefillFormFieldsEffect

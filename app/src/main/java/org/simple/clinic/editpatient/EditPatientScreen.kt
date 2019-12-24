@@ -36,6 +36,7 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
+import org.simple.clinic.newentry.form.BangladeshNationalIdField
 import org.simple.clinic.newentry.form.DateOfBirthField
 import org.simple.clinic.newentry.form.DistrictField
 import org.simple.clinic.newentry.form.GenderField
@@ -157,6 +158,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         DateOfBirthField::class.java to dateOfBirthEditTextContainer,
         LandlineOrMobileField::class.java to phoneNumberTextContainer,
         GenderField::class.java to genderRadioGroup,
+        BangladeshNationalIdField::class.java to bangladeshNationalIdInputContainer,
         StreetAddressField::class.java to streetAddressLayout,
         VillageOrColonyField::class.java to colonyOrVillageInputContainer,
         ZoneField::class.java to zoneLayout,
@@ -503,5 +505,9 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   override fun showDiscardChangesAlert() {
     ConfirmDiscardChangesDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun setBangladeshNationalId(nationalId: String) {
+    bangladeshNationalIdEditText.setTextAndCursor(nationalId)
   }
 }

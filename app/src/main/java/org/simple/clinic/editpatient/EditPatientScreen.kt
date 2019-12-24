@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.View
 import android.widget.RadioButton
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,17 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.newentry.form.AgeField
+import org.simple.clinic.newentry.form.DateOfBirthField
+import org.simple.clinic.newentry.form.DistrictField
+import org.simple.clinic.newentry.form.GenderField
+import org.simple.clinic.newentry.form.LandlineOrMobileField
+import org.simple.clinic.newentry.form.PatientNameField
+import org.simple.clinic.newentry.form.StateField
+import org.simple.clinic.newentry.form.StreetAddressField
+import org.simple.clinic.newentry.form.VillageOrColonyField
+import org.simple.clinic.newentry.form.ZoneField
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -54,6 +66,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.textChanges
+import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
@@ -84,6 +97,9 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   @Inject
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
+
+  @Inject
+  lateinit var inputFields: InputFields
 
   private val screenKey by unsafeLazy {
     screenRouter.key<EditPatientScreenKey>(this)
@@ -131,6 +147,28 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     delegate.prepare()
 
+    showOrHideInputFields()
+  }
+
+  private fun showOrHideInputFields() {
+    val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
+        PatientNameField::class.java to fullNameInputContainer,
+        AgeField::class.java to ageEditTextContainer,
+        DateOfBirthField::class.java to dateOfBirthEditTextContainer,
+        LandlineOrMobileField::class.java to phoneNumberTextContainer,
+        GenderField::class.java to genderRadioGroup,
+        StreetAddressField::class.java to streetAddressLayout,
+        VillageOrColonyField::class.java to colonyOrVillageInputContainer,
+        ZoneField::class.java to zoneLayout,
+        DistrictField::class.java to districtInputLayout,
+        StateField::class.java to stateInputLayout
+    )
+
+    val receivedTypesOfInputFields = inputFields.inputFields.map { it::class.java }
+
+    allTypesOfInputFields.forEach { (clazz, view) ->
+      view.visibleOrGone(clazz in receivedTypesOfInputFields)
+    }
   }
 
   override fun onAttachedToWindow() {

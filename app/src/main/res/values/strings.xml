@@ -62,7 +62,7 @@
   <string name="patiententry_gender_transgender" translatable="false">@string/gender_transgender</string>
   <string name="patiententry_street_address">House number and street</string>
   <string name="patiententry_colony_or_village">Colony / Village / Ward</string>
-  <string name="patiententry_zone">Zone</string>
+  <string name="patiententry_zone">Union</string>
   <string name="patiententry_district">District</string>
   <string name="patiententry_state">State</string>
   <string name="patiententry_save_patient">Next</string>
@@ -110,6 +110,9 @@
   <string name="patientedit_confirm_discard_title">Discard changes?</string>
   <string name="patientedit_confirm_discard_ok">Discard</string>
   <string name="patientedit_confirm_discard_cancel">Cancel</string>
+  <string name="patientedit_bangladesh_national_id" translatable="false">@string/patiententry_bangladesh_national_id</string>
+  <string name="patientedit_street_address" translatable="false">@string/patiententry_street_address</string>
+  <string name="patientedit_zone" translatable="false">@string/patiententry_zone</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->

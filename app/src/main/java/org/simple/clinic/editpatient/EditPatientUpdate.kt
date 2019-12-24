@@ -51,7 +51,9 @@ class EditPatientUpdate(
       is BackClicked -> onBackClicked(model)
       is PatientSaved -> dispatch(GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
-      is NationalIdPrefilled -> dispatch(PrefillBangladeshNationalIdEffect(event.bangladeshNationalId))
+      is NationalIdPrefilled -> next(model.updateBangladeshNationalId(event.bangladeshNationalId),
+          PrefillBangladeshNationalIdEffect(event.bangladeshNationalId.identifier.value))
+      is BangladeshNationalIdChanged -> next(model.updateBangladeshNationalIdIdentifier(event.bangladeshNationalId))
     }
   }
 
@@ -104,7 +106,7 @@ class EditPatientUpdate(
     val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator, ageValidator)
     val effect = if (validationErrors.isEmpty()) {
       val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber) = model
-      SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber)
+      SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, model.bangladeshNationalId)
     } else {
       ShowValidationErrorsEffect(validationErrors)
     }

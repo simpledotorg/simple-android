@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.businessid.BusinessId
 
 sealed class EditPatientEffect
 
@@ -36,5 +37,6 @@ data class SavePatientEffect(
     val ongoingEntry: EditablePatientEntry,
     val savedPatient: Patient,
     val savedAddress: PatientAddress,
-    val savedPhoneNumber: PatientPhoneNumber?
+    val savedPhoneNumber: PatientPhoneNumber?,
+    val bangladeshNationalId: BusinessId?
 ) : EditPatientEffect()

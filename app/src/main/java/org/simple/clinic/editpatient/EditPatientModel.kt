@@ -6,6 +6,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.businessid.BusinessId
 import org.threeten.bp.format.DateTimeFormatter
 
 @Parcelize
@@ -17,7 +18,8 @@ data class EditPatientModel(
     // patient information? Revisit these properties after migrating the feature
     val savedPatient: Patient,
     val savedAddress: PatientAddress,
-    val savedPhoneNumber: PatientPhoneNumber?
+    val savedPhoneNumber: PatientPhoneNumber?,
+    val bangladeshNationalId: BusinessId? = null
 ) : Parcelable {
   companion object {
     fun from(
@@ -55,4 +57,12 @@ data class EditPatientModel(
 
   fun updateDateOfBirth(dateOfBirth: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateDateOfBirth(dateOfBirth))
+
+  fun updateBangladeshNationalId(bangladeshNationalId: BusinessId): EditPatientModel =
+      copy(bangladeshNationalId = bangladeshNationalId)
+
+  fun updateBangladeshNationalIdIdentifier(bangladeshNationalIdIdentifier: String): EditPatientModel =
+      copy(bangladeshNationalId = bangladeshNationalId?.run {
+        copy(identifier = identifier.copy(value = bangladeshNationalIdIdentifier))
+      })
 }

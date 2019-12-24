@@ -512,6 +512,14 @@
     <item name="android:paddingEnd">@dimen/spacing_24</item>
   </style>
 
+  <style name="Clinic.V2.TextOnlyButtonRipple">
+    <item name="android:background">?selectableItemBackground</item>
+    <item name="android:paddingTop">10dp</item>
+    <item name="android:paddingBottom">10dp</item>
+    <item name="android:paddingStart">@dimen/spacing_24</item>
+    <item name="android:paddingEnd">@dimen/spacing_24</item>
+  </style>
+  
   <style name="Clinic.V2.OverdueListAction">
     <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left.Grey0</item>
     <item name="android:paddingStart">@dimen/spacing_16</item>

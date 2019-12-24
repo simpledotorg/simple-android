@@ -25,10 +25,11 @@ class BloodSugarTypePickerSheet : BottomSheetActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_blood_sugar_type_picker)
     val adapter = BloodSugarTypeAdapter {
-      TODO()
+      // [WIP] BloodSugarEntrySheet
+      TODO("BloodSugarEntrySheet not implemented yet")
     }
 
-    bloodSugarTypesRecyclerView.adapter = adapter
+    typesRecyclerView.adapter = adapter
     adapter.submitList(bloodSugarTypesList)
   }
 

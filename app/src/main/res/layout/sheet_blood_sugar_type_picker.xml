@@ -7,7 +7,7 @@
   android:layout_marginBottom="8dp">
 
   <TextView
-    android:id="@+id/bloodSugarTypePickerTitle"
+    android:id="@+id/titleTextView"
     style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
@@ -15,13 +15,13 @@
     android:layout_marginTop="@dimen/spacing_24"
     android:layout_marginEnd="@dimen/spacing_24"
     android:text="@string/bloodsugartype_picker_title"
-    app:layout_constraintBottom_toTopOf="@+id/bloodSugarTypePickerDesc"
+    app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
   <TextView
-    android:id="@+id/bloodSugarTypePickerDesc"
+    android:id="@+id/descriptionTextView"
     style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
@@ -29,20 +29,20 @@
     android:layout_marginTop="@dimen/spacing_8"
     android:layout_marginEnd="@dimen/spacing_24"
     android:text="@string/bloodsugartype_picker_desc"
-    app:layout_constraintBottom_toTopOf="@+id/bloodSugarTypesRecyclerView"
+    app:layout_constraintBottom_toTopOf="@+id/typesRecyclerView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/bloodSugarTypePickerTitle" />
+    app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/bloodSugarTypesRecyclerView"
+    android:id="@+id/typesRecyclerView"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/bloodSugarTypePickerDesc"
+    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
     tools:itemCount="4"
-    tools:listitem="@layout/blood_sugar_type_list_item" />
+    tools:listitem="@layout/list_blood_sugar_type" />
 </androidx.constraintlayout.widget.ConstraintLayout>

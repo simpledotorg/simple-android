@@ -2,7 +2,22 @@ package org.simple.clinic.patient
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.patient.PatientEntryValidationError.*
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
+import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
+import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_AGE
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_AGE_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
+import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
+import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
@@ -13,8 +28,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_T
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.AgeIsInvalid
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.DateIsInvalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.IsInvalid
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -89,7 +103,11 @@ data class OngoingNewPatientEntry(
   fun withBangladeshNationalId(bangladeshNationalId: Identifier): OngoingNewPatientEntry =
       copy(bangladeshNationalId = bangladeshNationalId)
 
-  fun validationErrors(dobValidator: UserInputDateValidator, numberValidator: PhoneNumberValidator, ageValidator: UserInputAgeValidator): List<PatientEntryValidationError> {
+  fun validationErrors(
+      dobValidator: UserInputDateValidator,
+      numberValidator: PhoneNumberValidator,
+      ageValidator: UserInputAgeValidator
+  ): List<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()
 
     if (personalDetails == null) {
@@ -108,15 +126,13 @@ data class OngoingNewPatientEntry(
         errors += when (dobValidationResult) {
           InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
           DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
-          is Valid -> when (ageValidator.invalidDateValidator(dateOfBirth)) {
-            DateIsInvalid -> listOf(INVALID_AGE_DATE_OF_BIRTH)
-            else -> emptyList()
-          }
+          is Valid -> if (ageValidator.validator(dateOfBirth) == IsInvalid) listOf(INVALID_AGE_DATE_OF_BIRTH)
+          else emptyList()
         }
-      } else if (age!=null) {
-        val ageValidatorResult = ageValidator.invalidAgeValidator(age.toInt())
+      } else if (age != null) {
+        val ageValidatorResult = ageValidator.validator(age.toInt())
         errors += when (ageValidatorResult) {
-          AgeIsInvalid -> listOf(INVALID_AGE)
+          IsInvalid -> listOf(INVALID_AGE)
           else -> emptyList()
         }
       }
@@ -202,7 +218,7 @@ data class OngoingNewPatientEntry(
       val colonyOrVillage: String, // TODO (rj) 8-Nov-19: Add `streetAddress` and `zone` fields.
       val district: String,
       val state: String
-  ): Parcelable {
+  ) : Parcelable {
     companion object {
       val BLANK = Address("", "", "")
 

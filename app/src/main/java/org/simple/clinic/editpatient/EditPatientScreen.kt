@@ -19,11 +19,25 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.editpatient.EditPatientValidationError.*
+import org.simple.clinic.editpatient.EditPatientValidationError.AGE_INVALID
+import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_INVALID
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_PARSE_ERROR
+import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.Gender.*
+import org.simple.clinic.patient.Gender.Female
+import org.simple.clinic.patient.Gender.Male
+import org.simple.clinic.patient.Gender.Transgender
+import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.BackPressInterceptCallback
@@ -32,7 +46,9 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.*
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.scrollToChild
@@ -98,7 +114,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         events,
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
         EditPatientInit(patient, address, phoneNumber),
-            EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
+        EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
         effectHandlerFactory.create(this).build(),
         viewRenderer::render,
         crashReporter
@@ -271,7 +287,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
           showAgeEmptyError(true)
         }
 
-        INVALID_DATE_OF_BIRTH -> {
+        DATE_OF_BIRTH_PARSE_ERROR -> {
           showInvalidaDateOfBithError()
         }
 
@@ -279,11 +295,11 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
           showDateOfBirthIsInFutureError()
         }
 
-        AGE_IS_INVALID -> {
+        AGE_INVALID -> {
           showAgeIsInvalidError()
         }
 
-        DATE_OF_BIRTH_IS_INVALID_AGE -> {
+        DATE_OF_BIRTH_INVALID -> {
           showDateOfBirthIsInvalidError()
         }
       }.exhaustive()
@@ -315,11 +331,11 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
           showEmptyStateError(false)
         }
 
-        BOTH_DATEOFBIRTH_AND_AGE_ABSENT, AGE_IS_INVALID -> {
+        BOTH_DATEOFBIRTH_AND_AGE_ABSENT, AGE_INVALID -> {
           showAgeEmptyError(false)
         }
 
-        INVALID_DATE_OF_BIRTH, DATE_OF_BIRTH_IN_FUTURE, DATE_OF_BIRTH_IS_INVALID_AGE -> {
+        DATE_OF_BIRTH_PARSE_ERROR, DATE_OF_BIRTH_IN_FUTURE, DATE_OF_BIRTH_INVALID -> {
           hideDateOfBirthError()
         }
       }.exhaustive()

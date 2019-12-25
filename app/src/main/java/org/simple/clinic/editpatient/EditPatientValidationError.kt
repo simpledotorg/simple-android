@@ -9,8 +9,8 @@ enum class EditPatientValidationError(val analyticsName: String) {
     DISTRICT_EMPTY("Patient Edit:District empty"),
     STATE_EMPTY("Patient Edit:State empty"),
     BOTH_DATEOFBIRTH_AND_AGE_ABSENT("Patient Edit:Both age and DOB are absent"),
-    INVALID_DATE_OF_BIRTH("Patient Edit:Invalid DOB"),
+    DATE_OF_BIRTH_PARSE_ERROR("Patient Edit:Invalid DOB"),
     DATE_OF_BIRTH_IN_FUTURE("Patient Edit:DOB in future"),
-    AGE_IS_INVALID("Patient Edit: Age greater than 120 years is invalid"),
-    DATE_OF_BIRTH_IS_INVALID_AGE("Patient Edit: Age greater than 120 years is invalid")
+    AGE_INVALID("Patient Edit: Age greater than 120 years is invalid"),
+    DATE_OF_BIRTH_INVALID("Patient Edit: Age greater than 120 years is invalid")
 }

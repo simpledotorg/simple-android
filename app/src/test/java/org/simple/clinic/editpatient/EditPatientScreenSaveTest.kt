@@ -171,7 +171,7 @@ class EditPatientScreenSaveTest {
   @Suppress("Unused")
   private fun `params for date of birth should be validated`(): List<DateOfBirthTestParams> {
     return listOf(
-        DateOfBirthTestParams("20/40-80", InvalidPattern, INVALID_DATE_OF_BIRTH),
+        DateOfBirthTestParams("20/40-80", InvalidPattern, DATE_OF_BIRTH_PARSE_ERROR),
         DateOfBirthTestParams("01/01/$nextYear", DateIsInFuture, DATE_OF_BIRTH_IN_FUTURE)
     )
   }
@@ -717,7 +717,7 @@ class EditPatientScreenSaveTest {
             "",
             null,
             "24/24/2000",
-            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY, INVALID_DATE_OF_BIRTH),
+            setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY, DATE_OF_BIRTH_PARSE_ERROR),
             "12345678901234"
         ),
         ValidateFieldsTestParams(

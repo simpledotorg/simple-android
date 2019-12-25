@@ -11,8 +11,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.*
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.AgeIsInvalid
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.DateIsInvalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.IsInvalid
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -130,7 +129,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
         colonyOrVillageCheck(),
         stateCheck(),
         districtCheck(),
-            ageOrDateOfBirthCheck(dobValidator, ageValidator)
+        ageOrDateOfBirthCheck(dobValidator, ageValidator)
     )
   }
 
@@ -166,8 +165,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       is EntryWithAge -> {
         when {
           (ageOrDateOfBirth.age.isBlank()) -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-          else -> when (ageValidator.invalidAgeValidator(ageOrDateOfBirth.age.toInt())) {
-            AgeIsInvalid -> AGE_IS_INVALID
+          else -> when (ageValidator.validator(ageOrDateOfBirth.age.toInt())) {
+            IsInvalid -> AGE_INVALID
             else -> null
           }
         }
@@ -175,10 +174,10 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
 
       is EntryWithDateOfBirth -> {
         when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
-          InvalidPattern -> INVALID_DATE_OF_BIRTH
+          InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
           DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
-          is Valid -> when (ageValidator.invalidDateValidator(ageOrDateOfBirth.dateOfBirth)) {
-            DateIsInvalid -> DATE_OF_BIRTH_IS_INVALID_AGE
+          is Valid -> when (ageValidator.validator(ageOrDateOfBirth.dateOfBirth)) {
+            IsInvalid -> DATE_OF_BIRTH_INVALID
             else -> null
           }
         }

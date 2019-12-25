@@ -25,4 +25,4 @@ The code styles which the project uses have been exported as an IntelliJ code st
 
 ## Build and deploy Simple Server
 
-Simple Server is in a separate repository, and you should follow the [instructions there](https://github.com/simpledotorg/simple-server/blob/master/README.md).
+Simple Server is in a separate repository and you should follow the [instructions there](https://github.com/simpledotorg/simple-server/blob/master/README.md).

@@ -78,7 +78,7 @@ class EditPatientScreenFormTest {
         HidingErrorsOnTextChangeParams(DistrictChanged(""), setOf(DISTRICT_EMPTY)),
         HidingErrorsOnTextChangeParams(DistrictChanged("District"), setOf(DISTRICT_EMPTY)),
         HidingErrorsOnTextChangeParams(AgeChanged("1"), setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)),
-        HidingErrorsOnTextChangeParams(DateOfBirthChanged("20/02/1990"), setOf(DATE_OF_BIRTH_IN_FUTURE, INVALID_DATE_OF_BIRTH)),
+        HidingErrorsOnTextChangeParams(DateOfBirthChanged("20/02/1990"), setOf(DATE_OF_BIRTH_IN_FUTURE, DATE_OF_BIRTH_PARSE_ERROR)),
         HidingErrorsOnTextChangeParams(GenderChanged(Transgender), emptySet())
     )
   }

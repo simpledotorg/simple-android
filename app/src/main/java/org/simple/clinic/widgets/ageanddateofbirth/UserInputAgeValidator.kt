@@ -1,52 +1,35 @@
 package org.simple.clinic.widgets.ageanddateofbirth
 
-import androidx.annotation.VisibleForTesting
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.AgeIsInvalid
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.DateIsInvalid
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Valid.AgeIsValid
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Valid.DateIsValid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.IsInvalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.IsValid
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-
 class UserInputAgeValidator @Inject constructor(
-        private val userClock: UserClock,
-        @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
+    private val userClock: UserClock,
+    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) {
+  sealed class Result {
+    object IsValid : Result()
+    object IsInvalid : Result()
+  }
 
-    sealed class Result {
-        sealed class Valid : Result() {
-            data class AgeIsValid(val age: Int) : Valid()
-            data class DateIsValid(val parsedDate: LocalDate) : Valid()
-        }
-
-        sealed class Invalid : Result() {
-            object AgeIsInvalid : Invalid()
-            object DateIsInvalid : Invalid()
-        }
+  fun validator(age: Int): Result {
+    return when (age > 120) {
+      true -> IsInvalid
+      false -> IsValid
     }
+  }
 
-
-    fun invalidAgeValidator(age: Int): Result {
-        return when {
-            age > 120 -> AgeIsInvalid
-            else -> AgeIsValid(age)
-        }
+  fun validator(dateText: String): Result {
+    val nowDate: LocalDate = LocalDate.now(userClock)
+    val parsedDate = dateOfBirthFormat.parse(dateText, LocalDate::from)
+    return when {
+      parsedDate < nowDate.minusYears(120) -> IsInvalid
+      else -> IsValid
     }
-
-    fun invalidDateValidator(dateText: String, nowDate: LocalDate = dateInUserTimeZone()): Result {
-        val parsedDate = dateOfBirthFormat.parse(dateText, LocalDate::from)
-        return when {
-            parsedDate < nowDate.minusYears(120) -> DateIsInvalid
-            else -> DateIsValid(parsedDate)
-        }
-    }
-
-    @VisibleForTesting
-    fun dateInUserTimeZone(): LocalDate {
-        return LocalDate.now(userClock)
-    }
+  }
 }

@@ -15,7 +15,7 @@ interface AppointmentSyncApi {
       @Body body: AppointmentPushRequest
   ): Single<DataPushResponse>
 
-  @Headers(value = ["X-RESYNC-TOKEN: 1"])
+  @Headers(value = ["X-RESYNC-TOKEN: 2"])
   @GET("appointments/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,

@@ -1,7 +1,9 @@
 package org.simple.clinic.summary.bloodsugar
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 
 class BloodSugarSummaryViewUpdate : Update<BloodSugarSummaryViewModel, BloodSugarSummaryViewEvent, BloodSugarSummaryViewEffect> {
 
@@ -9,6 +11,9 @@ class BloodSugarSummaryViewUpdate : Update<BloodSugarSummaryViewModel, BloodSuga
       model: BloodSugarSummaryViewModel,
       event: BloodSugarSummaryViewEvent
   ): Next<BloodSugarSummaryViewModel, BloodSugarSummaryViewEffect> {
-    return Next.next(model.summaryFetched())
+    return when (event) {
+      BloodSugarSummaryFetched -> next(model.summaryFetched())
+      NewBloodSugarClicked -> dispatch(OpenBloodSugarTypeSelector)
+    }
   }
 }

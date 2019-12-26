@@ -1,5 +1,5 @@
 package org.simple.clinic.summary.bloodsugar
 
-class BloodSugarSummaryViewEffect {
+sealed class BloodSugarSummaryViewEffect
 
-}
+object OpenBloodSugarTypeSelector : BloodSugarSummaryViewEffect()

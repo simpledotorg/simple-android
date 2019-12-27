@@ -29,7 +29,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.IsInvalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -194,7 +194,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
       DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
       is Valid -> when (ageValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
-        IsInvalid -> DATE_OF_BIRTH_INVALID
+        Invalid -> DATE_OF_BIRTH_INVALID
         else -> null
       }
     }
@@ -207,7 +207,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     return when {
       (ageOrDateOfBirth.age.isBlank()) -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
       else -> when (ageValidator.validate(ageOrDateOfBirth.age.toInt())) {
-        IsInvalid -> AGE_INVALID
+        Invalid -> AGE_INVALID
         else -> null
       }
     }

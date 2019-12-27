@@ -8,11 +8,33 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.newentry.Field.*
+import org.simple.clinic.newentry.Field.Age
+import org.simple.clinic.newentry.Field.ColonyOrVillage
+import org.simple.clinic.newentry.Field.DateOfBirth
+import org.simple.clinic.newentry.Field.District
+import org.simple.clinic.newentry.Field.FullName
+import org.simple.clinic.newentry.Field.Gender
+import org.simple.clinic.newentry.Field.PhoneNumber
+import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
-import org.simple.clinic.patient.PatientEntryValidationError.*
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
+import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
+import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_AGE
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_AGE_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
+import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
+import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ValueChangedCallback
@@ -109,7 +131,7 @@ class PatientEntryEffectHandler(
       showEmptyDateOfBirthAndAgeError(false)
       showInvalidDateOfBirthError(false)
       showDateOfBirthIsInFutureError(false)
-        showInvalidAgeError(false)
+      showInvalidAgeError(false)
       showInvalidDateOfBirthAgeError(false)
     }
   }

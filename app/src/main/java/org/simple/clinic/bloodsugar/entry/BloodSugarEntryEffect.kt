@@ -7,3 +7,5 @@ object HideBloodSugarErrorMessage : BloodSugarEntryEffect()
 object HideDateErrorMessage : BloodSugarEntryEffect()
 
 object Dismiss : BloodSugarEntryEffect()
+
+object ShowDateEntryScreen : BloodSugarEntryEffect()

@@ -49,4 +49,15 @@ class BloodSugarEntryUpdateTest {
             hasEffects(Dismiss as BloodSugarEntryEffect)
         ))
   }
+
+  @Test
+  fun `when blood sugar entry is active and value is valid and date button is pressed, then date entry should be shown`() {
+    updateSpec
+        .given(defaultModel.bloodSugarChanged())
+        .whenEvent(BloodSugarDateClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDateEntryScreen as BloodSugarEntryEffect)
+        ))
+  }
 }

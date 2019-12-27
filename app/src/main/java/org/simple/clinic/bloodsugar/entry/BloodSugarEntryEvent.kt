@@ -15,3 +15,6 @@ object YearChanged : BloodSugarEntryEvent()
 object BackPressed : BloodSugarEntryEvent()
 
 object BloodSugarDateClicked : BloodSugarEntryEvent()
+
+object ShowBloodSugarEntryClicked : BloodSugarEntryEvent()
+

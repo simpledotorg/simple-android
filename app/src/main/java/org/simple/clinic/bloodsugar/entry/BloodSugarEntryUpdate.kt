@@ -21,6 +21,7 @@ class BloodSugarEntryUpdate(
       YearChanged -> onDateChanged(model.yearChanged())
       BackPressed -> dispatch(Dismiss)
       BloodSugarDateClicked -> onBloodSugarDateClicked(model)
+      ShowBloodSugarEntryClicked -> dispatch(ShowBloodSugarEntryScreen)
     }
   }
 

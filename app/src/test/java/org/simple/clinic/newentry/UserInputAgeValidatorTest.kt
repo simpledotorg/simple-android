@@ -5,8 +5,8 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.IsInvalid
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.IsValid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Valid
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
@@ -33,7 +33,7 @@ class UserInputAgeValidatorTest {
     val expectedResult = validator.validate(age)
 
     //then
-    assertThat(expectedResult).isEqualTo(IsInvalid)
+    assertThat(expectedResult).isEqualTo(Invalid)
   }
 
   @Test
@@ -45,7 +45,7 @@ class UserInputAgeValidatorTest {
     val expectedResult = validator.validate(age)
 
     //then
-    assertThat(expectedResult).isEqualTo(IsValid)
+    assertThat(expectedResult).isEqualTo(Valid)
   }
 
   @Test
@@ -57,7 +57,7 @@ class UserInputAgeValidatorTest {
     val expectedResult = validator.validate(age)
 
     //then
-    assertThat(expectedResult).isEqualTo(IsValid)
+    assertThat(expectedResult).isEqualTo(Valid)
   }
 
   @Test
@@ -69,7 +69,7 @@ class UserInputAgeValidatorTest {
     val validation = validator.validate(dateText)
 
     //then
-    assertThat(validation).isEqualTo(IsInvalid)
+    assertThat(validation).isEqualTo(Invalid)
   }
 
   @Test
@@ -81,7 +81,7 @@ class UserInputAgeValidatorTest {
     val validation = validator.validate(dateText)
 
     //then
-    assertThat(validation).isEqualTo(IsValid)
+    assertThat(validation).isEqualTo(Valid)
   }
 
   @Test
@@ -93,6 +93,6 @@ class UserInputAgeValidatorTest {
     val validation = validator.validate(dateText)
 
     //then
-    assertThat(validation).isEqualTo(IsValid)
+    assertThat(validation).isEqualTo(Valid)
   }
 }

@@ -167,7 +167,7 @@ data class OngoingNewPatientEntry(
       age: String,
       errors: ArrayList<PatientEntryValidationError>
   ) {
-    val ageValidatorResult = ageValidator.validator(age.toInt())
+    val ageValidatorResult = ageValidator.validate(age.toInt())
     errors += when (ageValidatorResult) {
       IsInvalid -> listOf(INVALID_AGE)
       else -> emptyList()
@@ -185,7 +185,7 @@ data class OngoingNewPatientEntry(
       InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
       DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
       is Valid -> {
-        val ageValidationResult = ageValidator.validator(dateOfBirth) == IsInvalid
+        val ageValidationResult = ageValidator.validate(dateOfBirth) == IsInvalid
         if (ageValidationResult) listOf(INVALID_AGE_DATE_OF_BIRTH)
         else emptyList()
       }

@@ -47,8 +47,8 @@ class OngoingNewPatientEntryTest {
         dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
 
     val ageValidator = UserInputAgeValidator(
-            userClock = TestUserClock(LocalDate.parse("2018-01-01")),
-            dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
     )
 
     val numValidator = mock<PhoneNumberValidator>()

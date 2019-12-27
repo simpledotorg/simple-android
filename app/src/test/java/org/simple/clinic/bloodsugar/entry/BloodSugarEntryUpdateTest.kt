@@ -8,17 +8,33 @@ import org.junit.Test
 
 class BloodSugarEntryUpdateTest {
 
+  private val defaultModel = BloodSugarEntryModel.BLANK
+  private val updateSpec = UpdateSpec<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect>(BloodSugarEntryUpdate())
+
   @Test
   fun `when blood sugar value changes, hide any blood sugar error message`() {
-    val defaultModel = BloodSugarEntryModel.BLANK
-    val updateSpec = UpdateSpec<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect>(BloodSugarEntryUpdate())
-
     updateSpec
         .given(defaultModel)
         .whenEvent(BloodSugarChanged)
         .then(assertThatNext(
             hasModel(defaultModel.bloodSugarChanged()),
             hasEffects(HideBloodSugarErrorMessage as BloodSugarEntryEffect)
+        ))
+  }
+
+  @Test
+  fun `when date values change, hide any date error message`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvents(DayChanged, MonthChanged, YearChanged)
+        .then(assertThatNext(
+            hasModel(
+                defaultModel
+                    .dayChanged()
+                    .monthChanged()
+                    .yearChanged()
+            ),
+            hasEffects(HideDateErrorMessage as BloodSugarEntryEffect)
         ))
   }
 }

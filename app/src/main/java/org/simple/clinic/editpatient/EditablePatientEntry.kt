@@ -2,12 +2,30 @@ package org.simple.clinic.editpatient
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.editpatient.EditPatientValidationError.*
+import org.simple.clinic.editpatient.EditPatientValidationError.AGE_INVALID
+import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_INVALID
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_PARSE_ERROR
+import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.patient.*
+import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.*
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -18,7 +36,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.*
+import java.util.UUID
 
 typealias ValidationCheck = () -> EditPatientValidationError?
 
@@ -107,10 +125,10 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       copy(ageOrDateOfBirth = EntryWithDateOfBirth(dateOfBirth))
 
   fun validate(
-          alreadySavedNumber: PatientPhoneNumber?,
-          numberValidator: PhoneNumberValidator,
-          dobValidator: UserInputDateValidator,
-          ageValidator: UserInputAgeValidator
+      alreadySavedNumber: PatientPhoneNumber?,
+      numberValidator: PhoneNumberValidator,
+      dobValidator: UserInputDateValidator,
+      ageValidator: UserInputAgeValidator
   ): Set<EditPatientValidationError> {
     return getValidationChecks(alreadySavedNumber, numberValidator, dobValidator, ageValidator)
         .mapNotNull { it.invoke() }
@@ -118,10 +136,10 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
   }
 
   private fun getValidationChecks(
-          alreadySavedNumber: PatientPhoneNumber?,
-          numberValidator: PhoneNumberValidator,
-          dobValidator: UserInputDateValidator,
-          ageValidator: UserInputAgeValidator
+      alreadySavedNumber: PatientPhoneNumber?,
+      numberValidator: PhoneNumberValidator,
+      dobValidator: UserInputDateValidator,
+      ageValidator: UserInputAgeValidator
   ): List<ValidationCheck> {
     return listOf(
         nameCheck(),
@@ -158,29 +176,39 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       { if (district.isBlank()) DISTRICT_EMPTY else null }
 
   private fun ageOrDateOfBirthCheck(
-          dobValidator: UserInputDateValidator,
-          ageValidator: UserInputAgeValidator
+      dobValidator: UserInputDateValidator,
+      ageValidator: UserInputAgeValidator
   ): ValidationCheck = {
     when (ageOrDateOfBirth) {
-      is EntryWithAge -> {
-        when {
-          (ageOrDateOfBirth.age.isBlank()) -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-          else -> when (ageValidator.validator(ageOrDateOfBirth.age.toInt())) {
-            IsInvalid -> AGE_INVALID
-            else -> null
-          }
-        }
-      }
+      is EntryWithAge -> ageCheck(ageOrDateOfBirth, ageValidator)
+      is EntryWithDateOfBirth -> dobCheck(dobValidator, ageOrDateOfBirth, ageValidator)
+    }
+  }
 
-      is EntryWithDateOfBirth -> {
-        when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
-          InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
-          DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
-          is Valid -> when (ageValidator.validator(ageOrDateOfBirth.dateOfBirth)) {
-            IsInvalid -> DATE_OF_BIRTH_INVALID
-            else -> null
-          }
-        }
+  private fun dobCheck(
+      dobValidator: UserInputDateValidator,
+      ageOrDateOfBirth: EntryWithDateOfBirth,
+      ageValidator: UserInputAgeValidator
+  ): EditPatientValidationError? {
+    return when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
+      InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
+      DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
+      is Valid -> when (ageValidator.validator(ageOrDateOfBirth.dateOfBirth)) {
+        IsInvalid -> DATE_OF_BIRTH_INVALID
+        else -> null
+      }
+    }
+  }
+
+  private fun ageCheck(
+      ageOrDateOfBirth: EntryWithAge,
+      ageValidator: UserInputAgeValidator
+  ): EditPatientValidationError? {
+    return when {
+      (ageOrDateOfBirth.age.isBlank()) -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+      else -> when (ageValidator.validator(ageOrDateOfBirth.age.toInt())) {
+        IsInvalid -> AGE_INVALID
+        else -> null
       }
     }
   }

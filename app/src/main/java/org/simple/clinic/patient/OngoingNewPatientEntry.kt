@@ -122,19 +122,9 @@ data class OngoingNewPatientEntry(
         errors += BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 
       } else if (dateOfBirth != null) {
-        val dobValidationResult = dobValidator.validate(dateOfBirth)
-        errors += when (dobValidationResult) {
-          InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
-          DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
-          is Valid -> if (ageValidator.validator(dateOfBirth) == IsInvalid) listOf(INVALID_AGE_DATE_OF_BIRTH)
-          else emptyList()
-        }
+        dobValidationCheck(dobValidator, dateOfBirth, errors, ageValidator)
       } else if (age != null) {
-        val ageValidatorResult = ageValidator.validator(age.toInt())
-        errors += when (ageValidatorResult) {
-          IsInvalid -> listOf(INVALID_AGE)
-          else -> emptyList()
-        }
+        ageValidationCheck(ageValidator, age, errors)
       }
       if (fullName.isBlank()) {
         errors += FULL_NAME_EMPTY
@@ -170,6 +160,36 @@ data class OngoingNewPatientEntry(
     }
 
     return errors
+  }
+
+  private fun ageValidationCheck(
+      ageValidator: UserInputAgeValidator,
+      age: String,
+      errors: ArrayList<PatientEntryValidationError>
+  ) {
+    val ageValidatorResult = ageValidator.validator(age.toInt())
+    errors += when (ageValidatorResult) {
+      IsInvalid -> listOf(INVALID_AGE)
+      else -> emptyList()
+    }
+  }
+
+  private fun dobValidationCheck(
+      dobValidator: UserInputDateValidator,
+      dateOfBirth: String,
+      errors: ArrayList<PatientEntryValidationError>,
+      ageValidator: UserInputAgeValidator
+  ) {
+    val dobValidationResult = dobValidator.validate(dateOfBirth)
+    errors += when (dobValidationResult) {
+      InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
+      DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
+      is Valid -> {
+        val ageValidationResult = ageValidator.validator(dateOfBirth) == IsInvalid
+        if (ageValidationResult) listOf(INVALID_AGE_DATE_OF_BIRTH)
+        else emptyList()
+      }
+    }
   }
 
   private fun personalDetailsOrBlank(): PersonalDetails =

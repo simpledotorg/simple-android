@@ -193,7 +193,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     return when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
       InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
       DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
-      is Valid -> when (ageValidator.validator(ageOrDateOfBirth.dateOfBirth)) {
+      is Valid -> when (ageValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
         IsInvalid -> DATE_OF_BIRTH_INVALID
         else -> null
       }
@@ -206,7 +206,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
   ): EditPatientValidationError? {
     return when {
       (ageOrDateOfBirth.age.isBlank()) -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-      else -> when (ageValidator.validator(ageOrDateOfBirth.age.toInt())) {
+      else -> when (ageValidator.validate(ageOrDateOfBirth.age.toInt())) {
         IsInvalid -> AGE_INVALID
         else -> null
       }

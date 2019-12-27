@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.entry
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -35,6 +36,17 @@ class BloodSugarEntryUpdateTest {
                     .yearChanged()
             ),
             hasEffects(HideDateErrorMessage as BloodSugarEntryEffect)
+        ))
+  }
+
+  @Test
+  fun `when blood sugar entry is active and back is pressed, then the sheet should be dismissed`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(BackPressed)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(Dismiss as BloodSugarEntryEffect)
         ))
   }
 }

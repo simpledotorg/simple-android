@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.entry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class BloodSugarEntryUpdate : Update<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect> {
@@ -15,6 +16,7 @@ class BloodSugarEntryUpdate : Update<BloodSugarEntryModel, BloodSugarEntryEvent,
       DayChanged -> onDateChanged(model.dayChanged())
       MonthChanged -> onDateChanged(model.monthChanged())
       YearChanged -> onDateChanged(model.yearChanged())
+      BackPressed -> dispatch(Dismiss)
     }
   }
 

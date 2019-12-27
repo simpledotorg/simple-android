@@ -11,3 +11,5 @@ object Dismiss : BloodSugarEntryEffect()
 object ShowDateEntryScreen : BloodSugarEntryEffect()
 
 object ShowBloodSugarValidationError : BloodSugarEntryEffect()
+
+object ShowBloodSugarEntryScreen : BloodSugarEntryEffect()

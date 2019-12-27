@@ -122,10 +122,15 @@ data class OngoingNewPatientEntry(
         errors += BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 
       } else if (dateOfBirth != null) {
-        dobValidationCheck(dobValidator, dateOfBirth, errors, ageValidator)
+        errors += dobValidationCheck(dobValidator, dateOfBirth, ageValidator)
+
       } else if (age != null) {
-        ageValidationCheck(ageValidator, age, errors)
+        errors += when (ageValidator.validate(age.toInt())) {
+          Invalid -> listOf(INVALID_AGE)
+          else -> emptyList()
+        }
       }
+
       if (fullName.isBlank()) {
         errors += FULL_NAME_EMPTY
       }
@@ -162,32 +167,17 @@ data class OngoingNewPatientEntry(
     return errors
   }
 
-  private fun ageValidationCheck(
-      ageValidator: UserInputAgeValidator,
-      age: String,
-      errors: ArrayList<PatientEntryValidationError>
-  ) {
-    val ageValidatorResult = ageValidator.validate(age.toInt())
-    errors += when (ageValidatorResult) {
-      Invalid -> listOf(INVALID_AGE)
-      else -> emptyList()
-    }
-  }
-
   private fun dobValidationCheck(
       dobValidator: UserInputDateValidator,
       dateOfBirth: String,
-      errors: ArrayList<PatientEntryValidationError>,
       ageValidator: UserInputAgeValidator
-  ) {
-    val dobValidationResult = dobValidator.validate(dateOfBirth)
-    errors += when (dobValidationResult) {
+  ): List<PatientEntryValidationError> {
+    return when (dobValidator.validate(dateOfBirth)) {
       InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
       DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
       is Valid -> {
-        val ageValidationResult = ageValidator.validate(dateOfBirth) == Invalid
-        if (ageValidationResult) listOf(INVALID_AGE_DATE_OF_BIRTH)
-        else emptyList()
+        val isDateOfBirthInvalid = ageValidator.validate(dateOfBirth) == Invalid
+        if (isDateOfBirthInvalid) listOf(INVALID_AGE_DATE_OF_BIRTH) else emptyList()
       }
     }
   }

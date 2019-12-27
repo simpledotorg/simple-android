@@ -181,19 +181,21 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
   ): ValidationCheck = {
     when (ageOrDateOfBirth) {
       is EntryWithAge -> ageCheck(ageOrDateOfBirth, ageValidator)
-      is EntryWithDateOfBirth -> dobCheck(dobValidator, ageOrDateOfBirth, ageValidator)
+      is EntryWithDateOfBirth -> dateOfBirthCheck(dobValidator, ageOrDateOfBirth, ageValidator)
     }
   }
 
-  private fun dobCheck(
+  private fun dateOfBirthCheck(
       dobValidator: UserInputDateValidator,
       ageOrDateOfBirth: EntryWithDateOfBirth,
       ageValidator: UserInputAgeValidator
   ): EditPatientValidationError? {
-    return when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
+    val dateOfBirth = ageOrDateOfBirth.dateOfBirth
+
+    return when (dobValidator.validate(dateOfBirth)) {
       InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
       DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
-      is Valid -> when (ageValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
+      is Valid -> when (ageValidator.validate(dateOfBirth)) {
         Invalid -> DATE_OF_BIRTH_INVALID
         else -> null
       }
@@ -204,9 +206,11 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       ageOrDateOfBirth: EntryWithAge,
       ageValidator: UserInputAgeValidator
   ): EditPatientValidationError? {
+    val age = ageOrDateOfBirth.age
+
     return when {
-      (ageOrDateOfBirth.age.isBlank()) -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-      else -> when (ageValidator.validate(ageOrDateOfBirth.age.toInt())) {
+      age.isBlank() -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+      else -> when (ageValidator.validate(age.toInt())) {
         Invalid -> AGE_INVALID
         else -> null
       }

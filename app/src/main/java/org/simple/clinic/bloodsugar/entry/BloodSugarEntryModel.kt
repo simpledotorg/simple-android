@@ -1,22 +1,26 @@
 package org.simple.clinic.bloodsugar.entry
 
 data class BloodSugarEntryModel(
-    val bloodSugarReading: String = ""
+    val year: String,
+    val bloodSugarReading: String = "",
+    val day: String = "",
+    val month: String = "",
+    val twoDigitYear: String = ""
 ) {
 
   companion object {
-    val BLANK = BloodSugarEntryModel()
+    fun create(year: Int) = BloodSugarEntryModel(year.toString())
   }
 
   fun bloodSugarChanged(bloodSugarReading: String): BloodSugarEntryModel =
       copy(bloodSugarReading = bloodSugarReading)
 
-  fun dayChanged(): BloodSugarEntryModel =
-      copy()
+  fun dayChanged(day: String): BloodSugarEntryModel =
+      copy(day = day)
 
-  fun monthChanged(): BloodSugarEntryModel =
-      copy()
+  fun monthChanged(month: String): BloodSugarEntryModel =
+      copy(month = month)
 
-  fun yearChanged(): BloodSugarEntryModel =
-      copy()
+  fun yearChanged(twoDigitYear: String): BloodSugarEntryModel =
+      copy(twoDigitYear = twoDigitYear)
 }

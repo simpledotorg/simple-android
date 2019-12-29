@@ -6,11 +6,17 @@ data class BloodSugarChanged(
     val bloodSugarReading: String
 ) : BloodSugarEntryEvent()
 
-object DayChanged : BloodSugarEntryEvent()
+data class DayChanged(
+    val day: String
+) : BloodSugarEntryEvent()
 
-object MonthChanged : BloodSugarEntryEvent()
+data class MonthChanged(
+    val month: String
+) : BloodSugarEntryEvent()
 
-object YearChanged : BloodSugarEntryEvent()
+data class YearChanged(
+    val twoDigitYear: String
+) : BloodSugarEntryEvent()
 
 object BackPressed : BloodSugarEntryEvent()
 

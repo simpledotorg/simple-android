@@ -159,6 +159,8 @@ class PatientEntryScreenLogicTest {
       onNext(ColonyOrVillageChanged("colony"))
       onNext(DistrictChanged("district"))
       onNext(StateChanged("state"))
+      onNext(StreetAddressChanged("streetAddress"))
+      onNext(ZoneChanged("zone"))
       onNext(SaveClicked)
     }
 
@@ -589,6 +591,8 @@ class PatientEntryScreenLogicTest {
       onNext(ColonyOrVillageChanged("Colony"))
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
+      onNext(StreetAddressChanged("streetAddress"))
+      onNext(ZoneChanged("zone"))
       onNext(SaveClicked)
     }
 

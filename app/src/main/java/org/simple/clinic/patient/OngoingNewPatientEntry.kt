@@ -103,11 +103,17 @@ data class OngoingNewPatientEntry(
   fun withBangladeshNationalId(bangladeshNationalId: Identifier): OngoingNewPatientEntry =
       copy(bangladeshNationalId = bangladeshNationalId)
 
+  fun withStreetAddress(streetAddress: String): OngoingNewPatientEntry =
+      copy(address = addressOrBlank().copy(streetAddress = streetAddress))
+
+  fun withZone(zone: String): OngoingNewPatientEntry =
+      copy(address = addressOrBlank().copy(zone = zone))
+
   fun validationErrors(
       dobValidator: UserInputDateValidator,
       numberValidator: PhoneNumberValidator,
       ageValidator: UserInputAgeValidator
-  ): List<PatientEntryValidationError> {
+  ) : List<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()
 
     if (personalDetails == null) {

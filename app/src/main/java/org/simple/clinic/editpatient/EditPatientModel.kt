@@ -65,4 +65,10 @@ data class EditPatientModel(
       copy(bangladeshNationalId = bangladeshNationalId?.run {
         copy(identifier = identifier.copy(value = bangladeshNationalIdIdentifier))
       })
+
+  fun updateZone(zone: String): EditPatientModel =
+      copy(ongoingEntry = ongoingEntry.updateZone(zone))
+
+  fun updateStreetAddress(streetAddress: String): EditPatientModel =
+      copy(ongoingEntry = ongoingEntry.updateStreetAddress(streetAddress))
 }

@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import android.os.Bundle
+import kotlinx.android.synthetic.main.sheet_blood_sugar_entry.*
 import org.simple.clinic.R
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.threeten.bp.LocalDate
@@ -39,15 +40,15 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun showRandomBloodSugarTitle() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    enterBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_random_title)
   }
 
   override fun showPostPrandialBloodSugarTitle() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    enterBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_post_prandial_title)
   }
 
   override fun showFastingBloodSugarTitle() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    enterBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_fasting_title)
   }
 
   override fun showBloodSugarEntryScreen() {

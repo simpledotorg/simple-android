@@ -31,6 +31,8 @@ class PatientEntryUpdate(
       is StateChanged -> onFieldChanged(model.stateChanged(event.state), State)
       is BangladeshNationalIdChanged -> onFieldChanged(model.bangladeshNationalIdChanged(event.bangladeshNationalId), BangladeshNationalId)
       is GenderChanged -> onGenderChanged(model, event.gender)
+      is StreetAddressChanged -> onFieldChanged(model.streetAddressChanged(event.streetAddress), StreetAddress)
+      is ZoneChanged -> onFieldChanged(model.zoneChanged(event.zone), Zone)
       is OngoingEntryFetched -> onOngoingEntryFetched(model, event.patientEntry)
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
       is ReminderConsentChanged -> next(model.reminderConsentChanged(event.reminderConsent))

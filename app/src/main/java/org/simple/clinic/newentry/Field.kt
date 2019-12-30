@@ -9,5 +9,7 @@ enum class Field {
   ColonyOrVillage,
   District,
   State,
-  BangladeshNationalId
+  BangladeshNationalId,
+  StreetAddress,
+  Zone
 }

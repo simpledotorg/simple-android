@@ -55,4 +55,10 @@ data class PatientEntryModel(
 
   fun bangladeshNationalIdChanged(bangladeshNationalId: Identifier): PatientEntryModel =
       copy(patientEntry = patientEntry.withBangladeshNationalId(bangladeshNationalId))
+
+  fun streetAddressChanged(streetAddress: String): PatientEntryModel =
+      copy(patientEntry = patientEntry.withStreetAddress(streetAddress))
+
+  fun zoneChanged(zone: String): PatientEntryModel =
+      copy(patientEntry = patientEntry.withZone(zone))
 }

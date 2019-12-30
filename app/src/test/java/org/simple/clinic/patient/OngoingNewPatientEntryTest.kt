@@ -39,7 +39,13 @@ class OngoingNewPatientEntryTest {
   ) {
     val entry = OngoingNewPatientEntry(
         personalDetails = PersonalDetails(fullname, dateOfBirth, age, Gender.Male),
-        address = Address(colonyOrVillage, district, state),
+        address = Address(
+            colonyOrVillage = colonyOrVillage,
+            district = district,
+            state = state,
+            streetAddress = "streetAddress",
+            zone = "zone"
+        ),
         phoneNumber = PhoneNumber(""))
 
     val dobValidator = UserInputDateValidator(
@@ -79,7 +85,13 @@ class OngoingNewPatientEntryTest {
   fun `future date-of-birth should not be accepted`() {
     val entry = OngoingNewPatientEntry(
         personalDetails = PersonalDetails("Ashok", "01/01/3000", "", Gender.Male),
-        address = Address("colony", "district", "state"),
+        address = Address(
+            colonyOrVillage = "colony",
+            district = "district",
+            state = "state",
+            streetAddress = "streetAddress",
+            zone = "zone"
+        ),
         phoneNumber = PhoneNumber("phone-number"))
 
     val mockDobValidator = mock<UserInputDateValidator>()

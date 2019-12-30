@@ -4,8 +4,9 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.simple.clinic.bp.di.BloodPressureModule
+import org.simple.clinic.bloodsugar.di.BloodSugarModule
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.bp.di.BloodPressureModule
 import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -40,6 +41,7 @@ import javax.inject.Named
   FacilityModule::class,
   AppointmentModule::class,
   MedicalHistoryModule::class,
+  BloodSugarModule::class,
   ProtocolModule::class,
   ReportsModule::class,
   HelpModule::class])

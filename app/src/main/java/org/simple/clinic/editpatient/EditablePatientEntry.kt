@@ -49,7 +49,9 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     val colonyOrVillage: String,
     val district: String,
     val state: String,
-    val ageOrDateOfBirth: EitherAgeOrDateOfBirth
+    val ageOrDateOfBirth: EitherAgeOrDateOfBirth,
+    val zone: String,
+    val streetAddress: String
 ) : Parcelable {
 
   sealed class EitherAgeOrDateOfBirth : Parcelable {
@@ -83,7 +85,9 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
           colonyOrVillage = address.colonyOrVillage.valueOrEmpty(),
           district = address.district,
           state = address.state,
-          ageOrDateOfBirth = ageOrDateOfBirth(patient.age, patient.dateOfBirth, dateOfBirthFormatter)
+          ageOrDateOfBirth = ageOrDateOfBirth(patient.age, patient.dateOfBirth, dateOfBirthFormatter),
+          zone = address.zone.valueOrEmpty(),
+          streetAddress = address.streetAddress.valueOrEmpty()
       )
     }
 
@@ -123,6 +127,12 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
 
   fun updateDateOfBirth(dateOfBirth: String): EditablePatientEntry =
       copy(ageOrDateOfBirth = EntryWithDateOfBirth(dateOfBirth))
+
+  fun updateZone(zone: String): EditablePatientEntry =
+      copy(zone = zone)
+
+  fun updateStreetAddress(streetAddress: String): EditablePatientEntry =
+      copy(streetAddress = streetAddress)
 
   fun validate(
       alreadySavedNumber: PatientPhoneNumber?,

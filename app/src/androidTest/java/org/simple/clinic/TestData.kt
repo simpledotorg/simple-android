@@ -2,6 +2,9 @@ package org.simple.clinic
 
 import io.bloco.faker.Faker
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarReading
+import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
@@ -42,6 +45,7 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -799,6 +803,28 @@ class TestData @Inject constructor(
         endpoint = URI.create(endpoint),
         displayName = displayName,
         isdCode = isdCode
+    )
+  }
+
+  fun bloodSugarMeasurement(
+      uuid: UUID,
+      reading: BloodSugarReading = BloodSugarReading(faker.number.between(30, 1000), Random),
+      patientUuid: UUID = UUID.randomUUID(),
+      recordedAt: Instant = Instant.now(userClock),
+      userUuid: UUID = qaUser().uuid,
+      facilityUuid: UUID = qaUserFacilityUuid(),
+      timestamps: Timestamps = Timestamps(Instant.now(), Instant.now(), null),
+      syncStatus: SyncStatus = SyncStatus.DONE
+  ): BloodSugarMeasurement {
+    return BloodSugarMeasurement(
+        uuid = uuid,
+        reading = reading,
+        patientUuid = patientUuid,
+        recordedAt = recordedAt,
+        userUuid = userUuid,
+        facilityUuid = facilityUuid,
+        timestamps = timestamps,
+        syncStatus = syncStatus
     )
   }
 }

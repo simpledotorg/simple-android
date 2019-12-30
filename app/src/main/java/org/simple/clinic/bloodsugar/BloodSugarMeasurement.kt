@@ -6,6 +6,8 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
+import androidx.room.Query
+import io.reactivex.Observable
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import org.threeten.bp.Instant
@@ -38,5 +40,12 @@ data class BloodSugarMeasurement(
 
     @Insert(onConflict = REPLACE)
     fun save(bloodSugars: List<BloodSugarMeasurement>)
+
+    @Query("""
+      SELECT * FROM BloodSugarMeasurements
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+      ORDER BY recordedAt DESC LIMIT :limit
+    """)
+    fun latestMeasurements(patientUuid: UUID, limit: Int): Observable<List<BloodSugarMeasurement>>
   }
 }

@@ -120,7 +120,11 @@ class PatientEntryScreenLogicTest {
         address = Address(
             colonyOrVillage = "",
             district = "district",
-            state = "state")))
+            state = "state",
+            streetAddress = "",
+            zone = ""
+        )
+    ))
   }
 
   @Test
@@ -128,7 +132,9 @@ class PatientEntryScreenLogicTest {
     val address = Address(
         colonyOrVillage = "colony 1",
         district = "district 2",
-        state = "state 3"
+        state = "state 3",
+        streetAddress = "streetAddress",
+        zone = "zone"
     )
     whenever(patientRepository.ongoingEntry()).doReturn(Single.just(OngoingNewPatientEntry(address = address)))
 
@@ -159,7 +165,13 @@ class PatientEntryScreenLogicTest {
     verify(patientRepository).ongoingEntry()
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
         personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
-        address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
+        address = Address(
+            colonyOrVillage = "colony",
+            district = "district",
+            state = "state",
+            streetAddress = "streetAddress",
+            zone = "zone"
+        ),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
     verifyNoMoreInteractions(patientRepository)
@@ -188,13 +200,21 @@ class PatientEntryScreenLogicTest {
       onNext(ColonyOrVillageChanged("colony"))
       onNext(DistrictChanged("district"))
       onNext(StateChanged("state"))
+      onNext(StreetAddressChanged("streetAddress"))
+      onNext(ZoneChanged("zone"))
       onNext(SaveClicked)
     }
 
     verify(patientRepository).ongoingEntry()
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
         personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
-        address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
+        address = Address(
+            colonyOrVillage = "colony",
+            district = "district",
+            state = "state",
+            streetAddress = "streetAddress",
+            zone = "zone"
+        ),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890"),
         bangladeshNationalId = bangladeshNationalId
     ))
@@ -210,7 +230,13 @@ class PatientEntryScreenLogicTest {
     val existingPatientRegisteredCount = 5
     val ongoingEntry = OngoingNewPatientEntry(
         personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
-        address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
+        address = Address(
+            colonyOrVillage = "colony",
+            district = "district",
+            state = "state",
+            streetAddress = "streetAddress",
+            zone = "zone"
+        ),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     )
 
@@ -576,7 +602,9 @@ class PatientEntryScreenLogicTest {
         address = Address(
             colonyOrVillage = "Colony",
             district = "District",
-            state = "State"
+            state = "State",
+            streetAddress = "streetAddress",
+            zone = "zone"
         ),
         phoneNumber = null,
         identifier = identifier

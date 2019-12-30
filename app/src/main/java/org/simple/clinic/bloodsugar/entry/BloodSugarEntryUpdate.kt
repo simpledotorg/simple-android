@@ -22,6 +22,8 @@ class BloodSugarEntryUpdate(
       event: BloodSugarEntryEvent
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
     return when (event) {
+      is ScreenChanged -> next(model.screenChanged(event.type))
+      is DatePrefilled -> next(model.datePrefilled(event.prefilledDate))
       is BloodSugarChanged -> next(model.bloodSugarChanged(event.bloodSugarReading), HideBloodSugarErrorMessage)
       is DayChanged -> onDateChanged(model.dayChanged(event.day))
       is MonthChanged -> onDateChanged(model.monthChanged(event.month))
@@ -29,7 +31,58 @@ class BloodSugarEntryUpdate(
       BackPressed -> dispatch(Dismiss)
       BloodSugarDateClicked -> onBloodSugarDateClicked(model)
       ShowBloodSugarEntryClicked -> showBloodSugarClicked(model)
+      SaveClicked -> onSaveClicked(model)
+      is BloodSugarSaved -> dispatch(SetBloodSugarSavedResultAndFinish)
     }
+  }
+
+  private fun onSaveClicked(
+      model: BloodSugarEntryModel
+  ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
+    val bloodSugarValidationResult = bloodSugarValidator.validate(model.bloodSugarReading)
+    val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
+    val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult)
+
+    return if (validationErrorEffects.isNotEmpty()) {
+      Next.dispatch(validationErrorEffects)
+    } else {
+      dispatch(getCreateEntryEffect(model, dateValidationResult))
+    }
+  }
+
+  private fun getValidationErrorEffects(
+      bloodSugarValidationResult: BloodSugarValidator.Result,
+      dateValidationResult: Result
+  ): Set<BloodSugarEntryEffect> {
+    val validationErrorEffects = mutableSetOf<BloodSugarEntryEffect>()
+
+    if (bloodSugarValidationResult !is Valid) {
+      validationErrorEffects.add(ShowBloodSugarValidationError(bloodSugarValidationResult))
+    }
+
+    if (dateValidationResult !is Result.Valid) {
+      validationErrorEffects.add(ShowDateValidationError(dateValidationResult))
+    }
+    return validationErrorEffects.toSet()
+  }
+
+  private fun getCreateEntryEffect(
+      model: BloodSugarEntryModel,
+      dateValidationResult: Result
+  ): BloodSugarEntryEffect {
+    val openAs = model.openAs as New
+    val bloodSugarReading = model.bloodSugarReading.toInt()
+    val bloodSugarMeasurementType = openAs.measurementType
+    val userEnteredDate = (dateValidationResult as Result.Valid).parsedDate
+    val prefillDate = model.prefilledDate!!
+
+    return CreateNewBloodSugarEntry(
+        openAs.patientId,
+        bloodSugarReading,
+        bloodSugarMeasurementType,
+        userEnteredDate,
+        prefillDate
+    )
   }
 
   private fun showBloodSugarClicked(
@@ -37,9 +90,9 @@ class BloodSugarEntryUpdate(
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
     val result = dateValidator.validate(getDateText(model), dateInUserTimeZone)
     val effect = if (result is Result.Valid) {
-      ShowBloodSugarEntryScreen
+      ShowBloodSugarEntryScreen(result.parsedDate)
     } else {
-      ShowDateValidationError
+      ShowDateValidationError(result)
     }
     return dispatch(effect)
   }
@@ -51,7 +104,7 @@ class BloodSugarEntryUpdate(
     val effect = if (result is Valid) {
       ShowDateEntryScreen
     } else {
-      ShowBloodSugarValidationError
+      ShowBloodSugarValidationError(result)
     }
     return dispatch(effect)
   }

@@ -6,12 +6,16 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
+import java.util.UUID
 
 class BloodSugarEntryUpdateTest {
 
@@ -20,11 +24,9 @@ class BloodSugarEntryUpdateTest {
   private val dateValidator = UserInputDateValidator(testUserClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
 
   private val validBloodSugar = "30"
-  private val validDay = "14"
-  private val validMonth = "02"
-  private val validYear = "94"
+  private val patientUuid = UUID.fromString("79145baf-7a5c-4442-ab30-2da564a32944")
 
-  private val defaultModel = BloodSugarEntryModel.create(LocalDate.now(testUserClock).year)
+  private val defaultModel = BloodSugarEntryModel.create(LocalDate.now(testUserClock).year, New(patientUuid, Random))
   private val updateSpec = UpdateSpec<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect>(
       BloodSugarEntryUpdate(
           bloodSugarValidator,
@@ -47,15 +49,23 @@ class BloodSugarEntryUpdateTest {
 
   @Test
   fun `when date values change, hide any date error message`() {
+    val day = "14"
+    val month = "02"
+    val year = "94"
+
     updateSpec
         .given(defaultModel)
-        .whenEvents(DayChanged(validDay), MonthChanged(validMonth), YearChanged(validYear))
+        .whenEvents(
+            DayChanged(day),
+            MonthChanged(month),
+            YearChanged(year)
+        )
         .then(assertThatNext(
             hasModel(
                 defaultModel
-                    .dayChanged(validDay)
-                    .monthChanged(validMonth)
-                    .yearChanged(validYear)
+                    .dayChanged(day)
+                    .monthChanged(month)
+                    .yearChanged(year)
             ),
             hasEffects(HideDateErrorMessage as BloodSugarEntryEffect)
         ))
@@ -92,39 +102,44 @@ class BloodSugarEntryUpdateTest {
         .whenEvent(BloodSugarDateClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowBloodSugarValidationError as BloodSugarEntryEffect)
+            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh) as BloodSugarEntryEffect)
         ))
   }
 
   @Test
   fun `when date entry screen is active and has valid date and show blood sugar entry is pressed, then show blood sugar entry sheet`() {
+    val bloodSugarDate = LocalDate.of(1994, 2, 14)
     updateSpec
         .given(
             defaultModel
-                .dayChanged(validDay)
-                .monthChanged(validMonth)
-                .yearChanged(validYear)
+                .dayChanged(bloodSugarDate.dayOfMonth.toString())
+                .monthChanged(bloodSugarDate.monthValue.toString())
+                .yearChanged(bloodSugarDate.year.toString().substring(2))
         )
         .whenEvent(ShowBloodSugarEntryClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowBloodSugarEntryScreen as BloodSugarEntryEffect)
+            hasEffects(ShowBloodSugarEntryScreen(bloodSugarDate) as BloodSugarEntryEffect)
         ))
   }
 
   @Test
   fun `when blood sugar sheet has invalid date and show blood sugar entry is pressed, then show date validation errors`() {
+    val day = "14"
+    val month = "13"
+    val year = "94"
+
     updateSpec
         .given(
             defaultModel
-                .dayChanged("14")
-                .monthChanged("13")
-                .yearChanged("94")
+                .dayChanged(day)
+                .monthChanged(month)
+                .yearChanged(year)
         )
         .whenEvent(ShowBloodSugarEntryClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowDateValidationError as BloodSugarEntryEffect)
+            hasEffects(ShowDateValidationError(InvalidPattern) as BloodSugarEntryEffect)
         ))
   }
 }

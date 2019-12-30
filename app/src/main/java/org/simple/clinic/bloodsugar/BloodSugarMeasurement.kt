@@ -1,7 +1,10 @@
 package org.simple.clinic.bloodsugar
 
+import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
@@ -28,4 +31,12 @@ data class BloodSugarMeasurement(
     val timestamps: Timestamps,
 
     val syncStatus: SyncStatus
-)
+) {
+
+  @Dao
+  interface RoomDao {
+
+    @Insert(onConflict = REPLACE)
+    fun save(bloodSugars: List<BloodSugarMeasurement>)
+  }
+}

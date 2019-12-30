@@ -2,6 +2,8 @@ package org.simple.clinic.bloodsugar.entry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
+import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.Valid
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -28,7 +30,7 @@ class BloodSugarEntryUpdate(
       is DayChanged -> onDateChanged(model.dayChanged(event.day))
       is MonthChanged -> onDateChanged(model.monthChanged(event.month))
       is YearChanged -> onDateChanged(model.yearChanged(event.twoDigitYear))
-      BackPressed -> dispatch(Dismiss)
+      BackPressed -> onBackPressed(model)
       BloodSugarDateClicked -> onBloodSugarDateClicked(model)
       ShowBloodSugarEntryClicked -> showBloodSugarClicked(model)
       SaveClicked -> onSaveClicked(model)
@@ -107,6 +109,15 @@ class BloodSugarEntryUpdate(
       ShowBloodSugarValidationError(result)
     }
     return dispatch(effect)
+  }
+
+  private fun onBackPressed(
+      model: BloodSugarEntryModel
+  ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
+    return when (model.activeScreen) {
+      BLOOD_SUGAR_ENTRY -> dispatch(Dismiss as BloodSugarEntryEffect)
+      DATE_ENTRY -> showBloodSugarClicked(model)
+    }
   }
 
   private fun onDateChanged(

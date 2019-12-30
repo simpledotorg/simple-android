@@ -48,6 +48,8 @@ class EditPatientUpdate(
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(event)
       is DateOfBirthChanged -> onDateOfBirthChanged(model, event)
       is AgeChanged -> onTextFieldChanged(event) { model.updateAge(event.age) }
+      is ZoneChanged -> next(model.updateZone(event.zone))
+      is StreetAddressChanged -> next(model.updateStreetAddress(event.streetAddress))
       is BackClicked -> onBackClicked(model)
       is PatientSaved -> dispatch(GoBackEffect)
       is SaveClicked -> onSaveClicked(model)

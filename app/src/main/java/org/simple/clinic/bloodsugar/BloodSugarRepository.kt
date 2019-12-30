@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
@@ -36,5 +37,9 @@ class BloodSugarRepository @Inject constructor(
           )
       ))
     }
+  }
+
+  fun latestMeasurements(patientUuid: UUID, limit: Int): Observable<List<BloodSugarMeasurement>> {
+    return dao.latestMeasurements(patientUuid, limit)
   }
 }

@@ -6,6 +6,11 @@ import org.simple.clinic.widgets.BottomSheetActivity
 
 class BloodSugarEntrySheet : BottomSheetActivity() {
 
+  enum class ScreenType {
+    BLOOD_SUGAR_ENTRY,
+    DATE_ENTRY
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 

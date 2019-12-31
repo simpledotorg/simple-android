@@ -12,6 +12,7 @@ class BloodSugarEntryEffectHandler(
     return RxMobius
         .subtypeEffectHandler<BloodSugarEntryEffect, BloodSugarEntryEvent>()
         .addAction(HideBloodSugarErrorMessage::class.java, ui::hideBloodSugarErrorMessage, schedulersProvider.ui())
+        .addAction(HideDateErrorMessage::class.java, ui::hideDateErrorMessage, schedulersProvider.ui())
         .build()
   }
 }

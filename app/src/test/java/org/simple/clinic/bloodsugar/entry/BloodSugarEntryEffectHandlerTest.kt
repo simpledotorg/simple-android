@@ -32,4 +32,14 @@ class BloodSugarEntryEffectHandlerTest {
     verify(ui).hideBloodSugarErrorMessage()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `date error message must be hidden when hide date error message effect is received`() {
+    // when
+    testCase.dispatch(HideDateErrorMessage)
+
+    // then
+    verify(ui).hideDateErrorMessage()
+    verifyNoMoreInteractions(ui)
+  }
 }

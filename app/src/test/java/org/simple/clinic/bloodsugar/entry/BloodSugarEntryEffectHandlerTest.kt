@@ -42,4 +42,14 @@ class BloodSugarEntryEffectHandlerTest {
     verify(ui).hideDateErrorMessage()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `blood sugar entry sheet must be dismissed when dismiss effect is received`() {
+    // when
+    testCase.dispatch(Dismiss)
+
+    // then
+    verify(ui).dismiss()
+    verifyNoMoreInteractions(ui)
+  }
 }

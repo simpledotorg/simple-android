@@ -4,6 +4,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.sheet_blood_sugar_entry.*
 import org.simple.clinic.R
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 
 class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
@@ -24,7 +25,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun hideBloodSugarErrorMessage() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    bsErrorTextView.visibleOrGone(false)
   }
 
   override fun showBloodSugarEmptyError() {

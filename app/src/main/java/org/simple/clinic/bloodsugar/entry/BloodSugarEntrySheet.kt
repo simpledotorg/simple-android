@@ -1,9 +1,12 @@
 package org.simple.clinic.bloodsugar.entry
 
 import android.os.Bundle
+import android.view.animation.AnimationUtils
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import kotlinx.android.synthetic.main.sheet_blood_sugar_entry.*
 import org.simple.clinic.R
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 
@@ -57,7 +60,16 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun showDateEntryScreen() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    viewFlipper.inAnimation = AnimationUtils
+        .loadAnimation(this, R.anim.measurementinput_date_entry_from_right)
+        .apply { interpolator = FastOutSlowInInterpolator() }
+
+    viewFlipper.outAnimation = AnimationUtils
+        .loadAnimation(this, R.anim.measurementinput_reading_exit_to_left)
+        .apply { interpolator = FastOutSlowInInterpolator() }
+
+    viewFlipper.displayedChildResId = R.id.bloodsugarentry_flipper_date_entry
+    yearEditText.requestFocus()
   }
 
   override fun showInvalidDateError() {

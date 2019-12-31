@@ -5,6 +5,9 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarEmpty
+import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
+import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
@@ -60,6 +63,36 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     verify(ui).showDateEntryScreen()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `show blood sugar empty error when show blood sugar validation error effect is received with validation result empty`() {
+    // when
+    testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarEmpty))
+
+    // then
+    verify(ui).showBloodSugarEmptyError()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `show blood sugar high error when show blood sugar validation error effect is received with validation result too high`() {
+    // when
+    testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh))
+
+    // then
+    verify(ui).showBloodSugarHighError()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `show blood sugar low error when show blood sugar validation error effect is received with validation result too low`() {
+    // when
+    testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooLow))
+
+    // then
+    verify(ui).showBloodSugarLowError()
     verifyNoMoreInteractions(ui)
   }
 }

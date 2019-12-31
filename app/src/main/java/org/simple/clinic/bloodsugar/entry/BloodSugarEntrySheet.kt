@@ -32,15 +32,15 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun showBloodSugarEmptyError() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    bsErrorTextView.text = getString(R.string.bloodsugarentry_error_empty)
   }
 
   override fun showBloodSugarHighError() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    bsErrorTextView.text = getString(R.string.bloodsugarentry_error_higher_limit)
   }
 
   override fun showBloodSugarLowError() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    bsErrorTextView.text = getString(R.string.bloodsugarentry_error_lower_limit)
   }
 
   override fun showRandomBloodSugarTitle() {

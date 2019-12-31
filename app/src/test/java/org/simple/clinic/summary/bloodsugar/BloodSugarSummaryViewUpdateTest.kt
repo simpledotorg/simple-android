@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import java.util.UUID
 
 class BloodSugarSummaryViewUpdateTest {
@@ -16,9 +17,10 @@ class BloodSugarSummaryViewUpdateTest {
 
   @Test
   fun `when blood sugar is loaded then ui must be updated`() {
+    val measurements = listOf<BloodSugarMeasurement>()
     spec
         .given(defaultModel)
-        .whenEvent(BloodSugarSummaryFetched)
+        .whenEvent(BloodSugarSummaryFetched(measurements))
         .then(assertThatNext(
             hasModel(defaultModel.summaryFetched()),
             hasNoEffects()

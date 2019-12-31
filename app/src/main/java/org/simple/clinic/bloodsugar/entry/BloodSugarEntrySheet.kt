@@ -69,7 +69,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun hideDateErrorMessage() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    dateErrorTextView.visibleOrGone(false)
   }
 
   override fun setDateOnInputFields(dayOfMonth: String, month: String, twoDigitYear: String) {

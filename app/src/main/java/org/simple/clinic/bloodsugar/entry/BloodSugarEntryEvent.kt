@@ -2,7 +2,9 @@ package org.simple.clinic.bloodsugar.entry
 
 sealed class BloodSugarEntryEvent
 
-object BloodSugarChanged : BloodSugarEntryEvent()
+data class BloodSugarChanged(
+    val bloodSugarReading: String
+) : BloodSugarEntryEvent()
 
 object DayChanged : BloodSugarEntryEvent()
 

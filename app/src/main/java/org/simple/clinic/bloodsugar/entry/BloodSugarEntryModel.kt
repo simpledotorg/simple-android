@@ -1,13 +1,22 @@
 package org.simple.clinic.bloodsugar.entry
 
-class BloodSugarEntryModel {
+data class BloodSugarEntryModel(
+    val bloodSugarReading: String = ""
+) {
 
   companion object {
     val BLANK = BloodSugarEntryModel()
   }
 
-  fun bloodSugarChanged(): BloodSugarEntryModel = BLANK
-  fun dayChanged(): BloodSugarEntryModel = BLANK
-  fun monthChanged(): BloodSugarEntryModel = BLANK
-  fun yearChanged(): BloodSugarEntryModel = BLANK
+  fun bloodSugarChanged(bloodSugarReading: String): BloodSugarEntryModel =
+      copy(bloodSugarReading = bloodSugarReading)
+
+  fun dayChanged(): BloodSugarEntryModel =
+      copy()
+
+  fun monthChanged(): BloodSugarEntryModel =
+      copy()
+
+  fun yearChanged(): BloodSugarEntryModel =
+      copy()
 }

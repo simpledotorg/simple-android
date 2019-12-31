@@ -14,6 +14,7 @@ class BloodSugarEntryEffectHandler(
         .addAction(HideBloodSugarErrorMessage::class.java, ui::hideBloodSugarErrorMessage, schedulersProvider.ui())
         .addAction(HideDateErrorMessage::class.java, ui::hideDateErrorMessage, schedulersProvider.ui())
         .addAction(Dismiss::class.java, ui::dismiss, schedulersProvider.ui())
+        .addAction(ShowDateEntryScreen::class.java, ui::showDateEntryScreen, schedulersProvider.ui())
         .build()
   }
 }

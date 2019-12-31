@@ -52,4 +52,14 @@ class BloodSugarEntryEffectHandlerTest {
     verify(ui).dismiss()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `show date entry screen when show date entry screen effect is received`() {
+    // when
+    testCase.dispatch(ShowDateEntryScreen)
+
+    // then
+    verify(ui).showDateEntryScreen()
+    verifyNoMoreInteractions(ui)
+  }
 }

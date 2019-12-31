@@ -1,11 +1,16 @@
 package org.simple.clinic.summary.bloodsugar
 
-class BloodSugarSummaryViewModel {
+import java.util.UUID
+
+data class BloodSugarSummaryViewModel(val patientUuid: UUID) {
+
   companion object {
-    val EMPTY = BloodSugarSummaryViewModel()
+    fun create(patientUuid: UUID): BloodSugarSummaryViewModel {
+      return BloodSugarSummaryViewModel(patientUuid)
+    }
   }
 
   fun summaryFetched(): BloodSugarSummaryViewModel {
-    return EMPTY
+    return create(patientUuid)
   }
 }

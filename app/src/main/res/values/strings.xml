@@ -505,6 +505,8 @@
   <string name="bloodsugarentry_month">Month</string>
   <string name="bloodsugarentry_year">Year</string>
   <string name="bloodsugarentry_error_lower_limit">Value cannot be less than 30 mg/dl</string>
+  <string name="bloodsugarentry_error_higher_limit">Value cannot be more than 1000 mg/dl</string>
+  <string name="bloodsugarentry_error_empty">Value cannot be empty</string>
   <string name="bloodsugarentry_error_date_is_in_future">Date cannot be in the future</string>
   <string name="bloodsugarentry_random_title">Random blood sugar</string>
   <string name="bloodsugarentry_post_prandial_title">Post prandial blood sugar</string>

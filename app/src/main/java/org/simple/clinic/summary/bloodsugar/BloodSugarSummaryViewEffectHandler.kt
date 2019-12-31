@@ -2,15 +2,25 @@ package org.simple.clinic.summary.bloodsugar
 
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.util.scheduler.SchedulersProvider
 
-class BloodSugarSummaryViewEffectHandler {
+object BloodSugarSummaryViewEffectHandler {
 
-  companion object {
-    fun create(): ObservableTransformer<BloodSugarSummaryViewEffect, BloodSugarSummaryViewEvent> {
-      return RxMobius
-          .subtypeEffectHandler<BloodSugarSummaryViewEffect, BloodSugarSummaryViewEvent>()
-          .addTransformer(FetchBloodSugarSummary::class.java) { effect -> effect.map { BloodSugarSummaryFetched } }
-          .build()
-    }
+  fun create(
+      bloodSugarRepository: BloodSugarRepository,
+      schedulersProvider: SchedulersProvider
+  ): ObservableTransformer<BloodSugarSummaryViewEffect, BloodSugarSummaryViewEvent> {
+    return RxMobius
+        .subtypeEffectHandler<BloodSugarSummaryViewEffect, BloodSugarSummaryViewEvent>()
+        .addTransformer(FetchBloodSugarSummary::class.java) { effect ->
+          effect
+              .flatMap {
+                bloodSugarRepository.latestMeasurements(it.patientUuid, 100)
+                    .subscribeOn(schedulersProvider.io())
+              }
+              .map { BloodSugarSummaryFetched(it) }
+        }
+        .build()
   }
 }

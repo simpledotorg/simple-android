@@ -8,6 +8,7 @@ import com.facebook.flipper.plugins.databases.DatabasesFlipperPlugin
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
+import com.facebook.flipper.plugins.sharedpreferences.SharedPreferencesFlipperPlugin
 import com.facebook.soloader.SoLoader
 import com.tspoon.traceur.Traceur
 import io.github.inflationx.viewpump.ViewPump
@@ -70,6 +71,8 @@ class DebugClinicApp : ClinicApp() {
 
       val databasePlugin = DatabasesFlipperPlugin(ReadOnlySqliteDatabaseDriver(context))
       addPlugin(databasePlugin)
+
+      addPlugin(SharedPreferencesFlipperPlugin(context, "${context.packageName}_preferences"))
 
       start()
     }

@@ -6,8 +6,10 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import kotlinx.android.synthetic.main.sheet_blood_sugar_entry.*
 import org.simple.clinic.R
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.displayedChildResId
+import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -16,6 +18,9 @@ import javax.inject.Inject
 class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   @Inject
   lateinit var dateFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var userInputDatePaddingCharacter: UserInputDatePaddingCharacter
 
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
@@ -99,7 +104,9 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun setDateOnInputFields(dayOfMonth: String, month: String, twoDigitYear: String) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    dayEditText.setTextAndCursor(getPaddedString(dayOfMonth))
+    monthEditText.setTextAndCursor(getPaddedString(month))
+    yearEditText.setTextAndCursor(twoDigitYear)
   }
 
   override fun showDateOnDateButton(date: LocalDate) {
@@ -109,4 +116,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   override fun dismiss() {
     finish()
   }
+
+  private fun getPaddedString(value: String): String =
+      value.padStart(length = 2, padChar = userInputDatePaddingCharacter.value)
 }

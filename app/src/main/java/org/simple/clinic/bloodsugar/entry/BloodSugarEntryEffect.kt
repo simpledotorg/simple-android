@@ -37,9 +37,6 @@ data class CreateNewBloodSugarEntry(
     val measurementType: BloodSugarMeasurementType,
     val userEnteredDate: LocalDate,
     val prefilledDate: LocalDate
-) : BloodSugarEntryEffect() {
-  val wasDateChanged: Boolean
-    get() = userEnteredDate != prefilledDate
-}
+) : BloodSugarEntryEffect()
 
 object SetBloodSugarSavedResultAndFinish : BloodSugarEntryEffect()

@@ -121,7 +121,9 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         dateOfBirthFocusChanges(),
         ageTextChanges(),
         backClicks(),
-        bangladeshNationalIdChanges()
+        bangladeshNationalIdChanges(),
+        zoneEditText.textChanges(::ZoneChanged),
+        streetAddressEditText.textChanges(::StreetAddressChanged)
     ).compose(ReportAnalyticsEvents())
         .cast()
 

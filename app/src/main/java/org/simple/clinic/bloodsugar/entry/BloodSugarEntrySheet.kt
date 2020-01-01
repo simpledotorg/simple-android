@@ -5,12 +5,17 @@ import android.view.animation.AnimationUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import kotlinx.android.synthetic.main.sheet_blood_sugar_entry.*
 import org.simple.clinic.R
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import javax.inject.Inject
 
 class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
+  @Inject
+  lateinit var dateFormatter: DateTimeFormatter
 
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
@@ -21,6 +26,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.sheet_blood_sugar_entry)
+    TheActivity.component.inject(this)
   }
 
   override fun setBloodSugarSavedResultAndFinish() {
@@ -56,7 +62,15 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun showBloodSugarEntryScreen() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    viewFlipper.inAnimation = AnimationUtils
+        .loadAnimation(this, R.anim.measurementinput_reading_entry_from_left)
+        .apply { interpolator = FastOutSlowInInterpolator() }
+
+    viewFlipper.outAnimation = AnimationUtils
+        .loadAnimation(this, R.anim.measurementinput_date_exit_to_right)
+        .apply { interpolator = FastOutSlowInInterpolator() }
+
+    viewFlipper.displayedChildResId = R.id.bloodsugarentry_flipper_bs_entry
   }
 
   override fun showDateEntryScreen() {
@@ -89,7 +103,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun showDateOnDateButton(date: LocalDate) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    bsDateButton.text = dateFormatter.format(date)
   }
 
   override fun dismiss() {

@@ -6,6 +6,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodS
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.threeten.bp.LocalDate
 
 class BloodSugarEntryEffectHandler(
     private val ui: BloodSugarEntryUi,
@@ -19,6 +20,7 @@ class BloodSugarEntryEffectHandler(
         .addAction(Dismiss::class.java, ui::dismiss, schedulersProvider.ui())
         .addAction(ShowDateEntryScreen::class.java, ui::showDateEntryScreen, schedulersProvider.ui())
         .addConsumer(ShowBloodSugarValidationError::class.java, { showBloodSugarValidationError(it.result) }, schedulersProvider.ui())
+        .addConsumer(ShowBloodSugarEntryScreen::class.java, { showBloodSugarEntryScreen(it.date) }, schedulersProvider.ui())
         .build()
   }
 
@@ -27,6 +29,13 @@ class BloodSugarEntryEffectHandler(
       ErrorBloodSugarEmpty -> ui.showBloodSugarEmptyError()
       ErrorBloodSugarTooHigh -> ui.showBloodSugarHighError()
       ErrorBloodSugarTooLow -> ui.showBloodSugarLowError()
+    }
+  }
+
+  private fun showBloodSugarEntryScreen(date: LocalDate) {
+    with(ui) {
+      showBloodSugarEntryScreen()
+      showDateOnDateButton(date)
     }
   }
 }

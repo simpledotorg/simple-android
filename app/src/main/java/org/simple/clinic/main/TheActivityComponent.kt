@@ -15,6 +15,7 @@ import org.simple.clinic.activity.RxActivityLifecycle
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
+import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.bp.entry.di.BloodPressureEntryModule
@@ -136,6 +137,7 @@ interface TheActivityComponent : OnboardingScreenInjector {
   fun inject(target: EditPatientScreen)
   fun inject(target: SettingsScreen)
   fun inject(target: ChangeLanguageScreen)
+  fun inject(target: BloodSugarEntrySheet)
 
   @Subcomponent.Builder
   interface Builder : BindsActivity<Builder>, BindsScreenRouter<Builder> {

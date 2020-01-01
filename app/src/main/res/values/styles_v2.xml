@@ -616,7 +616,7 @@
     <item name="android:drawablePadding">6dp</item>
   </style>
 
-  <style name="Clinic.V2.BloodPressureInput" parent="Clinic.V2.TextAppearance.TextFieldLarge.Grey0">
+  <style name="Clinic.V2.MeasurementInput" parent="Clinic.V2.TextAppearance.TextFieldLarge.Grey0">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:gravity">center|top</item>
@@ -625,21 +625,19 @@
     <item name="android:paddingEnd">@dimen/spacing_8</item>
   </style>
 
-  <style name="Clinic.V2.BloodPressureInput.BpReading">
+  <style name="Clinic.V2.MeasurementInput.Reading">
     <item name="android:minWidth">84sp</item>
-    <item name="android:maxLength">3</item>
   </style>
 
-  <style name="Clinic.V2.BloodPressureInput.Date">
+  <style name="Clinic.V2.MeasurementInput.Date">
     <item name="android:minEms">1</item>
-    <item name="android:maxLength">2</item>
   </style>
 
-  <style name="Clinic.V2.BloodPressureInputTheme">
+  <style name="Clinic.V2.MeasurementInputTheme">
     <item name="colorControlNormal">@color/grey2</item>
   </style>
 
-  <style name="Clinic.V2.BloodPressureInputSeparator">
+  <style name="Clinic.V2.MeasurementInputSeparator">
     <item name="android:text">/</item>
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
@@ -649,6 +647,12 @@
     <item name="android:textSize">40sp</item>
     <item name="android:layout_marginStart">@dimen/spacing_8</item>
     <item name="android:layout_marginEnd">@dimen/spacing_8</item>
+  </style>
+
+  <style name="Clinic.V2.MeasurementInputLayout">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center_horizontal</item>
   </style>
 
   <style name="Clinic.V2.ListSeparator">
@@ -723,45 +727,5 @@
     <item name="android:paddingEnd">@dimen/spacing_16</item>
     <item name="android:paddingStart">@dimen/spacing_16</item>
     <item name="android:paddingTop">@dimen/spacing_16</item>
-  </style>
-
-  <style name="Clinic.V2.BloodSugarInput" parent="Clinic.V2.TextAppearance.TextFieldLarge.Grey0">
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:gravity">center|top</item>
-    <item name="android:inputType">number</item>
-    <item name="android:paddingStart">@dimen/spacing_8</item>
-    <item name="android:paddingEnd">@dimen/spacing_8</item>
-  </style>
-
-  <style name="Clinic.V2.BloodSugarInput.BsReading">
-    <item name="android:minWidth">84sp</item>
-    <item name="android:maxLength">4</item>
-  </style>
-
-  <style name="Clinic.V2.BloodSugarInput.Date">
-    <item name="android:minEms">1</item>
-    <item name="android:maxLength">2</item>
-  </style>
-
-  <style name="Clinic.V2.BloodSugarInputTheme">
-    <item name="colorControlNormal">@color/grey2</item>
-  </style>
-
-  <style name="Clinic.V2.BloodSugarInputSeparator">
-    <item name="android:text">/</item>
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:fontFamily">sans-serif</item>
-    <item name="android:gravity">center_vertical</item>
-    <item name="android:textColor">@color/grey2</item>
-    <item name="android:textSize">40sp</item>
-    <item name="android:layout_marginStart">@dimen/spacing_8</item>
-    <item name="android:layout_marginEnd">@dimen/spacing_8</item>
-  </style>
-
-  <style name="Clinic.V2.BloodSugarInputLabel">
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
   </style>
 </resources>

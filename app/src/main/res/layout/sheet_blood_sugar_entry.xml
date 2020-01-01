@@ -72,10 +72,10 @@
 
         <EditText
           android:id="@+id/bloodSugarEditText"
-          style="@style/Clinic.V2.BloodSugarInput.BsReading"
+          style="@style/Clinic.V2.MeasurementInput.Reading"
           android:imeOptions="actionDone"
           android:importantForAutofill="no"
-          android:theme="@style/Clinic.V2.BloodSugarInputTheme"
+          android:theme="@style/Clinic.V2.MeasurementInputTheme"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintHorizontal_chainStyle="packed"
           app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +87,7 @@
 
         <TextView
           android:id="@+id/bloodsugarentry_label"
-          style="@style/Clinic.V2.BloodSugarInputLabel"
+          style="@style/Clinic.V2.MeasurementInputLayout"
           android:labelFor="@+id/bloodSugarEditText"
           android:text="@string/bloodsugarentry_md_dl"
           android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
@@ -155,9 +155,9 @@
 
           <EditText
             android:id="@+id/dayEditText"
-            style="@style/Clinic.V2.BloodSugarInput.Date"
+            style="@style/Clinic.V2.MeasurementInput.Date"
             android:importantForAutofill="no"
-            android:theme="@style/Clinic.V2.BloodSugarInputTheme"
+            android:theme="@style/Clinic.V2.MeasurementInputTheme"
             app:layout_constraintEnd_toStartOf="@+id/bloodsugarentry_day_month_separator"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
@@ -166,7 +166,7 @@
 
           <TextView
             android:id="@+id/bloodsugarentry_day_label"
-            style="@style/Clinic.V2.BloodSugarInputLabel"
+            style="@style/Clinic.V2.MeasurementInputLayout"
             android:gravity="center_horizontal"
             android:labelFor="@id/dayEditText"
             android:text="@string/bloodsugarentry_day"
@@ -177,7 +177,7 @@
 
           <TextView
             android:id="@+id/bloodsugarentry_day_month_separator"
-            style="@style/Clinic.V2.BloodSugarInputSeparator"
+            style="@style/Clinic.V2.MeasurementInputSeparator"
             app:layout_constraintBottom_toBottomOf="@+id/dayEditText"
             app:layout_constraintEnd_toStartOf="@+id/monthEditText"
             app:layout_constraintStart_toEndOf="@+id/dayEditText"
@@ -185,9 +185,9 @@
 
           <EditText
             android:id="@+id/monthEditText"
-            style="@style/Clinic.V2.BloodSugarInput.Date"
+            style="@style/Clinic.V2.MeasurementInput.Date"
             android:importantForAutofill="no"
-            android:theme="@style/Clinic.V2.BloodSugarInputTheme"
+            android:theme="@style/Clinic.V2.MeasurementInputTheme"
             app:layout_constraintEnd_toStartOf="@+id/bloodsugarentry_month_year_separator"
             app:layout_constraintStart_toEndOf="@+id/bloodsugarentry_day_month_separator"
             app:layout_constraintTop_toTopOf="parent"
@@ -195,7 +195,7 @@
 
           <TextView
             android:id="@+id/bloodsugarentry_month_label"
-            style="@style/Clinic.V2.BloodSugarInputLabel"
+            style="@style/Clinic.V2.MeasurementInputLayout"
             android:gravity="center_horizontal"
             android:labelFor="@id/monthEditText"
             android:text="@string/bloodsugarentry_month"
@@ -206,7 +206,7 @@
 
           <TextView
             android:id="@+id/bloodsugarentry_month_year_separator"
-            style="@style/Clinic.V2.BloodSugarInputSeparator"
+            style="@style/Clinic.V2.MeasurementInputSeparator"
             app:layout_constraintBottom_toBottomOf="@+id/monthEditText"
             app:layout_constraintEnd_toStartOf="@+id/yearEditText"
             app:layout_constraintStart_toEndOf="@+id/monthEditText"
@@ -214,9 +214,9 @@
 
           <EditText
             android:id="@+id/yearEditText"
-            style="@style/Clinic.V2.BloodSugarInput.Date"
+            style="@style/Clinic.V2.MeasurementInput.Date"
             android:importantForAutofill="no"
-            android:theme="@style/Clinic.V2.BloodSugarInputTheme"
+            android:theme="@style/Clinic.V2.MeasurementInputTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/bloodsugarentry_month_year_separator"
             app:layout_constraintTop_toTopOf="parent"
@@ -224,7 +224,7 @@
 
           <TextView
             android:id="@+id/bloodsugarentry_year_label"
-            style="@style/Clinic.V2.BloodSugarInputLabel"
+            style="@style/Clinic.V2.MeasurementInputLayout"
             android:gravity="center_horizontal"
             android:labelFor="@id/yearEditText"
             android:text="@string/bloodsugarentry_year"

@@ -6,6 +6,7 @@ import android.os.StrictMode
 import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.facebook.soloader.SoLoader
 import com.tspoon.traceur.Traceur
 import io.github.inflationx.viewpump.ViewPump
@@ -18,9 +19,18 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
 import timber.log.Timber
+import javax.inject.Inject
 
 @SuppressLint("Registered")
 class DebugClinicApp : ClinicApp() {
+
+  /*
+  We are injecting this because we need to share the same instance with the OkHttp interceptor.
+
+  See debug/HttpInterceptorsModule for more info.
+  */
+  @Inject
+  lateinit var networkFlipperPlugin: NetworkFlipperPlugin
 
   private lateinit var signature: AppSignature
 
@@ -34,11 +44,11 @@ class DebugClinicApp : ClinicApp() {
     addStrictModeChecks()
     Traceur.enableLogging()
     super.onCreate()
-
     SoLoader.init(this, false)
-    setupFlipper()
 
     appComponent().inject(this)
+
+    setupFlipper()
 
     Timber.plant(Timber.DebugTree())
     showDebugNotification()
@@ -53,6 +63,7 @@ class DebugClinicApp : ClinicApp() {
   private fun setupFlipper() {
     with(AndroidFlipperClient.getInstance(this)) {
       addPlugin(InspectorFlipperPlugin(this@DebugClinicApp, DescriptorMapping.withDefaults()))
+      addPlugin(networkFlipperPlugin)
       start()
     }
   }

@@ -78,7 +78,8 @@ import javax.inject.Named
   HttpInterceptorsModule::class,
   RetrofitModule::class,
   ClearPatientDataModule::class,
-  PatientEntryModule::class
+  PatientEntryModule::class,
+  FlipperModule::class
 ])
 class AppModule(private val appContext: Application) {
 

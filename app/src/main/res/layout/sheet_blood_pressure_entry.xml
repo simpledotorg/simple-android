@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/rootLayout"
@@ -18,8 +17,8 @@
     android:inAnimation="@anim/measurementinput_date_entry_from_right"
     android:measureAllChildren="false"
     android:outAnimation="@anim/measurementinput_reading_exit_to_left"
-    android:paddingBottom="@dimen/spacing_8"
     android:paddingTop="@dimen/spacing_12"
+    android:paddingBottom="@dimen/spacing_8"
     app:debug_displayedChild="0"
     tools:background="@color/white">
 
@@ -51,9 +50,9 @@
           android:id="@+id/editBloodPressureTitleTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_alignTop="@+id/removeBloodPressureButton"
           android:layout_alignBottom="@+id/removeBloodPressureButton"
           android:layout_alignParentStart="true"
-          android:layout_alignTop="@+id/removeBloodPressureButton"
           android:layout_marginStart="@dimen/spacing_24"
           android:layout_toStartOf="@id/removeBloodPressureButton"
           android:ellipsize="end"
@@ -84,10 +83,10 @@
 
         <EditText
           android:id="@+id/systolicEditText"
-          style="@style/Clinic.V2.BloodPressureInput.BpReading"
+          style="@style/Clinic.V2.MeasurementInput.Reading"
           android:imeOptions="actionDone"
           android:importantForAutofill="no"
-          android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+          android:theme="@style/Clinic.V2.MeasurementInputTheme"
           app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_systolic_diastolic_separator"
           app:layout_constraintHorizontal_chainStyle="packed"
           app:layout_constraintStart_toEndOf="parent"
@@ -99,7 +98,7 @@
 
         <TextView
           android:id="@+id/bloodpressureentry_systolic_label"
-          style="@style/Clinic.BloodPressureInputLabel"
+          style="@style/Clinic.V2.MeasurementInputLayout"
           android:gravity="center_horizontal"
           android:labelFor="@+id/systolicEditText"
           android:text="@string/bloodpressureentry_systolic"
@@ -110,7 +109,7 @@
 
         <TextView
           android:id="@+id/bloodpressureentry_systolic_diastolic_separator"
-          style="@style/Clinic.V2.BloodPressureInputSeparator"
+          style="@style/Clinic.V2.MeasurementInputSeparator"
           app:layout_constraintBottom_toBottomOf="@+id/systolicEditText"
           app:layout_constraintEnd_toStartOf="@+id/diastolicEditText"
           app:layout_constraintStart_toEndOf="@+id/systolicEditText"
@@ -118,10 +117,10 @@
 
         <org.simple.clinic.widgets.EditTextWithBackspaceListener
           android:id="@+id/diastolicEditText"
-          style="@style/Clinic.V2.BloodPressureInput.BpReading"
+          style="@style/Clinic.V2.MeasurementInput.Reading"
           android:imeOptions="actionDone"
           android:importantForAutofill="no"
-          android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+          android:theme="@style/Clinic.V2.MeasurementInputTheme"
           app:layout_constraintEnd_toStartOf="parent"
           app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_systolic_diastolic_separator"
           app:layout_constraintTop_toTopOf="parent"
@@ -129,7 +128,7 @@
 
         <TextView
           android:id="@+id/bloodpressureentry_diastolic_label"
-          style="@style/Clinic.BloodPressureInputLabel"
+          style="@style/Clinic.V2.MeasurementInputLayout"
           android:gravity="center_horizontal"
           android:labelFor="@id/diastolicEditText"
           android:text="@string/bloodpressureentry_diastolic"
@@ -180,8 +179,8 @@
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_16"
         android:layout_marginTop="@dimen/spacing_12"
+        android:layout_marginBottom="@dimen/spacing_16"
         android:orientation="vertical">
 
         <TextView
@@ -198,9 +197,9 @@
 
           <EditText
             android:id="@+id/dayEditText"
-            style="@style/Clinic.V2.BloodPressureInput.Date"
+            style="@style/Clinic.V2.MeasurementInput.Date"
             android:importantForAutofill="no"
-            android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+            android:theme="@style/Clinic.V2.MeasurementInputTheme"
             app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_day_month_separator"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
@@ -209,7 +208,7 @@
 
           <TextView
             android:id="@+id/bloodpressureentry_day_label"
-            style="@style/Clinic.BloodPressureInputLabel"
+            style="@style/Clinic.V2.MeasurementInputLayout"
             android:gravity="center_horizontal"
             android:labelFor="@id/dayEditText"
             android:text="@string/bloodpressureentry_day"
@@ -220,7 +219,7 @@
 
           <TextView
             android:id="@+id/bloodpressureentry_day_month_separator"
-            style="@style/Clinic.V2.BloodPressureInputSeparator"
+            style="@style/Clinic.V2.MeasurementInputSeparator"
             app:layout_constraintBottom_toBottomOf="@+id/dayEditText"
             app:layout_constraintEnd_toStartOf="@+id/monthEditText"
             app:layout_constraintStart_toEndOf="@+id/dayEditText"
@@ -228,9 +227,9 @@
 
           <EditText
             android:id="@+id/monthEditText"
-            style="@style/Clinic.V2.BloodPressureInput.Date"
+            style="@style/Clinic.V2.MeasurementInput.Date"
             android:importantForAutofill="no"
-            android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+            android:theme="@style/Clinic.V2.MeasurementInputTheme"
             app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_month_year_separator"
             app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_day_month_separator"
             app:layout_constraintTop_toTopOf="parent"
@@ -238,7 +237,7 @@
 
           <TextView
             android:id="@+id/bloodpressureentry_month_label"
-            style="@style/Clinic.BloodPressureInputLabel"
+            style="@style/Clinic.V2.MeasurementInputLayout"
             android:gravity="center_horizontal"
             android:labelFor="@id/monthEditText"
             android:text="@string/bloodpressureentry_month"
@@ -249,7 +248,7 @@
 
           <TextView
             android:id="@+id/bloodpressureentry_month_year_separator"
-            style="@style/Clinic.V2.BloodPressureInputSeparator"
+            style="@style/Clinic.V2.MeasurementInputSeparator"
             app:layout_constraintBottom_toBottomOf="@+id/monthEditText"
             app:layout_constraintEnd_toStartOf="@+id/yearEditText"
             app:layout_constraintStart_toEndOf="@+id/monthEditText"
@@ -257,9 +256,9 @@
 
           <EditText
             android:id="@+id/yearEditText"
-            style="@style/Clinic.V2.BloodPressureInput.Date"
+            style="@style/Clinic.V2.MeasurementInput.Date"
             android:importantForAutofill="no"
-            android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+            android:theme="@style/Clinic.V2.MeasurementInputTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_month_year_separator"
             app:layout_constraintTop_toTopOf="parent"
@@ -267,7 +266,7 @@
 
           <TextView
             android:id="@+id/bloodpressureentry_year_label"
-            style="@style/Clinic.BloodPressureInputLabel"
+            style="@style/Clinic.V2.MeasurementInputLayout"
             android:gravity="center_horizontal"
             android:labelFor="@id/yearEditText"
             android:text="@string/bloodpressureentry_year"

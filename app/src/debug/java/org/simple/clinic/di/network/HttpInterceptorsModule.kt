@@ -1,5 +1,7 @@
 package org.simple.clinic.di.network
 
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -13,12 +15,18 @@ class HttpInterceptorsModule {
   @Provides
   fun providerInterceptors(
       loggedInInterceptor: LoggedInUserHttpInterceptor,
-      appInfoHttpInterceptor: AppInfoHttpInterceptor
+      appInfoHttpInterceptor: AppInfoHttpInterceptor,
+      networkPlugin: NetworkFlipperPlugin
   ): List<Interceptor> {
     val loggingInterceptor = HttpLoggingInterceptor().apply {
       level = BODY
     }
 
-    return listOf(loggedInInterceptor, appInfoHttpInterceptor, loggingInterceptor)
+    return listOf(
+        loggedInInterceptor,
+        appInfoHttpInterceptor,
+        loggingInterceptor,
+        FlipperOkhttpInterceptor(networkPlugin)
+    )
   }
 }

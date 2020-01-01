@@ -9,15 +9,18 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodS
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.threeten.bp.LocalDate
 
 class BloodSugarEntryEffectHandlerTest {
 
   private val ui = mock<BloodSugarEntryUi>()
+  private val userClock = TestUserClock()
 
   private val effectHandler = BloodSugarEntryEffectHandler(
       ui,
+      userClock,
       TrampolineSchedulersProvider()
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -108,6 +111,22 @@ class BloodSugarEntryEffectHandlerTest {
     // then
     verify(ui).showBloodSugarEntryScreen()
     verify(ui).showDateOnDateButton(bloodSugarDate)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `set date on input fields and date button when prefill date effect is received`() {
+    // given
+    val entryDate = LocalDate.of(1992, 6, 7)
+    userClock.setDate(LocalDate.of(1992, 6, 7))
+
+    // when
+    testCase.dispatch(PrefillDate.forNewEntry())
+
+    // then
+    testCase.assertOutgoingEvents(DatePrefilled(entryDate))
+    verify(ui).setDateOnInputFields("7", "6", "92")
+    verify(ui).showDateOnDateButton(entryDate)
     verifyNoMoreInteractions(ui)
   }
 }

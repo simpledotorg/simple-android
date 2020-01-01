@@ -39,19 +39,19 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun hideBloodSugarErrorMessage() {
-    bsErrorTextView.visibleOrGone(false)
+    bloodSugarErrorTextView.visibleOrGone(false)
   }
 
   override fun showBloodSugarEmptyError() {
-    bsErrorTextView.text = getString(R.string.bloodsugarentry_error_empty)
+    bloodSugarErrorTextView.text = getString(R.string.bloodsugarentry_error_empty)
   }
 
   override fun showBloodSugarHighError() {
-    bsErrorTextView.text = getString(R.string.bloodsugarentry_error_higher_limit)
+    bloodSugarErrorTextView.text = getString(R.string.bloodsugarentry_error_higher_limit)
   }
 
   override fun showBloodSugarLowError() {
-    bsErrorTextView.text = getString(R.string.bloodsugarentry_error_lower_limit)
+    bloodSugarErrorTextView.text = getString(R.string.bloodsugarentry_error_lower_limit)
   }
 
   override fun showRandomBloodSugarTitle() {
@@ -75,7 +75,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
         .loadAnimation(this, R.anim.measurementinput_date_exit_to_right)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
-    viewFlipper.displayedChildResId = R.id.bloodsugarentry_flipper_bs_entry
+    viewFlipper.displayedChildResId = R.id.bloodsugarentry_flipper_blood_sugar_entry
   }
 
   override fun showDateEntryScreen() {
@@ -110,7 +110,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun showDateOnDateButton(date: LocalDate) {
-    bsDateButton.text = dateFormatter.format(date)
+    bloodSugarDateButton.text = dateFormatter.format(date)
   }
 
   override fun dismiss() {

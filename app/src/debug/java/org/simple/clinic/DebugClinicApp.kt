@@ -3,7 +3,6 @@ package org.simple.clinic
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.StrictMode
-import com.facebook.stetho.Stetho
 import com.tspoon.traceur.Traceur
 import io.github.inflationx.viewpump.ViewPump
 import org.simple.clinic.activity.SimpleActivityLifecycleCallbacks
@@ -35,7 +34,6 @@ class DebugClinicApp : ClinicApp() {
     appComponent().inject(this)
 
     Timber.plant(Timber.DebugTree())
-    Stetho.initializeWithDefaults(this)
     showDebugNotification()
 
     ViewPump.init(ViewPump.builder()

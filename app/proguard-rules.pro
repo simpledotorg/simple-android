@@ -2,7 +2,6 @@
 -dontobfuscate
 
 # Debug app only, will never be in release builds
-#-dontwarn com.facebook.stetho.**
 #-dontwarn org.apache.commons.cli.CommandLineParser
 -dontwarn org.apache.log4j.**
 -dontwarn org.hamcrest.**

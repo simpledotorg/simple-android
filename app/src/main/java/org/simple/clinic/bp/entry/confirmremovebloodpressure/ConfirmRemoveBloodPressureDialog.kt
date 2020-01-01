@@ -87,7 +87,7 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
     screenDestroys.onNext(ScreenDestroyed())
   }
 
-  override fun onAttach(context: Context?) {
+  override fun onAttach(context: Context) {
     super.onAttach(context)
     removeBloodPressureListener = context as? RemoveBloodPressureListener
     if (removeBloodPressureListener == null) {

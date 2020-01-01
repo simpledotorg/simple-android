@@ -10,6 +10,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodS
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.threeten.bp.LocalDate
 
 class BloodSugarEntryEffectHandlerTest {
 
@@ -93,6 +94,20 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     verify(ui).showBloodSugarLowError()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `show blood sugar entry screen when show blood sugar entry screen effect is received`() {
+    // given
+    val bloodSugarDate = LocalDate.of(2020, 1, 1)
+
+    // when
+    testCase.dispatch(ShowBloodSugarEntryScreen(bloodSugarDate))
+
+    // then
+    verify(ui).showBloodSugarEntryScreen()
+    verify(ui).showDateOnDateButton(bloodSugarDate)
     verifyNoMoreInteractions(ui)
   }
 }

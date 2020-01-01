@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.StrictMode
 import com.facebook.flipper.android.AndroidFlipperClient
+import com.facebook.flipper.plugins.databases.DatabasesFlipperPlugin
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
@@ -62,8 +63,14 @@ class DebugClinicApp : ClinicApp() {
 
   private fun setupFlipper() {
     with(AndroidFlipperClient.getInstance(this)) {
-      addPlugin(InspectorFlipperPlugin(this@DebugClinicApp, DescriptorMapping.withDefaults()))
+      val context = this@DebugClinicApp
+
+      addPlugin(InspectorFlipperPlugin(context, DescriptorMapping.withDefaults()))
       addPlugin(networkFlipperPlugin)
+
+      val databasePlugin = DatabasesFlipperPlugin(ReadOnlySqliteDatabaseDriver(context))
+      addPlugin(databasePlugin)
+
       start()
     }
   }

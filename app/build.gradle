@@ -210,9 +210,6 @@ dependencies {
   androidTestImplementation "androidx.arch.core:core-testing:$versions.coreTesting"
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
 
-  debugImplementation "com.facebook.stetho:stetho:$versions.stetho"
-  debugImplementation "com.facebook.stetho:stetho-okhttp3:$versions.stetho"
-
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
   testImplementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 

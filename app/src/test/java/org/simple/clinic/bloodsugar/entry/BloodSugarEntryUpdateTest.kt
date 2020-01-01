@@ -147,7 +147,7 @@ class BloodSugarEntryUpdateTest {
   }
 
   @Test
-  fun `when date entry screen is active and has valid date and show blood sugar entry is pressed, then show blood sugar entry sheet`() {
+  fun `when date entry screen is active and has valid date and sheet back button is pressed, then show blood sugar entry sheet`() {
     updateSpec
         .given(
             defaultModel
@@ -164,7 +164,7 @@ class BloodSugarEntryUpdateTest {
   }
 
   @Test
-  fun `when blood sugar sheet has invalid date and show blood sugar entry is pressed, then show date validation errors`() {
+  fun `when blood sugar sheet has invalid date and sheet back button is pressed, then show date validation errors`() {
     val day = "14"
     val month = "13"
     val year = "94"

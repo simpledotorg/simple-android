@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.simple.clinic"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  package="org.simple.clinic">
 
   <application
     android:name=".DebugClinicApp"
@@ -13,7 +13,10 @@
 
     <activity
       android:name=".playground.AwaitActivity"
-      android:exported="true"
-      />
+      android:exported="true" />
+
+    <activity
+      android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"
+      android:exported="true" />
   </application>
 </manifest>

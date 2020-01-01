@@ -3,6 +3,10 @@ package org.simple.clinic
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.StrictMode
+import com.facebook.flipper.android.AndroidFlipperClient
+import com.facebook.flipper.plugins.inspector.DescriptorMapping
+import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
+import com.facebook.soloader.SoLoader
 import com.tspoon.traceur.Traceur
 import io.github.inflationx.viewpump.ViewPump
 import org.simple.clinic.activity.SimpleActivityLifecycleCallbacks
@@ -31,6 +35,9 @@ class DebugClinicApp : ClinicApp() {
     Traceur.enableLogging()
     super.onCreate()
 
+    SoLoader.init(this, false)
+    setupFlipper()
+
     appComponent().inject(this)
 
     Timber.plant(Timber.DebugTree())
@@ -41,6 +48,13 @@ class DebugClinicApp : ClinicApp() {
         .build())
 
     signature = AppSignature(this)
+  }
+
+  private fun setupFlipper() {
+    with(AndroidFlipperClient.getInstance(this)) {
+      addPlugin(InspectorFlipperPlugin(this@DebugClinicApp, DescriptorMapping.withDefaults()))
+      start()
+    }
   }
 
   private fun showDebugNotification() {

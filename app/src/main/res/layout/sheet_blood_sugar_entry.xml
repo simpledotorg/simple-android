@@ -23,7 +23,7 @@
     tools:background="@color/white">
 
     <LinearLayout
-      android:id="@+id/bloodsugarentry_flipper_bs_entry"
+      android:id="@+id/bloodsugarentry_flipper_blood_sugar_entry"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical">
@@ -71,7 +71,7 @@
         app:layout_optimizationLevel="direct|barrier">
 
         <EditText
-          android:id="@+id/bloodSugarEditText"
+          android:id="@+id/bloodSugarReadingEditText"
           style="@style/Clinic.V2.MeasurementInput.Reading"
           android:imeOptions="actionDone"
           android:importantForAutofill="no"
@@ -88,16 +88,16 @@
         <TextView
           android:id="@+id/bloodsugarentry_label"
           style="@style/Clinic.V2.MeasurementInputLayout"
-          android:labelFor="@+id/bloodSugarEditText"
+          android:labelFor="@+id/bloodSugarReadingEditText"
           android:text="@string/bloodsugarentry_md_dl"
           android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
-          app:layout_constraintEnd_toEndOf="@+id/bloodSugarEditText"
-          app:layout_constraintStart_toStartOf="@+id/bloodSugarEditText"
-          app:layout_constraintTop_toBottomOf="@+id/bloodSugarEditText" />
+          app:layout_constraintEnd_toEndOf="@+id/bloodSugarReadingEditText"
+          app:layout_constraintStart_toStartOf="@+id/bloodSugarReadingEditText"
+          app:layout_constraintTop_toBottomOf="@+id/bloodSugarReadingEditText" />
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <TextView
-        android:id="@+id/bsErrorTextView"
+        android:id="@+id/bloodSugarErrorTextView"
         style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
         tools:text="@string/bloodsugarentry_error_lower_limit" />
 
       <Button
-        android:id="@+id/bsDateButton"
+        android:id="@+id/bloodSugarDateButton"
         style="@style/Clinic.V2.NoBackgroundRippleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -11,6 +11,8 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodS
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.threeten.bp.LocalDate
 
 class BloodSugarEntryEffectHandlerTest {
@@ -127,6 +129,26 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.assertOutgoingEvents(DatePrefilled(entryDate))
     verify(ui).setDateOnInputFields("7", "6", "92")
     verify(ui).showDateOnDateButton(entryDate)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `show invalid date error when show date validation error is received with validation invalid pattern`() {
+    // when
+    testCase.dispatch(ShowDateValidationError(InvalidPattern))
+
+    // then
+    verify(ui).showInvalidDateError()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `show date is in future error when show date validation error is received with validation date is in future`() {
+    // when
+    testCase.dispatch(ShowDateValidationError(DateIsInFuture))
+
+    // then
+    verify(ui).showDateIsInFutureError()
     verifyNoMoreInteractions(ui)
   }
 }

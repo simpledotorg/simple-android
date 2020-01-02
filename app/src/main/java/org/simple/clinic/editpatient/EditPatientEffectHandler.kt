@@ -74,6 +74,8 @@ class EditPatientEffectHandler @AssistedInject constructor(
       setGender(patient.gender)
       setState(address.state)
       setDistrict(address.district)
+      setStreetAddress(address.streetAddress)
+      setZone(address.zone)
 
       if (address.colonyOrVillage.isNullOrBlank().not()) {
         setColonyOrVillage(address.colonyOrVillage!!)

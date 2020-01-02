@@ -1370,7 +1370,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(withPhoneNumber).map(RecordAppointment::toOverdueAppointment)
+    val expectedAppointments = listOf(withPhoneNumber).map { it.toOverdueAppointment() }
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }

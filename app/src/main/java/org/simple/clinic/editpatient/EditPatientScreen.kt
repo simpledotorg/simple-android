@@ -20,10 +20,12 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.editpatient.EditPatientValidationError.AGE_INVALID
+import org.simple.clinic.editpatient.EditPatientValidationError.AGE_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.editpatient.EditPatientValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_INVALID
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_PARSE_ERROR
 import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
@@ -350,12 +352,20 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
           showDateOfBirthIsInFutureError()
         }
 
-        AGE_INVALID -> {
-          showAgeIsInvalidError()
+        AGE_EXCEEDS_MAX_LIMIT -> {
+          showAgeExceedsMaxLimitError()
         }
 
-        DATE_OF_BIRTH_INVALID -> {
-          showDateOfBirthIsInvalidError()
+        DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT -> {
+          showDateOfBirthExceedsMaxLimitError()
+        }
+
+        AGE_EXCEEDS_MIN_LIMIT -> {
+          showAgeExceedsMinLimitError()
+        }
+
+        DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT -> {
+          showDateOfBirthExceedsMinLimitError()
         }
       }.exhaustive()
     }
@@ -386,11 +396,16 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
           showEmptyStateError(false)
         }
 
-        BOTH_DATEOFBIRTH_AND_AGE_ABSENT, AGE_INVALID -> {
+        BOTH_DATEOFBIRTH_AND_AGE_ABSENT,
+        AGE_EXCEEDS_MAX_LIMIT,
+        AGE_EXCEEDS_MIN_LIMIT -> {
           showAgeEmptyError(false)
         }
 
-        DATE_OF_BIRTH_PARSE_ERROR, DATE_OF_BIRTH_IN_FUTURE, DATE_OF_BIRTH_INVALID -> {
+        DATE_OF_BIRTH_PARSE_ERROR,
+        DATE_OF_BIRTH_IN_FUTURE,
+        DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT,
+        DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT -> {
           hideDateOfBirthError()
         }
       }.exhaustive()
@@ -448,12 +463,20 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     dateOfBirthInputLayout.error = context.getString(R.string.patientedit_error_dateofbirth_is_in_future)
   }
 
-  private fun showAgeIsInvalidError() {
+  private fun showAgeExceedsMaxLimitError() {
     ageInputLayout.error = resources.getString(R.string.patiententry_invalid_age_error)
   }
 
-  private fun showDateOfBirthIsInvalidError() {
+  private fun showDateOfBirthExceedsMaxLimitError() {
     dateOfBirthInputLayout.error = resources.getString(R.string.patiententry_invalid_age_error)
+  }
+
+  private fun showAgeExceedsMinLimitError() {
+    ageInputLayout.error = resources.getString(R.string.patiententry_age_exceeds_min_limit_error)
+  }
+
+  private fun showDateOfBirthExceedsMinLimitError() {
+    dateOfBirthInputLayout.error = resources.getString(R.string.patiententry_age_exceeds_min_limit_error)
   }
 
   private fun hideDateOfBirthError() {

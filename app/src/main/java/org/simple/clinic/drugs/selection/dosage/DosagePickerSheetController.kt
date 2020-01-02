@@ -17,6 +17,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 private typealias Ui = DosagePickerSheet
@@ -47,7 +48,7 @@ class DosagePickerSheetController @Inject constructor(
         .ofType<DosagePickerSheetCreated>()
         .map { it.drugName }
 
-    val protocolUuid = drugName
+    val protocolUuid: Observable<UUID> = drugName
         .flatMap { userSession.requireLoggedInUser() }
         .switchMap { facilityRepository.currentFacility(it) }
         .map { it.protocolUuid }

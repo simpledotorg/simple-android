@@ -54,9 +54,9 @@ data class RecentPatient(
               GROUP BY patientUuid
           ) PD ON P.uuid = PD.patientUuid
           LEFT JOIN (
-            SELECT MAX(createdAt) latestCreatedAt, uuid, patientUuid, facilityUuid
+            SELECT MAX(createdAt) latestCreatedAt, uuid, patientUuid, facilityUuid, creationFacilityUuid
               FROM Appointment
-              WHERE facilityUuid = :facilityUuid
+              WHERE creationFacilityUuid = :facilityUuid
               AND deletedAt IS NULL
               AND status = :appointmentStatus
               AND appointmentType = :appointmentType
@@ -66,7 +66,7 @@ data class RecentPatient(
           (
             BP.facilityUuid = :facilityUuid OR
             PD.facilityUuid = :facilityUuid OR
-            AP.facilityUuid = :facilityUuid
+            AP.creationFacilityUuid = :facilityUuid
           ) 
           AND P.deletedAt IS NULL
           AND P.status = :patientStatus

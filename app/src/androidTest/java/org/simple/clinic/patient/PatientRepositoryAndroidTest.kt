@@ -1125,10 +1125,10 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun verify_deleted_appointments_are_not_included_when_fetching_recent_patients() {
-    val facilityUuid = UUID.randomUUID()
-    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid)
-    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, deletedAt = Instant.now())
-    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid)
+    val facilityUuid = UUID.fromString("086a5afd-c14b-4023-8eaa-9f29eee180a5")
+    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid)
+    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid, deletedAt = Instant.now())
+    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid)
 
     val recentPatients = patientRepository
         .recentPatients(facilityUuid)
@@ -1138,10 +1138,22 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun verify_only_scheduled_appointments_are_included_when_fetching_recent_patients() {
-    val facilityUuid = UUID.randomUUID()
-    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid, status = Scheduled)
-    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, status = Cancelled)
-    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, status = Visited)
+    val facilityUuid = UUID.fromString("7d314030-97a2-4075-a0f7-15363fe17070")
+    val recentPatient1 = savePatientWithAppointment(
+        facilityUuid = facilityUuid,
+        creationFacilityUuid = facilityUuid,
+        status = Scheduled
+    )
+    val recentPatient2 = savePatientWithAppointment(
+        facilityUuid = facilityUuid,
+        creationFacilityUuid = facilityUuid,
+        status = Cancelled
+    )
+    val recentPatient3 = savePatientWithAppointment(
+        facilityUuid = facilityUuid,
+        creationFacilityUuid = facilityUuid,
+        status = Visited
+    )
 
     val recentPatients = patientRepository
         .recentPatients(facilityUuid)
@@ -1150,11 +1162,29 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun verify_only_appointments_with_correct_facility_ID_are_included_when_fetching_recent_patients() {
+    val fromFacilityUuid = UUID.fromString("25fc9220-3fcb-43b4-8f47-fb67ad275094")
+    val toFacilityUuid = UUID.fromString("7d314030-97a2-4075-a0f7-15363fe17070")
+    val recentPatient = savePatientWithAppointment(
+        facilityUuid = toFacilityUuid,
+        creationFacilityUuid = fromFacilityUuid,
+        status = Scheduled
+    )
+
+    val recentPatientsInFromFacility = patientRepository.recentPatients(fromFacilityUuid).blockingFirst()
+    assertThat(recentPatientsInFromFacility).isEqualTo(listOf(recentPatient))
+
+    val recentPatientsInToFacility = patientRepository.recentPatients(toFacilityUuid).blockingFirst()
+    assertThat(recentPatientsInToFacility).isEqualTo(emptyList<RecentPatient>())
+  }
+
+  @Test
   fun verify_only_patients_with_manual_appointments_are_included_when_fetching_recent_patients() {
-    val facilityUuid = UUID.randomUUID()
-    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid, appointmentType = Automatic)
-    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, appointmentType = Manual)
-    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, appointmentType = AppointmentType.Unknown(""))
+    val facilityUuid = UUID.fromString("e86e036c-8a55-4a07-8678-32f13b006dcb")
+    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid, appointmentType = Automatic)
+    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid, appointmentType = Manual)
+    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid,
+        appointmentType = AppointmentType.Unknown(""))
 
     val recentPatients = patientRepository
         .recentPatients(facilityUuid)
@@ -1165,6 +1195,7 @@ class PatientRepositoryAndroidTest {
   private fun savePatientWithAppointment(
       appointmentUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = testData.qaUserFacilityUuid(),
+      creationFacilityUuid: UUID = testData.qaUserFacilityUuid(),
       patientUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -1183,7 +1214,8 @@ class PatientRepositoryAndroidTest {
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         status = status,
-        appointmentType = appointmentType
+        appointmentType = appointmentType,
+        creationFacilityUuid = creationFacilityUuid
     )
     database.appointmentDao().save(listOf(appointment))
     return patientProfile.patient.run {

@@ -247,7 +247,7 @@ dependencies {
   kapt "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
   implementation "com.squareup.moshi:moshi-adapters:$versions.moshi"
   implementation "com.f2prateek.rx.preferences2:rx-preferences:$versions.rxPreference"
-  implementation "com.tspoon.traceur:traceur:$versions.traceur"
+  implementation "com.github.qoqa:Traceur:$versions.traceur"
   implementation "ru.egslava:MaskedEditText:$versions.maskedEditText"
   implementation "io.sentry:sentry-android:$versions.sentry"
   implementation("org.slf4j:slf4j-nop:$versions.slf4j") {
@@ -279,15 +279,10 @@ dependencies {
   implementation "androidx.work:work-runtime:$versions.workManager"
   implementation "androidx.work:work-gcm:$versions.workManager"
 
-  implementation(project(":mobius-base")) {
-    exclude group: "io.reactivex.rxjava2"
-    because "Traceur is incompatible with the version of RxJava this artifact pulls in transitively"
-  }
+  implementation project(":mobius-base")
   testImplementation "com.spotify.mobius:mobius-test:$versions.mobius"
-  testImplementation(project(":mobius-migration")) {
-    exclude group: "io.reactivex.rxjava2"
-    because "Traceur is incompatible with the version of RxJava this artifact pulls in transitively"
-  }
+  testImplementation project(":mobius-migration")
+
   implementation "com.fasterxml.uuid:java-uuid-generator:$versions.uuidGenerator"
   implementation project(":simple-platform")
   implementation project(":simple-visuals")

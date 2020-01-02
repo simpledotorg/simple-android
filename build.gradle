@@ -31,7 +31,7 @@ buildscript {
       threeTenBp          : '1.3.6',
       lazyThreeTenBp      : '0.3.0',
       okLoggingInterceptor: '3.10.0',
-      traceur             : '1.0.1',
+      traceur             : '2.2.12',
       maskedEditText      : '1.0.5',
       itemAnimators       : '1.0.2',
       jbcrypt             : '0.3m',

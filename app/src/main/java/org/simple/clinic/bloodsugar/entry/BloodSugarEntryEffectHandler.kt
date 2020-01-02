@@ -33,6 +33,7 @@ class BloodSugarEntryEffectHandler(
         .addConsumer(ShowBloodSugarEntryScreen::class.java, { showBloodSugarEntryScreen(it.date) }, schedulersProvider.ui())
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))
         .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
+        .addAction(SetBloodSugarSavedResultAndFinish::class.java, ui::setBloodSugarSavedResultAndFinish, schedulersProvider.ui())
         .build()
   }
 

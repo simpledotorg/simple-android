@@ -11,8 +11,6 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -540,6 +538,6 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     // then
-    verify(screen).showIllustration(file)
+    verify(screen).loadRemoteIllustration(file)
   }
 }

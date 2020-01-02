@@ -49,7 +49,7 @@ import javax.inject.Named
 private const val REQUESTCODE_CAMERA_PERMISSION = 0
 private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
 
-open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -230,7 +230,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     // we are not sure if we will have variations of this training video.
     // We should make the title, duration and video thumbnail configurable in order to improve this.
     simpleVideoDuration.text = resources.getString(R.string.simple_video_duration, "5:07")
-    showHomeScreenBackground(R.id.simpleVideoLayout)
+    showHomeScreenBackground(simpleVideoLayout.id)
   }
 
   fun showIllustration() {
@@ -254,7 +254,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     }
   }
 
-  fun showIllustration(illustrationFile: File) {
+  fun loadRemoteIllustration(illustrationFile: File) {
     Picasso.get().load(illustrationFile).into(homeIllustration)
   }
 }

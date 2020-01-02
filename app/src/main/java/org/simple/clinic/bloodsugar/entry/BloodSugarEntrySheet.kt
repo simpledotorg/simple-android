@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import kotlinx.android.synthetic.main.sheet_blood_sugar_entry.*
@@ -92,11 +93,11 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun showInvalidDateError() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    showDateErrorMessage(getString(R.string.bloodsugarentry_error_date_invalid_pattern))
   }
 
   override fun showDateIsInFutureError() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    showDateErrorMessage(getString(R.string.bloodsugarentry_error_date_is_in_future))
   }
 
   override fun hideDateErrorMessage() {
@@ -115,6 +116,13 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
 
   override fun dismiss() {
     finish()
+  }
+
+  private fun showDateErrorMessage(message: String) {
+    with(dateErrorTextView) {
+      text = message
+      visibility = View.VISIBLE
+    }
   }
 
   private fun getPaddedString(value: String): String =

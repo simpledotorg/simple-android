@@ -7,8 +7,13 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodS
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 
@@ -27,6 +32,7 @@ class BloodSugarEntryEffectHandler(
         .addConsumer(ShowBloodSugarValidationError::class.java, { showBloodSugarValidationError(it.result) }, schedulersProvider.ui())
         .addConsumer(ShowBloodSugarEntryScreen::class.java, { showBloodSugarEntryScreen(it.date) }, schedulersProvider.ui())
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))
+        .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
         .build()
   }
 
@@ -66,4 +72,12 @@ class BloodSugarEntryEffectHandler(
 
   private fun getYear(date: LocalDate): String =
       date.year.toString().substring(startIndex = 2, endIndex = 4)
+
+  private fun showDateValidationError(result: UserInputDateValidator.Result) {
+    when (result) {
+      InvalidPattern -> ui.showInvalidDateError()
+      DateIsInFuture -> ui.showDateIsInFutureError()
+      is Valid -> throw IllegalStateException("Date validation error cannot be $result")
+    }.exhaustive()
+  }
 }

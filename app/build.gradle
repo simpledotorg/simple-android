@@ -235,6 +235,7 @@ dependencies {
   implementation "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
   implementation "com.jakewharton.rxbinding2:rxbinding:$versions.rxBinding"
   implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$versions.rxBinding"
+  implementation "com.jakewharton.rxbinding3:rxbinding:$versions.rxBinding3"
   implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
   implementation "org.threeten:threetenbp:$versions.threeTenBp:no-tzdb"
   implementation "com.gabrielittner.threetenbp:lazythreetenbp:$versions.lazyThreeTenBp"

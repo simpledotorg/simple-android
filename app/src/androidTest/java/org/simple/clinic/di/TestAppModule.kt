@@ -6,7 +6,6 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.di.network.NetworkModule
-import org.simple.clinic.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
@@ -37,8 +36,7 @@ import java.util.Locale
   TestRemoteConfigModule::class,
   SyncModule::class,
   UuidShortCodeCreatorModule::class,
-  DateFormatterModule::class,
-  HomescreenIllustrationModule::class
+  DateFormatterModule::class
 ])
 class TestAppModule(private val application: Application) {
 

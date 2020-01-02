@@ -15,7 +15,6 @@ import org.simple.clinic.di.network.HttpInterceptorsModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.di.network.RetrofitModule
 import org.simple.clinic.facility.change.FacilityChangeModule
-import org.simple.clinic.illustration.HomescreenIllustrationModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListenerModule
 import org.simple.clinic.newentry.PatientEntryModule
@@ -65,7 +64,6 @@ import javax.inject.Named
   OnboardingModule::class,
   AppUpdateModule::class,
   DataSyncOnApprovalModule::class,
-  HomescreenIllustrationModule::class,
   SimpleVideoModule::class,
   RemoteConfigModule::class,
   SettingsModule::class,

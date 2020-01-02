@@ -2,10 +2,12 @@ package org.simple.clinic.editpatient
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.editpatient.EditPatientValidationError.AGE_INVALID
+import org.simple.clinic.editpatient.EditPatientValidationError.AGE_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.editpatient.EditPatientValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
-import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_INVALID
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_PARSE_ERROR
 import org.simple.clinic.editpatient.EditPatientValidationError.DISTRICT_EMPTY
@@ -29,7 +31,8 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAge
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAge
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -206,7 +209,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
       DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
       is Valid -> when (ageValidator.validate(dateOfBirth)) {
-        Invalid -> DATE_OF_BIRTH_INVALID
+        ExceedsMaxAge -> DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT
+        ExceedsMinAge -> DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT
         else -> null
       }
     }
@@ -221,7 +225,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     return when {
       age.isBlank() -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
       else -> when (ageValidator.validate(age.toInt())) {
-        Invalid -> AGE_INVALID
+        ExceedsMaxAge -> AGE_EXCEEDS_MAX_LIMIT
+        ExceedsMinAge -> AGE_EXCEEDS_MIN_LIMIT
         else -> null
       }
     }

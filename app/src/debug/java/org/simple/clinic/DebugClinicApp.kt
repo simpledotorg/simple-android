@@ -63,9 +63,9 @@ class DebugClinicApp : ClinicApp() {
   }
 
   private fun setupFlipper() {
-    with(AndroidFlipperClient.getInstance(this)) {
-      val context = this@DebugClinicApp
+    val context = this
 
+    with(AndroidFlipperClient.getInstance(this)) {
       addPlugin(InspectorFlipperPlugin(context, DescriptorMapping.withDefaults()))
       addPlugin(networkFlipperPlugin)
 

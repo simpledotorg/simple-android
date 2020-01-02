@@ -16,6 +16,8 @@ enum class PatientEntryValidationError(val analyticsName: String) {
   COLONY_OR_VILLAGE_EMPTY("Patient Entry:Colony or village empty"),
   DISTRICT_EMPTY("Patient Entry:District empty"),
   STATE_EMPTY("Patient Entry:State empty"),
-  INVALID_AGE("Patient Entry: Age greater than 120 years is not allowed"),
-  INVALID_AGE_DATE_OF_BIRTH("Patient Entry: Age greater than 120 years is not allowed")
+  AGE_EXCEEDS_MAX_LIMIT("Patient Entry: Age greater than 120 years is not allowed"),
+  DOB_EXCEEDS_MAX_LIMIT("Patient Entry: Age greater than 120 years is not allowed"),
+  AGE_EXCEEDS_MIN_LIMIT("Patient Entry: Age equal to 0 is not allowed"),
+  DOB_EXCEEDS_MIN_LIMIT("Patient Entry: Age equal to 0 is not allowed")
 }

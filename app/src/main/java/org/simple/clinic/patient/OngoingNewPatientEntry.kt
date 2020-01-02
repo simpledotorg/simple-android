@@ -9,8 +9,10 @@ import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FU
 import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.INVALID_AGE
-import org.simple.clinic.patient.PatientEntryValidationError.INVALID_AGE_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
@@ -29,6 +31,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_O
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAge
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAge
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -132,7 +135,8 @@ data class OngoingNewPatientEntry(
 
       } else if (age != null) {
         errors += when (ageValidator.validate(age.toInt())) {
-          ExceedsMaxAge -> listOf(INVALID_AGE)
+          ExceedsMaxAge -> listOf(AGE_EXCEEDS_MAX_LIMIT)
+          ExceedsMinAge -> listOf(AGE_EXCEEDS_MIN_LIMIT)
           else -> emptyList()
         }
       }
@@ -182,8 +186,11 @@ data class OngoingNewPatientEntry(
       InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
       DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
       is Valid -> {
-        val isDateOfBirthInvalid = ageValidator.validate(dateOfBirth) == ExceedsMaxAge
-        if (isDateOfBirthInvalid) listOf(INVALID_AGE_DATE_OF_BIRTH) else emptyList()
+        when (ageValidator.validate(dateOfBirth)){
+          ExceedsMaxAge -> listOf(DOB_EXCEEDS_MAX_LIMIT)
+          ExceedsMinAge -> listOf(DOB_EXCEEDS_MIN_LIMIT)
+          else -> emptyList()
+        }
       }
     }
   }

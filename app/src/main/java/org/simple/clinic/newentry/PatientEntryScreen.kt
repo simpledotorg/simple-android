@@ -45,7 +45,10 @@ import org.simple.clinic.newentry.form.StreetAddressField
 import org.simple.clinic.newentry.form.VillageOrColonyField
 import org.simple.clinic.newentry.form.ZoneField
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.Gender.*
+import org.simple.clinic.patient.Gender.Female
+import org.simple.clinic.patient.Gender.Male
+import org.simple.clinic.patient.Gender.Transgender
+import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.ReminderConsent.Denied
@@ -61,12 +64,19 @@ import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.*
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.scrollToChild
+import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
+import org.simple.clinic.widgets.setTextAndCursor
+import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.textChanges
+import org.simple.clinic.widgets.topRelativeTo
+import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -442,19 +452,34 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-    override fun showInvalidAgeError(show: Boolean) {
-      ageEditTextInputLayout.error = when {
-        show -> resources.getString(R.string.patiententry_invalid_age_error)
-        else -> null
-      }
+  override fun showAgeExceedsMaxLimitError(show: Boolean) {
+    ageEditTextInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_invalid_age_error)
+      else -> null
     }
+  }
 
-  override fun showInvalidDateOfBirthAgeError(show: Boolean) {
+  override fun showDOBExceedsMaxLimitError(show: Boolean) {
     dateOfBirthInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_invalid_age_error)
       else -> null
     }
   }
+
+  override fun showAgeExceedsMinLimitError(show: Boolean) {
+    ageEditTextInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_age_exceeds_min_limit_error)
+      else -> null
+    }
+  }
+
+  override fun showDOBExceedsMinLimitError(show: Boolean) {
+    dateOfBirthInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_age_exceeds_min_limit_error)
+      else -> null
+    }
+  }
+
 
   override fun scrollToFirstFieldWithError() {
     // FIXME This is temporally coupled to the layout and changes whenever the order of the fields change.

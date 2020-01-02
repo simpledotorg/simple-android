@@ -7,7 +7,9 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Instant
@@ -48,22 +50,37 @@ class BloodSugarRepositoryAndroidTest {
 
   @Test
   fun saving_a_blood_sugar_reading_should_work_correctly() {
-    //given
-    val bloodSugarReading = BloodSugarReading(value = 10, type = Random)
+    // given
+    val bloodSugarUuid = UUID.fromString("e35dea7a-b13b-4ab1-aaa4-0c5998e5c79f")
+    val bloodSugarReading = BloodSugarReading(value = 50, type = Random)
+    val now = Instant.now(clock)
     val patientUuid = UUID.fromString("a5921ec9-5c70-421a-bb0b-1291364683f6")
+    val facility = testData.qaFacility()
     val user = testData.qaUser()
 
-    //when
-    val testObserver = repository.saveMeasurement(
+    val expectedBloodSugarMeasurement = BloodSugarMeasurement(
+        uuid = bloodSugarUuid,
+        reading = bloodSugarReading,
+        recordedAt = now,
+        patientUuid = patientUuid,
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    // when
+    val savedBloodSugar = repository.saveMeasurement(
+        uuid = bloodSugarUuid,
         reading = bloodSugarReading,
         patientUuid = patientUuid,
         loggedInUser = user,
-        facility = testData.qaFacility(),
-        recordedAt = Instant.now(clock)
-    ).test()
+        facility = facility,
+        recordedAt = now)
+        .blockingGet()
 
-    //then
-    testObserver.assertComplete().assertNoErrors()
+    // then
+    assertThat(savedBloodSugar).isEqualTo(expectedBloodSugarMeasurement)
   }
 
   @Test

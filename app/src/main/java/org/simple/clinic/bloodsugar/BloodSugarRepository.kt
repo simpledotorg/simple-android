@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar
 
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
@@ -21,22 +22,27 @@ class BloodSugarRepository @Inject constructor(
       patientUuid: UUID,
       loggedInUser: User,
       facility: Facility,
-      recordedAt: Instant
-  ): Completable {
-    return Completable.fromAction {
-      dao.save(listOf(
-          BloodSugarMeasurement(
-              uuid = UUID.randomUUID(),
-              reading = reading,
-              recordedAt = recordedAt,
-              patientUuid = patientUuid,
-              userUuid = loggedInUser.uuid,
-              facilityUuid = facility.uuid,
-              timestamps = Timestamps.create(utcClock),
-              syncStatus = SyncStatus.PENDING
-          )
-      ))
-    }
+      recordedAt: Instant,
+      uuid: UUID = UUID.randomUUID()
+  ): Single<BloodSugarMeasurement> {
+    return Single
+        .just(
+            BloodSugarMeasurement(
+                uuid = uuid,
+                reading = reading,
+                recordedAt = recordedAt,
+                patientUuid = patientUuid,
+                userUuid = loggedInUser.uuid,
+                facilityUuid = facility.uuid,
+                timestamps = Timestamps.create(utcClock),
+                syncStatus = SyncStatus.PENDING
+            )
+        )
+        .flatMap {
+          Completable
+              .fromAction { dao.save(listOf(it)) }
+              .toSingleDefault(it)
+        }
   }
 
   fun latestMeasurements(patientUuid: UUID, limit: Int): Observable<List<BloodSugarMeasurement>> {

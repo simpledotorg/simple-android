@@ -9,6 +9,8 @@ interface EditPatientUi {
   fun setPatientPhoneNumber(number: String)
   fun setColonyOrVillage(colonyOrVillage: String)
   fun setDistrict(district: String)
+  fun setStreetAddress(streetAddress: String?)
+  fun setZone(zone: String?)
   fun setState(state: String)
   fun setGender(gender: Gender)
   fun setPatientAge(age: Int)

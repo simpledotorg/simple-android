@@ -34,6 +34,7 @@ class InputFieldsFactory(
         AgeField(),
         DateOfBirthField(dateTimeFormatter, today),
         LandlineOrMobileField(),
+        StreetAddressField(),
         GenderField(),
         VillageOrColonyField(),
         DistrictField(),

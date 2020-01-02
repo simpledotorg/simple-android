@@ -3,14 +3,27 @@ package org.simple.clinic.bloodsugar.entry
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import io.reactivex.Single
+import io.reactivex.rxkotlin.cast
+import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarReading
+import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.User
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
+import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -20,9 +33,16 @@ import org.threeten.bp.LocalDate
 
 class BloodSugarEntryEffectHandler(
     private val ui: BloodSugarEntryUi,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
+    private val bloodSugarRepository: BloodSugarRepository,
+    private val patientRepository: PatientRepository,
+    private val appointmentsRepository: AppointmentRepository,
     private val userClock: UserClock,
     private val schedulersProvider: SchedulersProvider
 ) {
+  private val reportAnalyticsEvents = ReportAnalyticsEvents()
+
   fun build(): ObservableTransformer<BloodSugarEntryEffect, BloodSugarEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<BloodSugarEntryEffect, BloodSugarEntryEvent>()
@@ -35,6 +55,7 @@ class BloodSugarEntryEffectHandler(
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))
         .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
         .addAction(SetBloodSugarSavedResultAndFinish::class.java, ui::setBloodSugarSavedResultAndFinish, schedulersProvider.ui())
+        .addTransformer(CreateNewBloodSugarEntry::class.java, createNewBloodSugarEntryTransformer())
         .build()
   }
 
@@ -81,5 +102,53 @@ class BloodSugarEntryEffectHandler(
       DateIsInFuture -> ui.showDateIsInFutureError()
       is Valid -> throw IllegalStateException("Date validation error cannot be $result")
     }.exhaustive()
+  }
+
+  private fun createNewBloodSugarEntryTransformer(): ObservableTransformer<CreateNewBloodSugarEntry, BloodSugarEntryEvent> {
+    return ObservableTransformer { createNewBloodSugarEntries ->
+      createNewBloodSugarEntries
+          .flatMapSingle { createNewBloodSugarEntry ->
+            userAndCurrentFacility()
+                .flatMap { (user, facility) -> storeNewBloodSugarMeasurement(user, facility, createNewBloodSugarEntry) }
+                .flatMap { updateAppointmentsAsVisited(createNewBloodSugarEntry, it) }
+          }
+          .compose(reportAnalyticsEvents)
+          .cast()
+    }
+  }
+
+  private fun userAndCurrentFacility(): Single<Pair<User, Facility>> {
+    return userSession
+        .loggedInUser()
+        .filterAndUnwrapJust()
+        .flatMap { user ->
+          facilityRepository
+              .currentFacility(user)
+              .map { facility -> user to facility }
+        }
+        .firstOrError()
+  }
+
+  private fun storeNewBloodSugarMeasurement(
+      user: User,
+      currentFacility: Facility,
+      entry: CreateNewBloodSugarEntry
+  ): Single<BloodSugarMeasurement> {
+    val (patientUuid, bloodSugarReading, measurementType, date) = entry
+    return bloodSugarRepository.saveMeasurement(BloodSugarReading(bloodSugarReading, measurementType), patientUuid, user, currentFacility, date.toUtcInstant(userClock))
+  }
+
+  private fun updateAppointmentsAsVisited(
+      createNewBloodSugarEntry: CreateNewBloodSugarEntry,
+      bloodSugarMeasurement: BloodSugarMeasurement
+  ): Single<BloodSugarSaved> {
+    val entryDate = createNewBloodSugarEntry.userEnteredDate.toUtcInstant(userClock)
+    val compareAndUpdateRecordedAt = patientRepository
+        .compareAndUpdateRecordedAt(bloodSugarMeasurement.patientUuid, entryDate)
+
+    return appointmentsRepository
+        .markAppointmentsCreatedBeforeTodayAsVisited(bloodSugarMeasurement.patientUuid)
+        .andThen(compareAndUpdateRecordedAt)
+        .toSingleDefault(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
   }
 }

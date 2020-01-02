@@ -2,6 +2,8 @@ package org.simple.clinic.patient
 
 import com.nhaarman.mockito_kotlin.mock
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
@@ -19,6 +21,7 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
@@ -512,6 +515,28 @@ object PatientMocker {
         endpoint = URI.create(endpoint),
         displayName = displayName,
         isdCode = isdCode
+    )
+  }
+
+  fun bloodSugar(
+      uuid: UUID = UUID.randomUUID(),
+      reading: BloodSugarReading = BloodSugarReading(600, org.simple.clinic.bloodsugar.Random),
+      patientUuid: UUID = UUID.randomUUID(),
+      recordedAt: Instant = Instant.now(),
+      userUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID = UUID.randomUUID(),
+      timestamps: Timestamps = Timestamps(Instant.now(), Instant.now(), null),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+  ): BloodSugarMeasurement {
+    return BloodSugarMeasurement(
+        uuid = uuid,
+        reading = reading,
+        patientUuid = patientUuid,
+        recordedAt = recordedAt,
+        userUuid = userUuid,
+        facilityUuid = facilityUuid,
+        timestamps = timestamps,
+        syncStatus = syncStatus
     )
   }
 }

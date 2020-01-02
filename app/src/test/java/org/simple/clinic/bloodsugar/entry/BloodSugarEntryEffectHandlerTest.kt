@@ -1,27 +1,57 @@
 package org.simple.clinic.bloodsugar.entry
 
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
+import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.User
+import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.threeten.bp.LocalDate
+import java.util.UUID
 
 class BloodSugarEntryEffectHandlerTest {
 
   private val ui = mock<BloodSugarEntryUi>()
   private val userClock = TestUserClock()
 
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
+  private val appointmentRepository = mock<AppointmentRepository>()
+  private val patientRepository = mock<PatientRepository>()
+  private val bloodSugarRepository = mock<BloodSugarRepository>()
+
   private val effectHandler = BloodSugarEntryEffectHandler(
       ui,
+      userSession,
+      facilityRepository,
+      bloodSugarRepository,
+      patientRepository,
+      appointmentRepository,
       userClock,
       TrampolineSchedulersProvider()
   ).build()
@@ -160,5 +190,35 @@ class BloodSugarEntryEffectHandlerTest {
     // then
     verify(ui).setBloodSugarSavedResultAndFinish()
     verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `create new blood sugar entry when create blood sugar entry effect is received`() {
+    // given
+    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
+    val facility = PatientMocker.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
+
+    val date = LocalDate.parse("2020-01-02")
+    val bloodSugar = PatientMocker.bloodSugar()
+    val createNewBloodSugarEntry = CreateNewBloodSugarEntry(
+        patientUuid = bloodSugar.patientUuid,
+        bloodSugarReading = bloodSugar.reading.value,
+        measurementType = bloodSugar.reading.type,
+        userEnteredDate = date,
+        prefilledDate = date
+    )
+
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
+    whenever(bloodSugarRepository.saveMeasurement(eq(bloodSugar.reading), eq(bloodSugar.patientUuid), eq(user), eq(facility), eq(date.toUtcInstant(userClock)), any())).doReturn(Single.just(bloodSugar))
+    whenever(patientRepository.compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))).doReturn(Completable.complete())
+    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)).doReturn(Completable.complete())
+
+    // when
+    testCase.dispatch(createNewBloodSugarEntry)
+
+    // then
+    testCase.assertOutgoingEvents(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
+    verifyZeroInteractions(ui)
   }
 }

@@ -8,7 +8,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
@@ -156,7 +157,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             newBpClicks()
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = this.detaches().map { ScreenDestroyed() }
     )
   }
 
@@ -181,13 +182,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     return Observable.just(PatientSummaryScreenCreated(screenKey.patientUuid, screenKey.intention, screenKey.screenCreatedTimestamp))
   }
 
-  private fun doneClicks() = RxView.clicks(doneButtonFrame.button).map { PatientSummaryDoneClicked() }
+  private fun doneClicks() = doneButtonFrame.button.clicks().map { PatientSummaryDoneClicked() }
 
   private fun backClicks(): Observable<UiEvent> {
-    val hardwareBackKeyClicks = Observable.create<Any> { emitter ->
+    val hardwareBackKeyClicks = Observable.create<Unit> { emitter ->
       val interceptor = object : BackPressInterceptor {
         override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(Any())
+          emitter.onNext(Unit)
           callback.markBackPressIntercepted()
         }
       }
@@ -195,7 +196,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       screenRouter.registerBackPressInterceptor(interceptor)
     }
 
-    return RxView.clicks(backButton)
+    return backButton.clicks()
         .mergeWith(hardwareBackKeyClicks)
         .map { PatientSummaryBackClicked() }
   }

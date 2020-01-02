@@ -167,7 +167,13 @@ class EditPatientEffectHandler @AssistedInject constructor(
       patientAddress: PatientAddress,
       ongoingEntry: EditablePatientEntry
   ): PatientAddress = with(ongoingEntry) {
-    patientAddress.withLocality(colonyOrVillage, district, state)
+    patientAddress.withLocality(
+        colonyOrVillage = colonyOrVillage,
+        district = district,
+        state = state,
+        zone = zone,
+        streetAddress = streetAddress
+    )
   }
 
   private fun createOrUpdatePhoneNumber(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {

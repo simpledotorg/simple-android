@@ -35,6 +35,8 @@ jobs:
       - name: QA Unit Tests
         run: ./gradlew testQaDebugUnitTest
 
+  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
+  # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
     runs-on: [macos-latest]
     steps:

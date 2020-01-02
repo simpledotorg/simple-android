@@ -23,6 +23,7 @@ buildscript {
       rxJava              : '2.2.16',
       rxAndroid           : '2.1.1',
       rxBinding           : '2.1.1',
+      rxBinding3          : '3.1.0',
       rxKotlin            : '2.4.0',
       rxPreference        : '2.0.0',
       qrReader            : '2.1.2',

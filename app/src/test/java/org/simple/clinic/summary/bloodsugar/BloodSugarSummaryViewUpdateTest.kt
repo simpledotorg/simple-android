@@ -22,7 +22,7 @@ class BloodSugarSummaryViewUpdateTest {
         .given(defaultModel)
         .whenEvent(BloodSugarSummaryFetched(measurements))
         .then(assertThatNext(
-            hasModel(defaultModel.summaryFetched()),
+            hasModel(defaultModel.summaryFetched(measurements)),
             hasNoEffects()
         ))
   }

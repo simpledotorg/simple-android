@@ -12,7 +12,7 @@ class BloodSugarSummaryViewUpdate : Update<BloodSugarSummaryViewModel, BloodSuga
       event: BloodSugarSummaryViewEvent
   ): Next<BloodSugarSummaryViewModel, BloodSugarSummaryViewEffect> {
     return when (event) {
-      is BloodSugarSummaryFetched -> next(model.summaryFetched())
+      is BloodSugarSummaryFetched -> next(model.summaryFetched(event.measurements))
       NewBloodSugarClicked -> dispatch(OpenBloodSugarTypeSelector)
     }
   }

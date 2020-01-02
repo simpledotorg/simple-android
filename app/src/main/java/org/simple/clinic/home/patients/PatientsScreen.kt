@@ -13,7 +13,6 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
-import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.ofType
@@ -41,7 +40,6 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import org.simple.clinic.widgets.visibleOrGone
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -252,9 +250,5 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     } else {
       crashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
-  }
-
-  fun loadRemoteIllustration(illustrationFile: File) {
-    Picasso.get().load(illustrationFile).into(homeIllustration)
   }
 }

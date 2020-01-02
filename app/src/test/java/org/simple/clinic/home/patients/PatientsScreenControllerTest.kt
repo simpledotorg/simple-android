@@ -21,7 +21,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
-import org.simple.clinic.illustration.HomescreenIllustrationRepository
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.User
@@ -47,7 +46,6 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
-import java.io.File
 import java.net.SocketTimeoutException
 
 @RunWith(JUnitParamsRunner::class)
@@ -62,7 +60,6 @@ class PatientsScreenControllerTest {
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
-  private val homescreenIllustrationRepository: HomescreenIllustrationRepository = mock()
   private val utcClock = TestUtcClock()
   private val userClock = TestUserClock()
   private val numberOfPatientsRegisteredPref = mock<Preference<Int>>()
@@ -83,7 +80,6 @@ class PatientsScreenControllerTest {
         checkAppUpdate = checkAppUpdate,
         utcClock = utcClock,
         userClock = userClock,
-        homescreenIllustrationRepository = homescreenIllustrationRepository,
         refreshCurrentUser = refreshCurrentUser,
         schedulersProvider = TrampolineSchedulersProvider(),
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
@@ -96,7 +92,6 @@ class PatientsScreenControllerTest {
     whenever(refreshCurrentUser.refresh()).doReturn(Completable.never())
     whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
     whenever(numberOfPatientsRegisteredPref.get()).doReturn(0)
-    whenever(homescreenIllustrationRepository.illustrationImageToShow()).doReturn(Observable.empty())
 
     uiEvents
         .compose(controller)
@@ -523,21 +518,5 @@ class PatientsScreenControllerTest {
             shouldShow = false
         )
     )
-  }
-
-  @Test
-  fun `when an illustration is emitted then show the illustration`() {
-    //given
-    whenever(userSession.loggedInUser()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-
-    val file: File = mock()
-    whenever(homescreenIllustrationRepository.illustrationImageToShow()).doReturn(Observable.just(file))
-
-    // when
-    uiEvents.onNext(ScreenCreated())
-
-    // then
-    verify(screen).loadRemoteIllustration(file)
   }
 }

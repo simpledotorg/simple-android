@@ -7,7 +7,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.illustration.DayOfMonth
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
@@ -49,7 +48,6 @@ class NetworkModule {
         .add(Answer.MoshiTypeAdapter())
         .add(Gender.MoshiTypeAdapter())
         .add(PatientPhoneNumberType.MoshiTypeAdapter())
-        .add(DayOfMonth.MoshiTypeAdapter)
         .add(URIMoshiAdapter())
         .add(BloodSugarMeasurementType.MoshiTypeAdapter())
         .build()

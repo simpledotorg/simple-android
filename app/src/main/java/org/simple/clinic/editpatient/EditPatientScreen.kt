@@ -280,6 +280,14 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     stateEditText.setTextAndCursor(state)
   }
 
+  override fun setStreetAddress(streetAddress: String?) {
+    streetAddressEditText.setTextAndCursor(streetAddress)
+  }
+
+  override fun setZone(zone: String?) {
+    zoneEditText.setTextAndCursor(zone)
+  }
+
   override fun setGender(gender: Gender) {
     val genderButton: RadioButton? = when (gender) {
       Male -> maleRadioButton

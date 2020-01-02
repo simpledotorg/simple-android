@@ -543,7 +543,8 @@ class TestData @Inject constructor(
       appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      creationFacilityUuid: UUID = qaUserFacilityUuid()
   ): Appointment {
     return Appointment(
         uuid = uuid,
@@ -559,7 +560,8 @@ class TestData @Inject constructor(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        creationFacilityUuid = null)
+        creationFacilityUuid = creationFacilityUuid
+    )
   }
 
   fun appointmentPayload(

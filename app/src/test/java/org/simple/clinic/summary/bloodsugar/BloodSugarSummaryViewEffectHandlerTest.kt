@@ -2,6 +2,7 @@ package org.simple.clinic.summary.bloodsugar
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.Test
@@ -13,11 +14,13 @@ import java.util.UUID
 
 class BloodSugarSummaryViewEffectHandlerTest {
 
+  private val bloodSugarRepository = mock<BloodSugarRepository>()
+  private val uiActions = mock<UiActions>()
+  private val testCase = EffectHandlerTestCase(BloodSugarSummaryViewEffectHandler.create(bloodSugarRepository, TrampolineSchedulersProvider(), uiActions))
+
   @Test
   fun `when fetch blood sugar effect is received then blood sugar should be fetched`() {
     //given
-    val bloodSugarRepository = mock<BloodSugarRepository>()
-    val testCase = EffectHandlerTestCase(BloodSugarSummaryViewEffectHandler.create(bloodSugarRepository, TrampolineSchedulersProvider()))
     val measurements = listOf<BloodSugarMeasurement>()
     whenever(bloodSugarRepository.latestMeasurements(any(), any())).thenReturn(Observable.just(measurements))
 
@@ -26,5 +29,15 @@ class BloodSugarSummaryViewEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(BloodSugarSummaryFetched(measurements))
+  }
+
+  @Test
+  fun `when open blood sugar type selector effect is received then type selector sheet should be opened`() {
+    //when
+    testCase.dispatch(OpenBloodSugarTypeSelector)
+
+    //then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showBloodSugarTypeSelector()
   }
 }

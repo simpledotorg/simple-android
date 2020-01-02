@@ -151,4 +151,14 @@ class BloodSugarEntryEffectHandlerTest {
     verify(ui).showDateIsInFutureError()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `set blood sugar saved result and finish when set blood sugar saved result and finish effect is received`() {
+    // when
+    testCase.dispatch(SetBloodSugarSavedResultAndFinish)
+
+    // then
+    verify(ui).setBloodSugarSavedResultAndFinish()
+    verifyNoMoreInteractions(ui)
+  }
 }

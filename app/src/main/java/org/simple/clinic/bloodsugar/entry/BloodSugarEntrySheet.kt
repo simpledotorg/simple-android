@@ -1,5 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -17,16 +19,20 @@ import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 
 class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
+  enum class ScreenType {
+    BLOOD_SUGAR_ENTRY,
+    DATE_ENTRY
+  }
+
+  companion object {
+    private const val EXTRA_WAS_BLOOD_SUGAR_SAVED = "wasBloodSugarSaved"
+  }
+
   @Inject
   lateinit var dateFormatter: DateTimeFormatter
 
   @Inject
   lateinit var userInputDatePaddingCharacter: UserInputDatePaddingCharacter
-
-  enum class ScreenType {
-    BLOOD_SUGAR_ENTRY,
-    DATE_ENTRY
-  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -36,7 +42,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun setBloodSugarSavedResultAndFinish() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    val intent = Intent()
+    intent.putExtra(EXTRA_WAS_BLOOD_SUGAR_SAVED, true)
+    setResult(Activity.RESULT_OK, intent)
+    finish()
   }
 
   override fun hideBloodSugarErrorMessage() {

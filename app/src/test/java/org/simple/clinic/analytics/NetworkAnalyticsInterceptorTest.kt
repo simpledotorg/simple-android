@@ -226,7 +226,7 @@ class NetworkAnalyticsInterceptorTest {
     } else {
       assertThat(mockReporter.receivedEvents.isEmpty()).isTrue()
     }
-    assertThat(thrownException).isSameAs(cause)
+    assertThat(thrownException).isSameInstanceAs(cause)
   }
 
   @Suppress("Unused")
@@ -256,7 +256,7 @@ class NetworkAnalyticsInterceptorTest {
     }
 
     assertThat(mockReporter.receivedEvents).isEmpty()
-    assertThat(thrownException).isSameAs(cause)
+    assertThat(thrownException).isSameInstanceAs(cause)
   }
 
   @Test

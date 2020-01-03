@@ -62,7 +62,7 @@ class AndroidFileStorageTest {
 
     val result = fileStorage.clearAllFiles() as ClearAllFilesResult.Failure
 
-    assertThat(result.cause).isSameAs(exception)
+    assertThat(result.cause).isSameInstanceAs(exception)
   }
 
   @Suppress("Unused")
@@ -80,7 +80,7 @@ class AndroidFileStorageTest {
 
     val result = fileStorage.clearAllFiles()
 
-    assertThat(result).isSameAs(ClearAllFilesResult.Success)
+    assertThat(result).isSameInstanceAs(ClearAllFilesResult.Success)
   }
 
   @Test
@@ -89,6 +89,6 @@ class AndroidFileStorageTest {
 
     val result = fileStorage.clearAllFiles()
 
-    assertThat(result).isSameAs(ClearAllFilesResult.PartiallyDeleted)
+    assertThat(result).isSameInstanceAs(ClearAllFilesResult.PartiallyDeleted)
   }
 }

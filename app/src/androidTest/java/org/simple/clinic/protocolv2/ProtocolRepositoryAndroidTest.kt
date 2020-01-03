@@ -98,7 +98,7 @@ class ProtocolRepositoryAndroidTest {
     database.protocolDrugDao().save(listOf(drug1, drug2, drug3))
 
     val drugsForCurrentProtocol = protocolRepository.drugsForProtocolOrDefault(currentProtocolUuid).blockingFirst()
-    assertThat(drugsForCurrentProtocol).containsAllOf(
+    assertThat(drugsForCurrentProtocol).containsAtLeast(
         ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(drug1)),
         ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(drug2)))
     assertThat(drugsForCurrentProtocol).doesNotContain(drug3)
@@ -121,7 +121,7 @@ class ProtocolRepositoryAndroidTest {
     database.protocolDrugDao().save(listOf(amlodipine5mg, amlodipine10mg, telmisartan40mg, telmisartan80mg))
 
     val drugsForProtocol1 = protocolRepository.drugsForProtocolOrDefault(protocol1.uuid).blockingFirst()
-    assertThat(drugsForProtocol1).containsAllOf(
+    assertThat(drugsForProtocol1).containsAtLeast(
         ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(amlodipine5mg, amlodipine10mg)),
         ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(telmisartan40mg)))
   }
@@ -143,7 +143,7 @@ class ProtocolRepositoryAndroidTest {
     protocolRepository.mergeWithLocalData(listOf(protocolPayload)).blockingAwait()
 
     val drugsForProtocol = protocolRepository.drugsForProtocolOrDefault(protocolUuid).blockingFirst()
-    assertThat(drugsForProtocol).containsAllOf(
+    assertThat(drugsForProtocol).containsAtLeast(
         ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(drug1)),
         ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(drug2, drug3)))
   }

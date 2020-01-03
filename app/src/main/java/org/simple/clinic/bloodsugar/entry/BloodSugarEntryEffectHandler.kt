@@ -1,6 +1,8 @@
 package org.simple.clinic.bloodsugar.entry
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -31,8 +33,8 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 
-class BloodSugarEntryEffectHandler(
-    private val ui: BloodSugarEntryUi,
+class BloodSugarEntryEffectHandler @AssistedInject constructor(
+    @Assisted private val ui: BloodSugarEntryUi,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val bloodSugarRepository: BloodSugarRepository,
@@ -41,6 +43,11 @@ class BloodSugarEntryEffectHandler(
     private val userClock: UserClock,
     private val schedulersProvider: SchedulersProvider
 ) {
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(ui: BloodSugarEntryUi): BloodSugarEntryEffectHandler
+  }
+
   private val reportAnalyticsEvents = ReportAnalyticsEvents()
 
   fun build(): ObservableTransformer<BloodSugarEntryEffect, BloodSugarEntryEvent> {

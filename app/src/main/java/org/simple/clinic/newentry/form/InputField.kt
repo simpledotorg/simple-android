@@ -1,5 +1,7 @@
 package org.simple.clinic.newentry.form
 
-abstract class InputField<T> {
+import androidx.annotation.StringRes
+
+abstract class InputField<T>(@StringRes val labelResId: Int) {
   abstract fun validate(value: T): Set<ValidationError>
 }

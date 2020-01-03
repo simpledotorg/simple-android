@@ -201,6 +201,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     delegate.prepare()
 
     showOrHideInputFields()
+    setInputFieldsHint()
   }
 
   private fun showOrHideInputFields() {
@@ -222,6 +223,23 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     allTypesOfInputFields.forEach { (clazz, view) ->
       view.visibleOrGone(clazz in receivedTypesOfInputFields)
+    }
+  }
+
+  private fun setInputFieldsHint() {
+    val allTextInputFields: Map<Class<*>, TextInputLayout> = mapOf(
+        PatientNameField::class.java to fullNameInputLayout,
+        LandlineOrMobileField::class.java to phoneNumberInputLayout,
+        BangladeshNationalIdField::class.java to bangladeshNationalIdInputLayout,
+        StreetAddressField::class.java to streetAddressInputLayout,
+        VillageOrColonyField::class.java to colonyOrVillageInputLayout,
+        ZoneField::class.java to zoneInputLayout,
+        DistrictField::class.java to districtInputLayout,
+        StateField::class.java to stateInputLayout
+    )
+
+    inputFields.inputFields.forEach {
+      allTextInputFields[it::class.java]?.hint = context.getString(it.labelResId)
     }
   }
 

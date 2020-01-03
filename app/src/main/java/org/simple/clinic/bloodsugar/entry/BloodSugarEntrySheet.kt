@@ -53,15 +53,15 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun showBloodSugarEmptyError() {
-    bloodSugarErrorTextView.text = getString(R.string.bloodsugarentry_error_empty)
+    showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_empty))
   }
 
   override fun showBloodSugarHighError() {
-    bloodSugarErrorTextView.text = getString(R.string.bloodsugarentry_error_higher_limit)
+    showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_higher_limit))
   }
 
   override fun showBloodSugarLowError() {
-    bloodSugarErrorTextView.text = getString(R.string.bloodsugarentry_error_lower_limit)
+    showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit))
   }
 
   override fun showRandomBloodSugarTitle() {
@@ -125,6 +125,13 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
 
   override fun dismiss() {
     finish()
+  }
+
+  private fun showBloodSugarErrorMessage(message: String) {
+    with(bloodSugarErrorTextView) {
+      text = message
+      visibility = View.VISIBLE
+    }
   }
 
   private fun showDateErrorMessage(message: String) {

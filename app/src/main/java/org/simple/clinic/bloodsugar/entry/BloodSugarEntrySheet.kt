@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.animation.AnimationUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import kotlinx.android.synthetic.main.sheet_blood_sugar_entry.*
 import org.simple.clinic.R
+import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -16,6 +18,7 @@ import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 
 class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
@@ -25,7 +28,18 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   companion object {
+    private const val KEY_OPEN_AS = "openAs"
     private const val EXTRA_WAS_BLOOD_SUGAR_SAVED = "wasBloodSugarSaved"
+
+    fun intentForNewBloodSugar(
+        context: Context,
+        patientUuid: UUID,
+        measurementType: BloodSugarMeasurementType
+    ): Intent {
+      val intent = Intent(context, BloodSugarEntrySheet::class.java)
+      intent.putExtra(KEY_OPEN_AS, New(patientUuid, measurementType))
+      return intent
+    }
   }
 
   @Inject

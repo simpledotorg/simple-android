@@ -84,3 +84,14 @@ jobs:
         with:
           name: app_qa_debug
           path: app/build/outputs/apk/qa/debug/app-qa-debug.apk
+
+  qa_purge_env:
+    runs-on: [ubuntu-latest]
+    needs: [qa_lint, qa_unit_tests, mobius_migration_tests, qa_android_tests, qa_build_apk]
+    steps:
+      - name: Purge QA server
+        run: |
+          curl -v --request DELETE \
+          --url https://api-qa.simple.org/qa/purge \
+          --header 'Authorization: Bearer {{ secrets.QA_PURGE_TOKEN }}'
+

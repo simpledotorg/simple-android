@@ -1,9 +1,12 @@
 package org.simple.clinic.bloodsugar.entry
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.threeten.bp.LocalDate
 
+@Parcelize
 data class BloodSugarEntryModel(
     val year: String,
     val openAs: OpenAs,
@@ -13,7 +16,7 @@ data class BloodSugarEntryModel(
     val month: String = "",
     val twoDigitYear: String = "",
     val prefilledDate: LocalDate? = null
-) {
+) : Parcelable {
 
   companion object {
     fun create(year: Int, openAs: OpenAs) =

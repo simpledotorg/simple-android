@@ -1,5 +1,6 @@
 package org.simple.clinic.newentry.country
 
+import org.simple.clinic.R
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.newentry.form.AgeField
 import org.simple.clinic.newentry.form.BangladeshNationalIdField
@@ -30,31 +31,31 @@ class InputFieldsFactory(
 
   private fun formFieldsForIndia(): List<InputField<*>> {
     return listOf(
-        PatientNameField(),
-        AgeField(),
-        DateOfBirthField(dateTimeFormatter, today),
-        LandlineOrMobileField(),
-        StreetAddressField(),
-        GenderField(),
-        VillageOrColonyField(),
-        DistrictField(),
-        StateField()
+        PatientNameField(R.string.patiententry_full_name),
+        AgeField(R.string.patiententry_age),
+        DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
+        LandlineOrMobileField(R.string.patiententry_phone_number),
+        StreetAddressField(R.string.patiententry_street_address),
+        GenderField(labelResId = 0),
+        VillageOrColonyField(R.string.patiententry_colony_or_village),
+        DistrictField(R.string.patiententry_district),
+        StateField(R.string.patiententry_state)
     )
   }
 
   private fun formFieldsForBangladesh(): List<InputField<*>> {
     return listOf(
-        PatientNameField(),
-        AgeField(),
-        DateOfBirthField(dateTimeFormatter, today),
-        LandlineOrMobileField(),
-        GenderField(),
-        BangladeshNationalIdField(),
-        StreetAddressField(),
-        VillageOrColonyField(),
-        ZoneField(),
-        DistrictField(),
-        StateField()
+        PatientNameField(R.string.patiententry_full_name),
+        AgeField(R.string.patiententry_age),
+        DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
+        LandlineOrMobileField(R.string.patiententry_phone_number),
+        GenderField(labelResId = 0),
+        BangladeshNationalIdField(R.string.patiententry_bangladesh_national_id),
+        StreetAddressField(R.string.patiententry_street_address),
+        VillageOrColonyField(R.string.patiententry_colony_or_village),
+        ZoneField(R.string.patiententry_zone),
+        DistrictField(R.string.patiententry_district),
+        StateField(R.string.patiententry_state)
     )
   }
 }

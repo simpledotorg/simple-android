@@ -6,7 +6,7 @@ import org.simple.clinic.newentry.form.ValidationError.MissingValue
 import org.simple.clinic.patient.Gender.Female
 
 class GenderFieldTest {
-  private val genderField = GenderField()
+  private val genderField = GenderField(labelResId = 0)
 
   @Test
   fun `it returns a missing value error if gender is absent`() {

@@ -9,8 +9,9 @@ import org.threeten.bp.format.DateTimeParseException
 
 class DateOfBirthField(
     private val dateTimeFormatter: DateTimeFormatter,
-    private val today: LocalDate
-) : InputField<String>() {
+    private val today: LocalDate,
+    labelResId: Int
+) : InputField<String>(labelResId) {
   override fun validate(value: String): Set<ValidationError> {
     if (value.isBlank()) return setOf(MissingValue)
 

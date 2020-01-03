@@ -5,7 +5,7 @@ import org.junit.Test
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
 
 class AgeFieldTest {
-  private val ageField = AgeField()
+  private val ageField = AgeField(labelResId = 0)
 
   @Test
   fun `it returns a missing value error when the field is empty`() {

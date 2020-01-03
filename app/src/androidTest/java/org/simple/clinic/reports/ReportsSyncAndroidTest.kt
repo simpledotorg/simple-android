@@ -51,7 +51,7 @@ class ReportsSyncAndroidTest {
 
     val reportsFileAfterSync = reportsRepository.reportsFile().unwrapJust().blockingFirst()
 
-    assertThat(reportsFileBeforeSync).isSameAs(None)
+    assertThat(reportsFileBeforeSync).isSameInstanceAs(None)
     assertThat(reportsFileAfterSync.length()).isGreaterThan(0L)
   }
 }

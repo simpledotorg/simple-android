@@ -37,7 +37,7 @@ buildscript {
       jbcrypt             : '0.3m',
       workManager         : '2.2.0',
       faker               : '1.2.7',
-      truth               : '0.40',
+      truth               : '1.0',
       junit               : '4.12',
       mockito             : '2.18.3',
       mockitoKotlin       : '1.5.0',
@@ -65,7 +65,8 @@ buildscript {
       uuidGenerator       : '3.2.0',
       assistedInject      : '0.5.2',
       flipper             : '0.30.1',
-      soloader            : '0.5.1'
+      soloader            : '0.5.1',
+      asm                 : '7.2'
   ]
 
   repositories {

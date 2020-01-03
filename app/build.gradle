@@ -292,6 +292,13 @@ dependencies {
   debugImplementation "com.facebook.flipper:flipper:$versions.flipper"
   debugImplementation "com.facebook.flipper:flipper-network-plugin:$versions.flipper"
   debugImplementation "com.facebook.soloader:soloader:$versions.soloader"
+
+  testRuntimeOnly ("org.ow2.asm:asm:$versions.asm") {
+    because "not mandatory, but Truth recommends adding this dependency for better error reporting"
+  }
+  androidTestRuntimeOnly ("org.ow2.asm:asm:$versions.asm") {
+    because "not mandatory, but Truth recommends adding this dependency for better error reporting"
+  }
 }
 
 // This must always be present at the bottom of this file, as per:

@@ -196,7 +196,7 @@ class UserSessionTest {
 
     val result = userSession.logout().blockingGet()
 
-    assertThat(result).isSameAs(UserSession.LogoutResult.Success)
+    assertThat(result).isSameInstanceAs(UserSession.LogoutResult.Success)
 
     verify(fileStorage).clearAllFiles()
 
@@ -225,7 +225,7 @@ class UserSessionTest {
 
     val result = userSession.logout().blockingGet()
 
-    assertThat(result).isSameAs(UserSession.LogoutResult.Success)
+    assertThat(result).isSameInstanceAs(UserSession.LogoutResult.Success)
   }
 
   @Test

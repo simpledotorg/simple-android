@@ -65,7 +65,7 @@ class ErrorResolverTest {
       expectedActualCause: Throwable
   ) {
     val resolvedError = ErrorResolver.resolve(compositeException)
-    assertThat(resolvedError.actualCause).isSameAs(expectedActualCause)
+    assertThat(resolvedError.actualCause).isSameInstanceAs(expectedActualCause)
   }
 
   @Suppress("Unused")
@@ -115,8 +115,8 @@ class ErrorResolverTest {
 
     // then
     with(resolvedError) {
-      assertThat(this::class).isSameAs(Unauthenticated::class)
-      assertThat(actualCause).isSameAs(exception)
+      assertThat(this::class).isSameInstanceAs(Unauthenticated::class)
+      assertThat(actualCause).isSameInstanceAs(exception)
     }
   }
 
@@ -131,8 +131,8 @@ class ErrorResolverTest {
 
     // then
     with(resolvedError) {
-      assertThat(this::class).isSameAs(Unexpected::class)
-      assertThat(actualCause).isSameAs(exception)
+      assertThat(this::class).isSameInstanceAs(Unexpected::class)
+      assertThat(actualCause).isSameInstanceAs(exception)
     }
   }
 
@@ -147,8 +147,8 @@ class ErrorResolverTest {
 
     // then
     with(resolvedError) {
-      assertThat(this::class).isSameAs(ServerError::class)
-      assertThat(actualCause).isSameAs(exception)
+      assertThat(this::class).isSameInstanceAs(ServerError::class)
+      assertThat(actualCause).isSameInstanceAs(exception)
     }
   }
 

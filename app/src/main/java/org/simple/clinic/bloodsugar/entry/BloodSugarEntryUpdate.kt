@@ -2,6 +2,8 @@ package org.simple.clinic.bloodsugar.entry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.Valid
@@ -12,12 +14,16 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.LocalDate
 
-class BloodSugarEntryUpdate(
+class BloodSugarEntryUpdate @AssistedInject constructor(
     private val bloodSugarValidator: BloodSugarValidator,
     private val dateValidator: UserInputDateValidator,
-    private val dateInUserTimeZone: LocalDate,
+    @Assisted private val dateInUserTimeZone: LocalDate,
     private val inputDatePaddingCharacter: UserInputDatePaddingCharacter
 ) : Update<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect> {
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(dateInUserTimeZone: LocalDate): BloodSugarEntryUpdate
+  }
 
   override fun update(
       model: BloodSugarEntryModel,

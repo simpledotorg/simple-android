@@ -1,4 +1,4 @@
-![Build Status](https://github.com/simpledotorg/simple-android/workflows/CI/badge.svg)
+![Build Status](https://github.com/simpledotorg/simple-android/workflows/CI/badge.svg?event=pull_request)
 [![pullreminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
 
 # Simple

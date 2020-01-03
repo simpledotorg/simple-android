@@ -315,58 +315,20 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   override fun showValidationErrors(errors: Set<EditPatientValidationError>) {
     errors.forEach {
       when (it) {
-        FULL_NAME_EMPTY -> {
-          showEmptyFullNameError(true)
-        }
-
+        FULL_NAME_EMPTY -> showEmptyFullNameError(true)
         PHONE_NUMBER_EMPTY,
-        PHONE_NUMBER_LENGTH_TOO_SHORT -> {
-          showLengthTooShortPhoneNumberError()
-        }
-
-        PHONE_NUMBER_LENGTH_TOO_LONG -> {
-          showLengthTooLongPhoneNumberError()
-        }
-
-        COLONY_OR_VILLAGE_EMPTY -> {
-          showEmptyColonyOrVillageError(true)
-        }
-
-        DISTRICT_EMPTY -> {
-          showEmptyDistrictError(true)
-        }
-
-        STATE_EMPTY -> {
-          showEmptyStateError(true)
-        }
-
-        BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> {
-          showAgeEmptyError(true)
-        }
-
-        DATE_OF_BIRTH_PARSE_ERROR -> {
-          showInvalidaDateOfBithError()
-        }
-
-        DATE_OF_BIRTH_IN_FUTURE -> {
-          showDateOfBirthIsInFutureError()
-        }
-
-        AGE_EXCEEDS_MAX_LIMIT -> {
-          showAgeExceedsMaxLimitError()
-        }
-
-        DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT -> {
-          showDateOfBirthExceedsMaxLimitError()
-        }
-
-        AGE_EXCEEDS_MIN_LIMIT -> {
-          showAgeExceedsMinLimitError()
-        }
-
-        DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT -> {
-          showDateOfBirthExceedsMinLimitError()
-        }
+        PHONE_NUMBER_LENGTH_TOO_SHORT -> showLengthTooShortPhoneNumberError()
+        PHONE_NUMBER_LENGTH_TOO_LONG -> showLengthTooLongPhoneNumberError()
+        COLONY_OR_VILLAGE_EMPTY -> showEmptyColonyOrVillageError(true)
+        DISTRICT_EMPTY -> showEmptyDistrictError(true)
+        STATE_EMPTY -> showEmptyStateError(true)
+        BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> showAgeEmptyError(true)
+        DATE_OF_BIRTH_PARSE_ERROR -> showInvalidaDateOfBithError()
+        DATE_OF_BIRTH_IN_FUTURE -> showDateOfBirthIsInFutureError()
+        AGE_EXCEEDS_MAX_LIMIT -> showAgeExceedsMaxLimitError()
+        DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT -> showDateOfBirthExceedsMaxLimitError()
+        AGE_EXCEEDS_MIN_LIMIT -> showAgeExceedsMinLimitError()
+        DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT -> showDateOfBirthExceedsMinLimitError()
       }.exhaustive()
     }
   }

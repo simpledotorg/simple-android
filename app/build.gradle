@@ -266,7 +266,6 @@ dependencies {
   implementation "com.facebook.shimmer:shimmer:$versions.fbShimmer"
   implementation "com.alimuzaffar.lib:pinentryedittext:$versions.pinEntryEditText"
   implementation "info.debatty:java-string-similarity:$versions.javaStringSimilarity"
-  androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
   debugImplementation "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary"
 
   implementation "com.budiyev.android:code-scanner:$versions.codeScanner"

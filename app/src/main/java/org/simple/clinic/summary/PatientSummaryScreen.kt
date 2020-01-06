@@ -64,7 +64,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi, BloodPressureSummaryUi {
+class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
 
   companion object {
     const val REQCODE_BP_ENTRY = 1
@@ -91,18 +91,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @Inject
   lateinit var timestampGenerator: RelativeTimestampGenerator
-
-  @Inject
-  lateinit var config: PatientSummaryConfig
-
-  @Inject
-  lateinit var utcClock: UtcClock
-
-  @Inject
-  lateinit var zoneId: ZoneId
-
-  @field:[Inject Named("time_for_bps_recorded")]
-  lateinit var timeFormatterForBp: DateTimeFormatter
 
   @Deprecated("""
     ~ DOA ~
@@ -336,20 +324,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     )
   }
 
-  override fun populateBloodPressures(bloodPressureMeasurements: List<BloodPressureMeasurement>) {
-    bloodPressureSummaryView.render(
-        bloodPressureMeasurements = bloodPressureMeasurements,
-        utcClock = utcClock,
-        placeholderLimit = config.numberOfBpPlaceholders,
-        timestampGenerator = timestampGenerator,
-        dateFormatter = exactDateFormatter,
-        canEditFor = config.bpEditableDuration,
-        bpTimeFormatter = timeFormatterForBp,
-        zoneId = zoneId,
-        userClock = userClock
-    )
-  }
-
   override fun showBloodPressureEntrySheet(patientUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
     activity.startActivityForResult(intent, REQCODE_BP_ENTRY)
@@ -401,7 +375,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     editButton.visibility = View.VISIBLE
   }
 
-  override fun bloodPressureSummaryUi(): BloodPressureSummaryUi = this
+  override fun bloodPressureSummaryUi(): BloodPressureSummaryUi = bloodPressureSummaryView
 }
 
 @Parcelize

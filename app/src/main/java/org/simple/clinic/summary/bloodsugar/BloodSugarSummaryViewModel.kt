@@ -5,12 +5,12 @@ import java.util.UUID
 
 data class BloodSugarSummaryViewModel(
     val patientUuid: UUID,
-    val measurements: List<BloodSugarMeasurement>
+    val measurements: List<BloodSugarMeasurement>?
 ) {
 
   companion object {
     fun create(patientUuid: UUID): BloodSugarSummaryViewModel {
-      return BloodSugarSummaryViewModel(patientUuid, emptyList())
+      return BloodSugarSummaryViewModel(patientUuid, null)
     }
   }
 

@@ -681,7 +681,7 @@ class PatientSummaryScreenControllerTest {
         openIntention = openIntention,
         screenCreatedTimestamp = screenCreatedTimestamp
     )
-    uiEvents.onNext(PatientSummaryScreenCreated(screenCreatedTimestamp))
+    uiEvents.onNext(PatientSummaryScreenCreated())
   }
 
   private fun setupControllerWithoutScreenCreated(

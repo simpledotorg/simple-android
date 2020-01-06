@@ -198,15 +198,11 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun showScheduleAppointmentSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreatedEvents = events.ofType<PatientSummaryScreenCreated>()
-
     val backClicks = events.ofType<PatientSummaryBackClicked>()
     val doneClicks = events.ofType<PatientSummaryDoneClicked>()
 
     val hasSummaryItemChangedStream = backClicks
-        .zipWith(screenCreatedEvents) { _, screenCreated ->
-          patientRepository.hasPatientDataChangedSince(patientUuid, screenCreated.screenCreatedTimestamp)
-        }
+        .map { patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp) }
 
     val allBpsForPatientDeletedStream = backClicks
         .cast<UiEvent>()
@@ -244,16 +240,13 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun goBackWhenBackClicked(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreatedEvents = events.ofType<PatientSummaryScreenCreated>()
-
     val allBpsForPatientDeletedStream = events
         .ofType<PatientSummaryBackClicked>()
         .map { doesNotHaveBloodPressures(patientUuid) }
 
     val hasSummaryItemChangedStream = events
         .ofType<PatientSummaryBackClicked>()
-        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated }
-        .map { screenCreated -> patientRepository.hasPatientDataChangedSince(patientUuid, screenCreated.screenCreatedTimestamp) }
+        .map { patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp) }
 
     val shouldGoBackStream = Observables
         .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)

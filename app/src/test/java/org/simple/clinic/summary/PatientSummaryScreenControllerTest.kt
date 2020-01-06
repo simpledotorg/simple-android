@@ -673,7 +673,14 @@ class PatientSummaryScreenControllerTest {
       numberOfBpsToDisplay: Int = this.bpDisplayLimit,
       bpEditableDuration: Duration = Duration.ofMinutes(60)
   ) {
-    setupControllerWithoutScreenCreated(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration, patientUuid, openIntention)
+    setupControllerWithoutScreenCreated(
+        numberOfBpPlaceholders = numberOfBpPlaceholders,
+        numberOfBpsToDisplay = numberOfBpsToDisplay,
+        bpEditableDuration = bpEditableDuration,
+        patientUuid = patientUuid,
+        openIntention = openIntention,
+        screenCreatedTimestamp = screenCreatedTimestamp
+    )
     uiEvents.onNext(PatientSummaryScreenCreated(screenCreatedTimestamp))
   }
 
@@ -682,20 +689,23 @@ class PatientSummaryScreenControllerTest {
       numberOfBpsToDisplay: Int = this.bpDisplayLimit,
       bpEditableDuration: Duration = Duration.ofMinutes(60),
       patientUuid: UUID = this.patientUuid,
-      openIntention: OpenIntention
+      openIntention: OpenIntention,
+      screenCreatedTimestamp: Instant = Instant.now(utcClock)
   ) {
     val config = PatientSummaryConfig(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
-    createController(config, patientUuid, openIntention)
+    createController(config, patientUuid, openIntention, screenCreatedTimestamp)
   }
 
   private fun createController(
       config: PatientSummaryConfig,
       patientUuid: UUID,
-      openIntention: OpenIntention
+      openIntention: OpenIntention,
+      screenCreatedTimestamp: Instant
   ) {
     val controller = PatientSummaryScreenController(
         patientUuid = patientUuid,
         openIntention = openIntention,
+        screenCreatedTimestamp = screenCreatedTimestamp,
         patientRepository = patientRepository,
         bpRepository = bpRepository,
         prescriptionRepository = prescriptionRepository,

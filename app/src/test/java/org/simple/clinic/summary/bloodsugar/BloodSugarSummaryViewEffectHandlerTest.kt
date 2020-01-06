@@ -16,7 +16,13 @@ class BloodSugarSummaryViewEffectHandlerTest {
 
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val uiActions = mock<UiActions>()
-  private val testCase = EffectHandlerTestCase(BloodSugarSummaryViewEffectHandler.create(bloodSugarRepository, TrampolineSchedulersProvider(), uiActions))
+  private val effectHandler = BloodSugarSummaryViewEffectHandler(
+      bloodSugarRepository,
+      TrampolineSchedulersProvider(),
+      uiActions
+  ).build()
+
+  private val testCase = EffectHandlerTestCase(effectHandler)
 
   @Test
   fun `when fetch blood sugar effect is received then blood sugar should be fetched`() {

@@ -39,6 +39,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import java.util.UUID
 
 typealias Ui = PatientSummaryScreenUi
@@ -47,6 +48,7 @@ typealias UiChange = (Ui) -> Unit
 class PatientSummaryScreenController @AssistedInject constructor(
     @Assisted private val patientUuid: UUID,
     @Assisted private val openIntention: OpenIntention,
+    @Assisted private val screenCreatedTimestamp: Instant,
     private val patientRepository: PatientRepository,
     private val bpRepository: BloodPressureRepository,
     private val prescriptionRepository: PrescriptionRepository,
@@ -58,7 +60,11 @@ class PatientSummaryScreenController @AssistedInject constructor(
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(patientUuid: UUID, openIntention: OpenIntention): PatientSummaryScreenController
+    fun create(
+        patientUuid: UUID,
+        openIntention: OpenIntention,
+        screenCreatedTimestamp: Instant
+    ): PatientSummaryScreenController
   }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {

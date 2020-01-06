@@ -60,6 +60,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -681,7 +682,7 @@ class PatientSummaryScreenControllerTest {
         openIntention = openIntention,
         screenCreatedTimestamp = screenCreatedTimestamp
     )
-    uiEvents.onNext(PatientSummaryScreenCreated())
+    uiEvents.onNext(ScreenCreated())
   }
 
   private fun setupControllerWithoutScreenCreated(

@@ -38,6 +38,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -93,7 +94,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PatientSummaryScreenCreated>()
+    return events.ofType<ScreenCreated>()
         .take(1L)
         .doOnNext { Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
         .flatMap { Observable.empty<UiChange>() }
@@ -231,7 +232,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
 
   private fun openLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<PatientSummaryScreenCreated>()
+        .ofType<ScreenCreated>()
         .filter { openIntention is LinkIdWithPatient }
         .map {
           val linkIdWithPatient = openIntention as LinkIdWithPatient
@@ -370,7 +371,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun exitScreenIfLinkIdWithPatientIsCancelled(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreates = events.ofType<PatientSummaryScreenCreated>()
+    val screenCreates = events.ofType<ScreenCreated>()
     val linkIdCancelled = events.ofType<PatientSummaryLinkIdCancelled>()
 
     return Observables.combineLatest(screenCreates, linkIdCancelled)

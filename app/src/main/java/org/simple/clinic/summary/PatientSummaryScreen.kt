@@ -182,8 +182,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
-    return Observable.just(PatientSummaryScreenCreated(screenKey.screenCreatedTimestamp))
+    return Observable.just(PatientSummaryScreenCreated())
   }
 
   private fun doneClicks() = doneButtonFrame.button.clicks().map { PatientSummaryDoneClicked() }

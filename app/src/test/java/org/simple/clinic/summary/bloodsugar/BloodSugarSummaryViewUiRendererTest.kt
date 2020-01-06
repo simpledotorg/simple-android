@@ -36,4 +36,14 @@ class BloodSugarSummaryViewUiRendererTest {
     verify(ui).showBloodSugarSummary(bloodSugars)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when blood sugar summary is empty then show empty ui state`() {
+    //when
+    renderer.render(defaultModel.summaryFetched(emptyList()))
+
+    //then
+    verify(ui).showNoBloodSugarsView()
+    verifyNoMoreInteractions(ui)
+  }
 }

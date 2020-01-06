@@ -674,7 +674,7 @@ class PatientSummaryScreenControllerTest {
       bpEditableDuration: Duration = Duration.ofMinutes(60)
   ) {
     setupControllerWithoutScreenCreated(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration, patientUuid, openIntention)
-    uiEvents.onNext(PatientSummaryScreenCreated(openIntention, screenCreatedTimestamp))
+    uiEvents.onNext(PatientSummaryScreenCreated(screenCreatedTimestamp))
   }
 
   private fun setupControllerWithoutScreenCreated(

@@ -5,8 +5,6 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.widgets.UiEvent
 
-class PatientSummaryScreenCreated : UiEvent
-
 class PatientSummaryBackClicked : UiEvent {
   override val analyticsName = "Patient Summary:Back Clicked"
 }

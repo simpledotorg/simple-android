@@ -142,7 +142,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     setupEditButtonClicks()
 
     val controller = with(screenRouter.key<PatientSummaryScreenKey>(this)) {
-      controllerFactory.create(patientUuid)
+      controllerFactory.create(patientUuid, intention)
     }
 
     bindUiToController(

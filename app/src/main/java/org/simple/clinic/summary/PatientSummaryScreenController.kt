@@ -46,6 +46,7 @@ typealias UiChange = (Ui) -> Unit
 
 class PatientSummaryScreenController @AssistedInject constructor(
     @Assisted private val patientUuid: UUID,
+    @Assisted private val openIntention: OpenIntention,
     private val patientRepository: PatientRepository,
     private val bpRepository: BloodPressureRepository,
     private val prescriptionRepository: PrescriptionRepository,
@@ -57,7 +58,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(patientUuid: UUID): PatientSummaryScreenController
+    fun create(patientUuid: UUID, openIntention: OpenIntention): PatientSummaryScreenController
   }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {

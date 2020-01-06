@@ -7,7 +7,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 
 data class PatientSummaryScreenCreated(
-    val openIntention: OpenIntention,
     val screenCreatedTimestamp: Instant
 ) : UiEvent
 

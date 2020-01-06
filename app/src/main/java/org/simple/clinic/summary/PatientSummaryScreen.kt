@@ -52,6 +52,7 @@ import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -182,7 +183,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    return Observable.just(PatientSummaryScreenCreated())
+    return Observable.just(ScreenCreated())
   }
 
   private fun doneClicks() = doneButtonFrame.button.clicks().map { PatientSummaryDoneClicked() }

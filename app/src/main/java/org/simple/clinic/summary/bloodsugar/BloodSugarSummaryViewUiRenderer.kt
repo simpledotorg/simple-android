@@ -5,5 +5,8 @@ import org.simple.clinic.mobius.ViewRenderer
 class BloodSugarSummaryViewUiRenderer(private val ui: BloodSugarSummaryViewUi) : ViewRenderer<BloodSugarSummaryViewModel> {
 
   override fun render(model: BloodSugarSummaryViewModel) {
+    if (model.measurements.isNotEmpty()) {
+      ui.showBloodSugarSummary(model.measurements)
+    }
   }
 }

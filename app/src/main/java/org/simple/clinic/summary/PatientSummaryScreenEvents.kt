@@ -5,9 +5,11 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
-import java.util.UUID
 
-data class PatientSummaryScreenCreated(val patientUuid: UUID, val openIntention: OpenIntention, val screenCreatedTimestamp: Instant) : UiEvent
+data class PatientSummaryScreenCreated(
+    val openIntention: OpenIntention,
+    val screenCreatedTimestamp: Instant
+) : UiEvent
 
 class PatientSummaryBackClicked : UiEvent {
   override val analyticsName = "Patient Summary:Back Clicked"

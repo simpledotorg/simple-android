@@ -320,7 +320,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   override fun populateList(
       prescribedDrugs: List<PrescribedDrug>,
-      bloodPressureMeasurements: List<BloodPressureMeasurement>,
       medicalHistory: MedicalHistory
   ) {
     drugSummaryView.bind(
@@ -334,7 +333,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
         dateFormatter = exactDateFormatter
     )
+  }
 
+  override fun populateBloodPressures(bloodPressureMeasurements: List<BloodPressureMeasurement>) {
     bloodPressureSummaryView.render(
         bloodPressureMeasurements = bloodPressureMeasurements,
         utcClock = utcClock,

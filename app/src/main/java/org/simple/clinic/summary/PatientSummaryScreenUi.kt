@@ -1,17 +1,15 @@
 package org.simple.clinic.summary
 
-import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryUi
 import java.util.UUID
 
 interface PatientSummaryScreenUi {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
 
   fun populateList(prescribedDrugs: List<PrescribedDrug>, medicalHistory: MedicalHistory)
-
-  fun populateBloodPressures(bloodPressureMeasurements: List<BloodPressureMeasurement>)
 
   fun showBloodPressureEntrySheet(patientUuid: UUID)
   fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID)
@@ -24,4 +22,6 @@ interface PatientSummaryScreenUi {
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
   fun hideLinkIdWithPatientView()
   fun showEditButton()
+
+  fun bloodPressureSummaryUi(): BloodPressureSummaryUi
 }

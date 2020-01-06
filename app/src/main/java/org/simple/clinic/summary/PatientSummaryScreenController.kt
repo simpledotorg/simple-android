@@ -40,7 +40,6 @@ import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
-import javax.inject.Inject
 
 typealias Ui = PatientSummaryScreenUi
 typealias UiChange = (Ui) -> Unit
@@ -70,7 +69,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
     return Observable.mergeArray(
         populateList(replayedEvents),
         reportViewedPatientEvent(replayedEvents),
-        populatePatientProfile(replayedEvents),
+        populatePatientProfile(),
         updateMedicalHistory(replayedEvents),
         openBloodPressureBottomSheet(replayedEvents),
         openPrescribedDrugsScreen(replayedEvents),
@@ -89,17 +88,13 @@ class PatientSummaryScreenController @AssistedInject constructor(
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSummaryScreenCreated>()
         .take(1L)
-        .doOnNext { (patientUuid, openIntention) -> Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
+        .map { it.openIntention }
+        .doOnNext { openIntention -> Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
         .flatMap { Observable.empty<UiChange>() }
   }
 
-  private fun populatePatientProfile(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuid = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
-
-    val sharedPatients = patientUuid
-        .flatMap { patientRepository.patient(it) }
+  private fun populatePatientProfile(): Observable<UiChange> {
+    val sharedPatients = patientRepository.patient(patientUuid)
         .map {
           // We do not expect the patient to get deleted while this screen is already open.
           (it as Just).value
@@ -111,11 +106,8 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .flatMap { patient -> patientRepository.address(patient.addressUuid) }
         .map { (it as Just).value }
 
-    val phoneNumbers = patientUuid
-        .flatMap { patientRepository.phoneNumber(it) }
-
-    val bpPassport = patientUuid
-        .flatMap { patientRepository.bpPassportForPatient(it) }
+    val phoneNumbers = patientRepository.phoneNumber(patientUuid)
+    val bpPassport = patientRepository.bpPassportForPatient(patientUuid)
 
     return Observables
         .combineLatest(sharedPatients, addresses, phoneNumbers, bpPassport, ::PatientSummaryProfile)
@@ -131,16 +123,10 @@ class PatientSummaryScreenController @AssistedInject constructor(
 
   private fun mergeWithPatientSummaryChanges(): ObservableTransformer<UiEvent, UiEvent> {
     return ObservableTransformer { events ->
-      val patientUuids = events
-          .ofType<PatientSummaryScreenCreated>()
-          .map { it.patientUuid }
-          .distinctUntilChanged()
 
-      val prescribedDrugsStream = patientUuids.flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
-
-      val bloodPressures = patientUuids.flatMap { patientUuid -> bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay) }
-
-      val medicalHistoryItems = patientUuids.flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
+      val prescribedDrugsStream = prescriptionRepository.newestPrescriptionsForPatient(patientUuid)
+      val bloodPressures = bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)
+      val medicalHistoryItems = medicalHistoryRepository.historyForPatientOrDefault(patientUuid)
 
       // combineLatest() is important here so that the first data-set for the list
       // is dispatched in one go instead of them appearing one after another on the UI.
@@ -168,12 +154,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun updateMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuids = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
-
-    val medicalHistories = patientUuids
-        .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
+    val medicalHistories = medicalHistoryRepository.historyForPatientOrDefault(patientUuid)
 
     val updateHistory = { medicalHistory: MedicalHistory, question: MedicalHistoryQuestion, answer: Answer ->
       when (question) {
@@ -199,46 +180,32 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun openBloodPressureBottomSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuid = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
-
     return events
         .ofType<PatientSummaryNewBpClicked>()
-        .withLatestFrom(patientUuid)
-        .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheet(patientUuid) } }
+        .map { { ui: Ui -> ui.showBloodPressureEntrySheet(patientUuid) } }
   }
 
   private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuid = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
-
     return events
         .ofType<PatientSummaryUpdateDrugsClicked>()
-        .withLatestFrom(patientUuid)
-        .map { (_, patientUuid) ->
-          { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) }
-        }
+        .map { { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) } }
   }
 
   private fun showScheduleAppointmentSheet(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreatedEvents = events.ofType<PatientSummaryScreenCreated>()
 
-    val patientUuids = screenCreatedEvents.map { it.patientUuid }
-
     val backClicks = events.ofType<PatientSummaryBackClicked>()
     val doneClicks = events.ofType<PatientSummaryDoneClicked>()
 
     val hasSummaryItemChangedStream = backClicks
-        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid to screenCreated.screenCreatedTimestamp }
-        .map { (patientUuid, screenCreatedAt) -> patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedAt) }
+        .zipWith(screenCreatedEvents) { _, screenCreated ->
+          patientRepository.hasPatientDataChangedSince(patientUuid, screenCreated.screenCreatedTimestamp)
+        }
 
     val allBpsForPatientDeletedStream = backClicks
         .cast<UiEvent>()
         .mergeWith(doneClicks.cast())
-        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid }
-        .map(::doesNotHaveBloodPressures)
+        .map { doesNotHaveBloodPressures(patientUuid) }
 
     val shouldShowScheduleAppointmentSheetOnBackClicksStream = Observables
         .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)
@@ -247,14 +214,14 @@ class PatientSummaryScreenController @AssistedInject constructor(
         }
 
     val showScheduleAppointmentSheetOnBackClicks = backClicks
-        .withLatestFrom(shouldShowScheduleAppointmentSheetOnBackClicksStream, patientUuids)
-        .filter { (_, shouldShowScheduleAppointmentSheet, _) -> shouldShowScheduleAppointmentSheet }
-        .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
+        .withLatestFrom(shouldShowScheduleAppointmentSheetOnBackClicksStream)
+        .filter { (_, shouldShowScheduleAppointmentSheet) -> shouldShowScheduleAppointmentSheet }
+        .map { (_, _) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid) } }
 
     val showScheduleAppointmentSheetOnDoneClicks = doneClicks
-        .withLatestFrom(allBpsForPatientDeletedStream, patientUuids)
-        .filter { (_, allBpsForPatientDeleted, _) -> allBpsForPatientDeleted.not() }
-        .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
+        .withLatestFrom(allBpsForPatientDeletedStream)
+        .filter { (_, allBpsForPatientDeleted) -> allBpsForPatientDeleted.not() }
+        .map { (_, _) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid) } }
 
     return showScheduleAppointmentSheetOnBackClicks
         .mergeWith(showScheduleAppointmentSheetOnDoneClicks)
@@ -266,7 +233,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .filter { it.openIntention is LinkIdWithPatient }
         .map {
           val linkIdWithPatient = it.openIntention as LinkIdWithPatient
-          { ui: Ui -> ui.showLinkIdWithPatientView(it.patientUuid, linkIdWithPatient.identifier) }
+          { ui: Ui -> ui.showLinkIdWithPatientView(patientUuid, linkIdWithPatient.identifier) }
         }
   }
 
@@ -275,13 +242,14 @@ class PatientSummaryScreenController @AssistedInject constructor(
 
     val openIntentions = screenCreatedEvents.map { it.openIntention }
 
-    val allBpsForPatientDeletedStream = events.ofType<PatientSummaryBackClicked>()
-        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid }
-        .map(::doesNotHaveBloodPressures)
+    val allBpsForPatientDeletedStream = events
+        .ofType<PatientSummaryBackClicked>()
+        .map { doesNotHaveBloodPressures(patientUuid) }
 
-    val hasSummaryItemChangedStream = events.ofType<PatientSummaryBackClicked>()
-        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated.patientUuid to screenCreated.screenCreatedTimestamp }
-        .map { (patientUuid, screenCreatedAt) -> patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedAt) }
+    val hasSummaryItemChangedStream = events
+        .ofType<PatientSummaryBackClicked>()
+        .zipWith(screenCreatedEvents) { _, screenCreated -> screenCreated }
+        .map { screenCreated -> patientRepository.hasPatientDataChangedSince(patientUuid, screenCreated.screenCreatedTimestamp) }
 
     val shouldGoBackStream = Observables
         .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)
@@ -308,9 +276,9 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun goToHomeOnDoneClick(events: Observable<UiEvent>): Observable<UiChange> {
-    val allBpsForPatientDeletedStream = events.ofType<PatientSummaryDoneClicked>()
-        .zipWith(events.ofType<PatientSummaryScreenCreated>()) { _, screenCreated -> screenCreated.patientUuid }
-        .map(::doesNotHaveBloodPressures)
+    val allBpsForPatientDeletedStream = events
+        .ofType<PatientSummaryDoneClicked>()
+        .map { doesNotHaveBloodPressures(patientUuid) }
 
     return events
         .ofType<PatientSummaryDoneClicked>()
@@ -360,14 +328,10 @@ class PatientSummaryScreenController @AssistedInject constructor(
   private fun showUpdatePhoneDialogIfRequired(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreations = events.ofType<PatientSummaryScreenCreated>()
 
-    val showForInvalidPhone = screenCreations
-        .map { it.patientUuid }
-        .switchMap { patientUuid ->
-          hasInvalidPhone(patientUuid)
-              .take(1)
-              .filter { invalid -> invalid }
-              .map { { ui: Ui -> ui.showUpdatePhoneDialog(patientUuid) } }
-        }
+    val showForInvalidPhone = hasInvalidPhone(patientUuid)
+        .take(1)
+        .filter { invalid -> invalid }
+        .map { { ui: Ui -> ui.showUpdatePhoneDialog(patientUuid) } }
 
     val waitTillABpIsRecorded = events
         .ofType<PatientSummaryBloodPressureSaved>()
@@ -376,15 +340,14 @@ class PatientSummaryScreenController @AssistedInject constructor(
     val showForMissingPhone = Observables
         .combineLatest(screenCreations, waitTillABpIsRecorded) { screenCreated, _ -> screenCreated }
         .filter { it.openIntention != ViewNewPatient }
-        .map { it.patientUuid }
-        .switchMap { patientUuid ->
+        .switchMap {
           isMissingPhoneAndShouldBeReminded(patientUuid)
               .take(1)
               .filter { missing -> missing }
               .flatMap {
                 missingPhoneReminderRepository
                     .markReminderAsShownFor(patientUuid)
-                    .andThen(Observable.just({ ui: Ui -> ui.showAddPhoneDialog(patientUuid) }))
+                    .andThen(Observable.just { ui: Ui -> ui.showAddPhoneDialog(patientUuid) })
               }
         }
 

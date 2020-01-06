@@ -65,7 +65,7 @@ android {
     multiDexEnabled true
 
     testInstrumentationRunner "org.simple.clinic.AndroidTestJUnitRunner"
-    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    proguardFiles getDefaultProguardFile(defaultProguardFile), 'proguard-rules.pro'
   }
 
   buildTypes {

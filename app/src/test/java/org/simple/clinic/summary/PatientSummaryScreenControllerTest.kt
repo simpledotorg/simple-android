@@ -266,7 +266,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when blood pressure is clicked for editing, blood pressure update sheet should show up`() {
-    setupControllerWithoutScreenCreated()
+    setupControllerWithoutScreenCreated(openIntention = OpenIntention.ViewExistingPatient)
 
     val bloodPressureMeasurement = PatientMocker.bp()
     uiEvents.onNext(PatientSummaryBpClicked(bloodPressureMeasurement))
@@ -673,7 +673,7 @@ class PatientSummaryScreenControllerTest {
       numberOfBpsToDisplay: Int = this.bpDisplayLimit,
       bpEditableDuration: Duration = Duration.ofMinutes(60)
   ) {
-    setupControllerWithoutScreenCreated(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration, patientUuid)
+    setupControllerWithoutScreenCreated(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration, patientUuid, openIntention)
     uiEvents.onNext(PatientSummaryScreenCreated(openIntention, screenCreatedTimestamp))
   }
 
@@ -681,18 +681,21 @@ class PatientSummaryScreenControllerTest {
       numberOfBpPlaceholders: Int = 0,
       numberOfBpsToDisplay: Int = this.bpDisplayLimit,
       bpEditableDuration: Duration = Duration.ofMinutes(60),
-      patientUuid: UUID = this.patientUuid
+      patientUuid: UUID = this.patientUuid,
+      openIntention: OpenIntention
   ) {
     val config = PatientSummaryConfig(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
-    createController(config, patientUuid)
+    createController(config, patientUuid, openIntention)
   }
 
   private fun createController(
       config: PatientSummaryConfig,
-      patientUuid: UUID
+      patientUuid: UUID,
+      openIntention: OpenIntention
   ) {
     val controller = PatientSummaryScreenController(
         patientUuid = patientUuid,
+        openIntention = openIntention,
         patientRepository = patientRepository,
         bpRepository = bpRepository,
         prescriptionRepository = prescriptionRepository,

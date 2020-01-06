@@ -39,6 +39,7 @@ import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryUi
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
@@ -63,7 +64,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
+class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi, BloodPressureSummaryUi {
 
   companion object {
     const val REQCODE_BP_ENTRY = 1
@@ -399,6 +400,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   override fun showEditButton() {
     editButton.visibility = View.VISIBLE
   }
+
+  override fun bloodPressureSummaryUi(): BloodPressureSummaryUi = this
 }
 
 @Parcelize

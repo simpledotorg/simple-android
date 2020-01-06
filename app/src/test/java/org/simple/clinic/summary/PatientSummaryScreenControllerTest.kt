@@ -673,21 +673,26 @@ class PatientSummaryScreenControllerTest {
       numberOfBpsToDisplay: Int = this.bpDisplayLimit,
       bpEditableDuration: Duration = Duration.ofMinutes(60)
   ) {
-    setupControllerWithoutScreenCreated(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
+    setupControllerWithoutScreenCreated(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration, patientUuid)
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, screenCreatedTimestamp))
   }
 
   private fun setupControllerWithoutScreenCreated(
       numberOfBpPlaceholders: Int = 0,
       numberOfBpsToDisplay: Int = this.bpDisplayLimit,
-      bpEditableDuration: Duration = Duration.ofMinutes(60)
+      bpEditableDuration: Duration = Duration.ofMinutes(60),
+      patientUuid: UUID = this.patientUuid
   ) {
     val config = PatientSummaryConfig(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
-    createController(config)
+    createController(config, patientUuid)
   }
 
-  private fun createController(config: PatientSummaryConfig) {
+  private fun createController(
+      config: PatientSummaryConfig,
+      patientUuid: UUID
+  ) {
     val controller = PatientSummaryScreenController(
+        patientUuid = patientUuid,
         patientRepository = patientRepository,
         bpRepository = bpRepository,
         prescriptionRepository = prescriptionRepository,

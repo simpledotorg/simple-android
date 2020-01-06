@@ -18,6 +18,6 @@ class BloodPressureSummaryViewController : ObservableTransformer<UiEvent, UiChan
         .ofType<PatientSummaryItemChanged>()
         .map { it.patientSummaryItems.bloodPressures }
         .distinctUntilChanged()
-        .map { { ui: Ui -> ui.populateBloodPressures(it) } }
+        .map { { ui: Ui -> ui.bloodPressureSummaryUi().populateBloodPressures(it) } }
   }
 }

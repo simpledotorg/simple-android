@@ -89,8 +89,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSummaryScreenCreated>()
         .take(1L)
-        .map { it.openIntention }
-        .doOnNext { openIntention -> Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
+        .doOnNext { Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
         .flatMap { Observable.empty<UiChange>() }
   }
 
@@ -231,17 +230,15 @@ class PatientSummaryScreenController @AssistedInject constructor(
   private fun openLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<PatientSummaryScreenCreated>()
-        .filter { it.openIntention is LinkIdWithPatient }
+        .filter { openIntention is LinkIdWithPatient }
         .map {
-          val linkIdWithPatient = it.openIntention as LinkIdWithPatient
+          val linkIdWithPatient = openIntention as LinkIdWithPatient
           { ui: Ui -> ui.showLinkIdWithPatientView(patientUuid, linkIdWithPatient.identifier) }
         }
   }
 
   private fun goBackWhenBackClicked(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreatedEvents = events.ofType<PatientSummaryScreenCreated>()
-
-    val openIntentions = screenCreatedEvents.map { it.openIntention }
 
     val allBpsForPatientDeletedStream = events
         .ofType<PatientSummaryBackClicked>()
@@ -258,19 +255,17 @@ class PatientSummaryScreenController @AssistedInject constructor(
           if (allBpsForPatientDeleted) true else hasSummaryItemChanged.not()
         }
 
-    val shouldGoBackWithIntentionStream = events
+    val shouldGoBackAfterBackClickedStream = events
         .ofType<PatientSummaryBackClicked>()
-        .withLatestFrom(shouldGoBackStream, openIntentions) { _, shouldGoBack, openIntention ->
-          shouldGoBack to openIntention
-        }
-        .filter { (shouldGoBack, _) -> shouldGoBack }
+        .withLatestFrom(shouldGoBackStream) { _, shouldGoBack -> shouldGoBack }
+        .filter { shouldGoBack -> shouldGoBack }
 
-    val goBackToHomeScreen = shouldGoBackWithIntentionStream
-        .filter { (_, openIntention) -> openIntention == ViewNewPatient || openIntention is LinkIdWithPatient }
+    val goBackToHomeScreen = shouldGoBackAfterBackClickedStream
+        .filter { openIntention == ViewNewPatient || openIntention is LinkIdWithPatient }
         .map { { ui: Ui -> ui.goToHomeScreen() } }
 
-    val goBackToSearchResults = shouldGoBackWithIntentionStream
-        .filter { (_, openIntention) -> openIntention == ViewExistingPatient }
+    val goBackToSearchResults = shouldGoBackAfterBackClickedStream
+        .filter { openIntention == ViewExistingPatient }
         .map { { ui: Ui -> ui.goToPreviousScreen() } }
 
     return goBackToHomeScreen.mergeWith(goBackToSearchResults)
@@ -289,10 +284,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun exitScreenAfterSchedulingAppointment(events: Observable<UiEvent>): Observable<UiChange> {
-    val openIntentions = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.openIntention }
-
     val scheduleAppointmentCloses = events
         .ofType<ScheduleAppointmentSheetClosed>()
 
@@ -303,10 +294,10 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val afterBackClicks = scheduleAppointmentCloses
-        .withLatestFrom(backClicks, openIntentions)
-        .map { (_, _, openIntention) ->
+        .withLatestFrom(backClicks)
+        .map { (_, _) ->
           { ui: Ui ->
-            when (openIntention!!) {
+            when (openIntention) {
               ViewExistingPatient -> ui.goToPreviousScreen()
               ViewNewPatient, is LinkIdWithPatient -> ui.goToHomeScreen()
             }.exhaustive()
@@ -327,8 +318,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun showUpdatePhoneDialogIfRequired(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreations = events.ofType<PatientSummaryScreenCreated>()
-
     val showForInvalidPhone = hasInvalidPhone(patientUuid)
         .take(1)
         .filter { invalid -> invalid }
@@ -338,9 +327,8 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .ofType<PatientSummaryBloodPressureSaved>()
         .take(1)
 
-    val showForMissingPhone = Observables
-        .combineLatest(screenCreations, waitTillABpIsRecorded) { screenCreated, _ -> screenCreated }
-        .filter { it.openIntention != ViewNewPatient }
+    val showForMissingPhone = waitTillABpIsRecorded
+        .filter { openIntention != ViewNewPatient }
         .switchMap {
           isMissingPhoneAndShouldBeReminded(patientUuid)
               .take(1)

@@ -69,6 +69,7 @@ import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewInjector
 import org.simple.clinic.summary.linkId.LinkIdWithPatientView
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
@@ -79,7 +80,7 @@ import org.threeten.bp.Instant
 import javax.inject.Named
 
 @Subcomponent(modules = [TheActivityModule::class])
-interface TheActivityComponent : OnboardingScreenInjector {
+interface TheActivityComponent : OnboardingScreenInjector, BloodPressureSummaryViewInjector {
 
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)

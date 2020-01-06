@@ -9,11 +9,9 @@ import java.util.UUID
 interface PatientSummaryScreenUi {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
 
-  fun populateList(
-      prescribedDrugs: List<PrescribedDrug>,
-      bloodPressureMeasurements: List<BloodPressureMeasurement>,
-      medicalHistory: MedicalHistory
-  )
+  fun populateList(prescribedDrugs: List<PrescribedDrug>, medicalHistory: MedicalHistory)
+
+  fun populateBloodPressures(bloodPressureMeasurements: List<BloodPressureMeasurement>)
 
   fun showBloodPressureEntrySheet(patientUuid: UUID)
   fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID)

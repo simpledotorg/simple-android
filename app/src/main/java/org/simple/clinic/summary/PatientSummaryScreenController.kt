@@ -1,5 +1,7 @@
 package org.simple.clinic.summary
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -43,7 +45,8 @@ import javax.inject.Inject
 typealias Ui = PatientSummaryScreenUi
 typealias UiChange = (Ui) -> Unit
 
-class PatientSummaryScreenController @Inject constructor(
+class PatientSummaryScreenController @AssistedInject constructor(
+    @Assisted private val patientUuid: UUID,
     private val patientRepository: PatientRepository,
     private val bpRepository: BloodPressureRepository,
     private val prescriptionRepository: PrescriptionRepository,
@@ -52,6 +55,11 @@ class PatientSummaryScreenController @Inject constructor(
     private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
     private val config: PatientSummaryConfig
 ) : ObservableTransformer<UiEvent, UiChange> {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(patientUuid: UUID): PatientSummaryScreenController
+  }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)

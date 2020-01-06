@@ -73,7 +73,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: PatientSummaryScreenController
+  lateinit var controllerFactory: PatientSummaryScreenController.Factory
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -140,6 +140,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     rootLayout.hideKeyboard()
 
     setupEditButtonClicks()
+
+    val controller = with(screenRouter.key<PatientSummaryScreenKey>(this)) {
+      controllerFactory.create(patientUuid)
+    }
 
     bindUiToController(
         ui = this,

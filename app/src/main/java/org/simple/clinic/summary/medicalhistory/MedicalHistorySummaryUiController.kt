@@ -21,6 +21,10 @@ class MedicalHistorySummaryUiController(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
+    return displayMedicalHistory(events)
+  }
+
+  private fun displayMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ScreenCreated>()
         .switchMap { repository.historyForPatientOrDefault(patientUuid) }

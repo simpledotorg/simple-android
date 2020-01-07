@@ -513,4 +513,9 @@
   <string name="bloodsugarentry_random_title">Random blood sugar</string>
   <string name="bloodsugarentry_post_prandial_title">Post prandial blood sugar</string>
   <string name="bloodsugarentry_fasting_title">Fasting blood sugar</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_reading_unit_type">%d mg/dl %s</string>
+  <string name="bloodsugarsummaryview_no_blood_sugars">No blood sugars added</string>
+  <string name="bloodsugarsummaryview_new_blood_sugar_button">New blood sugar</string>
 </resources>

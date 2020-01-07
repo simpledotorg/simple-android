@@ -16,7 +16,6 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.EditPatientScreenKey
@@ -137,8 +136,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             identifierLinkedEvents(),
             identifierLinkCancelledEvents(),
             updateDrugsClicks(),
-            cvHistoryAnswerToggles(),
-            editMeasurementClicks()
+            cvHistoryAnswerToggles()
         ),
         controller = controller,
         screenDestroys = this.detaches().map { ScreenDestroyed() }
@@ -227,14 +225,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
-  private fun editMeasurementClicks(): Observable<UiEvent> {
-    return Observable.create { emitter ->
-      bloodPressureSummaryView.editMeasurementClicked = { measurement -> emitter.onNext(PatientSummaryBpClicked(measurement)) }
-
-      emitter.setCancellable { bloodPressureSummaryView.editMeasurementClicked = null }
-    }
-  }
-
   @SuppressLint("SetTextI18n")
   override fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
@@ -306,11 +296,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
         dateFormatter = exactDateFormatter
     )
-  }
-
-  override fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {
-    val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bloodPressureMeasurementUuid)
-    activity.startActivity(intent)
   }
 
   override fun showScheduleAppointmentSheet(patientUuid: UUID) {

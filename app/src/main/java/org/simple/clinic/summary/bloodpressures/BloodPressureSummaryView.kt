@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.patientsummary_bpsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
@@ -36,13 +37,14 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-private typealias EditMeasurementClicked = (BloodPressureMeasurement) -> Unit
 private typealias BpRecorded = () -> Unit
 
 class BloodPressureSummaryView(
     context: Context,
     attributeSet: AttributeSet
 ) : CardView(context, attributeSet), BloodPressureSummaryUi {
+
+  private val adapterEvents = PublishSubject.create<BloodPressureSummaryEvent>()
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -78,7 +80,6 @@ class BloodPressureSummaryView(
     LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_content, this, true)
   }
 
-  var editMeasurementClicked: EditMeasurementClicked? = null
   var bpRecorded: BpRecorded? = null
 
   override fun onFinishInflate() {
@@ -99,7 +100,8 @@ class BloodPressureSummaryView(
         ui = this,
         events = Observable.merge(
             screenCreates(),
-            newBpClicks()
+            newBpClicks(),
+            adapterEvents
         ),
         controller = controllerFactory.create(screenKey.patientUuid),
         screenDestroys = screenDestroys
@@ -141,6 +143,11 @@ class BloodPressureSummaryView(
   override fun showBloodPressureEntrySheet(patientUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
     activity.startActivityForResult(intent, SUMMARY_REQCODE_BP_ENTRY)
+  }
+
+  override fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {
+    val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bloodPressureMeasurementUuid)
+    activity.startActivity(intent)
   }
 
   private fun render(
@@ -205,7 +212,7 @@ class BloodPressureSummaryView(
             daysAgo = timestamp,
             dateFormatter = dateFormatter,
             isBpEditable = isBpEditable(measurement, canEditFor, utcClock)
-        ) { clickedMeasurement -> editMeasurementClicked?.invoke(clickedMeasurement) }
+        ) { clickedMeasurement -> adapterEvents.onNext(BloodPressureClicked(clickedMeasurement)) }
 
         bloodPressureItemView
       }

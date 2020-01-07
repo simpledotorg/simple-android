@@ -157,7 +157,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .ofType<PatientSummaryItemChanged>()
         .map { it.patientSummaryItems }
         .map { patientSummary ->
-          { ui: Ui -> ui.populateList(patientSummary.prescription, patientSummary.medicalHistory) }
+          { ui: Ui -> ui.populateList(patientSummary.prescription) }
         }
   }
 

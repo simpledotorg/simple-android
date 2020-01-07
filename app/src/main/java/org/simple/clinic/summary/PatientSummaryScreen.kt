@@ -281,16 +281,15 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
-  override fun populateList(
-      prescribedDrugs: List<PrescribedDrug>,
-      medicalHistory: MedicalHistory
-  ) {
+  override fun populateList(prescribedDrugs: List<PrescribedDrug>) {
     drugSummaryView.bind(
         prescriptions = prescribedDrugs,
         dateFormatter = exactDateFormatter,
         userClock = userClock
     )
+  }
 
+  override fun populateMedicalHistory(medicalHistory: MedicalHistory) {
     medicalHistorySummaryView.bind(
         medicalHistory = medicalHistory,
         lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),

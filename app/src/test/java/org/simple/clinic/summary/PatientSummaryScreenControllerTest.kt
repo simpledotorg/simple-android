@@ -3,7 +3,6 @@ package org.simple.clinic.summary
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -24,16 +23,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.medicalhistory.Answer.Unanswered
-import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
@@ -54,13 +43,11 @@ import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScre
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryUi
-import org.simple.clinic.summary.medicalhistory.SummaryMedicalHistoryAnswerToggled
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -161,19 +148,6 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   @Parameters(method = "patient summary open intentions")
-  fun `patient's medical history should be populated`(openIntention: OpenIntention) {
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
-
-    val medicalHistory = medicalHistory(updatedAt = Instant.now(utcClock))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
-
-    setupControllerWithScreenCreated(openIntention)
-
-    verify(medicalHistorySummaryUi).populateMedicalHistory(medicalHistory)
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
   fun `when update medicines is clicked then BP medicines screen should be shown`(openIntention: OpenIntention) {
     setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
@@ -191,52 +165,6 @@ class PatientSummaryScreenControllerTest {
         "from" to openIntention.analyticsName()
     ))
     assertThat(reporter.receivedEvents).contains(expectedEvent)
-  }
-
-  @Test
-  @Parameters(method = "medicalHistoryQuestionsAndAnswers")
-  fun `when answers for medical history questions are toggled, then the updated medical history should be saved`(
-      openIntention: OpenIntention,
-      question: MedicalHistoryQuestion,
-      newAnswer: Answer
-  ) {
-    val medicalHistory = medicalHistory(
-        diagnosedWithHypertension = Unanswered,
-        isOnTreatmentForHypertension = Unanswered,
-        hasHadHeartAttack = Unanswered,
-        hasHadStroke = Unanswered,
-        hasHadKidneyDisease = Unanswered,
-        hasDiabetes = Unanswered,
-        updatedAt = Instant.now())
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
-    whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any<Instant>())).doReturn(Completable.complete())
-
-    setupControllerWithScreenCreated(openIntention)
-    uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
-
-    val updatedMedicalHistory = medicalHistory.copy(
-        diagnosedWithHypertension = if (question == DIAGNOSED_WITH_HYPERTENSION) newAnswer else Unanswered,
-        isOnTreatmentForHypertension = if (question == IS_ON_TREATMENT_FOR_HYPERTENSION) newAnswer else Unanswered,
-        hasHadHeartAttack = if (question == HAS_HAD_A_HEART_ATTACK) newAnswer else Unanswered,
-        hasHadStroke = if (question == HAS_HAD_A_STROKE) newAnswer else Unanswered,
-        hasHadKidneyDisease = if (question == HAS_HAD_A_KIDNEY_DISEASE) newAnswer else Unanswered,
-        hasDiabetes = if (question == HAS_DIABETES) newAnswer else Unanswered)
-    verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any<Instant>())
-  }
-
-  @Suppress("unused")
-  fun medicalHistoryQuestionsAndAnswers(): List<List<Any>> {
-    val questions = MedicalHistoryQuestion.values().asList()
-    return questions
-        .asSequence()
-        .map { question ->
-          listOf(
-              randomPatientSummaryOpenIntention(),
-              question,
-              randomMedicalHistoryAnswer()
-          )
-        }
-        .toList()
   }
 
   @Test

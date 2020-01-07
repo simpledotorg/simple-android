@@ -15,7 +15,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
@@ -27,7 +26,6 @@ import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
@@ -45,10 +43,8 @@ class PatientSummaryScreenController @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val bpRepository: BloodPressureRepository,
     private val prescriptionRepository: PrescriptionRepository,
-    private val medicalHistoryRepository: MedicalHistoryRepository,
     private val appointmentRepository: AppointmentRepository,
-    private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
-    private val clock: UtcClock
+    private val missingPhoneReminderRepository: MissingPhoneReminderRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   @AssistedInject.Factory

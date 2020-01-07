@@ -28,6 +28,7 @@ import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryUiController
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
@@ -47,7 +48,8 @@ class PatientSummaryScreenController @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val appointmentRepository: AppointmentRepository,
-    private val missingPhoneReminderRepository: MissingPhoneReminderRepository
+    private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
+    private val clock: UtcClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   @AssistedInject.Factory
@@ -83,7 +85,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun medicalHistorySummaryUiController(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.compose(MedicalHistorySummaryUiController(patientUuid, medicalHistoryRepository))
+    return events.compose(MedicalHistorySummaryUiController(patientUuid, medicalHistoryRepository, clock))
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {

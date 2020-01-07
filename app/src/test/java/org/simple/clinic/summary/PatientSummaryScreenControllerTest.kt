@@ -209,7 +209,7 @@ class PatientSummaryScreenControllerTest {
         hasDiabetes = Unanswered,
         updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
-    whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).doReturn(Completable.complete())
+    whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any<Instant>())).doReturn(Completable.complete())
 
     setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
@@ -221,7 +221,7 @@ class PatientSummaryScreenControllerTest {
         hasHadStroke = if (question == HAS_HAD_A_STROKE) newAnswer else Unanswered,
         hasHadKidneyDisease = if (question == HAS_HAD_A_KIDNEY_DISEASE) newAnswer else Unanswered,
         hasDiabetes = if (question == HAS_DIABETES) newAnswer else Unanswered)
-    verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any())
+    verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any<Instant>())
   }
 
   @Suppress("unused")
@@ -665,7 +665,8 @@ class PatientSummaryScreenControllerTest {
         prescriptionRepository = prescriptionRepository,
         medicalHistoryRepository = medicalHistoryRepository,
         appointmentRepository = appointmentRepository,
-        missingPhoneReminderRepository = missingPhoneReminderRepository
+        missingPhoneReminderRepository = missingPhoneReminderRepository,
+        clock = utcClock
     )
 
     controllerSubscription = uiEvents

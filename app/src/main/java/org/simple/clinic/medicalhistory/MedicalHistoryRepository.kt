@@ -5,7 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
@@ -75,6 +74,15 @@ class MedicalHistoryRepository @Inject constructor(
       val dirtyHistory = history.copy(
           syncStatus = SyncStatus.PENDING,
           updatedAt = updateTime())
+      dao.save(dirtyHistory)
+    }
+  }
+
+  fun save(history: MedicalHistory, updateTime: Instant): Completable {
+    return Completable.fromAction {
+      val dirtyHistory = history.copy(
+          syncStatus = SyncStatus.PENDING,
+          updatedAt = updateTime)
       dao.save(dirtyHistory)
     }
   }

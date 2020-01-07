@@ -1,8 +1,6 @@
 package org.simple.clinic.summary.medicalhistory
 
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -18,11 +16,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.summary.PatientSummaryScreenUi
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -37,6 +35,7 @@ class MedicalHistorySummaryUiControllerTest {
   private val repository = mock<MedicalHistoryRepository>()
   private val ui = mock<PatientSummaryScreenUi>()
   private val medicalHistorySummaryUi = mock<MedicalHistorySummaryUi>()
+  private val clock = TestUtcClock()
 
   private val events = PublishSubject.create<UiEvent>()
 
@@ -67,14 +66,13 @@ class MedicalHistorySummaryUiControllerTest {
     verifyNoMoreInteractions(medicalHistorySummaryUi)
   }
 
-  // This was copied from `PatientSummaryScreenControllerTest`
-  // TODO(vs): 2020-01-07 Clean this up once the refactoring is done
   @Test
   @Parameters(method = "medicalHistoryQuestionsAndAnswers")
   fun `when answers for medical history questions are toggled, then the updated medical history should be saved`(
       question: MedicalHistoryQuestion,
       newAnswer: Answer
   ) {
+    // given
     val medicalHistory = PatientMocker.medicalHistory(
         diagnosedWithHypertension = Answer.Unanswered,
         isOnTreatmentForHypertension = Answer.Unanswered,
@@ -82,40 +80,32 @@ class MedicalHistorySummaryUiControllerTest {
         hasHadStroke = Answer.Unanswered,
         hasHadKidneyDisease = Answer.Unanswered,
         hasDiabetes = Answer.Unanswered,
-        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+        updatedAt = Instant.parse("2017-12-31T00:00:00Z")
     )
-    whenever(repository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
-    whenever(repository.save(any<MedicalHistory>(), any())) doReturn Completable.complete()
+    val updatedMedicalHistory = medicalHistory.answered(question, newAnswer)
+    val now = Instant.now(clock)
 
+    whenever(repository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
+    whenever(repository.save(updatedMedicalHistory, now)) doReturn Completable.complete()
+
+    // when
     setupController()
     events.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
-    val updatedMedicalHistory = medicalHistory.copy(
-        diagnosedWithHypertension = if (question == MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION) newAnswer else Answer.Unanswered,
-        isOnTreatmentForHypertension = if (question == MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION) newAnswer else Answer.Unanswered,
-        hasHadHeartAttack = if (question == MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK) newAnswer else Answer.Unanswered,
-        hasHadStroke = if (question == MedicalHistoryQuestion.HAS_HAD_A_STROKE) newAnswer else Answer.Unanswered,
-        hasHadKidneyDisease = if (question == MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE) newAnswer else Answer.Unanswered,
-        hasDiabetes = if (question == MedicalHistoryQuestion.HAS_DIABETES) newAnswer else Answer.Unanswered)
-    verify(repository).save(eq(updatedMedicalHistory), any())
+    // then
+    verify(repository).save(updatedMedicalHistory, now)
   }
 
   @Suppress("unused")
   fun medicalHistoryQuestionsAndAnswers(): List<List<Any>> {
     val questions = MedicalHistoryQuestion.values().asList()
     return questions
-        .asSequence()
-        .map { question ->
-          listOf(
-              question,
-              randomMedicalHistoryAnswer()
-          )
-        }
+        .map { question -> listOf(question, randomMedicalHistoryAnswer()) }
         .toList()
   }
 
   private fun setupController() {
-    controller = MedicalHistorySummaryUiController(patientUuid, repository)
+    controller = MedicalHistorySummaryUiController(patientUuid, repository, clock)
     controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }
 
     events.onNext(ScreenCreated())

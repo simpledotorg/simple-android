@@ -69,15 +69,6 @@ class MedicalHistoryRepository @Inject constructor(
     return save(listOf(medicalHistory))
   }
 
-  fun save(history: MedicalHistory, updateTime: () -> Instant = { Instant.now(utcClock) }): Completable {
-    return Completable.fromAction {
-      val dirtyHistory = history.copy(
-          syncStatus = SyncStatus.PENDING,
-          updatedAt = updateTime())
-      dao.save(dirtyHistory)
-    }
-  }
-
   fun save(history: MedicalHistory, updateTime: Instant): Completable {
     return Completable.fromAction {
       val dirtyHistory = history.copy(

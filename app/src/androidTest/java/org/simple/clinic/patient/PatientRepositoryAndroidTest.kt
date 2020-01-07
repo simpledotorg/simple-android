@@ -946,11 +946,16 @@ class PatientRepositoryAndroidTest {
     )
 
     clock.advanceBy(Duration.ofSeconds(1))
+    val instant = Instant.now(clock)
 
-    medicalHistoryRepository.save(testData.medicalHistory(
-        patientUuid = recentPatient1.uuid,
-        updatedAt = clock.instant()
-    )) { Instant.now(clock) }.blockingAwait()
+    medicalHistoryRepository
+        .save(
+            history = testData.medicalHistory(
+                patientUuid = recentPatient1.uuid,
+                updatedAt = instant
+            ),
+            updateTime = instant
+        ).blockingAwait()
 
     verifyRecentPatientOrder(
         recentPatient2,

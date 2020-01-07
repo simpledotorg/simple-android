@@ -55,8 +55,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val appointmentRepository: AppointmentRepository,
-    private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
-    private val config: PatientSummaryConfig
+    private val missingPhoneReminderRepository: MissingPhoneReminderRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   @AssistedInject.Factory

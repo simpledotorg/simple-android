@@ -426,11 +426,11 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun showAgeExceedsMaxLimitError() {
-    ageInputLayout.error = resources.getString(R.string.patiententry_invalid_age_error)
+    ageInputLayout.error = resources.getString(R.string.patiententry_age_exceeds_max_limit_error)
   }
 
   private fun showDateOfBirthExceedsMaxLimitError() {
-    dateOfBirthInputLayout.error = resources.getString(R.string.patiententry_invalid_age_error)
+    dateOfBirthInputLayout.error = resources.getString(R.string.patiententry_age_exceeds_max_limit_error)
   }
 
   private fun showAgeExceedsMinLimitError() {

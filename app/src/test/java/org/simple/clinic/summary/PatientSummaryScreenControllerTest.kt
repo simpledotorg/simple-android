@@ -151,7 +151,7 @@ class PatientSummaryScreenControllerTest {
 
     setupControllerWithScreenCreated(intention)
 
-    verify(ui).populateList(prescriptions, medicalHistory)
+    verify(ui).populateList(prescriptions)
   }
 
   @Test
@@ -164,7 +164,7 @@ class PatientSummaryScreenControllerTest {
 
     setupControllerWithScreenCreated(openIntention)
 
-    verify(ui).populateList(emptyList(), medicalHistory)
+    verify(ui).populateMedicalHistory(medicalHistory)
   }
 
   @Test

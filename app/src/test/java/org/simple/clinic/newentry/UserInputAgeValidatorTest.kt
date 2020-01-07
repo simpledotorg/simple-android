@@ -5,8 +5,8 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAge
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAge
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Valid
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
@@ -34,7 +34,7 @@ class UserInputAgeValidatorTest {
     val expectedResult = validator.validate(age)
 
     //then
-    assertThat(expectedResult).isEqualTo(ExceedsMaxAge)
+    assertThat(expectedResult).isEqualTo(ExceedsMaxAgeLimit)
   }
 
   @Test
@@ -70,7 +70,7 @@ class UserInputAgeValidatorTest {
     val validation = validator.validate(dateText)
 
     //then
-    assertThat(validation).isEqualTo(ExceedsMaxAge)
+    assertThat(validation).isEqualTo(ExceedsMaxAgeLimit)
   }
 
   @Test
@@ -106,6 +106,6 @@ class UserInputAgeValidatorTest {
     val expectedResult = validator.validate(age)
 
     //then
-    assertThat(expectedResult).isEqualTo(ExceedsMinAge)
+    assertThat(expectedResult).isEqualTo(ExceedsMinAgeLimit)
   }
 }

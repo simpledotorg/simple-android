@@ -30,8 +30,8 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_T
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAge
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAge
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -135,8 +135,8 @@ data class OngoingNewPatientEntry(
 
       } else if (age != null) {
         errors += when (ageValidator.validate(age.toInt())) {
-          ExceedsMaxAge -> listOf(AGE_EXCEEDS_MAX_LIMIT)
-          ExceedsMinAge -> listOf(AGE_EXCEEDS_MIN_LIMIT)
+          ExceedsMaxAgeLimit -> listOf(AGE_EXCEEDS_MAX_LIMIT)
+          ExceedsMinAgeLimit -> listOf(AGE_EXCEEDS_MIN_LIMIT)
           else -> emptyList()
         }
       }
@@ -187,8 +187,8 @@ data class OngoingNewPatientEntry(
       DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
       is Valid -> {
         when (ageValidator.validate(dateOfBirth)){
-          ExceedsMaxAge -> listOf(DOB_EXCEEDS_MAX_LIMIT)
-          ExceedsMinAge -> listOf(DOB_EXCEEDS_MIN_LIMIT)
+          ExceedsMaxAgeLimit -> listOf(DOB_EXCEEDS_MAX_LIMIT)
+          ExceedsMinAgeLimit -> listOf(DOB_EXCEEDS_MIN_LIMIT)
           else -> emptyList()
         }
       }

@@ -184,11 +184,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .map { PatientSummaryBackClicked() }
   }
 
-  private fun bloodPressureSaves() = screenRouter.streamScreenResults()
-      .ofType<ActivityResult>()
-      .filter { it.requestCode == SUMMARY_REQCODE_BP_ENTRY && it.succeeded() }
-      .filter { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
-      .map { PatientSummaryBloodPressureSaved }
+  private fun bloodPressureSaves(): Observable<PatientSummaryBloodPressureSaved> {
+    return Observable.create { emitter ->
+      bloodPressureSummaryView.bpRecorded = { emitter.onNext(PatientSummaryBloodPressureSaved) }
+
+      emitter.setCancellable { bloodPressureSummaryView.bpRecorded = null }
+    }
+  }
 
   private fun appointmentScheduleSheetClosed() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()

@@ -96,7 +96,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun bloodPressureSummaryViewController(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.compose(BloodPressureSummaryViewController())
+    return events.compose(BloodPressureSummaryViewController(patientUuid, config, bpRepository))
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {

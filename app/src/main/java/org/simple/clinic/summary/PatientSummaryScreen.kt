@@ -40,6 +40,7 @@ import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
+import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryUi
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -59,7 +60,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
+class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi, MedicalHistorySummaryUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -336,6 +337,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   override fun showEditButton() {
     editButton.visibility = View.VISIBLE
+  }
+
+  override fun medicalHistorySummaryUi(): MedicalHistorySummaryUi {
+    return this
   }
 }
 

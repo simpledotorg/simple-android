@@ -66,7 +66,8 @@ buildscript {
       assistedInject      : '0.5.2',
       flipper             : '0.30.1',
       soloader            : '0.5.1',
-      asm                 : '7.2'
+      asm                 : '7.2',
+      ktlint              : '0.36.0'
   ]
 
   repositories {
@@ -84,6 +85,10 @@ buildscript {
   }
 }
 
+plugins {
+  id "com.diffplug.gradle.spotless" version "3.27.0"
+}
+
 allprojects {
   repositories {
     google()
@@ -92,7 +97,27 @@ allprojects {
   }
 }
 
-task clean(type: Delete) {
+subprojects {
+  apply plugin: 'com.diffplug.gradle.spotless'
+
+  // https://github.com/diffplug/spotless/tree/master/plugin-gradle
+  spotless {
+    lineEndings 'UNIX'
+
+    kotlin {
+      ktlint(versions.ktlint).userData([
+        'indent_style'            : 'space',
+        'indent_size'             : '2',
+        'continuation_indent_size': '4'
+      ])
+
+      trimTrailingWhitespace()
+      endWithNewline()
+    }
+  }
+}
+
+task cleanRoot(type: Delete) {
   delete rootProject.buildDir
 }
 

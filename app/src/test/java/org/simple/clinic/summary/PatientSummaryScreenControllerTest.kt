@@ -54,6 +54,7 @@ import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScre
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryUi
+import org.simple.clinic.summary.medicalhistory.SummaryMedicalHistoryAnswerToggled
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional

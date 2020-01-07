@@ -21,7 +21,6 @@ import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -45,7 +44,6 @@ import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
@@ -60,7 +58,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi, MedicalHistorySummaryUi {
+class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -79,9 +77,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @field:[Inject Named("exact_date")]
   lateinit var exactDateFormatter: DateTimeFormatter
-
-  @Inject
-  lateinit var timestampGenerator: RelativeTimestampGenerator
 
   @Deprecated("""
     ~ DOA ~
@@ -290,14 +285,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     )
   }
 
-  override fun populateMedicalHistory(medicalHistory: MedicalHistory) {
-    medicalHistorySummaryView.bind(
-        medicalHistory = medicalHistory,
-        lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
-        dateFormatter = exactDateFormatter
-    )
-  }
-
   override fun showScheduleAppointmentSheet(patientUuid: UUID) {
     val intent = ScheduleAppointmentSheet.intent(context, patientUuid)
     activity.startActivityForResult(intent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
@@ -340,7 +327,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   override fun medicalHistorySummaryUi(): MedicalHistorySummaryUi {
-    return this
+    return medicalHistorySummaryView
   }
 }
 

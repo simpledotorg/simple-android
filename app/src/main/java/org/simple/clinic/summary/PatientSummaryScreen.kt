@@ -40,6 +40,7 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryUi
+import org.simple.clinic.summary.medicalhistory.SummaryMedicalHistoryAnswerToggled
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None

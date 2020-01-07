@@ -4,22 +4,26 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.summary.PatientSummaryItemChanged
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.summary.PatientSummaryScreenUi
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 // TODO(vs): 2020-01-07 Change to screen specific types
 typealias Ui = PatientSummaryScreenUi
 
 typealias UiChange = (Ui) -> Unit
 
-class MedicalHistorySummaryUiController : ObservableTransformer<UiEvent, UiChange> {
+class MedicalHistorySummaryUiController(
+    private val patientUuid: UUID,
+    private val repository: MedicalHistoryRepository
+) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     return events
-        .ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItems.medicalHistory }
-        .distinctUntilChanged()
+        .ofType<ScreenCreated>()
+        .switchMap { repository.historyForPatientOrDefault(patientUuid) }
         .map { { ui: Ui -> ui.medicalHistorySummaryUi().populateMedicalHistory(it) } }
   }
 }

@@ -53,7 +53,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.HOME
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
-import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryUi
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -74,7 +73,6 @@ class PatientSummaryScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<PatientSummaryScreenUi>()
-  private val bloodPressureSummaryUi = mock<BloodPressureSummaryUi>()
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
@@ -100,7 +98,6 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
-    whenever(ui.bloodPressureSummaryUi()) doReturn bloodPressureSummaryUi
 
     Analytics.addReporter(reporter)
   }
@@ -158,25 +155,6 @@ class PatientSummaryScreenControllerTest {
     setupControllerWithScreenCreated(intention)
 
     verify(ui).populateList(prescriptions, medicalHistory)
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `patient's blood pressure history should be populated`(intention: OpenIntention) {
-    val bloodPressureMeasurements = listOf(
-        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85, recordedAt = Instant.now(utcClock).minusSeconds(15L)),
-        PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95, recordedAt = Instant.now(utcClock).minusSeconds(30L)),
-        PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90, recordedAt = Instant.now(utcClock).minusSeconds(45L)))
-
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(bloodPressureMeasurements))
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
-    val medicalHistory = medicalHistory()
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
-
-    setupControllerWithScreenCreated(intention)
-
-    verify(ui).populateList(emptyList(), medicalHistory)
-    verify(bloodPressureSummaryUi).populateBloodPressures(bloodPressureMeasurements)
   }
 
   @Test

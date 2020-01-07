@@ -10,6 +10,7 @@ import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
@@ -17,10 +18,12 @@ class BloodSugarSummaryViewEffectHandlerTest {
 
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val uiActions = mock<UiActions>()
+  private val config = mock<PatientSummaryConfig>()
   private val effectHandler = BloodSugarSummaryViewEffectHandler(
       bloodSugarRepository,
       TrampolineSchedulersProvider(),
-      uiActions
+      uiActions,
+      config
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -30,7 +33,7 @@ class BloodSugarSummaryViewEffectHandlerTest {
     //given
     val measurements = listOf<BloodSugarMeasurement>()
     val patientUuid = UUID.fromString("69cdea01-fbd8-437a-844c-25e412f32a9e")
-    whenever(bloodSugarRepository.latestMeasurements(patientUuid = patientUuid, limit = 100)).thenReturn(Observable.just(measurements))
+    whenever(bloodSugarRepository.latestMeasurements(patientUuid = patientUuid, limit = config.numberOfBloodSugarsToDisplay)).thenReturn(Observable.just(measurements))
 
     //when
     testCase.dispatch(FetchBloodSugarSummary(patientUuid))

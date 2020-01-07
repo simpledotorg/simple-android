@@ -8,12 +8,13 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Valid
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
 class UserInputAgeValidatorTest {
 
-  private val testUserClock = TestUserClock()
+  private val testUserClock = TestUserClock(LocalDate.parse("2020-01-01"))
 
   private lateinit var validator: UserInputAgeValidator
 
@@ -88,7 +89,7 @@ class UserInputAgeValidatorTest {
   @Test
   fun `when user inputs date equal to 120 years, then return valid`() {
     //given
-    val dateText = "17/12/1899"
+    val dateText = "01/01/1900"
 
     //when
     val validation = validator.validate(dateText)
@@ -104,6 +105,18 @@ class UserInputAgeValidatorTest {
 
     //when
     val expectedResult = validator.validate(age)
+
+    //then
+    assertThat(expectedResult).isEqualTo(ExceedsMinAgeLimit)
+  }
+
+  @Test
+  fun `when user inputs current date, then return invalid error`() {
+    //given
+    val dateText = "01/01/2020"
+
+    //when
+    val expectedResult = validator.validate(dateText)
 
     //then
     assertThat(expectedResult).isEqualTo(ExceedsMinAgeLimit)

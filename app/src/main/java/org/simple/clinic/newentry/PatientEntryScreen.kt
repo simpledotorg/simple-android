@@ -454,14 +454,14 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   override fun showAgeExceedsMaxLimitError(show: Boolean) {
     ageEditTextInputLayout.error = when {
-      show -> resources.getString(R.string.patiententry_invalid_age_error)
+      show -> resources.getString(R.string.patiententry_age_exceeds_max_limit_error)
       else -> null
     }
   }
 
   override fun showDOBExceedsMaxLimitError(show: Boolean) {
     dateOfBirthInputLayout.error = when {
-      show -> resources.getString(R.string.patiententry_invalid_age_error)
+      show -> resources.getString(R.string.patiententry_age_exceeds_max_limit_error)
       else -> null
     }
   }

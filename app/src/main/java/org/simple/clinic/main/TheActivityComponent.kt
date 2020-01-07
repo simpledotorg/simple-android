@@ -71,6 +71,7 @@ import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewInjector
 import org.simple.clinic.summary.linkId.LinkIdWithPatientView
+import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryViewInjector
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.preference.InstantRxPreferencesConverter
@@ -80,7 +81,10 @@ import org.threeten.bp.Instant
 import javax.inject.Named
 
 @Subcomponent(modules = [TheActivityModule::class])
-interface TheActivityComponent : OnboardingScreenInjector, BloodPressureSummaryViewInjector {
+interface TheActivityComponent :
+    OnboardingScreenInjector,
+    BloodPressureSummaryViewInjector,
+    MedicalHistorySummaryViewInjector {
 
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)

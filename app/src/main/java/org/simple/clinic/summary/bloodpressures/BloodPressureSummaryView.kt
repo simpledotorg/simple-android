@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.bloodpressures
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -9,12 +10,14 @@ import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.patientsummary_bpsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.di.injector
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -34,6 +37,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private typealias EditMeasurementClicked = (BloodPressureMeasurement) -> Unit
+private typealias BpRecorded = () -> Unit
 
 class BloodPressureSummaryView(
     context: Context,
@@ -75,6 +79,7 @@ class BloodPressureSummaryView(
   }
 
   var editMeasurementClicked: EditMeasurementClicked? = null
+  var bpRecorded: BpRecorded? = null
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -86,6 +91,10 @@ class BloodPressureSummaryView(
 
     val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
 
+    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+
+    setupBpRecordedEvents(screenDestroys)
+
     bindUiToController(
         ui = this,
         events = Observable.merge(
@@ -93,7 +102,7 @@ class BloodPressureSummaryView(
             newBpClicks()
         ),
         controller = controllerFactory.create(screenKey.patientUuid),
-        screenDestroys = detaches().map { ScreenDestroyed() }
+        screenDestroys = screenDestroys
     )
   }
 
@@ -103,6 +112,16 @@ class BloodPressureSummaryView(
 
   private fun newBpClicks(): Observable<UiEvent> {
     return newBp.clicks().map { NewBloodPressureClicked }
+  }
+
+  @SuppressLint("CheckResult")
+  private fun setupBpRecordedEvents(screenDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == SUMMARY_REQCODE_BP_ENTRY && it.succeeded() }
+        .filter { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
+        .takeUntil(screenDestroys)
+        .subscribe { bpRecorded?.invoke() }
   }
 
   override fun populateBloodPressures(bloodPressureMeasurements: List<BloodPressureMeasurement>) {

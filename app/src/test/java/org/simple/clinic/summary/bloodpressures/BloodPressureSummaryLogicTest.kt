@@ -10,6 +10,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.summary.PatientSummaryConfig
@@ -48,15 +49,30 @@ class BloodPressureSummaryLogicTest {
 
     // when
     setupController()
-    events.onNext(ScreenCreated())
 
     // then
     verify(ui).populateBloodPressures(bloodPressureMeasurements)
     verifyNoMoreInteractions(ui)
   }
 
+  @Test
+  fun `when new BP is clicked then BP entry sheet should be shown`() {
+    // given
+    whenever(repository.newestMeasurementsForPatient(patientUuid, numberOfBpsToDisplay)) doReturn Observable.never<List<BloodPressureMeasurement>>()
+
+    // when
+    setupController()
+    events.onNext(NewBloodPressureClicked)
+
+    // then
+    verify(ui).showBloodPressureEntrySheet(patientUuid)
+    verifyNoMoreInteractions(ui)
+  }
+
   private fun setupController() {
     controller = BloodPressureSummaryViewController(patientUuid, config, repository)
     controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }
+
+    events.onNext(ScreenCreated())
   }
 }

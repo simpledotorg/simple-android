@@ -13,10 +13,6 @@ class PatientSummaryDoneClicked : UiEvent {
   override val analyticsName = "Patient Summary:Done Clicked"
 }
 
-class PatientSummaryNewBpClicked : UiEvent {
-  override val analyticsName = "Patient Summary:New BP Clicked"
-}
-
 class PatientSummaryUpdateDrugsClicked : UiEvent {
   override val analyticsName = "Patient Summary:Update Drugs Clicked"
 }

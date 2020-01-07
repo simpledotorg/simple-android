@@ -22,6 +22,4 @@ interface PatientSummaryScreenUi {
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
   fun hideLinkIdWithPatientView()
   fun showEditButton()
-
-  fun bloodPressureSummaryUi(): BloodPressureSummaryUi
 }

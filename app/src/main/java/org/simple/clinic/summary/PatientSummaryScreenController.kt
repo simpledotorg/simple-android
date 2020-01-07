@@ -78,7 +78,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         reportViewedPatientEvent(replayedEvents),
         populatePatientProfile(),
         updateMedicalHistory(replayedEvents),
-        openBloodPressureBottomSheet(replayedEvents),
         openPrescribedDrugsScreen(replayedEvents),
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openBloodPressureUpdateSheet(replayedEvents),
@@ -181,12 +180,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
               .save(it)
               .andThen(Observable.never<UiChange>())
         }
-  }
-
-  private fun openBloodPressureBottomSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientSummaryNewBpClicked>()
-        .map { { ui: Ui -> ui.showBloodPressureEntrySheet(patientUuid) } }
   }
 
   private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {

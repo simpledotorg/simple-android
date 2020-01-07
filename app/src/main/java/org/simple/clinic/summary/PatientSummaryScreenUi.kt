@@ -3,7 +3,6 @@ package org.simple.clinic.summary
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryUi
 import java.util.UUID
 
 interface PatientSummaryScreenUi {
@@ -11,7 +10,6 @@ interface PatientSummaryScreenUi {
 
   fun populateList(prescribedDrugs: List<PrescribedDrug>, medicalHistory: MedicalHistory)
 
-  fun showBloodPressureEntrySheet(patientUuid: UUID)
   fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID)
   fun showScheduleAppointmentSheet(patientUuid: UUID)
   fun goToPreviousScreen()

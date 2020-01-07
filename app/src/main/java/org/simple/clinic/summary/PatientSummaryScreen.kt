@@ -138,8 +138,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             identifierLinkCancelledEvents(),
             updateDrugsClicks(),
             cvHistoryAnswerToggles(),
-            editMeasurementClicks(),
-            newBpClicks()
+            editMeasurementClicks()
         ),
         controller = controller,
         screenDestroys = this.detaches().map { ScreenDestroyed() }
@@ -234,14 +233,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
-  private fun newBpClicks(): Observable<UiEvent> {
-    return Observable.create { emitter ->
-      bloodPressureSummaryView.newBpClicked = { emitter.onNext(PatientSummaryNewBpClicked()) }
-
-      emitter.setCancellable { bloodPressureSummaryView.newBpClicked = null }
-    }
-  }
-
   @SuppressLint("SetTextI18n")
   override fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
@@ -313,11 +304,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
         dateFormatter = exactDateFormatter
     )
-  }
-
-  override fun showBloodPressureEntrySheet(patientUuid: UUID) {
-    val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
-    activity.startActivityForResult(intent, SUMMARY_REQCODE_BP_ENTRY)
   }
 
   override fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {

@@ -72,10 +72,11 @@ class MedicalHistoryRepositoryAndroidTest {
     val patientUuid = UUID.randomUUID()
     val historyToSave = testData.medicalHistory(patientUuid = patientUuid)
 
-    repository.save(historyToSave).blockingAwait()
+    val instant = Instant.now(clock)
+    repository.save(historyToSave, instant).blockingAwait()
 
     val savedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
-    val expectedSavedHistory = historyToSave.copy(syncStatus = SyncStatus.PENDING, updatedAt = Instant.now(clock))
+    val expectedSavedHistory = historyToSave.copy(syncStatus = SyncStatus.PENDING, updatedAt = instant)
 
     assertThat(savedHistory).isEqualTo(expectedSavedHistory)
   }
@@ -83,22 +84,23 @@ class MedicalHistoryRepositoryAndroidTest {
   @Test
   fun when_updating_an_existing_medical_history_then_it_should_be_marked_as_pending_sync() {
     val patientUuid = UUID.randomUUID()
+    val now = Instant.now(clock)
     val oldHistory = testData.medicalHistory(
         patientUuid = patientUuid,
         hasHadHeartAttack = No,
         syncStatus = SyncStatus.DONE,
-        updatedAt = Instant.now().minus(10, DAYS))
+        updatedAt = now.minus(10, DAYS))
 
     repository.save(listOf(oldHistory)).blockingAwait()
 
     val newHistory = oldHistory.copy(hasHadHeartAttack = Yes)
-    repository.save(newHistory).blockingAwait()
+    repository.save(newHistory, now).blockingAwait()
 
     val updatedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
 
     assertThat(updatedHistory.hasHadHeartAttack).isEqualTo(Yes)
     assertThat(updatedHistory.syncStatus).isEqualTo(SyncStatus.PENDING)
-    assertThat(updatedHistory.updatedAt).isEqualTo(clock.instant())
+    assertThat(updatedHistory.updatedAt).isEqualTo(now)
   }
 
   @Test
@@ -127,8 +129,8 @@ class MedicalHistoryRepositoryAndroidTest {
         createdAt = Instant.now(clock).minusMillis(100),
         updatedAt = Instant.now(clock))
 
-    repository.save(olderHistory, updateTime = { olderHistory.updatedAt })
-        .andThen(repository.save(newerHistory, updateTime = { newerHistory.updatedAt }))
+    repository.save(olderHistory, olderHistory.updatedAt)
+        .andThen(repository.save(newerHistory, newerHistory.updatedAt))
         .blockingAwait()
 
     val foundHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()

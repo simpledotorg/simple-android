@@ -5,17 +5,17 @@
   android:orientation="vertical">
 
   <org.simple.clinic.widgets.OmegaCenterIconButton
-    android:id="@+id/newBp"
+    android:id="@+id/newBloodSugar"
     style="@style/Clinic.V2.Button.WithIcon.Blue2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_8"
     android:drawableStart="@drawable/ic_new_bp"
-    android:text="@string/patientsummary_bp_add_new"
+    android:text="@string/bloodsugarsummaryview_new_blood_sugar_button"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
 
   <LinearLayout
-    android:id="@+id/bpItemContainer"
+    android:id="@+id/bloodSugarItemContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"/>

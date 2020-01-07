@@ -34,7 +34,10 @@ class BloodPressureSummaryViewController @AssistedInject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    return displayBloodPressures(replayedEvents)
+    return Observable.merge(
+        displayBloodPressures(replayedEvents),
+        openBloodPressureEntrySheet(replayedEvents)
+    )
   }
 
   private fun displayBloodPressures(events: Observable<UiEvent>): Observable<UiChange> {
@@ -42,5 +45,11 @@ class BloodPressureSummaryViewController @AssistedInject constructor(
         .ofType<ScreenCreated>()
         .switchMap { repository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay) }
         .map { { ui: Ui -> ui.populateBloodPressures(it) } }
+  }
+
+  private fun openBloodPressureEntrySheet(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<NewBloodPressureClicked>()
+        .map { { ui: Ui -> ui.showBloodPressureEntrySheet(patientUuid) } }
   }
 }

@@ -4,32 +4,36 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.patientsummary_bpsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.SUMMARY_REQCODE_BP_ENTRY
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
 private typealias EditMeasurementClicked = (BloodPressureMeasurement) -> Unit
-private typealias NewBpClicked = () -> Unit
 
 class BloodPressureSummaryView(
     context: Context,
@@ -61,6 +65,9 @@ class BloodPressureSummaryView(
   lateinit var screenRouter: ScreenRouter
 
   @Inject
+  lateinit var activity: AppCompatActivity
+
+  @Inject
   lateinit var controllerFactory: BloodPressureSummaryViewController.Factory
 
   init {
@@ -68,7 +75,6 @@ class BloodPressureSummaryView(
   }
 
   var editMeasurementClicked: EditMeasurementClicked? = null
-  var newBpClicked: NewBpClicked? = null
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -82,10 +88,21 @@ class BloodPressureSummaryView(
 
     bindUiToController(
         ui = this,
-        events = Observable.just(ScreenCreated()).cast(),
+        events = Observable.merge(
+            screenCreates(),
+            newBpClicks()
+        ),
         controller = controllerFactory.create(screenKey.patientUuid),
         screenDestroys = detaches().map { ScreenDestroyed() }
     )
+  }
+
+  private fun screenCreates(): Observable<UiEvent> {
+    return Observable.just(ScreenCreated())
+  }
+
+  private fun newBpClicks(): Observable<UiEvent> {
+    return newBp.clicks().map { NewBloodPressureClicked }
   }
 
   override fun populateBloodPressures(bloodPressureMeasurements: List<BloodPressureMeasurement>) {
@@ -102,6 +119,11 @@ class BloodPressureSummaryView(
     )
   }
 
+  override fun showBloodPressureEntrySheet(patientUuid: UUID) {
+    val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
+    activity.startActivityForResult(intent, SUMMARY_REQCODE_BP_ENTRY)
+  }
+
   private fun render(
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       utcClock: UtcClock,
@@ -113,8 +135,6 @@ class BloodPressureSummaryView(
       zoneId: ZoneId,
       userClock: UserClock
   ) {
-    newBp.setOnClickListener { newBpClicked?.invoke() }
-
     val placeholderViews = generatePlaceholders(bloodPressureMeasurements, utcClock, placeholderLimit)
     val listItemViews = generateBpViews(bloodPressureMeasurements, timestampGenerator, userClock, zoneId, bpTimeFormatter, dateFormatter, canEditFor, utcClock)
 

@@ -169,15 +169,6 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   @Parameters(method = "patient summary open intentions")
-  fun `when new-BP is clicked then BP entry sheet should be shown`(openIntention: OpenIntention) {
-    setupControllerWithScreenCreated(openIntention)
-    uiEvents.onNext(PatientSummaryNewBpClicked())
-
-    verify(ui).showBloodPressureEntrySheet(patientUuid)
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
   fun `when update medicines is clicked then BP medicines screen should be shown`(openIntention: OpenIntention) {
     setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())

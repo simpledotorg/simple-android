@@ -20,6 +20,6 @@ class MedicalHistorySummaryUiController : ObservableTransformer<UiEvent, UiChang
         .ofType<PatientSummaryItemChanged>()
         .map { it.patientSummaryItems.medicalHistory }
         .distinctUntilChanged()
-        .map { { ui: Ui -> ui.populateMedicalHistory(it) } }
+        .map { { ui: Ui -> ui.medicalHistorySummaryUi().populateMedicalHistory(it) } }
   }
 }

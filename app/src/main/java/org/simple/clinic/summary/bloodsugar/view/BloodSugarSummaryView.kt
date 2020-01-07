@@ -5,21 +5,17 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.cardview.widget.CardView
-import kotlinx.android.synthetic.main.patientsummary_bpsummary_content.view.*
+import kotlinx.android.synthetic.main.patientsummary_bloodsugarsummary_content.view.*
 import org.simple.clinic.R
-import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.summary.bloodpressures.BloodPressureItemView
-import org.simple.clinic.summary.bloodpressures.BloodPressurePlaceholderItemView
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 
-private typealias EditMeasurementClicked = (BloodPressureMeasurement) -> Unit
-private typealias NewBpClicked = () -> Unit
+private typealias AddNewBloodSugarClicked = () -> Unit
 
 class BloodSugarSummaryView(
     context: Context,
@@ -27,79 +23,75 @@ class BloodSugarSummaryView(
 ) : CardView(context, attributes) {
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_content, this, true)
+    LayoutInflater.from(context).inflate(R.layout.patientsummary_bloodsugarsummary_content, this, true)
   }
 
-  var editMeasurementClicked: EditMeasurementClicked? = null
-  var newBpClicked: NewBpClicked? = null
+  var addNewBloodSugarClicked: AddNewBloodSugarClicked? = null
 
   fun render(
-      bloodPressureMeasurements: List<BloodPressureMeasurement>,
+      bloodSugarMeasurements: List<BloodSugarMeasurement>,
       utcClock: UtcClock,
       placeholderLimit: Int,
       timestampGenerator: RelativeTimestampGenerator,
       dateFormatter: DateTimeFormatter,
-      canEditFor: Duration,
       bpTimeFormatter: DateTimeFormatter,
       zoneId: ZoneId,
       userClock: UserClock
   ) {
-    newBp.setOnClickListener { newBpClicked?.invoke() }
+    newBloodSugar.setOnClickListener { addNewBloodSugarClicked?.invoke() }
 
-    val placeholderViews = generatePlaceholders(bloodPressureMeasurements, utcClock, placeholderLimit)
-    val listItemViews = generateBpViews(bloodPressureMeasurements, timestampGenerator, userClock, zoneId, bpTimeFormatter, dateFormatter, canEditFor, utcClock)
+    val placeholderViews = generatePlaceholders(bloodSugarMeasurements, utcClock, placeholderLimit)
+    val listItemViews = generateBloodSugarRows(bloodSugarMeasurements, timestampGenerator, userClock, zoneId, bpTimeFormatter, dateFormatter, utcClock)
 
-    bpItemContainer.removeAllViews()
-    withDividers(listItemViews + placeholderViews).forEach(bpItemContainer::addView)
+    bloodSugarItemContainer.removeAllViews()
+    withDividers(listItemViews + placeholderViews).forEach(bloodSugarItemContainer::addView)
   }
 
   private fun generatePlaceholders(
-      bloodPressureMeasurements: List<BloodPressureMeasurement>,
+      bloodSugarMeasurements: List<BloodSugarMeasurement>,
       utcClock: UtcClock,
       placeholderLimit: Int
   ): List<View> {
-    val measurementsByDate = bloodPressureMeasurements.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
-    val numberOfBloodPressureGroups = measurementsByDate.size
+    val measurementsByDate = bloodSugarMeasurements.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
+    val numberOfBloodSugarGroups = measurementsByDate.size
 
-    val numberOfPlaceholders = 0.coerceAtLeast(placeholderLimit - numberOfBloodPressureGroups)
+    val numberOfPlaceholders = 0.coerceAtLeast(placeholderLimit - numberOfBloodSugarGroups)
 
     return (1..numberOfPlaceholders).map { placeholderNumber ->
-      val shouldShowHint = numberOfBloodPressureGroups == 0 && placeholderNumber == 1
+      val shouldShowHint = numberOfBloodSugarGroups == 0 && placeholderNumber == 1
 
-      val placeholderItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bp_placeholder, this, false) as BloodPressurePlaceholderItemView
+      val placeholderItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bloodsugar_placeholder, this, false) as BloodSugarPlaceholderItemView
       placeholderItemView.render(showHint = shouldShowHint)
 
       placeholderItemView
     }
   }
 
-  private fun generateBpViews(
-      bloodPressureMeasurements: List<BloodPressureMeasurement>,
+  private fun generateBloodSugarRows(
+      bloodSugarMeasurements: List<BloodSugarMeasurement>,
       timestampGenerator: RelativeTimestampGenerator,
       userClock: UserClock,
       zoneId: ZoneId,
       bpTimeFormatter: DateTimeFormatter,
       dateFormatter: DateTimeFormatter,
-      canEditFor: Duration,
       utcClock: UtcClock
   ): List<View> {
-    val measurementsByDate = bloodPressureMeasurements.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
+    val measurementsByDate = bloodSugarMeasurements.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
 
     return measurementsByDate.mapValues { (_, measurementList) ->
       measurementList.map { measurement ->
         val timestamp = timestampGenerator.generate(measurement.recordedAt, userClock)
 
-        val bloodPressureItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bp_measurement, this, false) as BloodPressureItemView
-        bloodPressureItemView.render(
+        val bloodSugarItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bloodsugar_measurement, this, false) as BloodSugarItemView
+        bloodSugarItemView.render(
             measurement = measurement,
             formattedTime = if (measurementList.size > 1) displayTime(measurement.recordedAt, zoneId, bpTimeFormatter) else null,
             addTopPadding = measurement == measurementList.first(),
             daysAgo = timestamp,
-            dateFormatter = dateFormatter,
-            isBpEditable = isBpEditable(measurement, canEditFor, utcClock)
-        ) { clickedMeasurement -> editMeasurementClicked?.invoke(clickedMeasurement) }
+            dateFormatter = dateFormatter
+        )
 
-        bloodPressureItemView
+        bloodSugarItemView
       }
     }.values.flatten()
   }
@@ -109,19 +101,6 @@ class BloodSugarSummaryView(
       zoneId: ZoneId,
       formatter: DateTimeFormatter
   ): String = instant.atZone(zoneId).format(formatter)
-
-  private fun isBpEditable(
-      bloodPressureMeasurement: BloodPressureMeasurement,
-      bpEditableFor: Duration,
-      utcClock: UtcClock
-  ): Boolean {
-    val now = Instant.now(utcClock)
-    val createdAt = bloodPressureMeasurement.createdAt
-
-    val durationSinceBpCreated = Duration.between(createdAt, now)
-
-    return durationSinceBpCreated <= bpEditableFor
-  }
 
   private fun inflateDividerView() = LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_divider, this, false)
 

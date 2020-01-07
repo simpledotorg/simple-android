@@ -1,24 +1,18 @@
 package org.simple.clinic.summary.bloodsugar.view
 
 import android.content.Context
-import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.content.res.ResourcesCompat
-import kotlinx.android.synthetic.main.patientsummary_bpitem_content.view.*
+import kotlinx.android.synthetic.main.patientsummary_bloodsugar_item_content.view.*
 import org.simple.clinic.R
-import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.util.RelativeTimestamp
-import org.simple.clinic.util.Truss
-import org.simple.clinic.util.Unicode
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.setPaddingTop
-import org.simple.clinic.widgets.setTextAppearanceCompat
 import org.threeten.bp.format.DateTimeFormatter
 
 class BloodSugarItemView(
@@ -27,26 +21,18 @@ class BloodSugarItemView(
 ) : FrameLayout(context, attributeSet) {
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_bpitem_content, this, true)
+    LayoutInflater.from(context).inflate(R.layout.patientsummary_bloodsugar_item_content, this, true)
   }
 
   fun render(
-      isBpEditable: Boolean,
-      measurement: BloodPressureMeasurement,
+      measurement: BloodSugarMeasurement,
       daysAgo: RelativeTimestamp,
       formattedTime: String?,
       dateFormatter: DateTimeFormatter,
-      addTopPadding: Boolean,
-      editMeasurementClicked: (BloodPressureMeasurement) -> Unit
+      addTopPadding: Boolean
   ) {
-    isClickable = isBpEditable
-    isFocusable = isBpEditable
-    if (isBpEditable) setOnClickListener { editMeasurementClicked(measurement) }
-
-    renderBpReading(measurement)
-    renderBpLevel(measurement)
-    renderRelativeTimestampWithEditButton(daysAgo, dateFormatter, isBpEditable)
-    setIconTint(measurement)
+    renderBloodSugarReading(measurement.reading)
+    renderRelativeTimestampWithEditButton(daysAgo, dateFormatter)
     renderTimeOfDay(formattedTime)
     addPadding(formattedTime, addTopPadding)
   }
@@ -62,51 +48,15 @@ class BloodSugarItemView(
     timeTextView.text = formattedTime
   }
 
-  private fun setIconTint(measurement: BloodPressureMeasurement) {
-    val measurementImageTint = when {
-      measurement.level.isUrgent() -> R.color.patientsummary_bp_reading_high
-      else -> R.color.patientsummary_bp_reading_normal
-    }
-    heartImageView.imageTintList = ResourcesCompat.getColorStateList(resources, measurementImageTint, null)
-  }
-
-  private fun renderBpReading(measurement: BloodPressureMeasurement) {
-    val readingsTextAppearanceResId = when {
-      measurement.level.isUrgent() -> R.style.Clinic_V2_TextAppearance_PatientSummary_BloodPressure_High
-      else -> R.style.Clinic_V2_TextAppearance_PatientSummary_BloodPressure_Normal
-    }
-    readingsTextView.setTextAppearanceCompat(readingsTextAppearanceResId)
-    readingsTextView.text = context.resources.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)
-  }
-
-  private fun renderBpLevel(measurement: BloodPressureMeasurement) {
-    levelTextView.text = when (measurement.level.displayTextRes) {
-      is Just -> context.getString(measurement.level.displayTextRes.value)
-      is None -> ""
-    }
+  private fun renderBloodSugarReading(reading: BloodSugarReading) {
+    readingTextView.text = context.getString(R.string.bloodsugarsummaryview_reading_unit_type, reading.value, reading.type)
   }
 
   private fun renderRelativeTimestampWithEditButton(
       daysAgo: RelativeTimestamp,
-      dateFormatter: DateTimeFormatter,
-      isBpEditable: Boolean
+      dateFormatter: DateTimeFormatter
   ) {
-    val daysAgoText = daysAgo.displayText(context, dateFormatter)
-
-    daysAgoTextView.text = when {
-      isBpEditable -> {
-        val colorSpanForEditLabel = ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.blue1, context.theme))
-        Truss()
-            .pushSpan(colorSpanForEditLabel)
-            .append(resources.getString(R.string.patientsummary_edit))
-            .popSpan()
-            .append(" ${Unicode.bullet} ")
-            .append(daysAgoText)
-            .build()
-
-      }
-      else -> daysAgoText
-    }
+    daysAgoTextView.text = daysAgo.displayText(context, dateFormatter)
   }
 
   private fun addTopPadding(

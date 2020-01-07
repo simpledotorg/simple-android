@@ -9,12 +9,10 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.summary.PatientSummaryConfig
-import org.simple.clinic.summary.PatientSummaryScreenUi
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
@@ -27,17 +25,11 @@ class BloodPressureSummaryLogicTest {
   private val numberOfBpsToDisplay = 100
   private val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, numberOfBpsToDisplay = numberOfBpsToDisplay, bpEditableDuration = Duration.ZERO)
   private val repository = mock<BloodPressureRepository>()
-  private val ui = mock<PatientSummaryScreenUi>()
-  private val bloodPressureSummaryUi = mock<BloodPressureSummaryUi>()
+  private val ui = mock<BloodPressureSummaryUi>()
   private val events = PublishSubject.create<UiEvent>()
 
   lateinit var controller: BloodPressureSummaryViewController
   lateinit var controllerSubscription: Disposable
-
-  @Before
-  fun setUp() {
-    whenever(ui.bloodPressureSummaryUi()) doReturn bloodPressureSummaryUi
-  }
 
   @After
   fun tearDown() {
@@ -59,8 +51,8 @@ class BloodPressureSummaryLogicTest {
     events.onNext(ScreenCreated())
 
     // then
-    verify(bloodPressureSummaryUi).populateBloodPressures(bloodPressureMeasurements)
-    verifyNoMoreInteractions(bloodPressureSummaryUi)
+    verify(ui).populateBloodPressures(bloodPressureMeasurements)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {

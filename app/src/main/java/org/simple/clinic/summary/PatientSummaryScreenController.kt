@@ -15,15 +15,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
@@ -35,7 +26,6 @@ import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryUiController
-import org.simple.clinic.summary.medicalhistory.SummaryMedicalHistoryAnswerToggled
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.exhaustive
@@ -79,7 +69,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         populateList(replayedEvents),
         reportViewedPatientEvent(replayedEvents),
         populatePatientProfile(),
-        updateMedicalHistory(replayedEvents),
         openPrescribedDrugsScreen(replayedEvents),
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openLinkIdWithPatientSheet(replayedEvents),
@@ -150,32 +139,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .map { it.patientSummaryItems }
         .map { patientSummary ->
           { ui: Ui -> ui.populateList(patientSummary.prescription) }
-        }
-  }
-
-  private fun updateMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {
-    val medicalHistories = medicalHistoryRepository.historyForPatientOrDefault(patientUuid)
-
-    val updateHistory = { medicalHistory: MedicalHistory, question: MedicalHistoryQuestion, answer: Answer ->
-      when (question) {
-        DIAGNOSED_WITH_HYPERTENSION -> medicalHistory.copy(diagnosedWithHypertension = answer)
-        IS_ON_TREATMENT_FOR_HYPERTENSION -> medicalHistory.copy(isOnTreatmentForHypertension = answer)
-        HAS_HAD_A_HEART_ATTACK -> medicalHistory.copy(hasHadHeartAttack = answer)
-        HAS_HAD_A_STROKE -> medicalHistory.copy(hasHadStroke = answer)
-        HAS_HAD_A_KIDNEY_DISEASE -> medicalHistory.copy(hasHadKidneyDisease = answer)
-        HAS_DIABETES -> medicalHistory.copy(hasDiabetes = answer)
-      }
-    }
-
-    return events.ofType<SummaryMedicalHistoryAnswerToggled>()
-        .withLatestFrom(medicalHistories)
-        .map { (toggleEvent, medicalHistory) ->
-          updateHistory(medicalHistory, toggleEvent.question, toggleEvent.answer)
-        }
-        .flatMap {
-          medicalHistoryRepository
-              .save(it)
-              .andThen(Observable.never<UiChange>())
         }
   }
 

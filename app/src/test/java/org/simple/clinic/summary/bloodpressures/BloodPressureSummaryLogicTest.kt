@@ -69,6 +69,23 @@ class BloodPressureSummaryLogicTest {
     verifyNoMoreInteractions(ui)
   }
 
+  @Test
+  fun `when BP is clicked then BP update sheet should be shown`() {
+    // given
+    whenever(repository.newestMeasurementsForPatient(patientUuid, numberOfBpsToDisplay)) doReturn Observable.never<List<BloodPressureMeasurement>>()
+
+    // when
+    setupController()
+    val bloodPressureMeasurement = PatientMocker.bp(
+        uuid = UUID.fromString("81605b55-b8aa-409d-80a5-42e3e495b3c2"),
+        patientUuid = patientUuid
+    )
+    events.onNext(BloodPressureClicked(bloodPressureMeasurement))
+
+    verify(ui).showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
+    verifyNoMoreInteractions(ui)
+  }
+
   private fun setupController() {
     controller = BloodPressureSummaryViewController(patientUuid, config, repository)
     controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }

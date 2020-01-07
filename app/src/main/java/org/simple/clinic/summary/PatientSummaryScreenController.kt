@@ -80,7 +80,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         updateMedicalHistory(replayedEvents),
         openPrescribedDrugsScreen(replayedEvents),
         exitScreenAfterSchedulingAppointment(replayedEvents),
-        openBloodPressureUpdateSheet(replayedEvents),
         openLinkIdWithPatientSheet(replayedEvents),
         showUpdatePhoneDialogIfRequired(replayedEvents),
         showScheduleAppointmentSheet(replayedEvents),
@@ -299,12 +298,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .map { { ui: Ui -> ui.goToHomeScreen() } }
 
     return afterBackClicks.mergeWith(afterDoneClicks)
-  }
-
-  private fun openBloodPressureUpdateSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PatientSummaryBpClicked>()
-        .map { it.bloodPressureMeasurement }
-        .map { bp -> { ui: Ui -> ui.showBloodPressureUpdateSheet(bp.uuid) } }
   }
 
   private fun showUpdatePhoneDialogIfRequired(events: Observable<UiEvent>): Observable<UiChange> {

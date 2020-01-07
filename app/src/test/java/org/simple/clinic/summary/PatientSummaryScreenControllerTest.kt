@@ -84,7 +84,6 @@ class PatientSummaryScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockAnalyticsReporter()
-  private val bpDisplayLimit = 100
 
   private lateinit var controllerSubscription: Disposable
 
@@ -92,7 +91,6 @@ class PatientSummaryScreenControllerTest {
   fun setUp() {
     whenever(patientRepository.patient(patientUuid)).doReturn(Observable.never())
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.never())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.never())
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
@@ -148,7 +146,6 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Telmisartan", dosage = "9000mg"),
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(prescriptions))
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(emptyList()))
     val medicalHistory = medicalHistory()
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
 
@@ -161,7 +158,6 @@ class PatientSummaryScreenControllerTest {
   @Parameters(method = "patient summary open intentions")
   fun `patient's medical history should be populated`(openIntention: OpenIntention) {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(emptyList()))
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, bpDisplayLimit)).doReturn(Observable.just(emptyList()))
 
     val medicalHistory = medicalHistory(updatedAt = Instant.now(utcClock))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
@@ -651,15 +647,9 @@ class PatientSummaryScreenControllerTest {
   private fun setupControllerWithScreenCreated(
       openIntention: OpenIntention,
       patientUuid: UUID = this.patientUuid,
-      screenCreatedTimestamp: Instant = Instant.now(utcClock),
-      numberOfBpPlaceholders: Int = 0,
-      numberOfBpsToDisplay: Int = this.bpDisplayLimit,
-      bpEditableDuration: Duration = Duration.ofMinutes(60)
+      screenCreatedTimestamp: Instant = Instant.now(utcClock)
   ) {
     setupControllerWithoutScreenCreated(
-        numberOfBpPlaceholders = numberOfBpPlaceholders,
-        numberOfBpsToDisplay = numberOfBpsToDisplay,
-        bpEditableDuration = bpEditableDuration,
         patientUuid = patientUuid,
         openIntention = openIntention,
         screenCreatedTimestamp = screenCreatedTimestamp
@@ -668,19 +658,14 @@ class PatientSummaryScreenControllerTest {
   }
 
   private fun setupControllerWithoutScreenCreated(
-      numberOfBpPlaceholders: Int = 0,
-      numberOfBpsToDisplay: Int = this.bpDisplayLimit,
-      bpEditableDuration: Duration = Duration.ofMinutes(60),
       patientUuid: UUID = this.patientUuid,
       openIntention: OpenIntention,
       screenCreatedTimestamp: Instant = Instant.now(utcClock)
   ) {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders, numberOfBpsToDisplay, bpEditableDuration)
-    createController(config, patientUuid, openIntention, screenCreatedTimestamp)
+    createController(patientUuid, openIntention, screenCreatedTimestamp)
   }
 
   private fun createController(
-      config: PatientSummaryConfig,
       patientUuid: UUID,
       openIntention: OpenIntention,
       screenCreatedTimestamp: Instant
@@ -694,8 +679,7 @@ class PatientSummaryScreenControllerTest {
         prescriptionRepository = prescriptionRepository,
         medicalHistoryRepository = medicalHistoryRepository,
         appointmentRepository = appointmentRepository,
-        missingPhoneReminderRepository = missingPhoneReminderRepository,
-        config = config
+        missingPhoneReminderRepository = missingPhoneReminderRepository
     )
 
     controllerSubscription = uiEvents

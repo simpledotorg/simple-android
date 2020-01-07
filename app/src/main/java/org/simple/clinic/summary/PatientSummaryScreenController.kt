@@ -134,19 +134,10 @@ class PatientSummaryScreenController @AssistedInject constructor(
   private fun mergeWithPatientSummaryChanges(): ObservableTransformer<UiEvent, UiEvent> {
     return ObservableTransformer { events ->
 
-      val prescribedDrugsStream = prescriptionRepository.newestPrescriptionsForPatient(patientUuid)
-      val medicalHistoryItems = medicalHistoryRepository.historyForPatientOrDefault(patientUuid)
-
-      // combineLatest() is important here so that the first data-set for the list
-      // is dispatched in one go instead of them appearing one after another on the UI.
-      val summaryItemChanges = Observables
-          .combineLatest(prescribedDrugsStream, medicalHistoryItems) { prescribedDrugs, history ->
-            PatientSummaryItemChanged(PatientSummaryItems(
-                prescription = prescribedDrugs,
-                medicalHistory = history
-            ))
-          }
-          .distinctUntilChanged()
+      val summaryItemChanges = prescriptionRepository
+          .newestPrescriptionsForPatient(patientUuid)
+          .map(::PatientSummaryItems)
+          .map(::PatientSummaryItemChanged)
 
       events.mergeWith(summaryItemChanges)
     }

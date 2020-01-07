@@ -39,8 +39,6 @@ import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
-import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryUi
-import org.simple.clinic.summary.medicalhistory.SummaryMedicalHistoryAnswerToggled
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -132,8 +130,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
             identifierLinkCancelledEvents(),
-            updateDrugsClicks(),
-            cvHistoryAnswerToggles()
+            updateDrugsClicks()
         ),
         controller = controller,
         screenDestroys = this.detaches().map { ScreenDestroyed() }
@@ -211,14 +208,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       drugSummaryView.updateClicked = { emitter.onNext(PatientSummaryUpdateDrugsClicked()) }
 
       emitter.setCancellable { drugSummaryView.updateClicked = null }
-    }
-  }
-
-  private fun cvHistoryAnswerToggles(): Observable<UiEvent> {
-    return Observable.create { emitter ->
-      medicalHistorySummaryView.answerToggled = { question, newAnswer -> emitter.onNext(SummaryMedicalHistoryAnswerToggled(question, newAnswer)) }
-
-      emitter.setCancellable { medicalHistorySummaryView.answerToggled = null }
     }
   }
 
@@ -325,10 +314,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   override fun showEditButton() {
     editButton.visibility = View.VISIBLE
-  }
-
-  override fun medicalHistorySummaryUi(): MedicalHistorySummaryUi {
-    return medicalHistorySummaryView
   }
 }
 

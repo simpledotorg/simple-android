@@ -12,14 +12,12 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.summary.PatientSummaryScreenUi
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.widgets.ScreenCreated
@@ -33,19 +31,13 @@ class MedicalHistorySummaryUiControllerTest {
   private val patientUuid = UUID.fromString("31665de6-0265-4e33-888f-526bdb274699")
 
   private val repository = mock<MedicalHistoryRepository>()
-  private val ui = mock<PatientSummaryScreenUi>()
-  private val medicalHistorySummaryUi = mock<MedicalHistorySummaryUi>()
+  private val ui = mock<MedicalHistorySummaryUi>()
   private val clock = TestUtcClock()
 
   private val events = PublishSubject.create<UiEvent>()
 
   lateinit var controller: MedicalHistorySummaryUiController
   lateinit var controllerSubscription: Disposable
-
-  @Before
-  fun setUp() {
-    whenever(ui.medicalHistorySummaryUi()) doReturn medicalHistorySummaryUi
-  }
 
   @After
   fun tearDown() {
@@ -62,8 +54,8 @@ class MedicalHistorySummaryUiControllerTest {
     setupController()
 
     // then
-    verify(medicalHistorySummaryUi).populateMedicalHistory(medicalHistory)
-    verifyNoMoreInteractions(medicalHistorySummaryUi)
+    verify(ui).populateMedicalHistory(medicalHistory)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test

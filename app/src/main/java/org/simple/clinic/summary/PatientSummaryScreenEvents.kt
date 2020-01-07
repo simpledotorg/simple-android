@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.widgets.UiEvent
@@ -24,8 +23,6 @@ class ScheduleAppointmentSheetClosed : UiEvent {
 data class SummaryMedicalHistoryAnswerToggled(val question: MedicalHistoryQuestion, val answer: Answer) : UiEvent {
   override val analyticsName = "Patient Summary:Answer for $question set to $answer"
 }
-
-data class PatientSummaryBpClicked(val bloodPressureMeasurement: BloodPressureMeasurement) : UiEvent
 
 data class PatientSummaryItemChanged(val patientSummaryItems: PatientSummaryItems) : UiEvent
 

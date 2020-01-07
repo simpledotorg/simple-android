@@ -235,16 +235,6 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when blood pressure is clicked for editing, blood pressure update sheet should show up`() {
-    setupControllerWithoutScreenCreated(openIntention = OpenIntention.ViewExistingPatient)
-
-    val bloodPressureMeasurement = PatientMocker.bp()
-    uiEvents.onNext(PatientSummaryBpClicked(bloodPressureMeasurement))
-
-    verify(ui).showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
-  }
-
-  @Test
   @Parameters(method = "appointment cancelation reasons")
   fun `when patient's phone was marked as invalid after the phone number was last updated then update phone dialog should be shown`(
       openIntention: OpenIntention,

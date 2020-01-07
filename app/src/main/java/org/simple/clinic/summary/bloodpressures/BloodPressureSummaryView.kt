@@ -5,14 +5,22 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.cardview.widget.CardView
+import com.jakewharton.rxbinding3.view.detaches
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.patientsummary_bpsummary_content.view.*
 import org.simple.clinic.R
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.di.injector
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
@@ -49,6 +57,12 @@ class BloodPressureSummaryView(
   @Inject
   lateinit var userClock: UserClock
 
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var controllerFactory: BloodPressureSummaryViewController.Factory
+
   init {
     LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_content, this, true)
   }
@@ -58,11 +72,20 @@ class BloodPressureSummaryView(
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    if(isInEditMode) {
+    if (isInEditMode) {
       return
     }
 
     context.injector<BloodPressureSummaryViewInjector>().inject(this)
+
+    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
+
+    bindUiToController(
+        ui = this,
+        events = Observable.just(ScreenCreated()).cast(),
+        controller = controllerFactory.create(screenKey.patientUuid),
+        screenDestroys = detaches().map { ScreenDestroyed() }
+    )
   }
 
   override fun populateBloodPressures(bloodPressureMeasurements: List<BloodPressureMeasurement>) {

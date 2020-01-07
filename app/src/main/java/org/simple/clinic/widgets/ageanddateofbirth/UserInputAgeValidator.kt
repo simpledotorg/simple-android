@@ -1,8 +1,8 @@
 package org.simple.clinic.widgets.ageanddateofbirth
 
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAge
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAge
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Valid
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -16,15 +16,15 @@ class UserInputAgeValidator @Inject constructor(
   sealed class Result {
     object Valid : Result()
     sealed class Invalid : Result() {
-      object ExceedsMaxAge : Invalid()
-      object ExceedsMinAge : Invalid()
+      object ExceedsMaxAgeLimit : Invalid()
+      object ExceedsMinAgeLimit : Invalid()
     }
   }
 
   fun validate(age: Int): Result {
     return when {
-      age > 120 -> ExceedsMaxAge
-      age == 0 -> ExceedsMinAge
+      age > 120 -> ExceedsMaxAgeLimit
+      age == 0 -> ExceedsMinAgeLimit
       else -> Valid
     }
   }
@@ -33,8 +33,8 @@ class UserInputAgeValidator @Inject constructor(
     val nowDate: LocalDate = LocalDate.now(userClock)
     val parsedDate = dateOfBirthFormat.parse(dateText, LocalDate::from)
     return when {
-      parsedDate < nowDate.minusYears(120) -> ExceedsMaxAge
-      parsedDate == nowDate -> ExceedsMinAge
+      parsedDate < nowDate.minusYears(120) -> ExceedsMaxAgeLimit
+      parsedDate == nowDate -> ExceedsMinAgeLimit
       else -> Valid
     }
   }

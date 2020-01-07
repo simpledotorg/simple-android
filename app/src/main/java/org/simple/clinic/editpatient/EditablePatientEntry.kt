@@ -31,8 +31,8 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAge
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAge
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -209,8 +209,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       InvalidPattern -> DATE_OF_BIRTH_PARSE_ERROR
       DateIsInFuture -> DATE_OF_BIRTH_IN_FUTURE
       is Valid -> when (ageValidator.validate(dateOfBirth)) {
-        ExceedsMaxAge -> DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT
-        ExceedsMinAge -> DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT
+        ExceedsMaxAgeLimit -> DATE_OF_BIRTH_EXCEEDS_MAX_LIMIT
+        ExceedsMinAgeLimit -> DATE_OF_BIRTH_EXCEEDS_MIN_LIMIT
         else -> null
       }
     }
@@ -225,8 +225,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     return when {
       age.isBlank() -> BOTH_DATEOFBIRTH_AND_AGE_ABSENT
       else -> when (ageValidator.validate(age.toInt())) {
-        ExceedsMaxAge -> AGE_EXCEEDS_MAX_LIMIT
-        ExceedsMinAge -> AGE_EXCEEDS_MIN_LIMIT
+        ExceedsMaxAgeLimit -> AGE_EXCEEDS_MAX_LIMIT
+        ExceedsMinAgeLimit -> AGE_EXCEEDS_MIN_LIMIT
         else -> null
       }
     }

@@ -34,6 +34,7 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
+import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryUiController
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.exhaustive
@@ -86,8 +87,13 @@ class PatientSummaryScreenController @AssistedInject constructor(
         goBackWhenBackClicked(replayedEvents),
         goToHomeOnDoneClick(replayedEvents),
         exitScreenIfLinkIdWithPatientIsCancelled(replayedEvents),
-        hideLinkIdWithPatientSheet(replayedEvents)
+        hideLinkIdWithPatientSheet(replayedEvents),
+        medicalHistorySummaryUiController(replayedEvents)
     )
+  }
+
+  private fun medicalHistorySummaryUiController(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.compose(MedicalHistorySummaryUiController())
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {

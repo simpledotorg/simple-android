@@ -6,12 +6,14 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: UiActions
+    @Assisted private val uiActions: UiActions,
+    private val config: PatientSummaryConfig
 ) {
 
   @AssistedInject.Factory
@@ -35,7 +37,7 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
       effect
           .flatMap {
             bloodSugarRepository
-                .latestMeasurements(it.patientUuid, 100)
+                .latestMeasurements(it.patientUuid, config.numberOfBloodSugarsToDisplay)
                 .subscribeOn(scheduler)
           }
           .map { BloodSugarSummaryFetched(it) }

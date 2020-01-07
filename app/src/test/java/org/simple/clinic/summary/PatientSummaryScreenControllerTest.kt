@@ -23,7 +23,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
@@ -33,7 +32,6 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.patient.PatientMocker.medicalHistory
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.BusinessId
@@ -64,10 +62,8 @@ class PatientSummaryScreenControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
-  private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
-  private val utcClock = TestUtcClock()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -80,7 +76,6 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.patient(patientUuid)).doReturn(Observable.never())
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.never())
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.never())
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
@@ -134,8 +129,6 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Telmisartan", dosage = "9000mg"),
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(prescriptions))
-    val medicalHistory = medicalHistory()
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).doReturn(Observable.just(medicalHistory))
 
     setupControllerWithScreenCreated(intention)
 
@@ -557,7 +550,7 @@ class PatientSummaryScreenControllerTest {
   private fun setupControllerWithScreenCreated(
       openIntention: OpenIntention,
       patientUuid: UUID = this.patientUuid,
-      screenCreatedTimestamp: Instant = Instant.now(utcClock)
+      screenCreatedTimestamp: Instant = Instant.parse("2018-01-01T00:00:00Z")
   ) {
     setupControllerWithoutScreenCreated(
         patientUuid = patientUuid,
@@ -570,7 +563,7 @@ class PatientSummaryScreenControllerTest {
   private fun setupControllerWithoutScreenCreated(
       patientUuid: UUID = this.patientUuid,
       openIntention: OpenIntention,
-      screenCreatedTimestamp: Instant = Instant.now(utcClock)
+      screenCreatedTimestamp: Instant = Instant.parse("2018-01-01T00:00:00Z")
   ) {
     createController(patientUuid, openIntention, screenCreatedTimestamp)
   }
@@ -587,10 +580,8 @@ class PatientSummaryScreenControllerTest {
         patientRepository = patientRepository,
         bpRepository = bpRepository,
         prescriptionRepository = prescriptionRepository,
-        medicalHistoryRepository = medicalHistoryRepository,
         appointmentRepository = appointmentRepository,
-        missingPhoneReminderRepository = missingPhoneReminderRepository,
-        clock = utcClock
+        missingPhoneReminderRepository = missingPhoneReminderRepository
     )
 
     controllerSubscription = uiEvents

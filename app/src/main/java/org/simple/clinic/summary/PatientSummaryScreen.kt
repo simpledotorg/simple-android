@@ -16,7 +16,6 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
@@ -39,7 +38,6 @@ import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
-import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryUi
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
@@ -51,25 +49,18 @@ import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
-
-  companion object {
-    const val REQCODE_BP_ENTRY = 1
-    const val REQCODE_SCHEDULE_APPOINTMENT = 2
-  }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -196,13 +187,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private fun bloodPressureSaves() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
-      .filter { it.requestCode == REQCODE_BP_ENTRY && it.succeeded() }
+      .filter { it.requestCode == SUMMARY_REQCODE_BP_ENTRY && it.succeeded() }
       .filter { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
       .map { PatientSummaryBloodPressureSaved }
 
   private fun appointmentScheduleSheetClosed() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
-      .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
+      .filter { it.requestCode == SUMMARY_REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
       .map { ScheduleAppointmentSheetClosed() }
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
@@ -326,7 +317,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   override fun showBloodPressureEntrySheet(patientUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
-    activity.startActivityForResult(intent, REQCODE_BP_ENTRY)
+    activity.startActivityForResult(intent, SUMMARY_REQCODE_BP_ENTRY)
   }
 
   override fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {
@@ -336,7 +327,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   override fun showScheduleAppointmentSheet(patientUuid: UUID) {
     val intent = ScheduleAppointmentSheet.intent(context, patientUuid)
-    activity.startActivityForResult(intent, REQCODE_SCHEDULE_APPOINTMENT)
+    activity.startActivityForResult(intent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
   }
 
   override fun goToPreviousScreen() {

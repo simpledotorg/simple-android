@@ -374,8 +374,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   override fun showEditButton() {
     editButton.visibility = View.VISIBLE
   }
-
-  override fun bloodPressureSummaryUi(): BloodPressureSummaryUi = bloodPressureSummaryView
 }
 
 @Parcelize

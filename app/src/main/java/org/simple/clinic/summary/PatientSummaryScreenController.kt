@@ -59,12 +59,10 @@ class PatientSummaryScreenController @AssistedInject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(mergeWithPatientSummaryChanges())
         .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(
-        populateList(replayedEvents),
         reportViewedPatientEvent(replayedEvents),
         populatePatientProfile(),
         openPrescribedDrugsScreen(replayedEvents),
@@ -117,27 +115,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
       populatePatientProfile(patientSummaryProfile)
       showEditButton()
     }
-  }
-
-  private fun mergeWithPatientSummaryChanges(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { events ->
-
-      val summaryItemChanges = prescriptionRepository
-          .newestPrescriptionsForPatient(patientUuid)
-          .map(::PatientSummaryItems)
-          .map(::PatientSummaryItemChanged)
-
-      events.mergeWith(summaryItemChanges)
-    }
-  }
-
-  private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItems }
-        .map { patientSummary ->
-          { ui: Ui -> ui.populateList(patientSummary.prescription) }
-        }
   }
 
   private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {

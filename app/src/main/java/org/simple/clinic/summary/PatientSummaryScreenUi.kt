@@ -1,15 +1,11 @@
 package org.simple.clinic.summary
 
-import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryUi
 import org.simple.clinic.summary.prescribeddrugs.DrugSummaryUi
 import java.util.UUID
 
 interface PatientSummaryScreenUi {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
-  fun populateList(prescribedDrugs: List<PrescribedDrug>)
   fun showScheduleAppointmentSheet(patientUuid: UUID)
   fun goToPreviousScreen()
   fun goToHomeScreen()

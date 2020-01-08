@@ -51,7 +51,7 @@
   <string name="patiententry_date_of_birth_focused">জন্মতারিখ: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">অথবা</string>
   <string name="patiententry_age">বয়স</string>
-  <string name="patiententry_colony_or_village">কলোনি / গ্রাম / ওয়ার্ড</string>
+  <string name="patiententry_village_colony_ward">কলোনি / গ্রাম / ওয়ার্ড</string>
   <string name="patiententry_district">জেলা</string>
   <string name="patiententry_state">Sub District</string>
   <string name="patiententry_save_patient">পরবর্তী</string>

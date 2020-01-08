@@ -53,7 +53,7 @@
   <string name="patiententry_dateofbirth_and_age_separator">ਜਾਂ</string>
   <string name="patiententry_age">ਉਮਰ</string>
   <string name="patiententry_street_address">ਮਕਾਨ ਸੰਖਿਆ ਅਤੇ ਗਲੀ</string>
-  <string name="patiententry_colony_or_village">ਕੋਲੋਨੀ/ਪਿੰਡ/ਵਾਰਡ</string>
+  <string name="patiententry_village_colony_ward">ਕੋਲੋਨੀ/ਪਿੰਡ/ਵਾਰਡ</string>
   <string name="patiententry_zone">ਖੇਤਰ/ਜ਼ੋਨ</string>
   <string name="patiententry_district">ਜਿਲ੍ਹਾ</string>
   <string name="patiententry_state">ਰਾਜ</string>

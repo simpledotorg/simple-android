@@ -53,7 +53,7 @@
   <string name="patiententry_dateofbirth_and_age_separator">లేదా</string>
   <string name="patiententry_age">వయస్సు</string>
   <string name="patiententry_street_address">ఇంటి సంఖ్య, వీధి</string>
-  <string name="patiententry_colony_or_village">కాలనీ / గ్రామం / వార్డ్</string>
+  <string name="patiententry_village_colony_ward">కాలనీ / గ్రామం / వార్డ్</string>
   <string name="patiententry_zone">జోన్</string>
   <string name="patiententry_district">జిల్లా</string>
   <string name="patiententry_state">రాష్ట్రం</string>

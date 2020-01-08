@@ -53,7 +53,7 @@
   <string name="patiententry_dateofbirth_and_age_separator">या</string>
   <string name="patiententry_age">उम्र</string>
   <string name="patiententry_street_address">मकान नंबर और गली</string>
-  <string name="patiententry_colony_or_village">कॉलोनी / गांव / वार्ड</string>
+  <string name="patiententry_village_colony_ward">कॉलोनी / गांव / वार्ड</string>
   <string name="patiententry_zone">क्षेत्र</string>
   <string name="patiententry_district">ज़िला</string>
   <string name="patiententry_state">राज्य</string>

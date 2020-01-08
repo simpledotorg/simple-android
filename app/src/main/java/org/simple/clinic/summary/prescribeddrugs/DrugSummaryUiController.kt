@@ -20,6 +20,6 @@ class DrugSummaryUiController : ObservableTransformer<UiEvent, UiChange> {
         .ofType<PatientSummaryItemChanged>()
         .map { it.patientSummaryItems.prescription }
         .distinctUntilChanged()
-        .map { { ui: Ui -> ui.populatePrescribedDrugs(it) } }
+        .map { { ui: Ui -> ui.drugSummaryUi().populatePrescribedDrugs(it) } }
   }
 }

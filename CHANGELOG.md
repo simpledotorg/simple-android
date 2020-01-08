@@ -1,6 +1,15 @@
 # CHANGELOG
 
-## On Demo
+## On demo
+### Feature
+- Updated patient entry consent text to include registration of minors
+- Added/updated translations for the following languages: Telugu, Punjabi, Marathi, Kannada, Hindi
+
+### Internal
+- Removed the remote homescreen illustrations feature
+- Moved to the dynamic address field model for patient entry and editing
+
+## 2020-01-01-6917
 ### Feature
 - Transfer patients to a different facility for follow-up 
 

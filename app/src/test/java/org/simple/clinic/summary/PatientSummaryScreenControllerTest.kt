@@ -40,11 +40,11 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.HOME
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
+import org.simple.clinic.summary.prescribeddrugs.DrugSummaryUi
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -59,6 +59,7 @@ class PatientSummaryScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<PatientSummaryScreenUi>()
+  private val drugSummaryUi = mock<DrugSummaryUi>()
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
@@ -79,6 +80,8 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
+
+    whenever(ui.drugSummaryUi()) doReturn drugSummaryUi
 
     Analytics.addReporter(reporter)
   }
@@ -133,7 +136,7 @@ class PatientSummaryScreenControllerTest {
     setupControllerWithScreenCreated(intention)
 
     verify(ui).populateList(prescriptions)
-    verify(ui).populatePrescribedDrugs(prescriptions)
+    verify(drugSummaryUi).populatePrescribedDrugs(prescriptions)
   }
 
   @Test

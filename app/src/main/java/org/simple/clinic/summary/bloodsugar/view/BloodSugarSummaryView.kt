@@ -1,15 +1,19 @@
 package org.simple.clinic.summary.bloodsugar.view
 
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import kotlinx.android.synthetic.main.patientsummary_bloodsugarsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewUi
+import org.simple.clinic.summary.bloodsugar.UiActions
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -24,7 +28,10 @@ private typealias AddNewBloodSugarClicked = () -> Unit
 class BloodSugarSummaryView(
     context: Context,
     attributes: AttributeSet
-) : CardView(context, attributes), BloodSugarSummaryViewUi {
+) : CardView(context, attributes), BloodSugarSummaryViewUi, UiActions {
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var userClock: UserClock
@@ -59,6 +66,10 @@ class BloodSugarSummaryView(
 
   override fun showNoBloodSugarsView() {
     render(emptyList())
+  }
+
+  override fun showBloodSugarTypeSelector() {
+    activity.startActivity(Intent(context, BloodSugarTypePickerSheet::class.java))
   }
 
   private fun render(bloodSugarMeasurements: List<BloodSugarMeasurement>) {

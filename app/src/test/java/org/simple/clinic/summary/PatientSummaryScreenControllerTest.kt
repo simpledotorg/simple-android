@@ -40,8 +40,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.HOME
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
-import org.simple.clinic.summary.prescribeddrugs.DrugSummaryUi
-import org.simple.clinic.summary.prescribeddrugs.PatientSummaryUpdateDrugsClicked
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -60,7 +58,6 @@ class PatientSummaryScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<PatientSummaryScreenUi>()
-  private val drugSummaryUi = mock<DrugSummaryUi>()
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
@@ -81,8 +78,6 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
-
-    whenever(ui.drugSummaryUi()) doReturn drugSummaryUi
 
     Analytics.addReporter(reporter)
   }
@@ -124,29 +119,6 @@ class PatientSummaryScreenControllerTest {
       listOf(OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), PatientMocker.businessId(patientUuid = patientUuid)),
       listOf(OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), null)
   )
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `patient's prescription summary should be populated`(intention: OpenIntention) {
-    val prescriptions = listOf(
-        PatientMocker.prescription(name = "Amlodipine", dosage = "10mg"),
-        PatientMocker.prescription(name = "Telmisartan", dosage = "9000mg"),
-        PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.just(prescriptions))
-
-    setupControllerWithScreenCreated(intention)
-
-    verify(drugSummaryUi).populatePrescribedDrugs(prescriptions)
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `when update medicines is clicked then BP medicines screen should be shown`(openIntention: OpenIntention) {
-    setupControllerWithScreenCreated(openIntention)
-    uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
-
-    verify(drugSummaryUi).showUpdatePrescribedDrugsScreen(patientUuid)
-  }
 
   @Test
   @Parameters(method = "patient summary open intentions")

@@ -21,7 +21,10 @@ class DrugSummaryUiController(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return populatePrescribedDrugs(events)
+    return Observable.merge(
+        populatePrescribedDrugs(events),
+        openPrescribedDrugsScreen(events)
+    )
   }
 
   private fun populatePrescribedDrugs(events: Observable<UiEvent>): Observable<UiChange> {
@@ -29,5 +32,11 @@ class DrugSummaryUiController(
         .ofType<ScreenCreated>()
         .switchMap { repository.newestPrescriptionsForPatient(patientUuid) }
         .map { { ui: Ui -> ui.drugSummaryUi().populatePrescribedDrugs(it) } }
+  }
+
+  private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientSummaryUpdateDrugsClicked>()
+        .map { { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) } }
   }
 }

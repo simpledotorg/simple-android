@@ -25,7 +25,6 @@ import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.prescribeddrugs.DrugSummaryUiController
-import org.simple.clinic.summary.prescribeddrugs.PatientSummaryUpdateDrugsClicked
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.exhaustive
@@ -66,7 +65,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
     return Observable.mergeArray(
         reportViewedPatientEvent(replayedEvents),
         populatePatientProfile(),
-        openPrescribedDrugsScreen(replayedEvents),
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openLinkIdWithPatientSheet(replayedEvents),
         showUpdatePhoneDialogIfRequired(replayedEvents),
@@ -116,12 +114,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
       populatePatientProfile(patientSummaryProfile)
       showEditButton()
     }
-  }
-
-  private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientSummaryUpdateDrugsClicked>()
-        .map { { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) } }
   }
 
   private fun showScheduleAppointmentSheet(events: Observable<UiEvent>): Observable<UiChange> {

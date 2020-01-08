@@ -16,7 +16,6 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
@@ -38,8 +37,6 @@ import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
-import org.simple.clinic.summary.prescribeddrugs.DrugSummaryUi
-import org.simple.clinic.summary.prescribeddrugs.PatientSummaryUpdateDrugsClicked
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -125,8 +122,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             bloodPressureSaves(),
             appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
-            identifierLinkCancelledEvents(),
-            updateDrugsClicks()
+            identifierLinkCancelledEvents()
         ),
         controller = controller,
         screenDestroys = this.detaches().map { ScreenDestroyed() }
@@ -197,14 +193,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .uiEvents()
         .ofType<LinkIdWithPatientCancelled>()
         .map { PatientSummaryLinkIdCancelled }
-  }
-
-  private fun updateDrugsClicks(): Observable<UiEvent> {
-    return Observable.create { emitter ->
-      drugSummaryView.updateClicked = { emitter.onNext(PatientSummaryUpdateDrugsClicked()) }
-
-      emitter.setCancellable { drugSummaryView.updateClicked = null }
-    }
   }
 
   @SuppressLint("SetTextI18n")
@@ -298,10 +286,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   override fun showEditButton() {
     editButton.visibility = View.VISIBLE
-  }
-
-  override fun drugSummaryUi(): DrugSummaryUi {
-    return drugSummaryView
   }
 }
 

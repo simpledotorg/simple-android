@@ -3,6 +3,8 @@ package org.simple.clinic.summary.prescribeddrugs
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.summary.PatientSummaryItemChanged
 import org.simple.clinic.summary.PatientSummaryScreenUi
 import org.simple.clinic.widgets.UiEvent
 
@@ -14,6 +16,10 @@ typealias UiChange = (Ui) -> Unit
 class DrugSummaryUiController : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return Observable.never()
+    return events
+        .ofType<PatientSummaryItemChanged>()
+        .map { it.patientSummaryItems.prescription }
+        .distinctUntilChanged()
+        .map { { ui: Ui -> ui.populatePrescribedDrugs(it) } }
   }
 }

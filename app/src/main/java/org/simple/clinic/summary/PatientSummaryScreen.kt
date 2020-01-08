@@ -268,6 +268,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   override fun populateList(prescribedDrugs: List<PrescribedDrug>) {
+  }
+
+  override fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>) {
     drugSummaryView.bind(
         prescriptions = prescribedDrugs,
         dateFormatter = exactDateFormatter,

@@ -133,6 +133,7 @@ class PatientSummaryScreenControllerTest {
     setupControllerWithScreenCreated(intention)
 
     verify(ui).populateList(prescriptions)
+    verify(ui).populatePrescribedDrugs(prescriptions)
   }
 
   @Test

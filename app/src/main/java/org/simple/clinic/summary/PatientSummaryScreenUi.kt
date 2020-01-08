@@ -9,6 +9,7 @@ import java.util.UUID
 interface PatientSummaryScreenUi {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
   fun populateList(prescribedDrugs: List<PrescribedDrug>)
+  fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>)
   fun showScheduleAppointmentSheet(patientUuid: UUID)
   fun goToPreviousScreen()
   fun goToHomeScreen()

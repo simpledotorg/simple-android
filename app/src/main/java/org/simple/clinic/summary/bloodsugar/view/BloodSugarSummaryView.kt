@@ -8,19 +8,44 @@ import androidx.cardview.widget.CardView
 import kotlinx.android.synthetic.main.patientsummary_bloodsugarsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.summary.PatientSummaryConfig
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewUi
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
+import javax.inject.Inject
+import javax.inject.Named
 
 private typealias AddNewBloodSugarClicked = () -> Unit
 
 class BloodSugarSummaryView(
     context: Context,
     attributes: AttributeSet
-) : CardView(context, attributes) {
+) : CardView(context, attributes), BloodSugarSummaryViewUi {
+
+  @Inject
+  lateinit var userClock: UserClock
+
+  @field:[Inject Named("exact_date")]
+  lateinit var exactDateFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var timestampGenerator: RelativeTimestampGenerator
+
+  @Inject
+  lateinit var config: PatientSummaryConfig
+
+  @Inject
+  lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var zoneId: ZoneId
+
+  @field:[Inject Named("time_for_bps_recorded")]
+  lateinit var timeFormatter: DateTimeFormatter
 
   init {
     LayoutInflater.from(context).inflate(R.layout.patientsummary_bloodsugarsummary_content, this, true)
@@ -28,34 +53,29 @@ class BloodSugarSummaryView(
 
   var addNewBloodSugarClicked: AddNewBloodSugarClicked? = null
 
-  fun render(
-      bloodSugarMeasurements: List<BloodSugarMeasurement>,
-      utcClock: UtcClock,
-      placeholderLimit: Int,
-      timestampGenerator: RelativeTimestampGenerator,
-      dateFormatter: DateTimeFormatter,
-      bpTimeFormatter: DateTimeFormatter,
-      zoneId: ZoneId,
-      userClock: UserClock
-  ) {
+  override fun showBloodSugarSummary(bloodSugars: List<BloodSugarMeasurement>) {
+    render(bloodSugars)
+  }
+
+  override fun showNoBloodSugarsView() {
+    render(emptyList())
+  }
+
+  private fun render(bloodSugarMeasurements: List<BloodSugarMeasurement>) {
     newBloodSugar.setOnClickListener { addNewBloodSugarClicked?.invoke() }
 
-    val placeholderViews = generatePlaceholders(bloodSugarMeasurements, utcClock, placeholderLimit)
-    val listItemViews = generateBloodSugarRows(bloodSugarMeasurements, timestampGenerator, userClock, zoneId, bpTimeFormatter, dateFormatter, utcClock)
+    val placeholderViews = generatePlaceholders(bloodSugarMeasurements)
+    val listItemViews = generateBloodSugarRows(bloodSugarMeasurements)
 
     bloodSugarItemContainer.removeAllViews()
     withDividers(listItemViews + placeholderViews).forEach(bloodSugarItemContainer::addView)
   }
 
-  private fun generatePlaceholders(
-      bloodSugarMeasurements: List<BloodSugarMeasurement>,
-      utcClock: UtcClock,
-      placeholderLimit: Int
-  ): List<View> {
+  private fun generatePlaceholders(bloodSugarMeasurements: List<BloodSugarMeasurement>): List<View> {
     val measurementsByDate = bloodSugarMeasurements.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
     val numberOfBloodSugarGroups = measurementsByDate.size
 
-    val numberOfPlaceholders = 0.coerceAtLeast(placeholderLimit - numberOfBloodSugarGroups)
+    val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodSugarGroups)
 
     return (1..numberOfPlaceholders).map { placeholderNumber ->
       val shouldShowHint = numberOfBloodSugarGroups == 0 && placeholderNumber == 1
@@ -67,15 +87,7 @@ class BloodSugarSummaryView(
     }
   }
 
-  private fun generateBloodSugarRows(
-      bloodSugarMeasurements: List<BloodSugarMeasurement>,
-      timestampGenerator: RelativeTimestampGenerator,
-      userClock: UserClock,
-      zoneId: ZoneId,
-      bpTimeFormatter: DateTimeFormatter,
-      dateFormatter: DateTimeFormatter,
-      utcClock: UtcClock
-  ): List<View> {
+  private fun generateBloodSugarRows(bloodSugarMeasurements: List<BloodSugarMeasurement>): List<View> {
     val measurementsByDate = bloodSugarMeasurements.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
 
     return measurementsByDate.mapValues { (_, measurementList) ->
@@ -85,10 +97,10 @@ class BloodSugarSummaryView(
         val bloodSugarItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bloodsugar_measurement, this, false) as BloodSugarItemView
         bloodSugarItemView.render(
             measurement = measurement,
-            formattedTime = if (measurementList.size > 1) displayTime(measurement.recordedAt, zoneId, bpTimeFormatter) else null,
+            formattedTime = if (measurementList.size > 1) displayTime(measurement.recordedAt, zoneId, timeFormatter) else null,
             addTopPadding = measurement == measurementList.first(),
             daysAgo = timestamp,
-            dateFormatter = dateFormatter
+            dateFormatter = exactDateFormatter
         )
 
         bloodSugarItemView

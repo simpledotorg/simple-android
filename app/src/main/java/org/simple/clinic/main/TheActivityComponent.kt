@@ -72,6 +72,7 @@ import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewInjector
 import org.simple.clinic.summary.linkId.LinkIdWithPatientView
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryViewInjector
+import org.simple.clinic.summary.prescribeddrugs.DrugSummaryViewInjector
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.preference.InstantRxPreferencesConverter
@@ -84,7 +85,8 @@ import javax.inject.Named
 interface TheActivityComponent :
     OnboardingScreenInjector,
     BloodPressureSummaryViewInjector,
-    MedicalHistorySummaryViewInjector {
+    MedicalHistorySummaryViewInjector,
+    DrugSummaryViewInjector {
 
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)

@@ -53,12 +53,10 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Named
 
-class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi, DrugSummaryUi {
+class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -74,9 +72,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @Inject
   lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
-
-  @field:[Inject Named("exact_date")]
-  lateinit var exactDateFormatter: DateTimeFormatter
 
   @Deprecated("""
     ~ DOA ~
@@ -271,14 +266,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   override fun populateList(prescribedDrugs: List<PrescribedDrug>) {
   }
 
-  override fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>) {
-    drugSummaryView.bind(
-        prescriptions = prescribedDrugs,
-        dateFormatter = exactDateFormatter,
-        userClock = userClock
-    )
-  }
-
   override fun showScheduleAppointmentSheet(patientUuid: UUID) {
     val intent = ScheduleAppointmentSheet.intent(context, patientUuid)
     activity.startActivityForResult(intent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
@@ -321,7 +308,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   override fun drugSummaryUi(): DrugSummaryUi {
-    return this
+    return drugSummaryView
   }
 }
 

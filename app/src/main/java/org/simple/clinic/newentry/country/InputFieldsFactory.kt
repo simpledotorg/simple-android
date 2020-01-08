@@ -37,7 +37,7 @@ class InputFieldsFactory(
         LandlineOrMobileField(R.string.patiententry_phone_number),
         StreetAddressField(R.string.patiententry_street_address),
         GenderField(labelResId = 0),
-        VillageOrColonyField(R.string.patiententry_colony_or_village),
+        VillageOrColonyField(R.string.patiententry_village_colony_ward),
         DistrictField(R.string.patiententry_district),
         StateField(R.string.patiententry_state)
     )
@@ -51,11 +51,11 @@ class InputFieldsFactory(
         LandlineOrMobileField(R.string.patiententry_phone_number),
         GenderField(labelResId = 0),
         BangladeshNationalIdField(R.string.patiententry_bangladesh_national_id),
-        StreetAddressField(R.string.patiententry_street_address),
-        VillageOrColonyField(R.string.patiententry_colony_or_village),
+        StreetAddressField(R.string.patiententry_street_house_road_number),
+        VillageOrColonyField(R.string.patiententry_village_ward),
         ZoneField(R.string.patiententry_zone),
-        DistrictField(R.string.patiententry_district),
-        StateField(R.string.patiententry_state)
+        DistrictField(R.string.patiententry_upazila),
+        StateField(R.string.patiententry_district)
     )
   }
 }

@@ -53,7 +53,7 @@
   <string name="patiententry_dateofbirth_and_age_separator">ಅಥವಾ</string>
   <string name="patiententry_age">ವಯಸ್ಸು</string>
   <string name="patiententry_street_address">ಮನೆ ಸಂಖ್ಯೆ ಮತ್ತು ರಸ್ತೆ</string>
-  <string name="patiententry_colony_or_village">ಕಾಲೋನಿ / ಗ್ರಾಮ / ವಾರ್ಡ್</string>
+  <string name="patiententry_village_colony_ward">ಕಾಲೋನಿ / ಗ್ರಾಮ / ವಾರ್ಡ್</string>
   <string name="patiententry_zone">ವಲಯ</string>
   <string name="patiententry_district">ಜಿಲ್ಲೆ</string>
   <string name="patiententry_state">ರಾಜ್ಯ</string>

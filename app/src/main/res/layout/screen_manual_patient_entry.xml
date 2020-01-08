@@ -334,7 +334,7 @@
             android:id="@+id/colonyOrVillageEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/patiententry_colony_or_village"
+            android:hint="@string/patiententry_village_colony_ward"
             android:imeOptions="flagNoFullscreen"
             android:inputType="textPostalAddress|textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>

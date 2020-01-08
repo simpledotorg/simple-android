@@ -60,10 +60,13 @@
   <string name="patiententry_gender_female" translatable="false">@string/gender_female</string>
   <string name="patiententry_gender_male" translatable="false">@string/gender_male</string>
   <string name="patiententry_gender_transgender" translatable="false">@string/gender_transgender</string>
-  <string name="patiententry_street_address">House number and street</string>
-  <string name="patiententry_colony_or_village">Colony / Village / Ward</string>
+  <string name="patiententry_street_address">House address</string>
+  <string name="patiententry_street_house_road_number">House and road number</string>
+  <string name="patiententry_village_colony_ward">Village / colony / ward</string>
+  <string name="patiententry_village_ward">Village / ward</string>
   <string name="patiententry_zone">Union</string>
   <string name="patiententry_district">District</string>
+  <string name="patiententry_upazila">Upazila</string>
   <string name="patiententry_state">State</string>
   <string name="patiententry_save_patient">Next</string>
   <string name="patiententry_error_empty_fullname">Enter patient’s full name</string>
@@ -91,7 +94,7 @@
   <string name="patientedit_gender_male" translatable="false">@string/gender_male</string>
   <string name="patientedit_gender_transgender" translatable="false">@string/gender_transgender</string>
   <string name="patientedit_error_empty_gender" translatable="false">@string/patiententry_error_empty_gender</string>
-  <string name="patientedit_colony_or_village" translatable="false">@string/patiententry_colony_or_village</string>
+  <string name="patientedit_colony_or_village" translatable="false">@string/patiententry_village_colony_ward</string>
   <string name="patientedit_district" translatable="false">@string/patiententry_district</string>
   <string name="patientedit_state" translatable="false">@string/patiententry_state</string>
   <string name="patientedit_save_patient">Save</string>

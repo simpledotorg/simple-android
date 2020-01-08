@@ -12,6 +12,7 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
+import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -154,6 +155,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     delegate.prepare()
 
     showOrHideInputFields()
+    setInputFieldsHint()
   }
 
   private fun showOrHideInputFields() {
@@ -175,6 +177,23 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     allTypesOfInputFields.forEach { (clazz, view) ->
       view.visibleOrGone(clazz in receivedTypesOfInputFields)
+    }
+  }
+
+  private fun setInputFieldsHint() {
+    val allTextInputFields: Map<Class<*>, TextInputLayout> = mapOf(
+        PatientNameField::class.java to fullNameInputLayout,
+        LandlineOrMobileField::class.java to phoneNumberInputLayout,
+        BangladeshNationalIdField::class.java to bangladeshNationalIdInputLayout,
+        StreetAddressField::class.java to streetAddressInputLayout,
+        VillageOrColonyField::class.java to colonyOrVillageInputLayout,
+        ZoneField::class.java to zoneInputLayout,
+        DistrictField::class.java to districtInputLayout,
+        StateField::class.java to stateInputLayout
+    )
+
+    inputFields.inputFields.forEach {
+      allTextInputFields[it::class.java]?.hint = context.getString(it.labelResId)
     }
   }
 

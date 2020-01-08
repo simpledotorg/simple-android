@@ -1,6 +1,8 @@
 package org.simple.clinic.storage
 
+import android.os.Parcelable
 import androidx.room.Embedded
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 
@@ -16,11 +18,12 @@ import org.threeten.bp.Instant
  * This class is meant to encapsulate these timestamps as an [Embedded] model in the database
  * entities.
  **/
+@Parcelize
 data class Timestamps(
     val createdAt: Instant,
     val updatedAt: Instant,
     val deletedAt: Instant?
-) {
+) : Parcelable {
 
   companion object {
 

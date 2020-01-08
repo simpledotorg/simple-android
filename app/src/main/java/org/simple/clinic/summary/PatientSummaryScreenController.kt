@@ -14,7 +14,6 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
@@ -42,7 +41,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
     @Assisted private val screenCreatedTimestamp: Instant,
     private val patientRepository: PatientRepository,
     private val bpRepository: BloodPressureRepository,
-    private val prescriptionRepository: PrescriptionRepository,
     private val appointmentRepository: AppointmentRepository,
     private val missingPhoneReminderRepository: MissingPhoneReminderRepository
 ) : ObservableTransformer<UiEvent, UiChange> {

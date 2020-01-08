@@ -60,7 +60,6 @@ class PatientSummaryScreenControllerTest {
   private val ui = mock<PatientSummaryScreenUi>()
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
-  private val prescriptionRepository = mock<PrescriptionRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
@@ -74,7 +73,6 @@ class PatientSummaryScreenControllerTest {
   fun setUp() {
     whenever(patientRepository.patient(patientUuid)).doReturn(Observable.never())
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).doReturn(Observable.never())
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
@@ -555,7 +553,6 @@ class PatientSummaryScreenControllerTest {
         screenCreatedTimestamp = screenCreatedTimestamp,
         patientRepository = patientRepository,
         bpRepository = bpRepository,
-        prescriptionRepository = prescriptionRepository,
         appointmentRepository = appointmentRepository,
         missingPhoneReminderRepository = missingPhoneReminderRepository
     )

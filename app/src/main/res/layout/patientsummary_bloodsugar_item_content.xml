@@ -19,10 +19,11 @@
 
   <org.simple.clinic.widgets.TintableCompoundDrawableTextView
     android:id="@+id/readingTextView"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:layout_marginStart="@dimen/spacing_12"
+    android:layout_weight="1"
     android:textAppearance="@style/Clinic.V2.TextAppearance.PatientSummary.BloodPressure.Normal"
     tools:text="100" />
 

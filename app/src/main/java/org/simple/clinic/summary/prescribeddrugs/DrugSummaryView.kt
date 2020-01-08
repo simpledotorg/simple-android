@@ -4,21 +4,27 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
+import com.jakewharton.rxbinding3.view.detaches
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.drugs_summary_view.view.*
 import org.simple.clinic.R
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
-
-private typealias UpdateClicked = () -> Unit
 
 class DrugSummaryView(
     context: Context,
@@ -37,20 +43,33 @@ class DrugSummaryView(
   @Inject
   lateinit var screenRouter: ScreenRouter
 
+  @Inject
+  lateinit var controllerFactory: DrugSummaryUiController.Factory
+
+  private val internalEvents = PublishSubject.create<DrugSummaryEvent>()
+
   init {
     LayoutInflater.from(context).inflate(R.layout.drugs_summary_view, this, true)
   }
 
-  var updateClicked: UpdateClicked? = null
-
   override fun onFinishInflate() {
     super.onFinishInflate()
-    if(isInEditMode) {
+    if (isInEditMode) {
       return
     }
 
     context.injector<DrugSummaryViewInjector>().inject(this)
+
+    val key = screenRouter.key<PatientSummaryScreenKey>(this)
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(screenCreates(), internalEvents),
+        controller = controllerFactory.create(key.patientUuid),
+        screenDestroys = detaches().map { ScreenDestroyed() }
+    )
   }
+
+  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   override fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>) {
     bind(
@@ -64,12 +83,12 @@ class DrugSummaryView(
     screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
   }
 
-  fun bind(
+  private fun bind(
       prescriptions: List<PrescribedDrug>,
       dateFormatter: DateTimeFormatter,
       userClock: UserClock
   ) {
-    updateButton.setOnClickListener { updateClicked?.invoke() }
+    updateButton.setOnClickListener { internalEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
 
     summaryViewGroup.visibleOrGone(prescriptions.isNotEmpty())
 

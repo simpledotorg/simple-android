@@ -1,7 +1,6 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.summary.prescribeddrugs.DrugSummaryUi
 import java.util.UUID
 
 interface PatientSummaryScreenUi {
@@ -14,5 +13,4 @@ interface PatientSummaryScreenUi {
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
   fun hideLinkIdWithPatientView()
   fun showEditButton()
-  fun drugSummaryUi(): DrugSummaryUi
 }

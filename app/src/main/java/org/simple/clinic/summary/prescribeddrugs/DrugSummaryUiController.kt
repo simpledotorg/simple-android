@@ -1,29 +1,40 @@
 package org.simple.clinic.summary.prescribeddrugs
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.summary.PatientSummaryScreenUi
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-// TODO(vs): 2020-01-08 Change to screen specific types once the refactoring is done
-typealias Ui = PatientSummaryScreenUi
+typealias Ui = DrugSummaryUi
 
 typealias UiChange = (Ui) -> Unit
 
-class DrugSummaryUiController(
-    val patientUuid: UUID,
-    val repository: PrescriptionRepository
+class DrugSummaryUiController @AssistedInject constructor(
+    @Assisted private val patientUuid: UUID,
+    private val repository: PrescriptionRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(patientUuid: UUID): DrugSummaryUiController
+  }
+
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .replay()
+
     return Observable.merge(
-        populatePrescribedDrugs(events),
-        openPrescribedDrugsScreen(events)
+        populatePrescribedDrugs(replayedEvents),
+        openPrescribedDrugsScreen(replayedEvents)
     )
   }
 
@@ -31,12 +42,12 @@ class DrugSummaryUiController(
     return events
         .ofType<ScreenCreated>()
         .switchMap { repository.newestPrescriptionsForPatient(patientUuid) }
-        .map { { ui: Ui -> ui.drugSummaryUi().populatePrescribedDrugs(it) } }
+        .map { { ui: Ui -> ui.populatePrescribedDrugs(it) } }
   }
 
   private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<PatientSummaryUpdateDrugsClicked>()
-        .map { { ui: Ui -> ui.drugSummaryUi().showUpdatePrescribedDrugsScreen(patientUuid) } }
+        .map { { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) } }
   }
 }

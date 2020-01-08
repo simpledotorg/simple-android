@@ -8,15 +8,11 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import junitparams.Parameters
 import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.summary.OpenIntention
-import org.simple.clinic.summary.PatientSummaryScreenUi
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -25,18 +21,12 @@ class DrugSummaryUiControllerTest {
 
   private val patientUuid = UUID.fromString("f5dfca05-59da-4b91-9743-84d2690844c1")
 
-  private val ui = mock<PatientSummaryScreenUi>()
-  private val drugSummaryUi = mock<DrugSummaryUi>()
+  private val ui = mock<DrugSummaryUi>()
   private val repository = mock<PrescriptionRepository>()
   private val events = PublishSubject.create<UiEvent>()
 
   lateinit var controller: DrugSummaryUiController
   lateinit var controllerSubscription: Disposable
-
-  @Before
-  fun setUp() {
-    whenever(ui.drugSummaryUi()) doReturn drugSummaryUi
-  }
 
   @After
   fun tearDown() {
@@ -69,8 +59,8 @@ class DrugSummaryUiControllerTest {
     setupController()
 
     // then
-    verify(drugSummaryUi).populatePrescribedDrugs(prescriptions)
-    verifyNoMoreInteractions(drugSummaryUi)
+    verify(ui).populatePrescribedDrugs(prescriptions)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -82,7 +72,7 @@ class DrugSummaryUiControllerTest {
     setupController()
     events.onNext(PatientSummaryUpdateDrugsClicked())
 
-    verify(drugSummaryUi).showUpdatePrescribedDrugsScreen(patientUuid)
+    verify(ui).showUpdatePrescribedDrugsScreen(patientUuid)
   }
 
   private fun setupController() {

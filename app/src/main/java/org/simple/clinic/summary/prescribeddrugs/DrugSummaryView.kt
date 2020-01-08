@@ -8,10 +8,13 @@ import kotlinx.android.synthetic.main.drugs_summary_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -30,6 +33,9 @@ class DrugSummaryView(
 
   @Inject
   lateinit var timestampGenerator: RelativeTimestampGenerator
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
 
   init {
     LayoutInflater.from(context).inflate(R.layout.drugs_summary_view, this, true)
@@ -52,6 +58,10 @@ class DrugSummaryView(
         dateFormatter = exactDateFormatter,
         userClock = userClock
     )
+  }
+
+  override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
+    screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
   }
 
   fun bind(

@@ -145,7 +145,7 @@ class PatientSummaryScreenControllerTest {
     setupControllerWithScreenCreated(openIntention)
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
-    verify(ui).showUpdatePrescribedDrugsScreen(patientUuid)
+    verify(drugSummaryUi).showUpdatePrescribedDrugsScreen(patientUuid)
   }
 
   @Test

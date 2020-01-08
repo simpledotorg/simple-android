@@ -284,10 +284,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     AddPhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
   }
 
-  override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
-    screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
-  }
-
   override fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
     if (!linkIdWithPatientShown) {
       linkIdWithPatientShown = true

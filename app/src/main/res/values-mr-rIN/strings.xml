@@ -53,7 +53,7 @@
   <string name="patiententry_dateofbirth_and_age_separator">किंवा</string>
   <string name="patiententry_age">वय</string>
   <string name="patiententry_street_address">घर क्रमांक व मार्ग</string>
-  <string name="patiententry_colony_or_village">कॉलनी / गाव / वॉर्ड</string>
+  <string name="patiententry_village_colony_ward">कॉलनी / गाव / वॉर्ड</string>
   <string name="patiententry_zone">क्षेत्र</string>
   <string name="patiententry_district">जिल्हा</string>
   <string name="patiententry_state">राज्य</string>

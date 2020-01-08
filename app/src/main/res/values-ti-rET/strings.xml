@@ -52,7 +52,7 @@
   <string name="patiententry_date_of_birth_focused">ዕለተ ልደት፥ መዓልቲ/ወርሒ/ዓመተ ምህረት</string>
   <string name="patiententry_dateofbirth_and_age_separator">ወይ</string>
   <string name="patiententry_age">ዕድመ</string>
-  <string name="patiententry_colony_or_village">ግዝኣት / ገጠር / ናይ ከተማ ዞባ</string>
+  <string name="patiententry_village_colony_ward">ግዝኣት / ገጠር / ናይ ከተማ ዞባ</string>
   <string name="patiententry_district">ዞባ</string>
   <string name="patiententry_state">ክፍለሃገር</string>
   <string name="patiententry_save_patient">ዝቕጽል</string>

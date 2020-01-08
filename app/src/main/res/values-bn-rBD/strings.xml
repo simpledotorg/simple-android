@@ -53,7 +53,7 @@
   <string name="patiententry_dateofbirth_and_age_separator">অথবা</string>
   <string name="patiententry_age">বয়স</string>
   <string name="patiententry_street_address">বাড়ির নম্বর এবং রাস্তা</string>
-  <string name="patiententry_colony_or_village">কলোনি / গ্রাম / ওয়ার্ড</string>
+  <string name="patiententry_village_colony_ward">কলোনি / গ্রাম / ওয়ার্ড</string>
   <string name="patiententry_zone">অঞ্চল</string>
   <string name="patiententry_district">জেলা</string>
   <string name="patiententry_state">উপজেলা</string>

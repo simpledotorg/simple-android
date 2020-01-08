@@ -11,6 +11,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -46,6 +47,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -65,8 +67,10 @@ class PatientSummaryScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockAnalyticsReporter()
+  private val viewRenderer = PatientSummaryViewRenderer(ui)
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>
 
   @Before
   fun setUp() {
@@ -77,6 +81,15 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
 
     Analytics.addReporter(reporter)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = PatientSummaryModel(),
+        init = PatientSummaryInit(),
+        update = PatientSummaryUpdate(),
+        effectHandler = PatientSummaryEffectHandler().build(),
+        modelUpdateListener = viewRenderer::render
+    )
   }
 
   @After
@@ -84,6 +97,7 @@ class PatientSummaryScreenControllerTest {
     Analytics.clearReporters()
     reporter.clear()
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -540,5 +554,9 @@ class PatientSummaryScreenControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
+  }
+
+  private fun startMobiusLoop() {
+    testFixture.start()
   }
 }

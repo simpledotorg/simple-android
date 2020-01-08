@@ -172,7 +172,7 @@
   <string name="patientsummary_prescriptions_last_updated">Updated %s</string>
   <string name="patientsummary_prescriptions_add">Add medicines</string>
   <string name="patientsummary_prescriptions_update">Update medicines</string>
-  <string name="patientsummary_bp_add_new">New BP</string>
+  <string name="patientsummary_bp_add_new">Blood Pressure</string>
   <string name="patientsummary_finish_saving_patient">Save</string>
   <string name="patientsummary_medicalhistory_title">Cardiovascular History</string>
   <string name="patientsummary_medicalhistory_last_updated">Updated %s</string>
@@ -517,5 +517,5 @@
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_reading_unit_type">%d mg/dl %s</string>
   <string name="bloodsugarsummaryview_no_blood_sugars">No blood sugars added</string>
-  <string name="bloodsugarsummaryview_new_blood_sugar_button">New blood sugar</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">Diabetes</string>
 </resources>

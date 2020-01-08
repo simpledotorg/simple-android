@@ -39,6 +39,7 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.prescribeddrugs.DrugSummaryUi
+import org.simple.clinic.summary.prescribeddrugs.PatientSummaryUpdateDrugsClicked
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None

@@ -25,6 +25,7 @@ import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.prescribeddrugs.DrugSummaryUiController
+import org.simple.clinic.summary.prescribeddrugs.PatientSummaryUpdateDrugsClicked
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.exhaustive

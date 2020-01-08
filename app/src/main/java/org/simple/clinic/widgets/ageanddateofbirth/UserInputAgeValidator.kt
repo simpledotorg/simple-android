@@ -1,5 +1,7 @@
 package org.simple.clinic.widgets.ageanddateofbirth
 
+import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
+import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMinAgeLimit
@@ -23,8 +25,8 @@ class UserInputAgeValidator @Inject constructor(
 
   fun validate(age: Int): Result {
     return when {
-      age > 120 -> ExceedsMaxAgeLimit
-      age == 0 -> ExceedsMinAgeLimit
+      age > MAX_ALLOWED_PATIENT_AGE -> ExceedsMaxAgeLimit
+      age < MIN_ALLOWED_PATIENT_AGE -> ExceedsMinAgeLimit
       else -> Valid
     }
   }
@@ -33,7 +35,7 @@ class UserInputAgeValidator @Inject constructor(
     val nowDate: LocalDate = LocalDate.now(userClock)
     val parsedDate = dateOfBirthFormat.parse(dateText, LocalDate::from)
     return when {
-      parsedDate < nowDate.minusYears(120) -> ExceedsMaxAgeLimit
+      parsedDate < nowDate.minusYears(MAX_ALLOWED_PATIENT_AGE.toLong()) -> ExceedsMaxAgeLimit
       parsedDate == nowDate -> ExceedsMinAgeLimit
       else -> Valid
     }

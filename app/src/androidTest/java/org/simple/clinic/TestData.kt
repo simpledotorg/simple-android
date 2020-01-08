@@ -654,7 +654,7 @@ class TestData @Inject constructor(
   fun ongoingPatientEntry(
       fullName: String = faker.name.name(),
       dateOfBirth: String? = null,
-      age: String? = faker.number.between(0, 100).toString(),
+      age: String? = faker.number.between(MIN_ALLOWED_PATIENT_AGE, MAX_ALLOWED_PATIENT_AGE).toString(),
       gender: Gender = randomGender(),
       colony: String = faker.address.streetName(),
       district: String = faker.address.city(),

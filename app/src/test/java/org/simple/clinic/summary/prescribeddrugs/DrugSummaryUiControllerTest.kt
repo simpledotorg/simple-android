@@ -8,11 +8,14 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import junitparams.Parameters
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenUi
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -68,6 +71,18 @@ class DrugSummaryUiControllerTest {
     // then
     verify(drugSummaryUi).populatePrescribedDrugs(prescriptions)
     verifyNoMoreInteractions(drugSummaryUi)
+  }
+
+  @Test
+  fun `when update medicines is clicked then updated prescription screen should be shown`() {
+    // given
+    whenever(repository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.never<List<PrescribedDrug>>()
+
+    // when
+    setupController()
+    events.onNext(PatientSummaryUpdateDrugsClicked())
+
+    verify(drugSummaryUi).showUpdatePrescribedDrugsScreen(patientUuid)
   }
 
   private fun setupController() {

@@ -37,6 +37,6 @@ class DrugSummaryUiController(
   private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<PatientSummaryUpdateDrugsClicked>()
-        .map { { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) } }
+        .map { { ui: Ui -> ui.drugSummaryUi().showUpdatePrescribedDrugsScreen(patientUuid) } }
   }
 }

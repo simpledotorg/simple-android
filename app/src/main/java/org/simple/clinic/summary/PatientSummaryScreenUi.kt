@@ -11,7 +11,6 @@ interface PatientSummaryScreenUi {
   fun goToHomeScreen()
   fun showUpdatePhoneDialog(patientUuid: UUID)
   fun showAddPhoneDialog(patientUuid: UUID)
-  fun showUpdatePrescribedDrugsScreen(patientUuid: UUID)
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
   fun hideLinkIdWithPatientView()
   fun showEditButton()

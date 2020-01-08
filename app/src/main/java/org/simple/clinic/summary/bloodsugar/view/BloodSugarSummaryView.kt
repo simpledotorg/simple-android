@@ -7,23 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.jakewharton.rxbinding3.view.clicks
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.patientsummary_bloodsugarsummary_content.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.summary.PatientSummaryConfig
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEvent
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewUi
+import org.simple.clinic.summary.bloodsugar.NewBloodSugarClicked
 import org.simple.clinic.summary.bloodsugar.UiActions
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.unsafeLazy
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
-
-private typealias AddNewBloodSugarClicked = () -> Unit
 
 class BloodSugarSummaryView(
     context: Context,
@@ -58,7 +63,15 @@ class BloodSugarSummaryView(
     LayoutInflater.from(context).inflate(R.layout.patientsummary_bloodsugarsummary_content, this, true)
   }
 
-  var addNewBloodSugarClicked: AddNewBloodSugarClicked? = null
+  private val events: Observable<BloodSugarSummaryViewEvent> by unsafeLazy {
+    addNewBloodSugarClicks()
+        .compose(ReportAnalyticsEvents())
+        .cast<BloodSugarSummaryViewEvent>()
+  }
+
+  private fun addNewBloodSugarClicks(): Observable<BloodSugarSummaryViewEvent> {
+    return newBloodSugar.clicks().map { NewBloodSugarClicked }
+  }
 
   override fun showBloodSugarSummary(bloodSugars: List<BloodSugarMeasurement>) {
     render(bloodSugars)
@@ -73,8 +86,6 @@ class BloodSugarSummaryView(
   }
 
   private fun render(bloodSugarMeasurements: List<BloodSugarMeasurement>) {
-    newBloodSugar.setOnClickListener { addNewBloodSugarClicked?.invoke() }
-
     val placeholderViews = generatePlaceholders(bloodSugarMeasurements)
     val listItemViews = generateBloodSugarRows(bloodSugarMeasurements)
 

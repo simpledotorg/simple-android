@@ -135,7 +135,6 @@ class PatientSummaryScreenControllerTest {
 
     setupControllerWithScreenCreated(intention)
 
-    verify(ui).populateList(prescriptions)
     verify(drugSummaryUi).populatePrescribedDrugs(prescriptions)
   }
 

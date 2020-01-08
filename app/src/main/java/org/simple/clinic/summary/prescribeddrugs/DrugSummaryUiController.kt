@@ -5,7 +5,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.summary.PatientSummaryItemChanged
 import org.simple.clinic.summary.PatientSummaryScreenUi
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent

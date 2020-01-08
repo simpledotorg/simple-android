@@ -18,8 +18,6 @@ class ScheduleAppointmentSheetClosed : UiEvent {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
 
-data class PatientSummaryItemChanged(val patientSummaryItems: PatientSummaryItems) : UiEvent
-
 object PatientSummaryBloodPressureSaved : UiEvent
 
 object PatientSummaryLinkIdCancelled : UiEvent

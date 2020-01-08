@@ -16,7 +16,6 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.home.HomeScreenKey
@@ -261,9 +260,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         if (isPhoneNumberVisible) "${Unicode.bullet}  $formattedIdentifier" else formattedIdentifier
       }
     }
-  }
-
-  override fun populateList(prescribedDrugs: List<PrescribedDrug>) {
   }
 
   override fun showScheduleAppointmentSheet(patientUuid: UUID) {

@@ -368,4 +368,30 @@ class PatientEntryUpdateTest {
         )
   }
 
+  @Test
+  fun `when the date of birth exceeds max limit, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT)
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .dateOfBirthChanged("01/02/1800")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
 }

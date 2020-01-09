@@ -21,6 +21,7 @@ class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntry
 
     val personalDetails = patientEntry.personalDetails ?: return
     changeDateOfBirthAndAgeVisibility(personalDetails)
+    patientEntry.validationError?.let { ui.showValidationErrorUi(it) }
   }
 
   private fun renderIdentifier(identifier: Identifier?) {

@@ -1,6 +1,7 @@
 package org.simple.clinic.newentry
 
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 
 interface PatientEntryUi {
@@ -12,4 +13,5 @@ interface PatientEntryUi {
   fun scrollFormOnGenderSelection()
   fun showIdentifierSection()
   fun hideIdentifierSection()
+  fun showValidationErrorUi(error: PatientEntryValidationError)
 }

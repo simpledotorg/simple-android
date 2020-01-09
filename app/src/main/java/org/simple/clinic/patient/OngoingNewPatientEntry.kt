@@ -2,17 +2,17 @@ package org.simple.clinic.patient
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
-import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
+import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
@@ -49,7 +49,8 @@ data class OngoingNewPatientEntry(
     val phoneNumber: PhoneNumber? = null,
     val identifier: Identifier? = null,
     val bangladeshNationalId: Identifier? = null,
-    val reminderConsent: ReminderConsent = Granted
+    val reminderConsent: ReminderConsent = Granted,
+    val validationError: PatientEntryValidationError? = null
 ) : Parcelable {
 
   companion object {
@@ -112,11 +113,14 @@ data class OngoingNewPatientEntry(
   fun withZone(zone: String): OngoingNewPatientEntry =
       copy(address = addressOrBlank().copy(zone = zone))
 
+  fun withValidationFailed(error: PatientEntryValidationError): OngoingNewPatientEntry =
+      copy(validationError = error)
+
   fun validationErrors(
       dobValidator: UserInputDateValidator,
       numberValidator: PhoneNumberValidator,
       ageValidator: UserInputAgeValidator
-  ) : List<PatientEntryValidationError> {
+  ): List<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()
 
     if (personalDetails == null) {
@@ -186,7 +190,7 @@ data class OngoingNewPatientEntry(
       InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
       DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
       is Valid -> {
-        when (ageValidator.validate(dateOfBirth)){
+        when (ageValidator.validate(dateOfBirth)) {
           ExceedsMaxAgeLimit -> listOf(DOB_EXCEEDS_MAX_LIMIT)
           ExceedsMinAgeLimit -> listOf(DOB_EXCEEDS_MIN_LIMIT)
           else -> emptyList()

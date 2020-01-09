@@ -50,6 +50,8 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
@@ -549,5 +551,11 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   override fun hideIdentifierSection() {
     identifierContainer.visibleOrGone(isVisible = false)
+  }
+
+  override fun showValidationErrorUi(error: PatientEntryValidationError) {
+    when (error) {
+      FULL_NAME_EMPTY -> this.showEmptyFullNameError(true)
+    }
   }
 }

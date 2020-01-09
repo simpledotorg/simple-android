@@ -8,6 +8,7 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.newentry.Field.*
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -36,7 +37,7 @@ class PatientEntryUpdate(
       is OngoingEntryFetched -> onOngoingEntryFetched(model, event.patientEntry)
       is DateOfBirthFocusChanged -> onDateOfBirthFocusChanged(model, event.hasFocus)
       is ReminderConsentChanged -> next(model.reminderConsentChanged(event.reminderConsent))
-      is SaveClicked -> onSaveClicked(model.patientEntry)
+      is SaveClicked -> onSaveClicked(model, model.patientEntry)
       is PatientEntrySaved -> dispatch(OpenMedicalHistoryEntryScreen)
     }
   }
@@ -65,14 +66,18 @@ class PatientEntryUpdate(
   }
 
   private fun onSaveClicked(
+      model: PatientEntryModel,
       patientEntry: OngoingNewPatientEntry
   ): PatientEntryNext {
     val validationErrors = patientEntry.validationErrors(dobValidator, phoneNumberValidator, ageValidator)
-    val effect = if (validationErrors.isEmpty()) {
-      SavePatient(patientEntry)
+    val error: PatientEntryValidationError = PatientEntryValidationError.FULL_NAME_EMPTY
+    return if (validationErrors.isEmpty()) {
+      dispatch(SavePatient(patientEntry))
     } else {
-      ShowValidationErrors(validationErrors)
+      return if (validationErrors == listOf(error))
+        next(model.validationFailed(error))
+      else
+        dispatch(ShowValidationErrors(validationErrors))
     }
-    return dispatch(effect)
   }
 }

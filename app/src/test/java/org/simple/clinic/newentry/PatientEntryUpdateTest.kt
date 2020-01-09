@@ -164,4 +164,30 @@ class PatientEntryUpdateTest {
         )
   }
 
+  @Test
+  fun `when the user enters invalid date of birth, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.INVALID_DATE_OF_BIRTH)
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .dateOfBirthChanged("02-19-2000")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
 }

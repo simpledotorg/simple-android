@@ -1,10 +1,12 @@
 package org.simple.clinic.bloodsugar.selection.type
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.sheet_blood_sugar_type_picker.*
 import org.simple.clinic.R
+import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.Fasting
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
@@ -24,9 +26,11 @@ class BloodSugarTypePickerSheet : BottomSheetActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_blood_sugar_type_picker)
-    val adapter = BloodSugarTypeAdapter {
-      // [WIP] BloodSugarEntrySheet
-      TODO("BloodSugarEntrySheet not implemented yet")
+    val adapter = BloodSugarTypeAdapter { type ->
+      val intent = Intent()
+      intent.putExtra(EXTRA_BLOOD_SUGAR_TYPE, type)
+      setResult(Activity.RESULT_OK, intent)
+      finish()
     }
 
     typesRecyclerView.adapter = adapter
@@ -35,8 +39,14 @@ class BloodSugarTypePickerSheet : BottomSheetActivity() {
 
   companion object {
 
+    const val EXTRA_BLOOD_SUGAR_TYPE = "blood_sugar_type"
+
     fun intent(context: Context): Intent {
       return Intent(context, BloodSugarTypePickerSheet::class.java)
+    }
+
+    fun selectedBloodSugarType(data: Intent): BloodSugarMeasurementType {
+      return data.getParcelableExtra(EXTRA_BLOOD_SUGAR_TYPE) as BloodSugarMeasurementType
     }
   }
 }

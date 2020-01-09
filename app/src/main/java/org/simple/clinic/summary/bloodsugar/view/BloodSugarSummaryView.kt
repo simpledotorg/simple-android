@@ -1,7 +1,6 @@
 package org.simple.clinic.summary.bloodsugar.view
 
 import android.content.Context
-import android.content.Intent
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -9,16 +8,20 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.patientsummary_bloodsugarsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -36,6 +39,7 @@ import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
@@ -46,6 +50,10 @@ class BloodSugarSummaryView(
     context: Context,
     attributes: AttributeSet
 ) : CardView(context, attributes), BloodSugarSummaryViewUi, UiActions {
+
+  companion object {
+    const val TYPE_PICKER_SHEET = 1
+  }
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -110,10 +118,12 @@ class BloodSugarSummaryView(
     if (isInEditMode) {
       return
     }
-
     context.injector<BloodSugarSummaryViewInjector>().inject(this)
 
     delegate.prepare()
+
+    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+    openEntrySheetAfterTypeIsSelected(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
@@ -147,7 +157,23 @@ class BloodSugarSummaryView(
   }
 
   override fun showBloodSugarTypeSelector() {
-    activity.startActivity(Intent(context, BloodSugarTypePickerSheet::class.java))
+    activity.startActivityForResult(BloodSugarTypePickerSheet.intent(context), TYPE_PICKER_SHEET)
+  }
+
+  private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == TYPE_PICKER_SHEET && it.succeeded() }
+        .takeUntil(onDestroys)
+        .map { showBloodSugarEntrySheet(it) }
+        .subscribe()
+  }
+
+  private fun showBloodSugarEntrySheet(it: ActivityResult) {
+    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
+    val patientUuid = screenKey.patientUuid
+
+    activity.startActivity(BloodSugarEntrySheet.intentForNewBloodSugar(context, patientUuid, BloodSugarTypePickerSheet.selectedBloodSugarType(it.data!!)))
   }
 
   private fun render(bloodSugarMeasurements: List<BloodSugarMeasurement>) {

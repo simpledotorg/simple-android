@@ -19,6 +19,7 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -27,6 +28,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -71,6 +73,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
+  @Inject
+  lateinit var crashReporter: CrashReporter
+
   @Deprecated("""
     ~ DOA ~
 
@@ -93,6 +98,20 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         appointmentScheduleSheetClosed(),
         identifierLinkedEvents(),
         identifierLinkCancelledEvents()
+    )
+  }
+
+  private val viewRenderer = PatientSummaryViewRenderer(this)
+
+  private val mobiusDelegate: MobiusDelegate<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> by unsafeLazy {
+    MobiusDelegate(
+        events = events.ofType(),
+        defaultModel = PatientSummaryModel(),
+        init = PatientSummaryInit(),
+        update = PatientSummaryUpdate(),
+        effectHandler = PatientSummaryEffectHandler().build(),
+        modelUpdateListener = viewRenderer::render,
+        crashReporter = crashReporter
     )
   }
 

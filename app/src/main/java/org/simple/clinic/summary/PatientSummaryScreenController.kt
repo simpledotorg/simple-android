@@ -11,7 +11,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.overdue.Appointment
@@ -55,9 +54,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
-        .replay()
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events).replay()
 
     return Observable.mergeArray(
         reportViewedPatientEvent(replayedEvents),

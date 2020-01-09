@@ -86,4 +86,30 @@ class PatientEntryUpdateTest {
         )
   }
 
+  @Test
+  fun `when the user enters phone number which is too short, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT)
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("21")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("77210")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
 }

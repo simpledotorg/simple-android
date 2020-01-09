@@ -7,5 +7,5 @@ import org.simple.clinic.newentry.form.InputField
  *   because Dagger does not seem to support injection of types with wildcard generics.
  **/
 data class InputFields(
-    val inputFields: List<InputField<*>>
+    val fields: List<InputField<*>>
 )

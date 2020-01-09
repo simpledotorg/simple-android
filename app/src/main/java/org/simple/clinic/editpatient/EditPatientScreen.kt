@@ -173,7 +173,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         StateField::class.java to stateInputLayout
     )
 
-    val receivedTypesOfInputFields = inputFields.inputFields.map { it::class.java }
+    val receivedTypesOfInputFields = inputFields.fields.map { it::class.java }
 
     allTypesOfInputFields.forEach { (clazz, view) ->
       view.visibleOrGone(clazz in receivedTypesOfInputFields)
@@ -192,7 +192,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         StateField::class.java to stateInputLayout
     )
 
-    inputFields.inputFields.forEach {
+    inputFields.fields.forEach {
       allTextInputFields[it::class.java]?.hint = context.getString(it.labelResId)
     }
   }

@@ -112,4 +112,29 @@ class PatientEntryUpdateTest {
         )
   }
 
+  @Test
+  fun `when the user doesn't enter date of birth and age, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
 }

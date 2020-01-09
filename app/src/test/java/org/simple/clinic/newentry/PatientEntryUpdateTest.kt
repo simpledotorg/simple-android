@@ -113,6 +113,33 @@ class PatientEntryUpdateTest {
   }
 
   @Test
+  fun `when the user enters phone number which is too long, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG)
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("21")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721083838380")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
+
+  @Test
   fun `when the user doesn't enter date of birth and age, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)

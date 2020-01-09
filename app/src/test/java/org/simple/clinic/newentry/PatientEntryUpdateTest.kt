@@ -1,13 +1,18 @@
 package org.simple.clinic.newentry
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -22,10 +27,10 @@ class PatientEntryUpdateTest {
   private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
   private val update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
   private val updateSpec = UpdateSpec(update)
+  private val defaultModel = PatientEntryModel.DEFAULT
 
   @Test
   fun `when the user grants reminder consent, update the model`() {
-    val defaultModel = PatientEntryModel.DEFAULT
     val granted = Granted
 
     updateSpec
@@ -41,7 +46,6 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user denies reminder consent, update the model`() {
-    val defaultModel = PatientEntryModel.DEFAULT
     val denied = Denied
 
     updateSpec
@@ -54,4 +58,32 @@ class PatientEntryUpdateTest {
             )
         )
   }
+
+  //Tests for validation errors in Patient Entry Screen
+  @Test
+  fun `when the user leaves full name field empty, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.FULL_NAME_EMPTY)
+    val givenModel = defaultModel
+        .fullNameChanged("")
+        .ageChanged("21")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
 }

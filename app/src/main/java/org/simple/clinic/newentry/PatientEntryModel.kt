@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.Optional
@@ -11,7 +12,8 @@ import org.simple.clinic.util.Optional
 @Parcelize
 data class PatientEntryModel(
     val patientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry(),
-    val isSelectingGenderForTheFirstTime: Boolean = true
+    val isSelectingGenderForTheFirstTime: Boolean = true,
+    val validationError: List<PatientEntryValidationError>? = null
 ) : Parcelable {
   companion object {
     val DEFAULT = PatientEntryModel()
@@ -61,4 +63,7 @@ data class PatientEntryModel(
 
   fun zoneChanged(zone: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withZone(zone))
+
+  fun validationFailed(validationError: List<PatientEntryValidationError>) =
+      copy(validationError = validationError)
 }

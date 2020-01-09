@@ -98,7 +98,7 @@ class PatientEntryScreenLogicTest {
         PatientEntryInit(),
         PatientEntryUpdate(numberValidator, dobValidator, ageValidator),
         effectHandler,
-        PatientEntryUiRenderer(ui)::render
+        PatientEntryUiRenderer(ui, validationActions)::render
     )
 
     Analytics.addReporter(reporter)

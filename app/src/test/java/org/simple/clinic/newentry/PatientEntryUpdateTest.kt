@@ -66,7 +66,7 @@ class PatientEntryUpdateTest {
   //Tests for validation errors in Patient Entry Screen
   @Test
   fun `when the user leaves full name field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.FULL_NAME_EMPTY)
+    val error: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.FULL_NAME_EMPTY)
     val model = defaultModel
         .fullNameChanged("")
         .ageChanged("21")
@@ -80,11 +80,11 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasEffects(ShowValidationErrors(error) as PatientEntryEffect)
             )
         )
   }
@@ -364,7 +364,7 @@ class PatientEntryUpdateTest {
   fun `when the date of birth exceeds max limit, then show error`() {
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT)
     val enteredDate = dateOfBirthFormat.format(LocalDate.now(userClock).minusYears(MAX_ALLOWED_PATIENT_AGE.toLong().plus(1)))
-    val model = defaultModel
+    val givenModel = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged(enteredDate)
         .genderChanged(Just(Gender.Male))
@@ -376,7 +376,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(model)
+        .given(givenModel)
         .`when`(SaveClicked)
         .then(
             assertThatNext(

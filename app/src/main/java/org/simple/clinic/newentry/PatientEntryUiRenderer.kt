@@ -2,6 +2,8 @@ package org.simple.clinic.newentry
 
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ValueChangedCallback
@@ -11,7 +13,10 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.A
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 
-class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntryModel> {
+class PatientEntryUiRenderer(
+    val ui: PatientEntryUi,
+    private val validationActions: PatientEntryValidationActions
+) : ViewRenderer<PatientEntryModel> {
   private val dateOfBirthAndAgeVisibilityValueChangedCallback = ValueChangedCallback<DateOfBirthAndAgeVisibility>()
   private val identifierValueChangedCallback = ValueChangedCallback<Optional<Identifier>>()
 
@@ -21,6 +26,7 @@ class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntry
 
     val personalDetails = patientEntry.personalDetails ?: return
     changeDateOfBirthAndAgeVisibility(personalDetails)
+    model.validationError?.let { showValidationErrorUi(it) }
   }
 
   private fun renderIdentifier(identifier: Identifier?) {
@@ -48,5 +54,14 @@ class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntry
     } else {
       DATE_OF_BIRTH_VISIBLE
     }
+  }
+
+  private fun showValidationErrorUi(error: List<PatientEntryValidationError>) {
+    error
+        .forEach {
+          when (it) {
+            FULL_NAME_EMPTY -> validationActions.showEmptyFullNameError(true)
+          }
+        }
   }
 }

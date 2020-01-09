@@ -29,7 +29,6 @@ import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
-import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
@@ -162,7 +161,6 @@ class PatientEntryEffectHandler(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
-            FULL_NAME_EMPTY -> validationActions.showEmptyFullNameError(true)
             PHONE_NUMBER_LENGTH_TOO_SHORT -> validationActions.showLengthTooShortPhoneNumberError(true)
             PHONE_NUMBER_LENGTH_TOO_LONG -> validationActions.showLengthTooLongPhoneNumberError(true)
             BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> validationActions.showEmptyDateOfBirthAndAgeError(true)

@@ -138,7 +138,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
    **/
   private var alreadyFocusedOnEmptyTextField: Boolean = false
 
-  private val uiRenderer = PatientEntryUiRenderer(this)
+  private val uiRenderer = PatientEntryUiRenderer(this, this)
 
   private val events: Observable<PatientEntryEvent> by unsafeLazy {
     Observable

@@ -241,4 +241,79 @@ class PatientEntryUpdateTest {
         )
   }
 
+  @Test
+  fun `when the user leaves colony or village field empty, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY)
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("12")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the user leaves district field empty, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DISTRICT_EMPTY)
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("12")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the user leaves state field empty, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.STATE_EMPTY)
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("12")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
 }

@@ -70,6 +70,7 @@ import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewInjector
+import org.simple.clinic.summary.bloodsugar.view.BloodSugarSummaryViewInjector
 import org.simple.clinic.summary.linkId.LinkIdWithPatientView
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryViewInjector
 import org.simple.clinic.summary.prescribeddrugs.DrugSummaryViewInjector
@@ -86,8 +87,8 @@ interface TheActivityComponent :
     OnboardingScreenInjector,
     BloodPressureSummaryViewInjector,
     MedicalHistorySummaryViewInjector,
-    DrugSummaryViewInjector {
-
+    DrugSummaryViewInjector,
+    BloodSugarSummaryViewInjector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: PatientsScreen)

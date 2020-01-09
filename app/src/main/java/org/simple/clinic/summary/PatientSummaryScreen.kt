@@ -15,6 +15,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.home.HomeScreenKey
@@ -90,15 +91,18 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private var linkIdWithPatientShown: Boolean = false
 
   private val events: Observable<UiEvent> by unsafeLazy {
-    Observable.mergeArray(
-        screenCreates(),
-        backClicks(),
-        doneClicks(),
-        bloodPressureSaves(),
-        appointmentScheduleSheetClosed(),
-        identifierLinkedEvents(),
-        identifierLinkCancelledEvents()
-    )
+    Observable
+        .mergeArray(
+            screenCreates(),
+            backClicks(),
+            doneClicks(),
+            bloodPressureSaves(),
+            appointmentScheduleSheetClosed(),
+            identifierLinkedEvents(),
+            identifierLinkCancelledEvents()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
   }
 
   private val viewRenderer = PatientSummaryViewRenderer(this)
@@ -116,13 +120,15 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   override fun onSaveInstanceState(): Parcelable {
-    return PatientSummaryScreenSavedState(
+    val screenSavedState = PatientSummaryScreenSavedState(
         super.onSaveInstanceState(),
-        linkIdWithPatientShown = linkIdWithPatientShown)
+        linkIdWithPatientShown = linkIdWithPatientShown
+    )
+    return mobiusDelegate.onSaveInstanceState(screenSavedState)
   }
 
   override fun onRestoreInstanceState(state: Parcelable) {
-    val savedState = state as PatientSummaryScreenSavedState
+    val savedState = mobiusDelegate.onRestoreInstanceState(state) as PatientSummaryScreenSavedState
     linkIdWithPatientShown = savedState.linkIdWithPatientShown
 
     super.onRestoreInstanceState(savedState.superSavedState)
@@ -151,6 +157,17 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         controller = controller,
         screenDestroys = this.detaches().map { ScreenDestroyed() }
     )
+    mobiusDelegate.prepare()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    mobiusDelegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    mobiusDelegate.stop()
+    super.onDetachedFromWindow()
   }
 
   private fun setupEditButtonClicks() {

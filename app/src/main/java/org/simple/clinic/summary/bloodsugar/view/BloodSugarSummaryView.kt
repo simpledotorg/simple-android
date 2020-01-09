@@ -2,6 +2,7 @@ package org.simple.clinic.summary.bloodsugar.view
 
 import android.content.Context
 import android.content.Intent
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +16,20 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
+import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
+import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEffect
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEffectHandler
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEvent
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewInit
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewModel
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewUi
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewUiRenderer
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewUpdate
 import org.simple.clinic.summary.bloodsugar.NewBloodSugarClicked
 import org.simple.clinic.summary.bloodsugar.UiActions
 import org.simple.clinic.util.RelativeTimestampGenerator
@@ -41,9 +53,6 @@ class BloodSugarSummaryView(
   @Inject
   lateinit var userClock: UserClock
 
-  @field:[Inject Named("exact_date")]
-  lateinit var exactDateFormatter: DateTimeFormatter
-
   @Inject
   lateinit var timestampGenerator: RelativeTimestampGenerator
 
@@ -56,17 +65,73 @@ class BloodSugarSummaryView(
   @Inject
   lateinit var zoneId: ZoneId
 
+  @Inject
+  lateinit var effectHandlerFactory: BloodSugarSummaryViewEffectHandler.Factory
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var crashReporter: CrashReporter
+
   @field:[Inject Named("time_for_bps_recorded")]
   lateinit var timeFormatter: DateTimeFormatter
 
-  init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_bloodsugarsummary_content, this, true)
-  }
+  @field:[Inject Named("exact_date")]
+  lateinit var exactDateFormatter: DateTimeFormatter
+
+  private val uiRenderer = BloodSugarSummaryViewUiRenderer(this)
 
   private val events: Observable<BloodSugarSummaryViewEvent> by unsafeLazy {
     addNewBloodSugarClicks()
         .compose(ReportAnalyticsEvents())
         .cast<BloodSugarSummaryViewEvent>()
+  }
+
+  private val delegate: MobiusDelegate<BloodSugarSummaryViewModel, BloodSugarSummaryViewEvent, BloodSugarSummaryViewEffect> by unsafeLazy {
+    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
+    MobiusDelegate(
+        events = events,
+        defaultModel = BloodSugarSummaryViewModel.create(screenKey.patientUuid),
+        init = BloodSugarSummaryViewInit(),
+        update = BloodSugarSummaryViewUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        modelUpdateListener = uiRenderer::render,
+        crashReporter = crashReporter
+    )
+  }
+
+  init {
+    LayoutInflater.from(context).inflate(R.layout.patientsummary_bloodsugarsummary_content, this, true)
+  }
+
+  override fun onFinishInflate() {
+    super.onFinishInflate()
+    if (isInEditMode) {
+      return
+    }
+
+    context.injector<BloodSugarSummaryViewInjector>().inject(this)
+
+    delegate.prepare()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun addNewBloodSugarClicks(): Observable<BloodSugarSummaryViewEvent> {

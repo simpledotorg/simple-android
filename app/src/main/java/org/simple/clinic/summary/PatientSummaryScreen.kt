@@ -45,6 +45,7 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -83,6 +84,18 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private var linkIdWithPatientShown: Boolean = false
 
+  private val events: Observable<UiEvent> by unsafeLazy {
+    Observable.mergeArray(
+        screenCreates(),
+        backClicks(),
+        doneClicks(),
+        bloodPressureSaves(),
+        appointmentScheduleSheetClosed(),
+        identifierLinkedEvents(),
+        identifierLinkCancelledEvents()
+    )
+  }
+
   override fun onSaveInstanceState(): Parcelable {
     return PatientSummaryScreenSavedState(
         super.onSaveInstanceState(),
@@ -115,15 +128,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(
-            screenCreates(),
-            backClicks(),
-            doneClicks(),
-            bloodPressureSaves(),
-            appointmentScheduleSheetClosed(),
-            identifierLinkedEvents(),
-            identifierLinkCancelledEvents()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = this.detaches().map { ScreenDestroyed() }
     )

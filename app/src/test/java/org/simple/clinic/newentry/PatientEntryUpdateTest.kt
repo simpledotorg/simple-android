@@ -216,4 +216,29 @@ class PatientEntryUpdateTest {
         )
   }
 
+  @Test
+  fun `when the user leaves gender field empty, then show error`() {
+    //given
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.MISSING_GENDER)
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("12")
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(givenModel)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
 }

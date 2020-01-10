@@ -4,9 +4,14 @@ import org.simple.clinic.mobius.ViewRenderer
 
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi
-): ViewRenderer<PatientSummaryModel> {
+) : ViewRenderer<PatientSummaryModel> {
 
   override fun render(model: PatientSummaryModel) {
-    // Nothing to do here
+    with(ui) {
+      if (model.patientSummaryProfile != null) {
+        populatePatientProfile(model.patientSummaryProfile)
+        showEditButton()
+      }
+    }
   }
 }

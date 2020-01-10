@@ -84,7 +84,7 @@ class PatientSummaryScreenControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = PatientSummaryModel(),
+        defaultModel = PatientSummaryModel.from(patientUuid),
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
         effectHandler = PatientSummaryEffectHandler().build(),

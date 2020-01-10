@@ -9,6 +9,7 @@ import org.simple.clinic.newentry.Field.*
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Optional
@@ -75,7 +76,7 @@ class PatientEntryUpdate(
       dispatch(SavePatient(patientEntry))
     } else {
       return when {
-        setOf(PHONE_NUMBER_LENGTH_TOO_SHORT, FULL_NAME_EMPTY).any(validationErrors::contains) -> next(model.validationFailed(validationErrors), ShowValidationErrors(validationErrors))
+        setOf(PHONE_NUMBER_LENGTH_TOO_SHORT, FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_LONG).any(validationErrors::contains) -> next(model.validationFailed(validationErrors), ShowValidationErrors(validationErrors))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }
     }

@@ -32,7 +32,6 @@ import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAI
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
 import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.PatientRepository
@@ -160,7 +159,6 @@ class PatientEntryEffectHandler(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
-            PHONE_NUMBER_LENGTH_TOO_LONG -> validationActions.showLengthTooLongPhoneNumberError(true)
             BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> validationActions.showEmptyDateOfBirthAndAgeError(true)
             INVALID_DATE_OF_BIRTH -> validationActions.showInvalidDateOfBirthError(true)
             DATE_OF_BIRTH_IN_FUTURE -> validationActions.showDateOfBirthIsInFutureError(true)

@@ -11,6 +11,7 @@ import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
 import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
@@ -116,7 +117,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user enters phone number which is too long, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG)
+    val error: PatientEntryValidationError = PHONE_NUMBER_LENGTH_TOO_LONG
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("21")
@@ -133,8 +134,8 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasNoEffects()
             )
         )
   }

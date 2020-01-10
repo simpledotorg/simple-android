@@ -116,4 +116,30 @@ class PatientEntryUiRendererTest {
     verify(patientEntryUi).showValidationErrorUi(error)
     verifyNoMoreInteractions(patientEntryUi)
   }
+
+  @Test
+  fun `it should render invalid date of birth error`() {
+    //given
+    val error: PatientEntryValidationError = PatientEntryValidationError.INVALID_DATE_OF_BIRTH
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .dateOfBirthChanged("12/34-2019")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("772184840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+        .validationFailed(error)
+
+    //when
+    patientEntryUiRenderer.render(givenModel)
+
+    //then
+    verify(patientEntryUi).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
+    verify(patientEntryUi).hideIdentifierSection()
+    verify(patientEntryUi).showValidationErrorUi(error)
+    verifyNoMoreInteractions(patientEntryUi)
+  }
 }

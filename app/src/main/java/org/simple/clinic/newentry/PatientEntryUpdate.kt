@@ -10,6 +10,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -81,6 +82,7 @@ class PatientEntryUpdate(
         listOf(PHONE_NUMBER_LENGTH_TOO_SHORT) -> next(model.validationFailed(PHONE_NUMBER_LENGTH_TOO_SHORT))
         listOf(PHONE_NUMBER_LENGTH_TOO_LONG) -> next(model.validationFailed(PHONE_NUMBER_LENGTH_TOO_LONG))
         listOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT) -> next(model.validationFailed(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
+        listOf(INVALID_DATE_OF_BIRTH) -> next(model.validationFailed(INVALID_DATE_OF_BIRTH))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }
     }

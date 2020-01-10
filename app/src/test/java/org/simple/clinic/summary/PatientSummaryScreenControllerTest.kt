@@ -44,6 +44,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -82,12 +83,14 @@ class PatientSummaryScreenControllerTest {
 
     Analytics.addReporter(reporter)
 
+    val effectHandler = PatientSummaryEffectHandler(TrampolineSchedulersProvider(), patientRepository)
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = PatientSummaryModel.from(patientUuid),
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
-        effectHandler = PatientSummaryEffectHandler().build(),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render
     )
   }
@@ -96,7 +99,9 @@ class PatientSummaryScreenControllerTest {
   fun tearDown() {
     Analytics.clearReporters()
     reporter.clear()
-    controllerSubscription.dispose()
+    if(::controllerSubscription.isInitialized) {
+      controllerSubscription.dispose()
+    }
     testFixture.dispose()
   }
 
@@ -115,7 +120,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).doReturn(Observable.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.just(optionalBpPassport))
 
-    setupController(intention)
+    startMobiusLoop()
 
     val expectedSummaryProfile = PatientSummaryProfile(patient, address, phoneNumber.toNullable(), optionalBpPassport.toNullable())
     verify(ui).populatePatientProfile(expectedSummaryProfile)

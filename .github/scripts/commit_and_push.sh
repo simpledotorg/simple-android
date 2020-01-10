@@ -23,7 +23,5 @@ if [[ ${GIT_DIFF_STATUS} -eq ${GIT_HAS_CHANGES} ]]; then
     git commit -am "[BOT] Code formatting fixes"
     git push -u origin "$BRANCH_NAME"
 
-    echo "Git changes pushed to $BRANCH_NAME"
-else
-    echo "No git changes"
+    echo "::set-output name=branch_name::${BRANCH_NAME}"
 fi

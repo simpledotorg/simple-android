@@ -24,7 +24,13 @@ class BloodPressureSummaryLogicTest {
 
   private val patientUuid = UUID.fromString("d6fc367d-e298-4945-9ed8-b2a86f4a8bbe")
   private val numberOfBpsToDisplay = 100
-  private val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, numberOfBpsToDisplay = numberOfBpsToDisplay, bpEditableDuration = Duration.ZERO, numberOfBloodSugarsToDisplay = 100)
+  private val config = PatientSummaryConfig(
+      numberOfBpPlaceholders = 0,
+      numberOfBpsToDisplay = numberOfBpsToDisplay,
+      bpEditableDuration = Duration.ZERO,
+      numberOfBloodSugarsToDisplay = 100,
+      isDiabetesEnabled = false
+  )
   private val repository = mock<BloodPressureRepository>()
   private val ui = mock<BloodPressureSummaryUi>()
   private val events = PublishSubject.create<UiEvent>()

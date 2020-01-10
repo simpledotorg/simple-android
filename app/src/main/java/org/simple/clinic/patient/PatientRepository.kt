@@ -332,7 +332,7 @@ class PatientRepository @Inject constructor(
 
     val bangladeshNationalIdSave = cachedOngoingEntry
         .flatMapCompletable { entry ->
-          if (entry.bangladeshNationalId == null) {
+          if (entry.bangladeshNationalId == null || entry.bangladeshNationalId.value.isBlank()) {
             Completable.complete()
           } else {
             addIdentifierToPatient(patientUuid, entry.bangladeshNationalId, loggedInUser, facility).toCompletable()

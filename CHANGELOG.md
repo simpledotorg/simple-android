@@ -4,6 +4,9 @@
 ### Feature
 - Introduce Diabetes management for tracking patient blood sugar
 
+### Fixes
+- Blank national ID gets generated for patients, which stops them from syncing.
+
 ## On demo
 ### Feature
 - Updated patient entry consent text to include registration of minors

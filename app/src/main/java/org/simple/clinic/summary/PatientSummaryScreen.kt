@@ -23,7 +23,6 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
@@ -349,12 +348,3 @@ data class PatientSummaryScreenSavedState(
     val superSavedState: Parcelable?,
     val linkIdWithPatientShown: Boolean
 ) : Parcelable
-
-// TODO(vs): 2020-01-10 Move this to package level
-@Parcelize
-data class PatientSummaryProfile(
-    val patient: Patient,
-    val address: PatientAddress,
-    val phoneNumber: PatientPhoneNumber?,
-    val bpPassport: BusinessId?
-): Parcelable

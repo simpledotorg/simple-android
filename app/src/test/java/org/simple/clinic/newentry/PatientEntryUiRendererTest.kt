@@ -91,4 +91,29 @@ class PatientEntryUiRendererTest {
     verify(patientEntryUi).showValidationErrorUi(error)
     verifyNoMoreInteractions(patientEntryUi)
   }
+
+  @Test
+  fun `it should render both date of birth and age absent error`() {
+    //given
+    val error: PatientEntryValidationError = PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("772184840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+        .validationFailed(error)
+
+    //when
+    patientEntryUiRenderer.render(givenModel)
+
+    //then
+    verify(patientEntryUi).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
+    verify(patientEntryUi).hideIdentifierSection()
+    verify(patientEntryUi).showValidationErrorUi(error)
+    verifyNoMoreInteractions(patientEntryUi)
+  }
 }

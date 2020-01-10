@@ -8,6 +8,7 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.newentry.Field.*
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
@@ -79,6 +80,7 @@ class PatientEntryUpdate(
         listOf(FULL_NAME_EMPTY) -> next(model.validationFailed(FULL_NAME_EMPTY))
         listOf(PHONE_NUMBER_LENGTH_TOO_SHORT) -> next(model.validationFailed(PHONE_NUMBER_LENGTH_TOO_SHORT))
         listOf(PHONE_NUMBER_LENGTH_TOO_LONG) -> next(model.validationFailed(PHONE_NUMBER_LENGTH_TOO_LONG))
+        listOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT) -> next(model.validationFailed(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }
     }

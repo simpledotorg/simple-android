@@ -11,6 +11,7 @@ import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
 import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
@@ -143,7 +144,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user doesn't enter date of birth and age, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
+    val error: PatientEntryValidationError = BOTH_DATEOFBIRTH_AND_AGE_ABSENT
     val model = defaultModel
         .fullNameChanged("Name")
         .genderChanged(Just(Gender.Male))
@@ -159,8 +160,8 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasNoEffects()
             )
         )
   }

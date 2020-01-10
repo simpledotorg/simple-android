@@ -8,6 +8,8 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.newentry.Field.*
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -91,6 +93,8 @@ class PatientEntryUpdate(
         listOf(MISSING_GENDER) -> next(model.validationFailed(MISSING_GENDER))
         listOf(COLONY_OR_VILLAGE_EMPTY) -> next(model.validationFailed(COLONY_OR_VILLAGE_EMPTY))
         listOf(DISTRICT_EMPTY) -> next(model.validationFailed(DISTRICT_EMPTY))
+        listOf(AGE_EXCEEDS_MAX_LIMIT) -> next(model.validationFailed(AGE_EXCEEDS_MAX_LIMIT))
+        listOf(AGE_EXCEEDS_MIN_LIMIT) -> next(model.validationFailed(AGE_EXCEEDS_MIN_LIMIT))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }
     }

@@ -51,6 +51,8 @@ import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -572,6 +574,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       MISSING_GENDER -> this.showMissingGenderError(true)
       COLONY_OR_VILLAGE_EMPTY -> this.showEmptyColonyOrVillageError(true)
       DISTRICT_EMPTY -> this.showEmptyDistrictError(true)
+      AGE_EXCEEDS_MAX_LIMIT -> this.showAgeExceedsMaxLimitError(true)
+      AGE_EXCEEDS_MIN_LIMIT -> this.showAgeExceedsMinLimitError(true)
     }
   }
 }

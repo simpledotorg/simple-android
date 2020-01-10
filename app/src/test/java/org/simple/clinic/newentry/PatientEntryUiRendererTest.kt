@@ -243,4 +243,56 @@ class PatientEntryUiRendererTest {
     verify(patientEntryUi).showValidationErrorUi(error)
     verifyNoMoreInteractions(patientEntryUi)
   }
+
+  @Test
+  fun `it should render max age limit exceeded error`() {
+    //given
+    val error: PatientEntryValidationError = PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("122")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+        .validationFailed(error)
+
+    //when
+    patientEntryUiRenderer.render(givenModel)
+
+    //then
+    verify(patientEntryUi).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+    verify(patientEntryUi).hideIdentifierSection()
+    verify(patientEntryUi).showValidationErrorUi(error)
+    verifyNoMoreInteractions(patientEntryUi)
+  }
+
+  @Test
+  fun `it should render min age limit exceeded error`() {
+    //given
+    val error: PatientEntryValidationError = PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("0")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+        .validationFailed(error)
+
+    //when
+    patientEntryUiRenderer.render(givenModel)
+
+    //then
+    verify(patientEntryUi).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+    verify(patientEntryUi).hideIdentifierSection()
+    verify(patientEntryUi).showValidationErrorUi(error)
+    verifyNoMoreInteractions(patientEntryUi)
+  }
 }

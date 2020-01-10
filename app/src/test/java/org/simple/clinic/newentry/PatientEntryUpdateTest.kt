@@ -11,6 +11,8 @@ import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
 import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
@@ -317,7 +319,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the age exceeds max limit, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT)
+    val error: PatientEntryValidationError = AGE_EXCEEDS_MAX_LIMIT
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged(MAX_ALLOWED_PATIENT_AGE.plus(1).toString())
@@ -334,15 +336,15 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasNoEffects()
             )
         )
   }
 
   @Test
   fun `when the age exceeds min limit, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT)
+    val error: PatientEntryValidationError = AGE_EXCEEDS_MIN_LIMIT
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged(MIN_ALLOWED_PATIENT_AGE.minus(1).toString())
@@ -359,8 +361,8 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasNoEffects()
             )
         )
   }

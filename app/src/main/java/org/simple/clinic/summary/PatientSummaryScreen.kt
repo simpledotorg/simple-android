@@ -51,12 +51,13 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Named
 
-class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
+class PatientSummaryScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -109,10 +110,14 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private val viewRenderer = PatientSummaryViewRenderer(this)
 
+  private val screenKey: PatientSummaryScreenKey by unsafeLazy {
+    screenRouter.key<PatientSummaryScreenKey>(this)
+  }
+
   private val mobiusDelegate: MobiusDelegate<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> by unsafeLazy {
     MobiusDelegate(
         events = events.ofType(),
-        defaultModel = PatientSummaryModel(),
+        defaultModel = PatientSummaryModel.from(screenKey.patientUuid),
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
         effectHandler = PatientSummaryEffectHandler().build(),
@@ -151,9 +156,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     toggleDiabetesView(config.isDiabetesEnabled)
 
-    val controller = with(screenRouter.key<PatientSummaryScreenKey>(this)) {
-      controllerFactory.create(patientUuid, intention, screenCreatedTimestamp)
-    }
+    val controller = controllerFactory.create(screenKey.patientUuid, screenKey.intention, screenKey.screenCreatedTimestamp)
 
     bindUiToController(
         ui = this,

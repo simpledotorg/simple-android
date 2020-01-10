@@ -11,6 +11,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
@@ -89,6 +90,7 @@ class PatientEntryUpdate(
         listOf(DATE_OF_BIRTH_IN_FUTURE) -> next(model.validationFailed(DATE_OF_BIRTH_IN_FUTURE))
         listOf(MISSING_GENDER) -> next(model.validationFailed(MISSING_GENDER))
         listOf(COLONY_OR_VILLAGE_EMPTY) -> next(model.validationFailed(COLONY_OR_VILLAGE_EMPTY))
+        listOf(DISTRICT_EMPTY) -> next(model.validationFailed(DISTRICT_EMPTY))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }
     }

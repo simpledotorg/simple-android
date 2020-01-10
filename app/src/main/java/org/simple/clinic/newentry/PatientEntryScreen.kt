@@ -54,6 +54,7 @@ import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
@@ -570,6 +571,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       DATE_OF_BIRTH_IN_FUTURE -> this.showDateOfBirthIsInFutureError(true)
       MISSING_GENDER -> this.showMissingGenderError(true)
       COLONY_OR_VILLAGE_EMPTY -> this.showEmptyColonyOrVillageError(true)
+      DISTRICT_EMPTY -> this.showEmptyDistrictError(true)
     }
   }
 }

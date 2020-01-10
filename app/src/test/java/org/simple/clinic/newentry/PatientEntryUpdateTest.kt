@@ -269,7 +269,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user leaves district field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DISTRICT_EMPTY)
+    val error: PatientEntryValidationError = PatientEntryValidationError.DISTRICT_EMPTY
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
@@ -285,8 +285,8 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasNoEffects()
             )
         )
   }

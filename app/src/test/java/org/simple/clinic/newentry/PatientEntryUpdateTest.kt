@@ -91,7 +91,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user enters phone number which is too short, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT)
+    val error: PatientEntryValidationError = PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("21")
@@ -104,17 +104,12 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasNoEffects()
             )
         )
   }
@@ -134,13 +129,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -164,13 +154,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -194,13 +179,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -224,13 +204,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -253,13 +228,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -282,13 +252,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -311,13 +276,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -340,13 +300,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -370,13 +325,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -400,13 +350,8 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-<<<<<<< HEAD
         .given(model)
-        .`when`(SaveClicked)
-=======
-        .given(givenModel)
         .whenEvent(SaveClicked)
->>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -419,7 +364,7 @@ class PatientEntryUpdateTest {
   fun `when the date of birth exceeds max limit, then show error`() {
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT)
     val enteredDate = dateOfBirthFormat.format(LocalDate.now(userClock).minusYears(MAX_ALLOWED_PATIENT_AGE.toLong().plus(1)))
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged(enteredDate)
         .genderChanged(Just(Gender.Male))
@@ -431,7 +376,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(

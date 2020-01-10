@@ -39,4 +39,30 @@ class PatientEntryUiRendererTest {
     verify(patientEntryUi).showValidationErrorUi(error)
     verifyNoMoreInteractions(patientEntryUi)
   }
+
+  @Test
+  fun `it should render phone number length too short error`() {
+    //given
+    val error: PatientEntryValidationError = PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("21")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+        .validationFailed(error)
+
+    //when
+    patientEntryUiRenderer.render(givenModel)
+
+    //then
+    verify(patientEntryUi).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+    verify(patientEntryUi).hideIdentifierSection()
+    verify(patientEntryUi).showValidationErrorUi(error)
+    verifyNoMoreInteractions(patientEntryUi)
+  }
 }

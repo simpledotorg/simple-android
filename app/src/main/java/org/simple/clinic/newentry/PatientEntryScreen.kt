@@ -52,6 +52,7 @@ import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
@@ -556,6 +557,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   override fun showValidationErrorUi(error: PatientEntryValidationError) {
     when (error) {
       FULL_NAME_EMPTY -> this.showEmptyFullNameError(true)
+      PHONE_NUMBER_LENGTH_TOO_SHORT -> this.showLengthTooShortPhoneNumberError(true)
     }
   }
 }

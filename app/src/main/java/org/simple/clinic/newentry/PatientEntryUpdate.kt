@@ -8,7 +8,8 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.newentry.Field.*
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -70,14 +71,14 @@ class PatientEntryUpdate(
       patientEntry: OngoingNewPatientEntry
   ): PatientEntryNext {
     val validationErrors = patientEntry.validationErrors(dobValidator, phoneNumberValidator, ageValidator)
-    val error: PatientEntryValidationError = PatientEntryValidationError.FULL_NAME_EMPTY
     return if (validationErrors.isEmpty()) {
       dispatch(SavePatient(patientEntry))
     } else {
-      return if (validationErrors == listOf(error))
-        next(model.validationFailed(error))
-      else
-        dispatch(ShowValidationErrors(validationErrors))
+      return when (validationErrors) {
+        listOf(FULL_NAME_EMPTY) -> next(model.validationFailed(FULL_NAME_EMPTY))
+        listOf(PHONE_NUMBER_LENGTH_TOO_SHORT) -> next(model.validationFailed(PHONE_NUMBER_LENGTH_TOO_SHORT))
+        else -> dispatch(ShowValidationErrors(validationErrors))
+      }
     }
   }
 }

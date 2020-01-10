@@ -65,6 +65,7 @@ class PatientEntryUiRenderer(
             FULL_NAME_EMPTY -> validationActions.showEmptyFullNameError(true)
             PHONE_NUMBER_LENGTH_TOO_SHORT -> validationActions.showLengthTooShortPhoneNumberError(true)
             PHONE_NUMBER_LENGTH_TOO_LONG -> validationActions.showLengthTooLongPhoneNumberError(true)
+            PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> validationActions.showEmptyDateOfBirthAndAgeError(true)
           }
         }
   }

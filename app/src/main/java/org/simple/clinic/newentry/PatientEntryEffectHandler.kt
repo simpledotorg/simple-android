@@ -21,7 +21,6 @@ import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
-import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -159,7 +158,6 @@ class PatientEntryEffectHandler(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
-            BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> validationActions.showEmptyDateOfBirthAndAgeError(true)
             INVALID_DATE_OF_BIRTH -> validationActions.showInvalidDateOfBirthError(true)
             DATE_OF_BIRTH_IN_FUTURE -> validationActions.showDateOfBirthIsInFutureError(true)
             MISSING_GENDER -> validationActions.showMissingGenderError(true)

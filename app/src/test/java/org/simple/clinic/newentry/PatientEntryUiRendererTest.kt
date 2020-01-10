@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 
@@ -291,6 +292,32 @@ class PatientEntryUiRendererTest {
 
     //then
     verify(patientEntryUi).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+    verify(patientEntryUi).hideIdentifierSection()
+    verify(patientEntryUi).showValidationErrorUi(error)
+    verifyNoMoreInteractions(patientEntryUi)
+  }
+
+  @Test
+  fun `it should render max dob limit exceeded error`() {
+    //given
+    val error: PatientEntryValidationError = DOB_EXCEEDS_MAX_LIMIT
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .dateOfBirthChanged("12/03/1230")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+        .validationFailed(error)
+
+    //when
+    patientEntryUiRenderer.render(givenModel)
+
+    //then
+    verify(patientEntryUi).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
     verify(patientEntryUi).hideIdentifierSection()
     verify(patientEntryUi).showValidationErrorUi(error)
     verifyNoMoreInteractions(patientEntryUi)

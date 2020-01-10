@@ -117,7 +117,8 @@ class PatientSummaryScreenControllerTest {
 
     setupController(intention)
 
-    verify(ui).populatePatientProfile(PatientSummaryProfile(patient, address, phoneNumber, optionalBpPassport))
+    val expectedSummaryProfile = PatientSummaryProfile(patient, address, phoneNumber.toNullable(), optionalBpPassport.toNullable())
+    verify(ui).populatePatientProfile(expectedSummaryProfile)
     verify(ui).showEditButton()
   }
 

@@ -662,7 +662,8 @@ class TestData @Inject constructor(
       streetAddress: String? = faker.address.streetAddress(),
       zone: String? = "Zone-" + faker.address.city(),
       phone: String? = faker.number.number(10),
-      identifier: Identifier? = null
+      identifier: Identifier? = null,
+      bangladeshNationalId: Identifier? = null
   ): OngoingNewPatientEntry {
     val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails(fullName, dateOfBirth, age, gender)
     val ongoingAddress = OngoingNewPatientEntry.Address(colony, district, state, streetAddress, zone)
@@ -674,7 +675,8 @@ class TestData @Inject constructor(
         personalDetails = ongoingPersonalDetails,
         address = ongoingAddress,
         phoneNumber = ongoingPhoneNumber,
-        identifier = identifier
+        identifier = identifier,
+        bangladeshNationalId = bangladeshNationalId
     )
   }
 

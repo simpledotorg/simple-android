@@ -1,9 +1,16 @@
 # CHANGELOG
 
+## Next release
+### Feature
+- Introduce Diabetes management for tracking patient blood sugar
+
 ## On demo
 ### Feature
 - Updated patient entry consent text to include registration of minors
 - Added/updated translations for the following languages: Telugu, Punjabi, Marathi, Kannada, Hindi
+
+### Fixes
+- Blank national ID gets generated for patients, which stops them from syncing.
 
 ### Internal
 - Removed the remote homescreen illustrations feature

@@ -1323,6 +1323,52 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun bangladesh_national_identifier_should_be_saved_if_it_is_not_blank() {
+    // given
+    val facilityCountry = "Bangladesh"
+
+    val facilityToSavePatientAt = testData.facility(
+        uuid = UUID.fromString("d10f34d5-f16c-4095-b345-0867cccf8d06"),
+        country = facilityCountry
+    )
+    val nationalId = "33ed3fb2-cfcc-48f8-9b7d-079c02146076"
+    val ongoingPatientEntry = testData.ongoingPatientEntry(
+        bangladeshNationalId = Identifier(nationalId, BangladeshNationalId)
+    )
+    patientRepository.saveOngoingEntry(ongoingPatientEntry).blockingAwait()
+
+    // when
+    val savedPatient = patientRepository.saveOngoingEntryAsPatient(loggedInUser, facilityToSavePatientAt).blockingGet()
+    val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.uuid).blockingFirst().toNullable()!!
+
+    // then
+    assertThat(savedPatientNationalId.identifier.value).isEqualTo(nationalId)
+  }
+
+  @Test
+  fun bangladesh_national_identifier_should_not_be_saved_if_it_is_blank() {
+    // given
+    val facilityCountry = "Bangladesh"
+
+    val facilityToSavePatientAt = testData.facility(
+        uuid = UUID.fromString("d10f34d5-f16c-4095-b345-0867cccf8d06"),
+        country = facilityCountry
+    )
+    val nationalId = ""
+    val ongoingPatientEntry = testData.ongoingPatientEntry(
+        bangladeshNationalId = Identifier(nationalId, BangladeshNationalId)
+    )
+    patientRepository.saveOngoingEntry(ongoingPatientEntry).blockingAwait()
+
+    // when
+    val savedPatient = patientRepository.saveOngoingEntryAsPatient(loggedInUser, facilityToSavePatientAt).blockingGet()
+    val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.uuid).blockingFirst()
+
+    // then
+    assertThat(savedPatientNationalId).isEqualTo(None)
+  }
+
+  @Test
   fun finding_a_patient_by_a_business_id_must_work_as_expected() {
     val patientProfileTemplate = testData.patientProfile(syncStatus = DONE, generateBusinessId = false, generatePhoneNumber = false)
 

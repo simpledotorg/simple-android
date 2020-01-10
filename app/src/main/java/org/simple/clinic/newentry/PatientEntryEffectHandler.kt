@@ -25,7 +25,6 @@ import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AN
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
-import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
 import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
@@ -154,7 +153,6 @@ class PatientEntryEffectHandler(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
-            MISSING_GENDER -> validationActions.showMissingGenderError(true)
             COLONY_OR_VILLAGE_EMPTY -> validationActions.showEmptyColonyOrVillageError(true)
             DISTRICT_EMPTY -> validationActions.showEmptyDistrictError(true)
             STATE_EMPTY -> validationActions.showEmptyStateError(true)

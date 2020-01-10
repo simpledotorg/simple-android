@@ -15,6 +15,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AN
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.ReminderConsent.Denied
@@ -222,7 +223,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user leaves gender field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.MISSING_GENDER)
+    val errors: List<PatientEntryValidationError> = listOf(MISSING_GENDER)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
@@ -238,7 +239,7 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.validationFailed(errors)),
                 hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )

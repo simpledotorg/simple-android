@@ -9,6 +9,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIM
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.businessid.Identifier
@@ -75,6 +76,7 @@ class PatientEntryUiRenderer(
             DATE_OF_BIRTH_IN_FUTURE -> validationActions.showDateOfBirthIsInFutureError(true)
             DOB_EXCEEDS_MAX_LIMIT -> validationActions.showDOBExceedsMaxLimitError(true)
             DOB_EXCEEDS_MIN_LIMIT -> validationActions.showDOBExceedsMinLimitError(true)
+            MISSING_GENDER -> validationActions.showMissingGenderError(true)
           }
         }
   }

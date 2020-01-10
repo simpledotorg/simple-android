@@ -14,6 +14,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIM
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -89,7 +90,8 @@ class PatientEntryUpdate(
             INVALID_DATE_OF_BIRTH,
             DATE_OF_BIRTH_IN_FUTURE,
             DOB_EXCEEDS_MAX_LIMIT,
-            DOB_EXCEEDS_MIN_LIMIT
+            DOB_EXCEEDS_MIN_LIMIT,
+            MISSING_GENDER
         ).any(validationErrors::contains) -> next(model.validationFailed(validationErrors), ShowValidationErrors(validationErrors))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }

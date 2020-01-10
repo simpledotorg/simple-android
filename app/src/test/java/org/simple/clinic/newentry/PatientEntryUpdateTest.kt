@@ -19,6 +19,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIM
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
@@ -296,7 +297,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user leaves state field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.STATE_EMPTY)
+    val error: PatientEntryValidationError = STATE_EMPTY
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
@@ -312,8 +313,8 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasNoEffects()
             )
         )
   }

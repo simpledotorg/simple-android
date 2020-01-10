@@ -21,6 +21,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIR
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -99,6 +100,7 @@ class PatientEntryUpdate(
         listOf(AGE_EXCEEDS_MIN_LIMIT) -> next(model.validationFailed(AGE_EXCEEDS_MIN_LIMIT))
         listOf(DOB_EXCEEDS_MAX_LIMIT) -> next(model.validationFailed(DOB_EXCEEDS_MAX_LIMIT))
         listOf(DOB_EXCEEDS_MIN_LIMIT) -> next(model.validationFailed(DOB_EXCEEDS_MIN_LIMIT))
+        listOf(STATE_EMPTY) -> next(model.validationFailed(STATE_EMPTY))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }
     }

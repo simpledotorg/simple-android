@@ -64,6 +64,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIR
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
@@ -580,6 +581,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       AGE_EXCEEDS_MIN_LIMIT -> this.showAgeExceedsMinLimitError(true)
       DOB_EXCEEDS_MAX_LIMIT -> this.showDOBExceedsMaxLimitError(true)
       DOB_EXCEEDS_MIN_LIMIT -> this.showDOBExceedsMinLimitError(true)
+      STATE_EMPTY -> this.showEmptyStateError(true)
     }
   }
 }

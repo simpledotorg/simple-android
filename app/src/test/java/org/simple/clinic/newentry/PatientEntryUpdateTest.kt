@@ -39,7 +39,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .`when`(ReminderConsentChanged(granted))
+        .whenEvent(ReminderConsentChanged(granted))
         .then(
             assertThatNext(
                 hasModel(defaultModel.reminderConsentChanged(granted)),
@@ -54,7 +54,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .`when`(ReminderConsentChanged(denied))
+        .whenEvent(ReminderConsentChanged(denied))
         .then(
             assertThatNext(
                 hasModel(defaultModel.reminderConsentChanged(denied)),
@@ -104,8 +104,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -129,8 +134,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -154,8 +164,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -179,8 +194,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -204,8 +224,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -228,8 +253,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -252,8 +282,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -276,8 +311,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -300,8 +340,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -325,8 +370,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -350,8 +400,13 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
+<<<<<<< HEAD
         .given(model)
         .`when`(SaveClicked)
+=======
+        .given(givenModel)
+        .whenEvent(SaveClicked)
+>>>>>>> Change `when` to whenEvent in `PatientEntryUpdateTest`
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -377,7 +432,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(givenModel)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),

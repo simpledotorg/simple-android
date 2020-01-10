@@ -168,4 +168,29 @@ class PatientEntryUiRendererTest {
     verify(patientEntryUi).showValidationErrorUi(error)
     verifyNoMoreInteractions(patientEntryUi)
   }
+
+  @Test
+  fun `it should render gender is missing error`() {
+    //given
+    val error: PatientEntryValidationError = PatientEntryValidationError.MISSING_GENDER
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("12")
+        .phoneNumberChanged("772184840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+        .validationFailed(error)
+
+    //when
+    patientEntryUiRenderer.render(givenModel)
+
+    //then
+    verify(patientEntryUi).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+    verify(patientEntryUi).hideIdentifierSection()
+    verify(patientEntryUi).showValidationErrorUi(error)
+    verifyNoMoreInteractions(patientEntryUi)
+  }
 }

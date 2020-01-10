@@ -12,6 +12,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AN
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -85,6 +86,7 @@ class PatientEntryUpdate(
         listOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT) -> next(model.validationFailed(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
         listOf(INVALID_DATE_OF_BIRTH) -> next(model.validationFailed(INVALID_DATE_OF_BIRTH))
         listOf(DATE_OF_BIRTH_IN_FUTURE) -> next(model.validationFailed(DATE_OF_BIRTH_IN_FUTURE))
+        listOf(MISSING_GENDER) -> next(model.validationFailed(MISSING_GENDER))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }
     }

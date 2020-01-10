@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next release
+### Feature
+- Introduce Diabetes management for tracking patient blood sugar
+
 ## On demo
 ### Feature
 - Updated patient entry consent text to include registration of minors

@@ -12,6 +12,9 @@ import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.ReminderConsent.Denied
@@ -169,7 +172,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user enters invalid date of birth, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.INVALID_DATE_OF_BIRTH)
+    val errors: List<PatientEntryValidationError> = listOf(INVALID_DATE_OF_BIRTH)
     val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged("02-19-2000")
@@ -186,7 +189,7 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.validationFailed(errors)),
                 hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
@@ -194,7 +197,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user enters date of birth in future, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE)
+    val errors: List<PatientEntryValidationError> = listOf(DATE_OF_BIRTH_IN_FUTURE)
     val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged("02/02/2021")
@@ -211,7 +214,7 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.validationFailed(errors)),
                 hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
@@ -365,7 +368,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the date of birth exceeds max limit, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT)
+    val errors: List<PatientEntryValidationError> = listOf(DOB_EXCEEDS_MAX_LIMIT)
     val enteredDate = dateOfBirthFormat.format(LocalDate.now(userClock).minusYears(MAX_ALLOWED_PATIENT_AGE.toLong().plus(1)))
     val model = defaultModel
         .fullNameChanged("Name")
@@ -383,7 +386,7 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.validationFailed(errors)),
                 hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
@@ -409,7 +412,7 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.validationFailed(errors)),
                 hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )

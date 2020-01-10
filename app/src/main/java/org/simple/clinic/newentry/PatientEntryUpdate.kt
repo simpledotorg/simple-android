@@ -9,7 +9,11 @@ import org.simple.clinic.newentry.Field.*
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -77,7 +81,16 @@ class PatientEntryUpdate(
       dispatch(SavePatient(patientEntry))
     } else {
       return when {
-        setOf(PHONE_NUMBER_LENGTH_TOO_SHORT, FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_LONG, BOTH_DATEOFBIRTH_AND_AGE_ABSENT).any(validationErrors::contains) -> next(model.validationFailed(validationErrors), ShowValidationErrors(validationErrors))
+        setOf(
+            PHONE_NUMBER_LENGTH_TOO_SHORT,
+            FULL_NAME_EMPTY,
+            PHONE_NUMBER_LENGTH_TOO_LONG,
+            BOTH_DATEOFBIRTH_AND_AGE_ABSENT,
+            INVALID_DATE_OF_BIRTH,
+            DATE_OF_BIRTH_IN_FUTURE,
+            DOB_EXCEEDS_MAX_LIMIT,
+            DOB_EXCEEDS_MIN_LIMIT
+        ).any(validationErrors::contains) -> next(model.validationFailed(validationErrors), ShowValidationErrors(validationErrors))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }
     }

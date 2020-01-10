@@ -1,6 +1,8 @@
 package org.simple.clinic.summary.bloodsugar.view
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -25,6 +27,7 @@ import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEffect
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEffectHandler
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEvent
@@ -50,10 +53,6 @@ class BloodSugarSummaryView(
     context: Context,
     attributes: AttributeSet
 ) : CardView(context, attributes), BloodSugarSummaryViewUi, UiActions {
-
-  companion object {
-    const val TYPE_PICKER_SHEET = 1
-  }
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -160,20 +159,26 @@ class BloodSugarSummaryView(
     activity.startActivityForResult(BloodSugarTypePickerSheet.intent(context), TYPE_PICKER_SHEET)
   }
 
+  @SuppressLint("CheckResult")
   private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == TYPE_PICKER_SHEET && it.succeeded() }
+        .filter { it.requestCode == TYPE_PICKER_SHEET && it.succeeded() && it.data != null }
         .takeUntil(onDestroys)
-        .map { showBloodSugarEntrySheet(it) }
-        .subscribe()
+        .map { it.data!! }
+        .subscribe(::showBloodSugarEntrySheet)
   }
 
-  private fun showBloodSugarEntrySheet(it: ActivityResult) {
+  private fun showBloodSugarEntrySheet(intent: Intent) {
     val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
     val patientUuid = screenKey.patientUuid
 
-    activity.startActivity(BloodSugarEntrySheet.intentForNewBloodSugar(context, patientUuid, BloodSugarTypePickerSheet.selectedBloodSugarType(it.data!!)))
+    val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(
+        context,
+        patientUuid,
+        BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
+    )
+    activity.startActivity(intentForNewBloodSugar)
   }
 
   private fun render(bloodSugarMeasurements: List<BloodSugarMeasurement>) {

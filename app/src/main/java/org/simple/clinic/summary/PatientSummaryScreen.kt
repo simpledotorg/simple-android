@@ -54,8 +54,10 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
 
@@ -77,6 +79,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  lateinit var config: PatientSummaryConfig
+  
   @Deprecated("""
     ~ DOA ~
 
@@ -147,6 +151,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     setupEditButtonClicks()
 
+    toggleDiabetesView(config.isDiabetesEnabled)
+
     val controller = with(screenRouter.key<PatientSummaryScreenKey>(this)) {
       controllerFactory.create(patientUuid, intention, screenCreatedTimestamp)
     }
@@ -168,6 +174,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   override fun onDetachedFromWindow() {
     mobiusDelegate.stop()
     super.onDetachedFromWindow()
+  }
+
+  private fun toggleDiabetesView(diabetesEnabled: Boolean) {
+    bloodSugarSummaryView.visibility = if (diabetesEnabled) View.VISIBLE else View.GONE
   }
 
   private fun setupEditButtonClicks() {

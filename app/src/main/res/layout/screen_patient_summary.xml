@@ -123,6 +123,15 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8" />
 
+      <org.simple.clinic.summary.bloodsugar.view.BloodSugarSummaryView
+        android:id="@+id/bloodSugarSummaryView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:visibility="gone"/>
+
       <org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryView
         android:id="@+id/medicalHistorySummaryView"
         android:layout_width="match_parent"

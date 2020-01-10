@@ -82,17 +82,6 @@ class PatientSummaryScreen(
   @Inject
   lateinit var effectHandler: PatientSummaryEffectHandler
 
-  @Deprecated("""
-    ~ DOA ~
-
-    This is a quick work around that passes patient information to the Edit Patient screen so
-    that the Edit Patient screen doesn't have to re-query this information from the database.
-
-    This needs to go when we refactor this screen to Mobius and an appropriate mechanism to pass
-    this information should be built.
-    """)
-  private var patientSummaryProfile: PatientSummaryProfile? = null
-
   private var linkIdWithPatientShown: Boolean = false
 
   private val events: Observable<UiEvent> by unsafeLazy {
@@ -185,7 +174,7 @@ class PatientSummaryScreen(
 
   private fun setupEditButtonClicks() {
     editButton.setOnClickListener {
-      screenRouter.push(createEditPatientScreenKey(patientSummaryProfile!!))
+      screenRouter.push(createEditPatientScreenKey(mobiusDelegate.model.patientSummaryProfile!!))
     }
   }
 
@@ -258,8 +247,6 @@ class PatientSummaryScreen(
     displayPhoneNumber(patientSummaryProfile.phoneNumber)
     displayPatientAddress(patientSummaryProfile.address)
     displayBpPassport(patientSummaryProfile.bpPassport, patientSummaryProfile.phoneNumber != null)
-
-    this.patientSummaryProfile = patientSummaryProfile
   }
 
   private fun displayPatientAddress(address: PatientAddress) {

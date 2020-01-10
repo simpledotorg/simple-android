@@ -79,6 +79,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  @Inject
   lateinit var config: PatientSummaryConfig
   
   @Deprecated("""

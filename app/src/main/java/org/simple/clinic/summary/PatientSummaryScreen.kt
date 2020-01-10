@@ -41,9 +41,6 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
@@ -193,7 +190,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     return EditPatientScreenKey.fromPatientData(
         patientSummaryProfile.patient,
         patientSummaryProfile.address,
-        patientSummaryProfile.phoneNumber.toNullable()
+        patientSummaryProfile.phoneNumber
     )
   }
 
@@ -253,9 +250,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
 
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
-    displayPhoneNumber(patientSummaryProfile.phoneNumber.toNullable())
+    displayPhoneNumber(patientSummaryProfile.phoneNumber)
     displayPatientAddress(patientSummaryProfile.address)
-    displayBpPassport(patientSummaryProfile.bpPassport, patientSummaryProfile.phoneNumber.isNotEmpty())
+    displayBpPassport(patientSummaryProfile.bpPassport, patientSummaryProfile.phoneNumber != null)
 
     this.patientSummaryProfile = patientSummaryProfile
   }
@@ -282,13 +279,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     fullNameTextView.text = resources.getString(R.string.patientsummary_name, name, genderLetter, age)
   }
 
-  private fun displayBpPassport(bpPassport: Optional<BusinessId>, isPhoneNumberVisible: Boolean) {
-    bpPassportTextView.visibleOrGone(bpPassport.isNotEmpty())
+  private fun displayBpPassport(bpPassport: BusinessId?, isPhoneNumberVisible: Boolean) {
+    bpPassportTextView.visibleOrGone(bpPassport != null)
 
     bpPassportTextView.text = when (bpPassport) {
-      None -> ""
-      is Just -> {
-        val identifier = bpPassport.value.identifier
+      null -> ""
+      else -> {
+        val identifier = bpPassport.identifier
         val numericSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Numeric_White72)
         val formattedIdentifier = Truss()
             .append(identifierDisplayAdapter.typeAsText(identifier))
@@ -350,6 +347,6 @@ data class PatientSummaryScreenSavedState(
 data class PatientSummaryProfile(
     val patient: Patient,
     val address: PatientAddress,
-    val phoneNumber: Optional<PatientPhoneNumber>,
-    val bpPassport: Optional<BusinessId>
+    val phoneNumber: PatientPhoneNumber?,
+    val bpPassport: BusinessId?
 )

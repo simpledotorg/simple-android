@@ -90,11 +90,13 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .flatMap { patient -> patientRepository.address(patient.addressUuid) }
         .map { (it as Just).value }
 
-    val phoneNumbers = patientRepository.phoneNumber(patientUuid)
-    val bpPassport = patientRepository.bpPassportForPatient(patientUuid)
+    val latestPhoneNumberStream = patientRepository.phoneNumber(patientUuid)
+    val latestBpPassportStream = patientRepository.bpPassportForPatient(patientUuid)
 
     return Observables
-        .combineLatest(sharedPatients, addresses, phoneNumbers, bpPassport, ::PatientSummaryProfile)
+        .combineLatest(sharedPatients, addresses, latestPhoneNumberStream, latestBpPassportStream) { patient, address, phoneNumber, bpPassport ->
+          PatientSummaryProfile(patient, address, phoneNumber.toNullable(), bpPassport.toNullable())
+        }
         .map { patientSummaryProfile -> { ui: Ui -> showPatientSummaryProfile(ui, patientSummaryProfile) } }
   }
 

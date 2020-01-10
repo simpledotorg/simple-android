@@ -1,3 +1,7 @@
 package org.simple.clinic.summary
 
-sealed class PatientSummaryEvent
+import org.simple.clinic.widgets.UiEvent
+
+sealed class PatientSummaryEvent : UiEvent
+
+data class PatientSummaryProfileLoaded(val patientSummaryProfile: PatientSummaryProfile) : PatientSummaryEvent()

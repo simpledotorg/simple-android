@@ -22,7 +22,6 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -58,7 +57,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
 
     return Observable.mergeArray(
         reportViewedPatientEvent(replayedEvents),
-        populatePatientProfile(),
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openLinkIdWithPatientSheet(replayedEvents),
         showUpdatePhoneDialogIfRequired(replayedEvents),
@@ -75,36 +73,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .take(1L)
         .doOnNext { Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
         .flatMap { Observable.empty<UiChange>() }
-  }
-
-  private fun populatePatientProfile(): Observable<UiChange> {
-    val sharedPatients = patientRepository.patient(patientUuid)
-        .map {
-          // We do not expect the patient to get deleted while this screen is already open.
-          (it as Just).value
-        }
-        .replay(1)
-        .refCount()
-
-    val addresses = sharedPatients
-        .flatMap { patient -> patientRepository.address(patient.addressUuid) }
-        .map { (it as Just).value }
-
-    val latestPhoneNumberStream = patientRepository.phoneNumber(patientUuid)
-    val latestBpPassportStream = patientRepository.bpPassportForPatient(patientUuid)
-
-    return Observables
-        .combineLatest(sharedPatients, addresses, latestPhoneNumberStream, latestBpPassportStream) { patient, address, phoneNumber, bpPassport ->
-          PatientSummaryProfile(patient, address, phoneNumber.toNullable(), bpPassport.toNullable())
-        }
-        .map { patientSummaryProfile -> { ui: Ui -> showPatientSummaryProfile(ui, patientSummaryProfile) } }
-  }
-
-  private fun showPatientSummaryProfile(ui: Ui, patientSummaryProfile: PatientSummaryProfile) {
-    with(ui) {
-      populatePatientProfile(patientSummaryProfile)
-      showEditButton()
-    }
   }
 
   private fun showScheduleAppointmentSheet(events: Observable<UiEvent>): Observable<UiChange> {

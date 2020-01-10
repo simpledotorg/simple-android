@@ -79,7 +79,10 @@ class PatientSummaryScreen(
 
   @Inject
   lateinit var config: PatientSummaryConfig
-  
+
+  @Inject
+  lateinit var effectHandler: PatientSummaryEffectHandler
+
   @Deprecated("""
     ~ DOA ~
 
@@ -120,7 +123,7 @@ class PatientSummaryScreen(
         defaultModel = PatientSummaryModel.from(screenKey.patientUuid),
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
-        effectHandler = PatientSummaryEffectHandler().build(),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render,
         crashReporter = crashReporter
     )
@@ -347,9 +350,11 @@ data class PatientSummaryScreenSavedState(
     val linkIdWithPatientShown: Boolean
 ) : Parcelable
 
+// TODO(vs): 2020-01-10 Move this to package level
+@Parcelize
 data class PatientSummaryProfile(
     val patient: Patient,
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?,
     val bpPassport: BusinessId?
-)
+): Parcelable

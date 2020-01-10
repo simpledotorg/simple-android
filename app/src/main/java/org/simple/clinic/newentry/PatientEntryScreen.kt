@@ -52,6 +52,7 @@ import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
@@ -564,6 +565,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       PHONE_NUMBER_LENGTH_TOO_LONG -> this.showLengthTooLongPhoneNumberError(true)
       BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> this.showEmptyDateOfBirthAndAgeError(true)
       INVALID_DATE_OF_BIRTH -> this.showInvalidDateOfBirthError(true)
+      DATE_OF_BIRTH_IN_FUTURE -> this.showDateOfBirthIsInFutureError(true)
     }
   }
 }

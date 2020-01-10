@@ -4,6 +4,7 @@ import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ValueChangedCallback
@@ -61,6 +62,7 @@ class PatientEntryUiRenderer(
         .forEach {
           when (it) {
             FULL_NAME_EMPTY -> validationActions.showEmptyFullNameError(true)
+            PHONE_NUMBER_LENGTH_TOO_SHORT -> validationActions.showLengthTooShortPhoneNumberError(true)
           }
         }
   }

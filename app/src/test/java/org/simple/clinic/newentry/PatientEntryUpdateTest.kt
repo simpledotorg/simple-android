@@ -11,6 +11,7 @@ import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
 import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
@@ -91,7 +92,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user enters phone number which is too short, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT)
+    val error: List<PatientEntryValidationError> = listOf(PHONE_NUMBER_LENGTH_TOO_SHORT)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("21")
@@ -108,8 +109,8 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasEffects(ShowValidationErrors(error) as PatientEntryEffect)
             )
         )
   }
@@ -364,7 +365,7 @@ class PatientEntryUpdateTest {
   fun `when the date of birth exceeds max limit, then show error`() {
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT)
     val enteredDate = dateOfBirthFormat.format(LocalDate.now(userClock).minusYears(MAX_ALLOWED_PATIENT_AGE.toLong().plus(1)))
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged(enteredDate)
         .genderChanged(Just(Gender.Male))
@@ -376,7 +377,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(

@@ -193,4 +193,29 @@ class PatientEntryUiRendererTest {
     verify(patientEntryUi).showValidationErrorUi(error)
     verifyNoMoreInteractions(patientEntryUi)
   }
+
+  @Test
+  fun `it should render colony or village is missing error`() {
+    //given
+    val error: PatientEntryValidationError = PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
+    val givenModel = defaultModel
+        .fullNameChanged("Name")
+        .ageChanged("12")
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("772184840")
+        .streetAddressChanged("street")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+        .validationFailed(error)
+
+    //when
+    patientEntryUiRenderer.render(givenModel)
+
+    //then
+    verify(patientEntryUi).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+    verify(patientEntryUi).hideIdentifierSection()
+    verify(patientEntryUi).showValidationErrorUi(error)
+    verifyNoMoreInteractions(patientEntryUi)
+  }
 }

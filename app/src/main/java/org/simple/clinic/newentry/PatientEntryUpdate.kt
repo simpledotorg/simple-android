@@ -15,6 +15,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_E
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
@@ -97,6 +98,7 @@ class PatientEntryUpdate(
         listOf(AGE_EXCEEDS_MAX_LIMIT) -> next(model.validationFailed(AGE_EXCEEDS_MAX_LIMIT))
         listOf(AGE_EXCEEDS_MIN_LIMIT) -> next(model.validationFailed(AGE_EXCEEDS_MIN_LIMIT))
         listOf(DOB_EXCEEDS_MAX_LIMIT) -> next(model.validationFailed(DOB_EXCEEDS_MAX_LIMIT))
+        listOf(DOB_EXCEEDS_MIN_LIMIT) -> next(model.validationFailed(DOB_EXCEEDS_MIN_LIMIT))
         else -> dispatch(ShowValidationErrors(validationErrors))
       }
     }

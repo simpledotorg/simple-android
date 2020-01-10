@@ -12,7 +12,9 @@ import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
@@ -247,7 +249,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user leaves colony or village field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY)
+    val errors: List<PatientEntryValidationError> = listOf(COLONY_OR_VILLAGE_EMPTY)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
@@ -263,7 +265,7 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.validationFailed(errors)),
                 hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
@@ -271,7 +273,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the user leaves district field empty, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DISTRICT_EMPTY)
+    val errors: List<PatientEntryValidationError> = listOf(DISTRICT_EMPTY)
     val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
@@ -287,7 +289,7 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.validationFailed(errors)),
                 hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
@@ -311,7 +313,7 @@ class PatientEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.validationFailed(errors)),
                 hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )

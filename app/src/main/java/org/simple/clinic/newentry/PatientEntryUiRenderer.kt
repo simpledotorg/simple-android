@@ -4,7 +4,9 @@ import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
@@ -12,6 +14,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIR
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ValueChangedCallback
@@ -77,6 +80,9 @@ class PatientEntryUiRenderer(
             DOB_EXCEEDS_MAX_LIMIT -> validationActions.showDOBExceedsMaxLimitError(true)
             DOB_EXCEEDS_MIN_LIMIT -> validationActions.showDOBExceedsMinLimitError(true)
             MISSING_GENDER -> validationActions.showMissingGenderError(true)
+            COLONY_OR_VILLAGE_EMPTY -> validationActions.showEmptyColonyOrVillageError(true)
+            DISTRICT_EMPTY -> validationActions.showEmptyDistrictError(true)
+            STATE_EMPTY -> validationActions.showEmptyStateError(true)
           }
         }
   }

@@ -130,6 +130,10 @@ class BloodPressureRepository @Inject constructor(
 
   fun bloodPressureCount(patientUuid: UUID): Int = dao.recordedBloodPressureCountForPatient(patientUuid)
 
+  fun allBloodPressures(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
+    return dao.allBloodPressures(patientUuid)
+  }
+
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao
         .count(SyncStatus.PENDING)

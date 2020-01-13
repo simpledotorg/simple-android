@@ -19,14 +19,14 @@ import io.reactivex.disposables.Disposable
 typealias ModelUpdateListener<M> = (M) -> Unit
 typealias EffectHandler<F, E> = ObservableTransformer<F, E>
 
-class MobiusTestFixture<M: Any, E, F>(
-    events: Observable<E>,
-    defaultModel: M,
-    init: Init<M, F>?,
-    update: Update<M, E, F>,
-    effectHandler: EffectHandler<F, E>,
-    modelUpdateListener: ModelUpdateListener<M>,
-    requiresLogging: Boolean = false
+class MobiusTestFixture<M : Any, E, F>(
+  events: Observable<E>,
+  defaultModel: M,
+  init: Init<M, F>?,
+  update: Update<M, E, F>,
+  effectHandler: EffectHandler<F, E>,
+  modelUpdateListener: ModelUpdateListener<M>,
+  requiresLogging: Boolean = false
 ) {
   private val eventsDisposable: Disposable
   private val controller: MobiusLoop.Controller<M, E>
@@ -63,12 +63,12 @@ class MobiusTestFixture<M: Any, E, F>(
   }
 
   private fun createLoop(
-      eventSource: EventSource<E>,
-      init: Init<M, F>,
-      update: Update<M, E, F>,
-      effectHandlerListener: EffectHandler<F, E>,
-      workRunner: WorkRunner,
-      requiresLogging: Boolean
+    eventSource: EventSource<E>,
+    init: Init<M, F>,
+    update: Update<M, E, F>,
+    effectHandlerListener: EffectHandler<F, E>,
+    workRunner: WorkRunner,
+    requiresLogging: Boolean
   ): MobiusLoop.Builder<M, E, F> {
     return RxMobius
         .loop(update, effectHandlerListener)
@@ -80,8 +80,8 @@ class MobiusTestFixture<M: Any, E, F>(
   }
 
   private fun spyingInit(
-      init: Init<M, F>?,
-      modelUpdateListener: ModelUpdateListener<M>
+    init: Init<M, F>?,
+    modelUpdateListener: ModelUpdateListener<M>
   ): Init<M, F> {
     return Init { model ->
       (init?.init(model) ?: First.first(model)).also { first ->
@@ -91,8 +91,8 @@ class MobiusTestFixture<M: Any, E, F>(
   }
 
   private fun spyingUpdate(
-      update: Update<M, E, F>,
-      modelUpdateListener: ModelUpdateListener<M>
+    update: Update<M, E, F>,
+    modelUpdateListener: ModelUpdateListener<M>
   ): Update<M, E, F> {
     return Update { model, event ->
       update.update(model, event).also { next ->

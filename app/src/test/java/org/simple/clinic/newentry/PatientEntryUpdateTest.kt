@@ -64,7 +64,7 @@ class PatientEntryUpdateTest {
   fun `when the user leaves full name field empty, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.FULL_NAME_EMPTY)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("")
         .ageChanged("21")
         .genderChanged(Just(Gender.Male))
@@ -76,7 +76,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -90,7 +90,7 @@ class PatientEntryUpdateTest {
   fun `when the user enters phone number which is too short, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("21")
         .genderChanged(Just(Gender.Male))
@@ -102,7 +102,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -116,7 +116,7 @@ class PatientEntryUpdateTest {
   fun `when the user enters phone number which is too long, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("21")
         .genderChanged(Just(Gender.Male))
@@ -128,7 +128,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -143,7 +143,7 @@ class PatientEntryUpdateTest {
   fun `when the user doesn't enter date of birth and age, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .genderChanged(Just(Gender.Male))
         .phoneNumberChanged("7721084840")
@@ -154,7 +154,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -168,7 +168,7 @@ class PatientEntryUpdateTest {
   fun `when the user enters invalid date of birth, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.INVALID_DATE_OF_BIRTH)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged("02-19-2000")
         .genderChanged(Just(Gender.Male))
@@ -180,7 +180,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -194,7 +194,7 @@ class PatientEntryUpdateTest {
   fun `when the user enters date of birth in future, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged("02/02/4000")
         .genderChanged(Just(Gender.Male))
@@ -206,7 +206,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -220,7 +220,7 @@ class PatientEntryUpdateTest {
   fun `when the user leaves gender field empty, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.MISSING_GENDER)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
         .phoneNumberChanged("7721084840")
@@ -231,7 +231,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -245,7 +245,7 @@ class PatientEntryUpdateTest {
   fun `when the user leaves colony or village field empty, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
         .genderChanged(Just(Gender.Male))
@@ -256,7 +256,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -270,7 +270,7 @@ class PatientEntryUpdateTest {
   fun `when the user leaves district field empty, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DISTRICT_EMPTY)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
         .genderChanged(Just(Gender.Male))
@@ -281,7 +281,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -295,7 +295,7 @@ class PatientEntryUpdateTest {
   fun `when the user leaves state field empty, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.STATE_EMPTY)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("12")
         .genderChanged(Just(Gender.Male))
@@ -306,7 +306,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -320,7 +320,7 @@ class PatientEntryUpdateTest {
   fun `when the age exceeds max limit, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("130")
         .genderChanged(Just(Gender.Male))
@@ -332,7 +332,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -346,7 +346,7 @@ class PatientEntryUpdateTest {
   fun `when the age exceeds min limit, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .ageChanged("0")
         .genderChanged(Just(Gender.Male))
@@ -358,7 +358,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(
@@ -372,7 +372,7 @@ class PatientEntryUpdateTest {
   fun `when the date of birth exceeds max limit, then show error`() {
     //given
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT)
-    val givenModel = defaultModel
+    val model = defaultModel
         .fullNameChanged("Name")
         .dateOfBirthChanged("01/02/1800")
         .genderChanged(Just(Gender.Male))
@@ -384,7 +384,7 @@ class PatientEntryUpdateTest {
         .zoneChanged("zone")
 
     updateSpec
-        .given(givenModel)
+        .given(model)
         .`when`(SaveClicked)
         .then(
             assertThatNext(

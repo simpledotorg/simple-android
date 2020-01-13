@@ -12,6 +12,9 @@ data class BloodPressureHistoryScreenModel(
     fun create(patientUuid: UUID) = BloodPressureHistoryScreenModel(patientUuid, null)
   }
 
+  val hasBloodPressures: Boolean
+    get() = bloodPressures.isNullOrEmpty().not()
+
   fun historyLoaded(bloodPressures: List<BloodPressureMeasurement>): BloodPressureHistoryScreenModel =
       copy(bloodPressures = bloodPressures)
 }

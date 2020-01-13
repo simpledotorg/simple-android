@@ -28,7 +28,7 @@ jobs:
         env:
           branch_name: ${{steps.commit_and_push.outputs.branch_name}}
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{secrets.GITHUB_ACCESS_TOKEN}}
           script: |
             const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const branchName = process.env.branch_name

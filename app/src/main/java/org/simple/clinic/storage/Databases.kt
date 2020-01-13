@@ -1,5 +1,6 @@
 package org.simple.clinic.storage
 
+import android.database.Cursor
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 fun SupportSQLiteDatabase.inTransaction(block: SupportSQLiteDatabase.() -> Unit) {
@@ -11,3 +12,5 @@ fun SupportSQLiteDatabase.inTransaction(block: SupportSQLiteDatabase.() -> Unit)
     endTransaction()
   }
 }
+
+fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

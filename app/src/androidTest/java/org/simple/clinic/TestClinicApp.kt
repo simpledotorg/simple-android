@@ -25,7 +25,6 @@ class TestClinicApp : Application() {
 
   override fun onCreate() {
     super.onCreate()
-
     Timber.plant(Timber.DebugTree())
     Traceur.enableLogging()
     LazyThreeTen.init(this)

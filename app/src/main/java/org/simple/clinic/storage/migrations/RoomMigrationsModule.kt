@@ -61,7 +61,8 @@ class RoomMigrationsModule {
       migration_52_53: Migration_52_53,
       migration_53_54: Migration_53_54,
       migration_54_55: Migration_54_55,
-      migration_55_56: Migration_55_56
+      migration_55_56: Migration_55_56,
+      migration_56_57: Migration_56_57
   ): List<Migration> {
     return listOf(
         migration_3_4,
@@ -116,7 +117,8 @@ class RoomMigrationsModule {
         migration_52_53,
         migration_53_54,
         migration_54_55,
-        migration_55_56
+        migration_55_56,
+        migration_56_57
     )
   }
 }

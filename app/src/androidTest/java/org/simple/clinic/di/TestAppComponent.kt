@@ -31,6 +31,7 @@ import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.storage.files.AndroidFileStorageAndroidTest
 import org.simple.clinic.storage.migrations.BaseDatabaseMigrationTest
 import org.simple.clinic.storage.migrations.DatabaseMigrationAndroidTest
+import org.simple.clinic.storage.migrations.Migration57AndroidTest
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidTest
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.RegisterUserServerIntegrationTest
@@ -82,4 +83,5 @@ interface TestAppComponent {
   fun inject(target: DateOfBirthHintUnfocusedAndroidTest)
   fun inject(target: BaseDatabaseMigrationTest)
   fun inject(target: BloodSugarRepositoryAndroidTest)
+  fun inject(target: Migration57AndroidTest)
 }

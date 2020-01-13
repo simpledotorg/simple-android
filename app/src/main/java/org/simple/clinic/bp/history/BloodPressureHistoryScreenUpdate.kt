@@ -2,6 +2,7 @@ package org.simple.clinic.bp.history
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class BloodPressureHistoryScreenUpdate : Update<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEvent, BloodPressureHistoryScreenEffect> {
@@ -11,6 +12,7 @@ class BloodPressureHistoryScreenUpdate : Update<BloodPressureHistoryScreenModel,
   ): Next<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEffect> {
     return when (event) {
       is BloodPressureHistoryLoaded -> next(model.historyLoaded(event.bloodPressures))
+      is NewBloodPressureClicked -> dispatch(OpenBloodPressureEntrySheet)
     }
   }
 }

@@ -7,6 +7,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
+import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent.Denied
@@ -311,7 +313,7 @@ class PatientEntryUpdateTest {
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT)
     val model = defaultModel
         .fullNameChanged("Name")
-        .ageChanged("130")
+        .ageChanged(MAX_ALLOWED_PATIENT_AGE.plus(1).toString())
         .genderChanged(Just(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")
@@ -336,7 +338,7 @@ class PatientEntryUpdateTest {
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT)
     val model = defaultModel
         .fullNameChanged("Name")
-        .ageChanged("0")
+        .ageChanged(MIN_ALLOWED_PATIENT_AGE.minus(1).toString())
         .genderChanged(Just(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")

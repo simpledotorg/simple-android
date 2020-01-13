@@ -210,4 +210,31 @@ class BloodPressureRepositoryAndroidTest {
     assertThat(repository.bloodPressureCount(patientUuidWithOnlyDeletedBloodPressures)).isEqualTo(0)
     assertThat(repository.bloodPressureCount(patientUuidWithBloodPressures)).isEqualTo(1)
   }
+
+  @Test
+  fun when_fetching_all_blood_pressure_the_list_should_be_ordered_by_recorded_at() {
+    val patientUuid = UUID.fromString("b5c190d1-3d99-40ce-aef1-d0c82270f834")
+    val bpRecordRightNow = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        recordedAt = Instant.now(clock))
+
+    val bpRecordADayInFuture = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        recordedAt = Instant.now(clock).plus(1, DAYS))
+
+    val bpRecordADayInPast = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        recordedAt = Instant.now(clock).minus(1, DAYS))
+
+    appDatabase.bloodPressureDao().save(listOf(bpRecordRightNow, bpRecordADayInFuture, bpRecordADayInPast))
+
+    val bpMeasurements = repository.allBloodPressures(patientUuid).blockingFirst()
+
+    assertThat(bpMeasurements)
+        .isEqualTo(listOf(
+            bpRecordADayInFuture,
+            bpRecordRightNow,
+            bpRecordADayInPast
+        ))
+  }
 }

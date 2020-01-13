@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
@@ -122,5 +123,12 @@ data class BloodPressureMeasurement(
         instantToCompare: Instant,
         pendingStatus: SyncStatus
     ): Boolean
+
+    @Query("""
+      SELECT * FROM bloodpressuremeasurement
+      WHERE patientUuid == :patientUuid AND deletedAt IS NULL
+      ORDER BY recordedAt DESC
+    """)
+    fun allBloodPressures(patientUuid: UUID): Observable<List<BloodPressureMeasurement>>
   }
 }

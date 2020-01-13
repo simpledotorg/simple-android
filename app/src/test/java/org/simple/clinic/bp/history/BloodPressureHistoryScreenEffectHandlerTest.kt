@@ -60,4 +60,21 @@ class BloodPressureHistoryScreenEffectHandlerTest {
     verify(uiActions).openBloodPressureEntrySheet()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open blood pressure update sheet effect is received, then open blood pressure update sheet`() {
+    // given
+    val bloodPressureMeasurement = PatientMocker.bp(
+        UUID.fromString("3c6fb840-86b9-4b85-aa75-b24c4bb9fbfd"),
+        patientUuid
+    )
+
+    // when
+    testCase.dispatch(OpenBloodPressureUpdateSheet(bloodPressureMeasurement))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

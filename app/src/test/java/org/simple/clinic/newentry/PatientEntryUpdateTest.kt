@@ -19,14 +19,16 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
 class PatientEntryUpdateTest {
   private val phoneNumberValidator = IndianPhoneNumberValidator()
   private val userClock: UserClock = TestUserClock()
-  private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
-  private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
+  private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat)
+  private val ageValidator = UserInputAgeValidator(userClock, dateOfBirthFormat)
   private val update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
   private val updateSpec = UpdateSpec(update)
   private val defaultModel = PatientEntryModel.DEFAULT
@@ -361,9 +363,36 @@ class PatientEntryUpdateTest {
   @Test
   fun `when the date of birth exceeds max limit, then show error`() {
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT)
+    val enteredDate = dateOfBirthFormat.format(LocalDate.now(userClock).minusYears(MAX_ALLOWED_PATIENT_AGE.toLong().plus(1)))
     val model = defaultModel
         .fullNameChanged("Name")
-        .dateOfBirthChanged("01/02/1800")
+        .dateOfBirthChanged(enteredDate)
+        .genderChanged(Just(Gender.Male))
+        .phoneNumberChanged("7721084840")
+        .streetAddressChanged("street")
+        .colonyOrVillageChanged("village")
+        .districtChanged("district")
+        .stateChanged("state")
+        .zoneChanged("zone")
+
+    updateSpec
+        .given(model)
+        .`when`(SaveClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the date of birth exceeds min limit, then show error`() {
+    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT)
+    val enteredDate = dateOfBirthFormat.format(LocalDate.now(userClock))
+    val model = defaultModel
+        .fullNameChanged("Name")
+        .dateOfBirthChanged(enteredDate)
         .genderChanged(Just(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")

@@ -24,6 +24,7 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<BloodPressureHistoryScreenEffect, BloodPressureHistoryScreenEvent>()
         .addTransformer(LoadBloodPressureHistory::class.java, loadBloodPressureHistory(schedulersProvider.io()))
         .addAction(OpenBloodPressureEntrySheet::class.java, uiActions::openBloodPressureEntrySheet, schedulersProvider.ui())
+        .addConsumer(OpenBloodPressureUpdateSheet::class.java, { uiActions.openBloodPressureUpdateSheet(it.bloodPressureMeasurement.uuid) }, schedulersProvider.ui())
         .build()
   }
 

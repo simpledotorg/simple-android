@@ -44,4 +44,23 @@ class BloodPressureHistoryScreenUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when blood pressure is clicked, then open update sheet`() {
+    val bloodPressureMeasurement = PatientMocker.bp(
+        UUID.fromString("e42d25fb-5693-449c-9ad2-71a172eb8d92"),
+        patientUuid
+    )
+    val bloodPressures = listOf(bloodPressureMeasurement)
+
+    updateSpec
+        .given(model.historyLoaded(bloodPressures))
+        .whenEvent(BloodPressureClicked(bloodPressureMeasurement))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenBloodPressureUpdateSheet(bloodPressureMeasurement) as BloodPressureHistoryScreenEffect)
+            )
+        )
+  }
 }

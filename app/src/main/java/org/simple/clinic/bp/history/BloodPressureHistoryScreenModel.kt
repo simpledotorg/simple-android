@@ -7,7 +7,11 @@ data class BloodPressureHistoryScreenModel(
     val patientUuid: UUID,
     val bloodPressures: List<BloodPressureMeasurement>?
 ) {
+
   companion object {
     fun create(patientUuid: UUID) = BloodPressureHistoryScreenModel(patientUuid, null)
   }
+
+  fun historyLoaded(bloodPressures: List<BloodPressureMeasurement>): BloodPressureHistoryScreenModel =
+      copy(bloodPressures = bloodPressures)
 }

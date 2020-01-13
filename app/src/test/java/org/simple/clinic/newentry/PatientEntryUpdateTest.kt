@@ -25,7 +25,7 @@ import java.util.Locale
 
 class PatientEntryUpdateTest {
   private val phoneNumberValidator = IndianPhoneNumberValidator()
-  private val userClock: UserClock = TestUserClock()
+  private val userClock: UserClock = TestUserClock(LocalDate.parse("2020-01-01"))
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat)
   private val ageValidator = UserInputAgeValidator(userClock, dateOfBirthFormat)
@@ -194,7 +194,7 @@ class PatientEntryUpdateTest {
     val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE)
     val model = defaultModel
         .fullNameChanged("Name")
-        .dateOfBirthChanged("02/02/4000")
+        .dateOfBirthChanged("02/02/2021")
         .genderChanged(Just(Gender.Male))
         .phoneNumberChanged("7721084840")
         .streetAddressChanged("street")

@@ -1,9 +1,10 @@
 name: Code formatting
 
-# Scheduled at 11:30 PM UTC (05:00 AM IST)
+# Scheduled at 11:30 PM UTC (Sunday to Thursday)
+# Scheduled at 05:00 AM IST (Monday to Friday)
 on:
   schedule:
-    - cron: "30 23 * * *"
+    - cron: "30 23 * * 0-4"
 
 jobs:
   fix_code_formatting:

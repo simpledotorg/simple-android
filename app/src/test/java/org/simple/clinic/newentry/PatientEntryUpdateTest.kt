@@ -1,9 +1,7 @@
 package org.simple.clinic.newentry
 
-import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
-import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -16,6 +14,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIM
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
@@ -397,7 +396,7 @@ class PatientEntryUpdateTest {
 
   @Test
   fun `when the date of birth exceeds min limit, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT)
+    val error: PatientEntryValidationError = DOB_EXCEEDS_MIN_LIMIT
     val enteredDate = dateOfBirthFormat.format(LocalDate.now(userClock))
     val model = defaultModel
         .fullNameChanged("Name")
@@ -415,8 +414,8 @@ class PatientEntryUpdateTest {
         .`when`(SaveClicked)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
+                hasModel(model.validationFailed(error)),
+                hasNoEffects()
             )
         )
   }

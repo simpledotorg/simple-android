@@ -14,11 +14,15 @@
 
 ### Internal
 - Removed the remote homescreen illustrations feature
-- Moved to the dynamic address field model for patient entry and editing
+- Bumped resync token for appointment sync
+- Fixed incorrect migration for appointments which set all appointment types to `manual`
 
 ## 2020-01-01-6917
 ### Feature
-- Transfer patients to a different facility for follow-up 
+- Transfer patients to a different facility for follow-up
+
+### Internal
+- Moved to the dynamic address field model for patient entry and editing
 
 ## 2019-12-16-6732
 ### Fixes

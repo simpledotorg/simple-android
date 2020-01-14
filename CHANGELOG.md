@@ -4,8 +4,9 @@
 ### Feature
 - Introduce Diabetes management for tracking patient blood sugar
 
-### Fixes
-- Blank national ID gets generated for patients, which stops them from syncing.
+### Internal
+- Bumped resync token for appointment sync
+- Fixed incorrect migration for appointments which set all appointment types to `manual`
 
 ## On demo
 ### Feature
@@ -14,6 +15,7 @@
 
 ### Fixes
 - Patient shows up on the Recent patients list of a transferred facility as soon as they are transferred
+- Blank national ID gets generated for patients, which stops them from syncing
 
 ### Internal
 - Removed the remote homescreen illustrations feature

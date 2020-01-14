@@ -582,6 +582,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       DOB_EXCEEDS_MAX_LIMIT -> this.showDOBExceedsMaxLimitError(true)
       DOB_EXCEEDS_MIN_LIMIT -> this.showDOBExceedsMinLimitError(true)
       STATE_EMPTY -> this.showEmptyStateError(true)
+
+      PatientEntryValidationError.EMPTY_ADDRESS_DETAILS,
+      PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK,
+      PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
+      PatientEntryValidationError.PERSONAL_DETAILS_EMPTY -> {
+        throw AssertionError("Should never receive this error: $error")
+      }
     }
   }
 }

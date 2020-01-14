@@ -11,8 +11,8 @@
     <ignore path="src/main/res/drawable/ic_patient_male.xml" />
     <ignore path="src/main/res/drawable/ic_patient_transgender.xml" />
 
-    <!-- TODO: Remove after the select country screen is integrated -->
-    <ignore regexp="selectcountry_*" />
+    <!-- TODO: Remove when blood pressure history screen layout is used -->
+    <ignore path="src/main/res/layout/screen_bp_history" />
   </issue>
 
   <!-- Ignore this for now due to time constraints. Switch to static images later. -->

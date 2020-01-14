@@ -42,7 +42,7 @@ class Migration_55_56 @Inject constructor() : Migration(55, 56) {
       SELECT
         "uuid", "patientUuid", "facilityUuid", "facilityUuid",
         "scheduledDate", "status", "cancelReason",
-        "remindOn",  "agreedToVisit", 'manual',
+        "remindOn",  "agreedToVisit", "appointmentType",
         "syncStatus", "createdAt",  "updatedAt",  "deletedAt"
       FROM "Appointment_v55"
       """

@@ -19,6 +19,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.bp.entry.di.BloodPressureEntryModule
+import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
@@ -88,7 +89,8 @@ interface TheActivityComponent :
     BloodPressureSummaryViewInjector,
     MedicalHistorySummaryViewInjector,
     DrugSummaryViewInjector,
-    BloodSugarSummaryViewInjector {
+    BloodSugarSummaryViewInjector,
+    BloodPressureHistoryScreenInjector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: PatientsScreen)

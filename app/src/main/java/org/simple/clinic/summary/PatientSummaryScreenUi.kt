@@ -5,6 +5,10 @@ import java.util.UUID
 
 interface PatientSummaryScreenUi {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
+  fun showEditButton()
+
+  // Not yet migrated to Mobius
+
   fun showScheduleAppointmentSheet(patientUuid: UUID)
   fun goToPreviousScreen()
   fun goToHomeScreen()
@@ -12,5 +16,4 @@ interface PatientSummaryScreenUi {
   fun showAddPhoneDialog(patientUuid: UUID)
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
   fun hideLinkIdWithPatientView()
-  fun showEditButton()
 }

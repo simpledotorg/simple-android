@@ -83,7 +83,15 @@ class PatientSummaryScreenControllerTest {
 
     Analytics.addReporter(reporter)
 
-    val effectHandler = PatientSummaryEffectHandler(TrampolineSchedulersProvider(), patientRepository)
+    val effectHandler = PatientSummaryEffectHandler(
+        schedulersProvider = TrampolineSchedulersProvider(),
+        patientRepository = patientRepository,
+        uiActions = object : PatientSummaryUiActions {
+          override fun showScheduleAppointmentSheet(patientUuid: UUID) {
+            ui.showScheduleAppointmentSheet(patientUuid)
+          }
+        }
+    )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
@@ -99,7 +107,7 @@ class PatientSummaryScreenControllerTest {
   fun tearDown() {
     Analytics.clearReporters()
     reporter.clear()
-    if(::controllerSubscription.isInitialized) {
+    if (::controllerSubscription.isInitialized) {
       controllerSubscription.dispose()
     }
     testFixture.dispose()

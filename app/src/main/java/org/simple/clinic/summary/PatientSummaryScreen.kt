@@ -208,7 +208,7 @@ class PatientSummaryScreen(
 
     return backButton.clicks()
         .mergeWith(hardwareBackKeyClicks)
-        .map { PatientSummaryBackClicked() }
+        .map { PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp) }
   }
 
   private fun bloodPressureSaves(): Observable<PatientSummaryBloodPressureSaved> {

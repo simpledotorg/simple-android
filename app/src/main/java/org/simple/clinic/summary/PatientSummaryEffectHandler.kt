@@ -1,18 +1,25 @@
 package org.simple.clinic.summary
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import javax.inject.Inject
 
-class PatientSummaryEffectHandler @Inject constructor(
+class PatientSummaryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
-    private val patientRepository: PatientRepository
+    private val patientRepository: PatientRepository,
+    @Assisted private val uiActions: PatientSummaryUiActions
 ) {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(uiActions: PatientSummaryUiActions): PatientSummaryEffectHandler
+  }
 
   fun build(): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
     return RxMobius

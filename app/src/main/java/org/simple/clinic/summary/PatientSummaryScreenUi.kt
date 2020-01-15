@@ -3,13 +3,12 @@ package org.simple.clinic.summary
 import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
-interface PatientSummaryScreenUi {
+interface PatientSummaryScreenUi : PatientSummaryUiActions {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
   fun showEditButton()
 
   // Not yet migrated to Mobius
 
-  fun showScheduleAppointmentSheet(patientUuid: UUID)
   fun goToPreviousScreen()
   fun goToHomeScreen()
   fun showUpdatePhoneDialog(patientUuid: UUID)

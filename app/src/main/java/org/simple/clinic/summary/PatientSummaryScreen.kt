@@ -80,7 +80,7 @@ class PatientSummaryScreen(
   lateinit var config: PatientSummaryConfig
 
   @Inject
-  lateinit var effectHandler: PatientSummaryEffectHandler
+  lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
 
   private var linkIdWithPatientShown: Boolean = false
 
@@ -111,7 +111,7 @@ class PatientSummaryScreen(
         defaultModel = PatientSummaryModel.from(screenKey.patientUuid),
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
-        effectHandler = effectHandler.build(),
+        effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = viewRenderer::render,
         crashReporter = crashReporter
     )

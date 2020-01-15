@@ -6,13 +6,16 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
+import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import java.util.UUID
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
+    private val bloodPressureRepository: BloodPressureRepository,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -57,5 +60,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           }
         }
         .build()
+  }
+
+  private fun doesNotHaveBloodPressures(patientUuid: UUID): Boolean {
+    return bloodPressureRepository.bloodPressureCount(patientUuid) == 0
   }
 }

@@ -86,6 +86,7 @@ class PatientSummaryScreenControllerTest {
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
+        bloodPressureRepository = bpRepository,
         uiActions = object : PatientSummaryUiActions {
           override fun showScheduleAppointmentSheet(patientUuid: UUID) {
             ui.showScheduleAppointmentSheet(patientUuid)

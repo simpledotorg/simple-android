@@ -6,7 +6,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
@@ -76,35 +75,14 @@ class PatientSummaryScreenController @AssistedInject constructor(
   }
 
   private fun showScheduleAppointmentSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    val backClicks = events.ofType<PatientSummaryBackClicked>()
     val doneClicks = events.ofType<PatientSummaryDoneClicked>()
 
-    val hasSummaryItemChangedStream = backClicks
-        .map { patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp) }
+    val allBpsForPatientDeletedStream = doneClicks.map { doesNotHaveBloodPressures(patientUuid) }
 
-    val allBpsForPatientDeletedStream = backClicks
-        .cast<UiEvent>()
-        .mergeWith(doneClicks.cast())
-        .map { doesNotHaveBloodPressures(patientUuid) }
-
-    val shouldShowScheduleAppointmentSheetOnBackClicksStream = Observables
-        .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)
-        .map { (hasSummaryItemChanged, allBpsForPatientDeleted) ->
-          if (allBpsForPatientDeleted) false else hasSummaryItemChanged
-        }
-
-    val showScheduleAppointmentSheetOnBackClicks = backClicks
-        .withLatestFrom(shouldShowScheduleAppointmentSheetOnBackClicksStream)
-        .filter { (_, shouldShowScheduleAppointmentSheet) -> shouldShowScheduleAppointmentSheet }
-        .map { (_, _) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid) } }
-
-    val showScheduleAppointmentSheetOnDoneClicks = doneClicks
+    return doneClicks
         .withLatestFrom(allBpsForPatientDeletedStream)
         .filter { (_, allBpsForPatientDeleted) -> allBpsForPatientDeleted.not() }
         .map { (_, _) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid) } }
-
-    return showScheduleAppointmentSheetOnBackClicks
-        .mergeWith(showScheduleAppointmentSheetOnDoneClicks)
   }
 
   private fun openLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {

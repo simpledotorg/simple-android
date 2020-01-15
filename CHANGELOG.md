@@ -4,11 +4,7 @@
 ### Feature
 - Introduce Diabetes management for tracking patient blood sugar
 
-### Internal
-- Bumped resync token for appointment sync
-- Fixed incorrect migration for appointments which set all appointment types to `manual`
-
-## On demo
+## 2020-01-14-7007
 ### Feature
 - Updated patient entry consent text to include registration of minors
 - Added/updated translations for the following languages: Telugu, Punjabi, Marathi, Kannada, Hindi
@@ -19,11 +15,13 @@
 
 ### Internal
 - Removed the remote homescreen illustrations feature
-- Moved to the dynamic address field model for patient entry and editing
+- Bumped resync token for appointment sync
+- Fixed incorrect migration for appointments which set all appointment types to `manual`
+- Moved to the dynamic address field model for patient editing
 
 ## 2020-01-01-6917
 ### Feature
-- Transfer patients to a different facility for follow-up 
+- Transfer patients to a different facility for follow-up
 
 ## 2019-12-16-6732
 ### Fixes
@@ -31,6 +29,7 @@
 
 ### Internal
 - Use the selected country for connecting to the server
+- Moved to the dynamic address field model for patient entry
 
 ## 2019-12-03-6640
 ### Internal

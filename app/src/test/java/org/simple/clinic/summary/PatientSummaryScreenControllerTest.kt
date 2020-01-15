@@ -436,9 +436,10 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(any(), any())).doReturn(true)
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
 
-    setupController(openIntention)
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
     startMobiusLoop()
-    uiEvents.onNext(PatientSummaryBackClicked())
+    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui, never()).goToPreviousScreen()
     verify(ui, never()).goToHomeScreen()
@@ -453,9 +454,10 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
-    setupController(openIntention)
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
     startMobiusLoop()
-    uiEvents.onNext(PatientSummaryBackClicked())
+    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
     if (goBackToScreen == HOME) {
@@ -491,9 +493,10 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
 
-    setupController(openIntention)
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
     startMobiusLoop()
-    uiEvents.onNext(PatientSummaryBackClicked())
+    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
     if (goBackToScreen == HOME) {
@@ -511,9 +514,10 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
-    setupController(openIntention)
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
     startMobiusLoop()
-    uiEvents.onNext(PatientSummaryBackClicked())
+    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
     if (goBackToScreen == HOME) {

@@ -428,6 +428,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
 
     setupController(openIntention)
+    startMobiusLoop()
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(ui, never()).goToPreviousScreen()
@@ -444,6 +445,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
     setupController(openIntention)
+    startMobiusLoop()
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
@@ -481,6 +483,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
 
     setupController(openIntention)
+    startMobiusLoop()
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
@@ -500,6 +503,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
     setupController(openIntention)
+    startMobiusLoop()
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
@@ -518,6 +522,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
 
     setupController(openIntention)
+    startMobiusLoop()
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     verify(ui).showScheduleAppointmentSheet(patientUuid)
@@ -533,6 +538,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
 
     setupController(openIntention)
+    startMobiusLoop()
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)

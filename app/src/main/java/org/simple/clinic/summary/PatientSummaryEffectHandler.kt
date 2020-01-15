@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
@@ -28,10 +29,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientSummaryEffect, PatientSummaryEvent>()
         .addTransformer(LoadPatientSummaryProfile::class.java) { effects ->
+          // TODO(vs): 2020-01-15 Revisit after Mobius migration
           effects.flatMap { fetchPatientSummaryProfile ->
             val patientUuid = fetchPatientSummaryProfile.patientUuid
 
-            // TODO(vs): 2020-01-10 Simplify this chain once refactoring is done
             val scheduler = schedulersProvider.io()
 
             val sharedPatients = patientRepository.patient(patientUuid)
@@ -58,6 +59,29 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 .map(::PatientSummaryProfileLoaded)
                 .cast<PatientSummaryEvent>()
           }
+        }
+        .addTransformer(HandleBackClick::class.java) { effects ->
+          // TODO(vs): 2020-01-15 Revisit after Mobius migration
+          effects
+              .observeOn(schedulersProvider.io())
+              .map { handleBackClick ->
+
+                val (patientUuid, screenCreatedTime) = handleBackClick
+
+                val hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTime)
+                val noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid)
+
+                val shouldShowScheduleAppointmentSheet = if (noBloodPressuresRecordedForPatient) false else hasPatientDataChangedSinceScreenCreated
+
+                shouldShowScheduleAppointmentSheet to patientUuid
+              }
+              .observeOn(schedulersProvider.ui())
+              .doOnNext { (showScheduleAppointmentSheet, patientUuid) ->
+                if (showScheduleAppointmentSheet) {
+                  uiActions.showScheduleAppointmentSheet(patientUuid)
+                }
+              }
+              .flatMap { Observable.empty<PatientSummaryEvent>() }
         }
         .build()
   }

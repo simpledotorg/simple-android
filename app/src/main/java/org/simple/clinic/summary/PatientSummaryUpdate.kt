@@ -12,7 +12,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     return when (event) {
       is PatientSummaryProfileLoaded -> next(model.patientSummaryProfileLoaded(event.patientSummaryProfile))
       is PatientSummaryBackClicked -> dispatch(HandleBackClick(event.patientUuid, event.screenCreatedTimestamp))
-      is PatientSummaryDoneClicked -> noChange()
+      is PatientSummaryDoneClicked -> dispatch(HandleDoneClick(event.patientUuid))
     }
   }
 }

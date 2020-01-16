@@ -59,7 +59,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openLinkIdWithPatientSheet(replayedEvents),
         showUpdatePhoneDialogIfRequired(replayedEvents),
-        showScheduleAppointmentSheet(replayedEvents),
         goBackWhenBackClicked(replayedEvents),
         goToHomeOnDoneClick(replayedEvents),
         exitScreenIfLinkIdWithPatientIsCancelled(replayedEvents),
@@ -72,17 +71,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .take(1L)
         .doOnNext { Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
         .flatMap { Observable.empty<UiChange>() }
-  }
-
-  private fun showScheduleAppointmentSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    val doneClicks = events.ofType<PatientSummaryDoneClicked>()
-
-    val allBpsForPatientDeletedStream = doneClicks.map { doesNotHaveBloodPressures(patientUuid) }
-
-    return doneClicks
-        .withLatestFrom(allBpsForPatientDeletedStream)
-        .filter { (_, allBpsForPatientDeleted) -> allBpsForPatientDeleted.not() }
-        .map { (_, _) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid) } }
   }
 
   private fun openLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {

@@ -12,3 +12,8 @@ data class HandleBackClick(
     val patientUuid: UUID,
     val screenCreatedTimestamp: Instant
 ) : PatientSummaryEffect()
+
+// TODO(vs): 2020-01-16 Revisit this effect once the patient summary migration is done
+data class HandleDoneClick(
+    val patientUuid: UUID
+): PatientSummaryEffect()

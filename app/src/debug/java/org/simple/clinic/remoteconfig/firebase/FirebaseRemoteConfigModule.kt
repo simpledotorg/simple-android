@@ -26,15 +26,4 @@ class FirebaseRemoteConfigModule {
           .addOnFailureListener { Timber.e(it) }
     }
   }
-
-  @Provides
-  @Named("firebase_cache_expiration_duration")
-  fun remoteConfigCacheExpiration(): Duration {
-    /**
-     * Firebase says calls are unthrottled when developer mode is enabled with up
-     * to 10 developers. Developer mode is enabled using
-     * [FirebaseRemoteConfigSettings.Builder.setDeveloperModeEnabled].
-     */
-    return Duration.ofMinutes(0)
-  }
 }

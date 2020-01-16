@@ -5,8 +5,6 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigService
-import org.threeten.bp.Duration
-import javax.inject.Named
 
 @Module
 class RemoteConfigModule {
@@ -14,10 +12,12 @@ class RemoteConfigModule {
   @Provides
   fun provideRemoteConfigService(
       firebaseRemoteConfig: FirebaseRemoteConfig,
-      @Named("firebase_cache_expiration_duration") cacheExpirationDuration: Duration
+      // This is marked as Lazy to avoid a cyclic dependency between FirebaseRemoteConfigService and
+      // SentryCrashReporter (which happens only in release builds).
+      // TODO(vs): 2020-01-17 Change CrashReporter to be something like Timber, which can live outside the DI graph
       crashReporter: dagger.Lazy<CrashReporter>
   ): RemoteConfigService {
-    return FirebaseRemoteConfigService(firebaseRemoteConfig, crashReporter, cacheExpirationDuration)
+    return FirebaseRemoteConfigService(firebaseRemoteConfig, crashReporter)
   }
 
   @Provides

@@ -8,7 +8,6 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.platform.crash.CrashReporter
 import org.threeten.bp.Duration
 import timber.log.Timber
-import javax.inject.Named
 
 @Module
 class FirebaseRemoteConfigModule {
@@ -26,14 +25,5 @@ class FirebaseRemoteConfigModule {
           .addOnSuccessListener { Timber.tag("FRC").i("Set remote config settings") }
           .addOnFailureListener { crashReporter.get().report(it) }
     }
-  }
-
-  @Provides
-  @Named("firebase_cache_expiration_duration")
-  fun remoteConfigCacheExpiration(): Duration {
-    /**
-     * Calls on production builds are limited to a maximum of 5 per 60 minutes.
-     */
-    return Duration.ofMinutes(12)
   }
 }

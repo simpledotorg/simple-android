@@ -536,7 +536,7 @@ class PatientSummaryScreenControllerTest {
 
     setupController(openIntention)
     startMobiusLoop()
-    uiEvents.onNext(PatientSummaryDoneClicked())
+    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(ui).showScheduleAppointmentSheet(patientUuid)
     verify(ui, never()).goToHomeScreen()
@@ -552,7 +552,7 @@ class PatientSummaryScreenControllerTest {
 
     setupController(openIntention)
     startMobiusLoop()
-    uiEvents.onNext(PatientSummaryDoneClicked())
+    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
     verify(ui, never()).goToPreviousScreen()

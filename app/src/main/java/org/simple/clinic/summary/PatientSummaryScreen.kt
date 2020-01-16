@@ -192,7 +192,7 @@ class PatientSummaryScreen(
     return Observable.just(ScreenCreated())
   }
 
-  private fun doneClicks() = doneButtonFrame.button.clicks().map { PatientSummaryDoneClicked() }
+  private fun doneClicks() = doneButtonFrame.button.clicks().map { PatientSummaryDoneClicked(screenKey.patientUuid) }
 
   private fun backClicks(): Observable<UiEvent> {
     val hardwareBackKeyClicks = Observable.create<Unit> { emitter ->

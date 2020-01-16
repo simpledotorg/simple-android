@@ -34,6 +34,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             backgroundWorkScheduler = schedulersProvider.io(),
             uiWorkScheduler = schedulersProvider.ui()
         ))
+        .addTransformer(HandleDoneClick::class.java, handleDoneClick(
+            backgroundWorkScheduler = schedulersProvider.io(),
+            uiWorkScheduler = schedulersProvider.ui()
+        ))
         .build()
   }
 
@@ -91,6 +95,31 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(uiWorkScheduler)
           .doOnNext { (showScheduleAppointmentSheet, patientUuid) ->
             if (showScheduleAppointmentSheet) {
+              uiActions.showScheduleAppointmentSheet(patientUuid)
+            }
+          }
+          .flatMap { Observable.empty<PatientSummaryEvent>() }
+    }
+  }
+
+  // TODO(vs): 2020-01-16 Revisit after Mobius migration
+  private fun handleDoneClick(
+      backgroundWorkScheduler: Scheduler,
+      uiWorkScheduler: Scheduler
+  ): ObservableTransformer<HandleDoneClick, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(backgroundWorkScheduler)
+          .map { handleDoneClick ->
+            val patientUuid = handleDoneClick.patientUuid
+
+            val shouldShowScheduleAppointmentSheet = !doesNotHaveBloodPressures(patientUuid)
+
+            shouldShowScheduleAppointmentSheet to patientUuid
+          }
+          .observeOn(uiWorkScheduler)
+          .doOnNext { (shouldShowScheduleAppointmentSheet, patientUuid) ->
+            if (shouldShowScheduleAppointmentSheet) {
               uiActions.showScheduleAppointmentSheet(patientUuid)
             }
           }

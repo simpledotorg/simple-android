@@ -22,7 +22,7 @@ class FirebaseRemoteConfigService @Inject constructor(
   override fun update(): Completable {
     return firebaseRemoteConfig
         .fetchAndActivate()
-        .toCompletable { Timber.w("Failed to update Firebase remote config") }
+        .toCompletable(onTaskUnsuccessful = { Timber.w("Failed to update Firebase remote config") })
         .doOnComplete { Timber.i("Firebase remote config updated successfully") }
         .doOnError { crashReporter.get().report(it) }
   }

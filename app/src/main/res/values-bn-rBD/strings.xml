@@ -48,6 +48,7 @@
   <string name="patiententry_contentdescription_up_button">অনুসন্ধানে ফিরে যান</string>
   <string name="patiententry_full_name">রোগীর নাম</string>
   <string name="patiententry_phone_number">ফোন নম্বর</string>
+  <string name="patiententry_bangladesh_national_id">জাতীয় পরিচয়পত্র নম্বর</string>
   <string name="patiententry_date_of_birth_unfocused">জন্ম তারিখ</string>
   <string name="patiententry_date_of_birth_focused">জন্মতারিখ: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">অথবা</string>
@@ -73,12 +74,10 @@
   <string name="patiententry_consent_first_para">নিন্মে ট্যাপ করার মাধমে আপনি নিশ্চিত করছেন যে এখানে আপনার দেওয়া যে কোন রোগীর ডেটা যথাযথভাবে অবহিত করে সম্মতি গ্রহণ করা হয়েছে। এর অর্থ হল রোগী জানেন যে আপনি অ্যাপে তাদের ব্যক্তিগত ডেটা প্রদান করেছেন, কোন ডেটা সংগ্রহ করা হচ্ছে তা বুঝতে পারেন এবং এটিও জানেন যে অ্যাপটিতে প্রদত্ত ফোন নম্বর ব্যবহার করে এসএমএস, হোয়াটসঅ্যাপ বা অন্যান্য পদ্ধতির মাধ্যমে তাদের সাথে যোগাযোগ করা হতে পারে।</string>
   <string name="patiententry_consent_second_para">আপনার দ্বারা অনুমোদিত যে কেউ, বা স্বাস্থ্যসেবা প্রদানকারী যার জন্য আপনি কাজ করেন, এখানে আপনার প্রদত্ত রোগীর ডেটা এবং তথ্যে প্রবেশ করতে পারবে। অ্যাপটি ব্যবহার করে আপনি নিশ্চিত করেছেন যে রোগী বুঝতে পারে  এই অ্যাপ্লিকেশনটির মাধ্যমে প্রাপ্ত ডেটাতে কার প্রবেশাধিকার থাকবে এবং সেই প্রবেশাধিকারে রোগীর সম্মতি রয়েছে।</string>
   <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / এসএমএস রিমাইন্ডার</string>
-
   <string name="patientedit_save_patient">সংরক্ষণ করুন</string>
   <string name="patientedit_confirm_discard_title">পরিবর্তনগুলো কি খারিজ করবেন?</string>
   <string name="patientedit_confirm_discard_ok">খারিজ করুন</string>
   <string name="patientedit_confirm_discard_cancel">বাতিল করুন</string>
-
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -368,7 +367,7 @@
   <string name="recent_patients_toolbar_title">সাম্প্রতিক রোগীসমূহ</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">শেষ দেখা হয়েছিল:u0020\</string>
+  <string name="recent_patients_itemview_last_seen">শেষ দেখা হয়েছিল:\u0020</string>
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">%1$s\u0020 যোগ করুন</string>
   <string name="addidtopatientsearchresults_to_patient">\u0020থেকে\u2026</string>
@@ -426,4 +425,12 @@
   <string name="selectcountry_servererror">সার্ভারে সমস্যা! কিছুক্ষণ পর আবার চেষ্টা করুন</string>
   <string name="selectcountry_genericerror">কিছু গন্ডগোল হয়েছে! কিছুক্ষণ পর আবার চেষ্টা করুন</string>
   <string name="selectcountry_retry">আবার চেষ্টা করুন</string>
-</resources>
+  <string name="scheduleappointment_change">পরিবর্তন</string>
+
+  <string name="bloodsugarentry_sheet_title_enter_date">সাক্ষাৎকারের তারিখ</string>
+  <string name="bloodsugarentry_day">দিন</string>
+  <string name="bloodsugarentry_month">মাস</string>
+  <string name="bloodsugarentry_year">বছর</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY-তে একটি বৈধ তারিখ লিখুন</string>
+  <string name="bloodsugarentry_error_date_is_in_future">তারিখটি ভবিষ্যতের হতে পারে না</string>
+  </resources>

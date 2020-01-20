@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_bp_history.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItemDiffCallback
 import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
@@ -83,6 +84,7 @@ class BloodPressureHistoryScreen(
     delegate.prepare()
 
     setupBloodPressureHistoryList()
+    handleToolbarBackClick()
   }
 
   override fun onAttachedToWindow() {
@@ -111,14 +113,24 @@ class BloodPressureHistoryScreen(
     }
   }
 
+  private fun handleToolbarBackClick() {
+    toolbar.setNavigationOnClickListener {
+      screenRouter.pop()
+    }
+  }
+
   override fun showBloodPressureHistory(bloodPressures: List<BloodPressureMeasurement>) {
     bloodPressureHistoryAdapter.submitList(BloodPressureHistoryListItem.from(bloodPressures, config.bpEditableDuration, utcClock))
   }
 
   override fun openBloodPressureEntrySheet() {
+    val intent = BloodPressureEntrySheet.intentForNewBp(context, delegate.model.patientUuid)
+    context.startActivity(intent)
   }
 
   override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
+    val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bpUuid)
+    context.startActivity(intent)
   }
 
   private fun addNewBpClicked(): Observable<BloodPressureHistoryScreenEvent> {

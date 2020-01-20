@@ -11,17 +11,23 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
 class BloodPressureHistoryScreenEffectHandlerTest {
 
+  private val patientRepository = mock<PatientRepository>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val patientUuid = UUID.fromString("433d058f-daef-47a7-8c61-95f1a220cbcb")
   private val uiActions = mock<BloodPressureHistoryScreenUiActions>()
   private val effectHandler = BloodPressureHistoryScreenEffectHandler(
       bloodPressureRepository,
+      patientRepository,
       TrampolineSchedulersProvider(),
       uiActions
   ).build()
@@ -30,6 +36,21 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   @After
   fun tearDown() {
     testCase.dispose()
+  }
+
+  @Test
+  fun `when load patient effect is received, then load patient`() {
+    // given
+    val patientUuid = UUID.fromString("46044a13-012e-439b-81c9-8bbb15307629")
+    val patient = PatientMocker.patient(uuid = patientUuid)
+    whenever(patientRepository.patient(patientUuid)) doReturn Observable.just<Optional<Patient>>(Just(patient))
+
+    // when
+    testCase.dispatch(LoadPatient(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(PatientLoaded(patient))
+    verifyZeroInteractions(uiActions)
   }
 
   @Test

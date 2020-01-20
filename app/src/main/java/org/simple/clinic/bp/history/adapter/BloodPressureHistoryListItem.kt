@@ -66,6 +66,8 @@ data class BloodPressureHistoryListItem(
     } else {
       holder.itemView.setOnClickListener(null)
     }
+    holder.itemView.isClickable = isBpEditable
+    holder.itemView.isFocusable = isBpEditable
     holder.editButton.visibleOrGone(isBpEditable)
 
     holder.readingsTextView.text = context.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)

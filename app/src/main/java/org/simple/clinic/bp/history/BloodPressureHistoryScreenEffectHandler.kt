@@ -6,10 +6,13 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
+    private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: BloodPressureHistoryScreenUiActions
 ) {
@@ -22,6 +25,7 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<BloodPressureHistoryScreenEffect, BloodPressureHistoryScreenEvent> {
     return RxMobius
         .subtypeEffectHandler<BloodPressureHistoryScreenEffect, BloodPressureHistoryScreenEvent>()
+        .addTransformer(LoadPatient::class.java, loadPatient(schedulersProvider.io()))
         .addTransformer(LoadBloodPressureHistory::class.java, loadBloodPressureHistory(schedulersProvider.io()))
         .addAction(OpenBloodPressureEntrySheet::class.java, uiActions::openBloodPressureEntrySheet, schedulersProvider.ui())
         .addConsumer(OpenBloodPressureUpdateSheet::class.java, { uiActions.openBloodPressureUpdateSheet(it.bloodPressureMeasurement.uuid) }, schedulersProvider.ui())
@@ -39,6 +43,22 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
                 .subscribeOn(scheduler)
           }
           .map(::BloodPressureHistoryLoaded)
+    }
+  }
+
+  private fun loadPatient(
+      scheduler: Scheduler
+  ): ObservableTransformer<LoadPatient, BloodPressureHistoryScreenEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .switchMap {
+            patientRepository
+                .patient(it.patientUuid)
+                .take(1)
+                .subscribeOn(scheduler)
+          }
+          .filterAndUnwrapJust()
+          .map(::PatientLoaded)
     }
   }
 }

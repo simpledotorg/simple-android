@@ -9,6 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_bp_history.view.*
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
@@ -18,9 +19,14 @@ import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
@@ -34,6 +40,9 @@ class BloodPressureHistoryScreen(
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var userClock: UserClock
 
   @Inject
   lateinit var config: PatientSummaryConfig
@@ -123,6 +132,11 @@ class BloodPressureHistoryScreen(
     bloodPressureHistoryAdapter.submitList(BloodPressureHistoryListItem.from(bloodPressures, config.bpEditableDuration, utcClock))
   }
 
+  override fun showPatientInformation(patient: Patient) {
+    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    displayNameGenderAge(patient.fullName, patient.gender, ageValue)
+  }
+
   override fun openBloodPressureEntrySheet() {
     val intent = BloodPressureEntrySheet.intentForNewBp(context, delegate.model.patientUuid)
     context.startActivity(intent)
@@ -131,6 +145,11 @@ class BloodPressureHistoryScreen(
   override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bpUuid)
     context.startActivity(intent)
+  }
+
+  private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
+    val genderLetter = resources.getString(gender.displayLetterRes)
+    toolbar.title = resources.getString(R.string.bloodpressurehistory_toolbar_title, name, genderLetter, age)
   }
 
   private fun addNewBpClicked(): Observable<BloodPressureHistoryScreenEvent> {

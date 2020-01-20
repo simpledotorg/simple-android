@@ -40,4 +40,40 @@ class BloodPressureHistoryScreenUiRendererTest {
     verify(ui).showBloodPressureHistory(bloodPressures)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when patient is loaded, then show it on the ui`() {
+    //given
+    val patient = PatientMocker.patient(
+        uuid = UUID.fromString("c80bce99-82bc-4d12-a85a-dcae373fece3")
+    )
+
+    //when
+    renderer.render(defaultModel.patientLoaded(patient))
+
+    //then
+    verify(ui).showPatientInformation(patient)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when both patient and blood pressure history is loaded, then show it on the ui`() {
+    //given
+    val patient = PatientMocker.patient(
+        uuid = UUID.fromString("bf8b7e71-9b99-4d7b-9dfa-55f3c5e74730")
+    )
+    val bloodPressure = PatientMocker.bp(
+        UUID.fromString("4ca198c4-18f8-4a3d-8cc7-fc1f363241fa"),
+        patientUuid
+    )
+    val bloodPressures = listOf(bloodPressure)
+
+    //when
+    renderer.render(defaultModel.historyLoaded(bloodPressures).patientLoaded(patient))
+
+    //then
+    verify(ui).showBloodPressureHistory(bloodPressures)
+    verify(ui).showPatientInformation(patient)
+    verifyNoMoreInteractions(ui)
+  }
 }

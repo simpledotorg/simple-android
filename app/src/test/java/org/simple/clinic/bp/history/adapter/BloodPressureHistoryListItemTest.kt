@@ -3,6 +3,7 @@ package org.simple.clinic.bp.history.adapter
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.BloodPressureHistoryItem
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.NewBpButton
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Duration
@@ -34,6 +35,7 @@ class BloodPressureHistoryListItemTest {
     // then
     assertThat(listItems)
         .containsExactly(
+            NewBpButton,
             BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isHighBloodPressure = false, showDivider = true),
             BloodPressureHistoryItem(measurement = bloodPressureInPast, isBpEditable = false, isHighBloodPressure = false, showDivider = false)
         )
@@ -58,6 +60,7 @@ class BloodPressureHistoryListItemTest {
     // then
     assertThat(listItems)
         .containsExactly(
+            NewBpButton,
             BloodPressureHistoryItem(measurement = bloodPressureNormal, isBpEditable = true, isHighBloodPressure = false, showDivider = true),
             BloodPressureHistoryItem(measurement = bloodPressureHigh, isBpEditable = true, isHighBloodPressure = true, showDivider = false)
         ).inOrder()
@@ -77,6 +80,7 @@ class BloodPressureHistoryListItemTest {
     // then
     assertThat(listItems)
         .containsExactly(
+            NewBpButton,
             BloodPressureHistoryItem(measurement = bloodPressure, isBpEditable = true, isHighBloodPressure = false, showDivider = false)
         )
         .inOrder()
@@ -106,6 +110,7 @@ class BloodPressureHistoryListItemTest {
     // then
     assertThat(listItems)
         .containsExactly(
+            NewBpButton,
             BloodPressureHistoryItem(measurement = bloodPressure1, isBpEditable = true, isHighBloodPressure = false, showDivider = true),
             BloodPressureHistoryItem(measurement = bloodPressure2, isBpEditable = true, isHighBloodPressure = true, showDivider = true),
             BloodPressureHistoryItem(measurement = bloodPressure3, isBpEditable = true, isHighBloodPressure = false, showDivider = false)

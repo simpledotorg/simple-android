@@ -4,6 +4,9 @@
 ### Feature
 - Introduce Diabetes management for tracking patient blood sugar
 
+### Fixes
+- Fix blank Bangladesh national ID getting saved while editing a patient
+
 ## 2020-01-14-7007
 ### Feature
 - Updated patient entry consent text to include registration of minors

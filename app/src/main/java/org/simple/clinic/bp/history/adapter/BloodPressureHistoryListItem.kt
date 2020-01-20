@@ -2,8 +2,11 @@ package org.simple.clinic.bp.history.adapter
 
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_bp_history_item.*
+import kotlinx.android.synthetic.main.list_bp_history_item.divider
+import kotlinx.android.synthetic.main.list_new_bp_button.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ItemAdapter
@@ -15,7 +18,7 @@ import org.threeten.bp.Instant
 sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
   companion object {
     fun from(measurements: List<BloodPressureMeasurement>, canEditFor: Duration, utcClock: UtcClock): List<BloodPressureHistoryListItem> {
-      return measurements
+      val bpHistoryItems = measurements
           .mapIndexed { index, measurement ->
             val isLastMeasurement = index == measurements.lastIndex
             val isBpEditable = isBpEditable(measurement, canEditFor, utcClock)
@@ -27,6 +30,7 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
                 showDivider = !isLastMeasurement
             )
           }
+      return listOf(NewBpButton) + bpHistoryItems
     }
 
     private fun isBpEditable(
@@ -40,6 +44,15 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
       val durationSinceBpCreated = Duration.between(createdAt, now)
 
       return durationSinceBpCreated <= bpEditableFor
+    }
+  }
+
+  object NewBpButton : BloodPressureHistoryListItem() {
+
+    override fun layoutResId(): Int = R.layout.list_new_bp_button
+
+    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
+      holder.newBp.setOnClickListener { subject.onNext(AddNewBpClicked) }
     }
   }
 

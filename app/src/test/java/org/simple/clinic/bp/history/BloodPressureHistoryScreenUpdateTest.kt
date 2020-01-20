@@ -16,6 +16,21 @@ class BloodPressureHistoryScreenUpdateTest {
   private val updateSpec = UpdateSpec<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEvent, BloodPressureHistoryScreenEffect>(BloodPressureHistoryScreenUpdate())
 
   @Test
+  fun `when patient is loaded, then show patient information`() {
+    val patient = PatientMocker.patient(uuid = UUID.fromString("7d04777d-3480-451b-b571-0e114c87cebf"))
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientLoaded(patient))
+        .then(
+            assertThatNext(
+                hasModel(model.patientLoaded(patient)),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
   fun `when blood pressure history is loaded, then show blood pressures`() {
     val bloodPressure1 = PatientMocker.bp(UUID.fromString("8815d0fc-73cc-44a2-a4b3-473c4c0989aa"))
     val bloodPressure2 = PatientMocker.bp(UUID.fromString("ddf87db7-1034-4618-bc0e-879d7d357adf"))

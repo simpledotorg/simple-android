@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next release
+## On Demo
 ### Feature
 - Introduce Diabetes management for tracking patient blood sugar
 

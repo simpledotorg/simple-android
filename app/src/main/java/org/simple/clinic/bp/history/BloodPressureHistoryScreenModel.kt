@@ -1,12 +1,15 @@
 package org.simple.clinic.bp.history
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bp.BloodPressureMeasurement
 import java.util.UUID
 
+@Parcelize
 data class BloodPressureHistoryScreenModel(
     val patientUuid: UUID,
     val bloodPressures: List<BloodPressureMeasurement>?
-) {
+) : Parcelable {
 
   companion object {
     fun create(patientUuid: UUID) = BloodPressureHistoryScreenModel(patientUuid, null)

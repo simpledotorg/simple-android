@@ -1,5 +1,6 @@
 package org.simple.clinic.bp
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Index
@@ -9,11 +10,14 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 
+@Parcelize
 @Entity(indices = [Index("patientUuid", unique = false)])
 data class BloodPressureMeasurement(
     @PrimaryKey
@@ -38,9 +42,10 @@ data class BloodPressureMeasurement(
     val deletedAt: Instant?,
 
     val recordedAt: Instant
-) {
+) : Parcelable {
 
   @Transient
+  @IgnoredOnParcel
   val level = BloodPressureLevel.compute(this)
 
   fun toPayload(): BloodPressureMeasurementPayload {

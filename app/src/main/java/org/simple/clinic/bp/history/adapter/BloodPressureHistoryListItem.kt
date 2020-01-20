@@ -4,7 +4,7 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_bp_history_item.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.bp.history.adapter.Event.BloodPressureClicked
+import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
@@ -12,14 +12,7 @@ import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
-// TODO (sm) : Add `NewBpButtonItem`
-data class BloodPressureHistoryListItem(
-    val measurement: BloodPressureMeasurement,
-    val isBpEditable: Boolean,
-    val isHighBloodPressure: Boolean,
-    val showDivider: Boolean
-) : ItemAdapter.Item<Event> {
-
+sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
   companion object {
     fun from(measurements: List<BloodPressureMeasurement>, canEditFor: Duration, utcClock: UtcClock): List<BloodPressureHistoryListItem> {
       return measurements
@@ -27,7 +20,7 @@ data class BloodPressureHistoryListItem(
             val isLastMeasurement = index == measurements.lastIndex
             val isBpEditable = isBpEditable(measurement, canEditFor, utcClock)
 
-            BloodPressureHistoryListItem(
+            BloodPressureHistoryItem(
                 measurement = measurement,
                 isBpEditable = isBpEditable,
                 isHighBloodPressure = measurement.level.isUrgent(),
@@ -50,27 +43,35 @@ data class BloodPressureHistoryListItem(
     }
   }
 
-  override fun layoutResId(): Int = R.layout.list_bp_history_item
+  data class BloodPressureHistoryItem(
+      val measurement: BloodPressureMeasurement,
+      val isBpEditable: Boolean,
+      val isHighBloodPressure: Boolean,
+      val showDivider: Boolean
+  ) : BloodPressureHistoryListItem() {
 
-  override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-    val context = holder.itemView.context
+    override fun layoutResId(): Int = R.layout.list_bp_history_item
 
-    if (isHighBloodPressure) {
-      holder.heartImageView.setImageResource(R.drawable.bp_reading_high)
-    } else {
-      holder.heartImageView.setImageResource(R.drawable.bp_reading_normal)
+    override fun render(holder: ViewHolderX, subject: Subject<Event>) {
+      val context = holder.itemView.context
+
+      if (isHighBloodPressure) {
+        holder.heartImageView.setImageResource(R.drawable.bp_reading_high)
+      } else {
+        holder.heartImageView.setImageResource(R.drawable.bp_reading_normal)
+      }
+
+      if (isBpEditable) {
+        holder.itemView.setOnClickListener { subject.onNext(BloodPressureHistoryItemClicked(measurement)) }
+      } else {
+        holder.itemView.setOnClickListener(null)
+      }
+      holder.itemView.isClickable = isBpEditable
+      holder.itemView.isFocusable = isBpEditable
+      holder.editButton.visibleOrGone(isBpEditable)
+
+      holder.readingsTextView.text = context.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)
+      holder.divider.visibleOrGone(showDivider)
     }
-
-    if (isBpEditable) {
-      holder.itemView.setOnClickListener { subject.onNext(BloodPressureClicked(measurement)) }
-    } else {
-      holder.itemView.setOnClickListener(null)
-    }
-    holder.itemView.isClickable = isBpEditable
-    holder.itemView.isFocusable = isBpEditable
-    holder.editButton.visibleOrGone(isBpEditable)
-
-    holder.readingsTextView.text = context.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)
-    holder.divider.visibleOrGone(showDivider)
   }
 }

@@ -66,6 +66,7 @@ data class BloodPressureHistoryListItem(
     } else {
       holder.itemView.setOnClickListener(null)
     }
+    holder.editButton.visibleOrGone(isBpEditable)
 
     holder.readingsTextView.text = context.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)
     holder.divider.visibleOrGone(showDivider)

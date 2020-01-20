@@ -3,16 +3,18 @@ package org.simple.clinic.bp.history
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.patient.Patient
 import java.util.UUID
 
 @Parcelize
 data class BloodPressureHistoryScreenModel(
     val patientUuid: UUID,
+    val patient: Patient?,
     val bloodPressures: List<BloodPressureMeasurement>?
 ) : Parcelable {
 
   companion object {
-    fun create(patientUuid: UUID) = BloodPressureHistoryScreenModel(patientUuid, null)
+    fun create(patientUuid: UUID) = BloodPressureHistoryScreenModel(patientUuid, null, null)
   }
 
   val hasBloodPressures: Boolean
@@ -20,4 +22,7 @@ data class BloodPressureHistoryScreenModel(
 
   fun historyLoaded(bloodPressures: List<BloodPressureMeasurement>): BloodPressureHistoryScreenModel =
       copy(bloodPressures = bloodPressures)
+
+  fun patientLoaded(patient: Patient): BloodPressureHistoryScreenModel =
+      copy(patient = patient)
 }

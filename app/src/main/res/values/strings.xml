@@ -524,4 +524,6 @@
   <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
   <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
+
+  <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
 </resources>

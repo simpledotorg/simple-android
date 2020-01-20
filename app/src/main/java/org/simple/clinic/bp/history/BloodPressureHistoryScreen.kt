@@ -1,6 +1,7 @@
 package org.simple.clinic.bp.history
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,9 @@ import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItemDiffCall
 import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
@@ -33,6 +37,15 @@ class BloodPressureHistoryScreen(
   @Inject
   lateinit var config: PatientSummaryConfig
 
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var effectHandler: BloodPressureHistoryScreenEffectHandler.Factory
+
+  @Inject
+  lateinit var crashReporter: CrashReporter
+
   private val bloodPressureHistoryAdapter = ItemAdapter(BloodPressureHistoryListItemDiffCallback())
 
   private val events: Observable<BloodPressureHistoryScreenEvent> by unsafeLazy {
@@ -45,6 +58,21 @@ class BloodPressureHistoryScreen(
         .cast<BloodPressureHistoryScreenEvent>()
   }
 
+  private val uiRenderer = BloodPressureHistoryScreenUiRenderer(this)
+
+  private val delegate: MobiusDelegate<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEvent, BloodPressureHistoryScreenEffect> by unsafeLazy {
+    val screenKey = screenRouter.key<BloodPressureHistoryScreenKey>(this)
+    MobiusDelegate(
+        events = events,
+        defaultModel = BloodPressureHistoryScreenModel.create(screenKey.patientUuid),
+        init = BloodPressureHistoryScreenInit(),
+        update = BloodPressureHistoryScreenUpdate(),
+        effectHandler = effectHandler.create(this).build(),
+        modelUpdateListener = uiRenderer::render,
+        crashReporter = crashReporter
+    )
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -52,7 +80,27 @@ class BloodPressureHistoryScreen(
     }
     context.injector<BloodPressureHistoryScreenInjector>().inject(this)
 
+    delegate.prepare()
+
     setupBloodPressureHistoryList()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun setupBloodPressureHistoryList() {

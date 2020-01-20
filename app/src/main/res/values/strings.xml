@@ -526,4 +526,5 @@
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
+  <string name="bloodpressurehistory_toolbar_title" translatable="false">%1$s, %2$s, %3$d</string>
 </resources>

@@ -8,5 +8,9 @@ class BloodPressureHistoryScreenUiRenderer(private val ui: BloodPressureHistoryS
     if (model.hasBloodPressures) {
       ui.showBloodPressureHistory(model.bloodPressures!!)
     }
+
+    if (model.hasPatient) {
+      ui.showPatientInformation(model.patient!!)
+    }
   }
 }

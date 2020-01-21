@@ -57,4 +57,21 @@ class NewBloodPressureSummaryViewUpdateTest {
             hasEffects(OpenBloodPressureEntrySheet(patientUuid) as NewBloodPressureSummaryViewEffect)
         ))
   }
+
+  @Test
+  fun `when blood pressure is clicked, then open blood pressure update sheet`() {
+    val bloodPressureMeasurement = PatientMocker.bp(
+        UUID.fromString("88ed645b-7b00-4a72-81bb-94fba4474523"),
+        patientUuid
+    )
+    val bloodPressures = listOf(bloodPressureMeasurement)
+
+    updateSpec
+        .given(defaultModel.bloodPressuresLoaded(bloodPressures))
+        .whenEvent(BloodPressureClicked(bloodPressureMeasurement))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenBloodPressureUpdateSheet(bloodPressureMeasurement) as NewBloodPressureSummaryViewEffect)
+        ))
+  }
 }

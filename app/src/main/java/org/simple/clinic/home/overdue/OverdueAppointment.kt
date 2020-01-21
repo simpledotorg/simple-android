@@ -90,9 +90,10 @@ data class OverdueAppointment(
               WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 0
               WHEN MH.hasHadHeartAttack = :yesAnswer
                 OR MH.hasHadStroke = :yesAnswer
-                OR MH.hasDiabetes = :yesAnswer
-                OR MH.hasHadKidneyDisease = :yesAnswer
                 THEN 1
+              WHEN MH.hasDiabetes = :yesAnswer
+                OR MH.hasHadKidneyDisease = :yesAnswer
+                THEN 5
               WHEN (BP.systolic BETWEEN 160 AND 179) OR (BP.diastolic BETWEEN 100 AND 109) THEN 2
               WHEN (BP.systolic BETWEEN 140 AND 159) OR (BP.diastolic BETWEEN 90 AND 99) THEN 3
               WHEN A.scheduledDate < :overdueDateForLowestRiskLevel AND (BP.systolic <= 140 AND BP.diastolic <= 90) THEN 4

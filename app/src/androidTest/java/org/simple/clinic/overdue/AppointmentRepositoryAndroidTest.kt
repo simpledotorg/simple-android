@@ -592,7 +592,7 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("8b497bb5-f809-434c-b1a4-4efdf810f044"),
-        fullName = "Has diabetes, overdue == 27 days",
+        fullName = "Has diabetes, overdue == 30 days",
         bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasDiabetes = Yes,
         appointmentHasBeenOverdueFor = Duration.ofDays(27)
@@ -763,7 +763,6 @@ class AppointmentRepositoryAndroidTest {
         "Systolic > 180, overdue > 30 days" to HIGHEST,
         "Diastolic > 110, overdue > 30 days" to HIGHEST,
         "Has had a heart attack, overdue == 30 days" to VERY_HIGH,
-        "Has had a kidney disease, overdue == 30 days" to VERY_HIGH,
         "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days" to VERY_HIGH,
         "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days" to VERY_HIGH,
         "Systolic == 179, overdue == 30 days" to HIGH,
@@ -779,7 +778,8 @@ class AppointmentRepositoryAndroidTest {
         "Overdue == 3 days" to NONE,
         "Systolic > 180, overdue == 4 days" to NONE,
         "Has had a stroke, overdue == 20 days" to NONE,
-        "Has diabetes, overdue == 27 days" to NONE,
+        "Has diabetes, overdue == 30 days" to NONE,
+        "Has had a kidney disease, overdue == 30 days" to NONE,
         "BP == 110/80, overdue between 30 days and 1 year" to NONE,
         "BP == 139/89, overdue == 350 days" to NONE,
         "BP == 110/80, overdue == 350 days" to NONE

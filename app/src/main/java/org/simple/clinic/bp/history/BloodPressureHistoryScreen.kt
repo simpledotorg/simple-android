@@ -137,7 +137,14 @@ class BloodPressureHistoryScreen(
   }
 
   override fun showBloodPressureHistory(bloodPressures: List<BloodPressureMeasurement>) {
-    bloodPressureHistoryAdapter.submitList(BloodPressureHistoryListItem.from(bloodPressures, config.bpEditableDuration, utcClock))
+    bloodPressureHistoryAdapter.submitList(BloodPressureHistoryListItem.from(
+        bloodPressures,
+        config.bpEditableDuration,
+        utcClock,
+        userClock,
+        dateFormatter,
+        timeFormatter
+    ))
   }
 
   override fun showPatientInformation(patient: Patient) {

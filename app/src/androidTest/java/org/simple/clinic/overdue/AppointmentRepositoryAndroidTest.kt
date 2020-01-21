@@ -18,7 +18,6 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGH
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGHEST
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.NONE
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.REGULAR
@@ -117,7 +116,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentDate = appointmentDate,
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
-        creationFacilityUuid =  creationFacility.uuid
+        creationFacilityUuid = creationFacility.uuid
     ).blockingGet()
 
     // then
@@ -765,23 +764,23 @@ class AppointmentRepositoryAndroidTest {
         "Has had a heart attack, overdue == 30 days" to VERY_HIGH,
         "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days" to VERY_HIGH,
         "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days" to VERY_HIGH,
-        "Systolic == 179, overdue == 30 days" to HIGH,
-        "Systolic == 160, overdue == 30 days" to HIGH,
-        "Diastolic == 109, overdue == 30 days" to HIGH,
-        "Diastolic == 100, overdue == 30 days" to HIGH,
-        "Systolic == 159, overdue == 30 days" to REGULAR,
-        "Systolic == 140, overdue == 30 days" to REGULAR,
-        "Diastolic == 99, overdue == 30 days" to REGULAR,
-        "Diastolic == 90, overdue == 30 days" to REGULAR,
-        "BP == 141/91, overdue == 350 days" to REGULAR,
         "Diastolic > 110, overdue == 3 days" to NONE,
         "Overdue == 3 days" to NONE,
         "Systolic > 180, overdue == 4 days" to NONE,
         "Has had a stroke, overdue == 20 days" to NONE,
         "Has diabetes, overdue == 30 days" to NONE,
         "Has had a kidney disease, overdue == 30 days" to NONE,
+        "Systolic == 179, overdue == 30 days" to NONE,
+        "Systolic == 160, overdue == 30 days" to NONE,
+        "Diastolic == 109, overdue == 30 days" to NONE,
+        "Diastolic == 100, overdue == 30 days" to NONE,
+        "Systolic == 159, overdue == 30 days" to NONE,
+        "Systolic == 140, overdue == 30 days" to NONE,
+        "Diastolic == 99, overdue == 30 days" to NONE,
+        "Diastolic == 90, overdue == 30 days" to NONE,
         "BP == 110/80, overdue between 30 days and 1 year" to NONE,
         "BP == 139/89, overdue == 350 days" to NONE,
+        "BP == 141/91, overdue == 350 days" to NONE,
         "BP == 110/80, overdue == 350 days" to NONE
     ))
   }

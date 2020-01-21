@@ -20,8 +20,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGHEST
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.NONE
-import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.REGULAR
-import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.VERY_HIGH
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -757,13 +755,13 @@ class AppointmentRepositoryAndroidTest {
 
     // then
     assertThat(appointments.map { it.fullName to it.riskLevel }).isEqualTo(listOf(
+        "Has had a heart attack, overdue == 30 days" to HIGHEST,
+        "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days" to HIGHEST,
         "Systolic > 180, overdue == 30 days" to HIGHEST,
         "Diastolic > 110, overdue == 30 days" to HIGHEST,
+        "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days" to HIGHEST,
         "Systolic > 180, overdue > 30 days" to HIGHEST,
         "Diastolic > 110, overdue > 30 days" to HIGHEST,
-        "Has had a heart attack, overdue == 30 days" to VERY_HIGH,
-        "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days" to VERY_HIGH,
-        "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days" to VERY_HIGH,
         "Diastolic > 110, overdue == 3 days" to NONE,
         "Overdue == 3 days" to NONE,
         "Systolic > 180, overdue == 4 days" to NONE,

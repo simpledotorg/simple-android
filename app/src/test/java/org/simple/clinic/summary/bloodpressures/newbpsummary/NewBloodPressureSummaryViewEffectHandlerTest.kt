@@ -2,6 +2,9 @@ package org.simple.clinic.summary.bloodpressures.newbpsummary
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
@@ -14,10 +17,12 @@ import java.util.UUID
 
 class NewBloodPressureSummaryViewEffectHandlerTest {
 
+  private val uiActions = mock<NewBloodPressureSummaryViewUiActions>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val effectHandler = NewBloodPressureSummaryViewEffectHandler(
       bloodPressureRepository = bloodPressureRepository,
-      schedulersProvider = TrampolineSchedulersProvider()
+      schedulersProvider = TrampolineSchedulersProvider(),
+      uiActions = uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
   private val patientUuid = UUID.fromString("6b00207f-a613-4adc-9a72-dff68481a3ff")
@@ -43,6 +48,7 @@ class NewBloodPressureSummaryViewEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodPressuresLoaded(bloodPressures))
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -56,5 +62,16 @@ class NewBloodPressureSummaryViewEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodPressuresCountLoaded(bloodPressuresCount))
+  }
+
+  @Test
+  fun `when open blood pressure entry sheet effect is received, then open blood pressure entry sheet`() {
+    // when
+    testCase.dispatch(OpenBloodPressureEntrySheet(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openBloodPressureEntrySheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
   }
 }

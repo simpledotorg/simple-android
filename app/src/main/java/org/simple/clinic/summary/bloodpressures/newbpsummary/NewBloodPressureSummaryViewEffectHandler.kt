@@ -1,22 +1,30 @@
 package org.simple.clinic.summary.bloodpressures.newbpsummary
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import javax.inject.Inject
 
-class NewBloodPressureSummaryViewEffectHandler @Inject constructor(
+class NewBloodPressureSummaryViewEffectHandler @AssistedInject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    @Assisted private val uiActions: NewBloodPressureSummaryViewUiActions
 ) {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(uiActions: NewBloodPressureSummaryViewUiActions): NewBloodPressureSummaryViewEffectHandler
+  }
 
   fun build(): ObservableTransformer<NewBloodPressureSummaryViewEffect, NewBloodPressureSummaryViewEvent> {
     return RxMobius
         .subtypeEffectHandler<NewBloodPressureSummaryViewEffect, NewBloodPressureSummaryViewEvent>()
         .addTransformer(LoadBloodPressures::class.java, loadBloodPressureHistory(schedulersProvider.io()))
         .addTransformer(LoadBloodPressuresCount::class.java, loadBloodPressuresCount(schedulersProvider.io()))
+        .addConsumer(OpenBloodPressureEntrySheet::class.java, { uiActions.openBloodPressureEntrySheet(it.patientUuid) }, schedulersProvider.ui())
         .build()
   }
 

@@ -30,8 +30,10 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class BloodPressureHistoryScreen(
     context: Context,
@@ -55,6 +57,12 @@ class BloodPressureHistoryScreen(
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  @field:[Inject Named("date_for_bp_history")]
+  lateinit var dateFormatter: DateTimeFormatter
+
+  @field:[Inject Named("time_for_bp_history")]
+  lateinit var timeFormatter: DateTimeFormatter
 
   private val bloodPressureHistoryAdapter = ItemAdapter(BloodPressureHistoryListItemDiffCallback())
 

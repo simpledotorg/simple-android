@@ -12,3 +12,5 @@ data class LoadBloodPressuresCount(val patientUuid: UUID) : NewBloodPressureSumm
 data class OpenBloodPressureEntrySheet(val patientUuid: UUID) : NewBloodPressureSummaryViewEffect()
 
 data class OpenBloodPressureUpdateSheet(val measurement: BloodPressureMeasurement) : NewBloodPressureSummaryViewEffect()
+
+data class ShowBloodPressureHistoryScreen(val patientUuid: UUID) : NewBloodPressureSummaryViewEffect()

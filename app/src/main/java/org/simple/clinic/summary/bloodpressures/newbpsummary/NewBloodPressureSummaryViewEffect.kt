@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.bloodpressures.newbpsummary
 
+import org.simple.clinic.bp.BloodPressureMeasurement
 import java.util.UUID
 
 sealed class NewBloodPressureSummaryViewEffect
@@ -9,3 +10,5 @@ data class LoadBloodPressures(val patientUuid: UUID, val numberOfBpsToDisplay: I
 data class LoadBloodPressuresCount(val patientUuid: UUID) : NewBloodPressureSummaryViewEffect()
 
 data class OpenBloodPressureEntrySheet(val patientUuid: UUID) : NewBloodPressureSummaryViewEffect()
+
+data class OpenBloodPressureUpdateSheet(val measurement: BloodPressureMeasurement) : NewBloodPressureSummaryViewEffect()

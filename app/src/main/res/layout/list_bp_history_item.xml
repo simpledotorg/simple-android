@@ -70,12 +70,12 @@
     android:layout_marginStart="@dimen/spacing_8"
     android:text="@string/patientsummary_edit"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
-    app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
+    app:layout_constraintEnd_toStartOf="@id/timeDateTextView"
     app:layout_constraintStart_toEndOf="@id/readingsTextView"
     app:layout_constraintTop_toBottomOf="@id/topGuideline" />
 
   <TextView
-    android:id="@+id/dateTimeTextView"
+    android:id="@+id/timeDateTextView"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:textAlignment="viewEnd"

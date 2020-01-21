@@ -90,7 +90,7 @@ data class OverdueAppointment(
               WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 0
               WHEN MH.hasHadHeartAttack = :yesAnswer
                 OR MH.hasHadStroke = :yesAnswer
-                THEN 1
+                THEN 0 
               ELSE 5
             END
           ) AS riskLevelIndex

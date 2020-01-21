@@ -7,3 +7,5 @@ sealed class NewBloodPressureSummaryViewEffect
 data class LoadBloodPressures(val patientUuid: UUID, val numberOfBpsToDisplay: Int) : NewBloodPressureSummaryViewEffect()
 
 data class LoadBloodPressuresCount(val patientUuid: UUID) : NewBloodPressureSummaryViewEffect()
+
+data class OpenBloodPressureEntrySheet(val patientUuid: UUID) : NewBloodPressureSummaryViewEffect()

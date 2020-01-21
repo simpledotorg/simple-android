@@ -15,6 +15,7 @@ class NewBloodPressureSummaryViewUpdate : Update<NewBloodPressureSummaryViewMode
       is BloodPressuresCountLoaded -> next(model.bloodPressuresCountLoaded(event.count))
       is NewBloodPressureClicked -> dispatch(OpenBloodPressureEntrySheet(model.patientUuid))
       is BloodPressureClicked -> dispatch(OpenBloodPressureUpdateSheet(event.measurement))
+      is SeeAllClicked -> dispatch(ShowBloodPressureHistoryScreen(model.patientUuid))
     }
   }
 }

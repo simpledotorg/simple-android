@@ -7,3 +7,5 @@ sealed class NewBloodPressureSummaryViewEvent
 data class BloodPressuresLoaded(val measurements: List<BloodPressureMeasurement>) : NewBloodPressureSummaryViewEvent()
 
 data class BloodPressuresCountLoaded(val count: Int) : NewBloodPressureSummaryViewEvent()
+
+object NewBloodPressureClicked : NewBloodPressureSummaryViewEvent()

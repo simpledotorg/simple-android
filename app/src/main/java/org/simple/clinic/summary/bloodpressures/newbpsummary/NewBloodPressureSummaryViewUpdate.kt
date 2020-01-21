@@ -2,6 +2,7 @@ package org.simple.clinic.summary.bloodpressures.newbpsummary
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class NewBloodPressureSummaryViewUpdate : Update<NewBloodPressureSummaryViewModel, NewBloodPressureSummaryViewEvent, NewBloodPressureSummaryViewEffect> {
@@ -12,6 +13,7 @@ class NewBloodPressureSummaryViewUpdate : Update<NewBloodPressureSummaryViewMode
     return when (event) {
       is BloodPressuresLoaded -> next(model.bloodPressuresLoaded(event.measurements))
       is BloodPressuresCountLoaded -> next(model.bloodPressuresCountLoaded(event.count))
+      is NewBloodPressureClicked -> dispatch(OpenBloodPressureEntrySheet(model.patientUuid))
     }
   }
 }

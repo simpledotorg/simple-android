@@ -65,7 +65,6 @@ class ScheduleAppointmentSheetControllerTest {
 
   private val appointmentConfig: AppointmentConfig = AppointmentConfig(
       minimumOverduePeriodForHighRisk = Period.ofDays(30),
-      overduePeriodForLowestRiskLevel = Period.ofDays(365),
       appointmentDuePeriodForDefaulters = Period.ofDays(30),
       scheduleAppointmentsIn = listOf(Days(1)),
       defaultTimeToAppointment = Days(1),

@@ -13,7 +13,6 @@
     android:drawablePadding="@dimen/spacing_8"
     android:text="@string/bloodpressurehistory_add_bp_button"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
-    android:tint="@color/blue1"
     app:layout_constraintBottom_toTopOf="@id/divider"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />

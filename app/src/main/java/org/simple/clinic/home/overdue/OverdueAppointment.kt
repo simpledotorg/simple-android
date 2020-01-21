@@ -96,7 +96,7 @@ data class OverdueAppointment(
                 THEN 5
               WHEN (BP.systolic BETWEEN 160 AND 179) OR (BP.diastolic BETWEEN 100 AND 109) THEN 5
               WHEN (BP.systolic BETWEEN 140 AND 159) OR (BP.diastolic BETWEEN 90 AND 99) THEN 5
-              WHEN A.scheduledDate < :overdueDateForLowestRiskLevel AND (BP.systolic <= 140 AND BP.diastolic <= 90) THEN 4
+              WHEN A.scheduledDate < :overdueDateForLowestRiskLevel AND (BP.systolic <= 140 AND BP.diastolic <= 90) THEN 5
               ELSE 5
             END
           ) AS riskLevelIndex

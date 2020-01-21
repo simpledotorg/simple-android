@@ -25,7 +25,6 @@ class AppointmentModule {
   fun config(): Observable<AppointmentConfig> {
     return Observable.just(AppointmentConfig(
         minimumOverduePeriodForHighRisk = Period.ofDays(30),
-        overduePeriodForLowestRiskLevel = Period.ofDays(365),
         appointmentDuePeriodForDefaulters = Period.ofDays(30),
         scheduleAppointmentsIn = listOf(
             Days(1),

@@ -5,7 +5,6 @@ import org.threeten.bp.Period
 
 data class AppointmentConfig(
     val minimumOverduePeriodForHighRisk: Period,
-    val overduePeriodForLowestRiskLevel: Period,
     val appointmentDuePeriodForDefaulters: Period,
     val scheduleAppointmentsIn: List<TimeToAppointment>,
     val defaultTimeToAppointment: TimeToAppointment,

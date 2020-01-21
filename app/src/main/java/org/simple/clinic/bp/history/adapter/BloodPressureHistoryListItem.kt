@@ -83,7 +83,7 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
       holder.itemView.isFocusable = isBpEditable
       holder.editButton.visibleOrGone(isBpEditable)
 
-      holder.readingsTextView.text = context.getString(R.string.patientsummary_bp_reading, measurement.systolic, measurement.diastolic)
+      holder.readingsTextView.text = context.getString(R.string.bloodpressurehistory_bp_reading, measurement.systolic, measurement.diastolic)
       holder.divider.visibleOrGone(showDivider)
     }
   }

@@ -55,7 +55,7 @@ class BloodPressureHistoryScreenUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(OpenBloodPressureEntrySheet as BloodPressureHistoryScreenEffect)
+                hasEffects(OpenBloodPressureEntrySheet(patientUuid) as BloodPressureHistoryScreenEffect)
             )
         )
   }

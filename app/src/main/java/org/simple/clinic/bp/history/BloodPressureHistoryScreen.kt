@@ -137,8 +137,8 @@ class BloodPressureHistoryScreen(
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
   }
 
-  override fun openBloodPressureEntrySheet() {
-    val intent = BloodPressureEntrySheet.intentForNewBp(context, delegate.model.patientUuid)
+  override fun openBloodPressureEntrySheet(patientUuid: UUID) {
+    val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
     context.startActivity(intent)
   }
 

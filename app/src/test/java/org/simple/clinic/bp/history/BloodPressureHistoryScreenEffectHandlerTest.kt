@@ -73,12 +73,15 @@ class BloodPressureHistoryScreenEffectHandlerTest {
 
   @Test
   fun `when open blood pressure entry sheet effect is received, then open blood pressure entry sheet`() {
+    // given
+    val patientUuid = UUID.fromString("5adeb648-00a6-4073-b509-ac74cbd5f08b")
+
     // when
-    testCase.dispatch(OpenBloodPressureEntrySheet)
+    testCase.dispatch(OpenBloodPressureEntrySheet(patientUuid))
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).openBloodPressureEntrySheet()
+    verify(uiActions).openBloodPressureEntrySheet(patientUuid)
     verifyNoMoreInteractions(uiActions)
   }
 

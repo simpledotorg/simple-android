@@ -9,3 +9,5 @@ data class BloodPressuresLoaded(val measurements: List<BloodPressureMeasurement>
 data class BloodPressuresCountLoaded(val count: Int) : NewBloodPressureSummaryViewEvent()
 
 object NewBloodPressureClicked : NewBloodPressureSummaryViewEvent()
+
+data class BloodPressureClicked(val measurement: BloodPressureMeasurement) : NewBloodPressureSummaryViewEvent()

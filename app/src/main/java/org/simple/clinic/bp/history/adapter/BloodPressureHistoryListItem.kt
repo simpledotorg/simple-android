@@ -30,32 +30,23 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
       val measurementsByDate = measurements.groupBy { it.recordedAt.toLocalDateAtZone(userClock.zone) }
 
       val bpHistoryItems = measurementsByDate.mapValues { (_, measurementsList) ->
-        if (measurementsList.size > 1) {
-          measurementsList.map { measurement ->
-            val isBpEditable = isBpEditable(measurement, canEditFor, utcClock)
-            val recordedAt = measurement.recordedAt.toLocalDateAtZone(userClock.zone)
-
-            BloodPressureHistoryItem(
-                measurement = measurement,
-                isBpEditable = isBpEditable,
-                isHighBloodPressure = measurement.level.isUrgent(),
-                bpDate = dateFormatter.format(recordedAt),
-                bpTime = timeFormatter.format(measurement.recordedAt.atZone(userClock.zone))
-            )
+        val hasMultipleMeasurementsInSameDate = measurementsList.size > 1
+        measurementsList.map { measurement ->
+          val isBpEditable = isBpEditable(measurement, canEditFor, utcClock)
+          val recordedAt = measurement.recordedAt.toLocalDateAtZone(userClock.zone)
+          val bpTime = if (hasMultipleMeasurementsInSameDate) {
+            timeFormatter.format(measurement.recordedAt.atZone(userClock.zone))
+          } else {
+            null
           }
-        } else {
-          measurementsList.map { measurement ->
-            val isBpEditable = isBpEditable(measurement, canEditFor, utcClock)
-            val recordedAt = measurement.recordedAt.toLocalDateAtZone(userClock.zone)
 
-            BloodPressureHistoryItem(
-                measurement = measurement,
-                isBpEditable = isBpEditable,
-                isHighBloodPressure = measurement.level.isUrgent(),
-                bpDate = dateFormatter.format(recordedAt),
-                bpTime = null
-            )
-          }
+          BloodPressureHistoryItem(
+              measurement = measurement,
+              isBpEditable = isBpEditable,
+              isHighBloodPressure = measurement.level.isUrgent(),
+              bpDate = dateFormatter.format(recordedAt),
+              bpTime = bpTime
+          )
         }
       }.values.flatten()
 

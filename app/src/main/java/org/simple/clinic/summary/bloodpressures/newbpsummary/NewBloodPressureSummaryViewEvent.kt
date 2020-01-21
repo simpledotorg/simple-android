@@ -11,3 +11,5 @@ data class BloodPressuresCountLoaded(val count: Int) : NewBloodPressureSummaryVi
 object NewBloodPressureClicked : NewBloodPressureSummaryViewEvent()
 
 data class BloodPressureClicked(val measurement: BloodPressureMeasurement) : NewBloodPressureSummaryViewEvent()
+
+object SeeAllClicked : NewBloodPressureSummaryViewEvent()

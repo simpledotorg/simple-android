@@ -74,4 +74,33 @@ class NewBloodPressureSummaryViewUpdateTest {
             hasEffects(OpenBloodPressureUpdateSheet(bloodPressureMeasurement) as NewBloodPressureSummaryViewEffect)
         ))
   }
+
+  @Test
+  fun `when see all is clicked, then show blood pressure history screen`() {
+    val bloodPressure1 = PatientMocker.bp(
+        UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
+        patientUuid
+    )
+    val bloodPressure2 = PatientMocker.bp(
+        UUID.fromString("c1cba6aa-4cff-4809-9654-05c7c5b8fcd0"),
+        patientUuid
+    )
+    val bloodPressure3 = PatientMocker.bp(
+        UUID.fromString("4ca650eb-706c-4c8e-8e7d-f0a5f41e99e6"),
+        patientUuid
+    )
+    val bloodPressure4 = PatientMocker.bp(
+        UUID.fromString("1bd8492b-ca4c-4ae6-a4ce-0034818da775"),
+        patientUuid
+    )
+    val bloodPressures = listOf(bloodPressure1, bloodPressure2, bloodPressure3, bloodPressure4)
+
+    updateSpec
+        .given(defaultModel.bloodPressuresLoaded(bloodPressures))
+        .whenEvent(SeeAllClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowBloodPressureHistoryScreen(patientUuid) as NewBloodPressureSummaryViewEffect)
+        ))
+  }
 }

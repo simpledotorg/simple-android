@@ -1,7 +1,9 @@
 package org.simple.clinic.summary.bloodpressures.newbpsummary
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -9,9 +11,8 @@ import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
 class NewBloodPressureSummaryViewUpdateTest {
-  private val patientUuid = UUID.fromString("2871447a-571f-43c6-b946-ba8133f583be")
+  private val patientUuid = UUID.fromString("8f1befda-f99e-4d26-aff3-cecb90925df1")
   private val defaultModel = NewBloodPressureSummaryViewModel.create(patientUuid)
-
   private val updateSpec = UpdateSpec<NewBloodPressureSummaryViewModel, NewBloodPressureSummaryViewEvent, NewBloodPressureSummaryViewEffect>(NewBloodPressureSummaryViewUpdate())
 
   @Test
@@ -44,5 +45,16 @@ class NewBloodPressureSummaryViewUpdateTest {
                 hasNoEffects()
             )
         )
+  }
+
+  @Test
+  fun `when add new blood pressure is clicked, then open blood pressure entry sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(NewBloodPressureClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenBloodPressureEntrySheet(patientUuid) as NewBloodPressureSummaryViewEffect)
+        ))
   }
 }

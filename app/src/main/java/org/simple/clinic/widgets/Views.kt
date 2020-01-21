@@ -250,3 +250,6 @@ fun MenuItem.visibleOrGone(isVisible: Boolean) {
 fun ViewPropertyAnimator.setDuration(duration: Duration): ViewPropertyAnimator {
   return setDuration(duration.toMillis())
 }
+
+val Int.dp: Int
+  get() = (Resources.getSystem().displayMetrics.density * this).toInt()

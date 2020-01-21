@@ -29,7 +29,9 @@ import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.dp
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -123,9 +125,13 @@ class BloodPressureHistoryScreen(
   }
 
   private fun setupBloodPressureHistoryList() {
+    val dividerMargin = 8.dp
+    val divider = DividerItemDecorator(context = context, marginStart = dividerMargin, marginEnd = dividerMargin)
+
     bpHistoryList.apply {
       setHasFixedSize(true)
       layoutManager = LinearLayoutManager(context)
+      addItemDecoration(divider)
       adapter = bloodPressureHistoryAdapter
     }
   }

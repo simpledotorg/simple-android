@@ -6,6 +6,10 @@ import org.simple.clinic.mobius.first
 
 class BloodPressureHistoryScreenInit : Init<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEffect> {
   override fun init(model: BloodPressureHistoryScreenModel): First<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEffect> {
-    return first(model, LoadPatient(model.patientUuid), LoadBloodPressureHistory(model.patientUuid))
+    return if (model.hasPatient) {
+      first(model, LoadBloodPressureHistory(model.patientUuid))
+    } else {
+      first(model, LoadPatient(model.patientUuid), LoadBloodPressureHistory(model.patientUuid))
+    }
   }
 }

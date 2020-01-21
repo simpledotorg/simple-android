@@ -55,8 +55,8 @@ class BloodPressureHistoryListItemTest {
     assertThat(listItems)
         .containsExactly(
             NewBpButton,
-            BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isHighBloodPressure = false, showDivider = true, bpDate = "1-Jan-2020", bpTime = null),
-            BloodPressureHistoryItem(measurement = bloodPressureInPast, isBpEditable = false, isHighBloodPressure = false, showDivider = false, bpDate = "31-Dec-2019", bpTime = null)
+            BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isHighBloodPressure = false, bpDate = "1-Jan-2020", bpTime = null),
+            BloodPressureHistoryItem(measurement = bloodPressureInPast, isBpEditable = false, isHighBloodPressure = false, bpDate = "31-Dec-2019", bpTime = null)
         )
   }
 
@@ -89,8 +89,8 @@ class BloodPressureHistoryListItemTest {
     assertThat(listItems)
         .containsExactly(
             NewBpButton,
-            BloodPressureHistoryItem(measurement = bloodPressureNormal, isBpEditable = true, isHighBloodPressure = false, showDivider = true, bpDate = "6-Jan-2020", bpTime = null),
-            BloodPressureHistoryItem(measurement = bloodPressureHigh, isBpEditable = true, isHighBloodPressure = true, showDivider = false, bpDate = "8-Jan-2020", bpTime = null)
+            BloodPressureHistoryItem(measurement = bloodPressureNormal, isBpEditable = true, isHighBloodPressure = false, bpDate = "6-Jan-2020", bpTime = null),
+            BloodPressureHistoryItem(measurement = bloodPressureHigh, isBpEditable = true, isHighBloodPressure = true, bpDate = "8-Jan-2020", bpTime = null)
         ).inOrder()
   }
 
@@ -117,7 +117,7 @@ class BloodPressureHistoryListItemTest {
     assertThat(listItems)
         .containsExactly(
             NewBpButton,
-            BloodPressureHistoryItem(measurement = bloodPressure, isBpEditable = true, isHighBloodPressure = false, showDivider = false, bpDate = "1-Jan-2018", bpTime = null)
+            BloodPressureHistoryItem(measurement = bloodPressure, isBpEditable = true, isHighBloodPressure = false, bpDate = "1-Jan-2018", bpTime = null)
         )
         .inOrder()
   }
@@ -157,9 +157,9 @@ class BloodPressureHistoryListItemTest {
     assertThat(listItems)
         .containsExactly(
             NewBpButton,
-            BloodPressureHistoryItem(measurement = bloodPressure1, isBpEditable = true, isHighBloodPressure = false, showDivider = true, bpDate = "16-Jan-2020", bpTime = null),
-            BloodPressureHistoryItem(measurement = bloodPressure2, isBpEditable = true, isHighBloodPressure = true, showDivider = true, bpDate = "13-Dec-2019", bpTime = null),
-            BloodPressureHistoryItem(measurement = bloodPressure3, isBpEditable = true, isHighBloodPressure = false, showDivider = false, bpDate = "22-Nov-2019", bpTime = null)
+            BloodPressureHistoryItem(measurement = bloodPressure1, isBpEditable = true, isHighBloodPressure = false, bpDate = "16-Jan-2020", bpTime = null),
+            BloodPressureHistoryItem(measurement = bloodPressure2, isBpEditable = true, isHighBloodPressure = true, bpDate = "13-Dec-2019", bpTime = null),
+            BloodPressureHistoryItem(measurement = bloodPressure3, isBpEditable = true, isHighBloodPressure = false, bpDate = "22-Nov-2019", bpTime = null)
         )
         .inOrder()
   }
@@ -199,9 +199,9 @@ class BloodPressureHistoryListItemTest {
     assertThat(listItems)
         .containsExactly(
             NewBpButton,
-            BloodPressureHistoryItem(measurement = bloodPressure1, isBpEditable = true, isHighBloodPressure = false, showDivider = true, bpDate = "16-Jan-2020", bpTime = "10:00 AM"),
-            BloodPressureHistoryItem(measurement = bloodPressure2, isBpEditable = true, isHighBloodPressure = true, showDivider = true, bpDate = "16-Jan-2020", bpTime = "9:00 AM"),
-            BloodPressureHistoryItem(measurement = bloodPressure3, isBpEditable = true, isHighBloodPressure = false, showDivider = false, bpDate = "16-Dec-2019", bpTime = null)
+            BloodPressureHistoryItem(measurement = bloodPressure1, isBpEditable = true, isHighBloodPressure = false, bpDate = "16-Jan-2020", bpTime = "10:00 AM"),
+            BloodPressureHistoryItem(measurement = bloodPressure2, isBpEditable = true, isHighBloodPressure = true, bpDate = "16-Jan-2020", bpTime = "9:00 AM"),
+            BloodPressureHistoryItem(measurement = bloodPressure3, isBpEditable = true, isHighBloodPressure = false, bpDate = "16-Dec-2019", bpTime = null)
         )
         .inOrder()
   }

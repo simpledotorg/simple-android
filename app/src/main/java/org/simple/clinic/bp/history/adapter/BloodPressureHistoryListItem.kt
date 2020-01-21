@@ -2,7 +2,6 @@ package org.simple.clinic.bp.history.adapter
 
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_bp_history_item.*
-import kotlinx.android.synthetic.main.list_bp_history_item.divider
 import kotlinx.android.synthetic.main.list_new_bp_button.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -40,7 +39,6 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
                 measurement = measurement,
                 isBpEditable = isBpEditable,
                 isHighBloodPressure = measurement.level.isUrgent(),
-                showDivider = true,
                 bpDate = dateFormatter.format(recordedAt),
                 bpTime = timeFormatter.format(measurement.recordedAt.atZone(userClock.zone))
             )
@@ -54,7 +52,6 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
                 measurement = measurement,
                 isBpEditable = isBpEditable,
                 isHighBloodPressure = measurement.level.isUrgent(),
-                showDivider = true,
                 bpDate = dateFormatter.format(recordedAt),
                 bpTime = null
             )
@@ -62,14 +59,7 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
         }
       }.values.flatten()
 
-      return listOf(NewBpButton) + bpHistoryItems.mapIndexed { index, measurement ->
-        val isLastIndex = index == bpHistoryItems.lastIndex
-        if (isLastIndex) {
-          measurement.copy(showDivider = false)
-        } else {
-          measurement
-        }
-      }
+      return listOf(NewBpButton) + bpHistoryItems
     }
 
     private fun isBpEditable(
@@ -99,7 +89,6 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
       val measurement: BloodPressureMeasurement,
       val isBpEditable: Boolean,
       val isHighBloodPressure: Boolean,
-      val showDivider: Boolean,
       val bpDate: String,
       val bpTime: String?
   ) : BloodPressureHistoryListItem() {
@@ -131,7 +120,6 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
 
       holder.readingsTextView.text = context.getString(R.string.bloodpressurehistory_bp_reading, measurement.systolic, measurement.diastolic)
       holder.timeDateTextView.text = bpTimeDate
-      holder.divider.visibleOrGone(showDivider)
     }
   }
 }

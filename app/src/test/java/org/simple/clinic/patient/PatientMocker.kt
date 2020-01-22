@@ -7,6 +7,7 @@ import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.location.Coordinates
@@ -143,7 +144,8 @@ object PatientMocker {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   ): Facility {
     return Facility(
         uuid = uuid,
@@ -161,7 +163,9 @@ object PatientMocker {
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        config = facilityConfig
+    )
   }
 
   fun facilityPayload(

@@ -11,6 +11,7 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.location.Coordinates
@@ -359,7 +360,8 @@ class TestData @Inject constructor(
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   ): Facility {
     return Facility(
         uuid = uuid,
@@ -377,7 +379,9 @@ class TestData @Inject constructor(
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        config = facilityConfig
+    )
   }
 
   fun facilityPayload(

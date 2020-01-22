@@ -52,7 +52,10 @@ data class Facility(
 
     val syncStatus: SyncStatus,
 
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    @Embedded(prefix = "config_")
+    val config: FacilityConfig
 ) {
 
   @Dao

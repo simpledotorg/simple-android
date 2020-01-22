@@ -25,40 +25,40 @@ class OverdueAppointmentRowTest {
     val appointmentDelayedBy4Days = PatientMocker
         .overdueAppointment(
             name = "Anish Acharya",
-            gender = Gender.Male,
-            phoneNumber = PatientMocker.phoneNumber(number = "123456"),
             bloodPressureMeasurement = PatientMocker.bp(
                 systolic = 127,
                 diastolic = 95,
                 recordedAt = Instant.now(userClock).minus(oneWeek)
             ),
+            isHighRisk = false,
+            gender = Gender.Male,
             dateOfBirth = LocalDate.parse("1985-01-01"),
             age = null,
+            phoneNumber = PatientMocker.phoneNumber(number = "123456"),
             appointment = PatientMocker.appointment(
                 uuid = UUID.fromString("65d790f3-a9ea-4a83-bce1-8d1ea8539c67"),
                 patientUuid = UUID.fromString("c88a4835-40e5-476b-9a6f-2f850c48ecdb"),
                 scheduledDate = LocalDate.parse("2019-01-01")
-            ),
-            riskLevel = OverdueAppointment.RiskLevel.NONE
+            )
         )
     val appointmentDelayedByOneWeek = PatientMocker
         .overdueAppointment(
             name = "Deepa",
-            gender = Gender.Female,
-            phoneNumber = PatientMocker.phoneNumber(number = "45678912"),
             bloodPressureMeasurement = PatientMocker.bp(
                 systolic = 168,
                 diastolic = 110,
                 recordedAt = Instant.now(userClock).minus(twoWeeks)
             ),
+            isHighRisk = true,
+            gender = Gender.Female,
             dateOfBirth = null,
             age = Age(45, Instant.now(userClock).minus(oneYear)),
+            phoneNumber = PatientMocker.phoneNumber(number = "45678912"),
             appointment = PatientMocker.appointment(
                 uuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
                 patientUuid = UUID.fromString("0c35a015-d823-4cc5-be77-21ce026c5780"),
                 scheduledDate = LocalDate.parse("2018-12-29")
-            ),
-            riskLevel = OverdueAppointment.RiskLevel.HIGHEST
+            )
         )
 
     val appointments = listOf(appointmentDelayedBy4Days, appointmentDelayedByOneWeek)

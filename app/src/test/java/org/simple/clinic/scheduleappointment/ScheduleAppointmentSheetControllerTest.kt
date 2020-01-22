@@ -64,7 +64,6 @@ class ScheduleAppointmentSheetControllerTest {
   private val protocol = PatientMocker.protocol(protocolUuid, 27)
 
   private val appointmentConfig: AppointmentConfig = AppointmentConfig(
-      minimumOverduePeriodForHighRisk = Period.ofDays(30),
       appointmentDuePeriodForDefaulters = Period.ofDays(30),
       scheduleAppointmentsIn = listOf(Days(1)),
       defaultTimeToAppointment = Days(1),

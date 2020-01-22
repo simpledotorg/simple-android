@@ -91,4 +91,15 @@ class NewBloodPressureSummaryViewEffectHandlerTest {
     verify(uiActions).openBloodPressureUpdateSheet(bloodPressure.uuid)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show blood pressure history screen effect is received, then show blood pressure history screen`() {
+    // when
+    testCase.dispatch(ShowBloodPressureHistoryScreen(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showBloodPressureHistoryScreen(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

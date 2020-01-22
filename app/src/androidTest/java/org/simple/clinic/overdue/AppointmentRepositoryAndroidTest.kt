@@ -743,18 +743,14 @@ class AppointmentRepositoryAndroidTest {
         appointmentHasBeenOverdueFor = Duration.ofDays(80)
     )
 
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("a0388e84-3741-4bee-96d3-9a2335f0660b"),
-        fullName = "Overdue == 3 days",
-        bps = listOf(BP(systolic = 9000, diastolic = 9000)),
-        appointmentHasBeenOverdueFor = Duration.ofDays(3)
-    )
-
     // when
     val appointments = appointmentRepository.overdueAppointments(since = LocalDate.now(clock), facility = facility).blockingFirst()
 
     // then
     assertThat(appointments.map { it.fullName to it.riskLevel }).isEqualTo(listOf(
+        "Diastolic > 110, overdue == 3 days" to HIGHEST,
+        "Systolic > 180, overdue == 4 days" to HIGHEST,
+        "Has had a stroke, overdue == 20 days" to HIGHEST,
         "Has had a heart attack, overdue == 30 days" to HIGHEST,
         "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days" to HIGHEST,
         "Systolic > 180, overdue == 30 days" to HIGHEST,
@@ -762,10 +758,6 @@ class AppointmentRepositoryAndroidTest {
         "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days" to HIGHEST,
         "Systolic > 180, overdue > 30 days" to HIGHEST,
         "Diastolic > 110, overdue > 30 days" to HIGHEST,
-        "Diastolic > 110, overdue == 3 days" to NONE,
-        "Overdue == 3 days" to NONE,
-        "Systolic > 180, overdue == 4 days" to NONE,
-        "Has had a stroke, overdue == 20 days" to NONE,
         "Has diabetes, overdue == 30 days" to NONE,
         "Has had a kidney disease, overdue == 30 days" to NONE,
         "Systolic == 179, overdue == 30 days" to NONE,

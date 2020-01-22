@@ -184,7 +184,8 @@ object PatientMocker {
       locationLongitude: Double? = 73.537524,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   ): FacilityPayload {
     return FacilityPayload(
         uuid = uuid,
@@ -202,7 +203,9 @@ object PatientMocker {
         locationLongitude = locationLongitude,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        config = facilityConfig
+    )
   }
 
   fun prescription(

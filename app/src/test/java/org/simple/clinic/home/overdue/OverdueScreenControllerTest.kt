@@ -126,7 +126,7 @@ class OverdueScreenControllerTest {
     // given
     val overdueAppointments = listOf(
         PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.HIGHEST),
-        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.LOW),
+        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.NONE),
         PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.NONE)
     )
     whenever(repository.overdueAppointments(dateOnClock, facility))

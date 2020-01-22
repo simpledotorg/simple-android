@@ -607,45 +607,6 @@ class AppointmentRepositoryAndroidTest {
     )
 
     savePatientAndAppointment(
-        patientUuid = UUID.fromString("241d61a7-b4fd-43c3-9f7c-24ce31c7b0b7"),
-        fullName = "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days",
-        bps = listOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = Yes,
-        hasHadHeartAttack = Yes,
-        hasHadKidneyDisease = Yes,
-        hasDiabetes = Yes,
-        appointmentHasBeenOverdueFor = threeFiftyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("a8822899-afb9-4b20-af0d-dbee682c068d"),
-        fullName = "Systolic > 180, overdue == 30 days",
-        bps = listOf(BP(systolic = 9000, diastolic = 100)),
-        appointmentHasBeenOverdueFor = thirtyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("f50082f5-c7be-430e-998e-9d052735da36"),
-        fullName = "Systolic > 180, overdue > 30 days",
-        bps = listOf(BP(systolic = 9000, diastolic = 100)),
-        appointmentHasBeenOverdueFor = threeFiftyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("a2f9d14a-ece3-471e-a45b-c40263d3517f"),
-        fullName = "Diastolic > 110, overdue == 30 days",
-        bps = listOf(BP(systolic = 100, diastolic = 9000)),
-        appointmentHasBeenOverdueFor = thirtyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("00dbcd51-a434-4a25-a1cf-1da66600082d"),
-        fullName = "Diastolic > 110, overdue > 30 days",
-        bps = listOf(BP(systolic = 100, diastolic = 9000)),
-        appointmentHasBeenOverdueFor = threeFiftyDays
-    )
-
-    savePatientAndAppointment(
         patientUuid = UUID.fromString("9f51709f-b356-4d9c-b6b7-1466eca35b78"),
         fullName = "Systolic > 180, overdue == 4 days",
         bps = listOf(BP(systolic = 9000, diastolic = 100)),
@@ -661,78 +622,37 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("b2a3fbd1-27eb-4ef4-b78d-f66cdbb164b4"),
-        fullName = "Systolic == 179, overdue == 30 days",
-        bps = listOf(BP(systolic = 179, diastolic = 90)),
+        fullName = "Systolic == 180, overdue == 30 days",
+        bps = listOf(BP(systolic = 180, diastolic = 90)),
         appointmentHasBeenOverdueFor = thirtyDays
     )
 
     savePatientAndAppointment(
-        patientUuid = UUID.fromString("ae1723d3-5162-4ae6-b483-016ed851ccbd"),
-        fullName = "Systolic == 160, overdue == 30 days",
-        bps = listOf(BP(systolic = 160, diastolic = 90)),
+        patientUuid = UUID.fromString("b2a3fbd1-27eb-4ef4-b78d-f66cdbb164b4"),
+        fullName = "Systolic == 170, overdue == 30 days",
+        bps = listOf(BP(systolic = 170, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+
+    savePatientAndAppointment(
+        patientUuid = UUID.fromString("a6ca12c1-6f00-4ea9-82f7-b949be415471"),
+        fullName = "Diastolic == 110, overdue == 30 days",
+        bps = listOf(BP(systolic = 101, diastolic = 110)),
         appointmentHasBeenOverdueFor = thirtyDays
     )
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("a6ca12c1-6f00-4ea9-82f7-b949be415471"),
-        fullName = "Diastolic == 109, overdue == 30 days",
-        bps = listOf(BP(systolic = 101, diastolic = 109)),
-        appointmentHasBeenOverdueFor = thirtyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("ab69af7f-70e8-44b2-8de3-fe591cd2741f"),
         fullName = "Diastolic == 100, overdue == 30 days",
-        bps = listOf(BP(systolic = 101, diastolic = 100)),
+        bps = listOf(BP(systolic = 101, diastolic = 110)),
         appointmentHasBeenOverdueFor = thirtyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("e365514d-3301-43bc-b801-13ea49c0330d"),
-        fullName = "Systolic == 159, overdue == 30 days",
-        bps = listOf(BP(systolic = 159, diastolic = 90)),
-        appointmentHasBeenOverdueFor = thirtyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("5f872222-5389-453d-bc47-b48decaa091b"),
-        fullName = "Systolic == 140, overdue == 30 days",
-        bps = listOf(BP(systolic = 140, diastolic = 90)),
-        appointmentHasBeenOverdueFor = thirtyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("b9d7de3c-4f8e-4f99-b306-ca6df4bff2d1"),
-        fullName = "Diastolic == 99, overdue == 30 days",
-        bps = listOf(BP(systolic = 100, diastolic = 99)),
-        appointmentHasBeenOverdueFor = thirtyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("e947caf3-7dc2-46de-b269-36e7c561104a"),
-        fullName = "Diastolic == 90, overdue == 30 days",
-        bps = listOf(BP(systolic = 100, diastolic = 90)),
-        appointmentHasBeenOverdueFor = thirtyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("7742babb-10ca-4dce-9eae-59895251284d"),
-        fullName = "BP == 139/89, overdue == 350 days",
-        bps = listOf(BP(systolic = 139, diastolic = 89)),
-        appointmentHasBeenOverdueFor = threeFiftyDays
     )
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("234cbcb8-c3b1-4b7c-be34-7ac3691c1df7"),
         fullName = "BP == 141/91, overdue == 350 days",
         bps = listOf(BP(systolic = 141, diastolic = 91)),
-        appointmentHasBeenOverdueFor = threeFiftyDays
-    )
-
-    savePatientAndAppointment(
-        patientUuid = UUID.fromString("6fe996ee-5792-4114-93dd-b79577600369"),
-        fullName = "BP == 110/80, overdue == 350 days",
-        bps = listOf(BP(systolic = 110, diastolic = 80)),
         appointmentHasBeenOverdueFor = threeFiftyDays
     )
 
@@ -753,25 +673,14 @@ class AppointmentRepositoryAndroidTest {
         "Has had a stroke, overdue == 20 days" to HIGHEST,
         "Has had a heart attack, overdue == 30 days" to HIGHEST,
         "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days" to HIGHEST,
-        "Systolic > 180, overdue == 30 days" to HIGHEST,
-        "Diastolic > 110, overdue == 30 days" to HIGHEST,
-        "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days" to HIGHEST,
-        "Systolic > 180, overdue > 30 days" to HIGHEST,
-        "Diastolic > 110, overdue > 30 days" to HIGHEST,
+        "Systolic == 180, overdue == 30 days" to HIGHEST,
+        "Diastolic == 110, overdue == 30 days" to HIGHEST,
         "Has diabetes, overdue == 30 days" to NONE,
         "Has had a kidney disease, overdue == 30 days" to NONE,
-        "Systolic == 179, overdue == 30 days" to NONE,
-        "Systolic == 160, overdue == 30 days" to NONE,
-        "Diastolic == 109, overdue == 30 days" to NONE,
+        "Systolic == 170, overdue == 30 days" to NONE,
         "Diastolic == 100, overdue == 30 days" to NONE,
-        "Systolic == 159, overdue == 30 days" to NONE,
-        "Systolic == 140, overdue == 30 days" to NONE,
-        "Diastolic == 99, overdue == 30 days" to NONE,
-        "Diastolic == 90, overdue == 30 days" to NONE,
         "BP == 110/80, overdue between 30 days and 1 year" to NONE,
-        "BP == 139/89, overdue == 350 days" to NONE,
-        "BP == 141/91, overdue == 350 days" to NONE,
-        "BP == 110/80, overdue == 350 days" to NONE
+        "BP == 141/91, overdue == 350 days" to NONE
     ))
   }
 

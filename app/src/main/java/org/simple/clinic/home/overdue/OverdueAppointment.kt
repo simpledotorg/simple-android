@@ -82,7 +82,6 @@ data class OverdueAppointment(
 
           (
             CASE
-              WHEN A.scheduledDate > :minimumOverdueDateForHighRisk THEN 5
               WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 0
               WHEN MH.hasHadHeartAttack = :yesAnswer
                 OR MH.hasHadStroke = :yesAnswer
@@ -116,8 +115,7 @@ data class OverdueAppointment(
         scheduledStatus: Appointment.Status,
         scheduledBefore: LocalDate,
         scheduledAfter: LocalDate,
-        yesAnswer: Answer = Answer.Yes,
-        minimumOverdueDateForHighRisk: LocalDate
+        yesAnswer: Answer = Answer.Yes
     ): Flowable<List<OverdueAppointment>>
   }
 }

@@ -56,7 +56,11 @@ data class FacilityPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    // TODO(vs): 2020-01-22 Make this non-nullable once the feature is in PROD
+    @Json(name = "config")
+    val config: FacilityConfig?
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): Facility {
@@ -85,7 +89,7 @@ data class FacilityPayload(
         updatedAt = updatedAt,
         syncStatus = syncStatus,
         deletedAt = deletedAt,
-        config = FacilityConfig(diabetesManagementEnabled = false)
+        config = config ?: FacilityConfig(diabetesManagementEnabled = false)
     )
   }
 }

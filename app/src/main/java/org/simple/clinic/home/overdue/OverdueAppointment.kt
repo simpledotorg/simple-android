@@ -2,11 +2,9 @@ package org.simple.clinic.home.overdue
 
 import androidx.room.Dao
 import androidx.room.Embedded
-import androidx.room.Ignore
 import androidx.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
@@ -35,30 +33,8 @@ data class OverdueAppointment(
     @Embedded(prefix = "phone_")
     val phoneNumber: PatientPhoneNumber?,
 
-    /**
-     * Referencing a column alias in the same SQL query isn't allowed so
-     * mapping this index to [RiskLevel] is manually done using [riskLevel].
-     * Also see [isAtHighRisk].
-     */
-    @Deprecated(
-        message = "This property is meant for internal use only. Use riskLevel instead.",
-        replaceWith = ReplaceWith("riskLevel")
-    )
-    val riskLevelIndex: Int
+    val isAtHighRisk: Boolean
 ) {
-
-  @Ignore
-  val isAtHighRisk = riskLevelIndex == RiskLevel.HIGHEST.levelIndex
-
-  @delegate:Ignore
-  val riskLevel by lazy {
-    RiskLevel.values().first { it.levelIndex == this.riskLevelIndex }
-  }
-
-  enum class RiskLevel(val levelIndex: Int) {
-    HIGHEST(0),
-    NONE(5);
-  }
 
   @Dao
   interface RoomDao {
@@ -82,12 +58,12 @@ data class OverdueAppointment(
 
           (
             CASE
-              WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 0
+              WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 1
               WHEN (MH.hasHadHeartAttack = :yesAnswer OR MH.hasHadStroke = :yesAnswer) AND (BP.systolic >= 140 OR BP.diastolic >= 110) 
-                THEN 0 
-              ELSE 5
+                THEN 1 
+              ELSE 0
             END
-          ) AS riskLevelIndex
+          ) AS isAtHighRisk
 
           FROM Patient P
 
@@ -107,7 +83,7 @@ data class OverdueAppointment(
             AND (A.remindOn < :scheduledBefore OR A.remindOn IS NULL)
 
           GROUP BY P.uuid HAVING max(BP.recordedAt)
-          ORDER BY riskLevelIndex ASC, A.scheduledDate DESC, A.updatedAt ASC
+          ORDER BY isAtHighRisk DESC, A.scheduledDate DESC, A.updatedAt ASC
           """)
     fun appointmentsForFacility(
         facilityUuid: UUID,

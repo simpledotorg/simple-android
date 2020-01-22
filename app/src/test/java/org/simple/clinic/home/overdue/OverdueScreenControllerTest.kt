@@ -125,9 +125,8 @@ class OverdueScreenControllerTest {
   fun `when screen is created then the overdue appointments must be displayed`() {
     // given
     val overdueAppointments = listOf(
-        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.HIGHEST),
-        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.NONE),
-        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.NONE)
+        PatientMocker.overdueAppointment(isHighRisk = true),
+        PatientMocker.overdueAppointment(isHighRisk = false)
     )
     whenever(repository.overdueAppointments(dateOnClock, facility))
         .thenReturn(Observable.just(overdueAppointments))

@@ -18,8 +18,6 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGHEST
-import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.NONE
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -683,22 +681,22 @@ class AppointmentRepositoryAndroidTest {
     val appointments = appointmentRepository.overdueAppointments(since = LocalDate.now(clock), facility = facility).blockingFirst()
 
     // then
-    assertThat(appointments.map { it.fullName to it.riskLevel }).isEqualTo(listOf(
-        "Diastolic > 110, overdue == 3 days" to HIGHEST,
-        "Systolic > 180, overdue == 4 days" to HIGHEST,
-        "Has had a heart attack, sBP > 140, overdue == 30 days" to HIGHEST,
-        "Has had a heart attack, dBP > 110, overdue == 30 days" to HIGHEST,
-        "Has had a heart attack, stroke, kidney disease and has diabetes, sBP > 140, overdue == 30 days" to HIGHEST,
-        "Systolic == 180, overdue == 30 days" to HIGHEST,
-        "Diastolic == 110, overdue == 30 days" to HIGHEST,
-        "Has had a stroke, sBP < 140 & dBP < 110, overdue == 20 days" to NONE,
-        "Has had a heart attack, sBP < 140 & dBP < 110, overdue == 30 days" to NONE,
-        "Has had a kidney disease, overdue == 30 days" to NONE,
-        "Has diabetes, overdue == 30 days" to NONE,
-        "Systolic == 170, overdue == 30 days" to NONE,
-        "Diastolic == 100, overdue == 30 days" to NONE,
-        "BP == 110/80, overdue between 30 days and 1 year" to NONE,
-        "BP == 141/91, overdue == 350 days" to NONE
+    assertThat(appointments.map { it.fullName to it.isAtHighRisk }).isEqualTo(listOf(
+        "Diastolic > 110, overdue == 3 days" to true,
+        "Systolic > 180, overdue == 4 days" to true,
+        "Has had a heart attack, sBP > 140, overdue == 30 days" to true,
+        "Has had a heart attack, dBP > 110, overdue == 30 days" to true,
+        "Has had a heart attack, stroke, kidney disease and has diabetes, sBP > 140, overdue == 30 days" to true,
+        "Systolic == 180, overdue == 30 days" to true,
+        "Diastolic == 110, overdue == 30 days" to true,
+        "Has had a stroke, sBP < 140 & dBP < 110, overdue == 20 days" to false,
+        "Has had a heart attack, sBP < 140 & dBP < 110, overdue == 30 days" to false,
+        "Has had a kidney disease, overdue == 30 days" to false,
+        "Has diabetes, overdue == 30 days" to false,
+        "Systolic == 170, overdue == 30 days" to false,
+        "Diastolic == 100, overdue == 30 days" to false,
+        "BP == 110/80, overdue between 30 days and 1 year" to false,
+        "BP == 141/91, overdue == 350 days" to false
     ))
   }
 
@@ -1397,7 +1395,7 @@ class AppointmentRepositoryAndroidTest {
           appointment = appointment,
           bloodPressure = bloodPressureMeasurement,
           phoneNumber = patientProfile.phoneNumbers.first(),
-          riskLevelIndex = NONE.levelIndex
+          isAtHighRisk = false
       )
     }
   }

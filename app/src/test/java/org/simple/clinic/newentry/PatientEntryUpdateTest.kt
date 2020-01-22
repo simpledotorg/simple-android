@@ -39,7 +39,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .`when`(ReminderConsentChanged(granted))
+        .whenEvent(ReminderConsentChanged(granted))
         .then(
             assertThatNext(
                 hasModel(defaultModel.reminderConsentChanged(granted)),
@@ -54,7 +54,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .`when`(ReminderConsentChanged(denied))
+        .whenEvent(ReminderConsentChanged(denied))
         .then(
             assertThatNext(
                 hasModel(defaultModel.reminderConsentChanged(denied)),
@@ -105,7 +105,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -130,7 +130,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -155,7 +155,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -180,7 +180,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -205,7 +205,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -229,7 +229,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -253,7 +253,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -277,7 +277,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -301,7 +301,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -326,7 +326,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -351,7 +351,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -377,7 +377,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(givenModel)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -403,7 +403,7 @@ class PatientEntryUpdateTest {
 
     updateSpec
         .given(model)
-        .`when`(SaveClicked)
+        .whenEvent(SaveClicked)
         .then(
             assertThatNext(
                 hasNoModel(),

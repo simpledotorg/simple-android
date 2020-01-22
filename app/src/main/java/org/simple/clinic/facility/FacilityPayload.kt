@@ -84,6 +84,8 @@ data class FacilityPayload(
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        config = FacilityConfig(diabetesManagementEnabled = false)
+    )
   }
 }

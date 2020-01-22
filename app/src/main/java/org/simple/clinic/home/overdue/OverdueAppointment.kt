@@ -83,8 +83,7 @@ data class OverdueAppointment(
           (
             CASE
               WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 0
-              WHEN MH.hasHadHeartAttack = :yesAnswer
-                OR MH.hasHadStroke = :yesAnswer
+              WHEN (MH.hasHadHeartAttack = :yesAnswer OR MH.hasHadStroke = :yesAnswer) AND (BP.systolic >= 140 OR BP.diastolic >= 110) 
                 THEN 0 
               ELSE 5
             END

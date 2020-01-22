@@ -14,10 +14,6 @@ class OverdueAppointmentTest {
   @Test
   @Parameters(
       "0, HIGHEST",
-      "1, VERY_HIGH",
-      "2, HIGH",
-      "3, REGULAR",
-      "4, LOW",
       "5, NONE"
   )
   fun `should calculate risk level enum from indices correctly`(riskLevelIndex: Int, expectedRiskLevel: RiskLevel) {
@@ -32,10 +28,6 @@ class OverdueAppointmentTest {
   @Test
   @Parameters(
       "HIGHEST, true",
-      "VERY_HIGH, true",
-      "HIGH, true",
-      "REGULAR, false",
-      "LOW, false",
       "NONE, false"
   )
   fun `should calculate if a patient is at risk correctly`(riskLevel: RiskLevel, isExpectedAtHighRisk: Boolean) {

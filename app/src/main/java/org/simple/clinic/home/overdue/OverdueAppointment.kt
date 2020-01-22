@@ -48,7 +48,7 @@ data class OverdueAppointment(
 ) {
 
   @Ignore
-  val isAtHighRisk = riskLevelIndex <= RiskLevel.HIGH.levelIndex
+  val isAtHighRisk = riskLevelIndex == RiskLevel.HIGHEST.levelIndex
 
   @delegate:Ignore
   val riskLevel by lazy {
@@ -57,10 +57,6 @@ data class OverdueAppointment(
 
   enum class RiskLevel(val levelIndex: Int) {
     HIGHEST(0),
-    VERY_HIGH(1),
-    HIGH(2),
-    REGULAR(3),
-    LOW(4),
     NONE(5);
   }
 

@@ -39,7 +39,7 @@ class OverdueAppointmentRowTest {
                 patientUuid = UUID.fromString("c88a4835-40e5-476b-9a6f-2f850c48ecdb"),
                 scheduledDate = LocalDate.parse("2019-01-01")
             ),
-            riskLevel = OverdueAppointment.RiskLevel.LOW
+            riskLevel = OverdueAppointment.RiskLevel.NONE
         )
     val appointmentDelayedByOneWeek = PatientMocker
         .overdueAppointment(

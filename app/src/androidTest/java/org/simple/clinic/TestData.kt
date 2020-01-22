@@ -400,7 +400,8 @@ class TestData @Inject constructor(
       locationLongitude: Double? = faker.number.between(73.537524, 18.209118),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   ): FacilityPayload {
     return FacilityPayload(
         uuid = uuid,
@@ -418,7 +419,9 @@ class TestData @Inject constructor(
         locationLongitude = locationLongitude,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        config = facilityConfig
+    )
   }
 
   fun loggedInUser(

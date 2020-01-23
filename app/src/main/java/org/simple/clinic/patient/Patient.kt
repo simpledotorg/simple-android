@@ -288,6 +288,7 @@ data class Patient(
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district,
           PA.state addr_state, PA.country addr_country,
           PA.createdAt addr_createdAt,PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt,
+          PA.streetAddress addr_streetAddress, PA.zone addr_zone,
 
           PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number,
           PPN.phoneType phone_phoneType, PPN.active phone_active,

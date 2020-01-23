@@ -19,10 +19,6 @@ import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientEntryValidationError
-import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
-import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
-import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ValueChangedCallback
@@ -148,12 +144,7 @@ class PatientEntryEffectHandler(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
-            EMPTY_ADDRESS_DETAILS,
-            PHONE_NUMBER_NON_NULL_BUT_BLANK,
-            BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
-            PERSONAL_DETAILS_EMPTY -> {
-              throw AssertionError("Should never receive this error: $it")
-            }
+
           }
         }
 

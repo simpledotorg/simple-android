@@ -6,16 +6,20 @@ import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT
 import org.simple.clinic.patient.PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT
+import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
 import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
+import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
 import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.Optional
@@ -87,6 +91,13 @@ class PatientEntryUiRenderer(
             STATE_EMPTY -> validationActions.showEmptyStateError(true)
             AGE_EXCEEDS_MAX_LIMIT -> validationActions.showAgeExceedsMaxLimitError(true)
             AGE_EXCEEDS_MIN_LIMIT -> validationActions.showAgeExceedsMinLimitError(true)
+
+            EMPTY_ADDRESS_DETAILS,
+            PHONE_NUMBER_NON_NULL_BUT_BLANK,
+            BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
+            PERSONAL_DETAILS_EMPTY -> {
+              throw AssertionError("Should never receive this error: $it")
+            }
           }
         }
   }

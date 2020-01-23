@@ -5,6 +5,56 @@
 
 An Android app for recording blood pressure measurements.
 
+## Pre-requisites
+
+The application currently requires JDK 1.8 to build. If you already have JDK 1.8 installed, skip this step.
+
+**Check if the right JDK is already available**
+
+Run the command `java -version`. If you have the right version of the JDK installed, you should see something like:
+```sh
+openjdk version "1.8.0_232"
+OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_232-b09)
+OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.232-b09, mixed mode)
+```
+
+If this command has an error, or shows a different version, you can follow the instructions below to install the JDK.
+
+**Install the JDK**
+
+We recommend using [jEnv](https://www.jenv.be/) to manage your JDK installations. Here are instructions to setup a working JDK 1.8 installation (macOS only):
+
+1. Setup up [Homebrew](https://brew.sh/).
+
+2. Install `jEnv` using Homebrew.
+```sh
+brew install jenv
+```
+
+3. Add the following lines to your shell configuration file (`~/.bash_profile` if you're using bash, or `~/.zshrc` if you're using zsh).
+```sh
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+```
+
+4. Install the JDK using Homebrew.
+```sh
+brew tap AdoptOpenJDK/openjdk
+brew cask install adoptopenjdk8
+```
+
+5. Add the installed JDK to `jEnv`
+```sh
+jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+```
+
+6. Run the command `jenv versions`. You should see something like:
+```sh
+  system
+* 1.8
+  1.8.0.222
+```
+
 ## How to build
 
 **Clone the project using git.**

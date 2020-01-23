@@ -9,7 +9,9 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -52,6 +54,8 @@ class NewMedicalHistoryScreenControllerTest {
   private val facility = PatientMocker.facility(uuid = UUID.fromString("6fc07446-c508-47e7-998e-8c475f9114d1"))
   private val patientUuid = UUID.fromString("d4f0fb3a-0146-4bc6-afec-95b76c61edca")
 
+  private lateinit var controllerSubscription: Disposable
+
   @Before
   fun setUp() {
     whenever(medicalHistoryRepository.save(eq(patientUuid), any())).thenReturn(Completable.complete())
@@ -60,6 +64,11 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     setupController()
+  }
+
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -137,6 +146,6 @@ class NewMedicalHistoryScreenControllerTest {
         facilityRepository = facilityRepository
     )
 
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+    controllerSubscription = uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 }

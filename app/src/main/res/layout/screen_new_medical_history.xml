@@ -6,7 +6,7 @@
   android:background="@color/white100">
 
   <androidx.appcompat.widget.Toolbar
-    android:id="@+id/newmedicalhistory_toolbar"
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:navigationIcon="@drawable/ic_arrow_back_24dp" />
@@ -14,7 +14,7 @@
   <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/newmedicalhistory_toolbar">
+    android:layout_below="@+id/toolbar">
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -25,39 +25,39 @@
       android:paddingTop="@dimen/spacing_8">
 
       <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-        android:id="@+id/newmedicalhistory_question_diagnosed_for_hypertension"
+        android:id="@+id/diagnosedForHypertensionQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
       <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-        android:id="@+id/newmedicalhistory_question_treatment_for_hypertension"
+        android:id="@+id/treatmentForHypertensionQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
       <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-        android:id="@+id/newmedicalhistory_question_heartattack"
+        android:id="@+id/heartAttackQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
       <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-        android:id="@+id/newmedicalhistory_question_stroke"
+        android:id="@+id/strokeQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
       <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-        android:id="@+id/newmedicalhistory_question_kidney"
+        android:id="@+id/kidneyDiseaseQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
       <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-        android:id="@+id/newmedicalhistory_question_diabetes"
+        android:id="@+id/diabetesQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     </LinearLayout>
   </ScrollView>
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
-    android:id="@+id/newmedicalhistory_next_frame"
+    android:id="@+id/nextButtonFrame"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
     app:buttonBackgroundDisabled="@color/grey2"
     app:buttonBackgroundEnabled="@color/blue1"

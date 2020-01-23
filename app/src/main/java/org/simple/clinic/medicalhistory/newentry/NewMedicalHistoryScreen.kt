@@ -3,13 +3,11 @@ package org.simple.clinic.medicalhistory.newentry
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
-import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import kotterknife.bindView
-import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
+import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -22,7 +20,6 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -41,15 +38,6 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   @Inject
   lateinit var utcClock: UtcClock
-
-  private val toolbar by bindView<Toolbar>(R.id.newmedicalhistory_toolbar)
-  private val diagnosedForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diagnosed_for_hypertension)
-  private val treatmentForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_treatment_for_hypertension)
-  private val heartAttackQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_heartattack)
-  private val strokeQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_stroke)
-  private val kidneyDiseaseQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_kidney)
-  private val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diabetes)
-  private val nextButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.newmedicalhistory_next_frame)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

@@ -10,6 +10,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Before
@@ -36,6 +37,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class NewMedicalHistoryScreenControllerTest {
@@ -44,6 +46,7 @@ class NewMedicalHistoryScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val screen: NewMedicalHistoryUi = mock()
+  private val viewRenderer = NewMedicalHistoryUiRenderer(screen)
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository: PatientRepository = mock()
@@ -55,6 +58,7 @@ class NewMedicalHistoryScreenControllerTest {
   private val patientUuid = UUID.fromString("d4f0fb3a-0146-4bc6-afec-95b76c61edca")
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect>
 
   @Before
   fun setUp() {
@@ -62,11 +66,21 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = NewMedicalHistoryModel(),
+        init = NewMedicalHistoryInit(),
+        update = NewMedicalHistoryUpdate(),
+        effectHandler = NewMedicalHistoryEffectHandler().build(),
+        modelUpdateListener = viewRenderer::render
+    )
   }
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -201,5 +215,9 @@ class NewMedicalHistoryScreenControllerTest {
 
     controllerSubscription = uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
     uiEvents.onNext(ScreenCreated())
+  }
+
+  private fun startMobiusLoop() {
+    testFixture.start()
   }
 }

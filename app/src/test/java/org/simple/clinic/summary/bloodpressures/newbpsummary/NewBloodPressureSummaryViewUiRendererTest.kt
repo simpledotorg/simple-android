@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
 class NewBloodPressureSummaryViewUiRendererTest {
@@ -33,6 +34,23 @@ class NewBloodPressureSummaryViewUiRendererTest {
 
     // then
     verify(ui).showNoBloodPressuresView()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when blood pressures are loaded, then show blood pressures`() {
+    // given
+    val bloodPressure = PatientMocker.bp(
+        uuid = UUID.fromString("58ff9789-c295-41ca-bab3-becb4e9b7861"),
+        patientUuid = patientUuid
+    )
+    val bloodPressures = listOf(bloodPressure)
+
+    // when
+    uiRenderer.render(model.bloodPressuresLoaded(bloodPressures))
+
+    // then
+    verify(ui).showBloodPressures(bloodPressures)
     verifyNoMoreInteractions(ui)
   }
 }

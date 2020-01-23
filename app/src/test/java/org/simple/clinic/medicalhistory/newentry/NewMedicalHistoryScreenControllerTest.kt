@@ -1,6 +1,7 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -48,8 +49,9 @@ class NewMedicalHistoryScreenControllerTest {
 
   private lateinit var controller: NewMedicalHistoryScreenController
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val user = PatientMocker.loggedInUser()
-  private val facility = PatientMocker.facility()
+  private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("4eb3d692-7362-4b10-848a-a7d679aee23a"))
+  private val facility = PatientMocker.facility(uuid = UUID.fromString("6fc07446-c508-47e7-998e-8c475f9114d1"))
+  private val patientUuid = UUID.fromString("d4f0fb3a-0146-4bc6-afec-95b76c61edca")
 
   @Before
   fun setUp() {
@@ -60,7 +62,7 @@ class NewMedicalHistoryScreenControllerTest {
         facilityRepository = facilityRepository
     )
 
-    whenever(medicalHistoryRepository.save(any<UUID>(), any())).thenReturn(Completable.complete())
+    whenever(medicalHistoryRepository.save(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
@@ -85,7 +87,7 @@ class NewMedicalHistoryScreenControllerTest {
 
   @Test
   fun `when save is clicked with selected answers then patient with the answers should be saved and summary screen should be opened`() {
-    val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
+    val savedPatient = PatientMocker.patient(uuid = patientUuid)
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     val questionsAndAnswers = MedicalHistoryQuestion.values()
@@ -115,7 +117,7 @@ class NewMedicalHistoryScreenControllerTest {
 
   @Test
   fun `when save is clicked with no answers then patient with an empty medical history should be saved and summary screen should be opened`() {
-    val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
+    val savedPatient = PatientMocker.patient(uuid = patientUuid)
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     uiEvents.onNext(ScreenCreated())

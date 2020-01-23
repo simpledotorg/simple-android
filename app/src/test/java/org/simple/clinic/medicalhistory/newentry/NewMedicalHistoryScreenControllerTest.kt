@@ -80,7 +80,6 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(patientEntry))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     verify(screen).setPatientName(patientName)
   }
@@ -95,7 +94,7 @@ class NewMedicalHistoryScreenControllerTest {
         .toMap()
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
+
     questionsAndAnswers.forEach { (question, answer) ->
       uiEvents.onNext(NewMedicalHistoryAnswerToggled(question, answer))
     }
@@ -122,7 +121,7 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     setupController()
-    uiEvents.onNext(ScreenCreated())
+
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     val inOrder = inOrder(medicalHistoryRepository, patientRepository, screen)
@@ -148,5 +147,6 @@ class NewMedicalHistoryScreenControllerTest {
     )
 
     controllerSubscription = uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+    uiEvents.onNext(ScreenCreated())
   }
 }

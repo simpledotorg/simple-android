@@ -100,19 +100,20 @@ class NewMedicalHistoryScreenControllerTest {
     }
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
-    val inOrder = inOrder(medicalHistoryRepository, patientRepository, screen)
-    inOrder.verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
-    inOrder.verify(medicalHistoryRepository).save(
-        patientUuid = savedPatient.uuid,
-        historyEntry = OngoingMedicalHistoryEntry(
-            diagnosedWithHypertension = questionsAndAnswers[DIAGNOSED_WITH_HYPERTENSION]!!,
-            isOnTreatmentForHypertension = questionsAndAnswers[IS_ON_TREATMENT_FOR_HYPERTENSION]!!,
-            hasHadHeartAttack = questionsAndAnswers[HAS_HAD_A_HEART_ATTACK]!!,
-            hasHadStroke = questionsAndAnswers[HAS_HAD_A_STROKE]!!,
-            hasHadKidneyDisease = questionsAndAnswers[HAS_HAD_A_KIDNEY_DISEASE]!!,
-            hasDiabetes = questionsAndAnswers[HAS_DIABETES]!!)
-    )
-    inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+    with(inOrder(medicalHistoryRepository, patientRepository, screen)) {
+      verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
+      verify(medicalHistoryRepository).save(
+          patientUuid = savedPatient.uuid,
+          historyEntry = OngoingMedicalHistoryEntry(
+              diagnosedWithHypertension = questionsAndAnswers[DIAGNOSED_WITH_HYPERTENSION]!!,
+              isOnTreatmentForHypertension = questionsAndAnswers[IS_ON_TREATMENT_FOR_HYPERTENSION]!!,
+              hasHadHeartAttack = questionsAndAnswers[HAS_HAD_A_HEART_ATTACK]!!,
+              hasHadStroke = questionsAndAnswers[HAS_HAD_A_STROKE]!!,
+              hasHadKidneyDisease = questionsAndAnswers[HAS_HAD_A_KIDNEY_DISEASE]!!,
+              hasDiabetes = questionsAndAnswers[HAS_DIABETES]!!)
+      )
+      verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+    }
   }
 
   @Test
@@ -124,18 +125,19 @@ class NewMedicalHistoryScreenControllerTest {
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
-    val inOrder = inOrder(medicalHistoryRepository, patientRepository, screen)
-    inOrder.verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
-    inOrder.verify(medicalHistoryRepository).save(
-        patientUuid = savedPatient.uuid,
-        historyEntry = OngoingMedicalHistoryEntry(
-            diagnosedWithHypertension = Unanswered,
-            isOnTreatmentForHypertension = Unanswered,
-            hasHadHeartAttack = Unanswered,
-            hasHadStroke = Unanswered,
-            hasHadKidneyDisease = Unanswered,
-            hasDiabetes = Unanswered))
-    inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+    with(inOrder(medicalHistoryRepository, patientRepository, screen)) {
+      verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
+      verify(medicalHistoryRepository).save(
+          patientUuid = savedPatient.uuid,
+          historyEntry = OngoingMedicalHistoryEntry(
+              diagnosedWithHypertension = Unanswered,
+              isOnTreatmentForHypertension = Unanswered,
+              hasHadHeartAttack = Unanswered,
+              hasHadStroke = Unanswered,
+              hasHadKidneyDisease = Unanswered,
+              hasDiabetes = Unanswered))
+      verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+    }
   }
 
   private fun setupController() {

@@ -16,8 +16,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
@@ -33,7 +34,6 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -89,15 +89,14 @@ class NewMedicalHistoryScreenControllerTest {
     val savedPatient = PatientMocker.patient(uuid = patientUuid)
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
-    val questionsAndAnswers = MedicalHistoryQuestion.values()
-        .map { it to randomMedicalHistoryAnswer() }
-        .toMap()
-
     setupController()
 
-    questionsAndAnswers.forEach { (question, answer) ->
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question, answer))
-    }
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_TREATMENT_FOR_HYPERTENSION, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_DIABETES, Yes))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     with(inOrder(medicalHistoryRepository, patientRepository, screen)) {
@@ -105,12 +104,13 @@ class NewMedicalHistoryScreenControllerTest {
       verify(medicalHistoryRepository).save(
           patientUuid = savedPatient.uuid,
           historyEntry = OngoingMedicalHistoryEntry(
-              diagnosedWithHypertension = questionsAndAnswers[DIAGNOSED_WITH_HYPERTENSION]!!,
-              isOnTreatmentForHypertension = questionsAndAnswers[IS_ON_TREATMENT_FOR_HYPERTENSION]!!,
-              hasHadHeartAttack = questionsAndAnswers[HAS_HAD_A_HEART_ATTACK]!!,
-              hasHadStroke = questionsAndAnswers[HAS_HAD_A_STROKE]!!,
-              hasHadKidneyDisease = questionsAndAnswers[HAS_HAD_A_KIDNEY_DISEASE]!!,
-              hasDiabetes = questionsAndAnswers[HAS_DIABETES]!!)
+              diagnosedWithHypertension = No,
+              isOnTreatmentForHypertension = Yes,
+              hasHadHeartAttack = No,
+              hasHadStroke = No,
+              hasHadKidneyDisease = Yes,
+              hasDiabetes = Yes
+          )
       )
       verify(screen).openPatientSummaryScreen(savedPatient.uuid)
     }

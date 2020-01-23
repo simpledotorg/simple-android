@@ -86,9 +86,11 @@ class NewMedicalHistoryScreenControllerTest {
 
   @Test
   fun `when save is clicked with selected answers then patient with the answers should be saved and summary screen should be opened`() {
+    // given
     val savedPatient = PatientMocker.patient(uuid = patientUuid)
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
+    // when
     setupController()
 
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
@@ -99,6 +101,7 @@ class NewMedicalHistoryScreenControllerTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_DIABETES, Yes))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
+    // then
     with(inOrder(medicalHistoryRepository, patientRepository, screen)) {
       verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
       verify(medicalHistoryRepository).save(
@@ -118,13 +121,16 @@ class NewMedicalHistoryScreenControllerTest {
 
   @Test
   fun `when save is clicked with no answers then patient with an empty medical history should be saved and summary screen should be opened`() {
+    // given
     val savedPatient = PatientMocker.patient(uuid = patientUuid)
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
+    // when
     setupController()
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
+    // then
     with(inOrder(medicalHistoryRepository, patientRepository, screen)) {
       verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
       verify(medicalHistoryRepository).save(

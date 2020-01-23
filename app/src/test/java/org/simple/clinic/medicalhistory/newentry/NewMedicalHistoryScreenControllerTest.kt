@@ -47,7 +47,6 @@ class NewMedicalHistoryScreenControllerTest {
   private val patientRepository: PatientRepository = mock()
   private val userSession = mock<UserSession>()
 
-  private lateinit var controller: NewMedicalHistoryScreenController
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("4eb3d692-7362-4b10-848a-a7d679aee23a"))
   private val facility = PatientMocker.facility(uuid = UUID.fromString("6fc07446-c508-47e7-998e-8c475f9114d1"))
@@ -55,19 +54,12 @@ class NewMedicalHistoryScreenControllerTest {
 
   @Before
   fun setUp() {
-    controller = NewMedicalHistoryScreenController(
-        medicalHistoryRepository = medicalHistoryRepository,
-        patientRepository = patientRepository,
-        userSession = userSession,
-        facilityRepository = facilityRepository
-    )
-
     whenever(medicalHistoryRepository.save(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+    setupController()
   }
 
   @Test
@@ -135,5 +127,16 @@ class NewMedicalHistoryScreenControllerTest {
             hasHadKidneyDisease = Unanswered,
             hasDiabetes = Unanswered))
     inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+  }
+
+  private fun setupController() {
+    val controller = NewMedicalHistoryScreenController(
+        medicalHistoryRepository = medicalHistoryRepository,
+        patientRepository = patientRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository
+    )
+
+    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 }

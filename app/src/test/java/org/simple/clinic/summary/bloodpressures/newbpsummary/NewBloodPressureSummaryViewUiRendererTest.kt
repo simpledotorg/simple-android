@@ -12,7 +12,8 @@ import java.util.UUID
 class NewBloodPressureSummaryViewUiRendererTest {
   private val patientUuid = UUID.fromString("8b298cc4-da11-4df9-a318-01e113f3abe3")
   private val ui = mock<NewBloodPressureSummaryViewUi>()
-  private val uiRenderer = NewBloodPressureSummaryViewUiRenderer(ui)
+  private val config = NewBloodPressureSummaryViewConfig(3)
+  private val uiRenderer = NewBloodPressureSummaryViewUiRenderer(ui, config)
   private val defaultModel = NewBloodPressureSummaryViewModel.create(patientUuid)
 
   @Test
@@ -47,10 +48,45 @@ class NewBloodPressureSummaryViewUiRendererTest {
     val bloodPressures = listOf(bloodPressure)
 
     // when
-    uiRenderer.render(model.bloodPressuresLoaded(bloodPressures))
+    uiRenderer.render(defaultModel.bloodPressuresLoaded(bloodPressures))
 
     // then
     verify(ui).showBloodPressures(bloodPressures)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `show see all button if blood pressures count is more than number of blood pressures to display`() {
+    // given
+    val bloodPressure1 = PatientMocker.bp(
+        uuid = UUID.fromString("f0b79c3f-b57d-4c1f-85c9-3c0045412aac"),
+        patientUuid = patientUuid
+    )
+    val bloodPressure2 = PatientMocker.bp(
+        uuid = UUID.fromString("7057728a-2021-459f-9aa4-d659c0404189"),
+        patientUuid = patientUuid
+    )
+    val bloodPressure3 = PatientMocker.bp(
+        uuid = UUID.fromString("870c83d7-b554-455d-9289-373eb3de1644"),
+        patientUuid = patientUuid
+    )
+    val bloodPressure4 = PatientMocker.bp(
+        uuid = UUID.fromString("6c69e196-a3a0-442b-a6ca-d9d20d2cd8c0"),
+        patientUuid = patientUuid
+    )
+    val bloodPressures = listOf(bloodPressure1, bloodPressure2, bloodPressure3, bloodPressure4)
+    val bloodPressuresCount = bloodPressures.size
+
+    // when
+    uiRenderer.render(
+        defaultModel
+            .bloodPressuresLoaded(bloodPressures)
+            .bloodPressuresCountLoaded(bloodPressuresCount)
+    )
+
+    // then
+    verify(ui).showBloodPressures(bloodPressures)
+    verify(ui).showSeeAllButton()
     verifyNoMoreInteractions(ui)
   }
 }

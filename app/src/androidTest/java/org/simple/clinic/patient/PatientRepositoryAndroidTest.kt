@@ -2784,4 +2784,30 @@ class PatientRepositoryAndroidTest {
     assertThat(patientRepository.hasMedicalHistoryForPatientChangedSince(medicalHistoryForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
   }
 
+  @Test
+  fun when_patient_address_details_are_saved_then_all_patient_address_fields_should_be_retrieved_as_expected() {
+    val patientUuid = UUID.fromString("a0ac466f-5a8d-436b-8845-4412e7f86cdd")
+    val patientAddressUuid = UUID.fromString("a0ac466f-5a8d-436b-8845-4412e7f86cdd")
+    val streetAddress = "Streetz"
+    val zone = "Zonez"
+
+    val patientProfile = testData.patientProfile(
+        patientUuid = patientUuid,
+        patientAddressUuid = patientAddressUuid,
+        syncStatus = PENDING
+    ).run {
+      copy(address = testData.patientAddress(
+          uuid = patientAddressUuid,
+          streetAddress = streetAddress,
+          zone = zone
+      ))
+    }
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val patients = patientRepository.recordsWithSyncStatus(PENDING).blockingGet()
+    assertThat(patients.size).isEqualTo(1)
+
+    assertThat(patients.first().address.streetAddress).isEqualTo(streetAddress)
+    assertThat(patients.first().address.zone).isEqualTo(zone)
+  }
 }

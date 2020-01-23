@@ -28,7 +28,7 @@ import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), NewMedicalHistoryUi {
 
   @Inject
   lateinit var controller: NewMedicalHistoryScreenController
@@ -96,11 +96,11 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
           .clicks(nextButtonFrame.button)
           .map { SaveMedicalHistoryClicked() }
 
-  fun openPatientSummaryScreen(patientUuid: UUID) {
+  override fun openPatientSummaryScreen(patientUuid: UUID) {
     screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))
   }
 
-  fun setPatientName(patientName: String) {
+  override fun setPatientName(patientName: String) {
     toolbar.title = patientName
   }
 }

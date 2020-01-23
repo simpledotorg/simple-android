@@ -40,7 +40,7 @@ class NewMedicalHistoryScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen: NewMedicalHistoryScreen = mock()
+  private val screen: NewMedicalHistoryUi = mock()
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository: PatientRepository = mock()

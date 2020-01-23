@@ -9,6 +9,7 @@ class NewBloodPressureSummaryViewUiRenderer(
     when {
       model.latestBloodPressuresToDisplay == null -> return
       model.latestBloodPressuresToDisplay.isEmpty() -> ui.showNoBloodPressuresView()
+      else -> ui.showBloodPressures(model.latestBloodPressuresToDisplay)
     }
   }
 }

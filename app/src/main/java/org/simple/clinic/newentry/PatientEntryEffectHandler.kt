@@ -6,7 +6,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
-import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.Field.Age
 import org.simple.clinic.newentry.Field.ColonyOrVillage
@@ -18,7 +17,6 @@ import org.simple.clinic.newentry.Field.PhoneNumber
 import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
-import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ValueChangedCallback
@@ -68,7 +66,6 @@ class PatientEntryEffectHandler(
           showDatePatternInLabelValueChangedCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
         }, schedulersProvider.ui())
         .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
-        .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
         .addAction(OpenMedicalHistoryEntryScreen::class.java, ui::openMedicalHistoryEntryScreen, schedulersProvider.ui())
         .build()
   }
@@ -137,19 +134,5 @@ class PatientEntryEffectHandler(
     return patientRepository
         .saveOngoingEntry(entry)
         .andThen(Single.just(Unit))
-  }
-
-  private fun showValidationErrors(errors: List<PatientEntryValidationError>) {
-    errors
-        .onEach { Analytics.reportInputValidationError(it.analyticsName) }
-        .forEach {
-          when (it) {
-
-          }
-        }
-
-    if (errors.isNotEmpty()) {
-      ui.scrollToFirstFieldWithError()
-    }
   }
 }

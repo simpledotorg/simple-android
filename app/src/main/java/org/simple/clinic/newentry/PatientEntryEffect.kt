@@ -1,7 +1,6 @@
 package org.simple.clinic.newentry
 
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.patient.PatientEntryValidationError
 
 sealed class PatientEntryEffect
 
@@ -12,8 +11,6 @@ data class PrefillFields(val patientEntry: OngoingNewPatientEntry) : PatientEntr
 object ScrollFormOnGenderSelection : PatientEntryEffect()
 
 data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryEffect()
-
-data class ShowValidationErrors(val errors: List<PatientEntryValidationError>) : PatientEntryEffect()
 
 data class HideValidationError(val field: Field) : PatientEntryEffect()
 

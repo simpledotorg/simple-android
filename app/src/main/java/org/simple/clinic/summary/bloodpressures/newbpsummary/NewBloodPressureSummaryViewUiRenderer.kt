@@ -15,6 +15,8 @@ class NewBloodPressureSummaryViewUiRenderer(
 
     if (model.totalRecordedBloodPressureCount != null && model.totalRecordedBloodPressureCount > config.numberOfBpsToDisplay) {
       ui.showSeeAllButton()
+    } else {
+      ui.hideSeeAllButton()
     }
   }
 }

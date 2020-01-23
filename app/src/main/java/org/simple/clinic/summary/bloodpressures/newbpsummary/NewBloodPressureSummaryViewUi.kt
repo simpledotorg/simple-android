@@ -6,4 +6,5 @@ interface NewBloodPressureSummaryViewUi {
   fun showNoBloodPressuresView()
   fun showBloodPressures(bloodPressures: List<BloodPressureMeasurement>)
   fun showSeeAllButton()
+  fun hideSeeAllButton()
 }

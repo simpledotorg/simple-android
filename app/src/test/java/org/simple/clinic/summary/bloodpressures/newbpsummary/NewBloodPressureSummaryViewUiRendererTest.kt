@@ -35,6 +35,7 @@ class NewBloodPressureSummaryViewUiRendererTest {
 
     // then
     verify(ui).showNoBloodPressuresView()
+    verify(ui).hideSeeAllButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -52,6 +53,7 @@ class NewBloodPressureSummaryViewUiRendererTest {
 
     // then
     verify(ui).showBloodPressures(bloodPressures)
+    verify(ui).hideSeeAllButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -87,6 +89,37 @@ class NewBloodPressureSummaryViewUiRendererTest {
     // then
     verify(ui).showBloodPressures(bloodPressures)
     verify(ui).showSeeAllButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `hide see all button if there are less than or equal to number of blood pressures to display`() {
+    // given
+    val bloodPressure1 = PatientMocker.bp(
+        uuid = UUID.fromString("462842bc-fd28-4d34-9102-61556e1cb9e0"),
+        patientUuid = patientUuid
+    )
+    val bloodPressure2 = PatientMocker.bp(
+        uuid = UUID.fromString("aabcfc40-f114-4453-9876-1707f61676db"),
+        patientUuid = patientUuid
+    )
+    val bloodPressure3 = PatientMocker.bp(
+        uuid = UUID.fromString("0c782d93-c62c-4823-bb70-5e8b355c8b89"),
+        patientUuid = patientUuid
+    )
+    val bloodPressures = listOf(bloodPressure1, bloodPressure2, bloodPressure3)
+    val bloodPressureCount = bloodPressures.size
+
+    // when
+    uiRenderer.render(
+        defaultModel
+            .bloodPressuresLoaded(bloodPressures)
+            .bloodPressuresCountLoaded(bloodPressureCount)
+    )
+
+    // then
+    verify(ui).showBloodPressures(bloodPressures)
+    verify(ui).hideSeeAllButton()
     verifyNoMoreInteractions(ui)
   }
 }

@@ -195,7 +195,6 @@ dependencies {
   implementation project(path: ':router')
 
   testImplementation "junit:junit:$versions.junit"
-  testImplementation "org.mockito:mockito-core:$versions.mockito"
   testImplementation "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin"
   testImplementation "pl.pragmatists:JUnitParams:$versions.junitParams"
   testImplementation "com.google.truth:truth:$versions.truth"
@@ -207,7 +206,14 @@ dependencies {
   androidTestImplementation "com.google.truth:truth:$versions.truth"
   androidTestImplementation "com.github.blocoio:faker:$versions.faker"
   androidTestImplementation "androidx.room:room-testing:$versions.room"
-  androidTestImplementation "androidx.arch.core:core-testing:$versions.coreTesting"
+  androidTestImplementation ("androidx.arch.core:core-testing:$versions.coreTesting") {
+    // This dependency transitively pulls in a newer version of Mockito than Mockito-Kotlin does.
+    // This results in the import statements in the unit tests breaking for mockito methods because
+    // the IDE uses the version of Mockito that is present in the classpath from the androidTest
+    // sourceset dependency, which raises an inspection error in the IDE. We can explicitly exclude
+    // it from this dependency because it is also pulled in via mockito-kotlin.
+    exclude group: 'org.mockito', module: 'mockito-core'
+  }
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"

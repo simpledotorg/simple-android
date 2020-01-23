@@ -1,22 +1,38 @@
 package org.simple.clinic.summary.bloodpressures.newbpsummary
 
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
+import org.simple.clinic.bp.BloodPressureMeasurement
 import java.util.UUID
 
 class NewBloodPressureSummaryViewUiRendererTest {
+  private val patientUuid = UUID.fromString("8b298cc4-da11-4df9-a318-01e113f3abe3")
+  private val ui = mock<NewBloodPressureSummaryViewUi>()
+  private val uiRenderer = NewBloodPressureSummaryViewUiRenderer(ui)
+  private val defaultModel = NewBloodPressureSummaryViewModel.create(patientUuid)
+
   @Test
   fun `when blood pressures are loading, then do nothing`() {
-    // given
-    val patientUuid = UUID.fromString("8b298cc4-da11-4df9-a318-01e113f3abe3")
-    val ui = mock<NewBloodPressureSummaryViewUi>()
-    val uiRenderer = NewBloodPressureSummaryViewUiRenderer(ui)
-
     // when
-    uiRenderer.render(NewBloodPressureSummaryViewModel.create(patientUuid))
+    uiRenderer.render(defaultModel)
 
     // then
     verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when loaded blood pressures are empty, then show no blood pressures view`() {
+    // given
+    val bloodPressures = listOf<BloodPressureMeasurement>()
+
+    // when
+    uiRenderer.render(defaultModel.bloodPressuresLoaded(bloodPressures))
+
+    // then
+    verify(ui).showNoBloodPressuresView()
+    verifyNoMoreInteractions(ui)
   }
 }

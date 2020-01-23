@@ -140,6 +140,51 @@ class NewMedicalHistoryScreenControllerTest {
     }
   }
 
+  @Test
+  fun `when an already selected answer for a question is changed, the new answer should be used when saving the medical history`() {
+    // given
+    val savedPatient = PatientMocker.patient(uuid = patientUuid)
+    whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
+
+    // when
+    setupController()
+
+    // Initial answers
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_TREATMENT_FOR_HYPERTENSION, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_DIABETES, Yes))
+
+    // Updated answers
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_TREATMENT_FOR_HYPERTENSION, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, Unanswered))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, Unanswered))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_DIABETES, No))
+
+    uiEvents.onNext(SaveMedicalHistoryClicked())
+
+    // then
+    with(inOrder(medicalHistoryRepository, patientRepository, screen)) {
+      verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
+      verify(medicalHistoryRepository).save(
+          patientUuid = savedPatient.uuid,
+          historyEntry = OngoingMedicalHistoryEntry(
+              diagnosedWithHypertension = Yes,
+              isOnTreatmentForHypertension = No,
+              hasHadHeartAttack = Unanswered,
+              hasHadStroke = Unanswered,
+              hasHadKidneyDisease = No,
+              hasDiabetes = No
+          )
+      )
+      verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+    }
+  }
+
   private fun setupController() {
     val controller = NewMedicalHistoryScreenController(
         medicalHistoryRepository = medicalHistoryRepository,

@@ -62,8 +62,6 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
-
-    setupController()
   }
 
   @After
@@ -81,6 +79,7 @@ class NewMedicalHistoryScreenControllerTest {
         gender = Gender.Transgender))
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(patientEntry))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).setPatientName(patientName)
@@ -95,6 +94,7 @@ class NewMedicalHistoryScreenControllerTest {
         .map { it to randomMedicalHistoryAnswer() }
         .toMap()
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
     questionsAndAnswers.forEach { (question, answer) ->
       uiEvents.onNext(NewMedicalHistoryAnswerToggled(question, answer))
@@ -121,6 +121,7 @@ class NewMedicalHistoryScreenControllerTest {
     val savedPatient = PatientMocker.patient(uuid = patientUuid)
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(SaveMedicalHistoryClicked())
 

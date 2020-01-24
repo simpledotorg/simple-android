@@ -35,6 +35,7 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -46,6 +47,7 @@ class NewMedicalHistoryScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val screen: NewMedicalHistoryUi = mock()
+  private val uiActions: NewMedicalHistoryUiActions = mock()
   private val viewRenderer = NewMedicalHistoryUiRenderer(screen)
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
   private val facilityRepository = mock<FacilityRepository>()
@@ -67,12 +69,17 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
+    val effectHandler = NewMedicalHistoryEffectHandler(
+        schedulersProvider = TrampolineSchedulersProvider(),
+        uiActions = uiActions
+    ).build()
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = NewMedicalHistoryModel.default(),
         init = NewMedicalHistoryInit(),
         update = NewMedicalHistoryUpdate(),
-        effectHandler = NewMedicalHistoryEffectHandler().build(),
+        effectHandler = effectHandler,
         modelUpdateListener = viewRenderer::render
     )
   }

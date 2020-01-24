@@ -1,5 +1,9 @@
 package org.simple.clinic.medicalhistory.newentry
 
+import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+
 interface NewMedicalHistoryUi {
   fun setPatientName(patientName: String)
+  fun renderAnswerForQuestion(question: MedicalHistoryQuestion, answer: Answer)
 }

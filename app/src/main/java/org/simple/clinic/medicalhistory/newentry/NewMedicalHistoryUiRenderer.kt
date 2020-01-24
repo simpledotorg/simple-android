@@ -7,6 +7,8 @@ class NewMedicalHistoryUiRenderer(
 ) : ViewRenderer<NewMedicalHistoryModel> {
 
   override fun render(model: NewMedicalHistoryModel) {
-    // Nothing to do here yet
+    if(model.hasLoadedPatientEntry) {
+      ui.setPatientName(model.ongoingPatientEntry!!.personalDetails!!.fullName)
+    }
   }
 }

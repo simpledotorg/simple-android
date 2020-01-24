@@ -11,7 +11,10 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 data class NewMedicalHistoryModel(
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry
-): Parcelable {
+) : Parcelable {
+
+  val hasLoadedPatientEntry: Boolean
+    get() = ongoingPatientEntry != null
 
   companion object {
     fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(null, OngoingMedicalHistoryEntry())
@@ -19,5 +22,9 @@ data class NewMedicalHistoryModel(
 
   fun answerChanged(question: MedicalHistoryQuestion, answer: Answer): NewMedicalHistoryModel {
     return copy(ongoingMedicalHistoryEntry = ongoingMedicalHistoryEntry.answerChanged(question, answer))
+  }
+
+  fun ongoingPatientEntryLoaded(entry: OngoingNewPatientEntry): NewMedicalHistoryModel {
+    return copy(ongoingPatientEntry = entry)
   }
 }

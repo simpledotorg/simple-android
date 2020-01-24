@@ -6,10 +6,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.CheckBox
-import android.widget.CompoundButton
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.list_medical_history_question.view.*
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.Answer.No
@@ -21,24 +19,6 @@ import org.simple.clinic.widgets.setHorizontalPadding
 @SuppressLint("ClickableViewAccessibility")
 class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
-  lateinit var question: MedicalHistoryQuestion
-  var answerChangeListener: (Answer) -> Unit = {}
-
-  var answer: Answer = Unanswered
-    set(value) {
-      field = value
-      answerChangeListener(value)
-      updateCheckboxesFromAnswer(value)
-    }
-
-  private val checkboxChangeListener: (CompoundButton, Boolean) -> Unit = { checkBox, checked ->
-    answer = when (checkBox) {
-      yesCheckBox -> if (checked) Yes else Unanswered
-      noCheckBox -> if (checked) No else Unanswered
-      else -> throw AssertionError()
-    }
-  }
-
   init {
     LayoutInflater.from(context).inflate(R.layout.list_medical_history_question, this, true)
 
@@ -48,17 +28,11 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     attributes.recycle()
 
     contentLayout.setPadding(contentPaddingStart, contentLayout.paddingTop, contentPaddingEnd, contentLayout.paddingBottom)
-
-    yesCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
-    noCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
-
-    // Force call the setter.
-    answer = answer
   }
 
   private fun updateCheckboxesFromAnswer(answer: Answer) {
-    yesCheckBox.runWithoutListener { yesCheckBox.isChecked = answer == Yes }
-    noCheckBox.runWithoutListener { noCheckBox.isChecked = answer == No }
+    yesCheckBox.isChecked = answer == Yes
+    noCheckBox.isChecked = answer == No
 
     yesCheckBox.updateCheckBoxVisualsBasedOnCheckedState()
     noCheckBox.updateCheckBoxVisualsBasedOnCheckedState()
@@ -80,26 +54,24 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     dividerView.visibility = View.GONE
   }
 
-  fun render(question: MedicalHistoryQuestion, answer: Answer) {
-    this.question = question
-    setAnswerWithoutListener(answer)
+  fun render(
+      question: MedicalHistoryQuestion,
+      answer: Answer,
+      answerChangeListener: (MedicalHistoryQuestion, Answer) -> Unit
+  ) {
+    yesCheckBox.setOnCheckedChangeListener(null)
+    noCheckBox.setOnCheckedChangeListener(null)
+
     labelTextView.setText(question.questionRes)
-  }
+    updateCheckboxesFromAnswer(answer)
 
-  fun answers() = Observable.create<Answer> { emitter ->
-    answerChangeListener = emitter::onNext
-    emitter.setCancellable { answerChangeListener = {} }
-
-    // Default value.
-    emitter.onNext(answer)
-  }!!
-
-  private fun setAnswerWithoutListener(answer: Answer) {
-    val listenerCopy = answerChangeListener
-    answerChangeListener = {}
-
-    this.answer = answer
-
-    answerChangeListener = listenerCopy
+    yesCheckBox.setOnCheckedChangeListener { _, checked ->
+      val newAnswer = if (checked) Yes else Unanswered
+      answerChangeListener.invoke(question, newAnswer)
+    }
+    noCheckBox.setOnCheckedChangeListener { _, checked ->
+      val newAnswer = if (checked) No else Unanswered
+      answerChangeListener.invoke(question, newAnswer)
+    }
   }
 }

@@ -28,7 +28,7 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     set(value) {
       field = value
       answerChangeListener(value)
-      updateCheckboxesFromAnswer()
+      updateCheckboxesFromAnswer(value)
     }
 
   private val checkboxChangeListener: (CompoundButton, Boolean) -> Unit = { checkBox, checked ->
@@ -56,7 +56,7 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     answer = answer
   }
 
-  private fun updateCheckboxesFromAnswer() {
+  private fun updateCheckboxesFromAnswer(answer: Answer) {
     yesCheckBox.runWithoutListener { yesCheckBox.isChecked = answer == Yes }
     noCheckBox.runWithoutListener { noCheckBox.isChecked = answer == No }
 

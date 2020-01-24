@@ -9,13 +9,13 @@
   tools:parentTag="android.widget.RelativeLayout">
 
   <LinearLayout
-    android:id="@+id/newmedicalhistory_layout"
+    android:id="@+id/contentLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <TextView
-      android:id="@+id/newmedicalhistory_item_label"
+      android:id="@+id/labelTextView"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_16"
@@ -33,7 +33,7 @@
       android:orientation="horizontal">
 
       <org.simple.clinic.widgets.CheckboxWithSuppressibleListener
-        android:id="@+id/newmedicalhistory_item_yes"
+        android:id="@+id/yesCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@drawable/selector_medicalhistory_answer"
@@ -49,7 +49,7 @@
         android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center" />
 
       <org.simple.clinic.widgets.CheckboxWithSuppressibleListener
-        android:id="@+id/newmedicalhistory_item_no"
+        android:id="@+id/noCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/spacing_12"
@@ -69,11 +69,11 @@
   </LinearLayout>
 
   <View
-    android:id="@+id/newmedicalhistory_item_divider"
+    android:id="@+id/dividerView"
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:layout_alignEnd="@+id/newmedicalhistory_layout"
-    android:layout_alignStart="@+id/newmedicalhistory_layout"
-    android:layout_below="@+id/newmedicalhistory_layout"
+    android:layout_alignEnd="@+id/contentLayout"
+    android:layout_alignStart="@+id/contentLayout"
+    android:layout_below="@+id/contentLayout"
     android:background="@color/grey3" />
 </RelativeLayout>

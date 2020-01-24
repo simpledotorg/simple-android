@@ -5,29 +5,20 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import io.reactivex.Observable
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.list_medical_history_question.view.*
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
-import org.simple.clinic.widgets.CheckboxWithSuppressibleListener
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setHorizontalPadding
 
 @SuppressLint("ClickableViewAccessibility")
 class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
-
-  private val labelTextView by bindView<TextView>(R.id.newmedicalhistory_item_label)
-  private val dividerView by bindView<View>(R.id.newmedicalhistory_item_divider)
-  private val yesCheckBox by bindView<CheckboxWithSuppressibleListener>(R.id.newmedicalhistory_item_yes)
-  private val noCheckBox by bindView<CheckboxWithSuppressibleListener>(R.id.newmedicalhistory_item_no)
-  private val contentLayout by bindView<ViewGroup>(R.id.newmedicalhistory_layout)
 
   lateinit var question: MedicalHistoryQuestion
   var answerChangeListener: (Answer) -> Unit = {}

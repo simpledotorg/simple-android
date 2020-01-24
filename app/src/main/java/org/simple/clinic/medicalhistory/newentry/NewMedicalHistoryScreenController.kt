@@ -10,12 +10,10 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import javax.inject.Inject
 
 typealias Ui = NewMedicalHistoryUi
 typealias UiChange = (Ui) -> Unit
@@ -52,12 +50,6 @@ class NewMedicalHistoryScreenController @AssistedInject constructor(
   }
 
   private fun saveMedicalHistoryAndShowSummary(events: Observable<UiEvent>): Observable<UiChange> {
-    val ongoingHistoryEntry = events
-        .ofType<NewMedicalHistoryAnswerToggled>()
-        .scan(OngoingMedicalHistoryEntry()) { entry, toggleEvent ->
-          entry.answerChanged(toggleEvent.question, toggleEvent.answer)
-        }
-
     val currentUserStream = userSession
         .requireLoggedInUser()
         .replay()
@@ -72,10 +64,9 @@ class NewMedicalHistoryScreenController @AssistedInject constructor(
           loggedInUser to currentFacility
         }
         .flatMapSingle { (loggedInUser, currentFacility) -> patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility) }
-        .withLatestFrom(ongoingHistoryEntry)
-        .flatMap { (savedPatient, entry) ->
+        .flatMap { savedPatient ->
           medicalHistoryRepository
-              .save(savedPatient.uuid, entry)
+              .save(savedPatient.uuid, modelSupplier().ongoingMedicalHistoryEntry)
               .andThen(Observable.just({ ui: Ui -> ui.openPatientSummaryScreen(savedPatient.uuid) }))
         }
   }

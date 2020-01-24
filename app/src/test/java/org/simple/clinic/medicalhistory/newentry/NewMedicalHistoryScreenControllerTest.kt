@@ -106,6 +106,7 @@ class NewMedicalHistoryScreenControllerTest {
 
     // when
     setupController()
+    startMobiusLoop()
 
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_TREATMENT_FOR_HYPERTENSION, Yes))
@@ -141,6 +142,7 @@ class NewMedicalHistoryScreenControllerTest {
 
     // when
     setupController()
+    startMobiusLoop()
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
@@ -168,6 +170,7 @@ class NewMedicalHistoryScreenControllerTest {
 
     // when
     setupController()
+    startMobiusLoop()
 
     // Initial answers
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))

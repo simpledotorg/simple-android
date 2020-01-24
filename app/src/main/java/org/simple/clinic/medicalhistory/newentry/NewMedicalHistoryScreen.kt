@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
@@ -16,6 +17,9 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -40,11 +44,28 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var crashReporter: CrashReporter
+
   private val events: Observable<UiEvent> by unsafeLazy {
     Observable.merge(
         screenCreates(),
         answerToggles(),
         saveClicks()
+    )
+  }
+
+  private val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this)
+
+  private val mobiusDelegate: MobiusDelegate<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> by unsafeLazy {
+    MobiusDelegate(
+        events = events.ofType(),
+        defaultModel = NewMedicalHistoryModel(),
+        update = NewMedicalHistoryUpdate(),
+        init = NewMedicalHistoryInit(),
+        effectHandler = NewMedicalHistoryEffectHandler().build(),
+        modelUpdateListener = uiRenderer::render,
+        crashReporter = crashReporter
     )
   }
 

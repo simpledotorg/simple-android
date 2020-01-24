@@ -35,7 +35,7 @@ import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), NewMedicalHistoryUi {
+class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
 
   @Inject
   lateinit var controllerFactory: NewMedicalHistoryScreenController.Factory
@@ -48,6 +48,9 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  @Inject
+  lateinit var effectHandlerFactory: NewMedicalHistoryEffectHandler.Factory
 
   private val events: Observable<UiEvent> by unsafeLazy {
     Observable
@@ -68,7 +71,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
         defaultModel = NewMedicalHistoryModel.default(),
         update = NewMedicalHistoryUpdate(),
         init = NewMedicalHistoryInit(),
-        effectHandler = NewMedicalHistoryEffectHandler().build(),
+        effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter
     )

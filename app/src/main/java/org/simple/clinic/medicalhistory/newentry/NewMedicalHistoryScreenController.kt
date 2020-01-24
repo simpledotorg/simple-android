@@ -1,5 +1,7 @@
 package org.simple.clinic.medicalhistory.newentry
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -18,12 +20,18 @@ import javax.inject.Inject
 typealias Ui = NewMedicalHistoryUi
 typealias UiChange = (Ui) -> Unit
 
-class NewMedicalHistoryScreenController @Inject constructor(
+class NewMedicalHistoryScreenController @AssistedInject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val patientRepository: PatientRepository,
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    @Assisted private val modelSupplier: () -> NewMedicalHistoryModel
 ) : ObservableTransformer<UiEvent, UiChange> {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(modelSupplier: () -> NewMedicalHistoryModel): NewMedicalHistoryScreenController
+  }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events).replay()

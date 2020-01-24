@@ -105,6 +105,7 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(patientEntry))
 
     setupController()
+    startMobiusLoop()
 
     verify(screen).setPatientName(patientName)
   }

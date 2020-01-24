@@ -34,7 +34,7 @@ class NewMedicalHistoryScreenController @AssistedInject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events).replay()
 
-    return showPatientName(replayedEvents)
+    return Observable.never()
   }
 
   private fun showPatientName(events: Observable<UiEvent>): Observable<UiChange> {

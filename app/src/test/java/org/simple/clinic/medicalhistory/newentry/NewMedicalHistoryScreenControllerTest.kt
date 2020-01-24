@@ -69,7 +69,7 @@ class NewMedicalHistoryScreenControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = NewMedicalHistoryModel(),
+        defaultModel = NewMedicalHistoryModel.default(),
         init = NewMedicalHistoryInit(),
         update = NewMedicalHistoryUpdate(),
         effectHandler = NewMedicalHistoryEffectHandler().build(),

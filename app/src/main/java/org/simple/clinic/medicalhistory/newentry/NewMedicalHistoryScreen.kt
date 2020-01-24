@@ -1,12 +1,14 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -48,11 +50,14 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   lateinit var crashReporter: CrashReporter
 
   private val events: Observable<UiEvent> by unsafeLazy {
-    Observable.merge(
-        screenCreates(),
-        answerToggles(),
-        saveClicks()
-    )
+    Observable
+        .merge(
+            screenCreates(),
+            answerToggles(),
+            saveClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
   }
 
   private val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this)
@@ -95,10 +100,29 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+    mobiusDelegate.prepare()
 
     post {
       hideKeyboard()
     }
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    mobiusDelegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    mobiusDelegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return mobiusDelegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(mobiusDelegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

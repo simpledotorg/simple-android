@@ -20,6 +20,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -38,6 +39,14 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  private val events: Observable<UiEvent> by unsafeLazy {
+    Observable.merge(
+        screenCreates(),
+        answerToggles(),
+        saveClicks()
+    )
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -61,11 +70,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            answerToggles(),
-            saveClicks()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

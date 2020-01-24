@@ -65,7 +65,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   private val mobiusDelegate: MobiusDelegate<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> by unsafeLazy {
     MobiusDelegate(
         events = events.ofType(),
-        defaultModel = NewMedicalHistoryModel(),
+        defaultModel = NewMedicalHistoryModel.default(),
         update = NewMedicalHistoryUpdate(),
         init = NewMedicalHistoryInit(),
         effectHandler = NewMedicalHistoryEffectHandler().build(),

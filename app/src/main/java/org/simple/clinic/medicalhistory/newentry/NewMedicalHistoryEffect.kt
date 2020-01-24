@@ -8,3 +8,5 @@ sealed class NewMedicalHistoryEffect
 data class OpenPatientSummaryScreen(val patientUuid: UUID) : NewMedicalHistoryEffect()
 
 data class RegisterPatient(val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry) : NewMedicalHistoryEffect()
+
+object LoadOngoingPatientEntry: NewMedicalHistoryEffect()

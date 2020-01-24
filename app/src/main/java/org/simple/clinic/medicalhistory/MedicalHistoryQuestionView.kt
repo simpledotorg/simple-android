@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
@@ -56,28 +57,22 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
   }
 
   private fun updateCheckboxesFromAnswer() {
-    yesCheckBox.runWithoutListener {
-      yesCheckBox.isChecked = answer == Yes
-    }
-    noCheckBox.runWithoutListener {
-      noCheckBox.isChecked = answer == No
-    }
+    yesCheckBox.runWithoutListener { yesCheckBox.isChecked = answer == Yes }
+    noCheckBox.runWithoutListener { noCheckBox.isChecked = answer == No }
 
-    arrayOf(yesCheckBox, noCheckBox).forEach { checkBox ->
-      checkBox.run {
-        when {
-          isChecked -> {
-            setTextColor(ContextCompat.getColor(context, R.color.white100))
-            setCompoundDrawableStart(R.drawable.ic_done_16dp)
-            setHorizontalPadding(R.dimen.medicalhistory_selected_padding)
-          }
-          else -> {
-            setTextColor(ContextCompat.getColor(context, R.color.blue1))
-            setCompoundDrawableStart(null)
-            setHorizontalPadding(R.dimen.medicalhistory_unselected_padding)
-          }
-        }
-      }
+    yesCheckBox.updateCheckBoxVisualsBasedOnCheckedState()
+    noCheckBox.updateCheckBoxVisualsBasedOnCheckedState()
+  }
+
+  private fun CheckBox.updateCheckBoxVisualsBasedOnCheckedState() {
+    if (isChecked) {
+      setTextColor(ContextCompat.getColor(context, R.color.white100))
+      setCompoundDrawableStart(R.drawable.ic_done_16dp)
+      setHorizontalPadding(R.dimen.medicalhistory_selected_padding)
+    } else {
+      setTextColor(ContextCompat.getColor(context, R.color.blue1))
+      setCompoundDrawableStart(null)
+      setHorizontalPadding(R.dimen.medicalhistory_unselected_padding)
     }
   }
 

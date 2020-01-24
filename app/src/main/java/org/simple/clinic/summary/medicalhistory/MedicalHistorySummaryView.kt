@@ -20,7 +20,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_A
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestamp
@@ -112,7 +112,7 @@ class MedicalHistorySummaryView(
     internalEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer))
   }
 
-  private fun MedicalHistoryQuestionView.render(
+  private fun MedicalHistoryQuestionView_Old.render(
       question: MedicalHistoryQuestion,
       answer: Answer,
       answerToggled: (MedicalHistoryQuestion, Answer) -> Unit

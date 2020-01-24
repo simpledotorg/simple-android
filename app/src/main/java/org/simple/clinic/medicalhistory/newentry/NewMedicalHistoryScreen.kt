@@ -19,7 +19,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_A
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.platform.crash.CrashReporter
@@ -118,7 +118,7 @@ class NewMedicalHistoryScreen(
   }
 
   private fun answerToggles(): Observable<UiEvent> {
-    val toggles = { view: MedicalHistoryQuestionView ->
+    val toggles = { view: MedicalHistoryQuestionView_Old ->
       view.answers().map { answer -> NewMedicalHistoryAnswerToggled(view.question, answer) }
     }
 

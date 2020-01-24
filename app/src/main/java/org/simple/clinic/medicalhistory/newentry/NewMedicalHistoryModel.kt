@@ -5,12 +5,16 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry
 
 @Parcelize
-data class NewMedicalHistoryModel(val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry): Parcelable {
+data class NewMedicalHistoryModel(
+    val ongoingPatientEntry: OngoingNewPatientEntry?,
+    val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry
+): Parcelable {
 
   companion object {
-    fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(OngoingMedicalHistoryEntry())
+    fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(null, OngoingMedicalHistoryEntry())
   }
 
   fun answerChanged(question: MedicalHistoryQuestion, answer: Answer): NewMedicalHistoryModel {

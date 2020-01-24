@@ -35,7 +35,10 @@ import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
+class NewMedicalHistoryScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
 
   @Inject
   lateinit var controllerFactory: NewMedicalHistoryScreenController.Factory

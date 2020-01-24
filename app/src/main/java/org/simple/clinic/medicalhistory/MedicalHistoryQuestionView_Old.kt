@@ -33,11 +33,11 @@ import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryView
 @SuppressLint("ClickableViewAccessibility")
 class MedicalHistoryQuestionView_Old(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
-  private val labelTextView by bindView<TextView>(R.id.newmedicalhistory_item_label)
-  private val dividerView by bindView<View>(R.id.newmedicalhistory_item_divider)
-  private val yesCheckBox by bindView<CheckboxWithSuppressibleListener>(R.id.newmedicalhistory_item_yes)
-  private val noCheckBox by bindView<CheckboxWithSuppressibleListener>(R.id.newmedicalhistory_item_no)
-  private val contentLayout by bindView<ViewGroup>(R.id.newmedicalhistory_layout)
+  private val labelTextView by bindView<TextView>(R.id.labelTextView)
+  private val dividerView by bindView<View>(R.id.dividerView)
+  private val yesCheckBox by bindView<CheckboxWithSuppressibleListener>(R.id.yesCheckBox)
+  private val noCheckBox by bindView<CheckboxWithSuppressibleListener>(R.id.noCheckBox)
+  private val contentLayout by bindView<ViewGroup>(R.id.contentLayout)
 
   lateinit var question: MedicalHistoryQuestion
   var answerChangeListener: (Answer) -> Unit = {}

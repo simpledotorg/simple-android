@@ -65,16 +65,14 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
 
     arrayOf(yesCheckBox, noCheckBox).forEach { checkBox ->
       checkBox.run {
-        val color: (Int) -> Int = { colorRes -> ContextCompat.getColor(context, colorRes) }
-
         when {
           isChecked -> {
-            setTextColor(color(R.color.white100))
+            setTextColor(ContextCompat.getColor(context, R.color.white100))
             setCompoundDrawableStart(R.drawable.ic_done_16dp)
             setHorizontalPadding(R.dimen.medicalhistory_selected_padding)
           }
           else -> {
-            setTextColor(color(R.color.blue1))
+            setTextColor(ContextCompat.getColor(context, R.color.blue1))
             setCompoundDrawableStart(null)
             setHorizontalPadding(R.dimen.medicalhistory_unselected_padding)
           }

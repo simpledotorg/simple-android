@@ -1,3 +1,9 @@
 package org.simple.clinic.medicalhistory.newentry
 
-sealed class NewMedicalHistoryEvent
+import org.simple.clinic.widgets.UiEvent
+
+sealed class NewMedicalHistoryEvent : UiEvent
+
+class SaveMedicalHistoryClicked : NewMedicalHistoryEvent() {
+  override val analyticsName = "New Medical History:Save Clicked"
+}

@@ -44,13 +44,11 @@ class NewMedicalHistoryScreenController @Inject constructor(
   }
 
   private fun saveMedicalHistoryAndShowSummary(events: Observable<UiEvent>): Observable<UiChange> {
-    val updateEntry = { entry: OngoingMedicalHistoryEntry, toggleEvent: NewMedicalHistoryAnswerToggled ->
-      entry.answerChanged(toggleEvent.question, toggleEvent.answer)
-    }
-
     val ongoingHistoryEntry = events
         .ofType<NewMedicalHistoryAnswerToggled>()
-        .scan(OngoingMedicalHistoryEntry(), updateEntry)
+        .scan(OngoingMedicalHistoryEntry()) { entry, toggleEvent ->
+          entry.answerChanged(toggleEvent.question, toggleEvent.answer)
+        }
 
     val currentUserStream = userSession
         .requireLoggedInUser()

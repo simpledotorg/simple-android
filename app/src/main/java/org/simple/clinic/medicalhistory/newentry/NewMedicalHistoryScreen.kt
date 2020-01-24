@@ -38,7 +38,7 @@ import javax.inject.Inject
 class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), NewMedicalHistoryUi {
 
   @Inject
-  lateinit var controller: NewMedicalHistoryScreenController
+  lateinit var controllerFactory: NewMedicalHistoryScreenController.Factory
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -97,7 +97,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
     bindUiToController(
         ui = this,
         events = events,
-        controller = controller,
+        controller = controllerFactory.create { mobiusDelegate.model },
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
     mobiusDelegate.prepare()

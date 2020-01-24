@@ -210,7 +210,8 @@ class NewMedicalHistoryScreenControllerTest {
         medicalHistoryRepository = medicalHistoryRepository,
         patientRepository = patientRepository,
         userSession = userSession,
-        facilityRepository = facilityRepository
+        facilityRepository = facilityRepository,
+        modelSupplier = { testFixture.model }
     )
 
     controllerSubscription = uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }

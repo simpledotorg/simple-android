@@ -66,12 +66,16 @@ class NewMedicalHistoryScreenControllerTest {
   fun setUp() {
     whenever(medicalHistoryRepository.save(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     val effectHandler = NewMedicalHistoryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
-        uiActions = uiActions
+        uiActions = uiActions,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        patientRepository = patientRepository,
+        medicalHistoryRepository = medicalHistoryRepository
     ).build()
 
     testFixture = MobiusTestFixture(
@@ -124,7 +128,7 @@ class NewMedicalHistoryScreenControllerTest {
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
-    with(inOrder(medicalHistoryRepository, patientRepository, screen)) {
+    with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
       verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
       verify(medicalHistoryRepository).save(
           patientUuid = savedPatient.uuid,
@@ -137,7 +141,7 @@ class NewMedicalHistoryScreenControllerTest {
               hasDiabetes = Yes
           )
       )
-      verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+      verify(uiActions).openPatientSummaryScreen(savedPatient.uuid)
     }
   }
 
@@ -154,7 +158,7 @@ class NewMedicalHistoryScreenControllerTest {
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
-    with(inOrder(medicalHistoryRepository, patientRepository, screen)) {
+    with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
       verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
       verify(medicalHistoryRepository).save(
           patientUuid = savedPatient.uuid,
@@ -165,7 +169,7 @@ class NewMedicalHistoryScreenControllerTest {
               hasHadStroke = Unanswered,
               hasHadKidneyDisease = Unanswered,
               hasDiabetes = Unanswered))
-      verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+      verify(uiActions).openPatientSummaryScreen(savedPatient.uuid)
     }
   }
 
@@ -198,7 +202,7 @@ class NewMedicalHistoryScreenControllerTest {
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
-    with(inOrder(medicalHistoryRepository, patientRepository, screen)) {
+    with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
       verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
       verify(medicalHistoryRepository).save(
           patientUuid = savedPatient.uuid,
@@ -211,7 +215,7 @@ class NewMedicalHistoryScreenControllerTest {
               hasDiabetes = No
           )
       )
-      verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+      verify(uiActions).openPatientSummaryScreen(savedPatient.uuid)
     }
   }
 

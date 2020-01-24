@@ -13,7 +13,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is NewMedicalHistoryAnswerToggled -> next(model.answerChanged(event.question, event.answer))
       is SaveMedicalHistoryClicked -> dispatch(RegisterPatient(model.ongoingMedicalHistoryEntry))
       is PatientRegistered -> dispatch(OpenPatientSummaryScreen(event.patientUuid))
-      is OngoingPatientEntryLoaded -> noChange()
+      is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
     }
   }
 }

@@ -10,7 +10,9 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
@@ -140,5 +142,18 @@ class NewMedicalHistoryScreen(
 
   override fun setPatientName(patientName: String) {
     toolbar.title = patientName
+  }
+
+  override fun renderAnswerForQuestion(question: MedicalHistoryQuestion, answer: Answer) {
+    val view = when (question) {
+      DIAGNOSED_WITH_HYPERTENSION -> diagnosedForHypertensionQuestionView
+      IS_ON_TREATMENT_FOR_HYPERTENSION -> treatmentForHypertensionQuestionView
+      HAS_HAD_A_HEART_ATTACK -> heartAttackQuestionView
+      HAS_HAD_A_STROKE -> strokeQuestionView
+      HAS_HAD_A_KIDNEY_DISEASE -> kidneyDiseaseQuestionView
+      HAS_DIABETES -> diabetesQuestionView
+    }
+
+    view.render(question, answer)
   }
 }

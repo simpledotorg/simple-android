@@ -25,27 +25,27 @@
     android:text="@string/patientsummary_medicalhistory_last_updated"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
     android:id="@+id/diagnosedForHypertensionQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
     android:id="@+id/treatmentForHypertensionQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
     android:id="@+id/heartAttackQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
     android:id="@+id/strokeQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
     android:id="@+id/kidneyDiseaseQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
     android:id="@+id/diabetesQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 </LinearLayout>

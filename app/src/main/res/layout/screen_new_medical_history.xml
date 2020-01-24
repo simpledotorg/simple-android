@@ -24,32 +24,32 @@
       android:layout_marginEnd="@dimen/spacing_16"
       android:paddingTop="@dimen/spacing_8">
 
-      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
         android:id="@+id/diagnosedForHypertensionQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
         android:id="@+id/treatmentForHypertensionQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
         android:id="@+id/heartAttackQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
         android:id="@+id/strokeQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
         android:id="@+id/kidneyDiseaseQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
         android:id="@+id/diabetesQuestionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

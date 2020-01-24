@@ -7,12 +7,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
@@ -51,16 +45,7 @@ class NewMedicalHistoryScreenController @Inject constructor(
 
   private fun saveMedicalHistoryAndShowSummary(events: Observable<UiEvent>): Observable<UiChange> {
     val updateEntry = { entry: OngoingMedicalHistoryEntry, toggleEvent: NewMedicalHistoryAnswerToggled ->
-      toggleEvent.run {
-        when (question) {
-          DIAGNOSED_WITH_HYPERTENSION -> entry.copy(diagnosedWithHypertension = answer)
-          IS_ON_TREATMENT_FOR_HYPERTENSION -> entry.copy(isOnTreatmentForHypertension = answer)
-          HAS_HAD_A_HEART_ATTACK -> entry.copy(hasHadHeartAttack = answer)
-          HAS_HAD_A_STROKE -> entry.copy(hasHadStroke = answer)
-          HAS_HAD_A_KIDNEY_DISEASE -> entry.copy(hasHadKidneyDisease = answer)
-          HAS_DIABETES -> entry.copy(hasDiabetes = answer)
-        }
-      }
+      entry.answerChanged(toggleEvent.question, toggleEvent.answer)
     }
 
     val ongoingHistoryEntry = events

@@ -9,7 +9,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -36,12 +35,11 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class NewMedicalHistoryScreenControllerTest {
+class NewMedicalHistoryScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -59,7 +57,6 @@ class NewMedicalHistoryScreenControllerTest {
   private val facility = PatientMocker.facility(uuid = UUID.fromString("6fc07446-c508-47e7-998e-8c475f9114d1"))
   private val patientUuid = UUID.fromString("d4f0fb3a-0146-4bc6-afec-95b76c61edca")
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect>
 
   @Before
@@ -90,7 +87,6 @@ class NewMedicalHistoryScreenControllerTest {
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -104,7 +100,6 @@ class NewMedicalHistoryScreenControllerTest {
         gender = Gender.Transgender))
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(patientEntry))
 
-    setupController()
     startMobiusLoop()
 
     verify(screen).setPatientName(patientName)
@@ -117,7 +112,6 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     // when
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
@@ -153,7 +147,6 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     // when
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
@@ -181,7 +174,6 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     // when
-    setupController()
     startMobiusLoop()
 
     // Initial answers
@@ -218,19 +210,6 @@ class NewMedicalHistoryScreenControllerTest {
       )
       verify(uiActions).openPatientSummaryScreen(savedPatient.uuid)
     }
-  }
-
-  private fun setupController() {
-    val controller = NewMedicalHistoryScreenController(
-        medicalHistoryRepository = medicalHistoryRepository,
-        patientRepository = patientRepository,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
-        modelSupplier = { testFixture.model }
-    )
-
-    controllerSubscription = uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
-    uiEvents.onNext(ScreenCreated())
   }
 
   private fun startMobiusLoop() {

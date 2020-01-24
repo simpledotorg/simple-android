@@ -6,10 +6,9 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
@@ -27,8 +26,6 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.Instant
@@ -39,9 +36,6 @@ class NewMedicalHistoryScreen(
     context: Context,
     attrs: AttributeSet
 ) : RelativeLayout(context, attrs), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
-
-  @Inject
-  lateinit var controllerFactory: NewMedicalHistoryScreenController.Factory
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -55,22 +49,18 @@ class NewMedicalHistoryScreen(
   @Inject
   lateinit var effectHandlerFactory: NewMedicalHistoryEffectHandler.Factory
 
-  private val events: Observable<UiEvent> by unsafeLazy {
+  private val events: Observable<NewMedicalHistoryEvent> by unsafeLazy {
     Observable
-        .merge(
-            screenCreates(),
-            answerToggles(),
-            saveClicks()
-        )
+        .merge(answerToggles(), saveClicks())
         .compose(ReportAnalyticsEvents())
-        .share()
+        .cast<NewMedicalHistoryEvent>()
   }
 
   private val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this)
 
   private val mobiusDelegate: MobiusDelegate<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> by unsafeLazy {
     MobiusDelegate(
-        events = events.ofType(),
+        events = events,
         defaultModel = NewMedicalHistoryModel.default(),
         update = NewMedicalHistoryUpdate(),
         init = NewMedicalHistoryInit(),
@@ -100,12 +90,6 @@ class NewMedicalHistoryScreen(
 
     diabetesQuestionView.hideDivider()
 
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controllerFactory.create { mobiusDelegate.model },
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    )
     mobiusDelegate.prepare()
 
     post {
@@ -130,8 +114,6 @@ class NewMedicalHistoryScreen(
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(mobiusDelegate.onRestoreInstanceState(state))
   }
-
-  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun answerToggles(): Observable<UiEvent> {
     val toggles = { view: MedicalHistoryQuestionView ->

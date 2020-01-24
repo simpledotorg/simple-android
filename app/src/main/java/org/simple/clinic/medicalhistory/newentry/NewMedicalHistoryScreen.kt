@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.RelativeLayout
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
@@ -130,8 +130,8 @@ class NewMedicalHistoryScreen(
   }
 
   private fun saveClicks() =
-      RxView
-          .clicks(nextButtonFrame.button)
+      nextButtonFrame.button
+          .clicks()
           .map { SaveMedicalHistoryClicked() }
 
   override fun openPatientSummaryScreen(patientUuid: UUID) {

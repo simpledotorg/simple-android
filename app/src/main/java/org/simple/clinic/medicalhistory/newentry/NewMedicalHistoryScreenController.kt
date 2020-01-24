@@ -34,9 +34,7 @@ class NewMedicalHistoryScreenController @AssistedInject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events).replay()
 
-    return Observable.mergeArray(
-        showPatientName(replayedEvents),
-        saveMedicalHistoryAndShowSummary(replayedEvents))
+    return showPatientName(replayedEvents)
   }
 
   private fun showPatientName(events: Observable<UiEvent>): Observable<UiChange> {
@@ -46,28 +44,6 @@ class NewMedicalHistoryScreenController @AssistedInject constructor(
           patientRepository.ongoingEntry()
               .map { it.personalDetails!!.fullName }
               .map { { ui: Ui -> ui.setPatientName(it) } }
-        }
-  }
-
-  private fun saveMedicalHistoryAndShowSummary(events: Observable<UiEvent>): Observable<UiChange> {
-    val currentUserStream = userSession
-        .requireLoggedInUser()
-        .replay()
-        .refCount()
-
-    val currentFacilityStream = currentUserStream
-        .flatMap { loggedInUser -> facilityRepository.currentFacility(loggedInUser) }
-
-    return events
-        .ofType<SaveMedicalHistoryClicked>()
-        .withLatestFrom(currentUserStream, currentFacilityStream) { _, loggedInUser, currentFacility ->
-          loggedInUser to currentFacility
-        }
-        .flatMapSingle { (loggedInUser, currentFacility) -> patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility) }
-        .flatMap { savedPatient ->
-          medicalHistoryRepository
-              .save(savedPatient.uuid, modelSupplier().ongoingMedicalHistoryEntry)
-              .andThen(Observable.just({ ui: Ui -> ui.openPatientSummaryScreen(savedPatient.uuid) }))
         }
   }
 }

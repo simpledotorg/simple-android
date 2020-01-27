@@ -177,11 +177,6 @@
   <string name="patientsummary_prescriptions_update">Update medicines</string>
   <string name="patientsummary_bp_add_new">Blood Pressure</string>
   <string name="patientsummary_finish_saving_patient">Save</string>
-
-  <!-- TODO: Remove strings after migrating to the new design -->
-  <string name="patientsummary_medicalhistory_title">Cardiovascular History</string>
-  <string name="patientsummary_medicalhistory_last_updated">Updated %s</string>
-
   <string name="patientsummary_bp_none_added">No blood pressures added</string>
   <string name="patientsummary_bp_reading" translatable="false">%1$d / %2$d</string>
   <string name="patientsummary_edit">Edit</string>
@@ -388,8 +383,6 @@
   <string name="medicalhistory_question_takes_hypertension_drugs">Already takes hypertension drugs</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">Diabetes</string>
-  <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_none">None of the above</string>
   <string name="newmedicalhistory_next">Next</string>
   <string name="newmedicalhistory_yes">Yes</string>
   <string name="newmedicalhistory_no">No</string>

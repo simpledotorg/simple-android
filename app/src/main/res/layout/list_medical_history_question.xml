@@ -6,7 +6,8 @@
   android:layout_height="match_parent"
   android:foreground="?attr/selectableItemBackgroundBorderless"
   tools:ignore="UnusedAttribute"
-  tools:parentTag="android.widget.RelativeLayout">
+  tools:parentTag="android.widget.RelativeLayout"
+  tools:background="@color/white100">
 
   <LinearLayout
     android:id="@+id/contentLayout"
@@ -22,8 +23,10 @@
       android:layout_marginEnd="@dimen/spacing_16"
       android:layout_marginTop="@dimen/spacing_16"
       android:layout_weight="1"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
-      tools:text="A really long medical history question that shouldn't fit" />
+      android:lines="1"
+      android:ellipsize="end"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+      tools:text="Kidney disease" />
 
     <LinearLayout
       android:layout_width="wrap_content"
@@ -75,5 +78,5 @@
     android:layout_alignEnd="@+id/contentLayout"
     android:layout_alignStart="@+id/contentLayout"
     android:layout_below="@+id/contentLayout"
-    android:background="@color/grey3" />
+    android:background="@color/grey4" />
 </RelativeLayout>

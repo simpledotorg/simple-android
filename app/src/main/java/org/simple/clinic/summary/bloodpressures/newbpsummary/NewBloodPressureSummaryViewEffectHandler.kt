@@ -16,6 +16,7 @@ class NewBloodPressureSummaryViewEffectHandler @Inject constructor(
     return RxMobius
         .subtypeEffectHandler<NewBloodPressureSummaryViewEffect, NewBloodPressureSummaryViewEvent>()
         .addTransformer(LoadBloodPressures::class.java, loadBloodPressureHistory(schedulersProvider.io()))
+        .addTransformer(LoadBloodPressuresCount::class.java, loadBloodPressuresCount(schedulersProvider.io()))
         .build()
   }
 
@@ -30,6 +31,20 @@ class NewBloodPressureSummaryViewEffectHandler @Inject constructor(
                 .subscribeOn(scheduler)
           }
           .map(::BloodPressuresLoaded)
+    }
+  }
+
+  private fun loadBloodPressuresCount(
+      scheduler: Scheduler
+  ): ObservableTransformer<LoadBloodPressuresCount, NewBloodPressureSummaryViewEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .switchMap {
+            bloodPressureRepository
+                .bloodPressureCount(it.patientUuid)
+                .subscribeOn(scheduler)
+          }
+          .map(::BloodPressuresCountLoaded)
     }
   }
 }

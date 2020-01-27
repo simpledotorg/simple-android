@@ -44,4 +44,17 @@ class NewBloodPressureSummaryViewEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(BloodPressuresLoaded(bloodPressures))
   }
+
+  @Test
+  fun `when load blood pressures count effect is received, then load blood pressures count`() {
+    // given
+    val bloodPressuresCount = 10
+    whenever(bloodPressureRepository.bloodPressureCount(patientUuid)) doReturn Observable.just(bloodPressuresCount)
+
+    // when
+    testCase.dispatch(LoadBloodPressuresCount(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(BloodPressuresCountLoaded(bloodPressuresCount))
+  }
 }

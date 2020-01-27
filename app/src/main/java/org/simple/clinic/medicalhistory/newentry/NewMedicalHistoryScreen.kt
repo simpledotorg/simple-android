@@ -14,12 +14,10 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.platform.crash.CrashReporter
@@ -126,15 +124,15 @@ class NewMedicalHistoryScreen(
 
   override fun renderAnswerForQuestion(question: MedicalHistoryQuestion, answer: Answer) {
     val view = when (question) {
-      DIAGNOSED_WITH_HYPERTENSION -> diagnosedForHypertensionQuestionView
-      IS_ON_TREATMENT_FOR_HYPERTENSION -> treatmentForHypertensionQuestionView
       HAS_HAD_A_HEART_ATTACK -> heartAttackQuestionView
       HAS_HAD_A_STROKE -> strokeQuestionView
       HAS_HAD_A_KIDNEY_DISEASE -> kidneyDiseaseQuestionView
       HAS_DIABETES -> diabetesQuestionView
+      // TODO(vs): 2020-01-27 Remove unused enums once the separation of the models is done
+      else -> null
     }
 
-    view.render(question, answer) { questionForView, newAnswer ->
+    view?.render(question, answer) { questionForView, newAnswer ->
       questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
   }

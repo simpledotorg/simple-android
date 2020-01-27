@@ -134,8 +134,6 @@
   <string name="patientsummary_prescriptions_update">መድሃኒታት ኣሐድስ</string>
   <string name="patientsummary_bp_add_new">ሓድሽ ጸቕጢ ደም</string>
   <string name="patientsummary_finish_saving_patient">ዓቅብ</string>
-  <string name="patientsummary_medicalhistory_title">መትነ-ልባዊ ታሪኽ</string>
-  <string name="patientsummary_medicalhistory_last_updated">ዝተሓደሰ %s</string>
   <string name="patientsummary_bp_none_added">ዝተወሰኸ ንጸቕጢ ደም የለን</string>
   <string name="patientsummary_edit">ኣመዓራሪ/ኣርትዕ</string>
   <string name="patientsummary_updatephone_dialog_title">ቊጽሪ ተሌፎን ኣሐድስ</string>
@@ -317,8 +315,6 @@
   <string name="medicalhistory_question_takes_hypertension_drugs">ድሮ ናይ ጸቕጢ ደም መድሃኒታት ይወስድ’ዩ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">ሽኮርያ ኣለዎ</string>
-  <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_none">ካብቶም ኣብ ላዕሊ ዘለዉ ዝኾነ የብሉን</string>
   <string name="newmedicalhistory_next">ዝቕጽል</string>
   <string name="newmedicalhistory_yes">እወ</string>
   <string name="newmedicalhistory_no">ኣይፋል</string>

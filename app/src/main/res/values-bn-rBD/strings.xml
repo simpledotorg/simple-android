@@ -135,8 +135,6 @@
   <string name="patientsummary_prescriptions_update">ওষুধগুলো আপডেট করুন</string>
   <string name="patientsummary_bp_add_new">নতুন বিপি</string>
   <string name="patientsummary_finish_saving_patient">সংরক্ষণ করুন</string>
-  <string name="patientsummary_medicalhistory_title">হৃদরোগের ইতিহাস</string>
-  <string name="patientsummary_medicalhistory_last_updated">আপডেট করা হয়েছে %s</string>
   <string name="patientsummary_bp_none_added">কোন রক্তচাপ যোগ করা হয়নি</string>
   <string name="patientsummary_edit">সম্পাদনা করুন</string>
   <string name="patientsummary_updatephone_dialog_title">ফোন নম্বর আপডেট করুন</string>
@@ -318,8 +316,6 @@
   <string name="medicalhistory_question_takes_hypertension_drugs">ইতিমধ্যে হাইপারটেনশনের/ উচ্চ রক্তচাপের ওষুধগুলো সেবন করেন</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">ডায়াবেটিস আছে</string>
-  <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_none">উপরের একটিও নয়</string>
   <string name="newmedicalhistory_next">পরবর্তী</string>
   <string name="newmedicalhistory_yes">হ্যাঁ</string>
   <string name="newmedicalhistory_no">না</string>

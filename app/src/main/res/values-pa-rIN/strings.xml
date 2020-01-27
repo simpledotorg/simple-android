@@ -136,8 +136,6 @@
   <string name="patientsummary_prescriptions_update">ਦਵਾਈਆਂ ਅੱਪਡੇਟ ਕਰੋ</string>
   <string name="patientsummary_bp_add_new">ਨਵਾਂ ਬੀ ਪੀ</string>
   <string name="patientsummary_finish_saving_patient">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
-  <string name="patientsummary_medicalhistory_title">ਕਾਰਡੀਓਵੈਸਕਿਉਲਰ ਇਤਿਹਾਸ</string>
-  <string name="patientsummary_medicalhistory_last_updated">ਅੱਪਡੇਟ ਕੀਤਾ ਗਿਆ %s</string>
   <string name="patientsummary_bp_none_added">ਕੋਈ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਨਹੀਂ ਜੋੜੇ ਗਏ</string>
   <string name="patientsummary_edit">ਸੰਪਾਦਨ ਕਰੋ</string>
   <string name="patientsummary_updatephone_dialog_title">ਫ਼ੋਨ ਨੰਬਰ ਅੱਪਡੇਟ ਕਰੋ</string>
@@ -319,8 +317,6 @@
   <string name="medicalhistory_question_takes_hypertension_drugs">ਪਹਿਲਾਂ ਹੀ ਹਾਈਪਰਟੈਂਸ਼ਨ ਦੀਆਂ ਦਵਾਈਆਂ ਲੈਂਦਾ/ਦੀ ਹੈ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">ਡਾਇਬੀਟੀਜ਼ ਹੈ</string>
-  <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_none">ਉਪਰੋਕਤ ਕੋਈ ਨਹੀਂ</string>
   <string name="newmedicalhistory_next">ਅਗਲਾ</string>
   <string name="newmedicalhistory_yes">ਹਾਂ</string>
   <string name="newmedicalhistory_no">ਨਹੀਂ</string>

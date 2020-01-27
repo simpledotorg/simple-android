@@ -136,8 +136,6 @@
   <string name="patientsummary_prescriptions_update">మందులను అప్‌డేట్ చేయి</string>
   <string name="patientsummary_bp_add_new">కొత్త బిపి</string>
   <string name="patientsummary_finish_saving_patient">సేవ్ చేయి</string>
-  <string name="patientsummary_medicalhistory_title">గతంలో గుండె రక్త నాళాలకు సంబంధించిన సమస్యలు</string>
-  <string name="patientsummary_medicalhistory_last_updated">%s అప్‌డేట్ అయింది</string>
   <string name="patientsummary_bp_none_added">రక్తపోటును జోడించలేదు</string>
   <string name="patientsummary_edit">సవరించు</string>
   <string name="patientsummary_updatephone_dialog_title">ఫోన్ నంబర్‌ను అప్‌డేట్ చేయి</string>
@@ -319,8 +317,6 @@
   <string name="medicalhistory_question_takes_hypertension_drugs">ఇప్పటికే రక్తపోటు మందులను వాడుతున్నారు</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">మధుమేహం ఉంది</string>
-  <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_none">ఇవేవీ కావు</string>
   <string name="newmedicalhistory_next">తదుపరి</string>
   <string name="newmedicalhistory_yes">అవును</string>
   <string name="newmedicalhistory_no">కాదు</string>

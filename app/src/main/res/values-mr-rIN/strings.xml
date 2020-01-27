@@ -136,8 +136,6 @@
   <string name="patientsummary_prescriptions_update">औषधे अद्ययावत करा</string>
   <string name="patientsummary_bp_add_new">नवीन बीपी</string>
   <string name="patientsummary_finish_saving_patient">जतन करा</string>
-  <string name="patientsummary_medicalhistory_title">हृदय व रक्तवाहिन्यासंबंधीचा इतिहास</string>
-  <string name="patientsummary_medicalhistory_last_updated">अद्ययावत केलेले %s</string>
   <string name="patientsummary_bp_none_added">कोणतेही रक्तदाब जोडले नाहीत</string>
   <string name="patientsummary_edit">संपादित करा</string>
   <string name="patientsummary_updatephone_dialog_title">फोन नंबर अद्ययावत करा</string>
@@ -319,8 +317,6 @@
   <string name="medicalhistory_question_takes_hypertension_drugs">आधीच उच्च रक्तदाबाची औषधे घेतात</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">मधुमेह आहे</string>
-  <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_none">वरीलपैकी काहीही नाही</string>
   <string name="newmedicalhistory_next">पुढे</string>
   <string name="newmedicalhistory_yes">होय</string>
   <string name="newmedicalhistory_no">नाही</string>

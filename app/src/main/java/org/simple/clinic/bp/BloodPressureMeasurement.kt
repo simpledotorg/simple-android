@@ -94,7 +94,7 @@ data class BloodPressureMeasurement(
       FROM bloodpressuremeasurement
       WHERE patientUuid = :patientUuid AND deletedAt IS NULL
     """)
-    fun recordedBloodPressureCountForPatient(patientUuid: UUID): Int
+    fun recordedBloodPressureCountForPatientImmediate(patientUuid: UUID): Int
 
     @Query("""
       SELECT * FROM bloodpressuremeasurement

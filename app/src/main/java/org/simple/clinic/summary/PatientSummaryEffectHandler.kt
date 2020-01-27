@@ -128,6 +128,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
   }
 
   private fun doesNotHaveBloodPressures(patientUuid: UUID): Boolean {
-    return bloodPressureRepository.bloodPressureCount(patientUuid) == 0
+    return bloodPressureRepository.bloodPressureCountImmediate(patientUuid) == 0
   }
 }

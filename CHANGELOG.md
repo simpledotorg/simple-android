@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## On Demo
+## Next Release
+### Feature
+- Simplify the computation of high risk label in overdue list
+
+## 2020-01-27-7040
 ### Feature
 - Introduce Diabetes management for tracking patient blood sugar
 

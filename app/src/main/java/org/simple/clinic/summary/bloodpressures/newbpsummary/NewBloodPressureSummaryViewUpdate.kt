@@ -11,6 +11,7 @@ class NewBloodPressureSummaryViewUpdate : Update<NewBloodPressureSummaryViewMode
   ): Next<NewBloodPressureSummaryViewModel, NewBloodPressureSummaryViewEffect> {
     return when (event) {
       is BloodPressuresLoaded -> next(model.bloodPressuresLoaded(event.measurements))
+      is BloodPressuresCountLoaded -> next(model.bloodPressuresCountLoaded(event.count))
     }
   }
 }

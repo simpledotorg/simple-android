@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.cardview.widget.CardView
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.di.injector
 import org.simple.clinic.summary.bloodpressures.newbpsummary.NewBloodPressureSummaryViewUi
 import org.simple.clinic.summary.bloodpressures.newbpsummary.NewBloodPressureSummaryViewUiActions
 import java.util.UUID
@@ -18,6 +19,7 @@ class NewBloodPressureSummaryView(
     if (isInEditMode) {
       return
     }
+    context.injector<NewBloodPressureSummaryViewInjector>().inject(this)
   }
 
   override fun showNoBloodPressuresView() {

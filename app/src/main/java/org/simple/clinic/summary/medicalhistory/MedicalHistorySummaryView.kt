@@ -21,15 +21,10 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.util.RelativeTimestamp
-import org.simple.clinic.util.RelativeTimestampGenerator
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
-import javax.inject.Named
 
 class MedicalHistorySummaryView(
     context: Context,
@@ -39,19 +34,10 @@ class MedicalHistorySummaryView(
   private val internalEvents = PublishSubject.create<MedicalHistorySummaryEvent>()
 
   @Inject
-  lateinit var timestampGenerator: RelativeTimestampGenerator
-
-  @Inject
-  lateinit var userClock: UserClock
-
-  @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var controllerFactory: MedicalHistorySummaryUiController.Factory
-
-  @field:[Inject Named("exact_date")]
-  lateinit var exactDateFormatter: DateTimeFormatter
 
   init {
     LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
@@ -79,25 +65,6 @@ class MedicalHistorySummaryView(
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   override fun populateMedicalHistory(medicalHistory: MedicalHistory) {
-    bind(
-        medicalHistory = medicalHistory,
-        lastUpdatedAt = timestampGenerator.generate(medicalHistory.updatedAt, userClock),
-        dateFormatter = exactDateFormatter
-    )
-  }
-
-  private fun bind(
-      medicalHistory: MedicalHistory,
-      lastUpdatedAt: RelativeTimestamp,
-      dateFormatter: DateTimeFormatter
-  ) {
-    val updatedAtDisplayText = lastUpdatedAt.displayText(context, dateFormatter)
-
-    lastUpdatedAtTextView.text = context.getString(
-        R.string.patientsummary_medicalhistory_last_updated,
-        updatedAtDisplayText
-    )
-
     heartAttackQuestionView.render(HAS_HAD_A_HEART_ATTACK, medicalHistory.hasHadHeartAttack, ::answerToggled)
     strokeQuestionView.render(HAS_HAD_A_STROKE, medicalHistory.hasHadStroke, ::answerToggled)
     kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE, medicalHistory.hasHadKidneyDisease, ::answerToggled)

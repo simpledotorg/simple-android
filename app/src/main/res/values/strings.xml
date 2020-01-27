@@ -177,8 +177,11 @@
   <string name="patientsummary_prescriptions_update">Update medicines</string>
   <string name="patientsummary_bp_add_new">Blood Pressure</string>
   <string name="patientsummary_finish_saving_patient">Save</string>
+
+  <!-- TODO: Remove strings after migrating to the new design -->
   <string name="patientsummary_medicalhistory_title">Cardiovascular History</string>
   <string name="patientsummary_medicalhistory_last_updated">Updated %s</string>
+
   <string name="patientsummary_bp_none_added">No blood pressures added</string>
   <string name="patientsummary_bp_reading" translatable="false">%1$d / %2$d</string>
   <string name="patientsummary_edit">Edit</string>
@@ -201,6 +204,9 @@
   <string name="patientsummary_addphone_cancel">Skip</string>
   <string name="patientsummary_addphone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
   <string name="patientsummary_addphone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
+  <string name="patientsummary_newbp_date_time" translatable="false">%1$s\n%2$s</string>
+
+  <string name="bloodpressuresummaryview_see_all_button">See all</string>
 
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -526,16 +532,18 @@
   <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
+  <!-- Blood Sugar History screen -->
   <string name="bloodpressurehistory_bp_reading" translatable="false">%1$d / %2$d</string>
   <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
   <string name="bloodpressurehistory_toolbar_title" translatable="false">%1$s, %2$s, %3$d</string>
   <string name="bloodpressurehistory_bp_time_date" translatable="false">%1$s\n%2$s</string>
 
-  <string name="bloodpressuresummaryview_see_all_button">See all</string>
-  <string name="patientsummary_newbp_date_time" translatable="false">%1$s\n%2$s</string>
-
+  <!-- Blood Pressure History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">Diabetes</string>
   <string name="bloodsugarhistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
   <string name="bloodsugarhistory_blood_sugar_reading" translatable="false">%1$d mg/dl %2$s</string>
   <string name="bloodsugarhistory_toolbar_title" translatable="false">%1$s, %2$s, %3$d</string>
+
+  <!-- Summary CV History view -->
+  <string name="medicalhistorysummaryview_history">History</string>
 </resources>

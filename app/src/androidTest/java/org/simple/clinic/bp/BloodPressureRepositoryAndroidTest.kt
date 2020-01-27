@@ -187,7 +187,7 @@ class BloodPressureRepositoryAndroidTest {
   }
 
   @Test
-  fun getting_the_blood_pressure_count_for_a_patient_should_work_correctly() {
+  fun getting_the_blood_pressure_count_immediate_for_a_patient_should_work_correctly() {
     val patientUuidWithOnlyDeletedBloodPressures = UUID.randomUUID()
     val patientUuidWithBloodPressures = UUID.randomUUID()
 
@@ -207,8 +207,8 @@ class BloodPressureRepositoryAndroidTest {
     appDatabase.bloodPressureDao().save(bpsForPatientWithOnlyDeletedBloodPressures + bpsForPatientWithBloodPressures)
     assertThat(appDatabase.bloodPressureDao().count().blockingFirst()).isEqualTo(6)
 
-    assertThat(repository.bloodPressureCount(patientUuidWithOnlyDeletedBloodPressures)).isEqualTo(0)
-    assertThat(repository.bloodPressureCount(patientUuidWithBloodPressures)).isEqualTo(1)
+    assertThat(repository.bloodPressureCountImmediate(patientUuidWithOnlyDeletedBloodPressures)).isEqualTo(0)
+    assertThat(repository.bloodPressureCountImmediate(patientUuidWithBloodPressures)).isEqualTo(1)
   }
 
   @Test

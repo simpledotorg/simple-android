@@ -128,7 +128,7 @@ class BloodPressureRepository @Inject constructor(
     }
   }
 
-  fun bloodPressureCount(patientUuid: UUID): Int = dao.recordedBloodPressureCountForPatient(patientUuid)
+  fun bloodPressureCountImmediate(patientUuid: UUID): Int = dao.recordedBloodPressureCountForPatientImmediate(patientUuid)
 
   fun allBloodPressures(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
     return dao.allBloodPressures(patientUuid)

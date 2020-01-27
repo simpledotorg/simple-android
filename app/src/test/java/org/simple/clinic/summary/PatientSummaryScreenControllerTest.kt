@@ -434,7 +434,7 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention
   ) {
     whenever(patientRepository.hasPatientDataChangedSince(any(), any())).doReturn(true)
-    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(1)
 
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
     setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
@@ -452,7 +452,7 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(0)
 
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
     setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
@@ -491,7 +491,7 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(1)
 
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
     setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
@@ -512,7 +512,7 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(0)
 
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
     setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
@@ -532,7 +532,7 @@ class PatientSummaryScreenControllerTest {
   fun `when all bps are not deleted, clicking on save must show the schedule appointment sheet regardless of summary changes`(
       openIntention: OpenIntention
   ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(1)
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(1)
 
     setupController(openIntention)
     startMobiusLoop()
@@ -548,7 +548,7 @@ class PatientSummaryScreenControllerTest {
   fun `when all bps are deleted, clicking on save must go to the home screen regardless of summary changes`(
       openIntention: OpenIntention
   ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).doReturn(0)
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(0)
 
     setupController(openIntention)
     startMobiusLoop()

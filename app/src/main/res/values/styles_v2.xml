@@ -229,6 +229,14 @@
     <item name="android:textColor">@color/grey2</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Subtitle1Left.Emphasis">
+    <item name="android:fontFamily">sans-serif-medium</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Subtitle1Left.Emphasis.Grey0">
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body2Left">
     <item name="android:textSize">14sp</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.02</item>

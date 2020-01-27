@@ -4,30 +4,20 @@
   android:layout_height="wrap_content"
   android:orientation="vertical"
   android:paddingTop="@dimen/spacing_24"
-  android:paddingBottom="@dimen/spacing_16">
+  android:paddingBottom="@dimen/spacing_4">
 
   <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_16"
-    android:text="@string/patientsummary_medicalhistory_title"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
-
-  <TextView
-    android:id="@+id/lastUpdatedAtTextView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="@dimen/spacing_4"
-    android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginBottom="@dimen/spacing_8"
-    android:text="@string/patientsummary_medicalhistory_last_updated"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
+    android:text="@string/medicalhistorysummaryview_history"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Emphasis.Grey0" />
 
   <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
     android:id="@+id/heartAttackQuestionView"
-    style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
+    style="@style/Clinic.V2.SummaryMedicalHistoryQuestion"
+    android:layout_marginTop="@dimen/spacing_4"/>
 
   <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
     android:id="@+id/strokeQuestionView"

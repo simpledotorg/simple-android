@@ -212,6 +212,31 @@ class BloodPressureRepositoryAndroidTest {
   }
 
   @Test
+  fun getting_then_blood_pressure_count_for_a_patient_should_work_correctly() {
+    val patientUuidWithOnlyDeletedBloodPressures = UUID.randomUUID()
+    val patientUuidWithBloodPressures = UUID.randomUUID()
+
+    val now = Instant.now(clock)
+    val bpsForPatientWithOnlyDeletedBloodPressures = listOf(
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithOnlyDeletedBloodPressures, deletedAt = now),
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithOnlyDeletedBloodPressures, deletedAt = now),
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithOnlyDeletedBloodPressures, deletedAt = now)
+    )
+
+    val bpsForPatientWithBloodPressures = listOf(
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithBloodPressures, deletedAt = now),
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithBloodPressures),
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithBloodPressures, deletedAt = now)
+    )
+
+    appDatabase.bloodPressureDao().save(bpsForPatientWithOnlyDeletedBloodPressures + bpsForPatientWithBloodPressures)
+    assertThat(appDatabase.bloodPressureDao().count().blockingFirst()).isEqualTo(6)
+
+    assertThat(repository.bloodPressureCount(patientUuidWithOnlyDeletedBloodPressures).blockingFirst()).isEqualTo(0)
+    assertThat(repository.bloodPressureCount(patientUuidWithBloodPressures).blockingFirst()).isEqualTo(1)
+  }
+
+  @Test
   fun when_fetching_all_blood_pressure_the_list_should_be_ordered_by_recorded_at() {
     val patientUuid = UUID.fromString("b5c190d1-3d99-40ce-aef1-d0c82270f834")
     val bpRecordRightNow = testData.bloodPressureMeasurement(

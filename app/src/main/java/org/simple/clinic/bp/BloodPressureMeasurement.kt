@@ -97,6 +97,13 @@ data class BloodPressureMeasurement(
     fun recordedBloodPressureCountForPatientImmediate(patientUuid: UUID): Int
 
     @Query("""
+      SELECT COUNT(uuid)
+      FROM bloodpressuremeasurement
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+    """)
+    fun recordedBloodPressureCountForPatient(patientUuid: UUID): Observable<Int>
+
+    @Query("""
       SELECT * FROM bloodpressuremeasurement
         WHERE patientUuid = :patientUuid AND deletedAt IS NULL
         ORDER BY recordedAt DESC LIMIT :limit

@@ -5,12 +5,16 @@ import java.util.UUID
 
 data class NewBloodPressureSummaryViewModel(
     val patientUuid: UUID,
-    val latestBloodPressuresToDisplay: List<BloodPressureMeasurement>?
+    val latestBloodPressuresToDisplay: List<BloodPressureMeasurement>?,
+    val totalRecordedBloodPressureCount: Int?
 ) {
   companion object {
-    fun create(patientUuid: UUID) = NewBloodPressureSummaryViewModel(patientUuid, null)
+    fun create(patientUuid: UUID) = NewBloodPressureSummaryViewModel(patientUuid, null, null)
   }
 
   fun bloodPressuresLoaded(bloodPressures: List<BloodPressureMeasurement>): NewBloodPressureSummaryViewModel =
       copy(latestBloodPressuresToDisplay = bloodPressures)
+
+  fun bloodPressuresCountLoaded(bloodPressuresCount: Int): NewBloodPressureSummaryViewModel =
+      copy(totalRecordedBloodPressureCount = bloodPressuresCount)
 }

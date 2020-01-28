@@ -83,6 +83,7 @@ class NewMedicalHistoryScreen(
     }
 
     diabetesQuestionView.hideDivider()
+    diabetesDiagnosisView.hideDivider()
 
     mobiusDelegate.prepare()
 

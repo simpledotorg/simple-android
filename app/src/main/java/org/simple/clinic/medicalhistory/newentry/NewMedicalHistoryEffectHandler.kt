@@ -34,6 +34,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
         .addConsumer(OpenPatientSummaryScreen::class.java, { effect -> uiActions.openPatientSummaryScreen(effect.patientUuid) }, schedulersProvider.ui())
         .addTransformer(RegisterPatient::class.java, registerPatient(schedulersProvider.io()))
         .addTransformer(LoadOngoingPatientEntry::class.java, loadOngoingNewPatientEntry(schedulersProvider.io()))
+        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .build()
   }
 
@@ -70,6 +71,22 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
       effects
           .flatMapSingle { patientRepository.ongoingEntry().subscribeOn(scheduler) }
           .map(::OngoingPatientEntryLoaded)
+    }
+  }
+
+  private fun loadCurrentFacility(scheduler: Scheduler): ObservableTransformer<LoadCurrentFacility, NewMedicalHistoryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .flatMap {
+            val loggedInUser = userSession.loggedInUserImmediate()
+            requireNotNull(loggedInUser)
+
+            facilityRepository
+                .currentFacility(loggedInUser)
+                .take(1)
+          }
+          .map(::CurrentFacilityLoaded)
     }
   }
 

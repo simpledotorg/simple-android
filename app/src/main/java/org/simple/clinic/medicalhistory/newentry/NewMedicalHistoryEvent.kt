@@ -1,5 +1,6 @@
 package org.simple.clinic.medicalhistory.newentry
 
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -20,3 +21,5 @@ data class NewMedicalHistoryAnswerToggled(val question: MedicalHistoryQuestion, 
 data class PatientRegistered(val patientUuid: UUID): NewMedicalHistoryEvent()
 
 data class OngoingPatientEntryLoaded(val ongoingNewPatientEntry: OngoingNewPatientEntry): NewMedicalHistoryEvent()
+
+data class CurrentFacilityLoaded(val facility: Facility): NewMedicalHistoryEvent()

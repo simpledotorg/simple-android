@@ -48,14 +48,18 @@
   <string name="patiententry_contentdescription_up_button">ਖੋਜ ਲਈ ਵਾਪਸ ਜਾਉ</string>
   <string name="patiententry_full_name">ਮਰੀਜ਼ ਦਾ ਨਾਮ</string>
   <string name="patiententry_phone_number">ਫ਼ੋਨ ਨੰਬਰ</string>
+  <string name="patiententry_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
   <string name="patiententry_date_of_birth_unfocused">ਜਨਮ ਮਿਤੀ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (ਜਨਮ ਮਿਤੀ): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">ਜਾਂ</string>
   <string name="patiententry_age">ਉਮਰ</string>
-  <string name="patiententry_street_address">ਮਕਾਨ ਸੰਖਿਆ ਅਤੇ ਗਲੀ</string>
-  <string name="patiententry_village_colony_ward">ਕੋਲੋਨੀ/ਪਿੰਡ/ਵਾਰਡ</string>
-  <string name="patiententry_zone">ਖੇਤਰ/ਜ਼ੋਨ</string>
+  <string name="patiententry_street_address">ਘਰ ਦਾ ਪਤਾ</string>
+  <string name="patiententry_street_house_road_number">ਮਕਾਨ ਅਤੇ ਰੋਡ ਨੰਬਰ</string>
+  <string name="patiententry_village_colony_ward">ਪਿੰਡ / ਕਲੋਨੀ / ਵਾਰਡ</string>
+  <string name="patiententry_village_ward">ਪਿੰਡ / ਵਾਰਡ</string>
+  <string name="patiententry_zone">ਯੂਨੀਅਨ</string>
   <string name="patiententry_district">ਜਿਲ੍ਹਾ</string>
+  <string name="patiententry_upazila">ਅਪੈਜ਼ੀਲਾ</string>
   <string name="patiententry_state">ਰਾਜ</string>
   <string name="patiententry_save_patient">ਅਗਲਾ</string>
   <string name="patiententry_error_empty_fullname">ਮਰੀਜ਼ ਦਾ ਪੂਰਾ ਨਾਮ ਦਾਖ਼ਲ ਕਰੋ</string>
@@ -70,15 +74,16 @@
   <string name="patiententry_error_phonenumber_length_more">ਫ਼ੋਨ ਨੰਬਰ 12 ਅੰਕਾਂ ਤੋਂ ਵੱਡਾ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
   <string name="patiententry_identifier">ਬੀਪੀ ਪਾਸਪੋਰਟ</string>
   <string name="patiententry_consent_header">ਸਹਿਮਤੀ:\u0020</string>
-  <string name="patiententry_consent_first_para">ਹੇਠਾਂ ਟੈਪ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤਾ ਕੋਈ ਵੀ ਮਰੀਜ਼ ਡੇਟਾ ਢੁਕਵੀਂ ਸੂਚਿਤ ਸਹਿਮਤੀ ਤਹਿਤ ਹਾਸਲ ਕੀਤਾ ਗਿਆ ਹੈ। ਇਸਦਾ ਮਤਲਬ ਇਹ ਹੈ ਕਿ ਮਰੀਜ਼ ਨੂੰ ਪਤਾ ਹੈ ਕਿ ਤੁਸੀਂ ਉਸਦਾ ਨਿੱਜੀ ਡੇਟਾ ਐਪ ਵਿੱਚ ਪਾ ਰਹੇ ਹੋ, ਸਮਝਦਾ/ਦੀ ਹੈ ਕਿ ਕਿਹੜਾ ਡੇਟਾ ਇਕੱਤਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ, ਅਤੇ ਜਾਣਦਾ/ਦੀ ਹੈ ਕਿ ਐਪ ਵਿੱਚ ਪ੍ਰਦਾਨ ਕੀਤੇ ਫ਼ੋਨ ਨੰਬਰ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਉਸਦੇ ਨਾਲ ਐਸ.ਐਮ.ਐਸ, WhatsApp, ਜਾਂ ਹੋਰ ਵਿਧੀਆਂ ਦੁਆਰਾ ਸੰਪਰਕ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ।</string>
-  <string name="patiententry_consent_second_para">ਤੁਹਾਡੇ ਵਲੋਂ ਅਧਿਕਾਰ ਦਿੱਤੇ ਵਿਅਕਤੀ ਦੀ, ਜਾਂ ਸਿਹਤ-ਸੰਭਾਲ ਪ੍ਰਦਾਤੇ ਦੀ ਜਿਸ ਲਈ ਤੁਸੀਂ ਕੰਮ ਕਰਦੇ ਹੋ, ਮਰੀਜ਼ ਡੇਟਾ ਤੱਕ ਅਤੇ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤੀ ਜਾਣਕਾਰੀ ਤੱਕ ਪਹੁੰਚ ਹੋਵੇਗੀ। ਐਪ ਦੀ ਵਰਤੋਂ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਮਰੀਜ਼ ਸਮਝਦਾ/ਦੀ ਹੈ ਕਿ ਇਸ ਐਪ ਦੇ ਦੁਆਰਾ ਕਿਸ ਵਿਅਕਤੀ ਦੀ ਹਾਸਲ ਕੀਤੇ ਡੇਟਾ ਤੱਕ ਪਹੁੰਚ ਹੋਵੇਗੀ ਅਤੇ ਉਸ ਪਹੁੰਚ ਲਈ ਸਹਿਮਤੀ ਦਿੰਦਾ/ਦੀ ਹੈ।</string>
+  <string name="patiententry_consent_first_para">ਹੇਠਾਂ ਟੈਪ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤਾ ਕੋਈ ਵੀ ਮਰੀਜ਼ ਡੇਟਾ ਢੁਕਵੀਂ ਸੂਚਿਤ ਸਹਿਮਤੀ ਤਹਿਤ ਹਾਸਲ ਕੀਤਾ ਗਿਆ ਹੈ। ਇਸਦਾ ਮਤਲਬ ਇਹ ਹੈ ਕਿ ਮਰੀਜ਼ ਜਾਂ ਕਨੂੰਨੀ ਸਰਪ੍ਰਸਤ ਨੂੰ ਪਤਾ ਹੈ ਕਿ ਤੁਸੀਂ ਉਸਦਾ ਨਿੱਜੀ ਡਾਟਾ ਐਪ ਵਿੱਚ ਦਰਜ ਕਰ ਰਹੇ ਹੋ, ਸਮਝਦਾ/ਸਮਝਦੀ ਹੈ ਕਿ ਕਿਹੜਾ ਡਾਟਾ ਇਕੱਤਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ, ਅਤੇ ਜਾਣਦਾ/ਜਾਣਦੀ ਹੈ ਕਿ ਐਪ ਵਿੱਚ ਪ੍ਰਦਾਨ ਕੀਤੇ ਫ਼ੋਨ ਨੰਬਰ ਦੀ ਵਰਤੋਂ ਕਰਕੇ SMS, WhatsApp, ਜਾਂ ਹੋਰ ਵਿਧੀਆਂ ਰਾਹੀਂ ਉਹਨਾਂ ਨਾਲ ਸੰਪਰਕ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ।</string>
+  <string name="patiententry_consent_second_para">ਤੁਹਾਡੇ ਵਲੋਂ ਅਧਿਕਾਰ ਦਿੱਤੇ ਵਿਅਕਤੀ ਦੀ, ਜਾਂ ਸਿਹਤ-ਸੰਭਾਲ ਪ੍ਰਦਾਤੇ ਦੀ ਜਿਸ ਲਈ ਤੁਸੀਂ ਕੰਮ ਕਰਦੇ ਹੋ, ਮਰੀਜ਼ ਡੇਟਾ ਤੱਕ ਅਤੇ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤੀ ਜਾਣਕਾਰੀ ਤੱਕ ਪਹੁੰਚ ਹੋਵੇਗੀ। ਐਪ ਦੀ ਵਰਤੋਂ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਮਰੀਜ਼ ਜਾਂ ਕਨੂੰਨੀ ਸਰਪ੍ਰਸਤ ਸਮਝਦਾ/ਸਮਝਦੀ ਹੈ ਕਿ ਇਸ ਐਪ ਦੁਆਰਾ ਹਾਸਲ ਕੀਤੇ ਡਾਟਾ ਤੱਕ ਕਿਸ ਵਿਅਕਤੀ ਦੀ ਪਹੁੰਚ ਹੋਵੇਗੀ ਅਤੇ ਉਸ ਪਹੁੰਚ ਲਈ ਸਹਿਮਤੀ ਦਿੰਦਾ/ਦਿੰਦੀ ਹੈ।</string>
   <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS ਸਮਰਨ ਪੱਤਰ</string>
+  <string name="patiententry_age_exceeds_max_limit_error">ਉਮਰ 120 ਸਾਲਾਂ ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="patiententry_age_exceeds_min_limit_error">ਉਮਰ 0 ਸਾਲ ਦੇ ਬਰਾਬਰ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
 
   <string name="patientedit_save_patient">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="patientedit_confirm_discard_title">ਬਦਲਾਵ ਬਰਖਾਸਤ ਕਰਨੇ ਹਨ?</string>
   <string name="patientedit_confirm_discard_ok">ਬਰਖਾਸਤ ਕਰੋ</string>
   <string name="patientedit_confirm_discard_cancel">ਰੱਦ ਕਰੋ</string>
-
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -98,7 +103,7 @@
   <string name="patients_dismiss_user_approved_status">ਸਮਝ ਗਏ</string>
   <string name="patients_enter_code">ਕੋਡ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patients_you_are_now_logged_in">ਤਸਦੀਕੀ ਸਫ਼ਲ ਹੋਈ! ਮਰੀਜ਼ ਰਿਕਾਰਡ ਹੁਣ ਦਿਖਣ-ਯੋਗ ਹਨ।</string>
-  <string name="patients_loggedoutalert_title">ਤੁਹਾਨੂੰ ਇੱਕ ਸਮੇਂ \'ਤੇ ਸਿਰਫ਼ ਇੱਕ ਡਿਵਾਈਸ \'ਤੇ ਲੌਗ ਇਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ</string>
+  <string name="patients_loggedoutalert_title">ਤੁਹਾਨੂੰ ਇੱਕ ਸਮੇਂ &apos;ਤੇ ਸਿਰਫ਼ ਇੱਕ ਡਿਵਾਈਸ &apos;ਤੇ ਲੌਗ ਇਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ</string>
   <string name="patients_loggedoutalert_message">ਤੁਹਾਨੂੰ ਤੁਹਾਡੇ ਪੁਰਾਣੇ ਡਿਵਾਈਸ ਤੋਂ ਲੌਗ ਆਉਟ ਕੀਤਾ ਗਿਆ ਹੈ।</string>
   <string name="patients_loggedoutalert_dismiss">ਸਮਝ ਗਏ</string>
   <string name="patients_scan_simple_card">ਬੀਪੀ ਪਾਸਪੋਰਟ ਸਕੈਨ ਕਰੋ</string>
@@ -134,7 +139,7 @@
   <string name="patientsummary_prescriptions_last_updated">ਅਪਡੇਟ ਹੋਇਆ %s</string>
   <string name="patientsummary_prescriptions_add">ਸਾਰੀਆਂ ਦਵਾਈਆਂ</string>
   <string name="patientsummary_prescriptions_update">ਦਵਾਈਆਂ ਅੱਪਡੇਟ ਕਰੋ</string>
-  <string name="patientsummary_bp_add_new">ਨਵਾਂ ਬੀ ਪੀ</string>
+  <string name="patientsummary_bp_add_new">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ</string>
   <string name="patientsummary_finish_saving_patient">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="patientsummary_medicalhistory_title">ਕਾਰਡੀਓਵੈਸਕਿਉਲਰ ਇਤਿਹਾਸ</string>
   <string name="patientsummary_medicalhistory_last_updated">ਅੱਪਡੇਟ ਕੀਤਾ ਗਿਆ %s</string>
@@ -343,7 +348,7 @@
   <string name="syncindicator_status_synced">%d ਮਿੰ ਪਹਿਲਾਂ ਸਿੰਕ ਕੀਤਾ</string>
   <string name="syncindicator_dialog_error_network">ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਮਰੀਜ਼ ਦੇ ਰਿਕਾਰਡਾਂ ਨੂੰ ਸਿੰਕ ਕਰਨ ਲਈ ਤੁਹਾਡੇ ਕੋਲ ਕਾਰਜਸ਼ੀਲ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਹੈ।</string>
   <string name="syncindicator_dialog_button_text">ਠੀਕ ਹੈ</string>
-  <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ \'ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>
+  <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ &apos;ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>
 
   <!-- Help Screen -->
   <string name="help_title">ਮਦਦ</string>
@@ -375,7 +380,7 @@
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_title">ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰੋ</string>
-  <string name="appupdatedialog_body">ਸਿੰਪਲ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਪਲੇ ਸਟੋਰ \'ਤੇ ਲਿਜਾਇਆ ਜਾਵੇਗਾ</string>
+  <string name="appupdatedialog_body">ਸਿੰਪਲ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਪਲੇ ਸਟੋਰ &apos;ਤੇ ਲਿਜਾਇਆ ਜਾਵੇਗਾ</string>
   <string name="appupdatedialog_positive_button_text">ਅੱਪਡੇਟ ਕਰੋ</string>
   <string name="appupdatedialog_negative_button_text">ਹੁਣੇ ਨਹੀਂ</string>
 
@@ -426,4 +431,39 @@
   <string name="selectcountry_servererror">ਸਰਵਰ ਤਰੁੱਟੀ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
   <string name="selectcountry_genericerror">ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
   <string name="selectcountry_retry">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
+  <string name="scheduleappointment_at">&apos;ਤੇ</string>
+  <string name="scheduleappointment_change">ਬਦਲੋ</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">ਇੱਕ ਮਾਪ ਚੁਣੋ</string>
+  <string name="bloodsugartype_picker_desc">ਜੇਕਰ ਤੁਸੀਂ ਯਕੀਨੀ ਨਹੀਂ ਹੋ ਤਾਂ ‘RBS’ ਚੁਣੋ।</string>
+  <string name="bloodsugartype_rbs">ਬੇਤਰਤੀਬੀ ਬਲੱਡ ਸ਼ੂਗਰ (RBS)</string>
+  <string name="bloodsugartype_fbs">ਫਾਸਟਿੰਗ ਬਲੱਡ ਸ਼ੂਗਰ (FBS)</string>
+  <string name="bloodsugartype_ppbs">ਪੋਸਟ ਪ੍ਰੈਂਡੀਅਲ ਬਲੱਡ ਸ਼ੂਗਰ (PPBS)</string>
+
+  <!-- Blood sugar entry -->
+  <string name="bloodsugarentry_md_dl">ਮਿਲੀ/ਡੀਐੱਲ</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">ਮੁਲਾਕਾਤ ਦੀ ਮਿਤੀ</string>
+  <string name="bloodsugarentry_day">ਦਿਨ</string>
+  <string name="bloodsugarentry_month">ਮਹੀਨਾ</string>
+  <string name="bloodsugarentry_year">ਸਾਲ</string>
+  <string name="bloodsugarentry_error_lower_limit">ਮਾਤਰਾ 30 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_higher_limit">ਮਾਤਰਾ 1000 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_empty">ਮਾਤਰਾ ਜ਼ੀਰੋ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YY ਵਿੱਚ ਇੱਕ ਵੈਧ ਮਿਤੀ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="bloodsugarentry_error_date_is_in_future">ਮਿਤੀ ਅੱਗੇ ਦੀ ਵਿੱਚ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_random_title">ਬੇਤਰਤੀਬੀ ਬਲੱਡ ਸ਼ੂਗਰ</string>
+  <string name="bloodsugarentry_post_prandial_title">ਪੋਸਟ ਪ੍ਰੈਂਡੀਅਲ ਬਲੱਡ ਸ਼ੂਗਰ</string>
+  <string name="bloodsugarentry_fasting_title">ਫਾਸਟਿੰਗ ਬਲੱਡ ਸ਼ੂਗਰ</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_reading_unit_type">\u0020ਮਿਲੀ/ਡੀਐੱਲ %s</string>
+  <string name="bloodsugarsummaryview_no_blood_sugars">ਕੋਈ ਬਲੱਡ ਸ਼ੂਗਰ ਨਹੀਂ ਜੋੜੇ ਗਏ</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">ਸ਼ੂਗਰ</string>
+  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
+
+  <string name="bloodpressurehistory_add_bp_button">ਨਵਾਂ ਬੀ ਪੀ</string>
+  <string name="bloodpressurehistory_bp_time_date">%1$s, %2$s</string>
 </resources>

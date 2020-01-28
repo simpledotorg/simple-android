@@ -7,7 +7,12 @@ import com.spotify.mobius.Init
 class NewMedicalHistoryInit : Init<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
 
   override fun init(model: NewMedicalHistoryModel): First<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
-    val effects = if(model.ongoingPatientEntry != null) emptySet() else setOf(LoadOngoingPatientEntry)
+    val effects = when {
+      model.hasNotInitialized -> setOf(LoadOngoingPatientEntry, LoadCurrentFacility)
+      model.hasLoadedPatientEntry.not() -> setOf(LoadOngoingPatientEntry)
+      model.hasLoadedCurrentFacility.not() -> setOf(LoadCurrentFacility)
+      else -> setOf(LoadOngoingPatientEntry)
+    }
     return first(model, effects)
   }
 }

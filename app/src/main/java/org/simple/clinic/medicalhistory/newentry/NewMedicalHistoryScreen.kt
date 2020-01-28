@@ -3,17 +3,24 @@ package org.simple.clinic.medicalhistory.newentry
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.View
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import kotlinx.android.synthetic.main.medicalhistory_summary_view.view.*
 import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
+import kotlinx.android.synthetic.main.screen_new_medical_history.view.diabetesQuestionView
+import kotlinx.android.synthetic.main.screen_new_medical_history.view.heartAttackQuestionView
+import kotlinx.android.synthetic.main.screen_new_medical_history.view.kidneyDiseaseQuestionView
+import kotlinx.android.synthetic.main.screen_new_medical_history.view.strokeQuestionView
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
@@ -82,9 +89,6 @@ class NewMedicalHistoryScreen(
       screenRouter.pop()
     }
 
-    diabetesQuestionView.hideDivider()
-    diabetesDiagnosisView.hideDivider()
-
     mobiusDelegate.prepare()
 
     post {
@@ -130,6 +134,38 @@ class NewMedicalHistoryScreen(
       HAS_HAD_A_KIDNEY_DISEASE -> kidneyDiseaseQuestionView
       HAS_DIABETES -> diabetesQuestionView
       // TODO(vs): 2020-01-27 Remove unused enums once the separation of the models is done
+      else -> null
+    }
+
+    view?.render(question, answer) { questionForView, newAnswer ->
+      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
+    }
+  }
+
+  override fun showDiagnosisView() {
+    diagnosisViewContainer.visibility = VISIBLE
+    diabetesDiagnosisView.hideDivider()
+  }
+
+  override fun hideDiagnosisView() {
+    diagnosisViewContainer.visibility = GONE
+  }
+
+  override fun hideDiabetesHistorySection() {
+    diabetesQuestionView.visibility = GONE
+    kidneyDiseaseQuestionView.hideDivider()
+  }
+
+  override fun showDiabetesHistorySection() {
+    diabetesQuestionView.visibility = VISIBLE
+    kidneyDiseaseQuestionView.showDivider()
+    diabetesQuestionView.hideDivider()
+  }
+
+  override fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer) {
+    val view = when(question) {
+      DIAGNOSED_WITH_HYPERTENSION -> hypertensionDiagnosisView
+      HAS_DIABETES -> diabetesDiagnosisView
       else -> null
     }
 

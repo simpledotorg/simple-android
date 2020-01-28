@@ -14,7 +14,10 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is SaveMedicalHistoryClicked -> dispatch(RegisterPatient(model.ongoingMedicalHistoryEntry))
       is PatientRegistered -> dispatch(OpenPatientSummaryScreen(event.patientUuid))
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
-      is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
+      is CurrentFacilityLoaded -> next(
+          model.currentFacilityLoaded(event.facility),
+          SetupUiForDiabetesManagement(event.facility.config.diabetesManagementEnabled)
+      )
     }
   }
 }

@@ -48,14 +48,18 @@
   <string name="patiententry_contentdescription_up_button">ढूँड़ने वापिस जाएँ</string>
   <string name="patiententry_full_name">मरीज़ का नाम</string>
   <string name="patiententry_phone_number">फ़ोन नम्बर</string>
+  <string name="patiententry_bangladesh_national_id">राष्ट्रीय आईडी संख्या</string>
   <string name="patiententry_date_of_birth_unfocused">जन्म तिथी</string>
   <string name="patiententry_date_of_birth_focused">जन्म तिथी : DD/MM/YY</string>
   <string name="patiententry_dateofbirth_and_age_separator">या</string>
   <string name="patiententry_age">उम्र</string>
-  <string name="patiententry_street_address">मकान नंबर और गली</string>
-  <string name="patiententry_village_colony_ward">कॉलोनी / गांव / वार्ड</string>
-  <string name="patiententry_zone">क्षेत्र</string>
+  <string name="patiententry_street_address">घर का पता</string>
+  <string name="patiententry_street_house_road_number">घर और सड़क का नम्बर</string>
+  <string name="patiententry_village_colony_ward">गांव / कॉलोनी / वार्ड</string>
+  <string name="patiententry_village_ward">गांव / वार्ड</string>
+  <string name="patiententry_zone">संघ</string>
   <string name="patiententry_district">ज़िला</string>
+  <string name="patiententry_upazila">उप-ज़िला</string>
   <string name="patiententry_state">राज्य</string>
   <string name="patiententry_save_patient">आगे</string>
   <string name="patiententry_error_empty_fullname">मरीज़ का पूरा नाम लिखें</string>
@@ -70,15 +74,16 @@
   <string name="patiententry_error_phonenumber_length_more">फ़ोन नंबर में 12 अंक से ज़्यादा नहीं हो सकते</string>
   <string name="patiententry_identifier">बीपी पासपोर्ट</string>
   <string name="patiententry_consent_header">सहमति:\u0020</string>
-  <string name="patiententry_consent_first_para">नीचे टैप करके, आप इस बात की पुष्टि करते हैं कि रोगी के संबंध में आपके द्वारा लिखा गया कोई भी डेटा उचित सूचित सहमति के अंतर्गत प्राप्त किया गया है। इसका मतलब यह है कि रोगी को इस बात की जानकारी है कि आप ऐप में उनका व्यक्तिगत डेटा दर्ज रहे हैं, वह इस बात को समझता है कि किस डेटा को एकत्र किया जा रहा है, और उसे यह पता है कि ऐप में दिए गए फ़ोन नंबर का उपयोग करके SMS, WhatsApp, या अन्य तरीकों से उनसे संपर्क किया जा सकता है।</string>
-  <string name="patiententry_consent_second_para">आपके द्वारा अधिकृत किसी भी व्यक्ति, या आप जिस स्वास्थ्य सेवा प्रदाता के लिए काम करते हैं उनकी आपके द्वारा रोगी से संबंधित यहाँ दर्ज किए गए डेटा और जानकारी तक पहुँच होगी। ऐप का उपयोग करके आप यह पुष्टि करते हैं कि रोगी यह समझता है कि इस ऐप के माध्यम से प्राप्त डेटा तक पहुँच किसके पास होगी और रोगी उस पहुँच के लिए सहमति देता है।</string>
+  <string name="patiententry_consent_first_para">नीचे टैप करके, आप इस बात की पुष्टि करते हैं कि रोगी के संबंध में आपके द्वारा लिखा गया कोई भी डेटा उचित सूचित सहमति के अंतर्गत प्राप्त किया गया है। इसका मतलब है कि रोगी या उसके कानूनी अभिभावक को जानकारी है कि आप उनकी निजी जानकारी को ऐप में डाल रहे हैं, समझते हैं कि क्या डेटा एकत्र किया जा रहा है, और जानते हैं कि ऐप में दिए फोन नंबर के ज़रिए उनसे SMS, WhatsApp, या अन्य तरीकों से संपर्क किया जा सकता है।</string>
+  <string name="patiententry_consent_second_para">आपके द्वारा अधिकृत किसी भी व्यक्ति, या आप जिस स्वास्थ्य सेवा प्रदाता के लिए काम करते हैं उनकी आपके द्वारा रोगी से संबंधित यहाँ दर्ज किए गए डेटा और जानकारी तक पहुँच होगी। ऐप का उपयोग करके आप पुष्टी करते हैं कि रोगी या उसका कानूनी अभिभावक जानता है कि इस ऐप में मौजूद जानकारी कौन इस्तेमाल कर सकता है और उस पर सहमति देता है ।</string>
   <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS अनुस्मारक</string>
+  <string name="patiententry_age_exceeds_max_limit_error">आयु 120 वर्ष से अधिक नहीं होनी चाहिए</string>
+  <string name="patiententry_age_exceeds_min_limit_error">आयु 0 वर्ष के बराबर नहीं होनी चाहिए</string>
 
   <string name="patientedit_save_patient">सहेजें</string>
   <string name="patientedit_confirm_discard_title">बदलावों को छोड़ना है?</string>
   <string name="patientedit_confirm_discard_ok">छोड़ें</string>
   <string name="patientedit_confirm_discard_cancel">रद्द करें</string>
-
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -134,7 +139,7 @@
   <string name="patientsummary_prescriptions_last_updated">बदले गए %s</string>
   <string name="patientsummary_prescriptions_add">दवाई जोड़ें</string>
   <string name="patientsummary_prescriptions_update">दवाई बदलें</string>
-  <string name="patientsummary_bp_add_new">नया बी पी</string>
+  <string name="patientsummary_bp_add_new">रक्तचाप</string>
   <string name="patientsummary_finish_saving_patient">सेव</string>
   <string name="patientsummary_medicalhistory_title">ह्रदवाहिनी इतिहास</string>
   <string name="patientsummary_medicalhistory_last_updated">अपडेट किया गया %s</string>
@@ -242,7 +247,7 @@
     <item quantity="other">%d दिन अधिक हो गए हैं</item>
   </plurals>
   <string name="overduelist_last_bp">पिछला बी पी:</string>
-  <string name="overduelist_agreed_to_visit">रोगी को ‘विज़िट के लिए सहमत’ के रूप में चिन्हित करें</string>
+  <string name="overduelist_agreed_to_visit">रोगी को ‘मुलाकात के लिए सहमत’ के रूप में चिन्हित करें</string>
   <string name="overduelist_remind_call_later">बाद में कॉल करना याद दिलाएं…</string>
   <string name="overduelist_remove_from_list">अतिदेय सूची से हटाएं…</string>
   <string name="overduelist_result_of_call">कॉल का परिणाम</string>
@@ -279,7 +284,7 @@
   <string name="enterotp_sms_sent">नया सत्यापन SMS भेजा गया</string>
 
   <!-- Schedule appointment -->
-  <string name="scheduleappointment_next_visit_in">अगली विज़िट इतने समय बाद नियत की गई</string>
+  <string name="scheduleappointment_next_visit_in">अगली मुलाकात 30 दिनों में</string>
   <string name="scheduleappointment_not_now">अभी नहीं</string>
   <string name="scheduleappointment_done">पूरा हुआ</string>
   <plurals name="scheduleappointment_appointmentin_days">
@@ -426,4 +431,39 @@
   <string name="selectcountry_servererror">सर्वर में त्रुटि! कृपया बाद में दुबारा कोशिश करें!</string>
   <string name="selectcountry_genericerror">कुछ गलत हो गया! कृपया बाद में दुबारा कोशिश करें!</string>
   <string name="selectcountry_retry">फिर प्रयास करें</string>
+  <string name="scheduleappointment_at">पर</string>
+  <string name="scheduleappointment_change">बदलें</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">एक उपाय चुनें</string>
+  <string name="bloodsugartype_picker_desc">अगर विश्वस्त ना हों तो ‘RBS’ चुनें।</string>
+  <string name="bloodsugartype_rbs">यादृच्छिक रक्त शर्करा (RBS)</string>
+  <string name="bloodsugartype_fbs">उपवास रक्त शर्करा (FBS)</string>
+  <string name="bloodsugartype_ppbs">पोस्ट प्रैंडिअल ब्लड शुगर (PPBS)</string>
+
+  <!-- Blood sugar entry -->
+  <string name="bloodsugarentry_md_dl">मिग्रा/डीएल</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">विज़िट की तारीख</string>
+  <string name="bloodsugarentry_day">दिन</string>
+  <string name="bloodsugarentry_month">महीना</string>
+  <string name="bloodsugarentry_year">साल</string>
+  <string name="bloodsugarentry_error_lower_limit">मात्रा 30 मिग्रा/डीएल से कम नहीं होनी चाहिए</string>
+  <string name="bloodsugarentry_error_higher_limit">मात्रा 1000 मिग्रा/डीएल से अधिक नहीं होनी चाहिए</string>
+  <string name="bloodsugarentry_error_empty">मात्रा रिक्त नहीं होनी चाहिए</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YY फ़ॉर्मेट में एक वैध तारीख दर्ज करे</string>
+  <string name="bloodsugarentry_error_date_is_in_future">भविष्य की तारीख नहीं लिखी जा सकती</string>
+  <string name="bloodsugarentry_random_title">यादृच्छिक रक्त शर्करा</string>
+  <string name="bloodsugarentry_post_prandial_title">पोस्ट प्रैंडिअल ब्लड शुगर</string>
+  <string name="bloodsugarentry_fasting_title">उपवास रक्त शर्करा</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_reading_unit_type">\u0020मिग्रा/डीएल %s</string>
+  <string name="bloodsugarsummaryview_no_blood_sugars">कोई रक्त शर्करा जोड़ी नहीं गई</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">मधुमेह</string>
+  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
+
+  <string name="bloodpressurehistory_add_bp_button">नया बी पी</string>
+  <string name="bloodpressurehistory_bp_time_date">%1$s, %2$s</string>
 </resources>

@@ -14,7 +14,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is SaveMedicalHistoryClicked -> dispatch(RegisterPatient(model.ongoingMedicalHistoryEntry))
       is PatientRegistered -> dispatch(OpenPatientSummaryScreen(event.patientUuid))
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
-      else -> noChange<NewMedicalHistoryModel, NewMedicalHistoryEffect>()
+      is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
     }
   }
 }

@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.bloodpressures.newbpsummary.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
@@ -8,8 +9,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.patientsummary_newbpsummary_content.view.*
 import org.simple.clinic.R
@@ -20,6 +23,7 @@ import org.simple.clinic.bp.history.BloodPressureHistoryScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -41,12 +45,15 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+
+private typealias BpRecorded = () -> Unit
 
 class NewBloodPressureSummaryView(
     context: Context,
@@ -113,6 +120,8 @@ class NewBloodPressureSummaryView(
     )
   }
 
+  var bpRecorded: BpRecorded? = null
+
   init {
     LayoutInflater.from(context).inflate(R.layout.patientsummary_newbpsummary_content, this, true)
   }
@@ -125,6 +134,10 @@ class NewBloodPressureSummaryView(
     context.injector<NewBloodPressureSummaryViewInjector>().inject(this)
 
     delegate.prepare()
+
+    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+
+    setupBpRecordedEvents(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
@@ -184,6 +197,16 @@ class NewBloodPressureSummaryView(
 
   override fun showBloodPressureHistoryScreen(patientUuid: UUID) {
     screenRouter.push(BloodPressureHistoryScreenKey(patientUuid))
+  }
+
+  @SuppressLint("CheckResult")
+  private fun setupBpRecordedEvents(screenDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == SUMMARY_REQCODE_BP_ENTRY && it.succeeded() }
+        .filter { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
+        .takeUntil(screenDestroys)
+        .subscribe { bpRecorded?.invoke() }
   }
 
   private fun addNewBpClicked(): Observable<NewBloodPressureSummaryViewEvent> {

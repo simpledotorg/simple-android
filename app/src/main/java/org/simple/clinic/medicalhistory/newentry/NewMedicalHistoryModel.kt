@@ -38,4 +38,8 @@ data class NewMedicalHistoryModel(
   fun ongoingPatientEntryLoaded(entry: OngoingNewPatientEntry): NewMedicalHistoryModel {
     return copy(ongoingPatientEntry = entry)
   }
+
+  fun currentFacilityLoaded(facility: Facility): NewMedicalHistoryModel {
+    return copy(currentFacility = facility)
+  }
 }

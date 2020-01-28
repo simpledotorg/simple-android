@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -102,7 +103,10 @@ class NewMedicalHistoryScreenLogicTest {
 
     startMobiusLoop()
 
-    verify(screen).setPatientName(patientName)
+    // This gets set twice:
+    // 1. When we read the patient entry
+    // 2. When we load the current facility and update the model
+    verify(screen, times(2)).setPatientName(patientName)
   }
 
   @Test

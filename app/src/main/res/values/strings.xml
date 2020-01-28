@@ -535,4 +535,5 @@
   <string name="newbloodpressuresummaryview_add_bp_button">Blood Pressure</string>
   <!--suppress AndroidLintUnusedResources -->
   <string name="newbloodpressuresummaryview_see_all_button">See all</string>
+  <string name="patientsummary_newbp_date_time" translatable="false">%1$s\n%2$s</string>
 </resources>

@@ -54,6 +54,10 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     dividerView.visibility = View.GONE
   }
 
+  fun showDivider() {
+    dividerView.visibility = View.VISIBLE
+  }
+
   fun render(
       question: MedicalHistoryQuestion,
       answer: Answer,

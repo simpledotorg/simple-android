@@ -20,12 +20,13 @@
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="vertical"
       android:clipChildren="false"
       android:clipToPadding="false"
+      android:orientation="vertical"
       android:paddingBottom="@dimen/spacing_4">
 
       <androidx.cardview.widget.CardView
+        android:id="@+id/diagnosisViewContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_8"
@@ -52,9 +53,9 @@
           <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_4"
             android:text="@string/newmedicalhistory_diagnosis_required_error"
             android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Red1"
-            android:layout_marginTop="@dimen/spacing_4"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -112,7 +113,9 @@
           <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
             android:id="@+id/diabetesQuestionView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
         </LinearLayout>
       </androidx.cardview.widget.CardView>
 

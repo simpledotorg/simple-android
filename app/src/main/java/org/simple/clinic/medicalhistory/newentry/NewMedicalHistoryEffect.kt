@@ -9,6 +9,8 @@ data class OpenPatientSummaryScreen(val patientUuid: UUID) : NewMedicalHistoryEf
 
 data class RegisterPatient(val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry) : NewMedicalHistoryEffect()
 
-object LoadOngoingPatientEntry: NewMedicalHistoryEffect()
+object LoadOngoingPatientEntry : NewMedicalHistoryEffect()
 
-object LoadCurrentFacility: NewMedicalHistoryEffect()
+object LoadCurrentFacility : NewMedicalHistoryEffect()
+
+data class SetupUiForDiabetesManagement(val diabetesManagementEnabled: Boolean) : NewMedicalHistoryEffect()

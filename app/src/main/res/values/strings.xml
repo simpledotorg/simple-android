@@ -371,17 +371,17 @@
 
   <!-- Medical History -->
   <!--suppress UnusedResources used in enum -->
-  <string name="medicalhistory_question_heartattack">Heart attack in last 3 years</string>
+  <string name="medicalhistory_question_heartattack">Heart attack</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_stroke">Past history of stroke</string>
+  <string name="medicalhistory_question_stroke">Stroke</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_kidney">Past history of kidney disease</string>
+  <string name="medicalhistory_question_kidney">Kidney disease</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diagnosed_with_hypertension">Diagnosed with hypertension</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_takes_hypertension_drugs">Already takes hypertension drugs</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">Has diabetes</string>
+  <string name="medicalhistory_question_diabetes">Diabetes</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_none">None of the above</string>
   <string name="newmedicalhistory_next">Next</string>

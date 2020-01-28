@@ -3,6 +3,7 @@ package org.simple.clinic.summary.bloodpressures.newbpsummary.view
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -11,11 +12,14 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.patientsummary_newbpsummary_content.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet
+import org.simple.clinic.bp.history.BloodPressureHistoryScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.SUMMARY_REQCODE_BP_ENTRY
 import org.simple.clinic.summary.bloodpressures.newbpsummary.AddNewBloodPressureClicked
 import org.simple.clinic.summary.bloodpressures.newbpsummary.NewBloodPressureSummaryViewConfig
 import org.simple.clinic.summary.bloodpressures.newbpsummary.NewBloodPressureSummaryViewEffect
@@ -36,6 +40,9 @@ class NewBloodPressureSummaryView(
     context: Context,
     attrs: AttributeSet
 ) : CardView(context, attrs), NewBloodPressureSummaryViewUi, NewBloodPressureSummaryViewUiActions {
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var bloodPressureSummaryConfig: NewBloodPressureSummaryViewConfig
@@ -120,12 +127,17 @@ class NewBloodPressureSummaryView(
   }
 
   override fun openBloodPressureEntrySheet(patientUuid: UUID) {
+    val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
+    activity.startActivityForResult(intent, SUMMARY_REQCODE_BP_ENTRY)
   }
 
   override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
+    val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bpUuid)
+    activity.startActivity(intent)
   }
 
   override fun showBloodPressureHistoryScreen(patientUuid: UUID) {
+    screenRouter.push(BloodPressureHistoryScreenKey(patientUuid))
   }
 
   private fun addNewBpClicked(): Observable<NewBloodPressureSummaryViewEvent> {

@@ -24,7 +24,7 @@ class PatientEntryEffectHandlerTest {
     val userSession = mock<UserSession>()
     val facilityRepository = mock<FacilityRepository>()
     val patientRepository = mock<PatientRepository>()
-    val validationActions = mock<PatientEntryValidationActions>()
+    val patientEntryUi = mock<PatientEntryUi>()
     whenever(facilityRepository.currentFacility(any<UserSession>())).doReturn(Observable.never())
     whenever(patientRepository.ongoingEntry()).doReturn(Single.never<OngoingNewPatientEntry>())
 
@@ -33,8 +33,7 @@ class PatientEntryEffectHandlerTest {
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
         patientRegisteredCount = mock(),
-        ui = mock(),
-        validationActions = validationActions,
+        ui = patientEntryUi,
         schedulersProvider = TrampolineSchedulersProvider()
     ))
 
@@ -43,8 +42,8 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(validationActions).showLengthTooShortPhoneNumberError(false)
-    verify(validationActions).showLengthTooLongPhoneNumberError(false)
-    verifyNoMoreInteractions(validationActions)
+    verify(patientEntryUi).showLengthTooShortPhoneNumberError(false)
+    verify(patientEntryUi).showLengthTooLongPhoneNumberError(false)
+    verifyNoMoreInteractions(patientEntryUi)
   }
 }

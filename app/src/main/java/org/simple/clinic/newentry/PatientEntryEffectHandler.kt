@@ -28,7 +28,6 @@ class PatientEntryEffectHandler(
     private val patientRepository: PatientRepository,
     private val patientRegisteredCount: Preference<Int>,
     private val ui: PatientEntryUi,
-    private val validationActions: PatientEntryValidationActions,
     private val schedulersProvider: SchedulersProvider
 ) {
   companion object {
@@ -38,7 +37,6 @@ class PatientEntryEffectHandler(
         patientRepository: PatientRepository,
         patientRegisteredCount: Preference<Int>,
         ui: PatientEntryUi,
-        validationActions: PatientEntryValidationActions,
         schedulersProvider: SchedulersProvider
     ): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
       return PatientEntryEffectHandler(
@@ -47,7 +45,6 @@ class PatientEntryEffectHandler(
           patientRepository,
           patientRegisteredCount,
           ui,
-          validationActions,
           schedulersProvider
       ).build()
     }
@@ -90,25 +87,25 @@ class PatientEntryEffectHandler(
 
   private fun hideValidationError(field: Field) {
     when (field) {
-      FullName -> validationActions.showEmptyFullNameError(false)
+      FullName -> ui.showEmptyFullNameError(false)
       PhoneNumber -> hidePhoneLengthErrors()
       Age, DateOfBirth -> hideDateOfBirthErrors()
-      Gender -> validationActions.showMissingGenderError(false)
-      ColonyOrVillage -> validationActions.showEmptyColonyOrVillageError(false)
-      District -> validationActions.showEmptyDistrictError(false)
-      State -> validationActions.showEmptyStateError(false)
+      Gender -> ui.showMissingGenderError(false)
+      ColonyOrVillage -> ui.showEmptyColonyOrVillageError(false)
+      District -> ui.showEmptyDistrictError(false)
+      State -> ui.showEmptyStateError(false)
     }
   }
 
   private fun hidePhoneLengthErrors() {
-    with(validationActions) {
+    with(ui) {
       showLengthTooLongPhoneNumberError(false)
       showLengthTooShortPhoneNumberError(false)
     }
   }
 
   private fun hideDateOfBirthErrors() {
-    with(validationActions) {
+    with(ui) {
       showEmptyDateOfBirthAndAgeError(false)
       showInvalidDateOfBirthError(false)
       showDateOfBirthIsInFutureError(false)

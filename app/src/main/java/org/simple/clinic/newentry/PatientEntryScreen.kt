@@ -80,7 +80,7 @@ import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi, PatientEntryValidationActions {
+class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientEntryUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -138,7 +138,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
    **/
   private var alreadyFocusedOnEmptyTextField: Boolean = false
 
-  private val uiRenderer = PatientEntryUiRenderer(this, this)
+  private val uiRenderer = PatientEntryUiRenderer(this)
 
   private val events: Observable<PatientEntryEvent> by unsafeLazy {
     Observable
@@ -153,7 +153,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         facilityRepository,
         patientRepository,
         patientRegisteredCount,
-        this,
         this,
         schedulersProvider
     )

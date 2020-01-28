@@ -32,8 +32,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.B
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 
 class PatientEntryUiRenderer(
-    val ui: PatientEntryUi,
-    private val validationActions: PatientEntryValidationActions
+    val ui: PatientEntryUi
 ) : ViewRenderer<PatientEntryModel> {
   private val dateOfBirthAndAgeVisibilityValueChangedCallback = ValueChangedCallback<DateOfBirthAndAgeVisibility>()
   private val identifierValueChangedCallback = ValueChangedCallback<Optional<Identifier>>()
@@ -79,20 +78,20 @@ class PatientEntryUiRenderer(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
-            FULL_NAME_EMPTY -> validationActions.showEmptyFullNameError(true)
-            PHONE_NUMBER_LENGTH_TOO_SHORT -> validationActions.showLengthTooShortPhoneNumberError(true)
-            PHONE_NUMBER_LENGTH_TOO_LONG -> validationActions.showLengthTooLongPhoneNumberError(true)
-            BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> validationActions.showEmptyDateOfBirthAndAgeError(true)
-            INVALID_DATE_OF_BIRTH -> validationActions.showInvalidDateOfBirthError(true)
-            DATE_OF_BIRTH_IN_FUTURE -> validationActions.showDateOfBirthIsInFutureError(true)
-            DOB_EXCEEDS_MAX_LIMIT -> validationActions.showDOBExceedsMaxLimitError(true)
-            DOB_EXCEEDS_MIN_LIMIT -> validationActions.showDOBExceedsMinLimitError(true)
-            MISSING_GENDER -> validationActions.showMissingGenderError(true)
-            COLONY_OR_VILLAGE_EMPTY -> validationActions.showEmptyColonyOrVillageError(true)
-            DISTRICT_EMPTY -> validationActions.showEmptyDistrictError(true)
-            STATE_EMPTY -> validationActions.showEmptyStateError(true)
-            AGE_EXCEEDS_MAX_LIMIT -> validationActions.showAgeExceedsMaxLimitError(true)
-            AGE_EXCEEDS_MIN_LIMIT -> validationActions.showAgeExceedsMinLimitError(true)
+            FULL_NAME_EMPTY -> ui.showEmptyFullNameError(true)
+            PHONE_NUMBER_LENGTH_TOO_SHORT -> ui.showLengthTooShortPhoneNumberError(true)
+            PHONE_NUMBER_LENGTH_TOO_LONG -> ui.showLengthTooLongPhoneNumberError(true)
+            BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> ui.showEmptyDateOfBirthAndAgeError(true)
+            INVALID_DATE_OF_BIRTH -> ui.showInvalidDateOfBirthError(true)
+            DATE_OF_BIRTH_IN_FUTURE -> ui.showDateOfBirthIsInFutureError(true)
+            DOB_EXCEEDS_MAX_LIMIT -> ui.showDOBExceedsMaxLimitError(true)
+            DOB_EXCEEDS_MIN_LIMIT -> ui.showDOBExceedsMinLimitError(true)
+            MISSING_GENDER -> ui.showMissingGenderError(true)
+            COLONY_OR_VILLAGE_EMPTY -> ui.showEmptyColonyOrVillageError(true)
+            DISTRICT_EMPTY -> ui.showEmptyDistrictError(true)
+            STATE_EMPTY -> ui.showEmptyStateError(true)
+            AGE_EXCEEDS_MAX_LIMIT -> ui.showAgeExceedsMaxLimitError(true)
+            AGE_EXCEEDS_MIN_LIMIT -> ui.showAgeExceedsMinLimitError(true)
 
             EMPTY_ADDRESS_DETAILS,
             PHONE_NUMBER_NON_NULL_BUT_BLANK,

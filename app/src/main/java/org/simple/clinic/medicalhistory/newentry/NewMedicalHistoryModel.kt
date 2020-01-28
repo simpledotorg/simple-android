@@ -10,14 +10,15 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 @Parcelize
 data class NewMedicalHistoryModel(
     val ongoingPatientEntry: OngoingNewPatientEntry?,
-    val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry
+    val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
+    val facilityDiabetesManagementEnabled: Boolean?
 ) : Parcelable {
 
   val hasLoadedPatientEntry: Boolean
     get() = ongoingPatientEntry != null
 
   companion object {
-    fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(null, OngoingMedicalHistoryEntry())
+    fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(null, OngoingMedicalHistoryEntry(), null)
   }
 
   fun answerChanged(question: MedicalHistoryQuestion, answer: Answer): NewMedicalHistoryModel {

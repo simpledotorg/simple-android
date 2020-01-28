@@ -2,6 +2,7 @@ package org.simple.clinic.medicalhistory.newentry
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
@@ -11,11 +12,20 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 data class NewMedicalHistoryModel(
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
-    val facilityDiabetesManagementEnabled: Boolean?
+    val currentFacility: Facility?
 ) : Parcelable {
 
   val hasLoadedPatientEntry: Boolean
     get() = ongoingPatientEntry != null
+
+  val hasLoadedCurrentFacility: Boolean
+    get() = currentFacility != null
+
+  val hasNotInitialized: Boolean
+    get() = ongoingPatientEntry == null && currentFacility == null
+
+  val facilityDiabetesManagementEnabled: Boolean
+    get() = currentFacility!!.config.diabetesManagementEnabled
 
   companion object {
     fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(null, OngoingMedicalHistoryEntry(), null)

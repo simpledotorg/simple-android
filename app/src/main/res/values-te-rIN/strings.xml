@@ -48,14 +48,18 @@
   <string name="patiententry_contentdescription_up_button">తిరిగి శోధనలోకి వెళ్లండి</string>
   <string name="patiententry_full_name">రోగి పేరు</string>
   <string name="patiententry_phone_number">ఫోన్ నంబర్</string>
+  <string name="patiententry_bangladesh_national_id">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
   <string name="patiententry_date_of_birth_unfocused">పుట్టినతేదీ</string>
   <string name="patiententry_date_of_birth_focused">పుట్టినతేదీ: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">లేదా</string>
   <string name="patiententry_age">వయస్సు</string>
-  <string name="patiententry_street_address">ఇంటి సంఖ్య, వీధి</string>
-  <string name="patiententry_village_colony_ward">కాలనీ / గ్రామం / వార్డ్</string>
-  <string name="patiententry_zone">జోన్</string>
+  <string name="patiententry_street_address">ఇంటి చిరునామా</string>
+  <string name="patiententry_street_house_road_number">ఇల్లు మరియు రోడ్డు నంబర్</string>
+  <string name="patiententry_village_colony_ward">గ్రామం / పేట / వాడ</string>
+  <string name="patiententry_village_ward">గ్రామం / వాడ</string>
+  <string name="patiententry_zone">యూనియన్</string>
   <string name="patiententry_district">జిల్లా</string>
+  <string name="patiententry_upazila">ఉపజిలా</string>
   <string name="patiententry_state">రాష్ట్రం</string>
   <string name="patiententry_save_patient">తదుపరి</string>
   <string name="patiententry_error_empty_fullname">రోగి పూర్తి పేరును నమోదు చేయండి</string>
@@ -70,15 +74,16 @@
   <string name="patiententry_error_phonenumber_length_more">ఫోన్ నంబర్ 12 అంకెల కంటే ఎక్కువగా ఉండకూడదు</string>
   <string name="patiententry_identifier">బిపి పాస్‌పోర్ట్</string>
   <string name="patiententry_consent_header">సమ్మతి:\u0020</string>
-  <string name="patiententry_consent_first_para">దిగువ నొక్కడం ద్వారా, మీరు సముచిత సూచిత సమ్మతితో తీసుకున్న రోగి డేటాను మాత్రమే నమోదు చేస్తున్నట్లు మీరు నిర్ధారిస్తున్నారు. అంటే, రోగికి మీరు వారి వ్యక్తిగత డేటాను యాప్‌లో నమోదు చేస్తున్నట్లు తెలియజేయాలి, ఏ డేటా సేకరించబడుతోంది తెలియజేయాలి, యాప్‌లోని ఫోన్ నంబర్‌ను ఉపయోగించి SMS, WhatsApp లేదా మరో పద్ధతిలో వారిని సంప్రదించవచ్చు అని వారికి చెప్పాలి.</string>
-  <string name="patiententry_consent_second_para">మీరు అనుమతించిన వ్యక్తులు లేదా మీకు పని ఇచ్చిన ఆరోగ్య సంరక్షణ ప్రదాత, మీరు ఇక్కడ నమోదు చేసిన రోగి డేటాను, సమాచారాన్ని యాక్సెస్ చేయగలరు. యాప్‌ను ఉపయోగించడం ద్వారా, ఈ యాప్ నుండి సేకరించే డేటాను ఎవరు యాక్సెస్ చేయగలరో రోగికి తెలియజేసినట్లు, అందుకు వారు సమ్మతించినట్లు మీరు నిర్ధారిస్తున్నారు.</string>
-  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / ఎస్ఎంఎస్ రిమైండర్‌లు</string>
+  <string name="patiententry_consent_first_para">దిగువ నొక్కడం ద్వారా, మీరు సముచిత సూచిత సమ్మతితో తీసుకున్న రోగి డేటాను మాత్రమే నమోదు చేస్తున్నట్లు మీరు నిర్ధారిస్తున్నారు. అంటే, రోగికి లేదా చట్టపరమైన సంరక్షకునికి మీరు వారి వ్యక్తిగత డేటాను యాప్‌లో నమోదు చేస్తున్నట్లు తెలియజేయాలి, ఏ డేటా సేకరించబడుతోంది తెలియజేయాలి, యాప్‌లోని ఫోన్ నంబర్‌ను ఉపయోగించి SMS, WhatsApp లేదా మరో పద్ధతిలో వారిని సంప్రదించవచ్చు అని వారికి చెప్పాలి.</string>
+  <string name="patiententry_consent_second_para">మీరు అనుమతించిన వ్యక్తులు లేదా మీకు పని ఇచ్చిన ఆరోగ్య సంరక్షణ ప్రదాత, మీరు ఇక్కడ నమోదు చేసిన రోగి డేటాను, సమాచారాన్ని యాక్సెస్ చేయగలరు. యాప్‌ను ఉపయోగించడం ద్వారా, ఈ యాప్ నుండి సేకరించే డేటాను ఎవరు యాక్సెస్ చేయగలరో రోగికి లేదా చట్టపరమైన సంరక్షకునికి తెలియజేసినట్లు, అందుకు వారు సమ్మతించినట్లు మీరు నిర్ధారిస్తున్నారు.</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS రిమైండర్‌లు</string>
+  <string name="patiententry_age_exceeds_max_limit_error">వయస్సు 120 సంవత్సరాల కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="patiententry_age_exceeds_min_limit_error">వయస్సు 0 సంవత్సరాలకు సమానంగా ఉండకూడదు</string>
 
   <string name="patientedit_save_patient">సేవ్ చేయి</string>
   <string name="patientedit_confirm_discard_title">మార్పులను విస్మరించాలా?</string>
   <string name="patientedit_confirm_discard_ok">విస్మరించు</string>
   <string name="patientedit_confirm_discard_cancel">రద్దు చేయి</string>
-
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -134,7 +139,7 @@
   <string name="patientsummary_prescriptions_last_updated">%s అప్‌డేట్ అయింది</string>
   <string name="patientsummary_prescriptions_add">మందులను జోడించు</string>
   <string name="patientsummary_prescriptions_update">మందులను అప్‌డేట్ చేయి</string>
-  <string name="patientsummary_bp_add_new">కొత్త బిపి</string>
+  <string name="patientsummary_bp_add_new">రక్తపోటు</string>
   <string name="patientsummary_finish_saving_patient">సేవ్ చేయి</string>
   <string name="patientsummary_medicalhistory_title">గతంలో గుండె రక్త నాళాలకు సంబంధించిన సమస్యలు</string>
   <string name="patientsummary_medicalhistory_last_updated">%s అప్‌డేట్ అయింది</string>
@@ -243,8 +248,8 @@
   </plurals>
   <string name="overduelist_last_bp">చివరి బిపి:</string>
   <string name="overduelist_agreed_to_visit">రోగి ‘సందర్శించడానికి అంగీకరించారు’ అని గుర్తుపెట్టండి</string>
-  <string name="overduelist_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి…</string>
-  <string name="overduelist_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి…</string>
+  <string name="overduelist_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి...</string>
+  <string name="overduelist_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి...</string>
   <string name="overduelist_result_of_call">కాల్ ఫలితం</string>
   <string name="overduelist_high_risk">అధిక ప్రమాదం</string>
 
@@ -338,7 +343,7 @@
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">సింక్ పెండింగ్‌లో ఉంది</string>
   <string name="syncindicator_status_failed">సింక్ విఫలమైంది</string>
-  <string name="syncindicator_status_syncing">సింక్ చేస్తోంది…</string>
+  <string name="syncindicator_status_syncing">సింక్ చేస్తోంది...</string>
   <string name="syncindicator_status_synced_just_now">ఇప్పుడే సింక్ అయింది</string>
   <string name="syncindicator_status_synced">%d నిమి క్రితం సింక్ చేసారు</string>
   <string name="syncindicator_dialog_error_network">రోగి రికార్డ్‌లను సింక్ చేయడం కోసం మీ వద్ద పని చేస్తున్న ఇంటర్నెట్ కనెక్షన్ ఉండాలి.</string>
@@ -426,4 +431,39 @@
   <string name="selectcountry_servererror">సర్వర్లో లోపం ఏర్పడింది! తర్వాత మళ్లీ ప్రయత్నించండి!</string>
   <string name="selectcountry_genericerror">ఏదో తప్పు జరిగింది! తర్వాత మళ్లీ ప్రయత్నించండి!</string>
   <string name="selectcountry_retry">మళ్లీ ప్రయత్నించండి</string>
+  <string name="scheduleappointment_at">వద్ద</string>
+  <string name="scheduleappointment_change">మార్చు</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">ఒక కొలతను ఎంచుకోండి</string>
+  <string name="bloodsugartype_picker_desc">మీరు ఖచ్చితంగా లేకుంటే ‘RBS’ని ఎంచుకోండి</string>
+  <string name="bloodsugartype_rbs">యాదృచ్ఛిక రక్తంలోని చక్కెర (RBS)</string>
+  <string name="bloodsugartype_fbs">ఉపవాసం ఉన్నప్పుడు రక్తంలోని చక్కెర (FBS)</string>
+  <string name="bloodsugartype_ppbs">భోజనం తర్వాతా రక్తంలోని చక్కెర (PPBS)</string>
+
+  <!-- Blood sugar entry -->
+  <string name="bloodsugarentry_md_dl">ఎంజి/డిఎల్</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">సందర్శన తేదీ</string>
+  <string name="bloodsugarentry_day">రోజు</string>
+  <string name="bloodsugarentry_month">నెల</string>
+  <string name="bloodsugarentry_year">సంవత్సరం</string>
+  <string name="bloodsugarentry_error_lower_limit">విలువ 30 ఎంజి/డిఎల్ కంటే తక్కువగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_higher_limit">విలువ 1000 ఎంజి/డిఎల్ కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_empty">విలువ ఖాళీగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YY ప్రకారం చెల్లుబాటు అయ్యే తేదీని నమోదు చేయండి</string>
+  <string name="bloodsugarentry_error_date_is_in_future">తేదీ భవిష్యత్తులో ఉండకూడదు</string>
+  <string name="bloodsugarentry_random_title">యదృచ్ఛిక రక్తంలోని చక్కెర</string>
+  <string name="bloodsugarentry_post_prandial_title">భోజనం తర్వాతా రక్తంలోని చక్కెర</string>
+  <string name="bloodsugarentry_fasting_title">ఉపవాసం ఉన్నప్పుడు రక్తంలోని చక్కెర</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_reading_unit_type">\u0020ఎంజి/డిఎల్ %s</string>
+  <string name="bloodsugarsummaryview_no_blood_sugars">రక్తంలోని చక్కెర జోడించలేదు</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">మధుమేహం</string>
+  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
+
+  <string name="bloodpressurehistory_add_bp_button">కొత్త బిపి</string>
+  <string name="bloodpressurehistory_bp_time_date">%1$s, %2$s</string>
 </resources>

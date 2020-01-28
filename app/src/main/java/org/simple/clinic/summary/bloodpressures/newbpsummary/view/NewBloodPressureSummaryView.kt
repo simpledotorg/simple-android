@@ -1,6 +1,7 @@
 package org.simple.clinic.summary.bloodpressures.newbpsummary.view
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.clicks
@@ -84,6 +85,26 @@ class NewBloodPressureSummaryView(
       return
     }
     context.injector<NewBloodPressureSummaryViewInjector>().inject(this)
+
+    delegate.prepare()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun showNoBloodPressuresView() {

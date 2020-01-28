@@ -161,7 +161,10 @@ class NewMedicalHistoryScreenLogicTest {
       verify(medicalHistoryRepository).save(
           patientUuid = savedPatient.uuid,
           historyEntry = OngoingMedicalHistoryEntry(
-              diagnosedWithHypertension = Unanswered,
+              // We currently default the hypertension diagnosis answer to 'Yes' if the facility
+              // does not support diabetes management. The mock facility we use in tests has DM
+              // off by default, so this is hidden behaviour.
+              diagnosedWithHypertension = Yes,
               isOnTreatmentForHypertension = Unanswered,
               hasHadHeartAttack = Unanswered,
               hasHadStroke = Unanswered,

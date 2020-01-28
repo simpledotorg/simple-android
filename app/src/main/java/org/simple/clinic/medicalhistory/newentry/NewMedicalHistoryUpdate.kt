@@ -1,8 +1,9 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.medicalhistory.Answer.Yes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
@@ -14,10 +15,22 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is SaveMedicalHistoryClicked -> dispatch(RegisterPatient(model.ongoingMedicalHistoryEntry))
       is PatientRegistered -> dispatch(OpenPatientSummaryScreen(event.patientUuid))
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
-      is CurrentFacilityLoaded -> next(
-          model.currentFacilityLoaded(event.facility),
-          SetupUiForDiabetesManagement(event.facility.config.diabetesManagementEnabled)
-      )
+      is CurrentFacilityLoaded -> {
+        val diabetesManagementEnabled = event.facility.config.diabetesManagementEnabled
+
+        val updatedModel = if (diabetesManagementEnabled) {
+          model.currentFacilityLoaded(event.facility)
+        } else {
+          model
+              .currentFacilityLoaded(event.facility)
+              .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        }
+
+        next(
+            updatedModel,
+            SetupUiForDiabetesManagement(diabetesManagementEnabled)
+        )
+      }
     }
   }
 }

@@ -8,24 +8,12 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.summary.bloodpressures.AddNewBloodPressureClicked
-import org.simple.clinic.summary.bloodpressures.BloodPressureClicked
-import org.simple.clinic.summary.bloodpressures.BloodPressuresCountLoaded
-import org.simple.clinic.summary.bloodpressures.BloodPressuresLoaded
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewEffect
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewEvent
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewModel
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUpdate
-import org.simple.clinic.summary.bloodpressures.OpenBloodPressureEntrySheet
-import org.simple.clinic.summary.bloodpressures.OpenBloodPressureUpdateSheet
-import org.simple.clinic.summary.bloodpressures.SeeAllClicked
-import org.simple.clinic.summary.bloodpressures.ShowBloodPressureHistoryScreen
 import java.util.UUID
 
-class NewBloodPressureSummaryViewUpdateTest {
+class BloodPressureSummaryViewUpdateTest {
   private val patientUuid = UUID.fromString("8f1befda-f99e-4d26-aff3-cecb90925df1")
-  private val defaultModel = NewBloodPressureSummaryViewModel.create(patientUuid)
-  private val updateSpec = UpdateSpec<NewBloodPressureSummaryViewModel, NewBloodPressureSummaryViewEvent, NewBloodPressureSummaryViewEffect>(NewBloodPressureSummaryViewUpdate())
+  private val defaultModel = BloodPressureSummaryViewModel.create(patientUuid)
+  private val updateSpec = UpdateSpec<BloodPressureSummaryViewModel, BloodPressureSummaryViewEvent, BloodPressureSummaryViewEffect>(BloodPressureSummaryViewUpdate())
 
   @Test
   fun `when blood pressures are loaded, then show blood pressures`() {
@@ -66,7 +54,7 @@ class NewBloodPressureSummaryViewUpdateTest {
         .whenEvent(AddNewBloodPressureClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenBloodPressureEntrySheet(patientUuid) as NewBloodPressureSummaryViewEffect)
+            hasEffects(OpenBloodPressureEntrySheet(patientUuid) as BloodPressureSummaryViewEffect)
         ))
   }
 
@@ -83,7 +71,7 @@ class NewBloodPressureSummaryViewUpdateTest {
         .whenEvent(BloodPressureClicked(bloodPressureMeasurement))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenBloodPressureUpdateSheet(bloodPressureMeasurement) as NewBloodPressureSummaryViewEffect)
+            hasEffects(OpenBloodPressureUpdateSheet(bloodPressureMeasurement) as BloodPressureSummaryViewEffect)
         ))
   }
 
@@ -112,7 +100,7 @@ class NewBloodPressureSummaryViewUpdateTest {
         .whenEvent(SeeAllClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowBloodPressureHistoryScreen(patientUuid) as NewBloodPressureSummaryViewEffect)
+            hasEffects(ShowBloodPressureHistoryScreen(patientUuid) as BloodPressureSummaryViewEffect)
         ))
   }
 }

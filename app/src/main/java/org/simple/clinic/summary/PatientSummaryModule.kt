@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewConfig
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewConfig
 
 @Module
 class PatientSummaryModule {
@@ -15,8 +15,8 @@ class PatientSummaryModule {
   }
 
   @Provides
-  fun providesNewBloodPressureSummaryConfig(configReader: ConfigReader): NewBloodPressureSummaryViewConfig {
-    return NewBloodPressureSummaryViewConfig.read(configReader)
+  fun providesBloodPressureSummaryConfig(configReader: ConfigReader): BloodPressureSummaryViewConfig {
+    return BloodPressureSummaryViewConfig.read(configReader)
   }
 
   @Provides

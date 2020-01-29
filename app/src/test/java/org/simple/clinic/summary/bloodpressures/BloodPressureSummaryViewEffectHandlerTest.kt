@@ -12,23 +12,14 @@ import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.summary.bloodpressures.BloodPressuresCountLoaded
-import org.simple.clinic.summary.bloodpressures.BloodPressuresLoaded
-import org.simple.clinic.summary.bloodpressures.LoadBloodPressures
-import org.simple.clinic.summary.bloodpressures.LoadBloodPressuresCount
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewEffectHandler
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUiActions
-import org.simple.clinic.summary.bloodpressures.OpenBloodPressureEntrySheet
-import org.simple.clinic.summary.bloodpressures.OpenBloodPressureUpdateSheet
-import org.simple.clinic.summary.bloodpressures.ShowBloodPressureHistoryScreen
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
-class NewBloodPressureSummaryViewEffectHandlerTest {
+class BloodPressureSummaryViewEffectHandlerTest {
 
-  private val uiActions = mock<NewBloodPressureSummaryViewUiActions>()
+  private val uiActions = mock<BloodPressureSummaryViewUiActions>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
-  private val effectHandler = NewBloodPressureSummaryViewEffectHandler(
+  private val effectHandler = BloodPressureSummaryViewEffectHandler(
       bloodPressureRepository = bloodPressureRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
       uiActions = uiActions

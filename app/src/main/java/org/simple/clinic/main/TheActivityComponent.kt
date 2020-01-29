@@ -70,7 +70,7 @@ import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
 import org.simple.clinic.shortcodesearchresult.ShortCodeSearchResultScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
-import org.simple.clinic.summary.bloodpressures.newbpsummary.view.NewBloodPressureSummaryViewInjector
+import org.simple.clinic.summary.bloodpressures.view.NewBloodPressureSummaryViewInjector
 import org.simple.clinic.summary.bloodsugar.view.BloodSugarSummaryViewInjector
 import org.simple.clinic.summary.linkId.LinkIdWithPatientView
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryViewInjector

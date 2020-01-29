@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.bloodpressures.newbpsummary
+package org.simple.clinic.summary.bloodpressures
 
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted

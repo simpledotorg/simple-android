@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.bloodpressures.newbpsummary
+package org.simple.clinic.summary.bloodpressures
 
 import org.simple.clinic.remoteconfig.ConfigReader
 

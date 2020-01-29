@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.summary.bloodpressures.newbpsummary.NewBloodPressureSummaryViewConfig
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewConfig
 
 @Module
 class PatientSummaryModule {

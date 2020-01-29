@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.bloodpressures.newbpsummary
+package org.simple.clinic.summary.bloodpressures
 
 import com.spotify.mobius.First
 import com.spotify.mobius.Init

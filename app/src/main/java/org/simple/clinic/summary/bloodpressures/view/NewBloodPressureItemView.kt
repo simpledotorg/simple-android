@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.bloodpressures.newbpsummary.view
+package org.simple.clinic.summary.bloodpressures.view
 
 import android.content.Context
 import android.text.style.TextAppearanceSpan

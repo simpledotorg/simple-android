@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.bloodpressures.newbpsummary
+package org.simple.clinic.summary.bloodpressures
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
@@ -8,6 +8,18 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.summary.bloodpressures.AddNewBloodPressureClicked
+import org.simple.clinic.summary.bloodpressures.BloodPressureClicked
+import org.simple.clinic.summary.bloodpressures.BloodPressuresCountLoaded
+import org.simple.clinic.summary.bloodpressures.BloodPressuresLoaded
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewEffect
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewEvent
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewModel
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUpdate
+import org.simple.clinic.summary.bloodpressures.OpenBloodPressureEntrySheet
+import org.simple.clinic.summary.bloodpressures.OpenBloodPressureUpdateSheet
+import org.simple.clinic.summary.bloodpressures.SeeAllClicked
+import org.simple.clinic.summary.bloodpressures.ShowBloodPressureHistoryScreen
 import java.util.UUID
 
 class NewBloodPressureSummaryViewUpdateTest {

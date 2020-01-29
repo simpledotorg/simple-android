@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.bloodpressures.newbpsummary
+package org.simple.clinic.summary.bloodpressures
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

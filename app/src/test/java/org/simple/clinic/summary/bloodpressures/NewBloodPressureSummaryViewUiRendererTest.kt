@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.bloodpressures.newbpsummary
+package org.simple.clinic.summary.bloodpressures
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -7,6 +7,10 @@ import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewConfig
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewModel
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUi
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUiRenderer
 import java.util.UUID
 
 class NewBloodPressureSummaryViewUiRendererTest {

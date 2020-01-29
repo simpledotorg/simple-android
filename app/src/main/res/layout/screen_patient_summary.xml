@@ -115,7 +115,7 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8" />
 
-      <org.simple.clinic.summary.bloodpressures.BloodPressureSummaryView
+      <org.simple.clinic.summary.bloodpressures.newbpsummary.view.NewBloodPressureSummaryView
         android:id="@+id/bloodPressureSummaryView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

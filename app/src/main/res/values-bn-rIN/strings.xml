@@ -237,12 +237,12 @@
   <string name="overdue_no_patients">সময় পার হয়ে যাওয়া কোন রোগী নেই</string>
   <string name="overdue_empty_desc">যে রোগীরা ফলো আপ রক্তচাপ মাপার জন্য তাদের পূর্বনির্ধারিত সাক্ষাৎকার মিস করেছে আপনি সেই রোগীদের ফোন করতে পারবেন।</string>
   <plurals name="overdue_list_item_patient_bp">
-    <item quantity="one">%1$d/%2$d, %3$d দিন আগে</item>
-    <item quantity="other">%1$d/%2$d/ %3$d/.......... দিন আগে</item>
+    <item quantity="one">%s দিন আগে</item>
+    <item quantity="other">%s দিন আগে</item>
   </plurals>
   <plurals name="overdue_list_item_overdue_days">
-    <item quantity="one">%d দিন সময়াতীত</item>
-    <item quantity="other">%d দিন আগে সময় পার হয়ে গেছে</item>
+    <item quantity="one">%s দিন সময়াতীত</item>
+    <item quantity="other">%s দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
   <string name="overduelist_last_bp">শেষ রক্তচাপ:</string>
   <string name="overduelist_agreed_to_visit">\'ভিজিটে আসতে সম্মত হয়েছেন\' বলে রোগীকে চিহ্নিত করুন</string>

@@ -237,12 +237,12 @@
   <string name="overdue_no_patients">ግዜ ዘሕለፉ ተሓከምቲ የለዉን</string>
   <string name="overdue_empty_desc">ኣብ ዝተመደበ ናይ ምብጻሕ ግዜ ክመጹ ንዘይክኣሉ ተሓከምቲ ዝስዕብ ናይ ጸቕጢ ደም ንባብ ንኽውሰደሎም ክትድውለሎም ክትክእል ኢኻ።</string>
   <plurals name="overdue_list_item_patient_bp">
-    <item quantity="one">ቅድሚ %1$d/%2$d, %3$d መዓልቲ</item>
-    <item quantity="other">ቅድሚ %1$d/%2$d, %3$d መዓልታት</item>
+    <item quantity="one">ቅድሚ %s መዓልቲ</item>
+    <item quantity="other">ቅድሚ %s መዓልታት</item>
   </plurals>
   <plurals name="overdue_list_item_overdue_days">
-    <item quantity="one">%d መዓልቲ ዘሕለፈ</item>
-    <item quantity="other">%d መዓልታት ዘሕለፈ</item>
+    <item quantity="one">%s መዓልቲ ዘሕለፈ</item>
+    <item quantity="other">%s መዓልታት ዘሕለፈ</item>
   </plurals>
   <string name="overduelist_last_bp">ናይ መወዳእታ ዝሓለፈ ጸቕጢ ደም፡</string>
   <string name="overduelist_agreed_to_visit">ንተሓካሚ ‘ምብጻሕ ንምፍጻም ተሰማሚዑ’ ዝብል ምልክት ግበረሉ</string>

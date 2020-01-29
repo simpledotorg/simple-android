@@ -126,9 +126,7 @@ data class OverdueAppointmentRow(
     holder.patientBPTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_patient_bp,
         bpDaysAgo,
-        bpSystolic,
-        bpDiastolic,
-        bpDaysAgo
+        "$bpSystolic/$bpDiastolic, $bpDaysAgo"
     )
 
     holder.callButton.visibility = if (phoneNumber == null) GONE else VISIBLE
@@ -139,7 +137,7 @@ data class OverdueAppointmentRow(
     holder.overdueDaysTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_overdue_days,
         overdueDays,
-        overdueDays
+        "$overdueDays"
     )
 
     updateBottomLayoutVisibility(holder)

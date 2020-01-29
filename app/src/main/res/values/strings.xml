@@ -178,7 +178,6 @@
   <string name="patientsummary_bp_add_new">Blood Pressure</string>
   <string name="patientsummary_finish_saving_patient">Save</string>
   <string name="patientsummary_bp_none_added">No blood pressures added</string>
-  <string name="patientsummary_bp_reading" translatable="false">%1$d / %2$d</string>
   <string name="patientsummary_edit">Edit</string>
   <string name="patientsummary_address_with_colony" translatable="false">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_address_without_colony" translatable="false">%1$s, %2$s</string>
@@ -533,13 +532,12 @@
   <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
-  <!-- Blood Sugar History screen -->
-  <string name="bloodpressurehistory_bp_reading" translatable="false">%1$d / %2$d</string>
+  <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
   <string name="bloodpressurehistory_toolbar_title" translatable="false">%1$s, %2$s, %3$d</string>
   <string name="bloodpressurehistory_bp_time_date" translatable="false">%1$s\n%2$s</string>
 
-  <!-- Blood Pressure History screen -->
+  <!-- Blood Sugar History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">Diabetes</string>
   <string name="bloodsugarhistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
   <string name="bloodsugarhistory_blood_sugar_reading" translatable="false">%1$d mg/dl %2$s</string>

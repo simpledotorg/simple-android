@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.bloodpressures.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
@@ -33,12 +34,13 @@ class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout
     editButton.visibleOrGone(isBpEditable)
   }
 
+  @SuppressLint("SetTextI18n")
   private fun renderBloodPressureReading(
       systolic: Int,
       diastolic: Int,
       isBpHigh: Boolean
   ) {
-    readingsTextView.text = context.getString(R.string.patientsummary_bp_reading, systolic, diastolic)
+    readingsTextView.text = "$systolic / $diastolic"
     bpHighTextView.visibleOrGone(isBpHigh)
     if (isBpHigh) {
       heartImageView.setImageResource(R.drawable.bp_reading_high)

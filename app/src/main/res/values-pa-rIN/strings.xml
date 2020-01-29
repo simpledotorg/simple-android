@@ -237,12 +237,12 @@
   <string name="overdue_no_patients">ਕੋਈ ਮਰੀਜ਼ ਓਵਰਡਿਊ ਨਹੀਂ ਹਨ</string>
   <string name="overdue_empty_desc">ਤੁਸੀਂ ਇੱਕ ਫੋਲੋ-ਅੱਪ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਰੀਡਿੰਗ ਲਈ ਅਜਿਹੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਬੁਲਾਉਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ ਜੋ ਆਪਣੀ ਨਿਰਧਾਰਤ ਮੁਲਾਕਾਤ ਖੁੰਝਾ ਦਿੰਦੇ ਹਨ।</string>
   <plurals name="overdue_list_item_patient_bp">
-    <item quantity="one">%1$d/%2$d, %3$d ਦਿਨ ਪਹਿਲਾਂ</item>
-    <item quantity="other">%1$d/%2$d, %3$d ਦਿਨ ਪਹਿਲਾਂ</item>
+    <item quantity="one">%s ਦਿਨ ਪਹਿਲਾਂ</item>
+    <item quantity="other">%s ਦਿਨ ਪਹਿਲਾਂ</item>
   </plurals>
   <plurals name="overdue_list_item_overdue_days">
-    <item quantity="one">%d ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
-    <item quantity="other">%d ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
+    <item quantity="one">%s ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
+    <item quantity="other">%s ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
   <string name="overduelist_last_bp">ਆਖਰੀ ਵਾਰ ਬੀਪੀ:</string>
   <string name="overduelist_agreed_to_visit">ਮਰੀਜ਼ ਨੂੰ ‘ਫੇਰੀ ਲਈ ਸਹਿਮਤ ਹੋਏ’ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ</string>

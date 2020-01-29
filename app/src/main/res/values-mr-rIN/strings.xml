@@ -237,12 +237,12 @@
   <string name="overdue_no_patients">कोणतेही रुग्ण उशीरा आलेले नाहीत</string>
   <string name="overdue_empty_desc">आपण अशा रुग्णांना कॉल करू शकाल, जे फॉलो-अप रक्तदाब वाचनासाठी त्यांची नियोजित भेट चुकवतात.</string>
   <plurals name="overdue_list_item_patient_bp">
-    <item quantity="one">%1$d/%2$d, %3$d दिवसापूर्वी</item>
-    <item quantity="other">%1$d/%2$d, %3$d दिवसांपूर्वी</item>
+    <item quantity="one">%s दिवसापूर्वी</item>
+    <item quantity="other">%s दिवसांपूर्वी</item>
   </plurals>
   <plurals name="overdue_list_item_overdue_days">
-    <item quantity="one">%d दिवसाने उशीर झाला</item>
-    <item quantity="other">%d दिवसांनी उशीर झाला</item>
+    <item quantity="one">%s दिवसाने उशीर झाला</item>
+    <item quantity="other">%s दिवसांनी उशीर झाला</item>
   </plurals>
   <string name="overduelist_last_bp">शेवटचा बीपी:</string>
   <string name="overduelist_agreed_to_visit">रूग्णाला ‘भेटण्यास सहमती दर्शविली’ म्हणून चिन्हांकित करा</string>

@@ -237,12 +237,12 @@
   <string name="overdue_no_patients">గడువు దాటిన రోగులు లేరు</string>
   <string name="overdue_empty_desc">షెడ్యూల్ చేసిన సందర్శనకు హాజరుకాని రోగులకు మీరు కాల్ చేసి ఫాలో-అప్ రక్తపోటు రీడింగ్ కోసం రావాలని కోరవచ్చు.</string>
   <plurals name="overdue_list_item_patient_bp">
-    <item quantity="one">%1$d/%2$d, %3$d రోజు క్రితం</item>
-    <item quantity="other">%1$d/%2$d, %3$d రోజుల క్రితం</item>
+    <item quantity="one">%s రోజు క్రితం</item>
+    <item quantity="other">%s రోజుల క్రితం</item>
   </plurals>
   <plurals name="overdue_list_item_overdue_days">
-    <item quantity="one">%d రోజు క్రితం గడువు ముగిసింది</item>
-    <item quantity="other">%d రోజుల క్రితం గడువు ముగిసింది</item>
+    <item quantity="one">%s రోజు క్రితం గడువు ముగిసింది</item>
+    <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
   </plurals>
   <string name="overduelist_last_bp">చివరి బిపి:</string>
   <string name="overduelist_agreed_to_visit">రోగి ‘సందర్శించడానికి అంగీకరించారు’ అని గుర్తుపెట్టండి</string>

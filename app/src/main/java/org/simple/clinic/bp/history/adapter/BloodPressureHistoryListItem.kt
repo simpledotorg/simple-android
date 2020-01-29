@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.history.adapter
 
+import android.text.style.TextAppearanceSpan
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_bp_history_item.*
 import kotlinx.android.synthetic.main.list_new_bp_button.*
@@ -7,6 +8,7 @@ import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
+import org.simple.clinic.util.Truss
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toLocalDateAtZone
@@ -88,11 +90,22 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
 
     override fun render(holder: ViewHolderX, subject: Subject<Event>) {
       val context = holder.itemView.context
-      val bpTimeDate = if (bpTime != null) {
-        context.getString(R.string.bloodpressurehistory_bp_time_date, bpTime, bpDate)
+      val bpDateTime = if (bpTime != null) {
+        context.getString(R.string.bloodpressurehistory_bp_time_date, bpDate, bpTime)
       } else {
         bpDate
       }
+      val dateTimeTextAppearance = if (bpTime != null) {
+        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Caption_Grey1)
+      } else {
+        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Grey1)
+      }
+
+      val formattedBPDateTime = Truss()
+          .pushSpan(dateTimeTextAppearance)
+          .append(bpDateTime)
+          .popSpan()
+          .build()
 
       if (isHighBloodPressure) {
         holder.heartImageView.setImageResource(R.drawable.bp_reading_high)
@@ -110,7 +123,7 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
       holder.editButton.visibleOrGone(isBpEditable)
 
       holder.readingsTextView.text = context.getString(R.string.bloodpressurehistory_bp_reading, measurement.systolic, measurement.diastolic)
-      holder.timeDateTextView.text = bpTimeDate
+      holder.timeDateTextView.text = formattedBPDateTime
     }
   }
 }

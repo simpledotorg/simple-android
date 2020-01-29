@@ -528,5 +528,5 @@
   <string name="bloodpressurehistory_bp_reading" translatable="false">%1$d / %2$d</string>
   <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
   <string name="bloodpressurehistory_toolbar_title" translatable="false">%1$s, %2$s, %3$d</string>
-  <string name="bloodpressurehistory_bp_time_date">%1$s, %2$s</string>
+  <string name="bloodpressurehistory_bp_time_date" translatable="false">%1$s\n%2$s</string>
 </resources>

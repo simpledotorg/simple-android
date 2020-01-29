@@ -51,7 +51,7 @@ class NewBloodPressureSummaryViewUpdateTest {
   fun `when add new blood pressure is clicked, then open blood pressure entry sheet`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(NewBloodPressureClicked)
+        .whenEvent(AddNewBloodPressureClicked)
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenBloodPressureEntrySheet(patientUuid) as NewBloodPressureSummaryViewEffect)

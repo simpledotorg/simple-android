@@ -1,10 +1,16 @@
-package org.simple.clinic.summary.bloodpressures.newbpsummary
+package org.simple.clinic.summary.bloodpressures
 
 import com.spotify.mobius.test.FirstMatchers.hasEffects
 import com.spotify.mobius.test.FirstMatchers.hasModel
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
+import org.simple.clinic.summary.bloodpressures.LoadBloodPressures
+import org.simple.clinic.summary.bloodpressures.LoadBloodPressuresCount
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewConfig
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewEffect
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewInit
+import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewModel
 import java.util.UUID
 
 class NewBloodPressureSummaryViewInitTest {

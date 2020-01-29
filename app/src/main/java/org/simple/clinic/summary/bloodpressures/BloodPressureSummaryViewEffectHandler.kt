@@ -8,20 +8,20 @@ import io.reactivex.Scheduler
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
-class NewBloodPressureSummaryViewEffectHandler @AssistedInject constructor(
+class BloodPressureSummaryViewEffectHandler @AssistedInject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: NewBloodPressureSummaryViewUiActions
+    @Assisted private val uiActions: BloodPressureSummaryViewUiActions
 ) {
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(uiActions: NewBloodPressureSummaryViewUiActions): NewBloodPressureSummaryViewEffectHandler
+    fun create(uiActions: BloodPressureSummaryViewUiActions): BloodPressureSummaryViewEffectHandler
   }
 
-  fun build(): ObservableTransformer<NewBloodPressureSummaryViewEffect, NewBloodPressureSummaryViewEvent> {
+  fun build(): ObservableTransformer<BloodPressureSummaryViewEffect, BloodPressureSummaryViewEvent> {
     return RxMobius
-        .subtypeEffectHandler<NewBloodPressureSummaryViewEffect, NewBloodPressureSummaryViewEvent>()
+        .subtypeEffectHandler<BloodPressureSummaryViewEffect, BloodPressureSummaryViewEvent>()
         .addTransformer(LoadBloodPressures::class.java, loadBloodPressureHistory(schedulersProvider.io()))
         .addTransformer(LoadBloodPressuresCount::class.java, loadBloodPressuresCount(schedulersProvider.io()))
         .addConsumer(OpenBloodPressureEntrySheet::class.java, { uiActions.openBloodPressureEntrySheet(it.patientUuid) }, schedulersProvider.ui())
@@ -32,7 +32,7 @@ class NewBloodPressureSummaryViewEffectHandler @AssistedInject constructor(
 
   private fun loadBloodPressureHistory(
       scheduler: Scheduler
-  ): ObservableTransformer<LoadBloodPressures, NewBloodPressureSummaryViewEvent> {
+  ): ObservableTransformer<LoadBloodPressures, BloodPressureSummaryViewEvent> {
     return ObservableTransformer { effect ->
       effect
           .switchMap {
@@ -46,7 +46,7 @@ class NewBloodPressureSummaryViewEffectHandler @AssistedInject constructor(
 
   private fun loadBloodPressuresCount(
       scheduler: Scheduler
-  ): ObservableTransformer<LoadBloodPressuresCount, NewBloodPressureSummaryViewEvent> {
+  ): ObservableTransformer<LoadBloodPressuresCount, BloodPressureSummaryViewEvent> {
     return ObservableTransformer { effect ->
       effect
           .switchMap {

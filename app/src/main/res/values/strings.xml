@@ -530,10 +530,6 @@
   <string name="bloodpressurehistory_toolbar_title" translatable="false">%1$s, %2$s, %3$d</string>
   <string name="bloodpressurehistory_bp_time_date" translatable="false">%1$s\n%2$s</string>
 
-  <!-- TODO: Remove lint suppress after new blood pressure summary view is completed -->
-  <!--suppress AndroidLintUnusedResources -->
-  <string name="newbloodpressuresummaryview_add_bp_button">Blood Pressure</string>
-  <!--suppress AndroidLintUnusedResources -->
-  <string name="newbloodpressuresummaryview_see_all_button">See all</string>
+  <string name="bloodpressuresummaryview_see_all_button">See all</string>
   <string name="patientsummary_newbp_date_time" translatable="false">%1$s\n%2$s</string>
 </resources>

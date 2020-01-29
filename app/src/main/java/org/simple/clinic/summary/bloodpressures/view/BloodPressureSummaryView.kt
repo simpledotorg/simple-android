@@ -14,7 +14,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.patientsummary_newbpsummary_content.view.*
+import kotlinx.android.synthetic.main.patientsummary_bpsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -30,16 +30,16 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.summary.SUMMARY_REQCODE_BP_ENTRY
 import org.simple.clinic.summary.bloodpressures.AddNewBloodPressureClicked
 import org.simple.clinic.summary.bloodpressures.BloodPressureClicked
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewConfig
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewEffect
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewEffectHandler
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewEvent
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewInit
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewModel
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUi
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUiActions
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUiRenderer
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUpdate
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewConfig
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewEffectHandler
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewInit
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewModel
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewUi
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewUiActions
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewUiRenderer
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewUpdate
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewEffect
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewEvent
 import org.simple.clinic.summary.bloodpressures.SeeAllClicked
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -55,22 +55,22 @@ import javax.inject.Named
 
 private typealias BpRecorded = () -> Unit
 
-class NewBloodPressureSummaryView(
+class BloodPressureSummaryView(
     context: Context,
     attrs: AttributeSet
-) : CardView(context, attrs), NewBloodPressureSummaryViewUi, NewBloodPressureSummaryViewUiActions {
+) : CardView(context, attrs), BloodPressureSummaryViewUi, BloodPressureSummaryViewUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var bloodPressureSummaryConfig: NewBloodPressureSummaryViewConfig
+  lateinit var bloodPressureSummaryConfig: BloodPressureSummaryViewConfig
 
   @Inject
   lateinit var patientSummaryConfig: PatientSummaryConfig
 
   @Inject
-  lateinit var effectHandlerFactory: NewBloodPressureSummaryViewEffectHandler.Factory
+  lateinit var effectHandlerFactory: BloodPressureSummaryViewEffectHandler.Factory
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -90,9 +90,9 @@ class NewBloodPressureSummaryView(
   @Inject
   lateinit var crashReporter: CrashReporter
 
-  private val viewEvents = PublishSubject.create<NewBloodPressureSummaryViewEvent>()
+  private val viewEvents = PublishSubject.create<BloodPressureSummaryViewEvent>()
 
-  private val events: Observable<NewBloodPressureSummaryViewEvent> by unsafeLazy {
+  private val events: Observable<BloodPressureSummaryViewEvent> by unsafeLazy {
     Observable
         .merge(
             addNewBpClicked(),
@@ -100,20 +100,20 @@ class NewBloodPressureSummaryView(
             viewEvents
         )
         .compose(ReportAnalyticsEvents())
-        .cast<NewBloodPressureSummaryViewEvent>()
+        .cast<BloodPressureSummaryViewEvent>()
   }
 
-  private val uiRenderer: NewBloodPressureSummaryViewUiRenderer by unsafeLazy {
-    NewBloodPressureSummaryViewUiRenderer(this, bloodPressureSummaryConfig)
+  private val uiRenderer: BloodPressureSummaryViewUiRenderer by unsafeLazy {
+    BloodPressureSummaryViewUiRenderer(this, bloodPressureSummaryConfig)
   }
 
-  private val delegate: MobiusDelegate<NewBloodPressureSummaryViewModel, NewBloodPressureSummaryViewEvent, NewBloodPressureSummaryViewEffect> by unsafeLazy {
+  private val delegate: MobiusDelegate<BloodPressureSummaryViewModel, BloodPressureSummaryViewEvent, BloodPressureSummaryViewEffect> by unsafeLazy {
     val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
     MobiusDelegate(
         events = events,
-        defaultModel = NewBloodPressureSummaryViewModel.create(screenKey.patientUuid),
-        init = NewBloodPressureSummaryViewInit(bloodPressureSummaryConfig),
-        update = NewBloodPressureSummaryViewUpdate(),
+        defaultModel = BloodPressureSummaryViewModel.create(screenKey.patientUuid),
+        init = BloodPressureSummaryViewInit(bloodPressureSummaryConfig),
+        update = BloodPressureSummaryViewUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter
@@ -123,7 +123,7 @@ class NewBloodPressureSummaryView(
   var bpRecorded: BpRecorded? = null
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_newbpsummary_content, this, true)
+    LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_content, this, true)
   }
 
   override fun onFinishInflate() {
@@ -131,7 +131,7 @@ class NewBloodPressureSummaryView(
     if (isInEditMode) {
       return
     }
-    context.injector<NewBloodPressureSummaryViewInjector>().inject(this)
+    context.injector<BloodPressureSummaryViewInjector>().inject(this)
 
     delegate.prepare()
 
@@ -209,11 +209,11 @@ class NewBloodPressureSummaryView(
         .subscribe { bpRecorded?.invoke() }
   }
 
-  private fun addNewBpClicked(): Observable<NewBloodPressureSummaryViewEvent> {
+  private fun addNewBpClicked(): Observable<BloodPressureSummaryViewEvent> {
     return addNewBP.clicks().map { AddNewBloodPressureClicked }
   }
 
-  private fun seeAllClicked(): Observable<NewBloodPressureSummaryViewEvent> {
+  private fun seeAllClicked(): Observable<BloodPressureSummaryViewEvent> {
     return seeAll.clicks().map { SeeAllClicked }
   }
 
@@ -258,7 +258,7 @@ class NewBloodPressureSummaryView(
           null
         }
 
-        val bloodPressureItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_newbp_measurement, this, false) as NewBloodPressureItemView
+        val bloodPressureItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bp_measurement, this, false) as BloodPressureItemView
         bloodPressureItemView.render(
             measurement = measurement,
             isBpEditable = isBpEditable,

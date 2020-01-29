@@ -5,16 +5,16 @@ import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import kotlinx.android.synthetic.main.patientsummary_newbpitem_content.view.*
+import kotlinx.android.synthetic.main.patientsummary_bpitem_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.visibleOrGone
 
-class NewBloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_newbpitem_content, this, true)
+    LayoutInflater.from(context).inflate(R.layout.patientsummary_bpitem_content, this, true)
   }
 
   fun render(

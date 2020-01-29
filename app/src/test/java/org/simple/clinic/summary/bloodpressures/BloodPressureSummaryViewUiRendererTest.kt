@@ -7,18 +7,14 @@ import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewConfig
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewModel
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUi
-import org.simple.clinic.summary.bloodpressures.NewBloodPressureSummaryViewUiRenderer
 import java.util.UUID
 
-class NewBloodPressureSummaryViewUiRendererTest {
+class BloodPressureSummaryViewUiRendererTest {
   private val patientUuid = UUID.fromString("8b298cc4-da11-4df9-a318-01e113f3abe3")
-  private val ui = mock<NewBloodPressureSummaryViewUi>()
-  private val config = NewBloodPressureSummaryViewConfig(3)
-  private val uiRenderer = NewBloodPressureSummaryViewUiRenderer(ui, config)
-  private val defaultModel = NewBloodPressureSummaryViewModel.create(patientUuid)
+  private val ui = mock<BloodPressureSummaryViewUi>()
+  private val config = BloodPressureSummaryViewConfig(3)
+  private val uiRenderer = BloodPressureSummaryViewUiRenderer(ui, config)
+  private val defaultModel = BloodPressureSummaryViewModel.create(patientUuid)
 
   @Test
   fun `when blood pressures are loading, then do nothing`() {

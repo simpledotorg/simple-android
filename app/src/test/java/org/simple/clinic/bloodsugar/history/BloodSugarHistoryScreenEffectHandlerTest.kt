@@ -2,6 +2,8 @@ package org.simple.clinic.bloodsugar.history
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
@@ -20,10 +22,12 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val patientUuid = UUID.fromString("1d695883-54cf-4cf0-8795-43f83a0c3f02")
+  private val uiActions = mock<BloodSugarHistoryScreenUiActions>()
   private val effectHandler = BloodSugarHistoryScreenEffectHandler(
       patientRepository,
       bloodSugarRepository,
-      TrampolineSchedulersProvider()
+      TrampolineSchedulersProvider(),
+      uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -43,6 +47,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(PatientLoaded(patient))
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -60,5 +65,17 @@ class BloodSugarHistoryScreenEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodSugarHistoryLoaded(bloodSugars))
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open blood sugar entry sheet effect is received, then open blood sugar entry sheet`() {
+    // when
+    testCase.dispatch(OpenBloodSugarEntrySheet(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openBloodSugarEntrySheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
   }
 }

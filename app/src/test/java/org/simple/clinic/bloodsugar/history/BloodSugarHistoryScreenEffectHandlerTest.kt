@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientMocker
@@ -17,9 +18,11 @@ import java.util.UUID
 
 class BloodSugarHistoryScreenEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
+  private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val patientUuid = UUID.fromString("1d695883-54cf-4cf0-8795-43f83a0c3f02")
   private val effectHandler = BloodSugarHistoryScreenEffectHandler(
       patientRepository,
+      bloodSugarRepository,
       TrampolineSchedulersProvider()
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -40,5 +43,22 @@ class BloodSugarHistoryScreenEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(PatientLoaded(patient))
+  }
+
+  @Test
+  fun `when load blood sugars history effect is received, then load all blood sugars`() {
+    // given
+    val bloodSugarMeasurement = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("c593e506-e603-4f34-9ea8-89913cdbce9e"),
+        patientUuid = patientUuid
+    )
+    val bloodSugars = listOf(bloodSugarMeasurement)
+    whenever(bloodSugarRepository.allBloodSugars(patientUuid)) doReturn Observable.just(bloodSugars)
+
+    // when
+    testCase.dispatch(LoadBloodSugarHistory(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(BloodSugarHistoryLoaded(bloodSugars))
   }
 }

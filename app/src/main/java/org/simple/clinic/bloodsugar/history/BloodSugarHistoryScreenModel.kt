@@ -16,6 +16,9 @@ data class BloodSugarHistoryScreenModel(
   val hasLoadedPatient: Boolean
     get() = patient != null
 
+  val hasLoadedBloodSugars: Boolean
+    get() = bloodSugars != null
+
   fun patientLoaded(patient: Patient): BloodSugarHistoryScreenModel =
       copy(patient = patient)
 

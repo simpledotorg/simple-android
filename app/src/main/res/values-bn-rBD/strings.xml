@@ -465,5 +465,4 @@
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <string name="bloodpressurehistory_add_bp_button">নতুন বিপি</string>
-  <string name="bloodpressurehistory_bp_time_date">%1$s, %2$s</string>
 </resources>

@@ -16,6 +16,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
 import org.threeten.bp.temporal.ChronoUnit
+import org.threeten.bp.temporal.ChronoUnit.DAYS
 import java.util.UUID
 import javax.inject.Inject
 
@@ -100,5 +101,42 @@ class BloodSugarRepositoryAndroidTest {
 
     //then
     assertThat(bloodSugars).isEqualTo(expected)
+  }
+
+  @Test
+  fun when_fetching_all_blood_sugars_the_list_should_be_ordered_by_recorded_at() {
+    val patientUuid = UUID.fromString("da8317c6-cc8f-44bc-81c7-964c5207cd0c")
+    val bloodSugarRecordRightNow = testData.bloodSugarMeasurement(
+        uuid = UUID.fromString("a3c08653-93f5-48b7-800c-3e298590ede8"),
+        patientUuid = patientUuid,
+        recordedAt = Instant.now(clock)
+    )
+    val bloodSugarRecordADayInFuture = testData.bloodSugarMeasurement(
+        uuid = UUID.fromString("0dcb44b4-aa71-4b98-be7c-2548c91110d6"),
+        patientUuid = patientUuid,
+        recordedAt = Instant.now(clock).plus(1, DAYS)
+    )
+    val bloodSugarADayInPast = testData.bloodSugarMeasurement(
+        uuid = UUID.fromString("ab383fdf-1aa9-4fc8-ba8e-bec1dcb92d16"),
+        patientUuid = patientUuid,
+        recordedAt = Instant.now(clock).minus(1, DAYS)
+    )
+    val bloodSugarDeleted = testData.bloodSugarMeasurement(
+        uuid = UUID.fromString("ea1b6347-6ac7-4db0-a0c7-f823ef585f5f"),
+        patientUuid = patientUuid,
+        recordedAt = Instant.now(clock).minus(2, DAYS),
+        deletedAt = Instant.now(clock).minus(1, DAYS)
+    )
+
+    appDatabase.bloodSugarDao().save(listOf(bloodSugarRecordRightNow, bloodSugarRecordADayInFuture, bloodSugarADayInPast, bloodSugarDeleted))
+
+    val bloodSugarMeasurements = repository.allBloodSugars(patientUuid).blockingFirst()
+
+    assertThat(bloodSugarMeasurements)
+        .isEqualTo(listOf(
+            bloodSugarRecordADayInFuture,
+            bloodSugarRecordRightNow,
+            bloodSugarADayInPast
+        ))
   }
 }

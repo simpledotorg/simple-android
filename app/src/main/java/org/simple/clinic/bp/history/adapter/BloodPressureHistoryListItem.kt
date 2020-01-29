@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.history.adapter
 
+import android.annotation.SuppressLint
 import android.text.style.TextAppearanceSpan
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_bp_history_item.*
@@ -88,6 +89,7 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
 
     override fun layoutResId(): Int = R.layout.list_bp_history_item
 
+    @SuppressLint("SetTextI18n")
     override fun render(holder: ViewHolderX, subject: Subject<Event>) {
       val context = holder.itemView.context
       val bpDateTime = if (bpTime != null) {
@@ -123,7 +125,7 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
       holder.itemView.isFocusable = isBpEditable
       holder.editButton.visibleOrGone(isBpEditable)
 
-      holder.readingsTextView.text = context.getString(R.string.bloodpressurehistory_bp_reading, measurement.systolic, measurement.diastolic)
+      holder.readingsTextView.text = "${measurement.systolic} / ${measurement.diastolic}"
       holder.timeDateTextView.text = formattedBPDateTime
     }
   }

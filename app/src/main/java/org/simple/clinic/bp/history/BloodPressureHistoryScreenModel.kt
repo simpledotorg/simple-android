@@ -18,7 +18,7 @@ data class BloodPressureHistoryScreenModel(
   }
 
   val hasBloodPressures: Boolean
-    get() = bloodPressures.isNullOrEmpty().not()
+    get() = bloodPressures != null
 
   val hasPatient: Boolean
     get() = patient != null

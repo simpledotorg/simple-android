@@ -826,7 +826,10 @@ class TestData @Inject constructor(
       recordedAt: Instant = Instant.now(userClock),
       userUuid: UUID = qaUser().uuid,
       facilityUuid: UUID = qaUserFacilityUuid(),
-      timestamps: Timestamps = Timestamps(Instant.now(), Instant.now(), null),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
+      timestamps: Timestamps = Timestamps(createdAt, updatedAt, deletedAt),
       syncStatus: SyncStatus = SyncStatus.DONE
   ): BloodSugarMeasurement {
     return BloodSugarMeasurement(

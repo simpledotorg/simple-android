@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.history
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class BloodSugarHistoryScreenUpdate : Update<BloodSugarHistoryScreenModel, BloodSugarHistoryScreenEvent, BloodSugarHistoryScreenEffect> {
@@ -12,6 +13,7 @@ class BloodSugarHistoryScreenUpdate : Update<BloodSugarHistoryScreenModel, Blood
     return when (event) {
       is PatientLoaded -> next(model.patientLoaded(event.patient))
       is BloodSugarHistoryLoaded -> next(model.bloodSugarsLoaded(event.bloodSugars))
+      is AddNewBloodSugarClicked -> dispatch(OpenBloodSugarEntrySheet(model.patientUuid))
     }
   }
 }

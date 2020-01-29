@@ -296,12 +296,12 @@
   <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
   <string name="overdue_list_item_name_age" translatable="false">%s, %d</string>
   <plurals name="overdue_list_item_patient_bp">
-    <item quantity="one">%1$d/%2$d, %3$d day ago</item>
-    <item quantity="other">%1$d/%2$d, %3$d days ago</item>
+    <item quantity="one">%s day ago</item>
+    <item quantity="other">%s days ago</item>
   </plurals>
   <plurals name="overdue_list_item_overdue_days">
-    <item quantity="one">%d day overdue</item>
-    <item quantity="other">%d days overdue</item>
+    <item quantity="one">%s day overdue</item>
+    <item quantity="other">%s days overdue</item>
   </plurals>
   <string name="overduelist_last_bp">Last BP:</string>
   <string name="overduelist_agreed_to_visit">Mark patient as ‘agreed to visit’</string>

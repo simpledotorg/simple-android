@@ -2,12 +2,18 @@ package org.simple.clinic.medicalhistory.newentry
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
@@ -51,6 +57,82 @@ class NewMedicalHistoryUpdateTest {
                         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
                 ),
                 hasEffects(SetupUiForDiabetesManagement(false) as NewMedicalHistoryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when diabetes management is enabled and the user clicks save, show the diagnosis required error if hypertension diagnosis is not selected`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(OngoingNewPatientEntry.fromFullName("Anish Acharya"))
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+        .answerChanged(HAS_DIABETES, No)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasModel(model.diagnosisRequired()),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when diabetes management is enabled and the user clicks save, show the diagnosis required error if diabetes diagnosis is not selected`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(OngoingNewPatientEntry.fromFullName("Anish Acharya"))
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        .answerChanged(HAS_DIABETES, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasModel(model.diagnosisRequired()),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when diabetes management is enabled and the user clicks save, show the diagnosis required error if both diagnosis are not selected`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(OngoingNewPatientEntry.fromFullName("Anish Acharya"))
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+        .answerChanged(HAS_DIABETES, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasModel(model.diagnosisRequired()),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when diabetes management is disabled and the user clicks save, do not show the diagnosis required error`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(OngoingNewPatientEntry.fromFullName("Anish Acharya"))
+        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+        .answerChanged(HAS_DIABETES, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry) as NewMedicalHistoryEffect)
             )
         )
   }

@@ -13,6 +13,9 @@ data class BloodSugarHistoryScreenModel(
     fun create(patientUuid: UUID) = BloodSugarHistoryScreenModel(patientUuid, null, null)
   }
 
+  val hasLoadedPatient: Boolean
+    get() = patient != null
+
   fun patientLoaded(patient: Patient): BloodSugarHistoryScreenModel =
       copy(patient = patient)
 

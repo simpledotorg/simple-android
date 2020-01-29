@@ -2,11 +2,11 @@ package org.simple.clinic.summary.bloodpressures
 
 import org.simple.clinic.mobius.ViewRenderer
 
-class NewBloodPressureSummaryViewUiRenderer(
-    private val ui: NewBloodPressureSummaryViewUi,
-    private val config: NewBloodPressureSummaryViewConfig
-) : ViewRenderer<NewBloodPressureSummaryViewModel> {
-  override fun render(model: NewBloodPressureSummaryViewModel) {
+class BloodPressureSummaryViewUiRenderer(
+    private val ui: BloodPressureSummaryViewUi,
+    private val config: BloodPressureSummaryViewConfig
+) : ViewRenderer<BloodPressureSummaryViewModel> {
+  override fun render(model: BloodPressureSummaryViewModel) {
     when {
       model.latestBloodPressuresToDisplay == null -> return
       model.latestBloodPressuresToDisplay.isEmpty() -> ui.showNoBloodPressuresView()

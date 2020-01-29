@@ -5,11 +5,11 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
-class NewBloodPressureSummaryViewUpdate : Update<NewBloodPressureSummaryViewModel, NewBloodPressureSummaryViewEvent, NewBloodPressureSummaryViewEffect> {
+class BloodPressureSummaryViewUpdate : Update<BloodPressureSummaryViewModel, BloodPressureSummaryViewEvent, BloodPressureSummaryViewEffect> {
   override fun update(
-      model: NewBloodPressureSummaryViewModel,
-      event: NewBloodPressureSummaryViewEvent
-  ): Next<NewBloodPressureSummaryViewModel, NewBloodPressureSummaryViewEffect> {
+      model: BloodPressureSummaryViewModel,
+      event: BloodPressureSummaryViewEvent
+  ): Next<BloodPressureSummaryViewModel, BloodPressureSummaryViewEffect> {
     return when (event) {
       is BloodPressuresLoaded -> next(model.bloodPressuresLoaded(event.measurements))
       is BloodPressuresCountLoaded -> next(model.bloodPressuresCountLoaded(event.count))

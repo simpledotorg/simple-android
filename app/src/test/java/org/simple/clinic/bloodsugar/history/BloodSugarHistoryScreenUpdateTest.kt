@@ -1,7 +1,9 @@
 package org.simple.clinic.bloodsugar.history
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -48,6 +50,17 @@ class BloodSugarHistoryScreenUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.bloodSugarsLoaded(bloodSugars)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when add new blood sugar is clicked, then open entry sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AddNewBloodSugarClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenBloodSugarEntrySheet(patientUuid) as BloodSugarHistoryScreenEffect)
         ))
   }
 }

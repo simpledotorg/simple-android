@@ -8,3 +8,5 @@ sealed class BloodSugarHistoryScreenEvent
 data class PatientLoaded(val patient: Patient) : BloodSugarHistoryScreenEvent()
 
 data class BloodSugarHistoryLoaded(val bloodSugars: List<BloodSugarMeasurement>) : BloodSugarHistoryScreenEvent()
+
+object AddNewBloodSugarClicked : BloodSugarHistoryScreenEvent()

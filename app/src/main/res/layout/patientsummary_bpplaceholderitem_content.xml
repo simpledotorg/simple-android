@@ -4,14 +4,13 @@
   android:id="@+id/placeHolderMessageTextView"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:gravity="center"
   android:layout_marginStart="@dimen/spacing_24"
   android:layout_marginTop="@dimen/spacing_16"
   android:layout_marginEnd="@dimen/spacing_24"
   android:layout_marginBottom="@dimen/spacing_16"
+  android:gravity="center"
   android:text="@string/patientsummary_bp_none_added"
   android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
   android:visibility="invisible"
-  tools:showIn="@layout/list_patientsummary_bp_placeholder"
   tools:visibility="visible" />
 

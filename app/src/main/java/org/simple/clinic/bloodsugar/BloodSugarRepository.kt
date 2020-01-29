@@ -48,4 +48,8 @@ class BloodSugarRepository @Inject constructor(
   fun latestMeasurements(patientUuid: UUID, limit: Int): Observable<List<BloodSugarMeasurement>> {
     return dao.latestMeasurements(patientUuid, limit)
   }
+
+  fun allBloodSugars(patientUuid: UUID): Observable<List<BloodSugarMeasurement>> {
+    return dao.allBloodSugars(patientUuid)
+  }
 }

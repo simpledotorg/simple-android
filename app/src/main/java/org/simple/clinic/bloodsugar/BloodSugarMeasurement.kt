@@ -50,5 +50,12 @@ data class BloodSugarMeasurement(
       ORDER BY recordedAt DESC LIMIT :limit
     """)
     fun latestMeasurements(patientUuid: UUID, limit: Int): Observable<List<BloodSugarMeasurement>>
+
+    @Query("""
+      SELECT * FROM BloodSugarMeasurements
+      WHERE patientUuid == :patientUuid AND deletedAt IS NULL
+      ORDER BY recordedAt DESC
+    """)
+    fun allBloodSugars(patientUuid: UUID): Observable<List<BloodSugarMeasurement>>
   }
 }

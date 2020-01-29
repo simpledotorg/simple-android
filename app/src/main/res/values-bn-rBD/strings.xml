@@ -248,7 +248,7 @@
   </plurals>
   <string name="overduelist_last_bp">শেষ রক্তচাপ:</string>
   <string name="overduelist_agreed_to_visit"> রোগী ভিজিটে আসতে সম্মত হয়েছেন বলে  চিহ্নিত করুন</string>
-  <string name="overduelist_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
+  <string name="overduelist_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন...</string>
   <string name="overduelist_remove_from_list">সময় পার হয়ে যাওয়া তালিকা থেকে সরান…</string>
   <string name="overduelist_result_of_call">কলের ফলাফল</string>
   <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকিসম্পন্ন</string>
@@ -373,7 +373,7 @@
   <string name="recent_patients_toolbar_title">সাম্প্রতিক রোগীসমূহ</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">শেষ দেখা হয়েছিল:\u0020</string>
+  <string name="recent_patients_itemview_last_seen">শেষ দেখা হয়েছিল:u0020\</string>
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">%1$s\u0020 যোগ করুন</string>
   <string name="addidtopatientsearchresults_to_patient">\u0020থেকে\u2026</string>
@@ -436,7 +436,7 @@
 
   <!-- BloodSugar type picker -->
   <string name="bloodsugartype_picker_title">একটি ব্যবস্থা নির্বাচন করুন</string>
-  <string name="bloodsugartype_picker_desc">আপনি নিশ্চিত না হলে \'RBS\' বেছে নিন।</string>
+  <string name="bloodsugartype_picker_desc">আপনি নিশ্চিত না হলে &apos;RBS&apos; বেছে নিন।</string>
   <string name="bloodsugartype_rbs">র‍্যান্ডম ব্লাড সুগার (RBS)</string>
   <string name="bloodsugartype_fbs">ফাস্টিং ব্লাড সুগার (FBS)</string>
   <string name="bloodsugartype_ppbs">খাওয়ার পরে ব্লাড সুগার (PPBS)</string>
@@ -465,4 +465,4 @@
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <string name="bloodpressurehistory_add_bp_button">নতুন বিপি</string>
-</resources>
+  </resources>

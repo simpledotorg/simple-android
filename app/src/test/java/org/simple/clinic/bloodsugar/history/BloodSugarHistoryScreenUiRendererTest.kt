@@ -1,8 +1,11 @@
 package org.simple.clinic.bloodsugar.history
 
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
+import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
 class BloodSugarHistoryScreenUiRendererTest {
@@ -18,5 +21,18 @@ class BloodSugarHistoryScreenUiRendererTest {
 
     // then
     verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when patient is loaded, then show it on the ui`() {
+    // given
+    val patient = PatientMocker.patient(patientUuid)
+
+    // when
+    renderer.render(defaultModel.patientLoaded(patient))
+
+    // then
+    verify(ui).showPatientInformation(patient)
+    verifyNoMoreInteractions(ui)
   }
 }

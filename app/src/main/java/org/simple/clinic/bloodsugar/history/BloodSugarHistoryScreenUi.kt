@@ -1,3 +1,7 @@
 package org.simple.clinic.bloodsugar.history
 
-interface BloodSugarHistoryScreenUi
+import org.simple.clinic.patient.Patient
+
+interface BloodSugarHistoryScreenUi {
+  fun showPatientInformation(patient: Patient)
+}

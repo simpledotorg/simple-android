@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -28,6 +29,9 @@ data class NewMedicalHistoryModel(
   val facilityDiabetesManagementEnabled: Boolean
     get() = currentFacility!!.config.diabetesManagementEnabled
 
+  val hasAnsweredBothDiagnosisQuestions: Boolean
+    get() = !(ongoingMedicalHistoryEntry.diagnosedWithHypertension == Unanswered || ongoingMedicalHistoryEntry.hasDiabetes == Unanswered)
+
   companion object {
     fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(
         ongoingPatientEntry = null,
@@ -47,5 +51,9 @@ data class NewMedicalHistoryModel(
 
   fun currentFacilityLoaded(facility: Facility): NewMedicalHistoryModel {
     return copy(currentFacility = facility)
+  }
+
+  fun diagnosisRequired(): NewMedicalHistoryModel {
+    return copy(showDiagnosisRequiredError = true)
   }
 }

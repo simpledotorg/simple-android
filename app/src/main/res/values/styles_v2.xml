@@ -580,11 +580,6 @@
     <item name="android:textColor">@color/grey0</item>
   </style>
 
-  <style name="Clinic.V2.TextAppearance.PatientSummary.BloodPressure.High">
-    <item name="android:fontFamily">sans-serif-medium</item>
-    <item name="android:textColor">@color/red1</item>
-  </style>
-
   <style name="Clinic.V2.TextAppearance.PatientSummary.PatientName" parent="Clinic.V2.TextAppearance.H6.White100">
     <item name="android:maxLines">1</item>
   </style>

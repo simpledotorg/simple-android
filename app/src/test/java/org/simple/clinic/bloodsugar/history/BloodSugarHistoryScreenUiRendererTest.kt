@@ -35,4 +35,21 @@ class BloodSugarHistoryScreenUiRendererTest {
     verify(ui).showPatientInformation(patient)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when blood sugar history is loaded, then show it on the ui`() {
+    // given
+    val bloodSugar = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("bfeed199-ca34-4503-aac9-8903f9501c5b"),
+        patientUuid = patientUuid
+    )
+    val bloodSugars = listOf(bloodSugar)
+
+    // when
+    renderer.render(defaultModel.bloodSugarsLoaded(bloodSugars))
+
+    // then
+    verify(ui).showBloodSugarHistory(bloodSugars)
+    verifyNoMoreInteractions(ui)
+  }
 }

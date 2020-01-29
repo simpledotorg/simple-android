@@ -1,0 +1,22 @@
+package org.simple.clinic.bloodsugar.history
+
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
+import org.junit.Test
+import java.util.UUID
+
+class BloodSugarHistoryScreenUiRendererTest {
+  private val ui = mock<BloodSugarHistoryScreenUi>()
+  private val renderer = BloodSugarHistoryScreenUiRenderer(ui)
+  private val patientUuid = UUID.fromString("74bc8b07-1d47-4595-9fe8-f1c7c83a1f2a")
+  private val defaultModel = BloodSugarHistoryScreenModel.create(patientUuid)
+
+  @Test
+  fun `when blood sugar history is being loaded then do nothing`() {
+    // when
+    renderer.render(defaultModel)
+
+    // then
+    verifyZeroInteractions(ui)
+  }
+}

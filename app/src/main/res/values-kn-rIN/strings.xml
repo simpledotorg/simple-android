@@ -248,8 +248,8 @@
   </plurals>
   <string name="overduelist_last_bp">ಹಿಂದಿನ ಬಿಪಿ:</string>
   <string name="overduelist_agreed_to_visit">ರೋಗಿಯನ್ನು ‘ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ’ ಎಂದು ಗುರುತಿಸಿ</string>
-  <string name="overduelist_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ...</string>
-  <string name="overduelist_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ...</string>
+  <string name="overduelist_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ…</string>
+  <string name="overduelist_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ…</string>
   <string name="overduelist_result_of_call">ಕರೆಯ ಫಲಿತಾಂಶ</string>
   <string name="overduelist_high_risk">ಹೆಚ್ಚಿನ ಅಪಾಯ</string>
 
@@ -420,7 +420,7 @@
   <string name="changelanguage_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">ದಯವಿಟ್ಟು ಕಾಯಿರಿ...</string>
+  <string name="placeholder_loading_title">ದಯವಿಟ್ಟು ಕಾಯಿರಿ…</string>
   <string name="placeholder_loading_message">ಡೇಟಾಬೇಸ್ ನಿರ್ವಹಣೆಯು ಪ್ರಗತಿಯಲ್ಲಿದೆ. ಇದಕ್ಕೆ ಕೇವಲ ಒಂದು ನಿಮಿಷ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ.</string>
 
   <!-- Select Country Screen -->
@@ -465,5 +465,4 @@
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <string name="bloodpressurehistory_add_bp_button">ಹೊಸ ಬಿಪಿ</string>
-  <string name="bloodpressurehistory_bp_time_date">%1$s, %2$s</string>
-</resources>
+  </resources>

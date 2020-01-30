@@ -3,6 +3,7 @@ package org.simple.clinic.medicalhistory.sync
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.ModelSync
@@ -57,7 +58,7 @@ class MedicalHistorySync @Inject constructor(
                 uuid = uuid,
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = diagnosedWithHypertension,
-                isOnTreatmentForHypertension = isOnTreatmentForHypertension,
+                isOnTreatmentForHypertension = Answer.Unanswered,
                 hasHadHeartAttack = hasHadHeartAttack,
                 hasHadStroke = hasHadStroke,
                 hasHadKidneyDisease = hasHadKidneyDisease,

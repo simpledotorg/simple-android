@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">সিঙ্ক ব্যর্থ হয়েছে</string>
   <string name="syncindicator_status_syncing">সিঙ্ক হচ্ছে…</string>
   <string name="syncindicator_status_synced_just_now">এইমাত্র সিঙ্ক হল</string>
-  <string name="syncindicator_status_synced">%d মিনিট আগে সিঙ্ক হয়েছে</string>
+  <string name="syncindicator_status_synced">%s মিনিট আগে সিঙ্ক হয়েছে</string>
   <string name="syncindicator_dialog_error_network">রোগীর রেকর্ডগুলো সিঙ্ক করার জন্য আপনার কাছে একটি কার্যকরী ইন্টারনেট সংযোগ রয়েছে তা নিশ্চিত করুন।</string>
   <string name="syncindicator_dialog_button_text">ঠিক আছে</string>
   <string name="syncindicator_dialog_error_server">সিঙ্ক সার্ভারগুলো এই মুহূর্তে ডাউন রয়েছে। অনুগ্রহ করে আবার পরে চেষ্টা করুন অথবা আপনার সুপারভাইজারের সাথে যোগাযোগ করুন।</string>

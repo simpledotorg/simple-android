@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">సింక్ విఫలమైంది</string>
   <string name="syncindicator_status_syncing">సింక్ చేస్తోంది…</string>
   <string name="syncindicator_status_synced_just_now">ఇప్పుడే సింక్ అయింది</string>
-  <string name="syncindicator_status_synced">%d నిమి క్రితం సింక్ చేసారు</string>
+  <string name="syncindicator_status_synced">%s నిమి క్రితం సింక్ చేసారు</string>
   <string name="syncindicator_dialog_error_network">రోగి రికార్డ్‌లను సింక్ చేయడం కోసం మీ వద్ద పని చేస్తున్న ఇంటర్నెట్ కనెక్షన్ ఉండాలి.</string>
   <string name="syncindicator_dialog_button_text">సరే</string>
   <string name="syncindicator_dialog_error_server">ప్రస్తుతం సింక్ సర్వర్‌లు పని చేయడం లేదు. తర్వాత మళ్లీ ప్రయత్నించండి లేదా మీ సూపర్‌వైజర్‌ను సంప్రదించండి.</string>

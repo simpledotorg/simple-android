@@ -340,7 +340,7 @@
   <string name="syncindicator_status_failed">सिंक विफल रहा</string>
   <string name="syncindicator_status_syncing">सिंक हो रहा है…</string>
   <string name="syncindicator_status_synced_just_now">अभी-अभी सिंक हुआ था</string>
-  <string name="syncindicator_status_synced">%d मिनट पहले सिंक हुआ था</string>
+  <string name="syncindicator_status_synced">%s मिनट पहले सिंक हुआ था</string>
   <string name="syncindicator_dialog_error_network">रोगी के रिकॉर्ड को सिंक करने के लिए सुनिश्चित करें कि आपके पास एक चालू इंटरनेट कनेक्शन है।</string>
   <string name="syncindicator_dialog_button_text">ठीक है</string>
   <string name="syncindicator_dialog_error_server">इस वक्त सिंक सर्वर काम नहीं कर रहे हैं। कृपया बाद में फिर प्रयास करें या अपने सुपरवाइज़र से संपर्क करें।</string>

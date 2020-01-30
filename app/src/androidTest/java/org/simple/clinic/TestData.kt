@@ -661,7 +661,8 @@ class TestData @Inject constructor(
   fun medicalHistoryPayload(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      diagnosedWithHypertension: Answer = randomMedicalHistoryAnswer(),
+      hasHypertension: Answer = randomMedicalHistoryAnswer(),
+      diagnosedWithHypertension: Answer = hasHypertension,
       hasHadHeartAttack: Answer = randomMedicalHistoryAnswer(),
       hasHadStroke: Answer = randomMedicalHistoryAnswer(),
       hasHadKidneyDisease: Answer = randomMedicalHistoryAnswer(),
@@ -680,6 +681,7 @@ class TestData @Inject constructor(
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
         hasDiabetes = hasDiabetes,
+        hasHypertension = diagnosedWithHypertension,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)

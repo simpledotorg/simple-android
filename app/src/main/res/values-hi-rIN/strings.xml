@@ -162,7 +162,7 @@
   <string name="timestamp_today">"आज "</string>
   <string name="timestamp_yesterday">"कल "</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">%d दिन पहले</string>
+  <string name="timestamp_days">%s दिन पहले</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">बी पी की दवाइयाँ</string>

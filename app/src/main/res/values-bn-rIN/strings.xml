@@ -162,7 +162,7 @@
   <string name="timestamp_today">আজ</string>
   <string name="timestamp_yesterday">গতকাল</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">%d দিন আগে</string>
+  <string name="timestamp_days">%s দিন আগে</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">উচ্চ রক্তচাপের ওষুধ</string>

@@ -50,6 +50,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_HEART_ATTACK, Yes)
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_STROKE, No)
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
+    verify(ui).showDiagnosisRequiredError(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -68,6 +69,7 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(HAS_DIABETES, No)
+    verify(ui).showDiagnosisRequiredError(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -84,6 +86,25 @@ class NewMedicalHistoryUiRendererTest {
     // then
     verifyImplicitRenders()
     verify(ui).renderAnswerForQuestion(HAS_DIABETES, Yes)
+    verify(ui).showDiagnosisRequiredError(false)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `if the facility supports diabetes management and the user has not selected a diagnosis, show the error`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .diagnosisRequired()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyImplicitRenders()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).renderDiagnosisAnswer(HAS_DIABETES, Unanswered)
+    verify(ui).showDiagnosisRequiredError(true)
     verifyNoMoreInteractions(ui)
   }
 

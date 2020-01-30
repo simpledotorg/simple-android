@@ -1,23 +1,34 @@
 package org.simple.clinic.bloodsugar.history
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jakewharton.rxbinding3.view.detaches
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_blood_sugar_history.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItemDiffCallback
+import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.di.injector
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.dp
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -28,6 +39,9 @@ class BloodSugarHistoryScreen(
     context: Context,
     attrs: AttributeSet
 ) : ConstraintLayout(context, attrs), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -50,6 +64,9 @@ class BloodSugarHistoryScreen(
     }
     context.injector<BloodSugarHistoryScreenInjector>().inject(this)
 
+    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+    openEntrySheetAfterTypeIsSelected(screenDestroys)
+
     handleToolbarBackClick()
     setupBloodSugarHistoryList()
   }
@@ -69,6 +86,8 @@ class BloodSugarHistoryScreen(
   }
 
   override fun openBloodSugarEntrySheet(patientUuid: UUID) {
+    val intent = BloodSugarTypePickerSheet.intent(context)
+    activity.startActivityForResult(intent, TYPE_PICKER_SHEET)
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
@@ -92,5 +111,27 @@ class BloodSugarHistoryScreen(
       addItemDecoration(divider)
       adapter = bloodSugarHistoryAdapter
     }
+  }
+
+  @SuppressLint("CheckResult")
+  private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == TYPE_PICKER_SHEET && it.succeeded() && it.data != null }
+        .takeUntil(onDestroys)
+        .map { it.data!! }
+        .subscribe(::showBloodSugarEntrySheet)
+  }
+
+  private fun showBloodSugarEntrySheet(intent: Intent) {
+    val screenKey = screenRouter.key<BloodSugarHistoryScreenKey>(this)
+    val patientUuid = screenKey.patientUuid
+
+    val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(
+        context,
+        patientUuid,
+        BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
+    )
+    activity.startActivity(intentForNewBloodSugar)
   }
 }

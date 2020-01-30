@@ -141,7 +141,27 @@ class PatientEntryEffectHandler(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
+            PatientEntryValidationError.FULL_NAME_EMPTY -> ui.showEmptyFullNameError(true)
+            PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT -> ui.showLengthTooShortPhoneNumberError(true)
+            PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG -> ui.showLengthTooLongPhoneNumberError(true)
+            PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> ui.showEmptyDateOfBirthAndAgeError(true)
+            PatientEntryValidationError.INVALID_DATE_OF_BIRTH -> ui.showInvalidDateOfBirthError(true)
+            PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE -> ui.showDateOfBirthIsInFutureError(true)
+            PatientEntryValidationError.DOB_EXCEEDS_MAX_LIMIT -> ui.showDOBExceedsMaxLimitError(true)
+            PatientEntryValidationError.DOB_EXCEEDS_MIN_LIMIT -> ui.showDOBExceedsMinLimitError(true)
+            PatientEntryValidationError.MISSING_GENDER -> ui.showMissingGenderError(true)
+            PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY -> ui.showEmptyColonyOrVillageError(true)
+            PatientEntryValidationError.DISTRICT_EMPTY -> ui.showEmptyDistrictError(true)
+            PatientEntryValidationError.STATE_EMPTY -> ui.showEmptyStateError(true)
+            PatientEntryValidationError.AGE_EXCEEDS_MAX_LIMIT -> ui.showAgeExceedsMaxLimitError(true)
+            PatientEntryValidationError.AGE_EXCEEDS_MIN_LIMIT -> ui.showAgeExceedsMinLimitError(true)
 
+            PatientEntryValidationError.EMPTY_ADDRESS_DETAILS,
+            PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK,
+            PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
+            PatientEntryValidationError.PERSONAL_DETAILS_EMPTY -> {
+              throw AssertionError("Should never receive this error: $it")
+            }
           }
         }
 

@@ -29,7 +29,7 @@
   <string name="identifiertype_unknown">ಐಡಿ</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">ಮುಂದಿನ</string>
+  <string name="patientsearch_search">ಮುಂದಿನದು</string>
   <string name="patientsearch_error_empty_fullname">ರೋಗಿಯ ಪೂರ್ಣ ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್ ನಮೂದಿಸಿ</string>
   <string name="patientsearch_hint">ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್</string>
 
@@ -95,14 +95,14 @@
 
   <string name="home_search_patient_name_phone">ರೋಗಿಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
   <string name="patients_user_awaiting_approval_title">ಅನುಮೋದನೆಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ</string>
-  <string name="patients_user_awaiting_approval_message">ಒಮ್ಮೆ ಅನುಮೋದಿಸಿದ ನಂತರ, ನೀವು ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ನ ರೋಗಿಗಳ ದಾಖಲೆಗಳಿಗೆ ಪ್ರವೇಶವನ್ನು ಹೊಂದಿರುತ್ತೀರಿ.</string>
+  <string name="patients_user_awaiting_approval_message">ಒಮ್ಮೆ ಅನುಮೋದಿಸಿದ ನಂತರ, ನೀವು ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ನ ರೋಗಿಗಳ ದಾಖಲೆ ನೋಡಬಹುದು</string>
   <string name="patients_user_approved_title">ನಿಮಗೆ ಅನುಮೋದಿಸಲಾಗಿದೆ!</string>
   <string name="patients_awaiting_sms_verification_title">SMS ಪರಿಶೀಲನೆಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ</string>
   <string name="patients_user_approved_message">ನೀವು ಈಗ ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ನ ಎಲ್ಲಾ ರೋಗಿಗಳ ಡೇಟಾವನ್ನು ನೋಡಬಹುದು</string>
-  <string name="patients_awaiting_sms_verification_message">ಪರಿಶೀಲಿಸಿದ ನಂತರ, ನೀವು ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ನಿಂದ ರೋಗಿಗಳ ದಾಖಲೆಗಳಿಗೆ ಪ್ರವೇಶ ಹೊಂದಿರುತ್ತೀರಿ.</string>
+  <string name="patients_awaiting_sms_verification_message">ಪರಿಶೀಲಿಸಿದ ನಂತರ, ನೀವು ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ನ ರೋಗಿಗಳ ದಾಖಲೆ ನೋಡಬಹುದು</string>
   <string name="patients_dismiss_user_approved_status">ಅರ್ಥವಾಯಿತು</string>
   <string name="patients_enter_code">ಕೋಡ್ ನಮೂದಿಸಿ</string>
-  <string name="patients_you_are_now_logged_in">ಪರಿಶೀಲನೆ ಯಶಸ್ವಿಯಾಗಿದೆ! ರೋಗಿಯ ದಾಖಲೆಗಳು ಈಗ ಕಂಡುಬರುತ್ತವೆ.</string>
+  <string name="patients_you_are_now_logged_in">ಪರಿಶೀಲನೆ ಯಶಸ್ವಿಯಾಗಿದೆ!ರೋಗಿಗಳ ದಾಖಲೆ ನೋಡಬಹುದು</string>
   <string name="patients_loggedoutalert_title">ನೀವು ಒಂದು ಸಾರಿ ಒಂದೇ ಸಾಧನದಲ್ಲಿ ಲಾಗ್ ಇನ್ ಮಾಡಬಹುದು</string>
   <string name="patients_loggedoutalert_message">ನಿಮ್ಮನ್ನು ನಿಮ್ಮ ಹಿಂದಿನ ಸಾಧನದಿಂದ ಲಾಗ್ ಔಟ್ ಮಾಡಲಾಗಿದೆ.</string>
   <string name="patients_loggedoutalert_dismiss">ಅರ್ಥವಾಯಿತು</string>
@@ -111,8 +111,8 @@
   <string name="patients_recentpatients_no_recent_patients">ಯಾವುದೇ ಇತ್ತೀಚಿನ ರೋಗಿಗಳಿಲ್ಲ</string>
   <string name="patients_recentpatients_see_all">ಎಲ್ಲವನ್ನು ವೀಕ್ಷಿಸಿ</string>
   <!-- Blood pressure entry -->
-  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">ರಕ್ತದೊತ್ತಡ</string>
-  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">ರಕ್ತದೊತ್ತಡವನ್ನು ಎಡಿಟ್ ಮಾಡಿ</string>
+  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Blood Pressure</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">ಬಿಪಿ ಯನ್ನು ಎಡಿಟ್ ಮಾಡಿ</string>
   <string name="bloodpressureentry_sheet_title_enter_date">ಭೇಟಿಯ ದಿನಾಂಕ</string>
   <string name="bloodpressureentry_remove">ತೆಗೆದುಹಾಕಿ</string>
   <string name="bloodpressureentry_systolic">ಸಿಸ್ಟೋಲಿಕ್</string>
@@ -125,12 +125,12 @@
   <string name="bloodpressureentry_error_systolic_300">ಸಿಸ್ಟೋಲಿಕ್ 300 ಕ್ಕಿಂತ ಹೆಚ್ಚಾಗಿರಬಾರದು</string>
   <string name="bloodpressureentry_error_diastolic_40">ಡಯಾಸ್ಟೋಲಿಕ್ 40 ಕ್ಕಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
   <string name="bloodpressureentry_error_diastolic_180">ಡಯಾಸ್ಟೋಲಿಕ್ 180 ಕ್ಕಿಂತ ಹೆಚ್ಚಾಗಿರಬಾರದು</string>
-  <string name="bloodpressureentry_error_systolic_empty">ಸಿಸ್ಟೋಲಿಕ್ ಮತ್ತು ಡಯಾಸ್ಟೋಲಿಕ್ ಒತ್ತಡವನ್ನು ನಮೂದಿಸಿ</string>
-  <string name="bloodpressureentry_error_diastolic_empty">ಸಿಸ್ಟೋಲಿಕ್ ಮತ್ತು ಡಯಾಸ್ಟೋಲಿಕ್ ಒತ್ತಡವನ್ನು ನಮೂದಿಸಿ</string>
+  <string name="bloodpressureentry_error_systolic_empty">ಸಿಸ್ಟೋಲಿಕ್ ಮತ್ತು ಡಯಾಸ್ಟೋಲಿಕ್ ಬಿಪಿ ಯನ್ನು ನಮೂದಿಸಿ</string>
+  <string name="bloodpressureentry_error_diastolic_empty">ಸಿಸ್ಟೋಲಿಕ್ ಮತ್ತು ಡಯಾಸ್ಟೋಲಿಕ್ ಬಿಪಿ ಯನ್ನು ನಮೂದಿಸಿ</string>
   <string name="bloodpressureentry_error_date_invalid_pattern">DD/MM/YY ನಲ್ಲಿ ಮಾನ್ಯ ದಿನಾಂಕವನ್ನು ನಮೂದಿಸಿ</string>
   <string name="bloodpressureentry_error_date_is_in_future">ಭವಿಷ್ಯದ ದಿನಾಂಕದಲ್ಲಿರಬಾರದು</string>
   <string name="bloodpressureentry_remove_bp_title">ಬಿಪಿ ತೆಗೆದುಹಾಕಿ</string>
-  <string name="bloodpressureentry_remove_bp_message">ನೀವು ಈ ರಕ್ತದೊತ್ತಡದ ರೆಕಾರ್ಡಿಂಗ್ ಅನ್ನು ಖಚಿತವಾಗಿ ತೆಗೆದುಹಾಕಲು ಬಯಸುವಿರಾ?</string>
+  <string name="bloodpressureentry_remove_bp_message">ನೀವು ಈ BP ರೆಕಾರ್ಡಿಂಗ್ ಅನ್ನು ಖಚಿತವಾಗಿ ತೆಗೆದುಹಾಕಲು ಬಯಸುವಿರಾ?</string>
   <string name="bloodpressureentry_remove_bp_confirm">ತೆಗೆದುಹಾಕಿ</string>
   <string name="bloodpressureentry_remove_bp_cancel">ರದ್ದುಮಾಡಿ</string>
 
@@ -139,12 +139,12 @@
   <string name="patientsummary_prescriptions_last_updated">%s ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ</string>
   <string name="patientsummary_prescriptions_add">ಔಷಧಗಳನ್ನು ಸೇರಿಸಿ</string>
   <string name="patientsummary_prescriptions_update">ಔಷಧಗಳನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
-  <string name="patientsummary_bp_add_new">ರಕ್ತದೊತ್ತಡ</string>
+  <string name="patientsummary_bp_add_new">Blood pressure</string>
   <string name="patientsummary_finish_saving_patient">ಉಳಿಸಿ</string>
-  <string name="patientsummary_medicalhistory_title">ಹೃದಯ ರಕ್ತನಾಳದ ಇತಿಹಾಸ</string>
+  <string name="patientsummary_medicalhistory_title">ಹಿಂದಿನ ಹೃದಯ ರೋಗಗಳು?</string>
   <string name="patientsummary_medicalhistory_last_updated">%s ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ</string>
-  <string name="patientsummary_bp_none_added">ಯಾವುದೇ ರಕ್ತದ ಒತ್ತಡವನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ</string>
-  <string name="patientsummary_edit">ಸಂಪಾದಿಸಿ</string>
+  <string name="patientsummary_bp_none_added">ಬಿಪಿ ಯನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ</string>
+  <string name="patientsummary_edit">ತಿದ್ದು</string>
   <string name="patientsummary_updatephone_dialog_title">ಫೋನ್ ನಂಬರ್ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
   <string name="patientsummary_updatephone_dialog_message">ರೋಗಿಯ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಈ ಹಿಂದೆ ತಪ್ಪಾಗಿ ಗುರುತಿಸಲಾಗಿತ್ತು</string>
   <string name="patientsummary_updatephone_phone_hint">ಫೋನ್ ಸಂಖ್ಯೆ</string>
@@ -201,7 +201,7 @@
 
   <!-- Registration -->
   <string name="registrationphone_phone_number_label">ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆ</string>
-  <string name="registrationphone_error_invalid_number">ಫೋನ್ ಸಂಖ್ಯೆ ಪರಿಶೀಲಿಸಿ. ಇದು ಅತ್ಯಂತ ಚಿಕ್ಕದಾಗಿರುವಂತೆ ಕಾಣಿಸುತ್ತದೆ.</string>
+  <string name="registrationphone_error_invalid_number">ಫೋನ್ ಸಂಖ್ಯೆ ಪರಿಶೀಲಿಸಿ. ಇದು ಅತ್ಯಂತಕಡಿಮೆ ಸಂಖ್ಯೆ ಇದೆ</string>
   <string name="registration_loggedout_dialog_title">ನೀವು ಲಾಗ್ ಔಟ್ ಆಗಿರುವಿರಿ</string>
   <string name="registration_loggedout_dialog_message">ಮುಂದುವರೆಯಲು ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಲಾಗಿನ್ ಮಾಡಿ</string>
   <string name="registration_loggedout_dialog_confirm">ಸರಿ</string>
@@ -236,8 +236,8 @@
   <string name="onboarding_get_started">ಪ್ರಾರಂಭಿಸಿ</string>
 
   <!-- Overdue List -->
-  <string name="overdue_no_patients">ಯಾವ ರೋಗಿಗಳು ಬಾಕಿ ಇಲ್ಲ</string>
-  <string name="overdue_empty_desc">ನೀವು ರಕ್ತದ ಒತ್ತಡದ ರೀಡಿಂಗ್‌ನ ಫಾಲೋ ಅಪ್ ಮಾಡುವುದಕ್ಕಾಗಿ ತಮ್ಮ ನಿಗದಿತ ಭೇಟಿಯನ್ನು ತಪ್ಪಿಸಿಕೊಂಡ ರೋಗಿಗಳಿಗೆ ಕರೆ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತದೆ.</string>
+  <string name="overdue_no_patients">ಯಾವ ರೋಗಿಗಳು ವಿಳಂಬ ಪಟ್ಟಿಯಲ್ಲಿಲ್ಲ</string>
+  <string name="overdue_empty_desc"> ತಮ್ಮ ನಿಗದಿತ ಭೇಟಿಯನ್ನು ತಪ್ಪಿಸಿಕೊಂಡ ರೋಗಿಗಳಿಗೆ ಕರೆ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತದೆ.</string>
   <plurals name="overdue_list_item_patient_bp">
     <item quantity="one">%1$d/%2$d, %3$d ದಿನದ ಹಿಂದೆ</item>
     <item quantity="other">%1$d/%2$d, %3$d ದಿನಗಳ ಹಿಂದೆ</item>
@@ -248,8 +248,8 @@
   </plurals>
   <string name="overduelist_last_bp">ಹಿಂದಿನ ಬಿಪಿ:</string>
   <string name="overduelist_agreed_to_visit">ರೋಗಿಯನ್ನು ‘ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ’ ಎಂದು ಗುರುತಿಸಿ</string>
-  <string name="overduelist_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ…</string>
-  <string name="overduelist_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ…</string>
+  <string name="overduelist_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ...</string>
+  <string name="overduelist_remove_from_list">ವಿಳಂಬ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ...</string>
   <string name="overduelist_result_of_call">ಕರೆಯ ಫಲಿತಾಂಶ</string>
   <string name="overduelist_high_risk">ಹೆಚ್ಚಿನ ಅಪಾಯ</string>
 
@@ -259,7 +259,7 @@
   <string name="phonemasking_help_text">ಸುರಕ್ಷಿತ ಕರೆಗಳು ನಿಮ್ಮ ಸಂಖ್ಯೆಯನ್ನು ಮರೆಮಾಡುತ್ತವೆ ಮತ್ತು ಅವು ಶುಲ್ಕ ರಹಿತವಾಗಿರುತ್ತವೆ</string>
 
   <!-- Appointment reminder -->
-  <string name="appointmentreminder_call_later_in">ನಂತರ ಇಷ್ಟು ಸಮಯದಲ್ಲಿ ಕರೆ ಮಾಡಿ</string>
+  <string name="appointmentreminder_call_later_in">ನಂತರ  ಕರೆ ಮಾಡಿ</string>
   <string name="appointmentreminder_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
 
   <!-- Remove Overdue Patients -->
@@ -267,14 +267,14 @@
   <string name="removeappointment_patient_already_visited">ರೋಗಿಯನ್ನು ಈಗಾಗಲೇ ಭೇಟಿಮಾಡಲಾಗಿದೆ</string>
   <string name="removeappointment_patient_is_not_responding">ರೋಗಿ ಉತ್ತರಿಸುತ್ತಿಲ್ಲ</string>
   <string name="removeappointment_invalid_phone_number">ಫೋನ್ ನಂಬರ್ ಕೆಲಸ ಮಾಡುತ್ತಿಲ್ಲ</string>
-  <string name="removeappointment_public_hospital_transfer">ಇನ್ನೊಂದು ಸಾರ್ವಜನಿಕ ಆರೋಗ್ಯ ಸೌಲಭ್ಯಕ್ಕೆ ವರ್ಗಾಯಿಸಲಾಗಿದೆ</string>
+  <string name="removeappointment_public_hospital_transfer">ಇನ್ನೊಂದು ಸರ್ಕಾರೀ ಆರೋಗ್ಯ ಸೌಲಭ್ಯಕ್ಕೆ ವರ್ಗಾಯಿಸಲಾಗಿದೆ</string>
   <string name="removeappointment_moved_to_private">ಖಾಸಗಿ ವೈದ್ಯರಲ್ಲಿಗೆ ಹೋಗಿದ್ದಾರೆ</string>
   <string name="removeappointment_patient_died">ಮರಣ ಹೊಂದಿದ್ದಾರೆ</string>
   <string name="removeappointment_other_reason">ಇತರೆ ಕಾರಣ</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್ ಆಯ್ಕೆಮಾಡಿ</string>
-  <string name="facilitychange_search_hint">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ಗಾಗಿ ಶೋಧಿಸಿ</string>
+  <string name="facilitychange_search_hint">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ ಹುಡುಕಿ</string>
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">ಇಲ್ಲಿಗೆ ಕಳುಹಿಸಲಾದ SMS ಪರಿಶೀಲಿಸಿ</string>
@@ -309,24 +309,24 @@
 
   <!-- Reports -->
   <string name="reports_come_back_later">ನಂತರ ಹಿಂದಿರುಗಿ ಬನ್ನಿ</string>
-  <string name="reports_you_will_be_able_to_see">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ಗಾಗಿ ಅಧಿಕ ರಕ್ತದೊತ್ತಡ ವರದಿಗಳನ್ನು ಇಲ್ಲಿ ನೋಡಲು ನಿಮಗೆ ಸಾಧ್ಯವಾಗುತ್ತದೆ.</string>
+  <string name="reports_you_will_be_able_to_see">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್‌ನ ಅಧಿಕ ರಕ್ತದೊತ್ತಡ ವರದಿಗಳನ್ನು ಇಲ್ಲಿ ನೋಡಲು ನಿಮಗೆ ಸಾಧ್ಯವಾಗುತ್ತದೆ.</string>
 
   <!-- Medical History -->
   <!--suppress UnusedResources used in enum -->
-  <string name="medicalhistory_question_heartattack">ಕಳೆದ 3 ವರ್ಷಗಳಲ್ಲಿ ಆದ ಹೃದಯಾಘಾತಗಳು</string>
+  <string name="medicalhistory_question_heartattack">ಕಳೆದ 3 ವರ್ಷಗಳಲ್ಲಿ ಹೃದಯಾಘಾತ?</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_stroke">ಸ್ಟ್ರೋಕ್‌ನ ಹಿಂದಿನ ಇತಿಹಾಸ</string>
+  <string name="medicalhistory_question_stroke"> ಹಿಂದೆ ಯಾವಾಗಲಾದರೂ ಸ್ಟ್ರೋಕ್‌/ಲಕ್ವ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_kidney">ಮೂತ್ರಪಿಂಡ ಕಾಯಿಲೆಯ ಹಿಂದಿನ ಇತಿಹಾಸ</string>
+  <string name="medicalhistory_question_kidney">ಹಿಂದೆ ಯಾವಾಗಲಾದರೂ ಮೂತ್ರಪಿಂಡ ಕಾಯಿಲೆ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">ಅಧಿಕ ರಕ್ತದೊತ್ತಡವನ್ನು ಪತ್ತೆಹಚ್ಚಲಾಗಿದೆ</string>
+  <string name="medicalhistory_question_diagnosed_with_hypertension">ಹಿಂದೆಯೇ ರಕ್ತದೊತ್ತಡವನ್ನು ಪತ್ತೆಹಚ್ಚಲಾಗಿತ್ತು</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_takes_hypertension_drugs">ಈಗಾಗಲೇ ಅಧಿಕ ರಕ್ತದೊತ್ತಡದ ಔಷಧಗಳನ್ನು ತೆಗೆದುಕೊಂಡಿದ್ದಾರೆ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">ಮಧುಮೇಹವನ್ನು ಹೊಂದಿದ್ದಾರೆ</string>
+  <string name="medicalhistory_question_diabetes">ಮಧುಮೇಹ ಇದೆ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_none">ಮೇಲಿನವುಗಳಲ್ಲಿ ಯಾವುದೂ ಅಲ್ಲ</string>
-  <string name="newmedicalhistory_next">ಮುಂದಿನ</string>
+  <string name="newmedicalhistory_next">ಮುಂದೆ</string>
   <string name="newmedicalhistory_yes">ಹೌದು</string>
   <string name="newmedicalhistory_no">ಇಲ್ಲ</string>
 
@@ -363,7 +363,7 @@
   <string name="linkidwithpatient_to_patient_text">\u0020\u00A0ರೋಗಿಗೆ?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_search">ಮುಂದಿನ</string>
+  <string name="addidtopatientsearch_search">ಮುಂದೆ</string>
   <string name="addidtopatientsearch_error_empty_fullname">ರೋಗಿಯ ಪೂರ್ಣ ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್ ನಮೂದಿಸಿ</string>
   <string name="addidtopatientsearch_hint">ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್</string>
   <string name="addidtopatientsearch_add">%1$s\u0020 ಸೇರಿಸಿ</string>
@@ -420,12 +420,12 @@
   <string name="changelanguage_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">ದಯವಿಟ್ಟು ಕಾಯಿರಿ…</string>
+  <string name="placeholder_loading_title">ದಯವಿಟ್ಟು ಕಾಯಿರಿ...</string>
   <string name="placeholder_loading_message">ಡೇಟಾಬೇಸ್ ನಿರ್ವಹಣೆಯು ಪ್ರಗತಿಯಲ್ಲಿದೆ. ಇದಕ್ಕೆ ಕೇವಲ ಒಂದು ನಿಮಿಷ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ.</string>
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">ಸಿಂಪಲ್ ಲೋಗೊ</string>
-  <string name="selectcountry_next">ಮುಂದಿನ</string>
+  <string name="selectcountry_next">ಮುಂದೆ</string>
   <string name="selectcountry_title">ನಿಮ್ಮ ದೇಶವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
   <string name="selectcountry_networkerror">ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ!</string>
   <string name="selectcountry_servererror">ಸರ್ವರ್ ದೋಷ! ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ!</string>
@@ -442,13 +442,13 @@
   <string name="bloodsugartype_ppbs">ಪೋಸ್ಟ್ ಪ್ರಾಂಡಿಯಲ್ ಬ್ಲಡ್ ಶುಗರ್ (PPBS)</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_md_dl">ಮಿಗ್ರಾಂ/ಡೆಲೀ</string>
+  <string name="bloodsugarentry_md_dl">ಮಿಗ್ರಾಂ/ಡಿಎಲ್</string>
   <string name="bloodsugarentry_sheet_title_enter_date">ಭೇಟಿಯ ದಿನಾಂಕ</string>
   <string name="bloodsugarentry_day">ದಿನ</string>
   <string name="bloodsugarentry_month">ತಿಂಗಳು</string>
   <string name="bloodsugarentry_year">ವರ್ಷ</string>
-  <string name="bloodsugarentry_error_lower_limit">ಮೌಲ್ಯವು 30 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
-  <string name="bloodsugarentry_error_higher_limit">ಮೌಲ್ಯವು 1000 ಮಿಗ್ರಾಂ/ಡೆಲೀಗಿಂತ ಹೆಚ್ಚು ಇರಬಾರದು</string>
+  <string name="bloodsugarentry_error_lower_limit">ಮೌಲ್ಯವು 30 ಮಿಗ್ರಾಂ/ಡಿಎಲ್  ಗಿಂತ ಕಡಿಮೆ ಇರಬಾರದು</string>
+  <string name="bloodsugarentry_error_higher_limit">ಮೌಲ್ಯವು 1000 ಮಿಗ್ರಾಂ/ಡಿಎಲ್ ಗಿಂತ ಹೆಚ್ಚು ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_empty">ಮೌಲ್ಯವು ಖಾಲಿ ಇರಬಾರದು</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YY ನಲ್ಲಿ ಮಾನ್ಯ ದಿನಾಂಕವನ್ನು ನಮೂದಿಸಿ</string>
   <string name="bloodsugarentry_error_date_is_in_future">ಭವಿಷ್ಯದ ದಿನಾಂಕದಲ್ಲಿರಬಾರದು</string>
@@ -457,7 +457,7 @@
   <string name="bloodsugarentry_fasting_title">ಫಾಸ್ಟಿಂಗ್ ಬ್ಲಡ್ ಶುಗರ್</string>
 
   <!-- Blood Sugar Summary view -->
-  <string name="bloodsugarsummaryview_reading_unit_type">\u0020ಮಿಗ್ರಾಂ/ಡೆಲೀ %s</string>
+  <string name="bloodsugarsummaryview_reading_unit_type">\u0020ಮಿಗ್ರಾಂ/ ಡಿಎಲ್ %s</string>
   <string name="bloodsugarsummaryview_no_blood_sugars">ಯಾವುದೇ ರಕ್ತದ ಸಕ್ಕರೆಗಳನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">ಡಯಾಬಿಟಿಸ್</string>
   <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
@@ -465,4 +465,5 @@
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <string name="bloodpressurehistory_add_bp_button">ಹೊಸ ಬಿಪಿ</string>
+  <string name="bloodpressuresummaryview_see_all_button">ಎಲ್ಲ ನೋಡಿ</string>
   </resources>

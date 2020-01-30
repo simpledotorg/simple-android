@@ -191,8 +191,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">PIN ಮರೆತಿರುವಿರಾ?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">ಮೂಲ PIN ಗೆ PIN ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">ತಪ್ಪಾದ PIN, %d ಪ್ರಯತ್ನಗಳು ಉಳಿದಿವೆ</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">ನೀವು %d ತಪ್ಪಾದ ಪ್ರಯತ್ನಗಳನ್ನು ಮಾಡಿದ್ದಿರಿ</string>
+  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">ತಪ್ಪಾದ PIN, %s ಪ್ರಯತ್ನಗಳು ಉಳಿದಿವೆ</string>
+  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">ನೀವು %s ತಪ್ಪಾದ ಪ್ರಯತ್ನಗಳನ್ನು ಮಾಡಿದ್ದಿರಿ</string>
   <string name="pinentry_pin_number_hint">ನಿಮ್ಮ ಸೆಕ್ಯೂರಿಟಿ PIN</string>
   <string name="pinentry_bruteforcelock_timer_label">ಇದರ ನಂತರ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
   <!-- minutes:seconds -->

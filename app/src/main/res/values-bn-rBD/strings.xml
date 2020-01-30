@@ -191,8 +191,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">পিন ভুলে গেছেন?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">পিনটি আসল পিনটির সাথে মেলে না</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">ভুল PIN, আরো %d বার চেষ্টা করতে পারবেন</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">আপনি %d বার ভুল প্রচেষ্টা করেছেন</string>
+  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">ভুল PIN, আরো %s বার চেষ্টা করতে পারবেন</string>
+  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">আপনি %s বার ভুল প্রচেষ্টা করেছেন</string>
   <string name="pinentry_pin_number_hint">আপনার সুরক্ষা পিন</string>
   <string name="pinentry_bruteforcelock_timer_label">পরে আবার চেষ্টা করুন</string>
   <!-- minutes:seconds -->

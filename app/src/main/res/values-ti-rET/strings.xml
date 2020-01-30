@@ -191,8 +191,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">ንናትካ PIN (ውልቃዊ ቊጽሪ መንነት) ረሲዕካዮ፧</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN (ውልቃዊ ቊጽሪ መንነት) ምስቲ መበቆላዊ PIN (ውልቃዊ ቊጽሪ መንነት) ኣይዛመድን’ዩ</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">ዘይቅኑዕ PIN (ውልቃዊ ቊጽሪ መንነት)፡ %d ተረፍ ፈተነታት ኣለዉ</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">ዘይቅኑዓት ፈተነታት %d ኣካይድካ ኣለኻ</string>
+  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">ዘይቅኑዕ PIN (ውልቃዊ ቊጽሪ መንነት)፡ %s ተረፍ ፈተነታት ኣለዉ</string>
+  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">ዘይቅኑዓት ፈተነታት %s ኣካይድካ ኣለኻ</string>
   <string name="pinentry_pin_number_hint">ናትካ ናይ ውሕስነት PIN (ውልቃዊ ቊጽሪ መንነት)</string>
   <string name="pinentry_bruteforcelock_timer_label">ደጊምካ ፈትን ድሕሪ</string>
   <!-- minutes:seconds -->

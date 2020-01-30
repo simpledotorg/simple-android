@@ -41,7 +41,7 @@ sealed class RelativeTimestamp {
     return when (this) {
       Today -> context.getString(R.string.timestamp_today)
       Yesterday -> context.getString(R.string.timestamp_yesterday)
-      is WithinSixMonths -> context.getString(R.string.timestamp_days, daysBetween.toString())
+      is WithinSixMonths -> context.getString(R.string.timestamp_days_ago, daysBetween.toString())
       is ExactDate -> timeFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
     }
   }

@@ -208,7 +208,7 @@
   <string name="timestamp_today">Today</string>
   <string name="timestamp_yesterday">Yesterday</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">%s days ago</string>
+  <string name="timestamp_days_ago">%s days ago</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">BP Medicines</string>
@@ -240,8 +240,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">Forgot PIN?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN doesn’t match the original PIN</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">Incorrect PIN, %s attempts remaining</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">You have made %s incorrect attempts</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">Incorrect PIN, %s attempts remaining</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">You have made %s incorrect attempts</string>
   <string name="pinentry_pin_number_hint">Your security PIN</string>
   <string name="pinentry_bruteforcelock_timer_label">Try again after</string>
   <string name="pinentry_bruteforcelock_timer" translatable="false">%1$s:%2$s</string> <!-- minutes:seconds -->
@@ -291,11 +291,11 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">No patients overdue</string>
   <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
-  <plurals name="overdue_list_item_patient_bp">
+  <plurals name="overdue_list_item_patient_bp_days_ago">
     <item quantity="one">%s day ago</item>
     <item quantity="other">%s days ago</item>
   </plurals>
-  <plurals name="overdue_list_item_overdue_days">
+  <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s day overdue</item>
     <item quantity="other">%s days overdue</item>
   </plurals>
@@ -349,15 +349,15 @@
   <string name="scheduleappointment_next_visit_in">Schedule next visit in</string>
   <string name="scheduleappointment_not_now">Not now</string>
   <string name="scheduleappointment_done">done</string>
-  <plurals name="scheduleappointment_appointmentin_days">
+  <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s day</item>
     <item quantity="other">%s days</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_weeks">
+  <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%s week</item>
     <item quantity="other">%s weeks</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_months">
+  <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s month</item>
     <item quantity="other">%s months</item>
   </plurals>
@@ -407,7 +407,7 @@
   <string name="syncindicator_status_failed">Sync failed</string>
   <string name="syncindicator_status_syncing">Syncing…</string>
   <string name="syncindicator_status_synced_just_now">Synced just now</string>
-  <string name="syncindicator_status_synced">Synced %s min ago</string>
+  <string name="syncindicator_status_synced_min_ago">Synced %s min ago</string>
   <string name="syncindicator_dialog_error_network">Make sure you have a working internet connection to sync patient records.</string>
   <string name="syncindicator_dialog_button_text">okay</string>
   <string name="syncindicator_dialog_error_server">Sync servers are down at the moment. Please try again later or get in touch with your supervisor.</string>

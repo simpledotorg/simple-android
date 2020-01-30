@@ -162,7 +162,7 @@
   <string name="timestamp_today">ਅੱਜ</string>
   <string name="timestamp_yesterday">ਕੱਲ੍ਹ</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">%s ਦਿਨ ਪਹਿਲਾਂ</string>
+  <string name="timestamp_days_ago">%s ਦਿਨ ਪਹਿਲਾਂ</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">ਬੀ ਪੀ ਦੀਆਂ ਦਵਾਈਆਂ</string>
@@ -191,8 +191,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">PIN ਭੁੱਲ ਗਏ?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN ਮੂਲ PIN ਦੇ ਨਾਲ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">ਗ਼ਲਤ PIN, %s ਕੋਸ਼ਿਸ਼ਾਂ ਬਾਕੀ ਹਨ</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">ਤੁਸੀਂ %s ਗ਼ਲਤ ਕੋਸ਼ਿਸ਼ਾਂ ਕੀਤੀਆਂ ਹਨ</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">ਗ਼ਲਤ PIN, %s ਕੋਸ਼ਿਸ਼ਾਂ ਬਾਕੀ ਹਨ</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">ਤੁਸੀਂ %s ਗ਼ਲਤ ਕੋਸ਼ਿਸ਼ਾਂ ਕੀਤੀਆਂ ਹਨ</string>
   <string name="pinentry_pin_number_hint">ਤੁਹਾਡਾ ਸਕਿਓਰਿਟੀ PIN</string>
   <string name="pinentry_bruteforcelock_timer_label">ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
   <!-- minutes:seconds -->
@@ -236,11 +236,11 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">ਕੋਈ ਮਰੀਜ਼ ਓਵਰਡਿਊ ਨਹੀਂ ਹਨ</string>
   <string name="overdue_empty_desc">ਤੁਸੀਂ ਇੱਕ ਫੋਲੋ-ਅੱਪ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਰੀਡਿੰਗ ਲਈ ਅਜਿਹੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਬੁਲਾਉਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ ਜੋ ਆਪਣੀ ਨਿਰਧਾਰਤ ਮੁਲਾਕਾਤ ਖੁੰਝਾ ਦਿੰਦੇ ਹਨ।</string>
-  <plurals name="overdue_list_item_patient_bp">
+  <plurals name="overdue_list_item_patient_bp_days_ago">
     <item quantity="one">%s ਦਿਨ ਪਹਿਲਾਂ</item>
     <item quantity="other">%s ਦਿਨ ਪਹਿਲਾਂ</item>
   </plurals>
-  <plurals name="overdue_list_item_overdue_days">
+  <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
     <item quantity="other">%s ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
@@ -285,15 +285,15 @@
   <string name="scheduleappointment_next_visit_in">ਅਗਲੀ ਫੇਰੀ ਇਦੋਂ ਕਰਨਾ ਤੈਅ ਕਰੋ</string>
   <string name="scheduleappointment_not_now">ਹੁਣੇ ਨਹੀਂ</string>
   <string name="scheduleappointment_done">ਹੋ ਗਿਆ</string>
-  <plurals name="scheduleappointment_appointmentin_days">
+  <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s ਦਿਨ</item>
     <item quantity="other">%s ਦਿਨ</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_weeks">
+  <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%s ਹਫਤਾ</item>
     <item quantity="other">%s ਹਫਤੇ</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_months">
+  <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s ਮਹੀਨਾ</item>
     <item quantity="other">%s ਮਹੀਨੇ</item>
   </plurals>
@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">ਸਿੰਕ ਅਸਫ਼ਲ ਰਿਹਾ</string>
   <string name="syncindicator_status_syncing">ਸਿੰਕ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…</string>
   <string name="syncindicator_status_synced_just_now">ਬੱਸ ਹੁਣੇ ਸਿੰਕ ਕੀਤਾ</string>
-  <string name="syncindicator_status_synced">%s ਮਿੰ ਪਹਿਲਾਂ ਸਿੰਕ ਕੀਤਾ</string>
+  <string name="syncindicator_status_synced_min_ago">%s ਮਿੰ ਪਹਿਲਾਂ ਸਿੰਕ ਕੀਤਾ</string>
   <string name="syncindicator_dialog_error_network">ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਮਰੀਜ਼ ਦੇ ਰਿਕਾਰਡਾਂ ਨੂੰ ਸਿੰਕ ਕਰਨ ਲਈ ਤੁਹਾਡੇ ਕੋਲ ਕਾਰਜਸ਼ੀਲ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਹੈ।</string>
   <string name="syncindicator_dialog_button_text">ਠੀਕ ਹੈ</string>
   <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ \'ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>

@@ -13,7 +13,6 @@
 
     <!-- TODO: Remove when blood sugar history screen is done -->
     <ignore path="src/main/res/drawable/ic_blood_sugar_filled.xml" />
-    <ignore path="src/main/res/layout/screen_blood_sugar_history" />
 
   </issue>
 

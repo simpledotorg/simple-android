@@ -133,7 +133,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
       is TimeToAppointment.Months -> R.plurals.scheduleappointment_appointmentin_months
     }
 
-    return resources.getQuantityString(quantityStringResourceId, timeToAppointment.value, timeToAppointment.value)
+    return resources.getQuantityString(quantityStringResourceId, timeToAppointment.value, "${timeToAppointment.value}")
   }
 
   fun enableIncrementButton(state: Boolean) {

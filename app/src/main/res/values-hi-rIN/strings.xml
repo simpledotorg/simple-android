@@ -286,16 +286,16 @@
   <string name="scheduleappointment_not_now">अभी नहीं</string>
   <string name="scheduleappointment_done">पूरा हुआ</string>
   <plurals name="scheduleappointment_appointmentin_days">
-    <item quantity="one">%d दिन</item>
-    <item quantity="other">%d दिन</item>
+    <item quantity="one">%s दिन</item>
+    <item quantity="other">%s दिन</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_weeks">
-    <item quantity="one">%d हफ़्ता</item>
-    <item quantity="other">%d हफ़्ते</item>
+    <item quantity="one">%s हफ़्ता</item>
+    <item quantity="other">%s हफ़्ते</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_months">
-    <item quantity="one">%d महीना</item>
-    <item quantity="other">%d महीने</item>
+    <item quantity="one">%s महीना</item>
+    <item quantity="other">%s महीने</item>
   </plurals>
 
   <!-- Forgot PIN -->

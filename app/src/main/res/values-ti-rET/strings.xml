@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">ምስትኽኻል ዕዉት ኣይነበረን</string>
   <string name="syncindicator_status_syncing">የስተኻኽል ኣሎ…</string>
   <string name="syncindicator_status_synced_just_now">ሕጂ ተስተኻኺሉ</string>
-  <string name="syncindicator_status_synced">ቅድሚ %d ደቓይቕ ተስተኻኺሉ</string>
+  <string name="syncindicator_status_synced">ቅድሚ %s ደቓይቕ ተስተኻኺሉ</string>
   <string name="syncindicator_dialog_error_network">ናይ ተሓካሚ መዛግብቲ ንምስትኽኻል ዝሰርሕ ናይ ኢንተርነት መስመር ከምዘለካ ኣረጋግጽ</string>
   <string name="syncindicator_dialog_button_text">ሕራይ</string>
   <string name="syncindicator_dialog_error_server">ናይ ምስትኽኻል ሰርቨራት/ኮምፕዩተራት ኣብዚ እዋን’ዚ ጠፊአን ኣለዋ ብኽብረትካ ድሓር ደጊምካ ፈትን ወይ ምስ ተቖጻጻሪኻ ተራኸብ።</string>

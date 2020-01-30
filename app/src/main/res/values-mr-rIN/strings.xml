@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">सिंक अयशस्वी झाले</string>
   <string name="syncindicator_status_syncing">सिंक करत आहे…</string>
   <string name="syncindicator_status_synced_just_now">आत्ताच सिंक केले</string>
-  <string name="syncindicator_status_synced">%d मिनिटापूर्वी सिंक केले</string>
+  <string name="syncindicator_status_synced">%s मिनिटापूर्वी सिंक केले</string>
   <string name="syncindicator_dialog_error_network">आपल्याकडे रुग्णांच्या नोंदी सिंक करण्यासाठी काम करणारे इंटरनेट कनेक्शन असल्याची खात्री करा.</string>
   <string name="syncindicator_dialog_button_text">ठीक आहे</string>
   <string name="syncindicator_dialog_error_server">सध्या सिंक सर्व्हर्स बंद आहेत. कृपया थोड्या वेळाने पुन्हा प्रयत्न करा किंवा आपल्या पर्यवेक्षकाशी संपर्क साधा.</string>

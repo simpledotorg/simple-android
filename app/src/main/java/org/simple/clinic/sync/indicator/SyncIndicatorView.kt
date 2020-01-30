@@ -61,6 +61,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
 
   private fun viewClicks() = RxView.clicks(syncIndicatorLayout).map { SyncIndicatorViewClicked }
 
+  @SuppressLint("StringFormatMatches")
   fun updateState(syncState: SyncIndicatorState) {
     val transition = AutoTransition().setInterpolator(FastOutSlowInInterpolator())
     TransitionManager.beginDelayedTransition(this, transition)
@@ -77,7 +78,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
         syncStatusTextView.text = if (durationToMinsAgo == 0) {
           context.getString(R.string.syncindicator_status_synced_just_now)
         } else {
-          context.getString(R.string.syncindicator_status_synced, durationToMinsAgo)
+          context.getString(R.string.syncindicator_status_synced, "$durationToMinsAgo")
         }
         syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_done_16dp)
       }

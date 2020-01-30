@@ -51,6 +51,7 @@
             android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Emphasis.Grey0" />
 
           <TextView
+            android:id="@+id/diagnosisRequiredError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_4"

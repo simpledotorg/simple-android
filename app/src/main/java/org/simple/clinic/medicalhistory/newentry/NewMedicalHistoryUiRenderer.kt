@@ -30,5 +30,7 @@ class NewMedicalHistoryUiRenderer(
         }
       }
     }
+
+    ui.showDiagnosisRequiredError(model.showDiagnosisRequiredError)
   }
 }

@@ -3,19 +3,13 @@ package org.simple.clinic.medicalhistory.newentry
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.View
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.medicalhistory_summary_view.view.*
 import kotlinx.android.synthetic.main.screen_new_medical_history.view.*
-import kotlinx.android.synthetic.main.screen_new_medical_history.view.diabetesQuestionView
-import kotlinx.android.synthetic.main.screen_new_medical_history.view.heartAttackQuestionView
-import kotlinx.android.synthetic.main.screen_new_medical_history.view.kidneyDiseaseQuestionView
-import kotlinx.android.synthetic.main.screen_new_medical_history.view.strokeQuestionView
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.Answer
@@ -163,7 +157,7 @@ class NewMedicalHistoryScreen(
   }
 
   override fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer) {
-    val view = when(question) {
+    val view = when (question) {
       DIAGNOSED_WITH_HYPERTENSION -> hypertensionDiagnosisView
       HAS_DIABETES -> diabetesDiagnosisView
       else -> null
@@ -172,5 +166,9 @@ class NewMedicalHistoryScreen(
     view?.render(question, answer) { questionForView, newAnswer ->
       questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
+  }
+
+  override fun showDiagnosisRequiredError(showError: Boolean) {
+    diagnosisRequiredError.visibility = if (showError) VISIBLE else GONE
   }
 }

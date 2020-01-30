@@ -61,7 +61,7 @@
   <string name="patiententry_district">ಜಿಲ್ಲೆ</string>
   <string name="patiententry_upazila">ಉಪಜಿಲ್ಲೆ</string>
   <string name="patiententry_state">ರಾಜ್ಯ</string>
-  <string name="patiententry_save_patient">ಮುಂದಿನ</string>
+  <string name="patiententry_save_patient">ಮುಂದೆ</string>
   <string name="patiententry_error_empty_fullname">ರೋಗಿಯ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ</string>
   <string name="patiententry_error_empty_gender">ರೋಗಿಯ ಲಿಂಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
   <string name="patiententry_error_empty_colony_or_village">ಕಾಲೋನಿಯನ್ನು ನಮೂದಿಸಿ / ಗ್ರಾಮ / ವಾರ್ಡ್</string>

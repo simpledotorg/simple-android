@@ -532,4 +532,8 @@
 
   <string name="bloodpressuresummaryview_see_all_button">See all</string>
   <string name="patientsummary_newbp_date_time" translatable="false">%1$s\n%2$s</string>
+
+  <string name="bloodsugarhistory_add_blood_sugar_button">Diabetes</string>
+  <string name="bloodsugarhistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
+  <string name="bloodsugarhistory_blood_sugar_reading" translatable="false">%1$d mg/dl %2$s</string>
 </resources>

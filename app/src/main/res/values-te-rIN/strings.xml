@@ -162,7 +162,7 @@
   <string name="timestamp_today">ఈరోజు</string>
   <string name="timestamp_yesterday">నిన్న</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">%d రోజుల క్రితం</string>
+  <string name="timestamp_days">%s రోజుల క్రితం</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">బిపి మందులు</string>

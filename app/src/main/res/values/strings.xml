@@ -243,8 +243,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">Forgot PIN?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN doesn’t match the original PIN</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">Incorrect PIN, %d attempts remaining</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">You have made %d incorrect attempts</string>
+  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">Incorrect PIN, %s attempts remaining</string>
+  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">You have made %s incorrect attempts</string>
   <string name="pinentry_pin_number_hint">Your security PIN</string>
   <string name="pinentry_bruteforcelock_timer_label">Try again after</string>
   <string name="pinentry_bruteforcelock_timer" translatable="false">%1$s:%2$s</string> <!-- minutes:seconds -->

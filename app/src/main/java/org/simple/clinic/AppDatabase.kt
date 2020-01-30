@@ -55,7 +55,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       MissingPhoneReminder::class,
       BloodSugarMeasurement::class
     ],
-    version = 59,
+    version = 60,
     exportSchema = true
 )
 @TypeConverters(

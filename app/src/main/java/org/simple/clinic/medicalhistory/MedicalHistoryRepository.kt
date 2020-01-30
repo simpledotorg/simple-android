@@ -24,7 +24,6 @@ class MedicalHistoryRepository @Inject constructor(
         uuid = UUID.randomUUID(),
         patientUuid = patientUuid,
         diagnosedWithHypertension = Unanswered,
-        isOnTreatmentForHypertension = Unanswered,
         hasHadHeartAttack = Unanswered,
         hasHadStroke = Unanswered,
         hasHadKidneyDisease = Unanswered,
@@ -57,7 +56,6 @@ class MedicalHistoryRepository @Inject constructor(
         uuid = UUID.randomUUID(),
         patientUuid = patientUuid,
         diagnosedWithHypertension = historyEntry.diagnosedWithHypertension,
-        isOnTreatmentForHypertension = historyEntry.isOnTreatmentForHypertension,
         hasHadHeartAttack = historyEntry.hasHadHeartAttack,
         hasHadStroke = historyEntry.hasHadStroke,
         hasHadKidneyDisease = historyEntry.hasHadKidneyDisease,
@@ -122,7 +120,6 @@ class MedicalHistoryRepository @Inject constructor(
           patientUuid = patientUuid,
           // TODO(vs): 2020-01-30 Remove the fallback value when the server changes are available in PROD
           diagnosedWithHypertension = hasHypertension ?: Unanswered,
-          isOnTreatmentForHypertension = isOnTreatmentForHypertension,
           hasHadHeartAttack = hasHadHeartAttack,
           hasHadStroke = hasHadStroke,
           hasHadKidneyDisease = hasHadKidneyDisease,

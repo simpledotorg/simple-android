@@ -12,7 +12,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
@@ -24,7 +23,6 @@ data class MedicalHistory(
     val uuid: UUID,
     val patientUuid: UUID,
     val diagnosedWithHypertension: Answer,
-    val isOnTreatmentForHypertension: Answer,
     val hasHadHeartAttack: Answer,
     val hasHadStroke: Answer,
     val hasHadKidneyDisease: Answer,
@@ -38,11 +36,11 @@ data class MedicalHistory(
   fun answered(question: MedicalHistoryQuestion, answer: Answer): MedicalHistory {
     return when (question) {
       DIAGNOSED_WITH_HYPERTENSION -> copy(diagnosedWithHypertension = answer)
-      IS_ON_TREATMENT_FOR_HYPERTENSION -> copy(isOnTreatmentForHypertension = answer)
       HAS_HAD_A_HEART_ATTACK -> copy(hasHadHeartAttack = answer)
       HAS_HAD_A_STROKE -> copy(hasHadStroke = answer)
       HAS_HAD_A_KIDNEY_DISEASE -> copy(hasHadKidneyDisease = answer)
       HAS_DIABETES -> copy(hasDiabetes = answer)
+      else -> this
     }
   }
 

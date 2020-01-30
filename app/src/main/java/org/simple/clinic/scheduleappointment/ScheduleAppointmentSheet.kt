@@ -128,9 +128,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private fun displayTextForTimeToAppointment(timeToAppointment: TimeToAppointment): String {
     val quantityStringResourceId = when (timeToAppointment) {
-      is TimeToAppointment.Days -> R.plurals.scheduleappointment_appointmentin_days
-      is TimeToAppointment.Weeks -> R.plurals.scheduleappointment_appointmentin_weeks
-      is TimeToAppointment.Months -> R.plurals.scheduleappointment_appointmentin_months
+      is TimeToAppointment.Days -> R.plurals.scheduleappointment_appointment_in_days
+      is TimeToAppointment.Weeks -> R.plurals.scheduleappointment_appointment_in_weeks
+      is TimeToAppointment.Months -> R.plurals.scheduleappointment_appointment_in_months
     }
 
     return resources.getQuantityString(quantityStringResourceId, timeToAppointment.value, "${timeToAppointment.value}")

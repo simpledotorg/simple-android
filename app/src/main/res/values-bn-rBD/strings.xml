@@ -162,7 +162,7 @@
   <string name="timestamp_today">আজ</string>
   <string name="timestamp_yesterday">গতকাল</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">%s দিন আগে</string>
+  <string name="timestamp_days_ago">%s দিন আগে</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">উচ্চ রক্তচাপের ওষুধ</string>
@@ -191,8 +191,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">পিন ভুলে গেছেন?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">পিনটি আসল পিনটির সাথে মেলে না</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">ভুল PIN, আরো %s বার চেষ্টা করতে পারবেন</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">আপনি %s বার ভুল প্রচেষ্টা করেছেন</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">ভুল PIN, আরো %s বার চেষ্টা করতে পারবেন</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">আপনি %s বার ভুল প্রচেষ্টা করেছেন</string>
   <string name="pinentry_pin_number_hint">আপনার সুরক্ষা পিন</string>
   <string name="pinentry_bruteforcelock_timer_label">পরে আবার চেষ্টা করুন</string>
   <!-- minutes:seconds -->
@@ -236,11 +236,11 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">সময় পার হয়ে যাওয়া কোন রোগী নেই</string>
   <string name="overdue_empty_desc">যে রোগীরা ফলো আপ রক্তচাপ মাপার জন্য তাদের পূর্বনির্ধারিত সাক্ষাৎকার মিস করেছে আপনি সেই রোগীদের ফোন করতে পারবেন।</string>
-  <plurals name="overdue_list_item_patient_bp">
+  <plurals name="overdue_list_item_patient_bp_days_ago">
     <item quantity="one">%s দিন আগে</item>
     <item quantity="other">%s দিন আগে</item>
   </plurals>
-  <plurals name="overdue_list_item_overdue_days">
+  <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s দিন সময়াতীত</item>
     <item quantity="other">%s দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
@@ -285,15 +285,15 @@
   <string name="scheduleappointment_next_visit_in">সাক্ষাতের পরবর্তী সময়সূচী স্থির করুন</string>
   <string name="scheduleappointment_not_now">এখন নয়</string>
   <string name="scheduleappointment_done">সম্পন্ন হয়েছে</string>
-  <plurals name="scheduleappointment_appointmentin_days">
+  <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s দিন</item>
     <item quantity="other">%s দিন</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_weeks">
+  <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%s সপ্তাহ</item>
     <item quantity="other">%s সপ্তাহ</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_months">
+  <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s মাস</item>
     <item quantity="other">%s মাস</item>
   </plurals>
@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">সিঙ্ক ব্যর্থ হয়েছে</string>
   <string name="syncindicator_status_syncing">সিঙ্ক হচ্ছে…</string>
   <string name="syncindicator_status_synced_just_now">এইমাত্র সিঙ্ক হল</string>
-  <string name="syncindicator_status_synced">%s মিনিট আগে সিঙ্ক হয়েছে</string>
+  <string name="syncindicator_status_synced_min_ago">%s মিনিট আগে সিঙ্ক হয়েছে</string>
   <string name="syncindicator_dialog_error_network">রোগীর রেকর্ডগুলো সিঙ্ক করার জন্য আপনার কাছে একটি কার্যকরী ইন্টারনেট সংযোগ রয়েছে তা নিশ্চিত করুন।</string>
   <string name="syncindicator_dialog_button_text">ঠিক আছে</string>
   <string name="syncindicator_dialog_error_server">সিঙ্ক সার্ভারগুলো এই মুহূর্তে ডাউন রয়েছে। অনুগ্রহ করে আবার পরে চেষ্টা করুন অথবা আপনার সুপারভাইজারের সাথে যোগাযোগ করুন।</string>

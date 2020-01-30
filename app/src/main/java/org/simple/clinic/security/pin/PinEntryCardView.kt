@@ -138,11 +138,11 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   fun showIncorrectPinErrorOnSubsequentAttempts(remaining: Int) {
-    showError(resources.getString(R.string.pinentry_error_incorrect_pin_on_subsequent_attempts, "$remaining"))
+    showError(resources.getString(R.string.pinentry_error_incorrect_pin_attempts_remaining, "$remaining"))
   }
 
   fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int) {
-    showError(resources.getString(R.string.pinentry_error_incorrect_attempts_limit_reached, "$attemptsMade"))
+    showError(resources.getString(R.string.pinentry_error_incorrect_pin_attempts_limit_reached, "$attemptsMade"))
   }
 
   fun clearPin() {

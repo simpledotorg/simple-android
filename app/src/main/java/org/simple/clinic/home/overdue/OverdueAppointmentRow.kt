@@ -126,7 +126,7 @@ data class OverdueAppointmentRow(
     holder.patientNameTextView.setCompoundDrawableStart(gender.displayIconRes)
 
     holder.patientBPTextView.text = context.resources.getQuantityString(
-        R.plurals.overdue_list_item_patient_bp,
+        R.plurals.overdue_list_item_patient_bp_days_ago,
         bpDaysAgo,
         "$bpSystolic/$bpDiastolic, $bpDaysAgo"
     )
@@ -137,7 +137,7 @@ data class OverdueAppointmentRow(
     holder.isAtHighRiskTextView.visibility = if (isAtHighRisk) VISIBLE else GONE
 
     holder.overdueDaysTextView.text = context.resources.getQuantityString(
-        R.plurals.overdue_list_item_overdue_days,
+        R.plurals.overdue_list_item_appointment_overdue_days,
         overdueDays,
         "$overdueDays"
     )

@@ -162,7 +162,7 @@
   <string name="timestamp_today">आज</string>
   <string name="timestamp_yesterday">काल</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">%s दिवसांपूर्वी</string>
+  <string name="timestamp_days_ago">%s दिवसांपूर्वी</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">बीपीची औषधे</string>
@@ -191,8 +191,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">PIN विसरलात का?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN मूळ PIN शी जुळत नाही</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">चुकीचा PIN, %s प्रयत्न शिल्लक आहेत</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">आपण %s चुकीचे प्रयत्न केले आहेत</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">चुकीचा PIN, %s प्रयत्न शिल्लक आहेत</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">आपण %s चुकीचे प्रयत्न केले आहेत</string>
   <string name="pinentry_pin_number_hint">आपला सुरक्षा PIN</string>
   <string name="pinentry_bruteforcelock_timer_label">नंतर पुन्हा प्रयत्न करा</string>
   <!-- minutes:seconds -->
@@ -236,11 +236,11 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">कोणतेही रुग्ण उशीरा आलेले नाहीत</string>
   <string name="overdue_empty_desc">आपण अशा रुग्णांना कॉल करू शकाल, जे फॉलो-अप रक्तदाब वाचनासाठी त्यांची नियोजित भेट चुकवतात.</string>
-  <plurals name="overdue_list_item_patient_bp">
+  <plurals name="overdue_list_item_patient_bp_days_ago">
     <item quantity="one">%s दिवसापूर्वी</item>
     <item quantity="other">%s दिवसांपूर्वी</item>
   </plurals>
-  <plurals name="overdue_list_item_overdue_days">
+  <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s दिवसाने उशीर झाला</item>
     <item quantity="other">%s दिवसांनी उशीर झाला</item>
   </plurals>
@@ -285,15 +285,15 @@
   <string name="scheduleappointment_next_visit_in">नियोजित पुढील भेट यावेळी आहे</string>
   <string name="scheduleappointment_not_now">आता नाही</string>
   <string name="scheduleappointment_done">पूर्ण झाले</string>
-  <plurals name="scheduleappointment_appointmentin_days">
+  <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s दिवस</item>
     <item quantity="other">%s दिवस</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_weeks">
+  <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%s आठवडा</item>
     <item quantity="other">%s आठवडे</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_months">
+  <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s महिना</item>
     <item quantity="other">%s महिने</item>
   </plurals>
@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">सिंक अयशस्वी झाले</string>
   <string name="syncindicator_status_syncing">सिंक करत आहे…</string>
   <string name="syncindicator_status_synced_just_now">आत्ताच सिंक केले</string>
-  <string name="syncindicator_status_synced">%s मिनिटापूर्वी सिंक केले</string>
+  <string name="syncindicator_status_synced_min_ago">%s मिनिटापूर्वी सिंक केले</string>
   <string name="syncindicator_dialog_error_network">आपल्याकडे रुग्णांच्या नोंदी सिंक करण्यासाठी काम करणारे इंटरनेट कनेक्शन असल्याची खात्री करा.</string>
   <string name="syncindicator_dialog_button_text">ठीक आहे</string>
   <string name="syncindicator_dialog_error_server">सध्या सिंक सर्व्हर्स बंद आहेत. कृपया थोड्या वेळाने पुन्हा प्रयत्न करा किंवा आपल्या पर्यवेक्षकाशी संपर्क साधा.</string>

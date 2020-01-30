@@ -319,8 +319,6 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diagnosed_with_hypertension">ಅಧಿಕ ರಕ್ತದೊತ್ತಡವನ್ನು ಪತ್ತೆಹಚ್ಚಲಾಗಿದೆ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_takes_hypertension_drugs">ಈಗಾಗಲೇ ಅಧಿಕ ರಕ್ತದೊತ್ತಡದ ಔಷಧಗಳನ್ನು ತೆಗೆದುಕೊಂಡಿದ್ದಾರೆ</string>
-  <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">ಮಧುಮೇಹವನ್ನು ಹೊಂದಿದ್ದಾರೆ</string>
   <string name="newmedicalhistory_next">ಮುಂದಿನ</string>
   <string name="newmedicalhistory_yes">ಹೌದು</string>

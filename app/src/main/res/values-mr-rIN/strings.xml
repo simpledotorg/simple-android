@@ -319,8 +319,6 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diagnosed_with_hypertension">उच्च रक्तदाबाचे निदान केले</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_takes_hypertension_drugs">आधीच उच्च रक्तदाबाची औषधे घेतात</string>
-  <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">मधुमेह आहे</string>
   <string name="newmedicalhistory_next">पुढे</string>
   <string name="newmedicalhistory_yes">होय</string>

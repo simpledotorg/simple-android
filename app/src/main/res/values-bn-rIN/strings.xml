@@ -319,8 +319,6 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diagnosed_with_hypertension">হাইপারটেনশন নির্ণীত হয়েছে</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_takes_hypertension_drugs">ইতিমধ্যে হাইপারটেনশনের ওষুধগুলো সেবন করেন</string>
-  <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">ডায়াবেটিস আছে</string>
   <string name="newmedicalhistory_next">পরবর্তী</string>
   <string name="newmedicalhistory_yes">হ্যাঁ</string>

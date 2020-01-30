@@ -21,7 +21,7 @@ import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
@@ -123,7 +123,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_DIABETES, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, Yes))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
@@ -189,7 +189,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_DIABETES, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, Yes))
 
     // Updated answers
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
@@ -197,7 +197,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, Unanswered))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, Unanswered))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_DIABETES, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, No))
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 

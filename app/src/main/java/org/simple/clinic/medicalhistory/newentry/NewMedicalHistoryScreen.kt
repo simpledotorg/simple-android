@@ -15,7 +15,7 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
@@ -126,7 +126,7 @@ class NewMedicalHistoryScreen(
       HAS_HAD_A_HEART_ATTACK -> heartAttackQuestionView
       HAS_HAD_A_STROKE -> strokeQuestionView
       HAS_HAD_A_KIDNEY_DISEASE -> kidneyDiseaseQuestionView
-      HAS_DIABETES -> diabetesQuestionView
+      DIAGNOSED_WITH_DIABETES -> diabetesQuestionView
       // TODO(vs): 2020-01-27 Remove unused enums once the separation of the models is done
       else -> null
     }
@@ -159,7 +159,7 @@ class NewMedicalHistoryScreen(
   override fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer) {
     val view = when (question) {
       DIAGNOSED_WITH_HYPERTENSION -> hypertensionDiagnosisView
-      HAS_DIABETES -> diabetesDiagnosisView
+      DIAGNOSED_WITH_DIABETES -> diabetesDiagnosisView
       else -> null
     }
 

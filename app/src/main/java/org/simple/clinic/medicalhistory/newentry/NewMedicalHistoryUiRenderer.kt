@@ -1,7 +1,7 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
@@ -26,11 +26,11 @@ class NewMedicalHistoryUiRenderer(
           ui.showDiagnosisView()
           ui.hideDiabetesHistorySection()
           ui.renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, diagnosedWithHypertension)
-          ui.renderDiagnosisAnswer(HAS_DIABETES, hasDiabetes)
+          ui.renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, hasDiabetes)
         } else {
           ui.hideDiagnosisView()
           ui.showDiabetesHistorySection()
-          ui.renderAnswerForQuestion(HAS_DIABETES, hasDiabetes)
+          ui.renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, hasDiabetes)
         }
       }
     }

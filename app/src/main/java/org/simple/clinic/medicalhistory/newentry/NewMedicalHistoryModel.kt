@@ -12,7 +12,8 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 data class NewMedicalHistoryModel(
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
-    val currentFacility: Facility?
+    val currentFacility: Facility?,
+    val showDiagnosisRequiredError: Boolean
 ) : Parcelable {
 
   val hasLoadedPatientEntry: Boolean
@@ -28,7 +29,12 @@ data class NewMedicalHistoryModel(
     get() = currentFacility!!.config.diabetesManagementEnabled
 
   companion object {
-    fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(null, OngoingMedicalHistoryEntry(), null)
+    fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(
+        ongoingPatientEntry = null,
+        ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
+        currentFacility = null,
+        showDiagnosisRequiredError = false
+    )
   }
 
   fun answerChanged(question: MedicalHistoryQuestion, answer: Answer): NewMedicalHistoryModel {

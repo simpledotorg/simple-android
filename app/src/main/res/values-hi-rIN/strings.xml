@@ -319,7 +319,6 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diagnosed_with_hypertension">उच्च रक्तचाप रोग का निदान हुआ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_takes_hypertension_drugs">पहले ही उच्च रक्तचाप की दवाएं लेता/लेती है</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">इसे मधुमेह है</string>
   <string name="newmedicalhistory_next">अगला</string>

@@ -549,10 +549,10 @@ class AppointmentRepositoryAndroidTest {
       bpRepository.save(bloodPressureMeasurements).blockingAwait()
 
       medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
+          hasHadHeartAttack = hasHadHeartAttack,
           hasHadStroke = hasHadStroke,
-          hasDiabetes = hasDiabetes,
           hasHadKidneyDisease = hasHadKidneyDisease,
-          hasHadHeartAttack = hasHadHeartAttack
+          hasDiabetes = hasDiabetes
       )).blockingAwait()
       clock.advanceBy(Duration.ofSeconds(bps.size.toLong() + 1))
     }

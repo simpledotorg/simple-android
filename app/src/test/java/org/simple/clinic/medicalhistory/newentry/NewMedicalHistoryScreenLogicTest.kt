@@ -25,7 +25,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DI
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
@@ -119,7 +118,6 @@ class NewMedicalHistoryScreenLogicTest {
     startMobiusLoop()
 
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_TREATMENT_FOR_HYPERTENSION, Yes))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
@@ -132,11 +130,10 @@ class NewMedicalHistoryScreenLogicTest {
       verify(medicalHistoryRepository).save(
           patientUuid = savedPatient.uuid,
           historyEntry = OngoingMedicalHistoryEntry(
-              diagnosedWithHypertension = No,
-              isOnTreatmentForHypertension = Yes,
               hasHadHeartAttack = No,
               hasHadStroke = No,
               hasHadKidneyDisease = Yes,
+              diagnosedWithHypertension = No,
               hasDiabetes = Yes
           )
       )
@@ -164,11 +161,10 @@ class NewMedicalHistoryScreenLogicTest {
               // We currently default the hypertension diagnosis answer to 'Yes' if the facility
               // does not support diabetes management. The mock facility we use in tests has DM
               // off by default, so this is hidden behaviour.
-              diagnosedWithHypertension = Yes,
-              isOnTreatmentForHypertension = Unanswered,
               hasHadHeartAttack = Unanswered,
               hasHadStroke = Unanswered,
               hasHadKidneyDisease = Unanswered,
+              diagnosedWithHypertension = Yes,
               hasDiabetes = Unanswered))
       verify(uiActions).openPatientSummaryScreen(savedPatient.uuid)
     }
@@ -185,7 +181,6 @@ class NewMedicalHistoryScreenLogicTest {
 
     // Initial answers
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_TREATMENT_FOR_HYPERTENSION, Yes))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
@@ -193,7 +188,6 @@ class NewMedicalHistoryScreenLogicTest {
 
     // Updated answers
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_TREATMENT_FOR_HYPERTENSION, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, Unanswered))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, Unanswered))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, No))
@@ -207,11 +201,10 @@ class NewMedicalHistoryScreenLogicTest {
       verify(medicalHistoryRepository).save(
           patientUuid = savedPatient.uuid,
           historyEntry = OngoingMedicalHistoryEntry(
-              diagnosedWithHypertension = Yes,
-              isOnTreatmentForHypertension = No,
               hasHadHeartAttack = Unanswered,
               hasHadStroke = Unanswered,
               hasHadKidneyDisease = No,
+              diagnosedWithHypertension = Yes,
               hasDiabetes = No
           )
       )

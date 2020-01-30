@@ -319,8 +319,6 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diagnosed_with_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ ਦੇ ਨਾਲ ਨਿਦਾਨ ਕੀਤਾ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_takes_hypertension_drugs">ਪਹਿਲਾਂ ਹੀ ਹਾਈਪਰਟੈਂਸ਼ਨ ਦੀਆਂ ਦਵਾਈਆਂ ਲੈਂਦਾ/ਦੀ ਹੈ</string>
-  <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">ਡਾਇਬੀਟੀਜ਼ ਹੈ</string>
   <string name="newmedicalhistory_next">ਅਗਲਾ</string>
   <string name="newmedicalhistory_yes">ਹਾਂ</string>

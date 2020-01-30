@@ -173,7 +173,7 @@ class PatientSummaryScreen(
   }
 
   private fun setupEditButtonClicks() {
-    editButton.setOnClickListener {
+    editPatientButton.setOnClickListener {
       screenRouter.push(createEditPatientScreenKey(mobiusDelegate.model.patientSummaryProfile!!))
     }
   }
@@ -326,7 +326,7 @@ class PatientSummaryScreen(
   }
 
   override fun showEditButton() {
-    editButton.visibility = View.VISIBLE
+    editPatientButton.visibility = View.VISIBLE
   }
 }
 

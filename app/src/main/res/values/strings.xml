@@ -407,7 +407,7 @@
   <string name="syncindicator_status_failed">Sync failed</string>
   <string name="syncindicator_status_syncing">Syncing…</string>
   <string name="syncindicator_status_synced_just_now">Synced just now</string>
-  <string name="syncindicator_status_synced">Synced %d min ago</string>
+  <string name="syncindicator_status_synced">Synced %s min ago</string>
   <string name="syncindicator_dialog_error_network">Make sure you have a working internet connection to sync patient records.</string>
   <string name="syncindicator_dialog_button_text">okay</string>
   <string name="syncindicator_dialog_error_server">Sync servers are down at the moment. Please try again later or get in touch with your supervisor.</string>

@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">ಸಿಂಕ್ ವಿಫಲವಾಗಿದೆ</string>
   <string name="syncindicator_status_syncing">ಸಿಂಕ್ ಮಾಡಲಾಗುತ್ತಿದೆ…</string>
   <string name="syncindicator_status_synced_just_now">ಈಗ ತಾನೇ ಸಿಂಕ್ ಮಾಡಲಾಗಿದೆ</string>
-  <string name="syncindicator_status_synced">%d ನಿಮಿಷ ಹಿಂದೆ ಸಿಂಕ್ ಮಾಡಲಾಗಿದೆ</string>
+  <string name="syncindicator_status_synced">%s ನಿಮಿಷ ಹಿಂದೆ ಸಿಂಕ್ ಮಾಡಲಾಗಿದೆ</string>
   <string name="syncindicator_dialog_error_network">ರೋಗಿಯ ದಾಖಲೆಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಲು ನೀವು ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತಿರುವ ಇಂಟರ್‌ನೆಟ್ ಸಂಪರ್ಕ ಹೊಂದಿರುವುದನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.</string>
   <string name="syncindicator_dialog_button_text">ಸರಿ</string>
   <string name="syncindicator_dialog_error_server">ಈ ಕ್ಷಣದಲ್ಲಿ ಸಿಂಕ್ ಸರ್ವರ್‌ಗಳು ಕೆಲಸ ಮಾಡುತ್ತಿಲ್ಲ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ನಿಮ್ಮ ಸೂಪರ್‌ವೈಸರ್‌ ಅವರೊಂದಿಗೆ ಸಂಪರ್ಕದಲ್ಲಿರಿ.</string>

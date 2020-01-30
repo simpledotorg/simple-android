@@ -388,8 +388,6 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diagnosed_with_hypertension">Hypertension</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_takes_hypertension_drugs">Already takes hypertension drugs</string>
-  <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">Diabetes</string>
   <string name="newmedicalhistory_next">Next</string>
   <string name="newmedicalhistory_yes">Yes</string>

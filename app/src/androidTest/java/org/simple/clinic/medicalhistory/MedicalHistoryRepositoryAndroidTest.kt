@@ -52,7 +52,6 @@ class MedicalHistoryRepositoryAndroidTest {
         hasHadHeartAttack = Yes,
         hasHadStroke = Yes,
         hasHadKidneyDisease = Yes,
-        isOnTreatmentForHypertension = No,
         hasDiabetes = No)
 
     repository.save(patientUuid, historyEntry).blockingAwait()

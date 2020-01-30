@@ -319,8 +319,6 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diagnosed_with_hypertension">ጸቕጢ ደም ከምዘለዎ ብመርመራ ተነጺሩ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_takes_hypertension_drugs">ድሮ ናይ ጸቕጢ ደም መድሃኒታት ይወስድ’ዩ</string>
-  <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">ሽኮርያ ኣለዎ</string>
   <string name="newmedicalhistory_next">ዝቕጽል</string>
   <string name="newmedicalhistory_yes">እወ</string>

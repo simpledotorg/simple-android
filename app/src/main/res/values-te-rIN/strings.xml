@@ -319,8 +319,6 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diagnosed_with_hypertension">రక్తపోటు నిర్ధారణ అయింది</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_takes_hypertension_drugs">ఇప్పటికే రక్తపోటు మందులను వాడుతున్నారు</string>
-  <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">మధుమేహం ఉంది</string>
   <string name="newmedicalhistory_next">తదుపరి</string>
   <string name="newmedicalhistory_yes">అవును</string>

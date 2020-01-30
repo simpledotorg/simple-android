@@ -423,7 +423,6 @@ object PatientMocker {
         uuid = UUID.randomUUID(),
         patientUuid = UUID.randomUUID(),
         diagnosedWithHypertension = diagnosedWithHypertension,
-        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasHadHeartAttack = hasHadHeartAttack,
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,

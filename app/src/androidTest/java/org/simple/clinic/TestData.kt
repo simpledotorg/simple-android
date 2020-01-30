@@ -647,7 +647,6 @@ class TestData @Inject constructor(
         uuid = uuid,
         patientUuid = patientUuid,
         diagnosedWithHypertension = diagnosedWithHypertension,
-        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasHadHeartAttack = hasHadHeartAttack,
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,

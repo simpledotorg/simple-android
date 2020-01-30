@@ -9,13 +9,16 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_blood_sugar_history.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItemDiffCallback
+import org.simple.clinic.bloodsugar.history.adapter.NewBloodSugarClicked
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.di.injector
 import org.simple.clinic.patient.DateOfBirth
@@ -26,6 +29,7 @@ import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -56,6 +60,12 @@ class BloodSugarHistoryScreen(
   lateinit var timeFormatter: DateTimeFormatter
 
   private val bloodSugarHistoryAdapter = ItemAdapter(BloodSugarHistoryListItemDiffCallback())
+
+  private val events: Observable<BloodSugarHistoryScreenEvent> by unsafeLazy {
+    addNewBloodSugarClicked()
+        .compose(ReportAnalyticsEvents())
+        .cast<BloodSugarHistoryScreenEvent>()
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -133,5 +143,12 @@ class BloodSugarHistoryScreen(
         BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
     )
     activity.startActivity(intentForNewBloodSugar)
+  }
+
+  private fun addNewBloodSugarClicked(): Observable<BloodSugarHistoryScreenEvent> {
+    return bloodSugarHistoryAdapter
+        .itemEvents
+        .ofType<NewBloodSugarClicked>()
+        .map { AddNewBloodSugarClicked }
   }
 }

@@ -1,5 +1,6 @@
 package org.simple.clinic.recentpatientsview
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -48,6 +49,7 @@ data class RecentPatientItem(
     private val lastSeenTextView by bindView<TextView>(R.id.recentpatient_item_last_seen)
     private val genderImageView by bindView<ImageView>(R.id.recentpatient_item_gender)
 
+    @SuppressLint("SetTextI18n")
     fun render(
         name: String,
         age: Int,
@@ -55,7 +57,7 @@ data class RecentPatientItem(
         updatedAt: RelativeTimestamp,
         dateFormatter: DateTimeFormatter
     ) {
-      nameAgeTextView.text = itemView.resources.getString(R.string.patients_recentpatients_nameage, name, age)
+      nameAgeTextView.text = "$name, $age"
       genderImageView.setImageResource(gender.displayIconRes)
       lastSeenTextView.text = updatedAt.displayText(itemView.context, dateFormatter)
     }

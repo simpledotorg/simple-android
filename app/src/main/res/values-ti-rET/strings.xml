@@ -162,7 +162,7 @@
   <string name="timestamp_today">ሎሚ</string>
   <string name="timestamp_yesterday">ትማሊ</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">ቅድሚ %d መዓልታት</string>
+  <string name="timestamp_days">ቅድሚ %s መዓልታት</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">ናይ ጸቕጢ ደም መድሓኒታት</string>

@@ -1,5 +1,6 @@
 package org.simple.clinic.recentpatient
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -33,9 +34,10 @@ data class RecentPatientItem(
 
   override fun createViewHolder(itemView: View) = RecentPatientItemViewHolder(itemView)
 
+  @SuppressLint("SetTextI18n")
   override fun bind(viewHolder: RecentPatientItemViewHolder, position: Int) {
     viewHolder.apply {
-      titleTextView.text = itemView.context.getString(R.string.recent_patients_itemview_title, name, age)
+      titleTextView.text = "$name, $age"
 
       lastSeenTextView.text = lastSeenTimestamp.displayText(itemView.context, dateFormatter)
       genderImageView.setImageResource(gender.displayIconRes)

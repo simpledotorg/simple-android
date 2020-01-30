@@ -9,7 +9,6 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_bp_history.view.*
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
@@ -170,7 +169,7 @@ class BloodPressureHistoryScreen(
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
     val genderLetter = resources.getString(gender.displayLetterRes)
-    toolbar.title = resources.getString(R.string.bloodpressurehistory_toolbar_title, name, genderLetter, age)
+    toolbar.title = "$name, $genderLetter, $age"
   }
 
   private fun addNewBpClicked(): Observable<BloodPressureHistoryScreenEvent> {

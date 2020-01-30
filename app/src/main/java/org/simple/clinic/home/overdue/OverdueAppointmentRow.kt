@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import android.annotation.SuppressLint
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.recyclerview.widget.DiffUtil
@@ -116,11 +117,12 @@ data class OverdueAppointmentRow(
     }
   }
 
+  @SuppressLint("SetTextI18n")
   private fun bindUi(holder: ViewHolderX) {
     val containerView = holder.containerView
     val context = containerView.context
 
-    holder.patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, name, age)
+    holder.patientNameTextView.text = "$name, $age"
     holder.patientNameTextView.setCompoundDrawableStart(gender.displayIconRes)
 
     holder.patientBPTextView.text = context.resources.getQuantityString(

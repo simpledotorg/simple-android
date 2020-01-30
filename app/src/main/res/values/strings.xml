@@ -41,7 +41,6 @@
   <string name="patientsearchresults_register_patient">Register as a new patient</string>
   <string name="patientsearchresults_register_patient_for_empty_state">Register patient</string>
   <string name="patientsearchresults_item_last_bp">Last BP:</string>
-  <string name="patientsearchresults_item_name_with_gender_and_age" translatable="false">%1$s, %2$s, %3$d</string>
   <string name="patientsearchresults_item_address_with_colony_and_district" translatable="false">%1$s, %2$s</string>
   <string name="patientsearchresults_item_last_bp_date_with_facility" translatable="false">%1$s, %2$s</string>
   <string name="patientsearchresults_current_facility_header">Has visited %s</string>
@@ -144,7 +143,6 @@
   <string name="patients_recentpatients_title">Recent Patients</string>
   <string name="patients_recentpatients_no_recent_patients">No recent patients</string>
   <string name="patients_recentpatients_see_all">See All</string>
-  <string name="patients_recentpatients_nameage" translatable="false">%1$s, %2$d</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Blood pressure</string>
@@ -181,7 +179,6 @@
   <string name="patientsummary_edit">Edit</string>
   <string name="patientsummary_address_with_colony" translatable="false">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_address_without_colony" translatable="false">%1$s, %2$s</string>
-  <string name="patientsummary_name" translatable="false">%1$s, %2$s, %3$d</string>
 
   <string name="patientsummary_updatephone_dialog_title">Update phone number</string>
   <string name="patientsummary_updatephone_dialog_message">Patient’s phone number was previously marked as incorrect</string>
@@ -294,7 +291,6 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">No patients overdue</string>
   <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
-  <string name="overdue_list_item_name_age" translatable="false">%s, %d</string>
   <plurals name="overdue_list_item_patient_bp">
     <item quantity="one">%s day ago</item>
     <item quantity="other">%s days ago</item>
@@ -440,7 +436,6 @@
 
   <!-- Recent Patients Item View -->
   <string name="recent_patients_itemview_last_seen">Last Seen:\u0020</string>
-  <string name="recent_patients_itemview_title" translatable="false">%1$s, %2$d</string>
 
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">Add %1$s\u0020</string>
@@ -534,7 +529,6 @@
 
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
-  <string name="bloodpressurehistory_toolbar_title" translatable="false">%1$s, %2$s, %3$d</string>
   <string name="bloodpressurehistory_bp_time_date" translatable="false">%1$s\n%2$s</string>
 
   <!-- Blood Sugar History screen -->

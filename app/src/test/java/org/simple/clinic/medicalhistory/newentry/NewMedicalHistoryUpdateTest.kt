@@ -16,7 +16,7 @@ import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
@@ -73,7 +73,7 @@ class NewMedicalHistoryUpdateTest {
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
-        .answerChanged(HAS_DIABETES, No)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
 
     updateSpec
         .given(model)
@@ -92,7 +92,7 @@ class NewMedicalHistoryUpdateTest {
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
-        .answerChanged(HAS_DIABETES, Unanswered)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, Unanswered)
 
     updateSpec
         .given(model)
@@ -111,7 +111,7 @@ class NewMedicalHistoryUpdateTest {
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
-        .answerChanged(HAS_DIABETES, Unanswered)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, Unanswered)
 
     updateSpec
         .given(model)
@@ -130,7 +130,7 @@ class NewMedicalHistoryUpdateTest {
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
-        .answerChanged(HAS_DIABETES, Unanswered)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, Unanswered)
 
     updateSpec
         .given(model)
@@ -174,12 +174,12 @@ class NewMedicalHistoryUpdateTest {
 
     updateSpec
         .given(model)
-        .whenEvent(NewMedicalHistoryAnswerToggled(HAS_DIABETES, No))
+        .whenEvent(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, No))
         .then(
             assertThatNext(
                 hasModel(
                     model
-                        .answerChanged(HAS_DIABETES, No)
+                        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
                         .clearDiagnosisRequiredError()
                 ),
                 hasNoEffects()

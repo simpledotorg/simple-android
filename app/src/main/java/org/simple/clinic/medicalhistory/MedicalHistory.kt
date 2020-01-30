@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
@@ -51,7 +51,7 @@ data class MedicalHistory(
       HAS_HAD_A_HEART_ATTACK -> copy(hasHadHeartAttack = answer)
       HAS_HAD_A_STROKE -> copy(hasHadStroke = answer)
       HAS_HAD_A_KIDNEY_DISEASE -> copy(hasHadKidneyDisease = answer)
-      HAS_DIABETES -> copy(diagnosedWithDiabetes = answer)
+      DIAGNOSED_WITH_DIABETES -> copy(diagnosedWithDiabetes = answer)
       else -> this
     }
   }

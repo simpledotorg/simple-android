@@ -9,7 +9,7 @@ import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
@@ -60,7 +60,7 @@ class NewMedicalHistoryUiRendererTest {
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
-        .answerChanged(HAS_DIABETES, No)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
 
     // when
     uiRenderer.render(model)
@@ -70,7 +70,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
-    verify(ui).renderDiagnosisAnswer(HAS_DIABETES, No)
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
     verify(ui).showDiagnosisRequiredError(false)
     verifyNoMoreInteractions(ui)
   }
@@ -80,7 +80,7 @@ class NewMedicalHistoryUiRendererTest {
     // given
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-        .answerChanged(HAS_DIABETES, Yes)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, Yes)
 
     // when
     uiRenderer.render(model)
@@ -89,7 +89,7 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).hideDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(HAS_DIABETES, Yes)
+    verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Yes)
     verify(ui).showDiagnosisRequiredError(false)
     verifyNoMoreInteractions(ui)
   }
@@ -109,7 +109,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
-    verify(ui).renderDiagnosisAnswer(HAS_DIABETES, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
     verify(ui).showDiagnosisRequiredError(true)
     verifyNoMoreInteractions(ui)
   }

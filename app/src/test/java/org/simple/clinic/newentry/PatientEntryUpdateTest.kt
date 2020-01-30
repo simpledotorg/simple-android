@@ -1,5 +1,6 @@
 package org.simple.clinic.newentry
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.UpdateSpec
@@ -93,7 +94,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(error)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(error) as PatientEntryEffect)
             )
         )
   }
@@ -118,7 +119,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(error)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(error) as PatientEntryEffect)
             )
         )
   }
@@ -143,7 +144,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -168,7 +169,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -193,7 +194,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -218,7 +219,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -242,7 +243,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -266,7 +267,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -290,7 +291,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -314,7 +315,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -339,7 +340,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -364,7 +365,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -390,7 +391,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }
@@ -416,7 +417,7 @@ class PatientEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.validationFailed(errors)),
-                hasNoEffects()
+                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
             )
         )
   }

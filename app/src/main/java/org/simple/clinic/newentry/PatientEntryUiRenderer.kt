@@ -1,6 +1,5 @@
 package org.simple.clinic.newentry
 
-import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError
@@ -73,9 +72,8 @@ class PatientEntryUiRenderer(
     }
   }
 
-  private fun showValidationErrorUi(errors: List<PatientEntryValidationError>) {
-    errors
-        .onEach { Analytics.reportInputValidationError(it.analyticsName) }
+  private fun showValidationErrorUi(error: List<PatientEntryValidationError>) {
+    error
         .forEach {
           when (it) {
             FULL_NAME_EMPTY -> ui.showEmptyFullNameError(true)
@@ -101,8 +99,5 @@ class PatientEntryUiRenderer(
             }
           }
         }
-    if (errors.isNotEmpty()) {
-      ui.scrollToFirstFieldWithError()
-    }
   }
 }

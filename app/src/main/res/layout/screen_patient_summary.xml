@@ -28,7 +28,7 @@
       android:tint="@color/white" />
 
     <Button
-      android:id="@+id/editButton"
+      android:id="@+id/editPatientButton"
       style="@style/Clinic.V2.ToolbarButton"
       android:layout_alignParentEnd="true"
       android:layout_marginTop="@dimen/spacing_4"

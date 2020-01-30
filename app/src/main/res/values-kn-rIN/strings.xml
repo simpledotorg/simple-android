@@ -286,16 +286,16 @@
   <string name="scheduleappointment_not_now">ಈಗಲ್ಲ</string>
   <string name="scheduleappointment_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
   <plurals name="scheduleappointment_appointmentin_days">
-    <item quantity="one">%d ದಿನ</item>
-    <item quantity="other">%d ದಿನಗಳು</item>
+    <item quantity="one">%s ದಿನ</item>
+    <item quantity="other">%s ದಿನಗಳು</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_weeks">
-    <item quantity="one">%d ವಾರ</item>
-    <item quantity="other">%d ವಾರಗಳು</item>
+    <item quantity="one">%s ವಾರ</item>
+    <item quantity="other">%s ವಾರಗಳು</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_months">
-    <item quantity="one">%d ತಿಂಗಳು</item>
-    <item quantity="other">%d ತಿಂಗಳುಗಳು</item>
+    <item quantity="one">%s ತಿಂಗಳು</item>
+    <item quantity="other">%s ತಿಂಗಳುಗಳು</item>
   </plurals>
 
   <!-- Forgot PIN -->

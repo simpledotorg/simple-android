@@ -26,10 +26,10 @@ class DateFormatterModule {
   fun providesTimeFormatterForRecentPatientsHeader(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", locale)
 
   @Provides
-  @Named("date_for_bp_history")
-  fun provideDateFormatterForBPHistory(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d-MMM-yyyy", locale)
+  @Named("date_for_measurement_history")
+  fun provideDateFormatterForMeasurementHistory(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d-MMM-yyyy", locale)
 
   @Provides
-  @Named("time_for_bp_history")
-  fun providesTimeFormatterForBPHistory(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a", locale)
+  @Named("time_for_measurement_history")
+  fun providesTimeFormatterForMeasurementHistory(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a", locale)
 }

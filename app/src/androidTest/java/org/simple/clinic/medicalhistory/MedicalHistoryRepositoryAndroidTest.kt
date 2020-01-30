@@ -62,7 +62,6 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(savedHistory.hasHadHeartAttack).isEqualTo(Yes)
     assertThat(savedHistory.hasHadStroke).isEqualTo(Yes)
     assertThat(savedHistory.hasHadKidneyDisease).isEqualTo(Yes)
-    assertThat(savedHistory.isOnTreatmentForHypertension).isEqualTo(No)
     assertThat(savedHistory.hasDiabetes).isEqualTo(No)
     assertThat(savedHistory.syncStatus).isEqualTo(SyncStatus.PENDING)
   }
@@ -110,7 +109,6 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(emptyHistory.hasHadHeartAttack).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasHadStroke).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(Unanswered)
-    assertThat(emptyHistory.isOnTreatmentForHypertension).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasDiabetes).isEqualTo(Unanswered)
     assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }

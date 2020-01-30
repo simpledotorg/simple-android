@@ -6,17 +6,22 @@ import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
+@RunWith(JUnitParamsRunner::class)
 class NewMedicalHistoryUpdateTest {
 
   private val defaultModel = NewMedicalHistoryModel.default()
@@ -28,6 +33,7 @@ class NewMedicalHistoryUpdateTest {
       uuid = UUID.fromString("bbffeac9-296d-4e95-8266-e5c9ac5eedf3"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   )
+  private val patientEntry = OngoingNewPatientEntry.fromFullName("Anish Acharya")
 
   private val updateSpec = UpdateSpec(NewMedicalHistoryUpdate())
 
@@ -64,7 +70,7 @@ class NewMedicalHistoryUpdateTest {
   @Test
   fun `when diabetes management is enabled and the user clicks save, show the diagnosis required error if hypertension diagnosis is not selected`() {
     val model = defaultModel
-        .ongoingPatientEntryLoaded(OngoingNewPatientEntry.fromFullName("Anish Acharya"))
+        .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
         .answerChanged(HAS_DIABETES, No)
@@ -83,7 +89,7 @@ class NewMedicalHistoryUpdateTest {
   @Test
   fun `when diabetes management is enabled and the user clicks save, show the diagnosis required error if diabetes diagnosis is not selected`() {
     val model = defaultModel
-        .ongoingPatientEntryLoaded(OngoingNewPatientEntry.fromFullName("Anish Acharya"))
+        .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
         .answerChanged(HAS_DIABETES, Unanswered)
@@ -102,7 +108,7 @@ class NewMedicalHistoryUpdateTest {
   @Test
   fun `when diabetes management is enabled and the user clicks save, show the diagnosis required error if both diagnosis are not selected`() {
     val model = defaultModel
-        .ongoingPatientEntryLoaded(OngoingNewPatientEntry.fromFullName("Anish Acharya"))
+        .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
         .answerChanged(HAS_DIABETES, Unanswered)
@@ -121,7 +127,7 @@ class NewMedicalHistoryUpdateTest {
   @Test
   fun `when diabetes management is disabled and the user clicks save, do not show the diagnosis required error`() {
     val model = defaultModel
-        .ongoingPatientEntryLoaded(OngoingNewPatientEntry.fromFullName("Anish Acharya"))
+        .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
         .answerChanged(HAS_DIABETES, Unanswered)
@@ -133,6 +139,77 @@ class NewMedicalHistoryUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry) as NewMedicalHistoryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the diagnosis required error is being shown and the user changes the hypertension diagnosis answer, clear the error`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .diagnosisRequired()
+
+    updateSpec
+        .given(model)
+        .whenEvent(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
+        .then(
+            assertThatNext(
+                hasModel(
+                    model
+                        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+                        .clearDiagnosisRequiredError()
+                ),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when the diagnosis required error is being shown and the user changes the diabetes diagnosis answer, clear the error`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .diagnosisRequired()
+
+    updateSpec
+        .given(model)
+        .whenEvent(NewMedicalHistoryAnswerToggled(HAS_DIABETES, No))
+        .then(
+            assertThatNext(
+                hasModel(
+                    model
+                        .answerChanged(HAS_DIABETES, No)
+                        .clearDiagnosisRequiredError()
+                ),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  @Parameters(
+      value = [
+        "HAS_HAD_A_HEART_ATTACK",
+        "HAS_HAD_A_STROKE",
+        "HAS_HAD_A_KIDNEY_DISEASE"
+      ]
+  )
+  fun `when the diagnosis required error is being shown and the user changes the history answers, do not clear the error`(
+      question: MedicalHistoryQuestion
+  ) {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .diagnosisRequired()
+
+    updateSpec
+        .given(model)
+        .whenEvent(NewMedicalHistoryAnswerToggled(question, Yes))
+        .then(
+            assertThatNext(
+                hasModel(model.answerChanged(question, Yes)),
+                hasNoEffects()
             )
         )
   }

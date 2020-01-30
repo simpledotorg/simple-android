@@ -29,7 +29,7 @@
   <string name="identifiertype_unknown">ಐಡಿ</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_search">ಮುಂದಿನದು</string>
+  <string name="patientsearch_search">ಮುಂದೆ</string>
   <string name="patientsearch_error_empty_fullname">ರೋಗಿಯ ಪೂರ್ಣ ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್ ನಮೂದಿಸಿ</string>
   <string name="patientsearch_hint">ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್</string>
 

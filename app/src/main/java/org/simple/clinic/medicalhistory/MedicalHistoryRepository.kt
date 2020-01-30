@@ -120,7 +120,8 @@ class MedicalHistoryRepository @Inject constructor(
       MedicalHistory(
           uuid = uuid,
           patientUuid = patientUuid,
-          diagnosedWithHypertension = diagnosedWithHypertension,
+          // TODO(vs): 2020-01-30 Remove the fallback value when the server changes are available in PROD
+          diagnosedWithHypertension = hasHypertension ?: Unanswered,
           isOnTreatmentForHypertension = isOnTreatmentForHypertension,
           hasHadHeartAttack = hasHadHeartAttack,
           hasHadStroke = hasHadStroke,

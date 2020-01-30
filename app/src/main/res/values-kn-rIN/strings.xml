@@ -45,7 +45,7 @@
   <string name="patientsearchresults_no_patients_match">ಯಾವುದೇ ರೋಗಿ ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>
 
   <!-- Manual patient entry -->
-  <string name="patiententry_contentdescription_up_button">ಹುಡುಕಾಟಕ್ಕೆ ಹಿಂದಕ್ಕೆ ಹೋಗಿ</string>
+  <string name="patiententry_contentdescription_up_button">ಹುಡುಕಲು ಹಿಂದಕ್ಕೆ ಹೋಗಿ</string>
   <string name="patiententry_full_name">ರೋಗಿಯ ಹೆಸರು</string>
   <string name="patiententry_phone_number">ಫೋನ್ ಸಂಖ್ಯೆ</string>
   <string name="patiententry_bangladesh_national_id">ರಾಷ್ಟ್ರೀಯ ಐಡಿ ಸಂಖ್ಯೆ</string>

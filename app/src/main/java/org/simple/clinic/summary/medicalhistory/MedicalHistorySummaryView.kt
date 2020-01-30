@@ -68,7 +68,7 @@ class MedicalHistorySummaryView(
     heartAttackQuestionView.render(HAS_HAD_A_HEART_ATTACK, medicalHistory.hasHadHeartAttack, ::answerToggled)
     strokeQuestionView.render(HAS_HAD_A_STROKE, medicalHistory.hasHadStroke, ::answerToggled)
     kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE, medicalHistory.hasHadKidneyDisease, ::answerToggled)
-    diabetesQuestionView.render(HAS_DIABETES, medicalHistory.hasDiabetes, ::answerToggled)
+    diabetesQuestionView.render(HAS_DIABETES, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
   }
 
   private fun answerToggled(question: MedicalHistoryQuestion, answer: Answer) {

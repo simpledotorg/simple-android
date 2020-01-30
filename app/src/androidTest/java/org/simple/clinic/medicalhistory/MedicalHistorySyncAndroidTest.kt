@@ -10,6 +10,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.medicalhistory.Answer.*
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPushRequest
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
@@ -74,11 +75,22 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
   override fun generateRecord(syncStatus: SyncStatus): MedicalHistory {
     return testData.medicalHistory(
         syncStatus = syncStatus,
-        patientUuid = registerPatientRule.patientUuid)
+        patientUuid = registerPatientRule.patientUuid,
+        // This is manually being set here because the server endpoint does not accept `Unanswered`
+        // as a valid value yet, and the test factory can end up setting the value to `Unanswered`,
+        // which causes the test to fail.
+        diagnosedWithHypertension = listOf(Yes, No).shuffled().first()
+    )
   }
 
   override fun generatePayload(): MedicalHistoryPayload {
-    return testData.medicalHistoryPayload(patientUuid = registerPatientRule.patientUuid)
+    return testData.medicalHistoryPayload(
+        patientUuid = registerPatientRule.patientUuid,
+        // This is manually being set here because the server endpoint does not accept `Unanswered`
+        // as a valid value yet, and the test factory can end up setting the value to `Unanswered`,
+        // which causes the test to fail.
+        hasHypertension = listOf(Yes, No).shuffled().first()
+    )
   }
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken

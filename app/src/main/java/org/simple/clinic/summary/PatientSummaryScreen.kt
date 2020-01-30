@@ -266,9 +266,10 @@ class PatientSummaryScreen(
     }
   }
 
+  @SuppressLint("SetTextI18n")
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
     val genderLetter = resources.getString(gender.displayLetterRes)
-    fullNameTextView.text = resources.getString(R.string.patientsummary_name, name, genderLetter, age)
+    fullNameTextView.text = "$name, $genderLetter, $age"
   }
 
   private fun displayBpPassport(bpPassport: BusinessId?, isPhoneNumberVisible: Boolean) {

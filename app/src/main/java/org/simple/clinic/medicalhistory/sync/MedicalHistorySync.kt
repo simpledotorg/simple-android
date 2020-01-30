@@ -63,6 +63,7 @@ class MedicalHistorySync @Inject constructor(
                 hasHadStroke = hasHadStroke,
                 hasHadKidneyDisease = hasHadKidneyDisease,
                 hasDiabetes = hasDiabetes,
+                hasHypertension = diagnosedWithHypertension,
                 createdAt = createdAt,
                 updatedAt = updatedAt,
                 deletedAt = deletedAt)

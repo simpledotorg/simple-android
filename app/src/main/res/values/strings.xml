@@ -350,16 +350,16 @@
   <string name="scheduleappointment_not_now">Not now</string>
   <string name="scheduleappointment_done">done</string>
   <plurals name="scheduleappointment_appointmentin_days">
-    <item quantity="one">%d day</item>
-    <item quantity="other">%d days</item>
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_weeks">
-    <item quantity="one">%d week</item>
-    <item quantity="other">%d weeks</item>
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_months">
-    <item quantity="one">%d month</item>
-    <item quantity="other">%d months</item>
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s months</item>
   </plurals>
 
   <!-- Forgot PIN -->

@@ -286,16 +286,16 @@
   <string name="scheduleappointment_not_now">ሕጂ ኣይኮነን</string>
   <string name="scheduleappointment_done">ተገይሩ</string>
   <plurals name="scheduleappointment_appointmentin_days">
-    <item quantity="one">%d መዓልቲ</item>
-    <item quantity="other">%d መዓልታት</item>
+    <item quantity="one">%s መዓልቲ</item>
+    <item quantity="other">%s መዓልታት</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_weeks">
-    <item quantity="one">%d ሰሙን</item>
-    <item quantity="other">%d ሰሙናት</item>
+    <item quantity="one">%s ሰሙን</item>
+    <item quantity="other">%s ሰሙናት</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_months">
-    <item quantity="one">%d ወርሒ</item>
-    <item quantity="other">%d ኣዋርሕ</item>
+    <item quantity="one">%s ወርሒ</item>
+    <item quantity="other">%s ኣዋርሕ</item>
   </plurals>
 
   <!-- Forgot PIN -->

@@ -286,16 +286,16 @@
   <string name="scheduleappointment_not_now">এখন নয়</string>
   <string name="scheduleappointment_done">সম্পন্ন হয়েছে</string>
   <plurals name="scheduleappointment_appointmentin_days">
-    <item quantity="one">%d দিন</item>
-    <item quantity="other">%d দিন</item>
+    <item quantity="one">%s দিন</item>
+    <item quantity="other">%s দিন</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_weeks">
-    <item quantity="one">%d সপ্তাহ</item>
-    <item quantity="other">%d সপ্তাহ</item>
+    <item quantity="one">%s সপ্তাহ</item>
+    <item quantity="other">%s সপ্তাহ</item>
   </plurals>
   <plurals name="scheduleappointment_appointmentin_months">
-    <item quantity="one">%d মাস</item>
-    <item quantity="other">%d মাস</item>
+    <item quantity="one">%s মাস</item>
+    <item quantity="other">%s মাস</item>
   </plurals>
 
   <!-- Forgot PIN -->

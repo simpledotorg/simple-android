@@ -162,7 +162,7 @@
   <string name="timestamp_today">ఈరోజు</string>
   <string name="timestamp_yesterday">నిన్న</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">%s రోజుల క్రితం</string>
+  <string name="timestamp_days_ago">%s రోజుల క్రితం</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">బిపి మందులు</string>
@@ -191,8 +191,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">పిన్ మర్చిపోయారా?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">పిన్ మరియు అసలు పిన్ సరిపోలలేదు</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">PIN తప్పు, %s ప్రయత్నాలు మిగిలి ఉన్నాయి</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">మీరు %s సార్లు విఫలయత్నాలు చేసారు</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">PIN తప్పు, %s ప్రయత్నాలు మిగిలి ఉన్నాయి</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">మీరు %s సార్లు విఫలయత్నాలు చేసారు</string>
   <string name="pinentry_pin_number_hint">మీ భద్రతా పిన్</string>
   <string name="pinentry_bruteforcelock_timer_label">తర్వాత మళ్లీ ప్రయత్నించండి</string>
   <!-- minutes:seconds -->
@@ -236,11 +236,11 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">గడువు దాటిన రోగులు లేరు</string>
   <string name="overdue_empty_desc">షెడ్యూల్ చేసిన సందర్శనకు హాజరుకాని రోగులకు మీరు కాల్ చేసి ఫాలో-అప్ రక్తపోటు రీడింగ్ కోసం రావాలని కోరవచ్చు.</string>
-  <plurals name="overdue_list_item_patient_bp">
+  <plurals name="overdue_list_item_patient_bp_days_ago">
     <item quantity="one">%s రోజు క్రితం</item>
     <item quantity="other">%s రోజుల క్రితం</item>
   </plurals>
-  <plurals name="overdue_list_item_overdue_days">
+  <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s రోజు క్రితం గడువు ముగిసింది</item>
     <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
   </plurals>
@@ -285,15 +285,15 @@
   <string name="scheduleappointment_next_visit_in">షెడ్యూల్ చేసిన తదుపరి సందర్శన</string>
   <string name="scheduleappointment_not_now">ఇప్పుడు కాదు</string>
   <string name="scheduleappointment_done">పూర్తయింది</string>
-  <plurals name="scheduleappointment_appointmentin_days">
+  <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s రోజు</item>
     <item quantity="other">%s రోజులు</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_weeks">
+  <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%s వారం</item>
     <item quantity="other">%s వారాలు</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_months">
+  <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s నెల</item>
     <item quantity="other">%s నెలలు</item>
   </plurals>
@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">సింక్ విఫలమైంది</string>
   <string name="syncindicator_status_syncing">సింక్ చేస్తోంది…</string>
   <string name="syncindicator_status_synced_just_now">ఇప్పుడే సింక్ అయింది</string>
-  <string name="syncindicator_status_synced">%s నిమి క్రితం సింక్ చేసారు</string>
+  <string name="syncindicator_status_synced_min_ago">%s నిమి క్రితం సింక్ చేసారు</string>
   <string name="syncindicator_dialog_error_network">రోగి రికార్డ్‌లను సింక్ చేయడం కోసం మీ వద్ద పని చేస్తున్న ఇంటర్నెట్ కనెక్షన్ ఉండాలి.</string>
   <string name="syncindicator_dialog_button_text">సరే</string>
   <string name="syncindicator_dialog_error_server">ప్రస్తుతం సింక్ సర్వర్‌లు పని చేయడం లేదు. తర్వాత మళ్లీ ప్రయత్నించండి లేదా మీ సూపర్‌వైజర్‌ను సంప్రదించండి.</string>

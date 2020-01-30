@@ -78,7 +78,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
         syncStatusTextView.text = if (durationToMinsAgo == 0) {
           context.getString(R.string.syncindicator_status_synced_just_now)
         } else {
-          context.getString(R.string.syncindicator_status_synced, "$durationToMinsAgo")
+          context.getString(R.string.syncindicator_status_synced_min_ago, "$durationToMinsAgo")
         }
         syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_done_16dp)
       }

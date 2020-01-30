@@ -162,7 +162,7 @@
   <string name="timestamp_today">ሎሚ</string>
   <string name="timestamp_yesterday">ትማሊ</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days">ቅድሚ %s መዓልታት</string>
+  <string name="timestamp_days_ago">ቅድሚ %s መዓልታት</string>
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">ናይ ጸቕጢ ደም መድሓኒታት</string>
@@ -191,8 +191,8 @@
   <!-- PIN entry -->
   <string name="pinentry_forgotpin">ንናትካ PIN (ውልቃዊ ቊጽሪ መንነት) ረሲዕካዮ፧</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN (ውልቃዊ ቊጽሪ መንነት) ምስቲ መበቆላዊ PIN (ውልቃዊ ቊጽሪ መንነት) ኣይዛመድን’ዩ</string>
-  <string name="pinentry_error_incorrect_pin_on_subsequent_attempts" tools:ignore="PluralsCandidate">ዘይቅኑዕ PIN (ውልቃዊ ቊጽሪ መንነት)፡ %s ተረፍ ፈተነታት ኣለዉ</string>
-  <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">ዘይቅኑዓት ፈተነታት %s ኣካይድካ ኣለኻ</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">ዘይቅኑዕ PIN (ውልቃዊ ቊጽሪ መንነት)፡ %s ተረፍ ፈተነታት ኣለዉ</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">ዘይቅኑዓት ፈተነታት %s ኣካይድካ ኣለኻ</string>
   <string name="pinentry_pin_number_hint">ናትካ ናይ ውሕስነት PIN (ውልቃዊ ቊጽሪ መንነት)</string>
   <string name="pinentry_bruteforcelock_timer_label">ደጊምካ ፈትን ድሕሪ</string>
   <!-- minutes:seconds -->
@@ -236,11 +236,11 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">ግዜ ዘሕለፉ ተሓከምቲ የለዉን</string>
   <string name="overdue_empty_desc">ኣብ ዝተመደበ ናይ ምብጻሕ ግዜ ክመጹ ንዘይክኣሉ ተሓከምቲ ዝስዕብ ናይ ጸቕጢ ደም ንባብ ንኽውሰደሎም ክትድውለሎም ክትክእል ኢኻ።</string>
-  <plurals name="overdue_list_item_patient_bp">
+  <plurals name="overdue_list_item_patient_bp_days_ago">
     <item quantity="one">ቅድሚ %s መዓልቲ</item>
     <item quantity="other">ቅድሚ %s መዓልታት</item>
   </plurals>
-  <plurals name="overdue_list_item_overdue_days">
+  <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s መዓልቲ ዘሕለፈ</item>
     <item quantity="other">%s መዓልታት ዘሕለፈ</item>
   </plurals>
@@ -285,15 +285,15 @@
   <string name="scheduleappointment_next_visit_in">ዝቕጽል ምብጻሕ ኣብዚ ዝስዕብ መድብ</string>
   <string name="scheduleappointment_not_now">ሕጂ ኣይኮነን</string>
   <string name="scheduleappointment_done">ተገይሩ</string>
-  <plurals name="scheduleappointment_appointmentin_days">
+  <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s መዓልቲ</item>
     <item quantity="other">%s መዓልታት</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_weeks">
+  <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%s ሰሙን</item>
     <item quantity="other">%s ሰሙናት</item>
   </plurals>
-  <plurals name="scheduleappointment_appointmentin_months">
+  <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s ወርሒ</item>
     <item quantity="other">%s ኣዋርሕ</item>
   </plurals>
@@ -339,7 +339,7 @@
   <string name="syncindicator_status_failed">ምስትኽኻል ዕዉት ኣይነበረን</string>
   <string name="syncindicator_status_syncing">የስተኻኽል ኣሎ…</string>
   <string name="syncindicator_status_synced_just_now">ሕጂ ተስተኻኺሉ</string>
-  <string name="syncindicator_status_synced">ቅድሚ %s ደቓይቕ ተስተኻኺሉ</string>
+  <string name="syncindicator_status_synced_min_ago">ቅድሚ %s ደቓይቕ ተስተኻኺሉ</string>
   <string name="syncindicator_dialog_error_network">ናይ ተሓካሚ መዛግብቲ ንምስትኽኻል ዝሰርሕ ናይ ኢንተርነት መስመር ከምዘለካ ኣረጋግጽ</string>
   <string name="syncindicator_dialog_button_text">ሕራይ</string>
   <string name="syncindicator_dialog_error_server">ናይ ምስትኽኻል ሰርቨራት/ኮምፕዩተራት ኣብዚ እዋን’ዚ ጠፊአን ኣለዋ ብኽብረትካ ድሓር ደጊምካ ፈትን ወይ ምስ ተቖጻጻሪኻ ተራኸብ።</string>

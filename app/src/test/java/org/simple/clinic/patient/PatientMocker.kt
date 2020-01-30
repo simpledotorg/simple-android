@@ -426,7 +426,7 @@ object PatientMocker {
         hasHadHeartAttack = hasHadHeartAttack,
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
-        hasDiabetes = hasDiabetes,
+        diagnosedWithDiabetes = hasDiabetes,
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,

@@ -1,5 +1,6 @@
 package org.simple.clinic.medicalhistory
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
@@ -21,15 +22,26 @@ import java.util.UUID
 data class MedicalHistory(
     @PrimaryKey
     val uuid: UUID,
+
     val patientUuid: UUID,
+
     val diagnosedWithHypertension: Answer,
+
     val hasHadHeartAttack: Answer,
+
     val hasHadStroke: Answer,
+
     val hasHadKidneyDisease: Answer,
-    val hasDiabetes: Answer,
+
+    @ColumnInfo(name = "hasDiabetes")
+    val diagnosedWithDiabetes: Answer,
+
     val syncStatus: SyncStatus,
+
     val createdAt: Instant,
+
     val updatedAt: Instant,
+
     val deletedAt: Instant?
 ) {
 
@@ -39,7 +51,7 @@ data class MedicalHistory(
       HAS_HAD_A_HEART_ATTACK -> copy(hasHadHeartAttack = answer)
       HAS_HAD_A_STROKE -> copy(hasHadStroke = answer)
       HAS_HAD_A_KIDNEY_DISEASE -> copy(hasHadKidneyDisease = answer)
-      HAS_DIABETES -> copy(hasDiabetes = answer)
+      HAS_DIABETES -> copy(diagnosedWithDiabetes = answer)
       else -> this
     }
   }

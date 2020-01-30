@@ -56,4 +56,8 @@ data class NewMedicalHistoryModel(
   fun diagnosisRequired(): NewMedicalHistoryModel {
     return copy(showDiagnosisRequiredError = true)
   }
+
+  fun clearDiagnosisRequiredError(): NewMedicalHistoryModel {
+    return copy(showDiagnosisRequiredError = false)
+  }
 }

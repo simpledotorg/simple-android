@@ -2,16 +2,21 @@ package org.simple.clinic.medicalhistory.newentry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Yes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> {
 
+  private val diagnosisQuestions = setOf(DIAGNOSED_WITH_HYPERTENSION, HAS_DIABETES)
+
   override fun update(model: NewMedicalHistoryModel, event: NewMedicalHistoryEvent): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
     return when (event) {
-      is NewMedicalHistoryAnswerToggled -> next(model.answerChanged(event.question, event.answer))
+      is NewMedicalHistoryAnswerToggled -> answerToggled(model, event.question, event.answer)
       is SaveMedicalHistoryClicked -> saveClicked(model)
       is PatientRegistered -> dispatch(OpenPatientSummaryScreen(event.patientUuid))
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
@@ -45,5 +50,19 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
         updatedModel,
         SetupUiForDiabetesManagement(diabetesManagementEnabled)
     )
+  }
+
+  private fun answerToggled(
+      model: NewMedicalHistoryModel,
+      answeredQuestion: MedicalHistoryQuestion,
+      newAnswer: Answer
+  ): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
+    var updatedModel = model.answerChanged(answeredQuestion, newAnswer)
+
+    if (answeredQuestion in diagnosisQuestions) {
+      updatedModel = updatedModel.clearDiagnosisRequiredError()
+    }
+
+    return next(updatedModel)
   }
 }

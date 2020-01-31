@@ -43,6 +43,7 @@ class MedicalHistorySummaryView(
 
   init {
     LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
+    diabetesDiagnosisView.hideDivider()
     diabetesQuestionView.hideDivider()
   }
 

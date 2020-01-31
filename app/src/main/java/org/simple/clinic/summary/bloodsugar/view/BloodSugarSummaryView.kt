@@ -89,7 +89,9 @@ class BloodSugarSummaryView(
   @field:[Inject Named("time_for_measurement_history")]
   lateinit var timeFormatter: DateTimeFormatter
 
-  private val uiRenderer = BloodSugarSummaryViewUiRenderer(this)
+  private val uiRenderer: BloodSugarSummaryViewUiRenderer by unsafeLazy {
+    BloodSugarSummaryViewUiRenderer(this, config)
+  }
 
   private val events: Observable<BloodSugarSummaryViewEvent> by unsafeLazy {
     addNewBloodSugarClicks()
@@ -160,6 +162,10 @@ class BloodSugarSummaryView(
 
   override fun showBloodSugarTypeSelector() {
     activity.startActivityForResult(BloodSugarTypePickerSheet.intent(context), TYPE_PICKER_SHEET)
+  }
+
+  override fun showSeeAllButton() {
+    bloodSugarSeeAll.visibility = View.VISIBLE
   }
 
   @SuppressLint("CheckResult")

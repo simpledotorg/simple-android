@@ -39,7 +39,7 @@ class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout
       isBpHigh: Boolean
   ) {
     readingsTextView.text = context.getString(R.string.patientsummary_bp_reading, systolic, diastolic)
-    bpHigh.visibleOrGone(isBpHigh)
+    bpHighTextView.visibleOrGone(isBpHigh)
     if (isBpHigh) {
       heartImageView.setImageResource(R.drawable.bp_reading_high)
     } else {

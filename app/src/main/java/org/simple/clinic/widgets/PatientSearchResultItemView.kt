@@ -1,6 +1,5 @@
 package org.simple.clinic.widgets
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -108,14 +107,13 @@ class PatientSearchResultItemView(
     }
   }
 
-  @SuppressLint("SetTextI18n")
   private fun renderPatientNameAgeAndGender(fullName: String, gender: Gender, dateOfBirth: DateOfBirth) {
     genderLabel.setImageResource(gender.displayIconRes)
 
     val ageValue = dateOfBirth.estimateAge(userClock)
 
     val genderLetter = resources.getString(gender.displayLetterRes)
-    patientNameAgeGenderLabel.text = "$fullName, $genderLetter, $ageValue"
+    patientNameAgeGenderLabel.text = resources.getString(R.string.patientsummary_toolbar_title, fullName, genderLetter, ageValue.toString())
   }
 
   data class PatientSearchResultViewModel(

@@ -236,10 +236,6 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">ግዜ ዘሕለፉ ተሓከምቲ የለዉን</string>
   <string name="overdue_empty_desc">ኣብ ዝተመደበ ናይ ምብጻሕ ግዜ ክመጹ ንዘይክኣሉ ተሓከምቲ ዝስዕብ ናይ ጸቕጢ ደም ንባብ ንኽውሰደሎም ክትድውለሎም ክትክእል ኢኻ።</string>
-  <plurals name="overdue_list_item_patient_bp_days_ago">
-    <item quantity="one">ቅድሚ %s መዓልቲ</item>
-    <item quantity="other">ቅድሚ %s መዓልታት</item>
-  </plurals>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s መዓልቲ ዘሕለፈ</item>
     <item quantity="other">%s መዓልታት ዘሕለፈ</item>

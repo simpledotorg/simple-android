@@ -122,13 +122,15 @@ data class OverdueAppointmentRow(
     val containerView = holder.containerView
     val context = containerView.context
 
-    holder.patientNameTextView.text = "$name, $age"
+    holder.patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, name, age.toString())
     holder.patientNameTextView.setCompoundDrawableStart(gender.displayIconRes)
 
     holder.patientBPTextView.text = context.resources.getQuantityString(
-        R.plurals.overdue_list_item_patient_bp_days_ago,
+        R.plurals.overdue_list_item_patient_bp_and_days_ago,
         bpDaysAgo,
-        "$bpSystolic/$bpDiastolic, $bpDaysAgo"
+        bpSystolic,
+        bpDiastolic,
+        bpDaysAgo
     )
 
     holder.callButton.visibility = if (phoneNumber == null) GONE else VISIBLE

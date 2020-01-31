@@ -236,10 +236,6 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">कोणतेही रुग्ण उशीरा आलेले नाहीत</string>
   <string name="overdue_empty_desc">आपण अशा रुग्णांना कॉल करू शकाल, जे फॉलो-अप रक्तदाब वाचनासाठी त्यांची नियोजित भेट चुकवतात.</string>
-  <plurals name="overdue_list_item_patient_bp_days_ago">
-    <item quantity="one">%s दिवसापूर्वी</item>
-    <item quantity="other">%s दिवसांपूर्वी</item>
-  </plurals>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s दिवसाने उशीर झाला</item>
     <item quantity="other">%s दिवसांनी उशीर झाला</item>

@@ -236,10 +236,6 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">किसी रोगी अतिदेय सूची में नहीं</string>
   <string name="overdue_empty_desc">आप उन रोगियों को कॉल कर पाएंगे जो अपने फ़ॉलो-अप रक्तचाप रीडिंग करवाने के लिए अपनी नियत विज़िट पर नहीं आए।</string>
-  <plurals name="overdue_list_item_patient_bp_days_ago">
-    <item quantity="one">%s दिन पहले</item>
-    <item quantity="other">%s दिन पहले</item>
-  </plurals>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s दिन अधिक हो गया है</item>
     <item quantity="other">%s दिन अधिक हो गए हैं</item>

@@ -143,6 +143,7 @@
   <string name="patients_recentpatients_title">Recent Patients</string>
   <string name="patients_recentpatients_no_recent_patients">No recent patients</string>
   <string name="patients_recentpatients_see_all">See All</string>
+  <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Blood pressure</string>
@@ -196,6 +197,7 @@
   <string name="patientsummary_addphone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
   <string name="patientsummary_addphone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
   <string name="patientsummary_newbp_date_time" translatable="false">%1$s\n%2$s</string>
+  <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
 
   <string name="bloodpressuresummaryview_see_all_button">See all</string>
 
@@ -291,9 +293,10 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">No patients overdue</string>
   <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
-  <plurals name="overdue_list_item_patient_bp_days_ago">
-    <item quantity="one">%s day ago</item>
-    <item quantity="other">%s days ago</item>
+  <string name="overdue_list_item_name_age">%s, %s</string>
+  <plurals name="overdue_list_item_patient_bp_and_days_ago">
+  <item quantity="one">%1$s/%2$s, %3$s day ago</item>
+  <item quantity="other">%1$s/%2$s, %3$s days ago</item>
   </plurals>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s day overdue</item>
@@ -436,6 +439,7 @@
 
   <!-- Recent Patients Item View -->
   <string name="recent_patients_itemview_last_seen">Last Seen:\u0020</string>
+  <string name="recent_patients_itemview_title">%1$s, %2$s</string>
 
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">Add %1$s\u0020</string>
@@ -530,6 +534,7 @@
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
   <string name="bloodpressurehistory_bp_time_date" translatable="false">%1$s\n%2$s</string>
+  <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
 
   <!-- Blood Sugar History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">Diabetes</string>

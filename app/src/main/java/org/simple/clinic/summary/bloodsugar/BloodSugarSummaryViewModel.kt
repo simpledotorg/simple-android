@@ -8,16 +8,20 @@ import java.util.UUID
 @Parcelize
 data class BloodSugarSummaryViewModel(
     val patientUuid: UUID,
-    val measurements: List<BloodSugarMeasurement>?
+    val measurements: List<BloodSugarMeasurement>?,
+    val totalRecordedBloodSugarCount: Int?
 ) : Parcelable {
 
   companion object {
     fun create(patientUuid: UUID): BloodSugarSummaryViewModel {
-      return BloodSugarSummaryViewModel(patientUuid, null)
+      return BloodSugarSummaryViewModel(patientUuid, null, null)
     }
   }
 
   fun summaryFetched(measurements: List<BloodSugarMeasurement>): BloodSugarSummaryViewModel {
     return copy(measurements = measurements)
   }
+
+  fun countFetched(count: Int): BloodSugarSummaryViewModel =
+      copy(totalRecordedBloodSugarCount = count)
 }

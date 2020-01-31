@@ -3,7 +3,10 @@ package org.simple.clinic.summary.medicalhistory
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -28,7 +31,7 @@ import javax.inject.Inject
 class MedicalHistorySummaryView(
     context: Context,
     attributeSet: AttributeSet
-) : CardView(context, attributeSet), MedicalHistorySummaryUi {
+) : FrameLayout(context, attributeSet), MedicalHistorySummaryUi {
 
   private val internalEvents = PublishSubject.create<MedicalHistorySummaryEvent>()
 

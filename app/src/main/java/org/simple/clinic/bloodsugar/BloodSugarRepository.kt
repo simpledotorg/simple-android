@@ -61,6 +61,8 @@ class BloodSugarRepository @Inject constructor(
     return dao.allBloodSugars(patientUuid)
   }
 
+  fun bloodSugarsCount(patientUuid: UUID): Observable<Int> = dao.recordedBloodSugarsCountForPatient(patientUuid)
+
   override fun save(records: List<BloodSugarMeasurement>): Completable =
       Completable.fromAction { dao.save(records) }
 

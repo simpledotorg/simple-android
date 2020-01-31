@@ -41,11 +41,11 @@ import org.simple.clinic.summary.bloodsugar.UiActions
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
@@ -83,11 +83,11 @@ class BloodSugarSummaryView(
   @Inject
   lateinit var crashReporter: CrashReporter
 
-  @field:[Inject Named("time_for_bps_recorded")]
-  lateinit var timeFormatter: DateTimeFormatter
+  @field:[Inject Named("date_for_measurement_history")]
+  lateinit var dateFormatter: DateTimeFormatter
 
-  @field:[Inject Named("exact_date")]
-  lateinit var exactDateFormatter: DateTimeFormatter
+  @field:[Inject Named("time_for_measurement_history")]
+  lateinit var timeFormatter: DateTimeFormatter
 
   private val uiRenderer = BloodSugarSummaryViewUiRenderer(this)
 
@@ -155,7 +155,7 @@ class BloodSugarSummaryView(
 
   override fun showNoBloodSugarsView() {
     bloodSugarItemContainer.visibility = View.GONE
-    placeHolderMessageTextView.visibility = View.VISIBLE
+    noBloodSugarTextView.visibility = View.VISIBLE
   }
 
   override fun showBloodSugarTypeSelector() {
@@ -188,7 +188,7 @@ class BloodSugarSummaryView(
     val listItemViews = generateBloodSugarRows(bloodSugarMeasurements)
 
     bloodSugarItemContainer.removeAllViews()
-      withDividers(listItemViews).forEach(bloodSugarItemContainer::addView)
+      listItemViews.forEach(bloodSugarItemContainer::addView)
 
     val itemContainerBottomPadding = if (listItemViews.size > 1) {
       R.dimen.patientsummary_blood_sugar_summary_item_container_bottom_padding_8
@@ -198,45 +198,31 @@ class BloodSugarSummaryView(
     bloodSugarItemContainer.setPaddingBottom(itemContainerBottomPadding)
 
     bloodSugarItemContainer.visibility = View.VISIBLE
-    placeHolderMessageTextView.visibility = View.GONE
+    noBloodSugarTextView.visibility = View.GONE
   }
 
   private fun generateBloodSugarRows(bloodSugarMeasurements: List<BloodSugarMeasurement>): List<View> {
     val measurementsByDate = bloodSugarMeasurements.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
 
     return measurementsByDate.mapValues { (_, measurementList) ->
+      val hasMultipleMeasurementsInSameDate = measurementList.size > 1
       measurementList.map { measurement ->
-        val timestamp = timestampGenerator.generate(measurement.recordedAt, userClock)
+        val recordedAt = measurement.recordedAt.toLocalDateAtZone(userClock.zone)
+        val bloodSugarTime = if (hasMultipleMeasurementsInSameDate) {
+          timeFormatter.format(measurement.recordedAt.atZone(userClock.zone))
+        } else {
+          null
+        }
 
         val bloodSugarItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bloodsugar_measurement, this, false) as BloodSugarItemView
         bloodSugarItemView.render(
             measurement = measurement,
-            formattedTime = if (measurementList.size > 1) displayTime(measurement.recordedAt, zoneId, timeFormatter) else null,
-            addTopPadding = measurement == measurementList.first(),
-            daysAgo = timestamp,
-            dateFormatter = exactDateFormatter
+            bloodSugarDate = dateFormatter.format(recordedAt),
+            bloodSugarTime = bloodSugarTime
         )
 
         bloodSugarItemView
       }
     }.values.flatten()
-  }
-
-  private fun displayTime(
-      instant: Instant,
-      zoneId: ZoneId,
-      formatter: DateTimeFormatter
-  ): String = instant.atZone(zoneId).format(formatter)
-
-  private fun inflateDividerView() = LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_divider, this, false)
-
-  private fun withDividers(views: List<View>): List<View> {
-    return views
-        .mapIndexed { index: Int, view: View ->
-          val isLastViewInList = index == views.lastIndex
-
-          if (isLastViewInList) listOf(view) else listOf(view, inflateDividerView())
-        }
-        .flatten()
   }
 }

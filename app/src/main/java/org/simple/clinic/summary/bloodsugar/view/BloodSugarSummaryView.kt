@@ -168,6 +168,10 @@ class BloodSugarSummaryView(
     bloodSugarSeeAll.visibility = View.VISIBLE
   }
 
+  override fun hideSeeAllButton() {
+    bloodSugarSeeAll.visibility = View.GONE
+  }
+
   @SuppressLint("CheckResult")
   private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()

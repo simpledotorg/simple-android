@@ -139,4 +139,52 @@ class BloodSugarRepositoryAndroidTest {
             bloodSugarADayInPast
         ))
   }
+
+  @Test
+  fun getting_then_blood_sugar_count_for_a_patient_should_work_correctly() {
+    val patientUuidWithOnlyDeletedBloodSugars = UUID.fromString("0ced892b-8897-4c2e-b62a-ac35be363411")
+    val patientUuidWithBloodSugars = UUID.fromString("cc88dd5a-e254-4c93-8027-31152f47cd04")
+
+    val now = Instant.now(clock)
+    val bloodSugarsForPatientWithOnlyDeletedBloodSugars = listOf(
+        testData.bloodSugarMeasurement(
+            patientUuid = patientUuidWithOnlyDeletedBloodSugars,
+            uuid = UUID.fromString("995f4d61-57fd-41df-a727-1d1bb4ddb6bb"),
+            deletedAt = now
+        ),
+        testData.bloodSugarMeasurement(
+            patientUuid = patientUuidWithOnlyDeletedBloodSugars,
+            uuid = UUID.fromString("8d53d7ec-e165-4ed1-9716-17fd400449cb"),
+            deletedAt = now
+        ),
+        testData.bloodSugarMeasurement(
+            patientUuid = patientUuidWithOnlyDeletedBloodSugars,
+            uuid = UUID.fromString("08d73a5e-bae7-48d9-9780-9e94ec705b11"),
+            deletedAt = now
+        )
+    )
+
+    val bloodSugarsForPatientWithBloodSugars = listOf(
+        testData.bloodSugarMeasurement(
+            patientUuid = patientUuidWithBloodSugars,
+            uuid = UUID.fromString("ecc4640f-e59b-47d1-946c-3a2ff2e2d369"),
+            deletedAt = now
+        ),
+        testData.bloodSugarMeasurement(
+            patientUuid = patientUuidWithBloodSugars,
+            uuid = UUID.fromString("08f2510a-203d-4fa7-9573-a324798217a4")
+        ),
+        testData.bloodSugarMeasurement(
+            patientUuid = patientUuidWithBloodSugars,
+            uuid = UUID.fromString("7987320d-b6f7-4662-a1c5-a2c568041890"),
+            deletedAt = now
+        )
+    )
+
+    appDatabase.bloodSugarDao().save(bloodSugarsForPatientWithOnlyDeletedBloodSugars + bloodSugarsForPatientWithBloodSugars)
+    assertThat(appDatabase.bloodSugarDao().count().blockingFirst()).isEqualTo(6)
+
+    assertThat(repository.bloodSugarsCount(patientUuidWithOnlyDeletedBloodSugars).blockingFirst()).isEqualTo(0)
+    assertThat(repository.bloodSugarsCount(patientUuidWithBloodSugars).blockingFirst()).isEqualTo(1)
+  }
 }

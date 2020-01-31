@@ -19,6 +19,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
+import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenKey
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
@@ -48,6 +49,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setPaddingBottom
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -178,6 +180,10 @@ class BloodSugarSummaryView(
 
   override fun hideSeeAllButton() {
     bloodSugarSeeAll.visibility = View.GONE
+  }
+
+  override fun showBloodSugarHistoryScreen(patientUuid: UUID) {
+    screenRouter.push(BloodSugarHistoryScreenKey(patientUuid))
   }
 
   @SuppressLint("CheckResult")

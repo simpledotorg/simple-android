@@ -67,4 +67,15 @@ class BloodSugarSummaryViewEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(BloodSugarCountFetched(bloodSugarsCount))
   }
+
+  @Test
+  fun `when show blood sugar history screen effect is received, then show blood sugar history screen`() {
+    // when
+    testCase.dispatch(ShowBloodSugarHistoryScreen(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showBloodSugarHistoryScreen(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -1,14 +1,22 @@
 package org.simple.clinic.summary.bloodsugar
 
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.summary.PatientSummaryConfig
 
-class BloodSugarSummaryViewUiRenderer(private val ui: BloodSugarSummaryViewUi) : ViewRenderer<BloodSugarSummaryViewModel> {
+class BloodSugarSummaryViewUiRenderer(
+    private val ui: BloodSugarSummaryViewUi,
+    private val config: PatientSummaryConfig
+) : ViewRenderer<BloodSugarSummaryViewModel> {
 
   override fun render(model: BloodSugarSummaryViewModel) {
     when {
       model.measurements == null -> return
       model.measurements.isEmpty() -> ui.showNoBloodSugarsView()
       else -> ui.showBloodSugarSummary(model.measurements)
+    }
+
+    if (model.totalRecordedBloodSugarCount != null && model.totalRecordedBloodSugarCount > config.numberOfBloodSugarsToDisplay) {
+      ui.showSeeAllButton()
     }
   }
 }

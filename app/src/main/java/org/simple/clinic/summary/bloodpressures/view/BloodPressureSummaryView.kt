@@ -31,21 +31,22 @@ import org.simple.clinic.summary.SUMMARY_REQCODE_BP_ENTRY
 import org.simple.clinic.summary.bloodpressures.AddNewBloodPressureClicked
 import org.simple.clinic.summary.bloodpressures.BloodPressureClicked
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewConfig
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewEffect
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewEffectHandler
+import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewEvent
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewInit
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewModel
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewUi
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewUiActions
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewUiRenderer
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewUpdate
-import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewEffect
-import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewEvent
 import org.simple.clinic.summary.bloodpressures.SeeAllClicked
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.setPaddingBottom
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeFormatter
@@ -233,8 +234,15 @@ class BloodPressureSummaryView(
         dateFormatter = dateFormatter,
         timeFormatter = timeFormatter
     )
+    val itemContainerBottomPadding = if (listItemViews.size > 1) {
+      R.dimen.patientsummary_bp_summary_item_container_bottom_padding_8
+    } else {
+      R.dimen.patientsummary_bp_summary_item_container_bottom_padding_24
+    }
+
     newBPItemContainer.removeAllViews()
     listItemViews.forEach(newBPItemContainer::addView)
+    newBPItemContainer.setPaddingBottom(itemContainerBottomPadding)
   }
 
   private fun generateBpViews(

@@ -4,7 +4,9 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.di.BloodSugarModule
+import org.simple.clinic.bloodsugar.sync.BloodSugarSync
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.di.BloodPressureModule
 import org.simple.clinic.bp.sync.BloodPressureSync
@@ -80,12 +82,14 @@ class SyncModule {
       prescriptionSync: PrescriptionSync,
       reportsSync: ReportsSync,
       remoteConfigSync: RemoteConfigSync,
-      helpSync: HelpSync
+      helpSync: HelpSync,
+      bloodSugarSync: BloodSugarSync
   ): ArrayList<ModelSync> {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
-        prescriptionSync, reportsSync, remoteConfigSync, helpSync
+        prescriptionSync, reportsSync, remoteConfigSync, helpSync,
+        bloodSugarSync
     )
   }
 
@@ -96,14 +100,16 @@ class SyncModule {
       bloodPressureSyncRepository: BloodPressureRepository,
       medicalHistorySyncRepository: MedicalHistoryRepository,
       appointmentSyncRepository: AppointmentRepository,
-      prescriptionSyncRepository: PrescriptionRepository
+      prescriptionSyncRepository: PrescriptionRepository,
+      bloodSugarRepository: BloodSugarRepository
   ): ArrayList<SynceableRepository<*, *>> {
     return arrayListOf(
         patientSyncRepository,
         bloodPressureSyncRepository,
         medicalHistorySyncRepository,
         appointmentSyncRepository,
-        prescriptionSyncRepository
+        prescriptionSyncRepository,
+        bloodSugarRepository
     )
   }
 

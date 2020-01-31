@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar
 
 import android.os.Parcelable
+import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
@@ -35,6 +36,11 @@ sealed class BloodSugarMeasurementType : Parcelable {
 
     @ToJson
     fun toJson(measurementType: BloodSugarMeasurementType?): String? = TypeAdapter.fromEnum(measurementType)
+  }
+
+  companion object {
+    @VisibleForTesting
+    fun random(): BloodSugarMeasurementType = TypeAdapter.knownMappings.keys.shuffled().first()
   }
 }
 

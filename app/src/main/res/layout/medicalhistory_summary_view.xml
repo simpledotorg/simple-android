@@ -14,20 +14,20 @@
     android:text="@string/medicalhistorysummaryview_history"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Emphasis.Grey0" />
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
     android:id="@+id/heartAttackQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion"
     android:layout_marginTop="@dimen/spacing_4"/>
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
     android:id="@+id/strokeQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
     android:id="@+id/kidneyDiseaseQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
-  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
+  <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
     android:id="@+id/diabetesQuestionView"
     style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 </LinearLayout>

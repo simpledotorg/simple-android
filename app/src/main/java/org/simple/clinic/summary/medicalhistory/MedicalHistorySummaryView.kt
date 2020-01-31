@@ -18,7 +18,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DI
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView_Old
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.widgets.ScreenCreated
@@ -73,14 +72,5 @@ class MedicalHistorySummaryView(
 
   private fun answerToggled(question: MedicalHistoryQuestion, answer: Answer) {
     internalEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer))
-  }
-
-  private fun MedicalHistoryQuestionView_Old.render(
-      question: MedicalHistoryQuestion,
-      answer: Answer,
-      answerToggled: (MedicalHistoryQuestion, Answer) -> Unit
-  ) {
-    render(question, answer)
-    answerChangeListener = { newAnswer -> answerToggled.invoke(question, newAnswer) }
   }
 }

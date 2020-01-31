@@ -7,4 +7,5 @@ interface BloodSugarSummaryViewUi {
   fun showBloodSugarSummary(bloodSugars: List<BloodSugarMeasurement>)
 
   fun showNoBloodSugarsView()
+  fun showSeeAllButton()
 }

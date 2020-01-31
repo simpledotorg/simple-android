@@ -9,7 +9,9 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -22,7 +24,9 @@ typealias UiChange = (Ui) -> Unit
 
 class MedicalHistorySummaryUiController @AssistedInject constructor(
     @Assisted private val patientUuid: UUID,
-    private val repository: MedicalHistoryRepository,
+    private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
     private val clock: UtcClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -45,18 +49,18 @@ class MedicalHistorySummaryUiController @AssistedInject constructor(
   private fun displayMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ScreenCreated>()
-        .switchMap { repository.historyForPatientOrDefault(patientUuid) }
+        .switchMap { medicalHistoryRepository.historyForPatientOrDefault(patientUuid) }
         .map { { ui: Ui -> ui.populateMedicalHistory(it) } }
   }
 
   private fun updateMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {
-    val medicalHistories = repository.historyForPatientOrDefault(patientUuid)
+    val medicalHistories = medicalHistoryRepository.historyForPatientOrDefault(patientUuid)
 
     return events.ofType<SummaryMedicalHistoryAnswerToggled>()
         .withLatestFrom(medicalHistories)
         .map { (toggleEvent, medicalHistory) -> medicalHistory.answered(toggleEvent.question, toggleEvent.answer) }
         .flatMap { medicalHistory ->
-          repository
+          medicalHistoryRepository
               .save(medicalHistory, Instant.now(clock))
               .andThen(Observable.never<UiChange>())
         }

@@ -36,6 +36,11 @@ class BloodSugarItemView(
 
   private fun renderBloodSugarReading(reading: BloodSugarReading) {
     readingTextView.text = context.getString(R.string.bloodsugarhistory_blood_sugar_reading, reading.value.toString(), textForReadingType(context, reading.type))
+    if (reading.isHigh) {
+      bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
+    } else {
+      bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_outline)
+    }
   }
 
   private fun renderDateTime(bloodSugarDate: String, bloodSugarTime: String?) {

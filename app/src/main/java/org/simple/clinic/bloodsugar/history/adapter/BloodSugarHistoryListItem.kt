@@ -18,6 +18,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.format.DateTimeFormatter
 
 sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
@@ -86,9 +87,15 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
           .append(bloodSugarDateTime)
           .popSpan()
           .build()
+      val isBloodSugarHigh = measurement.reading.isHigh
 
       holder.readingsTextView.text = "${bloodSugarReading.value} ${textForReadingType(context, bloodSugarReading.type)}"
       holder.dateTimeTextView.text = formattedBPDateTime
+      if (isBloodSugarHigh) {
+        holder.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
+      } else {
+        holder.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_outline)
+      }
     }
 
     private fun textForReadingType(context: Context, type: BloodSugarMeasurementType): String {

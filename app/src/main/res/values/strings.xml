@@ -530,6 +530,7 @@
   <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
   <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
+  <string name="bloodpressurehistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
 
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
@@ -540,6 +541,7 @@
   <string name="bloodsugarhistory_add_blood_sugar_button">Diabetes</string>
   <string name="bloodsugarhistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+  <string name="bloodsugarhistory_blood_sugar_reading" translatable="false">%1$s mg/dl %2$s</string>
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">History</string>

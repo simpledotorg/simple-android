@@ -14,10 +14,12 @@ import junitparams.Parameters
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.widgets.ScreenCreated
@@ -30,8 +32,10 @@ class MedicalHistorySummaryUiControllerTest {
 
   private val patientUuid = UUID.fromString("31665de6-0265-4e33-888f-526bdb274699")
 
-  private val repository = mock<MedicalHistoryRepository>()
+  private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val ui = mock<MedicalHistorySummaryUi>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
   private val clock = TestUtcClock()
 
   private val events = PublishSubject.create<UiEvent>()
@@ -48,7 +52,7 @@ class MedicalHistorySummaryUiControllerTest {
   fun `patient's medical history should be populated`() {
     // given
     val medicalHistory = PatientMocker.medicalHistory(updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
-    whenever(repository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController()
@@ -77,15 +81,15 @@ class MedicalHistorySummaryUiControllerTest {
     val updatedMedicalHistory = medicalHistory.answered(question, newAnswer)
     val now = Instant.now(clock)
 
-    whenever(repository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
-    whenever(repository.save(updatedMedicalHistory, now)) doReturn Completable.complete()
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
+    whenever(medicalHistoryRepository.save(updatedMedicalHistory, now)) doReturn Completable.complete()
 
     // when
     setupController()
     events.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
     // then
-    verify(repository).save(updatedMedicalHistory, now)
+    verify(medicalHistoryRepository).save(updatedMedicalHistory, now)
   }
 
   @Suppress("unused")
@@ -97,7 +101,7 @@ class MedicalHistorySummaryUiControllerTest {
   }
 
   private fun setupController() {
-    controller = MedicalHistorySummaryUiController(patientUuid, repository, clock)
+    controller = MedicalHistorySummaryUiController(patientUuid, medicalHistoryRepository, userSession, facilityRepository, clock)
     controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }
 
     events.onNext(ScreenCreated())

@@ -37,4 +37,17 @@ class BloodSugarSummaryViewUpdateTest {
             hasEffects(OpenBloodSugarTypeSelector as BloodSugarSummaryViewEffect)
         ))
   }
+
+  @Test
+  fun `when blood sugars count is loaded, then change the blood sugars count in model`() {
+    val bloodSugarsCount = 4
+
+    spec
+        .given(defaultModel)
+        .whenEvent(BloodSugarCountFetched(bloodSugarsCount))
+        .then(assertThatNext(
+            hasModel(defaultModel.countFetched(bloodSugarsCount)),
+            hasNoEffects()
+        ))
+  }
 }

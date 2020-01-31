@@ -9,7 +9,9 @@ import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.UUID
@@ -18,6 +20,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val bloodPressureRepository: BloodPressureRepository,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -38,6 +42,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             backgroundWorkScheduler = schedulersProvider.io(),
             uiWorkScheduler = schedulersProvider.ui()
         ))
+        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .build()
   }
 
@@ -124,6 +129,22 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             }
           }
           .flatMap { Observable.empty<PatientSummaryEvent>() }
+    }
+  }
+
+  private fun loadCurrentFacility(scheduler: Scheduler): ObservableTransformer<LoadCurrentFacility, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .flatMap {
+            val user = userSession.loggedInUserImmediate()
+            requireNotNull(user)
+
+            facilityRepository
+                .currentFacility(user)
+                .take(1)
+          }
+          .map(::CurrentFacilityLoaded)
     }
   }
 

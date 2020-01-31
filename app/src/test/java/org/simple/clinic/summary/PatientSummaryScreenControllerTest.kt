@@ -23,6 +23,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
@@ -40,6 +41,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.HOME
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -65,6 +67,8 @@ class PatientSummaryScreenControllerTest {
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockAnalyticsReporter()
@@ -87,6 +91,8 @@ class PatientSummaryScreenControllerTest {
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
         bloodPressureRepository = bpRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
         uiActions = object : PatientSummaryUiActions {
           override fun showScheduleAppointmentSheet(patientUuid: UUID) {
             ui.showScheduleAppointmentSheet(patientUuid)

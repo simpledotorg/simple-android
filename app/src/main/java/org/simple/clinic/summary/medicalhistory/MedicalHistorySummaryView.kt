@@ -4,9 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import android.widget.LinearLayout
-import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -18,6 +16,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
@@ -43,8 +42,6 @@ class MedicalHistorySummaryView(
 
   init {
     LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
-    diabetesDiagnosisView.hideDivider()
-    diabetesQuestionView.hideDivider()
   }
 
   override fun onFinishInflate() {
@@ -68,10 +65,40 @@ class MedicalHistorySummaryView(
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   override fun populateMedicalHistory(medicalHistory: MedicalHistory) {
+    renderMedicalHistory(medicalHistory)
+    renderDiagnosis(medicalHistory)
+  }
+
+  private fun renderMedicalHistory(medicalHistory: MedicalHistory) {
     heartAttackQuestionView.render(HAS_HAD_A_HEART_ATTACK, medicalHistory.hasHadHeartAttack, ::answerToggled)
     strokeQuestionView.render(HAS_HAD_A_STROKE, medicalHistory.hasHadStroke, ::answerToggled)
     kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE, medicalHistory.hasHadKidneyDisease, ::answerToggled)
     diabetesQuestionView.render(DIAGNOSED_WITH_DIABETES, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
+  }
+
+  private fun renderDiagnosis(medicalHistory: MedicalHistory) {
+    hypertensionDiagnosisView.render(DIAGNOSED_WITH_HYPERTENSION, medicalHistory.diagnosedWithHypertension, ::answerToggled)
+    diabetesDiagnosisView.render(DIAGNOSED_WITH_DIABETES, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
+  }
+
+  override fun showDiagnosisView() {
+    diagnosisViewContainer.visibility = RelativeLayout.VISIBLE
+    diabetesDiagnosisView.hideDivider()
+  }
+
+  override fun hideDiagnosisView() {
+    diagnosisViewContainer.visibility = RelativeLayout.GONE
+  }
+
+  override fun showDiabetesHistorySection() {
+    diabetesQuestionView.visibility = RelativeLayout.VISIBLE
+    kidneyDiseaseQuestionView.showDivider()
+    diabetesQuestionView.hideDivider()
+  }
+
+  override fun hideDiabetesHistorySection() {
+    diabetesQuestionView.visibility = RelativeLayout.GONE
+    kidneyDiseaseQuestionView.hideDivider()
   }
 
   private fun answerToggled(question: MedicalHistoryQuestion, answer: Answer) {

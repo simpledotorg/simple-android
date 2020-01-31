@@ -9,10 +9,12 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -42,7 +44,8 @@ class MedicalHistorySummaryUiController @AssistedInject constructor(
 
     return Observable.merge(
         displayMedicalHistory(replayedEvents),
-        updateMedicalHistory(replayedEvents)
+        updateMedicalHistory(replayedEvents),
+        setupViewForDiabetesManagement(replayedEvents)
     )
   }
 
@@ -64,5 +67,31 @@ class MedicalHistorySummaryUiController @AssistedInject constructor(
               .save(medicalHistory, Instant.now(clock))
               .andThen(Observable.never<UiChange>())
         }
+  }
+
+  private fun setupViewForDiabetesManagement(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<ScreenCreated>()
+        .switchMap { currentFacility() }
+        .map { it.config.diabetesManagementEnabled }
+        .map { diabetesManagementEnabled ->
+          { ui: Ui ->
+            if (diabetesManagementEnabled) {
+              ui.showDiagnosisView()
+              ui.hideDiabetesHistorySection()
+            } else {
+              ui.hideDiagnosisView()
+              ui.showDiabetesHistorySection()
+            }
+          }
+        }
+  }
+
+  private fun currentFacility(): Observable<Facility> {
+    return userSession
+        .loggedInUser()
+        .filterAndUnwrapJust()
+        .flatMap(facilityRepository::currentFacility)
+        .take(1)
   }
 }

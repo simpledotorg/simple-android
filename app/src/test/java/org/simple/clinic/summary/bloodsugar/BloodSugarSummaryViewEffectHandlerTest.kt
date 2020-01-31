@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.bloodsugar
 
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -27,12 +28,12 @@ class BloodSugarSummaryViewEffectHandlerTest {
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
+  private val patientUuid = UUID.fromString("69cdea01-fbd8-437a-844c-25e412f32a9e")
 
   @Test
   fun `when fetch blood sugar effect is received then blood sugar should be fetched`() {
     //given
     val measurements = listOf<BloodSugarMeasurement>()
-    val patientUuid = UUID.fromString("69cdea01-fbd8-437a-844c-25e412f32a9e")
     whenever(bloodSugarRepository.latestMeasurements(patientUuid = patientUuid, limit = config.numberOfBloodSugarsToDisplay)).thenReturn(Observable.just(measurements))
 
     //when
@@ -52,5 +53,18 @@ class BloodSugarSummaryViewEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).showBloodSugarTypeSelector()
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load blood sugars count effect is received, then load blood sugars count`() {
+    // given
+    val bloodSugarsCount = 10
+    whenever(bloodSugarRepository.bloodSugarsCount(patientUuid)) doReturn Observable.just(bloodSugarsCount)
+
+    // when
+    testCase.dispatch(FetchBloodSugarCount(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(BloodSugarCountFetched(bloodSugarsCount))
   }
 }

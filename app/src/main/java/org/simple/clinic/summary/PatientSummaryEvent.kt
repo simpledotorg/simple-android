@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -20,3 +21,5 @@ data class PatientSummaryBackClicked(
 data class PatientSummaryDoneClicked(val patientUuid: UUID) : PatientSummaryEvent() {
   override val analyticsName = "Patient Summary:Done Clicked"
 }
+
+data class CurrentFacilityLoaded(val facility: Facility) : PatientSummaryEvent()

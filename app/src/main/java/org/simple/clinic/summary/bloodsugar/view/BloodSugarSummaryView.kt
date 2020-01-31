@@ -43,6 +43,8 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.setPaddingBottom
+import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
@@ -144,7 +146,7 @@ class BloodSugarSummaryView(
   }
 
   private fun addNewBloodSugarClicks(): Observable<BloodSugarSummaryViewEvent> {
-    return newBloodSugar.clicks().map { NewBloodSugarClicked }
+    return addNewBloodSugar.clicks().map { NewBloodSugarClicked }
   }
 
   override fun showBloodSugarSummary(bloodSugars: List<BloodSugarMeasurement>) {
@@ -152,7 +154,8 @@ class BloodSugarSummaryView(
   }
 
   override fun showNoBloodSugarsView() {
-    render(emptyList())
+    bloodSugarItemContainer.visibility = View.GONE
+    placeHolderMessageTextView.visibility = View.VISIBLE
   }
 
   override fun showBloodSugarTypeSelector() {
@@ -182,27 +185,20 @@ class BloodSugarSummaryView(
   }
 
   private fun render(bloodSugarMeasurements: List<BloodSugarMeasurement>) {
-    val placeholderViews = generatePlaceholders(bloodSugarMeasurements)
     val listItemViews = generateBloodSugarRows(bloodSugarMeasurements)
 
     bloodSugarItemContainer.removeAllViews()
-    withDividers(listItemViews + placeholderViews).forEach(bloodSugarItemContainer::addView)
-  }
+      withDividers(listItemViews).forEach(bloodSugarItemContainer::addView)
 
-  private fun generatePlaceholders(bloodSugarMeasurements: List<BloodSugarMeasurement>): List<View> {
-    val measurementsByDate = bloodSugarMeasurements.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
-    val numberOfBloodSugarGroups = measurementsByDate.size
-
-    val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodSugarGroups)
-
-    return (1..numberOfPlaceholders).map { placeholderNumber ->
-      val shouldShowHint = numberOfBloodSugarGroups == 0 && placeholderNumber == 1
-
-      val placeholderItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bloodsugar_placeholder, this, false) as BloodSugarPlaceholderItemView
-      placeholderItemView.render(showHint = shouldShowHint)
-
-      placeholderItemView
+    val itemContainerBottomPadding = if (listItemViews.size > 1) {
+      R.dimen.patientsummary_blood_sugar_summary_item_container_bottom_padding_8
+    } else {
+      R.dimen.patientsummary_blood_sugar_summary_item_container_bottom_padding_24
     }
+    bloodSugarItemContainer.setPaddingBottom(itemContainerBottomPadding)
+
+    bloodSugarItemContainer.visibility = View.VISIBLE
+    placeHolderMessageTextView.visibility = View.GONE
   }
 
   private fun generateBloodSugarRows(bloodSugarMeasurements: List<BloodSugarMeasurement>): List<View> {

@@ -146,7 +146,7 @@ class BloodSugarHistoryScreen(
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
     val genderLetter = resources.getString(gender.displayLetterRes)
-    toolbar.title = resources.getString(R.string.bloodsugarhistory_toolbar_title, name, genderLetter, age)
+    toolbar.title = resources.getString(R.string.bloodsugarhistory_toolbar_title, name, genderLetter, age.toString())
   }
 
   private fun handleToolbarBackClick() {

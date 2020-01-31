@@ -1,5 +1,6 @@
 package org.simple.clinic.bloodsugar.history.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.style.TextAppearanceSpan
 import io.reactivex.subjects.Subject
@@ -66,6 +67,7 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
   ) : BloodSugarHistoryListItem() {
     override fun layoutResId(): Int = R.layout.list_blood_sugar_history_item
 
+    @SuppressLint("SetTextI18n")
     override fun render(holder: ViewHolderX, subject: Subject<Event>) {
       val context = holder.itemView.context
       val bloodSugarReading = measurement.reading
@@ -85,7 +87,7 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
           .popSpan()
           .build()
 
-      holder.readingsTextView.text = context.getString(R.string.bloodsugarhistory_blood_sugar_reading, bloodSugarReading.value, textForReadingType(context, bloodSugarReading.type))
+      holder.readingsTextView.text = "${bloodSugarReading.value} ${textForReadingType(context, bloodSugarReading.type)}"
       holder.dateTimeTextView.text = formattedBPDateTime
     }
 

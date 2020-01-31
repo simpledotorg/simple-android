@@ -534,8 +534,7 @@
   <!-- Blood Sugar History screen -->
   <string name="bloodsugarhistory_add_blood_sugar_button">Diabetes</string>
   <string name="bloodsugarhistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
-  <string name="bloodsugarhistory_blood_sugar_reading" translatable="false">%1$d mg/dl %2$s</string>
-  <string name="bloodsugarhistory_toolbar_title" translatable="false">%1$s, %2$s, %3$d</string>
+  <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">History</string>

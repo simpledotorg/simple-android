@@ -15,6 +15,7 @@ class BloodSugarSummaryViewUpdate : Update<BloodSugarSummaryViewModel, BloodSuga
       is BloodSugarSummaryFetched -> next(model.summaryFetched(event.measurements))
       is BloodSugarCountFetched -> next(model.countFetched(event.count))
       NewBloodSugarClicked -> dispatch(OpenBloodSugarTypeSelector)
+      is SeeAllClicked -> dispatch(ShowBloodSugarHistoryScreen(model.patientUuid))
     }
   }
 }

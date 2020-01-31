@@ -37,6 +37,7 @@ import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewUi
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewUiRenderer
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewUpdate
 import org.simple.clinic.summary.bloodsugar.NewBloodSugarClicked
+import org.simple.clinic.summary.bloodsugar.SeeAllClicked
 import org.simple.clinic.summary.bloodsugar.UiActions
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
@@ -45,7 +46,6 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setPaddingBottom
-import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
@@ -94,7 +94,11 @@ class BloodSugarSummaryView(
   }
 
   private val events: Observable<BloodSugarSummaryViewEvent> by unsafeLazy {
-    addNewBloodSugarClicks()
+    Observable
+        .merge(
+            addNewBloodSugarClicks(),
+            seeAllClicks()
+        )
         .compose(ReportAnalyticsEvents())
         .cast<BloodSugarSummaryViewEvent>()
   }
@@ -149,6 +153,10 @@ class BloodSugarSummaryView(
 
   private fun addNewBloodSugarClicks(): Observable<BloodSugarSummaryViewEvent> {
     return addNewBloodSugar.clicks().map { NewBloodSugarClicked }
+  }
+
+  private fun seeAllClicks(): Observable<BloodSugarSummaryViewEvent> {
+    return bloodSugarSeeAll.clicks().map { SeeAllClicked }
   }
 
   override fun showBloodSugarSummary(bloodSugars: List<BloodSugarMeasurement>) {

@@ -17,6 +17,8 @@ class BloodSugarSummaryViewUiRenderer(
 
     if (model.totalRecordedBloodSugarCount != null && model.totalRecordedBloodSugarCount > config.numberOfBloodSugarsToDisplay) {
       ui.showSeeAllButton()
+    } else {
+      ui.hideSeeAllButton()
     }
   }
 }

@@ -447,7 +447,6 @@
   <string name="bloodsugarentry_fasting_title">খালি পেটে ব্লাড সুগার</string>
 
   <!-- Blood Sugar Summary view -->
-  <string name="bloodsugarsummaryview_reading_unit_type">\u0020মিগ্রা/ডেসিলি %s</string>
   <string name="bloodsugarsummaryview_no_blood_sugars">কোনও ব্লাড সুগার যোগ করা হয়নি</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">ডায়াবেটিস</string>
   <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>

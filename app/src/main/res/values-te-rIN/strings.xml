@@ -447,7 +447,6 @@
   <string name="bloodsugarentry_fasting_title">ఉపవాసం ఉన్నప్పుడు రక్తంలోని చక్కెర</string>
 
   <!-- Blood Sugar Summary view -->
-  <string name="bloodsugarsummaryview_reading_unit_type">\u0020ఎంజి/డిఎల్ %s</string>
   <string name="bloodsugarsummaryview_no_blood_sugars">రక్తంలోని చక్కెర జోడించలేదు</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">మధుమేహం</string>
   <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>

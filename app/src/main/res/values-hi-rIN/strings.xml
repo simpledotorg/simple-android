@@ -448,7 +448,6 @@
   <string name="bloodsugarentry_fasting_title">उपवास रक्त शर्करा</string>
 
   <!-- Blood Sugar Summary view -->
-  <string name="bloodsugarsummaryview_reading_unit_type">\u0020मिग्रा/डीएल %s</string>
   <string name="bloodsugarsummaryview_no_blood_sugars">कोई रक्त शर्करा जोड़ी नहीं गई</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">मधुमेह</string>
   <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>

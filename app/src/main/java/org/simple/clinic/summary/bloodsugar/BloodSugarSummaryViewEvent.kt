@@ -10,3 +10,7 @@ data class BloodSugarSummaryFetched(val measurements: List<BloodSugarMeasurement
 object NewBloodSugarClicked : BloodSugarSummaryViewEvent()
 
 data class BloodSugarCountFetched(val count: Int) : BloodSugarSummaryViewEvent()
+
+object SeeAllClicked : BloodSugarSummaryViewEvent() {
+  override val analyticsName: String = "Patient Summary:Blood Sugar See All Clicked"
+}

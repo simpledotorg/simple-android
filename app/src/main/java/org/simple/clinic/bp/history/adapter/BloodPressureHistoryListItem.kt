@@ -112,6 +112,7 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
       } else {
         holder.heartImageView.setImageResource(R.drawable.bp_reading_normal)
       }
+      holder.bpHighTextView.visibleOrGone(isHighBloodPressure)
 
       if (isBpEditable) {
         holder.itemView.setOnClickListener { subject.onNext(BloodPressureHistoryItemClicked(measurement)) }

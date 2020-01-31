@@ -3,8 +3,10 @@ package org.simple.clinic
 import io.bloco.faker.Faker
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
@@ -465,6 +467,7 @@ class TestData @Inject constructor(
       facilityUuid: UUID = qaUserFacilityUuid(),
       systolic: Int = faker.number.between(0, 299),
       diastolic: Int = faker.number.between(50, 60),
+      userUuid: UUID = qaUserUuid(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
@@ -476,12 +479,36 @@ class TestData @Inject constructor(
         systolic = systolic,
         diastolic = diastolic,
         facilityUuid = facilityUuid,
-        userUuid = qaUserUuid(),
+        userUuid = userUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         recordedAt = recordedAt)
   }
+
+  fun bloodSugarPayload(
+      uuid: UUID = UUID.randomUUID(),
+      bloodSugarType: BloodSugarMeasurementType = BloodSugarMeasurementType.random(),
+      bloodSugarValue: Int = faker.number.between(0, 300),
+      patientUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID = qaUserFacilityUuid(),
+      userUuid: UUID = qaUserUuid(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
+  ) = BloodSugarMeasurementPayload(
+      uuid = uuid,
+      bloodSugarType = bloodSugarType,
+      bloodSugarValue = bloodSugarValue,
+      patientUuid = patientUuid,
+      facilityUuid = facilityUuid,
+      userUuid = userUuid,
+      createdAt = createdAt,
+      updatedAt = updatedAt,
+      deletedAt = deletedAt,
+      recordedAt = recordedAt
+  )
 
   fun prescription(
       uuid: UUID = UUID.randomUUID(),
@@ -820,7 +847,7 @@ class TestData @Inject constructor(
   }
 
   fun bloodSugarMeasurement(
-      uuid: UUID,
+      uuid: UUID = UUID.randomUUID(),
       reading: BloodSugarReading = BloodSugarReading(faker.number.between(30, 1000), Random),
       patientUuid: UUID = UUID.randomUUID(),
       recordedAt: Instant = Instant.now(userClock),

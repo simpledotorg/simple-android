@@ -35,16 +35,16 @@
     app:layout_constraintGuide_end="@dimen/spacing_12" />
 
   <ImageView
-    android:id="@+id/glucoseImageView"
+    android:id="@+id/bloodSugarIconImageView"
     android:layout_width="@dimen/spacing_16"
     android:layout_height="@dimen/spacing_16"
     android:layout_gravity="center_vertical"
+    android:src="@drawable/ic_blood_sugar_outline"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
     app:layout_constraintEnd_toStartOf="@id/readingsTextView"
     app:layout_constraintStart_toEndOf="@id/startGuideline"
     app:layout_constraintTop_toBottomOf="@id/topGuideline"
-    tools:ignore="ContentDescription"
-    android:src="@drawable/ic_blood_sugar_outline" />
+    tools:ignore="ContentDescription" />
 
   <org.simple.clinic.widgets.TintableCompoundDrawableTextView
     android:id="@+id/readingsTextView"
@@ -55,7 +55,7 @@
     android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
     app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
-    app:layout_constraintStart_toEndOf="@id/glucoseImageView"
+    app:layout_constraintStart_toEndOf="@id/bloodSugarIconImageView"
     app:layout_constraintTop_toBottomOf="@id/topGuideline"
     tools:text="150 mg/dl RBS" />
 

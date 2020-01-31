@@ -91,6 +91,13 @@ data class BloodSugarMeasurement(
     @Query("SELECT COUNT(uuid) FROM BloodSugarMeasurements WHERE syncStatus = :syncStatus")
     fun count(syncStatus: SyncStatus): Flowable<Int>
 
+    @Query("""
+      SELECT COUNT(uuid)
+      FROM bloodsugarmeasurements
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+    """)
+    fun recordedBloodSugarsCountForPatient(patientUuid: UUID): Observable<Int>
+
     @Query("DELETE FROM BloodSugarMeasurements")
     fun clear()
   }

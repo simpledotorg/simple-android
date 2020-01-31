@@ -25,6 +25,7 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<BloodSugarSummaryViewEffect, BloodSugarSummaryViewEvent>()
         .addTransformer(FetchBloodSugarSummary::class.java, fetchBloodSugarMeasurements(bloodSugarRepository, schedulersProvider.ui()))
+        .addTransformer(FetchBloodSugarCount::class.java, fetchBloodSugarMeasurementsCount(schedulersProvider.io()))
         .addAction(OpenBloodSugarTypeSelector::class.java, uiActions::showBloodSugarTypeSelector, schedulersProvider.ui())
         .build()
   }
@@ -41,6 +42,20 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
                 .subscribeOn(scheduler)
           }
           .map { BloodSugarSummaryFetched(it) }
+    }
+  }
+
+  private fun fetchBloodSugarMeasurementsCount(
+      scheduler: Scheduler
+  ): ObservableTransformer<FetchBloodSugarCount, BloodSugarSummaryViewEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap {
+            bloodSugarRepository
+                .bloodSugarsCount(it.patientUuid)
+                .subscribeOn(scheduler)
+          }
+          .map(::BloodSugarCountFetched)
     }
   }
 }

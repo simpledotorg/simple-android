@@ -8,12 +8,14 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
 class BloodSugarSummaryViewUpdateTest {
 
   private val spec = UpdateSpec<BloodSugarSummaryViewModel, BloodSugarSummaryViewEvent, BloodSugarSummaryViewEffect>(BloodSugarSummaryViewUpdate())
-  private val defaultModel = BloodSugarSummaryViewModel.create(patientUuid = UUID.fromString("6a955cca-929f-4466-80cf-f2190dd57ce7"))
+  private val patientUuid = UUID.fromString("6a955cca-929f-4466-80cf-f2190dd57ce7")
+  private val defaultModel = BloodSugarSummaryViewModel.create(patientUuid = patientUuid)
 
   @Test
   fun `when blood sugar is loaded then ui must be updated`() {
@@ -48,6 +50,36 @@ class BloodSugarSummaryViewUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.countFetched(bloodSugarsCount)),
             hasNoEffects()
+        ))
+  }
+
+
+  @Test
+  fun `when see all is clicked, then show blood sugar history screen`() {
+    val bloodSugar1 = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
+        patientUuid = patientUuid
+    )
+    val bloodSugar2 = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
+        patientUuid = patientUuid
+    )
+    val bloodSugar3 = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
+        patientUuid = patientUuid
+    )
+    val bloodSugar4 = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
+        patientUuid = patientUuid
+    )
+    val bloodSugars = listOf(bloodSugar1, bloodSugar2, bloodSugar3, bloodSugar4)
+
+    spec
+        .given(defaultModel.summaryFetched(bloodSugars))
+        .whenEvent(SeeAllClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowBloodSugarHistoryScreen(patientUuid) as BloodSugarSummaryViewEffect)
         ))
   }
 }

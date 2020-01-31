@@ -12,15 +12,6 @@
     <item name="android:src">@drawable/ic_clear_circular_16dp</item>
   </style>
 
-  <style name="Clinic.Separator">
-    <item name="android:background">@color/black_opacity_05</item>
-  </style>
-
-  <style name="Clinic.Separator.VerticalContent">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">2dp</item>
-  </style>
-
   <style name="Clinic.LoginBackButton">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>

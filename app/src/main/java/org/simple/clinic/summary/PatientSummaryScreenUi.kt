@@ -6,6 +6,8 @@ import java.util.UUID
 interface PatientSummaryScreenUi : PatientSummaryUiActions {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
   fun showEditButton()
+  fun showDiabetesView()
+  fun hideDiabetesView()
 
   // Not yet migrated to Mobius
 

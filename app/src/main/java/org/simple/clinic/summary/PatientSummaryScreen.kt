@@ -328,6 +328,14 @@ class PatientSummaryScreen(
   override fun showEditButton() {
     editPatientButton.visibility = View.VISIBLE
   }
+
+  override fun showDiabetesView() {
+    bloodSugarSummaryView.visibility = VISIBLE
+  }
+
+  override fun hideDiabetesView() {
+    bloodSugarSummaryView.visibility = GONE
+  }
 }
 
 @Parcelize

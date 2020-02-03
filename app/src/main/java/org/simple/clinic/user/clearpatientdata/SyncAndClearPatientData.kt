@@ -24,7 +24,8 @@ class SyncAndClearPatientData @Inject constructor(
     @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<String>>,
     @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<String>>,
     @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<String>>,
-    @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<String>>
+    @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<String>>,
+    @Named("last_blood_sugar_pull_token") private val bloodSugarSyncPullToken: Preference<Optional<String>>
 ) {
 
   fun run(): Completable {
@@ -48,6 +49,7 @@ class SyncAndClearPatientData @Inject constructor(
       prescriptionSyncPullToken.delete()
       appointmentSyncPullToken.delete()
       medicalHistorySyncPullToken.delete()
+      bloodSugarSyncPullToken.delete()
     }
   }
 }

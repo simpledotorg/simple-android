@@ -31,6 +31,7 @@ class SyncAndClearPatientDataTest {
   private val appointmentPullToken = mock<Preference<Optional<String>>>()
   private val prescriptionPullToken = mock<Preference<Optional<String>>>()
   private val medicalHistoryPullToken = mock<Preference<Optional<String>>>()
+  private val bloodSugarSyncPullToken = mock<Preference<Optional<String>>>()
 
   @Test
   fun `after clearing patient related data during forgot PIN flow, the sync timestamps must be cleared`() {
@@ -50,6 +51,7 @@ class SyncAndClearPatientDataTest {
     verify(appointmentPullToken).delete()
     verify(medicalHistoryPullToken).delete()
     verify(prescriptionPullToken).delete()
+    verify(bloodSugarSyncPullToken).delete()
     assertThat(bruteForceReset).isTrue()
   }
 
@@ -153,7 +155,8 @@ class SyncAndClearPatientDataTest {
         bpSyncPullToken = bpPullToken,
         prescriptionSyncPullToken = prescriptionPullToken,
         appointmentSyncPullToken = appointmentPullToken,
-        medicalHistorySyncPullToken = medicalHistoryPullToken
+        medicalHistorySyncPullToken = medicalHistoryPullToken,
+        bloodSugarSyncPullToken = bloodSugarSyncPullToken
     )
   }
 }

@@ -12,6 +12,18 @@ class PatientSummaryViewRenderer(
         populatePatientProfile(model.patientSummaryProfile)
         showEditButton()
       }
+
+      if (model.hasLoadedCurrentFacility) {
+        setupUiForDiabetesManagement(model.isDiabetesManagementEnabled)
+      }
+    }
+  }
+
+  private fun setupUiForDiabetesManagement(isDiabetesManagementEnabled: Boolean) {
+    if (isDiabetesManagementEnabled) {
+      ui.showDiabetesView()
+    } else {
+      ui.hideDiabetesView()
     }
   }
 }

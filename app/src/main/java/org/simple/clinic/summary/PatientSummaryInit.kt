@@ -7,10 +7,14 @@ import com.spotify.mobius.Init
 class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
 
   override fun init(model: PatientSummaryModel): First<PatientSummaryModel, PatientSummaryEffect> {
-    val effects = if (model.patientSummaryProfile == null) {
-      setOf(LoadPatientSummaryProfile(model.patientUuid))
-    } else {
-      emptySet()
+    val effects = mutableSetOf<PatientSummaryEffect>()
+
+    if(model.patientSummaryProfile == null) {
+      effects.add(LoadPatientSummaryProfile(model.patientUuid))
+    }
+
+    if(!model.hasLoadedCurrentFacility) {
+      effects.add(LoadCurrentFacility)
     }
 
     return first(model, effects)

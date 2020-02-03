@@ -77,9 +77,6 @@ class PatientSummaryScreen(
   lateinit var crashReporter: CrashReporter
 
   @Inject
-  lateinit var config: PatientSummaryConfig
-
-  @Inject
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
 
   private var linkIdWithPatientShown: Boolean = false
@@ -145,8 +142,6 @@ class PatientSummaryScreen(
 
     setupEditButtonClicks()
 
-    toggleDiabetesView(config.isDiabetesEnabled)
-
     val controller = controllerFactory.create(screenKey.patientUuid, screenKey.intention, screenKey.screenCreatedTimestamp)
 
     bindUiToController(
@@ -166,10 +161,6 @@ class PatientSummaryScreen(
   override fun onDetachedFromWindow() {
     mobiusDelegate.stop()
     super.onDetachedFromWindow()
-  }
-
-  private fun toggleDiabetesView(diabetesEnabled: Boolean) {
-    bloodSugarSummaryView.visibility = if (diabetesEnabled) View.VISIBLE else View.GONE
   }
 
   private fun setupEditButtonClicks() {

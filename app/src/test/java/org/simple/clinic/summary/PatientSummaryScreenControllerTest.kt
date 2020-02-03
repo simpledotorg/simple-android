@@ -69,6 +69,7 @@ class PatientSummaryScreenControllerTest {
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val user = PatientMocker.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockAnalyticsReporter()
@@ -84,6 +85,8 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
+    whenever(userSession.loggedInUserImmediate()).doReturn(user)
+    whenever(facilityRepository.currentFacility(user)).doReturn(Observable.never())
 
     Analytics.addReporter(reporter)
 

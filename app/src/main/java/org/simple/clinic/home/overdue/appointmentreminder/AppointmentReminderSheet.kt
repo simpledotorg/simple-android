@@ -11,8 +11,8 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -99,7 +99,8 @@ class AppointmentReminderSheet : BottomSheetActivity() {
 
   fun updateDisplayedDate(newIndex: Int) {
     currentIndex = newIndex
-    currentDateTextView.text = possibleDates[currentIndex].displayText
+    val appointmentReminder = possibleDates[currentIndex]
+    currentDateTextView.text = textForAppointmentReminder(appointmentReminder.timeAmount, appointmentReminder.chronoUnit)
   }
 
   fun enableIncrementButton(state: Boolean) {
@@ -108,6 +109,15 @@ class AppointmentReminderSheet : BottomSheetActivity() {
 
   fun enableDecrementButton(state: Boolean) {
     decrementDateButton.isEnabled = state
+  }
+
+  private fun textForAppointmentReminder(timeAmount: Int, chronoUnit: ChronoUnit): String {
+    val quantityStringResourceId = when (chronoUnit) {
+      ChronoUnit.DAYS -> R.plurals.appointmentreminder_days
+      ChronoUnit.WEEKS -> R.plurals.appointmentreminder_weeks
+      else -> throw IllegalArgumentException("$chronoUnit is unsupported type for appointment reminders")
+    }
+    return resources.getQuantityString(quantityStringResourceId, timeAmount, timeAmount.toString())
   }
 
   override fun onDestroy() {

@@ -4,8 +4,4 @@ import java.util.UUID
 
 interface NewMedicalHistoryUiActions {
   fun openPatientSummaryScreen(patientUuid: UUID)
-  fun showDiagnosisView()
-  fun hideDiagnosisView()
-  fun showDiabetesHistorySection()
-  fun hideDiabetesHistorySection()
 }

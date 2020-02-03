@@ -12,5 +12,3 @@ data class RegisterPatient(val ongoingMedicalHistoryEntry: OngoingMedicalHistory
 object LoadOngoingPatientEntry : NewMedicalHistoryEffect()
 
 object LoadCurrentFacility : NewMedicalHistoryEffect()
-
-data class SetupUiForDiabetesManagement(val diabetesManagementEnabled: Boolean) : NewMedicalHistoryEffect()

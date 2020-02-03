@@ -45,7 +45,7 @@ class NewMedicalHistoryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)),
-                hasEffects(SetupUiForDiabetesManagement(true) as NewMedicalHistoryEffect)
+                hasNoEffects()
             )
         )
   }
@@ -62,7 +62,7 @@ class NewMedicalHistoryUpdateTest {
                         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
                         .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
                 ),
-                hasEffects(SetupUiForDiabetesManagement(false) as NewMedicalHistoryEffect)
+                hasNoEffects()
             )
         )
   }

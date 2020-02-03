@@ -46,10 +46,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
           .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
     }
 
-    return next(
-        updatedModel,
-        SetupUiForDiabetesManagement(diabetesManagementEnabled)
-    )
+    return next(updatedModel)
   }
 
   private fun answerToggled(

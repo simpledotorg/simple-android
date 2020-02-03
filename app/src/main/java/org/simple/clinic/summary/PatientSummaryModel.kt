@@ -18,6 +18,9 @@ data class PatientSummaryModel(
     }
   }
 
+  val hasLoadedPatientSummaryProfile: Boolean
+    get() = patientSummaryProfile != null
+
   val hasLoadedCurrentFacility: Boolean
     get() = currentFacility != null
 

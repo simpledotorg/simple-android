@@ -12,6 +12,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -74,6 +75,9 @@ class PatientRepositoryAndroidTest {
 
   @Inject
   lateinit var bloodPressureRepository: BloodPressureRepository
+
+  @Inject
+  lateinit var bloodSugarRepository: BloodSugarRepository
 
   @Inject
   lateinit var prescriptionRepository: PrescriptionRepository
@@ -462,6 +466,7 @@ class PatientRepositoryAndroidTest {
 
     val rangeOfRecords = 1..4
     val bloodPressurePayloads = rangeOfRecords.map { testData.bpPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
+    val bloodSugarPayloads = rangeOfRecords.map { testData.bloodSugarPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
     val prescriptionPayloads = rangeOfRecords.map { testData.prescriptionPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
     val appointmentPayloads = rangeOfRecords.map { testData.appointmentPayload(patientUuid = patientUuid) }
 
@@ -471,6 +476,7 @@ class PatientRepositoryAndroidTest {
     Completable.mergeArray(
         patientRepository.mergeWithLocalData(patientPayloads),
         bloodPressureRepository.mergeWithLocalData(bloodPressurePayloads),
+        bloodSugarRepository.mergeWithLocalData(bloodSugarPayloads),
         prescriptionRepository.mergeWithLocalData(prescriptionPayloads),
         appointmentRepository.mergeWithLocalData(appointmentPayloads),
         medicalHistoryRepository.mergeWithLocalData(medicalHistoryPayloads)
@@ -487,6 +493,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.phoneNumberDao().count()).isGreaterThan(0)
     assertThat(database.businessIdDao().count()).isGreaterThan(0)
     assertThat(database.bloodPressureDao().count().blockingFirst()).isGreaterThan(0)
+    assertThat(database.bloodSugarDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.prescriptionDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.facilityDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.userDao().userImmediate()).isNotNull()
@@ -502,6 +509,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.phoneNumberDao().count()).isEqualTo(0)
     assertThat(database.businessIdDao().count()).isEqualTo(0)
     assertThat(database.bloodPressureDao().count().blockingFirst()).isEqualTo(0)
+    assertThat(database.bloodSugarDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.prescriptionDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.appointmentDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isEqualTo(0)

@@ -319,6 +319,14 @@
   <!-- Appointment reminder -->
   <string name="appointmentreminder_call_later_in">Call later in</string>
   <string name="appointmentreminder_done">Done</string>
+  <plurals name="appointmentreminder_days">
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
+  </plurals>
+  <plurals name="appointmentreminder_weeks">
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
+  </plurals>
 
   <!-- Remove Overdue Patients -->
   <string name="removeappointment_select_a_reason">Select a Reason</string>

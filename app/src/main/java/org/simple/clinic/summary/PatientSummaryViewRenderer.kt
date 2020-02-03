@@ -8,8 +8,8 @@ class PatientSummaryViewRenderer(
 
   override fun render(model: PatientSummaryModel) {
     with(ui) {
-      if (model.patientSummaryProfile != null) {
-        populatePatientProfile(model.patientSummaryProfile)
+      if (model.hasLoadedPatientSummaryProfile) {
+        populatePatientProfile(model.patientSummaryProfile!!)
         showEditButton()
       }
 

@@ -2,8 +2,6 @@ package org.simple.clinic.medicalhistory.newentry
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -53,29 +51,5 @@ class NewMedicalHistoryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
     verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when diabetes management is enabled, setup the UI with the diagnosis view`() {
-    // when
-    testCase.dispatch(SetupUiForDiabetesManagement(true))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).showDiagnosisView()
-    verify(uiActions).hideDiabetesHistorySection()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when diabetes management is disabled, setup the UI without the diagnosis view`() {
-    // when
-    testCase.dispatch(SetupUiForDiabetesManagement(false))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).hideDiagnosisView()
-    verify(uiActions).showDiabetesHistorySection()
-    verifyNoMoreInteractions(uiActions)
   }
 }

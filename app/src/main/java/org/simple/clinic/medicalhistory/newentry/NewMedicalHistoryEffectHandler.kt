@@ -35,7 +35,6 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
         .addTransformer(RegisterPatient::class.java, registerPatient(schedulersProvider.io()))
         .addTransformer(LoadOngoingPatientEntry::class.java, loadOngoingNewPatientEntry(schedulersProvider.io()))
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
-        .addConsumer(SetupUiForDiabetesManagement::class.java, { setupUiForDiabetesManagement(it.diabetesManagementEnabled) }, schedulersProvider.ui())
         .build()
   }
 
@@ -88,18 +87,6 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
                 .take(1)
           }
           .map(::CurrentFacilityLoaded)
-    }
-  }
-
-  private fun setupUiForDiabetesManagement(diabetesManagementEnabled: Boolean) {
-    uiActions.apply {
-      if (diabetesManagementEnabled) {
-        showDiagnosisView()
-        hideDiabetesHistorySection()
-      } else {
-        hideDiagnosisView()
-        showDiabetesHistorySection()
-      }
     }
   }
 

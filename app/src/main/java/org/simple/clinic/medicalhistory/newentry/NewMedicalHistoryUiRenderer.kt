@@ -23,9 +23,13 @@ class NewMedicalHistoryUiRenderer(
 
       if (model.hasLoadedCurrentFacility) {
         if (model.facilityDiabetesManagementEnabled) {
+          ui.showDiagnosisView()
+          ui.hideDiabetesHistorySection()
           ui.renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, diagnosedWithHypertension)
           ui.renderDiagnosisAnswer(HAS_DIABETES, hasDiabetes)
         } else {
+          ui.hideDiagnosisView()
+          ui.showDiabetesHistorySection()
           ui.renderAnswerForQuestion(HAS_DIABETES, hasDiabetes)
         }
       }

@@ -67,6 +67,8 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
+    verify(ui).showDiagnosisView()
+    verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(HAS_DIABETES, No)
     verify(ui).showDiagnosisRequiredError(false)
@@ -85,6 +87,8 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
+    verify(ui).hideDiagnosisView()
+    verify(ui).showDiabetesHistorySection()
     verify(ui).renderAnswerForQuestion(HAS_DIABETES, Yes)
     verify(ui).showDiagnosisRequiredError(false)
     verifyNoMoreInteractions(ui)
@@ -102,6 +106,8 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
+    verify(ui).showDiagnosisView()
+    verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
     verify(ui).renderDiagnosisAnswer(HAS_DIABETES, Unanswered)
     verify(ui).showDiagnosisRequiredError(true)

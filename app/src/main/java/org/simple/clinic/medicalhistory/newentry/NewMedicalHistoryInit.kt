@@ -9,9 +9,9 @@ class NewMedicalHistoryInit : Init<NewMedicalHistoryModel, NewMedicalHistoryEffe
   override fun init(model: NewMedicalHistoryModel): First<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
     val effects = when {
       model.hasNotInitialized -> setOf(LoadOngoingPatientEntry, LoadCurrentFacility)
-      model.hasLoadedPatientEntry.not() -> setOf(LoadOngoingPatientEntry, SetupUiForDiabetesManagement(model.facilityDiabetesManagementEnabled))
+      model.hasLoadedPatientEntry.not() -> setOf(LoadOngoingPatientEntry)
       model.hasLoadedCurrentFacility.not() -> setOf(LoadCurrentFacility)
-      else -> setOf(SetupUiForDiabetesManagement(model.facilityDiabetesManagementEnabled))
+      else -> emptySet()
     }
 
     return first(model, effects)

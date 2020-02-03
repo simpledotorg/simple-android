@@ -31,24 +31,24 @@ class AppointmentReminderSheet : BottomSheetActivity() {
   }
 
   private val possibleDates = listOf(
-      AppointmentReminder("1 day", 1, ChronoUnit.DAYS),
-      AppointmentReminder("2 days", 2, ChronoUnit.DAYS),
-      AppointmentReminder("3 days", 3, ChronoUnit.DAYS),
-      AppointmentReminder("4 days", 4, ChronoUnit.DAYS),
-      AppointmentReminder("5 days", 5, ChronoUnit.DAYS),
-      AppointmentReminder("6 days", 6, ChronoUnit.DAYS),
-      AppointmentReminder("7 days", 7, ChronoUnit.DAYS),
-      AppointmentReminder("2 weeks", 2, ChronoUnit.WEEKS),
-      AppointmentReminder("3 weeks", 3, ChronoUnit.WEEKS),
-      AppointmentReminder("4 weeks", 4, ChronoUnit.WEEKS),
-      AppointmentReminder("5 weeks", 5, ChronoUnit.WEEKS),
-      AppointmentReminder("6 weeks", 6, ChronoUnit.WEEKS),
-      AppointmentReminder("7 weeks", 7, ChronoUnit.WEEKS),
-      AppointmentReminder("8 weeks", 8, ChronoUnit.WEEKS),
-      AppointmentReminder("9 weeks", 9, ChronoUnit.WEEKS),
-      AppointmentReminder("10 weeks", 10, ChronoUnit.WEEKS),
-      AppointmentReminder("11 weeks", 11, ChronoUnit.WEEKS),
-      AppointmentReminder("12 weeks", 12, ChronoUnit.WEEKS)
+      AppointmentReminder(1, ChronoUnit.DAYS),
+      AppointmentReminder(2, ChronoUnit.DAYS),
+      AppointmentReminder(3, ChronoUnit.DAYS),
+      AppointmentReminder(4, ChronoUnit.DAYS),
+      AppointmentReminder(5, ChronoUnit.DAYS),
+      AppointmentReminder(6, ChronoUnit.DAYS),
+      AppointmentReminder(7, ChronoUnit.DAYS),
+      AppointmentReminder(2, ChronoUnit.WEEKS),
+      AppointmentReminder(3, ChronoUnit.WEEKS),
+      AppointmentReminder(4, ChronoUnit.WEEKS),
+      AppointmentReminder(5, ChronoUnit.WEEKS),
+      AppointmentReminder(6, ChronoUnit.WEEKS),
+      AppointmentReminder(7, ChronoUnit.WEEKS),
+      AppointmentReminder(8, ChronoUnit.WEEKS),
+      AppointmentReminder(9, ChronoUnit.WEEKS),
+      AppointmentReminder(10, ChronoUnit.WEEKS),
+      AppointmentReminder(11, ChronoUnit.WEEKS),
+      AppointmentReminder(12, ChronoUnit.WEEKS)
   )
 
   @Inject

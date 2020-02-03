@@ -118,7 +118,7 @@ class AppointmentReminderSheetControllerTest {
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
     whenever(repository.createReminder(any(), any())).thenReturn(Completable.complete())
 
-    val current = AppointmentReminder("2 weeks", 2, ChronoUnit.WEEKS)
+    val current = AppointmentReminder(2, ChronoUnit.WEEKS)
     uiEvents.onNext(AppointmentReminderSheetCreated(3, appointmentUuid))
     uiEvents.onNext(ReminderCreated(current))
 

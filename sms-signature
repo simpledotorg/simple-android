@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+command -v keytool >/dev/null 2>&1 || { echo >&2 "I require keytool but it's not installed."; exit 1; }
+command -v sha256sum >/dev/null 2>&1 || { echo >&2 "I require sha256sum but it's not installed."; exit 1; }
+
+keystore=${1}
+alias=${2}
+application=${3}
+
+keytool -exportcert -alias ${alias} -keystore ${keystore} | xxd -p | tr -d "[:space:]" | echo -n ${application} `cat` | sha256sum | tr -d "[:space:]-" | xxd -r -p | base64 | cut -c1-11

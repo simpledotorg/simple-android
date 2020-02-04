@@ -13,6 +13,8 @@
 
 ### Fixes
 - Fix issue where the street and zone address fields would not be synced to the servers
+- Fix issue where the units('days', 'weeks') in the appointment reminder sheet would not be translated
+- Fix issue where formatted numerals in the app (BP, Age, Overdue days, etc) would use numeric glyphs in some languages instead of Arabic numerals
 
 ## 2020-01-27-7040
 ### Feature

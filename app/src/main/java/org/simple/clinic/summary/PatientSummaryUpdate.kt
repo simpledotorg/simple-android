@@ -15,6 +15,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryDoneClicked -> dispatch(HandleDoneClick(event.patientUuid))
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
+      is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       else -> noChange()
     }
   }

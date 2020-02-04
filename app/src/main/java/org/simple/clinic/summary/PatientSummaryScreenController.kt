@@ -61,7 +61,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         showUpdatePhoneDialogIfRequired(replayedEvents),
         goBackWhenBackClicked(replayedEvents),
         goToHomeOnDoneClick(replayedEvents),
-        exitScreenIfLinkIdWithPatientIsCancelled(replayedEvents),
         hideLinkIdWithPatientSheet(replayedEvents)
     )
   }
@@ -205,15 +204,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
     return missingPhoneReminderRepository
         .hasShownReminderFor(patientUuid)
         .toObservable()
-  }
-
-  private fun exitScreenIfLinkIdWithPatientIsCancelled(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreates = events.ofType<ScreenCreated>()
-    val linkIdCancelled = events.ofType<PatientSummaryLinkIdCancelled>()
-
-    return Observables.combineLatest(screenCreates, linkIdCancelled)
-        .take(1)
-        .map { { ui: Ui -> ui.goToPreviousScreen() } }
   }
 
   private fun hideLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {

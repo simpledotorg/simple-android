@@ -57,7 +57,7 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
     override fun layoutResId(): Int = R.layout.list_new_blood_sugar_button
 
     override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-      holder.newBloodSugar.setOnClickListener { subject.onNext(NewBloodSugarClicked) }
+      holder.newBloodSugarButton.setOnClickListener { subject.onNext(NewBloodSugarClicked) }
     }
   }
 

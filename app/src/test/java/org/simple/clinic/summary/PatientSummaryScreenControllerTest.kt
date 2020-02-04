@@ -390,8 +390,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when the link id with patient is cancelled, the patient summary screen must be closed`() {
-    val openIntention = OpenIntention.LinkIdWithPatient(identifier = Identifier("id", BpPassport))
-    setupController(openIntention)
+    startMobiusLoop()
 
     uiEvents.onNext(PatientSummaryLinkIdCancelled)
 

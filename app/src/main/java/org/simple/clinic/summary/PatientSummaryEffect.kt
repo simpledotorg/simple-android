@@ -21,3 +21,5 @@ data class HandleDoneClick(
 object LoadCurrentFacility : PatientSummaryEffect()
 
 data class HandleEditClick(val patientSummaryProfile: PatientSummaryProfile) : PatientSummaryEffect()
+
+object HandleLinkIdCancelled: PatientSummaryEffect()

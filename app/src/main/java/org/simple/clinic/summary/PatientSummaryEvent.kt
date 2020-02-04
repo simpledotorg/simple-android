@@ -25,3 +25,5 @@ data class PatientSummaryDoneClicked(val patientUuid: UUID) : PatientSummaryEven
 data class CurrentFacilityLoaded(val facility: Facility) : PatientSummaryEvent()
 
 object PatientSummaryEditClicked : PatientSummaryEvent()
+
+object PatientSummaryLinkIdCancelled : PatientSummaryEvent()

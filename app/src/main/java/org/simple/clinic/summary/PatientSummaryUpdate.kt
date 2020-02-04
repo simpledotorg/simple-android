@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -14,6 +15,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryDoneClicked -> dispatch(HandleDoneClick(event.patientUuid))
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
+      else -> noChange()
     }
   }
 }

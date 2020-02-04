@@ -37,6 +37,8 @@ The [app signature](https://developers.google.com/identity/sms-retriever/verify#
 
 ![App signature in debug notification](arch/images/app_signature_in_debug_notification.png)
 
+For other build environments, see [this doc](how-to-generate-an-app-sms-signature.md) for instructions on computing an app signature.
+
 #### 2. Approval for new user accounts
 
 Unlike other environments (staging, QA, and production), users registering on the dev environment are auto-approved when they register.

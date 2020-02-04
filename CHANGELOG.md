@@ -5,10 +5,11 @@
 - Add support for recording the patient diagnosis, based on the facility diabetes management support
 - Added sync support for the recorded blood sugars
 
-### Changes
+### Internal
 - Simplify the computation of high risk label in overdue list
 - Use the diabetes management flag from the facility instead of the remote config flag to toggle the diabetes view on patient summary
 - Updated to the new visual styling of the CV history, Blood pressure, and Blood sugar widgets on the patient summary screen
+- Bump the resync token for CV history sync to 2
 
 ### Fixes
 - Fix issue where the street and zone address fields would not be synced to the servers

@@ -15,7 +15,7 @@ interface MedicalHistorySyncApi {
       @Body body: MedicalHistoryPushRequest
   ): Single<DataPushResponse>
 
-  @Headers(value = ["X-RESYNC-TOKEN: 1"])
+  @Headers(value = ["X-RESYNC-TOKEN: 2"])
   @GET("medical_histories/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,

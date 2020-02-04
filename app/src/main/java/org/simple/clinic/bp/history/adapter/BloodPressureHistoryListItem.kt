@@ -75,7 +75,7 @@ sealed class BloodPressureHistoryListItem : ItemAdapter.Item<Event> {
     override fun layoutResId(): Int = R.layout.list_new_bp_button
 
     override fun render(holder: ViewHolderX, subject: Subject<Event>) {
-      holder.newBp.setOnClickListener { subject.onNext(AddNewBpClicked) }
+      holder.newBpButton.setOnClickListener { subject.onNext(AddNewBpClicked) }
     }
   }
 

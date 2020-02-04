@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Feature
 - Add support for recording the patient diagnosis, based on the facility diabetes management support
 - Added sync support for the recorded blood sugars

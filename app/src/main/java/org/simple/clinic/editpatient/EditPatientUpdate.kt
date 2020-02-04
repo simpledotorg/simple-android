@@ -108,7 +108,7 @@ class EditPatientUpdate(
     val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator, ageValidator)
     val effect = if (validationErrors.isEmpty()) {
       val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber) = model
-      SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, model.bangladeshNationalId)
+      SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber)
     } else {
       ShowValidationErrorsEffect(validationErrors)
     }

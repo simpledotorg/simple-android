@@ -45,7 +45,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
-        .addTransformer(FetchBangladeshNationalIdEffect::class.java, fetchAllPrefillForm(schedulersProvider.io()))
+        .addTransformer(FetchBangladeshNationalIdEffect::class.java, fetchBangladeshId(schedulersProvider.io()))
         .addConsumer(PrefillBangladeshNationalIdEffect::class.java, { ui.setBangladeshNationalId(it.bangladeshNationalId) },
             schedulersProvider.ui())
         .addConsumer(PrefillFormEffect::class.java, ::prefillFormFields, schedulersProvider.ui())
@@ -59,7 +59,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  private fun fetchAllPrefillForm(scheduler: Scheduler) =
+  private fun fetchBangladeshId(scheduler: Scheduler) =
       ObservableTransformer<FetchBangladeshNationalIdEffect, EditPatientEvent> { effectStream ->
         effectStream
             .flatMap { patientRepository.bangladeshNationalIdForPatient(it.patient.uuid).subscribeOn(scheduler) }

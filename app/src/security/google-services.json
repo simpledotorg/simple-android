@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "151775750385",
+    "firebase_url": "https://simple-security-cb992.firebaseio.com",
+    "project_id": "simple-security-cb992",
+    "storage_bucket": "simple-security-cb992.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:151775750385:android:2dea3f7ab696358506e150",
+        "android_client_info": {
+          "package_name": "org.simple.clinic.security"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "151775750385-8fvj194mbk9gkcfenb4f3dch4ue0dns5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnKMM8WPQD69LAUXh03Jjj5EhYqjVxl0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "151775750385-8fvj194mbk9gkcfenb4f3dch4ue0dns5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

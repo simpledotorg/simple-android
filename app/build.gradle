@@ -130,13 +130,24 @@ android {
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + productionMixpanelToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
     }
+
+    security {
+      dimension 'track'
+      applicationIdSuffix ".security"
+      versionNameSuffix "-security"
+      buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + securityManifestEndpoint + "\""
+      buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + securityFallbackApiEndpoint + "\""
+      buildConfigField "String", "MIXPANEL_TOKEN", "\"" + securityMixpanelToken + "\""
+      buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
+    }
   }
 
   variantFilter { variant ->
     if (variant.name == "qaRelease" ||
         variant.name == "stagingDebug" ||
         variant.name == "sandboxDebug" ||
-        variant.name == "productionDebug"
+        variant.name == "productionDebug" ||
+        variant.name == "securityDebug"
     ) {
       setIgnore(true)
     }
@@ -186,7 +197,7 @@ android {
   }
 
   afterEvaluate {
-    tasks.findAll { it.name in ["assembleStagingRelease", "assembleSandboxRelease", "assembleProductionRelease"] }
+    tasks.findAll { it.name in ["assembleStagingRelease", "assembleSandboxRelease", "assembleProductionRelease", "assembleSecurityRelease"] }
         .forEach { it.finalizedBy deleteProguardMappings }
   }
 }

@@ -23,6 +23,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
@@ -54,7 +55,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     val state: String,
     val ageOrDateOfBirth: EitherAgeOrDateOfBirth,
     val zone: String,
-    val streetAddress: String
+    val streetAddress: String,
+    val bangladeshNationalId: BusinessId?
 ) : Parcelable {
 
   sealed class EitherAgeOrDateOfBirth : Parcelable {
@@ -90,7 +92,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
           state = address.state,
           ageOrDateOfBirth = ageOrDateOfBirth(patient.age, patient.dateOfBirth, dateOfBirthFormatter),
           zone = address.zone.valueOrEmpty(),
-          streetAddress = address.streetAddress.valueOrEmpty()
+          streetAddress = address.streetAddress.valueOrEmpty(),
+          bangladeshNationalId = null
       )
     }
 
@@ -136,6 +139,9 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
 
   fun updateStreetAddress(streetAddress: String): EditablePatientEntry =
       copy(streetAddress = streetAddress)
+
+  fun updateBangladeshNationalId(bangladeshNationalId: BusinessId): EditablePatientEntry =
+      copy(bangladeshNationalId = bangladeshNationalId)
 
   fun validate(
       alreadySavedNumber: PatientPhoneNumber?,

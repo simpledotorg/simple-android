@@ -196,7 +196,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
 
   private fun saveBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
-        .extractNullable { it.bangladeshNationalId }
+        .extractNullable { it.ongoingEntry.bangladeshNationalId }
         .filter { it.identifier.value.isNotBlank() }
         .flatMapCompletable { patientRepository.saveBusinessId(it) }
         .toObservable()

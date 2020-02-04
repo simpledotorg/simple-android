@@ -88,7 +88,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.saveBusinessId(blankBangladeshNationalId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber, blankBangladeshNationalId))
+    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -113,7 +113,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber, null))
+    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -133,13 +133,15 @@ class EditPatientEffectHandlerTest {
         patientUuid = patient.uuid,
         identifier = Identifier(value = "1234567890abcd", type = Identifier.IdentifierType.BangladeshNationalId)
     )
+    val ongoingEntryWithBangladeshId = entry.copy(bangladeshNationalId = bangladeshNationalId)
+
     whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
     whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
     whenever(patientRepository.saveBusinessId(bangladeshNationalId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber, bangladeshNationalId))
+    testCase.dispatch(SavePatientEffect(ongoingEntryWithBangladeshId, patient, patientAddress, phoneNumber))
 
     // then
     verify(patientRepository).updatePatient(patient)

@@ -88,7 +88,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.saveBusinessId(blankBangladeshNationalId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber))
+    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber, null))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -113,7 +113,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber))
+    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber, null))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -141,7 +141,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.saveBusinessId(bangladeshNationalId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(ongoingEntryWithBangladeshId, patient, patientAddress, phoneNumber))
+    testCase.dispatch(SavePatientEffect(ongoingEntryWithBangladeshId, patient, patientAddress, phoneNumber, null))
 
     // then
     verify(patientRepository).updatePatient(patient)

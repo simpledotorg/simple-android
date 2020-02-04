@@ -11,7 +11,6 @@ interface PatientSummaryScreenUi : PatientSummaryUiActions {
 
   // Not yet migrated to Mobius
 
-  fun goToPreviousScreen()
   fun goToHomeScreen()
   fun showUpdatePhoneDialog(patientUuid: UUID)
   fun showAddPhoneDialog(patientUuid: UUID)

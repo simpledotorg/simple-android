@@ -18,8 +18,7 @@ data class EditPatientModel(
     // patient information? Revisit these properties after migrating the feature
     val savedPatient: Patient,
     val savedAddress: PatientAddress,
-    val savedPhoneNumber: PatientPhoneNumber?,
-    val bangladeshNationalId: BusinessId? = null
+    val savedPhoneNumber: PatientPhoneNumber?
 ) : Parcelable {
   companion object {
     fun from(
@@ -59,12 +58,16 @@ data class EditPatientModel(
       copy(ongoingEntry = ongoingEntry.updateDateOfBirth(dateOfBirth))
 
   fun updateBangladeshNationalId(bangladeshNationalId: BusinessId): EditPatientModel =
-      copy(bangladeshNationalId = bangladeshNationalId)
+      copy(ongoingEntry = ongoingEntry.updateBangladeshNationalId(bangladeshNationalId))
 
-  fun updateBangladeshNationalIdIdentifier(bangladeshNationalIdIdentifier: String): EditPatientModel =
+  fun updateBangladeshNationalIdIdentifier(bangladeshNationalIdIdentifier: String): EditPatientModel {
+    return copy(ongoingEntry = ongoingEntry.run {
       copy(bangladeshNationalId = bangladeshNationalId?.run {
         copy(identifier = identifier.copy(value = bangladeshNationalIdIdentifier))
-      })
+      }
+      )
+    })
+  }
 
   fun updateZone(zone: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateZone(zone))

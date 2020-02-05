@@ -7,12 +7,13 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.summary.OpenIntention.*
 import java.util.UUID
 
 class PatientSummaryInitTest {
 
   private val patientUuid = UUID.fromString("fca8c3ad-75ca-4053-ba2f-e5c8ffda8991")
-  private val defaultModel = PatientSummaryModel.from(patientUuid)
+  private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, patientUuid)
 
   private val initSpec = InitSpec(PatientSummaryInit())
 

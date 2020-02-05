@@ -8,6 +8,11 @@ class BloodPressureSummaryViewInit(
     val config: BloodPressureSummaryViewConfig
 ) : Init<BloodPressureSummaryViewModel, BloodPressureSummaryViewEffect> {
   override fun init(model: BloodPressureSummaryViewModel): First<BloodPressureSummaryViewModel, BloodPressureSummaryViewEffect> {
-    return first(model, LoadBloodPressures(model.patientUuid, config.numberOfBpsToDisplay), LoadBloodPressuresCount(model.patientUuid))
+    return first(
+        model,
+        LoadBloodPressures(model.patientUuid, config.numberOfBpsToDisplay),
+        LoadBloodPressuresCount(model.patientUuid),
+        LoadCurrentFacility
+    )
   }
 }

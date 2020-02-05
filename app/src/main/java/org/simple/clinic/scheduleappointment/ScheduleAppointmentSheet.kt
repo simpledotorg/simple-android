@@ -47,6 +47,10 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
           .putExtra(KEY_PATIENT_UUID, patientUuid)
           .putExtra(KEY_EXTRA, extra)
     }
+
+    fun <T: Parcelable> readExtra(intent: Intent): T? {
+      return intent.getParcelableExtra(KEY_EXTRA) as T
+    }
   }
 
   @Inject

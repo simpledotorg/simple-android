@@ -6,9 +6,13 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class BloodPressureSummaryViewEffectHandler @AssistedInject constructor(
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
     private val bloodPressureRepository: BloodPressureRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: BloodPressureSummaryViewUiActions
@@ -24,6 +28,7 @@ class BloodPressureSummaryViewEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<BloodPressureSummaryViewEffect, BloodPressureSummaryViewEvent>()
         .addTransformer(LoadBloodPressures::class.java, loadBloodPressureHistory(schedulersProvider.io()))
         .addTransformer(LoadBloodPressuresCount::class.java, loadBloodPressuresCount(schedulersProvider.io()))
+        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addConsumer(OpenBloodPressureEntrySheet::class.java, { uiActions.openBloodPressureEntrySheet(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenBloodPressureUpdateSheet::class.java, { uiActions.openBloodPressureUpdateSheet(it.measurement.uuid) }, schedulersProvider.ui())
         .addConsumer(ShowBloodPressureHistoryScreen::class.java, { uiActions.showBloodPressureHistoryScreen(it.patientUuid) }, schedulersProvider.ui())
@@ -55,6 +60,22 @@ class BloodPressureSummaryViewEffectHandler @AssistedInject constructor(
                 .subscribeOn(scheduler)
           }
           .map(::BloodPressuresCountLoaded)
+    }
+  }
+
+  private fun loadCurrentFacility(scheduler: Scheduler): ObservableTransformer<LoadCurrentFacility, BloodPressureSummaryViewEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .flatMap {
+            val user = userSession.loggedInUserImmediate()
+            requireNotNull(user)
+
+            facilityRepository
+                .currentFacility(user)
+                .take(1)
+          }
+          .map(::CurrentFacilityLoaded)
     }
   }
 }

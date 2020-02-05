@@ -7,6 +7,7 @@ import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import java.util.UUID
 
 class PatientSummaryViewRendererTest {
@@ -21,7 +22,7 @@ class PatientSummaryViewRendererTest {
       facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   )
 
-  private val defaultModel = PatientSummaryModel.from(UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470"))
+  private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470"))
   private val ui = mock<PatientSummaryScreenUi>()
 
   private val uiRenderer = PatientSummaryViewRenderer(ui)

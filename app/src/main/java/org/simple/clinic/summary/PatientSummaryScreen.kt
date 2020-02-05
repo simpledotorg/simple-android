@@ -106,7 +106,7 @@ class PatientSummaryScreen(
   private val mobiusDelegate: MobiusDelegate<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> by unsafeLazy {
     MobiusDelegate(
         events = events.ofType(),
-        defaultModel = PatientSummaryModel.from(screenKey.patientUuid),
+        defaultModel = PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid),
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),

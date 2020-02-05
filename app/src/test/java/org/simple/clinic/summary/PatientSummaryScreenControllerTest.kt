@@ -38,6 +38,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.summary.OpenIntention.*
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.HOME
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
@@ -114,7 +115,7 @@ class PatientSummaryScreenControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = PatientSummaryModel.from(patientUuid),
+        defaultModel = PatientSummaryModel.from(ViewExistingPatient, patientUuid),
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
         effectHandler = effectHandler.build(),
@@ -231,7 +232,7 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.just<Optional<Appointment>>(None))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
 
-    setupController(OpenIntention.ViewNewPatient)
+    setupController(ViewNewPatient)
 
     verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -323,9 +324,9 @@ class PatientSummaryScreenControllerTest {
 
   @Suppress("Unused")
   private fun `patient summary open intentions`() = listOf(
-      OpenIntention.ViewExistingPatient,
-      OpenIntention.ViewNewPatient,
-      OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport))
+      ViewExistingPatient,
+      ViewNewPatient,
+      LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport))
   )
 
   @Suppress("Unused")
@@ -335,16 +336,16 @@ class PatientSummaryScreenControllerTest {
     }
 
     return listOf(
-        testCase(openIntention = OpenIntention.ViewExistingPatient, goBackToScreen = PREVIOUS),
-        testCase(openIntention = OpenIntention.ViewNewPatient, goBackToScreen = HOME),
-        testCase(openIntention = OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), goBackToScreen = HOME)
+        testCase(openIntention = ViewExistingPatient, goBackToScreen = PREVIOUS),
+        testCase(openIntention = ViewNewPatient, goBackToScreen = HOME),
+        testCase(openIntention = LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), goBackToScreen = HOME)
     )
   }
 
   @Suppress("Unused")
   private fun `patient summary open intentions except new patient`() = listOf(
-      OpenIntention.ViewExistingPatient,
-      OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport))
+      ViewExistingPatient,
+      LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport))
   )
 
   @Suppress("Unused")
@@ -352,12 +353,12 @@ class PatientSummaryScreenControllerTest {
     val identifier = Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)
 
     return listOf(
-        listOf(OpenIntention.ViewExistingPatient, true),
-        listOf(OpenIntention.ViewExistingPatient, false),
-        listOf(OpenIntention.ViewNewPatient, true),
-        listOf(OpenIntention.ViewNewPatient, false),
-        listOf(OpenIntention.LinkIdWithPatient(identifier), true),
-        listOf(OpenIntention.LinkIdWithPatient(identifier), false))
+        listOf(ViewExistingPatient, true),
+        listOf(ViewExistingPatient, false),
+        listOf(ViewNewPatient, true),
+        listOf(ViewNewPatient, false),
+        listOf(LinkIdWithPatient(identifier), true),
+        listOf(LinkIdWithPatient(identifier), false))
   }
 
 
@@ -382,9 +383,9 @@ class PatientSummaryScreenControllerTest {
     val identifier = Identifier("1f79f976-f1bc-4c8a-8a53-ad646ce09fdb", BpPassport)
 
     return listOf(
-        listOf(OpenIntention.LinkIdWithPatient(identifier), true, identifier),
-        listOf(OpenIntention.ViewExistingPatient, false, null),
-        listOf(OpenIntention.ViewNewPatient, false, null)
+        listOf(LinkIdWithPatient(identifier), true, identifier),
+        listOf(ViewExistingPatient, false, null),
+        listOf(ViewNewPatient, false, null)
     )
   }
 
@@ -399,7 +400,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when the link id with patient is completed, the link id screen must be closed`() {
-    val openIntention = OpenIntention.LinkIdWithPatient(identifier = Identifier("id", BpPassport))
+    val openIntention = LinkIdWithPatient(identifier = Identifier("id", BpPassport))
     setupController(openIntention)
 
     uiEvents.onNext(PatientSummaryLinkIdCompleted)
@@ -456,15 +457,15 @@ class PatientSummaryScreenControllerTest {
   private fun `params for going back or home when clicking back when there are no BPs`(): List<List<Any>> {
     return listOf(
         listOf(
-            OpenIntention.ViewExistingPatient,
+            ViewExistingPatient,
             PREVIOUS
         ),
         listOf(
-            OpenIntention.ViewNewPatient,
+            ViewNewPatient,
             HOME
         ),
         listOf(
-            OpenIntention.LinkIdWithPatient(Identifier("1f79f976-f1bc-4c8a-8a53-ad646ce09fdb", BpPassport)),
+            LinkIdWithPatient(Identifier("1f79f976-f1bc-4c8a-8a53-ad646ce09fdb", BpPassport)),
             HOME
         )
     )

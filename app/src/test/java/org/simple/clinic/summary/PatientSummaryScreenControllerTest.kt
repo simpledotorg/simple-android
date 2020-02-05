@@ -38,6 +38,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.*
 import org.simple.clinic.summary.OpenIntention.*
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.HOME
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
@@ -103,8 +104,11 @@ class PatientSummaryScreenControllerTest {
             ui.showEditPatientScreen(patientSummaryProfile)
           }
 
-          override fun showScheduleAppointmentSheet(patientUuid: UUID) {
-            ui.showScheduleAppointmentSheet(patientUuid)
+          override fun showScheduleAppointmentSheet(
+              patientUuid: UUID,
+              sheetOpenedFrom: AppointmentSheetOpenedFrom
+          ) {
+            ui.showScheduleAppointmentSheet(patientUuid, sheetOpenedFrom)
           }
 
           override fun goToPreviousScreen() {
@@ -429,7 +433,7 @@ class PatientSummaryScreenControllerTest {
 
     verify(ui, never()).goToPreviousScreen()
     verify(ui, never()).goToHomeScreen()
-    verify(ui).showScheduleAppointmentSheet(patientUuid)
+    verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
   }
 
   @Test
@@ -445,7 +449,7 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
     if (goBackToScreen == HOME) {
       verify(ui).goToHomeScreen()
     } else {
@@ -484,7 +488,7 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
     if (goBackToScreen == HOME) {
       verify(ui).goToHomeScreen()
     } else {
@@ -505,7 +509,7 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
     if (goBackToScreen == HOME) {
       verify(ui).goToHomeScreen()
     } else {
@@ -524,7 +528,7 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
-    verify(ui).showScheduleAppointmentSheet(patientUuid)
+    verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
     verify(ui, never()).goToHomeScreen()
     verify(ui, never()).goToPreviousScreen()
   }
@@ -540,7 +544,7 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
-    verify(ui, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(ui, never()).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
     verify(ui, never()).goToPreviousScreen()
     verify(ui).goToHomeScreen()
   }

@@ -114,7 +114,7 @@ class BloodPressureSummaryView(
         events = events,
         defaultModel = BloodPressureSummaryViewModel.create(screenKey.patientUuid),
         init = BloodPressureSummaryViewInit(bloodPressureSummaryConfig),
-        update = BloodPressureSummaryViewUpdate(),
+        update = BloodPressureSummaryViewUpdate(bloodPressureSummaryConfig),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter

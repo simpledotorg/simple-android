@@ -7,13 +7,15 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
 class BloodPressureSummaryViewUpdateTest {
   private val patientUuid = UUID.fromString("8f1befda-f99e-4d26-aff3-cecb90925df1")
   private val defaultModel = BloodPressureSummaryViewModel.create(patientUuid)
-  private val updateSpec = UpdateSpec<BloodPressureSummaryViewModel, BloodPressureSummaryViewEvent, BloodPressureSummaryViewEffect>(BloodPressureSummaryViewUpdate())
+  private val config = BloodPressureSummaryViewConfig(numberOfBpsToDisplay = 3, numberOfBpsToDisplayWithoutDiabetesManagement = 8)
+  private val updateSpec = UpdateSpec<BloodPressureSummaryViewModel, BloodPressureSummaryViewEvent, BloodPressureSummaryViewEffect>(BloodPressureSummaryViewUpdate(config))
 
   @Test
   fun `when blood pressures are loaded, then show blood pressures`() {
@@ -48,15 +50,34 @@ class BloodPressureSummaryViewUpdateTest {
   }
 
   @Test
-  fun `when current facility is loaded, then update the model`() {
-    val facility = PatientMocker.facility(uuid = UUID.fromString("0729cf58-73b8-4be9-b9d7-87cbb6ee0f6b"))
+  fun `when diabetes management is enabled, then load fewer number of blood pressures`() {
+    val facility = PatientMocker.facility(
+        uuid = UUID.fromString("0729cf58-73b8-4be9-b9d7-87cbb6ee0f6b"),
+        facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+    )
 
     updateSpec
         .given(defaultModel)
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
             hasModel(defaultModel.currentFacilityLoaded(facility)),
-            hasNoEffects()
+            hasEffects(LoadBloodPressures(patientUuid, config.numberOfBpsToDisplay) as BloodPressureSummaryViewEffect)
+        ))
+  }
+
+  @Test
+  fun `when diabetes management is disabled, then load larger number of blood pressures`() {
+    val facility = PatientMocker.facility(
+        uuid = UUID.fromString("924d5e18-039e-4e83-9f36-5a0974d8a299"),
+        facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CurrentFacilityLoaded(facility))
+        .then(assertThatNext(
+            hasModel(defaultModel.currentFacilityLoaded(facility)),
+            hasEffects(LoadBloodPressures(patientUuid, config.numberOfBpsToDisplayWithoutDiabetesManagement) as BloodPressureSummaryViewEffect)
         ))
   }
 

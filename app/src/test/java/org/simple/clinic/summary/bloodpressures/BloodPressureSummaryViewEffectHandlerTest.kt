@@ -10,8 +10,10 @@ import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
@@ -19,7 +21,11 @@ class BloodPressureSummaryViewEffectHandlerTest {
 
   private val uiActions = mock<BloodPressureSummaryViewUiActions>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
   private val effectHandler = BloodPressureSummaryViewEffectHandler(
+      userSession = userSession,
+      facilityRepository = facilityRepository,
       bloodPressureRepository = bloodPressureRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
       uiActions = uiActions
@@ -62,7 +68,26 @@ class BloodPressureSummaryViewEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodPressuresCountLoaded(bloodPressuresCount))
+    verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when load current facility effect is received, then load current facility`() {
+    // given
+    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("ca84abfe-1236-4b98-8efa-747123e7c608"))
+    val currentFacility = PatientMocker.facility(uuid = UUID.fromString("2257f737-0e8a-452d-a270-66bdc2422664"))
+
+    whenever(userSession.loggedInUserImmediate()) doReturn user
+    whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(currentFacility)
+
+    // when
+    testCase.dispatch(LoadCurrentFacility)
+
+    // then
+    testCase.assertOutgoingEvents(CurrentFacilityLoaded(currentFacility))
+    verifyZeroInteractions(uiActions)
+  }
+
 
   @Test
   fun `when open blood pressure entry sheet effect is received, then open blood pressure entry sheet`() {

@@ -211,7 +211,8 @@ class PatientSummaryScreen(
   private fun appointmentScheduleSheetClosed() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
       .filter { it.requestCode == SUMMARY_REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
-      .map { ScheduleAppointmentSheetClosed() }
+      .map { ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(it.data!!) }
+      .map { ScheduleAppointmentSheetClosed(it.sheetOpenedFrom) }
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
     return linkIdWithPatientView

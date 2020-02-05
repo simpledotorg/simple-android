@@ -2,7 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.widgets.UiEvent
 
-class ScheduleAppointmentSheetClosed : UiEvent {
+data class ScheduleAppointmentSheetClosed(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : UiEvent {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
 

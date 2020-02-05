@@ -113,7 +113,7 @@ class BloodPressureSummaryView(
     MobiusDelegate(
         events = events,
         defaultModel = BloodPressureSummaryViewModel.create(screenKey.patientUuid),
-        init = BloodPressureSummaryViewInit(),
+        init = BloodPressureSummaryViewInit(bloodPressureSummaryConfig),
         update = BloodPressureSummaryViewUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render,

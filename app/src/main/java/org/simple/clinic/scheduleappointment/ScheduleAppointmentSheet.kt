@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.widget.DatePicker
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
@@ -35,10 +36,17 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
     private const val KEY_PATIENT_UUID = "patientUuid"
+    private const val KEY_EXTRA = "extra"
 
-    fun intent(context: Context, patientUuid: UUID): Intent =
-        Intent(context, ScheduleAppointmentSheet::class.java)
-            .putExtra(KEY_PATIENT_UUID, patientUuid)
+    fun intent(
+        context: Context,
+        patientUuid: UUID,
+        extra: Parcelable?
+    ): Intent {
+      return Intent(context, ScheduleAppointmentSheet::class.java)
+          .putExtra(KEY_PATIENT_UUID, patientUuid)
+          .putExtra(KEY_EXTRA, extra)
+    }
   }
 
   @Inject
@@ -117,7 +125,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   fun closeSheet() {
-    setResult(Activity.RESULT_OK)
+    val resultIntent = Intent().putExtra(KEY_EXTRA, intent.getParcelableExtra<Parcelable>(KEY_EXTRA))
+
+    setResult(Activity.RESULT_OK, resultIntent)
     finish()
   }
 

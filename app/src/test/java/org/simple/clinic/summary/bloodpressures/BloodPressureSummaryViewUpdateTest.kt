@@ -48,6 +48,19 @@ class BloodPressureSummaryViewUpdateTest {
   }
 
   @Test
+  fun `when current facility is loaded, then update the model`() {
+    val facility = PatientMocker.facility(uuid = UUID.fromString("0729cf58-73b8-4be9-b9d7-87cbb6ee0f6b"))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CurrentFacilityLoaded(facility))
+        .then(assertThatNext(
+            hasModel(defaultModel.currentFacilityLoaded(facility)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
   fun `when add new blood pressure is clicked, then open blood pressure entry sheet`() {
     updateSpec
         .given(defaultModel)

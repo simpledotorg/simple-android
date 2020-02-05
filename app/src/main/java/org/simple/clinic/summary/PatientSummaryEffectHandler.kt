@@ -11,6 +11,8 @@ import io.reactivex.rxkotlin.cast
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -103,7 +105,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(uiWorkScheduler)
           .doOnNext { (showScheduleAppointmentSheet, patientUuid) ->
             if (showScheduleAppointmentSheet) {
-              uiActions.showScheduleAppointmentSheet(patientUuid)
+              uiActions.showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
             }
           }
           .flatMap { Observable.empty<PatientSummaryEvent>() }
@@ -128,7 +130,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(uiWorkScheduler)
           .doOnNext { (shouldShowScheduleAppointmentSheet, patientUuid) ->
             if (shouldShowScheduleAppointmentSheet) {
-              uiActions.showScheduleAppointmentSheet(patientUuid)
+              uiActions.showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
             }
           }
           .flatMap { Observable.empty<PatientSummaryEvent>() }

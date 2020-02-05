@@ -307,7 +307,7 @@ class PatientSummaryScreen(
     }
   }
 
-  override fun showScheduleAppointmentSheet(patientUuid: UUID) {
+  override fun showScheduleAppointmentSheet(patientUuid: UUID, sheetOpenedFrom: AppointmentSheetOpenedFrom) {
     val intent = ScheduleAppointmentSheet.intent(context, patientUuid)
     activity.startActivityForResult(intent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
   }

@@ -12,7 +12,7 @@ class BloodPressureSummaryViewInitTest {
   fun `when widget is created, then load blood pressures for patient`() {
     val patientUuid = UUID.fromString("33d7f6d7-39f9-46a2-a104-457e5f77dc20")
     val defaultModel = BloodPressureSummaryViewModel.create(patientUuid)
-    val config = BloodPressureSummaryViewConfig(numberOfBpsToDisplay = 3)
+    val config = BloodPressureSummaryViewConfig(numberOfBpsToDisplay = 3, numberOfBpsToDisplayWithoutDiabetesManagement = 8)
     val initSpec = InitSpec<BloodPressureSummaryViewModel, BloodPressureSummaryViewEffect>(BloodPressureSummaryViewInit(config))
 
     initSpec

@@ -14,3 +14,5 @@ data class OpenBloodPressureEntrySheet(val patientUuid: UUID) : BloodPressureSum
 data class OpenBloodPressureUpdateSheet(val measurement: BloodPressureMeasurement) : BloodPressureSummaryViewEffect()
 
 data class ShowBloodPressureHistoryScreen(val patientUuid: UUID) : BloodPressureSummaryViewEffect()
+
+object LoadCurrentFacility : BloodPressureSummaryViewEffect()

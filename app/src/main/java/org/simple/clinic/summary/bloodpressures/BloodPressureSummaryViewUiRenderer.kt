@@ -13,10 +13,17 @@ class BloodPressureSummaryViewUiRenderer(
       else -> ui.showBloodPressures(model.latestBloodPressuresToDisplay)
     }
 
-    if (model.totalRecordedBloodPressureCount != null && model.totalRecordedBloodPressureCount > config.numberOfBpsToDisplay) {
-      ui.showSeeAllButton()
-    } else {
-      ui.hideSeeAllButton()
+    if (model.hasLoadedFacility && model.hasLoadedCountOfBloodSugars) {
+      val numberOfBpsToDisplay = if (model.isDiabetesManagementEnabled) {
+        config.numberOfBpsToDisplay
+      } else {
+        config.numberOfBpsToDisplayWithoutDiabetesManagement
+      }
+
+      when {
+        model.totalRecordedBloodPressureCount!! > numberOfBpsToDisplay -> ui.showSeeAllButton()
+        else -> ui.hideSeeAllButton()
+      }
     }
   }
 }

@@ -7,14 +7,15 @@ import java.util.UUID
 
 @Parcelize
 data class PatientSummaryModel(
+    val openIntention: OpenIntention,
     val patientUuid: UUID,
     val patientSummaryProfile: PatientSummaryProfile?,
     val currentFacility: Facility?
 ) : Parcelable {
 
   companion object {
-    fun from(patientUuid: UUID): PatientSummaryModel {
-      return PatientSummaryModel(patientUuid, null, null)
+    fun from(openIntention: OpenIntention, patientUuid: UUID): PatientSummaryModel {
+      return PatientSummaryModel(openIntention, patientUuid, null, null)
     }
   }
 

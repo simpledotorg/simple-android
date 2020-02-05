@@ -10,11 +10,12 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import java.util.UUID
 
 class PatientSummaryUpdateTest {
 
-  private val defaultModel = PatientSummaryModel.from(UUID.fromString("93a131b0-890e-41a3-88ec-b35b48efc6c5"))
+  private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, UUID.fromString("93a131b0-890e-41a3-88ec-b35b48efc6c5"))
   private val updateSpec = UpdateSpec(PatientSummaryUpdate())
 
   @Test

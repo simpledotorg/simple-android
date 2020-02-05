@@ -308,7 +308,7 @@ class PatientSummaryScreen(
   }
 
   override fun showScheduleAppointmentSheet(patientUuid: UUID, sheetOpenedFrom: AppointmentSheetOpenedFrom) {
-    val intent = ScheduleAppointmentSheet.intent(context, patientUuid)
+    val intent = ScheduleAppointmentSheet.intent(context, patientUuid, ScheduleAppointmentSheetExtra(sheetOpenedFrom))
     activity.startActivityForResult(intent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
   }
 
@@ -358,7 +358,12 @@ class PatientSummaryScreen(
 }
 
 @Parcelize
-data class PatientSummaryScreenSavedState(
+private data class PatientSummaryScreenSavedState(
     val superSavedState: Parcelable?,
     val linkIdWithPatientShown: Boolean
+) : Parcelable
+
+@Parcelize
+private data class ScheduleAppointmentSheetExtra(
+    val sheetOpenedFrom: AppointmentSheetOpenedFrom
 ) : Parcelable

@@ -72,8 +72,9 @@ class DrugSummaryView(
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   override fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>) {
+    val alphabeticallySortedPrescribedDrugs = prescribedDrugs.sortedBy { it.name }
     bind(
-        prescriptions = prescribedDrugs,
+        prescriptions = alphabeticallySortedPrescribedDrugs,
         dateFormatter = exactDateFormatter,
         userClock = userClock
     )
@@ -99,7 +100,7 @@ class DrugSummaryView(
     if (prescriptions.isNotEmpty()) {
       prescriptions
           .map { drug -> DrugSummaryItemView.create(drugsSummaryContainer, drug) }
-          .forEach { drugView -> drugsSummaryContainer.addView(drugView, drugsSummaryContainer.childCount - 1) }
+          .forEach { drugView -> drugsSummaryContainer.addView(drugView) }
 
       val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt }!!
 

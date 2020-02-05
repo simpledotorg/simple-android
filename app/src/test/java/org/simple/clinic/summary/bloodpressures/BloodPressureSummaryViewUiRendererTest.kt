@@ -12,7 +12,7 @@ import java.util.UUID
 class BloodPressureSummaryViewUiRendererTest {
   private val patientUuid = UUID.fromString("8b298cc4-da11-4df9-a318-01e113f3abe3")
   private val ui = mock<BloodPressureSummaryViewUi>()
-  private val config = BloodPressureSummaryViewConfig(3, numberOfBpsToDisplayWithoutDiabetesManagement = 8)
+  private val config = BloodPressureSummaryViewConfig(numberOfBpsToDisplay = 3, numberOfBpsToDisplayWithoutDiabetesManagement = 8)
   private val uiRenderer = BloodPressureSummaryViewUiRenderer(ui, config)
   private val defaultModel = BloodPressureSummaryViewModel.create(patientUuid)
 

@@ -17,6 +17,15 @@ data class BloodPressureSummaryViewModel(
     fun create(patientUuid: UUID) = BloodPressureSummaryViewModel(patientUuid, null, null, null)
   }
 
+  val hasLoadedCountOfBloodSugars: Boolean
+    get() = totalRecordedBloodPressureCount != null
+
+  val hasLoadedFacility: Boolean
+    get() = facility != null
+
+  val isDiabetesManagementEnabled: Boolean
+    get() = facility!!.config.diabetesManagementEnabled
+
   fun bloodPressuresLoaded(bloodPressures: List<BloodPressureMeasurement>): BloodPressureSummaryViewModel =
       copy(latestBloodPressuresToDisplay = bloodPressures)
 

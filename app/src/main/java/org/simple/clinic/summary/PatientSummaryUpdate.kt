@@ -13,7 +13,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   override fun update(model: PatientSummaryModel, event: PatientSummaryEvent): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when (event) {
       is PatientSummaryProfileLoaded -> next(model.patientSummaryProfileLoaded(event.patientSummaryProfile))
-      is PatientSummaryBackClicked -> dispatch(HandleBackClick(event.patientUuid, event.screenCreatedTimestamp))
+      is PatientSummaryBackClicked -> dispatch(HandleBackClick(event.patientUuid, event.screenCreatedTimestamp, model.openIntention))
       is PatientSummaryDoneClicked -> dispatch(HandleDoneClick(event.patientUuid))
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))

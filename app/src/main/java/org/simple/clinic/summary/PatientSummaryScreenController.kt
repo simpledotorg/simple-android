@@ -22,7 +22,6 @@ import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.None
-import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -140,9 +139,8 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .map { (_, _) ->
           { ui: Ui ->
             when (openIntention) {
-              ViewExistingPatient -> ui.goToPreviousScreen()
               ViewNewPatient, is LinkIdWithPatient -> ui.goToHomeScreen()
-            }.exhaustive()
+            }
           }
         }
 

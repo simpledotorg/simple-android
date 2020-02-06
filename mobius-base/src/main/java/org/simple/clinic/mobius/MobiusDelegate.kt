@@ -53,9 +53,6 @@ class MobiusDelegate<M : Parcelable, E, F>(
 
   private lateinit var eventsDisposable: Disposable
 
-  val model: M
-    get() = controller.model
-
   fun prepare() {
     controller = MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
     controller.connect(Connectables.contramap(identity(), this))

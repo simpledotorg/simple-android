@@ -43,7 +43,17 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             uiWorkScheduler = schedulersProvider.ui()
         ))
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
+        .addTransformer(HandleEditClick::class.java, handleEditClick(uiWorkScheduler = schedulersProvider.ui()))
         .build()
+  }
+
+  private fun handleEditClick(uiWorkScheduler: Scheduler): ObservableTransformer<HandleEditClick, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(uiWorkScheduler)
+          .doOnNext { uiActions.showPatientEditScreen(it.patientSummaryProfile) }
+          .flatMap { Observable.empty<PatientSummaryEvent>() }
+    }
   }
 
   // TODO(vs): 2020-01-15 Revisit after Mobius migration

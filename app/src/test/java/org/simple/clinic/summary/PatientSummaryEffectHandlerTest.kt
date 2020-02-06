@@ -9,9 +9,16 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.toOptional
 import java.util.UUID
 
 class PatientSummaryEffectHandlerTest {
@@ -19,10 +26,11 @@ class PatientSummaryEffectHandlerTest {
   private val uiActions = mock<PatientSummaryUiActions>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val patientRepository = mock<PatientRepository>()
 
   private val effectHandler = PatientSummaryEffectHandler(
       schedulersProvider = TrampolineSchedulersProvider(),
-      patientRepository = mock(),
+      patientRepository = patientRepository,
       bloodPressureRepository = mock(),
       userSession = userSession,
       facilityRepository = facilityRepository,
@@ -51,4 +59,36 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when the load patient summary profile is received, then patient summary profile must be fetched`() {
+    // given
+    val patientUuid = UUID.fromString("2bd2ad18-f532-4649-b775-efe97c38ce59")
+    val patient = PatientMocker.patient(patientUuid)
+    val patientAddress = PatientMocker.address(uuid = patient.addressUuid)
+    val patientPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid)
+    val bpPassport = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
+    val bangladeshNationId = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
+
+    whenever(patientRepository.patient(patientUuid)) doReturn Observable.just(patient.toOptional())
+    whenever(patientRepository.address(patient.addressUuid)) doReturn Observable.just(patientAddress.toOptional())
+    whenever(patientRepository.phoneNumber(patientUuid)) doReturn Observable.just(patientPhoneNumber.toOptional())
+    whenever(patientRepository.bpPassportForPatient(patientUuid)) doReturn Observable.just(bpPassport.toOptional())
+    whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)) doReturn Observable.just(bangladeshNationId.toOptional())
+
+    // when
+    testCase.dispatch(LoadPatientSummaryProfile(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(PatientSummaryProfileLoaded(
+        PatientSummaryProfile(
+            patient = patient,
+            address = patientAddress,
+            phoneNumber = patientPhoneNumber,
+            bpPassport = bpPassport,
+            bangladeshNationalId = bangladeshNationId
+        )
+    ))
+  }
+
 }

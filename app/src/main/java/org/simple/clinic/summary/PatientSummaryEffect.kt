@@ -23,3 +23,5 @@ object LoadCurrentFacility : PatientSummaryEffect()
 data class HandleEditClick(val patientSummaryProfile: PatientSummaryProfile) : PatientSummaryEffect()
 
 object HandleLinkIdCancelled: PatientSummaryEffect()
+
+object GoBackToPreviousScreen: PatientSummaryEffect()

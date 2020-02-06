@@ -78,6 +78,12 @@ fun View.setTopMarginRes(@DimenRes topMarginRes: Int) {
   layoutParams = marginLayoutParams
 }
 
+fun View.setBottomMarginRes(@DimenRes bottomMarginRes: Int) {
+  val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
+  marginLayoutParams.bottomMargin = resources.getDimensionPixelSize(bottomMarginRes)
+  layoutParams = marginLayoutParams
+}
+
 fun View.setTopMargin(topMargin: Int) {
   val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
   marginLayoutParams.topMargin = topMargin

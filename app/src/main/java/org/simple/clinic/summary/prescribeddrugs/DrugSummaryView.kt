@@ -19,6 +19,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.setBottomMarginRes
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -93,6 +94,13 @@ class DrugSummaryView(
     summaryViewGroup.visibleOrGone(prescriptions.isNotEmpty())
 
     setButtonText(prescriptions)
+
+    divider.visibleOrGone(prescriptions.isNotEmpty())
+
+    drugSummaryViewRoot.setBottomMarginRes(
+        if (prescriptions.isEmpty()) R.dimen.spacing_0
+        else R.dimen.spacing_16
+    )
 
     removeAllDrugViews()
 

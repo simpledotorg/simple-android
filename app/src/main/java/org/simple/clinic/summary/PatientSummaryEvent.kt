@@ -27,3 +27,7 @@ data class CurrentFacilityLoaded(val facility: Facility) : PatientSummaryEvent()
 object PatientSummaryEditClicked : PatientSummaryEvent()
 
 object PatientSummaryLinkIdCancelled : PatientSummaryEvent()
+
+data class ScheduleAppointmentSheetClosed(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent() {
+  override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
+}

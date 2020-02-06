@@ -237,7 +237,8 @@ class PatientSummaryScreen(
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
     displayPhoneNumber(patientSummaryProfile.phoneNumber)
     displayPatientAddress(patientSummaryProfile.address)
-    displayBpPassport(patientSummaryProfile.bpPassport, patientSummaryProfile.phoneNumber != null)
+    displayBpPassport(patientSummaryProfile.bpPassport)
+    displayBangladeshNationalId(patientSummaryProfile.bangladeshNationalId, patientSummaryProfile.bpPassport != null)
   }
 
   private fun displayPatientAddress(address: PatientAddress) {
@@ -262,7 +263,7 @@ class PatientSummaryScreen(
     fullNameTextView.text = resources.getString(R.string.patientsummary_toolbar_title, name, genderLetter, age.toString())
   }
 
-  private fun displayBpPassport(bpPassport: BusinessId?, isPhoneNumberVisible: Boolean) {
+  private fun displayBpPassport(bpPassport: BusinessId?) {
     bpPassportTextView.visibleOrGone(bpPassport != null)
 
     bpPassportTextView.text = when (bpPassport) {
@@ -270,15 +271,35 @@ class PatientSummaryScreen(
       else -> {
         val identifier = bpPassport.identifier
         val numericSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Numeric_White72)
-        val formattedIdentifier = Truss()
+        Truss()
             .append(identifierDisplayAdapter.typeAsText(identifier))
             .append(": ")
             .pushSpan(numericSpan)
             .append(identifierDisplayAdapter.valueAsText(identifier))
             .popSpan()
             .build()
+      }
+    }
+  }
 
-        if (isPhoneNumberVisible) "${Unicode.bullet}  $formattedIdentifier" else formattedIdentifier
+  private fun displayBangladeshNationalId(bangladeshNationalId: BusinessId?, isBpPassportVisible: Boolean) {
+    bangladeshNationalIdTextView.visibleOrGone(bangladeshNationalId != null)
+
+    bangladeshNationalIdTextView.text = when (bangladeshNationalId) {
+      null -> ""
+      else -> {
+        val identifier = bangladeshNationalId.identifier
+        val numericSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Numeric_White72)
+
+        val formattedIdentifier = Truss()
+            .append(context.getString(R.string.patientsummary_bangladesh_national_id))
+            .append(": ")
+            .pushSpan(numericSpan)
+            .append(identifierDisplayAdapter.valueAsText(identifier))
+            .popSpan()
+            .build()
+
+        if (isBpPassportVisible) "${Unicode.bullet} $formattedIdentifier" else formattedIdentifier
       }
     }
   }

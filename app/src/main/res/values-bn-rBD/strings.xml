@@ -153,6 +153,7 @@
   <string name="patientsummary_addphone_phone_hint">ফোন নম্বর</string>
   <string name="patientsummary_addphone_save">সংরক্ষণ করুন</string>
   <string name="patientsummary_addphone_cancel">ছেড়ে যান</string>
+  <string name="patientsummary_bangladesh_national_id">আইডি</string>
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_low">নিম্ন</string>

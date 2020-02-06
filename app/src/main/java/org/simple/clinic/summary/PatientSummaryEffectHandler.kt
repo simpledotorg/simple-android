@@ -67,10 +67,11 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
         val latestPhoneNumberStream = patientRepository.phoneNumber(patientUuid).subscribeOn(scheduler)
         val latestBpPassportStream = patientRepository.bpPassportForPatient(patientUuid).subscribeOn(scheduler)
+        val bangladeshNationalIdStream = patientRepository.bangladeshNationalIdForPatient(patientUuid).subscribeOn(scheduler)
 
         Observables
-            .combineLatest(sharedPatients, addresses, latestPhoneNumberStream, latestBpPassportStream) { patient, address, phoneNumber, bpPassport ->
-              PatientSummaryProfile(patient, address, phoneNumber.toNullable(), bpPassport.toNullable())
+            .combineLatest(sharedPatients, addresses, latestPhoneNumberStream, latestBpPassportStream, bangladeshNationalIdStream) { patient, address, phoneNumber, bpPassport, bangladeshNationalId ->
+              PatientSummaryProfile(patient, address, phoneNumber.toNullable(), bpPassport.toNullable(), bangladeshNationalId.toNullable())
             }
             .take(1)
             .map(::PatientSummaryProfileLoaded)

@@ -51,7 +51,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(uiWorkScheduler)
-          .doOnNext { uiActions.showPatientEditScreen(it.patientSummaryProfile) }
+          .doOnNext { uiActions.showEditPatientScreen(it.patientSummaryProfile) }
           .flatMap { Observable.empty<PatientSummaryEvent>() }
     }
   }

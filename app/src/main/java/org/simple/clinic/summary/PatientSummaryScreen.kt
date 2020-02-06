@@ -90,7 +90,8 @@ class PatientSummaryScreen(
             bloodPressureSaves(),
             appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
-            identifierLinkCancelledEvents()
+            identifierLinkCancelledEvents(),
+            editButtonClicks()
         )
         .compose(ReportAnalyticsEvents())
         .share()
@@ -140,7 +141,7 @@ class PatientSummaryScreen(
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
 
-    setupEditButtonClicks()
+    editButtonClicks()
 
     val controller = controllerFactory.create(screenKey.patientUuid, screenKey.intention, screenKey.screenCreatedTimestamp)
 
@@ -163,11 +164,7 @@ class PatientSummaryScreen(
     super.onDetachedFromWindow()
   }
 
-  private fun setupEditButtonClicks() {
-    editPatientButton.setOnClickListener {
-      screenRouter.push(createEditPatientScreenKey(mobiusDelegate.model.patientSummaryProfile!!))
-    }
-  }
+  private fun editButtonClicks(): Observable<UiEvent> = editPatientButton.clicks().map { PatientSummaryEditClicked }
 
   private fun createEditPatientScreenKey(
       patientSummaryProfile: PatientSummaryProfile
@@ -347,6 +344,10 @@ class PatientSummaryScreen(
 
   override fun hideDiabetesView() {
     bloodSugarSummaryView.visibility = GONE
+  }
+
+  override fun showEditPatientScreen(patientSummaryProfile: PatientSummaryProfile) {
+    screenRouter.push(createEditPatientScreenKey(patientSummaryProfile))
   }
 }
 

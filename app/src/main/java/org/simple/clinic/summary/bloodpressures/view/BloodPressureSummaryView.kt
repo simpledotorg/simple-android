@@ -124,7 +124,7 @@ class BloodPressureSummaryView(
   var bpRecorded: BpRecorded? = null
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.patientsummary_bpsummary_content, this, true)
+    inflate(context, R.layout.patientsummary_bpsummary_content, this)
   }
 
   override fun onFinishInflate() {

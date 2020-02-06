@@ -2,10 +2,12 @@ package org.simple.clinic.summary
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -30,16 +32,16 @@ import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.summary.AppointmentSheetOpenedFrom.*
-import org.simple.clinic.summary.OpenIntention.*
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
+import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
+import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.HOME
 import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
@@ -49,7 +51,6 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -141,6 +142,7 @@ class PatientSummaryScreenControllerTest {
   @Parameters(method = "patient summary open intentions")
   fun `when the screen is opened, the viewed patient analytics event must be sent`(openIntention: OpenIntention) {
     setupController(openIntention)
+    startMobiusLoop()
 
     val expectedEvent = MockAnalyticsReporter.Event("ViewedPatient", mapOf(
         "patientId" to patientUuid.toString(),
@@ -165,6 +167,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
 
     setupController(openIntention)
+    startMobiusLoop()
 
     if (cancelReason == InvalidPhoneNumber) {
       verify(ui).showUpdatePhoneDialog(patientUuid)
@@ -189,6 +192,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
 
     setupController(openIntention)
+    startMobiusLoop()
 
     verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -206,6 +210,7 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
 
     setupController(openIntention)
+    startMobiusLoop()
 
     verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -227,6 +232,7 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
 
     setupController(openIntention)
+    startMobiusLoop()
 
     verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -237,6 +243,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
 
     setupController(ViewNewPatient)
+    startMobiusLoop()
 
     verify(ui, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -251,6 +258,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
     setupController(openIntention)
+    startMobiusLoop()
     uiEvents.onNext(PatientSummaryBloodPressureSaved)
 
     verify(ui).showAddPhoneDialog(patientUuid)
@@ -267,6 +275,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
     setupController(openIntention)
+    startMobiusLoop()
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -281,6 +290,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(true))
 
     setupController(openIntention)
+    startMobiusLoop()
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -294,6 +304,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
     setupController(openIntention)
+    startMobiusLoop()
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -307,6 +318,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
     setupController(openIntention)
+    startMobiusLoop()
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -319,6 +331,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
 
     setupController(openIntention)
+    startMobiusLoop()
 
     verify(ui, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -374,6 +387,7 @@ class PatientSummaryScreenControllerTest {
       identifier: Identifier?
   ) {
     setupController(openIntention)
+    startMobiusLoop()
 
     if (shouldShowLinkIdSheet) {
       verify(ui).showLinkIdWithPatientView(patientUuid, identifier!!)
@@ -395,6 +409,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when the link id with patient is cancelled, the patient summary screen must be closed`() {
+    setupController(LinkIdWithPatient(PatientMocker.bpPassportIdentifier()))
     startMobiusLoop()
 
     uiEvents.onNext(PatientSummaryLinkIdCancelled)
@@ -406,6 +421,7 @@ class PatientSummaryScreenControllerTest {
   fun `when the link id with patient is completed, the link id screen must be closed`() {
     val openIntention = LinkIdWithPatient(identifier = Identifier("id", BpPassport))
     setupController(openIntention)
+    startMobiusLoop()
 
     uiEvents.onNext(PatientSummaryLinkIdCompleted)
 
@@ -547,6 +563,166 @@ class PatientSummaryScreenControllerTest {
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
     verify(ui, never()).goToPreviousScreen()
     verify(ui).goToHomeScreen()
+  }
+
+  @Test
+  fun `when schedule appointment sheet is closed after clicking back from a new patient, go to home screen`() {
+    // given
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
+
+    // when
+    setupController(
+        openIntention = ViewNewPatient,
+        screenCreatedTimestamp = screenCreatedTimestamp
+    )
+    startMobiusLoop()
+    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
+
+    verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verifyNoMoreInteractions(ui)
+    clearInvocations(ui)
+
+    uiEvents.onNext(ScheduleAppointmentSheetClosed(BACK_CLICK))
+
+    // then
+    verify(ui).goToHomeScreen()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when schedule appointment sheet is closed after clicking back from an existing patient, go to previous screen`() {
+    // given
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
+
+    // when
+    setupController(
+        openIntention = ViewExistingPatient,
+        screenCreatedTimestamp = screenCreatedTimestamp
+    )
+    startMobiusLoop()
+    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
+
+    verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verifyNoMoreInteractions(ui)
+    clearInvocations(ui)
+
+    uiEvents.onNext(ScheduleAppointmentSheetClosed(BACK_CLICK))
+
+    // then
+    verify(ui).goToPreviousScreen()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when schedule appointment sheet is closed after clicking back after linking an ID with existing patient, go to home screen`() {
+    // given
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    val identifier = PatientMocker.bpPassportIdentifier()
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
+
+    // when
+    setupController(
+        openIntention = LinkIdWithPatient(identifier),
+        screenCreatedTimestamp = screenCreatedTimestamp
+    )
+    startMobiusLoop()
+    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
+
+    verify(ui).showLinkIdWithPatientView(patientUuid, identifier)
+    verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verifyNoMoreInteractions(ui)
+    clearInvocations(ui)
+
+    uiEvents.onNext(ScheduleAppointmentSheetClosed(BACK_CLICK))
+
+    // then
+    verify(ui).goToHomeScreen()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when schedule appointment sheet is closed after clicking save from a new patient, go to home screen`() {
+    // given
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
+
+    // when
+    setupController(
+        openIntention = ViewNewPatient,
+        screenCreatedTimestamp = screenCreatedTimestamp
+    )
+    startMobiusLoop()
+    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
+
+    verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+    verifyNoMoreInteractions(ui)
+    clearInvocations(ui)
+
+    uiEvents.onNext(ScheduleAppointmentSheetClosed(DONE_CLICK))
+
+    // then
+    verify(ui).goToHomeScreen()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when schedule appointment sheet is closed after clicking save from an existing patient, go to home screen`() {
+    // given
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
+
+    // when
+    setupController(
+        openIntention = ViewExistingPatient,
+        screenCreatedTimestamp = screenCreatedTimestamp
+    )
+    startMobiusLoop()
+    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
+
+    verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+    verifyNoMoreInteractions(ui)
+    clearInvocations(ui)
+
+    uiEvents.onNext(ScheduleAppointmentSheetClosed(DONE_CLICK))
+
+    // then
+    verify(ui).goToHomeScreen()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when schedule appointment sheet is closed after clicking save after linking an ID with existing patient, go to home screen`() {
+    // given
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    val identifier = PatientMocker.bpPassportIdentifier()
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
+
+    // when
+    setupController(
+        openIntention = LinkIdWithPatient(identifier),
+        screenCreatedTimestamp = screenCreatedTimestamp
+    )
+    startMobiusLoop()
+    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
+
+    verify(ui).showLinkIdWithPatientView(patientUuid, identifier)
+    verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+    verifyNoMoreInteractions(ui)
+    clearInvocations(ui)
+
+    uiEvents.onNext(ScheduleAppointmentSheetClosed(DONE_CLICK))
+
+    // then
+    verify(ui).goToHomeScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(

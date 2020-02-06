@@ -332,7 +332,7 @@ object PatientMocker {
         appointment = appointment,
         bloodPressure = bloodPressureMeasurement,
         isAtHighRisk = isHighRisk
-        )
+    )
   }
 
   fun loggedInUser(
@@ -534,5 +534,12 @@ object PatientMocker {
         timestamps = timestamps,
         syncStatus = syncStatus
     )
+  }
+
+  fun bpPassportIdentifier(
+      value: String = "5e572558-e102-40e2-9119-e4cebba56029",
+      type: Identifier.IdentifierType = Identifier.IdentifierType.BpPassport
+  ): Identifier {
+    return Identifier(value, type)
   }
 }

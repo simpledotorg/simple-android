@@ -125,39 +125,6 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for patient summary populating profile")
-  fun `patient's profile should be populated`(intention: OpenIntention, bpPassport: BusinessId?) {
-    val addressUuid = UUID.fromString("471253db-11d7-42ae-9e92-1415abd7a418")
-    val patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid)
-    val address = PatientMocker.address(uuid = addressUuid)
-    val phoneNumber = None
-    val optionalBpPassport = bpPassport.toOptional()
-
-    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just<Optional<Patient>>(Just(patient)))
-    whenever(patientRepository.address(addressUuid)).doReturn(Observable.just<Optional<PatientAddress>>(Just(address)))
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
-    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).doReturn(Observable.never())
-    whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.just(optionalBpPassport))
-    whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)).doReturn(Observable.just<Optional<BusinessId>>(None))
-
-    startMobiusLoop()
-
-    val expectedSummaryProfile = PatientSummaryProfile(patient, address, phoneNumber.toNullable(), optionalBpPassport.toNullable(), null)
-    verify(ui).populatePatientProfile(expectedSummaryProfile)
-    verify(ui).showEditButton()
-  }
-
-  @Suppress("Unused")
-  private fun `params for patient summary populating profile`() = listOf(
-      listOf(OpenIntention.ViewExistingPatient, PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("bp-pass", BpPassport))),
-      listOf(OpenIntention.ViewExistingPatient, null),
-      listOf(OpenIntention.ViewNewPatient, PatientMocker.businessId(patientUuid = patientUuid)),
-      listOf(OpenIntention.ViewNewPatient, null),
-      listOf(OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), PatientMocker.businessId(patientUuid = patientUuid)),
-      listOf(OpenIntention.LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), null)
-  )
-
-  @Test
   @Parameters(method = "patient summary open intentions")
   fun `when the screen is opened, the viewed patient analytics event must be sent`(openIntention: OpenIntention) {
     setupController(openIntention)

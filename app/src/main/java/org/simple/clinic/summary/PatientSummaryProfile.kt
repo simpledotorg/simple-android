@@ -12,5 +12,6 @@ data class PatientSummaryProfile(
     val patient: Patient,
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?,
-    val bpPassport: BusinessId?
+    val bpPassport: BusinessId?,
+    val bangladeshNationalId: BusinessId?
 ): Parcelable

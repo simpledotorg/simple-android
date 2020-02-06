@@ -81,6 +81,7 @@ class PatientSummaryScreenControllerTest {
   @Before
   fun setUp() {
     whenever(patientRepository.patient(patientUuid)).doReturn(Observable.never())
+    whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)).doReturn(Observable.never())
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
@@ -137,10 +138,11 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).doReturn(Observable.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.just(optionalBpPassport))
+    whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)).doReturn(Observable.just<Optional<BusinessId>>(None))
 
     startMobiusLoop()
 
-    val expectedSummaryProfile = PatientSummaryProfile(patient, address, phoneNumber.toNullable(), optionalBpPassport.toNullable())
+    val expectedSummaryProfile = PatientSummaryProfile(patient, address, phoneNumber.toNullable(), optionalBpPassport.toNullable(), null)
     verify(ui).populatePatientProfile(expectedSummaryProfile)
     verify(ui).showEditButton()
   }

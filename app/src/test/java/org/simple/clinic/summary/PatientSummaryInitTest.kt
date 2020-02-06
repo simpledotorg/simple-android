@@ -6,7 +6,6 @@ import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
@@ -40,7 +39,8 @@ class PatientSummaryInitTest {
         patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid),
         address = PatientMocker.address(uuid = addressUuid),
         phoneNumber = null,
-        bpPassport = null
+        bpPassport = null,
+        bangladeshNationalId = null
     )
     val facility = PatientMocker.facility(uuid = UUID.fromString("fc5b49de-0e07-4d33-8b77-6611b47cb403"))
 

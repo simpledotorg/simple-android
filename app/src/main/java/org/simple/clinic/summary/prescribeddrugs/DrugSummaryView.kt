@@ -2,7 +2,6 @@ package org.simple.clinic.summary.prescribeddrugs
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -49,7 +48,7 @@ class DrugSummaryView(
   private val internalEvents = PublishSubject.create<DrugSummaryEvent>()
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.drugs_summary_view, this, true)
+    inflate(context, R.layout.drugs_summary_view, this)
   }
 
   override fun onFinishInflate() {

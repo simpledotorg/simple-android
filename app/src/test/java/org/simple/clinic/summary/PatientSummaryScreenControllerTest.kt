@@ -93,39 +93,6 @@ class PatientSummaryScreenControllerTest {
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.never())
 
     Analytics.addReporter(reporter)
-
-    val effectHandler = PatientSummaryEffectHandler(
-        schedulersProvider = TrampolineSchedulersProvider(),
-        patientRepository = patientRepository,
-        bloodPressureRepository = bpRepository,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
-        uiActions = object : PatientSummaryUiActions {
-          override fun showEditPatientScreen(patientSummaryProfile: PatientSummaryProfile) {
-            ui.showEditPatientScreen(patientSummaryProfile)
-          }
-
-          override fun showScheduleAppointmentSheet(
-              patientUuid: UUID,
-              sheetOpenedFrom: AppointmentSheetOpenedFrom
-          ) {
-            ui.showScheduleAppointmentSheet(patientUuid, sheetOpenedFrom)
-          }
-
-          override fun goToPreviousScreen() {
-            ui.goToPreviousScreen()
-          }
-        }
-    )
-
-    testFixture = MobiusTestFixture(
-        events = uiEvents.ofType(),
-        defaultModel = PatientSummaryModel.from(ViewExistingPatient, patientUuid),
-        init = PatientSummaryInit(),
-        update = PatientSummaryUpdate(),
-        effectHandler = effectHandler.build(),
-        modelUpdateListener = viewRenderer::render
-    )
   }
 
   @After
@@ -573,11 +540,12 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
+    val openIntention = ViewNewPatient
     setupController(
-        openIntention = ViewNewPatient,
+        openIntention = openIntention,
         screenCreatedTimestamp = screenCreatedTimestamp
     )
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
@@ -599,11 +567,12 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
+    val openIntention = ViewExistingPatient
     setupController(
-        openIntention = ViewExistingPatient,
+        openIntention = openIntention,
         screenCreatedTimestamp = screenCreatedTimestamp
     )
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
@@ -626,11 +595,12 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
+    val openIntention = LinkIdWithPatient(identifier)
     setupController(
-        openIntention = LinkIdWithPatient(identifier),
+        openIntention = openIntention,
         screenCreatedTimestamp = screenCreatedTimestamp
     )
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui).showLinkIdWithPatientView(patientUuid, identifier)
@@ -653,11 +623,12 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
+    val openIntention = ViewNewPatient
     setupController(
-        openIntention = ViewNewPatient,
+        openIntention = openIntention,
         screenCreatedTimestamp = screenCreatedTimestamp
     )
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
@@ -679,11 +650,12 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
+    val openIntention = ViewExistingPatient
     setupController(
-        openIntention = ViewExistingPatient,
+        openIntention = openIntention,
         screenCreatedTimestamp = screenCreatedTimestamp
     )
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
@@ -706,11 +678,12 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
+    val openIntention = LinkIdWithPatient(identifier)
     setupController(
-        openIntention = LinkIdWithPatient(identifier),
+        openIntention = openIntention,
         screenCreatedTimestamp = screenCreatedTimestamp
     )
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(ui).showLinkIdWithPatientView(patientUuid, identifier)
@@ -747,7 +720,40 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
   }
 
-  private fun startMobiusLoop() {
+  private fun startMobiusLoop(openIntention: OpenIntention = ViewExistingPatient) {
+    val effectHandler = PatientSummaryEffectHandler(
+        schedulersProvider = TrampolineSchedulersProvider(),
+        patientRepository = patientRepository,
+        bloodPressureRepository = bpRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        uiActions = object : PatientSummaryUiActions {
+          override fun showEditPatientScreen(patientSummaryProfile: PatientSummaryProfile) {
+            ui.showEditPatientScreen(patientSummaryProfile)
+          }
+
+          override fun showScheduleAppointmentSheet(
+              patientUuid: UUID,
+              sheetOpenedFrom: AppointmentSheetOpenedFrom
+          ) {
+            ui.showScheduleAppointmentSheet(patientUuid, sheetOpenedFrom)
+          }
+
+          override fun goToPreviousScreen() {
+            ui.goToPreviousScreen()
+          }
+        }
+    )
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = PatientSummaryModel.from(openIntention, patientUuid),
+        init = PatientSummaryInit(),
+        update = PatientSummaryUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = viewRenderer::render
+    )
+
     testFixture.start()
   }
 }

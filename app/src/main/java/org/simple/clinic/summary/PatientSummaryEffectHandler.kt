@@ -13,6 +13,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
+import org.simple.clinic.summary.OpenIntention.*
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -94,19 +95,21 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
       effects
           .observeOn(backgroundWorkScheduler)
           .map { handleBackClick ->
-            val (patientUuid, screenCreatedTime) = handleBackClick
+            val (patientUuid, screenCreatedTime, openIntention) = handleBackClick
 
             val hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTime)
             val noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid)
 
             val shouldShowScheduleAppointmentSheet = if (noBloodPressuresRecordedForPatient) false else hasPatientDataChangedSinceScreenCreated
 
-            shouldShowScheduleAppointmentSheet to patientUuid
+            Triple(shouldShowScheduleAppointmentSheet,patientUuid, openIntention)
           }
           .observeOn(uiWorkScheduler)
-          .doOnNext { (showScheduleAppointmentSheet, patientUuid) ->
+          .doOnNext { (showScheduleAppointmentSheet, patientUuid, openIntention) ->
             if (showScheduleAppointmentSheet) {
               uiActions.showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+            } else if(openIntention == ViewExistingPatient) {
+              uiActions.goToPreviousScreen()
             }
           }
           .flatMap { Observable.empty<PatientSummaryEvent>() }

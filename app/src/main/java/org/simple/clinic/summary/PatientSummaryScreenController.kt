@@ -18,7 +18,6 @@ import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
-import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.None
@@ -101,15 +100,9 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .withLatestFrom(shouldGoBackStream) { _, shouldGoBack -> shouldGoBack }
         .filter { shouldGoBack -> shouldGoBack }
 
-    val goBackToHomeScreen = shouldGoBackAfterBackClickedStream
+    return shouldGoBackAfterBackClickedStream
         .filter { openIntention == ViewNewPatient || openIntention is LinkIdWithPatient }
         .map { { ui: Ui -> ui.goToHomeScreen() } }
-
-    val goBackToSearchResults = shouldGoBackAfterBackClickedStream
-        .filter { openIntention == ViewExistingPatient }
-        .map { { ui: Ui -> ui.goToPreviousScreen() } }
-
-    return goBackToHomeScreen.mergeWith(goBackToSearchResults)
   }
 
   private fun goToHomeOnDoneClick(events: Observable<UiEvent>): Observable<UiChange> {

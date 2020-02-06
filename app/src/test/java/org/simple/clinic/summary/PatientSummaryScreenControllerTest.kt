@@ -98,6 +98,10 @@ class PatientSummaryScreenControllerTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         uiActions = object : PatientSummaryUiActions {
+          override fun showEditPatientScreen(patientSummaryProfile: PatientSummaryProfile) {
+            ui.showEditPatientScreen(patientSummaryProfile)
+          }
+
           override fun showScheduleAppointmentSheet(patientUuid: UUID) {
             ui.showScheduleAppointmentSheet(patientUuid)
           }

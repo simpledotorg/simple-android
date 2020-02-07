@@ -97,14 +97,15 @@ class PatientSearchResultItemView(
   }
 
   private fun renderPatientAddress(address: PatientAddress) {
-    if (address.colonyOrVillage.isNullOrEmpty()) {
-      addressLabel.text = address.district
-    } else {
-      addressLabel.text = resources.getString(
-          R.string.patientsearchresults_item_address_with_colony_and_district,
-          address.colonyOrVillage,
-          address.district)
-    }
+    val addressFields = listOf(
+        address.streetAddress,
+        address.colonyOrVillage,
+        address.district,
+        address.state,
+        address.zone
+    ).filterNot { it.isNullOrBlank() }
+
+    addressLabel.text = addressFields.joinToString()
   }
 
   private fun renderPatientNameAgeAndGender(fullName: String, gender: Gender, dateOfBirth: DateOfBirth) {

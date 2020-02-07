@@ -178,8 +178,6 @@
   <string name="patientsummary_finish_saving_patient">Save</string>
   <string name="patientsummary_bp_none_added">No blood pressures added</string>
   <string name="patientsummary_edit">Edit</string>
-  <string name="patientsummary_address_with_colony" translatable="false">%1$s, %2$s, %3$s</string>
-  <string name="patientsummary_address_without_colony" translatable="false">%1$s, %2$s</string>
 
   <string name="patientsummary_updatephone_dialog_title">Update phone number</string>
   <string name="patientsummary_updatephone_dialog_message">Patient’s phone number was previously marked as incorrect</string>

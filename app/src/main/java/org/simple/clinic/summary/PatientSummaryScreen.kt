@@ -239,10 +239,15 @@ class PatientSummaryScreen(
   }
 
   private fun displayPatientAddress(address: PatientAddress) {
-    addressTextView.text = when {
-      address.colonyOrVillage.isNullOrBlank() -> resources.getString(R.string.patientsummary_address_without_colony, address.district, address.state)
-      else -> resources.getString(R.string.patientsummary_address_with_colony, address.colonyOrVillage, address.district, address.state)
-    }
+    val addressFields = listOf(
+        address.streetAddress,
+        address.colonyOrVillage,
+        address.district,
+        address.state,
+        address.zone
+    ).filterNot { it.isNullOrBlank() }
+
+    addressTextView.text = addressFields.joinToString()
   }
 
   private fun displayPhoneNumber(phoneNumber: PatientPhoneNumber?) {

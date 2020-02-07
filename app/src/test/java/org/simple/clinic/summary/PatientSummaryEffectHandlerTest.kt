@@ -2,6 +2,8 @@ package org.simple.clinic.summary
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -91,4 +93,27 @@ class PatientSummaryEffectHandlerTest {
     ))
   }
 
+  @Test
+  fun `when edit click effect is received then show edit patient screen`() {
+    //given
+    val patientProfile = PatientMocker.patientProfile(
+        patientUuid = UUID.fromString("12fdada1-57df-49de-871a-766fbdbb2f37"),
+        addressUuid = UUID.fromString("d261cde2-b0cb-436e-9612-8b3b7bde0c63")
+    )
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patientProfile.patient,
+        phoneNumber = null,
+        address = patientProfile.address,
+        bpPassport = null,
+        bangladeshNationalId = null
+    )
+
+    //when
+    testCase.dispatch(HandleEditClick(patientSummaryProfile))
+
+    //then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showEditPatientScreen(patientSummaryProfile)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

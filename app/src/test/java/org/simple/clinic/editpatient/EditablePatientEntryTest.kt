@@ -23,7 +23,8 @@ class EditablePatientEntryTest {
         PatientMocker.patient().copy(age = Age(99, Instant.now(clock)), dateOfBirth = null),
         PatientMocker.address(),
         null,
-        dateOfBirthFormat
+        dateOfBirthFormat,
+        null
     )
 
     assertThat(patientEntry.ageOrDateOfBirth)
@@ -36,7 +37,8 @@ class EditablePatientEntryTest {
         PatientMocker.patient().copy(age = null, dateOfBirth = LocalDate.now(clock)),
         PatientMocker.address(),
         null,
-        dateOfBirthFormat
+        dateOfBirthFormat,
+        null
     )
 
     assertThat(patientEntry.ageOrDateOfBirth)
@@ -49,7 +51,8 @@ class EditablePatientEntryTest {
         PatientMocker.patient().copy(age = Age(99, Instant.now(clock)), dateOfBirth = LocalDate.now(clock)),
         PatientMocker.address(),
         null,
-        dateOfBirthFormat
+        dateOfBirthFormat,
+        null
     )
 
     assertThat(patientEntry.ageOrDateOfBirth)
@@ -62,7 +65,8 @@ class EditablePatientEntryTest {
         PatientMocker.patient().copy(age = null, dateOfBirth = null),
         PatientMocker.address(),
         null,
-        dateOfBirthFormat
+        dateOfBirthFormat,
+        null
     )
   }
 }

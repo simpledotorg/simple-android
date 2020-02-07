@@ -6,21 +6,24 @@ import org.simple.clinic.R
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.router.screen.FullScreenKey
 
 @Parcelize
 data class EditPatientScreenKey(
     val patient: Patient,
     val address: PatientAddress,
-    val phoneNumber: PatientPhoneNumber?
+    val phoneNumber: PatientPhoneNumber?,
+    val bangladeshNationalId: BusinessId?
 ) : FullScreenKey {
   companion object {
     fun fromPatientData(
         patient: Patient,
         address: PatientAddress,
-        phoneNumber: PatientPhoneNumber?
+        phoneNumber: PatientPhoneNumber?,
+        bangladeshNationalId: BusinessId?
     ): EditPatientScreenKey {
-      return EditPatientScreenKey(patient, address, phoneNumber)
+      return EditPatientScreenKey(patient, address, phoneNumber, bangladeshNationalId)
     }
   }
 

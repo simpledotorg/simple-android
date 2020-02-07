@@ -20,8 +20,6 @@ import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.extractNullable
-import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -103,7 +101,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
       Observable.merge(
           createOrUpdatePhoneNumber(sharedSavePatientEffects),
           savePatient(sharedSavePatientEffects),
-          saveBangladeshNationalId(sharedSavePatientEffects)
+          updateBangladeshNationalId(sharedSavePatientEffects)
       )
     }
   }
@@ -187,10 +185,10 @@ class EditPatientEffectHandler @AssistedInject constructor(
     )
   }
 
-  private fun saveBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
+  private fun updateBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
-        .extractNullable { it.ongoingEntry.bangladeshNationalId }
-        .filter { it.identifier.value.isNotBlank() }
+        .filter { it.savedBangladeshId != null && it.ongoingEntry.bangladeshNationalId.isNotBlank() }
+        .map { it.savedBangladeshId?.updateIdentifierValue(it.ongoingEntry.bangladeshNationalId) }
         .flatMapCompletable { patientRepository.saveBusinessId(it) }
         .toObservable()
   }

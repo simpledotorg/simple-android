@@ -455,4 +455,5 @@
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <string name="bloodpressurehistory_add_bp_button">নতুন বিপি</string>
+  <string name="drugsummaryview_no_medicines">কোনটাই না</string>
 </resources>

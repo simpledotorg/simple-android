@@ -14,7 +14,8 @@ data class PrefillBangladeshNationalIdEffect(val bangladeshNationalId: String) :
 data class PrefillFormEffect(
     val patient: Patient,
     val address: PatientAddress,
-    val phoneNumber: PatientPhoneNumber?
+    val phoneNumber: PatientPhoneNumber?,
+    val bangladeshNationalId: BusinessId?
 ) : EditPatientEffect()
 
 data class HideValidationErrorsEffect(

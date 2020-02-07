@@ -44,6 +44,13 @@ class EditPatientEffectHandlerTest {
       uuid = UUID.fromString("61638775-2815-4f59-b513-643cc2fe3c90"),
       patientUuid = patient.uuid
   )
+
+  private val bangladeshNationalId = PatientMocker.businessId(
+      uuid = UUID.fromString("77bd5387-641b-42f8-ab8d-d662bcee9b00"),
+      patientUuid = patient.uuid,
+      identifier = Identifier(value = "1234567890abcd", type = Identifier.IdentifierType.BangladeshNationalId)
+  )
+
   private val entry = EditablePatientEntry.from(
       patient = patient,
       address = patientAddress,
@@ -78,18 +85,13 @@ class EditPatientEffectHandlerTest {
   @Test
   fun `editing a patient with a blank bangladesh ID should not save the business ID`() {
     // given
-    val blankBangladeshNationalId = PatientMocker.businessId(
-        uuid = UUID.fromString("77bd5387-641b-42f8-ab8d-d662bcee9b00"),
-        patientUuid = patient.uuid,
-        identifier = Identifier(value = "", type = Identifier.IdentifierType.BangladeshNationalId)
-    )
     whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
     whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
-    whenever(patientRepository.saveBusinessId(blankBangladeshNationalId)) doReturn Completable.complete()
+    whenever(patientRepository.saveBusinessId(any())) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber, null))
+    testCase.dispatch(SavePatientEffect(entry.updateBangladeshNationalId(""), patient, patientAddress, phoneNumber, bangladeshNationalId))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -129,26 +131,23 @@ class EditPatientEffectHandlerTest {
   @Test
   fun `editing a patient with a non-blank bangladesh ID should save the business ID`() {
     // given
-    val bangladeshNationalId = PatientMocker.businessId(
-        uuid = UUID.fromString("77bd5387-641b-42f8-ab8d-d662bcee9b00"),
-        patientUuid = patient.uuid,
-        identifier = Identifier(value = "1234567890abcd", type = Identifier.IdentifierType.BangladeshNationalId)
-    )
-    val ongoingEntryWithBangladeshId = entry.copy(bangladeshNationalId = bangladeshNationalId)
+    val bangladeshNationalIdText = "1569273"
+    val ongoingEntryWithBangladeshId = entry.updateBangladeshNationalId(bangladeshNationalIdText)
+    val updatedBangladeshNationalId = bangladeshNationalId.updateIdentifierValue(bangladeshNationalIdText)
 
     whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
     whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
-    whenever(patientRepository.saveBusinessId(bangladeshNationalId)) doReturn Completable.complete()
+    whenever(patientRepository.saveBusinessId(updatedBangladeshNationalId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(ongoingEntryWithBangladeshId, patient, patientAddress, phoneNumber, null))
+    testCase.dispatch(SavePatientEffect(ongoingEntryWithBangladeshId, patient, patientAddress, phoneNumber, bangladeshNationalId))
 
     // then
     verify(patientRepository).updatePatient(patient)
     verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
-    verify(patientRepository).saveBusinessId(bangladeshNationalId)
+    verify(patientRepository).saveBusinessId(updatedBangladeshNationalId)
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
     verifyZeroInteractions(ui)

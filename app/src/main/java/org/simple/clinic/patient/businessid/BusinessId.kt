@@ -74,6 +74,9 @@ data class BusinessId(
     )
   }
 
+  fun updateIdentifierValue(newValue: String): BusinessId =
+      copy(identifier = identifier.copy(value = newValue))
+
   sealed class MetaDataVersion : Parcelable {
 
     companion object {

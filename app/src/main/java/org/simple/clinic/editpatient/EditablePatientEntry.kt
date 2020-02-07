@@ -56,7 +56,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     val ageOrDateOfBirth: EitherAgeOrDateOfBirth,
     val zone: String,
     val streetAddress: String,
-    val bangladeshNationalId: BusinessId?
+    val bangladeshNationalId: String
 ) : Parcelable {
 
   sealed class EitherAgeOrDateOfBirth : Parcelable {
@@ -94,7 +94,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
           ageOrDateOfBirth = ageOrDateOfBirth(patient.age, patient.dateOfBirth, dateOfBirthFormatter),
           zone = address.zone.valueOrEmpty(),
           streetAddress = address.streetAddress.valueOrEmpty(),
-          bangladeshNationalId = bangladeshNationalId
+          bangladeshNationalId = bangladeshNationalId?.identifier?.value.valueOrEmpty()
       )
     }
 
@@ -141,7 +141,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
   fun updateStreetAddress(streetAddress: String): EditablePatientEntry =
       copy(streetAddress = streetAddress)
 
-  fun updateBangladeshNationalId(bangladeshNationalId: BusinessId): EditablePatientEntry =
+  fun updateBangladeshNationalId(bangladeshNationalId: String): EditablePatientEntry =
       copy(bangladeshNationalId = bangladeshNationalId)
 
   fun validate(

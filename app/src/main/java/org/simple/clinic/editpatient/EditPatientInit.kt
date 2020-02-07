@@ -6,11 +6,13 @@ import com.spotify.mobius.Init
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.businessid.BusinessId
 
 class EditPatientInit(
     private val patient: Patient,
     private val address: PatientAddress,
-    private val phoneNumber: PatientPhoneNumber?
+    private val phoneNumber: PatientPhoneNumber?,
+    val bangladeshNationalId: BusinessId?
 ) : Init<EditPatientModel, EditPatientEffect> {
   override fun init(model: EditPatientModel): First<EditPatientModel, EditPatientEffect> {
     return first(

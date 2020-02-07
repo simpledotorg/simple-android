@@ -172,7 +172,8 @@ class PatientSummaryScreen(
     return EditPatientScreenKey.fromPatientData(
         patientSummaryProfile.patient,
         patientSummaryProfile.address,
-        patientSummaryProfile.phoneNumber
+        patientSummaryProfile.phoneNumber,
+        patientSummaryProfile.bangladeshNationalId
     )
   }
 

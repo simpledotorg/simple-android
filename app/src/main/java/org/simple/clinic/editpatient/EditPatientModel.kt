@@ -25,9 +25,16 @@ data class EditPatientModel(
         patient: Patient,
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?,
-        dateOfBirthFormatter: DateTimeFormatter
+        dateOfBirthFormatter: DateTimeFormatter,
+        bangladeshNationalId: BusinessId?
     ): EditPatientModel {
-      val savedEntry = EditablePatientEntry.from(patient, address, phoneNumber, dateOfBirthFormatter)
+      val savedEntry = EditablePatientEntry.from(
+          patient,
+          address,
+          phoneNumber,
+          dateOfBirthFormatter,
+          bangladeshNationalId
+      )
       val ongoingEntry = savedEntry.copy()
       return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber)
     }

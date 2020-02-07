@@ -148,7 +148,7 @@ class EditPatientScreenCreatedTest {
   private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
     MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         Observable.never<EditPatientEvent>(),
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
+        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
         EditPatientInit(patient, address, phoneNumber),
         EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
         EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()).build(),

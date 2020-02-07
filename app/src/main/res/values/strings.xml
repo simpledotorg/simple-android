@@ -544,4 +544,7 @@
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">History</string>
   <string name="medicalhistorysummaryview_diagnosis">Diagnosis</string>
+
+  <!-- Summary prescriptions view -->
+  <string name="drugsummaryview_no_medicines">None</string>
 </resources>

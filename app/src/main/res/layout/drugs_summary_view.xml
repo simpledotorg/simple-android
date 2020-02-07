@@ -57,4 +57,16 @@
       android:textColor="@color/grey1"
       tools:text="Updated today" />
   </LinearLayout>
+
+  <TextView
+    android:id="@+id/emptyMedicinesTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:gravity="center"
+    android:text="@string/drugsummaryview_no_medicines"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
+    android:visibility="gone"
+    tools:visibility="visible" />
 </LinearLayout>

@@ -7,10 +7,6 @@ import org.simple.clinic.patient.businessid.BusinessId
 
 sealed class EditPatientEffect
 
-data class FetchBangladeshNationalIdEffect(val patient: Patient) : EditPatientEffect()
-
-data class PrefillBangladeshNationalIdEffect(val bangladeshNationalId: String) : EditPatientEffect()
-
 data class PrefillFormEffect(
     val patient: Patient,
     val address: PatientAddress,

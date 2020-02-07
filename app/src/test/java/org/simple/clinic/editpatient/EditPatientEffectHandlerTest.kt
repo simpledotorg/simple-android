@@ -48,7 +48,8 @@ class EditPatientEffectHandlerTest {
       patient = patient,
       address = patientAddress,
       phoneNumber = phoneNumber,
-      dateOfBirthFormatter = dateOfBirthFormatter
+      dateOfBirthFormatter = dateOfBirthFormatter,
+      bangladeshNationalId = null
   )
 
   private val effectHandler = EditPatientEffectHandler(

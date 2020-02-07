@@ -80,7 +80,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
         patient: Patient,
         address: PatientAddress,
         phoneNumber: PatientPhoneNumber?,
-        dateOfBirthFormatter: DateTimeFormatter
+        dateOfBirthFormatter: DateTimeFormatter,
+        bangladeshNationalId: BusinessId?
     ): EditablePatientEntry {
       return EditablePatientEntry(
           patientUuid = patient.uuid,
@@ -93,7 +94,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
           ageOrDateOfBirth = ageOrDateOfBirth(patient.age, patient.dateOfBirth, dateOfBirthFormatter),
           zone = address.zone.valueOrEmpty(),
           streetAddress = address.streetAddress.valueOrEmpty(),
-          bangladeshNationalId = null
+          bangladeshNationalId = bangladeshNationalId
       )
     }
 

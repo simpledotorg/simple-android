@@ -902,7 +902,7 @@ class EditPatientScreenSaveTest {
   private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         uiEvents,
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
+        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
         EditPatientInit(patient, address, phoneNumber),
         EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
         EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()).build(),

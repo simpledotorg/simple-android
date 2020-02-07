@@ -131,11 +131,11 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         .cast()
 
   private val delegate by unsafeLazy {
-    val (patient, address, phoneNumber) = screenKey
+    val (patient, address, phoneNumber, bangladeshNationalId) = screenKey
 
     MobiusDelegate(
         events,
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat),
+        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, bangladeshNationalId),
         EditPatientInit(patient, address, phoneNumber),
         EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
         effectHandlerFactory.create(this).build(),

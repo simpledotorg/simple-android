@@ -786,7 +786,7 @@ class EditPatientScreenFormTest {
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         uiEvents,
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
-        EditPatientInit(patient, address, phoneNumber),
+        EditPatientInit(patient, address, phoneNumber, null),
         EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
         EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()).build(),
         viewRenderer::render

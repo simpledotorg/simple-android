@@ -136,7 +136,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     MobiusDelegate(
         events,
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, bangladeshNationalId),
-        EditPatientInit(patient, address, phoneNumber),
+        EditPatientInit(patient, address, phoneNumber, bangladeshNationalId),
         EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator),
         effectHandlerFactory.create(this).build(),
         viewRenderer::render,

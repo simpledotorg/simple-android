@@ -92,10 +92,9 @@ class DrugSummaryView(
     updateButton.setOnClickListener { internalEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
 
     summaryViewGroup.visibleOrGone(prescriptions.isNotEmpty())
+    emptyMedicinesTextView.visibleOrGone(prescriptions.isEmpty())
 
     setButtonText(prescriptions)
-
-    divider.visibleOrGone(prescriptions.isNotEmpty())
 
     drugSummaryViewRoot.setBottomMarginRes(
         if (prescriptions.isEmpty()) R.dimen.spacing_0

@@ -87,19 +87,13 @@ class EditPatientEffectHandlerTest {
     testCase.dispose()
   }
 
-  // This is a temporary test added in order to hotfix a potential bug. If we allow the user to save
-  // a blank Identifier, this would cause the sync for the associated patient to fail and would prevent
-  // edits from syncing.
-  //
-  // This feature has to change so that clearing the text field should instead delete the existing
-  // alternate identifier.
-  // TODO(vs): 2020-01-15 Change feature to soft-delete existing Bangladesh ID
   @Test
-  fun `editing a patient with a blank bangladesh ID should not save the business ID`() {
+  fun `editing a patient with a blank bangladesh ID should delete the business ID`() {
     // given
     whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
     whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
+    whenever(patientRepository.deleteBusinessId(bangladeshNationalId)) doReturn Completable.complete()
 
     // when
     testCase.dispatch(SavePatientEffect(entry.updateBangladeshNationalId(""), patient, patientAddress, phoneNumber, bangladeshNationalId))
@@ -108,6 +102,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePatient(patient)
     verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
+    verify(patientRepository).deleteBusinessId(bangladeshNationalId)
     verify(patientRepository, never()).saveBusinessId(any())
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
@@ -115,17 +110,13 @@ class EditPatientEffectHandlerTest {
     verifyZeroInteractions(ui)
   }
 
-  // This is a temporary test added in order to hotfix a potential bug. If we allow the user to save
-  // a blank Identifier, this would cause the sync for the associated patient to fail and would prevent
-  // edits from syncing.
-  //
-  // TODO(vs): 2020-01-15 Change feature to soft-delete existing Bangladesh ID
   @Test
   fun `editing a patient with a null bangladesh ID should not save the business ID`() {
     // given
     whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
     whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
+    whenever(patientRepository.deleteBusinessId(bangladeshNationalId)) doReturn Completable.complete()
 
     // when
     testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber, bangladeshNationalId))
@@ -134,6 +125,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePatient(patient)
     verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
+    verify(patientRepository).deleteBusinessId(bangladeshNationalId)
     verify(patientRepository, never()).saveBusinessId(any())
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)

@@ -12,6 +12,7 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -19,6 +20,7 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -42,6 +44,8 @@ class EditPatientScreenCreatedTest {
   private val userClock: TestUserClock = TestUserClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val patientRepository = mock<PatientRepository>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
@@ -151,7 +155,7 @@ class EditPatientScreenCreatedTest {
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
         EditPatientInit(patient, address, phoneNumber, null),
         EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
-        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, dateOfBirthFormat, TrampolineSchedulersProvider()).build(),
+        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, dateOfBirthFormat, TrampolineSchedulersProvider(), userSession, facilityRepository).build(),
         { /* nothing here */ }
     ).start()
   }

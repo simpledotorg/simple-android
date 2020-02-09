@@ -9,6 +9,8 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
@@ -18,8 +20,12 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.user.User
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -32,7 +38,9 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val utcClock: UtcClock,
     private val dateOfBirthFormatter: DateTimeFormatter,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository
 ) {
 
   @AssistedInject.Factory
@@ -101,7 +109,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
       Observable.merge(
           createOrUpdatePhoneNumber(sharedSavePatientEffects),
           savePatient(sharedSavePatientEffects),
-          updateBangladeshNationalId(sharedSavePatientEffects)
+          handleBangladeshId(sharedSavePatientEffects)
       )
     }
   }
@@ -185,9 +193,36 @@ class EditPatientEffectHandler @AssistedInject constructor(
     )
   }
 
+  private fun handleBangladeshId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
+    val sharedEffects = savePatientEffects.share()
+
+    return Observable.merge(
+        createBangladeshNationalId(sharedEffects),
+        updateBangladeshNationalId(sharedEffects)
+    )
+  }
+
+  private fun createBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
+    return savePatientEffects
+        .filter { isBangladeshIdAdded(it) }
+        .flatMapCompletable { savedPatient ->
+          userAndCurrentFacility()
+              .flatMap { (user, facility) ->
+                patientRepository.addIdentifierToPatient(
+                    assigningUser = user,
+                    assigningFacility = facility,
+                    patientUuid = savedPatient.ongoingEntry.patientUuid,
+                    identifier = Identifier(
+                        value = savedPatient.ongoingEntry.bangladeshNationalId,
+                        type = Identifier.IdentifierType.BangladeshNationalId
+                    ))
+              }.ignoreElement()
+        }.toObservable()
+  }
+
   private fun updateBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
-        .filter { it.savedBangladeshId != null && it.ongoingEntry.bangladeshNationalId.isNotBlank() }
+        .filter { isBangladeshIdModified(it) }
         .map { it.savedBangladeshId?.updateIdentifierValue(it.ongoingEntry.bangladeshNationalId) }
         .flatMapCompletable { patientRepository.saveBusinessId(it) }
         .toObservable()
@@ -235,4 +270,20 @@ class EditPatientEffectHandler @AssistedInject constructor(
         // Doing this because Completables are not working properly
         .toSingleDefault(true)
   }
+
+  private fun userAndCurrentFacility(): Single<Pair<User, Facility>> {
+    return userSession
+        .loggedInUser()
+        .filterAndUnwrapJust()
+        .flatMap { user ->
+          facilityRepository
+              .currentFacility(user)
+              .map { facility -> user to facility }
+        }
+        .firstOrError()
+  }
+
+  private fun isBangladeshIdModified(it: SavePatientEffect) = it.savedBangladeshId != null && it.ongoingEntry.bangladeshNationalId.isNotBlank()
+
+  private fun isBangladeshIdAdded(it: SavePatientEffect) = it.savedBangladeshId == null && it.ongoingEntry.bangladeshNationalId.isNotBlank()
 }

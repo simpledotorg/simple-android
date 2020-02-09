@@ -194,11 +194,10 @@ class EditPatientEffectHandler @AssistedInject constructor(
   }
 
   private fun handleBangladeshId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
-    val sharedEffects = savePatientEffects.share()
-
     return Observable.merge(
-        createBangladeshNationalId(sharedEffects),
-        updateBangladeshNationalId(sharedEffects)
+        createBangladeshNationalId(savePatientEffects),
+        updateBangladeshNationalId(savePatientEffects),
+        deleteBangladeshNationalId(savePatientEffects)
     )
   }
 
@@ -226,6 +225,14 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .map { it.savedBangladeshId?.updateIdentifierValue(it.ongoingEntry.bangladeshNationalId) }
         .flatMapCompletable { patientRepository.saveBusinessId(it) }
         .toObservable()
+  }
+
+  private fun deleteBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
+    return savePatientEffects
+        .filter { isBangladeshIdCleared(it) }
+        .map { it.savedBangladeshId }
+        .flatMapCompletable { patientRepository.deleteBusinessId(it) }
+        .toObservable<EditPatientEvent>()
   }
 
   private fun updatePhoneNumber(
@@ -286,4 +293,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun isBangladeshIdModified(it: SavePatientEffect) = it.savedBangladeshId != null && it.ongoingEntry.bangladeshNationalId.isNotBlank()
 
   private fun isBangladeshIdAdded(it: SavePatientEffect) = it.savedBangladeshId == null && it.ongoingEntry.bangladeshNationalId.isNotBlank()
+
+  private fun isBangladeshIdCleared(it: SavePatientEffect) = it.savedBangladeshId != null && it.ongoingEntry.bangladeshNationalId.isBlank()
 }

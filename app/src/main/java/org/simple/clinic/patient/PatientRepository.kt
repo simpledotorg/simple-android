@@ -593,6 +593,17 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
+  fun deleteBusinessId(businessId: BusinessId): Completable {
+    return Completable.fromAction {
+      val now = Instant.now(utcClock)
+      val deletedBusinessId = businessId.copy(
+          updatedAt = now,
+          deletedAt = now
+      )
+      database.businessIdDao().save(listOf(deletedBusinessId))
+    }
+  }
+
   fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {
     return database
         .patientDao()

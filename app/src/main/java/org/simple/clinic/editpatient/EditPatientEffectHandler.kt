@@ -203,16 +203,16 @@ class EditPatientEffectHandler @AssistedInject constructor(
 
   private fun createBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
-        .filter { isBangladeshIdAdded(it) }
-        .flatMapCompletable { savedPatient ->
+        .filter(::isBangladeshIdAdded)
+        .flatMapCompletable { savePatientEffect ->
           userAndCurrentFacility()
               .flatMap { (user, facility) ->
                 patientRepository.addIdentifierToPatient(
                     assigningUser = user,
                     assigningFacility = facility,
-                    patientUuid = savedPatient.ongoingEntry.patientUuid,
+                    patientUuid = savePatientEffect.ongoingEntry.patientUuid,
                     identifier = Identifier(
-                        value = savedPatient.ongoingEntry.bangladeshNationalId,
+                        value = savePatientEffect.ongoingEntry.bangladeshNationalId,
                         type = Identifier.IdentifierType.BangladeshNationalId
                     ))
               }.ignoreElement()
@@ -221,7 +221,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
 
   private fun updateBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
-        .filter { isBangladeshIdModified(it) }
+        .filter(::isBangladeshIdModified)
         .map { it.savedBangladeshId?.updateIdentifierValue(it.ongoingEntry.bangladeshNationalId) }
         .flatMapCompletable { patientRepository.saveBusinessId(it) }
         .toObservable()
@@ -229,9 +229,9 @@ class EditPatientEffectHandler @AssistedInject constructor(
 
   private fun deleteBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
-        .filter { isBangladeshIdCleared(it) }
+        .filter(::isBangladeshIdCleared)
         .map { it.savedBangladeshId }
-        .flatMapCompletable { patientRepository.deleteBusinessId(it) }
+        .flatMapCompletable(patientRepository::deleteBusinessId)
         .toObservable<EditPatientEvent>()
   }
 

@@ -174,7 +174,7 @@ class EditPatientEffectHandlerTest {
 
     //when
     testCase.dispatch(SavePatientEffect(
-        entry.updateBangladeshNationalId(bangladeshNationalId.identifier.value),
+        entry.updateBangladeshNationalId(identifier.value),
         patient,
         patientAddress,
         phoneNumber,

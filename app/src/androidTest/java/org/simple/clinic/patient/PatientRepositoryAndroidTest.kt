@@ -2818,4 +2818,37 @@ class PatientRepositoryAndroidTest {
     assertThat(patients.first().address.streetAddress).isEqualTo(streetAddress)
     assertThat(patients.first().address.zone).isEqualTo(zone)
   }
+
+  @Test
+  fun deleting_Bangladesh_Id_should_mark_it_as_soft_deleted() {
+    //given
+    val now = Instant.now(clock)
+    val patientUuid = UUID.fromString("e5b785f5-3128-470c-9b8f-466557dc3ff6")
+    val patientProfile = testData.patientProfile(patientUuid = patientUuid, syncStatus = DONE, generateBusinessId = false)
+    val bangladeshNationalId = testData.businessId(
+        uuid = UUID.fromString("8c32b6ba-c77f-4e9f-b32c-ed79d363edb1"),
+        patientUuid = patientProfile.patientUuid,
+        identifier = Identifier("12491236-9725-4eff-aab9-ba789ba37d72", BangladeshNationalId),
+        createdAt = now
+    )
+    patientRepository.save(listOf(patientProfile.copy(businessIds = listOf(bangladeshNationalId)))).blockingAwait()
+
+    //when
+    clock.advanceBy(Duration.ofHours(1))
+    patientRepository.deleteBusinessId(bangladeshNationalId).blockingAwait()
+
+    //then
+    val businessId = database
+        .businessIdDao()
+        .allBusinessIdsWithType(BangladeshNationalId)
+        .blockingGet()
+        .first { it.patientUuid == patientUuid }
+
+    assertThat(businessId).isNotNull()
+    with(businessId) {
+      val oneHourLater = Instant.now(clock)
+      assertThat(deletedAt).isEqualTo(oneHourLater)
+      assertThat(updatedAt).isEqualTo(oneHourLater)
+    }
+  }
 }

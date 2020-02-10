@@ -2,8 +2,13 @@
 
 ## On Demo
 ### Feature
+- Introduce a new design for the patient details page
 - Add support for recording the patient diagnosis, based on the facility diabetes management support
 - Added sync support for the recorded blood sugars
+- Display the complete address on the patient search results and patient details page
+- Add support for deleting the Bangladesh National ID from the edit patient page
+- Add support for adding a Bangladesh National ID from the edit patient page
+- Order the patient's prescribed drugs alphabetically on the patient details page
 
 ### Internal
 - Simplify the computation of high risk label in overdue list

@@ -186,6 +186,10 @@ class BloodSugarSummaryView(
     screenRouter.push(BloodSugarHistoryScreenKey(patientUuid))
   }
 
+  override fun openBloodSugarUpdateSheet(bloodSugarMeasurementUuid: UUID) {
+
+  }
+
   @SuppressLint("CheckResult")
   private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()
@@ -212,7 +216,7 @@ class BloodSugarSummaryView(
     val listItemViews = generateBloodSugarRows(bloodSugarMeasurements)
 
     bloodSugarItemContainer.removeAllViews()
-      listItemViews.forEach(bloodSugarItemContainer::addView)
+    listItemViews.forEach(bloodSugarItemContainer::addView)
 
     val itemContainerBottomPadding = if (listItemViews.size > 1) {
       R.dimen.patientsummary_blood_sugar_summary_item_container_bottom_padding_8

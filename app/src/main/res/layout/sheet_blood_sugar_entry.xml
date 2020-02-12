@@ -34,30 +34,19 @@
         android:paddingTop="@dimen/spacing_12"
         android:paddingBottom="@dimen/spacing_4">
 
-        <ImageView
-          android:id="@+id/enterBloodSugarIconImageView"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="@dimen/spacing_8"
-          android:contentDescription="@null"
-          android:src="@drawable/ic_blood_sugar_outline"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toStartOf="@id/enterBloodSugarTitleTextView"
-          app:layout_constraintHorizontal_chainStyle="packed"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
           android:id="@+id/enterBloodSugarTitleTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
+          android:drawableStart="@drawable/ic_blood_sugar_outline"
+          android:drawablePadding="@dimen/spacing_8"
           android:lines="1"
           android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toEndOf="@id/enterBloodSugarIconImageView"
+          app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute"
           tools:text="Random blood sugar" />

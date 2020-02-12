@@ -53,7 +53,6 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -271,6 +270,10 @@ class BloodSugarSummaryView(
 
     val durationSinceBloodSugarCreated = Duration.between(createdAt, now)
 
-    return durationSinceBloodSugarCreated <= config.bloodSugarEditableDuration
+    return if (config.isBloodSugarEditable) {
+      durationSinceBloodSugarCreated <= config.bloodSugarEditableDuration
+    } else {
+      false
+    }
   }
 }

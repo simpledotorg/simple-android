@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## On Demo
+## 2020-02-12-7090
 ### Feature
 - Introduce a new design for the patient details page
 - Add support for recording the patient diagnosis, based on the facility diabetes management support

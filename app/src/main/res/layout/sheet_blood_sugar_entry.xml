@@ -30,9 +30,7 @@
 
       <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/spacing_12"
-        android:paddingBottom="@dimen/spacing_4">
+        android:layout_height="wrap_content">
 
         <TextView
           android:id="@+id/enterBloodSugarTitleTextView"
@@ -40,6 +38,8 @@
           android:layout_height="wrap_content"
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
+          android:layout_marginTop="@dimen/spacing_12"
+          android:layout_marginBottom="@dimen/spacing_4"
           android:drawableStart="@drawable/ic_blood_sugar_outline"
           android:drawablePadding="@dimen/spacing_8"
           android:lines="1"
@@ -50,6 +50,21 @@
           app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute"
           tools:text="Random blood sugar" />
+
+        <Button
+          android:id="@+id/removeBloodSugarButton"
+          style="@style/Widget.AppCompat.Button.Borderless"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="10dp"
+          android:paddingTop="14dp"
+          android:text="@string/bloodsugarentry_remove"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Red1"
+          android:visibility="gone"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@id/enterBloodSugarTitleTextView"
+          app:layout_constraintTop_toTopOf="parent" />
 
       </androidx.constraintlayout.widget.ConstraintLayout>
 

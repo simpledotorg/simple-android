@@ -15,6 +15,7 @@ class BloodSugarSummaryViewUiRendererTest {
   private val ui = mock<BloodSugarSummaryViewUi>()
   private val config = PatientSummaryConfig(
       bpEditableDuration = Duration.ofSeconds(3600),
+      bloodSugarEditableDuration = Duration.ofSeconds(3600),
       numberOfBloodSugarsToDisplay = 3,
       isDiabetesEnabled = true
   )

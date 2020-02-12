@@ -14,3 +14,7 @@ data class BloodSugarCountFetched(val count: Int) : BloodSugarSummaryViewEvent()
 object SeeAllClicked : BloodSugarSummaryViewEvent() {
   override val analyticsName: String = "Patient Summary:Blood Sugar See All Clicked"
 }
+
+data class BloodSugarClicked(val bloodSugarMeasurement: BloodSugarMeasurement) : BloodSugarSummaryViewEvent() {
+  override val analyticsName: String = "Patient Summary:Blood Sugar Clicked"
+}

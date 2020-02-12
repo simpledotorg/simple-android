@@ -14,6 +14,7 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.patientsummary_bloodsugarsummary_content.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -29,6 +30,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
+import org.simple.clinic.summary.bloodsugar.BloodSugarClicked
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEffect
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEffectHandler
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEvent
@@ -47,8 +49,11 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setPaddingBottom
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
+import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -95,11 +100,14 @@ class BloodSugarSummaryView(
     BloodSugarSummaryViewUiRenderer(this, config)
   }
 
+  private val viewEvents = PublishSubject.create<BloodSugarSummaryViewEvent>()
+
   private val events: Observable<BloodSugarSummaryViewEvent> by unsafeLazy {
     Observable
         .merge(
             addNewBloodSugarClicks(),
-            seeAllClicks()
+            seeAllClicks(),
+            viewEvents
         )
         .compose(ReportAnalyticsEvents())
         .cast<BloodSugarSummaryViewEvent>()
@@ -235,6 +243,7 @@ class BloodSugarSummaryView(
     return measurementsByDate.mapValues { (_, measurementList) ->
       val hasMultipleMeasurementsInSameDate = measurementList.size > 1
       measurementList.map { measurement ->
+        val isBloodSugarEditable = isBloodSugarEditable(measurement)
         val recordedAt = measurement.recordedAt.toLocalDateAtZone(userClock.zone)
         val bloodSugarTime = if (hasMultipleMeasurementsInSameDate) {
           timeFormatter.format(measurement.recordedAt.atZone(userClock.zone))
@@ -246,11 +255,22 @@ class BloodSugarSummaryView(
         bloodSugarItemView.render(
             measurement = measurement,
             bloodSugarDate = dateFormatter.format(recordedAt),
-            bloodSugarTime = bloodSugarTime
+            bloodSugarTime = bloodSugarTime,
+            isBloodSugarEditable = isBloodSugarEditable,
+            editMeasurementClicked = { clickedMeasurement -> viewEvents.onNext(BloodSugarClicked(clickedMeasurement)) }
         )
 
         bloodSugarItemView
       }
     }.values.flatten()
+  }
+
+  private fun isBloodSugarEditable(measurement: BloodSugarMeasurement): Boolean {
+    val now = Instant.now(utcClock)
+    val createdAt = measurement.timestamps.createdAt
+
+    val durationSinceBloodSugarCreated = Duration.between(createdAt, now)
+
+    return durationSinceBloodSugarCreated <= config.bloodSugarEditableDuration
   }
 }

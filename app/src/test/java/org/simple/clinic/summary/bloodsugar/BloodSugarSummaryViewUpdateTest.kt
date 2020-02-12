@@ -53,7 +53,6 @@ class BloodSugarSummaryViewUpdateTest {
         ))
   }
 
-
   @Test
   fun `when see all is clicked, then show blood sugar history screen`() {
     val bloodSugar1 = PatientMocker.bloodSugar(
@@ -82,4 +81,22 @@ class BloodSugarSummaryViewUpdateTest {
             hasEffects(ShowBloodSugarHistoryScreen(patientUuid) as BloodSugarSummaryViewEffect)
         ))
   }
+
+  @Test
+  fun `when blood sugar is clicked, then open blood sugar update sheet`() {
+    val bloodSugarMeasurement = PatientMocker.bloodSugar(
+        UUID.fromString("9a82720a-0445-43dd-b557-3d4b079b66ef"),
+        patientUuid = patientUuid
+    )
+    val bloodSugars = listOf(bloodSugarMeasurement)
+
+    spec
+        .given(defaultModel.summaryFetched(bloodSugars))
+        .whenEvent(BloodSugarClicked(bloodSugarMeasurement))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenBloodSugarUpdateSheet(bloodSugarMeasurement) as BloodSugarSummaryViewEffect)
+        ))
+  }
+
 }

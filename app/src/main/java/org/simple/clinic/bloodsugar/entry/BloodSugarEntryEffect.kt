@@ -43,3 +43,5 @@ data class CreateNewBloodSugarEntry(
 }
 
 object SetBloodSugarSavedResultAndFinish : BloodSugarEntryEffect()
+
+data class FetchBloodSugarMeasurement(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()

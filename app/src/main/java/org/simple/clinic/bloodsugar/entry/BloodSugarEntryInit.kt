@@ -6,6 +6,9 @@ import com.spotify.mobius.Init
 
 class BloodSugarEntryInit : Init<BloodSugarEntryModel, BloodSugarEntryEffect> {
   override fun init(model: BloodSugarEntryModel): First<BloodSugarEntryModel, BloodSugarEntryEffect> {
-    return first(model, setOf(PrefillDate.forNewEntry()))
+    return when (model.openAs) {
+      is New -> first(model, setOf(PrefillDate.forNewEntry()))
+      is Update -> first(model, setOf(FetchBloodSugarMeasurement(model.openAs.bloodSugarMeasurementUuid) as BloodSugarEntryEffect))
+    }
   }
 }

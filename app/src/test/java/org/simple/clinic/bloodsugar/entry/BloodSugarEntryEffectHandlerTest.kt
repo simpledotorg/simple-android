@@ -221,4 +221,19 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.assertOutgoingEvents(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
     verifyZeroInteractions(ui)
   }
+
+  @Test
+  fun `fetch blood sugar measurement, when fetch blood sugar effect is received`() {
+    // given
+    val bloodSugarMeasurement = PatientMocker.bloodSugar()
+    whenever(bloodSugarRepository.measurement(bloodSugarMeasurement.uuid)) doReturn bloodSugarMeasurement
+
+    // when
+    testCase.dispatch(FetchBloodSugarMeasurement(bloodSugarMeasurement.uuid))
+
+    // then
+    testCase.assertOutgoingEvents(BloodSugarMeasurementFetched(bloodSugarMeasurement))
+    verifyZeroInteractions(ui)
+  }
+
 }

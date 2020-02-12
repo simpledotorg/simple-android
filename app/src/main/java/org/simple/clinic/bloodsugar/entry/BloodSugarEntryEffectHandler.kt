@@ -32,6 +32,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import java.util.UUID
 
 class BloodSugarEntryEffectHandler @AssistedInject constructor(
     @Assisted private val ui: BloodSugarEntryUi,
@@ -63,8 +64,23 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
         .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
         .addAction(SetBloodSugarSavedResultAndFinish::class.java, ui::setBloodSugarSavedResultAndFinish, schedulersProvider.ui())
         .addTransformer(CreateNewBloodSugarEntry::class.java, createNewBloodSugarEntryTransformer())
+        .addTransformer(FetchBloodSugarMeasurement::class.java, fetchBloodSugarMeasurement(schedulersProvider.io()))
         .build()
   }
+
+  private fun fetchBloodSugarMeasurement(
+      scheduler: Scheduler
+  ): ObservableTransformer<FetchBloodSugarMeasurement, BloodSugarEntryEvent> {
+    return ObservableTransformer { fetchBloodSugarMeasurementEffectStream ->
+      fetchBloodSugarMeasurementEffectStream
+          .observeOn(scheduler)
+          .map { getExistingBloodSugarMeasurement(it.bloodSugarMeasurementUuid) }
+          .map { BloodSugarMeasurementFetched(it) }
+    }
+  }
+
+  private fun getExistingBloodSugarMeasurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
+      bloodSugarRepository.measurement(bloodSugarMeasurementUuid)
 
   private fun showBloodSugarValidationError(result: BloodSugarValidator.Result) {
     when (result) {

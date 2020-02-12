@@ -1,5 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
@@ -44,3 +45,5 @@ object ShowBloodSugarEntryClicked : BloodSugarEntryEvent()
 object SaveClicked : BloodSugarEntryEvent() {
   override val analyticsName: String = "Blood Sugar Entry:Save Clicked"
 }
+
+data class BloodSugarMeasurementFetched(val bloodSugarMeasurement: BloodSugarMeasurement) : BloodSugarEntryEvent()

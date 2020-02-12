@@ -15,6 +15,7 @@ import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.util.Truss
+import org.simple.clinic.widgets.visibleOrGone
 
 class BloodSugarItemView(
     context: Context,
@@ -28,10 +29,19 @@ class BloodSugarItemView(
   fun render(
       measurement: BloodSugarMeasurement,
       bloodSugarDate: String,
-      bloodSugarTime: String?
+      bloodSugarTime: String?,
+      isBloodSugarEditable: Boolean,
+      editMeasurementClicked: (BloodSugarMeasurement) -> Unit
   ) {
     renderBloodSugarReading(measurement.reading)
     renderDateTime(bloodSugarDate, bloodSugarTime)
+
+    bloodSugarItemRoot.apply {
+      setOnClickListener { editMeasurementClicked(measurement) }
+      isClickable = isBloodSugarEditable
+      isFocusable = isBloodSugarEditable
+    }
+    bloodSugarEditButton.visibleOrGone(isBloodSugarEditable)
   }
 
   private fun renderBloodSugarReading(reading: BloodSugarReading) {

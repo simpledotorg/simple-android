@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -32,6 +33,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
     return when (event) {
       is ScreenChanged -> next(model.screenChanged(event.type))
       is DatePrefilled -> next(model.datePrefilled(event.prefilledDate))
+      is BloodSugarMeasurementFetched -> noChange()
       is BloodSugarChanged -> next(model.bloodSugarChanged(event.bloodSugarReading), HideBloodSugarErrorMessage)
       is DayChanged -> onDateChanged(model.dayChanged(event.day))
       is MonthChanged -> onDateChanged(model.monthChanged(event.month))

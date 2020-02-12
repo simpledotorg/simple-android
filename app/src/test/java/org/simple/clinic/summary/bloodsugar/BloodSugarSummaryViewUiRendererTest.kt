@@ -17,7 +17,8 @@ class BloodSugarSummaryViewUiRendererTest {
       bpEditableDuration = Duration.ofSeconds(3600),
       bloodSugarEditableDuration = Duration.ofSeconds(3600),
       numberOfBloodSugarsToDisplay = 3,
-      isDiabetesEnabled = true
+      isDiabetesEnabled = true,
+      isBloodSugarEditable = false
   )
   private val renderer = BloodSugarSummaryViewUiRenderer(ui, config)
   private val patientUuid = UUID.fromString("9dd563b5-99a5-4f43-b3ab-47c43ed5d62c")

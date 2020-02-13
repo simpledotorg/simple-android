@@ -6,19 +6,16 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.summary.PatientSummaryConfig
 import org.threeten.bp.Duration
 import java.util.UUID
 
 class BloodSugarSummaryViewUiRendererTest {
 
   private val ui = mock<BloodSugarSummaryViewUi>()
-  private val config = PatientSummaryConfig(
-      bpEditableDuration = Duration.ofSeconds(3600),
+  private val config = BloodSugarSummaryConfig(
       bloodSugarEditableDuration = Duration.ofSeconds(3600),
       numberOfBloodSugarsToDisplay = 3,
-      isDiabetesEnabled = true,
-      isBloodSugarEditable = false
+      bloodSugarEditFeatureEnabled = false
   )
   private val renderer = BloodSugarSummaryViewUiRenderer(ui, config)
   private val patientUuid = UUID.fromString("9dd563b5-99a5-4f43-b3ab-47c43ed5d62c")

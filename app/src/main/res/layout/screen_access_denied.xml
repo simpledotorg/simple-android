@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.deniedaccess.AccessDeniedScreen android:id="@+id/applock_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/window_background_auth"
+  tools:ignore="Overdraw">
+
+  <LinearLayout
+    android:id="@+id/applock_logo_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?colorPrimary"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_24"
+    android:paddingStart="@dimen/spacing_24"
+    android:paddingTop="@dimen/spacing_4">
+
+    <Button
+      android:id="@+id/applock_logout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/background_rounded_clearbutton"
+      android:foreground="?attr/selectableItemBackgroundBorderless"
+      android:minHeight="0dp"
+      android:minWidth="0dp"
+      android:paddingBottom="2dp"
+      android:paddingEnd="@dimen/spacing_8"
+      android:paddingStart="@dimen/spacing_8"
+      android:paddingTop="2dp"
+      android:text="@string/applock_logout"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
+      android:visibility="gone"
+      tools:ignore="UnusedAttribute" />
+
+    <TextView
+      android:id="@+id/applock_user_fullname"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:textColor="@color/white"
+      android:textSize="@dimen/textsize_20"
+      tools:text="A really long person name" />
+  </LinearLayout>
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_alignTop="@+id/applock_pin_entry_card"
+    android:background="?colorPrimary" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/applock_pin_entry_card"
+    style="@style/Clinic.LoginCard"
+    android:layout_below="@+id/applock_logo_container" />
+</org.simple.clinic.deniedaccess.AccessDeniedScreen>

@@ -471,6 +471,7 @@
   <string name="bloodsugarentry_random_title">র‍্যান্ডম ব্লাড সুগার</string>
   <string name="bloodsugarentry_post_prandial_title">খাওয়ার পরে ব্লাড সুগার</string>
   <string name="bloodsugarentry_fasting_title">খালি পেটে ব্লাড সুগার</string>
+  <string name="bloodsugarentry_remove">অপসারণ করুন</string>
 
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">কোনও ব্লাড সুগার যোগ করা হয়নি</string>

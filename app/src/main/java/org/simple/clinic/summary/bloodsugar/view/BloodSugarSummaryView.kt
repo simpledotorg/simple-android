@@ -27,10 +27,10 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.summary.bloodsugar.BloodSugarClicked
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEffect
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEffectHandler
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryViewEvent
@@ -72,7 +72,7 @@ class BloodSugarSummaryView(
   lateinit var timestampGenerator: RelativeTimestampGenerator
 
   @Inject
-  lateinit var config: PatientSummaryConfig
+  lateinit var bloodSugarSummaryConfig: BloodSugarSummaryConfig
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -96,7 +96,7 @@ class BloodSugarSummaryView(
   lateinit var timeFormatter: DateTimeFormatter
 
   private val uiRenderer: BloodSugarSummaryViewUiRenderer by unsafeLazy {
-    BloodSugarSummaryViewUiRenderer(this, config)
+    BloodSugarSummaryViewUiRenderer(this, bloodSugarSummaryConfig)
   }
 
   private val viewEvents = PublishSubject.create<BloodSugarSummaryViewEvent>()
@@ -270,8 +270,8 @@ class BloodSugarSummaryView(
 
     val durationSinceBloodSugarCreated = Duration.between(createdAt, now)
 
-    return if (config.isBloodSugarEditable) {
-      durationSinceBloodSugarCreated <= config.bloodSugarEditableDuration
+    return if (bloodSugarSummaryConfig.bloodSugarEditFeatureEnabled) {
+      durationSinceBloodSugarCreated <= bloodSugarSummaryConfig.bloodSugarEditableDuration
     } else {
       false
     }

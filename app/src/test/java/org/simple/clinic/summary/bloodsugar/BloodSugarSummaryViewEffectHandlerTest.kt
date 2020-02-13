@@ -20,7 +20,7 @@ class BloodSugarSummaryViewEffectHandlerTest {
 
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val uiActions = mock<UiActions>()
-  private val config = mock<PatientSummaryConfig>()
+  private val config = mock<BloodSugarSummaryConfig>()
   private val effectHandler = BloodSugarSummaryViewEffectHandler(
       bloodSugarRepository,
       TrampolineSchedulersProvider(),

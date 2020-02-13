@@ -6,14 +6,13 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bloodsugar.BloodSugarRepository
-import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: UiActions,
-    private val config: PatientSummaryConfig
+    private val config: BloodSugarSummaryConfig
 ) {
 
   @AssistedInject.Factory

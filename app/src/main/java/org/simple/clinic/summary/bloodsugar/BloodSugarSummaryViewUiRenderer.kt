@@ -1,11 +1,10 @@
 package org.simple.clinic.summary.bloodsugar
 
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.summary.PatientSummaryConfig
 
 class BloodSugarSummaryViewUiRenderer(
     private val ui: BloodSugarSummaryViewUi,
-    private val config: PatientSummaryConfig
+    private val config: BloodSugarSummaryConfig
 ) : ViewRenderer<BloodSugarSummaryViewModel> {
 
   override fun render(model: BloodSugarSummaryViewModel) {

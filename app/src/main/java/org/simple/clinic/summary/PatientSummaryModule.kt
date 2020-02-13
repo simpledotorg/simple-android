@@ -5,8 +5,9 @@ import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewConfig
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfigModule
 
-@Module
+@Module(includes = [BloodSugarSummaryConfigModule::class])
 class PatientSummaryModule {
 
   @Provides

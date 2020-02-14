@@ -14,6 +14,7 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
+import org.simple.clinic.bloodsugar.entry.PrefillDate.PrefillSpecificDate
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
@@ -100,12 +101,17 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   private fun prefillDate(scheduler: Scheduler): ObservableTransformer<PrefillDate, BloodSugarEntryEvent> {
     return ObservableTransformer { prefillDates ->
       prefillDates
-          .map { Instant.now(userClock).toLocalDateAtZone(userClock.zone) }
+          .map(::convertToLocalDate)
           .observeOn(scheduler)
           .doOnNext { setDateOnInputFields(it) }
           .doOnNext { ui.showDateOnDateButton(it) }
           .map { DatePrefilled(it) }
     }
+  }
+
+  private fun convertToLocalDate(prefillDate: PrefillDate): LocalDate {
+    val instant = if (prefillDate is PrefillSpecificDate) prefillDate.date else Instant.now(userClock)
+    return instant.toLocalDateAtZone(userClock.zone)
   }
 
   private fun setDateOnInputFields(dateToSet: LocalDate) {

@@ -31,6 +31,7 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
@@ -158,6 +159,22 @@ class BloodSugarEntryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(DatePrefilled(entryDate))
     verify(ui).setDateOnInputFields("7", "6", "92")
+    verify(ui).showDateOnDateButton(entryDate)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `set specific date on input fields and date button when prefill date for update effect is received`() {
+    // given
+    val entryDate = LocalDate.of(2020, 2, 14)
+    userClock.setDate(entryDate)
+
+    // when
+    testCase.dispatch(PrefillDate.forUpdateEntry(Instant.now(userClock)))
+
+    // then
+    testCase.assertOutgoingEvents(DatePrefilled(entryDate))
+    verify(ui).setDateOnInputFields("14", "2", "20")
     verify(ui).showDateOnDateButton(entryDate)
     verifyNoMoreInteractions(ui)
   }

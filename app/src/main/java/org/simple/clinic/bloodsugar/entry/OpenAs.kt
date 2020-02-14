@@ -11,4 +11,4 @@ sealed class OpenAs : Parcelable
 data class New(val patientId: UUID, val measurementType: BloodSugarMeasurementType) : OpenAs()
 
 @Parcelize
-data class Update(val bloodSugarMeasurementUuid: UUID) : OpenAs()
+data class Update(val bloodSugarMeasurementUuid: UUID, val measurementType: BloodSugarMeasurementType) : OpenAs()

@@ -19,7 +19,10 @@ class BloodSugarEntryUiRenderer(
   private fun setupUi(openAs: OpenAs) {
     when (openAs) {
       is New -> showEnterNewBloodSugarTitle(openAs.measurementType)
-      is Update -> showEditBloodSugarTitle(openAs.measurementType)
+      is Update -> {
+        ui.showRemoveButton()
+        showEditBloodSugarTitle(openAs.measurementType)
+      }
     }
   }
 

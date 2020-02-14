@@ -6,6 +6,8 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.bloodsugar.entry.OpenAs.New
+import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.PrefillDate.PrefillCurrentDate
 import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.LocalDate

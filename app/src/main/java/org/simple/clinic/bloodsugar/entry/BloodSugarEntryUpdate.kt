@@ -95,7 +95,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       model: BloodSugarEntryModel,
       dateValidationResult: Result
   ): BloodSugarEntryEffect {
-    val openAs = model.openAs as New
+    val openAs = model.openAs as OpenAs.New
     val bloodSugarReading = model.bloodSugarReading.toInt()
     val bloodSugarMeasurementType = openAs.measurementType
     val userEnteredDate = (dateValidationResult as Result.Valid).parsedDate

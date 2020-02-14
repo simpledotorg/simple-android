@@ -316,6 +316,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
     removeBloodSugarButton.visibility = View.GONE
   }
 
+  override fun setBloodSugarReading(bloodSugarReading: String) {
+    bloodSugarReadingEditText.setTextAndCursor(bloodSugarReading)
+  }
+
   override fun dismiss() {
     finish()
   }

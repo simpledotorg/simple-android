@@ -302,6 +302,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
     removeBloodSugarButton.visibility = View.VISIBLE
   }
 
+  override fun hideRemoveButton() {
+    removeBloodSugarButton.visibility = View.GONE
+  }
+
   override fun dismiss() {
     finish()
   }

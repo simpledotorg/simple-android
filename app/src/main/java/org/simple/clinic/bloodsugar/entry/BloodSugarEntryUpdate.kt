@@ -1,7 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -33,7 +32,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
     return when (event) {
       is ScreenChanged -> next(model.screenChanged(event.type))
       is DatePrefilled -> next(model.datePrefilled(event.prefilledDate))
-      is BloodSugarMeasurementFetched -> noChange()
+      is BloodSugarMeasurementFetched -> bloodSugarMeasurementFetched(model, event)
       is BloodSugarChanged -> next(model.bloodSugarChanged(event.bloodSugarReading), HideBloodSugarErrorMessage)
       is DayChanged -> onDateChanged(model.dayChanged(event.day))
       is MonthChanged -> onDateChanged(model.monthChanged(event.month))
@@ -44,6 +43,22 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       SaveClicked -> onSaveClicked(model)
       is BloodSugarSaved -> dispatch(SetBloodSugarSavedResultAndFinish)
     }
+  }
+
+  private fun bloodSugarMeasurementFetched(
+      model: BloodSugarEntryModel,
+      event: BloodSugarMeasurementFetched
+  ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
+    val bloodSugarMeasurement = event.bloodSugarMeasurement
+    val recordedAt = bloodSugarMeasurement.recordedAt
+    val bloodSugarReading = bloodSugarMeasurement.reading.value.toString()
+    val modelWithBloodSugarChanged = model.bloodSugarChanged(bloodSugarReading)
+
+    return next(
+        modelWithBloodSugarChanged,
+        SetBloodSugarReading(bloodSugarReading),
+        PrefillDate.forUpdateEntry(recordedAt)
+    )
   }
 
   private fun onSaveClicked(

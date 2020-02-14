@@ -216,14 +216,20 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   override fun showRandomBloodSugarTitle() {
+    enterBloodSugarTitleTextView.visibility = View.VISIBLE
+    editBloodSugarTitleTextView.visibility = View.GONE
     enterBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_random_title)
   }
 
   override fun showPostPrandialBloodSugarTitle() {
+    enterBloodSugarTitleTextView.visibility = View.VISIBLE
+    editBloodSugarTitleTextView.visibility = View.GONE
     enterBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_post_prandial_title)
   }
 
   override fun showFastingBloodSugarTitle() {
+    enterBloodSugarTitleTextView.visibility = View.VISIBLE
+    editBloodSugarTitleTextView.visibility = View.GONE
     enterBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_fasting_title)
   }
 
@@ -272,6 +278,24 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
 
   override fun showDateOnDateButton(date: LocalDate) {
     bloodSugarDateButton.text = dateFormatter.format(date)
+  }
+
+  override fun showEditRadomBloodSugarTitle() {
+    enterBloodSugarTitleTextView.visibility = View.GONE
+    editBloodSugarTitleTextView.visibility = View.VISIBLE
+    editBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_edit_random_title)
+  }
+
+  override fun showEditPostPrandialBloodSugarTitle() {
+    enterBloodSugarTitleTextView.visibility = View.GONE
+    editBloodSugarTitleTextView.visibility = View.VISIBLE
+    editBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_edit_post_prandial_title)
+  }
+
+  override fun showEditFastingBloodSugarTitle() {
+    enterBloodSugarTitleTextView.visibility = View.GONE
+    editBloodSugarTitleTextView.visibility = View.VISIBLE
+    editBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_edit_fasting_title)
   }
 
   override fun dismiss() {

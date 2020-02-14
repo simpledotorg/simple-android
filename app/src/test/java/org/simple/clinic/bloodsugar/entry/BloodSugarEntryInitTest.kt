@@ -33,7 +33,7 @@ class BloodSugarEntryInitTest {
   @Test
   fun `when screen is open to update blood sugar, then fetch blood sugar measurement`() {
     val bloodSugarMeasurementUuid = UUID.fromString("b83db9fd-43bf-4a99-82f5-1098dc00f613")
-    val openAs = Update(bloodSugarMeasurementUuid)
+    val openAs = Update(bloodSugarMeasurementUuid, Random)
     val model = BloodSugarEntryModel.create(LocalDate.now(testUserClock).year, openAs)
 
     initSpec

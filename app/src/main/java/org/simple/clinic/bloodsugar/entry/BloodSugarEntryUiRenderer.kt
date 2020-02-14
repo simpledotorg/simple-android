@@ -19,6 +19,7 @@ class BloodSugarEntryUiRenderer(
   private fun setupUi(openAs: OpenAs) {
     when (openAs) {
       is New -> showEnterNewBloodSugarTitle(openAs.measurementType)
+      is Update -> showEditBloodSugarTitle(openAs.measurementType)
     }
   }
 
@@ -28,6 +29,16 @@ class BloodSugarEntryUiRenderer(
         is Random -> showRandomBloodSugarTitle()
         is PostPrandial -> showPostPrandialBloodSugarTitle()
         is Fasting -> showFastingBloodSugarTitle()
+      }
+    }
+  }
+
+  private fun showEditBloodSugarTitle(measurementType: BloodSugarMeasurementType) {
+    with(ui) {
+      when (measurementType) {
+        is Random -> showEditRadomBloodSugarTitle()
+        is PostPrandial -> showEditPostPrandialBloodSugarTitle()
+        is Fasting -> showEditFastingBloodSugarTitle()
       }
     }
   }

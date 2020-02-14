@@ -18,5 +18,8 @@ interface BloodSugarEntryUi {
   fun hideDateErrorMessage()
   fun setDateOnInputFields(dayOfMonth: String, month: String, twoDigitYear: String)
   fun showDateOnDateButton(date: LocalDate)
+  fun showEditRadomBloodSugarTitle()
+  fun showEditPostPrandialBloodSugarTitle()
+  fun showEditFastingBloodSugarTitle()
   fun dismiss()
 }

@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.entry
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.bloodsugar.Fasting
 import org.simple.clinic.bloodsugar.PostPrandial
@@ -13,6 +14,7 @@ import java.util.UUID
 class BloodSugarEntryUiRendererTest {
 
   private val patientUuid = UUID.fromString("79145baf-7a5c-4442-ab30-2da564a32944")
+  private val bloodSugarUuid = UUID.fromString("27a522a0-4896-4875-a1cb-14baa7c2d7a9")
 
   private val ui = mock<BloodSugarEntryUi>()
   private val bloodSugarEntryUiRenderer = BloodSugarEntryUiRenderer(ui)
@@ -29,6 +31,7 @@ class BloodSugarEntryUiRendererTest {
 
     // then
     verify(ui).showRandomBloodSugarTitle()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -43,6 +46,7 @@ class BloodSugarEntryUiRendererTest {
 
     // then
     verify(ui).showPostPrandialBloodSugarTitle()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -57,5 +61,51 @@ class BloodSugarEntryUiRendererTest {
 
     // then
     verify(ui).showFastingBloodSugarTitle()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `it should render the edit title when updating the random blood sugar`() {
+    // given
+    val testUserClock = TestUserClock()
+    val year = LocalDate.now(testUserClock).year
+    val bloodSugarEntryModel = BloodSugarEntryModel.create(year, Update(bloodSugarUuid, Random))
+
+    // when
+    bloodSugarEntryUiRenderer.render(bloodSugarEntryModel)
+
+    // then
+    verify(ui).showEditRadomBloodSugarTitle()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `it should render the edit title when updating the post prandial blood sugar`() {
+    // given
+    val testUserClock = TestUserClock()
+    val year = LocalDate.now(testUserClock).year
+    val bloodSugarEntryModel = BloodSugarEntryModel.create(year, Update(bloodSugarUuid, PostPrandial))
+
+    // when
+    bloodSugarEntryUiRenderer.render(bloodSugarEntryModel)
+
+    // then
+    verify(ui).showEditPostPrandialBloodSugarTitle()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `it should render the edit title when updating the fasting blood sugar`() {
+    // given
+    val testUserClock = TestUserClock()
+    val year = LocalDate.now(testUserClock).year
+    val bloodSugarEntryModel = BloodSugarEntryModel.create(year, Update(bloodSugarUuid, Fasting))
+
+    // when
+    bloodSugarEntryUiRenderer.render(bloodSugarEntryModel)
+
+    // then
+    verify(ui).showEditFastingBloodSugarTitle()
+    verifyNoMoreInteractions(ui)
   }
 }

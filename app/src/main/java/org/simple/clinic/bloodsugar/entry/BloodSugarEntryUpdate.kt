@@ -71,7 +71,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
     return if (validationErrorEffects.isNotEmpty()) {
       Next.dispatch(validationErrorEffects)
     } else {
-      dispatch(getCreateEntryEffect(model, dateValidationResult))
+      dispatch(getCreateorUpdateEntryEffect(model, dateValidationResult))
     }
   }
 
@@ -91,23 +91,30 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
     return validationErrorEffects.toSet()
   }
 
-  private fun getCreateEntryEffect(
+  private fun getCreateorUpdateEntryEffect(
       model: BloodSugarEntryModel,
       dateValidationResult: Result
   ): BloodSugarEntryEffect {
-    val openAs = model.openAs as OpenAs.New
     val bloodSugarReading = model.bloodSugarReading.toInt()
-    val bloodSugarMeasurementType = openAs.measurementType
     val userEnteredDate = (dateValidationResult as Result.Valid).parsedDate
     val prefillDate = model.prefilledDate!!
 
-    return CreateNewBloodSugarEntry(
-        openAs.patientId,
-        bloodSugarReading,
-        bloodSugarMeasurementType,
-        userEnteredDate,
-        prefillDate
-    )
+    return when (val openAs = model.openAs) {
+      is OpenAs.New -> CreateNewBloodSugarEntry(
+          openAs.patientId,
+          bloodSugarReading,
+          openAs.measurementType,
+          userEnteredDate,
+          prefillDate
+      )
+      is OpenAs.Update -> UpdateBloodSugarEntry(
+          openAs.bloodSugarMeasurementUuid,
+          bloodSugarReading,
+          openAs.measurementType,
+          userEnteredDate,
+          prefillDate
+      )
+    }
   }
 
   private fun showBloodSugarClicked(

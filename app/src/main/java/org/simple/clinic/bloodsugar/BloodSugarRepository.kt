@@ -103,4 +103,15 @@ class BloodSugarRepository @Inject constructor(
 
   fun measurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       dao.getOne(bloodSugarMeasurementUuid)
+
+  fun updateMeasurement(measurement: BloodSugarMeasurement) {
+    val updatedMeasurement = measurement.copy(
+        timestamps = measurement.timestamps.copy(
+            updatedAt = Instant.now(utcClock)
+        ),
+        syncStatus = PENDING
+    )
+
+    dao.save(listOf(updatedMeasurement))
+  }
 }

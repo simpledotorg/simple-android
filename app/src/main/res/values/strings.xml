@@ -521,6 +521,9 @@
   <string name="bloodsugarentry_post_prandial_title">Post prandial blood sugar</string>
   <string name="bloodsugarentry_fasting_title">Fasting blood sugar</string>
   <string name="bloodsugarentry_remove">Remove</string>
+  <string name="bloodsugarentry_edit_random_title">Edit random blood sugar</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">Edit post prandial blood sugar</string>
+  <string name="bloodsugarentry_edit_fasting_title">Edit fasting blood sugar</string>
 
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">No blood sugars added</string>

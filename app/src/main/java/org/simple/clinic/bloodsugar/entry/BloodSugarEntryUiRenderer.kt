@@ -28,6 +28,7 @@ class BloodSugarEntryUiRenderer(
 
   private fun showEnterNewBloodSugarTitle(measurementType: BloodSugarMeasurementType) {
     with(ui) {
+      hideRemoveButton()
       when (measurementType) {
         is Random -> showRandomBloodSugarTitle()
         is PostPrandial -> showPostPrandialBloodSugarTitle()

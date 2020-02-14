@@ -4,6 +4,8 @@ import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.Fasting
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.bloodsugar.entry.OpenAs.New
+import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.util.ValueChangedCallback
 
@@ -18,7 +20,10 @@ class BloodSugarEntryUiRenderer(
 
   private fun setupUi(openAs: OpenAs) {
     when (openAs) {
-      is New -> showEnterNewBloodSugarTitle(openAs.measurementType)
+      is New -> {
+        ui.hideRemoveButton()
+        showEnterNewBloodSugarTitle(openAs.measurementType)
+      }
       is Update -> {
         ui.showRemoveButton()
         showEditBloodSugarTitle(openAs.measurementType)
@@ -28,7 +33,6 @@ class BloodSugarEntryUiRenderer(
 
   private fun showEnterNewBloodSugarTitle(measurementType: BloodSugarMeasurementType) {
     with(ui) {
-      hideRemoveButton()
       when (measurementType) {
         is Random -> showRandomBloodSugarTitle()
         is PostPrandial -> showPostPrandialBloodSugarTitle()

@@ -7,6 +7,8 @@ import org.junit.Test
 import org.simple.clinic.bloodsugar.Fasting
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.bloodsugar.entry.OpenAs.New
+import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.LocalDate
 import java.util.UUID

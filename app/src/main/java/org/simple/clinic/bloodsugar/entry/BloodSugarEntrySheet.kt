@@ -298,6 +298,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
     editBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_edit_fasting_title)
   }
 
+  override fun showRemoveButton() {
+    removeBloodSugarButton.visibility = View.VISIBLE
+  }
+
   override fun dismiss() {
     finish()
   }

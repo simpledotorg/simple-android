@@ -23,5 +23,6 @@ interface BloodSugarEntryUi {
   fun showEditFastingBloodSugarTitle()
   fun showRemoveButton()
   fun hideRemoveButton()
+  fun setBloodSugarReading(bloodSugarReading: String)
   fun dismiss()
 }

@@ -20,6 +20,8 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
+import org.simple.clinic.bloodsugar.entry.OpenAs.New
+import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusActivityDelegate
 import org.simple.clinic.platform.crash.CrashReporter

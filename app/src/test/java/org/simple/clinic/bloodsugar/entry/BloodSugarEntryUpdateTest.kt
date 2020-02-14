@@ -11,6 +11,7 @@ import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
+import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter

@@ -30,6 +30,7 @@ class BloodSugarEntryUiRendererTest {
     bloodSugarEntryUiRenderer.render(bloodSugarEntryModel)
 
     // then
+    verify(ui).hideRemoveButton()
     verify(ui).showRandomBloodSugarTitle()
     verifyNoMoreInteractions(ui)
   }
@@ -45,6 +46,7 @@ class BloodSugarEntryUiRendererTest {
     bloodSugarEntryUiRenderer.render(bloodSugarEntryModel)
 
     // then
+    verify(ui).hideRemoveButton()
     verify(ui).showPostPrandialBloodSugarTitle()
     verifyNoMoreInteractions(ui)
   }
@@ -60,6 +62,7 @@ class BloodSugarEntryUiRendererTest {
     bloodSugarEntryUiRenderer.render(bloodSugarEntryModel)
 
     // then
+    verify(ui).hideRemoveButton()
     verify(ui).showFastingBloodSugarTitle()
     verifyNoMoreInteractions(ui)
   }

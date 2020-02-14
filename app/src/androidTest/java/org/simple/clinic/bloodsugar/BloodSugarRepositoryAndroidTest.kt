@@ -12,6 +12,7 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
@@ -186,5 +187,35 @@ class BloodSugarRepositoryAndroidTest {
 
     assertThat(repository.bloodSugarsCount(patientUuidWithOnlyDeletedBloodSugars).blockingFirst()).isEqualTo(0)
     assertThat(repository.bloodSugarsCount(patientUuidWithBloodSugars).blockingFirst()).isEqualTo(1)
+  }
+
+  @Test
+  fun updating_a_blood_sugar_should_update_it_correctly() {
+    // given
+    val durationToAdvanceBy = Duration.ofMinutes(15L)
+    val bloodSugarReading = BloodSugarReading(126, Random)
+    val bloodSugar = testData.bloodSugarMeasurement(
+        reading = bloodSugarReading,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        syncStatus = SyncStatus.DONE
+    )
+
+    appDatabase.bloodSugarDao().save(listOf(bloodSugar))
+
+    // when
+    clock.advanceBy(durationToAdvanceBy)
+    repository.updateMeasurement(bloodSugar.copy(reading = bloodSugarReading.copy(value = 145)))
+
+    // then
+    val expected = bloodSugar.copy(
+        reading = bloodSugarReading.copy(145),
+        timestamps = bloodSugar.timestamps.copy(
+            updatedAt = bloodSugar.timestamps.updatedAt.plus(durationToAdvanceBy)
+        ),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    assertThat(appDatabase.bloodSugarDao().getOne(bloodSugar.uuid)!!).isEqualTo(expected)
   }
 }

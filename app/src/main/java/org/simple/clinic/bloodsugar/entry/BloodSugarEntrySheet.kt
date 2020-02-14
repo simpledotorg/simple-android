@@ -324,6 +324,12 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
     finish()
   }
 
+  override fun onBackgroundClick() {
+    if (bloodSugarReadingEditText.text.isBlank()) {
+      super.onBackgroundClick()
+    }
+  }
+
   private fun showBloodSugarErrorMessage(message: String) {
     with(bloodSugarErrorTextView) {
       text = message

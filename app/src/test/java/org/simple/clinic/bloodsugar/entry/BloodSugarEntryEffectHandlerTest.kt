@@ -180,6 +180,21 @@ class BloodSugarEntryEffectHandlerTest {
   }
 
   @Test
+  fun `set blood reading when set blood reading effect is received`() {
+    // given
+    val bloodSugarReading = "128"
+
+    // when
+    testCase.dispatch(SetBloodSugarReading(bloodSugarReading))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(ui).setBloodSugarReading(bloodSugarReading)
+    verifyNoMoreInteractions(ui)
+  }
+
+
+  @Test
   fun `show invalid date error when show date validation error is received with validation invalid pattern`() {
     // when
     testCase.dispatch(ShowDateValidationError(InvalidPattern))

@@ -12,6 +12,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
+import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
@@ -206,6 +207,34 @@ class BloodSugarEntryUpdateTest {
                 validBloodSugarDate,
                 validBloodSugarDate
             ) as BloodSugarEntryEffect)
+        ))
+  }
+
+  @Test
+  fun `when save is clicked after the blood sugar is updated, without any validation errors, then update the blood sugar`() {
+    val year = LocalDate.now(testUserClock).year
+    val bloodSugarMeasurementUuid = UUID.fromString("85c7413d-eb70-4182-b3dc-53471c6ff49c")
+    val model = BloodSugarEntryModel.create(year, Update(bloodSugarMeasurementUuid, Random))
+    val validBloodSugarModel = model
+        .bloodSugarChanged(validBloodSugar)
+        .dayChanged(validBloodSugarDate.dayOfMonth.toString())
+        .monthChanged(validBloodSugarDate.monthValue.toString())
+        .yearChanged(validBloodSugarDate.year.toString().substring(2))
+        .datePrefilled(validBloodSugarDate)
+    val expectedEffect: BloodSugarEntryEffect = UpdateBloodSugarEntry(
+        bloodSugarMeasurementUuid,
+        validBloodSugar.toInt(),
+        Random,
+        validBloodSugarDate,
+        validBloodSugarDate
+    )
+
+    updateSpec
+        .given(validBloodSugarModel)
+        .whenEvent(SaveClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(expectedEffect)
         ))
   }
 

@@ -67,6 +67,9 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
         .addTransformer(CreateNewBloodSugarEntry::class.java, createNewBloodSugarEntryTransformer())
         .addTransformer(FetchBloodSugarMeasurement::class.java, fetchBloodSugarMeasurement(schedulersProvider.io()))
         .addConsumer(SetBloodSugarReading::class.java, { ui.setBloodSugarReading(it.bloodSugarReading) }, schedulersProvider.ui())
+        .addAction(UpdateBloodSugarEntry::class.java, {
+          // TODO (SM):  Update blood sugar entry
+        })
         .build()
   }
 

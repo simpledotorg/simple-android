@@ -56,6 +56,16 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
       intent.putExtra(KEY_OPEN_AS, New(patientUuid, measurementType))
       return intent
     }
+
+    fun intentForUpdateBloodSugar(
+        context: Context,
+        bloodSugarMeasurementUuid: UUID,
+        measurementType: BloodSugarMeasurementType
+    ): Intent {
+      val intent = Intent(context, BloodSugarEntrySheet::class.java)
+      intent.putExtra(KEY_OPEN_AS, Update(bloodSugarMeasurementUuid, measurementType))
+      return intent
+    }
   }
 
   @Inject

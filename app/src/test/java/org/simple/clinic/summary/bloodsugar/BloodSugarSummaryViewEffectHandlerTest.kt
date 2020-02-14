@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.summary.PatientSummaryConfig
@@ -93,7 +94,7 @@ class BloodSugarSummaryViewEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).openBloodSugarUpdateSheet(bloodSugar.uuid)
+    verify(uiActions).openBloodSugarUpdateSheet(bloodSugar.uuid, Random)
     verifyNoMoreInteractions(uiActions)
   }
 }

@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.patientsummary_bloodsugarsummary_content.v
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenKey
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
@@ -193,8 +194,9 @@ class BloodSugarSummaryView(
     screenRouter.push(BloodSugarHistoryScreenKey(patientUuid))
   }
 
-  override fun openBloodSugarUpdateSheet(bloodSugarMeasurementUuid: UUID) {
-
+  override fun openBloodSugarUpdateSheet(bloodSugarMeasurementUuid: UUID, measurementType: BloodSugarMeasurementType) {
+    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, bloodSugarMeasurementUuid, measurementType)
+    context.startActivity(intent)
   }
 
   @SuppressLint("CheckResult")

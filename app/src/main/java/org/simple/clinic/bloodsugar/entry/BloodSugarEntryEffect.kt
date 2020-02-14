@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
@@ -12,9 +13,15 @@ sealed class PrefillDate : BloodSugarEntryEffect() {
     fun forNewEntry(): PrefillDate {
       return PrefillCurrentDate
     }
+
+    fun forUpdateEntry(date: Instant): PrefillDate {
+      return PrefillSpecificDate(date)
+    }
   }
 
   object PrefillCurrentDate : PrefillDate()
+
+  data class PrefillSpecificDate(val date: Instant) : PrefillDate()
 }
 
 object HideBloodSugarErrorMessage : BloodSugarEntryEffect()
@@ -45,3 +52,5 @@ data class CreateNewBloodSugarEntry(
 object SetBloodSugarSavedResultAndFinish : BloodSugarEntryEffect()
 
 data class FetchBloodSugarMeasurement(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
+
+data class SetBloodSugarReading(val bloodSugarReading: String) : BloodSugarEntryEffect()

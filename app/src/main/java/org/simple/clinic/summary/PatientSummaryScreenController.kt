@@ -58,7 +58,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         openLinkIdWithPatientSheet(replayedEvents),
         showUpdatePhoneDialogIfRequired(replayedEvents),
         goBackWhenBackClicked(replayedEvents),
-        goToHomeOnDoneClick(replayedEvents),
         hideLinkIdWithPatientSheet(replayedEvents)
     )
   }
@@ -105,18 +104,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .map { { ui: Ui -> ui.goToHomeScreen() } }
   }
 
-  private fun goToHomeOnDoneClick(events: Observable<UiEvent>): Observable<UiChange> {
-    val allBpsForPatientDeletedStream = events
-        .ofType<PatientSummaryDoneClicked>()
-        .map { doesNotHaveBloodPressures(patientUuid) }
-
-    return events
-        .ofType<PatientSummaryDoneClicked>()
-        .withLatestFrom(allBpsForPatientDeletedStream)
-        .filter { (_, allBpsForPatientDeleted) -> allBpsForPatientDeleted }
-        .map { { ui: Ui -> ui.goToHomeScreen() } }
-  }
-
   private fun exitScreenAfterSchedulingAppointment(events: Observable<UiEvent>): Observable<UiChange> {
     val scheduleAppointmentCloses = events
         .ofType<ScheduleAppointmentSheetClosed>()
@@ -132,7 +119,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .map { (_, _) ->
           { ui: Ui ->
             when (openIntention) {
-              ViewNewPatient, is LinkIdWithPatient -> ui.goToHomeScreen()
+              ViewNewPatient, is LinkIdWithPatient -> { ui.goToHomeScreen() }
             }
           }
         }

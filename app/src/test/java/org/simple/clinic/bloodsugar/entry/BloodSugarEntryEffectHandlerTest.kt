@@ -326,4 +326,19 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.assertOutgoingEvents(BloodSugarSaved(updateBloodSugarEntry.wasDateChanged))
     verifyZeroInteractions(ui)
   }
+
+  @Test
+  fun `show remove blood sugar confirmation dialog, when show confirm remove blood sugar effect is received`() {
+    // given
+    val bloodSugarMeasurementUuid = UUID.fromString("a9c5f19f-adc5-46ea-9d03-00a415631882")
+
+    // when
+    testCase.dispatch(ShowConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(ui).showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid)
+    verifyNoMoreInteractions(ui)
+  }
+
 }

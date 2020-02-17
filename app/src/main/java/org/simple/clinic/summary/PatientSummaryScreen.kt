@@ -143,7 +143,7 @@ class PatientSummaryScreen(
 
     editButtonClicks()
 
-    val controller = controllerFactory.create(screenKey.patientUuid, screenKey.intention, screenKey.screenCreatedTimestamp)
+    val controller = controllerFactory.create(screenKey.patientUuid, screenKey.intention)
 
     bindUiToController(
         ui = this,

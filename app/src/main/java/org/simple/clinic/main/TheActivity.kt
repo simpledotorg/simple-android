@@ -18,6 +18,7 @@ import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Destroyed
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
@@ -180,5 +181,13 @@ class TheActivity : AppCompatActivity() {
 
   fun redirectToLogin() {
     screenRouter.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.REPLACE)
+  }
+
+  fun showAccessDeniedScreen(fullName: String) {
+    screenRouter.push(AccessDeniedScreenKey(fullName))
+  }
+
+  fun hideAccessDeniedScreen() {
+    screenRouter.pop()
   }
 }

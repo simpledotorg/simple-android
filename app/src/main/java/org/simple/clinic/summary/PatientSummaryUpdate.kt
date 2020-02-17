@@ -22,13 +22,15 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduleAppointmentSheetClosed -> {
-        when (event.sheetOpenedFrom) {
+        val effect = when (event.sheetOpenedFrom) {
           BACK_CLICK -> when (model.openIntention) {
-            ViewExistingPatient -> dispatch(GoBackToPreviousScreen as PatientSummaryEffect)
-            ViewNewPatient, is LinkIdWithPatient -> dispatch(GoToHomeScreen as PatientSummaryEffect)
+            ViewExistingPatient -> GoBackToPreviousScreen
+            ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen
           }
-          DONE_CLICK -> dispatch(GoToHomeScreen as PatientSummaryEffect)
+          DONE_CLICK -> GoToHomeScreen
         }
+
+        dispatch(effect)
       }
       else -> noChange()
     }

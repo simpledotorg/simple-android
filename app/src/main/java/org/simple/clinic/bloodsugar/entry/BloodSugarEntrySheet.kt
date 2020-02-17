@@ -118,7 +118,8 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
         screenTypeChanges(),
         dayTextChanges(),
         monthTextChanges(),
-        yearTextChanges()
+        yearTextChanges(),
+        removeClicks()
     )
         .compose(ReportAnalyticsEvents())
         .share()
@@ -203,6 +204,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
       .textChanges()
       .map(CharSequence::toString)
       .map(::YearChanged)
+
+  private fun removeClicks() = removeBloodSugarButton
+      .clicks()
+      .map { RemoveBloodSugarClicked }
 
   override fun setBloodSugarSavedResultAndFinish() {
     val intent = Intent()

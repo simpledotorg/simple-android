@@ -42,6 +42,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       ShowBloodSugarEntryClicked -> showBloodSugarClicked(model)
       SaveClicked -> onSaveClicked(model)
       is BloodSugarSaved -> dispatch(SetBloodSugarSavedResultAndFinish)
+      RemoveBloodSugarClicked -> dispatch(ShowConfirmRemoveBloodSugarDialog((model.openAs as OpenAs.Update).bloodSugarMeasurementUuid))
     }
   }
 

@@ -318,4 +318,24 @@ class BloodSugarEntryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when remove blood sugar button is clicked, then show remove blood sugar confirmation dialog`() {
+    val bloodSugarMeasurementUuid = UUID.fromString("c4f8d34b-813b-4c96-9271-f262efd38f07")
+    val defaultModel = BloodSugarEntryModel.create(LocalDate.now(testUserClock).year, Update(bloodSugarMeasurementUuid, Random))
+    val bloodSugarModel = defaultModel
+        .bloodSugarChanged(validBloodSugar)
+        .dayChanged(validBloodSugarDate.dayOfMonth.toString())
+        .monthChanged(validBloodSugarDate.monthValue.toString())
+        .yearChanged(validBloodSugarDate.year.toString().substring(2))
+        .datePrefilled(validBloodSugarDate)
+
+    updateSpec
+        .given(bloodSugarModel)
+        .whenEvent(RemoveBloodSugarClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid) as BloodSugarEntryEffect)
+        ))
+  }
+
 }

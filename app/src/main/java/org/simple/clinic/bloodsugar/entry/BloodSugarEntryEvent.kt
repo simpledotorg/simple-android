@@ -47,3 +47,7 @@ object SaveClicked : BloodSugarEntryEvent() {
 }
 
 data class BloodSugarMeasurementFetched(val bloodSugarMeasurement: BloodSugarMeasurement) : BloodSugarEntryEvent()
+
+object RemoveBloodSugarClicked : BloodSugarEntryEvent() {
+  override val analyticsName: String = "Blood Sugar Entry: Remove clicked"
+}

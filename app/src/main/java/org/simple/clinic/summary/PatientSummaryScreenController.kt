@@ -6,7 +6,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.analytics.Analytics
@@ -53,7 +52,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
 
     return Observable.mergeArray(
         reportViewedPatientEvent(replayedEvents),
-        exitScreenAfterSchedulingAppointment(replayedEvents),
         openLinkIdWithPatientSheet(replayedEvents),
         showUpdatePhoneDialogIfRequired(replayedEvents),
         hideLinkIdWithPatientSheet(replayedEvents)
@@ -75,33 +73,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
           val linkIdWithPatient = openIntention as LinkIdWithPatient
           { ui: Ui -> ui.showLinkIdWithPatientView(patientUuid, linkIdWithPatient.identifier) }
         }
-  }
-
-  private fun exitScreenAfterSchedulingAppointment(events: Observable<UiEvent>): Observable<UiChange> {
-    val scheduleAppointmentCloses = events
-        .ofType<ScheduleAppointmentSheetClosed>()
-
-    val backClicks = events
-        .ofType<PatientSummaryBackClicked>()
-
-    val doneClicks = events
-        .ofType<PatientSummaryDoneClicked>()
-
-    val afterBackClicks = scheduleAppointmentCloses
-        .withLatestFrom(backClicks)
-        .map { (_, _) ->
-          { ui: Ui ->
-            when (openIntention) {
-              ViewNewPatient, is LinkIdWithPatient -> { ui.goToHomeScreen() }
-            }
-          }
-        }
-
-    val afterDoneClicks = scheduleAppointmentCloses
-        .withLatestFrom(doneClicks)
-        .map { { ui: Ui -> ui.goToHomeScreen() } }
-
-    return afterBackClicks.mergeWith(afterDoneClicks)
   }
 
   private fun showUpdatePhoneDialogIfRequired(events: Observable<UiEvent>): Observable<UiChange> {

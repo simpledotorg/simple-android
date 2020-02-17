@@ -26,3 +26,5 @@ data class HandleEditClick(val patientSummaryProfile: PatientSummaryProfile) : P
 object HandleLinkIdCancelled: PatientSummaryEffect()
 
 object GoBackToPreviousScreen: PatientSummaryEffect()
+
+object GoToHomeScreen: PatientSummaryEffect()

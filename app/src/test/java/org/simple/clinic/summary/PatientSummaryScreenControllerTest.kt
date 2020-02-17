@@ -709,9 +709,7 @@ class PatientSummaryScreenControllerTest {
     val controller = PatientSummaryScreenController(
         patientUuid = patientUuid,
         openIntention = openIntention,
-        screenCreatedTimestamp = screenCreatedTimestamp,
         patientRepository = patientRepository,
-        bpRepository = bpRepository,
         appointmentRepository = appointmentRepository,
         missingPhoneReminderRepository = missingPhoneReminderRepository
     )

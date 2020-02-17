@@ -9,7 +9,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
@@ -22,7 +21,6 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
 import java.util.UUID
 
 typealias Ui = PatientSummaryScreenUi
@@ -31,9 +29,7 @@ typealias UiChange = (Ui) -> Unit
 class PatientSummaryScreenController @AssistedInject constructor(
     @Assisted private val patientUuid: UUID,
     @Assisted private val openIntention: OpenIntention,
-    @Assisted private val screenCreatedTimestamp: Instant,
     private val patientRepository: PatientRepository,
-    private val bpRepository: BloodPressureRepository,
     private val appointmentRepository: AppointmentRepository,
     private val missingPhoneReminderRepository: MissingPhoneReminderRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -42,8 +38,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
   interface Factory {
     fun create(
         patientUuid: UUID,
-        openIntention: OpenIntention,
-        screenCreatedTimestamp: Instant
+        openIntention: OpenIntention
     ): PatientSummaryScreenController
   }
 

@@ -337,6 +337,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
     }
   }
 
+  override fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID) {
+    // TODO(SM): 17-02-2020 Show confirm remove blood sugar dialog
+  }
+
   private fun showBloodSugarErrorMessage(message: String) {
     with(bloodSugarErrorTextView) {
       text = message

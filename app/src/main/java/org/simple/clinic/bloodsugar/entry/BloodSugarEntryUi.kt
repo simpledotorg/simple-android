@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import org.threeten.bp.LocalDate
+import java.util.UUID
 
 interface BloodSugarEntryUi {
   fun setBloodSugarSavedResultAndFinish()
@@ -25,4 +26,5 @@ interface BloodSugarEntryUi {
   fun hideRemoveButton()
   fun setBloodSugarReading(bloodSugarReading: String)
   fun dismiss()
+  fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID)
 }

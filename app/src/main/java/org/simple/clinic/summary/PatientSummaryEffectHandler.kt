@@ -135,6 +135,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .doOnNext { (shouldShowScheduleAppointmentSheet, patientUuid) ->
             if (shouldShowScheduleAppointmentSheet) {
               uiActions.showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+            } else {
+              uiActions.goToHomeScreen()
             }
           }
           .flatMap { Observable.empty<PatientSummaryEvent>() }

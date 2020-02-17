@@ -42,8 +42,10 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 @RunWith(JUnitParamsRunner::class)
@@ -248,6 +250,29 @@ class TheActivityControllerTest {
 
     assertThat(controller.initialScreenKey()).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
+
+  @Test
+  fun `when user is denied access then access denied screen should show`() {
+    //given
+    val fullName = "Anish Acharya"
+    val loggedInUser = PatientMocker.loggedInUser(
+        uuid = UUID.fromString("0b350f89-ed0e-4922-b384-7f7a9bf3aba0"),
+        name = fullName,
+        status = UserStatus.DisapprovedForSyncing,
+        loggedInStatus = LOGGED_IN
+    )
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
+
+    //when
+    uiEvents.onNext(Started(null))
+
+    //then
+    verify(activity).showAccessDeniedScreen(fullName)
+    verifyNoMoreInteractions(activity)
+  }
+
 
   data class RedirectToSignInParams(
       val userUnauthorizedValues: List<Boolean>,

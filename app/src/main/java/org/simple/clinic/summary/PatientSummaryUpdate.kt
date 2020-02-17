@@ -21,18 +21,23 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
-      is ScheduleAppointmentSheetClosed -> {
-        val effect = when (event.sheetOpenedFrom) {
-          BACK_CLICK -> when (model.openIntention) {
-            ViewExistingPatient -> GoBackToPreviousScreen
-            ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen
-          }
-          DONE_CLICK -> GoToHomeScreen
-        }
-
-        dispatch(effect)
-      }
+      is ScheduleAppointmentSheetClosed -> scheduleAppointmentSheetClosed(event, model)
       else -> noChange()
     }
+  }
+
+  private fun scheduleAppointmentSheetClosed(
+      event: ScheduleAppointmentSheetClosed,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val effect = when (event.sheetOpenedFrom) {
+      BACK_CLICK -> when (model.openIntention) {
+        ViewExistingPatient -> GoBackToPreviousScreen
+        ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen
+      }
+      DONE_CLICK -> GoToHomeScreen
+    }
+
+    return dispatch(effect)
   }
 }

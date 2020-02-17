@@ -6,7 +6,10 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
+import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
+import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 
 class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
@@ -19,11 +22,12 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduleAppointmentSheetClosed -> {
-        val sheetOpenedFrom = event.sheetOpenedFrom
-        if (sheetOpenedFrom == BACK_CLICK && model.openIntention == ViewExistingPatient) {
-          dispatch(GoBackToPreviousScreen as PatientSummaryEffect)
-        } else {
-          noChange()
+        when (event.sheetOpenedFrom) {
+          BACK_CLICK -> when (model.openIntention) {
+            ViewExistingPatient -> dispatch(GoBackToPreviousScreen as PatientSummaryEffect)
+            ViewNewPatient, is LinkIdWithPatient -> dispatch(GoToHomeScreen as PatientSummaryEffect)
+          }
+          DONE_CLICK -> dispatch(GoToHomeScreen as PatientSummaryEffect)
         }
       }
       else -> noChange()

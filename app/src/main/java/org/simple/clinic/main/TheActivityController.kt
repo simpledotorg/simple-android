@@ -15,7 +15,6 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.user.NewlyVerifiedUser
-import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
@@ -23,7 +22,8 @@ import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
+import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import javax.inject.Inject
@@ -47,19 +47,21 @@ class TheActivityController @Inject constructor(
         showAppLock(replayedEvents),
         updateLockTime(replayedEvents),
         displayUserLoggedOutOnOtherDevice(replayedEvents),
-        redirectToLoginScreen()
+        redirectToLoginScreen(),
+        showAccessDeniedToUser(replayedEvents),
+        hideAccessDeniedToUser(replayedEvents)
     )
   }
 
   private fun showAppLock(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedCanShowAppLock = events
         .ofType<Started>()
-        .flatMapMaybe { _ ->
+        .flatMap {
           userSession.loggedInUser()
-              .firstElement()
-              .filter { it is Just<User> }
-              .map { (user) -> user!!.loggedInStatus }
-              .defaultIfEmpty(NOT_LOGGED_IN)
+              .filterAndUnwrapJust()
+              .filter { it.status != UserStatus.DisapprovedForSyncing }
+              .map { user -> user.loggedInStatus }
+              .take(1)
         }
         .filter { it in showAppLockForUserStates }
         .map { Instant.now() > lockAfterTimestamp.get() }
@@ -92,6 +94,24 @@ class TheActivityController @Inject constructor(
                 Observable.empty<UiChange>()
               }
         }
+  }
+
+  private fun showAccessDeniedToUser(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<Started>()
+        .flatMap { userSession.loggedInUser() }
+        .filterAndUnwrapJust()
+        .filter { it.status == UserStatus.DisapprovedForSyncing }
+        .map { { ui: Ui -> ui.showAccessDeniedScreen(it.fullName) } }
+  }
+
+  private fun hideAccessDeniedToUser(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<Started>()
+        .flatMap { userSession.loggedInUser() }
+        .filterAndUnwrapJust()
+        .filter { it.status != UserStatus.DisapprovedForSyncing }
+        .map { { ui: Ui -> ui.hideAccessDeniedScreen() } }
   }
 
   private fun displayUserLoggedOutOnOtherDevice(events: Observable<UiEvent>): Observable<UiChange> {

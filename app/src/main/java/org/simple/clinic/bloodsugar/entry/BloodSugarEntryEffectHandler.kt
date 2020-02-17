@@ -67,9 +67,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
         .addTransformer(CreateNewBloodSugarEntry::class.java, createNewBloodSugarEntryTransformer())
         .addTransformer(FetchBloodSugarMeasurement::class.java, fetchBloodSugarMeasurement(schedulersProvider.io()))
         .addConsumer(SetBloodSugarReading::class.java, { ui.setBloodSugarReading(it.bloodSugarReading) }, schedulersProvider.ui())
-        .addAction(UpdateBloodSugarEntry::class.java, {
-          // TODO (SM):  Update blood sugar entry
-        })
+        .addTransformer(UpdateBloodSugarEntry::class.java, updateBloodSugarEntryTransformer(schedulersProvider.io()))
         .build()
   }
 
@@ -183,5 +181,38 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
         .markAppointmentsCreatedBeforeTodayAsVisited(bloodSugarMeasurement.patientUuid)
         .andThen(compareAndUpdateRecordedAt)
         .toSingleDefault(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
+  }
+
+  private fun updateBloodSugarEntryTransformer(scheduler: Scheduler): ObservableTransformer<UpdateBloodSugarEntry, BloodSugarEntryEvent> {
+    return ObservableTransformer { updateBloodSugarEntries ->
+      updateBloodSugarEntries
+          .observeOn(scheduler)
+          .map { updateBloodSugarEntry ->
+            val updatedBloodSugarMeasurement = updateBloodSugarMeasurement(updateBloodSugarEntry)
+            storeUpdateBloodSugarMeasurement(updatedBloodSugarMeasurement)
+            BloodSugarSaved(updateBloodSugarEntry.wasDateChanged)
+          }
+          .compose(reportAnalyticsEvents)
+          .cast<BloodSugarEntryEvent>()
+    }
+  }
+
+  private fun updateBloodSugarMeasurement(updateBloodSugarEntry: UpdateBloodSugarEntry): BloodSugarMeasurement {
+    val (_, bloodSugarReading, _, userEnteredDate, _) = updateBloodSugarEntry
+    val bloodSugarMeasurement = getExistingBloodSugarMeasurement(updateBloodSugarEntry.bloodSugarMeasurementUuid)!!
+    val user = userSession.loggedInUserImmediate()
+    val facility = facilityRepository.currentFacilityImmediate(user!!)
+
+    return bloodSugarMeasurement.copy(
+        userUuid = user.uuid,
+        facilityUuid = facility!!.uuid,
+        reading = bloodSugarMeasurement.reading.copy(value = bloodSugarReading),
+        recordedAt = userEnteredDate.toUtcInstant(userClock)
+    )
+  }
+
+  private fun storeUpdateBloodSugarMeasurement(bloodSugarMeasurement: BloodSugarMeasurement) {
+    bloodSugarRepository.updateMeasurement(bloodSugarMeasurement)
+    patientRepository.compareAndUpdateRecordedAtImmediate(bloodSugarMeasurement.patientUuid, bloodSugarMeasurement.recordedAt)
   }
 }

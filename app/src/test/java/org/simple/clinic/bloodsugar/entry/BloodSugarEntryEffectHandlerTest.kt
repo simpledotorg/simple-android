@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
@@ -13,7 +14,9 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
@@ -22,6 +25,8 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.SyncStatus.DONE
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -268,4 +273,57 @@ class BloodSugarEntryEffectHandlerTest {
     verifyZeroInteractions(ui)
   }
 
+  @Test
+  fun `update blood sugar entry when update blood sugar entry effect is received`() {
+    // given
+    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("50da2a45-3680-41e8-b46d-8a5896eadce0"))
+    val facility = PatientMocker.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
+    val patientUuid = UUID.fromString("260a831f-bc31-4341-bc0d-46325e85e32d")
+
+    val date = LocalDate.parse("2020-02-14")
+    val updatedDate = LocalDate.parse("2020-02-12")
+
+    val bloodSugarMeasurementType = Random
+    val bloodSugarReading = BloodSugarReading(250, bloodSugarMeasurementType)
+    val bloodSugarMeasurementUuid = UUID.fromString("58a3fa4b-2b32-4c43-a1cd-ee3d787064f7")
+
+    val bloodSugar = PatientMocker.bloodSugar(
+        uuid = bloodSugarMeasurementUuid,
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid,
+        userUuid = user.uuid,
+        reading = bloodSugarReading,
+        recordedAt = date.toUtcInstant(userClock),
+        timestamps = Timestamps(
+            createdAt = date.toUtcInstant(userClock),
+            updatedAt = date.toUtcInstant(userClock),
+            deletedAt = null
+        ),
+        syncStatus = DONE
+    )
+    val updateBloodSugarEntry = UpdateBloodSugarEntry(
+        bloodSugarMeasurementUuid = bloodSugarMeasurementUuid,
+        bloodSugarReading = 145,
+        measurementType = bloodSugar.reading.type,
+        userEnteredDate = updatedDate,
+        prefilledDate = updatedDate
+    )
+    val updatedBloodSugar = bloodSugar.copy(
+        reading = bloodSugarReading.copy(value = 145),
+        recordedAt = updatedDate.toUtcInstant(userClock)
+    )
+
+    whenever(userSession.loggedInUserImmediate()).doReturn(user)
+    whenever(facilityRepository.currentFacilityImmediate(user)).doReturn(facility)
+    whenever(bloodSugarRepository.measurement(bloodSugarMeasurementUuid)).doReturn(bloodSugar)
+    doNothing().whenever(bloodSugarRepository).updateMeasurement(updatedBloodSugar)
+    doNothing().whenever(patientRepository).compareAndUpdateRecordedAtImmediate(patientUuid, updatedDate.toUtcInstant(userClock))
+
+    // when
+    testCase.dispatch(updateBloodSugarEntry)
+
+    // then
+    testCase.assertOutgoingEvents(BloodSugarSaved(updateBloodSugarEntry.wasDateChanged))
+    verifyZeroInteractions(ui)
+  }
 }

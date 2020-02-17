@@ -13,7 +13,9 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
-import org.simple.clinic.summary.OpenIntention.*
+import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
+import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -102,14 +104,17 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             val shouldShowScheduleAppointmentSheet = if (noBloodPressuresRecordedForPatient) false else hasPatientDataChangedSinceScreenCreated
 
-            Triple(shouldShowScheduleAppointmentSheet,patientUuid, openIntention)
+            Triple(shouldShowScheduleAppointmentSheet, patientUuid, openIntention)
           }
           .observeOn(uiWorkScheduler)
           .doOnNext { (showScheduleAppointmentSheet, patientUuid, openIntention) ->
             if (showScheduleAppointmentSheet) {
               uiActions.showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-            } else if(openIntention == ViewExistingPatient) {
-              uiActions.goToPreviousScreen()
+            } else {
+              when (openIntention) {
+                ViewExistingPatient -> uiActions.goToPreviousScreen()
+                is LinkIdWithPatient, ViewNewPatient -> uiActions.goToHomeScreen()
+              }
             }
           }
           .flatMap { Observable.empty<PatientSummaryEvent>() }

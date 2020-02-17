@@ -5,7 +5,6 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
@@ -57,7 +56,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openLinkIdWithPatientSheet(replayedEvents),
         showUpdatePhoneDialogIfRequired(replayedEvents),
-        goBackWhenBackClicked(replayedEvents),
         hideLinkIdWithPatientSheet(replayedEvents)
     )
   }
@@ -77,31 +75,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
           val linkIdWithPatient = openIntention as LinkIdWithPatient
           { ui: Ui -> ui.showLinkIdWithPatientView(patientUuid, linkIdWithPatient.identifier) }
         }
-  }
-
-  private fun goBackWhenBackClicked(events: Observable<UiEvent>): Observable<UiChange> {
-    val allBpsForPatientDeletedStream = events
-        .ofType<PatientSummaryBackClicked>()
-        .map { doesNotHaveBloodPressures(patientUuid) }
-
-    val hasSummaryItemChangedStream = events
-        .ofType<PatientSummaryBackClicked>()
-        .map { patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp) }
-
-    val shouldGoBackStream = Observables
-        .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)
-        .map { (hasSummaryItemChanged, allBpsForPatientDeleted) ->
-          if (allBpsForPatientDeleted) true else hasSummaryItemChanged.not()
-        }
-
-    val shouldGoBackAfterBackClickedStream = events
-        .ofType<PatientSummaryBackClicked>()
-        .withLatestFrom(shouldGoBackStream) { _, shouldGoBack -> shouldGoBack }
-        .filter { shouldGoBack -> shouldGoBack }
-
-    return shouldGoBackAfterBackClickedStream
-        .filter { openIntention == ViewNewPatient || openIntention is LinkIdWithPatient }
-        .map { { ui: Ui -> ui.goToHomeScreen() } }
   }
 
   private fun exitScreenAfterSchedulingAppointment(events: Observable<UiEvent>): Observable<UiChange> {
@@ -188,9 +161,5 @@ class PatientSummaryScreenController @AssistedInject constructor(
     return events
         .ofType<PatientSummaryLinkIdCompleted>()
         .map { Ui::hideLinkIdWithPatientView }
-  }
-
-  private fun doesNotHaveBloodPressures(patientUuid: UUID): Boolean {
-    return bpRepository.bloodPressureCountImmediate(patientUuid) == 0
   }
 }

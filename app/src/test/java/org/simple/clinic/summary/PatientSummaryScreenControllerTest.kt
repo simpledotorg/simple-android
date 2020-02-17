@@ -425,11 +425,12 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(0)
-
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 0
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
+
     setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
-    startMobiusLoop()
+    startMobiusLoop(openIntention = openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
@@ -464,11 +465,12 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(1)
-
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
+
     setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
-    startMobiusLoop()
+    startMobiusLoop(openIntention = openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
@@ -485,11 +487,12 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       goBackToScreen: GoBackToScreen
   ) {
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(0)
-
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 0
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
+
     setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
-    startMobiusLoop()
+    startMobiusLoop(openIntention = openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(ui, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)

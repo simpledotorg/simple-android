@@ -742,6 +742,10 @@ class PatientSummaryScreenControllerTest {
           override fun goToPreviousScreen() {
             ui.goToPreviousScreen()
           }
+
+          override fun goToHomeScreen() {
+            ui.goToHomeScreen()
+          }
         }
     )
 

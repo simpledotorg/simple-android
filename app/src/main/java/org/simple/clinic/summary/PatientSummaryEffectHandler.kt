@@ -8,8 +8,12 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
@@ -18,6 +22,7 @@ import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.UUID
 
@@ -25,6 +30,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val bloodPressureRepository: BloodPressureRepository,
+    private val appointmentRepository: AppointmentRepository,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     @Assisted private val uiActions: PatientSummaryUiActions
@@ -167,5 +173,21 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
   private fun doesNotHaveBloodPressures(patientUuid: UUID): Boolean {
     return bloodPressureRepository.bloodPressureCountImmediate(patientUuid) == 0
+  }
+
+  // TODO(vs): 2020-02-18 Revisit after Mobius migration
+  private fun hasInvalidPhone(patientUuid: UUID): Observable<Boolean> {
+    return patientRepository.phoneNumber(patientUuid)
+        .filterAndUnwrapJust()
+        .zipWith(lastCancelledAppointmentWithInvalidPhone(patientUuid))
+        .map { (number, appointment) -> appointment.updatedAt > number.updatedAt }
+  }
+
+  // TODO(vs): 2020-02-18 Revisit after Mobius migration
+  private fun lastCancelledAppointmentWithInvalidPhone(patientUuid: UUID): Observable<Appointment> {
+    return appointmentRepository
+        .lastCreatedAppointmentForPatient(patientUuid)
+        .filterAndUnwrapJust()
+        .filter { it.status == Appointment.Status.Cancelled && it.cancelReason == AppointmentCancelReason.InvalidPhoneNumber }
   }
 }

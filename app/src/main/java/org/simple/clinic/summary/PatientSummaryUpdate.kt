@@ -22,6 +22,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduleAppointmentSheetClosed -> scheduleAppointmentSheetClosed(event, model)
+      is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())
       else -> noChange()
     }
   }

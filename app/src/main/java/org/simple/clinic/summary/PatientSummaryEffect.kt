@@ -28,3 +28,5 @@ object HandleLinkIdCancelled: PatientSummaryEffect()
 object GoBackToPreviousScreen: PatientSummaryEffect()
 
 object GoToHomeScreen: PatientSummaryEffect()
+
+data class CheckForInvalidPhone(val patientUuid: UUID): PatientSummaryEffect()

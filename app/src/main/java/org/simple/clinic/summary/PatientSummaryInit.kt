@@ -17,6 +17,10 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
       effects.add(LoadCurrentFacility)
     }
 
+    if(!model.hasCheckedForInvalidPhone) {
+      effects.add(CheckForInvalidPhone(model.patientUuid))
+    }
+
     return first(model, effects)
   }
 }

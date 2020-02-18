@@ -6,6 +6,7 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.zipWith
@@ -58,6 +59,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(HandleLinkIdCancelled::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
         .addAction(GoBackToPreviousScreen::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
         .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
+        .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
         .build()
   }
 
@@ -152,6 +154,27 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             }
           }
           .flatMap { Observable.empty<PatientSummaryEvent>() }
+    }
+  }
+
+  private fun checkForInvalidPhone(
+      backgroundWorkScheduler: Scheduler,
+      uiWorkScheduler: Scheduler
+  ): ObservableTransformer<CheckForInvalidPhone, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMap { checkForInvalidPhone ->
+            hasInvalidPhone(checkForInvalidPhone.patientUuid)
+                .subscribeOn(backgroundWorkScheduler)
+                .take(1)
+                .observeOn(uiWorkScheduler)
+                .doOnNext { isPhoneInvalid ->
+                  if (isPhoneInvalid) {
+                    uiActions.showUpdatePhoneDialog(checkForInvalidPhone.patientUuid)
+                  }
+                }
+                .flatMapSingle { Single.just(CompletedCheckForInvalidPhone) }
+          }
     }
   }
 

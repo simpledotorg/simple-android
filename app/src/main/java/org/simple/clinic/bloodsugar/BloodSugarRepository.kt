@@ -114,4 +114,12 @@ class BloodSugarRepository @Inject constructor(
 
     dao.save(listOf(updatedMeasurement))
   }
+
+  fun markBloodSugarAsDeleted(bloodSugarMeasurement: BloodSugarMeasurement) {
+    val deletedBloodSugarMeasurement = bloodSugarMeasurement.copy(
+        timestamps = bloodSugarMeasurement.timestamps.delete(utcClock),
+        syncStatus = PENDING
+    )
+    dao.save(listOf(deletedBloodSugarMeasurement))
+  }
 }

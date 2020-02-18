@@ -74,7 +74,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
     val showForInvalidPhone = hasInvalidPhone(patientUuid)
         .take(1)
         .filter { invalid -> invalid }
-        .map { { ui: Ui -> ui.showUpdatePhoneDialog(patientUuid) } }
+        .map { { ui: Ui -> /*ui.showUpdatePhoneDialog(patientUuid)*/ } }
 
     val waitTillABpIsRecorded = events
         .ofType<PatientSummaryBloodPressureSaved>()

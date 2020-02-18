@@ -26,7 +26,8 @@ class PatientSummaryInitTest {
                 hasModel(defaultModel),
                 hasEffects(
                     LoadPatientSummaryProfile(patientUuid),
-                    LoadCurrentFacility
+                    LoadCurrentFacility,
+                    CheckForInvalidPhone(patientUuid)
                 )
             )
         )
@@ -46,6 +47,7 @@ class PatientSummaryInitTest {
     val facility = PatientMocker.facility(uuid = UUID.fromString("fc5b49de-0e07-4d33-8b77-6611b47cb403"))
 
     val model = defaultModel
+        .completedCheckForInvalidPhone()
         .patientSummaryProfileLoaded(profile)
         .currentFacilityLoaded(facility)
 

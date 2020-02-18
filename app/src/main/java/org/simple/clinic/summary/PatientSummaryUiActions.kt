@@ -7,4 +7,5 @@ interface PatientSummaryUiActions {
   fun showEditPatientScreen(patientSummaryProfile: PatientSummaryProfile)
   fun goToPreviousScreen()
   fun goToHomeScreen()
+  fun showUpdatePhoneDialog(patientUuid: UUID)
 }

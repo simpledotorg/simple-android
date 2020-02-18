@@ -18,6 +18,9 @@ class ConfirmRemoveBloodSugarEffectHandler @Inject constructor(
     return RxMobius
         .subtypeEffectHandler<ConfirmRemoveBloodSugarEffect, ConfirmRemoveBloodSugarEvent>()
         .addTransformer(MarkBloodSugarAsDeleted::class.java, markBloodSugarAsDeleted(schedulersProvider.io()))
+        .addAction(CloseConfirmRemoveBloodSugarDialog::class.java, {
+          // TODO (SM): Close confirm remove blood sugar dialog
+        })
         .build()
   }
 

@@ -1,7 +1,6 @@
 package org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 
@@ -12,7 +11,7 @@ class ConfirmRemoveBloodSugarUpdate : Update<ConfirmRemoveBloodSugarModel, Confi
   ): Next<ConfirmRemoveBloodSugarModel, ConfirmRemoveBloodSugarEffect> {
     return when (event) {
       RemoveBloodSugarClicked -> dispatch(MarkBloodSugarAsDeleted(model.bloodSugarMeasurementUuid))
-      else -> noChange()
+      BloodSugarMarkedAsDeleted -> dispatch(CloseConfirmRemoveBloodSugarDialog)
     }
   }
 }

@@ -726,6 +726,7 @@ class PatientSummaryScreenControllerTest {
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
         bloodPressureRepository = bpRepository,
+        appointmentRepository = appointmentRepository,
         userSession = userSession,
         facilityRepository = facilityRepository,
         uiActions = object : PatientSummaryUiActions {

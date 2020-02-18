@@ -2,27 +2,27 @@ package org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import org.junit.After
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
 class ConfirmRemoveBloodSugarEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val bloodSugarRepository = mock<BloodSugarRepository>()
+  private val uiActions = mock<ConfirmRemoveBloodSugarUiActions>()
   private val effectHandler = ConfirmRemoveBloodSugarEffectHandler(
       patientRepository,
       bloodSugarRepository,
+      uiActions,
       TrampolineSchedulersProvider()
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -51,4 +51,16 @@ class ConfirmRemoveBloodSugarEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(BloodSugarMarkedAsDeleted)
   }
+
+  @Test
+  fun `close confirm blood sugar dialog, when close confirm dialog effect is received`() {
+    // when
+    testCase.dispatch(CloseConfirmRemoveBloodSugarDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).closeDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
+
 }

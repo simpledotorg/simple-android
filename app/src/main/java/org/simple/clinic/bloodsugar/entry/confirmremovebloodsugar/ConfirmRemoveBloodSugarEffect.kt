@@ -5,3 +5,5 @@ import java.util.UUID
 sealed class ConfirmRemoveBloodSugarEffect
 
 data class MarkBloodSugarAsDeleted(val bloodSugarMeasurementUuid: UUID) : ConfirmRemoveBloodSugarEffect()
+
+object CloseConfirmRemoveBloodSugarDialog : ConfirmRemoveBloodSugarEffect()

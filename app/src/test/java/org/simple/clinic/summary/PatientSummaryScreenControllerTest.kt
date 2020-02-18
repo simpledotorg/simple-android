@@ -710,7 +710,6 @@ class PatientSummaryScreenControllerTest {
         patientUuid = patientUuid,
         openIntention = openIntention,
         patientRepository = patientRepository,
-        appointmentRepository = appointmentRepository,
         missingPhoneReminderRepository = missingPhoneReminderRepository
     )
 

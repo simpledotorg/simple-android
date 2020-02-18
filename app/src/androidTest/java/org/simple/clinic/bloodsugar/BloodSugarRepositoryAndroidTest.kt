@@ -218,4 +218,29 @@ class BloodSugarRepositoryAndroidTest {
 
     assertThat(appDatabase.bloodSugarDao().getOne(bloodSugar.uuid)!!).isEqualTo(expected)
   }
+
+  @Test
+  fun marking_a_blood_sugar_as_deleted_should_work_correctly() {
+    val now = Instant.now(clock)
+    val bloodSugar = testData.bloodSugarMeasurement(
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE)
+
+    appDatabase.bloodSugarDao().save(listOf(bloodSugar))
+
+    val durationToAdvanceBy = Duration.ofMinutes(15L)
+    clock.advanceBy(durationToAdvanceBy)
+
+    repository.markBloodSugarAsDeleted(bloodSugar)
+
+    val expected = bloodSugar.copy(
+        timestamps = bloodSugar.timestamps.delete(clock),
+        syncStatus = SyncStatus.PENDING)
+
+    val savedBloodSugar = appDatabase.bloodSugarDao().getOne(expected.uuid)!!
+
+    assertThat(savedBloodSugar).isEqualTo(expected)
+  }
 }

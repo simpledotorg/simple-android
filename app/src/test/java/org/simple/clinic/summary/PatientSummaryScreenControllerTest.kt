@@ -747,6 +747,10 @@ class PatientSummaryScreenControllerTest {
           override fun goToHomeScreen() {
             ui.goToHomeScreen()
           }
+
+          override fun showUpdatePhoneDialog(patientUuid: UUID) {
+            ui.showUpdatePhoneDialog(patientUuid)
+          }
         }
     )
 

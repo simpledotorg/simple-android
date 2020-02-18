@@ -11,14 +11,12 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.util.UUID
@@ -34,6 +32,7 @@ class PatientSummaryEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       patientRepository = patientRepository,
       bloodPressureRepository = mock(),
+      appointmentRepository = mock(),
       userSession = userSession,
       facilityRepository = facilityRepository,
       uiActions = uiActions

@@ -525,6 +525,12 @@
   <string name="bloodsugarentry_edit_post_prandial_title">Edit post prandial blood sugar</string>
   <string name="bloodsugarentry_edit_fasting_title">Edit fasting blood sugar</string>
 
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">Remove Blood Sugar</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">Are you sure you want to remove this blood sugar recording?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">Remove</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">Cancel</string>
+
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">No blood sugars added</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">Diabetes</string>

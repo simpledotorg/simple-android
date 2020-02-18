@@ -31,3 +31,5 @@ object PatientSummaryLinkIdCancelled : PatientSummaryEvent()
 data class ScheduleAppointmentSheetClosed(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent() {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
+
+object CompletedCheckForInvalidPhone: PatientSummaryEvent()

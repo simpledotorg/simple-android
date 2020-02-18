@@ -36,4 +36,8 @@ data class PatientSummaryModel(
   fun currentFacilityLoaded(facility: Facility): PatientSummaryModel {
     return copy(currentFacility = facility)
   }
+
+  fun completedCheckForInvalidPhone(): PatientSummaryModel {
+    return copy(hasCheckedForInvalidPhone = true)
+  }
 }

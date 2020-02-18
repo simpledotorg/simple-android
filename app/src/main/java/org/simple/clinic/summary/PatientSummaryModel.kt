@@ -10,12 +10,13 @@ data class PatientSummaryModel(
     val openIntention: OpenIntention,
     val patientUuid: UUID,
     val patientSummaryProfile: PatientSummaryProfile?,
-    val currentFacility: Facility?
+    val currentFacility: Facility?,
+    val hasCheckedForInvalidPhone: Boolean
 ) : Parcelable {
 
   companion object {
     fun from(openIntention: OpenIntention, patientUuid: UUID): PatientSummaryModel {
-      return PatientSummaryModel(openIntention, patientUuid, null, null)
+      return PatientSummaryModel(openIntention, patientUuid, null, null, false)
     }
   }
 

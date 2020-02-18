@@ -11,6 +11,7 @@ import javax.inject.Inject
 class ConfirmRemoveBloodSugarEffectHandler @Inject constructor(
     private val patientRepository: PatientRepository,
     private val bloodSugarRepository: BloodSugarRepository,
+    private val uiActions: ConfirmRemoveBloodSugarUiActions,
     private val schedulersProvider: SchedulersProvider
 ) {
 
@@ -18,9 +19,7 @@ class ConfirmRemoveBloodSugarEffectHandler @Inject constructor(
     return RxMobius
         .subtypeEffectHandler<ConfirmRemoveBloodSugarEffect, ConfirmRemoveBloodSugarEvent>()
         .addTransformer(MarkBloodSugarAsDeleted::class.java, markBloodSugarAsDeleted(schedulersProvider.io()))
-        .addAction(CloseConfirmRemoveBloodSugarDialog::class.java, {
-          // TODO (SM): Close confirm remove blood sugar dialog
-        })
+        .addAction(CloseConfirmRemoveBloodSugarDialog::class.java, { uiActions.closeDialog() }, schedulersProvider.ui())
         .build()
   }
 

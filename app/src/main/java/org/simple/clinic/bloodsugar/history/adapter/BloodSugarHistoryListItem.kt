@@ -15,10 +15,13 @@ import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.visibleOrGone
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeFormatter
 
 sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
@@ -27,7 +30,9 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
         measurements: List<BloodSugarMeasurement>,
         userClock: UserClock,
         dateFormatter: DateTimeFormatter,
-        timeFormatter: DateTimeFormatter
+        timeFormatter: DateTimeFormatter,
+        canEditFor: Duration,
+        utcClock: UtcClock
     ): List<BloodSugarHistoryListItem> {
       val measurementsByDate = measurements.groupBy { it.recordedAt.toLocalDateAtZone(userClock.zone) }
 
@@ -40,16 +45,31 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
           } else {
             null
           }
+          val isBloodSugarEditable = isBloodSugarEditable(measurement, canEditFor, utcClock)
 
           BloodSugarHistoryItem(
               measurement = measurement,
               bloodSugarDate = dateFormatter.format(recordedAt),
-              bloodSugarTime = bloodSugarTime
+              bloodSugarTime = bloodSugarTime,
+              isBloodSugarEditable = isBloodSugarEditable
           )
         }
       }.values.flatten()
 
       return listOf(NewBloodSugarButton) + bloodSugarHistoryItems
+    }
+
+    private fun isBloodSugarEditable(
+        bloodSugarMeasurement: BloodSugarMeasurement,
+        bpEditableFor: Duration,
+        utcClock: UtcClock
+    ): Boolean {
+      val now = Instant.now(utcClock)
+      val createdAt = bloodSugarMeasurement.timestamps.createdAt
+
+      val durationSinceBpCreated = Duration.between(createdAt, now)
+
+      return durationSinceBpCreated <= bpEditableFor
     }
   }
 
@@ -64,7 +84,8 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
   data class BloodSugarHistoryItem(
       val measurement: BloodSugarMeasurement,
       val bloodSugarDate: String,
-      val bloodSugarTime: String?
+      val bloodSugarTime: String?,
+      val isBloodSugarEditable: Boolean
   ) : BloodSugarHistoryListItem() {
     override fun layoutResId(): Int = R.layout.list_blood_sugar_history_item
 
@@ -96,6 +117,15 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
       } else {
         holder.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_outline)
       }
+
+      if (isBloodSugarEditable) {
+        holder.itemView.setOnClickListener { subject.onNext(BloodSugarHistoryItemClicked(measurement)) }
+      } else {
+        holder.itemView.setOnClickListener(null)
+      }
+      holder.itemView.isClickable = isBloodSugarEditable
+      holder.itemView.isFocusable = isBloodSugarEditable
+      holder.editButton.visibleOrGone(isBloodSugarEditable)
     }
 
     private fun textForReadingType(context: Context, type: BloodSugarMeasurementType): String {

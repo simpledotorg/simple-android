@@ -78,4 +78,19 @@ class BloodSugarHistoryScreenEffectHandlerTest {
     verify(uiActions).openBloodSugarEntrySheet(patientUuid)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open blood sugar update sheet effect is received, then open blood sugar update sheet`() {
+    // given
+    val measurement = PatientMocker.bloodSugar()
+
+    // when
+    testCase.dispatch(OpenBloodSugarUpdateSheet(measurement))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openBloodSugarUpdateSheet(measurement)
+    verifyNoMoreInteractions(uiActions)
+  }
+
 }

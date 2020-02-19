@@ -154,6 +154,11 @@ class BloodSugarHistoryScreen(
     activity.startActivityForResult(intent, TYPE_PICKER_SHEET)
   }
 
+  override fun openBloodSugarUpdateSheet(measurement: BloodSugarMeasurement) {
+    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, measurement.uuid, measurement.reading.type)
+    activity.startActivity(intent)
+  }
+
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
     val genderLetter = resources.getString(gender.displayLetterRes)
     toolbar.title = resources.getString(R.string.bloodsugarhistory_toolbar_title, name, genderLetter, age.toString())

@@ -19,6 +19,10 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
+import org.simple.clinic.bloodsugar.Fasting
+import org.simple.clinic.bloodsugar.PostPrandial
+import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
@@ -241,24 +245,6 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit))
   }
 
-  override fun showRandomBloodSugarTitle() {
-    enterBloodSugarTitleTextView.visibility = View.VISIBLE
-    editBloodSugarTitleTextView.visibility = View.GONE
-    enterBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_random_title)
-  }
-
-  override fun showPostPrandialBloodSugarTitle() {
-    enterBloodSugarTitleTextView.visibility = View.VISIBLE
-    editBloodSugarTitleTextView.visibility = View.GONE
-    enterBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_post_prandial_title)
-  }
-
-  override fun showFastingBloodSugarTitle() {
-    enterBloodSugarTitleTextView.visibility = View.VISIBLE
-    editBloodSugarTitleTextView.visibility = View.GONE
-    enterBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_fasting_title)
-  }
-
   override fun showBloodSugarEntryScreen() {
     viewFlipper.inAnimation = AnimationUtils
         .loadAnimation(this, R.anim.measurementinput_reading_entry_from_left)
@@ -306,22 +292,30 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     bloodSugarDateButton.text = dateFormatter.format(date)
   }
 
-  override fun showEditRadomBloodSugarTitle() {
-    enterBloodSugarTitleTextView.visibility = View.GONE
-    editBloodSugarTitleTextView.visibility = View.VISIBLE
-    editBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_edit_random_title)
+  override fun showEntryTitle(measurementType: BloodSugarMeasurementType) {
+    enterBloodSugarTitleTextView.visibility = View.VISIBLE
+    editBloodSugarTitleTextView.visibility = View.GONE
+
+    val title = when (measurementType) {
+      Random -> getString(R.string.bloodsugarentry_random_title)
+      PostPrandial -> getString(R.string.bloodsugarentry_post_prandial_title)
+      Fasting -> getString(R.string.bloodsugarentry_fasting_title)
+      is Unknown -> measurementType.actualValue
+    }
+    enterBloodSugarTitleTextView.text = title
   }
 
-  override fun showEditPostPrandialBloodSugarTitle() {
+  override fun showEditTitle(measurementType: BloodSugarMeasurementType) {
     enterBloodSugarTitleTextView.visibility = View.GONE
     editBloodSugarTitleTextView.visibility = View.VISIBLE
-    editBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_edit_post_prandial_title)
-  }
 
-  override fun showEditFastingBloodSugarTitle() {
-    enterBloodSugarTitleTextView.visibility = View.GONE
-    editBloodSugarTitleTextView.visibility = View.VISIBLE
-    editBloodSugarTitleTextView.text = getString(R.string.bloodsugarentry_edit_fasting_title)
+    val title = when (measurementType) {
+      Random -> getString(R.string.bloodsugarentry_edit_random_title)
+      PostPrandial -> getString(R.string.bloodsugarentry_edit_post_prandial_title)
+      Fasting -> getString(R.string.bloodsugarentry_edit_fasting_title)
+      is Unknown -> measurementType.actualValue
+    }
+    editBloodSugarTitleTextView.text = title
   }
 
   override fun showRemoveButton() {

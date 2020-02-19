@@ -10,7 +10,6 @@ interface PatientSummaryScreenUi : PatientSummaryUiActions {
   fun hideDiabetesView()
 
   // Not yet migrated to Mobius
-  fun showAddPhoneDialog(patientUuid: UUID)
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
   fun hideLinkIdWithPatientView()
 }

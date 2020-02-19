@@ -751,6 +751,10 @@ class PatientSummaryScreenControllerTest {
           override fun showUpdatePhoneDialog(patientUuid: UUID) {
             ui.showUpdatePhoneDialog(patientUuid)
           }
+
+          override fun showAddPhoneDialog(patientUuid: UUID) {
+            ui.showAddPhoneDialog(patientUuid)
+          }
         }
     )
 

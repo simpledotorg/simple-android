@@ -21,8 +21,10 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.UUID
@@ -32,6 +34,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val bloodPressureRepository: BloodPressureRepository,
     private val appointmentRepository: AppointmentRepository,
+    private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     @Assisted private val uiActions: PatientSummaryUiActions
@@ -60,6 +63,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(GoBackToPreviousScreen::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
         .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
         .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
+        .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .build()
   }
 
@@ -157,6 +161,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
+  // TODO(vs): 2020-02-19 Revisit after Mobius migration
   private fun checkForInvalidPhone(
       backgroundWorkScheduler: Scheduler,
       uiWorkScheduler: Scheduler
@@ -174,6 +179,21 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                   }
                 }
                 .flatMapSingle { Single.just(CompletedCheckForInvalidPhone) }
+          }
+    }
+  }
+
+  // TODO(vs): 2020-02-19 Revisit after Mobius migration
+  private fun fetchHasShownMissingPhoneReminder(
+      scheduler: Scheduler
+  ): ObservableTransformer<FetchHasShownMissingPhoneReminder, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMap { effect ->
+            isMissingPhoneAndHasShownReminder(effect.patientUuid)
+                .subscribeOn(scheduler)
+                .take(1)
+                .map(::FetchedHasShownMissingReminder)
           }
     }
   }
@@ -212,5 +232,18 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .lastCreatedAppointmentForPatient(patientUuid)
         .filterAndUnwrapJust()
         .filter { it.status == Appointment.Status.Cancelled && it.cancelReason == AppointmentCancelReason.InvalidPhoneNumber }
+  }
+
+  private fun isMissingPhoneAndHasShownReminder(patientUuid: UUID): Observable<Boolean> {
+    return patientRepository
+        .phoneNumber(patientUuid)
+        .zipWith(hasShownReminderForMissingPhone(patientUuid))
+        .map { (number, reminderShown) -> number is None && reminderShown }
+  }
+
+  private fun hasShownReminderForMissingPhone(patientUuid: UUID): Observable<Boolean> {
+    return missingPhoneReminderRepository
+        .hasShownReminderFor(patientUuid)
+        .toObservable()
   }
 }

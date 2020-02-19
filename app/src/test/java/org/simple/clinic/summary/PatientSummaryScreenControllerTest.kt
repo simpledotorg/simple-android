@@ -726,6 +726,7 @@ class PatientSummaryScreenControllerTest {
         patientRepository = patientRepository,
         bloodPressureRepository = bpRepository,
         appointmentRepository = appointmentRepository,
+        missingPhoneReminderRepository = missingPhoneReminderRepository,
         userSession = userSession,
         facilityRepository = facilityRepository,
         uiActions = object : PatientSummaryUiActions {

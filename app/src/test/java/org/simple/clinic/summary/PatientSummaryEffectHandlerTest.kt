@@ -33,6 +33,7 @@ class PatientSummaryEffectHandlerTest {
       patientRepository = patientRepository,
       bloodPressureRepository = mock(),
       appointmentRepository = mock(),
+      missingPhoneReminderRepository = mock(),
       userSession = userSession,
       facilityRepository = facilityRepository,
       uiActions = uiActions

@@ -9,14 +9,20 @@ import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.BloodSugarHistoryItem
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.NewBloodSugarButton
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.ChronoUnit.DAYS
+import org.threeten.bp.temporal.ChronoUnit.MINUTES
 import java.util.Locale
 import java.util.UUID
 
 class BloodSugarHistoryListItemTest {
   private val userClock = TestUserClock()
+  private val utcClock = TestUtcClock()
   private val locale = Locale.ENGLISH
   private val dateFormatter = DateTimeFormatter.ofPattern("d-MMM-yyyy", locale)
   private val timeFormatter = DateTimeFormatter.ofPattern("h:mm a", locale)
@@ -38,15 +44,17 @@ class BloodSugarHistoryListItemTest {
         listOf(bloodSugar1, bloodSugar2),
         userClock,
         dateFormatter,
-        timeFormatter
+        timeFormatter,
+        Duration.ofMinutes(10),
+        utcClock
     )
 
     // then
     assertThat(listItems)
         .containsExactly(
             NewBloodSugarButton,
-            BloodSugarHistoryItem(measurement = bloodSugar1, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null),
-            BloodSugarHistoryItem(measurement = bloodSugar2, bloodSugarDate = "5-Jan-2020", bloodSugarTime = null)
+            BloodSugarHistoryItem(measurement = bloodSugar1, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null, isBloodSugarEditable = true),
+            BloodSugarHistoryItem(measurement = bloodSugar2, bloodSugarDate = "5-Jan-2020", bloodSugarTime = null, isBloodSugarEditable = true)
         )
   }
 
@@ -72,16 +80,60 @@ class BloodSugarHistoryListItemTest {
         listOf(bloodSugar1, bloodSugar2, bloodSugar3),
         userClock,
         dateFormatter,
-        timeFormatter
+        timeFormatter,
+        Duration.ofMinutes(10),
+        utcClock
     )
 
     // then
     assertThat(listItems)
         .containsExactly(
             NewBloodSugarButton,
-            BloodSugarHistoryItem(measurement = bloodSugar1, bloodSugarDate = "16-Jan-2020", bloodSugarTime = "10:00 AM"),
-            BloodSugarHistoryItem(measurement = bloodSugar2, bloodSugarDate = "16-Jan-2020", bloodSugarTime = "9:00 AM"),
-            BloodSugarHistoryItem(measurement = bloodSugar3, bloodSugarDate = "22-Nov-2019", bloodSugarTime = null)
+            BloodSugarHistoryItem(measurement = bloodSugar1, bloodSugarDate = "16-Jan-2020", bloodSugarTime = "10:00 AM", isBloodSugarEditable = true),
+            BloodSugarHistoryItem(measurement = bloodSugar2, bloodSugarDate = "16-Jan-2020", bloodSugarTime = "9:00 AM", isBloodSugarEditable = true),
+            BloodSugarHistoryItem(measurement = bloodSugar3, bloodSugarDate = "22-Nov-2019", bloodSugarTime = null, isBloodSugarEditable = true)
         )
   }
+
+  @Test
+  fun `if the blood sugar was created within the blood sugar editable duration, then the blood sugar list item must be editable`() {
+    // given
+    val recordedAt = Instant.parse("2020-01-01T09:00:00Z")
+    val createdAt = Instant.parse("2020-01-01T09:00:00Z")
+    val testUtcClock = TestUtcClock(createdAt)
+
+    val bloodSugarNow = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("c78b2bdf-1d38-439d-b755-91414d76b031"),
+        reading = BloodSugarReading(120, Random),
+        recordedAt = recordedAt,
+        timestamps = Timestamps.create(testUtcClock)
+    )
+    val bloodSugarInPast = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("270cf83f-913d-47c5-ab4d-dd8a742ccad2"),
+        reading = BloodSugarReading(156, PostPrandial),
+        recordedAt = recordedAt.minus(1, DAYS),
+        timestamps = Timestamps(
+            createdAt = createdAt.minus(15, MINUTES),
+            updatedAt = createdAt.minus(15, MINUTES),
+            deletedAt = null
+        )
+    )
+    val listItems = BloodSugarHistoryListItem.from(
+        listOf(bloodSugarNow, bloodSugarInPast),
+        userClock,
+        dateFormatter,
+        timeFormatter,
+        Duration.ofMinutes(10),
+        testUtcClock
+    )
+
+    // then
+    assertThat(listItems)
+        .containsExactly(
+            NewBloodSugarButton,
+            BloodSugarHistoryItem(measurement = bloodSugarNow, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null, isBloodSugarEditable = true),
+            BloodSugarHistoryItem(measurement = bloodSugarInPast, bloodSugarDate = "31-Dec-2019", bloodSugarTime = null, isBloodSugarEditable = false)
+        )
+  }
+
 }

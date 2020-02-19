@@ -556,6 +556,8 @@
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">None</string>
+
+  <!-- Access Denied screen -->
   <string name="accessdeniedscreen_title_access_denied">Access Denied</string>
   <string name="accessdeniedscreen_description">Your access to Simple has been denied.\n Please contact your Supervisor if you think that you have been denied access due to an error.</string>
 </resources>

@@ -31,7 +31,9 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
@@ -67,6 +69,12 @@ class BloodSugarHistoryScreen(
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  @Inject
+  lateinit var config: BloodSugarSummaryConfig
+
+  @Inject
+  lateinit var utcClock: UtcClock
 
   private val bloodSugarHistoryAdapter = ItemAdapter(BloodSugarHistoryListItemDiffCallback())
 
@@ -135,7 +143,9 @@ class BloodSugarHistoryScreen(
         bloodSugars,
         userClock,
         dateFormatter,
-        timeFormatter
+        timeFormatter,
+        config.bloodSugarEditableDuration,
+        utcClock
     ))
   }
 

@@ -3,7 +3,10 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content">
+  android:layout_height="wrap_content"
+  android:background="?attr/selectableItemBackground"
+  android:clickable="true"
+  android:focusable="true">
 
   <androidx.constraintlayout.widget.Guideline
     android:id="@+id/topGuideline"
@@ -54,10 +57,23 @@
     android:layout_marginStart="@dimen/spacing_12"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
     app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
-    app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
+    app:layout_constraintEnd_toStartOf="@id/editButton"
     app:layout_constraintStart_toEndOf="@id/bloodSugarIconImageView"
     app:layout_constraintTop_toBottomOf="@id/topGuideline"
     tools:text="150 mg/dl RBS" />
+
+  <TextView
+    android:id="@+id/editButton"
+    style="@style/Clinic.V2.TextAppearance.Button2.Blue1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:text="@string/patientsummary_edit"
+    android:visibility="gone"
+    app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+    app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
+    app:layout_constraintStart_toEndOf="@id/readingsTextView"
+    app:layout_constraintTop_toBottomOf="@id/topGuideline" />
 
   <TextView
     android:id="@+id/dateTimeTextView"

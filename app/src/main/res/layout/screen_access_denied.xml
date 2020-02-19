@@ -14,7 +14,7 @@
     android:background="?colorPrimary"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingBottom="@dimen/spacing_16"
+    android:paddingBottom="@dimen/spacing_24"
     android:paddingEnd="@dimen/spacing_24"
     android:paddingStart="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_64">
@@ -28,7 +28,7 @@
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="@dimen/textsize_20"
-        tools:text="A really long person name" />
+        tools:text="Gangadhar Vidyadhar Mayadhar Omkarnath Shastri" />
 
       <Button
         android:id="@+id/logoutButton"

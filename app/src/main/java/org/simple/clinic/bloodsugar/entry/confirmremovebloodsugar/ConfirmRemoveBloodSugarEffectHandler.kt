@@ -1,19 +1,26 @@
 package org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import javax.inject.Inject
 
-class ConfirmRemoveBloodSugarEffectHandler @Inject constructor(
+class ConfirmRemoveBloodSugarEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val bloodSugarRepository: BloodSugarRepository,
-    private val uiActions: ConfirmRemoveBloodSugarUiActions,
+    @Assisted private val uiActions: ConfirmRemoveBloodSugarUiActions,
     private val schedulersProvider: SchedulersProvider
 ) {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(uiActions: ConfirmRemoveBloodSugarUiActions): ConfirmRemoveBloodSugarEffectHandler
+  }
 
   fun build(): ObservableTransformer<ConfirmRemoveBloodSugarEffect, ConfirmRemoveBloodSugarEvent> {
     return RxMobius

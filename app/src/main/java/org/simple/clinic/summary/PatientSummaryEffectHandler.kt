@@ -64,6 +64,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
         .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
+        .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
         .build()
   }
 
@@ -194,6 +195,21 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 .subscribeOn(scheduler)
                 .take(1)
                 .map(::FetchedHasShownMissingReminder)
+          }
+    }
+  }
+
+  // TODO(vs): 2020-02-19 Revisit after Mobius migration
+  private fun markReminderAsShown(
+      scheduler: Scheduler
+  ): ObservableTransformer<MarkReminderAsShown, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMap { effect ->
+            missingPhoneReminderRepository
+                .markReminderAsShownFor(effect.patientUuid)
+                .subscribeOn(scheduler)
+                .andThen(Observable.empty<PatientSummaryEvent>())
           }
     }
   }

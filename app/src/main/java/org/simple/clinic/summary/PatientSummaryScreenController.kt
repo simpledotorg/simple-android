@@ -42,7 +42,7 @@ class PatientSummaryScreenController @AssistedInject constructor(
     return Observable.mergeArray(
         reportViewedPatientEvent(replayedEvents),
         openLinkIdWithPatientSheet(replayedEvents),
-        showUpdatePhoneDialogIfRequired(replayedEvents),
+//        showUpdatePhoneDialogIfRequired(replayedEvents),
         hideLinkIdWithPatientSheet(replayedEvents)
     )
   }

@@ -64,7 +64,10 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:padding="@dimen/spacing_24" >
+      android:paddingTop="@dimen/spacing_24"
+      android:paddingBottom="@dimen/spacing_24"
+      android:paddingEnd="@dimen/spacing_32"
+      android:paddingStart="@dimen/spacing_32" >
 
     <TextView
       android:layout_width="match_parent"
@@ -77,9 +80,9 @@
     <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:gravity="center"
+      android:lineSpacingExtra="2sp"
       android:text="@string/accessdeniedscreen_description"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center.Grey1" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
     </LinearLayout>
 
   </androidx.cardview.widget.CardView>

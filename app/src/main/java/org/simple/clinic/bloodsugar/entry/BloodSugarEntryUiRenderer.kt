@@ -1,9 +1,5 @@
 package org.simple.clinic.bloodsugar.entry
 
-import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
-import org.simple.clinic.bloodsugar.Fasting
-import org.simple.clinic.bloodsugar.PostPrandial
-import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.mobius.ViewRenderer
@@ -22,31 +18,11 @@ class BloodSugarEntryUiRenderer(
     when (openAs) {
       is New -> {
         ui.hideRemoveButton()
-        showEnterNewBloodSugarTitle(openAs.measurementType)
+        ui.showEntryTitle(openAs.measurementType)
       }
       is Update -> {
         ui.showRemoveButton()
-        showEditBloodSugarTitle(openAs.measurementType)
-      }
-    }
-  }
-
-  private fun showEnterNewBloodSugarTitle(measurementType: BloodSugarMeasurementType) {
-    with(ui) {
-      when (measurementType) {
-        is Random -> showRandomBloodSugarTitle()
-        is PostPrandial -> showPostPrandialBloodSugarTitle()
-        is Fasting -> showFastingBloodSugarTitle()
-      }
-    }
-  }
-
-  private fun showEditBloodSugarTitle(measurementType: BloodSugarMeasurementType) {
-    with(ui) {
-      when (measurementType) {
-        is Random -> showEditRadomBloodSugarTitle()
-        is PostPrandial -> showEditPostPrandialBloodSugarTitle()
-        is Fasting -> showEditFastingBloodSugarTitle()
+        ui.showEditTitle(openAs.measurementType)
       }
     }
   }

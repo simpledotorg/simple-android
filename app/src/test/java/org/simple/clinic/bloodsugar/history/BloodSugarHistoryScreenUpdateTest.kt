@@ -63,4 +63,19 @@ class BloodSugarHistoryScreenUpdateTest {
             hasEffects(OpenBloodSugarEntrySheet(patientUuid) as BloodSugarHistoryScreenEffect)
         ))
   }
+
+  @Test
+  fun `when blood sugar is clicked, then open update sheet`() {
+    val bloodSugar = PatientMocker.bloodSugar()
+    val bloodSugars = listOf(bloodSugar)
+
+    updateSpec
+        .given(defaultModel.bloodSugarsLoaded(bloodSugars))
+        .whenEvent(BloodSugarClicked(bloodSugar))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenBloodSugarUpdateSheet(bloodSugar) as BloodSugarHistoryScreenEffect)
+        ))
+  }
+
 }

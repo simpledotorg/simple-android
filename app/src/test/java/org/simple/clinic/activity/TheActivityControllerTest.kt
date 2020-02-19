@@ -272,6 +272,29 @@ class TheActivityControllerTest {
     verify(activity).showAccessDeniedScreen(fullName)
     verifyNoMoreInteractions(activity)
   }
+  
+  @Test
+  fun `when user's access is revived then the access denied screen should be hidden`() {
+    //given
+    val fullName = "Anish Acharya"
+    val loggedInUser = PatientMocker.loggedInUser(
+        uuid = UUID.fromString("0b350f89-ed0e-4922-b384-7f7a9bf3aba0"),
+        name = fullName,
+        status = UserStatus.ApprovedForSyncing,
+        loggedInStatus = LOGGED_IN
+    )
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
+
+    //when
+    uiEvents.onNext(Started(null))
+
+    //then
+    verify(activity).hideAccessDeniedScreen()
+    verify(activity).showAppLockScreen()
+    verifyNoMoreInteractions(activity)
+  }
 
 
   data class RedirectToSignInParams(

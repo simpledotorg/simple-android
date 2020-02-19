@@ -708,9 +708,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     val controller = PatientSummaryScreenController(
         patientUuid = patientUuid,
-        openIntention = openIntention,
-        patientRepository = patientRepository,
-        missingPhoneReminderRepository = missingPhoneReminderRepository
+        openIntention = openIntention
     )
 
     controllerSubscription = uiEvents

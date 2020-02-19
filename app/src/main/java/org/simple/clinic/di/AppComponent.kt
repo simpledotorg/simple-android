@@ -2,6 +2,7 @@ package org.simple.clinic.di
 
 import dagger.Component
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
@@ -26,6 +27,7 @@ interface AppComponent {
   fun theActivityComponentBuilder(): TheActivityComponent.Builder
   fun setupActivityComponentBuilder(): SetupActivityComponent.Builder
   fun patientFacilityChangeComponentBuilder() : FacilitySelectionActivityComponent.Builder
+  fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Builder
 }
 
 @Scope

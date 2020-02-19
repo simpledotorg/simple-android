@@ -15,6 +15,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import kotlinx.android.synthetic.main.sheet_blood_sugar_entry.*
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
@@ -23,7 +24,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_E
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
@@ -46,6 +47,8 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   }
 
   companion object {
+    lateinit var component: BloodSugarEntryComponent
+
     private const val KEY_OPEN_AS = "openAs"
     private const val EXTRA_WAS_BLOOD_SUGAR_SAVED = "wasBloodSugarSaved"
 
@@ -125,7 +128,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.sheet_blood_sugar_entry)
-    TheActivity.component.inject(this)
+    setupDi()
 
     delegate.onRestoreInstanceState(savedInstanceState)
   }
@@ -143,6 +146,15 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   override fun onSaveInstanceState(outState: Bundle) {
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
+  }
+
+  private fun setupDi() {
+    component = ClinicApp.appComponent
+        .bloodSugarEntryComponent()
+        .activity(this)
+        .build()
+
+    component.inject(this)
   }
 
   private fun bloodSugarTextChanges() = bloodSugarReadingEditText.textChanges()

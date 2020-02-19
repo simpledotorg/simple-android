@@ -24,6 +24,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_E
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog
+import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog.RemoveBloodSugarListener
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.UserClock
@@ -40,7 +41,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
-class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
+class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBloodSugarListener {
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
     DATE_ENTRY
@@ -347,6 +348,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
 
   override fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID) {
     ConfirmRemoveBloodSugarDialog.show(bloodSugarMeasurementUuid, supportFragmentManager)
+  }
+
+  override fun onBloodSugarRemoved() {
+    dismiss()
   }
 
   private fun showBloodSugarErrorMessage(message: String) {

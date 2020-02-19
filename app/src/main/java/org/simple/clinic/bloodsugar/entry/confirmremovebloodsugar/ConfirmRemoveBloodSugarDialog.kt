@@ -65,9 +65,20 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
     )
   }
 
+  private var removeBloodSugarListener: RemoveBloodSugarListener? = null
+
   override fun onAttach(context: Context) {
     BloodSugarEntrySheet.component.inject(this)
     super.onAttach(context)
+    removeBloodSugarListener = context as? RemoveBloodSugarListener
+    if (removeBloodSugarListener == null) {
+      throw ClassCastException("$context must implement RemoveBloodSugarListener")
+    }
+  }
+
+  override fun onDetach() {
+    removeBloodSugarListener = null
+    super.onDetach()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +92,7 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
         .setTitle(R.string.bloodsugarentry_remove_blood_sugar_title)
         .setMessage(R.string.bloodsugarentry_remove_blood_sugar_message)
         .setPositiveButton(R.string.bloodsugarentry_remove_blood_sugar_confirm) { _, _ ->
+          removeBloodSugarListener?.onBloodSugarRemoved()
           events.onNext(RemoveBloodSugarClicked)
         }
         .setNegativeButton(R.string.bloodsugarentry_remove_blood_sugar_cancel, null)
@@ -104,5 +116,9 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
 
   override fun closeDialog() {
     dismiss()
+  }
+
+  interface RemoveBloodSugarListener {
+    fun onBloodSugarRemoved()
   }
 }

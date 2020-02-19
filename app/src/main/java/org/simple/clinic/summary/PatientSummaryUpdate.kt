@@ -10,6 +10,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import java.util.UUID
 
 class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
@@ -23,7 +24,30 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduleAppointmentSheetClosed -> scheduleAppointmentSheetClosed(event, model)
       is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())
+      is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientUuid)
+      is FetchedHasShownMissingReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       else -> noChange()
+    }
+  }
+
+  private fun fetchedHasShownMissingReminder(
+      hasShownReminder: Boolean,
+      patientUuid: UUID
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return if (!hasShownReminder) {
+      dispatch(MarkReminderAsShown(patientUuid), ShowAddPhonePopup(patientUuid))
+    } else {
+      noChange()
+    }
+  }
+
+  private fun bloodPressureSaved(
+      openIntention: OpenIntention,
+      patientUuid: UUID
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return when (openIntention) {
+      ViewNewPatient -> noChange()
+      else -> dispatch(FetchHasShownMissingPhoneReminder(patientUuid))
     }
   }
 

@@ -65,6 +65,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
+        .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
         .build()
   }
 

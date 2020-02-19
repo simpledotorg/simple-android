@@ -28,6 +28,7 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatient::class.java, loadPatient(schedulersProvider.io()))
         .addTransformer(LoadBloodSugarHistory::class.java, loadBloodSugarHistory(schedulersProvider.io()))
         .addConsumer(OpenBloodSugarEntrySheet::class.java, { uiActions.openBloodSugarEntrySheet(it.patientUuid) }, schedulersProvider.ui())
+        .addConsumer(OpenBloodSugarUpdateSheet::class.java, { uiActions.openBloodSugarUpdateSheet(it.bloodSugarMeasurement) }, schedulersProvider.ui())
         .build()
   }
 

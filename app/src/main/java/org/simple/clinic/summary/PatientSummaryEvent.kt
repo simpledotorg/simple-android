@@ -33,3 +33,5 @@ data class ScheduleAppointmentSheetClosed(val sheetOpenedFrom: AppointmentSheetO
 }
 
 object CompletedCheckForInvalidPhone: PatientSummaryEvent()
+
+object PatientSummaryBloodPressureSaved : PatientSummaryEvent()

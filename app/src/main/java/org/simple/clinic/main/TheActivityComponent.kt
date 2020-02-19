@@ -149,7 +149,6 @@ interface TheActivityComponent :
   fun inject(target: EditPatientScreen)
   fun inject(target: SettingsScreen)
   fun inject(target: ChangeLanguageScreen)
-  fun inject(target: BloodSugarEntrySheet)
 
   @Subcomponent.Builder
   interface Builder : BindsActivity<Builder>, BindsScreenRouter<Builder> {

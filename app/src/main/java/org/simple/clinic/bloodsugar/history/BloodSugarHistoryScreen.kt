@@ -17,6 +17,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
+import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryItemClicked
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItemDiffCallback
 import org.simple.clinic.bloodsugar.history.adapter.NewBloodSugarClicked
@@ -79,7 +80,11 @@ class BloodSugarHistoryScreen(
   private val bloodSugarHistoryAdapter = ItemAdapter(BloodSugarHistoryListItemDiffCallback())
 
   private val events: Observable<BloodSugarHistoryScreenEvent> by unsafeLazy {
-    addNewBloodSugarClicked()
+    Observable
+        .merge(
+            addNewBloodSugarClicked(),
+            bloodPressureClicked()
+        )
         .compose(ReportAnalyticsEvents())
         .cast<BloodSugarHistoryScreenEvent>()
   }
@@ -209,5 +214,13 @@ class BloodSugarHistoryScreen(
         .itemEvents
         .ofType<NewBloodSugarClicked>()
         .map { AddNewBloodSugarClicked }
+  }
+
+  private fun bloodPressureClicked(): Observable<BloodSugarHistoryScreenEvent> {
+    return bloodSugarHistoryAdapter
+        .itemEvents
+        .ofType<BloodSugarHistoryItemClicked>()
+        .map { it.measurement }
+        .map(::BloodSugarClicked)
   }
 }

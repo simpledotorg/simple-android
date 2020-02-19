@@ -13,3 +13,7 @@ data class BloodSugarHistoryLoaded(val bloodSugars: List<BloodSugarMeasurement>)
 object AddNewBloodSugarClicked : BloodSugarHistoryScreenEvent() {
   override val analyticsName: String = "Blood Sugar History:Add New Blood Sugar"
 }
+
+data class BloodSugarClicked(val bloodSugarMeasurement: BloodSugarMeasurement) : BloodSugarHistoryScreenEvent() {
+  override val analyticsName: String = "Blood Sugar History:Blood Sugar Clicked"
+}

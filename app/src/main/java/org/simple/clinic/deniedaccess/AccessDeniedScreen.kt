@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.screen_access_denied.view.*
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
@@ -29,9 +29,9 @@ class AccessDeniedScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
-    userFullNameText.text = screenKey.fullName
+    context.injector<AccessDeniedScreenInjector>().inject(this)
 
+    userFullNameText.text = screenKey.fullName
     handleBackClicks()
   }
 

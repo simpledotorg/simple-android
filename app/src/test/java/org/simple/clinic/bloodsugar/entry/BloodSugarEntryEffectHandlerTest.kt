@@ -239,7 +239,7 @@ class BloodSugarEntryEffectHandlerTest {
     val bloodSugar = PatientMocker.bloodSugar()
     val createNewBloodSugarEntry = CreateNewBloodSugarEntry(
         patientUuid = bloodSugar.patientUuid,
-        bloodSugarReading = bloodSugar.reading.value,
+        bloodSugarReading = bloodSugar.reading.value.toInt(),
         measurementType = bloodSugar.reading.type,
         userEnteredDate = date,
         prefilledDate = date
@@ -284,7 +284,7 @@ class BloodSugarEntryEffectHandlerTest {
     val updatedDate = LocalDate.parse("2020-02-12")
 
     val bloodSugarMeasurementType = Random
-    val bloodSugarReading = BloodSugarReading(250, bloodSugarMeasurementType)
+    val bloodSugarReading = BloodSugarReading(250f, bloodSugarMeasurementType)
     val bloodSugarMeasurementUuid = UUID.fromString("58a3fa4b-2b32-4c43-a1cd-ee3d787064f7")
 
     val bloodSugar = PatientMocker.bloodSugar(

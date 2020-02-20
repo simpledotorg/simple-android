@@ -43,7 +43,7 @@ data class BloodSugarMeasurement(
   fun toPayload() = BloodSugarMeasurementPayload(
       uuid = uuid,
       bloodSugarType = reading.type,
-      bloodSugarValue = reading.value,
+      bloodSugarValue = reading.value.toInt(),
       patientUuid = patientUuid,
       facilityUuid = facilityUuid,
       userUuid = userUuid,

@@ -167,7 +167,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
       entry: CreateNewBloodSugarEntry
   ): Single<BloodSugarMeasurement> {
     val (patientUuid, bloodSugarReading, measurementType, date) = entry
-    return bloodSugarRepository.saveMeasurement(BloodSugarReading(bloodSugarReading, measurementType), patientUuid, user, currentFacility, date.toUtcInstant(userClock))
+    return bloodSugarRepository.saveMeasurement(BloodSugarReading(bloodSugarReading.toFloat(), measurementType), patientUuid, user, currentFacility, date.toUtcInstant(userClock))
   }
 
   private fun updateAppointmentsAsVisited(
@@ -207,7 +207,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     return bloodSugarMeasurement.copy(
         userUuid = user.uuid,
         facilityUuid = facility!!.uuid,
-        reading = bloodSugarMeasurement.reading.copy(value = bloodSugarReading),
+        reading = bloodSugarMeasurement.reading.copy(value = bloodSugarReading.toFloat()),
         recordedAt = userEnteredDate.toUtcInstant(userClock)
     )
   }

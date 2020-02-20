@@ -11,6 +11,7 @@ data class BloodSugarReading(val value: Float, val type: BloodSugarMeasurementTy
         Random,
         PostPrandial -> value >= 200
         Fasting -> value >= 126
+        HbA1c -> value >= 7
         else -> false
       }
     }

@@ -11,12 +11,20 @@ data class PatientSummaryModel(
     val patientUuid: UUID,
     val patientSummaryProfile: PatientSummaryProfile?,
     val currentFacility: Facility?,
-    val hasCheckedForInvalidPhone: Boolean
+    val hasCheckedForInvalidPhone: Boolean,
+    val linkIdWithPatientViewShown: Boolean
 ) : Parcelable {
 
   companion object {
     fun from(openIntention: OpenIntention, patientUuid: UUID): PatientSummaryModel {
-      return PatientSummaryModel(openIntention, patientUuid, null, null, false)
+      return PatientSummaryModel(
+          openIntention = openIntention,
+          patientUuid = patientUuid,
+          patientSummaryProfile = null,
+          currentFacility = null,
+          hasCheckedForInvalidPhone = false,
+          linkIdWithPatientViewShown = false
+      )
     }
   }
 

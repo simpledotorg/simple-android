@@ -354,7 +354,7 @@ class PatientSummaryScreenControllerTest {
       identifier: Identifier?
   ) {
     setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     if (shouldShowLinkIdSheet) {
       verify(ui).showLinkIdWithPatientView(patientUuid, identifier!!)

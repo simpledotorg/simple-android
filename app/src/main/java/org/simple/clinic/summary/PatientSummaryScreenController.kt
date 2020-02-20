@@ -8,7 +8,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -34,7 +33,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
 
     return Observable.mergeArray(
         reportViewedPatientEvent(replayedEvents),
-//        openLinkIdWithPatientSheet(replayedEvents),
         hideLinkIdWithPatientSheet(replayedEvents)
     )
   }
@@ -44,16 +42,6 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .take(1L)
         .doOnNext { Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
         .flatMap { Observable.empty<UiChange>() }
-  }
-
-  private fun openLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        .filter { openIntention is LinkIdWithPatient }
-        .map {
-          val linkIdWithPatient = openIntention as LinkIdWithPatient
-          { ui: Ui -> ui.showLinkIdWithPatientView(patientUuid, linkIdWithPatient.identifier) }
-        }
   }
 
   private fun hideLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {

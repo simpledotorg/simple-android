@@ -302,7 +302,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
       Random -> getString(R.string.bloodsugarentry_random_title)
       PostPrandial -> getString(R.string.bloodsugarentry_post_prandial_title)
       Fasting -> getString(R.string.bloodsugarentry_fasting_title)
-      HbA1c -> ""
+      HbA1c -> getString(R.string.bloodsugarentry_hba1c_title)
       is Unknown -> measurementType.actualValue
     }
     enterBloodSugarTitleTextView.text = title
@@ -316,7 +316,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
       Random -> getString(R.string.bloodsugarentry_edit_random_title)
       PostPrandial -> getString(R.string.bloodsugarentry_edit_post_prandial_title)
       Fasting -> getString(R.string.bloodsugarentry_edit_fasting_title)
-      HbA1c -> ""
+      HbA1c -> getString(R.string.bloodsugarentry_edit_hba1c_title)
       is Unknown -> measurementType.actualValue
     }
     editBloodSugarTitleTextView.text = title

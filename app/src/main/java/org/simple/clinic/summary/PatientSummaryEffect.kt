@@ -41,3 +41,5 @@ data class ShowAddPhonePopup(val patientUuid: UUID): PatientSummaryEffect()
 data class ShowLinkIdWithPatientView(val patientUuid: UUID, val identifier: Identifier): PatientSummaryEffect()
 
 object HideLinkIdWithPatientView : PatientSummaryEffect()
+
+data class ReportViewedPatientToAnalytics(val patientUuid: UUID, val openIntention: OpenIntention): PatientSummaryEffect()

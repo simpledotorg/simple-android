@@ -41,3 +41,5 @@ data class FetchedHasShownMissingReminder(val hasShownReminder: Boolean): Patien
 object LinkIdWithPatientSheetShown: PatientSummaryEvent()
 
 object PatientSummaryLinkIdCompleted : PatientSummaryEvent()
+
+object ReportedViewedPatientToAnalytics: PatientSummaryEvent()

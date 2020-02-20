@@ -67,6 +67,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
         .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
         .addTransformer(ShowLinkIdWithPatientView::class.java, showLinkIdWithPatientView(schedulersProvider.ui()))
+        .addAction(HideLinkIdWithPatientView::class.java, { uiActions.hideLinkIdWithPatientView() }, schedulersProvider.ui())
         .build()
   }
 

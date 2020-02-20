@@ -65,6 +65,7 @@ class PatientSummaryScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<PatientSummaryScreenUi>()
+  private val uiActions = mock<PatientSummaryUiActions>()
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
@@ -137,9 +138,9 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
 
     if (cancelReason == InvalidPhoneNumber) {
-      verify(ui).showUpdatePhoneDialog(patientUuid)
+      verify(uiActions).showUpdatePhoneDialog(patientUuid)
     } else {
-      verify(ui, never()).showUpdatePhoneDialog(patientUuid)
+      verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
     }
   }
 
@@ -161,7 +162,7 @@ class PatientSummaryScreenControllerTest {
     setupController(openIntention)
     startMobiusLoop()
 
-    verify(ui, never()).showUpdatePhoneDialog(patientUuid)
+    verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Test
@@ -179,7 +180,7 @@ class PatientSummaryScreenControllerTest {
     setupController(openIntention)
     startMobiusLoop()
 
-    verify(ui, never()).showUpdatePhoneDialog(patientUuid)
+    verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Suppress("unused")
@@ -201,7 +202,7 @@ class PatientSummaryScreenControllerTest {
     setupController(openIntention)
     startMobiusLoop()
 
-    verify(ui, never()).showUpdatePhoneDialog(patientUuid)
+    verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Test
@@ -212,7 +213,7 @@ class PatientSummaryScreenControllerTest {
     setupController(ViewNewPatient)
     startMobiusLoop()
 
-    verify(ui, never()).showUpdatePhoneDialog(patientUuid)
+    verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Test
@@ -228,7 +229,7 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
     uiEvents.onNext(PatientSummaryBloodPressureSaved)
 
-    verify(ui).showAddPhoneDialog(patientUuid)
+    verify(uiActions).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository).markReminderAsShownFor(patientUuid)
   }
 
@@ -244,7 +245,7 @@ class PatientSummaryScreenControllerTest {
     setupController(openIntention)
     startMobiusLoop()
 
-    verify(ui, never()).showAddPhoneDialog(patientUuid)
+    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -259,7 +260,7 @@ class PatientSummaryScreenControllerTest {
     setupController(openIntention)
     startMobiusLoop()
 
-    verify(ui, never()).showAddPhoneDialog(patientUuid)
+    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -273,7 +274,7 @@ class PatientSummaryScreenControllerTest {
     setupController(openIntention)
     startMobiusLoop()
 
-    verify(ui, never()).showAddPhoneDialog(patientUuid)
+    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -287,7 +288,7 @@ class PatientSummaryScreenControllerTest {
     setupController(openIntention)
     startMobiusLoop()
 
-    verify(ui, never()).showAddPhoneDialog(patientUuid)
+    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -300,7 +301,7 @@ class PatientSummaryScreenControllerTest {
     setupController(openIntention)
     startMobiusLoop()
 
-    verify(ui, never()).showAddPhoneDialog(patientUuid)
+    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
@@ -357,9 +358,9 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention)
 
     if (shouldShowLinkIdSheet) {
-      verify(ui).showLinkIdWithPatientView(patientUuid, identifier!!)
+      verify(uiActions).showLinkIdWithPatientView(patientUuid, identifier!!)
     } else {
-      verify(ui, never()).showLinkIdWithPatientView(any(), any())
+      verify(uiActions, never()).showLinkIdWithPatientView(any(), any())
     }
   }
 
@@ -381,7 +382,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryLinkIdCancelled)
 
-    verify(ui).goToPreviousScreen()
+    verify(uiActions).goToPreviousScreen()
   }
 
   @Test
@@ -392,8 +393,8 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryLinkIdCompleted)
 
-    verify(ui).hideLinkIdWithPatientView()
-    verify(ui, never()).goToPreviousScreen()
+    verify(uiActions).hideLinkIdWithPatientView()
+    verify(uiActions, never()).goToPreviousScreen()
   }
 
   enum class GoBackToScreen {
@@ -414,9 +415,9 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui, never()).goToPreviousScreen()
-    verify(ui, never()).goToHomeScreen()
-    verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verify(uiActions, never()).goToPreviousScreen()
+    verify(uiActions, never()).goToHomeScreen()
+    verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
   }
 
   @Test
@@ -433,11 +434,11 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention = openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
     if (goBackToScreen == HOME) {
-      verify(ui).goToHomeScreen()
+      verify(uiActions).goToHomeScreen()
     } else {
-      verify(ui).goToPreviousScreen()
+      verify(uiActions).goToPreviousScreen()
     }
   }
 
@@ -473,11 +474,11 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention = openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
     if (goBackToScreen == HOME) {
-      verify(ui).goToHomeScreen()
+      verify(uiActions).goToHomeScreen()
     } else {
-      verify(ui).goToPreviousScreen()
+      verify(uiActions).goToPreviousScreen()
     }
   }
 
@@ -495,11 +496,11 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention = openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
     if (goBackToScreen == HOME) {
-      verify(ui).goToHomeScreen()
+      verify(uiActions).goToHomeScreen()
     } else {
-      verify(ui).goToPreviousScreen()
+      verify(uiActions).goToPreviousScreen()
     }
   }
 
@@ -514,9 +515,9 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
-    verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
-    verify(ui, never()).goToHomeScreen()
-    verify(ui, never()).goToPreviousScreen()
+    verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+    verify(uiActions, never()).goToHomeScreen()
+    verify(uiActions, never()).goToPreviousScreen()
   }
 
   @Test
@@ -530,9 +531,9 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop()
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
-    verify(ui, never()).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
-    verify(ui, never()).goToPreviousScreen()
-    verify(ui).goToHomeScreen()
+    verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+    verify(uiActions, never()).goToPreviousScreen()
+    verify(uiActions).goToHomeScreen()
   }
 
   @Test
@@ -551,14 +552,14 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
     uiEvents.onNext(ScheduleAppointmentSheetClosed(BACK_CLICK))
 
     // then
-    verify(ui).goToHomeScreen()
+    verify(uiActions).goToHomeScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -578,14 +579,14 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
     uiEvents.onNext(ScheduleAppointmentSheetClosed(BACK_CLICK))
 
     // then
-    verify(ui).goToPreviousScreen()
+    verify(uiActions).goToPreviousScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -606,15 +607,15 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
-    verify(ui).showLinkIdWithPatientView(patientUuid, identifier)
-    verify(ui).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+    verify(uiActions).showLinkIdWithPatientView(patientUuid, identifier)
+    verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
     uiEvents.onNext(ScheduleAppointmentSheetClosed(BACK_CLICK))
 
     // then
-    verify(ui).goToHomeScreen()
+    verify(uiActions).goToHomeScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -634,14 +635,14 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
-    verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+    verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
     uiEvents.onNext(ScheduleAppointmentSheetClosed(DONE_CLICK))
 
     // then
-    verify(ui).goToHomeScreen()
+    verify(uiActions).goToHomeScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -661,14 +662,14 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
-    verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+    verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
     uiEvents.onNext(ScheduleAppointmentSheetClosed(DONE_CLICK))
 
     // then
-    verify(ui).goToHomeScreen()
+    verify(uiActions).goToHomeScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -689,15 +690,15 @@ class PatientSummaryScreenControllerTest {
     startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
-    verify(ui).showLinkIdWithPatientView(patientUuid, identifier)
-    verify(ui).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+    verify(uiActions).showLinkIdWithPatientView(patientUuid, identifier)
+    verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
     uiEvents.onNext(ScheduleAppointmentSheetClosed(DONE_CLICK))
 
     // then
-    verify(ui).goToHomeScreen()
+    verify(uiActions).goToHomeScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -727,42 +728,7 @@ class PatientSummaryScreenControllerTest {
         missingPhoneReminderRepository = missingPhoneReminderRepository,
         userSession = userSession,
         facilityRepository = facilityRepository,
-        uiActions = object : PatientSummaryUiActions {
-          override fun showEditPatientScreen(patientSummaryProfile: PatientSummaryProfile) {
-            ui.showEditPatientScreen(patientSummaryProfile)
-          }
-
-          override fun showScheduleAppointmentSheet(
-              patientUuid: UUID,
-              sheetOpenedFrom: AppointmentSheetOpenedFrom
-          ) {
-            ui.showScheduleAppointmentSheet(patientUuid, sheetOpenedFrom)
-          }
-
-          override fun goToPreviousScreen() {
-            ui.goToPreviousScreen()
-          }
-
-          override fun goToHomeScreen() {
-            ui.goToHomeScreen()
-          }
-
-          override fun showUpdatePhoneDialog(patientUuid: UUID) {
-            ui.showUpdatePhoneDialog(patientUuid)
-          }
-
-          override fun showAddPhoneDialog(patientUuid: UUID) {
-            ui.showAddPhoneDialog(patientUuid)
-          }
-
-          override fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
-            ui.showLinkIdWithPatientView(patientUuid, identifier)
-          }
-
-          override fun hideLinkIdWithPatientView() {
-            ui.hideLinkIdWithPatientView()
-          }
-        }
+        uiActions = uiActions
     )
 
     testFixture = MobiusTestFixture(

@@ -1,6 +1,6 @@
 package org.simple.clinic.summary
 
-interface PatientSummaryScreenUi : PatientSummaryUiActions {
+interface PatientSummaryScreenUi {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
   fun showEditButton()
   fun showDiabetesView()

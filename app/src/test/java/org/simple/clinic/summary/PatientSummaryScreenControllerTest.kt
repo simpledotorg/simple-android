@@ -758,6 +758,10 @@ class PatientSummaryScreenControllerTest {
           override fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
             ui.showLinkIdWithPatientView(patientUuid, identifier)
           }
+
+          override fun hideLinkIdWithPatientView() {
+            ui.hideLinkIdWithPatientView()
+          }
         }
     )
 

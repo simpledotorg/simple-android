@@ -5,7 +5,4 @@ interface PatientSummaryScreenUi : PatientSummaryUiActions {
   fun showEditButton()
   fun showDiabetesView()
   fun hideDiabetesView()
-
-  // Not yet migrated to Mobius
-  fun hideLinkIdWithPatientView()
 }

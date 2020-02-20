@@ -28,6 +28,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is FetchedHasShownMissingReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       is LinkIdWithPatientSheetShown -> next(model.shownLinkIdWithPatientView())
       is PatientSummaryLinkIdCompleted -> dispatch(HideLinkIdWithPatientView)
+      is ReportedViewedPatientToAnalytics -> next(model.reportedViewedPatientToAnalytics())
       else -> noChange()
     }
   }

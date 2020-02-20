@@ -10,20 +10,24 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
   override fun init(model: PatientSummaryModel): First<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf<PatientSummaryEffect>()
 
-    if(!model.hasLoadedPatientSummaryProfile) {
+    if (!model.hasLoadedPatientSummaryProfile) {
       effects.add(LoadPatientSummaryProfile(model.patientUuid))
     }
 
-    if(!model.hasLoadedCurrentFacility) {
+    if (!model.hasLoadedCurrentFacility) {
       effects.add(LoadCurrentFacility)
     }
 
-    if(!model.hasCheckedForInvalidPhone) {
+    if (!model.hasCheckedForInvalidPhone) {
       effects.add(CheckForInvalidPhone(model.patientUuid))
     }
 
-    if(!model.linkIdWithPatientViewShown && model.openIntention is LinkIdWithPatient) {
+    if (!model.linkIdWithPatientViewShown && model.openIntention is LinkIdWithPatient) {
       effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))
+    }
+
+    if (!model.hasReportedViewedPatientToAnalytics) {
+      effects.add(ReportViewedPatientToAnalytics(model.patientUuid, model.openIntention))
     }
 
     return first(model, effects)

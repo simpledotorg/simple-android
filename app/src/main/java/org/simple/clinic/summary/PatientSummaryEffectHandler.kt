@@ -66,6 +66,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
         .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
+        .addTransformer(ShowLinkIdWithPatientView::class.java, showLinkIdWithPatientView(schedulersProvider.ui()))
         .build()
   }
 
@@ -212,6 +213,17 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 .subscribeOn(scheduler)
                 .andThen(Observable.empty<PatientSummaryEvent>())
           }
+    }
+  }
+
+  private fun showLinkIdWithPatientView(
+      scheduler: Scheduler
+  ): ObservableTransformer<ShowLinkIdWithPatientView, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .doOnNext { uiActions.showLinkIdWithPatientView(it.patientUuid, it.identifier) }
+          .map { LinkIdWithPatientSheetShown }
     }
   }
 

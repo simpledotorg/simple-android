@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.patient.businessid.Identifier
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -36,3 +37,5 @@ data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID): PatientSumm
 data class MarkReminderAsShown(val patientUuid: UUID): PatientSummaryEffect()
 
 data class ShowAddPhonePopup(val patientUuid: UUID): PatientSummaryEffect()
+
+data class ShowLinkIdWithPatientView(val patientUuid: UUID, val identifier: Identifier): PatientSummaryEffect()

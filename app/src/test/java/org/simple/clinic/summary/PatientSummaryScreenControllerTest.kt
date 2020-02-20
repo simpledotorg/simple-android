@@ -109,7 +109,7 @@ class PatientSummaryScreenControllerTest {
   @Parameters(method = "patient summary open intentions")
   fun `when the screen is opened, the viewed patient analytics event must be sent`(openIntention: OpenIntention) {
     setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     val expectedEvent = MockAnalyticsReporter.Event("ViewedPatient", mapOf(
         "patientId" to patientUuid.toString(),

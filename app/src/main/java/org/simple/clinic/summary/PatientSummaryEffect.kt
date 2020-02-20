@@ -39,3 +39,5 @@ data class MarkReminderAsShown(val patientUuid: UUID): PatientSummaryEffect()
 data class ShowAddPhonePopup(val patientUuid: UUID): PatientSummaryEffect()
 
 data class ShowLinkIdWithPatientView(val patientUuid: UUID, val identifier: Identifier): PatientSummaryEffect()
+
+object HideLinkIdWithPatientView : PatientSummaryEffect()

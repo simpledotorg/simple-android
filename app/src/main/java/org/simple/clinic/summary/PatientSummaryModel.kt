@@ -12,7 +12,8 @@ data class PatientSummaryModel(
     val patientSummaryProfile: PatientSummaryProfile?,
     val currentFacility: Facility?,
     val hasCheckedForInvalidPhone: Boolean,
-    val linkIdWithPatientViewShown: Boolean
+    val linkIdWithPatientViewShown: Boolean,
+    val hasReportedViewedPatientToAnalytics: Boolean
 ) : Parcelable {
 
   companion object {
@@ -23,7 +24,8 @@ data class PatientSummaryModel(
           patientSummaryProfile = null,
           currentFacility = null,
           hasCheckedForInvalidPhone = false,
-          linkIdWithPatientViewShown = false
+          linkIdWithPatientViewShown = false,
+          hasReportedViewedPatientToAnalytics = false
       )
     }
   }
@@ -51,5 +53,9 @@ data class PatientSummaryModel(
 
   fun shownLinkIdWithPatientView(): PatientSummaryModel {
     return copy(linkIdWithPatientViewShown = true)
+  }
+
+  fun reportedViewedPatientToAnalytics(): PatientSummaryModel {
+    return copy(hasReportedViewedPatientToAnalytics = true)
   }
 }

@@ -11,4 +11,5 @@ interface PatientSummaryUiActions {
   fun showUpdatePhoneDialog(patientUuid: UUID)
   fun showAddPhoneDialog(patientUuid: UUID)
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
+  fun hideLinkIdWithPatientView()
 }

@@ -9,14 +9,13 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
@@ -45,8 +44,6 @@ import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
@@ -60,9 +57,6 @@ class PatientSummaryScreen(
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var controllerFactory: PatientSummaryScreenController.Factory
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -81,10 +75,9 @@ class PatientSummaryScreen(
 
   private var linkIdWithPatientShown: Boolean = false
 
-  private val events: Observable<UiEvent> by unsafeLazy {
+  private val events: Observable<PatientSummaryEvent> by unsafeLazy {
     Observable
         .mergeArray(
-            screenCreates(),
             backClicks(),
             doneClicks(),
             bloodPressureSaves(),
@@ -94,7 +87,7 @@ class PatientSummaryScreen(
             editButtonClicks()
         )
         .compose(ReportAnalyticsEvents())
-        .share()
+        .cast<PatientSummaryEvent>()
   }
 
   private val viewRenderer = PatientSummaryViewRenderer(this)
@@ -105,7 +98,7 @@ class PatientSummaryScreen(
 
   private val mobiusDelegate: MobiusDelegate<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> by unsafeLazy {
     MobiusDelegate(
-        events = events.ofType(),
+        events = events,
         defaultModel = PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid),
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
@@ -141,16 +134,6 @@ class PatientSummaryScreen(
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
 
-    editButtonClicks()
-
-    val controller = controllerFactory.create(screenKey.patientUuid, screenKey.intention)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = this.detaches().map { ScreenDestroyed() }
-    )
     mobiusDelegate.prepare()
   }
 
@@ -175,10 +158,6 @@ class PatientSummaryScreen(
         patientSummaryProfile.phoneNumber,
         patientSummaryProfile.bangladeshNationalId
     )
-  }
-
-  private fun screenCreates(): Observable<UiEvent> {
-    return Observable.just(ScreenCreated())
   }
 
   private fun doneClicks() = doneButtonFrame.button.clicks().map { PatientSummaryDoneClicked(screenKey.patientUuid) }

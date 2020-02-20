@@ -1,8 +1,5 @@
 package org.simple.clinic.summary
 
-import org.simple.clinic.patient.businessid.Identifier
-import java.util.UUID
-
 interface PatientSummaryScreenUi : PatientSummaryUiActions {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
   fun showEditButton()
@@ -10,6 +7,5 @@ interface PatientSummaryScreenUi : PatientSummaryUiActions {
   fun hideDiabetesView()
 
   // Not yet migrated to Mobius
-  fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
   fun hideLinkIdWithPatientView()
 }

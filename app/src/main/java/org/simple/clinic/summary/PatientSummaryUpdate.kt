@@ -27,6 +27,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientUuid)
       is FetchedHasShownMissingReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       is LinkIdWithPatientSheetShown -> next(model.shownLinkIdWithPatientView())
+      is PatientSummaryLinkIdCompleted -> dispatch(HideLinkIdWithPatientView)
       else -> noChange()
     }
   }

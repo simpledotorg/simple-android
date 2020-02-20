@@ -40,10 +40,4 @@ class PatientSummaryScreenController @AssistedInject constructor(
         .doOnNext { Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
         .flatMap { Observable.empty<UiChange>() }
   }
-
-  private fun hideLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientSummaryLinkIdCompleted>()
-        .map { Ui::hideLinkIdWithPatientView }
-  }
 }

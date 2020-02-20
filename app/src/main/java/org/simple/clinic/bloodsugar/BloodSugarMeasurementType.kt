@@ -14,7 +14,8 @@ sealed class BloodSugarMeasurementType : Parcelable {
       knownMappings = mapOf(
           Random to "random",
           PostPrandial to "post_prandial",
-          Fasting to "fasting"
+          Fasting to "fasting",
+          HbA1c to "hba1c"
       ),
       unknownStringToEnumConverter = ::Unknown,
       unknownEnumToStringConverter = { (it as Unknown).actualValue }
@@ -52,6 +53,9 @@ object PostPrandial : BloodSugarMeasurementType()
 
 @Parcelize
 object Fasting : BloodSugarMeasurementType()
+
+@Parcelize
+object HbA1c : BloodSugarMeasurementType()
 
 @Parcelize
 data class Unknown(val actualValue: String) : BloodSugarMeasurementType()

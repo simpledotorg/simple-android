@@ -20,6 +20,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.Fasting
+import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.Unknown
@@ -301,6 +302,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
       Random -> getString(R.string.bloodsugarentry_random_title)
       PostPrandial -> getString(R.string.bloodsugarentry_post_prandial_title)
       Fasting -> getString(R.string.bloodsugarentry_fasting_title)
+      HbA1c -> ""
       is Unknown -> measurementType.actualValue
     }
     enterBloodSugarTitleTextView.text = title
@@ -314,6 +316,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
       Random -> getString(R.string.bloodsugarentry_edit_random_title)
       PostPrandial -> getString(R.string.bloodsugarentry_edit_post_prandial_title)
       Fasting -> getString(R.string.bloodsugarentry_edit_fasting_title)
+      HbA1c -> ""
       is Unknown -> measurementType.actualValue
     }
     editBloodSugarTitleTextView.text = title

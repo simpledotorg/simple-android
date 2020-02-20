@@ -10,6 +10,7 @@ import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.Fasting
+import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.Unknown
@@ -134,6 +135,7 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
         PostPrandial -> context.getString(R.string.bloodsugarsummary_bloodsugartype_ppbs)
         Fasting -> context.getString(R.string.bloodsugarsummary_bloodsugartype_fbs)
         is Unknown -> ""
+        HbA1c -> ""
       }
     }
   }

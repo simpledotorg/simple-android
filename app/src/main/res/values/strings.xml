@@ -520,10 +520,12 @@
   <string name="bloodsugarentry_random_title">Random blood sugar</string>
   <string name="bloodsugarentry_post_prandial_title">Post prandial blood sugar</string>
   <string name="bloodsugarentry_fasting_title">Fasting blood sugar</string>
+  <string name="bloodsugarentry_hba1c_title" translatable="false">Hb A1c</string>
   <string name="bloodsugarentry_remove">Remove</string>
   <string name="bloodsugarentry_edit_random_title">Edit random blood sugar</string>
   <string name="bloodsugarentry_edit_post_prandial_title">Edit post prandial blood sugar</string>
   <string name="bloodsugarentry_edit_fasting_title">Edit fasting blood sugar</string>
+  <string name="bloodsugarentry_edit_hba1c_title">Edit Hb A1c</string>
 
   <!-- Confirm remove blood sugar dialog -->
   <string name="bloodsugarentry_remove_blood_sugar_title">Remove Blood Sugar</string>

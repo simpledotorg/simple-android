@@ -12,7 +12,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -51,7 +50,6 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
@@ -79,7 +77,6 @@ class PatientSummaryScreenControllerTest {
   private val reporter = MockAnalyticsReporter()
   private val viewRenderer = PatientSummaryViewRenderer(ui)
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>
 
   @Before
@@ -100,16 +97,12 @@ class PatientSummaryScreenControllerTest {
   fun tearDown() {
     Analytics.clearReporters()
     reporter.clear()
-    if (::controllerSubscription.isInitialized) {
-      controllerSubscription.dispose()
-    }
     testFixture.dispose()
   }
 
   @Test
   @Parameters(method = "patient summary open intentions")
   fun `when the screen is opened, the viewed patient analytics event must be sent`(openIntention: OpenIntention) {
-    setupController(openIntention)
     startMobiusLoop(openIntention)
 
     val expectedEvent = MockAnalyticsReporter.Event("ViewedPatient", mapOf(
@@ -134,8 +127,7 @@ class PatientSummaryScreenControllerTest {
         updatedAt = canceledAppointment.updatedAt - Duration.ofHours(2))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     if (cancelReason == InvalidPhoneNumber) {
       verify(uiActions).showUpdatePhoneDialog(patientUuid)
@@ -159,8 +151,7 @@ class PatientSummaryScreenControllerTest {
         updatedAt = canceledAppointment.updatedAt + Duration.ofHours(2))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -177,8 +168,7 @@ class PatientSummaryScreenControllerTest {
         Just(PatientMocker.appointment(cancelReason = cancelReason)))
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -199,8 +189,7 @@ class PatientSummaryScreenControllerTest {
         Just(PatientMocker.appointment(status = Scheduled, cancelReason = null)))
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -210,8 +199,7 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.just<Optional<Appointment>>(None))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
 
-    setupController(ViewNewPatient)
-    startMobiusLoop()
+    startMobiusLoop(ViewExistingPatient)
 
     verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -225,8 +213,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryBloodPressureSaved)
 
     verify(uiActions).showAddPhoneDialog(patientUuid)
@@ -242,8 +229,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -257,8 +243,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(true))
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -271,8 +256,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -285,8 +269,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -298,8 +281,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     verify(uiActions, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -354,7 +336,6 @@ class PatientSummaryScreenControllerTest {
       shouldShowLinkIdSheet: Boolean,
       identifier: Identifier?
   ) {
-    setupController(openIntention)
     startMobiusLoop(openIntention)
 
     if (shouldShowLinkIdSheet) {
@@ -377,8 +358,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when the link id with patient is cancelled, the patient summary screen must be closed`() {
-    setupController(LinkIdWithPatient(PatientMocker.bpPassportIdentifier()))
-    startMobiusLoop()
+    startMobiusLoop(LinkIdWithPatient(Identifier("abcd", BpPassport)))
 
     uiEvents.onNext(PatientSummaryLinkIdCancelled)
 
@@ -388,8 +368,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   fun `when the link id with patient is completed, the link id screen must be closed`() {
     val openIntention = LinkIdWithPatient(identifier = Identifier("id", BpPassport))
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
 
     uiEvents.onNext(PatientSummaryLinkIdCompleted)
 
@@ -411,8 +390,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(1)
 
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(uiActions, never()).goToPreviousScreen()
@@ -430,7 +408,6 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 0
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
-    setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
     startMobiusLoop(openIntention = openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
@@ -470,7 +447,6 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
 
-    setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
     startMobiusLoop(openIntention = openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
@@ -492,7 +468,6 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 0
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
 
-    setupController(openIntention, screenCreatedTimestamp = screenCreatedTimestamp)
     startMobiusLoop(openIntention = openIntention)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
@@ -511,8 +486,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(1)
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
@@ -527,8 +501,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(0)
 
-    setupController(openIntention)
-    startMobiusLoop()
+    startMobiusLoop(openIntention)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
@@ -544,12 +517,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
-    val openIntention = ViewNewPatient
-    setupController(
-        openIntention = openIntention,
-        screenCreatedTimestamp = screenCreatedTimestamp
-    )
-    startMobiusLoop(openIntention)
+    startMobiusLoop(ViewNewPatient)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
@@ -571,12 +539,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
-    val openIntention = ViewExistingPatient
-    setupController(
-        openIntention = openIntention,
-        screenCreatedTimestamp = screenCreatedTimestamp
-    )
-    startMobiusLoop(openIntention)
+    startMobiusLoop(ViewExistingPatient)
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
@@ -599,12 +562,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
-    val openIntention = LinkIdWithPatient(identifier)
-    setupController(
-        openIntention = openIntention,
-        screenCreatedTimestamp = screenCreatedTimestamp
-    )
-    startMobiusLoop(openIntention)
+    startMobiusLoop(LinkIdWithPatient(identifier))
     uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
 
     verify(uiActions).showLinkIdWithPatientView(patientUuid, identifier)
@@ -627,12 +585,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
-    val openIntention = ViewNewPatient
-    setupController(
-        openIntention = openIntention,
-        screenCreatedTimestamp = screenCreatedTimestamp
-    )
-    startMobiusLoop(openIntention)
+    startMobiusLoop(ViewNewPatient)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
@@ -654,12 +607,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
-    val openIntention = ViewExistingPatient
-    setupController(
-        openIntention = openIntention,
-        screenCreatedTimestamp = screenCreatedTimestamp
-    )
-    startMobiusLoop(openIntention)
+    startMobiusLoop(ViewExistingPatient)
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
@@ -682,12 +630,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
 
     // when
-    val openIntention = LinkIdWithPatient(identifier)
-    setupController(
-        openIntention = openIntention,
-        screenCreatedTimestamp = screenCreatedTimestamp
-    )
-    startMobiusLoop(openIntention)
+    startMobiusLoop(LinkIdWithPatient(identifier))
     uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
 
     verify(uiActions).showLinkIdWithPatientView(patientUuid, identifier)
@@ -702,24 +645,7 @@ class PatientSummaryScreenControllerTest {
     verifyNoMoreInteractions(ui)
   }
 
-  private fun setupController(
-      openIntention: OpenIntention,
-      patientUuid: UUID = this.patientUuid,
-      screenCreatedTimestamp: Instant = Instant.parse("2018-01-01T00:00:00Z")
-  ) {
-    val controller = PatientSummaryScreenController(
-        patientUuid = patientUuid,
-        openIntention = openIntention
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(ScreenCreated())
-  }
-
-  private fun startMobiusLoop(openIntention: OpenIntention = ViewExistingPatient) {
+  private fun startMobiusLoop(openIntention: OpenIntention) {
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,

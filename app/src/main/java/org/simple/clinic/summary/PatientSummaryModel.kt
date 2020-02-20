@@ -48,4 +48,8 @@ data class PatientSummaryModel(
   fun completedCheckForInvalidPhone(): PatientSummaryModel {
     return copy(hasCheckedForInvalidPhone = true)
   }
+
+  fun shownLinkIdWithPatientView(): PatientSummaryModel {
+    return copy(linkIdWithPatientViewShown = true)
+  }
 }

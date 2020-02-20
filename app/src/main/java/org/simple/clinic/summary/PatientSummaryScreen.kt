@@ -56,7 +56,7 @@ import javax.inject.Inject
 class PatientSummaryScreen(
     context: Context,
     attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientSummaryScreenUi {
+) : RelativeLayout(context, attrs), PatientSummaryScreenUi, PatientSummaryUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

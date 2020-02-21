@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.newrelic.agent.android.NewRelic
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
@@ -13,6 +14,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.placeholder.PlaceholderScreenKey
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.instrumentation.TracingConfig
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.onboarding.OnboardingScreenKey
@@ -41,6 +43,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
   @Inject
   lateinit var effectHandlerFactory: SetupActivityEffectHandler.Factory
 
+  @Inject
+  lateinit var tracingConfig: TracingConfig
+
   private val screenResults = ScreenResultBus()
 
   private val screenRouter by unsafeLazy {
@@ -63,6 +68,13 @@ class SetupActivity : AppCompatActivity(), UiActions {
     @Suppress("ConstantConditionIf")
     if (BuildConfig.DISABLE_SCREENSHOT) {
       window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    }
+
+    // TODO(vs): 2020-02-21 Discuss whether we should put this behind a Facade like what we did for Analytics
+    if(tracingConfig.enabled) {
+      NewRelic
+          .withApplicationToken(tracingConfig.apiToken)
+          .start(applicationContext)
     }
 
     delegate.onRestoreInstanceState(savedInstanceState)

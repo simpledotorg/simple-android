@@ -15,6 +15,7 @@ import org.simple.clinic.di.network.HttpInterceptorsModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.di.network.RetrofitModule
 import org.simple.clinic.facility.change.FacilityChangeModule
+import org.simple.clinic.instrumentation.TracingConfigModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListenerModule
 import org.simple.clinic.newentry.PatientEntryModule
@@ -77,7 +78,8 @@ import javax.inject.Named
   RetrofitModule::class,
   ClearPatientDataModule::class,
   PatientEntryModule::class,
-  FlipperModule::class
+  FlipperModule::class,
+  TracingConfigModule::class
 ])
 class AppModule(private val appContext: Application) {
 

@@ -111,7 +111,7 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
           .build()
       val isBloodSugarHigh = measurement.reading.isHigh
 
-      holder.readingsTextView.text = "${bloodSugarReading.value} ${textForReadingType(context, bloodSugarReading.type)}"
+      holder.readingsTextView.text = "${bloodSugarReading.displayValue} ${unitForReadingType(context, bloodSugarReading.type)} ${textForReadingType(context, bloodSugarReading.type)}"
       holder.dateTimeTextView.text = formattedBPDateTime
       if (isBloodSugarHigh) {
         holder.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
@@ -129,13 +129,21 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
       holder.editButton.visibleOrGone(isBloodSugarEditable)
     }
 
+    private fun unitForReadingType(context: Context, type: BloodSugarMeasurementType): String {
+      return when (type) {
+        Random, PostPrandial, Fasting -> context.getString(R.string.bloodsugarhistory_unit_type_mg_dl)
+        HbA1c -> context.getString(R.string.bloodsugarhistory_unit_type_percentage)
+        is Unknown -> ""
+      }
+    }
+
     private fun textForReadingType(context: Context, type: BloodSugarMeasurementType): String {
       return when (type) {
         Random -> context.getString(R.string.bloodsugarsummary_bloodsugartype_rbs)
         PostPrandial -> context.getString(R.string.bloodsugarsummary_bloodsugartype_ppbs)
         Fasting -> context.getString(R.string.bloodsugarsummary_bloodsugartype_fbs)
+        HbA1c -> context.getString(R.string.bloodsugarsummary_bloodsugartype_hba1c)
         is Unknown -> ""
-        HbA1c -> ""
       }
     }
   }

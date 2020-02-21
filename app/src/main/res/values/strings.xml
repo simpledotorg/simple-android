@@ -508,6 +508,7 @@
 
   <!-- Blood sugar entry -->
   <string name="bloodsugarentry_mg_dl" translatable="false">mg/dl</string>
+  <string name="bloodsugarentry_percentage" translatable="false">%</string>
   <string name="bloodsugarentry_sheet_title_enter_date">Date of visit</string>
   <string name="bloodsugarentry_day">Day</string>
   <string name="bloodsugarentry_month">Month</string>

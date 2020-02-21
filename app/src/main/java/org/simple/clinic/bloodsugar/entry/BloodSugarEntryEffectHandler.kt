@@ -9,7 +9,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.cast
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
-import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
@@ -166,8 +165,8 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
       currentFacility: Facility,
       entry: CreateNewBloodSugarEntry
   ): Single<BloodSugarMeasurement> {
-    val (patientUuid, bloodSugarReading, measurementType, date) = entry
-    return bloodSugarRepository.saveMeasurement(BloodSugarReading(bloodSugarReading.toFloat(), measurementType), patientUuid, user, currentFacility, date.toUtcInstant(userClock))
+    val (patientUuid, date, _, reading) = entry
+    return bloodSugarRepository.saveMeasurement(reading, patientUuid, user, currentFacility, date.toUtcInstant(userClock))
   }
 
   private fun updateAppointmentsAsVisited(

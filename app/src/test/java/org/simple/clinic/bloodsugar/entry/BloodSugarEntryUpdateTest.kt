@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
@@ -195,6 +196,8 @@ class BloodSugarEntryUpdateTest {
         .yearChanged(validBloodSugarDate.year.toString().substring(2))
         .datePrefilled(validBloodSugarDate)
 
+    val bloodSugarReading = BloodSugarReading(validBloodSugar.toFloat(), Random)
+
     updateSpec
         .given(validBloodSugarModel)
         .whenEvent(SaveClicked)
@@ -202,10 +205,9 @@ class BloodSugarEntryUpdateTest {
             hasNoModel(),
             hasEffects(CreateNewBloodSugarEntry(
                 patientUuid,
-                validBloodSugar.toInt(),
-                Random,
                 validBloodSugarDate,
-                validBloodSugarDate
+                validBloodSugarDate,
+                bloodSugarReading
             ) as BloodSugarEntryEffect)
         ))
   }

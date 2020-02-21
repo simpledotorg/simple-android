@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.Valid
@@ -100,21 +101,19 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       model: BloodSugarEntryModel,
       dateValidationResult: Result
   ): BloodSugarEntryEffect {
-    val bloodSugarReading = model.bloodSugarReading.toInt()
     val userEnteredDate = (dateValidationResult as Result.Valid).parsedDate
     val prefillDate = model.prefilledDate!!
 
     return when (val openAs = model.openAs) {
       is OpenAs.New -> CreateNewBloodSugarEntry(
           openAs.patientId,
-          bloodSugarReading,
-          openAs.measurementType,
           userEnteredDate,
-          prefillDate
+          prefillDate,
+          BloodSugarReading(model.bloodSugarReading.toFloat(), openAs.measurementType)
       )
       is OpenAs.Update -> UpdateBloodSugarEntry(
           openAs.bloodSugarMeasurementUuid,
-          bloodSugarReading,
+          model.bloodSugarReading.toInt(),
           openAs.measurementType,
           userEnteredDate,
           prefillDate

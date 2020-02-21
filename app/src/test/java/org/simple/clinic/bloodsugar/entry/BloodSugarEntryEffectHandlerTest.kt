@@ -16,6 +16,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
@@ -236,13 +237,43 @@ class BloodSugarEntryEffectHandlerTest {
     val facility = PatientMocker.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
 
     val date = LocalDate.parse("2020-01-02")
-    val bloodSugar = PatientMocker.bloodSugar()
+    val bloodSugarReading = BloodSugarReading(120f, Random)
+    val bloodSugar = PatientMocker.bloodSugar(reading = bloodSugarReading)
     val createNewBloodSugarEntry = CreateNewBloodSugarEntry(
         patientUuid = bloodSugar.patientUuid,
-        bloodSugarReading = bloodSugar.reading.value.toInt(),
-        measurementType = bloodSugar.reading.type,
         userEnteredDate = date,
-        prefilledDate = date
+        prefilledDate = date,
+        bloodSugarReading = bloodSugarReading
+    )
+
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
+    whenever(bloodSugarRepository.saveMeasurement(eq(bloodSugar.reading), eq(bloodSugar.patientUuid), eq(user), eq(facility), eq(date.toUtcInstant(userClock)), any())).doReturn(Single.just(bloodSugar))
+    whenever(patientRepository.compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))).doReturn(Completable.complete())
+    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)).doReturn(Completable.complete())
+
+    // when
+    testCase.dispatch(createNewBloodSugarEntry)
+
+    // then
+    testCase.assertOutgoingEvents(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
+    verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `create new hba1c blood sugar entry when create blood sugar entry effect is received`() {
+    // given
+    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
+    val facility = PatientMocker.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
+
+    val date = LocalDate.parse("2020-01-02")
+    val bloodSugarReading = BloodSugarReading(15.2f, HbA1c)
+    val bloodSugar = PatientMocker.bloodSugar(reading = bloodSugarReading)
+    val createNewBloodSugarEntry = CreateNewBloodSugarEntry(
+        patientUuid = bloodSugar.patientUuid,
+        userEnteredDate = date,
+        prefilledDate = date,
+        bloodSugarReading = bloodSugarReading
     )
 
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))

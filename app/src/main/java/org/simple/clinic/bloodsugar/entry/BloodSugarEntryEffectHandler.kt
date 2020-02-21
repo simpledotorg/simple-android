@@ -198,7 +198,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   }
 
   private fun updateBloodSugarMeasurement(updateBloodSugarEntry: UpdateBloodSugarEntry): BloodSugarMeasurement {
-    val (_, bloodSugarReading, _, userEnteredDate, _) = updateBloodSugarEntry
+    val (_, userEnteredDate, _, bloodSugarReading) = updateBloodSugarEntry
     val bloodSugarMeasurement = getExistingBloodSugarMeasurement(updateBloodSugarEntry.bloodSugarMeasurementUuid)!!
     val user = userSession.loggedInUserImmediate()
     val facility = facilityRepository.currentFacilityImmediate(user!!)
@@ -206,7 +206,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     return bloodSugarMeasurement.copy(
         userUuid = user.uuid,
         facilityUuid = facility!!.uuid,
-        reading = bloodSugarMeasurement.reading.copy(value = bloodSugarReading.toFloat()),
+        reading = bloodSugarMeasurement.reading.copy(value = bloodSugarReading.value),
         recordedAt = userEnteredDate.toUtcInstant(userClock)
     )
   }

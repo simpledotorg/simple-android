@@ -458,7 +458,6 @@
   <string name="bloodsugartype_ppbs">Sukkaara dhiigaa piraandiyaalii boodaa (SDPB)</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_md_dl">Mg/dl</string>
   <string name="bloodsugarentry_sheet_title_enter_date">Guyyaa ilaalchaa</string>
   <string name="bloodsugarentry_day">Guyyaa</string>
   <string name="bloodsugarentry_month">Ji’a</string>

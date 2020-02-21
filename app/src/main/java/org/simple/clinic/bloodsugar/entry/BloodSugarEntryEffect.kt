@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -40,10 +41,9 @@ data class ShowDateValidationError(val result: UserInputDateValidator.Result) : 
 
 data class CreateNewBloodSugarEntry(
     val patientUuid: UUID,
-    val bloodSugarReading: Int,
-    val measurementType: BloodSugarMeasurementType,
     val userEnteredDate: LocalDate,
-    val prefilledDate: LocalDate
+    val prefilledDate: LocalDate,
+    val bloodSugarReading: BloodSugarReading
 ) : BloodSugarEntryEffect() {
   val wasDateChanged: Boolean
     get() = userEnteredDate != prefilledDate

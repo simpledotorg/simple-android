@@ -52,7 +52,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
     val bloodSugarMeasurement = event.bloodSugarMeasurement
     val recordedAt = bloodSugarMeasurement.recordedAt
-    val bloodSugarReading = bloodSugarMeasurement.reading.value.toString()
+    val bloodSugarReading = bloodSugarMeasurement.reading.displayValue
     val modelWithBloodSugarChanged = model.bloodSugarChanged(bloodSugarReading)
 
     return next(

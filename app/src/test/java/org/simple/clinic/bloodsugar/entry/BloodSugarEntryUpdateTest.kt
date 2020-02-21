@@ -304,13 +304,13 @@ class BloodSugarEntryUpdateTest {
   @Test
   fun `when blood sugar measurement is fetched, then prefill date and set blood sugar reading`() {
     val bloodSugarMeasurement = PatientMocker.bloodSugar()
-    val bloodSugarReading = bloodSugarMeasurement.reading.value.toString()
+    val bloodSugarReading = bloodSugarMeasurement.reading.displayValue
 
     updateSpec
         .given(defaultModel)
         .whenEvent(BloodSugarMeasurementFetched(bloodSugarMeasurement))
         .then(assertThatNext(
-            hasModel(defaultModel.bloodSugarChanged(bloodSugarMeasurement.reading.value.toString())),
+            hasModel(defaultModel.bloodSugarChanged(bloodSugarReading)),
             hasEffects(
                 SetBloodSugarReading(bloodSugarReading),
                 PrefillDate.forUpdateEntry(bloodSugarMeasurement.recordedAt)

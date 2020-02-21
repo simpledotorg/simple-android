@@ -15,4 +15,15 @@ data class BloodSugarReading(val value: Float, val type: BloodSugarMeasurementTy
         else -> false
       }
     }
+
+  val displayValue: String
+    get() {
+      return when (type) {
+        Random -> value.toInt().toString()
+        PostPrandial -> value.toInt().toString()
+        Fasting -> value.toInt().toString()
+        HbA1c -> value.toString()
+        is Unknown -> value.toInt().toString()
+      }
+    }
 }

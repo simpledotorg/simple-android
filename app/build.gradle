@@ -109,6 +109,7 @@ android {
       buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + qaManifestEndpoint + "\""
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + qaFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + qaMixpanelToken + "\""
+      buildConfigField "String", "NEW_RELIC_TOKEN", "\"" + qaNewRelicToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
@@ -119,6 +120,7 @@ android {
       buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + stagingManifestEndpoint + "\""
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + stagingFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + stagingMixpanelToken + "\""
+      buildConfigField "String", "NEW_RELIC_TOKEN", "\"" + stagingNewRelicToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
@@ -129,6 +131,7 @@ android {
       buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + sandboxManifestEndpoint + "\""
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + sandboxFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + sandboxMixpanelToken + "\""
+      buildConfigField "String", "NEW_RELIC_TOKEN", "\"" + sandboxNewRelicToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
@@ -137,6 +140,7 @@ android {
       buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + productionManifestEndpoint + "\""
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + productionFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + productionMixpanelToken + "\""
+      buildConfigField "String", "NEW_RELIC_TOKEN", "\"" + productionNewRelicToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
     }
 
@@ -147,6 +151,7 @@ android {
       buildConfigField "String", "MANIFEST_ENDPOINT", "\"" + securityManifestEndpoint + "\""
       buildConfigField "String", "FALLBACK_ENDPOINT", "\"" + securityFallbackApiEndpoint + "\""
       buildConfigField "String", "MIXPANEL_TOKEN", "\"" + securityMixpanelToken + "\""
+      buildConfigField "String", "NEW_RELIC_TOKEN", "\"" + securityNewRelicToken + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
     }
   }

@@ -432,7 +432,6 @@
   <string name="bloodsugartype_ppbs">ಪೋಸ್ಟ್ ಪ್ರಾಂಡಿಯಲ್ ಬ್ಲಡ್ ಶುಗರ್ (PPBS)</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_md_dl">ಮಿಗ್ರಾಂ/ಡೆಲೀ</string>
   <string name="bloodsugarentry_sheet_title_enter_date">ಭೇಟಿಯ ದಿನಾಂಕ</string>
   <string name="bloodsugarentry_day">ದಿನ</string>
   <string name="bloodsugarentry_month">ತಿಂಗಳು</string>

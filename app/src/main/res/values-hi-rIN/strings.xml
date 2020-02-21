@@ -433,7 +433,6 @@
   <string name="bloodsugartype_ppbs">पोस्ट प्रैंडिअल ब्लड शुगर (PPBS)</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_md_dl">मिग्रा/डीएल</string>
   <string name="bloodsugarentry_sheet_title_enter_date">विज़िट की तारीख</string>
   <string name="bloodsugarentry_day">दिन</string>
   <string name="bloodsugarentry_month">महीना</string>

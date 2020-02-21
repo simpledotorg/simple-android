@@ -432,7 +432,6 @@
   <string name="bloodsugartype_ppbs">जेवणानंतरची रक्तातील साखर (PPBS)</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_md_dl">मिगॅ/डेली</string>
   <string name="bloodsugarentry_sheet_title_enter_date">भेटीची तारीख</string>
   <string name="bloodsugarentry_day">दिवस</string>
   <string name="bloodsugarentry_month">महिना</string>

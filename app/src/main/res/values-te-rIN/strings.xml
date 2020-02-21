@@ -432,7 +432,6 @@
   <string name="bloodsugartype_ppbs">భోజనం తర్వాతా రక్తంలోని చక్కెర (PPBS)</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_md_dl">ఎంజి/డిఎల్</string>
   <string name="bloodsugarentry_sheet_title_enter_date">సందర్శన తేదీ</string>
   <string name="bloodsugarentry_day">రోజు</string>
   <string name="bloodsugarentry_month">నెల</string>

@@ -458,7 +458,6 @@
   <string name="bloodsugartype_ppbs">খাওয়ার পরে ব্লাড সুগার (PPBS)</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_md_dl">মিগ্রা/ডেসিলি</string>
   <string name="bloodsugarentry_sheet_title_enter_date">সাক্ষাৎকারের তারিখ</string>
   <string name="bloodsugarentry_day">দিন</string>
   <string name="bloodsugarentry_month">মাস</string>

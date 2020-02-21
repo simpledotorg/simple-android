@@ -14,7 +14,7 @@ abstract class DaoWithUpsert<T> {
   abstract fun insert(record: List<T>): List<Long>
 
   @Update(onConflict = OnConflictStrategy.FAIL)
-  protected abstract fun update(entities: List<T>)
+  abstract fun update(entities: List<T>)
 
   @Transaction
   protected open fun upsert(records: List<T>) {

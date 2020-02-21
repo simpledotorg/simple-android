@@ -173,10 +173,10 @@ data class Patient(
     // transient query model whose only job is to represent this and process it in memory.
     // TODO: Remove this when we migrate to Room 2.1.0.
     @Query("$patientProfileQuery WHERE P.syncStatus == :syncStatus")
-    protected abstract fun loadPatientQueryModelsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientQueryModel>>
+    abstract fun loadPatientQueryModelsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientQueryModel>>
 
     @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
-    protected abstract fun loadPatientQueryModelsForPatientUuid(patientUuid: UUID): Flowable<List<PatientQueryModel>>
+    abstract fun loadPatientQueryModelsForPatientUuid(patientUuid: UUID): Flowable<List<PatientQueryModel>>
 
     fun recordsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientProfile>> {
       return loadPatientQueryModelsWithSyncStatus(syncStatus)
@@ -216,7 +216,7 @@ data class Patient(
           }
     }
 
-    protected data class PatientQueryModel(
+    data class PatientQueryModel(
 
         @Embedded(prefix = "patient_")
         val patient: Patient,

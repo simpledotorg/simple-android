@@ -73,8 +73,6 @@ class PatientSummaryScreen(
   @Inject
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
 
-  private var linkIdWithPatientShown: Boolean = false
-
   private val events: Observable<PatientSummaryEvent> by unsafeLazy {
     Observable
         .mergeArray(
@@ -109,18 +107,11 @@ class PatientSummaryScreen(
   }
 
   override fun onSaveInstanceState(): Parcelable {
-    val screenSavedState = PatientSummaryScreenSavedState(
-        super.onSaveInstanceState(),
-        linkIdWithPatientShown = linkIdWithPatientShown
-    )
-    return mobiusDelegate.onSaveInstanceState(screenSavedState)
+    return mobiusDelegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 
   override fun onRestoreInstanceState(state: Parcelable) {
-    val savedState = mobiusDelegate.onRestoreInstanceState(state) as PatientSummaryScreenSavedState
-    linkIdWithPatientShown = savedState.linkIdWithPatientShown
-
-    super.onRestoreInstanceState(savedState.superSavedState)
+    super.onRestoreInstanceState(mobiusDelegate.onRestoreInstanceState(state))
   }
 
   @SuppressLint("CheckResult")
@@ -309,11 +300,8 @@ class PatientSummaryScreen(
   }
 
   override fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
-    if (!linkIdWithPatientShown) {
-      linkIdWithPatientShown = true
-      linkIdWithPatientView.downstreamUiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
-      linkIdWithPatientView.show { linkIdWithPatientView.visibility = View.VISIBLE }
-    }
+    linkIdWithPatientView.downstreamUiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
+    linkIdWithPatientView.show { linkIdWithPatientView.visibility = View.VISIBLE }
   }
 
   override fun hideLinkIdWithPatientView() {
@@ -336,12 +324,6 @@ class PatientSummaryScreen(
     screenRouter.push(createEditPatientScreenKey(patientSummaryProfile))
   }
 }
-
-@Parcelize
-private data class PatientSummaryScreenSavedState(
-    val superSavedState: Parcelable?,
-    val linkIdWithPatientShown: Boolean
-) : Parcelable
 
 @Parcelize
 private data class ScheduleAppointmentSheetExtra(

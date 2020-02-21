@@ -74,6 +74,8 @@ class SetupActivity : AppCompatActivity(), UiActions {
     if(tracingConfig.enabled) {
       NewRelic
           .withApplicationToken(tracingConfig.apiToken)
+          // We use an alternate service for Crash Reporting
+          .withCrashReportingEnabled(false)
           .start(applicationContext)
     }
 

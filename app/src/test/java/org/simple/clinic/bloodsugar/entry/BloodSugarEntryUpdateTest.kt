@@ -223,12 +223,13 @@ class BloodSugarEntryUpdateTest {
         .monthChanged(validBloodSugarDate.monthValue.toString())
         .yearChanged(validBloodSugarDate.year.toString().substring(2))
         .datePrefilled(validBloodSugarDate)
+
+    val bloodSugarReading = BloodSugarReading(validBloodSugar.toFloat(), Random)
     val expectedEffect: BloodSugarEntryEffect = UpdateBloodSugarEntry(
         bloodSugarMeasurementUuid,
-        validBloodSugar.toInt(),
-        Random,
         validBloodSugarDate,
-        validBloodSugarDate
+        validBloodSugarDate,
+        bloodSugarReading
     )
 
     updateSpec

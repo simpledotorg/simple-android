@@ -432,7 +432,6 @@
   <string name="bloodsugartype_ppbs">ਪੋਸਟ ਪ੍ਰੈਂਡੀਅਲ ਬਲੱਡ ਸ਼ੂਗਰ (PPBS)</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_md_dl">ਮਿਲੀ/ਡੀਐੱਲ</string>
   <string name="bloodsugarentry_sheet_title_enter_date">ਮੁਲਾਕਾਤ ਦੀ ਮਿਤੀ</string>
   <string name="bloodsugarentry_day">ਦਿਨ</string>
   <string name="bloodsugarentry_month">ਮਹੀਨਾ</string>

@@ -432,7 +432,6 @@
   <string name="bloodsugartype_ppbs"> ምግቢ ምምጋብ  ስዒቡ ዝመጽእ ሽኮር ደም (PPBS)</string>
 
   <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_md_dl">ሚሊግራም/መዐቀኒ</string>
   <string name="bloodsugarentry_sheet_title_enter_date">ናይ ምብጻሕ ዕለት</string>
   <string name="bloodsugarentry_day">መዓልቲ</string>
   <string name="bloodsugarentry_month">ወርሒ</string>

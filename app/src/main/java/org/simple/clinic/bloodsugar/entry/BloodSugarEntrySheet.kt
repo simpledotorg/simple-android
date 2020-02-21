@@ -100,8 +100,11 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   private val uiRenderer = BloodSugarEntryUiRenderer(this)
 
+  private val openAs: OpenAs by lazy {
+    intent.getParcelableExtra<OpenAs>(KEY_OPEN_AS)!!
+  }
+
   private val delegate by unsafeLazy {
-    val openAs = intent.getParcelableExtra<OpenAs>(KEY_OPEN_AS)!!
     val defaultModel = BloodSugarEntryModel.create(LocalDate.now(userClock).year, openAs)
 
     MobiusDelegate.forActivity(
@@ -136,6 +139,18 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
     setContentView(R.layout.sheet_blood_sugar_entry)
     setupDi()
+
+    openAs.let { openAs ->
+      val measurementType = when (openAs) {
+        is New -> openAs.measurementType
+        is Update -> openAs.measurementType
+      }
+
+      when (measurementType) {
+        HbA1c -> bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_percentage)
+        Random, PostPrandial, Fasting -> bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_mg_dl)
+      }
+    }
 
     delegate.onRestoreInstanceState(savedInstanceState)
   }

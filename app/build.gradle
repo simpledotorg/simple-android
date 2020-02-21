@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
+apply plugin: 'newrelic'
 
 apply from: "../quality/install-git-hook.gradle"
 
@@ -322,6 +323,8 @@ dependencies {
   androidTestRuntimeOnly ("org.ow2.asm:asm:$versions.asm") {
     because "not mandatory, but Truth recommends adding this dependency for better error reporting"
   }
+
+  implementation "com.newrelic.agent.android:android-agent:$versions.newRelic"
 }
 
 // This must always be present at the bottom of this file, as per:

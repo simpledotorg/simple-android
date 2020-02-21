@@ -76,3 +76,8 @@
 -dontwarn javax.naming.*
 -dontwarn javax.servlet.*
 -dontwarn javax.servlet.http.Cookie
+
+# New Relic
+-keep class com.newrelic.** { *; }
+-dontwarn com.newrelic.**
+-keepattributes Exceptions, Signature, InnerClasses, LineNumberTable

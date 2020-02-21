@@ -1,7 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
@@ -314,8 +313,8 @@ class BloodSugarEntryEffectHandlerTest {
     val date = LocalDate.parse("2020-02-14")
     val updatedDate = LocalDate.parse("2020-02-12")
 
-    val bloodSugarMeasurementType = Random
-    val bloodSugarReading = BloodSugarReading(250f, bloodSugarMeasurementType)
+    val bloodSugarReading = BloodSugarReading(250f, Random)
+    val updateBloodSugarReading = bloodSugarReading.copy(value = 145f)
     val bloodSugarMeasurementUuid = UUID.fromString("58a3fa4b-2b32-4c43-a1cd-ee3d787064f7")
 
     val bloodSugar = PatientMocker.bloodSugar(
@@ -334,10 +333,56 @@ class BloodSugarEntryEffectHandlerTest {
     )
     val updateBloodSugarEntry = UpdateBloodSugarEntry(
         bloodSugarMeasurementUuid = bloodSugarMeasurementUuid,
-        bloodSugarReading = 145,
-        measurementType = bloodSugar.reading.type,
         userEnteredDate = updatedDate,
-        prefilledDate = updatedDate
+        prefilledDate = updatedDate,
+        bloodSugarReading = updateBloodSugarReading
+    )
+
+    whenever(userSession.loggedInUserImmediate()).doReturn(user)
+    whenever(facilityRepository.currentFacilityImmediate(user)).doReturn(facility)
+    whenever(bloodSugarRepository.measurement(bloodSugarMeasurementUuid)).doReturn(bloodSugar)
+
+    // when
+    testCase.dispatch(updateBloodSugarEntry)
+
+    // then
+    testCase.assertOutgoingEvents(BloodSugarSaved(updateBloodSugarEntry.wasDateChanged))
+    verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `update hba1c blood sugar entry when update blood sugar entry effect is received`() {
+    // given
+    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("50da2a45-3680-41e8-b46d-8a5896eadce0"))
+    val facility = PatientMocker.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
+    val patientUuid = UUID.fromString("260a831f-bc31-4341-bc0d-46325e85e32d")
+
+    val date = LocalDate.parse("2020-02-14")
+    val updatedDate = LocalDate.parse("2020-02-12")
+
+    val bloodSugarReading = BloodSugarReading(5.6f, HbA1c)
+    val updateBloodSugarReading = bloodSugarReading.copy(value = 6.2f)
+    val bloodSugarMeasurementUuid = UUID.fromString("58a3fa4b-2b32-4c43-a1cd-ee3d787064f7")
+
+    val bloodSugar = PatientMocker.bloodSugar(
+        uuid = bloodSugarMeasurementUuid,
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid,
+        userUuid = user.uuid,
+        reading = bloodSugarReading,
+        recordedAt = date.toUtcInstant(userClock),
+        timestamps = Timestamps(
+            createdAt = date.toUtcInstant(userClock),
+            updatedAt = date.toUtcInstant(userClock),
+            deletedAt = null
+        ),
+        syncStatus = DONE
+    )
+    val updateBloodSugarEntry = UpdateBloodSugarEntry(
+        bloodSugarMeasurementUuid = bloodSugarMeasurementUuid,
+        userEnteredDate = updatedDate,
+        prefilledDate = updatedDate,
+        bloodSugarReading = updateBloodSugarReading
     )
 
     whenever(userSession.loggedInUserImmediate()).doReturn(user)

@@ -16,6 +16,7 @@ import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.HbA1c
+import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
@@ -133,11 +134,14 @@ class BloodSugarEntryEffectHandlerTest {
 
   @Test
   fun `show blood sugar low error when show blood sugar validation error effect is received with validation result too low`() {
+    // given
+    val measurementType = PostPrandial
+
     // when
-    testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooLow))
+    testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooLow(measurementType)))
 
     // then
-    verify(ui).showBloodSugarLowError()
+    verify(ui).showBloodSugarLowError(measurementType)
     verifyNoMoreInteractions(ui)
   }
 

@@ -15,7 +15,7 @@ class BloodSugarValidator @Inject constructor() {
 
     object ErrorBloodSugarEmpty : Result()
     data class ErrorBloodSugarTooHigh(val measurementType: BloodSugarMeasurementType) : Result()
-    object ErrorBloodSugarTooLow : Result()
+    data class ErrorBloodSugarTooLow(val measurementType: BloodSugarMeasurementType) : Result()
   }
 
   fun validate(bloodSugarReading: String, measurementType: BloodSugarMeasurementType): Result {
@@ -28,7 +28,7 @@ class BloodSugarValidator @Inject constructor() {
     val maxAllowedBloodSugarValue = if (measurementType is HbA1c) 25 else 1000
 
     return when {
-      bloodSugarNumber < minAllowedBloodSugarValue -> ErrorBloodSugarTooLow
+      bloodSugarNumber < minAllowedBloodSugarValue -> ErrorBloodSugarTooLow(measurementType)
       bloodSugarNumber > maxAllowedBloodSugarValue -> ErrorBloodSugarTooHigh(measurementType)
       else -> Valid(bloodSugarNumber)
     }

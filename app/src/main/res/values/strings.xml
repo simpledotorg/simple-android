@@ -514,6 +514,7 @@
   <string name="bloodsugarentry_month">Month</string>
   <string name="bloodsugarentry_year">Year</string>
   <string name="bloodsugarentry_error_lower_limit">Value cannot be less than 30 mg/dl</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">Value cannot be less than 3%</string>
   <string name="bloodsugarentry_error_higher_limit">Value cannot be more than 1000 mg/dl</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">Value cannot be more than 25%</string>
   <string name="bloodsugarentry_error_empty">Value cannot be empty</string>

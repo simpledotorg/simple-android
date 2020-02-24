@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.storage.FileStorageModule
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
@@ -41,5 +42,10 @@ class TestStorageModule {
   @Provides
   fun userDao(appDatabase: AppDatabase): User.RoomDao {
     return appDatabase.userDao()
+  }
+
+  @Provides
+  fun patientDao(appDatabase: AppDatabase): Patient.RoomDao {
+    return appDatabase.patientDao()
   }
 }

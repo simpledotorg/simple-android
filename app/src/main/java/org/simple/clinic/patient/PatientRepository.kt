@@ -54,6 +54,7 @@ typealias FacilityUuid = UUID
 @AppScope
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,
+    private val patientDao: Patient.RoomDao,
     private val dobValidator: UserInputDateValidator,
     private val numberValidator: PhoneNumberValidator,
     private val utcClock: UtcClock,

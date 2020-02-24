@@ -85,6 +85,7 @@ class PatientRepositoryTest {
 
     repository = PatientRepository(
         database = database,
+        patientDao = patientDao,
         dobValidator = dobValidator,
         numberValidator = numberValidator,
         utcClock = clock,
@@ -93,9 +94,9 @@ class PatientRepositoryTest {
         reportsRepository = mock(),
         businessIdMetaDataAdapter = businessIdMetaAdapter,
         schedulersProvider = schedulersProvider,
-        dateOfBirthFormat = dateOfBirthFormat,
         uuidShortCodeCreator = uuidShortCodeCreator,
-            ageValidator = ageValidator)
+        dateOfBirthFormat = dateOfBirthFormat,
+        ageValidator = ageValidator)
 
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
     whenever(bloodPressureMeasurementDao.patientToFacilityIds(any())).thenReturn(Flowable.just(listOf()))

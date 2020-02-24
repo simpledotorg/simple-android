@@ -14,9 +14,8 @@ import org.simple.clinic.activity.placeholder.PlaceholderScreenKey
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.mobius.MobiusActivityDelegate
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.onboarding.OnboardingScreenKey
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -37,9 +36,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
   @Inject
   lateinit var locale: Locale
 
-  @Inject
-  lateinit var crashReporter: CrashReporter
-
   private lateinit var component: SetupActivityComponent
 
   @Inject
@@ -52,14 +48,13 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private val delegate by unsafeLazy {
-    MobiusActivityDelegate(
+    MobiusDelegate.forActivity(
         events = Observable.never<SetupActivityEvent>(),
         defaultModel = SetupActivityModel.SETTING_UP,
         init = SetupActivityInit(),
         update = SetupActivityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = { /* Nothing to do here */ },
-        crashReporter = crashReporter
+        modelUpdateListener = { /* Nothing to do here */ }
     )
   }
 

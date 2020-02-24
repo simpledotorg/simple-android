@@ -120,11 +120,14 @@ class BloodSugarEntryEffectHandlerTest {
 
   @Test
   fun `show blood sugar high error when show blood sugar validation error effect is received with validation result too high`() {
+    // given
+    val measurementType = Random
+
     // when
-    testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh))
+    testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType)))
 
     // then
-    verify(ui).showBloodSugarHighError()
+    verify(ui).showBloodSugarHighError(measurementType)
     verifyNoMoreInteractions(ui)
   }
 

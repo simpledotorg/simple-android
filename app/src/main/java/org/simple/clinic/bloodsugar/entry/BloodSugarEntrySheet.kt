@@ -23,8 +23,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_E
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.mobius.MobiusActivityDelegate
-import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.unsafeLazy
@@ -83,9 +82,6 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
   lateinit var userTimeZone: ZoneId
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   lateinit var bloodSugarEntryUpdate: BloodSugarEntryUpdate.Factory
 
   @Inject
@@ -97,14 +93,13 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
     val openAs = intent.getParcelableExtra<OpenAs>(KEY_OPEN_AS)!!
     val defaultModel = BloodSugarEntryModel.create(LocalDate.now(userClock).year, openAs)
 
-    MobiusActivityDelegate(
-        events = events.ofType(),
-        defaultModel = defaultModel,
-        init = BloodSugarEntryInit(),
-        update = bloodSugarEntryUpdate.create(LocalDate.now(userTimeZone)),
-        effectHandler = bloodSugarEntryEffectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        crashReporter = crashReporter
+    MobiusDelegate.forActivity(
+        events.ofType(),
+        defaultModel,
+        BloodSugarEntryInit(),
+        bloodSugarEntryUpdate.create(LocalDate.now(userTimeZone)),
+        bloodSugarEntryEffectHandler.create(this).build(),
+        uiRenderer::render
     )
   }
 

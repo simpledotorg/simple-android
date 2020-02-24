@@ -81,7 +81,9 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
       crashReporter: CrashReporter
   ) : this(events, defaultModel, init, update, effectHandler, modelUpdateListener, ViewSavedStateHandle(defaultModel::class.java.name))
 
-  private lateinit var controller: MobiusLoop.Controller<M, E>
+  private val controller: MobiusLoop.Controller<M, E> by lazy(NONE) {
+    MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
+  }
 
   private var lastKnownModel: M? = null
 
@@ -101,17 +103,10 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
     // No-Op
   }
 
-  private fun prepareController() {
-    if (!::controller.isInitialized) {
-      controller = MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
-      controller.connect(Connectables.contramap(identity(), this))
-      lastKnownModel = null
-    }
-  }
-
   fun start() {
-    prepareController()
+    controller.connect(Connectables.contramap(identity(), this))
     controller.start()
+    lastKnownModel = null
   }
 
   fun stop() {

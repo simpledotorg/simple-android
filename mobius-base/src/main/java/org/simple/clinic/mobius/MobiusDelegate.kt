@@ -24,7 +24,8 @@ class MobiusDelegate<M : Parcelable, E, F>(
     private val init: Init<M, F>?,
     private val update: Update<M, E, F>,
     private val effectHandler: ObservableTransformer<F, E>,
-    private val modelUpdateListener: (M) -> Unit
+    private val modelUpdateListener: (M) -> Unit,
+    private val savedStateHandle: SavedStateHandle<M>
 ) : Connectable<M, E> {
 
   @Deprecated(
@@ -39,7 +40,7 @@ class MobiusDelegate<M : Parcelable, E, F>(
       effectHandler: ObservableTransformer<F, E>,
       modelUpdateListener: (M) -> Unit,
       crashReporter: CrashReporter
-  ) : this(events, defaultModel, init, update, effectHandler, modelUpdateListener)
+  ) : this(events, defaultModel, init, update, effectHandler, modelUpdateListener, ViewSavedStateHandle(defaultModel::class.java.name))
 
   private val modelKey = defaultModel::class.java.name
   private val viewStateKey = "ViewState_$modelKey"

@@ -78,7 +78,7 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
       update: Update<M, E, F>,
       effectHandler: ObservableTransformer<F, E>,
       modelUpdateListener: (M) -> Unit,
-      crashReporter: CrashReporter
+      @Suppress("UNUSED_PARAMETER") crashReporter: CrashReporter
   ) : this(events, defaultModel, init, update, effectHandler, modelUpdateListener, ViewSavedStateHandle(defaultModel::class.java.name))
 
   private val controller: MobiusLoop.Controller<M, E> by lazy(NONE) {

@@ -82,6 +82,15 @@ data class LoggedInUserFacilityMapping(
     abstract fun currentFacility(userUuid: UUID): Flowable<Facility>
 
     @Query("""
+      SELECT * FROM Facility
+      INNER JOIN LoggedInUserFacilityMapping ON LoggedInUserFacilityMapping.facilityUuid = Facility.uuid
+      WHERE LoggedInUserFacilityMapping.userUuid = :userUuid
+      AND LoggedInUserFacilityMapping.isCurrentFacility = 1
+      LIMIT 1
+      """)
+    abstract fun currentFacilityImmediate(userUuid: UUID): Facility?
+
+    @Query("""
       SELECT facilityUuid FROM LoggedInUserFacilityMapping
       WHERE userUuid = :userUuid
       AND isCurrentFacility = 1

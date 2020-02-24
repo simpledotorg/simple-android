@@ -25,7 +25,7 @@ class BloodSugarValidatorTest {
     val bloodSugarReading = "1001"
     val result = bloodSugarValidator.validate(bloodSugarReading, PostPrandial)
 
-    assertThat(result).isEqualTo(ErrorBloodSugarTooHigh)
+    assertThat(result).isEqualTo(ErrorBloodSugarTooHigh(PostPrandial))
   }
 
   @Test
@@ -33,7 +33,7 @@ class BloodSugarValidatorTest {
     val bloodSugarReading = "26"
     val result = bloodSugarValidator.validate(bloodSugarReading, HbA1c)
 
-    assertThat(result).isEqualTo(ErrorBloodSugarTooHigh)
+    assertThat(result).isEqualTo(ErrorBloodSugarTooHigh(HbA1c))
   }
 
 

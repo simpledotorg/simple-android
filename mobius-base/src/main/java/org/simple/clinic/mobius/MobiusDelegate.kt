@@ -59,13 +59,21 @@ class MobiusDelegate<M : Parcelable, E, F>(
         .init(init)
   }
 
+  @Deprecated(message = "left to not break existing code. Do not use anymore.")
   fun prepare() {
-    controller = MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
-    controller.connect(Connectables.contramap(identity(), this))
-    lastKnownModel = null
+    // No-Op
+  }
+
+  private fun prepareController() {
+    if(!::controller.isInitialized) {
+      controller = MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
+      controller.connect(Connectables.contramap(identity(), this))
+      lastKnownModel = null
+    }
   }
 
   fun start() {
+    prepareController()
     controller.start()
   }
 
@@ -85,7 +93,6 @@ class MobiusDelegate<M : Parcelable, E, F>(
     val bundle = parcelable as? Bundle
     lastKnownModel = bundle?.getParcelable(modelKey) ?: defaultModel
     return bundle?.getParcelable<Parcelable?>(viewStateKey)
-        .also { prepare() }
   }
 
   override fun connect(output: Consumer<E>): Connection<M> {

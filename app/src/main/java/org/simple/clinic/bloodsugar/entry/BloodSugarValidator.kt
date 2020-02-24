@@ -14,7 +14,7 @@ class BloodSugarValidator @Inject constructor() {
     data class Valid(val bloodSugarReading: Float) : Result()
 
     object ErrorBloodSugarEmpty : Result()
-    object ErrorBloodSugarTooHigh : Result()
+    data class ErrorBloodSugarTooHigh(val measurementType: BloodSugarMeasurementType) : Result()
     object ErrorBloodSugarTooLow : Result()
   }
 
@@ -29,7 +29,7 @@ class BloodSugarValidator @Inject constructor() {
 
     return when {
       bloodSugarNumber < minAllowedBloodSugarValue -> ErrorBloodSugarTooLow
-      bloodSugarNumber > maxAllowedBloodSugarValue -> ErrorBloodSugarTooHigh
+      bloodSugarNumber > maxAllowedBloodSugarValue -> ErrorBloodSugarTooHigh(measurementType)
       else -> Valid(bloodSugarNumber)
     }
   }

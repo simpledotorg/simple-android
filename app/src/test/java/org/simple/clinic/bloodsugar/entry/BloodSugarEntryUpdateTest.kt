@@ -141,12 +141,14 @@ class BloodSugarEntryUpdateTest {
 
   @Test
   fun `when blood sugar entry is active and value is invalid and date button is pressed, then show blood sugar validation errors`() {
+    val measurementType = (defaultModel.openAs as New).measurementType
+
     updateSpec
         .given(defaultModel.bloodSugarChanged(invalidBloodSugar))
         .whenEvent(BloodSugarDateClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh) as BloodSugarEntryEffect)
+            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType)) as BloodSugarEntryEffect)
         ))
   }
 
@@ -249,13 +251,14 @@ class BloodSugarEntryUpdateTest {
         .monthChanged(validBloodSugarDate.monthValue.toString())
         .yearChanged(validBloodSugarDate.year.toString().substring(2))
         .datePrefilled(validBloodSugarDate)
+    val measurementType = (invalidBloodSugarModel.openAs as New).measurementType
 
     updateSpec
         .given(invalidBloodSugarModel)
         .whenEvent(SaveClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh) as BloodSugarEntryEffect)
+            hasEffects(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType)) as BloodSugarEntryEffect)
         ))
   }
 

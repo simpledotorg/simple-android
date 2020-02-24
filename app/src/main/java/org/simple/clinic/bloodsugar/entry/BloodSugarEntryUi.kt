@@ -8,7 +8,7 @@ interface BloodSugarEntryUi {
   fun setBloodSugarSavedResultAndFinish()
   fun hideBloodSugarErrorMessage()
   fun showBloodSugarEmptyError()
-  fun showBloodSugarHighError()
+  fun showBloodSugarHighError(measurementType: BloodSugarMeasurementType)
   fun showBloodSugarLowError()
   fun showBloodSugarEntryScreen()
   fun showDateEntryScreen()

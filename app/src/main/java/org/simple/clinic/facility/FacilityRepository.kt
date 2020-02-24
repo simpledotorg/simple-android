@@ -89,6 +89,10 @@ class FacilityRepository @Inject constructor(
     return userFacilityMappingDao.currentFacility(user.uuid).toObservable()
   }
 
+  fun currentFacilityImmediate(user: User): Facility? {
+    return userFacilityMappingDao.currentFacilityImmediate(user.uuid)
+  }
+
   fun currentFacilityUuid(user: User): UUID? {
     return userFacilityMappingDao.currentFacilityUuid(user.uuid)
   }

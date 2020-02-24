@@ -246,4 +246,23 @@ class FacilityRepositoryAndroidTest {
     val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "fac", user = user).blockingFirst()
     assertThat(filteredFacilities).isEqualTo(listOf(group1Facility))
   }
+
+  @Test
+  fun getting_current_facility_immediately_for_the_given_user() {
+    val facility1 = testData.facility(
+        uuid = UUID.fromString("19822126-a96d-4619-b7be-4477f1f5e429"),
+        name = "Facility 1"
+    )
+    val facility2 = testData.facility(
+        uuid = UUID.fromString("978bd4f6-3f13-4ef7-847a-ad315dcd46fa"),
+        name = "Facility 2"
+    )
+
+    repository.save(listOf(facility1, facility2)).blockingAwait()
+
+    associateCurrentFacilityToUser(user, facility1)
+
+    val currentFacility = repository.currentFacilityImmediate(user)
+    assertThat(currentFacility).isEqualTo(facility1)
+  }
 }

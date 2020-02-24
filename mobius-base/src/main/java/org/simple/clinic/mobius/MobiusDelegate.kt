@@ -15,7 +15,6 @@ import com.spotify.mobius.functions.Function
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.disposables.Disposable
 import org.simple.clinic.platform.crash.CrashReporter
 import kotlin.LazyThreadSafetyMode.NONE
 
@@ -51,8 +50,6 @@ class MobiusDelegate<M : Parcelable, E, F>(
     DeferredEventSource<E>(crashReporter)
   }
 
-  private lateinit var eventsDisposable: Disposable
-
   fun prepare() {
     controller = MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
     controller.connect(Connectables.contramap(identity(), this))
@@ -61,14 +58,9 @@ class MobiusDelegate<M : Parcelable, E, F>(
 
   fun start() {
     controller.start()
-    eventsDisposable = events.subscribe { mobiusEventSource.notifyEvent(it) }
   }
 
   fun stop() {
-    if (::eventsDisposable.isInitialized && eventsDisposable.isDisposed.not()) {
-      eventsDisposable.dispose()
-    }
-
     startControllerIfNotAlreadyRunning()
     stopAndDisconnectController()
   }
@@ -88,13 +80,15 @@ class MobiusDelegate<M : Parcelable, E, F>(
   }
 
   override fun connect(output: Consumer<E>): Connection<M> {
+    val eventsDisposable = events.subscribe(output::accept)
+
     return object : Connection<M> {
       override fun accept(value: M) {
         modelUpdateListener(value)
       }
 
       override fun dispose() {
-        /* no-op, nothing to dispose */
+        eventsDisposable.dispose()
       }
     }
   }

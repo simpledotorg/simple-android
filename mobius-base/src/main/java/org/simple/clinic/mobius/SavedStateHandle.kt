@@ -7,7 +7,7 @@ interface SavedStateHandle<M : Parcelable> {
 
   fun save(state: Parcelable?, model: M): Parcelable
 
-  fun restore(state: Parcelable): Pair<M, Parcelable>
+  fun restore(state: Parcelable): Pair<M, Parcelable?>
 }
 
 class ActivitySavedStateHandle<M : Parcelable>(
@@ -23,12 +23,35 @@ class ActivitySavedStateHandle<M : Parcelable>(
     return bundle
   }
 
-  override fun restore(state: Parcelable): Pair<M, Parcelable> {
+  override fun restore(state: Parcelable): Pair<M, Parcelable?> {
     val bundle = state as Bundle
 
     val model = bundle.getParcelable<M>(modelKey)
     requireNotNull(model)
 
     return model to bundle
+  }
+}
+
+class ViewSavedStateHandle<M: Parcelable>(
+    private val modelKey: String
+): SavedStateHandle<M> {
+
+  private val viewStateKey = "ViewState_$modelKey"
+
+  override fun save(state: Parcelable?, model: M): Parcelable {
+    return Bundle().apply {
+      putParcelable(viewStateKey, state)
+      putParcelable(modelKey, model)
+    }
+  }
+
+  override fun restore(state: Parcelable): Pair<M, Parcelable?> {
+    val bundle = state as Bundle
+
+    val model = bundle.getParcelable<M>(modelKey)
+    requireNotNull(model)
+
+    return model to bundle.getParcelable(viewStateKey)
   }
 }

@@ -1779,6 +1779,48 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun when_updating_patient_recordedAt_then_it_should_compare_and_then_update_the_date_immediately() {
+
+    fun createPatientProfile(patientUuid: UUID, recordedAt: Instant): PatientProfile {
+      return testData.patientProfile(patientUuid = patientUuid)
+          .run {
+            copy(patient = patient.copy(
+                recordedAt = recordedAt,
+                updatedAt = Instant.now(clock),
+                syncStatus = DONE)
+            )
+          }
+    }
+
+    val patientUuid1 = UUID.randomUUID()
+    val recordedAtForPatient1 = Instant.now(clock)
+    val patientProfile1 = createPatientProfile(patientUuid1, recordedAtForPatient1)
+    clock.advanceBy(Duration.ofMinutes(1))
+    val instantToCompare1 = Instant.now(clock)
+
+    val patientUuid2 = UUID.randomUUID()
+    val instantToCompare2 = Instant.now(clock)
+    clock.advanceBy(Duration.ofMinutes(1))
+    val recordedAtForPatient2 = Instant.now(clock)
+    val patientProfile2 = createPatientProfile(patientUuid2, recordedAtForPatient2)
+
+    patientRepository.save(listOf(patientProfile1, patientProfile2)).blockingAwait()
+
+    patientRepository.compareAndUpdateRecordedAtImmediate(patientUuid1, instantToCompare1)
+    patientRepository.compareAndUpdateRecordedAtImmediate(patientUuid2, instantToCompare2)
+
+    val patient1 = patientRepository.patient(patientUuid1).blockingFirst().toNullable()!!
+    val patient2 = patientRepository.patient(patientUuid2).blockingFirst().toNullable()!!
+
+    assertThat(patient1.recordedAt).isEqualTo(recordedAtForPatient1)
+    assertThat(patient1.syncStatus).isEqualTo(DONE)
+
+    assertThat(patient2.recordedAt).isEqualTo(instantToCompare2)
+    assertThat(patient2.syncStatus).isEqualTo(PENDING)
+    assertThat(patient2.updatedAt).isEqualTo(Instant.now(clock))
+  }
+
+  @Test
   fun when_patient_recorded_at_needs_to_be_updated_then_it_should_be_set_based_on_oldest_BP() {
     fun loadPatient(patientUuid: UUID) = patientRepository.patient(patientUuid).blockingFirst().toNullable()!!
 

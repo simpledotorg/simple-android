@@ -38,10 +38,6 @@ data class OverdueAppointment(
   @Dao
   interface RoomDao {
 
-    /**
-     * FYI: IntelliJ's SQL parser highlights `riskLevelIndex` as an error, but it's not. This is probably
-     * because referencing column aliases in a WHERE clause is not SQL standard, but sqlite still allows it.
-     */
     @Query("""
           SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt,
 
@@ -62,6 +58,10 @@ data class OverdueAppointment(
 
           (
             CASE
+              WHEN BloodSugar.reading_type = "fasting" AND CAST (BloodSugar.reading_value AS REAL) >= 200 THEN 1
+              WHEN BloodSugar.reading_type = "random" AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1
+              WHEN BloodSugar.reading_type = "post_prandial" AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1
+              WHEN BloodSugar.reading_type = "hba1c" AND CAST (BloodSugar.reading_value AS REAL) >= 9 THEN 1
               WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 1
               WHEN (MH.hasHadHeartAttack = :yesAnswer OR MH.hasHadStroke = :yesAnswer) AND (BP.systolic >= 140 OR BP.diastolic >= 110) 
                 THEN 1 
@@ -74,9 +74,11 @@ data class OverdueAppointment(
           INNER JOIN Appointment A ON A.patientUuid = P.uuid
           LEFT JOIN PatientPhoneNumber PPN ON (PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL)
           LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
+
           LEFT JOIN (
             SELECT * FROM BloodPressureMeasurement WHERE deletedAt IS NULL GROUP BY patientUuid HAVING max(recordedAt)
           ) BP ON BP.patientUuid = P.uuid
+
           LEFT JOIN (
             SELECT * FROM BloodSugarMeasurements WHERE deletedAt IS NULL GROUP BY patientUuid HAVING max(recordedAt)
           ) BloodSugar ON BloodSugar.patientUuid = P.uuid
@@ -92,7 +94,7 @@ data class OverdueAppointment(
             AND (A.remindOn < :scheduledBefore OR A.remindOn IS NULL)
             AND (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
 
-          GROUP BY P.uuid HAVING MAX(patientLastSeen)
+          GROUP BY P.uuid
           ORDER BY isAtHighRisk DESC, A.scheduledDate DESC, A.updatedAt ASC
           """)
     fun appointmentsForFacility(

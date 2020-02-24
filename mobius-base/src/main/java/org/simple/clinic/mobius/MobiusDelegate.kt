@@ -17,7 +17,7 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.platform.crash.CrashReporter
 import kotlin.LazyThreadSafetyMode.NONE
 
-class MobiusDelegate<M : Parcelable, E, F>(
+class MobiusDelegate<M : Parcelable, E, F> private constructor(
     private val events: Observable<E>,
     private val defaultModel: M,
     private val init: Init<M, F>?,
@@ -27,9 +27,49 @@ class MobiusDelegate<M : Parcelable, E, F>(
     private val savedStateHandle: SavedStateHandle<M>
 ) : Connectable<M, E> {
 
+  companion object {
+    fun <M : Parcelable, E, F> forView(
+        events: Observable<E>,
+        defaultModel: M,
+        init: Init<M, F>?,
+        update: Update<M, E, F>,
+        effectHandler: ObservableTransformer<F, E>,
+        modelUpdateListener: (M) -> Unit
+    ): MobiusDelegate<M, E, F> {
+      return MobiusDelegate(
+          events = events,
+          defaultModel = defaultModel,
+          init = init,
+          update = update,
+          effectHandler = effectHandler,
+          modelUpdateListener = modelUpdateListener,
+          savedStateHandle = ViewSavedStateHandle(defaultModel::class.java.name)
+      )
+    }
+
+    fun <M : Parcelable, E, F> forActivity(
+        events: Observable<E>,
+        defaultModel: M,
+        init: Init<M, F>?,
+        update: Update<M, E, F>,
+        effectHandler: ObservableTransformer<F, E>,
+        modelUpdateListener: (M) -> Unit
+    ): MobiusDelegate<M, E, F> {
+      return MobiusDelegate(
+          events = events,
+          defaultModel = defaultModel,
+          init = init,
+          update = update,
+          effectHandler = effectHandler,
+          modelUpdateListener = modelUpdateListener,
+          savedStateHandle = ActivitySavedStateHandle(defaultModel::class.java.name)
+      )
+    }
+  }
+
   @Deprecated(
       message = "This constructor is left to not break existing code. Use the version without the crashreporter parameter",
-      replaceWith = ReplaceWith("MobiusDelegate(events, defaultModel, init, update, effectHandler, modelUpdateListener)")
+      replaceWith = ReplaceWith("MobiusDelegate.forView(events, defaultModel, init, update, effectHandler, modelUpdateListener)")
   )
   constructor(
       events: Observable<E>,

@@ -143,10 +143,10 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
-  private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }
+  private fun savePatient(patient: Patient): Completable = Completable.fromAction { patientDao.save(patient) }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {
-    return database.patientDao()
+    return patientDao
         .patient(uuid)
         .toObservable()
         .map { patients ->
@@ -159,8 +159,7 @@ class PatientRepository @Inject constructor(
 
   fun updatePatientStatusToDead(patientUuid: UUID): Completable {
     return Completable.fromAction {
-      database
-          .patientDao()
+      patientDao
           .updatePatientStatus(
               uuid = patientUuid,
               newStatus = PatientStatus.Dead,
@@ -170,21 +169,21 @@ class PatientRepository @Inject constructor(
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<PatientProfile>> {
-    return database.patientDao()
+    return patientDao
         .recordsWithSyncStatus(syncStatus)
         .firstOrError()
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
-    return Completable.fromAction { database.patientDao().updateSyncStatus(from, to) }
+    return Completable.fromAction { patientDao.updateSyncStatus(from, to) }
   }
 
   override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
-    return Completable.fromAction { database.patientDao().updateSyncStatus(ids, to) }
+    return Completable.fromAction { patientDao.updateSyncStatus(ids, to) }
   }
 
   override fun recordCount(): Observable<Int> {
-    return database.patientDao()
+    return patientDao
         .patientCount()
         .toObservable()
   }
@@ -193,7 +192,7 @@ class PatientRepository @Inject constructor(
     return Single.fromCallable {
       payloads.asSequence()
           .filter { payload ->
-            database.patientDao().getOne(payload.uuid)?.syncStatus.canBeOverriddenByServerCopy()
+            patientDao.getOne(payload.uuid)?.syncStatus.canBeOverriddenByServerCopy()
           }
           .map(::payloadToPatientProfile)
           .toList()
@@ -206,8 +205,7 @@ class PatientRepository @Inject constructor(
           .addressDao()
           .save(records.map { it.address })
 
-      database
-          .patientDao()
+      patientDao
           .save(records.map { it.patient })
 
       database
@@ -375,7 +373,7 @@ class PatientRepository @Inject constructor(
           updatedAt = Instant.now(utcClock),
           syncStatus = PENDING
       )
-      database.patientDao().save(patientToSave)
+      patientDao.save(patientToSave)
     }
   }
 
@@ -455,7 +453,7 @@ class PatientRepository @Inject constructor(
 
   fun compareAndUpdateRecordedAt(patientUuid: UUID, instantToCompare: Instant): Completable {
     return Completable.fromAction {
-      database.patientDao().compareAndUpdateRecordedAt(
+      patientDao.compareAndUpdateRecordedAt(
           patientUuid = patientUuid,
           instantToCompare = instantToCompare,
           pendingStatus = PENDING,
@@ -475,7 +473,7 @@ class PatientRepository @Inject constructor(
 
   fun updateRecordedAt(patientUuid: UUID): Completable {
     return Completable.fromAction {
-      database.patientDao().updateRecordedAt(
+      patientDao.updateRecordedAt(
           patientUuid = patientUuid,
           pendingStatus = PENDING,
           updatedAt = Instant.now(utcClock))
@@ -499,7 +497,7 @@ class PatientRepository @Inject constructor(
           .toObservable()
 
   override fun pendingSyncRecordCount(): Observable<Int> {
-    return database.patientDao()
+    return patientDao
         .patientCount(PENDING)
         .toObservable()
   }
@@ -561,8 +559,7 @@ class PatientRepository @Inject constructor(
   }
 
   fun findPatientWithBusinessId(identifier: String): Observable<Optional<Patient>> {
-    return database
-        .patientDao()
+    return patientDao
         .findPatientsWithBusinessId(identifier)
         .map { patients ->
           if (patients.isEmpty()) {
@@ -615,8 +612,7 @@ class PatientRepository @Inject constructor(
   }
 
   fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {
-    return database
-        .patientDao()
+    return patientDao
         .isPatientDefaulter(
             patientUuid = patientUuid
         ).toObservable()
@@ -682,8 +678,7 @@ class PatientRepository @Inject constructor(
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun hasPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
-    return database
-        .patientDao()
+    return patientDao
         .hasPatientChangedSince(
             patientUuid = patientUuid,
             instantToCompare = instant,

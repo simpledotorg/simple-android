@@ -89,7 +89,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     when (result) {
       ErrorBloodSugarEmpty -> ui.showBloodSugarEmptyError()
       is ErrorBloodSugarTooHigh -> ui.showBloodSugarHighError(result.measurementType)
-      ErrorBloodSugarTooLow -> ui.showBloodSugarLowError()
+      is ErrorBloodSugarTooLow -> ui.showBloodSugarLowError(result.measurementType)
     }
   }
 

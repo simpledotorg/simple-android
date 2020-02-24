@@ -268,8 +268,12 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     }
   }
 
-  override fun showBloodSugarLowError() {
-    showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit))
+  override fun showBloodSugarLowError(measurementType: BloodSugarMeasurementType) {
+    when (measurementType) {
+      Random, PostPrandial, Fasting -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit))
+      HbA1c -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit_hba1c))
+      is Unknown -> throw AssertionError("Unknown measurement type: $measurementType")
+    }
   }
 
   override fun showBloodSugarEntryScreen() {

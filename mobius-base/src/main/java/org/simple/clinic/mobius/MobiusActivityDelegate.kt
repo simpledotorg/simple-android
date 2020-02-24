@@ -19,7 +19,10 @@ import io.reactivex.disposables.Disposable
 import org.simple.clinic.platform.crash.CrashReporter
 import kotlin.LazyThreadSafetyMode.NONE
 
-class MobiusActivityDelegate<M : Parcelable, E, F>(
+class MobiusActivityDelegate<M : Parcelable, E, F> @Deprecated(
+    message = "",
+    replaceWith = ReplaceWith("MobiusDelegate.forActivity(events, defaultModel, init, update, effectHandler, modelUpdateListener)", imports = ["org.simple.clinic.mobius.MobiusDelegate"])
+) constructor(
     private val events: Observable<E>,
     private val defaultModel: M,
     private val init: Init<M, F>?,

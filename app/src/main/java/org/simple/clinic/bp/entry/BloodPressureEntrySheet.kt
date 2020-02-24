@@ -27,10 +27,9 @@ import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodP
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog.RemoveBloodPressureListener
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.mobius.MobiusActivityDelegate
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
@@ -88,9 +87,6 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   lateinit var userClock: UserClock
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   lateinit var bpValidator: BpValidator
 
   @Inject
@@ -132,14 +128,13 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
         schedulersProvider
     )
 
-    MobiusActivityDelegate(
+    MobiusDelegate.forActivity(
         events.ofType(),
         defaultModel,
         BloodPressureEntryInit(),
         BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(userTimeZone), userInputDatePaddingCharacter),
         effectHandler,
-        uiRenderer::render,
-        crashReporter
+        uiRenderer::render
     )
   }
 

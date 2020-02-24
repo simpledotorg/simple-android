@@ -17,6 +17,9 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.Fasting
+import org.simple.clinic.bloodsugar.HbA1c
+import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
@@ -1816,6 +1819,228 @@ class AppointmentRepositoryAndroidTest {
     val expectedAppointments = listOf(withBloodSugar).map(RecordAppointment::toOverdueAppointment)
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
+  }
+
+  @Test
+  fun patients_with_different_combinations_of_blood_pressure_and_blood_sugars_should_be_included_in_overdue_list() {
+
+    data class BP(val systolic: Int, val diastolic: Int)
+
+    fun savePatientBloodPressureAndBloodSugar(
+        patientUuid: UUID,
+        appointmentUuid: UUID = UUID.randomUUID(),
+        fullName: String,
+        bps: List<BP> = emptyList(),
+        bloodSugars: List<BloodSugarReading> = emptyList(),
+        hasHadHeartAttack: Answer = No,
+        hasHadStroke: Answer = No,
+        hasDiabetes: Answer = No,
+        hasHadKidneyDisease: Answer = No,
+        appointmentHasBeenOverdueFor: Duration
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          patientName = fullName,
+          generatePhoneNumber = true,
+          generateBusinessId = false
+      )
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
+      appointmentRepository.schedule(
+          patientUuid = patientUuid,
+          appointmentUuid = appointmentUuid,
+          appointmentDate = scheduledDate,
+          appointmentType = Manual,
+          appointmentFacilityUuid = facility.uuid,
+          creationFacilityUuid = facility.uuid
+      ).blockingGet()
+
+      val bloodPressureMeasurements = bps.mapIndexed { index, (systolic, diastolic) ->
+
+        clock.advanceBy(Duration.ofSeconds(1L))
+        val bpTimestamp = Instant.now(clock)
+
+        testData.bloodPressureMeasurement(
+            patientUuid = patientUuid,
+            systolic = systolic,
+            diastolic = diastolic,
+            userUuid = userUuid,
+            facilityUuid = facility.uuid,
+            recordedAt = bpTimestamp,
+            createdAt = bpTimestamp,
+            updatedAt = bpTimestamp
+        )
+      }
+      bpRepository.save(bloodPressureMeasurements).blockingAwait()
+
+      val bloodSugarMeasurements = bloodSugars.mapIndexed { index, bloodSugarReading ->
+
+        clock.advanceBy(Duration.ofSeconds(1L))
+        val bloodSugarTimestamp = Instant.now(clock)
+
+        testData.bloodSugarMeasurement(
+            patientUuid = patientUuid,
+            reading = bloodSugarReading,
+            userUuid = userUuid,
+            facilityUuid = facility.uuid,
+            recordedAt = bloodSugarTimestamp,
+            createdAt = bloodSugarTimestamp,
+            updatedAt = bloodSugarTimestamp
+        )
+      }
+      bloodSugarRepository.save(bloodSugarMeasurements).blockingAwait()
+
+      medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
+          hasHadHeartAttack = hasHadHeartAttack,
+          hasHadStroke = hasHadStroke,
+          hasHadKidneyDisease = hasHadKidneyDisease,
+          hasDiabetes = hasDiabetes
+      )).blockingAwait()
+    }
+
+    // when
+    val thirtyDays = Duration.ofDays(30)
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("b408f97b-0c1c-41ac-b63d-2d6f5811d22c"),
+        fullName = "Diastolic > 110, overdue == 3 days",
+        bps = listOf(BP(systolic = 100, diastolic = 9000)),
+        appointmentHasBeenOverdueFor = Duration.ofDays(3)
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("d815ca26-b5f5-488e-a083-1946556993c5"),
+        fullName = "FBS = 199, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("199", Fasting)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("21d54d0e-dba1-4823-9b71-1d428a8e1a19"),
+        fullName = "FBS = 200, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("200", Fasting)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("1da72cec-fa4a-4d7b-aec8-cefdbae51f90"),
+        fullName = "FBS = 201, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("201", Fasting)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("4bd709ce-5fd3-47b2-95d3-2796b8b12916"),
+        fullName = "RBS = 299, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("299", Random)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("627f96dd-b8f6-428e-a68b-55f2b09447ef"),
+        fullName = "RBS = 300, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("300", Random)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("e66a1cf7-5970-426c-a87c-3402c832400a"),
+        fullName = "RBS = 301, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("301", Random)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("172b95be-075c-42ca-82bb-78e743250457"),
+        fullName = "Latest RBS = 200, overdue = 30 days",
+        bloodSugars = listOf(
+            BloodSugarReading("301", Random),
+            BloodSugarReading("200", Random)
+        ),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("9f84c79a-0b27-4aeb-a8fa-bd32df370592"),
+        fullName = "BP = 120/80, RBS = 200, overdue = 30 days",
+        bps = listOf(BP(systolic = 120, diastolic = 80)),
+        bloodSugars = listOf(
+            BloodSugarReading("301", Random),
+            BloodSugarReading("200", Random)
+        ),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("5c075549-565b-483f-9682-c26cb4930570"),
+        fullName = "BP = 200/80, RBS = 200, overdue = 30 days",
+        bps = listOf(BP(systolic = 200, diastolic = 80)),
+        bloodSugars = listOf(
+            BloodSugarReading("250", Random),
+            BloodSugarReading("200", Random)
+        ),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("901f5be3-0b3e-4d5c-96a0-479f9124e4e5"),
+        fullName = "BP = 120/80, RBS = 450, overdue = 30 days",
+        bps = listOf(
+            BP(systolic = 120, diastolic = 80),
+            BP(systolic = 122, diastolic = 78)
+        ),
+        bloodSugars = listOf(BloodSugarReading("450", Random)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("629090a7-445b-4533-8bbf-55b99737d639"),
+        fullName = "PPBS = 299, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("299", PostPrandial)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("8c42e506-0017-4029-aa89-0b968ca70c1a"),
+        fullName = "PPBS = 300, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("300", PostPrandial)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("70a9af3b-a321-454f-b8b8-80cb48e87126"),
+        fullName = "HbA1C = 8.9, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("8.9", HbA1c)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientBloodPressureAndBloodSugar(
+        patientUuid = UUID.fromString("ac43a70f-4c62-4dec-abac-bbc1ec6fa515"),
+        fullName = "HbA1C = 9, overdue = 30 days",
+        bloodSugars = listOf(BloodSugarReading("9", HbA1c)),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    // then
+    val overdueAppointments = appointmentRepository.overdueAppointments(since = LocalDate.now(clock), facility = facility).blockingFirst()
+    assertThat(overdueAppointments.map { it.fullName to it.isAtHighRisk }).isEqualTo(listOf(
+        "Diastolic > 110, overdue == 3 days" to true,
+        "FBS = 200, overdue = 30 days" to true,
+        "FBS = 201, overdue = 30 days" to true,
+        "RBS = 300, overdue = 30 days" to true,
+        "RBS = 301, overdue = 30 days" to true,
+        "BP = 200/80, RBS = 200, overdue = 30 days" to true,
+        "BP = 120/80, RBS = 450, overdue = 30 days" to true,
+        "PPBS = 300, overdue = 30 days" to true,
+        "HbA1C = 9, overdue = 30 days" to true,
+        "FBS = 199, overdue = 30 days" to false,
+        "RBS = 299, overdue = 30 days" to false,
+        "Latest RBS = 200, overdue = 30 days" to false,
+        "BP = 120/80, RBS = 200, overdue = 30 days" to false,
+        "PPBS = 299, overdue = 30 days" to false,
+        "HbA1C = 8.9, overdue = 30 days" to false
+    ))
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {

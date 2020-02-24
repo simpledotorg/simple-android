@@ -24,9 +24,23 @@ class MobiusDelegate<M : Parcelable, E, F>(
     private val init: Init<M, F>?,
     private val update: Update<M, E, F>,
     private val effectHandler: ObservableTransformer<F, E>,
-    private val modelUpdateListener: (M) -> Unit,
-    private val crashReporter: CrashReporter
+    private val modelUpdateListener: (M) -> Unit
 ) : Connectable<M, E> {
+
+  @Deprecated(
+      message = "This constructor is left to not break existing code. Use the version without the crashreporter parameter",
+      replaceWith = ReplaceWith("MobiusDelegate(events, defaultModel, init, update, effectHandler, modelUpdateListener)")
+  )
+  constructor(
+      events: Observable<E>,
+      defaultModel: M,
+      init: Init<M, F>?,
+      update: Update<M, E, F>,
+      effectHandler: ObservableTransformer<F, E>,
+      modelUpdateListener: (M) -> Unit,
+      crashReporter: CrashReporter
+  ) : this(events, defaultModel, init, update, effectHandler, modelUpdateListener)
+
   private val modelKey = defaultModel::class.java.name
   private val viewStateKey = "ViewState_$modelKey"
 
@@ -43,11 +57,6 @@ class MobiusDelegate<M : Parcelable, E, F>(
             { effects -> effects.compose(effectHandler) }
         )
         .init(init)
-        .eventSource(mobiusEventSource)
-  }
-
-  private val mobiusEventSource by lazy(NONE) {
-    DeferredEventSource<E>(crashReporter)
   }
 
   fun prepare() {

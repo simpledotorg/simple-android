@@ -15,7 +15,8 @@ import org.simple.clinic.user.User
 @Module(includes = [
   RoomMigrationsModule::class,
   SharedPreferencesModule::class,
-  FileStorageModule::class
+  FileStorageModule::class,
+  DaoModule::class
 ])
 class StorageModule {
 

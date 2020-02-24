@@ -1,6 +1,5 @@
 package org.simple.clinic.mobius
 
-import android.os.Bundle
 import android.os.Parcelable
 import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
@@ -41,9 +40,6 @@ class MobiusDelegate<M : Parcelable, E, F>(
       modelUpdateListener: (M) -> Unit,
       crashReporter: CrashReporter
   ) : this(events, defaultModel, init, update, effectHandler, modelUpdateListener, ViewSavedStateHandle(defaultModel::class.java.name))
-
-  private val modelKey = defaultModel::class.java.name
-  private val viewStateKey = "ViewState_$modelKey"
 
   private lateinit var controller: MobiusLoop.Controller<M, E>
 
@@ -86,16 +82,19 @@ class MobiusDelegate<M : Parcelable, E, F>(
   }
 
   fun onSaveInstanceState(androidViewState: Parcelable?): Parcelable {
-    return Bundle().apply {
-      putParcelable(viewStateKey, androidViewState)
-      putParcelable(modelKey, controller.model)
-    }
+    return savedStateHandle.save(androidViewState, controller.model)
   }
 
   fun onRestoreInstanceState(parcelable: Parcelable?): Parcelable? {
-    val bundle = parcelable as? Bundle
-    lastKnownModel = bundle?.getParcelable(modelKey) ?: defaultModel
-    return bundle?.getParcelable<Parcelable?>(viewStateKey)
+    val restored: Pair<M, Parcelable?>? = savedStateHandle.restore(parcelable)
+
+    return if (restored != null) {
+      lastKnownModel = restored.first
+      restored.second
+    } else {
+      // This is an activity that is being created, nothing to restore here
+      null
+    }
   }
 
   override fun connect(output: Consumer<E>): Connection<M> {

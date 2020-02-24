@@ -65,7 +65,7 @@ class MobiusDelegate<M : Parcelable, E, F>(
   }
 
   private fun prepareController() {
-    if(!::controller.isInitialized) {
+    if (!::controller.isInitialized) {
       controller = MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
       controller.connect(Connectables.contramap(identity(), this))
       lastKnownModel = null
@@ -78,8 +78,10 @@ class MobiusDelegate<M : Parcelable, E, F>(
   }
 
   fun stop() {
-    startControllerIfNotAlreadyRunning()
-    stopAndDisconnectController()
+    if (controller.isRunning) {
+      controller.stop()
+    }
+    controller.disconnect()
   }
 
   fun onSaveInstanceState(androidViewState: Parcelable?): Parcelable {
@@ -109,17 +111,5 @@ class MobiusDelegate<M : Parcelable, E, F>(
     }
   }
 
-  private fun identity(): Function<M, M> =
-      Function { it }
-
-  private fun startControllerIfNotAlreadyRunning() {
-    if (controller.isRunning.not()) {
-      controller.start()
-    }
-  }
-
-  private fun stopAndDisconnectController() {
-    controller.stop()
-    controller.disconnect()
-  }
+  private fun identity(): Function<M, M> = Function { it }
 }

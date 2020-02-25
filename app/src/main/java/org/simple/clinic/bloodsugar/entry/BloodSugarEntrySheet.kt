@@ -96,9 +96,9 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi {
     MobiusDelegate.forActivity(
         events.ofType(),
         defaultModel,
-        BloodSugarEntryInit(),
         bloodSugarEntryUpdate.create(LocalDate.now(userTimeZone)),
         bloodSugarEntryEffectHandler.create(this).build(),
+        BloodSugarEntryInit(),
         uiRenderer::render
     )
   }

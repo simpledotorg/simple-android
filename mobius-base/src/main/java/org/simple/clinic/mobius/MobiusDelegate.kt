@@ -20,7 +20,7 @@ import kotlin.LazyThreadSafetyMode.NONE
 class MobiusDelegate<M : Parcelable, E, F> private constructor(
     private val events: Observable<E>,
     private val defaultModel: M,
-    private val init: Init<M, F>?,
+    private val init: Init<M, F>,
     private val update: Update<M, E, F>,
     private val effectHandler: ObservableTransformer<F, E>,
     private val modelUpdateListener: (M) -> Unit,
@@ -31,9 +31,9 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
     fun <M : Parcelable, E, F> forView(
         events: Observable<E>,
         defaultModel: M,
-        init: Init<M, F>?,
         update: Update<M, E, F>,
         effectHandler: ObservableTransformer<F, E>,
+        init: Init<M, F> = Init { first(defaultModel) },
         modelUpdateListener: (M) -> Unit = {}
     ): MobiusDelegate<M, E, F> {
       return MobiusDelegate(
@@ -50,9 +50,9 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
     fun <M : Parcelable, E, F> forActivity(
         events: Observable<E>,
         defaultModel: M,
-        init: Init<M, F>?,
         update: Update<M, E, F>,
         effectHandler: ObservableTransformer<F, E>,
+        init: Init<M, F> = Init { first(defaultModel) },
         modelUpdateListener: (M) -> Unit = {}
     ): MobiusDelegate<M, E, F> {
       return MobiusDelegate(
@@ -79,7 +79,15 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
       effectHandler: ObservableTransformer<F, E>,
       modelUpdateListener: (M) -> Unit,
       @Suppress("UNUSED_PARAMETER") crashReporter: CrashReporter
-  ) : this(events, defaultModel, init, update, effectHandler, modelUpdateListener, ViewSavedStateHandle(defaultModel::class.java.name))
+  ) : this(
+      events = events,
+      defaultModel = defaultModel,
+      init = init ?: Init { first(defaultModel) },
+      update = update,
+      effectHandler = effectHandler,
+      modelUpdateListener = modelUpdateListener,
+      savedStateHandle = ViewSavedStateHandle(defaultModel::class.java.name)
+  )
 
   private val controller: MobiusLoop.Controller<M, E> by lazy(NONE) {
     MobiusAndroid.controller(loop, lastKnownModel ?: defaultModel)
@@ -88,8 +96,6 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
   private var lastKnownModel: M? = null
 
   private val loop by lazy(NONE) {
-    val init = init ?: Init { first(defaultModel) }
-
     RxMobius
         .loop(
             { model: M, event: E -> update.update(model, event) },

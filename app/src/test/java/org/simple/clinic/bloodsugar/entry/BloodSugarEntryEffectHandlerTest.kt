@@ -308,16 +308,10 @@ class BloodSugarEntryEffectHandlerTest {
         userEnteredDate = updatedDate,
         prefilledDate = updatedDate
     )
-    val updatedBloodSugar = bloodSugar.copy(
-        reading = bloodSugarReading.copy(value = 145),
-        recordedAt = updatedDate.toUtcInstant(userClock)
-    )
 
     whenever(userSession.loggedInUserImmediate()).doReturn(user)
     whenever(facilityRepository.currentFacilityImmediate(user)).doReturn(facility)
     whenever(bloodSugarRepository.measurement(bloodSugarMeasurementUuid)).doReturn(bloodSugar)
-    doNothing().whenever(bloodSugarRepository).updateMeasurement(updatedBloodSugar)
-    doNothing().whenever(patientRepository).compareAndUpdateRecordedAtImmediate(patientUuid, updatedDate.toUtcInstant(userClock))
 
     // when
     testCase.dispatch(updateBloodSugarEntry)

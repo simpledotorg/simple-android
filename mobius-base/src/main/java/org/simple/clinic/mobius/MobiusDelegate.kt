@@ -34,7 +34,7 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
         init: Init<M, F>?,
         update: Update<M, E, F>,
         effectHandler: ObservableTransformer<F, E>,
-        modelUpdateListener: (M) -> Unit
+        modelUpdateListener: (M) -> Unit = {}
     ): MobiusDelegate<M, E, F> {
       return MobiusDelegate(
           events = events,
@@ -53,7 +53,7 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
         init: Init<M, F>?,
         update: Update<M, E, F>,
         effectHandler: ObservableTransformer<F, E>,
-        modelUpdateListener: (M) -> Unit
+        modelUpdateListener: (M) -> Unit = {}
     ): MobiusDelegate<M, E, F> {
       return MobiusDelegate(
           events = events,

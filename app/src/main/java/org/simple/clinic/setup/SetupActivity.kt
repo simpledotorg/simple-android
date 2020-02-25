@@ -51,9 +51,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
     MobiusDelegate.forActivity(
         events = Observable.never<SetupActivityEvent>(),
         defaultModel = SetupActivityModel.SETTING_UP,
-        init = SetupActivityInit(),
         update = SetupActivityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
+        init = SetupActivityInit(),
         modelUpdateListener = { /* Nothing to do here */ }
     )
   }

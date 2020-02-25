@@ -58,10 +58,11 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
     val incomingView = inflateIncomingView(incomingContext, incomingKey, frame)
     throwIfIdIsMissing(incomingView, incomingKey)
 
-    Timber.tag("Screen Router").i("Add new view [$incomingKeyTag]")
-    frame.addView(incomingView)
     Timber.tag("Screen Router").i("Restore incoming view state [$incomingKeyTag]")
     incomingState.restore(incomingView)
+
+    Timber.tag("Screen Router").i("Add new view [$incomingKeyTag]")
+    frame.addView(incomingView)
 
     outgoingView?.let {
       val outgoingKey = outgoingState?.getKey<T?>()

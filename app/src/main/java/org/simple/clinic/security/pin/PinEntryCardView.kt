@@ -1,5 +1,6 @@
 package org.simple.clinic.security.pin
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -137,10 +138,12 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     showError(resources.getString(R.string.pinentry_error_incorrect_pin_on_first_attempt))
   }
 
+  @SuppressLint("StringFormatMatches")
   fun showIncorrectPinErrorOnSubsequentAttempts(remaining: Int) {
     showError(resources.getString(R.string.pinentry_error_incorrect_pin_attempts_remaining, remaining.toString()))
   }
 
+  @SuppressLint("StringFormatMatches")
   fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int) {
     showError(resources.getString(R.string.pinentry_error_incorrect_pin_attempts_limit_reached, attemptsMade.toString()))
   }

@@ -118,29 +118,3 @@ subprojects {
 task cleanRoot(type: Delete) {
   delete rootProject.buildDir
 }
-
-task compileSpellfix(type: Copy, dependsOn: 'spellfix:externalNativeBuildRelease') {
-  doLast {
-    logger.lifecycle("Copied libspellfix native libs to app jniLibs!")
-  }
-  from 'libspellfix/build/intermediates/ndkBuild/release'
-  into 'app/src/main/jniLibs'
-  eachFile {
-    if (!name.endsWith('.so')) {
-      exclude()
-    } else {
-      def pathParts = it.path.split("/").reverse()
-      // We expect the 0th item to be the native lib name and the 1st item to be the abi
-      if (pathParts.length < 2) {
-        logger.log(LogLevel.ERROR, "Unrecognized native lib path: $it.path")
-        throw TaskExecutionException(this)
-      }
-
-      def libName = pathParts[0]
-      def libAbi = pathParts[1]
-      it.path = "$libAbi/$libName"
-      logger.lifecycle("Copy native lib: $it.sourcePath to: $it.path")
-    }
-  }
-  includeEmptyDirs false
-}

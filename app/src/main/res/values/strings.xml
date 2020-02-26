@@ -293,8 +293,8 @@
   <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_patient_bp_and_days_ago">
-  <item quantity="one">%1$s/%2$s, %3$s day ago</item>
-  <item quantity="other">%1$s/%2$s, %3$s days ago</item>
+    <item quantity="one">%1$s/%2$s, %3$s day ago</item>
+    <item quantity="other">%1$s/%2$s, %3$s days ago</item>
   </plurals>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s day overdue</item>
@@ -505,6 +505,7 @@
   <string name="bloodsugartype_rbs">Random blood sugar (RBS)</string>
   <string name="bloodsugartype_fbs">Fasting blood sugar (FBS)</string>
   <string name="bloodsugartype_ppbs">Post prandial blood sugar (PPBS)</string>
+  <string name="bloodsugartype_hba1c" translatable="false">Hb A1c</string>
 
   <!-- Blood sugar entry -->
   <string name="bloodsugarentry_mg_dl" translatable="false">mg/dl</string>

@@ -4,14 +4,14 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class BloodSugarReading(val value: Float, val type: BloodSugarMeasurementType) : Parcelable {
+data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementType) : Parcelable {
   val isHigh: Boolean
     get() {
       return when (type) {
         Random,
-        PostPrandial -> value >= 200
-        Fasting -> value >= 126
-        HbA1c -> value >= 7
+        PostPrandial -> value.toInt() >= 200
+        Fasting -> value.toInt() >= 126
+        HbA1c -> value.toFloat() >= 7.0
         else -> false
       }
     }
@@ -22,7 +22,7 @@ data class BloodSugarReading(val value: Float, val type: BloodSugarMeasurementTy
         Random -> value.toInt().toString()
         PostPrandial -> value.toInt().toString()
         Fasting -> value.toInt().toString()
-        HbA1c -> value.toString()
+        HbA1c -> value.toFloat().toString()
         is Unknown -> value.toInt().toString()
       }
     }

@@ -16,7 +16,7 @@ class Migration_60_61 @Inject constructor() : Migration(60, 61) {
       execSQL("""
         CREATE TABLE IF NOT EXISTS "BloodSugarMeasurements" (
             "uuid" TEXT NOT NULL,
-            "reading_value" REAL NOT NULL, "reading_type" TEXT NOT NULL,
+            "reading_value" TEXT NOT NULL, "reading_type" TEXT NOT NULL,
             "recordedAt" TEXT NOT NULL, "patientUuid" TEXT NOT NULL, "userUuid" TEXT NOT NULL,
             "facilityUuid" TEXT NOT NULL, "createdAt" TEXT NOT NULL, "updatedAt" TEXT NOT NULL,
             "deletedAt" TEXT, "syncStatus" TEXT NOT NULL,
@@ -31,7 +31,7 @@ class Migration_60_61 @Inject constructor() : Migration(60, 61) {
             "deletedAt", "syncStatus"
         )
         SELECT 
-            "uuid", CAST ("reading_value" AS REAL), "reading_type", "recordedAt", "patientUuid",
+            "uuid", CAST ("reading_value" AS TEXT), "reading_type", "recordedAt", "patientUuid",
             "userUuid", "facilityUuid", "createdAt", "updatedAt",
             "deletedAt", "syncStatus"
         FROM "BloodSugarMeasurements_v60"

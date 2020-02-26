@@ -243,7 +243,7 @@ class BloodSugarEntryEffectHandlerTest {
     val facility = PatientMocker.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
 
     val date = LocalDate.parse("2020-01-02")
-    val bloodSugarReading = BloodSugarReading(120f, Random)
+    val bloodSugarReading = BloodSugarReading("120", Random)
     val bloodSugar = PatientMocker.bloodSugar(reading = bloodSugarReading)
     val createNewBloodSugarEntry = CreateNewBloodSugarEntry(
         patientUuid = bloodSugar.patientUuid,
@@ -273,7 +273,7 @@ class BloodSugarEntryEffectHandlerTest {
     val facility = PatientMocker.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
 
     val date = LocalDate.parse("2020-01-02")
-    val bloodSugarReading = BloodSugarReading(15.2f, HbA1c)
+    val bloodSugarReading = BloodSugarReading("15.2", HbA1c)
     val bloodSugar = PatientMocker.bloodSugar(reading = bloodSugarReading)
     val createNewBloodSugarEntry = CreateNewBloodSugarEntry(
         patientUuid = bloodSugar.patientUuid,
@@ -320,8 +320,8 @@ class BloodSugarEntryEffectHandlerTest {
     val date = LocalDate.parse("2020-02-14")
     val updatedDate = LocalDate.parse("2020-02-12")
 
-    val bloodSugarReading = BloodSugarReading(250f, Random)
-    val updateBloodSugarReading = bloodSugarReading.copy(value = 145f)
+    val bloodSugarReading = BloodSugarReading("250", Random)
+    val updateBloodSugarReading = bloodSugarReading.copy(value = "145")
     val bloodSugarMeasurementUuid = UUID.fromString("58a3fa4b-2b32-4c43-a1cd-ee3d787064f7")
 
     val bloodSugar = PatientMocker.bloodSugar(
@@ -367,8 +367,8 @@ class BloodSugarEntryEffectHandlerTest {
     val date = LocalDate.parse("2020-02-14")
     val updatedDate = LocalDate.parse("2020-02-12")
 
-    val bloodSugarReading = BloodSugarReading(5.6f, HbA1c)
-    val updateBloodSugarReading = bloodSugarReading.copy(value = 6.2f)
+    val bloodSugarReading = BloodSugarReading("5.6", HbA1c)
+    val updateBloodSugarReading = bloodSugarReading.copy(value = "6.2")
     val bloodSugarMeasurementUuid = UUID.fromString("58a3fa4b-2b32-4c43-a1cd-ee3d787064f7")
 
     val bloodSugar = PatientMocker.bloodSugar(

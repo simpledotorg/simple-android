@@ -46,7 +46,7 @@ data class BloodSugarMeasurementPayload(
   fun toDatabaseModel(syncStatus: SyncStatus) = BloodSugarMeasurement(
       uuid = uuid,
       reading = BloodSugarReading(
-          value = bloodSugarValue.toFloat(),
+          value = bloodSugarValue.toString(),
           type = bloodSugarType
       ),
       syncStatus = syncStatus,

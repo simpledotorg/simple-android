@@ -198,7 +198,7 @@ class BloodSugarEntryUpdateTest {
         .yearChanged(validBloodSugarDate.year.toString().substring(2))
         .datePrefilled(validBloodSugarDate)
 
-    val bloodSugarReading = BloodSugarReading(validBloodSugar.toFloat(), Random)
+    val bloodSugarReading = BloodSugarReading(validBloodSugar, Random)
 
     updateSpec
         .given(validBloodSugarModel)
@@ -226,7 +226,7 @@ class BloodSugarEntryUpdateTest {
         .yearChanged(validBloodSugarDate.year.toString().substring(2))
         .datePrefilled(validBloodSugarDate)
 
-    val bloodSugarReading = BloodSugarReading(validBloodSugar.toFloat(), Random)
+    val bloodSugarReading = BloodSugarReading(validBloodSugar, Random)
     val expectedEffect: BloodSugarEntryEffect = UpdateBloodSugarEntry(
         bloodSugarMeasurementUuid,
         validBloodSugarDate,

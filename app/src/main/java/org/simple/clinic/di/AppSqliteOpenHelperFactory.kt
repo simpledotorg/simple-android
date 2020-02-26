@@ -2,14 +2,12 @@ package org.simple.clinic.di
 
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
-import io.requery.android.database.sqlite.SQLiteCustomExtension
 import io.requery.android.database.sqlite.SQLiteDatabase
 import io.requery.android.database.sqlite.SQLiteDatabaseConfiguration
 
 /**
  * Instance of [SupportSQLiteOpenHelper.Factory] that does the following:
  * - Creates an instance of [RequerySQLiteOpenHelperFactory] internally
- * - Configures it to load the `spellfix1` SQLite extension
  * - Has a flag to set whether it should be an in-memory database
  *
  * **Note:** There is a reason why the configuration for in-memory databases was moved to this class
@@ -30,14 +28,11 @@ class AppSqliteOpenHelperFactory(inMemory: Boolean = false) : SupportSQLiteOpenH
 
   private fun createConfigurations(inMemory: Boolean) =
       listOf(RequerySQLiteOpenHelperFactory.ConfigurationOptions { config ->
-        val actualConfig = if (inMemory) {
+        if (inMemory) {
           SQLiteDatabaseConfiguration(SQLiteDatabaseConfiguration.MEMORY_DB_PATH, SQLiteDatabase.CREATE_IF_NECESSARY)
         } else {
           config
         }
-
-        actualConfig.customExtensions.add(SQLiteCustomExtension("libspellfix3.so", "sqlite3_spellfix_init"))
-        actualConfig
       })
 
   override fun create(configuration: SupportSQLiteOpenHelper.Configuration?) = factory.create(configuration)!!

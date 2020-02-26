@@ -380,16 +380,15 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_15_to_16() {
-    val db_v15 = helper.createDatabase(version = 15)
-
-    // We need to do this here because Room does not create virtual tables for us.
-    db_v15.execSQL("""CREATE VIRTUAL TABLE "PatientFuzzySearch" USING spellfix1""")
-
-    db_v15.assertTableExists("PatientFuzzySearch")
-
-    val db_v16 = helper.migrateTo(16)
-
-    db_v16.assertTableDoesNotExist("PatientFuzzySearch")
+    /*
+     * Originally, this test used the `libspellfix` sqlite extension to create a virtual table for testing
+     * the sqlite fuzzy search feature. Since then, we have removed the module, but this migration
+     * test was failing because the extension was no longer present.
+     *
+     * Since there are no active users in production (at the time of this change) who are on an older
+     * database version, we can no-op this migration and not test it because maintaining it is not
+     * worth the effort.
+     **/
   }
 
   @Test

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 61,
-    "identityHash": "a17f76413cfa3163a62b6203eea91e7f",
+    "identityHash": "20ab148d72745877943c33f61dae3cb3",
     "entities": [
       {
         "tableName": "Patient",
@@ -1229,7 +1229,7 @@
       },
       {
         "tableName": "BloodSugarMeasurements",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `recordedAt` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `userUuid` TEXT NOT NULL, `facilityUuid` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `reading_value` REAL NOT NULL, `reading_type` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `recordedAt` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `userUuid` TEXT NOT NULL, `facilityUuid` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `reading_value` TEXT NOT NULL, `reading_type` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -1270,7 +1270,7 @@
           {
             "fieldPath": "reading.value",
             "columnName": "reading_value",
-            "affinity": "REAL",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -1311,7 +1311,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a17f76413cfa3163a62b6203eea91e7f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '20ab148d72745877943c33f61dae3cb3')"
     ]
   }
 }

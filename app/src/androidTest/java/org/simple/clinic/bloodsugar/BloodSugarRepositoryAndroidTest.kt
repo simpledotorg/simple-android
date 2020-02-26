@@ -54,7 +54,7 @@ class BloodSugarRepositoryAndroidTest {
   fun saving_a_blood_sugar_reading_should_work_correctly() {
     // given
     val bloodSugarUuid = UUID.fromString("e35dea7a-b13b-4ab1-aaa4-0c5998e5c79f")
-    val bloodSugarReading = BloodSugarReading(value = 50f, type = Random)
+    val bloodSugarReading = BloodSugarReading(value = "50", type = Random)
     val now = Instant.now(clock)
     val patientUuid = UUID.fromString("a5921ec9-5c70-421a-bb0b-1291364683f6")
     val facility = testData.qaFacility()
@@ -193,7 +193,7 @@ class BloodSugarRepositoryAndroidTest {
   fun updating_a_blood_sugar_should_update_it_correctly() {
     // given
     val durationToAdvanceBy = Duration.ofMinutes(15L)
-    val bloodSugarReading = BloodSugarReading(126f, Random)
+    val bloodSugarReading = BloodSugarReading("126", Random)
     val bloodSugar = testData.bloodSugarMeasurement(
         reading = bloodSugarReading,
         createdAt = Instant.now(clock),
@@ -205,11 +205,11 @@ class BloodSugarRepositoryAndroidTest {
 
     // when
     clock.advanceBy(durationToAdvanceBy)
-    repository.updateMeasurement(bloodSugar.copy(reading = bloodSugarReading.copy(value = 145f)))
+    repository.updateMeasurement(bloodSugar.copy(reading = bloodSugarReading.copy(value = "145")))
 
     // then
     val expected = bloodSugar.copy(
-        reading = bloodSugarReading.copy(145f),
+        reading = bloodSugarReading.copy("145"),
         timestamps = bloodSugar.timestamps.copy(
             updatedAt = bloodSugar.timestamps.updatedAt.plus(durationToAdvanceBy)
         ),

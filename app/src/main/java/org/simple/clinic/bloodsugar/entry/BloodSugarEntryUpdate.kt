@@ -109,13 +109,13 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
           openAs.patientId,
           userEnteredDate,
           prefillDate,
-          BloodSugarReading(model.bloodSugarReading.toFloat(), openAs.measurementType)
+          BloodSugarReading(model.bloodSugarReading, openAs.measurementType)
       )
       is OpenAs.Update -> UpdateBloodSugarEntry(
           openAs.bloodSugarMeasurementUuid,
           userEnteredDate,
           prefillDate,
-          BloodSugarReading(model.bloodSugarReading.toFloat(), openAs.measurementType)
+          BloodSugarReading(model.bloodSugarReading, openAs.measurementType)
       )
     }
   }

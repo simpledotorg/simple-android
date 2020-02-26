@@ -9,7 +9,7 @@ import java.util.UUID
 class Migration61AndroidTest : BaseDatabaseMigrationTest(60, 61) {
 
   @Test
-  fun migration_to_61_should_convert_the_blood_sugar_reading_from_int_to_real() {
+  fun migration_to_61_should_convert_the_blood_sugar_reading_from_int_to_string() {
     val bloodSugarMeasurementUuid = UUID.fromString("17290c5f-2e22-47ba-873e-3ce8e0335f5a")
     val patientUuid = UUID.fromString("314478bf-0aac-4258-be20-101c5fd8dd2c")
     val userUuid = UUID.fromString("97be56df-32e4-43e2-a145-c38121a8fbb8")
@@ -35,7 +35,7 @@ class Migration61AndroidTest : BaseDatabaseMigrationTest(60, 61) {
           cursor.moveToFirst()
           cursor.assertValues(mapOf(
               "uuid" to bloodSugarMeasurementUuid,
-              "reading_value" to 145f,
+              "reading_value" to "145",
               "reading_type" to "random",
               "patientUuid" to patientUuid,
               "userUuid" to userUuid,

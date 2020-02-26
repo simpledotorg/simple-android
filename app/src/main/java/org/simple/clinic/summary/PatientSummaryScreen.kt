@@ -27,7 +27,6 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -68,9 +67,6 @@ class PatientSummaryScreen(
   lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
 
   private val events: Observable<PatientSummaryEvent> by unsafeLazy {
@@ -95,14 +91,13 @@ class PatientSummaryScreen(
   }
 
   private val mobiusDelegate: MobiusDelegate<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> by unsafeLazy {
-    MobiusDelegate(
+    MobiusDelegate.forView(
         events = events,
         defaultModel = PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid),
         init = PatientSummaryInit(),
         update = PatientSummaryUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = viewRenderer::render,
-        crashReporter = crashReporter
+        modelUpdateListener = viewRenderer::render
     )
   }
 
@@ -124,8 +119,6 @@ class PatientSummaryScreen(
 
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
-
-    mobiusDelegate.prepare()
   }
 
   override fun onAttachedToWindow() {

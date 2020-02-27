@@ -184,10 +184,6 @@ class TheActivity : AppCompatActivity() {
   }
 
   fun showAccessDeniedScreen(fullName: String) {
-    screenRouter.push(AccessDeniedScreenKey(fullName))
-  }
-
-  fun hideAccessDeniedScreen() {
-    screenRouter.pop()
+    screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(fullName), RouterDirection.REPLACE)
   }
 }

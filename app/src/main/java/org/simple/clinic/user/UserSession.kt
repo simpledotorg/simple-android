@@ -250,6 +250,13 @@ class UserSession @Inject constructor(
         .distinctUntilChanged()
   }
 
+  fun isUserDisapproved(): Observable<Boolean> {
+    return loggedInUser()
+        .filterAndUnwrapJust()
+        .map { user -> user.status == UserStatus.DisapprovedForSyncing }
+        .distinctUntilChanged()
+  }
+
   fun updateLoggedInStatusForUser(
       userUuid: UUID,
       newLoggedInStatus: User.LoggedInStatus

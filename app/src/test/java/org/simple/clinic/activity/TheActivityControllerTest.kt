@@ -10,6 +10,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -27,6 +28,7 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.main.TheActivityController
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.user.User
@@ -58,21 +60,25 @@ class TheActivityControllerTest {
 
   private val activity = mock<TheActivity>()
   private val userSession = mock<UserSession>()
+  private val patientRepository = mock<PatientRepository>()
   private val lockAfterTimestamp = mock<Preference<Instant>>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val userSubject = PublishSubject.create<Optional<User>>()
   private val userUnauthorizedSubject = PublishSubject.create<Boolean>()
+  private val userDisapprovedSubject = PublishSubject.create<Boolean>()
 
   private val controller = TheActivityController(
       userSession = userSession,
       appLockConfig = Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))),
-      lockAfterTimestamp = lockAfterTimestamp
+      lockAfterTimestamp = lockAfterTimestamp,
+      patientRepository = patientRepository
   )
 
   @Before
   fun setUp() {
     whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedSubject)
     whenever(userSession.loggedInUser()).thenReturn(userSubject)
+    whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedSubject)
 
     uiEvents
         .compose(controller)
@@ -264,17 +270,20 @@ class TheActivityControllerTest {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
+    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
+    whenever(userSession.loggedInUserImmediate()).thenReturn(loggedInUser)
 
     //when
-    uiEvents.onNext(Started(null))
+    userDisapprovedSubject.onNext(true)
 
     //then
+    verify(patientRepository).clearPatientData()
     verify(activity).showAccessDeniedScreen(fullName)
     verifyNoMoreInteractions(activity)
   }
   
   @Test
-  fun `when user's access is revived then the access denied screen should be hidden`() {
+  fun `when user has access then the access denied screen should not appear`() {
     //given
     val fullName = "Anish Acharya"
     val loggedInUser = PatientMocker.loggedInUser(
@@ -291,9 +300,8 @@ class TheActivityControllerTest {
     uiEvents.onNext(Started(null))
 
     //then
-    verify(activity).hideAccessDeniedScreen()
-    verify(activity).showAppLockScreen()
-    verifyNoMoreInteractions(activity)
+    verify(activity, never()).showAccessDeniedScreen(fullName)
+    verify(patientRepository, never()).clearPatientData()
   }
 
 

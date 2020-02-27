@@ -3,21 +3,21 @@ package org.simple.clinic.registration.phone
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.user.finduser.FindUserResult.Found
-import org.simple.clinic.user.finduser.FindUserResult.NetworkError
-import org.simple.clinic.user.finduser.FindUserResult.NotFound
-import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserStatus
+import org.simple.clinic.user.finduser.FindUserResult.Found
+import org.simple.clinic.user.finduser.FindUserResult.NetworkError
+import org.simple.clinic.user.finduser.FindUserResult.NotFound
+import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -133,20 +133,31 @@ class RegistrationPhoneScreenController @Inject constructor(
   }
 
   private fun saveFoundUserLocallyAndProceedToLogin(foundUser: Found): Observable<UiChange> {
-    return Single.just(foundUser.user)
-        .map(this::loggedInUserPayloadToOngoingLoginEntry)
-        .flatMapCompletable(userSession::saveOngoingLoginEntry)
-        .andThen(userSession.clearOngoingRegistrationEntry())
-        .andThen(Observable.just { ui: Ui ->
+    val user = Observable.just(foundUser.user)
+
+    return if (foundUser.user.status == UserStatus.DisapprovedForSyncing) {
+      user.map {
+        { ui: Ui ->
           ui.hideProgressIndicator()
-          ui.openLoginPinEntryScreen()
-        })
-        .onErrorReturn {
-          { ui: Ui ->
-            ui.hideProgressIndicator()
-            ui.showUnexpectedErrorMessage()
-          }
+          ui.showAccessDeniedScreen(it.fullName)
         }
+      }
+    } else {
+      user
+          .map(this::loggedInUserPayloadToOngoingLoginEntry)
+          .flatMapCompletable(userSession::saveOngoingLoginEntry)
+          .andThen(userSession.clearOngoingRegistrationEntry())
+          .andThen(Observable.just { ui: Ui ->
+            ui.hideProgressIndicator()
+            ui.openLoginPinEntryScreen()
+          })
+          .onErrorReturn {
+            { ui: Ui ->
+              ui.hideProgressIndicator()
+              ui.showUnexpectedErrorMessage()
+            }
+          }
+    }
   }
 
   private fun loggedInUserPayloadToOngoingLoginEntry(loggedInUserPayload: LoggedInUserPayload) = OngoingLoginEntry(

@@ -57,3 +57,22 @@
 
 # RxJava
 -dontwarn java.util.concurrent.Flow*
+
+# GMS
+-dontwarn org.checkerframework.checker.nullness.qual.PolyNull
+
+# Firebase
+-dontwarn com.google.firebase.components.*
+
+# Protobuf
+-dontwarn sun.misc.Unsafe
+
+# Mixpanel
+-dontwarn javax.servlet.http.HttpServletRequest
+-dontwarn com.google.firebase.messaging.*
+-dontwarn com.mixpanel.android.mpmetrics.MixpanelFCMMessagingService
+
+# Sentry
+-dontwarn javax.naming.*
+-dontwarn javax.servlet.*
+-dontwarn javax.servlet.http.Cookie

@@ -1,0 +1,12 @@
+def installedNdkVersion() {
+  def androidNdkPropertiesLocation = "$System.env.ANDROID_HOME/ndk-bundle/source.properties"
+
+  def ndkProperties = new Properties()
+  ndkProperties.load(file(androidNdkPropertiesLocation).newInputStream())
+
+  return ndkProperties["Pkg.Revision"]
+}
+
+ext {
+  installedNdkVersion = this.&installedNdkVersion
+}

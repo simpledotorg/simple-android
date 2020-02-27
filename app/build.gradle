@@ -8,6 +8,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
 
 apply from: "../quality/install-git-hook.gradle"
+apply from: "ndk-versions.gradle"
 
 repositories {
   maven { url 'https://jitpack.io' }
@@ -55,6 +56,14 @@ tasks.withType(Test) {
 
 android {
   compileSdkVersion versions.compileSdk
+  // Needed to switch NDK versions on the CI server since they have different
+  // NDK versions on macOS and Linux environments. Gradle plugin 3.6+ requires
+  // us to pin an NDK version if we package native libs.
+  // https://developer.android.com/studio/releases/gradle-plugin#default-ndk-version
+  //
+  // Currently, this is only used for assembling the APK where the build process
+  // strips debug symbols from the APK.
+  ndkVersion installedNdkVersion()
 
   defaultConfig {
     applicationId "org.simple.clinic"

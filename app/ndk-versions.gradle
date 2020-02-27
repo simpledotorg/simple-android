@@ -1,10 +1,25 @@
 def installedNdkVersion() {
-  def androidNdkPropertiesLocation = "$System.env.ANDROID_HOME/ndk-bundle/source.properties"
+  def sideBySideNdkFolder = file("$System.env.ANDROID_HOME/ndk")
+  def ndkBundlePropertiesFile = file("$System.env.ANDROID_HOME/ndk-bundle/source.properties")
 
-  def ndkProperties = new Properties()
-  ndkProperties.load(file(androidNdkPropertiesLocation).newInputStream())
+  String ndkVersion
 
-  return ndkProperties["Pkg.Revision"]
+  if (ndkBundlePropertiesFile.exists()) {
+    def ndkProperties = new Properties()
+    ndkProperties.load(ndkBundlePropertiesFile.newInputStream())
+
+    ndkVersion = ndkProperties["Pkg.Revision"]
+  } else {
+    def ndkFolderContents = sideBySideNdkFolder.listFiles(new FileFilter() {
+      @Override
+      boolean accept(File file) {
+        return file.isDirectory() && !file.isHidden()
+      }
+    }).toSorted().reverse()
+
+    ndkVersion = file(ndkFolderContents.first()).getName()
+  }
+  return ndkVersion
 }
 
 ext {

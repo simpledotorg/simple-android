@@ -2,7 +2,7 @@
 
 ## Status
 
-Superceded by [007](007-screen-architecture-v2.md) on 2019-07-03
+Superceded by [008](./008-screen-architecture-v3.md) on 2019-10-01
 
 ## Context
 

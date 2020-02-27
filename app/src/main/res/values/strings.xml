@@ -558,6 +558,6 @@
   <string name="drugsummaryview_no_medicines">None</string>
 
   <!-- Access Denied screen -->
-  <string name="accessdeniedscreen_title_access_denied">Access Denied</string>
-  <string name="accessdeniedscreen_description">Your access to Simple has been denied. Please contact your Supervisor if you think that you have been denied access due to an error.</string>
+  <string name="accessdeniedscreen_title_access_denied">Access denied</string>
+  <string name="accessdeniedscreen_description">Access to Simple is denied. Please contact your supervisor if you think this is an error.\n\nIf your access is restored, uninstall Simple and install from the Play store.</string>
 </resources>

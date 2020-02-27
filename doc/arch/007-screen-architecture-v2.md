@@ -1,7 +1,7 @@
 # ADR 007: Screen Architecture (v2)
 
 ## Status
-Accepted (Supersedes [001](001-screen-controllers.md)) on 2019-07-03
+Superceded by [008](./008-screen-architecture-v3.md) on 2019-10-01
 
 ## Context
 Our [current screen architecture](001-screen-controllers.md) has a bunch of problems:

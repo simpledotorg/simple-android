@@ -18,11 +18,13 @@ import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 @AppScope
 class BloodSugarRepository @Inject constructor(
     val dao: BloodSugarMeasurement.RoomDao,
-    val utcClock: UtcClock
+    val utcClock: UtcClock,
+    @Named("is_hba1c_enabled") val isHbA1cEnabled: Boolean
 ) : SynceableRepository<BloodSugarMeasurement, BloodSugarMeasurementPayload> {
 
   fun saveMeasurement(
@@ -66,8 +68,19 @@ class BloodSugarRepository @Inject constructor(
   override fun save(records: List<BloodSugarMeasurement>): Completable =
       Completable.fromAction { dao.save(records) }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<BloodSugarMeasurement>> =
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<BloodSugarMeasurement>> {
+    return if (isHbA1cEnabled) {
       dao.withSyncStatus(syncStatus).firstOrError()
+    } else {
+      dao.withSyncStatus(syncStatus)
+          .map { measurements ->
+            measurements.filter { measurement ->
+              measurement.reading.type != HbA1c
+            }
+          }
+          .firstOrError()
+    }
+  }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable =
       Completable.fromAction {

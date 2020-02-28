@@ -1,5 +1,6 @@
 package org.simple.clinic.instrumentation
 
+import com.google.firebase.perf.FirebasePerformance
 import com.newrelic.agent.android.NewRelic
 import com.newrelic.agent.android.instrumentation.MetricCategory
 import com.newrelic.agent.android.metric.MetricUnit
@@ -121,15 +122,19 @@ class InstrumentedPatientDao @Inject constructor(
               .timestamp(scheduler)
               .flatMap { start ->
                 var alreadyReportedToAnalytics = false
+                val trace = FirebasePerformance.getInstance().newTrace(operation)
 
                 start
                     .value()
                     .timestamp(scheduler)
+                    .doOnSubscribe { trace.start() }
                     .doOnNext { end ->
                       if (!alreadyReportedToAnalytics) {
                         val timeTaken = (end - start)
                         recordMetric(operation, timeTaken)
+                        trace.incrementMetric("durationMs", timeTaken.toMillis())
 
+                        trace.stop()
                         alreadyReportedToAnalytics = true
                       }
                     }
@@ -142,13 +147,19 @@ class InstrumentedPatientDao @Inject constructor(
       metricName: String,
       block: () -> T
   ): T {
+    val trace = FirebasePerformance.getInstance().newTrace(metricName)
+    trace.start()
     val start = Instant.now()
 
     val value = block()
 
     val end = Instant.now()
 
-    recordMetric(metricName, Duration.between(start, end))
+    val duration = Duration.between(start, end)
+    trace.incrementMetric("durationMs", duration.toMillis())
+    recordMetric(metricName, duration)
+
+    trace.stop()
 
     return value
   }

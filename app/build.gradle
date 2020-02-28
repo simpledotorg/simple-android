@@ -7,6 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
 apply plugin: 'newrelic'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 apply from: "../quality/install-git-hook.gradle"
 
@@ -330,6 +331,7 @@ dependencies {
   }
 
   implementation "com.newrelic.agent.android:android-agent:$versions.newRelic"
+  implementation "com.google.firebase:firebase-perf:$versions.firebasePerformance"
 }
 
 // This must always be present at the bottom of this file, as per:

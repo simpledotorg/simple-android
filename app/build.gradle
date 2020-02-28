@@ -8,7 +8,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
 
 apply from: "../quality/install-git-hook.gradle"
-apply from: "ndk-versions.gradle"
 
 repositories {
   maven { url 'https://jitpack.io' }
@@ -63,7 +62,7 @@ android {
   //
   // Currently, this is only used for assembling the APK where the build process
   // strips debug symbols from the APK.
-  ndkVersion installedNdkVersion()
+  ndkVersion androidNdkVersion
 
   defaultConfig {
     applicationId "org.simple.clinic"

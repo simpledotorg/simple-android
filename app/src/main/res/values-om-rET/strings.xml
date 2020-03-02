@@ -253,7 +253,6 @@
     <item quantity="one">Guyyaa %s darbe</item>
     <item quantity="other">Guyyoota %s darbe</item>
   </plurals>
-  <string name="overduelist_last_bp">BP dhumaa:</string>
   <string name="overduelist_agreed_to_visit">Dhukkubsataa ‘Ilaaluuf walii galeera’ tti sirreessi</string>
   <string name="overduelist_remind_call_later">Booda bilbiluu yaadadhu…</string>
   <string name="overduelist_remove_from_list">Tarree haftee irraa haqi…</string>

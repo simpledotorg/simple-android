@@ -240,7 +240,6 @@
     <item quantity="one">%s दिन अधिक हो गया है</item>
     <item quantity="other">%s दिन अधिक हो गए हैं</item>
   </plurals>
-  <string name="overduelist_last_bp">पिछला बी पी:</string>
   <string name="overduelist_agreed_to_visit">रोगी को ‘मुलाकात के लिए सहमत’ के रूप में चिन्हित करें</string>
   <string name="overduelist_remind_call_later">बाद में कॉल करना याद दिलाएं…</string>
   <string name="overduelist_remove_from_list">अतिदेय सूची से हटाएं…</string>

@@ -240,7 +240,6 @@
     <item quantity="one">%s दिवसाने उशीर झाला</item>
     <item quantity="other">%s दिवसांनी उशीर झाला</item>
   </plurals>
-  <string name="overduelist_last_bp">शेवटचा बीपी:</string>
   <string name="overduelist_agreed_to_visit">रूग्णाला ‘भेटण्यास सहमती दर्शविली’ म्हणून चिन्हांकित करा</string>
   <string name="overduelist_remind_call_later">नंतर कॉल करण्यासाठी आठवण करून द्या…</string>
   <string name="overduelist_remove_from_list">विलंबित यादीमधून काढा…</string>

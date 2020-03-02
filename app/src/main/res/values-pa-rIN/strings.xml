@@ -240,7 +240,6 @@
     <item quantity="one">%s ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
     <item quantity="other">%s ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
-  <string name="overduelist_last_bp">ਆਖਰੀ ਵਾਰ ਬੀਪੀ:</string>
   <string name="overduelist_agreed_to_visit">ਮਰੀਜ਼ ਨੂੰ ‘ਫੇਰੀ ਲਈ ਸਹਿਮਤ ਹੋਏ’ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ</string>
   <string name="overduelist_remind_call_later">ਬਾਅਦ ਵਿੱਚ ਕਾਲ ਕਰਨ ਲਈ ਯਾਦ ਕਰਵਾਓ…</string>
   <string name="overduelist_remove_from_list">ਓਵਰਡਿਊ ਸੂਚੀ ਤੋਂ ਹਟਾਓ…</string>

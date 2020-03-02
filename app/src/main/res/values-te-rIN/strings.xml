@@ -240,7 +240,6 @@
     <item quantity="one">%s రోజు క్రితం గడువు ముగిసింది</item>
     <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
   </plurals>
-  <string name="overduelist_last_bp">చివరి బిపి:</string>
   <string name="overduelist_agreed_to_visit">రోగి ‘సందర్శించడానికి అంగీకరించారు’ అని గుర్తుపెట్టండి</string>
   <string name="overduelist_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి…</string>
   <string name="overduelist_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి…</string>

@@ -240,7 +240,6 @@
     <item quantity="one">%s መዓልቲ ዘሕለፈ</item>
     <item quantity="other">%s መዓልታት ዘሕለፈ</item>
   </plurals>
-  <string name="overduelist_last_bp">ናይ መወዳእታ ዝሓለፈ ጸቕጢ ደም፡</string>
   <string name="overduelist_agreed_to_visit">ንተሓካሚ ‘ምብጻሕ ንምፍጻም ተሰማሚዑ’ ዝብል ምልክት ግበረሉ</string>
   <string name="overduelist_remind_call_later">ድሓር ንምድዋል ኣዘክር…</string>
   <string name="overduelist_remove_from_list">ካብ ናይ ግዜ ዘሕለፉ ዝርዝር እለዮ…</string>

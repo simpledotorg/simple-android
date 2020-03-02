@@ -253,7 +253,6 @@
     <item quantity="one">%s দিন সময়াতীত</item>
     <item quantity="other">%s দিন সময়াতীত</item>
   </plurals>
-  <string name="overduelist_last_bp">শেষ বিপি:</string>
   <string name="overduelist_agreed_to_visit">‘ভিজিটে আসতে সম্মত হয়েছেন’ বলে রোগীকে চিহ্নিত করুন</string>
   <string name="overduelist_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
   <string name="overduelist_remove_from_list">সময়াতীতের তালিকা থেকে সরান…</string>

@@ -300,7 +300,7 @@
     <item quantity="one">%s day overdue</item>
     <item quantity="other">%s days overdue</item>
   </plurals>
-  <string name="overduelist_last_bp">Last BP:</string>
+  <string name="overduelist_last_seen">Last seen:</string>
   <string name="overduelist_agreed_to_visit">Mark patient as ‘agreed to visit’</string>
   <string name="overduelist_remind_call_later">Remind to call later…</string>
   <string name="overduelist_remove_from_list">Remove from overdue list…</string>

@@ -240,7 +240,6 @@
     <item quantity="one">%s ದಿನ ತಡವಾಗಿದೆ</item>
     <item quantity="other">%s ದಿನಗಳಷ್ಟು ತಡವಾಗಿದೆ</item>
   </plurals>
-  <string name="overduelist_last_bp">ಹಿಂದಿನ ಬಿಪಿ:</string>
   <string name="overduelist_agreed_to_visit">ರೋಗಿಯನ್ನು ‘ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ’ ಎಂದು ಗುರುತಿಸಿ</string>
   <string name="overduelist_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ…</string>
   <string name="overduelist_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ…</string>

@@ -80,7 +80,6 @@ android {
     debug {
       applicationIdSuffix ".debug"
       minifyEnabled false
-      useProguard false
       shrinkResources false
     }
 
@@ -89,11 +88,9 @@ android {
       if (runProguard.equalsIgnoreCase("true")) {
         minifyEnabled true
         shrinkResources true
-        useProguard true
       } else {
         minifyEnabled false
         shrinkResources false
-        useProguard false
       }
     }
   }

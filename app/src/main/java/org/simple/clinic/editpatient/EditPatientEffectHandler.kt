@@ -31,16 +31,17 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
+import javax.inject.Named
 
 class EditPatientEffectHandler @AssistedInject constructor(
     @Assisted private val ui: EditPatientUi,
     private val userClock: UserClock,
     private val patientRepository: PatientRepository,
     private val utcClock: UtcClock,
-    private val dateOfBirthFormatter: DateTimeFormatter,
     private val schedulersProvider: SchedulersProvider,
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) {
 
   @AssistedInject.Factory

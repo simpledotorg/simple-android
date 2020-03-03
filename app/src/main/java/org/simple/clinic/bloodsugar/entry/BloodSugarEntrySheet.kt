@@ -44,6 +44,7 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBloodSugarListener {
   enum class ScreenType {
@@ -78,7 +79,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     }
   }
 
-  @Inject
+  @field:[Inject Named("exact_date")]
   lateinit var dateFormatter: DateTimeFormatter
 
   @Inject

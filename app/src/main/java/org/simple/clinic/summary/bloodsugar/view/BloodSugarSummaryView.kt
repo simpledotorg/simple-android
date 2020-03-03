@@ -20,6 +20,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
+import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenKey
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
@@ -267,15 +268,13 @@ class BloodSugarSummaryView(
   }
 
   private fun isBloodSugarEditable(measurement: BloodSugarMeasurement): Boolean {
+    if (bloodSugarSummaryConfig.bloodSugarEditFeatureEnabled.not() || measurement.reading.type is Unknown) {
+      return false
+    }
     val now = Instant.now(utcClock)
     val createdAt = measurement.timestamps.createdAt
 
     val durationSinceBloodSugarCreated = Duration.between(createdAt, now)
-
-    return if (bloodSugarSummaryConfig.bloodSugarEditFeatureEnabled) {
-      durationSinceBloodSugarCreated <= bloodSugarSummaryConfig.bloodSugarEditableDuration
-    } else {
-      false
-    }
+    return durationSinceBloodSugarCreated <= bloodSugarSummaryConfig.bloodSugarEditableDuration
   }
 }

@@ -4,8 +4,9 @@ import dagger.Subcomponent
 import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialogInjector
+import org.simple.clinic.di.AssistedInjectModule
 
-@Subcomponent(modules = [BloodSugarEntryModule::class])
+@Subcomponent(modules = [AssistedInjectModule::class])
 interface BloodSugarEntryComponent : ConfirmRemoveBloodSugarDialogInjector {
 
   fun inject(target: BloodSugarEntrySheet)

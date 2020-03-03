@@ -9,10 +9,6 @@ apply plugin: 'io.sentry.android.gradle'
 
 apply from: "../quality/install-git-hook.gradle"
 
-repositories {
-  maven { url 'https://jitpack.io' }
-}
-
 sentry {
   autoProguardConfig true
   // We can disable auto upload of proguard mappings since we use -dontobfuscate when running proguard
@@ -212,7 +208,7 @@ dependencies {
 
   testImplementation "junit:junit:$versions.junit"
   testImplementation "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin"
-  testImplementation "pl.pragmatists:JUnitParams:$versions.junitParams"
+  testImplementation "com.github.vinaysshenoy:JUnitParams:$versions.junitParams"
   testImplementation "com.google.truth:truth:$versions.truth"
   testImplementation "com.github.blocoio:faker:$versions.faker"
 

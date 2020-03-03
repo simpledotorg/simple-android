@@ -6,6 +6,7 @@ import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.Fasting
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.BloodSugarHistoryItem
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.NewBloodSugarButton
 import org.simple.clinic.patient.PatientMocker
@@ -136,4 +137,54 @@ class BloodSugarHistoryListItemTest {
         )
   }
 
+  @Test
+  fun `if the blood sugar type is unknown, then disallow editing`() {
+    // given
+    val recordedAt = Instant.parse("2020-01-01T09:00:00Z")
+    val createdAt = Instant.parse("2020-01-01T09:00:00Z")
+    val testUtcClock = TestUtcClock(createdAt)
+
+    val bloodSugarNow = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("c78b2bdf-1d38-439d-b755-91414d76b031"),
+        reading = BloodSugarReading("120", Unknown("unknown-blood-sugar")),
+        recordedAt = recordedAt,
+        timestamps = Timestamps.create(testUtcClock)
+    )
+    val bloodSugarInPast = PatientMocker.bloodSugar(
+        uuid = UUID.fromString("270cf83f-913d-47c5-ab4d-dd8a742ccad2"),
+        reading = BloodSugarReading("156", PostPrandial),
+        recordedAt = recordedAt.minus(1, DAYS),
+        timestamps = Timestamps(
+            createdAt = createdAt.minus(15, MINUTES),
+            updatedAt = createdAt.minus(15, MINUTES),
+            deletedAt = null
+        )
+    )
+    val listItems = BloodSugarHistoryListItem.from(
+        listOf(bloodSugarNow, bloodSugarInPast),
+        userClock,
+        dateFormatter,
+        timeFormatter,
+        Duration.ofMinutes(10),
+        testUtcClock
+    )
+
+    // then
+    assertThat(listItems)
+        .containsExactly(
+            NewBloodSugarButton,
+            BloodSugarHistoryItem(
+                measurement = bloodSugarNow,
+                bloodSugarDate = "1-Jan-2020",
+                bloodSugarTime = null,
+                isBloodSugarEditable = false
+            ),
+            BloodSugarHistoryItem(
+                measurement = bloodSugarInPast,
+                bloodSugarDate = "31-Dec-2019",
+                bloodSugarTime = null,
+                isBloodSugarEditable = false
+            )
+        )
+  }
 }

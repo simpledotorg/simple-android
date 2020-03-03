@@ -65,12 +65,16 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
         bpEditableFor: Duration,
         utcClock: UtcClock
     ): Boolean {
-      val now = Instant.now(utcClock)
-      val createdAt = bloodSugarMeasurement.timestamps.createdAt
+      return if (bloodSugarMeasurement.reading.type is Unknown) {
+        false
+      } else {
+        val now = Instant.now(utcClock)
+        val createdAt = bloodSugarMeasurement.timestamps.createdAt
 
-      val durationSinceBpCreated = Duration.between(createdAt, now)
+        val durationSinceBpCreated = Duration.between(createdAt, now)
 
-      return durationSinceBpCreated <= bpEditableFor
+        durationSinceBpCreated <= bpEditableFor
+      }
     }
   }
 

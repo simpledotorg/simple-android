@@ -26,6 +26,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.user.finduser.FindUserResult.Found
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
@@ -215,6 +216,7 @@ class RegistrationPhoneScreenControllerTest {
     ))
     verify(userSession).clearOngoingRegistrationEntry()
     verify(screen).openLoginPinEntryScreen()
+    verify(screen, never()).showAccessDeniedScreen(userPayload.fullName)
   }
 
   // TODO 26-07-19 : Check validity of this test since it no longer makes a network call (facility sync)
@@ -243,7 +245,25 @@ class RegistrationPhoneScreenControllerTest {
         updatedAt = userPayload.updatedAt
     ))
     verify(screen, never()).openLoginPinEntryScreen()
+    verify(screen, never()).showAccessDeniedScreen(userPayload.fullName)
     verify(screen).showUnexpectedErrorMessage()
+  }
+
+  @Test
+  fun `when the existing user is denied access then access denied screen should show`() {
+    val inputNumber = "1234567890"
+    val userPayload = PatientMocker.loggedInUserPayload(phone = inputNumber, status = UserStatus.DisapprovedForSyncing)
+
+    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
+    whenever(numberValidator.validate(inputNumber, MOBILE)).doReturn(VALID)
+
+    uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+
+    verify(screen).showAccessDeniedScreen(userPayload.fullName)
+    verify(userSession, never()).saveOngoingLoginEntry(any())
+    verify(userSession, never()).clearOngoingRegistrationEntry()
+    verify(screen, never()).openLoginPinEntryScreen()
   }
 
   @Test

@@ -46,9 +46,11 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, RemoveBloodPressureListener {
-  @Inject
+
+  @field:[Inject Named("exact_date")]
   lateinit var dateFormatter: DateTimeFormatter
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()

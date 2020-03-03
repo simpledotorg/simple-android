@@ -74,10 +74,10 @@ class EditPatientEffectHandlerTest {
       userClock = userClock,
       patientRepository = patientRepository,
       utcClock = utcClock,
-      dateOfBirthFormatter = dateOfBirthFormatter,
       schedulersProvider = TrampolineSchedulersProvider(),
       userSession = userSession,
-      facilityRepository = facilityRepository
+      facilityRepository = facilityRepository,
+      dateOfBirthFormatter = dateOfBirthFormatter
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())

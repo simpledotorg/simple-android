@@ -155,7 +155,7 @@ class EditPatientScreenCreatedTest {
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
         EditPatientInit(patient, address, phoneNumber, null),
         EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
-        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, dateOfBirthFormat, TrampolineSchedulersProvider(), userSession, facilityRepository).build(),
+        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, TrampolineSchedulersProvider(), userSession, facilityRepository, dateOfBirthFormat).build(),
         { /* nothing here */ }
     ).start()
   }

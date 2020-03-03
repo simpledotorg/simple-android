@@ -1,4 +1,17 @@
 # CHANGELOG
+## Next Release
+### Feature
+- Added support for editing blood sugar
+- Added a new language: Afaan Oromo
+
+### Internal
+- Bumped AGP to 3.6.1
+- Switched to R8 for minifying the APK
+- Removed spellfix sqlite extension
+- Unified mobius view and activity delegate
+
+### Fixes
+- Fixed crash when trying to edit patient DOB
 
 ## 2020-02-12-7090
 ### Feature

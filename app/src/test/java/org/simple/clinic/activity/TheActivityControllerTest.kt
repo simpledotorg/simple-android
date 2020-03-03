@@ -22,6 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.activity.ActivityLifecycle.Stopped
+import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
@@ -205,9 +206,10 @@ class TheActivityControllerTest {
   @Parameters(method = "params for local user initial screen key")
   fun `when a local user exists, the appropriate initial key must be returned based on the logged in status`(
       loggedInStatus: User.LoggedInStatus,
+      status: UserStatus,
       expectedKeyType: Class<FullScreenKey>
   ) {
-    val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus)
+    val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus, status = status)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
 
     assertThat(controller.initialScreenKey()).isInstanceOf(expectedKeyType)
@@ -217,44 +219,107 @@ class TheActivityControllerTest {
   private fun `params for local user initial screen key`(): Array<Array<Any>> {
     fun testCase(
         loggedInStatus: User.LoggedInStatus,
+        status: UserStatus,
         expectedKeyType: Class<*>
     ): Array<Any> {
-      return arrayOf(loggedInStatus, expectedKeyType)
+      return arrayOf(loggedInStatus, status, expectedKeyType)
     }
 
     return arrayOf(
+        // Waiting for Approval
         testCase(
             loggedInStatus = NOT_LOGGED_IN,
+            status = UserStatus.WaitingForApproval,
             expectedKeyType = RegistrationPhoneScreenKey::class.java
         ),
         testCase(
             loggedInStatus = OTP_REQUESTED,
+            status = UserStatus.WaitingForApproval,
             expectedKeyType = HomeScreenKey::class.java
         ),
         testCase(
             loggedInStatus = RESET_PIN_REQUESTED,
+            status = UserStatus.WaitingForApproval,
             expectedKeyType = HomeScreenKey::class.java
         ),
         testCase(
             loggedInStatus = RESETTING_PIN,
+            status = UserStatus.WaitingForApproval,
             expectedKeyType = ForgotPinCreateNewPinScreenKey::class.java
         ),
         testCase(
             loggedInStatus = LOGGED_IN,
+            status = UserStatus.WaitingForApproval,
             expectedKeyType = HomeScreenKey::class.java
         ),
         testCase(
             loggedInStatus = UNAUTHORIZED,
+            status = UserStatus.WaitingForApproval,
             expectedKeyType = RegistrationPhoneScreenKey::class.java
+        ),
+        // Approved for syncing
+        testCase(
+            loggedInStatus = NOT_LOGGED_IN,
+            status = UserStatus.ApprovedForSyncing,
+            expectedKeyType = RegistrationPhoneScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = OTP_REQUESTED,
+            status = UserStatus.ApprovedForSyncing,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = RESET_PIN_REQUESTED,
+            status = UserStatus.ApprovedForSyncing,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = RESETTING_PIN,
+            status = UserStatus.ApprovedForSyncing,
+            expectedKeyType = ForgotPinCreateNewPinScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = LOGGED_IN,
+            status = UserStatus.ApprovedForSyncing,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = UNAUTHORIZED,
+            status = UserStatus.ApprovedForSyncing,
+            expectedKeyType = RegistrationPhoneScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = NOT_LOGGED_IN,
+            status = UserStatus.DisapprovedForSyncing,
+            expectedKeyType = AccessDeniedScreenKey::class.java
+        ),
+        // Disapproved for syncing
+        testCase(
+            loggedInStatus = OTP_REQUESTED,
+            status = UserStatus.DisapprovedForSyncing,
+            expectedKeyType = AccessDeniedScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = RESET_PIN_REQUESTED,
+            status = UserStatus.DisapprovedForSyncing,
+            expectedKeyType = AccessDeniedScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = RESETTING_PIN,
+            status = UserStatus.DisapprovedForSyncing,
+            expectedKeyType = AccessDeniedScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = LOGGED_IN,
+            status = UserStatus.DisapprovedForSyncing,
+            expectedKeyType = AccessDeniedScreenKey::class.java
+        ),
+        testCase(
+            loggedInStatus = UNAUTHORIZED,
+            status = UserStatus.DisapprovedForSyncing,
+            expectedKeyType = AccessDeniedScreenKey::class.java
         )
     )
-  }
-
-  @Test
-  fun `when a local user does not exist, the registration screen must be opened`() {
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(None))
-
-    assertThat(controller.initialScreenKey()).isInstanceOf(RegistrationPhoneScreenKey::class.java)
   }
 
   @Test

@@ -15,11 +15,9 @@ import org.simple.clinic.activity.RxActivityLifecycle
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
-import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
-import org.simple.clinic.bp.entry.di.BloodPressureEntryModule
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
@@ -160,7 +158,6 @@ interface TheActivityComponent :
 @Module(includes = [
   PatientsModule::class,
   SearchResultsModule::class,
-  BloodPressureEntryModule::class,
   AssistedInjectModule::class
 ])
 class TheActivityModule {

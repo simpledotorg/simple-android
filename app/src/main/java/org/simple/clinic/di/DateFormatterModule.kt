@@ -23,7 +23,7 @@ class DateFormatterModule {
 
   @Provides
   @Named("exact_date")
-  fun providesTimeFormatterForRecentPatientsHeader(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", locale)
+  fun providesFormatterForFullReadableDate(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", locale)
 
   @Provides
   @Named("date_for_measurement_history")

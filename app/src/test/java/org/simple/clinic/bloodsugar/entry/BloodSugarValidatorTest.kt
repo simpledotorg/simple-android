@@ -21,7 +21,7 @@ class BloodSugarValidatorTest {
   }
 
   @Test
-  fun `when blood sugar reading is more than maximum possible, return error`() {
+  fun `when blood sugar reading is more than 1000, return error`() {
     val bloodSugarReading = "1001"
     val result = bloodSugarValidator.validate(bloodSugarReading, PostPrandial)
 
@@ -29,7 +29,7 @@ class BloodSugarValidatorTest {
   }
 
   @Test
-  fun `when hba1c blood sugar reading is more than maximum possible, return error`() {
+  fun `when hba1c blood sugar reading is more than 25, return error`() {
     val bloodSugarReading = "26"
     val result = bloodSugarValidator.validate(bloodSugarReading, HbA1c)
 
@@ -38,7 +38,7 @@ class BloodSugarValidatorTest {
 
 
   @Test
-  fun `when blood sugar reading is less than minimum possible, return error`() {
+  fun `when blood sugar reading is less than 30, return error`() {
     val bloodSugarReading = "29"
     val result = bloodSugarValidator.validate(bloodSugarReading, Random)
 
@@ -46,7 +46,7 @@ class BloodSugarValidatorTest {
   }
 
   @Test
-  fun `when hba1c blood sugar reading is less than minimum possible, return error`() {
+  fun `when hba1c blood sugar reading is less than 3, return error`() {
     val bloodSugarReading = "2"
     val result = bloodSugarValidator.validate(bloodSugarReading, HbA1c)
 

@@ -31,7 +31,7 @@ data class OverdueAppointmentRow(
     val gender: Gender,
     val age: Int,
     val phoneNumber: String? = null,
-    val bpDaysAgo: Int,
+    val lastSeenDaysAgo: Int,
     val overdueDays: Int,
     val isAtHighRisk: Boolean
 ) : ItemAdapter.Item<UiEvent> {
@@ -50,7 +50,7 @@ data class OverdueAppointmentRow(
           gender = overdueAppointment.gender,
           age = DateOfBirth.fromOverdueAppointment(overdueAppointment, clock).estimateAge(clock),
           phoneNumber = overdueAppointment.phoneNumber?.number,
-          bpDaysAgo = calculateDaysAgoFromInstant(overdueAppointment.bloodPressure.recordedAt, clock),
+          lastSeenDaysAgo = calculateDaysAgoFromInstant(overdueAppointment.bloodPressure.recordedAt, clock),
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
           isAtHighRisk = overdueAppointment.isAtHighRisk
       )
@@ -123,8 +123,8 @@ data class OverdueAppointmentRow(
 
     holder.patientBPTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_patient_days_ago,
-        bpDaysAgo,
-        bpDaysAgo
+        lastSeenDaysAgo,
+        lastSeenDaysAgo
     )
 
     holder.callButton.visibility = if (phoneNumber == null) GONE else VISIBLE

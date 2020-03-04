@@ -292,9 +292,9 @@
   <string name="overdue_no_patients">No patients overdue</string>
   <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <plurals name="overdue_list_item_patient_bp_and_days_ago">
-    <item quantity="one">%1$s/%2$s, %3$s day ago</item>
-    <item quantity="other">%1$s/%2$s, %3$s days ago</item>
+  <plurals name="overdue_list_item_patient_days_ago">
+    <item quantity="one">%1$s day ago</item>
+    <item quantity="other">%1$s days ago</item>
   </plurals>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s day overdue</item>

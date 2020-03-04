@@ -73,26 +73,22 @@ class OverdueAppointmentRowTest {
             patientUuid = UUID.fromString("c88a4835-40e5-476b-9a6f-2f850c48ecdb"),
             name = "Anish Acharya",
             gender = Gender.Male,
+            age = 34,
             phoneNumber = "123456",
-            bpSystolic = 127,
-            bpDiastolic = 95,
             bpDaysAgo = 7,
             overdueDays = 4,
-            isAtHighRisk = false,
-            age = 34
+            isAtHighRisk = false
         ),
         OverdueAppointmentRow(
             appointmentUuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
             patientUuid = UUID.fromString("0c35a015-d823-4cc5-be77-21ce026c5780"),
             name = "Deepa",
             gender = Gender.Female,
+            age = 46,
             phoneNumber = "45678912",
-            bpSystolic = 168,
-            bpDiastolic = 110,
             bpDaysAgo = 14,
             overdueDays = 7,
-            isAtHighRisk = true,
-            age = 46
+            isAtHighRisk = true
         )
     )
     assertThat(overdueListItems)

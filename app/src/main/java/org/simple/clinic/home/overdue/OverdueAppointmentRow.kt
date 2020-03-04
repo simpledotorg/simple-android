@@ -31,8 +31,6 @@ data class OverdueAppointmentRow(
     val gender: Gender,
     val age: Int,
     val phoneNumber: String? = null,
-    val bpSystolic: Int,
-    val bpDiastolic: Int,
     val bpDaysAgo: Int,
     val overdueDays: Int,
     val isAtHighRisk: Boolean
@@ -52,8 +50,6 @@ data class OverdueAppointmentRow(
           gender = overdueAppointment.gender,
           age = DateOfBirth.fromOverdueAppointment(overdueAppointment, clock).estimateAge(clock),
           phoneNumber = overdueAppointment.phoneNumber?.number,
-          bpSystolic = overdueAppointment.bloodPressure.systolic,
-          bpDiastolic = overdueAppointment.bloodPressure.diastolic,
           bpDaysAgo = calculateDaysAgoFromInstant(overdueAppointment.bloodPressure.recordedAt, clock),
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
           isAtHighRisk = overdueAppointment.isAtHighRisk

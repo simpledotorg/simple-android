@@ -75,7 +75,7 @@ class OverdueAppointmentRowTest {
             gender = Gender.Male,
             age = 34,
             phoneNumber = "123456",
-            bpDaysAgo = 7,
+            lastSeenDaysAgo = 7,
             overdueDays = 4,
             isAtHighRisk = false
         ),
@@ -86,7 +86,7 @@ class OverdueAppointmentRowTest {
             gender = Gender.Female,
             age = 46,
             phoneNumber = "45678912",
-            bpDaysAgo = 14,
+            lastSeenDaysAgo = 14,
             overdueDays = 7,
             isAtHighRisk = true
         )

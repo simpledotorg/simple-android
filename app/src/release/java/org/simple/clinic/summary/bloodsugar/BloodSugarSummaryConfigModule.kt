@@ -9,6 +9,6 @@ class BloodSugarSummaryConfigModule {
 
   @Provides
   fun bloodSugarSummaryConfig(configReader: ConfigReader): BloodSugarSummaryConfig {
-    return BloodSugarSummaryConfig.read(configReader = configReader, bloodSugarEditFeatureEnabled = false)
+    return BloodSugarSummaryConfig.read(configReader = configReader, bloodSugarEditFeatureEnabled = true)
   }
 }

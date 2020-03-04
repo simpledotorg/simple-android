@@ -126,10 +126,8 @@ data class OverdueAppointmentRow(
     holder.patientNameTextView.setCompoundDrawableStart(gender.displayIconRes)
 
     holder.patientBPTextView.text = context.resources.getQuantityString(
-        R.plurals.overdue_list_item_patient_bp_and_days_ago,
+        R.plurals.overdue_list_item_patient_days_ago,
         bpDaysAgo,
-        bpSystolic,
-        bpDiastolic,
         bpDaysAgo
     )
 

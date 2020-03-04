@@ -19,7 +19,7 @@ data class BloodSugarMeasurementPayload(
     val bloodSugarType: BloodSugarMeasurementType,
 
     @Json(name = "blood_sugar_value")
-    val bloodSugarValue: Int,
+    val bloodSugarValue: Float,
 
     @Json(name = "patient_id")
     val patientUuid: UUID,

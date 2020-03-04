@@ -460,7 +460,7 @@ object TestData {
   fun bloodSugarPayload(
       uuid: UUID = UUID.randomUUID(),
       bloodSugarType: BloodSugarMeasurementType = BloodSugarMeasurementType.random(),
-      bloodSugarValue: Int = faker.number.between(0, 300),
+      bloodSugarValue: Float = faker.number.between(0, 300).toFloat(),
       patientUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),

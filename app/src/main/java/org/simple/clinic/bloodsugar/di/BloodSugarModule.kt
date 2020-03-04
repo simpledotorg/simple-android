@@ -36,6 +36,6 @@ class BloodSugarModule {
   @Provides
   @Named("is_hba1c_enabled")
   fun isHbA1cEnabled(): Boolean {
-    return false
+    return true
   }
 }

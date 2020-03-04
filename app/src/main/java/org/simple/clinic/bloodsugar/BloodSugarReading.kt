@@ -9,8 +9,8 @@ data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementT
     get() {
       return when (type) {
         Random,
-        PostPrandial -> value.toInt() >= 200
-        Fasting -> value.toInt() >= 126
+        PostPrandial -> value.toFloat() >= 200
+        Fasting -> value.toFloat() >= 126
         HbA1c -> value.toFloat() >= 7.0
         else -> false
       }
@@ -19,9 +19,9 @@ data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementT
   val displayValue: String
     get() {
       return when (type) {
-        Random -> value.toInt().toString()
-        PostPrandial -> value.toInt().toString()
-        Fasting -> value.toInt().toString()
+        Random -> value.toFloat().toInt().toString()
+        PostPrandial -> value.toFloat().toInt().toString()
+        Fasting -> value.toFloat().toInt().toString()
         HbA1c -> value.toFloat().toString()
         is Unknown -> value.toInt().toString()
       }

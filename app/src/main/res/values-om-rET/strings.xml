@@ -245,10 +245,6 @@
   <string name="overdue_no_patients">Kilinikni hafe hin jiru</string>
   <string name="overdue_empty_desc">Dhukkubsattoota hordoffii dhiibbaa dhiigaa isaanii irraa kaatan deemtee gaafachuu danda’uu qabda</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <plurals name="overdue_list_item_patient_bp_and_days_ago">
-  <item quantity="one">Guyyaa %1$s/%2$s, %3$s dura</item>
-  <item quantity="other">Guyyoota %1$s/%2$s, %3$s dura</item>
-  </plurals>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">Guyyaa %s darbe</item>
     <item quantity="other">Guyyoota %s darbe</item>

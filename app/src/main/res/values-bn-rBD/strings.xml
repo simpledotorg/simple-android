@@ -245,10 +245,6 @@
   <string name="overdue_no_patients">সময়াতীত হওয়া কোন রোগী নেই</string>
   <string name="overdue_empty_desc">যে রোগীরা ফলো আপ রক্তচাপ মাপার জন্য তাদের পূর্বনির্ধারিত সাক্ষাৎকার মিস করেছে আপনি সেই রোগীদের ফোন করতে পারবেন।</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <plurals name="overdue_list_item_patient_bp_and_days_ago">
-  <item quantity="one">%1$s/%2$s, %3$s দিন আগে</item>
-  <item quantity="other">%1$s/%2$s, %3$s দিন আগে</item>
-  </plurals>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s দিন সময়াতীত</item>
     <item quantity="other">%s দিন সময়াতীত</item>

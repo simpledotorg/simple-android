@@ -154,7 +154,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { handleDoneClick ->
             val patientUuid = handleDoneClick.patientUuid
 
-            val shouldShowScheduleAppointmentSheet = !doesNotHaveBloodPressures(patientUuid)
+            val shouldShowScheduleAppointmentSheet = hasAtLeastOneMeasurementRecorded(patientUuid)
 
             shouldShowScheduleAppointmentSheet to patientUuid
           }
@@ -263,6 +263,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
   private fun doesNotHaveBloodSugars(patientUuid: UUID): Boolean {
     return bloodSugarRepository.bloodSugarCountImmediate(patientUuid) == 0
+  }
+
+  private fun hasAtLeastOneMeasurementRecorded(patientUuid: UUID): Boolean {
+    return !doesNotHaveBloodPressures(patientUuid) or !doesNotHaveBloodSugars(patientUuid)
   }
 
   // TODO(vs): 2020-02-18 Revisit after Mobius migration

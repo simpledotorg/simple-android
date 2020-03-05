@@ -241,4 +241,19 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when all blood sugar are deleted, clicking on save must go to the home screen regardless of summary changes`() {
+    // given
+    val patientUuid = UUID.fromString("d90b9cf0-3bf1-4555-96c0-bd324b4752f6")
+
+    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)).doReturn(0)
+
+    // when
+    testCase.dispatch(HandleDoneClick(patientUuid))
+
+    // then
+    verify(uiActions).goToHomeScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

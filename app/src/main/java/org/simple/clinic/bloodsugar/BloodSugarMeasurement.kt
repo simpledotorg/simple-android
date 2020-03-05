@@ -105,6 +105,22 @@ data class BloodSugarMeasurement(
     """)
     fun recordedBloodSugarsCountForPatientImmediate(patientUuid: UUID): Int
 
+    @Query("""
+        SELECT (
+            CASE
+                WHEN (COUNT(uuid) > 0) THEN 1
+                ELSE 0
+            END
+        )
+        FROM bloodsugarmeasurements
+        WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
+    """)
+    fun haveBloodSugarsForPatientChangedSince(
+        patientUuid: UUID,
+        instantToCompare: Instant,
+        pendingStatus: SyncStatus
+    ): Boolean
+
     @Query("DELETE FROM BloodSugarMeasurements")
     fun clear()
   }

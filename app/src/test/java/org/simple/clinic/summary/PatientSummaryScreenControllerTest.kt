@@ -23,6 +23,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
+import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment
@@ -72,6 +73,7 @@ class PatientSummaryScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val user = PatientMocker.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
+  private val bloodSugarRepository = mock<BloodSugarRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockAnalyticsReporter()
@@ -654,6 +656,7 @@ class PatientSummaryScreenControllerTest {
         missingPhoneReminderRepository = missingPhoneReminderRepository,
         userSession = userSession,
         facilityRepository = facilityRepository,
+        bloodSugarRepository = bloodSugarRepository,
         uiActions = uiActions
     )
 

@@ -9,6 +9,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
@@ -16,9 +17,11 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
+import org.threeten.bp.Instant
 import java.util.UUID
 
 class PatientSummaryEffectHandlerTest {
@@ -27,6 +30,7 @@ class PatientSummaryEffectHandlerTest {
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
+  private val bloodSugarRepository = mock<BloodSugarRepository>()
 
   private val effectHandler = PatientSummaryEffectHandler(
       schedulersProvider = TrampolineSchedulersProvider(),
@@ -36,6 +40,7 @@ class PatientSummaryEffectHandlerTest {
       missingPhoneReminderRepository = mock(),
       userSession = userSession,
       facilityRepository = facilityRepository,
+      bloodSugarRepository = bloodSugarRepository,
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -114,6 +119,23 @@ class PatientSummaryEffectHandlerTest {
     //then
     testCase.assertNoOutgoingEvents()
     verify(uiActions).showEditPatientScreen(patientSummaryProfile)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when there are patient summary changes and at least one blood sugar is present, clicking on back must show the schedule appointment sheet`() {
+    // given
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
+
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)).doReturn(true)
+    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)).doReturn(1)
+
+    // when
+    testCase.dispatch(HandleBackClick(patientUuid, screenCreatedTimestamp, ViewExistingPatient))
+
+    // then
+    verify(uiActions).showScheduleAppointmentSheet(patientUuid, AppointmentSheetOpenedFrom.BACK_CLICK)
     verifyNoMoreInteractions(uiActions)
   }
 }

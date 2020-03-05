@@ -14,13 +14,14 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.util.toOptional
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -78,11 +79,8 @@ class PatientSummaryEffectHandlerTest {
     val bpPassport = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
     val bangladeshNationId = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
 
-    whenever(patientRepository.patient(patientUuid)) doReturn Observable.just(patient.toOptional())
-    whenever(patientRepository.address(patient.addressUuid)) doReturn Observable.just(patientAddress.toOptional())
-    whenever(patientRepository.phoneNumber(patientUuid)) doReturn Observable.just(patientPhoneNumber.toOptional())
-    whenever(patientRepository.bpPassportForPatient(patientUuid)) doReturn Observable.just(bpPassport.toOptional())
-    whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)) doReturn Observable.just(bangladeshNationId.toOptional())
+    val patientProfile = PatientProfile(patient, patientAddress, listOf(patientPhoneNumber), listOf(bangladeshNationId, bpPassport))
+    whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn Just(patientProfile)
 
     // when
     testCase.dispatch(LoadPatientSummaryProfile(patientUuid))

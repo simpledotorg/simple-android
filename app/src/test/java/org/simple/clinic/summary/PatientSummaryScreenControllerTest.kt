@@ -34,6 +34,7 @@ import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -83,12 +84,10 @@ class PatientSummaryScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(patientRepository.patient(patientUuid)).doReturn(Observable.never())
-    whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)).doReturn(Observable.never())
+    whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn None
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
-    whenever(patientRepository.bpPassportForPatient(patientUuid)).doReturn(Observable.never())
     whenever(userSession.loggedInUserImmediate()).doReturn(user)
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.never())
 

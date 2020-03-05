@@ -11,4 +11,12 @@ data class PatientProfile(
 ) {
   val patientUuid: UUID
     get() = patient.uuid
+
+  fun withoutDeletedBusinessIds(): PatientProfile {
+    return copy(businessIds = businessIds.filter { it.deletedAt == null })
+  }
+
+  fun withoutDeletedPhoneNumbers(): PatientProfile {
+    return copy(phoneNumbers = phoneNumbers.filter { it.deletedAt == null })
+  }
 }

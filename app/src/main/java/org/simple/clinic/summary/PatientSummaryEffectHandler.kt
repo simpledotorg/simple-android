@@ -7,8 +7,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -17,10 +15,12 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -69,38 +69,26 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  // TODO(vs): 2020-01-15 Revisit after Mobius migration
   private fun loadPatientSummaryProfile(scheduler: Scheduler): ObservableTransformer<LoadPatientSummaryProfile, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
-      effects.flatMap { fetchPatientSummaryProfile ->
-        val patientUuid = fetchPatientSummaryProfile.patientUuid
-
-        val sharedPatients = patientRepository.patient(patientUuid)
-            .subscribeOn(scheduler)
-            .map {
-              // We do not expect the patient to get deleted while this screen is already open.
-              (it as Just).value
-            }
-            .replay(1)
-            .refCount()
-
-        val addresses = sharedPatients
-            .flatMap { patient -> patientRepository.address(patient.addressUuid).subscribeOn(scheduler) }
-            .map { (it as Just).value }
-
-        val latestPhoneNumberStream = patientRepository.phoneNumber(patientUuid).subscribeOn(scheduler)
-        val latestBpPassportStream = patientRepository.bpPassportForPatient(patientUuid).subscribeOn(scheduler)
-        val bangladeshNationalIdStream = patientRepository.bangladeshNationalIdForPatient(patientUuid).subscribeOn(scheduler)
-
-        Observables
-            .combineLatest(sharedPatients, addresses, latestPhoneNumberStream, latestBpPassportStream, bangladeshNationalIdStream) { patient, address, phoneNumber, bpPassport, bangladeshNationalId ->
-              PatientSummaryProfile(patient, address, phoneNumber.toNullable(), bpPassport.toNullable(), bangladeshNationalId.toNullable())
-            }
-            .take(1)
-            .map(::PatientSummaryProfileLoaded)
-            .cast<PatientSummaryEvent>()
-      }
+      effects
+          .observeOn(scheduler)
+          .map { patientRepository.patientProfileImmediate(it.patientUuid) }
+          .filterAndUnwrapJust()
+          .map { it.withoutDeletedBusinessIds().withoutDeletedPhoneNumbers() }
+          .map(::mapPatientProfileToSummaryProfile)
+          .map(::PatientSummaryProfileLoaded)
     }
+  }
+
+  private fun mapPatientProfileToSummaryProfile(patientProfile: PatientProfile): PatientSummaryProfile {
+    return PatientSummaryProfile(
+        patient = patientProfile.patient,
+        address = patientProfile.address,
+        phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
+        bpPassport = patientProfile.businessIds.filter { it.identifier.type == BpPassport }.maxBy { it.createdAt },
+        bangladeshNationalId = patientProfile.businessIds.filter { it.identifier.type == BangladeshNationalId }.maxBy { it.createdAt }
+    )
   }
 
   // TODO(vs): 2020-02-19 Revisit after Mobius migration

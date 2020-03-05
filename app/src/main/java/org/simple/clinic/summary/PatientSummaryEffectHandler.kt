@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment
@@ -38,6 +39,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
+    val bloodSugarRepository: BloodSugarRepository,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -120,8 +122,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             val hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTime)
             val noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid)
+            val noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid)
 
-            val shouldShowScheduleAppointmentSheet = if (noBloodPressuresRecordedForPatient) false else hasPatientDataChangedSinceScreenCreated
+            val shouldShowScheduleAppointmentSheet = if (noBloodPressuresRecordedForPatient && noBloodSugarsRecordedForPatient) false else hasPatientDataChangedSinceScreenCreated
 
             Triple(shouldShowScheduleAppointmentSheet, patientUuid, openIntention)
           }
@@ -256,6 +259,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
   private fun doesNotHaveBloodPressures(patientUuid: UUID): Boolean {
     return bloodPressureRepository.bloodPressureCountImmediate(patientUuid) == 0
+  }
+
+  private fun doesNotHaveBloodSugars(patientUuid: UUID): Boolean {
+    return bloodSugarRepository.bloodSugarCountImmediate(patientUuid) == 0
   }
 
   // TODO(vs): 2020-02-18 Revisit after Mobius migration

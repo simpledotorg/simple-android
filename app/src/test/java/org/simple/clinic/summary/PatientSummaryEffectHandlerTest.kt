@@ -175,4 +175,23 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).goToHomeScreen()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when the load data for done click effect is received, load the data`() {
+    // given
+    val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
+
+    whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
+    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 0
+
+    // when
+    testCase.dispatch(LoadDataForDoneClick(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(DataForDoneClickLoaded(
+        noBloodPressuresRecordedForPatient = false,
+        noBloodSugarsRecordedForPatient = true
+    ))
+    verifyZeroInteractions(uiActions)
+  }
 }

@@ -70,6 +70,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             schedulersProvider.ui()
         )
         .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))
+        .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
         .build()
   }
 
@@ -197,6 +198,22 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             val timestamp = loadDataForBackClick.screenCreatedTimestamp
             DataForBackClickLoaded(
                 hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
+                noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid),
+                noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid)
+            )
+          }
+    }
+  }
+
+  private fun loadDataForDoneClick(
+      scheduler: Scheduler
+  ): ObservableTransformer<LoadDataForDoneClick, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .map { loadDataForBackClick ->
+            val patientUuid = loadDataForBackClick.patientUuid
+            DataForDoneClickLoaded(
                 noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid),
                 noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid)
             )

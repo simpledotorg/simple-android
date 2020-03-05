@@ -43,3 +43,5 @@ data class LoadDataForBackClick(
     val patientUuid: UUID,
     val screenCreatedTimestamp: Instant
 ) : PatientSummaryEffect()
+
+data class LoadDataForDoneClick(val patientUuid: UUID): PatientSummaryEffect()

@@ -72,6 +72,11 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(ShowLinkIdWithPatientView::class.java, showLinkIdWithPatientView(schedulersProvider.ui()))
         .addAction(HideLinkIdWithPatientView::class.java, { uiActions.hideLinkIdWithPatientView() }, schedulersProvider.ui())
         .addTransformer(ReportViewedPatientToAnalytics::class.java, reportViewedPatientToAnalytics())
+        .addConsumer(
+            ShowScheduleAppointmentSheet::class.java,
+            { uiActions.showScheduleAppointmentSheet(it.patientUuid, it.sheetOpenedFrom) },
+            schedulersProvider.ui()
+        )
         .build()
   }
 

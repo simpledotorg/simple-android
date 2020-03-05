@@ -191,4 +191,21 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).goToHomeScreen()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when there are no patient summary changes and all blood sugars are not deleted, clicking on back must go back`() {
+    // given
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    val patientUuid = UUID.fromString("eaacf3be-2bc1-46c2-9132-d4f79e5b83ca")
+
+    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 1
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
+
+    // when
+    testCase.dispatch(HandleBackClick(patientUuid, screenCreatedTimestamp, ViewExistingPatient))
+
+    // then
+    verify(uiActions).goToPreviousScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -658,6 +658,17 @@ class PatientRepository @Inject constructor(
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+  fun haveBloodSugarsForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
+    return database
+        .bloodSugarDao()
+        .haveBloodSugarsForPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = instant,
+            pendingStatus = PENDING
+        )
+  }
+
+  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun hasPrescriptionForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
         .prescriptionDao()
@@ -695,11 +706,13 @@ class PatientRepository @Inject constructor(
     val bpsChangedSince = haveBpsForPatientChangedSince(patientUuid, timestamp)
     val prescriptionsChangedSince = hasPrescriptionForPatientChangedSince(patientUuid, timestamp)
     val medicalHistoryChangedSince = hasMedicalHistoryForPatientChangedSince(patientUuid, timestamp)
+    val bloodSugarsChangedSince = haveBloodSugarsForPatientChangedSince(patientUuid, timestamp)
 
     return patientChangedSince
         .or(bpsChangedSince)
         .or(prescriptionsChangedSince)
         .or(medicalHistoryChangedSince)
+        .or(bloodSugarsChangedSince)
   }
 
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)

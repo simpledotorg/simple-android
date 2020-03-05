@@ -11,6 +11,7 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
@@ -69,7 +70,8 @@ class BloodSugarSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodSugarMeasu
 
   override fun generateRecord(syncStatus: SyncStatus) = testData.bloodSugarMeasurement(syncStatus = syncStatus)
 
-  override fun generatePayload() = testData.bloodSugarPayload()
+  // TODO (SM): Remove blood sugar type once HbA1c sync is enabled
+  override fun generatePayload() = testData.bloodSugarPayload(bloodSugarType = Random)
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 

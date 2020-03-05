@@ -2741,6 +2741,53 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun querying_whether_blood_sugars_for_patient_have_changed_should_work_as_expected() {
+    fun setBloodSugarSyncStatusToDone(bloodSugarUuid: UUID) {
+      database.bloodSugarDao().updateSyncStatus(listOf(bloodSugarUuid), DONE)
+    }
+
+    val patientUuid = UUID.fromString("8ef781b9-afd3-4bb7-8742-193e48471f09")
+    val now = Instant.now(clock)
+    val oneSecondEarlier = now.minus(Duration.ofSeconds(1))
+    val fiftyNineSecondsLater = now.plus(Duration.ofSeconds(59))
+    val oneMinuteLater = now.plus(Duration.ofMinutes(1))
+
+    val bloodSugar1ForPatient = testData.bloodSugarMeasurement(
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+    val bloodSugar2ForPatient = testData.bloodSugarMeasurement(
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = oneMinuteLater
+    )
+    val bloodSugarForSomeOtherPatient = testData.bloodSugarMeasurement(
+        patientUuid = UUID.fromString("ba774e35-b727-472b-bb9c-231af252d190"),
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+
+    database.bloodSugarDao().save(listOf(bloodSugar1ForPatient, bloodSugar2ForPatient, bloodSugarForSomeOtherPatient))
+
+    assertThat(patientRepository.haveBloodSugarsForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+    assertThat(patientRepository.haveBloodSugarsForPatientChangedSince(patientUuid, now)).isTrue()
+    assertThat(patientRepository.haveBloodSugarsForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isTrue()
+    assertThat(patientRepository.haveBloodSugarsForPatientChangedSince(patientUuid, oneMinuteLater)).isFalse()
+
+    setBloodSugarSyncStatusToDone(bloodSugar2ForPatient.uuid)
+    assertThat(patientRepository.haveBloodSugarsForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isFalse()
+    assertThat(patientRepository.haveBloodSugarsForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+
+    setBloodSugarSyncStatusToDone(bloodSugar1ForPatient.uuid)
+    assertThat(patientRepository.haveBloodSugarsForPatientChangedSince(patientUuid, oneSecondEarlier)).isFalse()
+    assertThat(patientRepository.haveBloodSugarsForPatientChangedSince(bloodSugarForSomeOtherPatient.patientUuid, oneSecondEarlier)).isTrue()
+
+    setBloodSugarSyncStatusToDone(bloodSugarForSomeOtherPatient.uuid)
+    assertThat(patientRepository.haveBloodSugarsForPatientChangedSince(bloodSugarForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
+  }
+
+  @Test
   fun querying_whether_prescription_for_patient_has_changed_should_work_as_expected() {
     fun setPrescribedDrugSyncStatusToDone(prescribedDrug: UUID) {
       database.prescriptionDao().updateSyncStatus(listOf(prescribedDrug), DONE)

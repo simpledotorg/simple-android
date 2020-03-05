@@ -715,5 +715,9 @@ class PatientRepository @Inject constructor(
         .or(bloodSugarsChangedSince)
   }
 
+  fun patientProfileImmediate(patientUuid: UUID): Optional<PatientProfile> {
+    return database.patientDao().patientProfileImmediate(patientUuid).toOptional()
+  }
+
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
 }

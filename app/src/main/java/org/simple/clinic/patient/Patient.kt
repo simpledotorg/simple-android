@@ -178,6 +178,9 @@ data class Patient(
     @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
     protected abstract fun loadPatientQueryModelsForPatientUuid(patientUuid: UUID): Flowable<List<PatientQueryModel>>
 
+    @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
+    protected abstract fun loadPatientQueryModelsForPatientUuidImmediate(patientUuid: UUID): List<PatientQueryModel>
+
     fun recordsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientProfile>> {
       return loadPatientQueryModelsWithSyncStatus(syncStatus)
           .map(::queryModelsToPatientProfiles)
@@ -186,6 +189,12 @@ data class Patient(
     fun patientProfile(patientUuid: UUID): Flowable<PatientProfile> {
       return loadPatientQueryModelsForPatientUuid(patientUuid)
           .map { queryModelsToPatientProfiles(it).first() }
+    }
+
+    fun patientProfileImmediate(patientUuid: UUID): PatientProfile? {
+      val patientQueryModels = loadPatientQueryModelsForPatientUuidImmediate(patientUuid)
+
+      return if (patientQueryModels.isNotEmpty()) queryModelsToPatientProfiles(patientQueryModels).first() else null
     }
 
     private fun queryModelsToPatientProfiles(patientQueryModels: List<PatientQueryModel>): List<PatientProfile> {

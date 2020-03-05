@@ -98,6 +98,13 @@ data class BloodSugarMeasurement(
     """)
     fun recordedBloodSugarsCountForPatient(patientUuid: UUID): Observable<Int>
 
+    @Query("""
+      SELECT COUNT(uuid)
+      FROM bloodsugarmeasurements
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+    """)
+    fun recordedBloodSugarsCountForPatientImmediate(patientUuid: UUID): Int
+
     @Query("DELETE FROM BloodSugarMeasurements")
     fun clear()
   }

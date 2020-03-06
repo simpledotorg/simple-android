@@ -12,11 +12,10 @@ import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toOptional
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -140,15 +139,8 @@ class AppointmentRepository @Inject constructor(
         }
   }
 
-  fun lastCreatedAppointmentForPatient(patientUuid: UUID): Observable<Optional<Appointment>> {
-    return appointmentDao.lastCreatedAppointmentForPatient(patientUuid)
-        .toObservable()
-        .map { appointments ->
-          when {
-            appointments.isNotEmpty() -> Just(appointments.first())
-            else -> None
-          }
-        }
+  fun lastCreatedAppointmentForPatient(patientUuid: UUID): Optional<Appointment> {
+    return appointmentDao.lastCreatedAppointmentForPatient(patientUuid).toOptional()
   }
 
   fun markAppointmentsCreatedBeforeTodayAsVisited(patientUuid: UUID): Completable {

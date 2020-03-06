@@ -35,6 +35,8 @@ data class Appointment(
     val creationFacilityUuid: UUID?
 ) {
 
+  fun wasCancelledBecauseOfInvalidPhoneNumber(): Boolean = status == Status.Cancelled && cancelReason == AppointmentCancelReason.InvalidPhoneNumber
+
   sealed class Status {
 
     object Scheduled : Status()
@@ -142,7 +144,7 @@ data class Appointment(
       ORDER BY createdAt DESC
       LIMIT 1
     """)
-    fun lastCreatedAppointmentForPatient(patientUuid: UUID): Flowable<List<Appointment>>
+    fun lastCreatedAppointmentForPatient(patientUuid: UUID): Appointment?
 
     @Query("SELECT COUNT(uuid) FROM Appointment")
     fun count(): Flowable<Int>

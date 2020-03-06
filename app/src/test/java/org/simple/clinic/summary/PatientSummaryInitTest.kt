@@ -34,7 +34,7 @@ class PatientSummaryInitTest {
   }
 
   @Test
-  fun `when the screen is restored, do not load the current facility and patient profile`() {
+  fun `when the screen is restored, do not load the current facility`() {
     val addressUuid = UUID.fromString("27f25667-44de-4717-b235-f75f5456af1d")
 
     val profile = PatientSummaryProfile(
@@ -57,7 +57,7 @@ class PatientSummaryInitTest {
         .then(
             assertThatFirst(
                 hasModel(model),
-                hasNoEffects()
+                hasEffects(LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect)
             )
         )
   }

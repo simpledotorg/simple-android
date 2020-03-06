@@ -52,12 +52,12 @@
             android:textAllCaps="true" />
 
           <TextView
-            android:id="@+id/patientBPTextView"
+            android:id="@+id/patientLastSeenTextView"
             style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_4"
-            tools:text="175/85, 30 days ago" />
+            tools:text="01-01-2020" />
         </LinearLayout>
 
         <org.simple.clinic.widgets.TintableCompoundDrawableTextView

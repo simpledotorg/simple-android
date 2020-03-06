@@ -8,11 +8,7 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
 
   override fun init(model: PatientSummaryModel): First<PatientSummaryModel, PatientSummaryEffect> {
-    val effects = mutableSetOf<PatientSummaryEffect>()
-
-    if (!model.hasLoadedPatientSummaryProfile) {
-      effects.add(LoadPatientSummaryProfile(model.patientUuid))
-    }
+    val effects = mutableSetOf<PatientSummaryEffect>(LoadPatientSummaryProfile(model.patientUuid))
 
     if (!model.hasLoadedCurrentFacility) {
       effects.add(LoadCurrentFacility)

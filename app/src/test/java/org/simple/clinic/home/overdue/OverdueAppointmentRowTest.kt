@@ -9,17 +9,20 @@ import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.ChronoUnit.DAYS
+import java.util.Locale
 import java.util.UUID
 
 class OverdueAppointmentRowTest {
 
   private val userClock = TestUserClock(LocalDate.parse("2019-01-05"))
+  private val dateFormatter = DateTimeFormatter.ofPattern("d-MMM-yyyy", Locale.ENGLISH)
 
   @Test
   fun `overdue appointments must be converted to list items`() {
     // given
-    val oneWeek = Duration.ofDays(7)
-    val twoWeeks = Duration.ofDays(14)
+    val recordedAt = Instant.parse("2020-01-08T00:00:00Z")
     val oneYear = Duration.ofDays(365)
 
     val appointmentDelayedBy4Days = PatientMocker
@@ -28,7 +31,7 @@ class OverdueAppointmentRowTest {
             bloodPressureMeasurement = PatientMocker.bp(
                 systolic = 127,
                 diastolic = 95,
-                recordedAt = Instant.now(userClock).minus(oneWeek)
+                recordedAt = recordedAt.minus(7, DAYS)
             ),
             isHighRisk = false,
             gender = Gender.Male,
@@ -47,7 +50,7 @@ class OverdueAppointmentRowTest {
             bloodPressureMeasurement = PatientMocker.bp(
                 systolic = 168,
                 diastolic = 110,
-                recordedAt = Instant.now(userClock).minus(twoWeeks)
+                recordedAt = recordedAt.minus(14, DAYS)
             ),
             isHighRisk = true,
             gender = Gender.Female,
@@ -64,7 +67,7 @@ class OverdueAppointmentRowTest {
     val appointments = listOf(appointmentDelayedBy4Days, appointmentDelayedByOneWeek)
 
     // when
-    val overdueListItems = OverdueAppointmentRow.from(appointments, userClock)
+    val overdueListItems = OverdueAppointmentRow.from(appointments, userClock, dateFormatter)
 
     // then
     val expectedListItems = listOf(
@@ -75,9 +78,9 @@ class OverdueAppointmentRowTest {
             gender = Gender.Male,
             age = 34,
             phoneNumber = "123456",
-            lastSeenDaysAgo = 7,
             overdueDays = 4,
-            isAtHighRisk = false
+            isAtHighRisk = false,
+            lastSeenDate = "1-Jan-2020"
         ),
         OverdueAppointmentRow(
             appointmentUuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
@@ -86,9 +89,9 @@ class OverdueAppointmentRowTest {
             gender = Gender.Female,
             age = 46,
             phoneNumber = "45678912",
-            lastSeenDaysAgo = 14,
             overdueDays = 7,
-            isAtHighRisk = true
+            isAtHighRisk = true,
+            lastSeenDate = "25-Dec-2019"
         )
     )
     assertThat(overdueListItems)

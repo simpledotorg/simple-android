@@ -20,8 +20,10 @@ import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.locationRectOnScreen
 import org.simple.clinic.widgets.visibleOrGone
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -36,6 +38,9 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   @Inject
   lateinit var userClock: UserClock
+
+  @field:[Inject Named("date_for_search_results")]
+  lateinit var dateFormatter: DateTimeFormatter
 
   private val overdueListAdapter = ItemAdapter(OverdueAppointmentRow.DiffCallback())
 
@@ -93,7 +98,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun updateList(overdueAppointments: List<OverdueAppointment>) {
-    overdueListAdapter.submitList(OverdueAppointmentRow.from(overdueAppointments, userClock))
+    overdueListAdapter.submitList(OverdueAppointmentRow.from(overdueAppointments, userClock, dateFormatter))
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

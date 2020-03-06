@@ -19,8 +19,8 @@ import org.simple.clinic.widgets.marginLayoutParams
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
@@ -31,18 +31,22 @@ data class OverdueAppointmentRow(
     val gender: Gender,
     val age: Int,
     val phoneNumber: String? = null,
-    val lastSeenDaysAgo: Int,
     val overdueDays: Int,
-    val isAtHighRisk: Boolean
+    val isAtHighRisk: Boolean,
+    val lastSeenDate: String
 ) : ItemAdapter.Item<UiEvent> {
 
   companion object {
 
-    fun from(appointments: List<OverdueAppointment>, clock: UserClock): List<OverdueAppointmentRow> {
-      return appointments.map { overdueAppointment -> from(overdueAppointment, clock) }
+    fun from(
+        appointments: List<OverdueAppointment>,
+        clock: UserClock,
+        dateFormatter: DateTimeFormatter
+    ): List<OverdueAppointmentRow> {
+      return appointments.map { overdueAppointment -> from(overdueAppointment, clock, dateFormatter) }
     }
 
-    private fun from(overdueAppointment: OverdueAppointment, clock: UserClock): OverdueAppointmentRow {
+    private fun from(overdueAppointment: OverdueAppointment, clock: UserClock, dateFormatter: DateTimeFormatter): OverdueAppointmentRow {
       return OverdueAppointmentRow(
           appointmentUuid = overdueAppointment.appointment.uuid,
           patientUuid = overdueAppointment.appointment.patientUuid,
@@ -50,17 +54,10 @@ data class OverdueAppointmentRow(
           gender = overdueAppointment.gender,
           age = DateOfBirth.fromOverdueAppointment(overdueAppointment, clock).estimateAge(clock),
           phoneNumber = overdueAppointment.phoneNumber?.number,
-          lastSeenDaysAgo = calculateDaysAgoFromInstant(overdueAppointment.bloodPressure.recordedAt, clock),
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
-          isAtHighRisk = overdueAppointment.isAtHighRisk
+          isAtHighRisk = overdueAppointment.isAtHighRisk,
+          lastSeenDate = dateFormatter.format(overdueAppointment.bloodPressure.recordedAt.toLocalDateAtZone(clock.zone))
       )
-    }
-
-    private fun calculateDaysAgoFromInstant(
-        instant: Instant,
-        clock: UserClock
-    ): Int {
-      return daysBetweenNowAndDate(instant.toLocalDateAtZone(clock.zone), clock)
     }
 
     private fun daysBetweenNowAndDate(
@@ -121,11 +118,7 @@ data class OverdueAppointmentRow(
     holder.patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, name, age.toString())
     holder.patientNameTextView.setCompoundDrawableStart(gender.displayIconRes)
 
-    holder.patientBPTextView.text = context.resources.getQuantityString(
-        R.plurals.overdue_list_item_patient_days_ago,
-        lastSeenDaysAgo,
-        lastSeenDaysAgo
-    )
+    holder.patientLastSeenTextView.text = lastSeenDate
 
     holder.callButton.visibility = if (phoneNumber == null) GONE else VISIBLE
     holder.phoneNumberTextView.text = phoneNumber

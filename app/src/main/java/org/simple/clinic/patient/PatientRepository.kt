@@ -452,6 +452,10 @@ class PatientRepository @Inject constructor(
         }
   }
 
+  fun latestPhoneNumberForPatient(patientUuid: UUID): Optional<PatientPhoneNumber> {
+    return database.phoneNumberDao().latestPhoneNumber(patientUuid).toOptional()
+  }
+
   fun compareAndUpdateRecordedAt(patientUuid: UUID, instantToCompare: Instant): Completable {
     return Completable.fromAction {
       database.patientDao().compareAndUpdateRecordedAt(

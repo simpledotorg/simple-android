@@ -58,6 +58,13 @@ data class PatientPhoneNumber(
     @Query("SELECT * FROM patientphonenumber WHERE patientUuid = :patientUuid")
     fun phoneNumber(patientUuid: UUID): Flowable<List<PatientPhoneNumber>>
 
+    @Query("""
+      SELECT * FROM PatientPhoneNumber 
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL 
+      ORDER BY createdAt DESC LIMIT 1
+    """)
+    fun latestPhoneNumber(patientUuid: UUID): PatientPhoneNumber?
+
     @Query("DELETE FROM patientphonenumber")
     fun clear()
 

@@ -6,7 +6,6 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import io.reactivex.Single
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -97,18 +96,15 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
   ): ObservableTransformer<CheckForInvalidPhone, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .flatMap { checkForInvalidPhone ->
-            hasInvalidPhone(checkForInvalidPhone.patientUuid)
-                .subscribeOn(backgroundWorkScheduler)
-                .take(1)
-                .observeOn(uiWorkScheduler)
-                .doOnNext { isPhoneInvalid ->
-                  if (isPhoneInvalid) {
-                    uiActions.showUpdatePhoneDialog(checkForInvalidPhone.patientUuid)
-                  }
-                }
-                .flatMapSingle { Single.just(CompletedCheckForInvalidPhone) }
+          .observeOn(backgroundWorkScheduler)
+          .map { it.patientUuid to hasInvalidPhone(it.patientUuid) }
+          .observeOn(uiWorkScheduler)
+          .doOnNext { (patientUuid, isPhoneInvalid) ->
+            if (isPhoneInvalid) {
+              uiActions.showUpdatePhoneDialog(patientUuid)
+            }
           }
+          .map { CompletedCheckForInvalidPhone }
     }
   }
 
@@ -219,15 +215,20 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return bloodSugarRepository.bloodSugarCountImmediate(patientUuid) == 0
   }
 
-  // TODO(vs): 2020-02-18 Revisit after Mobius migration
-  private fun hasInvalidPhone(patientUuid: UUID): Observable<Boolean> {
-    return patientRepository.phoneNumber(patientUuid)
-        .filterAndUnwrapJust()
-        .map { phoneNumber -> phoneNumber to appointmentRepository.lastCreatedAppointmentForPatient(patientUuid) }
-        .filter { (_, appointmentOptional) -> appointmentOptional is Just }
-        .map { (number, appointmentOptional) -> number to (appointmentOptional as Just).value }
-        .filter { (_, appointment) -> appointment.wasCancelledBecauseOfInvalidPhoneNumber() }
-        .map { (number, appointment) -> appointment.updatedAt > number.updatedAt }
+  private fun hasInvalidPhone(patientUuid: UUID): Boolean {
+    val phoneNumber = patientRepository.latestPhoneNumberForPatient(patientUuid)
+    val appointment = appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)
+
+    return when {
+      phoneNumber.isEmpty() || appointment.isEmpty() -> false
+      else -> {
+        val actualNumber = (phoneNumber as Just).value
+        val actualAppointment = (appointment as Just).value
+
+        val wasAppointmentUpdatedAfterPhoneNumber = actualAppointment.updatedAt > actualNumber.updatedAt
+        actualAppointment.wasCancelledBecauseOfInvalidPhoneNumber() && wasAppointmentUpdatedAfterPhoneNumber
+      }
+    }
   }
 
   private fun isMissingPhoneAndHasShownReminder(patientUuid: UUID): Observable<Boolean> {

@@ -82,7 +82,7 @@ class PatientSummaryScreenControllerTest {
   @Before
   fun setUp() {
     whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn None
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
+    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn None
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(userSession.loggedInUserImmediate()).doReturn(user)
@@ -122,7 +122,7 @@ class PatientSummaryScreenControllerTest {
     val phoneNumber = PatientMocker.phoneNumber(
         patientUuid = patientUuid,
         updatedAt = canceledAppointment.updatedAt - Duration.ofHours(2))
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
+    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Just(phoneNumber)
 
     startMobiusLoop(openIntention)
 
@@ -145,7 +145,7 @@ class PatientSummaryScreenControllerTest {
     val phoneNumber = PatientMocker.phoneNumber(
         patientUuid = patientUuid,
         updatedAt = canceledAppointment.updatedAt + Duration.ofHours(2))
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
+    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Just(phoneNumber)
 
     startMobiusLoop(openIntention)
 
@@ -173,7 +173,6 @@ class PatientSummaryScreenControllerTest {
   @Test
   fun `when a new patient is missing a phone number, then avoid showing update phone dialog`() {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
 
     startMobiusLoop(ViewExistingPatient)
 
@@ -201,7 +200,6 @@ class PatientSummaryScreenControllerTest {
   fun `when an existing patient is missing a phone number, a BP hasn't been recorded yet, and the user has never been reminded, then add phone dialog should not be shown`(
       openIntention: OpenIntention
   ) {
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
@@ -216,7 +214,6 @@ class PatientSummaryScreenControllerTest {
   fun `when an existing patient is missing a phone number, and the user has been reminded before, then add phone dialog should not be shown`(
       openIntention: OpenIntention
   ) {
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(true))
 
     startMobiusLoop(openIntention)
@@ -229,7 +226,7 @@ class PatientSummaryScreenControllerTest {
   @Parameters(method = "patient summary open intentions except new patient")
   fun `when an existing patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
+    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn phoneNumber
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
     startMobiusLoop(openIntention)
@@ -242,7 +239,7 @@ class PatientSummaryScreenControllerTest {
   @Parameters(method = "patient summary open intentions except new patient")
   fun `when a new patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(phoneNumber))
+    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn phoneNumber
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
     startMobiusLoop(openIntention)
@@ -254,7 +251,6 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions except new patient")
   fun `when a new patient is missing a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
 
     startMobiusLoop(openIntention)

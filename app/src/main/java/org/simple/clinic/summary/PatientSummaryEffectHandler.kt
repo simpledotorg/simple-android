@@ -12,8 +12,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -21,6 +19,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -224,16 +223,11 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
   private fun hasInvalidPhone(patientUuid: UUID): Observable<Boolean> {
     return patientRepository.phoneNumber(patientUuid)
         .filterAndUnwrapJust()
-        .zipWith(lastCancelledAppointmentWithInvalidPhone(patientUuid))
+        .map { phoneNumber -> phoneNumber to appointmentRepository.lastCreatedAppointmentForPatient(patientUuid) }
+        .filter { (_, appointmentOptional) -> appointmentOptional is Just }
+        .map { (number, appointmentOptional) -> number to (appointmentOptional as Just).value }
+        .filter { (_, appointment) -> appointment.wasCancelledBecauseOfInvalidPhoneNumber() }
         .map { (number, appointment) -> appointment.updatedAt > number.updatedAt }
-  }
-
-  // TODO(vs): 2020-02-18 Revisit after Mobius migration
-  private fun lastCancelledAppointmentWithInvalidPhone(patientUuid: UUID): Observable<Appointment> {
-    return appointmentRepository
-        .lastCreatedAppointmentForPatient(patientUuid)
-        .filterAndUnwrapJust()
-        .filter { it.status == Appointment.Status.Cancelled && it.cancelReason == AppointmentCancelReason.InvalidPhoneNumber }
   }
 
   private fun isMissingPhoneAndHasShownReminder(patientUuid: UUID): Observable<Boolean> {

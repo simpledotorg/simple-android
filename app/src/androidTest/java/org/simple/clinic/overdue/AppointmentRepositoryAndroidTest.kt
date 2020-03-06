@@ -15,7 +15,9 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
@@ -260,7 +262,7 @@ class AppointmentRepositoryAndroidTest {
         createBloodPressure(
             bpUuid = UUID.fromString("ce5deb11-05ee-4f9e-8734-ec3d99f271a9"),
             patientUuid = noBpsDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:01Z")
+            recordedAt = Instant.parse("2018-01-02T00:00:00Z")
         )
     )
 
@@ -268,18 +270,18 @@ class AppointmentRepositoryAndroidTest {
         createBloodPressure(
             bpUuid = UUID.fromString("55266e25-0c15-4cd3-969d-3c5d5af48c62"),
             patientUuid = latestBpDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+            recordedAt = Instant.parse("2018-01-03T00:00:00Z")
         ),
         createBloodPressure(
             bpUuid = UUID.fromString("e4c3461e-8624-4b6e-874b-bb73967e423e"),
             patientUuid = latestBpDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:01Z")
+            recordedAt = Instant.parse("2018-01-04T00:00:00Z")
         ),
         createBloodPressure(
             bpUuid = UUID.fromString("e7d19558-36d8-4b5a-a17a-6e3117622b57"),
             patientUuid = latestBpDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:02Z"),
-            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+            recordedAt = Instant.parse("2018-01-05T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-05T00:00:00Z")
         )
     )
 
@@ -287,19 +289,19 @@ class AppointmentRepositoryAndroidTest {
         createBloodPressure(
             bpUuid = UUID.fromString("1de759ae-9f60-4be5-a1f1-d18143bf8318"),
             patientUuid = oldestBpNotDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+            recordedAt = Instant.parse("2018-01-06T00:00:00Z")
         ),
         createBloodPressure(
             bpUuid = UUID.fromString("f135aaa8-e4d6-48c0-acbf-ed0938c44f34"),
             patientUuid = oldestBpNotDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:01Z"),
-            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+            recordedAt = Instant.parse("2018-01-07T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-07T00:00:00Z")
         ),
         createBloodPressure(
             bpUuid = UUID.fromString("44cff8a9-08c2-4a48-9f4b-5c1ec7d9c10c"),
             patientUuid = oldestBpNotDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:02Z"),
-            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+            recordedAt = Instant.parse("2018-01-08T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-08T00:00:00Z")
         )
     )
 
@@ -307,20 +309,20 @@ class AppointmentRepositoryAndroidTest {
         createBloodPressure(
             bpUuid = UUID.fromString("264c4295-c61b-41df-8548-460977510574"),
             patientUuid = allBpsDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
-            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+            recordedAt = Instant.parse("2018-01-09T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-09T00:00:00Z")
         ),
         createBloodPressure(
             bpUuid = UUID.fromString("ff2a665e-d09a-4110-9791-8e966690370f"),
             patientUuid = allBpsDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:01Z"),
-            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+            recordedAt = Instant.parse("2018-01-10T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-10T00:00:00Z")
         ),
         createBloodPressure(
             bpUuid = UUID.fromString("4e97bd7e-87ea-4d4c-a826-3784703937ed"),
             patientUuid = allBpsDeletedPatientUuid,
-            recordedAt = Instant.parse("2018-01-01T00:00:02Z"),
-            deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+            recordedAt = Instant.parse("2018-01-11T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-11T00:00:00Z")
         )
     )
 
@@ -362,13 +364,193 @@ class AppointmentRepositoryAndroidTest {
     // then
     assertThat(overdueAppointments.keys).containsExactly(noBpsDeletedPatientUuid, latestBpDeletedPatientUuid, oldestBpNotDeletedPatientUuid)
 
-    val appointmentBpUuidOfNoBpsDeletedPatient = overdueAppointments.getValue(noBpsDeletedPatientUuid).bloodPressure.uuid
-    val appointmentBpUuidOfLatestBpDeletedPatient = overdueAppointments.getValue(latestBpDeletedPatientUuid).bloodPressure.uuid
-    val appointmentBpUuidOfOldestBpDeletedPatient = overdueAppointments.getValue(oldestBpNotDeletedPatientUuid).bloodPressure.uuid
+    val lastSeenForNoBpsDeletedPatient = overdueAppointments.getValue(noBpsDeletedPatientUuid).patientLastSeen
+    val lastSeenForLatestBpDeletedPatient = overdueAppointments.getValue(latestBpDeletedPatientUuid).patientLastSeen
+    val lastSeenForOldestBpDeletedPatient = overdueAppointments.getValue(oldestBpNotDeletedPatientUuid).patientLastSeen
 
-    assertThat(appointmentBpUuidOfNoBpsDeletedPatient).isEqualTo(bpsForPatientWithNoBpsDeleted[1].uuid)
-    assertThat(appointmentBpUuidOfLatestBpDeletedPatient).isEqualTo(bpsForPatientWithLatestBpDeleted[1].uuid)
-    assertThat(appointmentBpUuidOfOldestBpDeletedPatient).isEqualTo(bpsForPatientWithOldestBpNotDeleted[0].uuid)
+    assertThat(lastSeenForNoBpsDeletedPatient).isEqualTo(bpsForPatientWithNoBpsDeleted[1].recordedAt)
+    assertThat(lastSeenForLatestBpDeletedPatient).isEqualTo(bpsForPatientWithLatestBpDeleted[1].recordedAt)
+    assertThat(lastSeenForOldestBpDeletedPatient).isEqualTo(bpsForPatientWithOldestBpNotDeleted[0].recordedAt)
+  }
+
+  @Test
+  fun deleted_blood_sugar_measurements_should_not_be_considered_when_fetching_overdue_appointments() {
+    fun createBloodSugar(
+        bpUuid: UUID,
+        patientUuid: UUID,
+        recordedAt: Instant,
+        deletedAt: Instant? = null
+    ): BloodSugarMeasurement {
+      return testData.bloodSugarMeasurement(
+          uuid = bpUuid,
+          patientUuid = patientUuid,
+          facilityUuid = facility.uuid,
+          userUuid = userUuid,
+          syncStatus = DONE,
+          createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+          updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+          recordedAt = recordedAt,
+          deletedAt = deletedAt
+      )
+    }
+
+    fun createAppointment(patientUuid: UUID, scheduledDate: LocalDate): Appointment {
+      return testData.appointment(
+          patientUuid = patientUuid,
+          facilityUuid = facility.uuid,
+          status = Scheduled,
+          scheduledDate = scheduledDate)
+    }
+
+    // given
+    val noBloodSugarsDeletedPatientUuid = UUID.fromString("d05b8ed2-97ae-4fda-8af9-bc4168af3c4d")
+    val latestBloodSugarDeletedPatientUuid = UUID.fromString("9e5ec219-f4a5-4bab-9283-0a087c5d7ac2")
+    val oldestBloodSugarNotDeletedPatientUuid = UUID.fromString("54e7143c-fe64-4cd8-8c92-f379a79a60f9")
+    val allBloodSugarsDeletedPatientUuid = UUID.fromString("05bd9d55-5742-466f-b97e-07301e25fe7e")
+
+    val patients = listOf(
+        testData.patientProfile(
+            patientUuid = noBloodSugarsDeletedPatientUuid,
+            generatePhoneNumber = true,
+            patientName = "No blood sugars are deleted"
+        ),
+        testData.patientProfile(
+            patientUuid = latestBloodSugarDeletedPatientUuid,
+            generatePhoneNumber = true,
+            patientName = "Latest blood sugar is deleted"
+        ),
+        testData.patientProfile(
+            patientUuid = oldestBloodSugarNotDeletedPatientUuid,
+            generatePhoneNumber = true,
+            patientName = "Oldest blood sugar is not deleted"
+        ),
+        testData.patientProfile(
+            patientUuid = allBloodSugarsDeletedPatientUuid,
+            generatePhoneNumber = true,
+            patientName = "All blood sugars are deleted"
+        )
+    )
+
+    patientRepository.save(patients).blockingAwait()
+
+    val bloodSugarForPatientWithNoBloodSugarsDeleted = listOf(
+        createBloodSugar(
+            bpUuid = UUID.fromString("189b0842-044e-4f1c-a214-24318052f11d"),
+            patientUuid = noBloodSugarsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+        ),
+        createBloodSugar(
+            bpUuid = UUID.fromString("ce5deb11-05ee-4f9e-8734-ec3d99f271a9"),
+            patientUuid = noBloodSugarsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-02T00:00:00Z")
+        )
+    )
+
+    val bloodSugarsForPatientWithLatestBloodSugarDeleted = listOf(
+        createBloodSugar(
+            bpUuid = UUID.fromString("55266e25-0c15-4cd3-969d-3c5d5af48c62"),
+            patientUuid = latestBloodSugarDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-03T00:00:00Z")
+        ),
+        createBloodSugar(
+            bpUuid = UUID.fromString("e4c3461e-8624-4b6e-874b-bb73967e423e"),
+            patientUuid = latestBloodSugarDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-04T00:00:00Z")
+        ),
+        createBloodSugar(
+            bpUuid = UUID.fromString("e7d19558-36d8-4b5a-a17a-6e3117622b57"),
+            patientUuid = latestBloodSugarDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-05T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-05T00:00:00Z")
+        )
+    )
+
+    val bloodSugarsForPatientWithOldestBloodSugarNotDeleted = listOf(
+        createBloodSugar(
+            bpUuid = UUID.fromString("1de759ae-9f60-4be5-a1f1-d18143bf8318"),
+            patientUuid = oldestBloodSugarNotDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-06T00:00:00Z")
+        ),
+        createBloodSugar(
+            bpUuid = UUID.fromString("f135aaa8-e4d6-48c0-acbf-ed0938c44f34"),
+            patientUuid = oldestBloodSugarNotDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-07T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-07T00:00:00Z")
+        ),
+        createBloodSugar(
+            bpUuid = UUID.fromString("44cff8a9-08c2-4a48-9f4b-5c1ec7d9c10c"),
+            patientUuid = oldestBloodSugarNotDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-08T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-08T00:00:00Z")
+        )
+    )
+
+    val bloodSugarsForPatientWithAllBloodSugarsDeleted = listOf(
+        createBloodSugar(
+            bpUuid = UUID.fromString("264c4295-c61b-41df-8548-460977510574"),
+            patientUuid = allBloodSugarsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-09T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-09T00:00:00Z")
+        ),
+        createBloodSugar(
+            bpUuid = UUID.fromString("ff2a665e-d09a-4110-9791-8e966690370f"),
+            patientUuid = allBloodSugarsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-10T00:00:00Z"),
+            deletedAt = Instant.parse("2018-01-10T00:00:00Z")
+        ),
+        createBloodSugar(
+            bpUuid = UUID.fromString("4e97bd7e-87ea-4d4c-a826-3784703937ed"),
+            patientUuid = allBloodSugarsDeletedPatientUuid,
+            recordedAt = Instant.parse("2018-01-11T00:00:02Z"),
+            deletedAt = Instant.parse("2018-01-11T00:00:00Z")
+        )
+    )
+
+    bloodSugarRepository
+        .save(bloodSugarForPatientWithNoBloodSugarsDeleted + bloodSugarsForPatientWithLatestBloodSugarDeleted + bloodSugarsForPatientWithOldestBloodSugarNotDeleted + bloodSugarsForPatientWithAllBloodSugarsDeleted)
+        .blockingAwait()
+
+    val today = LocalDate.now(clock)
+    val appointmentsScheduledFor = today.minusDays(1L)
+
+    val appointmentForPatientWithNoBloodSugarDeleted = createAppointment(
+        patientUuid = noBloodSugarsDeletedPatientUuid,
+        scheduledDate = appointmentsScheduledFor
+    )
+
+    val appointmentForPatientWithLatestBloodSugarDeleted = createAppointment(
+        patientUuid = latestBloodSugarDeletedPatientUuid,
+        scheduledDate = appointmentsScheduledFor
+    )
+
+    val appointmentsForPatientWithOldestBloodSugarNotDeleted = createAppointment(
+        patientUuid = oldestBloodSugarNotDeletedPatientUuid,
+        scheduledDate = appointmentsScheduledFor
+    )
+
+    val appointmentsForPatientWithAllBloodSugarsDeleted = createAppointment(
+        patientUuid = allBloodSugarsDeletedPatientUuid,
+        scheduledDate = appointmentsScheduledFor
+    )
+
+    appointmentRepository
+        .save(listOf(appointmentForPatientWithNoBloodSugarDeleted, appointmentForPatientWithLatestBloodSugarDeleted, appointmentsForPatientWithOldestBloodSugarNotDeleted, appointmentsForPatientWithAllBloodSugarsDeleted))
+        .blockingAwait()
+
+    // when
+    val overdueAppointments = appointmentRepository.overdueAppointments(since = today, facility = facility).blockingFirst()
+        .associateBy { it.appointment.patientUuid }
+
+    // then
+    assertThat(overdueAppointments.keys).containsExactly(noBloodSugarsDeletedPatientUuid, latestBloodSugarDeletedPatientUuid, oldestBloodSugarNotDeletedPatientUuid)
+
+    val appointmentBpUuidOfNoBpsDeletedPatient = overdueAppointments.getValue(noBloodSugarsDeletedPatientUuid).patientLastSeen
+    val appointmentBpUuidOfLatestBpDeletedPatient = overdueAppointments.getValue(latestBloodSugarDeletedPatientUuid).patientLastSeen
+    val appointmentBpUuidOfOldestBpDeletedPatient = overdueAppointments.getValue(oldestBloodSugarNotDeletedPatientUuid).patientLastSeen
+
+    assertThat(appointmentBpUuidOfNoBpsDeletedPatient).isEqualTo(bloodSugarForPatientWithNoBloodSugarsDeleted[1].recordedAt)
+    assertThat(appointmentBpUuidOfLatestBpDeletedPatient).isEqualTo(bloodSugarsForPatientWithLatestBloodSugarDeleted[1].recordedAt)
+    assertThat(appointmentBpUuidOfOldestBpDeletedPatient).isEqualTo(bloodSugarsForPatientWithOldestBloodSugarNotDeleted[0].recordedAt)
   }
 
   @Test
@@ -934,14 +1116,225 @@ class AppointmentRepositoryAndroidTest {
     val bloodPressuresByAppointmentUuid = appointmentRepository
         .overdueAppointments(since = LocalDate.now(clock), facility = facility)
         .blockingFirst()
-        .associateBy({ it.appointment.uuid }, { it.bloodPressure })
+        .associateBy({ it.appointment.uuid }, { it.patientLastSeen })
 
     // then
     val expected = mapOf(
-        appointmentUuidForFirstPatient to laterRecordedBpForFirstPatient,
-        appointmentUuidForSecondPatient to laterRecordedBpForSecondPatient
+        appointmentUuidForFirstPatient to laterRecordedBpForFirstPatient.recordedAt,
+        appointmentUuidForSecondPatient to laterRecordedBpForSecondPatient.recordedAt
     )
     assertThat(bloodPressuresByAppointmentUuid).isEqualTo(expected)
+  }
+
+  @Test
+  fun when_picking_overdue_appointment_then_the_latest_recorded_blood_sugar_should_be_considered() {
+    fun createBloodSugar(patientProfile: PatientProfile, recordedAt: Instant): BloodSugarMeasurement {
+      return testData.bloodSugarMeasurement(
+          patientUuid = patientProfile.patient.uuid,
+          recordedAt = recordedAt
+      )
+    }
+
+    fun scheduleAppointment(
+        appointmentUuid: UUID,
+        patientProfile: PatientProfile
+    ): Single<Appointment> {
+      return appointmentRepository.schedule(
+          patientUuid = patientProfile.patient.uuid,
+          appointmentUuid = appointmentUuid,
+          appointmentDate = LocalDate.parse("2017-12-30"),
+          appointmentType = Manual,
+          appointmentFacilityUuid = facility.uuid,
+          creationFacilityUuid = facility.uuid
+      )
+    }
+
+    // given
+    val firstPatient = testData.patientProfile(
+        patientUuid = UUID.fromString("e1943cfb-faf0-42c4-b5b6-14b5153295b2"),
+        generatePhoneNumber = true
+    )
+    val secondPatient = testData.patientProfile(
+        patientUuid = UUID.fromString("08c7acbf-61f1-439e-93a8-43ba4e990428"),
+        generatePhoneNumber = true
+    )
+
+    patientRepository.save(listOf(firstPatient, secondPatient)).blockingAwait()
+
+    val earlierRecordedBloodSugarForFirstPatient = createBloodSugar(
+        patientProfile = firstPatient,
+        recordedAt = Instant.parse("2017-12-31T23:59:59Z")
+    )
+    val laterRecordedBloodSugarForFirstPatient = createBloodSugar(
+        patientProfile = firstPatient,
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    val earlierRecordedBloodSugarForSecondPatient = createBloodSugar(
+        patientProfile = secondPatient,
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val laterRecordedBloodSugarForSecondPatient = createBloodSugar(
+        patientProfile = secondPatient,
+        recordedAt = Instant.parse("2018-01-01T00:00:01Z")
+    )
+
+    bloodSugarRepository.save(listOf(laterRecordedBloodSugarForFirstPatient, earlierRecordedBloodSugarForFirstPatient, earlierRecordedBloodSugarForSecondPatient, laterRecordedBloodSugarForSecondPatient)).blockingAwait()
+
+    val appointmentUuidForFirstPatient = UUID.fromString("d9fd734d-13b8-43e3-a2d7-b40341699050")
+    val appointmentUuidForSecondPatient = UUID.fromString("979e4a13-ae73-4dcf-a1e0-31465dff5512")
+
+    scheduleAppointment(appointmentUuidForFirstPatient, firstPatient).blockingGet()
+    scheduleAppointment(appointmentUuidForSecondPatient, secondPatient).blockingGet()
+
+    // when
+    val bloodSugarByAppointmentUuid = appointmentRepository
+        .overdueAppointments(since = LocalDate.now(clock), facility = facility)
+        .blockingFirst()
+        .associateBy({ it.appointment.uuid }, { it.patientLastSeen })
+
+    // then
+    val expected = mapOf(
+        appointmentUuidForFirstPatient to laterRecordedBloodSugarForFirstPatient.recordedAt,
+        appointmentUuidForSecondPatient to laterRecordedBloodSugarForSecondPatient.recordedAt
+    )
+    assertThat(bloodSugarByAppointmentUuid).isEqualTo(expected)
+  }
+
+  @Test
+  fun when_picking_overdue_appointment_and_blood_sugar_is_latest_compared_to_blood_pressure_then_blood_sugar_should_be_considered() {
+    fun createBloodSugar(patientProfile: PatientProfile, recordedAt: Instant): BloodSugarMeasurement {
+      return testData.bloodSugarMeasurement(
+          patientUuid = patientProfile.patient.uuid,
+          recordedAt = recordedAt
+      )
+    }
+
+    fun createBloodPressure(patientProfile: PatientProfile, recordedAt: Instant): BloodPressureMeasurement {
+      return testData.bloodPressureMeasurement(
+          patientUuid = patientProfile.patient.uuid,
+          recordedAt = recordedAt
+      )
+    }
+
+    fun scheduleAppointment(
+        appointmentUuid: UUID,
+        patientProfile: PatientProfile
+    ): Single<Appointment> {
+      return appointmentRepository.schedule(
+          patientUuid = patientProfile.patient.uuid,
+          appointmentUuid = appointmentUuid,
+          appointmentDate = LocalDate.parse("2017-12-30"),
+          appointmentType = Manual,
+          appointmentFacilityUuid = facility.uuid,
+          creationFacilityUuid = facility.uuid
+      )
+    }
+
+    // given
+    val patient = testData.patientProfile(
+        patientUuid = UUID.fromString("e1943cfb-faf0-42c4-b5b6-14b5153295b2"),
+        generatePhoneNumber = true
+    )
+
+    patientRepository.save(listOf(patient)).blockingAwait()
+
+    val earlierRecordedBPForPatient = createBloodPressure(
+        patientProfile = patient,
+        recordedAt = Instant.parse("2017-12-31T23:59:59Z")
+    )
+    val laterRecordedBloodSugarForPatient = createBloodSugar(
+        patientProfile = patient,
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    bpRepository.save(listOf(earlierRecordedBPForPatient))
+    bloodSugarRepository.save(listOf(laterRecordedBloodSugarForPatient)).blockingAwait()
+
+    val appointmentUuidForFirstPatient = UUID.fromString("d9fd734d-13b8-43e3-a2d7-b40341699050")
+
+    scheduleAppointment(appointmentUuidForFirstPatient, patient).blockingGet()
+    scheduleAppointment(appointmentUuidForFirstPatient, patient).blockingGet()
+
+    // when
+    val bloodSugarByAppointmentUuid = appointmentRepository
+        .overdueAppointments(since = LocalDate.now(clock), facility = facility)
+        .blockingFirst()
+        .associateBy({ it.appointment.uuid }, { it.patientLastSeen })
+
+    // then
+    val expected = mapOf(
+        appointmentUuidForFirstPatient to laterRecordedBloodSugarForPatient.recordedAt
+    )
+    assertThat(bloodSugarByAppointmentUuid).isEqualTo(expected)
+  }
+
+  @Test
+  fun when_picking_overdue_appointment_and_blood_pressure_is_latest_compared_to_blood_sugar_then_blood_pressure_should_be_considered() {
+    fun createBloodSugar(patientProfile: PatientProfile, recordedAt: Instant): BloodSugarMeasurement {
+      return testData.bloodSugarMeasurement(
+          patientUuid = patientProfile.patient.uuid,
+          recordedAt = recordedAt
+      )
+    }
+
+    fun createBloodPressure(patientProfile: PatientProfile, recordedAt: Instant): BloodPressureMeasurement {
+      return testData.bloodPressureMeasurement(
+          patientUuid = patientProfile.patient.uuid,
+          recordedAt = recordedAt
+      )
+    }
+
+    fun scheduleAppointment(
+        appointmentUuid: UUID,
+        patientProfile: PatientProfile
+    ): Single<Appointment> {
+      return appointmentRepository.schedule(
+          patientUuid = patientProfile.patient.uuid,
+          appointmentUuid = appointmentUuid,
+          appointmentDate = LocalDate.parse("2017-12-30"),
+          appointmentType = Manual,
+          appointmentFacilityUuid = facility.uuid,
+          creationFacilityUuid = facility.uuid
+      )
+    }
+
+    // given
+    val patient = testData.patientProfile(
+        patientUuid = UUID.fromString("e1943cfb-faf0-42c4-b5b6-14b5153295b2"),
+        generatePhoneNumber = true
+    )
+
+    patientRepository.save(listOf(patient)).blockingAwait()
+
+    val earlierRecordedBloodSugarForPatient = createBloodSugar(
+        patientProfile = patient,
+        recordedAt = Instant.parse("2017-12-31T23:59:59Z")
+    )
+    val laterRecordedBPForPatient = createBloodPressure(
+        patientProfile = patient,
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    bloodSugarRepository.save(listOf(earlierRecordedBloodSugarForPatient))
+    bpRepository.save(listOf(laterRecordedBPForPatient)).blockingAwait()
+
+    val appointmentUuidForFirstPatient = UUID.fromString("d9fd734d-13b8-43e3-a2d7-b40341699050")
+
+    scheduleAppointment(appointmentUuidForFirstPatient, patient).blockingGet()
+    scheduleAppointment(appointmentUuidForFirstPatient, patient).blockingGet()
+
+    // when
+    val bloodSugarByAppointmentUuid = appointmentRepository
+        .overdueAppointments(since = LocalDate.now(clock), facility = facility)
+        .blockingFirst()
+        .associateBy({ it.appointment.uuid }, { it.patientLastSeen })
+
+    // then
+    val expected = mapOf(
+        appointmentUuidForFirstPatient to laterRecordedBPForPatient.recordedAt
+    )
+    assertThat(bloodSugarByAppointmentUuid).isEqualTo(expected)
   }
 
   @Test
@@ -1360,6 +1753,71 @@ class AppointmentRepositoryAndroidTest {
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
 
+  @Test
+  fun patients_without_blood_sugars_should_not_be_shown_when_fetching_overdue_appointments() {
+
+    val currentDate = LocalDate.parse("2018-01-05")
+
+    fun createAppointmentRecord(
+        patientUuid: UUID,
+        bloodSugarUuid: UUID?,
+        appointmentUuid: UUID
+    ): RecordAppointment {
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
+
+      val bloodSugarMeasurement = if (bloodSugarUuid != null) {
+        testData.bloodSugarMeasurement(
+            uuid = bloodSugarUuid,
+            patientUuid = patientUuid,
+            facilityUuid = facility.uuid,
+            userUuid = userUuid,
+            reading = BloodSugarReading("256", Random),
+            recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            deletedAt = null
+        )
+      } else null
+
+      val appointment = testData.appointment(
+          uuid = appointmentUuid,
+          patientUuid = patientUuid,
+          facilityUuid = facility.uuid,
+          scheduledDate = LocalDate.parse("2018-01-04"),
+          status = Scheduled,
+          cancelReason = null,
+          remindOn = null,
+          agreedToVisit = null
+      )
+
+      return RecordAppointment(patientProfile, null, bloodSugarMeasurement, appointment)
+    }
+
+    // given
+    val withBloodSugar = createAppointmentRecord(
+        patientUuid = UUID.fromString("417c19d3-68a0-4936-bc4f-5b7c2a73ccc7"),
+        bloodSugarUuid = UUID.fromString("3414fd9a-8b30-4850-9f8f-3de9305dcb6c"),
+        appointmentUuid = UUID.fromString("053f2f73-b693-420c-a9c6-d8aae1c77395")
+    )
+
+    val withoutBloodSugar = createAppointmentRecord(
+        patientUuid = UUID.fromString("0af5c909-551b-448d-988e-b00b3304f738"),
+        bloodSugarUuid = null,
+        appointmentUuid = UUID.fromString("e58cfd76-aaeb-42a8-8bf1-4c71614c6288")
+    )
+
+    listOf(withBloodSugar, withoutBloodSugar)
+        .forEach { it.save(patientRepository, bpRepository, bloodSugarRepository, appointmentRepository) }
+
+    // when
+    val overdueAppointments = appointmentRepository
+        .overdueAppointments(since = currentDate, facility = facility)
+        .blockingFirst()
+
+    // then
+    val expectedAppointments = listOf(withBloodSugar).map(RecordAppointment::toOverdueAppointment)
+
+    assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
+  }
+
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
     appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE).blockingAwait()
   }
@@ -1396,20 +1854,25 @@ class AppointmentRepositoryAndroidTest {
     }
 
     fun toOverdueAppointment(): OverdueAppointment {
-      checkNotNull(bloodPressureMeasurement) {
-        "Cannot create an Overdue Appointment without a Blood Pressure Measurement"
+      if (bloodPressureMeasurement == null && bloodSugarMeasurement == null) {
+        throw AssertionError("Need a Blood Pressure Measurement or Blood Sugar Measurement to create an Overdue Appointment")
+      } else {
+        val patientLastSeen = when {
+          bloodPressureMeasurement == null -> bloodSugarMeasurement!!.recordedAt
+          bloodSugarMeasurement == null -> bloodPressureMeasurement.recordedAt
+          else -> maxOf(bloodPressureMeasurement.recordedAt, bloodSugarMeasurement.recordedAt)
+        }
+        return OverdueAppointment(
+            fullName = patientProfile.patient.fullName,
+            gender = patientProfile.patient.gender,
+            dateOfBirth = patientProfile.patient.dateOfBirth,
+            age = patientProfile.patient.age,
+            appointment = appointment,
+            phoneNumber = patientProfile.phoneNumbers.first(),
+            isAtHighRisk = false,
+            patientLastSeen = patientLastSeen
+        )
       }
-      return OverdueAppointment(
-          fullName = patientProfile.patient.fullName,
-          gender = patientProfile.patient.gender,
-          dateOfBirth = patientProfile.patient.dateOfBirth,
-          age = patientProfile.patient.age,
-          appointment = appointment,
-          bloodPressure = bloodPressureMeasurement,
-          phoneNumber = patientProfile.phoneNumbers.first(),
-          isAtHighRisk = false,
-          patientLastSeen = bloodPressureMeasurement.recordedAt
-      )
     }
   }
 }

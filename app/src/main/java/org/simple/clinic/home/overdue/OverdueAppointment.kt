@@ -10,6 +10,7 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
@@ -33,7 +34,9 @@ data class OverdueAppointment(
     @Embedded(prefix = "phone_")
     val phoneNumber: PatientPhoneNumber?,
 
-    val isAtHighRisk: Boolean
+    val isAtHighRisk: Boolean,
+
+    val patientLastSeen: Instant
 ) {
 
   @Dao
@@ -55,6 +58,14 @@ data class OverdueAppointment(
 
           PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number, PPN.phoneType phone_phoneType, PPN.active phone_active,
           PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt,
+          
+          (
+            CASE
+                WHEN BP.uuid IS NULL THEN BloodSugar.recordedAt
+                WHEN BloodSugar.uuid IS NULL THEN BP.recordedAt
+                ELSE MAX(BP.recordedAt, BloodSugar.recordedAt)
+            END
+          ) AS patientLastSeen,
 
           (
             CASE
@@ -68,9 +79,14 @@ data class OverdueAppointment(
           FROM Patient P
 
           INNER JOIN Appointment A ON A.patientUuid = P.uuid
-          INNER JOIN BloodPressureMeasurement BP ON (BP.patientUuid = P.uuid AND BP.deletedAt IS NULL)
           LEFT JOIN PatientPhoneNumber PPN ON (PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL)
           LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
+          LEFT JOIN (
+            SELECT * FROM BloodPressureMeasurement WHERE deletedAt IS NULL GROUP BY patientUuid HAVING max(recordedAt)
+          ) BP ON BP.patientUuid = P.uuid
+          LEFT JOIN (
+            SELECT * FROM BloodSugarMeasurements WHERE deletedAt IS NULL GROUP BY patientUuid HAVING max(recordedAt)
+          ) BloodSugar ON BloodSugar.patientUuid = P.uuid
 
           WHERE 
             P.deletedAt IS NULL 
@@ -81,8 +97,9 @@ data class OverdueAppointment(
             AND A.scheduledDate > :scheduledAfter
             AND PPN.number IS NOT NULL
             AND (A.remindOn < :scheduledBefore OR A.remindOn IS NULL)
+            AND (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
 
-          GROUP BY P.uuid HAVING max(BP.recordedAt)
+          GROUP BY P.uuid HAVING MAX(patientLastSeen)
           ORDER BY isAtHighRisk DESC, A.scheduledDate DESC, A.updatedAt ASC
           """)
     fun appointmentsForFacility(

@@ -1407,7 +1407,8 @@ class AppointmentRepositoryAndroidTest {
           appointment = appointment,
           bloodPressure = bloodPressureMeasurement,
           phoneNumber = patientProfile.phoneNumbers.first(),
-          isAtHighRisk = false
+          isAtHighRisk = false,
+          patientLastSeen = bloodPressureMeasurement.recordedAt
       )
     }
   }

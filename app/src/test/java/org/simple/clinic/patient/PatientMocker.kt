@@ -314,24 +314,27 @@ object PatientMocker {
           uuid = bpUuid,
           userUuid = userUuid,
           facilityUuid = facilityUuid,
-          patientUuid = patientUuid
+          patientUuid = patientUuid,
+          recordedAt = Instant.parse("2018-01-01T00:00:00Z")
       ),
       isHighRisk: Boolean = false,
       gender: Gender = Gender.Transgender,
       dateOfBirth: LocalDate? = LocalDate.now(UTC).minusYears(30),
       age: Age? = null,
       phoneNumber: PatientPhoneNumber? = phoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
-      appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid)
+      appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
+      patientLastSeen: Instant = Instant.parse("2018-01-01T00:00:00Z")
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
         gender = gender,
         dateOfBirth = dateOfBirth,
         age = age,
-        phoneNumber = phoneNumber,
         appointment = appointment,
         bloodPressure = bloodPressureMeasurement,
-        isAtHighRisk = isHighRisk
+        phoneNumber = phoneNumber,
+        isAtHighRisk = isHighRisk,
+        patientLastSeen = patientLastSeen
     )
   }
 

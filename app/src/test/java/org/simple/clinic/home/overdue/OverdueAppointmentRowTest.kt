@@ -42,7 +42,8 @@ class OverdueAppointmentRowTest {
                 uuid = UUID.fromString("65d790f3-a9ea-4a83-bce1-8d1ea8539c67"),
                 patientUuid = UUID.fromString("c88a4835-40e5-476b-9a6f-2f850c48ecdb"),
                 scheduledDate = LocalDate.parse("2019-01-01")
-            )
+            ),
+            patientLastSeen = Instant.parse("2020-01-01T00:00:00Z")
         )
     val appointmentDelayedByOneWeek = PatientMocker
         .overdueAppointment(
@@ -61,7 +62,8 @@ class OverdueAppointmentRowTest {
                 uuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
                 patientUuid = UUID.fromString("0c35a015-d823-4cc5-be77-21ce026c5780"),
                 scheduledDate = LocalDate.parse("2018-12-29")
-            )
+            ),
+            patientLastSeen = Instant.parse("2019-12-25T00:00:00Z")
         )
 
     val appointments = listOf(appointmentDelayedBy4Days, appointmentDelayedByOneWeek)

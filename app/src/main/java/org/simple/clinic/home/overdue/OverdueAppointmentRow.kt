@@ -56,7 +56,7 @@ data class OverdueAppointmentRow(
           phoneNumber = overdueAppointment.phoneNumber?.number,
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
           isAtHighRisk = overdueAppointment.isAtHighRisk,
-          lastSeenDate = dateFormatter.format(overdueAppointment.bloodPressure.recordedAt.toLocalDateAtZone(clock.zone))
+          lastSeenDate = dateFormatter.format(overdueAppointment.patientLastSeen.toLocalDateAtZone(clock.zone))
       )
     }
 

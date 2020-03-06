@@ -775,7 +775,7 @@ class AppointmentRepositoryAndroidTest {
     ).blockingGet()
 
     // when
-    val appointment = appointmentRepository.lastCreatedAppointmentForPatient(patientUuid).blockingFirst().toNullable()!!
+    val appointment = appointmentRepository.lastCreatedAppointmentForPatient(patientUuid).toNullable()!!
 
     // then
     assertThat(appointment).isEqualTo(secondAppointment)

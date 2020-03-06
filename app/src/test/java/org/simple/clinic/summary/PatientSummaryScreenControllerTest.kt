@@ -26,15 +26,12 @@ import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
-import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -86,7 +83,7 @@ class PatientSummaryScreenControllerTest {
   fun setUp() {
     whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn None
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.never())
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.never())
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(userSession.loggedInUserImmediate()).doReturn(user)
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.never())
@@ -120,8 +117,7 @@ class PatientSummaryScreenControllerTest {
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = PatientMocker.appointment(status = Cancelled, cancelReason = cancelReason)
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid))
-        .doReturn(Observable.just<Optional<Appointment>>(Just(canceledAppointment)))
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Just(canceledAppointment)
 
     val phoneNumber = PatientMocker.phoneNumber(
         patientUuid = patientUuid,
@@ -144,30 +140,12 @@ class PatientSummaryScreenControllerTest {
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = PatientMocker.appointment(status = Cancelled, cancelReason = cancelReason)
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid))
-        .doReturn(Observable.just<Optional<Appointment>>(Just(canceledAppointment)))
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Just(canceledAppointment)
 
     val phoneNumber = PatientMocker.phoneNumber(
         patientUuid = patientUuid,
         updatedAt = canceledAppointment.updatedAt + Duration.ofHours(2))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(Just(phoneNumber)))
-
-    startMobiusLoop(openIntention)
-
-    verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
-  }
-
-  @Test
-  @Parameters(method = "appointment cancelation reasons")
-  fun `when update phone dialog feature is disabled then it should never be shown`(
-      openIntention: OpenIntention,
-      cancelReason: AppointmentCancelReason
-  ) {
-    val appointmentStream = Observable.just(
-        None,
-        Just(PatientMocker.appointment(cancelReason = null)),
-        Just(PatientMocker.appointment(cancelReason = cancelReason)))
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
 
     startMobiusLoop(openIntention)
 
@@ -185,10 +163,7 @@ class PatientSummaryScreenControllerTest {
   fun `when a canceled appointment with the patient does not exist then update phone dialog should not be shown`(
       openIntention: OpenIntention
   ) {
-    val appointmentStream = Observable.just(
-        None,
-        Just(PatientMocker.appointment(status = Scheduled, cancelReason = null)))
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(appointmentStream)
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
 
     startMobiusLoop(openIntention)
 
@@ -197,7 +172,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when a new patient is missing a phone number, then avoid showing update phone dialog`() {
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).doReturn(Observable.just<Optional<Appointment>>(None))
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
 
     startMobiusLoop(ViewExistingPatient)

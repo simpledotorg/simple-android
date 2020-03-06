@@ -303,20 +303,11 @@ object PatientMocker {
   }
 
   fun overdueAppointment(
-      userUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      bpUuid: UUID = UUID.randomUUID(),
       phoneNumberUuid: UUID = UUID.randomUUID(),
       appointmentUuid: UUID = UUID.randomUUID(),
       name: String = "somebody",
-      bloodPressureMeasurement: BloodPressureMeasurement = bp(
-          uuid = bpUuid,
-          userUuid = userUuid,
-          facilityUuid = facilityUuid,
-          patientUuid = patientUuid,
-          recordedAt = Instant.parse("2018-01-01T00:00:00Z")
-      ),
       isHighRisk: Boolean = false,
       gender: Gender = Gender.Transgender,
       dateOfBirth: LocalDate? = LocalDate.now(UTC).minusYears(30),
@@ -331,7 +322,6 @@ object PatientMocker {
         dateOfBirth = dateOfBirth,
         age = age,
         appointment = appointment,
-        bloodPressure = bloodPressureMeasurement,
         phoneNumber = phoneNumber,
         isAtHighRisk = isHighRisk,
         patientLastSeen = patientLastSeen

@@ -10,7 +10,6 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.ChronoUnit.DAYS
 import java.util.Locale
 import java.util.UUID
 
@@ -22,17 +21,11 @@ class OverdueAppointmentRowTest {
   @Test
   fun `overdue appointments must be converted to list items`() {
     // given
-    val recordedAt = Instant.parse("2020-01-08T00:00:00Z")
     val oneYear = Duration.ofDays(365)
 
     val appointmentDelayedBy4Days = PatientMocker
         .overdueAppointment(
             name = "Anish Acharya",
-            bloodPressureMeasurement = PatientMocker.bp(
-                systolic = 127,
-                diastolic = 95,
-                recordedAt = recordedAt.minus(7, DAYS)
-            ),
             isHighRisk = false,
             gender = Gender.Male,
             dateOfBirth = LocalDate.parse("1985-01-01"),
@@ -48,11 +41,6 @@ class OverdueAppointmentRowTest {
     val appointmentDelayedByOneWeek = PatientMocker
         .overdueAppointment(
             name = "Deepa",
-            bloodPressureMeasurement = PatientMocker.bp(
-                systolic = 168,
-                diastolic = 110,
-                recordedAt = recordedAt.minus(14, DAYS)
-            ),
             isHighRisk = true,
             gender = Gender.Female,
             dateOfBirth = null,

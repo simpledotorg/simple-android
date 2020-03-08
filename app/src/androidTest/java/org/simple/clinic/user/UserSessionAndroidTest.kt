@@ -20,6 +20,7 @@ import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import javax.inject.Inject
@@ -49,9 +50,10 @@ class UserSessionAndroidTest {
   lateinit var facility: Facility
 
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(LocalAuthenticationRule())
-      .around(RxErrorsRule())!!
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(LocalAuthenticationRule())
+      .around(RxErrorsRule())
 
   @Before
   fun setUp() {

@@ -23,6 +23,7 @@ import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
@@ -67,10 +68,10 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   private val registerPatientRule = RegisterPatientRule(UUID.randomUUID())
 
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(ServerAuthenticationRule())
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(ServerAuthenticationRule())
       .around(registerPatientRule)
-      .around(RxErrorsRule())!!
 
   @Before
   fun setUp() {

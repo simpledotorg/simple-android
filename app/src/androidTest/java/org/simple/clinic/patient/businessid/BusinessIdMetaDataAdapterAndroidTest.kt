@@ -3,9 +3,12 @@ package org.simple.clinic.patient.businessid
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 
@@ -14,6 +17,9 @@ class BusinessIdMetaDataAdapterAndroidTest {
 
   @field:Inject
   lateinit var businessIdMetaDataAdapter: BusinessIdMetaDataAdapter
+
+  @get:Rule
+  val rules: RuleChain = Rules.global()
 
   @Before
   fun setUp() {

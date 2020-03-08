@@ -7,11 +7,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
@@ -19,7 +19,7 @@ import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.Rules
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -54,9 +54,9 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
       syncGroup = SyncGroup.FREQUENT))
 
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(ServerAuthenticationRule())
-      .around(RxErrorsRule())!!
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(ServerAuthenticationRule())
 
   @Before
   fun setUp() {

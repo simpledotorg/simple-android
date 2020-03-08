@@ -6,8 +6,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.ExpectedException
+import org.junit.rules.RuleChain
 import org.simple.clinic.MigrationTestHelperWithForeignKeyConstraints
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.util.Rules
 import javax.inject.Inject
 
 abstract class BaseDatabaseMigrationTest(
@@ -15,11 +17,15 @@ abstract class BaseDatabaseMigrationTest(
     private val toVersion: Int
 ) {
 
-  @get:Rule
-  val helper = MigrationTestHelperWithForeignKeyConstraints()
+  private val helper = MigrationTestHelperWithForeignKeyConstraints()
+
+  private val expectedException: ExpectedException = ExpectedException.none()
 
   @get:Rule
-  val expectedException: ExpectedException = ExpectedException.none()
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(expectedException)
+      .around(helper)
 
   @Inject
   lateinit var migrations: List<@JvmSuppressWildcards Migration>

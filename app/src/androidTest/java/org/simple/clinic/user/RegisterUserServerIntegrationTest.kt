@@ -4,7 +4,9 @@ import android.content.SharedPreferences
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
@@ -15,6 +17,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,6 +50,9 @@ class RegisterUserServerIntegrationTest {
 
   @field:[Inject Named("user_pin")]
   lateinit var userPin: String
+
+  @get:Rule
+  val ruleChain: RuleChain = Rules.global()
 
   @Before
   fun setUp() {

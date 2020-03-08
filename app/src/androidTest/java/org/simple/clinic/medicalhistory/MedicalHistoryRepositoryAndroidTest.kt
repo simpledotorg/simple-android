@@ -5,6 +5,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.Answer.No
@@ -12,7 +13,8 @@ import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit.DAYS
@@ -34,7 +36,9 @@ class MedicalHistoryRepositoryAndroidTest {
   lateinit var clock: UtcClock
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: RuleChain = Rules
+      .global()
+      .around(LocalAuthenticationRule())
 
   @Before
   fun setup() {

@@ -1,7 +1,6 @@
 package org.simple.clinic.security.pin
 
 import androidx.test.annotation.UiThreadTest
-import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Observable
@@ -12,20 +11,17 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.util.Rules
-import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
+
 class BruteForceProtectionAndroidTest {
 
   @Inject

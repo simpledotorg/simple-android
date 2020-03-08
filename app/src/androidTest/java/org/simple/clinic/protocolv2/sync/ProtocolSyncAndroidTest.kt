@@ -1,13 +1,11 @@
 package org.simple.clinic.protocolv2.sync
 
-import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.protocol.ProtocolRepository
@@ -19,7 +17,7 @@ import org.simple.clinic.util.Rules
 import javax.inject.Inject
 import javax.inject.Named
 
-@RunWith(AndroidJUnit4::class)
+
 class ProtocolSyncAndroidTest {
 
   @Inject

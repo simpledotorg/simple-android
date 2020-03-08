@@ -1,15 +1,13 @@
 package org.simple.clinic.storage.migrations
 
-import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.assertColumnCount
 import org.simple.clinic.assertValues
 import org.simple.clinic.insert
 import java.util.UUID
 
-@RunWith(AndroidJUnit4::class)
+
 class Migration56AndroidTest : BaseDatabaseMigrationTest(fromVersion = 55, toVersion = 56) {
 
   private val tableName = "Appointment"

@@ -1,22 +1,20 @@
 package org.simple.clinic.drugs.sync
 
-import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
-import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.RegisterPatientRule
+import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.BatchSize
-import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
@@ -24,12 +22,11 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
-import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-@RunWith(AndroidJUnit4::class)
+
 class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDrug, PrescribedDrugPayload>() {
 
   @Inject

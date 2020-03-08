@@ -1,19 +1,17 @@
 package org.simple.clinic.util.identifierdisplay
 
-import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.util.Rules
 import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
+
 class IdentifierDisplayAdapterAndroidTest {
 
   @Inject

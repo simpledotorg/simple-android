@@ -9,13 +9,13 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.protocol.sync.ProtocolSync
+import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.Rules
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,14 +35,10 @@ class ProtocolSyncAndroidTest {
   @field:Named("last_protocol_pull_token")
   lateinit var lastPullToken: Preference<Optional<String>>
 
-  private val authenticationRule = LocalAuthenticationRule()
-
-  private val rxErrorsRule = RxErrorsRule()
-
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(authenticationRule)
-      .around(rxErrorsRule)!!
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(LocalAuthenticationRule())
 
   @Before
   fun setUp() {

@@ -5,12 +5,14 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.Rules
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -18,7 +20,9 @@ import javax.inject.Named
 class LoginUserWithOtpServerIntegrationTest {
 
   @get:Rule
-  val authenticationRule = ServerAuthenticationRule()
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(ServerAuthenticationRule())
 
   @Inject
   lateinit var userSession: UserSession

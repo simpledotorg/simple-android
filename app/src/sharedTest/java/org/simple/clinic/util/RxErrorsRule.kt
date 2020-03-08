@@ -45,7 +45,7 @@ class RxErrorsRule : TestRule {
     return error != null
   }
 
-  fun assertNoErrors() {
+  private fun assertNoErrors() {
     if (hasErrors()) {
       errors.forEach {
         it.printStackTrace()

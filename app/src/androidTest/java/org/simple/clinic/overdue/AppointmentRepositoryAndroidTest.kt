@@ -44,6 +44,7 @@ import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -91,9 +92,9 @@ class AppointmentRepositoryAndroidTest {
   lateinit var facility: Facility
 
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(LocalAuthenticationRule())
-      .around(RxErrorsRule())!!
+  val rules: RuleChain = Rules
+      .global()
+      .around(LocalAuthenticationRule())
 
   private val patientUuid = UUID.fromString("fcf0acd3-0b09-4ecb-bcd4-af40ca6456fc")
   private val appointmentUuid = UUID.fromString("a374e38f-6bc3-4829-899c-0966a4e13b10")

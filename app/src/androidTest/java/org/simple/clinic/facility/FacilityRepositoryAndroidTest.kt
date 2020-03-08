@@ -6,12 +6,14 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.User
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
@@ -35,7 +37,7 @@ class FacilityRepositoryAndroidTest {
   lateinit var facilityMappingDao: LoggedInUserFacilityMapping.RoomDao
 
   @get:Rule
-  val rule = RxErrorsRule()
+  val rule: RuleChain = Rules.global()
 
   private val user: User by lazy { testData.loggedInUser(uuid = UUID.fromString("3e78fb25-2ee2-442a-b7aa-21a87e067b9d")) }
 

@@ -10,6 +10,7 @@ import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.unwrapJust
 import javax.inject.Inject
@@ -24,9 +25,9 @@ class HelpSyncAndroidTest {
   lateinit var helpSync: HelpSync
 
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(LocalAuthenticationRule())
-      .around(RxErrorsRule())!!
+  val rules: RuleChain = Rules
+      .global()
+      .around(LocalAuthenticationRule())
 
   @Before
   fun setUp() {

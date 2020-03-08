@@ -7,24 +7,25 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.medicalhistory.Answer.*
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPushRequest
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApi
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.RegisterPatientRule
+import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.DataPushResponse
-import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -56,10 +57,10 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
   private val registerPatientRule = RegisterPatientRule(patientUuid = UUID.randomUUID())
 
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(ServerAuthenticationRule())
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(ServerAuthenticationRule())
       .around(registerPatientRule)
-      .around(RxErrorsRule())!!
 
   @Before
   fun setup() {

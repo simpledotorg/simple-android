@@ -11,10 +11,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UtcClock
@@ -39,7 +41,7 @@ class BruteForceProtectionAndroidTest {
   lateinit var state: Preference<BruteForceProtectionState>
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: RuleChain = Rules.global()
 
   private val config
     get() = configProvider.blockingFirst()

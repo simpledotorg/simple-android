@@ -8,10 +8,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.util.None
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.unwrapJust
 import javax.inject.Inject
 
@@ -25,9 +25,9 @@ class ReportsSyncAndroidTest {
   lateinit var reportsSync: ReportsSync
 
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(ServerAuthenticationRule())
-      .around(RxErrorsRule())!!
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(ServerAuthenticationRule())
 
   @Before
   fun setUp() {

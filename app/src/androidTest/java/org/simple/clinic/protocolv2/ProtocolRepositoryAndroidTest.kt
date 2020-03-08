@@ -8,14 +8,14 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 
@@ -37,14 +37,10 @@ class ProtocolRepositoryAndroidTest {
   @Inject
   lateinit var testData: TestData
 
-  private val authenticationRule = LocalAuthenticationRule()
-
-  private val rxErrorsRule = RxErrorsRule()
-
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(authenticationRule)
-      .around(rxErrorsRule)!!
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(LocalAuthenticationRule())
 
   @Before
   fun setUp() {

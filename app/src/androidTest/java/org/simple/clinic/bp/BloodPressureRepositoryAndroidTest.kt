@@ -13,7 +13,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -44,14 +44,10 @@ class BloodPressureRepositoryAndroidTest {
   @Inject
   lateinit var facility: Facility
 
-  private val authenticationRule = LocalAuthenticationRule()
-
-  private val rxErrorsRule = RxErrorsRule()
-
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(authenticationRule)
-      .around(rxErrorsRule)!!
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(LocalAuthenticationRule())
 
   @Before
   fun setUp() {

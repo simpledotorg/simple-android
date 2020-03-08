@@ -22,7 +22,7 @@ import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.Rules
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -56,14 +56,10 @@ class BloodSugarSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodSugarMeasu
       batchSize = BatchSize.VERY_SMALL,
       syncGroup = SyncGroup.FREQUENT))
 
-  private val authenticationRule = ServerAuthenticationRule()
-
-  private val rxErrorsRule = RxErrorsRule()
-
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(authenticationRule)
-      .around(rxErrorsRule)!!
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(ServerAuthenticationRule())
 
   @Before
   fun setUp() {

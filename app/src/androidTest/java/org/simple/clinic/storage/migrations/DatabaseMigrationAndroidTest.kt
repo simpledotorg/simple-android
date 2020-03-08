@@ -10,6 +10,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.MigrationTestHelperWithForeignKeyConstraints
 import org.simple.clinic.TestClinicApp
@@ -29,6 +30,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.generateEncounterUuid
@@ -44,11 +46,15 @@ import javax.inject.Named
 @RunWith(AndroidJUnit4::class)
 class DatabaseMigrationAndroidTest {
 
-  @get:Rule
-  val helper = MigrationTestHelperWithForeignKeyConstraints()
+  private val helper = MigrationTestHelperWithForeignKeyConstraints()
+
+  private val expectedException: ExpectedException = ExpectedException.none()
 
   @get:Rule
-  val expectedException = ExpectedException.none()
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(expectedException)
+      .around(helper)
 
   @Inject
   lateinit var migrations: List<@JvmSuppressWildcards Migration>

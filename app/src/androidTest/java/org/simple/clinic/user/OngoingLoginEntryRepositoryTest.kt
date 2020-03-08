@@ -10,7 +10,7 @@ import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 
@@ -23,14 +23,12 @@ class OngoingLoginEntryRepositoryTest {
   @Inject
   lateinit var database: AppDatabase
 
-  private val rxErrorsRule = RxErrorsRule()
-
   private val expectedException = ExpectedException.none()
 
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(rxErrorsRule)
-      .around(expectedException)!!
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(expectedException)
 
   @Before
   fun setUp() {

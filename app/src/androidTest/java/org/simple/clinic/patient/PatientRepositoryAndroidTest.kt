@@ -59,6 +59,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -126,10 +127,10 @@ class PatientRepositoryAndroidTest {
   lateinit var currentFacility: Facility
 
   @get:Rule
-  val ruleChain = RuleChain
-      .outerRule(LocalAuthenticationRule())
+  val rules: RuleChain = Rules
+      .global()
+      .around(LocalAuthenticationRule())
       .around(InstantTaskExecutorRule())
-      .around(RxErrorsRule())!!
 
   val config: PatientConfig
     get() = configProvider.blockingFirst()

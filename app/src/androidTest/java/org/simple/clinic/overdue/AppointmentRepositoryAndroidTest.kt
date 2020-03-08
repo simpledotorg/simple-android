@@ -1,6 +1,5 @@
 package org.simple.clinic.overdue
 
-import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -9,7 +8,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
@@ -45,7 +43,6 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
-import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Duration
@@ -55,7 +52,7 @@ import org.threeten.bp.LocalDateTime
 import java.util.UUID
 import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
+
 class AppointmentRepositoryAndroidTest {
 
   @Inject

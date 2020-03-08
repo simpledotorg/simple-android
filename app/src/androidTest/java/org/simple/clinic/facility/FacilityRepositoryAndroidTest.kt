@@ -1,24 +1,21 @@
 package org.simple.clinic.facility
 
-import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Rules
-import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
+
 class FacilityRepositoryAndroidTest {
 
   @Inject

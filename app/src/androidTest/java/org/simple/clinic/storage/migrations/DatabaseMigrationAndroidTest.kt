@@ -3,7 +3,6 @@ package org.simple.clinic.storage.migrations
 import android.database.sqlite.SQLiteConstraintException
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -11,7 +10,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
 import org.simple.clinic.MigrationTestHelperWithForeignKeyConstraints
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
@@ -43,7 +41,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("LocalVariableName")
-@RunWith(AndroidJUnit4::class)
+
 class DatabaseMigrationAndroidTest {
 
   private val helper = MigrationTestHelperWithForeignKeyConstraints()

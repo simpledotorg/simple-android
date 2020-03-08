@@ -14,7 +14,6 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.Rules
-import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
 

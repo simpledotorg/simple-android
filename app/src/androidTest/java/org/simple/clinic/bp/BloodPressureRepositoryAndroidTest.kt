@@ -1,12 +1,10 @@
 package org.simple.clinic.bp
 
-import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
@@ -23,7 +21,7 @@ import org.threeten.bp.temporal.ChronoUnit.DAYS
 import java.util.UUID
 import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
+
 class BloodPressureRepositoryAndroidTest {
 
   @Inject

@@ -217,8 +217,11 @@ dependencies {
   testImplementation "com.github.blocoio:faker:$versions.faker"
 
   androidTestImplementation "androidx.annotation:annotation:$versions.supportLib"
-  androidTestImplementation "androidx.test:runner:$versions.supportTest"
-  androidTestImplementation "androidx.test:rules:$versions.supportTest"
+
+  androidTestImplementation "androidx.test:runner:$versions.androidXTest"
+  androidTestImplementation "androidx.test:rules:$versions.androidXTest"
+  androidTestImplementation "androidx.test.ext:junit:$versions.androidXTestExt"
+
   androidTestImplementation "com.google.truth:truth:$versions.truth"
   androidTestImplementation "com.github.blocoio:faker:$versions.faker"
   androidTestImplementation "androidx.room:room-testing:$versions.room"

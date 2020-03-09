@@ -36,7 +36,8 @@ data class RecentPatient(
         MAX(
             IFNULL(BP.latestRecordedAt, '0'),
             IFNULL(PD.latestUpdatedAt, '0'),
-            IFNULL(AP.latestCreatedAt, '0')
+            IFNULL(AP.latestCreatedAt, '0'),
+            IFNULL(BloodSugar.latestRecordedAt, '0')
         ) updatedAt
         FROM Patient P
           LEFT JOIN (
@@ -62,11 +63,19 @@ data class RecentPatient(
               AND appointmentType = :appointmentType
               GROUP BY patientUuid
           ) AP ON P.uuid = AP.patientUuid
+          LEFT JOIN (
+            SELECT MAX(recordedAt) latestRecordedAt, patientUuid, facilityUuid
+              FROM BloodSugarMeasurements
+              WHERE facilityUuid = :facilityUuid
+              AND deletedAt IS NULL
+              GROUP BY patientUuid
+          ) BloodSugar ON P.uuid = BloodSugar.patientUuid
         WHERE (
           (
             BP.facilityUuid = :facilityUuid OR
             PD.facilityUuid = :facilityUuid OR
-            AP.creationFacilityUuid = :facilityUuid
+            AP.creationFacilityUuid = :facilityUuid OR
+            BloodSugar.facilityUuid = :facilityUuid
           ) 
           AND P.deletedAt IS NULL
           AND P.status = :patientStatus

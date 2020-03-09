@@ -66,7 +66,7 @@ class RecentPatientsViewControllerTest {
           scanSimpleCardFeatureEnabled = false,
           recentPatientLimit = recentPatientLimit
       )),
-      exactDateFormatter = dateFormatter
+      dateFormatter = dateFormatter
   )
 
   @Before

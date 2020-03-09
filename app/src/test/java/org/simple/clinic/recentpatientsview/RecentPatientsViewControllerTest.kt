@@ -32,6 +32,7 @@ import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
@@ -89,6 +90,7 @@ class RecentPatientsViewControllerTest {
     val patientUuid1 = UUID.randomUUID()
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
+    userClock.setDate(LocalDate.parse("2020-02-01"))
     whenever(patientRepository.recentPatients(
         facilityUuid = facility.uuid,
         limit = recentPatientLimitPlusOne
@@ -124,24 +126,27 @@ class RecentPatientsViewControllerTest {
             name = "Ajay Kumar",
             age = 42,
             gender = Transgender,
-            updatedAt = Today,
-            dateFormatter = dateFormatter
+            updatedAt = Instant.parse("2020-02-01T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
             gender = Male,
-            updatedAt = Yesterday,
-            dateFormatter = dateFormatter
+            updatedAt = Instant.parse("2020-01-31T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
             gender = Female,
-            updatedAt = WithinSixMonths(3),
-            dateFormatter = dateFormatter
+            updatedAt = Instant.parse("2020-01-29T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock
         )
     ))
     verify(screen).showOrHideRecentPatients(isVisible = true)
@@ -153,6 +158,7 @@ class RecentPatientsViewControllerTest {
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
     val patientUuid4 = UUID.randomUUID()
+    userClock.setDate(date = LocalDate.parse("2020-01-01"))
     whenever(patientRepository.recentPatients(
         facilityUuid = facility.uuid,
         limit = recentPatientLimitPlusOne
@@ -194,24 +200,27 @@ class RecentPatientsViewControllerTest {
             name = "Ajay Kumar",
             age = 42,
             gender = Transgender,
-            updatedAt = Today,
-            dateFormatter = dateFormatter
+            updatedAt = Instant.parse("2020-01-01T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
             gender = Male,
-            updatedAt = Yesterday,
-            dateFormatter = dateFormatter
+            updatedAt = Instant.parse("2019-12-31T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
             gender = Female,
-            updatedAt = WithinSixMonths(4),
-            dateFormatter = dateFormatter
+            updatedAt = Instant.parse("2019-12-28T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock
         ),
         SeeAllItem
     ))

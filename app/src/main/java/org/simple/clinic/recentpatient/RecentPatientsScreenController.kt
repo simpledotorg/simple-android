@@ -29,7 +29,7 @@ class RecentPatientsScreenController @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val relativeTimestampGenerator: RelativeTimestampGenerator,
     private val userClock: UserClock,
-    @Named("exact_date") private val exactDateFormatter: DateTimeFormatter
+    @Named("full_date") private val dateFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -61,7 +61,7 @@ class RecentPatientsScreenController @Inject constructor(
           age = age(recentPatient),
           gender = recentPatient.gender,
           lastSeenTimestamp = relativeTimestampGenerator.generate(recentPatient.updatedAt, userClock),
-          dateFormatter = exactDateFormatter
+          dateFormatter = dateFormatter
       )
 
   private fun age(recentPatient: RecentPatient): Int {

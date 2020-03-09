@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
@@ -34,11 +35,12 @@ class PatientSummaryEffectHandlerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val bloodSugarRepository = mock<BloodSugarRepository>()
+  private val bloodPressureRepository = mock<BloodPressureRepository>()
 
   private val effectHandler = PatientSummaryEffectHandler(
       schedulersProvider = TrampolineSchedulersProvider(),
       patientRepository = patientRepository,
-      bloodPressureRepository = mock(),
+      bloodPressureRepository = bloodPressureRepository,
       appointmentRepository = mock(),
       missingPhoneReminderRepository = mock(),
       userSession = userSession,
@@ -225,6 +227,28 @@ class PatientSummaryEffectHandlerTest {
     // then
     verify(uiActions).goToPreviousScreen()
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the load data for back click effect is received, load the data`() {
+    // given
+    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
+
+    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
+    whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 0
+    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 1
+
+    // when
+    testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp))
+
+    // then
+    testCase.assertOutgoingEvents(DataForBackClickLoaded(
+        hasPatientDataChangedSinceScreenCreated = true,
+        noBloodPressuresRecordedForPatient = true,
+        noBloodSugarsRecordedForPatient = false
+    ))
+    verifyZeroInteractions(uiActions)
   }
 
   @Test

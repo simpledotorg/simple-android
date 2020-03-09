@@ -45,3 +45,8 @@ object HideLinkIdWithPatientView : PatientSummaryEffect()
 data class ReportViewedPatientToAnalytics(val patientUuid: UUID, val openIntention: OpenIntention): PatientSummaryEffect()
 
 data class ShowScheduleAppointmentSheet(val patientUuid: UUID, val sheetOpenedFrom: AppointmentSheetOpenedFrom): PatientSummaryEffect()
+
+data class LoadDataForBackClick(
+    val patientUuid: UUID,
+    val screenCreatedTimestamp: Instant
+) : PatientSummaryEffect()

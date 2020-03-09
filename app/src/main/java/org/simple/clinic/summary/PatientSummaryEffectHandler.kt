@@ -77,6 +77,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             { uiActions.showScheduleAppointmentSheet(it.patientUuid, it.sheetOpenedFrom) },
             schedulersProvider.ui()
         )
+        .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))
         .build()
   }
 
@@ -223,6 +224,24 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 .markReminderAsShownFor(effect.patientUuid)
                 .subscribeOn(scheduler)
                 .andThen(Observable.empty<PatientSummaryEvent>())
+          }
+    }
+  }
+
+  private fun loadDataForBackClick(
+      scheduler: Scheduler
+  ): ObservableTransformer<LoadDataForBackClick, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .map { loadDataForBackClick ->
+            val patientUuid = loadDataForBackClick.patientUuid
+            val timestamp = loadDataForBackClick.screenCreatedTimestamp
+            DataForBackClickLoaded(
+                hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
+                noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid),
+                noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid)
+            )
           }
     }
   }

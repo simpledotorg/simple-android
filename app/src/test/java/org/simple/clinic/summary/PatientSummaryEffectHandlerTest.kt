@@ -19,9 +19,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
-import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
-import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
-import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
@@ -124,108 +121,6 @@ class PatientSummaryEffectHandlerTest {
     //then
     testCase.assertNoOutgoingEvents()
     verify(uiActions).showEditPatientScreen(patientSummaryProfile)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when there are patient summary changes and at least one blood sugar is present, clicking on back must show the schedule appointment sheet`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
-
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)).doReturn(true)
-    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)).doReturn(1)
-
-    // when
-    testCase.dispatch(HandleBackClick(patientUuid, screenCreatedTimestamp, ViewExistingPatient))
-
-    // then
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, AppointmentSheetOpenedFrom.BACK_CLICK)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when there are patient summary changes and all blood sugars are deleted, clicking on back for existing patient screen must go back to previous screen`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    val patientUuid = UUID.fromString("ea1fc96f-4736-400b-829e-e8d40d554669")
-
-    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 0
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    // when
-    testCase.dispatch(HandleBackClick(patientUuid, screenCreatedTimestamp, ViewExistingPatient))
-
-    // then
-    verify(uiActions).goToPreviousScreen()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when there are patient summary changes and all blood sugars are deleted, clicking on back for new patient screen must go back to home screen`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    val patientUuid = UUID.fromString("ea1fc96f-4736-400b-829e-e8d40d554669")
-
-    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 0
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    // when
-    testCase.dispatch(HandleBackClick(patientUuid, screenCreatedTimestamp, ViewNewPatient))
-
-    // then
-    verify(uiActions).goToHomeScreen()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when there are patient summary changes and all blood sugars are deleted, clicking on back link id with patient screen must go back to home screen`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    val patientUuid = UUID.fromString("ea1fc96f-4736-400b-829e-e8d40d554669")
-
-    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 0
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    // when
-    testCase.dispatch(HandleBackClick(patientUuid, screenCreatedTimestamp, LinkIdWithPatient(Identifier("927ac52b-a51c-487a-9737-a3150ff73d9d", BpPassport))))
-
-    // then
-    verify(uiActions).goToHomeScreen()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when there are no patient summary changes and all blood sugars are not deleted, clicking on back must go back`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    val patientUuid = UUID.fromString("eaacf3be-2bc1-46c2-9132-d4f79e5b83ca")
-
-    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 1
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
-
-    // when
-    testCase.dispatch(HandleBackClick(patientUuid, screenCreatedTimestamp, ViewExistingPatient))
-
-    // then
-    verify(uiActions).goToPreviousScreen()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when there are no patient summary changes and all blood sugars are deleted, clicking on back must go back`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    val patientUuid = UUID.fromString("81c5537f-34fc-4480-a2dc-a92eacf973e7")
-
-    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 0
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
-
-    // when
-    testCase.dispatch(HandleBackClick(patientUuid, screenCreatedTimestamp, ViewExistingPatient))
-
-    // then
-    verify(uiActions).goToPreviousScreen()
     verifyNoMoreInteractions(uiActions)
   }
 

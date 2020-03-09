@@ -17,7 +17,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   override fun update(model: PatientSummaryModel, event: PatientSummaryEvent): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when (event) {
       is PatientSummaryProfileLoaded -> next(model.patientSummaryProfileLoaded(event.patientSummaryProfile))
-      is PatientSummaryBackClicked -> dispatch(HandleBackClick(event.patientUuid, event.screenCreatedTimestamp, model.openIntention))
+      is PatientSummaryBackClicked -> dispatch(LoadDataForBackClick(model.patientUuid, event.screenCreatedTimestamp))
       is PatientSummaryDoneClicked -> dispatch(HandleDoneClick(event.patientUuid))
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
@@ -29,8 +29,34 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is LinkIdWithPatientSheetShown -> next(model.shownLinkIdWithPatientView())
       is PatientSummaryLinkIdCompleted -> dispatch(HideLinkIdWithPatientView)
       is ReportedViewedPatientToAnalytics -> next(model.reportedViewedPatientToAnalytics())
+      is DataForBackClickLoaded -> dataForHandlingBackLoaded(
+          patientUuid = model.patientUuid,
+          hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,
+          noBloodPressuresRecorded = event.noBloodPressuresRecordedForPatient,
+          noBloodSugarsRecorded = event.noBloodSugarsRecordedForPatient,
+          openIntention = model.openIntention
+      )
       else -> noChange()
     }
+  }
+
+  private fun dataForHandlingBackLoaded(
+      patientUuid: UUID,
+      hasPatientDataChanged: Boolean,
+      noBloodPressuresRecorded: Boolean,
+      noBloodSugarsRecorded: Boolean,
+      openIntention: OpenIntention
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val shouldShowScheduleAppointmentSheet = if (noBloodPressuresRecorded && noBloodSugarsRecorded) false else hasPatientDataChanged
+
+    val effect = when {
+      shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+      openIntention is ViewExistingPatient -> GoBackToPreviousScreen
+      openIntention is LinkIdWithPatient || openIntention is ViewNewPatient -> GoToHomeScreen
+      else -> throw IllegalStateException("This should not happen!")
+    }
+
+    return dispatch(effect)
   }
 
   private fun fetchedHasShownMissingReminder(

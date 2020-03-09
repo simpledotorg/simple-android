@@ -101,8 +101,9 @@ class RecentPatientsViewController @Inject constructor(
           name = recentPatient.fullName,
           age = age(recentPatient),
           gender = recentPatient.gender,
-          updatedAt = relativeTimestampGenerator.generate(recentPatient.updatedAt, userClock),
-          dateFormatter = dateFormatter
+          updatedAt = recentPatient.updatedAt,
+          dateFormatter = dateFormatter,
+          clock = userClock
       )
 
   private fun age(recentPatient: RecentPatient): Int {

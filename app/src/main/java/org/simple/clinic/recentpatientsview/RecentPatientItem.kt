@@ -11,8 +11,10 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.recentpatientsview.SeeAllItem.SeeAllItemViewHolder
 import org.simple.clinic.summary.GroupieItemWithUiEvents
-import org.simple.clinic.util.RelativeTimestamp
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
@@ -25,8 +27,9 @@ data class RecentPatientItem(
     val name: String,
     val age: Int,
     val gender: Gender,
-    val updatedAt: RelativeTimestamp,
-    val dateFormatter: DateTimeFormatter
+    val updatedAt: Instant,
+    val dateFormatter: DateTimeFormatter,
+    val clock: UserClock
 ) : RecentPatientItemType<RecentPatientItem.RecentPatientViewHolder>(uuid.hashCode().toLong()) {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view
@@ -40,7 +43,7 @@ data class RecentPatientItem(
       uiEvents.onNext(RecentPatientItemClicked(patientUuid = uuid))
     }
 
-    viewHolder.render(name, age, gender, updatedAt, dateFormatter)
+    viewHolder.render(name, age, gender, updatedAt, dateFormatter, clock)
   }
 
   class RecentPatientViewHolder(rootView: View) : ViewHolder(rootView) {
@@ -52,12 +55,13 @@ data class RecentPatientItem(
         name: String,
         age: Int,
         gender: Gender,
-        updatedAt: RelativeTimestamp,
-        dateFormatter: DateTimeFormatter
+        updatedAt: Instant,
+        dateFormatter: DateTimeFormatter,
+        clock: UserClock
     ) {
       nameAgeTextView.text = itemView.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
       genderImageView.setImageResource(gender.displayIconRes)
-      lastSeenTextView.text = updatedAt.displayText(itemView.context, dateFormatter)
+      lastSeenTextView.text = dateFormatter.format(updatedAt.toLocalDateAtZone(clock.zone))
     }
   }
 }

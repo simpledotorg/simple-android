@@ -989,6 +989,28 @@ class PatientRepositoryAndroidTest {
         recentPatient3,
         recentPatient2
     )
+
+    clock.advanceBy(Duration.ofSeconds(1))
+
+    val recentPatient5 = savePatientWithBloodSugarWithTestClock()
+
+    verifyRecentPatientOrder(
+        recentPatient5,
+        recentPatient4,
+        recentPatient3
+    )
+
+    clock.advanceBy(Duration.ofSeconds(1))
+
+    val recentPatient6Uuid = UUID.fromString("1b29c239-2398-425c-aa19-7693e4bf846e")
+    savePatientWithBloodSugarWithTestClock(patientUuid = recentPatient6Uuid)
+    val recentPatient6WithBP = savePatientWithBpWithTestClock(patientUuid = recentPatient6Uuid)
+
+    verifyRecentPatientOrder(
+        recentPatient6WithBP,
+        recentPatient5,
+        recentPatient4
+    )
   }
 
   @Test
@@ -1046,7 +1068,7 @@ class PatientRepositoryAndroidTest {
         recordedAt = recordedAt
     )
     database.bloodPressureDao().save(listOf(bpMeasurement))
-    return patientProfile.patient.toRecentPatient(bpMeasurement)
+    return patientProfile.patient.toRecentPatient(bpMeasurement.recordedAt)
   }
 
   private fun savePatientWithBpWithTestClock(
@@ -1071,16 +1093,41 @@ class PatientRepositoryAndroidTest {
         recordedAt = recordedAt
     )
     database.bloodPressureDao().save(listOf(bpMeasurement))
-    return patientProfile.patient.toRecentPatient(bpMeasurement)
+    return patientProfile.patient.toRecentPatient(bpMeasurement.recordedAt)
   }
 
-  private fun Patient.toRecentPatient(bpMeasurement: BloodPressureMeasurement) = RecentPatient(
+  private fun savePatientWithBloodSugarWithTestClock(
+      facilityUuid: UUID = testData.qaUserFacilityUuid(),
+      patientUuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(clock),
+      updatedAt: Instant = Instant.now(clock),
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now(clock)
+  ): RecentPatient {
+    val patientProfile = testData.patientProfile(patientUuid = patientUuid).run {
+      copy(patient = patient.copy(createdAt = createdAt, updatedAt = updatedAt))
+    }
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val bloodSugarMeasurement = testData.bloodSugarMeasurement(
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt,
+        recordedAt = recordedAt
+    )
+    database.bloodSugarDao().save(listOf(bloodSugarMeasurement))
+    return patientProfile.patient.toRecentPatient(bloodSugarMeasurement.recordedAt)
+  }
+
+  private fun Patient.toRecentPatient(recordedAt: Instant) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
       dateOfBirth = dateOfBirth,
       age = age,
-      updatedAt = bpMeasurement.recordedAt
+      updatedAt = recordedAt
   )
 
   private fun verifyRecentPatientOrder(

@@ -1,5 +1,5 @@
 # CHANGELOG
-## On Demo
+## 2020-03-09-7161
 ### Feature
 - Added support for editing blood sugar
 - Added a new language: Afaan Oromo

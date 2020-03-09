@@ -60,8 +60,9 @@ class RecentPatientsScreenController @Inject constructor(
           name = recentPatient.fullName,
           age = age(recentPatient),
           gender = recentPatient.gender,
-          lastSeenTimestamp = relativeTimestampGenerator.generate(recentPatient.updatedAt, userClock),
-          dateFormatter = dateFormatter
+          lastSeen = recentPatient.updatedAt,
+          dateFormatter = dateFormatter,
+          clock = userClock
       )
 
   private fun age(recentPatient: RecentPatient): Int {

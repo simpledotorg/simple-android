@@ -19,9 +19,6 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.RelativeTimestamp.Today
-import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
-import org.simple.clinic.util.RelativeTimestamp.Yesterday
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -30,6 +27,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
@@ -79,6 +77,7 @@ class RecentPatientsScreenControllerTest {
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
 
+    userClock.setDate(LocalDate.parse("2020-02-14"))
     val today = Instant.now(userClock)
     val yesterday = today.minus(Duration.ofDays(1))
     val twoDaysAgo = today.minus(Duration.ofDays(2))
@@ -114,24 +113,27 @@ class RecentPatientsScreenControllerTest {
             name = "Ajay Kumar",
             age = 42,
             gender = Gender.Transgender,
-            lastSeenTimestamp = Today,
-            dateFormatter = dateFormatter
+            lastSeen = Instant.parse("2020-02-14T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
             gender = Gender.Male,
-            lastSeenTimestamp = Yesterday,
-            dateFormatter = dateFormatter
+            lastSeen = Instant.parse("2020-02-13T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
             gender = Gender.Female,
-            lastSeenTimestamp = WithinSixMonths(2),
-            dateFormatter = dateFormatter
+            lastSeen = Instant.parse("2020-02-12T00:00:00Z"),
+            dateFormatter = dateFormatter,
+            clock = userClock
         )
     ))
   }

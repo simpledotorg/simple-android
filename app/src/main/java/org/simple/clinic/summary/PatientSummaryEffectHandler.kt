@@ -18,7 +18,6 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -48,10 +47,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientSummaryEffect, PatientSummaryEvent>()
         .addTransformer(LoadPatientSummaryProfile::class.java, loadPatientSummaryProfile(schedulersProvider.io()))
-        .addTransformer(HandleDoneClick::class.java, handleDoneClick(
-            backgroundWorkScheduler = schedulersProvider.io(),
-            uiWorkScheduler = schedulersProvider.ui()
-        ))
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addConsumer(HandleEditClick::class.java, { uiActions.showEditPatientScreen(it.patientSummaryProfile) }, schedulersProvider.ui())
         .addAction(HandleLinkIdCancelled::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
@@ -105,33 +100,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             .map(::PatientSummaryProfileLoaded)
             .cast<PatientSummaryEvent>()
       }
-    }
-  }
-
-  // TODO(vs): 2020-01-16 Revisit after Mobius migration
-  private fun handleDoneClick(
-      backgroundWorkScheduler: Scheduler,
-      uiWorkScheduler: Scheduler
-  ): ObservableTransformer<HandleDoneClick, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(backgroundWorkScheduler)
-          .map { handleDoneClick ->
-            val patientUuid = handleDoneClick.patientUuid
-
-            val shouldShowScheduleAppointmentSheet = hasAtLeastOneMeasurementRecorded(patientUuid)
-
-            shouldShowScheduleAppointmentSheet to patientUuid
-          }
-          .observeOn(uiWorkScheduler)
-          .doOnNext { (shouldShowScheduleAppointmentSheet, patientUuid) ->
-            if (shouldShowScheduleAppointmentSheet) {
-              uiActions.showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
-            } else {
-              uiActions.goToHomeScreen()
-            }
-          }
-          .flatMap { Observable.empty<PatientSummaryEvent>() }
     }
   }
 
@@ -262,10 +230,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
   private fun doesNotHaveBloodSugars(patientUuid: UUID): Boolean {
     return bloodSugarRepository.bloodSugarCountImmediate(patientUuid) == 0
-  }
-
-  private fun hasAtLeastOneMeasurementRecorded(patientUuid: UUID): Boolean {
-    return !doesNotHaveBloodPressures(patientUuid) or !doesNotHaveBloodSugars(patientUuid)
   }
 
   // TODO(vs): 2020-02-18 Revisit after Mobius migration

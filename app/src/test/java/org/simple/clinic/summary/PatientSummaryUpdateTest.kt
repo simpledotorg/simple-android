@@ -13,6 +13,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
@@ -154,6 +155,34 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoBackToPreviousScreen as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when all blood sugars are not deleted, clicking on save must show the schedule appointment sheet regardless of summary changes`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DataForDoneClickLoaded(
+            noBloodPressuresRecordedForPatient = true,
+            noBloodSugarsRecordedForPatient = false
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK) as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when all blood sugar are deleted, clicking on save must go to the home screen regardless of summary changes`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DataForDoneClickLoaded(
+            noBloodPressuresRecordedForPatient = true,
+            noBloodSugarsRecordedForPatient = true
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen as PatientSummaryEffect)
         ))
   }
 

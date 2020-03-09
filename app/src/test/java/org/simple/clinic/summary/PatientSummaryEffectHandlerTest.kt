@@ -18,7 +18,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
@@ -144,36 +143,6 @@ class PatientSummaryEffectHandlerTest {
         noBloodSugarsRecordedForPatient = false
     ))
     verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when all blood sugars are not deleted, clicking on save must show the schedule appointment sheet regardless of summary changes`() {
-    // given
-    val patientUuid = UUID.fromString("14b77a00-3cff-40aa-83da-36547e3c9ef6")
-
-    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)).doReturn(1)
-
-    // when
-    testCase.dispatch(HandleDoneClick(patientUuid))
-
-    // then
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when all blood sugar are deleted, clicking on save must go to the home screen regardless of summary changes`() {
-    // given
-    val patientUuid = UUID.fromString("d90b9cf0-3bf1-4555-96c0-bd324b4752f6")
-
-    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)).doReturn(0)
-
-    // when
-    testCase.dispatch(HandleDoneClick(patientUuid))
-
-    // then
-    verify(uiActions).goToHomeScreen()
-    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

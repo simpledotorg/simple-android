@@ -18,7 +18,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     return when (event) {
       is PatientSummaryProfileLoaded -> next(model.patientSummaryProfileLoaded(event.patientSummaryProfile))
       is PatientSummaryBackClicked -> dispatch(LoadDataForBackClick(model.patientUuid, event.screenCreatedTimestamp))
-      is PatientSummaryDoneClicked -> dispatch(HandleDoneClick(event.patientUuid))
+      is PatientSummaryDoneClicked -> dispatch(LoadDataForDoneClick(model.patientUuid))
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
@@ -36,8 +36,25 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           noBloodSugarsRecorded = event.noBloodSugarsRecordedForPatient,
           openIntention = model.openIntention
       )
+      is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
+          noBloodPressuresRecorded = event.noBloodPressuresRecordedForPatient,
+          noBloodSugarsRecorded = event.noBloodSugarsRecordedForPatient,
+          patientUuid = model.patientUuid
+      )
       else -> noChange()
     }
+  }
+
+  private fun dataForHandlingDoneClickLoaded(
+      noBloodPressuresRecorded: Boolean,
+      noBloodSugarsRecorded: Boolean,
+      patientUuid: UUID
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val hasAtLeastOneMeasurementRecorded = !noBloodPressuresRecorded or !noBloodSugarsRecorded
+
+    val effect = if (hasAtLeastOneMeasurementRecorded) ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK) else GoToHomeScreen
+
+    return dispatch(effect)
   }
 
   private fun dataForHandlingBackLoaded(

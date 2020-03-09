@@ -43,3 +43,9 @@ object LinkIdWithPatientSheetShown: PatientSummaryEvent()
 object PatientSummaryLinkIdCompleted : PatientSummaryEvent()
 
 object ReportedViewedPatientToAnalytics: PatientSummaryEvent()
+
+data class DataForBackClickLoaded(
+    val hasPatientDataChangedSinceScreenCreated: Boolean,
+    val noBloodPressuresRecordedForPatient: Boolean,
+    val noBloodSugarsRecordedForPatient: Boolean
+) : PatientSummaryEvent()

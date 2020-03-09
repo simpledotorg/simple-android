@@ -18,11 +18,7 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
-import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
-import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
-import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -52,10 +48,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientSummaryEffect, PatientSummaryEvent>()
         .addTransformer(LoadPatientSummaryProfile::class.java, loadPatientSummaryProfile(schedulersProvider.io()))
-        .addTransformer(HandleBackClick::class.java, handleBackClick(
-            backgroundWorkScheduler = schedulersProvider.io(),
-            uiWorkScheduler = schedulersProvider.ui()
-        ))
         .addTransformer(HandleDoneClick::class.java, handleDoneClick(
             backgroundWorkScheduler = schedulersProvider.io(),
             uiWorkScheduler = schedulersProvider.ui()
@@ -112,40 +104,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             .map(::PatientSummaryProfileLoaded)
             .cast<PatientSummaryEvent>()
       }
-    }
-  }
-
-  // TODO(vs): 2020-01-15 Revisit after Mobius migration
-  private fun handleBackClick(
-      backgroundWorkScheduler: Scheduler,
-      uiWorkScheduler: Scheduler
-  ): ObservableTransformer<HandleBackClick, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(backgroundWorkScheduler)
-          .map { handleBackClick ->
-            val (patientUuid, screenCreatedTime, openIntention) = handleBackClick
-
-            val hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTime)
-            val noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid)
-            val noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid)
-
-            val shouldShowScheduleAppointmentSheet = if (noBloodPressuresRecordedForPatient && noBloodSugarsRecordedForPatient) false else hasPatientDataChangedSinceScreenCreated
-
-            Triple(shouldShowScheduleAppointmentSheet, patientUuid, openIntention)
-          }
-          .observeOn(uiWorkScheduler)
-          .doOnNext { (showScheduleAppointmentSheet, patientUuid, openIntention) ->
-            if (showScheduleAppointmentSheet) {
-              uiActions.showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-            } else {
-              when (openIntention) {
-                ViewExistingPatient -> uiActions.goToPreviousScreen()
-                is LinkIdWithPatient, ViewNewPatient -> uiActions.goToHomeScreen()
-              }
-            }
-          }
-          .flatMap { Observable.empty<PatientSummaryEvent>() }
     }
   }
 

@@ -56,7 +56,7 @@ class RecentPatientsScreenControllerTest {
       facilityRepository = facilityRepository,
       relativeTimestampGenerator = RelativeTimestampGenerator(),
       userClock = userClock,
-      exactDateFormatter = dateFormatter
+      dateFormatter = dateFormatter
   )
 
   @Before

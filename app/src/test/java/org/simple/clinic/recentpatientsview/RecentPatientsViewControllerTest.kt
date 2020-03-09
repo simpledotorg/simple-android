@@ -22,10 +22,6 @@ import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.RelativeTimestamp.Today
-import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
-import org.simple.clinic.util.RelativeTimestamp.Yesterday
-import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.toOptional
@@ -60,7 +56,6 @@ class RecentPatientsViewControllerTest {
       userSession = userSession,
       patientRepository = patientRepository,
       facilityRepository = facilityRepository,
-      relativeTimestampGenerator = RelativeTimestampGenerator(),
       userClock = userClock,
       patientConfig = Observable.just(PatientConfig(
           limitOfSearchResults = 1,

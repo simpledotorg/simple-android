@@ -123,19 +123,14 @@ class SyncIndicatorViewController @Inject constructor(
         .asObservable()
         .distinctUntilChanged()
 
-    val syncStream = {
-      dataSync
-          .sync(FREQUENT)
-          .toObservable<UiChange>()
-    }
-
     return events
         .ofType<SyncIndicatorViewClicked>()
         .withLatestFrom(lastSyncedStateStream)
         .filter { (_, lastSyncedState) ->
           lastSyncedState.lastSyncProgress == null || lastSyncedState.lastSyncProgress != SYNCING
         }
-        .switchMap { syncStream().mergeWith(showErrorDialogOnSyncError()) }
+        .doOnNext { dataSync.fireAndForgetSync(FREQUENT) }
+        .switchMap { showErrorDialogOnSyncError() }
   }
 
   private fun showErrorDialogOnSyncError(): Observable<UiChange> {

@@ -5,8 +5,8 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -19,7 +19,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup
+import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
@@ -115,13 +115,12 @@ class SyncIndicatorViewControllerTest {
 
   @Test
   fun `when sync indicator is clicked, sync should be triggered`() {
-    whenever(dataSync.sync(SyncGroup.FREQUENT)).thenReturn(Completable.complete())
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.never())
 
     lastSyncStateStream.onNext(LastSyncedState())
     uiEvents.onNext(SyncIndicatorViewClicked)
 
-    verify(dataSync).sync(SyncGroup.FREQUENT)
+    verify(dataSync).fireAndForgetSync(FREQUENT)
   }
 
   data class ShowFailureDialogParams(
@@ -138,7 +137,6 @@ class SyncIndicatorViewControllerTest {
         shouldShowErrorDialog: Boolean) = testCase
 
     // given
-    whenever(dataSync.sync(SyncGroup.FREQUENT)).thenReturn(Completable.complete())
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
     lastSyncStateStream.onNext(LastSyncedState())
 
@@ -169,9 +167,8 @@ class SyncIndicatorViewControllerTest {
     lastSyncStateStream.onNext(LastSyncedState(lastSyncProgress = SYNCING))
     uiEvents.onNext(SyncIndicatorViewClicked)
 
-    verify(dataSync, never()).sync(any())
-    verify(dataSync, never()).streamSyncErrors()
-    verify(indicator, never()).showErrorDialog(any())
+    verifyZeroInteractions(dataSync)
+    verifyZeroInteractions(indicator)
   }
 
   @Test

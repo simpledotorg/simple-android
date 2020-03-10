@@ -12,13 +12,15 @@ import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import timber.log.Timber
 import javax.inject.Inject
 
 @AppScope
 class DataSync @Inject constructor(
     private val modelSyncs: ArrayList<ModelSync>,
-    private val crashReporter: CrashReporter
+    private val crashReporter: CrashReporter,
+    private val schedulersProvider: SchedulersProvider
 ) {
 
   private val syncProgress = PublishSubject.create<SyncGroupResult>()

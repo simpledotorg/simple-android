@@ -61,21 +61,21 @@ class DataSync @Inject constructor(
         .mergeDelayError(completables)
         .doOnComplete { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS)) }
         .doOnError { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE)) }
-        .doOnError(logError())
+        .doOnError(::logError)
         .onErrorComplete()
   }
 
-  private fun logError() = { e: Throwable ->
-    val resolvedError = ErrorResolver.resolve(e)
+  private fun logError(cause: Throwable) {
+    val resolvedError = ErrorResolver.resolve(cause)
     syncErrors.onNext(resolvedError)
 
     when (resolvedError) {
       is Unexpected, is ServerError -> {
-        Timber.i("(breadcrumb) Reporting to sentry. Error: $e. Resolved error: $resolvedError")
+        Timber.i("(breadcrumb) Reporting to sentry. Error: $cause. Resolved error: $resolvedError")
         crashReporter.report(resolvedError.actualCause)
         Timber.e(resolvedError.actualCause)
       }
-      is NetworkRelated, is Unauthenticated -> Timber.e(e)
+      is NetworkRelated, is Unauthenticated -> Timber.e(cause)
     }.exhaustive()
   }
 

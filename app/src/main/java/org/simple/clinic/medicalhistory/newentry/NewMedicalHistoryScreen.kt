@@ -21,7 +21,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -44,9 +43,6 @@ class NewMedicalHistoryScreen(
   lateinit var utcClock: UtcClock
 
   @Inject
-  lateinit var crashReporter: CrashReporter
-
-  @Inject
   lateinit var effectHandlerFactory: NewMedicalHistoryEffectHandler.Factory
 
   private val questionViewEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
@@ -61,14 +57,13 @@ class NewMedicalHistoryScreen(
   private val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this)
 
   private val mobiusDelegate: MobiusDelegate<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> by unsafeLazy {
-    MobiusDelegate(
+    MobiusDelegate.forView(
         events = events,
         defaultModel = NewMedicalHistoryModel.default(),
         update = NewMedicalHistoryUpdate(),
         init = NewMedicalHistoryInit(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        crashReporter = crashReporter
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -82,8 +77,6 @@ class NewMedicalHistoryScreen(
     toolbar.setNavigationOnClickListener {
       screenRouter.pop()
     }
-
-    mobiusDelegate.prepare()
 
     post {
       hideKeyboard()
@@ -127,7 +120,6 @@ class NewMedicalHistoryScreen(
       HAS_HAD_A_STROKE -> strokeQuestionView
       HAS_HAD_A_KIDNEY_DISEASE -> kidneyDiseaseQuestionView
       DIAGNOSED_WITH_DIABETES -> diabetesQuestionView
-      // TODO(vs): 2020-01-27 Remove unused enums once the separation of the models is done
       else -> null
     }
 

@@ -19,7 +19,6 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.toOptional
@@ -52,7 +51,6 @@ class RecentPatientsScreenControllerTest {
       userSession = userSession,
       patientRepository = patientRepository,
       facilityRepository = facilityRepository,
-      relativeTimestampGenerator = RelativeTimestampGenerator(),
       userClock = userClock,
       dateFormatter = dateFormatter
   )

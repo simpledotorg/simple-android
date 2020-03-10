@@ -10,13 +10,13 @@ import retrofit2.http.Query
 
 interface BloodPressureSyncApi {
 
-  @POST("blood_pressures/sync")
+  @POST("v3/blood_pressures/sync")
   fun push(
       @Body body: BloodPressurePushRequest
   ): Single<DataPushResponse>
 
   @Headers(value = ["X-RESYNC-TOKEN: 1"])
-  @GET("blood_pressures/sync")
+  @GET("v3/blood_pressures/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null

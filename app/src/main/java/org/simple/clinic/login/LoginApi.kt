@@ -11,12 +11,12 @@ import java.util.UUID
 
 interface LoginApi {
 
-  @POST("login")
+  @POST("v3/login")
   fun login(@Body body: LoginRequest): Single<LoginResponse>
 
-  @POST("users/{userId}/request_otp")
+  @POST("v3/users/{userId}/request_otp")
   fun requestLoginOtp(@Path("userId") userId: UUID): Completable
 
-  @POST("users/me/reset_password")
+  @POST("v3/users/me/reset_password")
   fun resetPin(@Body request: ResetPinRequest): Single<ForgotPinResponse>
 }

@@ -9,12 +9,12 @@ import retrofit2.http.Query
 
 interface RegistrationApi {
 
-  @GET("users/find")
+  @GET("v3/users/find")
   fun findUser(
       @Query("phone_number") phoneNumber: String
   ): Single<LoggedInUserPayload>
 
-  @POST("users/register")
+  @POST("v3/users/register")
   fun createUser(
       @Body body: RegistrationRequest
   ): Single<RegistrationResponse>

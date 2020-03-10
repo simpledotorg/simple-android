@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface ProtocolSyncApi {
 
   @Headers(value = ["X-RESYNC-TOKEN: 1"])
-  @GET("protocols/sync")
+  @GET("v3/protocols/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null

@@ -39,7 +39,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var userClock: UserClock
 
-  @field:[Inject Named("date_for_search_results")]
+  @field:[Inject Named("full_date")]
   lateinit var dateFormatter: DateTimeFormatter
 
   private val overdueListAdapter = ItemAdapter(OverdueAppointmentRow.DiffCallback())

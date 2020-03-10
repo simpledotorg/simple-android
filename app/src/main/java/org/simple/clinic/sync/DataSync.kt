@@ -50,6 +50,12 @@ class DataSync @Inject constructor(
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
   }
 
+  fun fireAndForgetSync(syncGroup: SyncGroup) {
+    sync(syncGroup)
+        .subscribeOn(schedulersProvider.io())
+        .subscribe()
+  }
+
   private fun runAndSwallowErrors(completables: List<Completable>, syncGroup: SyncGroup): Completable {
     return Completable
         .mergeDelayError(completables)

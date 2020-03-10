@@ -31,7 +31,7 @@ class PatientSearchResultItemView(
   @field:Inject
   lateinit var phoneMasker: PhoneNumberMasker
 
-  @field:[Inject Named("date_for_search_results")]
+  @field:[Inject Named("full_date")]
   lateinit var dateTimeFormatter: DateTimeFormatter
 
   @field:Inject

@@ -59,7 +59,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   @Inject
   lateinit var userClock: UserClock
 
-  @field:[Inject Named("date_for_search_results")]
+  @field:[Inject Named("full_date")]
   lateinit var dateFormatter: DateTimeFormatter
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()

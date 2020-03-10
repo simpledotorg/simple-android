@@ -10,8 +10,8 @@ import javax.inject.Named
 class DateFormatterModule {
 
   @Provides
-  @Named("date_for_search_results")
-  fun provideDateFormatterForSearchResults(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d-MMM-yyyy", locale)
+  @Named("full_date")
+  fun provideDateFormatterForFullDate(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d-MMM-yyyy", locale)
 
   @Provides
   @Named("date_for_user_input")
@@ -24,10 +24,6 @@ class DateFormatterModule {
   @Provides
   @Named("exact_date")
   fun providesFormatterForFullReadableDate(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", locale)
-
-  @Provides
-  @Named("date_for_measurement_history")
-  fun provideDateFormatterForMeasurementHistory(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d-MMM-yyyy", locale)
 
   @Provides
   @Named("time_for_measurement_history")

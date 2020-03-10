@@ -10,13 +10,13 @@ import retrofit2.http.Query
 
 interface MedicalHistorySyncApi {
 
-  @POST("medical_histories/sync")
+  @POST("v3/medical_histories/sync")
   fun push(
       @Body body: MedicalHistoryPushRequest
   ): Single<DataPushResponse>
 
   @Headers(value = ["X-RESYNC-TOKEN: 2"])
-  @GET("medical_histories/sync")
+  @GET("v3/medical_histories/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null

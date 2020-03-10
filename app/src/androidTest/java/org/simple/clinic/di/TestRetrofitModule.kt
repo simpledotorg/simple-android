@@ -38,7 +38,6 @@ class TestRetrofitModule {
       okHttpClient: OkHttpClient
   ): Retrofit {
     val baseUrl = BuildConfig.FALLBACK_ENDPOINT
-    val currentApiVersion = "v3"
 
     return Retrofit.Builder()
         .addConverterFactory(ScalarsConverterFactory.create())
@@ -46,7 +45,7 @@ class TestRetrofitModule {
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .client(okHttpClient)
         .validateEagerly(true)
-        .baseUrl("$baseUrl$currentApiVersion/")
+        .baseUrl("$baseUrl/")
         .build()
   }
 }

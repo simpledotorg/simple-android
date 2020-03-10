@@ -10,13 +10,13 @@ import retrofit2.http.Query
 
 interface AppointmentSyncApi {
 
-  @POST("appointments/sync")
+  @POST("v3/appointments/sync")
   fun push(
       @Body body: AppointmentPushRequest
   ): Single<DataPushResponse>
 
   @Headers(value = ["X-RESYNC-TOKEN: 3"])
-  @GET("appointments/sync")
+  @GET("v3/appointments/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null

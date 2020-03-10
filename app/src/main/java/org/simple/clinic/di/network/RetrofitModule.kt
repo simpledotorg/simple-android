@@ -48,7 +48,7 @@ class RetrofitModule {
     // this is a safety check that will generate the right endpoint regardless of whether the
     // endpoint defined in the manifest has a trailing slash or not.
     val baseUrl = country.endpoint.toString().removeSuffix("/")
-    val endpoint = HttpUrl.parse("$baseUrl/v3/")!!
+    val endpoint = HttpUrl.parse("$baseUrl/")!!
 
     return commonRetrofitBuilder
         .baseUrl(endpoint)

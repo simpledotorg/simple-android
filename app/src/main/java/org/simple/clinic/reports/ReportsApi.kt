@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface ReportsApi {
 
-  @GET("analytics/user_analytics.html")
+  @GET("v3/analytics/user_analytics.html")
   fun userAnalytics(): Single<String>
 }

@@ -10,13 +10,13 @@ import retrofit2.http.Query
 
 interface PrescriptionSyncApi {
 
-  @POST("prescription_drugs/sync")
+  @POST("v3/prescription_drugs/sync")
   fun push(
       @Body body: PrescriptionPushRequest
   ): Single<DataPushResponse>
 
   @Headers(value = ["X-RESYNC-TOKEN: 1"])
-  @GET("prescription_drugs/sync")
+  @GET("v3/prescription_drugs/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null

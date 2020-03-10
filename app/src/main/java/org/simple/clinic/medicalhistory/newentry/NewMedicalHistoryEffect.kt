@@ -13,4 +13,4 @@ object LoadOngoingPatientEntry : NewMedicalHistoryEffect()
 
 object LoadCurrentFacility : NewMedicalHistoryEffect()
 
-object TriggerSync : NewMedicalHistoryEffect()
+data class TriggerSync(val registeredPatientUuid: UUID) : NewMedicalHistoryEffect()

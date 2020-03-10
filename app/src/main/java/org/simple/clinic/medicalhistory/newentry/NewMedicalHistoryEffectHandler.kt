@@ -98,7 +98,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .doOnNext { dataSync.fireAndForgetSync(FREQUENT) }
-          .map { SyncTriggered }
+          .map { SyncTriggered(it.registeredPatientUuid) }
     }
   }
 

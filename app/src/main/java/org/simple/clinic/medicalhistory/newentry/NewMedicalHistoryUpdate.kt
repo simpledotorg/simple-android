@@ -19,9 +19,10 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
     return when (event) {
       is NewMedicalHistoryAnswerToggled -> answerToggled(model, event.question, event.answer)
       is SaveMedicalHistoryClicked -> saveClicked(model)
-      is PatientRegistered -> dispatch(OpenPatientSummaryScreen(event.patientUuid))
+      is PatientRegistered -> dispatch(TriggerSync(event.patientUuid))
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
       is CurrentFacilityLoaded -> currentFacilityLoaded(event, model)
+      is SyncTriggered -> dispatch(OpenPatientSummaryScreen(event.registeredPatientUuid))
       else -> noChange()
     }
   }

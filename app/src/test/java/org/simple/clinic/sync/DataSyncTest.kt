@@ -7,8 +7,11 @@ import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import org.junit.Test
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
 class DataSyncTest {
+
+  private val schedulersProvider = TrampolineSchedulersProvider()
 
   @Test
   fun `when syncing everything, all the model syncs should be invoked`() {
@@ -30,7 +33,9 @@ class DataSyncTest {
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
-        crashReporter = mock())
+        crashReporter = mock(),
+        schedulersProvider = schedulersProvider
+    )
 
     dataSync.syncTheWorld().blockingAwait()
 
@@ -59,7 +64,9 @@ class DataSyncTest {
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
-        crashReporter = mock())
+        crashReporter = mock(),
+        schedulersProvider = schedulersProvider
+    )
 
     dataSync.syncTheWorld().blockingAwait()
 
@@ -103,7 +110,9 @@ class DataSyncTest {
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
-        crashReporter = mock())
+        crashReporter = mock(),
+        schedulersProvider = schedulersProvider
+    )
 
     dataSync.sync(SyncGroup.FREQUENT).blockingAwait()
     sync1Consumer.assertInvoked()
@@ -139,7 +148,9 @@ class DataSyncTest {
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
-        crashReporter = mock())
+        crashReporter = mock(),
+        schedulersProvider = schedulersProvider
+    )
 
     dataSync.sync(SyncGroup.FREQUENT).blockingAwait()
     sync1Consumer.assertInvoked()

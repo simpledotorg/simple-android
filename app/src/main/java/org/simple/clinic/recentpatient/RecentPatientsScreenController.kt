@@ -11,7 +11,6 @@ import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
@@ -27,7 +26,6 @@ class RecentPatientsScreenController @Inject constructor(
     private val userSession: UserSession,
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
-    private val relativeTimestampGenerator: RelativeTimestampGenerator,
     private val userClock: UserClock,
     @Named("full_date") private val dateFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {

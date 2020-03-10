@@ -213,4 +213,46 @@ class NewMedicalHistoryUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when the patient is registered, trigger a sync`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, No)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+
+    val patientUuid = UUID.fromString("c14a06e1-2f60-437e-8845-67f65d4f01a6")
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientRegistered(patientUuid))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(TriggerSync(patientUuid) as NewMedicalHistoryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the sync is triggered, open the patient summary sheet`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, No)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+
+    val patientUuid = UUID.fromString("c14a06e1-2f60-437e-8845-67f65d4f01a6")
+
+    updateSpec
+        .given(model)
+        .whenEvent(SyncTriggered(patientUuid))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenPatientSummaryScreen(patientUuid) as NewMedicalHistoryEffect)
+            )
+        )
+  }
 }

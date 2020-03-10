@@ -62,12 +62,13 @@ class NewMedicalHistoryEffectHandlerTest {
   @Test
   fun `when the trigger sync effect is received, the frequent syncs must be triggered`() {
     // when
-    testCase.dispatch(TriggerSync)
+    val patientUuid = UUID.fromString("01a72d61-d502-447d-800f-02a38784fd6e")
+    testCase.dispatch(TriggerSync(patientUuid))
 
     // then
     verify(dataSync).fireAndForgetSync(FREQUENT)
     verifyNoMoreInteractions(dataSync)
-    testCase.assertOutgoingEvents(SyncTriggered)
+    testCase.assertOutgoingEvents(SyncTriggered(patientUuid))
     verifyZeroInteractions(uiActions)
   }
 }

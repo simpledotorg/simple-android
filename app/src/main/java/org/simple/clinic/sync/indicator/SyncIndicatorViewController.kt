@@ -119,14 +119,6 @@ class SyncIndicatorViewController @Inject constructor(
   }
 
   private fun startSync(events: Observable<UiEvent>): Observable<UiChange> {
-    val errorsStream = {
-      dataSync
-          .streamSyncErrors()
-          .take(1)
-          .filter { error -> error::class in errorTypesToShowErrorFor }
-          .map { { ui: Ui -> ui.showErrorDialog(it) } }
-    }
-
     val lastSyncedStateStream = lastSyncState
         .asObservable()
         .distinctUntilChanged()
@@ -143,7 +135,15 @@ class SyncIndicatorViewController @Inject constructor(
         .filter { (_, lastSyncedState) ->
           lastSyncedState.lastSyncProgress == null || lastSyncedState.lastSyncProgress != SYNCING
         }
-        .switchMap { syncStream().mergeWith(errorsStream()) }
+        .switchMap { syncStream().mergeWith(showErrorDialogOnSyncError()) }
+  }
+
+  private fun showErrorDialogOnSyncError(): Observable<UiChange> {
+    return dataSync
+        .streamSyncErrors()
+        .take(1)
+        .filter { error -> error::class in errorTypesToShowErrorFor }
+        .map { { ui: Ui -> ui.showErrorDialog(it) } }
   }
 
   private fun showPendingSyncStatus(events: Observable<UiEvent>): Observable<UiChange> {

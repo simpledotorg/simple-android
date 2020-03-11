@@ -1969,12 +1969,12 @@ class PatientRepositoryAndroidTest {
   @Test
   fun querying_all_patients_in_a_facility_should_return_only_patients_in_that_facility_ordered_by_name() {
 
-    fun recordPatientAtFacility(
+    fun recordPatientAtFacilityWithBp(
+        patientUuid: UUID,
         patientName: String,
         status: PatientStatus,
         facility: Facility
     ) {
-      val patientUuid = UUID.randomUUID()
       val patientProfile = testData.patientProfile(patientUuid = patientUuid).let { patientProfile ->
         patientProfile.copy(patient = patientProfile.patient.copy(status = status, fullName = patientName))
       }
@@ -1984,53 +1984,96 @@ class PatientRepositoryAndroidTest {
       bloodPressureRepository.save(listOf(bp)).blockingAwait()
     }
 
+    fun recordPatientAtFacilityWithBloodSugar(
+        patientUuid: UUID,
+        patientName: String,
+        status: PatientStatus,
+        facility: Facility
+    ) {
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid).let { patientProfile ->
+        patientProfile.copy(patient = patientProfile.patient.copy(status = status, fullName = patientName))
+      }
+      val bloodSugar = testData.bloodSugarMeasurement(patientUuid = patientUuid, facilityUuid = facility.uuid)
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      bloodSugarRepository.save(listOf(bloodSugar)).blockingAwait()
+    }
+
+    fun recordPatientAtFacilityWithoutMeasurements(
+        patientUuid: UUID,
+        patientName: String,
+        status: PatientStatus,
+        facility: Facility
+    ) {
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid).let { patientProfile ->
+        patientProfile.copy(patient = patientProfile.patient.copy(status = status, fullName = patientName))
+      }
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
     // given
     val (facilityA, facilityB, facilityC) = facilityRepository.facilities().blockingFirst()
 
-    recordPatientAtFacility(
-        "Chitra Naik",
-        Active,
-        facilityA
+    recordPatientAtFacilityWithBp(
+        patientUuid = UUID.fromString("db5ff67d-7004-436c-b42c-0928b7356f10"),
+        patientName = "Chitra Naik",
+        status = Active,
+        facility = facilityA
     )
-    recordPatientAtFacility(
-        "Anubhav acharya",
-        Active,
-        facilityA
+    recordPatientAtFacilityWithBp(
+        patientUuid = UUID.fromString("46faff02-3c94-4b93-b1a2-33043d2bde78"),
+        patientName = "Anubhav acharya",
+        status = Active,
+        facility = facilityA
     )
-    recordPatientAtFacility(
-        "Bhim",
-        Dead,
-        facilityA
+    recordPatientAtFacilityWithBp(
+        patientUuid = UUID.fromString("92c354c6-5e54-43c9-8c02-1c7278b1c5ee"),
+        patientName = "Bhim",
+        status = Dead,
+        facility = facilityA
     )
-    recordPatientAtFacility(
-        "Elvis",
-        Dead,
-        facilityB
+    recordPatientAtFacilityWithBloodSugar(
+        patientUuid = UUID.fromString("e309cbdf-5822-4e4c-b728-cb5b8a344e68"),
+        patientName = "Elvis",
+        status = Dead,
+        facility = facilityB
     )
-    recordPatientAtFacility(
-        "Farhan",
-        Dead,
-        facilityB
+    recordPatientAtFacilityWithBloodSugar(
+        patientUuid = UUID.fromString("742c72f1-615f-4dc0-a4fe-0b0ec0ffc740"),
+        patientName = "Farhan",
+        status = Dead,
+        facility = facilityB
     )
-    recordPatientAtFacility(
-        "Dhruv",
-        Active,
-        facilityB
+    recordPatientAtFacilityWithBp(
+        patientUuid = UUID.fromString("1cede2e9-792a-4d3d-bfce-8795a7c1a388"),
+        patientName = "Dhruv",
+        status = Active,
+        facility = facilityB
     )
-    recordPatientAtFacility(
-        "chitra menon",
-        Active,
-        facilityA
+    recordPatientAtFacilityWithBp(
+        patientUuid = UUID.fromString("277a3ff5-9a83-40eb-8980-ebe02eb0118d"),
+        patientName = "Chitra Menon",
+        status = Active,
+        facility = facilityA
     )
-    recordPatientAtFacility(
-        "anubhav Bansal",
-        Active,
-        facilityA
+    recordPatientAtFacilityWithBp(
+        patientUuid = UUID.fromString("889bf64c-54c5-413c-971a-c10cb8ebf758"),
+        patientName = "Anubhav Bansal",
+        status = Active,
+        facility = facilityA
     )
-    recordPatientAtFacility(
-        "bhim",
-        Active,
-        facilityB
+    recordPatientAtFacilityWithBloodSugar(
+        patientUuid = UUID.fromString("9583a07c-cd37-47d7-870e-f6fe9071544c"),
+        patientName = "Bhim",
+        status = Active,
+        facility = facilityB
+    )
+    recordPatientAtFacilityWithoutMeasurements(
+        patientUuid = UUID.fromString("2374f3a8-108e-4548-a1c9-ac3173268e07"),
+        patientName = "John Doe",
+        status = Active,
+        facility = facilityA
     )
 
     // when
@@ -2046,11 +2089,11 @@ class PatientRepositoryAndroidTest {
 
     // then
     assertThat(allPatientFullNamesInFacilityA)
-        .containsExactly("Anubhav acharya", "anubhav Bansal", "chitra menon", "Chitra Naik")
+        .containsExactly("Anubhav acharya", "Anubhav Bansal", "Chitra Menon", "Chitra Naik")
         .inOrder()
 
     assertThat(allPatientFullNamesInFacilityB)
-        .containsExactly("bhim", "Dhruv")
+        .containsExactly("Bhim", "Dhruv")
         .inOrder()
 
     assertThat(allPatientFullNamesInFacilityC).isEmpty()
@@ -2569,13 +2612,15 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun deleted_patients_must_be_excluded_when_loading_all_patients_in_a_facility() {
-    fun recordPatientAtFacility(
+    fun recordPatientAtFacilityWithBP(
         patientUuid: UUID,
+        patientName: String,
         facility: Facility,
         isDeleted: Boolean
     ) {
       val patientProfile = testData.patientProfile(
           patientUuid = patientUuid,
+          patientName = patientName,
           patientDeletedAt = if (isDeleted) Instant.now() else null
       )
       val bp = testData.bloodPressureMeasurement(patientUuid = patientUuid, facilityUuid = facility.uuid)
@@ -2584,18 +2629,61 @@ class PatientRepositoryAndroidTest {
       bloodPressureRepository.save(listOf(bp)).blockingAwait()
     }
 
+    fun recordPatientAtFacilityWithBloodSugar(
+        patientUuid: UUID,
+        patientName: String,
+        facility: Facility,
+        isDeleted: Boolean
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          patientName = patientName,
+          patientDeletedAt = if (isDeleted) Instant.now() else null
+      )
+      val bloodSugarMeasurement = testData.bloodSugarMeasurement(patientUuid = patientUuid, facilityUuid = facility.uuid)
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      bloodSugarRepository.save(listOf(bloodSugarMeasurement)).blockingAwait()
+    }
+
     //given
-    val deletedPatientId = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff")
-    recordPatientAtFacility(deletedPatientId, currentFacility, isDeleted = true)
-    val notDeletedPatientId = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d")
-    recordPatientAtFacility(notDeletedPatientId, currentFacility, isDeleted = false)
+    val deletedPatientIdWithBP = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff")
+    recordPatientAtFacilityWithBP(
+        patientUuid = deletedPatientIdWithBP,
+        patientName = "John Doe",
+        facility = currentFacility,
+        isDeleted = true
+    )
+    val notDeletedPatientIdWithBP = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d")
+    recordPatientAtFacilityWithBP(
+        patientUuid = notDeletedPatientIdWithBP,
+        patientName = "John Wick",
+        facility = currentFacility,
+        isDeleted = false
+    )
+    val deletedPatientIdWithBloodSugar = UUID.fromString("6042abbc-9ddc-4f6c-aa4d-befb1d2c04a1")
+    recordPatientAtFacilityWithBloodSugar(
+        patientUuid = deletedPatientIdWithBloodSugar,
+        patientName = "Sarah Connor",
+        facility = currentFacility,
+        isDeleted = true
+    )
+    val notDeletedPatientIdWithBloodSugar = UUID.fromString("e5db5392-9fec-41fa-9633-4213ddad5903")
+    recordPatientAtFacilityWithBloodSugar(
+        patientUuid = notDeletedPatientIdWithBloodSugar,
+        patientName = "Jane Doe",
+        facility = currentFacility,
+        isDeleted = false
+    )
 
     //when
     val allPatientsInFacility = patientRepository.allPatientsInFacility(currentFacility).blockingFirst()
 
     //then
-    assertThat(allPatientsInFacility).hasSize(1)
-    assertThat(allPatientsInFacility.first().uuid).isEqualTo(notDeletedPatientId)
+    assertThat(allPatientsInFacility).hasSize(2)
+    assertThat(allPatientsInFacility.map { it.uuid })
+        .containsExactly(notDeletedPatientIdWithBloodSugar, notDeletedPatientIdWithBP)
+        .inOrder()
   }
 
   @Test

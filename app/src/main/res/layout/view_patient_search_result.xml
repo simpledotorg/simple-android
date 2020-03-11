@@ -88,7 +88,7 @@
           android:textAllCaps="true" />
 
         <TextView
-          android:id="@+id/lastBpLabel"
+          android:id="@+id/lastSeenLabel"
           style="@style/Clinic.V2.TextAppearance.Body2Left.Green1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

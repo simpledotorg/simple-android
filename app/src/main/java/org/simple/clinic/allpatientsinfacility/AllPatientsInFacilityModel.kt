@@ -8,7 +8,7 @@ import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
-import org.simple.clinic.patient.PatientSearchResult.LastBp
+import org.simple.clinic.patient.PatientSearchResult.LastSeen
 import org.threeten.bp.LocalDate
 import java.util.Objects
 import java.util.UUID
@@ -71,7 +71,7 @@ data class PatientSearchResultUiState(
     val dateOfBirth: LocalDate?,
     val address: PatientAddress,
     val phoneNumber: String?,
-    val lastBp: LastBp?
+    val lastSeen: LastSeen?
 ) : Parcelable {
 
   constructor(searchResult: PatientSearchResult) : this(
@@ -82,6 +82,6 @@ data class PatientSearchResultUiState(
       searchResult.dateOfBirth,
       searchResult.address,
       searchResult.phoneNumber,
-      searchResult.lastBp
+      searchResult.lastSeen
   )
 }

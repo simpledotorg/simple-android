@@ -51,29 +51,29 @@ class PatientSearchResultItemView(
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.dateOfBirth)
     renderPatientPhoneNumber(model.phoneNumber)
-    renderLastRecordedBloodPressure(model.lastBp, currentFacilityUuid)
+    renderLastRecordedBloodPressure(model.lastSeen, currentFacilityUuid)
   }
 
   private fun renderLastRecordedBloodPressure(
-      lastBp: PatientSearchResult.LastBp?,
+      lastSeen: PatientSearchResult.LastSeen?,
       currentFacilityUuid: UUID
   ) {
-    if (lastBp == null) {
+    if (lastSeen == null) {
       lastBpContainer.visibility = View.GONE
     } else {
       lastBpContainer.visibility = View.VISIBLE
 
-      val lastBpDate = lastBp.takenOn.toLocalDateAtZone(userClock.zone)
-      val formattedLastBpDate = dateTimeFormatter.format(lastBpDate)
+      val lastSeenDate = lastSeen.takenOn.toLocalDateAtZone(userClock.zone)
+      val formattedLastBpDate = dateTimeFormatter.format(lastSeenDate)
 
-      val isCurrentFacility = lastBp.takenAtFacilityUuid == currentFacilityUuid
+      val isCurrentFacility = lastSeen.takenAtFacilityUuid == currentFacilityUuid
       if (isCurrentFacility) {
-        lastBpLabel.text = formattedLastBpDate
+        lastSeenLabel.text = formattedLastBpDate
       } else {
-        lastBpLabel.text = resources.getString(
-            R.string.patientsearchresults_item_last_bp_date_with_facility,
+        lastSeenLabel.text = resources.getString(
+            R.string.patientsearchresults_item_last_seen_date_with_facility,
             formattedLastBpDate,
-            lastBp.takenAtFacilityName)
+            lastSeen.takenAtFacilityName)
       }
     }
   }
@@ -125,6 +125,6 @@ class PatientSearchResultItemView(
       val dateOfBirth: LocalDate?,
       val address: PatientAddress,
       val phoneNumber: String?,
-      val lastBp: PatientSearchResult.LastBp?
+      val lastSeen: PatientSearchResult.LastSeen?
   )
 }

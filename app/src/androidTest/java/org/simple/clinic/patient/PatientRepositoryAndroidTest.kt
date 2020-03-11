@@ -32,7 +32,7 @@ import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
-import org.simple.clinic.patient.PatientSearchResult.LastBp
+import org.simple.clinic.patient.PatientSearchResult.LastSeen
 import org.simple.clinic.patient.PatientStatus.Active
 import org.simple.clinic.patient.PatientStatus.Dead
 import org.simple.clinic.patient.PatientStatus.Inactive
@@ -433,20 +433,20 @@ class PatientRepositoryAndroidTest {
 
     // then
     assertThat(searchResults.size).isEqualTo(4)
-    val expectedLastBpWithPatientWithLatestBpDeleted = LastBp(
+    val expectedLastSeenWithPatientWithLatestBpDeleted = LastSeen(
         uuid = UUID.fromString("b234458d-fa2c-4909-8891-f8c27999004b"),
         takenOn = now.plusSeconds(2L),
         takenAtFacilityName = currentFacility.name,
         takenAtFacilityUuid = currentFacility.uuid
     )
-    assertThat(searchResults.getValue(patientWithLatestBpDeleted.patientUuid).lastBp)
-        .isEqualTo(expectedLastBpWithPatientWithLatestBpDeleted)
+    assertThat(searchResults.getValue(patientWithLatestBpDeleted.patientUuid).lastSeen)
+        .isEqualTo(expectedLastSeenWithPatientWithLatestBpDeleted)
 
-    assertThat(searchResults.getValue(patientWithOneDeletedBp.patientUuid).lastBp)
+    assertThat(searchResults.getValue(patientWithOneDeletedBp.patientUuid).lastSeen)
         .isNull()
-    assertThat(searchResults.getValue(patientWithTwoDeletedBps.patientUuid).lastBp)
+    assertThat(searchResults.getValue(patientWithTwoDeletedBps.patientUuid).lastSeen)
         .isNull()
-    assertThat(searchResults.getValue(patientWithNoBps.patientUuid).lastBp)
+    assertThat(searchResults.getValue(patientWithNoBps.patientUuid).lastSeen)
         .isNull()
   }
 
@@ -2199,8 +2199,8 @@ class PatientRepositoryAndroidTest {
           .blockingFirst()
     }
 
-    data class PatientUuidAndLatestBpRecorded(val patientUuid: UUID, val lastBp: LastBp) {
-      constructor(patientSearchResult: PatientSearchResult) : this(patientSearchResult.uuid, patientSearchResult.lastBp!!)
+    data class PatientUuidAndLatestBpRecorded(val patientUuid: UUID, val lastSeen: LastSeen) {
+      constructor(patientSearchResult: PatientSearchResult) : this(patientSearchResult.uuid, patientSearchResult.lastSeen!!)
     }
 
     val patientsAndLatestBpRecordedAtFacilityA = patientsInFacility(facilityA)
@@ -2213,7 +2213,7 @@ class PatientRepositoryAndroidTest {
         .containsExactly(
             PatientUuidAndLatestBpRecorded(
                 patientUuid = uuidOfPatientA,
-                lastBp = LastBp(
+                lastSeen = LastSeen(
                     uuid = uuidOfBp1OfPatientA,
                     takenOn = oneSecondLater,
                     takenAtFacilityUuid = facilityA.uuid,
@@ -2222,7 +2222,7 @@ class PatientRepositoryAndroidTest {
             ),
             PatientUuidAndLatestBpRecorded(
                 patientUuid = uuidOfPatientB,
-                lastBp = LastBp(
+                lastSeen = LastSeen(
                     uuid = uuidOfBp1OfPatientB,
                     takenOn = fiveSecondsLater,
                     takenAtFacilityUuid = facilityB.uuid,
@@ -2236,7 +2236,7 @@ class PatientRepositoryAndroidTest {
         .containsExactly(
             PatientUuidAndLatestBpRecorded(
                 patientUuid = uuidOfPatientA,
-                lastBp = LastBp(
+                lastSeen = LastSeen(
                     uuid = uuidOfBp1OfPatientA,
                     takenOn = oneSecondLater,
                     takenAtFacilityUuid = facilityA.uuid,
@@ -2245,7 +2245,7 @@ class PatientRepositoryAndroidTest {
             ),
             PatientUuidAndLatestBpRecorded(
                 patientUuid = uuidOfPatientB,
-                lastBp = LastBp(
+                lastSeen = LastSeen(
                     uuid = uuidOfBp1OfPatientB,
                     takenOn = fiveSecondsLater,
                     takenAtFacilityUuid = facilityB.uuid,
@@ -2434,11 +2434,11 @@ class PatientRepositoryAndroidTest {
       bloodPressureRepository.save(bpMeasurements).blockingAwait()
     }
 
-    fun searchResults(phoneNumber: String): Map<UUID, Optional<LastBp>> {
+    fun searchResults(phoneNumber: String): Map<UUID, Optional<LastSeen>> {
       return patientRepository
           .search(PhoneNumber(phoneNumber))
           .blockingFirst()
-          .associateBy({ it.uuid }, { it.lastBp.toOptional() })
+          .associateBy({ it.uuid }, { it.lastSeen.toOptional() })
     }
 
     // given
@@ -2503,13 +2503,13 @@ class PatientRepositoryAndroidTest {
     // then
     val expectedResults = mapOf(
         patientWithNoBps to None,
-        patientWithOneBp to LastBp(
+        patientWithOneBp to LastSeen(
             uuid = bpUuidOfPatientWithOneBp,
             takenOn = instant,
             takenAtFacilityName = facilityName,
             takenAtFacilityUuid = facilityUuid
         ).toOptional(),
-        patientWithMultipleBps to LastBp(
+        patientWithMultipleBps to LastSeen(
             uuid = newerNonDeletedBpUuidOfPatientWithMultipleBps,
             takenOn = instant.plusSeconds(1L),
             takenAtFacilityName = facilityName,

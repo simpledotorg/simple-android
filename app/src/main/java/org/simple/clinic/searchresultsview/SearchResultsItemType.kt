@@ -139,7 +139,7 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
             dateOfBirth = searchResult.dateOfBirth,
             address = searchResult.address,
             phoneNumber = searchResult.phoneNumber,
-            lastBp = searchResult.lastBp
+            lastSeen = searchResult.lastSeen
         )
       }
     }

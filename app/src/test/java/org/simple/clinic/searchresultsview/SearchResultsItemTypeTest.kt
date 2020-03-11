@@ -45,7 +45,7 @@ class SearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult1.dateOfBirth,
                 address = patientSearchResult1.address,
                 phoneNumber = patientSearchResult1.phoneNumber,
-                lastBp = patientSearchResult1.lastBp
+                lastSeen = patientSearchResult1.lastSeen
             ),
             currentFacilityUuid = currentFacilityUuid
         ),
@@ -59,7 +59,7 @@ class SearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult2.dateOfBirth,
                 address = patientSearchResult2.address,
                 phoneNumber = patientSearchResult2.phoneNumber,
-                lastBp = patientSearchResult2.lastBp
+                lastSeen = patientSearchResult2.lastSeen
             ),
             currentFacilityUuid = currentFacilityUuid
         )
@@ -97,7 +97,7 @@ class SearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult1.dateOfBirth,
                 address = patientSearchResult1.address,
                 phoneNumber = patientSearchResult1.phoneNumber,
-                lastBp = patientSearchResult1.lastBp
+                lastSeen = patientSearchResult1.lastSeen
             ),
             currentFacilityUuid = currentFacilityUuid
         ),
@@ -109,7 +109,7 @@ class SearchResultsItemTypeTest {
             dateOfBirth = patientSearchResult2.dateOfBirth,
             address = patientSearchResult2.address,
             phoneNumber = patientSearchResult2.phoneNumber,
-            lastBp = patientSearchResult2.lastBp
+            lastSeen = patientSearchResult2.lastSeen
         ), currentFacilityUuid = currentFacilityUuid)
     )
     assertThat(listItems).isEqualTo(expected)
@@ -147,7 +147,7 @@ class SearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult1.dateOfBirth,
                 address = patientSearchResult1.address,
                 phoneNumber = patientSearchResult1.phoneNumber,
-                lastBp = patientSearchResult1.lastBp
+                lastSeen = patientSearchResult1.lastSeen
             ),
             currentFacilityUuid = currentFacilityUuid
         ),
@@ -160,7 +160,7 @@ class SearchResultsItemTypeTest {
                 dateOfBirth = patientSearchResult2.dateOfBirth,
                 address = patientSearchResult2.address,
                 phoneNumber = patientSearchResult2.phoneNumber,
-                lastBp = patientSearchResult2.lastBp
+                lastSeen = patientSearchResult2.lastSeen
             ),
             currentFacilityUuid = currentFacilityUuid
         )

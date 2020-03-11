@@ -394,10 +394,9 @@ object PatientMocker {
         phoneCreatedAt = mock(),
         phoneUpdatedAt = mock(),
         lastSeen = PatientSearchResult.LastSeen(
-            uuid = UUID.randomUUID(),
-            takenOn = Instant.now(),
-            takenAtFacilityName = "Some Facility",
-            takenAtFacilityUuid = UUID.randomUUID()))
+            lastSeenOn = Instant.now(),
+            lastSeenAtFacilityName = "Some Facility",
+            lastSeenAtFacilityUuid = UUID.randomUUID()))
   }
 
   fun medicalHistory(

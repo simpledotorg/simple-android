@@ -434,10 +434,9 @@ class PatientRepositoryAndroidTest {
     // then
     assertThat(searchResults.size).isEqualTo(4)
     val expectedLastSeenWithPatientWithLatestBpDeleted = LastSeen(
-        uuid = UUID.fromString("b234458d-fa2c-4909-8891-f8c27999004b"),
-        takenOn = now.plusSeconds(2L),
-        takenAtFacilityName = currentFacility.name,
-        takenAtFacilityUuid = currentFacility.uuid
+        lastSeenOn = now.plusSeconds(2L),
+        lastSeenAtFacilityName = currentFacility.name,
+        lastSeenAtFacilityUuid = currentFacility.uuid
     )
     assertThat(searchResults.getValue(patientWithLatestBpDeleted.patientUuid).lastSeen)
         .isEqualTo(expectedLastSeenWithPatientWithLatestBpDeleted)
@@ -2214,19 +2213,17 @@ class PatientRepositoryAndroidTest {
             PatientUuidAndLatestBpRecorded(
                 patientUuid = uuidOfPatientA,
                 lastSeen = LastSeen(
-                    uuid = uuidOfBp1OfPatientA,
-                    takenOn = oneSecondLater,
-                    takenAtFacilityUuid = facilityA.uuid,
-                    takenAtFacilityName = facilityA.name
+                    lastSeenOn = oneSecondLater,
+                    lastSeenAtFacilityName = facilityA.name,
+                    lastSeenAtFacilityUuid = facilityA.uuid
                 )
             ),
             PatientUuidAndLatestBpRecorded(
                 patientUuid = uuidOfPatientB,
                 lastSeen = LastSeen(
-                    uuid = uuidOfBp1OfPatientB,
-                    takenOn = fiveSecondsLater,
-                    takenAtFacilityUuid = facilityB.uuid,
-                    takenAtFacilityName = facilityB.name
+                    lastSeenOn = fiveSecondsLater,
+                    lastSeenAtFacilityName = facilityB.name,
+                    lastSeenAtFacilityUuid = facilityB.uuid
                 )
             )
         )
@@ -2237,19 +2234,17 @@ class PatientRepositoryAndroidTest {
             PatientUuidAndLatestBpRecorded(
                 patientUuid = uuidOfPatientA,
                 lastSeen = LastSeen(
-                    uuid = uuidOfBp1OfPatientA,
-                    takenOn = oneSecondLater,
-                    takenAtFacilityUuid = facilityA.uuid,
-                    takenAtFacilityName = facilityA.name
+                    lastSeenOn = oneSecondLater,
+                    lastSeenAtFacilityName = facilityA.name,
+                    lastSeenAtFacilityUuid = facilityA.uuid
                 )
             ),
             PatientUuidAndLatestBpRecorded(
                 patientUuid = uuidOfPatientB,
                 lastSeen = LastSeen(
-                    uuid = uuidOfBp1OfPatientB,
-                    takenOn = fiveSecondsLater,
-                    takenAtFacilityUuid = facilityB.uuid,
-                    takenAtFacilityName = facilityB.name
+                    lastSeenOn = fiveSecondsLater,
+                    lastSeenAtFacilityName = facilityB.name,
+                    lastSeenAtFacilityUuid = facilityB.uuid
                 )
             )
         )
@@ -2504,16 +2499,14 @@ class PatientRepositoryAndroidTest {
     val expectedResults = mapOf(
         patientWithNoBps to None,
         patientWithOneBp to LastSeen(
-            uuid = bpUuidOfPatientWithOneBp,
-            takenOn = instant,
-            takenAtFacilityName = facilityName,
-            takenAtFacilityUuid = facilityUuid
+            lastSeenOn = instant,
+            lastSeenAtFacilityName = facilityName,
+            lastSeenAtFacilityUuid = facilityUuid
         ).toOptional(),
         patientWithMultipleBps to LastSeen(
-            uuid = newerNonDeletedBpUuidOfPatientWithMultipleBps,
-            takenOn = instant.plusSeconds(1L),
-            takenAtFacilityName = facilityName,
-            takenAtFacilityUuid = facilityUuid
+            lastSeenOn = instant.plusSeconds(1L),
+            lastSeenAtFacilityName = facilityName,
+            lastSeenAtFacilityUuid = facilityUuid
         ).toOptional()
     )
     assertThat(searchResults).isEqualTo(expectedResults)

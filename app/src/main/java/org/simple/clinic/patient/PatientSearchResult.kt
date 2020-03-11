@@ -55,7 +55,7 @@ data class PatientSearchResult(
 ) {
 
   override fun toString(): String {
-    return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastSeen?.takenAtFacilityUuid}"
+    return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastSeen?.lastSeenAtFacilityUuid}"
   }
 
   @Dao
@@ -69,14 +69,14 @@ data class PatientSearchResult(
           PA.state addr_state, PA.country addr_country,
           PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
           PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
-          BP.uuid lastSeen_uuid, BP.recordedAt lastSeen_takenOn, BP.facilityName lastSeen_takenAtFacilityName, BP.facilityUuid lastSeen_takenAtFacilityUuid
+          BP.recordedAt lastSeen_lastSeenOn, BP.facilityName lastSeen_lastSeenAtFacilityName, BP.facilityUuid lastSeen_lastSeenAtFacilityUuid
           FROM Patient P
           INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid
           LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
           LEFT JOIN (
-        		SELECT BP.uuid, BP.patientUuid, BP.recordedAt, F.name facilityName, F.uuid facilityUuid
+        		SELECT BP.patientUuid, BP.recordedAt, F.name facilityName, F.uuid facilityUuid
         		FROM (
-                SELECT BP.uuid, BP.patientUuid, BP.recordedAt, BP.facilityUuid
+                SELECT BP.patientUuid, BP.recordedAt, BP.facilityUuid
                 FROM BloodPressureMeasurement BP
                 WHERE BP.deletedAt IS NULL
                 GROUP BY BP.patientUuid HAVING MAX (BP.recordedAt)
@@ -123,9 +123,8 @@ data class PatientSearchResult(
 
   @Parcelize
   data class LastSeen(
-      val uuid: UUID,
-      val takenOn: Instant,
-      val takenAtFacilityName: String,
-      val takenAtFacilityUuid: UUID
+      val lastSeenOn: Instant,
+      val lastSeenAtFacilityName: String,
+      val lastSeenAtFacilityUuid: UUID
   ) : Parcelable
 }

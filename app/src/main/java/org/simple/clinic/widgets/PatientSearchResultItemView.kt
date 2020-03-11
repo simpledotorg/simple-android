@@ -63,17 +63,17 @@ class PatientSearchResultItemView(
     } else {
       lastBpContainer.visibility = View.VISIBLE
 
-      val lastSeenDate = lastSeen.takenOn.toLocalDateAtZone(userClock.zone)
+      val lastSeenDate = lastSeen.lastSeenOn.toLocalDateAtZone(userClock.zone)
       val formattedLastBpDate = dateTimeFormatter.format(lastSeenDate)
 
-      val isCurrentFacility = lastSeen.takenAtFacilityUuid == currentFacilityUuid
+      val isCurrentFacility = lastSeen.lastSeenAtFacilityUuid == currentFacilityUuid
       if (isCurrentFacility) {
         lastSeenLabel.text = formattedLastBpDate
       } else {
         lastSeenLabel.text = resources.getString(
             R.string.patientsearchresults_item_last_seen_date_with_facility,
             formattedLastBpDate,
-            lastSeen.takenAtFacilityName)
+            lastSeen.lastSeenAtFacilityName)
       }
     }
   }

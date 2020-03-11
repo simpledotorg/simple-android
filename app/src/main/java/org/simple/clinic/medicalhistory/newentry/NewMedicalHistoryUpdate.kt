@@ -1,6 +1,7 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -21,6 +22,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is PatientRegistered -> dispatch(OpenPatientSummaryScreen(event.patientUuid))
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
       is CurrentFacilityLoaded -> currentFacilityLoaded(event, model)
+      else -> noChange()
     }
   }
 

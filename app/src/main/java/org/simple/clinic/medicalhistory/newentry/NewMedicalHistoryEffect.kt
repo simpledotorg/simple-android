@@ -12,3 +12,5 @@ data class RegisterPatient(val ongoingMedicalHistoryEntry: OngoingMedicalHistory
 object LoadOngoingPatientEntry : NewMedicalHistoryEffect()
 
 object LoadCurrentFacility : NewMedicalHistoryEffect()
+
+object TriggerSync : NewMedicalHistoryEffect()

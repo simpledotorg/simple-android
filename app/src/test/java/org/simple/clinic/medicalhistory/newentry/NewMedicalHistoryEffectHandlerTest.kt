@@ -2,6 +2,8 @@ package org.simple.clinic.medicalhistory.newentry
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -10,6 +12,8 @@ import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
@@ -19,14 +23,16 @@ class NewMedicalHistoryEffectHandlerTest {
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val uiActions = mock<NewMedicalHistoryUiActions>()
+  private val dataSync = mock<DataSync>()
 
   private val effectHandler = NewMedicalHistoryEffectHandler(
-      schedulersProvider = TrampolineSchedulersProvider(),
       uiActions = uiActions,
+      schedulersProvider = TrampolineSchedulersProvider(),
       userSession = userSession,
       facilityRepository = facilityRepository,
       patientRepository = mock(),
-      medicalHistoryRepository = mock()
+      medicalHistoryRepository = mock(),
+      dataSync = dataSync
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -50,6 +56,18 @@ class NewMedicalHistoryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the trigger sync effect is received, the frequent syncs must be triggered`() {
+    // when
+    testCase.dispatch(TriggerSync)
+
+    // then
+    verify(dataSync).fireAndForgetSync(FREQUENT)
+    verifyNoMoreInteractions(dataSync)
+    testCase.assertOutgoingEvents(SyncTriggered)
     verifyZeroInteractions(uiActions)
   }
 }

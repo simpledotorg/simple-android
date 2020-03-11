@@ -67,12 +67,13 @@ class NewMedicalHistoryScreenLogicTest {
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     val effectHandler = NewMedicalHistoryEffectHandler(
-        schedulersProvider = TrampolineSchedulersProvider(),
         uiActions = uiActions,
+        schedulersProvider = TrampolineSchedulersProvider(),
         userSession = userSession,
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
-        medicalHistoryRepository = medicalHistoryRepository
+        medicalHistoryRepository = medicalHistoryRepository,
+        dataSync = mock()
     ).build()
 
     testFixture = MobiusTestFixture(

@@ -23,3 +23,5 @@ data class PatientRegistered(val patientUuid: UUID): NewMedicalHistoryEvent()
 data class OngoingPatientEntryLoaded(val ongoingNewPatientEntry: OngoingNewPatientEntry): NewMedicalHistoryEvent()
 
 data class CurrentFacilityLoaded(val facility: Facility): NewMedicalHistoryEvent()
+
+object SyncTriggered: NewMedicalHistoryEvent()

@@ -98,10 +98,14 @@ data class PatientSearchResult(
       SELECT * FROM ($mainQuery) AllSearchResults
       INNER JOIN (
         SELECT DISTINCT P.uuid FROM Patient P
-          INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
+          LEFT JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
+          LEFT JOIN BloodSugarMeasurements BloodSugar ON BloodSugar.patientUuid = P.uuid
           WHERE
             (P.deletedAt IS NULL AND P.status = :status) AND
-            (BP.deletedAt IS NULL AND BP.facilityUuid = :facilityUuid)
+            (
+                (BP.deletedAt IS NULL AND BP.facilityUuid = :facilityUuid) OR
+                (BloodSugar.deletedAt IS NULL AND BloodSugar.facilityUuid = :facilityUuid)
+            )
       ) PatientsAtFacility ON AllSearchResults.uuid = PatientsAtFacility.uuid
       ORDER BY AllSearchResults.fullName COLLATE NOCASE ASC
     """)

@@ -10,17 +10,20 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class NewMedicalHistoryEffectHandler @AssistedInject constructor(
-    private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: NewMedicalHistoryUiActions,
+    private val schedulersProvider: SchedulersProvider,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
-    private val medicalHistoryRepository: MedicalHistoryRepository
+    private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val dataSync: DataSync
 ) {
 
   @AssistedInject.Factory
@@ -35,6 +38,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
         .addTransformer(RegisterPatient::class.java, registerPatient(schedulersProvider.io()))
         .addTransformer(LoadOngoingPatientEntry::class.java, loadOngoingNewPatientEntry(schedulersProvider.io()))
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
+        .addTransformer(TriggerSync::class.java, triggerSync())
         .build()
   }
 
@@ -87,6 +91,14 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
                 .take(1)
           }
           .map(::CurrentFacilityLoaded)
+    }
+  }
+
+  private fun triggerSync(): ObservableTransformer<TriggerSync, NewMedicalHistoryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .doOnNext { dataSync.fireAndForgetSync(FREQUENT) }
+          .map { SyncTriggered }
     }
   }
 

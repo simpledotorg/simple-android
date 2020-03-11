@@ -50,12 +50,12 @@ data class PatientSearchResult(
 
     val phoneUpdatedAt: Instant?,
 
-    @Embedded(prefix = "bp_")
-    val lastBp: LastBp?
+    @Embedded(prefix = "lastSeen_")
+    val lastSeen: LastSeen?
 ) {
 
   override fun toString(): String {
-    return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastBp?.takenAtFacilityUuid}"
+    return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastSeen?.takenAtFacilityUuid}"
   }
 
   @Dao
@@ -69,7 +69,7 @@ data class PatientSearchResult(
           PA.state addr_state, PA.country addr_country,
           PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
           PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
-          BP.uuid bp_uuid, BP.recordedAt bp_takenOn, BP.facilityName bp_takenAtFacilityName, BP.facilityUuid bp_takenAtFacilityUuid
+          BP.uuid lastSeen_uuid, BP.recordedAt lastSeen_takenOn, BP.facilityName lastSeen_takenAtFacilityName, BP.facilityUuid lastSeen_takenAtFacilityUuid
           FROM Patient P
           INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid
           LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
@@ -122,7 +122,7 @@ data class PatientSearchResult(
   data class PatientNameAndId(val uuid: UUID, val fullName: String)
 
   @Parcelize
-  data class LastBp(
+  data class LastSeen(
       val uuid: UUID,
       val takenOn: Instant,
       val takenAtFacilityName: String,

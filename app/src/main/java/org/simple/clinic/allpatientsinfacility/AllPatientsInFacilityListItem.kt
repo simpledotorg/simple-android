@@ -36,7 +36,7 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
           dateOfBirth = searchResultUiState.dateOfBirth,
           address = searchResultUiState.address,
           phoneNumber = searchResultUiState.phoneNumber,
-          lastBp = searchResultUiState.lastBp
+          lastSeen = searchResultUiState.lastSeen
       )
     }
   }

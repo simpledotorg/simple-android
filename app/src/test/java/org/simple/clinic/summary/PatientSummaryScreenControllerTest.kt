@@ -2,12 +2,10 @@ package org.simple.clinic.summary
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -479,142 +477,6 @@ class PatientSummaryScreenControllerTest {
     verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
     verify(uiActions, never()).goToPreviousScreen()
     verify(uiActions).goToHomeScreen()
-  }
-
-  @Test
-  fun `when schedule appointment sheet is closed after clicking back from a new patient, go to home screen`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    // when
-    startMobiusLoop(ViewNewPatient)
-    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
-
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-    verifyNoMoreInteractions(ui)
-    clearInvocations(ui)
-
-    uiEvents.onNext(ScheduledAppointment(BACK_CLICK))
-
-    // then
-    verify(uiActions).goToHomeScreen()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when schedule appointment sheet is closed after clicking back from an existing patient, go to previous screen`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    // when
-    startMobiusLoop(ViewExistingPatient)
-    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
-
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-    verifyNoMoreInteractions(ui)
-    clearInvocations(ui)
-
-    uiEvents.onNext(ScheduledAppointment(BACK_CLICK))
-
-    // then
-    verify(uiActions).goToPreviousScreen()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when schedule appointment sheet is closed after clicking back after linking an ID with existing patient, go to home screen`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    val identifier = PatientMocker.bpPassportIdentifier()
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    // when
-    startMobiusLoop(LinkIdWithPatient(identifier))
-    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
-
-    verify(uiActions).showLinkIdWithPatientView(patientUuid, identifier)
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-    verifyNoMoreInteractions(ui)
-    clearInvocations(ui)
-
-    uiEvents.onNext(ScheduledAppointment(BACK_CLICK))
-
-    // then
-    verify(uiActions).goToHomeScreen()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when schedule appointment sheet is closed after clicking save from a new patient, go to home screen`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    // when
-    startMobiusLoop(ViewNewPatient)
-    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
-
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
-    verifyNoMoreInteractions(ui)
-    clearInvocations(ui)
-
-    uiEvents.onNext(ScheduledAppointment(DONE_CLICK))
-
-    // then
-    verify(uiActions).goToHomeScreen()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when schedule appointment sheet is closed after clicking save from an existing patient, go to home screen`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    // when
-    startMobiusLoop(ViewExistingPatient)
-    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
-
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
-    verifyNoMoreInteractions(ui)
-    clearInvocations(ui)
-
-    uiEvents.onNext(ScheduledAppointment(DONE_CLICK))
-
-    // then
-    verify(uiActions).goToHomeScreen()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when schedule appointment sheet is closed after clicking save after linking an ID with existing patient, go to home screen`() {
-    // given
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    val identifier = PatientMocker.bpPassportIdentifier()
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    // when
-    startMobiusLoop(LinkIdWithPatient(identifier))
-    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
-
-    verify(uiActions).showLinkIdWithPatientView(patientUuid, identifier)
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
-    verifyNoMoreInteractions(ui)
-    clearInvocations(ui)
-
-    uiEvents.onNext(ScheduledAppointment(DONE_CLICK))
-
-    // then
-    verify(uiActions).goToHomeScreen()
-    verifyNoMoreInteractions(ui)
   }
 
   private fun startMobiusLoop(openIntention: OpenIntention) {

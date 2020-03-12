@@ -2043,6 +2043,122 @@ class AppointmentRepositoryAndroidTest {
     ))
   }
 
+  @Test
+  fun medical_diagnosis_of_patients_has_to_be_retrieved_properly() {
+    data class MedicalHistoryAnswers(
+        val hasDiabetes: Answer,
+        val hasHypertension: Answer
+    )
+
+    fun savePatientDiagnosis(
+        patientUuid: UUID,
+        fullName: String,
+        medicalHistoryAnswers: MedicalHistoryAnswers?,
+        appointmentHasBeenOverdueFor: Duration
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          patientName = fullName,
+          generatePhoneNumber = true,
+          generateBusinessId = false
+      )
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
+      appointmentRepository.schedule(
+          patientUuid = patientUuid,
+          appointmentUuid = UUID.randomUUID(),
+          appointmentDate = scheduledDate,
+          appointmentType = Manual,
+          appointmentFacilityUuid = facility.uuid,
+          creationFacilityUuid = facility.uuid
+      ).blockingGet()
+
+      val bpTimestamp = Instant.now(clock)
+
+      val bloodPressureMeasurement = testData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          systolic = 200,
+          diastolic = 200,
+          userUuid = userUuid,
+          facilityUuid = facility.uuid,
+          recordedAt = bpTimestamp,
+          createdAt = bpTimestamp,
+          updatedAt = bpTimestamp
+      )
+
+      bpRepository.save(listOf(bloodPressureMeasurement)).blockingAwait()
+
+      medicalHistoryAnswers?.run {
+        medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
+            hasDiabetes = hasDiabetes,
+            diagnosedWithHypertension = hasHypertension
+        )).blockingAwait()
+      }
+    }
+
+    // when
+    val thirtyDays = Duration.ofDays(30)
+
+    savePatientDiagnosis(
+        patientUuid = UUID.fromString("466016d6-f3fd-4982-b960-363f6c76a6b0"),
+        fullName = "No diabetes; No hypertension",
+        medicalHistoryAnswers = MedicalHistoryAnswers(
+            hasDiabetes = No,
+            hasHypertension = No
+        ),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientDiagnosis(
+        patientUuid = UUID.fromString("599a9f6b-4bb4-4b67-9b3e-8975fe3a2199"),
+        fullName = "No diabetes; Has hypertension",
+        medicalHistoryAnswers = MedicalHistoryAnswers(
+            hasDiabetes = No,
+            hasHypertension = Yes
+        ),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientDiagnosis(
+        patientUuid = UUID.fromString("6ee27ce7-9492-41cd-8cec-936087de615c"),
+        fullName = "Has diabetes; No hypertension",
+        medicalHistoryAnswers = MedicalHistoryAnswers(
+            hasDiabetes = Yes,
+            hasHypertension = No
+        ),
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    savePatientDiagnosis(
+        patientUuid = UUID.fromString("c3602eb2-d146-469b-b73a-f8336fd803c8"),
+        fullName = "No medical history",
+        medicalHistoryAnswers = null,
+        appointmentHasBeenOverdueFor = thirtyDays
+    )
+
+    // then
+    val overdueAppointments = appointmentRepository.overdueAppointments(since = LocalDate.now(clock), facility = facility).blockingFirst()
+
+    data class MedicalHistoryResult(
+        val name: String,
+        val diagnosedWithDiabetes: Answer?,
+        val diagnosedWithHypertension: Answer?
+    )
+    assertThat(overdueAppointments.map {
+      MedicalHistoryResult(
+          name = it.fullName,
+          diagnosedWithDiabetes = it.diagnosedWithDiabetes,
+          diagnosedWithHypertension = it.diagnosedWithHypertension
+      )
+    }).isEqualTo(listOf(
+        MedicalHistoryResult(name = "No diabetes; No hypertension", diagnosedWithDiabetes = No, diagnosedWithHypertension = No),
+        MedicalHistoryResult(name = "No diabetes; Has hypertension", diagnosedWithDiabetes = No, diagnosedWithHypertension = Yes),
+        MedicalHistoryResult(name = "Has diabetes; No hypertension", diagnosedWithDiabetes = Yes, diagnosedWithHypertension = No),
+        MedicalHistoryResult(name = "No medical history", diagnosedWithDiabetes = null, diagnosedWithHypertension = null)
+    ))
+  }
+
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
     appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE).blockingAwait()
   }
@@ -2095,7 +2211,9 @@ class AppointmentRepositoryAndroidTest {
             appointment = appointment,
             phoneNumber = patientProfile.phoneNumbers.first(),
             isAtHighRisk = false,
-            patientLastSeen = patientLastSeen
+            patientLastSeen = patientLastSeen,
+            diagnosedWithDiabetes = null,
+            diagnosedWithHypertension = null
         )
       }
     }

@@ -324,7 +324,9 @@ object PatientMocker {
         appointment = appointment,
         phoneNumber = phoneNumber,
         isAtHighRisk = isHighRisk,
-        patientLastSeen = patientLastSeen
+        patientLastSeen = patientLastSeen,
+        diagnosedWithDiabetes = null,
+        diagnosedWithHypertension = null
     )
   }
 

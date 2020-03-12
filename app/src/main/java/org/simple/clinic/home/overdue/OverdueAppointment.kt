@@ -32,7 +32,11 @@ data class OverdueAppointment(
 
     val isAtHighRisk: Boolean,
 
-    val patientLastSeen: Instant
+    val patientLastSeen: Instant,
+
+    val diagnosedWithDiabetes: Answer?,
+
+    val diagnosedWithHypertension: Answer?
 ) {
 
   @Dao
@@ -47,7 +51,9 @@ data class OverdueAppointment(
 
           PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number, PPN.phoneType phone_phoneType, PPN.active phone_active,
           PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt,
-          
+
+          MH.hasDiabetes diagnosedWithDiabetes, MH.diagnosedWithHypertension diagnosedWithHypertension,
+
           (
             CASE
                 WHEN BP.uuid IS NULL THEN BloodSugar.recordedAt
@@ -84,7 +90,7 @@ data class OverdueAppointment(
           ) BloodSugar ON BloodSugar.patientUuid = P.uuid
 
           WHERE 
-            P.deletedAt IS NULL 
+            P.deletedAt IS NULL
             AND A.deletedAt IS NULL
             AND A.facilityUuid = :facilityUuid
             AND A.status = :scheduledStatus

@@ -39,7 +39,6 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">ተሓካሚ ኣይተመዝገበን</string>
   <string name="patientsearchresults_register_patient">ከም ሓድሽ ተሓካሚ ተመዝገብ</string>
   <string name="patientsearchresults_register_patient_for_empty_state">ንተሓካሚ መዝግቦ</string>
-  <string name="patientsearchresults_item_last_bp">ናይ መወዳእታ ዝሓለፈ ጸቕጢ ደም፡</string>
   <string name="patientsearchresults_current_facility_header">ምብጻሕ ፈጺሙ ኣሎ %s</string>
   <string name="patientsearchresults_other_results_header">ካልእ ውጽኢታት</string>
   <string name="patientsearchresults_no_patients_match">ዝዛመዱ ተሓከምቲ የለዉን</string>

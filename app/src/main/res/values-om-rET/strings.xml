@@ -39,7 +39,6 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">Dhukkubsataan hin galmoofne</string>
   <string name="patientsearchresults_register_patient">Akka dhukkubsataa haaraatti galmeessi</string>
   <string name="patientsearchresults_register_patient_for_empty_state">Dhukkubsataa galmeessi</string>
-  <string name="patientsearchresults_item_last_bp">BP dhumaa:</string>
   <string name="patientsearchresults_current_facility_header">%s ilaalameera</string>
   <string name="patientsearchresults_other_results_header">Bu’aalee biroo</string>
   <string name="patientsearchresults_no_patients_match">Dhukkubsataan kana fakkaatu hin jiru</string>

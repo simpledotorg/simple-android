@@ -39,7 +39,6 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">রোগী নিবন্ধিত নয়</string>
   <string name="patientsearchresults_register_patient">নতুন রোগী হিসাবে নিবন্ধন করুন</string>
   <string name="patientsearchresults_register_patient_for_empty_state">নিবন্ধিত রোগী</string>
-  <string name="patientsearchresults_item_last_bp">শেষ বিপি:</string>
   <string name="patientsearchresults_current_facility_header">%s দেখেছেন</string>
   <string name="patientsearchresults_other_results_header">অন্যান্য ফলাফল</string>
   <string name="patientsearchresults_no_patients_match">কোনও রোগী খুঁজে পাওয়া যায়নি</string>

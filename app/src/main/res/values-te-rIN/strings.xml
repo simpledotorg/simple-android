@@ -39,7 +39,6 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">రోగి నమోదు చేసుకోలేదు</string>
   <string name="patientsearchresults_register_patient">కొత్త రోగి లాగా నమోదు చేసుకోండి</string>
   <string name="patientsearchresults_register_patient_for_empty_state">రోగిని నమోదు చేయండి</string>
-  <string name="patientsearchresults_item_last_bp">చివరి బిపి:</string>
   <string name="patientsearchresults_current_facility_header">%s సందర్శించారు</string>
   <string name="patientsearchresults_other_results_header">ఇతర ఫలితాలు</string>
   <string name="patientsearchresults_no_patients_match">సరిపోలిన రోగులు లేరు</string>

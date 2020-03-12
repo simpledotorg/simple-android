@@ -22,7 +22,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
-      is ScheduleAppointmentSheetClosed -> scheduleAppointmentSheetClosed(event, model)
+      is ScheduledAppointment -> scheduleAppointmentSheetClosed(event, model)
       is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())
       is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientUuid)
       is FetchedHasShownMissingReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
@@ -98,7 +98,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun scheduleAppointmentSheetClosed(
-      event: ScheduleAppointmentSheetClosed,
+      event: ScheduledAppointment,
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val effect = when (event.sheetOpenedFrom) {

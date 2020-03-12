@@ -23,15 +23,30 @@ class PatientSummaryUpdateTest {
 
   private val patientUuid = UUID.fromString("93a131b0-890e-41a3-88ec-b35b48efc6c5")
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, patientUuid)
+
+  private val patient = PatientMocker.patient(patientUuid)
+  private val patientAddress = PatientMocker.address(patient.addressUuid)
+  private val phoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid)
+  private val bpPassport = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
+  private val bangladeshNationalId = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
+
+  private val patientSummaryProfile = PatientSummaryProfile(
+      patient = patient,
+      address = patientAddress,
+      phoneNumber = phoneNumber,
+      bpPassport = bpPassport,
+      bangladeshNationalId = bangladeshNationalId
+  )
+
+  private val facility = PatientMocker.facility(
+      uuid = UUID.fromString("abe86f8e-1828-48fe-afb5-d697b3ce36bb"),
+      facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+  )
+
   private val updateSpec = UpdateSpec(PatientSummaryUpdate())
 
   @Test
   fun `when the current facility is loaded, update the UI`() {
-    val facility = PatientMocker.facility(
-        uuid = UUID.fromString("abe86f8e-1828-48fe-afb5-d697b3ce36bb"),
-        facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
-    )
-
     updateSpec
         .given(defaultModel)
         .whenEvent(CurrentFacilityLoaded(facility))
@@ -45,20 +60,6 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when the patient summary profile is loaded, then update the UI`() {
-    val patient = PatientMocker.patient(patientUuid)
-    val patientAddress = PatientMocker.address(patient.addressUuid)
-    val phoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid)
-    val bpPassport = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
-    val bangladeshNationalId = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
-
-    val patientSummaryProfile = PatientSummaryProfile(
-        patient = patient,
-        address = patientAddress,
-        phoneNumber = phoneNumber,
-        bpPassport = bpPassport,
-        bangladeshNationalId = bangladeshNationalId
-    )
-
     updateSpec
         .given(defaultModel)
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
@@ -184,6 +185,145 @@ class PatientSummaryUpdateTest {
             hasNoModel(),
             hasEffects(GoToHomeScreen as PatientSummaryEffect)
         ))
+  }
+
+  @Test
+  fun `when an appointment is scheduled, trigger a sync`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(ScheduledAppointment(BACK_CLICK))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(TriggerSync(BACK_CLICK) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the sync is triggered after clicking back from a new patient, go to home screen`() {
+    val model = defaultModel
+        .forNewPatient()
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(SyncTriggered(BACK_CLICK))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoToHomeScreen as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the sync is triggered after clicking back from an existing patient, go to previous screen`() {
+    val model = defaultModel
+        .forExistingPatient()
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(SyncTriggered(BACK_CLICK))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoBackToPreviousScreen as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the sync is triggered after clicking back from linking id with patient, go to home screen`() {
+    val model = defaultModel
+        .forLinkingWithExistingPatient()
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(SyncTriggered(BACK_CLICK))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoToHomeScreen as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the sync is triggered after clicking save from a new patient, go to home screen`() {
+    val model = defaultModel
+        .forNewPatient()
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(SyncTriggered(DONE_CLICK))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoToHomeScreen as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the sync is triggered after clicking save from an existing patient, go to home screen`() {
+    val model = defaultModel
+        .forExistingPatient()
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(SyncTriggered(DONE_CLICK))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoToHomeScreen as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when the sync is triggered after clicking save from linking id with patient, go to home screen`() {
+    val model = defaultModel
+        .forLinkingWithExistingPatient()
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(SyncTriggered(DONE_CLICK))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(GoToHomeScreen as PatientSummaryEffect)
+            )
+        )
   }
 
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {

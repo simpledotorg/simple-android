@@ -22,7 +22,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
-      is ScheduledAppointment -> scheduleAppointmentSheetClosed(event, model)
+      is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
       is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())
       is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientUuid)
       is FetchedHasShownMissingReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
@@ -41,6 +41,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           noBloodSugarsRecorded = event.noBloodSugarsRecordedForPatient,
           patientUuid = model.patientUuid
       )
+      is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       else -> noChange()
     }
   }
@@ -98,10 +99,10 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun scheduleAppointmentSheetClosed(
-      event: ScheduledAppointment,
-      model: PatientSummaryModel
+      model: PatientSummaryModel,
+      appointmentScheduledFrom: AppointmentSheetOpenedFrom
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val effect = when (event.sheetOpenedFrom) {
+    val effect = when (appointmentScheduledFrom) {
       BACK_CLICK -> when (model.openIntention) {
         ViewExistingPatient -> GoBackToPreviousScreen
         ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen

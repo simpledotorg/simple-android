@@ -40,3 +40,5 @@ data class LoadDataForBackClick(
 ) : PatientSummaryEffect()
 
 data class LoadDataForDoneClick(val patientUuid: UUID): PatientSummaryEffect()
+
+data class TriggerSync(val sheetOpenedFrom: AppointmentSheetOpenedFrom): PatientSummaryEffect()

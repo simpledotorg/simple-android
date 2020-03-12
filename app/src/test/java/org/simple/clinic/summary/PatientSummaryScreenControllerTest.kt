@@ -627,6 +627,7 @@ class PatientSummaryScreenControllerTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         bloodSugarRepository = bloodSugarRepository,
+        dataSync = mock(),
         uiActions = uiActions
     )
 

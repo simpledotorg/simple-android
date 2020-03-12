@@ -19,6 +19,9 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.*
+import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -33,6 +36,7 @@ class PatientSummaryEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
+  private val dataSync = mock<DataSync>()
 
   private val effectHandler = PatientSummaryEffectHandler(
       schedulersProvider = TrampolineSchedulersProvider(),
@@ -43,6 +47,7 @@ class PatientSummaryEffectHandlerTest {
       userSession = userSession,
       facilityRepository = facilityRepository,
       bloodSugarRepository = bloodSugarRepository,
+      dataSync = dataSync,
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -159,6 +164,18 @@ class PatientSummaryEffectHandlerTest {
         noBloodPressuresRecordedForPatient = false,
         noBloodSugarsRecordedForPatient = true
     ))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the trigger sync effect is received, trigger a sync`() {
+    // when
+    testCase.dispatch(TriggerSync(BACK_CLICK))
+
+    // then
+    verify(dataSync).fireAndForgetSync(FREQUENT)
+    verifyNoMoreInteractions(dataSync)
+    testCase.assertOutgoingEvents(SyncTriggered(BACK_CLICK))
     verifyZeroInteractions(uiActions)
   }
 }

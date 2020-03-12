@@ -496,7 +496,7 @@ class PatientSummaryScreenControllerTest {
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
-    uiEvents.onNext(ScheduleAppointmentSheetClosed(BACK_CLICK))
+    uiEvents.onNext(ScheduledAppointment(BACK_CLICK))
 
     // then
     verify(uiActions).goToHomeScreen()
@@ -518,7 +518,7 @@ class PatientSummaryScreenControllerTest {
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
-    uiEvents.onNext(ScheduleAppointmentSheetClosed(BACK_CLICK))
+    uiEvents.onNext(ScheduledAppointment(BACK_CLICK))
 
     // then
     verify(uiActions).goToPreviousScreen()
@@ -542,7 +542,7 @@ class PatientSummaryScreenControllerTest {
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
-    uiEvents.onNext(ScheduleAppointmentSheetClosed(BACK_CLICK))
+    uiEvents.onNext(ScheduledAppointment(BACK_CLICK))
 
     // then
     verify(uiActions).goToHomeScreen()
@@ -564,7 +564,7 @@ class PatientSummaryScreenControllerTest {
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
-    uiEvents.onNext(ScheduleAppointmentSheetClosed(DONE_CLICK))
+    uiEvents.onNext(ScheduledAppointment(DONE_CLICK))
 
     // then
     verify(uiActions).goToHomeScreen()
@@ -586,7 +586,7 @@ class PatientSummaryScreenControllerTest {
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
-    uiEvents.onNext(ScheduleAppointmentSheetClosed(DONE_CLICK))
+    uiEvents.onNext(ScheduledAppointment(DONE_CLICK))
 
     // then
     verify(uiActions).goToHomeScreen()
@@ -610,7 +610,7 @@ class PatientSummaryScreenControllerTest {
     verifyNoMoreInteractions(ui)
     clearInvocations(ui)
 
-    uiEvents.onNext(ScheduleAppointmentSheetClosed(DONE_CLICK))
+    uiEvents.onNext(ScheduledAppointment(DONE_CLICK))
 
     // then
     verify(uiActions).goToHomeScreen()

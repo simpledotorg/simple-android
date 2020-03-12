@@ -175,7 +175,7 @@ class PatientSummaryScreen(
       .ofType<ActivityResult>()
       .filter { it.requestCode == SUMMARY_REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
       .map { ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(it.data!!) }
-      .map { ScheduleAppointmentSheetClosed(it.sheetOpenedFrom) }
+      .map { ScheduledAppointment(it.sheetOpenedFrom) }
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
     return linkIdWithPatientView

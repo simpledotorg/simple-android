@@ -39,7 +39,6 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">ರೋಗಿ ನೋಂದಾಯಿಸಿಕೊಂಡಿಲ್ಲ</string>
   <string name="patientsearchresults_register_patient">ಹೊಸ ರೋಗಿಯಾಗಿ ನೋಂದಾಯಿಸಿ</string>
   <string name="patientsearchresults_register_patient_for_empty_state">ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ</string>
-  <string name="patientsearchresults_item_last_bp">ಹಿಂದಿನ ಬಿಪಿ:</string>
   <string name="patientsearchresults_current_facility_header">ಅವರು %s ಗೆ ಭೇಟಿ ನೀಡಿದ್ದಾರೆ</string>
   <string name="patientsearchresults_other_results_header">ಇತರೆ ಫಲಿತಾಂಶಗಳು</string>
   <string name="patientsearchresults_no_patients_match">ಯಾವುದೇ ರೋಗಿ ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ</string>

@@ -39,7 +39,6 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">ਮਰੀਜ਼ ਰਜਿਸਟਰਡ ਨਹੀਂ ਹੈ</string>
   <string name="patientsearchresults_register_patient">ਇੱਕ ਨਵੇਂ ਮਰੀਜ਼ ਵਜੋਂ ਰਜਿਸਟਰ ਕਰੋ</string>
   <string name="patientsearchresults_register_patient_for_empty_state">ਮਰੀਜ਼ ਨੂੰ ਰਜਿਸਟਰ ਕਰੋ</string>
-  <string name="patientsearchresults_item_last_bp">ਆਖਰੀ ਵਾਰ ਬੀਪੀ:</string>
   <string name="patientsearchresults_current_facility_header">%s ਦਾ ਦੌਰਾ ਕੀਤਾ ਹੈ</string>
   <string name="patientsearchresults_other_results_header">ਹੋਰ ਨਤੀਜੇ</string>
   <string name="patientsearchresults_no_patients_match">ਕੋਈ ਮਰੀਜ਼ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ ਹਨ</string>

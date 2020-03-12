@@ -17,6 +17,8 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
+import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -32,7 +34,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    val bloodSugarRepository: BloodSugarRepository,
+    private val bloodSugarRepository: BloodSugarRepository,
+    private val dataSync: DataSync,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -64,6 +67,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         )
         .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))
         .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
+        .addTransformer(TriggerSync::class.java, triggerSync())
         .build()
   }
 
@@ -204,6 +208,14 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 .take(1)
           }
           .map(::CurrentFacilityLoaded)
+    }
+  }
+
+  private fun triggerSync(): ObservableTransformer<TriggerSync, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .doOnNext { dataSync.fireAndForgetSync(FREQUENT) }
+          .map { SyncTriggered(it.sheetOpenedFrom) }
     }
   }
 

@@ -15,7 +15,6 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityPayload
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -51,7 +50,6 @@ import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.randomGender
@@ -72,8 +70,6 @@ private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
 @AppScope
 class TestData @Inject constructor(
     private val faker: Faker,
-    private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession,
     private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
     private val userClock: TestUserClock
 ) {

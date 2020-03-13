@@ -51,17 +51,13 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
+import org.simple.clinic.util.randomOfEnum
 import org.simple.clinic.util.randomPatientPhoneNumberType
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import java.net.URI
 import java.util.UUID
-import kotlin.reflect.KClass
-
-private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
-  return enumClass.java.enumConstants!!.asList().shuffled().first()
-}
 
 object TestData {
 

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.res.Resources
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.login.LoginModule
@@ -57,4 +58,7 @@ class TestAppModule(private val application: Application) {
 
   @Provides
   fun resources(): Resources = application.resources
+
+  @Provides
+  fun testData(): TestData = TestData
 }

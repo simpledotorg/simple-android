@@ -27,7 +27,7 @@ class BloodPressureHistoryScreenUiRendererTest {
   @Test
   fun `when blood pressure history is loaded, then show it on the ui`() {
     //given
-    val bloodPressure = PatientMocker.bp(
+    val bloodPressure = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("4ca198c4-18f8-4a3d-8cc7-fc1f363241fa"),
         patientUuid
     )
@@ -62,7 +62,7 @@ class BloodPressureHistoryScreenUiRendererTest {
     val patient = PatientMocker.patient(
         uuid = UUID.fromString("bf8b7e71-9b99-4d7b-9dfa-55f3c5e74730")
     )
-    val bloodPressure = PatientMocker.bp(
+    val bloodPressure = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("4ca198c4-18f8-4a3d-8cc7-fc1f363241fa"),
         patientUuid
     )

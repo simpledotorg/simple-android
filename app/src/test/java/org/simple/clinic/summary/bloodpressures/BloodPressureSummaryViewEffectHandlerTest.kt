@@ -42,7 +42,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
   fun `when load blood pressures effect is received, then load blood pressures`() {
     // given
     val numberOfBpsToDisplay = 3
-    val bloodPressure = PatientMocker.bp(
+    val bloodPressure = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("51ac042d-2f70-495c-a3e3-2599d8990da2"),
         patientUuid
     )
@@ -103,7 +103,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
   @Test
   fun `when open blood pressure update sheet effect is received, then open blood pressure update sheet`() {
     // given
-    val bloodPressure = PatientMocker.bp(
+    val bloodPressure = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("3c59796e-780b-4e2d-9aaf-8cd662975378"),
         patientUuid
     )

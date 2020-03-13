@@ -39,7 +39,7 @@ class BloodSugarHistoryScreenUiRendererTest {
   @Test
   fun `when blood sugar history is loaded, then show it on the ui`() {
     // given
-    val bloodSugar = PatientMocker.bloodSugar(
+    val bloodSugar = PatientMocker.bloodSugarMeasurement(
         uuid = UUID.fromString("bfeed199-ca34-4503-aac9-8903f9501c5b"),
         patientUuid = patientUuid
     )

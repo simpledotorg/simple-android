@@ -53,7 +53,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   @Test
   fun `when load blood sugars history effect is received, then load all blood sugars`() {
     // given
-    val bloodSugarMeasurement = PatientMocker.bloodSugar(
+    val bloodSugarMeasurement = PatientMocker.bloodSugarMeasurement(
         uuid = UUID.fromString("c593e506-e603-4f34-9ea8-89913cdbce9e"),
         patientUuid = patientUuid
     )
@@ -82,7 +82,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   @Test
   fun `when open blood sugar update sheet effect is received, then open blood sugar update sheet`() {
     // given
-    val measurement = PatientMocker.bloodSugar()
+    val measurement = PatientMocker.bloodSugarMeasurement()
 
     // when
     testCase.dispatch(OpenBloodSugarUpdateSheet(measurement))

@@ -55,19 +55,19 @@ class BloodSugarSummaryViewUpdateTest {
 
   @Test
   fun `when see all is clicked, then show blood sugar history screen`() {
-    val bloodSugar1 = PatientMocker.bloodSugar(
+    val bloodSugar1 = PatientMocker.bloodSugarMeasurement(
         uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
         patientUuid = patientUuid
     )
-    val bloodSugar2 = PatientMocker.bloodSugar(
+    val bloodSugar2 = PatientMocker.bloodSugarMeasurement(
         uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
         patientUuid = patientUuid
     )
-    val bloodSugar3 = PatientMocker.bloodSugar(
+    val bloodSugar3 = PatientMocker.bloodSugarMeasurement(
         uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
         patientUuid = patientUuid
     )
-    val bloodSugar4 = PatientMocker.bloodSugar(
+    val bloodSugar4 = PatientMocker.bloodSugarMeasurement(
         uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
         patientUuid = patientUuid
     )
@@ -84,7 +84,7 @@ class BloodSugarSummaryViewUpdateTest {
 
   @Test
   fun `when blood sugar is clicked, then open blood sugar update sheet`() {
-    val bloodSugarMeasurement = PatientMocker.bloodSugar(
+    val bloodSugarMeasurement = PatientMocker.bloodSugarMeasurement(
         UUID.fromString("9a82720a-0445-43dd-b557-3d4b079b66ef"),
         patientUuid = patientUuid
     )

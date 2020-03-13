@@ -16,7 +16,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -75,10 +74,10 @@ class BloodPressureRepositoryTest {
   ) {
     val bpUuid = UUID.randomUUID()
 
-    val localCopy = PatientMocker.bp(bpUuid, syncStatus = syncStatusOfLocalCopy)
+    val localCopy = PatientMocker.bloodPressureMeasurement(bpUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(dao.getOne(bpUuid)).doReturn(localCopy)
 
-    val serverBp = PatientMocker.bp(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
+    val serverBp = PatientMocker.bloodPressureMeasurement(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
     repository.mergeWithLocalData(listOf(serverBp)).blockingAwait()
 
     if (serverRecordExpectedToBeSaved) {

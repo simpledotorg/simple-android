@@ -78,12 +78,6 @@ class TestData @Inject constructor(
     private val userClock: TestUserClock
 ) {
 
-  private fun qaUser() = userSession.loggedInUserImmediate()!!
-
-  fun qaFacility() = facilityRepository.currentFacility(qaUser()).blockingFirst()
-
-  fun qaUserFacilityUuid() = qaFacility().uuid
-
   fun patientProfile(
       patientUuid: UUID = UUID.randomUUID(),
       patientAddressUuid: UUID = UUID.randomUUID(),
@@ -197,7 +191,7 @@ class TestData @Inject constructor(
   )
 
   private fun businessIdMetadata(
-      metaData: BusinessIdMetaData = BusinessIdMetaData.BpPassportMetaDataV1(UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"), qaUserFacilityUuid()),
+      metaData: BusinessIdMetaData = BusinessIdMetaData.BpPassportMetaDataV1(UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"), UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe")),
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1
   ): String = businessIdMetaDataAdapter.serialize(metaData, metaDataVersion)
 
@@ -208,7 +202,7 @@ class TestData @Inject constructor(
       meta: String = businessIdMetadata(
           metaData = BusinessIdMetaData.BpPassportMetaDataV1(
               assigningUserUuid = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
-              assigningFacilityUuid = qaUserFacilityUuid()
+              assigningFacilityUuid = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe")
           ),
           metaDataVersion = BpPassportMetaDataV1
       ),
@@ -315,7 +309,7 @@ class TestData @Inject constructor(
       meta: String = businessIdMetadata(
           metaData = BusinessIdMetaData.BpPassportMetaDataV1(
               assigningUserUuid = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
-              assigningFacilityUuid = qaUserFacilityUuid()
+              assigningFacilityUuid = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe")
           )
       ),
       createdAt: Instant = Instant.now(),
@@ -458,7 +452,7 @@ class TestData @Inject constructor(
   fun bpPayload(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      facilityUuid: UUID = qaUserFacilityUuid(),
+      facilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       systolic: Int = faker.number.between(0, 299),
       diastolic: Int = faker.number.between(50, 60),
       userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
@@ -485,7 +479,7 @@ class TestData @Inject constructor(
       bloodSugarType: BloodSugarMeasurementType = BloodSugarMeasurementType.random(),
       bloodSugarValue: Int = faker.number.between(0, 300),
       patientUuid: UUID = UUID.randomUUID(),
-      facilityUuid: UUID = qaUserFacilityUuid(),
+      facilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -562,7 +556,7 @@ class TestData @Inject constructor(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      facilityUuid: UUID = qaUserFacilityUuid(),
+      facilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       scheduledDate: LocalDate = LocalDate.now(UTC).plusDays(30),
       status: Appointment.Status = Appointment.Status.random(),
       cancelReason: AppointmentCancelReason? = AppointmentCancelReason.random(),
@@ -572,7 +566,7 @@ class TestData @Inject constructor(
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      creationFacilityUuid: UUID = qaUserFacilityUuid()
+      creationFacilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe")
   ): Appointment {
     return Appointment(
         uuid = uuid,
@@ -596,8 +590,8 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
       date: LocalDate = LocalDate.now(UTC).plusDays(30),
-      facilityUuid: UUID = qaUserFacilityUuid(),
-      creationFacilityUuid: UUID? = qaUserFacilityUuid(),
+      facilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
+      creationFacilityUuid: UUID? = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       status: Appointment.Status = Appointment.Status.random(),
       cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
       remindOn: LocalDate? = null,
@@ -712,7 +706,7 @@ class TestData @Inject constructor(
   fun bloodPressureMeasurement(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      facilityUuid: UUID = qaUserFacilityUuid(),
+      facilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
       systolic: Int = faker.number.between(0, 299),
       diastolic: Int = faker.number.between(50, 60),
@@ -847,7 +841,7 @@ class TestData @Inject constructor(
       patientUuid: UUID = UUID.randomUUID(),
       recordedAt: Instant = Instant.now(userClock),
       userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
-      facilityUuid: UUID = qaUserFacilityUuid(),
+      facilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,

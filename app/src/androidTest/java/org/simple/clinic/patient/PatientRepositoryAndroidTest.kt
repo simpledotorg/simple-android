@@ -122,6 +122,9 @@ class PatientRepositoryAndroidTest {
   @Inject
   lateinit var loggedInUser: User
 
+  @Inject
+  lateinit var currentFacility: Facility
+
   @get:Rule
   val ruleChain = RuleChain
       .outerRule(LocalAuthenticationRule())
@@ -130,9 +133,6 @@ class PatientRepositoryAndroidTest {
 
   val config: PatientConfig
     get() = configProvider.blockingFirst()
-
-  private val currentFacility: Facility
-    get() = testData.qaFacility()
 
   @Before
   fun setUp() {
@@ -942,6 +942,8 @@ class PatientRepositoryAndroidTest {
 
     val appointment2 = testData.appointment(
         patientUuid = recentPatient2.uuid,
+        facilityUuid = currentFacility.uuid,
+        creationFacilityUuid = currentFacility.uuid,
         createdAt = clock.instant(),
         updatedAt = clock.instant().plusSeconds(1),
         status = Scheduled,
@@ -1036,7 +1038,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun verify_deleted_bps_are_not_included_when_fetching_recent_patients() {
-    val facilityUuid = testData.qaUserFacilityUuid()
+    val facilityUuid = currentFacility.uuid
     val recentPatient1 = savePatientWithBp(facilityUuid = facilityUuid)
     savePatientWithBp(facilityUuid = facilityUuid, deletedAt = Instant.now())
     val recentPatient3 = savePatientWithBp(facilityUuid = facilityUuid)
@@ -1048,7 +1050,7 @@ class PatientRepositoryAndroidTest {
   }
 
   private fun savePatientWithBp(
-      facilityUuid: UUID = testData.qaUserFacilityUuid(),
+      facilityUuid: UUID = currentFacility.uuid,
       patientUuid: UUID = UUID.randomUUID(),
       patientAddressUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
@@ -1075,7 +1077,7 @@ class PatientRepositoryAndroidTest {
   }
 
   private fun savePatientWithBpWithTestClock(
-      facilityUuid: UUID = testData.qaUserFacilityUuid(),
+      facilityUuid: UUID = currentFacility.uuid,
       patientUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(clock),
       updatedAt: Instant = Instant.now(clock),
@@ -1100,7 +1102,7 @@ class PatientRepositoryAndroidTest {
   }
 
   private fun savePatientWithBloodSugarWithTestClock(
-      facilityUuid: UUID = testData.qaUserFacilityUuid(),
+      facilityUuid: UUID = currentFacility.uuid,
       patientUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(clock),
       updatedAt: Instant = Instant.now(clock),
@@ -1135,7 +1137,7 @@ class PatientRepositoryAndroidTest {
 
   private fun verifyRecentPatientOrder(
       vararg expectedRecentPatients: RecentPatient,
-      facilityUuid: UUID = testData.qaUserFacilityUuid()
+      facilityUuid: UUID = currentFacility.uuid
   ) {
     val recentPatients = patientRepository
         .recentPatients(facilityUuid, limit = 3)
@@ -1145,7 +1147,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun verify_deleted_prescribed_drugs_are_not_included_when_fetching_recent_patients() {
-    val facilityUuid = testData.qaUserFacilityUuid()
+    val facilityUuid = currentFacility.uuid
     val recentPatient1 = savePatientWithPrescribedDrug(facilityUuid = facilityUuid)
     val recentPatient2 = savePatientWithPrescribedDrug(facilityUuid = facilityUuid, deletedAt = Instant.now())
     val recentPatient3 = savePatientWithPrescribedDrug(facilityUuid = facilityUuid)
@@ -1157,7 +1159,7 @@ class PatientRepositoryAndroidTest {
   }
 
   private fun savePatientWithPrescribedDrug(
-      facilityUuid: UUID = testData.qaUserFacilityUuid(),
+      facilityUuid: UUID = currentFacility.uuid,
       patientUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -1257,8 +1259,8 @@ class PatientRepositoryAndroidTest {
 
   private fun savePatientWithAppointment(
       appointmentUuid: UUID = UUID.randomUUID(),
-      facilityUuid: UUID = testData.qaUserFacilityUuid(),
-      creationFacilityUuid: UUID = testData.qaUserFacilityUuid(),
+      facilityUuid: UUID = currentFacility.uuid,
+      creationFacilityUuid: UUID = currentFacility.uuid,
       patientUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),

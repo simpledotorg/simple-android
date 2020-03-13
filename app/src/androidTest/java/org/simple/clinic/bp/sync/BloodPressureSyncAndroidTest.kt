@@ -12,12 +12,14 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
+import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
@@ -41,6 +43,12 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
 
   @Inject
   lateinit var testData: TestData
+
+  @Inject
+  lateinit var user: User
+
+  @Inject
+  lateinit var facility: Facility
 
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
@@ -67,9 +75,16 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.bloodPressureMeasurement(syncStatus = syncStatus)
+  override fun generateRecord(syncStatus: SyncStatus) = testData.bloodPressureMeasurement(
+      syncStatus = syncStatus,
+      userUuid = user.uuid,
+      facilityUuid = facility.uuid
+  )
 
-  override fun generatePayload() = testData.bpPayload()
+  override fun generatePayload() = testData.bpPayload(
+      userUuid = user.uuid,
+      facilityUuid = facility.uuid
+  )
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 

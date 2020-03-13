@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.UserSession
@@ -44,6 +45,9 @@ class PrescriptionRepositoryAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  @Inject
+  lateinit var facility: Facility
+
   private val authenticationRule = LocalAuthenticationRule()
 
   private val rxErrorsRule = RxErrorsRule()
@@ -61,8 +65,7 @@ class PrescriptionRepositoryAndroidTest {
 
   @Test
   fun prescriptions_for_a_patient_should_exclude_soft_deleted_prescriptions() {
-    val facilityUUID = testData.qaUserFacilityUuid()
-    database.facilityDao().save(listOf(testData.facility(uuid = facilityUUID, syncStatus = SyncStatus.DONE)))
+    database.facilityDao().save(listOf(testData.facility(uuid = facility.uuid, syncStatus = SyncStatus.DONE)))
 
     val addressUuid = UUID.randomUUID()
     database.addressDao().save(testData.patientAddress(uuid = addressUuid))
@@ -74,12 +77,12 @@ class PrescriptionRepositoryAndroidTest {
     val amlodipine5mg = testData.protocolDrug(name = "Amlodipine", dosage = "5mg", protocolUuid = protocolUuid)
     val amlodipine10mg = testData.protocolDrug(name = "Amlodipine", dosage = "10mg", protocolUuid = protocolUuid)
 
-    repository.savePrescription(patientUuid, amlodipine5mg, testData.qaFacility()).blockingAwait()
+    repository.savePrescription(patientUuid, amlodipine5mg, facility).blockingAwait()
 
     val savedPrescriptions = repository.newestPrescriptionsForPatient(patientUuid).blockingFirst()
     assertThat(savedPrescriptions).hasSize(1)
 
-    repository.savePrescription(patientUuid, amlodipine10mg, testData.qaFacility())
+    repository.savePrescription(patientUuid, amlodipine10mg, facility)
         .andThen(repository.softDeletePrescription(savedPrescriptions.first().uuid))
         .blockingAwait()
 
@@ -92,7 +95,7 @@ class PrescriptionRepositoryAndroidTest {
     val patientUUID = UUID.randomUUID()
 
     val amlodipine5mg = testData.protocolDrug(name = "Amlodipine", dosage = "5mg")
-    repository.savePrescription(patientUUID, amlodipine5mg, testData.qaFacility()).blockingAwait()
+    repository.savePrescription(patientUUID, amlodipine5mg, facility).blockingAwait()
 
     val savedPrescriptions = repository.newestPrescriptionsForPatient(patientUUID).blockingFirst()
     assertThat(savedPrescriptions).hasSize(1)

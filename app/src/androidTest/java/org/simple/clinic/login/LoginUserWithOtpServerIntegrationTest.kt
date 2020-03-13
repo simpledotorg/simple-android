@@ -13,6 +13,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import javax.inject.Inject
+import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
 class LoginUserWithOtpServerIntegrationTest {
@@ -29,6 +30,9 @@ class LoginUserWithOtpServerIntegrationTest {
   @Inject
   lateinit var testData: TestData
 
+  @field:[Inject Named("user_pin")]
+  lateinit var userPin: String
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -38,7 +42,7 @@ class LoginUserWithOtpServerIntegrationTest {
   fun when_correct_login_params_are_given_then_login_should_happen_and_session_data_should_be_persisted() {
     val user = userSession.loggedInUserImmediate()!!
 
-    val loginResult = loginUserWithOtp.loginWithOtp(user.phoneNumber, testData.qaUserPin(), testData.qaUserOtp())
+    val loginResult = loginUserWithOtp.loginWithOtp(user.phoneNumber, userPin, testData.qaUserOtp())
         .blockingGet()
 
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)

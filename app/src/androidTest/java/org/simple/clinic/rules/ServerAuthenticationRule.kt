@@ -29,6 +29,7 @@ import org.simple.clinic.util.unsafeLazy
 import java.io.File
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Runs every test with an actual user on the server.
@@ -72,6 +73,9 @@ class ServerAuthenticationRule : TestRule {
 
   @Inject
   lateinit var passwordHasher: PasswordHasher
+
+  @field:[Inject Named("user_pin")]
+  lateinit var userPin: String
 
   private val cachedUserInformationAdapter by unsafeLazy { moshi.adapter(CachedUserInformation::class.java) }
 
@@ -128,7 +132,7 @@ class ServerAuthenticationRule : TestRule {
     val loginRequest = LoginRequest(
         UserPayload(
             phoneNumber = phoneNumber,
-            pin = testData.qaUserPin(),
+            pin = userPin,
             otp = testData.qaUserOtp()
         )
     )
@@ -175,7 +179,7 @@ class ServerAuthenticationRule : TestRule {
   private fun registerUserAtFacility(facility: Facility): RegistrationResult {
     val user = testData.loggedInUser(
         phone = faker.phoneNumber.phoneNumber(),
-        pinDigest = passwordHasher.hash(testData.qaUserPin()).blockingGet()
+        pinDigest = passwordHasher.hash(userPin).blockingGet()
     )
 
     return registerUser.registerUserAtFacility(user, facility).blockingGet()

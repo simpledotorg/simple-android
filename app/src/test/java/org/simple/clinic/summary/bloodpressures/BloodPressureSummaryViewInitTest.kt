@@ -7,7 +7,7 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class BloodPressureSummaryViewInitTest {
@@ -35,7 +35,7 @@ class BloodPressureSummaryViewInitTest {
   @Test
   fun `when the screen is restored and diabetes management is enabled, do not load the current facility and load fewer blood pressures`() {
     val bloodSugarsCount = 10
-    val facility = PatientMocker.facility(
+    val facility = TestData.facility(
         uuid = UUID.fromString("2b4d19e0-5291-4dc3-b7c9-704ebc1cfcd7"),
         facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
     )
@@ -58,7 +58,7 @@ class BloodPressureSummaryViewInitTest {
   @Test
   fun `when the screen is restored and diabetes management is disabled, do not load the current facility and load fewer blood pressures`() {
     val bloodSugarsCount = 10
-    val facility = PatientMocker.facility(
+    val facility = TestData.facility(
         uuid = UUID.fromString("e67dd86c-5311-437d-b86d-ad6d2dd75c7e"),
         facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
     )

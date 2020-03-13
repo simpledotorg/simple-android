@@ -13,7 +13,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.UserSession
@@ -37,12 +37,12 @@ class RegistrationLoadingScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private val user = PatientMocker.loggedInUser(
+  private val user = TestData.loggedInUser(
       uuid = UUID.fromString("fe1786be-5725-45b5-a6aa-e9ce0f99f794"),
       loggedInStatus = NOT_LOGGED_IN,
       status = WaitingForApproval
   )
-  private val facility = PatientMocker.facility(UUID.fromString("37e253a9-8a8a-4c60-8aac-34338dc47e8b"))
+  private val facility = TestData.facility(UUID.fromString("37e253a9-8a8a-4c60-8aac-34338dc47e8b"))
 
   private val controller = RegistrationLoadingScreenController(userSession, facilityRepository, registerUser)
 

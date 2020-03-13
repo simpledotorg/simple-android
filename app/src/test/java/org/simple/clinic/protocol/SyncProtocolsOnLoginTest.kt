@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -49,7 +49,7 @@ class SyncProtocolsOnLoginTest {
   fun `when user is available and existing drugs are empty then protocol drugs should be sync`() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(
         None,
-        Just(PatientMocker.loggedInUser())))
+        Just(TestData.loggedInUser())))
     whenever(protocolRepository.recordCount()).thenReturn(Observable.just(0))
 
     syncProtocolOnLogin.listen()
@@ -61,7 +61,7 @@ class SyncProtocolsOnLoginTest {
   fun `when user is available and existing drugs are not empty then protocol drugs should not be synced`() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(
         None,
-        Just(PatientMocker.loggedInUser())))
+        Just(TestData.loggedInUser())))
     whenever(protocolRepository.recordCount()).thenReturn(Observable.just(1))
 
     syncProtocolOnLogin.listen()

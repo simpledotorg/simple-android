@@ -23,7 +23,7 @@ import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
 import org.simple.clinic.login.LoginUserWithOtp
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.RequestLoginOtp.Result
@@ -54,7 +54,7 @@ class EnterOtpScreenControllerTest {
   private val phoneNumber = "1234567890"
   private val loggedInUserUuid = UUID.fromString("13e563ba-a148-4b5d-838d-e38d42dca72c")
   private val registrationFacilityUuid = UUID.fromString("f33bfc01-f595-42ce-8ad8-b70150ccbde2")
-  private val user = PatientMocker.loggedInUser(uuid = loggedInUserUuid, phone = phoneNumber)
+  private val user = TestData.loggedInUser(uuid = loggedInUserUuid, phone = phoneNumber)
   private val ongoingLoginEntry = OngoingLoginEntry(
       uuid = loggedInUserUuid,
       phoneNumber = phoneNumber,
@@ -280,7 +280,7 @@ class EnterOtpScreenControllerTest {
       curLoggedInStatus: User.LoggedInStatus,
       shouldCloseScreen: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
+    val user = TestData.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
     whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(user))
     whenever(userSession.loggedInUser()).doReturn(
         Observable.just<Optional<User>>(
@@ -305,7 +305,7 @@ class EnterOtpScreenControllerTest {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(requestOtpSingle)
     whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -317,7 +317,7 @@ class EnterOtpScreenControllerTest {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(Result.Success as Result))
     whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -329,7 +329,7 @@ class EnterOtpScreenControllerTest {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(Result.Success as Result))
     whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -344,7 +344,7 @@ class EnterOtpScreenControllerTest {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(result))
     whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -368,7 +368,7 @@ class EnterOtpScreenControllerTest {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(params.result))
     whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -397,7 +397,7 @@ class EnterOtpScreenControllerTest {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(params.result))
     whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -442,7 +442,7 @@ class EnterOtpScreenControllerTest {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(result))
     whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
+        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 

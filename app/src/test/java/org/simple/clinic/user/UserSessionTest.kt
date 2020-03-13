@@ -27,7 +27,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
@@ -115,7 +115,7 @@ class UserSessionTest {
   @Test
   fun `user approved for syncing changes should be notified correctly`() {
     fun createUser(loggedInStatus: User.LoggedInStatus, userStatus: UserStatus): List<User> {
-      return listOf(PatientMocker.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus))
+      return listOf(TestData.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus))
     }
 
     val userSubject = PublishSubject.create<List<User>>()
@@ -330,7 +330,7 @@ class UserSessionTest {
       loggedInStatus: List<User.LoggedInStatus>,
       expectedIsUnauthorized: List<Boolean>
   ) {
-    val user = PatientMocker
+    val user = TestData
         .loggedInUser()
         .let { userTemplate ->
           loggedInStatus.map { userTemplate.copy(loggedInStatus = it) }
@@ -432,7 +432,7 @@ class UserSessionTest {
     // given
     whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
 
-    val user = PatientMocker.loggedInUser(uuid = userUuid)
+    val user = TestData.loggedInUser(uuid = userUuid)
     reporter.setLoggedInUser(user, false)
     assertThat(reporter.user).isNotNull()
 

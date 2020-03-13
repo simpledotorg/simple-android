@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.user.UserSession
@@ -40,9 +40,9 @@ class LinkIdWithPatientViewControllerTest {
       type = Identifier.IdentifierType.random()
   )
 
-  private val user = PatientMocker.loggedInUser()
+  private val user = TestData.loggedInUser()
 
-  private val facility = PatientMocker.facility()
+  private val facility = TestData.facility()
 
   private val facilityRepository = mock<FacilityRepository>()
 
@@ -66,7 +66,7 @@ class LinkIdWithPatientViewControllerTest {
 
   @Test
   fun `when add is clicked, id should be added to patient and sheet should close`() {
-    val businessId = PatientMocker.businessId(patientUuid = patientUuid, identifier = identifier)
+    val businessId = TestData.businessId(patientUuid = patientUuid, identifier = identifier)
 
     whenever(patientRepository.addIdentifierToPatient(patientUuid, identifier, user, facility)).thenReturn(Single.just(businessId))
 

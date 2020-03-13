@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -42,8 +42,8 @@ class RecentPatientsScreenControllerTest {
   private val facilityRepository: FacilityRepository = mock()
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create()
-  private val loggedInUser = PatientMocker.loggedInUser()
-  private val facility = PatientMocker.facility()
+  private val loggedInUser = TestData.loggedInUser()
+  private val facility = TestData.facility()
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
   private val userClock = TestUserClock()
 
@@ -80,21 +80,21 @@ class RecentPatientsScreenControllerTest {
     val yesterday = today.minus(Duration.ofDays(1))
     val twoDaysAgo = today.minus(Duration.ofDays(2))
     whenever(patientRepository.recentPatients(facility.uuid)).thenReturn(Observable.just(listOf(
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(userClock)),
             gender = Gender.Transgender,
             updatedAt = today
         ),
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(userClock)),
             gender = Gender.Male,
             updatedAt = yesterday
         ),
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(userClock)),

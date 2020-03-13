@@ -19,7 +19,7 @@ import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.PatientConfig
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -45,8 +45,8 @@ class RecentPatientsViewControllerTest {
   private val facilityRepository: FacilityRepository = mock()
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create()
-  private val loggedInUser = PatientMocker.loggedInUser()
-  private val facility = PatientMocker.facility()
+  private val loggedInUser = TestData.loggedInUser()
+  private val facility = TestData.facility()
   private val recentPatientLimit = 3
   private val recentPatientLimitPlusOne = recentPatientLimit + 1
   private val dateFormatter = DateTimeFormatter.ISO_INSTANT
@@ -90,21 +90,21 @@ class RecentPatientsViewControllerTest {
         facilityUuid = facility.uuid,
         limit = recentPatientLimitPlusOne
     )).thenReturn(Observable.just(listOf(
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(userClock)),
             gender = Transgender,
             updatedAt = Instant.now(userClock)
         ),
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(userClock)),
             gender = Male,
             updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS)
         ),
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(userClock)),
@@ -158,28 +158,28 @@ class RecentPatientsViewControllerTest {
         facilityUuid = facility.uuid,
         limit = recentPatientLimitPlusOne
     )).thenReturn(Observable.just(listOf(
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(userClock)),
             gender = Transgender,
             updatedAt = Instant.now(userClock)
         ),
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(userClock)),
             gender = Male,
             updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS)
         ),
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(userClock)),
             gender = Female,
             updatedAt = Instant.now(userClock).minus(4, ChronoUnit.DAYS)
         ),
-        PatientMocker.recentPatient(
+        TestData.recentPatient(
             uuid = patientUuid4,
             fullName = "Abhilash Devi",
             age = Age(37, Instant.now(userClock)),

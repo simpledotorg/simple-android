@@ -12,7 +12,7 @@ import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
@@ -42,7 +42,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
   fun `when load blood pressures effect is received, then load blood pressures`() {
     // given
     val numberOfBpsToDisplay = 3
-    val bloodPressure = PatientMocker.bloodPressureMeasurement(
+    val bloodPressure = TestData.bloodPressureMeasurement(
         UUID.fromString("51ac042d-2f70-495c-a3e3-2599d8990da2"),
         patientUuid
     )
@@ -74,8 +74,8 @@ class BloodPressureSummaryViewEffectHandlerTest {
   @Test
   fun `when load current facility effect is received, then load current facility`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("ca84abfe-1236-4b98-8efa-747123e7c608"))
-    val currentFacility = PatientMocker.facility(uuid = UUID.fromString("2257f737-0e8a-452d-a270-66bdc2422664"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("ca84abfe-1236-4b98-8efa-747123e7c608"))
+    val currentFacility = TestData.facility(uuid = UUID.fromString("2257f737-0e8a-452d-a270-66bdc2422664"))
 
     whenever(userSession.loggedInUserImmediate()) doReturn user
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(currentFacility)
@@ -103,7 +103,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
   @Test
   fun `when open blood pressure update sheet effect is received, then open blood pressure update sheet`() {
     // given
-    val bloodPressure = PatientMocker.bloodPressureMeasurement(
+    val bloodPressure = TestData.bloodPressureMeasurement(
         UUID.fromString("3c59796e-780b-4e2d-9aaf-8cd662975378"),
         patientUuid
     )

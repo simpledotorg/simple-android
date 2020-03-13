@@ -5,19 +5,19 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import java.util.UUID
 
 class PatientSummaryViewRendererTest {
 
-  private val facilityWithDiabetesManagementEnabled = PatientMocker.facility(
+  private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("9eb182ee-1ec8-4d19-89b8-abe66ed993d9"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
   )
 
-  private val facilityWithDiabetesManagementDisabled = PatientMocker.facility(
+  private val facilityWithDiabetesManagementDisabled = TestData.facility(
       uuid = UUID.fromString("9eb182ee-1ec8-4d19-89b8-abe66ed993d9"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   )
@@ -57,11 +57,11 @@ class PatientSummaryViewRendererTest {
   fun `when profile summary is loaded, then populate patient profile and show edit button`() {
     // given
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
-    val patient = PatientMocker.patient(patientUuid)
-    val patientAddress = PatientMocker.address(patient.addressUuid)
-    val phoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid)
-    val bpPassport = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
-    val bangladeshNationalId = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val patient = TestData.patient(patientUuid)
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
 
     val patientSummaryProfile = PatientSummaryProfile(
         patient = patient,

@@ -8,7 +8,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -46,7 +46,7 @@ class NewlyVerifiedUserTest {
       currentLoggedInStatus: User.LoggedInStatus,
       shouldEmitUser: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(loggedInStatus = previousLoggedInStatus2)
+    val user = TestData.loggedInUser(loggedInStatus = previousLoggedInStatus2)
 
     userEmitter.onNext(Just(user))
     userEmitter.onNext(Just(user.copy(loggedInStatus = previousLoggedInStatus1)))

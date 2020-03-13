@@ -16,7 +16,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
@@ -45,8 +45,8 @@ class ForgotPinConfirmPinScreenControllerTest {
   private val resetUserPin = mock<ResetUserPin>()
   private val syncAndClearPatientData = mock<SyncAndClearPatientData>()
 
-  private val loggedInUser = PatientMocker.loggedInUser(uuid = UUID.fromString("324d7648-e2a5-4192-831f-533b81181dc2"))
-  private val facility = PatientMocker.facility()
+  private val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("324d7648-e2a5-4192-831f-533b81181dc2"))
+  private val facility = TestData.facility()
 
   private val controller = ForgotPinConfirmPinScreenController(
       userSession = userSession,

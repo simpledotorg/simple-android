@@ -16,7 +16,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
@@ -40,7 +40,7 @@ class ResetUserPinTest {
   private val userDao = mock<User.RoomDao>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
 
-  private val currentUser = PatientMocker.loggedInUser(
+  private val currentUser = TestData.loggedInUser(
       uuid = UUID.fromString("36f6072c-0757-43e6-9a09-2bb9971cc7d3"),
       pinDigest = hash("0000"),
       loggedInStatus = RESETTING_PIN

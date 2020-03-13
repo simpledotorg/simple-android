@@ -19,7 +19,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
@@ -193,7 +193,7 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when the phone number belongs to an existing user then an ongoing login entry should be created and login PIN entry screen should be opened`() {
     val inputNumber = "1234567890"
-    val userPayload = PatientMocker.loggedInUserPayload(phone = inputNumber)
+    val userPayload = TestData.loggedInUserPayload(phone = inputNumber)
 
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
     whenever(numberValidator.validate(inputNumber, MOBILE)).doReturn(VALID)
@@ -223,7 +223,7 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when the phone number belongs to an existing user and creating ongoing entry fails, an error should be shown`() {
     val inputNumber = "1234567890"
-    val userPayload = PatientMocker.loggedInUserPayload(phone = inputNumber)
+    val userPayload = TestData.loggedInUserPayload(phone = inputNumber)
 
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
     whenever(numberValidator.validate(inputNumber, MOBILE)).doReturn(VALID)
@@ -252,7 +252,7 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when the existing user is denied access then access denied screen should show`() {
     val inputNumber = "1234567890"
-    val userPayload = PatientMocker.loggedInUserPayload(phone = inputNumber, status = UserStatus.DisapprovedForSyncing)
+    val userPayload = TestData.loggedInUserPayload(phone = inputNumber, status = UserStatus.DisapprovedForSyncing)
 
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
     whenever(numberValidator.validate(inputNumber, MOBILE)).doReturn(VALID)

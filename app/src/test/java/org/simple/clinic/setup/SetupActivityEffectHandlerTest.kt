@@ -13,7 +13,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -26,7 +26,7 @@ class SetupActivityEffectHandlerTest {
   private val uiActions = mock<UiActions>()
   private val userDao = mock<User.RoomDao>()
   private val appConfigRepository = mock<AppConfigRepository>()
-  private val fallbackCountry = PatientMocker.country()
+  private val fallbackCountry = TestData.country()
 
   private val effectHandler = SetupActivityEffectHandler(
       onboardingCompletePreference,
@@ -49,10 +49,10 @@ class SetupActivityEffectHandlerTest {
     // given
     whenever(onboardingCompletePreference.get()) doReturn true
 
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("426d2eb9-ebf7-4a62-b157-1de221c7c3d0"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("426d2eb9-ebf7-4a62-b157-1de221c7c3d0"))
     whenever(userDao.userImmediate()).doReturn(user)
 
-    val country = PatientMocker.country()
+    val country = TestData.country()
     whenever(appConfigRepository.currentCountry()) doReturn country.toOptional()
 
     // when

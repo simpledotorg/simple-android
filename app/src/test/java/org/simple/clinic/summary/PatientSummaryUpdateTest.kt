@@ -8,7 +8,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -24,11 +24,11 @@ class PatientSummaryUpdateTest {
   private val patientUuid = UUID.fromString("93a131b0-890e-41a3-88ec-b35b48efc6c5")
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, patientUuid)
 
-  private val patient = PatientMocker.patient(patientUuid)
-  private val patientAddress = PatientMocker.address(patient.addressUuid)
-  private val phoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid)
-  private val bpPassport = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
-  private val bangladeshNationalId = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
+  private val patient = TestData.patient(patientUuid)
+  private val patientAddress = TestData.patientAddress(patient.addressUuid)
+  private val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+  private val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
+  private val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
 
   private val patientSummaryProfile = PatientSummaryProfile(
       patient = patient,
@@ -38,7 +38,7 @@ class PatientSummaryUpdateTest {
       bangladeshNationalId = bangladeshNationalId
   )
 
-  private val facility = PatientMocker.facility(
+  private val facility = TestData.facility(
       uuid = UUID.fromString("abe86f8e-1828-48fe-afb5-d697b3ce36bb"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
   )

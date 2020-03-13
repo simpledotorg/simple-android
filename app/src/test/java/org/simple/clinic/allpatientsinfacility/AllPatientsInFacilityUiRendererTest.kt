@@ -5,14 +5,14 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class AllPatientsInFacilityUiRendererTest {
   private val defaultModel = AllPatientsInFacilityModel.FETCHING_PATIENTS
   private val ui = mock<AllPatientsInFacilityUi>()
   private val uiRenderer = AllPatientsInFacilityUiRenderer(ui)
-  private val facility = PatientMocker.facility(UUID.fromString("1be5097b-1c9f-4f78-aa70-9b907f241669"))
+  private val facility = TestData.facility(UUID.fromString("1be5097b-1c9f-4f78-aa70-9b907f241669"))
 
   @Test
   fun `when a facility is being fetched, then do nothing`() {
@@ -54,7 +54,7 @@ class AllPatientsInFacilityUiRendererTest {
   @Test
   fun `when a facility has patients, then show the patients search result list`() {
     // given
-    val patientSearchResults = listOf(PatientMocker.patientSearchResult())
+    val patientSearchResults = listOf(TestData.patientSearchResult())
         .map(::PatientSearchResultUiState)
 
     val hasPatientsInFacilityState = defaultModel

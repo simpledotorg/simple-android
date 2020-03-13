@@ -30,7 +30,7 @@ import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -53,8 +53,8 @@ class NewMedicalHistoryScreenLogicTest {
   private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("4eb3d692-7362-4b10-848a-a7d679aee23a"))
-  private val facility = PatientMocker.facility(uuid = UUID.fromString("6fc07446-c508-47e7-998e-8c475f9114d1"))
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("4eb3d692-7362-4b10-848a-a7d679aee23a"))
+  private val facility = TestData.facility(uuid = UUID.fromString("6fc07446-c508-47e7-998e-8c475f9114d1"))
   private val patientUuid = UUID.fromString("d4f0fb3a-0146-4bc6-afec-95b76c61edca")
 
   private lateinit var testFixture: MobiusTestFixture<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect>
@@ -112,7 +112,7 @@ class NewMedicalHistoryScreenLogicTest {
   @Test
   fun `when save is clicked with selected answers then patient with the answers should be saved and summary screen should be opened`() {
     // given
-    val savedPatient = PatientMocker.patient(uuid = patientUuid)
+    val savedPatient = TestData.patient(uuid = patientUuid)
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     // when
@@ -145,7 +145,7 @@ class NewMedicalHistoryScreenLogicTest {
   @Test
   fun `when save is clicked with no answers then patient with an empty medical history should be saved and summary screen should be opened`() {
     // given
-    val savedPatient = PatientMocker.patient(uuid = patientUuid)
+    val savedPatient = TestData.patient(uuid = patientUuid)
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     // when
@@ -174,7 +174,7 @@ class NewMedicalHistoryScreenLogicTest {
   @Test
   fun `when an already selected answer for a question is changed, the new answer should be used when saving the medical history`() {
     // given
-    val savedPatient = PatientMocker.patient(uuid = patientUuid)
+    val savedPatient = TestData.patient(uuid = patientUuid)
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     // when

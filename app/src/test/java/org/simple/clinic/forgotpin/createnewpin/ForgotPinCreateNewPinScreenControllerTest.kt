@@ -11,7 +11,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -27,8 +27,8 @@ class ForgotPinCreateNewPinScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
 
-  private val loggedInUser = PatientMocker.loggedInUser()
-  private val facility = PatientMocker.facility()
+  private val loggedInUser = TestData.loggedInUser()
+  private val facility = TestData.facility()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   lateinit var controller: ForgotPinCreateNewPinScreenController

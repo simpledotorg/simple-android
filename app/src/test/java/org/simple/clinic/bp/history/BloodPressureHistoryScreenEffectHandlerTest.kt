@@ -12,7 +12,7 @@ import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
@@ -42,7 +42,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   fun `when load patient effect is received, then load patient`() {
     // given
     val patientUuid = UUID.fromString("46044a13-012e-439b-81c9-8bbb15307629")
-    val patient = PatientMocker.patient(uuid = patientUuid)
+    val patient = TestData.patient(uuid = patientUuid)
     whenever(patientRepository.patient(patientUuid)) doReturn Observable.just<Optional<Patient>>(Just(patient))
 
     // when
@@ -56,7 +56,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   @Test
   fun `when load blood pressure history effect is received, then load all blood pressures`() {
     // given
-    val bloodPressureMeasurement = PatientMocker.bloodPressureMeasurement(
+    val bloodPressureMeasurement = TestData.bloodPressureMeasurement(
         UUID.fromString("51ac042d-2f70-495c-a3e3-2599d8990da2"),
         patientUuid
     )
@@ -88,7 +88,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   @Test
   fun `when open blood pressure update sheet effect is received, then open blood pressure update sheet`() {
     // given
-    val bloodPressureMeasurement = PatientMocker.bloodPressureMeasurement(
+    val bloodPressureMeasurement = TestData.bloodPressureMeasurement(
         UUID.fromString("3c6fb840-86b9-4b85-aa75-b24c4bb9fbfd"),
         patientUuid
     )

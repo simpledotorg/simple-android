@@ -9,7 +9,7 @@ import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.finduser.FindUserResult.*
@@ -33,7 +33,7 @@ class UserLookupTest {
   @Test
   fun `when the find user call is successful, the user payload must be returned in the result`() {
     // given
-    val loggedInUserPayload = PatientMocker.loggedInUserPayload(uuid = UUID.fromString("f61b59da-4e2c-4e3f-a33f-afcd45022bbc"), phone = phoneNumber)
+    val loggedInUserPayload = TestData.loggedInUserPayload(uuid = UUID.fromString("f61b59da-4e2c-4e3f-a33f-afcd45022bbc"), phone = phoneNumber)
 
     whenever(registrationApi.findUser(phoneNumber)) doReturn Single.just(loggedInUserPayload)
 

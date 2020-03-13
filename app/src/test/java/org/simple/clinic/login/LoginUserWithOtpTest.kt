@@ -23,7 +23,7 @@ import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -60,7 +60,7 @@ class LoginUserWithOtpTest {
   private val userUuid = UUID.fromString("34bf96ef-06f3-4d1c-9ef1-9a55cb1904e9")
   private val facilityUuid = UUID.fromString("18bd9def-ab06-491f-97bf-8fbd74f213cd")
   private val accessToken = "token"
-  private val loggedInUserPayload = PatientMocker.loggedInUserPayload(uuid = userUuid, registrationFacilityUuid = facilityUuid)
+  private val loggedInUserPayload = TestData.loggedInUserPayload(uuid = userUuid, registrationFacilityUuid = facilityUuid)
   private val loginResponse = LoginResponse(accessToken, loggedInUserPayload)
 
   private val loginUserWithOtp = LoginUserWithOtp(

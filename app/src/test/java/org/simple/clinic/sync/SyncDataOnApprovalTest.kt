@@ -16,7 +16,7 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -41,7 +41,7 @@ class SyncDataOnApprovalTest {
   @Test
   fun `when the user status changes to ApprovedFromSyncing from anything, the sync should be triggered`(previousUserStatus: UserStatus) {
     // given
-    val user = PatientMocker.loggedInUser(status = previousUserStatus)
+    val user = TestData.loggedInUser(status = previousUserStatus)
     val userSubject = PublishSubject.create<Optional<User>>()
     whenever(userSession.loggedInUser()).thenReturn(userSubject)
     whenever(dataSync.syncTheWorld()).thenReturn(Completable.complete())

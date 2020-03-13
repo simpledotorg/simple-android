@@ -10,7 +10,7 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.None
@@ -40,7 +40,7 @@ class SettingsEffectHandlerTest {
   @Test
   fun `user details must be fetched when the load user details event is received`() {
     // given
-    val savedUser = PatientMocker.loggedInUser(
+    val savedUser = TestData.loggedInUser(
         uuid = UUID.fromString("eadfd8ef-6c88-4bc9-ba96-e05bec2d6d8b"),
         name = "Mahalakshmi Puri",
         phone = "1234567890"

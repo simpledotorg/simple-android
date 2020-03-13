@@ -2,7 +2,7 @@ package org.simple.clinic.searchresultsview
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCurrentFacility
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
@@ -13,15 +13,15 @@ import java.util.UUID
 class SearchResultsItemTypeTest {
 
   private val currentFacilityUuid = UUID.fromString("69cf85c8-6788-4071-b985-0536ae606b70")
-  private val currentFacility = PatientMocker.facility(currentFacilityUuid)
+  private val currentFacility = TestData.facility(currentFacilityUuid)
 
   @Test
   fun `list items must be generated from the search results`() {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
     val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
-    val patientSearchResult1 = PatientMocker.patientSearchResult(patientUuid1)
-    val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
+    val patientSearchResult1 = TestData.patientSearchResult(patientUuid1)
+    val patientSearchResult2 = TestData.patientSearchResult(patientUuid2)
     val searchResults = PatientSearchResults(
         visitedCurrentFacility = listOf(patientSearchResult1),
         notVisitedCurrentFacility = listOf(patientSearchResult2),
@@ -72,8 +72,8 @@ class SearchResultsItemTypeTest {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
     val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
-    val patientSearchResult1 = PatientMocker.patientSearchResult(patientUuid1)
-    val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
+    val patientSearchResult1 = TestData.patientSearchResult(patientUuid1)
+    val patientSearchResult2 = TestData.patientSearchResult(patientUuid2)
     val searchResults = PatientSearchResults(
         visitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2),
         notVisitedCurrentFacility = emptyList(),
@@ -120,8 +120,8 @@ class SearchResultsItemTypeTest {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
     val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
-    val patientSearchResult1 = PatientMocker.patientSearchResult(patientUuid1)
-    val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
+    val patientSearchResult1 = TestData.patientSearchResult(patientUuid1)
+    val patientSearchResult2 = TestData.patientSearchResult(patientUuid2)
     val searchResults = PatientSearchResults(
         visitedCurrentFacility = emptyList(),
         notVisitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2),

@@ -7,7 +7,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -60,8 +60,8 @@ class SetupActivityUpdateTest {
   @Test
   fun `if the user has logged in and a country is selected, go to home screen`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
-    val country = PatientMocker.country()
+    val user = TestData.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
+    val country = TestData.country()
 
     //then
     val expectedModel = defaultModel.loggedInUser(user, country)
@@ -78,7 +78,7 @@ class SetupActivityUpdateTest {
   @Test
   fun `if a logged in user has updated the app without selecting a country, set the fallback country as the selected country`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
 
     // then
     val expectedModel = defaultModel.previouslyLoggedInUser(user)
@@ -95,7 +95,7 @@ class SetupActivityUpdateTest {
   @Test
   fun `when the fallback country is set as the selected country, go to home screen`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
     val model = defaultModel.previouslyLoggedInUser(user)
 
     // then

@@ -24,7 +24,7 @@ import org.simple.clinic.drugs.selection.dosage.DosagePickerSheetCreated
 import org.simple.clinic.drugs.selection.dosage.DosageSelected
 import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -47,8 +47,8 @@ class DosagePickerSheetControllerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val protocolUuid = UUID.randomUUID()
-  private val user = PatientMocker.loggedInUser()
-  private val currentFacility = PatientMocker.facility(protocolUuid = protocolUuid)
+  private val user = TestData.loggedInUser()
+  private val currentFacility = TestData.facility(protocolUuid = protocolUuid)
   private val userSubject = PublishSubject.create<User>()
 
   private val controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
@@ -70,8 +70,8 @@ class DosagePickerSheetControllerTest {
     val patientUUID = UUID.randomUUID()
     val drugName = "Amlodipine"
 
-    val protocolDrug1 = PatientMocker.protocolDrug(name = drugName, dosage = "5 mg")
-    val protocolDrug2 = PatientMocker.protocolDrug(name = drugName, dosage = "10 mg")
+    val protocolDrug1 = TestData.protocolDrug(name = drugName, dosage = "5 mg")
+    val protocolDrug2 = TestData.protocolDrug(name = drugName, dosage = "10 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.just(listOf(protocolDrug1, protocolDrug2)))
 
@@ -89,7 +89,7 @@ class DosagePickerSheetControllerTest {
   fun `when a dosage is selected, it should be saved as prescription`() {
     val patientUUID = UUID.randomUUID()
     val drugName = "Amlodipine"
-    val dosageSelected = PatientMocker.protocolDrug(name = drugName, dosage = "5 mg")
+    val dosageSelected = TestData.protocolDrug(name = drugName, dosage = "5 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.savePrescription(patientUUID, dosageSelected, currentFacility)).thenReturn(Completable.complete())
@@ -106,8 +106,8 @@ class DosagePickerSheetControllerTest {
   fun `when a dosage is selected and a prescription exists for that drug, existing prescription should get deleted and new prescription should be saved`() {
     val patientUUID = UUID.randomUUID()
     val drugName = "Amlodipine"
-    val dosageSelected = PatientMocker.protocolDrug(name = drugName, dosage = "5 mg")
-    val existingPrescription = PatientMocker.prescription(name = drugName, dosage = "10 mg")
+    val dosageSelected = TestData.protocolDrug(name = drugName, dosage = "5 mg")
+    val existingPrescription = TestData.prescription(name = drugName, dosage = "10 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.savePrescription(patientUUID, dosageSelected, currentFacility)).thenReturn(Completable.complete())
@@ -125,7 +125,7 @@ class DosagePickerSheetControllerTest {
   fun `when none is selected, the existing prescription should be soft deleted`() {
     val patientUUID = UUID.randomUUID()
     val drugName = "Amlodipine"
-    val existingPrescription = PatientMocker.prescription(name = drugName, dosage = "10 mg")
+    val existingPrescription = TestData.prescription(name = drugName, dosage = "10 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.softDeletePrescription(existingPrescription.uuid)).thenReturn(Completable.complete())

@@ -1,7 +1,7 @@
 package org.simple.clinic.analytics
 
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 
 class ErrorSwallowingReporterTest {
@@ -11,7 +11,7 @@ class ErrorSwallowingReporterTest {
   @Test(expected = Test.None::class)
   fun `no error should be thrown when reporting a new user registration`() {
     // given
-    val user = PatientMocker.loggedInUser()
+    val user = TestData.loggedInUser()
 
     // when
     reporter.setLoggedInUser(user, isANewRegistration = true)
@@ -20,7 +20,7 @@ class ErrorSwallowingReporterTest {
   @Test(expected = Test.None::class)
   fun `no error should be thrown when reporting a user login`() {
     // given
-    val user = PatientMocker.loggedInUser()
+    val user = TestData.loggedInUser()
 
     // when
     reporter.setLoggedInUser(user, isANewRegistration = false)

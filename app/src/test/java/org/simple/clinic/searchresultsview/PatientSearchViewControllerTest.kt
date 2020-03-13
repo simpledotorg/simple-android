@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
@@ -48,9 +48,9 @@ class PatientSearchViewControllerTest {
   )
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private val currentFacility = PatientMocker.facility(UUID.fromString("69cf85c8-6788-4071-b985-0536ae606b70"))
-  private val otherFacility = PatientMocker.facility(UUID.fromString("0bb48f0a-3a6c-4e35-8781-74b074443f36"))
-  private val user = PatientMocker.loggedInUser()
+  private val currentFacility = TestData.facility(UUID.fromString("69cf85c8-6788-4071-b985-0536ae606b70"))
+  private val otherFacility = TestData.facility(UUID.fromString("0bb48f0a-3a6c-4e35-8781-74b074443f36"))
+  private val user = TestData.loggedInUser()
 
   private val patientName = "name"
   private val phoneNumber: String = "123456"
@@ -68,7 +68,7 @@ class PatientSearchViewControllerTest {
 
   @Test
   fun `when search result clicked then SearchResultClicked event should be emitted`() {
-    val searchResult = PatientMocker.patientSearchResult()
+    val searchResult = TestData.patientSearchResult()
     val searchResultClicked = SearchResultClicked(searchResult.uuid)
     uiEvents.onNext(searchResultClicked)
 
@@ -89,23 +89,23 @@ class PatientSearchViewControllerTest {
   @Parameters(method = "params for search criteria")
   fun `when searching patients returns results, the results should be displayed`(searchCriteria: PatientSearchCriteria) {
     // given
-    val searchResult1InCurrentFacility = PatientMocker.patientSearchResult(
+    val searchResult1InCurrentFacility = TestData.patientSearchResult(
         uuid = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470"),
         fullName = "Anish Acharya in CHC Bagta"
     )
-    val searchResult2InCurrentFacility = PatientMocker.patientSearchResult(
+    val searchResult2InCurrentFacility = TestData.patientSearchResult(
         uuid = UUID.fromString("6aba53eb-c8dd-452c-b640-c11c6df94f8a"),
         fullName = "Deepa in CHC Bagta"
     )
-    val searchResult3InCurrentFacility = PatientMocker.patientSearchResult(
+    val searchResult3InCurrentFacility = TestData.patientSearchResult(
         uuid = UUID.fromString("65965892-7218-4ca1-bfca-e7b037751802"),
         fullName = "Vinay in CHC Bagta"
     )
-    val searchResult1InOtherFacility = PatientMocker.patientSearchResult(
+    val searchResult1InOtherFacility = TestData.patientSearchResult(
         uuid = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88"),
         fullName = "Sanchita in CHC Ballianwali"
     )
-    val searchResult2InOtherFacility = PatientMocker.patientSearchResult(
+    val searchResult2InOtherFacility = TestData.patientSearchResult(
         uuid = UUID.fromString("760c7342-b0f2-4130-9d4c-c5f18336d4b8"),
         fullName = "Daniel in CHC Ballianwali"
     )

@@ -10,7 +10,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -57,7 +57,7 @@ class UpdateAnalyticsUserIdTest {
       loggedInStatus: User.LoggedInStatus
   ) {
     // given
-    val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus)
+    val user = TestData.loggedInUser(loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
 
     // when
@@ -77,7 +77,7 @@ class UpdateAnalyticsUserIdTest {
       loggedInStatus: User.LoggedInStatus
   ) {
     // given
-    val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus)
+    val user = TestData.loggedInUser(loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
 
     // when

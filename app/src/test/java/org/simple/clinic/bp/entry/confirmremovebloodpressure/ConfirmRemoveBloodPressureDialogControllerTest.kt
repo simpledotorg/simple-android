@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
@@ -40,7 +40,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
 
   @Test
   fun `when remove is clicked, the blood pressure must be marked as deleted and the dialog should be dismissed`() {
-    val bloodPressure = PatientMocker.bloodPressureMeasurement()
+    val bloodPressure = TestData.bloodPressureMeasurement()
     val markBloodPressureDeletedCompletable = Completable.complete()
     val updatePatientRecordedAtCompletable = Completable.complete()
     whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).doReturn(Observable.just(bloodPressure))

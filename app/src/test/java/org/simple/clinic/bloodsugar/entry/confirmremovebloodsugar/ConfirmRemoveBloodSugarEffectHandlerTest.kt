@@ -37,7 +37,7 @@ class ConfirmRemoveBloodSugarEffectHandlerTest {
     // given
     val patientUuid = UUID.fromString("8fb98b2b-84d7-4e19-a5bc-3a57c3f53982")
     val bloodSugarMeasurementUuid = UUID.fromString("7693aafb-9044-4ef3-999a-5ecda2895415")
-    val bloodSugarMeasurement = PatientMocker.bloodSugar(
+    val bloodSugarMeasurement = PatientMocker.bloodSugarMeasurement(
         uuid = bloodSugarMeasurementUuid,
         patientUuid = patientUuid
     )

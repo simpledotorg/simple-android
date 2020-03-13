@@ -309,7 +309,7 @@ class BloodSugarEntryUpdateTest {
 
   @Test
   fun `when blood sugar measurement is fetched, then prefill date and set blood sugar reading`() {
-    val bloodSugarMeasurement = PatientMocker.bloodSugar()
+    val bloodSugarMeasurement = PatientMocker.bloodSugarMeasurement()
     val bloodSugarReading = bloodSugarMeasurement.reading.displayValue
 
     updateSpec

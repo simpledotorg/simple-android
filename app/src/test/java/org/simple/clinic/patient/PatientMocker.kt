@@ -1,6 +1,5 @@
 package org.simple.clinic.patient
 
-import com.nhaarman.mockito_kotlin.mock
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
@@ -95,7 +94,7 @@ object PatientMocker {
         deletedAt = deletedAt)
   }
 
-  fun bp(
+  fun bloodPressureMeasurement(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
       systolic: Int = random.nextInt(100) + 100,
@@ -124,7 +123,7 @@ object PatientMocker {
   }
 
   fun facility(
-      uuid: UUID = mock(),
+      uuid: UUID = UUID.randomUUID(),
       name: String = "some facility",
       streetAddress: String? = "some street",
       district: String = "district",
@@ -164,7 +163,7 @@ object PatientMocker {
   }
 
   fun facilityPayload(
-      uuid: UUID = mock(),
+      uuid: UUID = UUID.randomUUID(),
       name: String = "some facility",
       streetAddress: String? = "some street",
       district: String = "district",
@@ -204,7 +203,7 @@ object PatientMocker {
   }
 
   fun prescription(
-      uuid: UUID = mock(),
+      uuid: UUID = UUID.randomUUID(),
       name: String = "drug name",
       dosage: String? = "dosage",
       isProtocolDrug: Boolean = false,
@@ -522,7 +521,7 @@ object PatientMocker {
     )
   }
 
-  fun bloodSugar(
+  fun bloodSugarMeasurement(
       uuid: UUID = UUID.randomUUID(),
       reading: BloodSugarReading = BloodSugarReading("600", org.simple.clinic.bloodsugar.Random),
       patientUuid: UUID = UUID.randomUUID(),

@@ -19,8 +19,8 @@ class BloodPressureSummaryViewUpdateTest {
 
   @Test
   fun `when blood pressures are loaded, then show blood pressures`() {
-    val bloodPressure1 = PatientMocker.bp(UUID.fromString("8815d0fc-73cc-44a2-a4b3-473c4c0989aa"))
-    val bloodPressure2 = PatientMocker.bp(UUID.fromString("ddf87db7-1034-4618-bc0e-879d7d357adf"))
+    val bloodPressure1 = PatientMocker.bloodPressureMeasurement(UUID.fromString("8815d0fc-73cc-44a2-a4b3-473c4c0989aa"))
+    val bloodPressure2 = PatientMocker.bloodPressureMeasurement(UUID.fromString("ddf87db7-1034-4618-bc0e-879d7d357adf"))
     val bloodPressures = listOf(bloodPressure1, bloodPressure2)
 
     updateSpec
@@ -94,7 +94,7 @@ class BloodPressureSummaryViewUpdateTest {
 
   @Test
   fun `when blood pressure is clicked, then open blood pressure update sheet`() {
-    val bloodPressureMeasurement = PatientMocker.bp(
+    val bloodPressureMeasurement = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("88ed645b-7b00-4a72-81bb-94fba4474523"),
         patientUuid
     )
@@ -111,19 +111,19 @@ class BloodPressureSummaryViewUpdateTest {
 
   @Test
   fun `when see all is clicked, then show blood pressure history screen`() {
-    val bloodPressure1 = PatientMocker.bp(
+    val bloodPressure1 = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
         patientUuid
     )
-    val bloodPressure2 = PatientMocker.bp(
+    val bloodPressure2 = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("c1cba6aa-4cff-4809-9654-05c7c5b8fcd0"),
         patientUuid
     )
-    val bloodPressure3 = PatientMocker.bp(
+    val bloodPressure3 = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("4ca650eb-706c-4c8e-8e7d-f0a5f41e99e6"),
         patientUuid
     )
-    val bloodPressure4 = PatientMocker.bp(
+    val bloodPressure4 = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("1bd8492b-ca4c-4ae6-a4ce-0034818da775"),
         patientUuid
     )

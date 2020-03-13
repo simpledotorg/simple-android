@@ -66,9 +66,9 @@ private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
 }
 
 @AppScope
-class TestData @Inject constructor(
-    private val faker: Faker
-) {
+class TestData @Inject constructor() {
+
+  private val faker = Faker("en-IND")
 
   fun patientProfile(
       patientUuid: UUID = UUID.randomUUID(),

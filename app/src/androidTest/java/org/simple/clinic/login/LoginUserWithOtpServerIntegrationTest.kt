@@ -7,7 +7,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -27,11 +26,11 @@ class LoginUserWithOtpServerIntegrationTest {
   @Inject
   lateinit var loginUserWithOtp: LoginUserWithOtp
 
-  @Inject
-  lateinit var testData: TestData
-
   @field:[Inject Named("user_pin")]
   lateinit var userPin: String
+
+  @field:[Inject Named("user_otp")]
+  lateinit var userOtp: String
 
   @Before
   fun setUp() {
@@ -42,7 +41,7 @@ class LoginUserWithOtpServerIntegrationTest {
   fun when_correct_login_params_are_given_then_login_should_happen_and_session_data_should_be_persisted() {
     val user = userSession.loggedInUserImmediate()!!
 
-    val loginResult = loginUserWithOtp.loginWithOtp(user.phoneNumber, userPin, testData.qaUserOtp())
+    val loginResult = loginUserWithOtp.loginWithOtp(user.phoneNumber, userPin, userOtp)
         .blockingGet()
 
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)

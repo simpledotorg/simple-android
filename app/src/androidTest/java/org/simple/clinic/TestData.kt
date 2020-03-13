@@ -80,8 +80,6 @@ class TestData @Inject constructor(
 
   private fun qaUser() = userSession.loggedInUserImmediate()!!
 
-  fun qaUserOtp() = "000000"
-
   fun qaFacility() = facilityRepository.currentFacility(qaUser()).blockingFirst()
 
   fun qaUserFacilityUuid() = qaFacility().uuid

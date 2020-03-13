@@ -17,4 +17,8 @@ class TestDataModule {
   @Provides
   @Named("user_pin")
   fun provideTestUserPin(): String = "1712"
+
+  @Provides
+  @Named("user_otp")
+  fun provideTestUserOtp(): String = "000000"
 }

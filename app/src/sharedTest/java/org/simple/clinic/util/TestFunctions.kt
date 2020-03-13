@@ -14,6 +14,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.util.UUID
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KClass
 
 fun <T> TestObserver<T>.assertLatestValue(value: T) {
   @Suppress("UnstableApiUsage")
@@ -69,4 +70,8 @@ fun httpErrorResponse(
 ): HttpException {
   val error = Response.error<Any>(code, ResponseBody.create(MediaType.parse(contentType), body))
   return HttpException(error)
+}
+
+fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
+  return enumClass.java.enumConstants!!.asList().shuffled().first()
 }

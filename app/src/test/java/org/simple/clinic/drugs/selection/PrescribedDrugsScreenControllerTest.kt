@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.User
@@ -52,14 +52,14 @@ class PrescribedDrugsScreenControllerTest {
 
   @Test
   fun `should correctly construct RecyclerView models from protocol drugs and prescribed drugs`() {
-    val amlodipine5mg = PatientMocker.protocolDrug(name = "Amlodipine", dosage = "5mg")
-    val amlodipine10mg = PatientMocker.protocolDrug(name = "Amlodipine", dosage = "10mg")
-    val telmisartan40mg = PatientMocker.protocolDrug(name = "Telmisartan", dosage = "40mg")
-    val telmisartan80mg = PatientMocker.protocolDrug(name = "Telmisartan", dosage = "80mg")
+    val amlodipine5mg = TestData.protocolDrug(name = "Amlodipine", dosage = "5mg")
+    val amlodipine10mg = TestData.protocolDrug(name = "Amlodipine", dosage = "10mg")
+    val telmisartan40mg = TestData.protocolDrug(name = "Telmisartan", dosage = "40mg")
+    val telmisartan80mg = TestData.protocolDrug(name = "Telmisartan", dosage = "80mg")
 
     val protocolUuid = UUID.randomUUID()
-    val currentFacility = PatientMocker.facility(protocolUuid = protocolUuid)
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(PatientMocker.loggedInUser()))
+    val currentFacility = TestData.facility(protocolUuid = protocolUuid)
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(TestData.loggedInUser()))
     whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(currentFacility))
 
     whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.just(listOf(
@@ -72,11 +72,11 @@ class PrescribedDrugsScreenControllerTest {
     val prescriptionUuid3 = UUID.randomUUID()
     val prescriptionUuid4 = UUID.randomUUID()
 
-    val amlodipine10mgPrescription = PatientMocker.prescription(name = "Amlodipine", dosage = "10mg", isProtocolDrug = true)
-    val telmisartan9000mgPrescription = PatientMocker.prescription(uuid = prescriptionUuid1, name = "Telmisartan", dosage = "9000mg", isProtocolDrug = false)
-    val reesesPrescription = PatientMocker.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets", isProtocolDrug = false)
-    val fooPrescription = PatientMocker.prescription(uuid = prescriptionUuid3, name = "Foo", dosage = "2 pills", isProtocolDrug = false)
-    val barPrescription = PatientMocker.prescription(uuid = prescriptionUuid4, name = "Bar", dosage = null, isProtocolDrug = false)
+    val amlodipine10mgPrescription = TestData.prescription(name = "Amlodipine", dosage = "10mg", isProtocolDrug = true)
+    val telmisartan9000mgPrescription = TestData.prescription(uuid = prescriptionUuid1, name = "Telmisartan", dosage = "9000mg", isProtocolDrug = false)
+    val reesesPrescription = TestData.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets", isProtocolDrug = false)
+    val fooPrescription = TestData.prescription(uuid = prescriptionUuid3, name = "Foo", dosage = "2 pills", isProtocolDrug = false)
+    val barPrescription = TestData.prescription(uuid = prescriptionUuid4, name = "Bar", dosage = null, isProtocolDrug = false)
 
     val prescriptions = listOf(
         amlodipine10mgPrescription,
@@ -138,7 +138,7 @@ class PrescribedDrugsScreenControllerTest {
 
   @Test
   fun `when a custom prescription is clicked then open upate custom prescription screen`() {
-    val prescribedDrug = PatientMocker.prescription()
+    val prescribedDrug = TestData.prescription()
     uiEvents.onNext(CustomPrescriptionClicked(prescribedDrug))
 
     verify(screen).showUpdateCustomPrescriptionSheet(prescribedDrug)

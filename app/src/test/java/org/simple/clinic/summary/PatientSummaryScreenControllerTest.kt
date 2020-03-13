@@ -28,7 +28,7 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
@@ -63,7 +63,7 @@ class PatientSummaryScreenControllerTest {
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val user = PatientMocker.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
+  private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
   private val bloodSugarRepository = mock<BloodSugarRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -109,10 +109,10 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       cancelReason: AppointmentCancelReason
   ) {
-    val canceledAppointment = PatientMocker.appointment(status = Cancelled, cancelReason = cancelReason)
+    val canceledAppointment = TestData.appointment(status = Cancelled, cancelReason = cancelReason)
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Just(canceledAppointment)
 
-    val phoneNumber = PatientMocker.phoneNumber(
+    val phoneNumber = TestData.patientPhoneNumber(
         patientUuid = patientUuid,
         updatedAt = canceledAppointment.updatedAt - Duration.ofHours(2))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Just(phoneNumber)
@@ -132,10 +132,10 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       cancelReason: AppointmentCancelReason
   ) {
-    val canceledAppointment = PatientMocker.appointment(status = Cancelled, cancelReason = cancelReason)
+    val canceledAppointment = TestData.appointment(status = Cancelled, cancelReason = cancelReason)
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Just(canceledAppointment)
 
-    val phoneNumber = PatientMocker.phoneNumber(
+    val phoneNumber = TestData.patientPhoneNumber(
         patientUuid = patientUuid,
         updatedAt = canceledAppointment.updatedAt + Duration.ofHours(2))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Just(phoneNumber)
@@ -218,7 +218,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions except new patient")
   fun `when an existing patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
-    val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
+    val phoneNumber = Just(TestData.patientPhoneNumber(number = "101"))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn phoneNumber
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 
@@ -231,7 +231,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "patient summary open intentions except new patient")
   fun `when a new patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
-    val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
+    val phoneNumber = Just(TestData.patientPhoneNumber(number = "101"))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn phoneNumber
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
 

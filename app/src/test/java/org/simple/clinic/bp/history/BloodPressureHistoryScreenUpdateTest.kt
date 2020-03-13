@@ -7,7 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class BloodPressureHistoryScreenUpdateTest {
@@ -17,7 +17,7 @@ class BloodPressureHistoryScreenUpdateTest {
 
   @Test
   fun `when patient is loaded, then show patient information`() {
-    val patient = PatientMocker.patient(uuid = UUID.fromString("7d04777d-3480-451b-b571-0e114c87cebf"))
+    val patient = TestData.patient(uuid = UUID.fromString("7d04777d-3480-451b-b571-0e114c87cebf"))
 
     updateSpec
         .given(model)
@@ -32,8 +32,8 @@ class BloodPressureHistoryScreenUpdateTest {
 
   @Test
   fun `when blood pressure history is loaded, then show blood pressures`() {
-    val bloodPressure1 = PatientMocker.bloodPressureMeasurement(UUID.fromString("8815d0fc-73cc-44a2-a4b3-473c4c0989aa"))
-    val bloodPressure2 = PatientMocker.bloodPressureMeasurement(UUID.fromString("ddf87db7-1034-4618-bc0e-879d7d357adf"))
+    val bloodPressure1 = TestData.bloodPressureMeasurement(UUID.fromString("8815d0fc-73cc-44a2-a4b3-473c4c0989aa"))
+    val bloodPressure2 = TestData.bloodPressureMeasurement(UUID.fromString("ddf87db7-1034-4618-bc0e-879d7d357adf"))
     val bloodPressures = listOf(bloodPressure1, bloodPressure2)
 
     updateSpec
@@ -62,7 +62,7 @@ class BloodPressureHistoryScreenUpdateTest {
 
   @Test
   fun `when blood pressure is clicked, then open update sheet`() {
-    val bloodPressureMeasurement = PatientMocker.bloodPressureMeasurement(
+    val bloodPressureMeasurement = TestData.bloodPressureMeasurement(
         UUID.fromString("e42d25fb-5693-449c-9ad2-71a172eb8d92"),
         patientUuid
     )

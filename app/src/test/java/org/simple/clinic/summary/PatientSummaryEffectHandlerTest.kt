@@ -13,7 +13,7 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
@@ -60,8 +60,8 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when the load current facility effect is received, the current facility must be fetched`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("39f96341-c043-4059-880e-e32754341a04"))
-    val facility = PatientMocker.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("39f96341-c043-4059-880e-e32754341a04"))
+    val facility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
 
     whenever(userSession.loggedInUserImmediate()) doReturn user
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
@@ -78,11 +78,11 @@ class PatientSummaryEffectHandlerTest {
   fun `when the load patient summary profile is received, then patient summary profile must be fetched`() {
     // given
     val patientUuid = UUID.fromString("2bd2ad18-f532-4649-b775-efe97c38ce59")
-    val patient = PatientMocker.patient(patientUuid)
-    val patientAddress = PatientMocker.address(uuid = patient.addressUuid)
-    val patientPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid)
-    val bpPassport = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
-    val bangladeshNationId = PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
+    val patient = TestData.patient(patientUuid)
+    val patientAddress = TestData.patientAddress(uuid = patient.addressUuid)
+    val patientPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
+    val bangladeshNationId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
 
     val patientProfile = PatientProfile(patient, patientAddress, listOf(patientPhoneNumber), listOf(bangladeshNationId, bpPassport))
     whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn Just(patientProfile)
@@ -105,9 +105,9 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when edit click effect is received then show edit patient screen`() {
     //given
-    val patientProfile = PatientMocker.patientProfile(
+    val patientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("12fdada1-57df-49de-871a-766fbdbb2f37"),
-        addressUuid = UUID.fromString("d261cde2-b0cb-436e-9612-8b3b7bde0c63")
+        patientAddressUuid = UUID.fromString("d261cde2-b0cb-436e-9612-8b3b7bde0c63")
     )
     val patientSummaryProfile = PatientSummaryProfile(
         patient = patientProfile.patient,

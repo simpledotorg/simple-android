@@ -36,11 +36,11 @@ class RegisterUser @Inject constructor(
     return registrationApi
         .createUser(registrationRequest)
         .doOnSubscribe { Timber.i("Registering user") }
-        .flatMap(::storeUserAndAccessToken)
-        .doOnSuccess(Analytics::setNewlyRegisteredUser)
+        .flatMap { storeUserAndAccessToken(it) }
+        .doOnSuccess { Analytics.setNewlyRegisteredUser(it) }
         .map { Success as RegistrationResult }
-        .doOnError(::reportErrors)
-        .onErrorReturn(::mapErrorToRegistrationResult)
+        .doOnError { reportErrors(it) }
+        .onErrorReturn { mapErrorToRegistrationResult(it) }
         .doOnSuccess { Timber.i("Registration result: $it") }
 
   }

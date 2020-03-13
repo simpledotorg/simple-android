@@ -32,7 +32,7 @@ import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -69,9 +69,9 @@ class BloodPressureValidationTest {
   private val userSession = mock<UserSession>()
 
   private val facilityRepository = mock<FacilityRepository>()
-  private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
 
-  private val facility = PatientMocker.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
+  private val facility = TestData.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
   private val userSubject = PublishSubject.create<User>()
 
   private val uiRenderer = BloodPressureEntryUiRenderer(ui)

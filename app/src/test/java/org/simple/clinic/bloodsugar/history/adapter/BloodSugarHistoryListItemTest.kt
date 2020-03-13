@@ -9,7 +9,7 @@ import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.BloodSugarHistoryItem
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.NewBloodSugarButton
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -31,12 +31,12 @@ class BloodSugarHistoryListItemTest {
   @Test
   fun `new blood sugar button should be at the top of the list`() {
     // when
-    val bloodSugar1 = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar1 = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("5eb4e57f-69c5-4ade-be4b-5371d0d13bd2"),
         reading = BloodSugarReading("420", Random),
         recordedAt = Instant.parse("2020-01-01T00:00:00Z")
     )
-    val bloodSugar2 = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar2 = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("a6027293-5e2b-4289-9ccd-a4befc3be1b3"),
         reading = BloodSugarReading("168", PostPrandial),
         recordedAt = Instant.parse("2020-01-05T00:00:00Z")
@@ -62,17 +62,17 @@ class BloodSugarHistoryListItemTest {
   @Test
   fun `if two blood sugars are recorded in same date, then show blood sugar date and time`() {
     // when
-    val bloodSugar1 = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar1 = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("b0001467-88b2-44ad-b046-7b7d5f905979"),
         reading = BloodSugarReading("250", PostPrandial),
         recordedAt = Instant.parse("2020-01-16T10:00:00Z")
     )
-    val bloodSugar2 = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar2 = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("c1dde486-feef-4e46-a70e-61139ffaf20e"),
         reading = BloodSugarReading("455", Random),
         recordedAt = Instant.parse("2020-01-16T09:00:00Z")
     )
-    val bloodSugar3 = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar3 = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("94304037-889b-476c-a95f-ecb4de897d6e"),
         reading = BloodSugarReading("650", Fasting),
         recordedAt = Instant.parse("2019-11-22T00:00:00Z")
@@ -103,13 +103,13 @@ class BloodSugarHistoryListItemTest {
     val createdAt = Instant.parse("2020-01-01T09:00:00Z")
     val testUtcClock = TestUtcClock(createdAt)
 
-    val bloodSugarNow = PatientMocker.bloodSugarMeasurement(
+    val bloodSugarNow = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("c78b2bdf-1d38-439d-b755-91414d76b031"),
         reading = BloodSugarReading("120", Random),
         recordedAt = recordedAt,
         timestamps = Timestamps.create(testUtcClock)
     )
-    val bloodSugarInPast = PatientMocker.bloodSugarMeasurement(
+    val bloodSugarInPast = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("270cf83f-913d-47c5-ab4d-dd8a742ccad2"),
         reading = BloodSugarReading("156", PostPrandial),
         recordedAt = recordedAt.minus(1, DAYS),
@@ -144,13 +144,13 @@ class BloodSugarHistoryListItemTest {
     val createdAt = Instant.parse("2020-01-01T09:00:00Z")
     val testUtcClock = TestUtcClock(createdAt)
 
-    val bloodSugarNow = PatientMocker.bloodSugarMeasurement(
+    val bloodSugarNow = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("c78b2bdf-1d38-439d-b755-91414d76b031"),
         reading = BloodSugarReading("120", Unknown("unknown-blood-sugar")),
         recordedAt = recordedAt,
         timestamps = Timestamps.create(testUtcClock)
     )
-    val bloodSugarInPast = PatientMocker.bloodSugarMeasurement(
+    val bloodSugarInPast = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("270cf83f-913d-47c5-ab4d-dd8a742ccad2"),
         reading = BloodSugarReading("156", PostPrandial),
         recordedAt = recordedAt.minus(1, DAYS),

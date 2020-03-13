@@ -21,6 +21,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -75,8 +76,8 @@ class PatientRepositoryTest {
 
   private val clock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
-  private val user = PatientMocker.loggedInUser()
-  private val facility = PatientMocker.facility()
+  private val user = TestData.loggedInUser()
+  private val facility = TestData.facility()
   private val schedulersProvider = TestSchedulersProvider()
 
   @Before
@@ -124,10 +125,10 @@ class PatientRepositoryTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
-    val localPatientCopy = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
+    val localPatientCopy = TestData.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(patientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
 
-    val serverAddress = PatientMocker.address(uuid = addressUuid).toPayload()
+    val serverAddress = TestData.patientAddress(uuid = addressUuid).toPayload()
     val serverPatientWithoutPhone = PatientPayload(
         uuid = patientUuid,
         fullName = "name",
@@ -174,10 +175,10 @@ class PatientRepositoryTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
-    val localPatientCopy = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
+    val localPatientCopy = TestData.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(patientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
 
-    val serverAddress = PatientMocker.address(uuid = addressUuid).toPayload()
+    val serverAddress = TestData.patientAddress(uuid = addressUuid).toPayload()
     val serverPatientWithPhone = PatientPayload(
         uuid = patientUuid,
         fullName = "name",
@@ -229,7 +230,7 @@ class PatientRepositoryTest {
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
     whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(filteredUuids))
     whenever(patientSearchResultDao.searchByIds(any(), any()))
-        .thenReturn(Single.just(filteredUuids.map { PatientMocker.patientSearchResult(uuid = it) }))
+        .thenReturn(Single.just(filteredUuids.map { TestData.patientSearchResult(uuid = it) }))
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
     repository
@@ -275,7 +276,7 @@ class PatientRepositoryTest {
   private fun `params for sorting results for fuzzy search`(): List<List<Any>> {
     fun generateTestData(numberOfResults: Int): List<Any> {
       val filteredUuids = (1..numberOfResults).map { UUID.randomUUID() }
-      val results = filteredUuids.map { PatientMocker.patientSearchResult(uuid = it) }.shuffled()
+      val results = filteredUuids.map { TestData.patientSearchResult(uuid = it) }.shuffled()
       val expectedResults = filteredUuids.map { uuid -> results.find { it.uuid == uuid }!! }
 
       assertThat(results.map { it.uuid }).isNotEqualTo(filteredUuids)
@@ -318,7 +319,7 @@ class PatientRepositoryTest {
         )
     whenever(patientSearchResultDao.searchByIds(any(), any()))
         .thenReturn(
-            BehaviorSubject.createDefault(listOf(PatientMocker.patientSearchResult(uuid = patientUuid)))
+            BehaviorSubject.createDefault(listOf(TestData.patientSearchResult(uuid = patientUuid)))
                 .doOnNext { schedulersProvider.testScheduler.advanceTimeBy(timeTakenToFetchPatientDetails) }
                 .firstOrError()
         )

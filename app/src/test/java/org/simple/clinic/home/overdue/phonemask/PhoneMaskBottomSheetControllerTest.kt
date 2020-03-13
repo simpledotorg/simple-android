@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
@@ -50,14 +50,14 @@ class PhoneMaskBottomSheetControllerTest {
   private val patientRepository: PatientRepository = mock()
   private val clock = TestUserClock()
 
-  private val patient = PatientMocker.patient(
+  private val patient = TestData.patient(
       uuid = patientUuid,
       fullName = "Anish Acharya",
       gender = Male,
       age = Age(30, updatedAt = Instant.now(clock)),
       dateOfBirth = null
   )
-  private val phoneNumber = PatientMocker.phoneNumber(
+  private val phoneNumber = TestData.patientPhoneNumber(
       uuid = UUID.fromString("fe364a55-118a-4f0f-bb64-b7b0ca2e8282"),
       patientUuid = patientUuid,
       number = "1234567890"

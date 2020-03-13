@@ -10,7 +10,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
@@ -37,7 +37,7 @@ class ConfirmRemoveBloodSugarEffectHandlerTest {
     // given
     val patientUuid = UUID.fromString("8fb98b2b-84d7-4e19-a5bc-3a57c3f53982")
     val bloodSugarMeasurementUuid = UUID.fromString("7693aafb-9044-4ef3-999a-5ecda2895415")
-    val bloodSugarMeasurement = PatientMocker.bloodSugarMeasurement(
+    val bloodSugarMeasurement = TestData.bloodSugarMeasurement(
         uuid = bloodSugarMeasurementUuid,
         patientUuid = patientUuid
     )

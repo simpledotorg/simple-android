@@ -10,7 +10,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
@@ -39,10 +39,10 @@ class PrescriptionRepositoryTest {
   ) {
     val prescriptionUuid = UUID.randomUUID()
 
-    val localCopy = PatientMocker.prescription(prescriptionUuid, syncStatus = syncStatusOfLocalCopy)
+    val localCopy = TestData.prescription(prescriptionUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(dao.getOne(prescriptionUuid)).thenReturn(localCopy)
 
-    val serverBp = PatientMocker.prescription(prescriptionUuid, syncStatus = SyncStatus.DONE).toPayload()
+    val serverBp = TestData.prescription(prescriptionUuid, syncStatus = SyncStatus.DONE).toPayload()
     repository.mergeWithLocalData(listOf(serverBp)).blockingAwait()
 
     if (serverRecordExpectedToBeSaved) {

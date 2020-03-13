@@ -9,7 +9,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.DataSync
@@ -38,7 +38,7 @@ class SyncAndClearPatientDataTest {
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
 
-    val user = PatientMocker.loggedInUser()
+    val user = TestData.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
     var bruteForceReset = false
@@ -65,7 +65,7 @@ class SyncAndClearPatientDataTest {
     )
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
-    val user = PatientMocker.loggedInUser()
+    val user = TestData.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
     createTestInstance(syncRetryCount = 2)
@@ -85,7 +85,7 @@ class SyncAndClearPatientDataTest {
     )
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
-    val user = PatientMocker.loggedInUser()
+    val user = TestData.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
     createTestInstance(syncRetryCount = 2)
@@ -101,7 +101,7 @@ class SyncAndClearPatientDataTest {
     whenever(patientRepository.clearPatientData()) doReturn Completable.complete()
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
-    val user = PatientMocker.loggedInUser()
+    val user = TestData.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
     createTestInstance().run()
@@ -117,7 +117,7 @@ class SyncAndClearPatientDataTest {
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
-    val user = PatientMocker.loggedInUser()
+    val user = TestData.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
     createTestInstance().run()
@@ -133,7 +133,7 @@ class SyncAndClearPatientDataTest {
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
     whenever(bruteForceProtection.resetFailedAttempts()) doReturn Completable.complete()
 
-    val user = PatientMocker.loggedInUser()
+    val user = TestData.loggedInUser()
     whenever(userDao.user()) doReturn Flowable.just(listOf(user))
 
     createTestInstance().run()

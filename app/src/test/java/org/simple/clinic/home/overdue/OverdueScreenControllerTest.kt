@@ -19,7 +19,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.user.UserSession
@@ -44,8 +44,8 @@ class OverdueScreenControllerTest {
   private val configStream: Subject<PhoneNumberMaskerConfig> = PublishSubject.create()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
-  private val facility = PatientMocker.facility()
-  private val user = PatientMocker.loggedInUser()
+  private val facility = TestData.facility()
+  private val user = TestData.loggedInUser()
   private val dateOnClock = LocalDate.parse("2018-01-01")
   private val userClock = TestUserClock(dateOnClock)
 
@@ -125,8 +125,8 @@ class OverdueScreenControllerTest {
   fun `when screen is created then the overdue appointments must be displayed`() {
     // given
     val overdueAppointments = listOf(
-        PatientMocker.overdueAppointment(isHighRisk = true),
-        PatientMocker.overdueAppointment(isHighRisk = false)
+        TestData.overdueAppointment(isHighRisk = true),
+        TestData.overdueAppointment(isHighRisk = false)
     )
     whenever(repository.overdueAppointments(dateOnClock, facility))
         .thenReturn(Observable.just(overdueAppointments))

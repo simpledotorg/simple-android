@@ -33,7 +33,7 @@ import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
@@ -53,6 +53,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale.ENGLISH
+import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientEntryScreenLogicTest {
@@ -79,7 +80,14 @@ class PatientEntryScreenLogicTest {
 
   @Before
   fun setUp() {
-    whenever(facilityRepository.currentFacility(userSession)).doReturn(Observable.just(PatientMocker.facility()))
+    whenever(facilityRepository.currentFacility(userSession))
+        .doReturn(Observable.just(TestData.facility(
+            uuid = UUID.fromString("563c12be-fe24-4e19-a02a-dd87c18ff767"),
+            villageOrColony = "village",
+            district = "district",
+            state = "state",
+            streetAddress = "street"
+        )))
     whenever(patientRepository.ongoingEntry()).doReturn(Single.never())
 
     val effectHandler = PatientEntryEffectHandler.create(

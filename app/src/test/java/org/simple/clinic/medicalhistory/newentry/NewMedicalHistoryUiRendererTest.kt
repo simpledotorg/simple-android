@@ -13,18 +13,18 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DI
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class NewMedicalHistoryUiRendererTest {
 
-  private val facilityWithDiabetesManagementEnabled = PatientMocker
+  private val facilityWithDiabetesManagementEnabled = TestData
       .facility(
           uuid = UUID.fromString("fb08c52e-24ac-4fa8-8573-13edd2f06232"),
           facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
       )
 
-  private val facilityWithDiabetesManagementDisabled = PatientMocker
+  private val facilityWithDiabetesManagementDisabled = TestData
       .facility(
           uuid = UUID.fromString("66a52e56-b773-4692-b19c-a58636c6d85a"),
           facilityConfig = FacilityConfig(diabetesManagementEnabled = false)

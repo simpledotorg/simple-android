@@ -6,7 +6,7 @@ import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -25,15 +25,15 @@ class OverdueAppointmentRowTest {
     // given
     val oneYear = Duration.ofDays(365)
 
-    val appointmentDelayedBy4Days = PatientMocker
+    val appointmentDelayedBy4Days = TestData
         .overdueAppointment(
             name = "Anish Acharya",
             isHighRisk = false,
             gender = Gender.Male,
             dateOfBirth = LocalDate.parse("1985-01-01"),
             age = null,
-            phoneNumber = PatientMocker.phoneNumber(number = "123456"),
-            appointment = PatientMocker.appointment(
+            phoneNumber = TestData.patientPhoneNumber(number = "123456"),
+            appointment = TestData.appointment(
                 uuid = UUID.fromString("65d790f3-a9ea-4a83-bce1-8d1ea8539c67"),
                 patientUuid = UUID.fromString("c88a4835-40e5-476b-9a6f-2f850c48ecdb"),
                 scheduledDate = LocalDate.parse("2019-01-01")
@@ -42,15 +42,15 @@ class OverdueAppointmentRowTest {
             diagnosedWithDiabetes = Yes,
             diagnosedWithHypertension = No
         )
-    val appointmentDelayedByOneWeek = PatientMocker
+    val appointmentDelayedByOneWeek = TestData
         .overdueAppointment(
             name = "Deepa",
             isHighRisk = true,
             gender = Gender.Female,
             dateOfBirth = null,
             age = Age(45, Instant.now(userClock).minus(oneYear)),
-            phoneNumber = PatientMocker.phoneNumber(number = "45678912"),
-            appointment = PatientMocker.appointment(
+            phoneNumber = TestData.patientPhoneNumber(number = "45678912"),
+            appointment = TestData.appointment(
                 uuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
                 patientUuid = UUID.fromString("0c35a015-d823-4cc5-be77-21ce026c5780"),
                 scheduledDate = LocalDate.parse("2018-12-29")

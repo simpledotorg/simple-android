@@ -28,7 +28,7 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.main.TheActivityController
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
@@ -108,7 +108,8 @@ class TheActivityControllerTest {
       shouldShowAppLock: Boolean
   ) {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = loggedInStatus))))
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = loggedInStatus, status = UserStatus.ApprovedForSyncing))))
 
     val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
@@ -151,7 +152,7 @@ class TheActivityControllerTest {
   fun `when app is started unlocked and lock timer hasn't expired yet then the timer should be unset`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = LOGGED_IN))))
+        .thenReturn(Observable.just(Just(TestData.loggedInUser(loggedInStatus = LOGGED_IN, status = UserStatus.ApprovedForSyncing))))
 
     val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
@@ -184,7 +185,7 @@ class TheActivityControllerTest {
       nextLoggedInStatus: User.LoggedInStatus,
       shouldShowLoggedOutAlert: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
+    val user = TestData.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(
@@ -209,7 +210,7 @@ class TheActivityControllerTest {
       status: UserStatus,
       expectedKeyType: Class<FullScreenKey>
   ) {
-    val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus, status = status)
+    val user = TestData.loggedInUser(loggedInStatus = loggedInStatus, status = status)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
 
     assertThat(controller.initialScreenKey()).isInstanceOf(expectedKeyType)
@@ -326,7 +327,7 @@ class TheActivityControllerTest {
   fun `when user is denied access then access denied screen should show`() {
     //given
     val fullName = "Anish Acharya"
-    val loggedInUser = PatientMocker.loggedInUser(
+    val loggedInUser = TestData.loggedInUser(
         uuid = UUID.fromString("0b350f89-ed0e-4922-b384-7f7a9bf3aba0"),
         name = fullName,
         status = UserStatus.DisapprovedForSyncing,
@@ -351,7 +352,7 @@ class TheActivityControllerTest {
   fun `when user has access then the access denied screen should not appear`() {
     //given
     val fullName = "Anish Acharya"
-    val loggedInUser = PatientMocker.loggedInUser(
+    val loggedInUser = TestData.loggedInUser(
         uuid = UUID.fromString("0b350f89-ed0e-4922-b384-7f7a9bf3aba0"),
         name = fullName,
         status = UserStatus.ApprovedForSyncing,

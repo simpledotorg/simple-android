@@ -40,7 +40,7 @@ import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -83,9 +83,9 @@ class BloodPressureEntrySheetLogicTest {
   private val userSession = mock<UserSession>()
 
   private val facilityRepository = mock<FacilityRepository>()
-  private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
 
-  private val facility = PatientMocker.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
+  private val facility = TestData.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
 
   private val uiRenderer = BloodPressureEntryUiRenderer(ui)
   private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
@@ -230,7 +230,7 @@ class BloodPressureEntrySheetLogicTest {
     val bpUuid = UUID.fromString("8ddd7237-f331-4d34-9ce6-a3cd0c4c8133")
     return listOf(
         listOf(New(patientUuid), null),
-        listOf(Update(bpUuid), PatientMocker.bloodPressureMeasurement(uuid = bpUuid, patientUuid = patientUuid))
+        listOf(Update(bpUuid), TestData.bloodPressureMeasurement(uuid = bpUuid, patientUuid = patientUuid))
     )
   }
 
@@ -240,7 +240,7 @@ class BloodPressureEntrySheetLogicTest {
       openAs: OpenAs,
       shouldShowRemoveBpButton: Boolean
   ) {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bloodPressureMeasurement()))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(TestData.bloodPressureMeasurement()))
 
     sheetCreated(openAs)
 
@@ -264,7 +264,7 @@ class BloodPressureEntrySheetLogicTest {
       openAs: OpenAs,
       showEntryTitle: Boolean
   ) {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bloodPressureMeasurement()))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(TestData.bloodPressureMeasurement()))
 
     sheetCreated(openAs)
 
@@ -284,7 +284,7 @@ class BloodPressureEntrySheetLogicTest {
 
   @Test
   fun `when the remove button is clicked, the confirmation alert must be shown`() {
-    val bloodPressure = PatientMocker.bloodPressureMeasurement()
+    val bloodPressure = TestData.bloodPressureMeasurement()
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressure))
 
     sheetCreatedForUpdate(bloodPressure.uuid)
@@ -329,7 +329,7 @@ class BloodPressureEntrySheetLogicTest {
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 2, 13)
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
-    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(TestData.bloodPressureMeasurement(patientUuid = patientUuid)))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
     sheetCreatedForNew(patientUuid)
@@ -365,7 +365,7 @@ class BloodPressureEntrySheetLogicTest {
   @Test
   fun `when save is clicked while updating a BP, date entry is active and input is valid then the updated BP measurement should be saved`() {
     val oldCreatedAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
-    val existingBp = PatientMocker.bloodPressureMeasurement(
+    val existingBp = TestData.bloodPressureMeasurement(
         userUuid = user.uuid,
         facilityUuid = facility.uuid,
         systolic = 9000,
@@ -376,7 +376,7 @@ class BloodPressureEntrySheetLogicTest {
     )
 
     val newInputDate = LocalDate.of(1991, 2, 14)
-    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(PatientMocker.bloodPressureMeasurement()))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(TestData.bloodPressureMeasurement()))
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp))
     whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
@@ -553,7 +553,7 @@ class BloodPressureEntrySheetLogicTest {
   fun `when screen is opened for updating an existing BP, then the date should be prefilled with the BP's recorded date`() {
     val recordedAtDate = LocalDate.of(2018, 4, 23)
     val recordedAtDateAsInstant = recordedAtDate.atStartOfDay().toInstant(UTC)
-    val existingBp = PatientMocker.bloodPressureMeasurement(recordedAt = recordedAtDateAsInstant)
+    val existingBp = TestData.bloodPressureMeasurement(recordedAt = recordedAtDateAsInstant)
 
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp, existingBp))
 
@@ -594,7 +594,7 @@ class BloodPressureEntrySheetLogicTest {
 
   @Test
   fun `whenever the BP sheet is shown to update an existing BP, then show the BP date`() {
-    val bp = PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)
+    val bp = TestData.bloodPressureMeasurement(patientUuid = patientUuid)
     val recordedDate = bp.recordedAt.toLocalDateAtZone(testUserClock.zone)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
@@ -694,7 +694,7 @@ class BloodPressureEntrySheetLogicTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    val bp = PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)
+    val bp = TestData.bloodPressureMeasurement(patientUuid = patientUuid)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
     sheetCreatedForUpdate(bp.uuid)
@@ -721,7 +721,7 @@ class BloodPressureEntrySheetLogicTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    val bp = PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)
+    val bp = TestData.bloodPressureMeasurement(patientUuid = patientUuid)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
     sheetCreatedForUpdate(bp.uuid)
@@ -802,7 +802,7 @@ class BloodPressureEntrySheetLogicTest {
     val inputDate = LocalDate.of(1916, 5, 10)
 
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any()))
-        .doReturn(Single.just(PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)))
+        .doReturn(Single.just(TestData.bloodPressureMeasurement(patientUuid = patientUuid)))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
@@ -840,7 +840,7 @@ class BloodPressureEntrySheetLogicTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
     val createdAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
-    val existingBp = PatientMocker.bloodPressureMeasurement(
+    val existingBp = TestData.bloodPressureMeasurement(
         userUuid = user.uuid,
         facilityUuid = facility.uuid,
         patientUuid = patientUuid,
@@ -895,15 +895,15 @@ class BloodPressureEntrySheetLogicTest {
   fun `when a different user clicks on save while updating a BP, then the updated BP measurement should be saved with the user's ID and the corresponding facility ID`() {
     // given
     reset(userSession, facilityRepository)
-    val userFromDifferentFacility = PatientMocker.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
-    val differentFacility = PatientMocker.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
+    val userFromDifferentFacility = TestData.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
+    val differentFacility = TestData.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
 
     whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(userFromDifferentFacility))
     whenever(facilityRepository.currentFacility(userFromDifferentFacility)).doReturn(Observable.just(differentFacility))
 
     val oldCreatedAt = Instant.parse("1990-01-13T00:00:00Z")
     val patientUuid = UUID.fromString("af92b081-0131-4f91-9c28-98da5737945b")
-    val existingBp = PatientMocker.bloodPressureMeasurement(
+    val existingBp = TestData.bloodPressureMeasurement(
         uuid = patientUuid,
         userUuid = user.uuid,
         facilityUuid = facility.uuid,
@@ -956,8 +956,8 @@ class BloodPressureEntrySheetLogicTest {
   fun `when done button is clicked by a user from a different facility in update BP entry, then save BP with entered date immediately`() {
     // given
     reset(userSession, facilityRepository)
-    val userFromDifferentFacility = PatientMocker.loggedInUser(uuid = UUID.fromString("e246c4fb-5a8d-418a-b80a-9e9d12ca1a8c"))
-    val differentFacility = PatientMocker.facility(uuid = UUID.fromString("d9ea6458-fbe2-4d59-b1ac-7dc77b234486"))
+    val userFromDifferentFacility = TestData.loggedInUser(uuid = UUID.fromString("e246c4fb-5a8d-418a-b80a-9e9d12ca1a8c"))
+    val differentFacility = TestData.facility(uuid = UUID.fromString("d9ea6458-fbe2-4d59-b1ac-7dc77b234486"))
 
     whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(userFromDifferentFacility))
     whenever(facilityRepository.currentFacility(userFromDifferentFacility)).doReturn(Observable.just(differentFacility))
@@ -965,7 +965,7 @@ class BloodPressureEntrySheetLogicTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
     val createdAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
-    val existingBp = PatientMocker.bloodPressureMeasurement(
+    val existingBp = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("20d6aba0-80a9-4ab1-b0b6-5261a53f5fe5"),
         userUuid = user.uuid,
         facilityUuid = facility.uuid,

@@ -18,7 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -39,8 +39,8 @@ class CustomPrescriptionEntryControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val user = PatientMocker.loggedInUser()
-  private val facility = PatientMocker.facility()
+  private val user = TestData.loggedInUser()
+  private val facility = TestData.facility()
   private val userSubject = PublishSubject.create<User>()
 
   private val controller = CustomPrescriptionEntryController(prescriptionRepository, userSession, facilityRepository)
@@ -169,7 +169,7 @@ class CustomPrescriptionEntryControllerTest {
 
   @Test
   fun `when sheet is opened to edit prescription then the drug name and dosage should be pre-filled`() {
-    val prescription = PatientMocker.prescription(uuid = prescriptionUuid)
+    val prescription = TestData.prescription(uuid = prescriptionUuid)
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescription))
 
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
@@ -180,7 +180,7 @@ class CustomPrescriptionEntryControllerTest {
 
   @Test
   fun `when sheet is opened in edit mode and save is clicked after making changes, then the prescription should be updated`() {
-    val prescribedDrug = PatientMocker.prescription(uuid = prescriptionUuid, name = "Atnlol", dosage = "20mg")
+    val prescribedDrug = TestData.prescription(uuid = prescriptionUuid, name = "Atnlol", dosage = "20mg")
 
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescribedDrug))
     whenever(prescriptionRepository.updatePrescription(any())).thenReturn(Completable.complete())
@@ -207,7 +207,7 @@ class CustomPrescriptionEntryControllerTest {
 
   @Test
   fun `when prescription is deleted then close the sheet`() {
-    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(PatientMocker.prescription(uuid = prescriptionUuid, isDeleted = true)))
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(TestData.prescription(uuid = prescriptionUuid, isDeleted = true)))
 
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
 

@@ -15,7 +15,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.user.UserSession
@@ -40,19 +40,19 @@ class EditPatientEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
-  private val patientAddress = PatientMocker.address(uuid = UUID.fromString("85d0b5f1-af84-4a6b-938e-5166f8c27666"))
-  private val patient = PatientMocker.patient(
+  private val patientAddress = TestData.patientAddress(uuid = UUID.fromString("85d0b5f1-af84-4a6b-938e-5166f8c27666"))
+  private val patient = TestData.patient(
       uuid = UUID.fromString("c9c9d4db-cd80-4b67-bf69-378de9656b49"),
       addressUuid = patientAddress.uuid,
       age = null,
       dateOfBirth = LocalDate.now(userClock).minusYears(30)
   )
-  private val phoneNumber = PatientMocker.phoneNumber(
+  private val phoneNumber = TestData.patientPhoneNumber(
       uuid = UUID.fromString("61638775-2815-4f59-b513-643cc2fe3c90"),
       patientUuid = patient.uuid
   )
 
-  private val bangladeshNationalId = PatientMocker.businessId(
+  private val bangladeshNationalId = TestData.businessId(
       uuid = UUID.fromString("77bd5387-641b-42f8-ab8d-d662bcee9b00"),
       patientUuid = patient.uuid,
       identifier = Identifier(value = "1234567890abcd", type = Identifier.IdentifierType.BangladeshNationalId)
@@ -66,8 +66,8 @@ class EditPatientEffectHandlerTest {
       bangladeshNationalId = null
   )
 
-  private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("3c3d0057-d6f6-42be-9bf6-5ccacb8bc54d"))
-  private val facility = PatientMocker.facility(uuid = UUID.fromString("d6685d51-f882-4995-b922-a6c637eed0a5"))
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("3c3d0057-d6f6-42be-9bf6-5ccacb8bc54d"))
+  private val facility = TestData.facility(uuid = UUID.fromString("d6685d51-f882-4995-b922-a6c637eed0a5"))
 
   private val effectHandler = EditPatientEffectHandler(
       ui = ui,

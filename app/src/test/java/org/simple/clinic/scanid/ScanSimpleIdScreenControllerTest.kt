@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -182,7 +182,7 @@ class ScanSimpleIdScreenControllerTest {
 
     return listOf(
         testCase(None),
-        testCase(PatientMocker.patient().toOptional())
+        testCase(TestData.patient().toOptional())
     )
   }
 

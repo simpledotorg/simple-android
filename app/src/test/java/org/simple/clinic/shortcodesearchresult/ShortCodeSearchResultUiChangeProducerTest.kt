@@ -6,7 +6,7 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.searchresultsview.PatientSearchResults
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
@@ -39,7 +39,7 @@ class ShortCodeSearchResultUiChangeProducerTest {
   fun `it shows a list of patients if found`() {
     // given
     val foundPatients = PatientSearchResults(listOf(
-        PatientMocker.patientSearchResult(uuid = UUID.fromString("be021029-4935-4400-8e5b-e57176a45517"))), emptyList(), PatientMocker.facility())
+        TestData.patientSearchResult(uuid = UUID.fromString("be021029-4935-4400-8e5b-e57176a45517"))), emptyList(), TestData.facility())
 
     val patientsFetched = ShortCodeSearchResultState
         .fetchingPatients("1234567")

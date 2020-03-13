@@ -5,7 +5,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class BloodPressureHistoryScreenUiRendererTest {
@@ -27,7 +27,7 @@ class BloodPressureHistoryScreenUiRendererTest {
   @Test
   fun `when blood pressure history is loaded, then show it on the ui`() {
     //given
-    val bloodPressure = PatientMocker.bloodPressureMeasurement(
+    val bloodPressure = TestData.bloodPressureMeasurement(
         UUID.fromString("4ca198c4-18f8-4a3d-8cc7-fc1f363241fa"),
         patientUuid
     )
@@ -44,7 +44,7 @@ class BloodPressureHistoryScreenUiRendererTest {
   @Test
   fun `when patient is loaded, then show it on the ui`() {
     //given
-    val patient = PatientMocker.patient(
+    val patient = TestData.patient(
         uuid = UUID.fromString("c80bce99-82bc-4d12-a85a-dcae373fece3")
     )
 
@@ -59,10 +59,10 @@ class BloodPressureHistoryScreenUiRendererTest {
   @Test
   fun `when both patient and blood pressure history is loaded, then show it on the ui`() {
     //given
-    val patient = PatientMocker.patient(
+    val patient = TestData.patient(
         uuid = UUID.fromString("bf8b7e71-9b99-4d7b-9dfa-55f3c5e74730")
     )
-    val bloodPressure = PatientMocker.bloodPressureMeasurement(
+    val bloodPressure = TestData.bloodPressureMeasurement(
         UUID.fromString("4ca198c4-18f8-4a3d-8cc7-fc1f363241fa"),
         patientUuid
     )

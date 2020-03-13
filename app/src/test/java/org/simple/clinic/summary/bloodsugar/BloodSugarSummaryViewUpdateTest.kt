@@ -8,7 +8,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class BloodSugarSummaryViewUpdateTest {
@@ -55,19 +55,19 @@ class BloodSugarSummaryViewUpdateTest {
 
   @Test
   fun `when see all is clicked, then show blood sugar history screen`() {
-    val bloodSugar1 = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar1 = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
         patientUuid = patientUuid
     )
-    val bloodSugar2 = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar2 = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
         patientUuid = patientUuid
     )
-    val bloodSugar3 = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar3 = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
         patientUuid = patientUuid
     )
-    val bloodSugar4 = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar4 = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"),
         patientUuid = patientUuid
     )
@@ -84,7 +84,7 @@ class BloodSugarSummaryViewUpdateTest {
 
   @Test
   fun `when blood sugar is clicked, then open blood sugar update sheet`() {
-    val bloodSugarMeasurement = PatientMocker.bloodSugarMeasurement(
+    val bloodSugarMeasurement = TestData.bloodSugarMeasurement(
         UUID.fromString("9a82720a-0445-43dd-b557-3d4b079b66ef"),
         patientUuid = patientUuid
     )

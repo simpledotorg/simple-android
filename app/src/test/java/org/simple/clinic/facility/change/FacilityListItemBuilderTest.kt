@@ -10,7 +10,7 @@ import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.DistanceCalculator
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
 
@@ -24,7 +24,7 @@ class FacilityListItemBuilderTest {
 
   @Test
   fun `search query should be correctly highlighted`() {
-    val facility = PatientMocker.facility(
+    val facility = TestData.facility(
         name = "Facility Gotham",
         streetAddress = null,
         district = "Gotham City",
@@ -50,7 +50,7 @@ class FacilityListItemBuilderTest {
 
   @Test
   fun `address should be correctly created`() {
-    val facilityWithStreet = PatientMocker.facility(
+    val facilityWithStreet = TestData.facility(
         name = "Facility Gotham",
         streetAddress = "Gotham",
         district = "Gotham City",
@@ -92,19 +92,19 @@ class FacilityListItemBuilderTest {
   fun `when user location is present and search query is empty then facilities nearby user should be correctly identified`() {
     val userLocation = Coordinates(latitude = 1.0, longitude = 1.0)
 
-    val facility1 = PatientMocker.facility(
+    val facility1 = TestData.facility(
         name = "Exactly at proximity threshold",
         location = Coordinates(0.0, 0.0))
 
-    val facility2 = PatientMocker.facility(
+    val facility2 = TestData.facility(
         name = "Within proximity threshold",
         location = Coordinates(2.0, 2.0))
 
-    val facility3 = PatientMocker.facility(
+    val facility3 = TestData.facility(
         name = "Without location",
         location = null)
 
-    val facility4 = PatientMocker.facility(
+    val facility4 = TestData.facility(
         name = "Outside of proximity threshold",
         location = Coordinates(100.0, 100.0))
 
@@ -141,11 +141,11 @@ class FacilityListItemBuilderTest {
   fun `when both user location and search query are present then nearby facilities should not be present`() {
     val userLocation = Coordinates(latitude = 1.0, longitude = 1.0)
 
-    val facility1 = PatientMocker.facility(
+    val facility1 = TestData.facility(
         name = "Within proximity threshold",
         location = Coordinates(0.0, 0.0))
 
-    val facility2 = PatientMocker.facility(
+    val facility2 = TestData.facility(
         name = "Outside of proximity threshold",
         location = Coordinates(2.0, 2.0))
 
@@ -176,11 +176,11 @@ class FacilityListItemBuilderTest {
     val userLocation = null
 
     val facilities = listOf(
-        PatientMocker.facility(
+        TestData.facility(
             name = "With location",
             location = Coordinates(latitude = 51.864038, longitude = 17.608030)
         ),
-        PatientMocker.facility(
+        TestData.facility(
             name = "Without location",
             location = null
         ))

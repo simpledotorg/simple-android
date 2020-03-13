@@ -12,7 +12,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -37,17 +37,17 @@ class DrugSummaryUiControllerTest {
   fun `patient's prescription summary should be populated`() {
     // given
     val prescriptions = listOf(
-        PatientMocker.prescription(
+        TestData.prescription(
             uuid = UUID.fromString("b99c147c-d2db-4b73-9b8e-cf8866b7daa1"),
             name = "Amlodipine",
             dosage = "10mg"
         ),
-        PatientMocker.prescription(
+        TestData.prescription(
             uuid = UUID.fromString("262752e2-1565-4140-98d8-0b1e914dbb64"),
             name = "Telmisartan",
             dosage = "9000mg"
         ),
-        PatientMocker.prescription(
+        TestData.prescription(
             uuid = UUID.fromString("f0674dbd-6981-4b79-ae3c-8b513ba1166c"),
             name = "Randomzole",
             dosage = "2 packets"

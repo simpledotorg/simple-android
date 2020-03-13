@@ -35,7 +35,7 @@ import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
@@ -131,8 +131,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
       permissionResult: RuntimePermissionResult
   ) {
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
@@ -150,8 +150,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
     configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
 
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
 
@@ -177,7 +177,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val config = configTemplate.copy(staleLocationThreshold = Duration.ofMinutes(10))
     configProvider.onNext(config)
 
-    val facilities = listOf(PatientMocker.facility(name = "Facility 1"))
+    val facilities = listOf(TestData.facility(name = "Facility 1"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
 
@@ -257,8 +257,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
     configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
 
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
@@ -282,8 +282,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
     configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
 
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
@@ -299,7 +299,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when screen is started then facilities should not be fetched if they are already available`() {
-    val facilities = listOf(PatientMocker.facility())
+    val facilities = listOf(TestData.facility())
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
@@ -313,8 +313,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
   @Test
   fun `when search query is changed then the query should be used for fetching filtered facilities`() {
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
@@ -366,8 +366,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when facilities are received then their UI models for facility list should be created`() {
-    val facility1 = PatientMocker.facility(name = "Facility 1")
-    val facility2 = PatientMocker.facility(name = "Facility 2")
+    val facility1 = TestData.facility(name = "Facility 1")
+    val facility2 = TestData.facility(name = "Facility 2")
     val facilities = listOf(facility1, facility2)
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities, facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size, facilities.size))
@@ -402,7 +402,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
 
-    val facility1 = PatientMocker.facility(name = "Hoshiarpur", uuid = UUID.randomUUID())
+    val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.randomUUID())
     uiEvents.onNext(RegistrationFacilityClicked(facility1))
 
     verify(screen).openRegistrationScreen()

@@ -15,7 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
@@ -57,7 +57,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
   @Test
   fun `when dialog is created, the existing phone number should be pre-filled`() {
-    val phoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
 
     uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
@@ -68,7 +68,7 @@ class UpdatePhoneNumberDialogControllerTest {
   @Test
   fun `when save is clicked, the number should be saved if it's valid`() {
     val newNumber = "1234567890"
-    val existingPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid, number = "0987654321")
+    val existingPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid, number = "0987654321")
 
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(VALID)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
@@ -86,7 +86,7 @@ class UpdatePhoneNumberDialogControllerTest {
       validationError: Result
   ) {
     val newNumber = "123"
-    val existingPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid, number = "old-number")
+    val existingPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid, number = "old-number")
 
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
@@ -104,7 +104,7 @@ class UpdatePhoneNumberDialogControllerTest {
       validationError: Result
   ) {
     val newNumber = "123"
-    val existingPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid, number = "old-number")
+    val existingPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid, number = "old-number")
 
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
@@ -122,7 +122,7 @@ class UpdatePhoneNumberDialogControllerTest {
 
   @Test
   fun `when cancel is clicked then the existing number should be saved again`() {
-    val existingPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid)
+    val existingPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)).thenReturn(Completable.complete())
 

@@ -9,6 +9,7 @@ import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User
@@ -40,6 +41,9 @@ class BloodPressureRepositoryAndroidTest {
   @Inject
   lateinit var user: User
 
+  @Inject
+  lateinit var facility: Facility
+
   private val authenticationRule = LocalAuthenticationRule()
 
   private val rxErrorsRule = RxErrorsRule()
@@ -67,7 +71,7 @@ class BloodPressureRepositoryAndroidTest {
             systolic = 120,
             diastolic = 80,
             loggedInUser = user,
-            currentFacility = testData.qaFacility(),
+            currentFacility = facility,
             recordedAt = now)
         .blockingGet()
 

@@ -10,12 +10,14 @@ import org.junit.runner.RunWith
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
+import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
@@ -40,6 +42,12 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
   @Inject
   lateinit var testData: TestData
 
+  @Inject
+  lateinit var user: User
+
+  @Inject
+  lateinit var facility: Facility
+
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = BatchSize.VERY_SMALL,
@@ -61,9 +69,16 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.appointment(syncStatus)
+  override fun generateRecord(syncStatus: SyncStatus) = testData.appointment(
+      syncStatus = syncStatus,
+      facilityUuid = facility.uuid,
+      creationFacilityUuid = facility.uuid
+  )
 
-  override fun generatePayload() = testData.appointmentPayload()
+  override fun generatePayload() = testData.appointmentPayload(
+      facilityUuid = facility.uuid,
+      creationFacilityUuid = facility.uuid
+  )
 
   override fun lastPullToken() = lastPullToken
 

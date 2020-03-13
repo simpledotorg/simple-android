@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.storage.Timestamps
@@ -39,6 +40,9 @@ class BloodSugarRepositoryAndroidTest {
   @Inject
   lateinit var user: User
 
+  @Inject
+  lateinit var facility: Facility
+
   private val authenticationRule = LocalAuthenticationRule()
 
   private val rxErrorsRule = RxErrorsRule()
@@ -61,7 +65,6 @@ class BloodSugarRepositoryAndroidTest {
     val bloodSugarReading = BloodSugarReading(value = "50", type = Random)
     val now = Instant.now(clock)
     val patientUuid = UUID.fromString("a5921ec9-5c70-421a-bb0b-1291364683f6")
-    val facility = testData.qaFacility()
 
     val expectedBloodSugarMeasurement = BloodSugarMeasurement(
         uuid = bloodSugarUuid,

@@ -2,7 +2,6 @@ package org.simple.clinic.drugs
 
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import io.bloco.faker.Faker
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,9 +37,6 @@ class PrescriptionRepositoryAndroidTest {
 
   @Inject
   lateinit var userSession: UserSession
-
-  @Inject
-  lateinit var faker: Faker
 
   @Inject
   lateinit var testData: TestData

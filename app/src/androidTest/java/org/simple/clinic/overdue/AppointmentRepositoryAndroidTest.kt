@@ -2,7 +2,6 @@ package org.simple.clinic.overdue
 
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import io.bloco.faker.Faker
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
@@ -54,7 +53,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
 class AppointmentRepositoryAndroidTest {
@@ -82,9 +80,6 @@ class AppointmentRepositoryAndroidTest {
 
   @Inject
   lateinit var testData: TestData
-
-  @Inject
-  lateinit var faker: Faker
 
   @Inject
   lateinit var clock: TestUtcClock

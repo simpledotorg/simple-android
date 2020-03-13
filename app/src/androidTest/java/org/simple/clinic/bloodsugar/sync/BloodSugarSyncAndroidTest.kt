@@ -75,7 +75,7 @@ class BloodSugarSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodSugarMeasu
   override fun generateRecord(syncStatus: SyncStatus) = testData.bloodSugarMeasurement(syncStatus = syncStatus, userUuid = user.uuid)
 
   // TODO (SM): Remove blood sugar type once HbA1c sync is enabled
-  override fun generatePayload() = testData.bloodSugarPayload(bloodSugarType = Random)
+  override fun generatePayload() = testData.bloodSugarPayload(bloodSugarType = Random, userUuid = user.uuid)
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 

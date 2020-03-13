@@ -58,7 +58,7 @@ class UserSessionAndroidTest {
   fun when_logging_in_from_registration_entry_user_should_be_logged_in_locally() {
     val selectedFacility = testData.qaFacility()
     val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(
-        uuid = testData.qaUserUuid(),
+        uuid = user.uuid,
         registrationFacility = selectedFacility
     )
     userSession.saveOngoingRegistrationEntry(ongoingRegistrationEntry)

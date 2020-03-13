@@ -41,6 +41,9 @@ class UserSessionAndroidTest {
   @Inject
   lateinit var selectedCountryPreference: Preference<Optional<Country>>
 
+  @Inject
+  lateinit var user: User
+
   @get:Rule
   val ruleChain = RuleChain
       .outerRule(LocalAuthenticationRule())
@@ -67,7 +70,7 @@ class UserSessionAndroidTest {
     assertThat(loggedInUser!!.status).isEqualTo(UserStatus.WaitingForApproval)
 
     val currentFacility = facilityRepository
-        .currentFacility(testData.qaUser())
+        .currentFacility(user)
         .blockingFirst()
     assertThat(currentFacility.uuid).isEqualTo(selectedFacility.uuid)
 
@@ -77,9 +80,6 @@ class UserSessionAndroidTest {
 
   @Test
   fun when_user_is_logged_out_then_all_app_data_should_get_cleared() {
-    assertThat(userSession.loggedInUser().blockingFirst())
-        .isEqualTo(testData.qaUser().toOptional())
-
     userSession.logout().blockingGet()
 
     assertThat(userSession.loggedInUser().blockingFirst())

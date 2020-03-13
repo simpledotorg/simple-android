@@ -78,7 +78,7 @@ class TestData @Inject constructor(
     private val userClock: TestUserClock
 ) {
 
-  fun qaUser() = userSession.loggedInUserImmediate()!!
+  private fun qaUser() = userSession.loggedInUserImmediate()!!
 
   fun qaUserUuid() = qaUser().uuid
 
@@ -852,7 +852,7 @@ class TestData @Inject constructor(
       reading: BloodSugarReading = BloodSugarReading(faker.number.between(30, 1000).toString(), Random),
       patientUuid: UUID = UUID.randomUUID(),
       recordedAt: Instant = Instant.now(userClock),
-      userUuid: UUID = qaUser().uuid,
+      userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
       facilityUuid: UUID = qaUserFacilityUuid(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),

@@ -40,6 +40,28 @@
         <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_56"
+          android:layout_marginBottom="@dimen/spacing_4"
+          android:orientation="horizontal">
+
+          <TextView
+            style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/overduelist_diagnosis_label" />
+
+          <TextView
+            android:id="@+id/diagnosisTextView"
+            style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_8"
+            tools:text="Hypertension, Diabetes" />
+        </LinearLayout>
+
+        <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_marginBottom="@dimen/spacing_4"
           android:layout_marginStart="@dimen/spacing_56"
           android:orientation="horizontal">
@@ -48,15 +70,14 @@
             style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/overduelist_last_seen"
-            android:textAllCaps="true" />
+            android:text="@string/overduelist_visited" />
 
           <TextView
             android:id="@+id/patientLastSeenTextView"
             style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_4"
+            android:layout_marginStart="@dimen/spacing_8"
             tools:text="01-01-2020" />
         </LinearLayout>
 

@@ -9,7 +9,6 @@ import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
-import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
@@ -58,15 +57,13 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import java.net.URI
 import java.util.UUID
-import javax.inject.Inject
 import kotlin.reflect.KClass
 
 private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
   return enumClass.java.enumConstants!!.asList().shuffled().first()
 }
 
-@AppScope
-class TestData @Inject constructor() {
+object TestData {
 
   private val faker = Faker("en-IND")
 
@@ -289,9 +286,9 @@ class TestData @Inject constructor() {
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
       meta: String = run {
         BusinessIdMetaData.BpPassportMetaDataV1(
-                assigningUserUuid = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
-                assigningFacilityUuid = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe")
-            )
+            assigningUserUuid = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
+            assigningFacilityUuid = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe")
+        )
         ""
       },
       createdAt: Instant = Instant.now(),

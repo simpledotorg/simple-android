@@ -5,7 +5,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class BloodSugarHistoryScreenUiRendererTest {
@@ -26,7 +26,7 @@ class BloodSugarHistoryScreenUiRendererTest {
   @Test
   fun `when patient is loaded, then show it on the ui`() {
     // given
-    val patient = PatientMocker.patient(patientUuid)
+    val patient = TestData.patient(patientUuid)
 
     // when
     renderer.render(defaultModel.patientLoaded(patient))
@@ -39,7 +39,7 @@ class BloodSugarHistoryScreenUiRendererTest {
   @Test
   fun `when blood sugar history is loaded, then show it on the ui`() {
     // given
-    val bloodSugar = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("bfeed199-ca34-4503-aac9-8903f9501c5b"),
         patientUuid = patientUuid
     )

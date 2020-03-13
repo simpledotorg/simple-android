@@ -6,7 +6,7 @@ import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.summary.OpenIntention.*
 import java.util.UUID
 
@@ -38,13 +38,13 @@ class PatientSummaryInitTest {
     val addressUuid = UUID.fromString("27f25667-44de-4717-b235-f75f5456af1d")
 
     val profile = PatientSummaryProfile(
-        patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid),
-        address = PatientMocker.address(uuid = addressUuid),
+        patient = TestData.patient(uuid = patientUuid, addressUuid = addressUuid),
+        address = TestData.patientAddress(uuid = addressUuid),
         phoneNumber = null,
         bpPassport = null,
         bangladeshNationalId = null
     )
-    val facility = PatientMocker.facility(uuid = UUID.fromString("fc5b49de-0e07-4d33-8b77-6611b47cb403"))
+    val facility = TestData.facility(uuid = UUID.fromString("fc5b49de-0e07-4d33-8b77-6611b47cb403"))
 
     val model = defaultModel
         .completedCheckForInvalidPhone()

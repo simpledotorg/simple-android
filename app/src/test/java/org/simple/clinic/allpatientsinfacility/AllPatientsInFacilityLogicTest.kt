@@ -8,7 +8,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -20,8 +20,8 @@ class AllPatientsInFacilityLogicTest {
   private val modelUpdates = PublishSubject.create<AllPatientsInFacilityModel>()
   private val testObserver = modelUpdates.test()
 
-  private val facility = PatientMocker.facility(UUID.fromString("1be5097b-1c9f-4f78-aa70-9b907f241669"))
-  private val user = PatientMocker.loggedInUser()
+  private val facility = TestData.facility(UUID.fromString("1be5097b-1c9f-4f78-aa70-9b907f241669"))
+  private val user = TestData.loggedInUser()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
@@ -96,7 +96,7 @@ class AllPatientsInFacilityLogicTest {
   @Test
   fun `when the facility has patients, then show a list of patients`() {
     // given
-    val patientSearchResults = listOf(PatientMocker.patientSearchResult())
+    val patientSearchResults = listOf(TestData.patientSearchResult())
     whenever(patientRepository.allPatientsInFacility(facility))
         .thenReturn(Observable.just(patientSearchResults))
 

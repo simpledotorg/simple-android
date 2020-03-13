@@ -23,7 +23,7 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
@@ -57,11 +57,11 @@ class ScheduleAppointmentSheetControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val today = LocalDate.parse("2019-01-01")
   private val clock = TestUserClock(today)
-  private val user = PatientMocker.loggedInUser()
+  private val user = TestData.loggedInUser()
   private val patientUuid = UUID.fromString("d44bf81f-4369-4bbc-a51b-52d88c54f065")
   private val protocolUuid = UUID.fromString("8782e890-2fb0-4204-8647-6d20006cec02")
-  private val facility = PatientMocker.facility(protocolUuid = protocolUuid)
-  private val protocol = PatientMocker.protocol(protocolUuid, 27)
+  private val facility = TestData.facility(protocolUuid = protocolUuid)
+  private val protocol = TestData.protocol(protocolUuid, followUpDays = 27)
 
   private val appointmentConfig: AppointmentConfig = AppointmentConfig(
       appointmentDuePeriodForDefaulters = Period.ofDays(30),
@@ -74,13 +74,13 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
-    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
+    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(TestData.appointment()))
 
     val date = LocalDate.now(clock).plus(1, ChronoUnit.MONTHS)
     val defaultTimeToAppointment = Months(1)
     val periodsToScheduleAppointmentsIn = listOf(defaultTimeToAppointment)
 
-    val protocol = PatientMocker.protocol(protocolUuid, 31)
+    val protocol = TestData.protocol(protocolUuid, followUpDays = 31)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
@@ -106,7 +106,7 @@ class ScheduleAppointmentSheetControllerTest {
       shouldAutomaticAppointmentBeScheduled: Boolean
   ) {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(isPatientDefaulter))
-    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
+    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(TestData.appointment()))
 
     sheetCreated(
         patientUuid = patientUuid,
@@ -140,7 +140,7 @@ class ScheduleAppointmentSheetControllerTest {
         Days(3)
     )
 
-    val protocol = PatientMocker.protocol(protocolUuid, 2)
+    val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
@@ -168,7 +168,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
-    val protocol = PatientMocker.protocol(protocolUuid, 2)
+    val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
@@ -201,7 +201,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
-    val protocol = PatientMocker.protocol(protocolUuid, 2)
+    val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
@@ -234,7 +234,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
-    val protocol = PatientMocker.protocol(protocolUuid, 2)
+    val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
@@ -258,7 +258,7 @@ class ScheduleAppointmentSheetControllerTest {
         Days(4)
     )
 
-    val protocol = PatientMocker.protocol(protocolUuid, 2)
+    val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
@@ -300,7 +300,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
-    val protocol = PatientMocker.protocol(protocolUuid, 2)
+    val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
@@ -348,7 +348,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
-    val protocol = PatientMocker.protocol(protocolUuid, 1)
+    val protocol = TestData.protocol(protocolUuid, followUpDays = 1)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
@@ -397,7 +397,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
-    val protocol = PatientMocker.protocol(protocolUuid, 1)
+    val protocol = TestData.protocol(protocolUuid, followUpDays = 1)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
@@ -514,10 +514,10 @@ class ScheduleAppointmentSheetControllerTest {
   @Test
   fun `when patient facility is changed then appointment should be scheduled in the changed facility`() {
     //given
-    val updatedFacilityUuid = PatientMocker.facility().uuid
-    val appointment = PatientMocker.appointment()
+    val updatedFacilityUuid = TestData.facility().uuid
+    val appointment = TestData.appointment()
 
-    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(PatientMocker.facility(uuid = updatedFacilityUuid)))
+    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(TestData.facility(uuid = updatedFacilityUuid)))
     whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
 
     //when
@@ -533,7 +533,7 @@ class ScheduleAppointmentSheetControllerTest {
   @Test
   fun `when patient facility is not changed then appointment should be scheduled in the current facility`() {
     //given
-    val appointment = PatientMocker.appointment()
+    val appointment = TestData.appointment()
 
     whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
 
@@ -550,7 +550,7 @@ class ScheduleAppointmentSheetControllerTest {
   fun `when patient facility is changed then show selected facility`() {
     //given
     val updatedFacilityUuid = UUID.fromString("60b32059-fe85-4b90-8a5d-984e56f9b001")
-    val updatedFacility = PatientMocker.facility(uuid = updatedFacilityUuid, name = "new facility")
+    val updatedFacility = TestData.facility(uuid = updatedFacilityUuid, name = "new facility")
 
     whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(updatedFacility))
 

@@ -11,7 +11,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
@@ -45,8 +45,8 @@ class NewMedicalHistoryEffectHandlerTest {
   @Test
   fun `when the load current facility effect is received, the current facility should be loaded`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("c70eb25b-c665-4f9d-a889-bf5504ec8af0"))
-    val facility = PatientMocker.facility(uuid = UUID.fromString("5b9629f3-042b-4b0a-8bd6-f7658130eee7"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("c70eb25b-c665-4f9d-a889-bf5504ec8af0"))
+    val facility = TestData.facility(uuid = UUID.fromString("5b9629f3-042b-4b0a-8bd6-f7658130eee7"))
 
     whenever(userSession.loggedInUserImmediate()) doReturn user
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)

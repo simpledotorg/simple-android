@@ -7,7 +7,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
@@ -35,7 +35,7 @@ class RefreshCurrentUserTest {
   @Test
   fun `when refreshing the user succeeds, the updated user details must be saved in the database`() {
     // given
-    val userPayload = PatientMocker.loggedInUserPayload(uuid = userUuid, phone = phone, status = ApprovedForSyncing)
+    val userPayload = TestData.loggedInUserPayload(uuid = userUuid, phone = phone, status = ApprovedForSyncing)
     whenever(findUserWithPhoneNumber.find(phone)) doReturn Single.just<FindUserResult>(Found(userPayload))
 
     val savedUser = userPayload.toUser(LOGGED_IN)
@@ -50,7 +50,7 @@ class RefreshCurrentUserTest {
 
   @Test
   fun `when the locally saved user has requested a PIN reset and the refreshed user has been approved for syncing, the user must be updated as logged in`() {
-    val userPayload = PatientMocker.loggedInUserPayload(uuid = userUuid, phone = phone, status = ApprovedForSyncing)
+    val userPayload = TestData.loggedInUserPayload(uuid = userUuid, phone = phone, status = ApprovedForSyncing)
     whenever(findUserWithPhoneNumber.find(phone)) doReturn Single.just<FindUserResult>(Found(userPayload))
 
     val savedUser = userPayload.toUser(RESET_PIN_REQUESTED)

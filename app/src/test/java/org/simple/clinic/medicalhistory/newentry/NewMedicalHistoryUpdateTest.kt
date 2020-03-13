@@ -18,18 +18,18 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class NewMedicalHistoryUpdateTest {
 
   private val defaultModel = NewMedicalHistoryModel.default()
-  private val facilityWithDiabetesManagementEnabled = PatientMocker.facility(
+  private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("3c7bc1c8-1bb6-4c3a-b6d0-52700bdaac5c"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
   )
-  private val facilityWithDiabetesManagementDisabled = PatientMocker.facility(
+  private val facilityWithDiabetesManagementDisabled = TestData.facility(
       uuid = UUID.fromString("bbffeac9-296d-4e95-8266-e5c9ac5eedf3"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   )

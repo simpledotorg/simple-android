@@ -11,7 +11,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
@@ -28,7 +28,7 @@ class AppLockScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val lastUnlockTimestamp = mock<Preference<Instant>>()
 
-  private val loggedInUser = PatientMocker.loggedInUser(pinDigest = "actual-hash")
+  private val loggedInUser = TestData.loggedInUser(pinDigest = "actual-hash")
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   lateinit var controller: AppLockScreenController
@@ -62,8 +62,8 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `On start, the currently selected facility should be shown`() {
-    val facility1 = PatientMocker.facility(name = "facility1")
-    val facility2 = PatientMocker.facility(name = "facility2")
+    val facility1 = TestData.facility(name = "facility1")
+    val facility2 = TestData.facility(name = "facility2")
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility1, facility2))
 
     uiEvents.onNext(AppLockScreenCreated())

@@ -21,7 +21,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus.PENDING
@@ -92,11 +92,11 @@ class ReportPendingRecordsToAnalyticsTest {
   fun `pending bp records should be reported to analytics`() {
     val now = Instant.now()
     val bpRecords = listOf(
-        PatientMocker.bloodPressureMeasurement(updatedAt = now),
-        PatientMocker.bloodPressureMeasurement(updatedAt = now),
-        PatientMocker.bloodPressureMeasurement(updatedAt = now),
-        PatientMocker.bloodPressureMeasurement(updatedAt = now),
-        PatientMocker.bloodPressureMeasurement(updatedAt = now)
+        TestData.bloodPressureMeasurement(updatedAt = now),
+        TestData.bloodPressureMeasurement(updatedAt = now),
+        TestData.bloodPressureMeasurement(updatedAt = now),
+        TestData.bloodPressureMeasurement(updatedAt = now),
+        TestData.bloodPressureMeasurement(updatedAt = now)
     )
     whenever(bloodPressureRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(bpRecords))
 
@@ -118,10 +118,10 @@ class ReportPendingRecordsToAnalyticsTest {
   fun `pending appointment records should be reported to analytics`() {
     val now = Instant.now()
     val appointmentRecords = listOf(
-        PatientMocker.appointment(updatedAt = now),
-        PatientMocker.appointment(updatedAt = now),
-        PatientMocker.appointment(updatedAt = now),
-        PatientMocker.appointment(updatedAt = now)
+        TestData.appointment(updatedAt = now),
+        TestData.appointment(updatedAt = now),
+        TestData.appointment(updatedAt = now),
+        TestData.appointment(updatedAt = now)
     )
     whenever(appointmentRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(appointmentRecords))
 
@@ -143,8 +143,8 @@ class ReportPendingRecordsToAnalyticsTest {
   fun `pending prescribed drug records should be reported to analytics`() {
     val now = Instant.now()
     val prescribedDrugRecords = listOf(
-        PatientMocker.prescription(updatedAt = now),
-        PatientMocker.prescription(updatedAt = now)
+        TestData.prescription(updatedAt = now),
+        TestData.prescription(updatedAt = now)
     )
     whenever(prescriptionRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(prescribedDrugRecords))
 
@@ -166,12 +166,12 @@ class ReportPendingRecordsToAnalyticsTest {
   fun `pending medical history records should be reported to analytics`() {
     val now = Instant.now()
     val medicalHistoryRecords = listOf(
-        PatientMocker.medicalHistory(updatedAt = now),
-        PatientMocker.medicalHistory(updatedAt = now),
-        PatientMocker.medicalHistory(updatedAt = now),
-        PatientMocker.medicalHistory(updatedAt = now),
-        PatientMocker.medicalHistory(updatedAt = now),
-        PatientMocker.medicalHistory(updatedAt = now)
+        TestData.medicalHistory(updatedAt = now),
+        TestData.medicalHistory(updatedAt = now),
+        TestData.medicalHistory(updatedAt = now),
+        TestData.medicalHistory(updatedAt = now),
+        TestData.medicalHistory(updatedAt = now),
+        TestData.medicalHistory(updatedAt = now)
     )
     whenever(medicalHistoryRepository.recordsWithSyncStatus(PENDING)).thenReturn(Single.just(medicalHistoryRecords))
 
@@ -248,16 +248,16 @@ class ReportPendingRecordsToAnalyticsTest {
     return listOf(
         testCase(
             patientRecords = listOf(patientRecord(updatedAt = now)),
-            bpRecords = listOf(PatientMocker.bloodPressureMeasurement(updatedAt = twoHoursEarlier)),
-            appointmentRecords = listOf(PatientMocker.appointment(updatedAt = twoHoursLater)),
-            prescribedDrugRecords = listOf(PatientMocker.prescription(updatedAt = oneDayLater)),
-            medicalHistoryRecords = listOf(PatientMocker.medicalHistory(updatedAt = twoHoursLater)),
+            bpRecords = listOf(TestData.bloodPressureMeasurement(updatedAt = twoHoursEarlier)),
+            appointmentRecords = listOf(TestData.appointment(updatedAt = twoHoursLater)),
+            prescribedDrugRecords = listOf(TestData.prescription(updatedAt = oneDayLater)),
+            medicalHistoryRecords = listOf(TestData.medicalHistory(updatedAt = twoHoursLater)),
             expectedSince = twoHoursEarlier
         ),
         testCase(
             patientRecords = emptyList(),
             bpRecords = emptyList(),
-            appointmentRecords = listOf(PatientMocker.appointment(updatedAt = twoHoursLater)),
+            appointmentRecords = listOf(TestData.appointment(updatedAt = twoHoursLater)),
             prescribedDrugRecords = emptyList(),
             medicalHistoryRecords = emptyList(),
             expectedSince = twoHoursLater
@@ -265,9 +265,9 @@ class ReportPendingRecordsToAnalyticsTest {
         testCase(
             patientRecords = emptyList(),
             bpRecords = emptyList(),
-            appointmentRecords = listOf(PatientMocker.appointment(updatedAt = oneDayLater)),
+            appointmentRecords = listOf(TestData.appointment(updatedAt = oneDayLater)),
             prescribedDrugRecords = emptyList(),
-            medicalHistoryRecords = listOf(PatientMocker.medicalHistory(updatedAt = oneDayLater)),
+            medicalHistoryRecords = listOf(TestData.medicalHistory(updatedAt = oneDayLater)),
             expectedSince = oneDayLater
         ),
         testCase(
@@ -277,16 +277,16 @@ class ReportPendingRecordsToAnalyticsTest {
                 patientRecord(updatedAt = twoHoursEarlier)
             ),
             bpRecords = listOf(
-                PatientMocker.bloodPressureMeasurement(updatedAt = now),
-                PatientMocker.bloodPressureMeasurement(updatedAt = twoHoursEarlier),
-                PatientMocker.bloodPressureMeasurement(updatedAt = oneDayLater),
-                PatientMocker.bloodPressureMeasurement(updatedAt = twoHoursEarlier)
+                TestData.bloodPressureMeasurement(updatedAt = now),
+                TestData.bloodPressureMeasurement(updatedAt = twoHoursEarlier),
+                TestData.bloodPressureMeasurement(updatedAt = oneDayLater),
+                TestData.bloodPressureMeasurement(updatedAt = twoHoursEarlier)
             ),
             appointmentRecords = emptyList(),
             prescribedDrugRecords = listOf(
-                PatientMocker.prescription(updatedAt = now),
-                PatientMocker.prescription(updatedAt = twoHoursEarlier),
-                PatientMocker.prescription(updatedAt = twoHoursLater)
+                TestData.prescription(updatedAt = now),
+                TestData.prescription(updatedAt = twoHoursEarlier),
+                TestData.prescription(updatedAt = twoHoursLater)
             ),
             medicalHistoryRecords = emptyList(),
             expectedSince = oneDayEarlier
@@ -294,19 +294,19 @@ class ReportPendingRecordsToAnalyticsTest {
         testCase(
             patientRecords = emptyList(),
             bpRecords = listOf(
-                PatientMocker.bloodPressureMeasurement(updatedAt = now),
-                PatientMocker.bloodPressureMeasurement(updatedAt = twoHoursLater)
+                TestData.bloodPressureMeasurement(updatedAt = now),
+                TestData.bloodPressureMeasurement(updatedAt = twoHoursLater)
             ),
             appointmentRecords = listOf(
-                PatientMocker.appointment(updatedAt = now),
-                PatientMocker.appointment(updatedAt = twoHoursEarlier),
-                PatientMocker.appointment(updatedAt = now)
+                TestData.appointment(updatedAt = now),
+                TestData.appointment(updatedAt = twoHoursEarlier),
+                TestData.appointment(updatedAt = now)
             ),
             prescribedDrugRecords = emptyList(),
             medicalHistoryRecords = listOf(
-                PatientMocker.medicalHistory(updatedAt = now),
-                PatientMocker.medicalHistory(updatedAt = oneDayLater),
-                PatientMocker.medicalHistory(updatedAt = twoHoursLater)
+                TestData.medicalHistory(updatedAt = now),
+                TestData.medicalHistory(updatedAt = oneDayLater),
+                TestData.medicalHistory(updatedAt = twoHoursLater)
             ),
             expectedSince = twoHoursEarlier
         ),
@@ -314,12 +314,12 @@ class ReportPendingRecordsToAnalyticsTest {
             patientRecords = listOf(patientRecord(updatedAt = oneDayLater)),
             bpRecords = emptyList(),
             appointmentRecords = listOf(
-                PatientMocker.appointment(updatedAt = twoHoursLater),
-                PatientMocker.appointment(updatedAt = oneDayLater)
+                TestData.appointment(updatedAt = twoHoursLater),
+                TestData.appointment(updatedAt = oneDayLater)
             ),
             prescribedDrugRecords = listOf(
-                PatientMocker.prescription(updatedAt = now),
-                PatientMocker.prescription(updatedAt = twoHoursLater)
+                TestData.prescription(updatedAt = now),
+                TestData.prescription(updatedAt = twoHoursLater)
             ),
             medicalHistoryRecords = emptyList(),
             expectedSince = now
@@ -331,16 +331,16 @@ class ReportPendingRecordsToAnalyticsTest {
                 patientRecord(updatedAt = twoHoursLater)
             ),
             bpRecords = listOf(
-                PatientMocker.bloodPressureMeasurement(updatedAt = oneDayLater),
-                PatientMocker.bloodPressureMeasurement(updatedAt = now),
-                PatientMocker.bloodPressureMeasurement(updatedAt = twoHoursEarlier)
+                TestData.bloodPressureMeasurement(updatedAt = oneDayLater),
+                TestData.bloodPressureMeasurement(updatedAt = now),
+                TestData.bloodPressureMeasurement(updatedAt = twoHoursEarlier)
             ),
             appointmentRecords = emptyList(),
-            prescribedDrugRecords = listOf(PatientMocker.prescription(updatedAt = twoHoursEarlier)),
+            prescribedDrugRecords = listOf(TestData.prescription(updatedAt = twoHoursEarlier)),
             medicalHistoryRecords = listOf(
-                PatientMocker.medicalHistory(updatedAt = now),
-                PatientMocker.medicalHistory(updatedAt = oneDayEarlier),
-                PatientMocker.medicalHistory(updatedAt = twoHoursLater)
+                TestData.medicalHistory(updatedAt = now),
+                TestData.medicalHistory(updatedAt = oneDayEarlier),
+                TestData.medicalHistory(updatedAt = twoHoursLater)
             ),
             expectedSince = oneDayEarlier
         )
@@ -348,7 +348,7 @@ class ReportPendingRecordsToAnalyticsTest {
   }
 
   private fun patientRecord(updatedAt: Instant): PatientProfile {
-    return PatientMocker
+    return TestData
         .patientProfile()
         .let { patientProfile ->
           patientProfile.copy(patient = patientProfile.patient.copy(updatedAt = updatedAt))

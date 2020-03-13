@@ -13,7 +13,7 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated
@@ -38,7 +38,7 @@ class UnauthorizeUserTest {
 
     val userSession = mock<UserSession>()
     var unauthorizeCompleted = false
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(PatientMocker.loggedInUser().toOptional()))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(TestData.loggedInUser().toOptional()))
     whenever(userSession.unauthorize()).thenReturn(Completable.fromAction { unauthorizeCompleted = true })
 
     val unauthorizeUser = UnauthorizeUser(userSession = userSession, dataSync = dataSync, schedulersProvider = TrampolineSchedulersProvider())

@@ -24,7 +24,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodS
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.storage.Timestamps
@@ -239,12 +239,12 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `create new blood sugar entry when create blood sugar entry effect is received`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
-    val facility = PatientMocker.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
+    val facility = TestData.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
 
     val date = LocalDate.parse("2020-01-02")
     val bloodSugarReading = BloodSugarReading("120", Random)
-    val bloodSugar = PatientMocker.bloodSugarMeasurement(reading = bloodSugarReading)
+    val bloodSugar = TestData.bloodSugarMeasurement(reading = bloodSugarReading)
     val createNewBloodSugarEntry = CreateNewBloodSugarEntry(
         patientUuid = bloodSugar.patientUuid,
         userEnteredDate = date,
@@ -269,12 +269,12 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `create new hba1c blood sugar entry when create blood sugar entry effect is received`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
-    val facility = PatientMocker.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
+    val facility = TestData.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
 
     val date = LocalDate.parse("2020-01-02")
     val bloodSugarReading = BloodSugarReading("15.2", HbA1c)
-    val bloodSugar = PatientMocker.bloodSugarMeasurement(reading = bloodSugarReading)
+    val bloodSugar = TestData.bloodSugarMeasurement(reading = bloodSugarReading)
     val createNewBloodSugarEntry = CreateNewBloodSugarEntry(
         patientUuid = bloodSugar.patientUuid,
         userEnteredDate = date,
@@ -299,7 +299,7 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `fetch blood sugar measurement, when fetch blood sugar effect is received`() {
     // given
-    val bloodSugarMeasurement = PatientMocker.bloodSugarMeasurement()
+    val bloodSugarMeasurement = TestData.bloodSugarMeasurement()
     whenever(bloodSugarRepository.measurement(bloodSugarMeasurement.uuid)) doReturn bloodSugarMeasurement
 
     // when
@@ -313,8 +313,8 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `update blood sugar entry when update blood sugar entry effect is received`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("50da2a45-3680-41e8-b46d-8a5896eadce0"))
-    val facility = PatientMocker.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("50da2a45-3680-41e8-b46d-8a5896eadce0"))
+    val facility = TestData.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
     val patientUuid = UUID.fromString("260a831f-bc31-4341-bc0d-46325e85e32d")
 
     val date = LocalDate.parse("2020-02-14")
@@ -324,7 +324,7 @@ class BloodSugarEntryEffectHandlerTest {
     val updateBloodSugarReading = bloodSugarReading.copy(value = "145")
     val bloodSugarMeasurementUuid = UUID.fromString("58a3fa4b-2b32-4c43-a1cd-ee3d787064f7")
 
-    val bloodSugar = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar = TestData.bloodSugarMeasurement(
         uuid = bloodSugarMeasurementUuid,
         patientUuid = patientUuid,
         facilityUuid = facility.uuid,
@@ -360,8 +360,8 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `update hba1c blood sugar entry when update blood sugar entry effect is received`() {
     // given
-    val user = PatientMocker.loggedInUser(uuid = UUID.fromString("50da2a45-3680-41e8-b46d-8a5896eadce0"))
-    val facility = PatientMocker.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("50da2a45-3680-41e8-b46d-8a5896eadce0"))
+    val facility = TestData.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
     val patientUuid = UUID.fromString("260a831f-bc31-4341-bc0d-46325e85e32d")
 
     val date = LocalDate.parse("2020-02-14")
@@ -371,7 +371,7 @@ class BloodSugarEntryEffectHandlerTest {
     val updateBloodSugarReading = bloodSugarReading.copy(value = "6.2")
     val bloodSugarMeasurementUuid = UUID.fromString("58a3fa4b-2b32-4c43-a1cd-ee3d787064f7")
 
-    val bloodSugar = PatientMocker.bloodSugarMeasurement(
+    val bloodSugar = TestData.bloodSugarMeasurement(
         uuid = bloodSugarMeasurementUuid,
         patientUuid = patientUuid,
         facilityUuid = facility.uuid,

@@ -4,14 +4,14 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
 
 class AnalyticsTest {
 
-  private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("8d8c86a1-1c32-4e1b-96ba-a85bfee7b45c"))
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("8d8c86a1-1c32-4e1b-96ba-a85bfee7b45c"))
 
   @After
   fun tearDown() {

@@ -35,7 +35,7 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -80,8 +80,8 @@ class EditPatientScreenFormTest {
   fun `when input changes, errors corresponding to the input must be hidden`(textChangeParams: HidingErrorsOnTextChangeParams) {
     val (inputChange, expectedErrorsToHide) = textChangeParams
 
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.updatePatient(any())).doReturn(Completable.complete())
@@ -125,10 +125,10 @@ class EditPatientScreenFormTest {
 
   @Test
   fun `when data of birth has focus, the date format should be shown in the label`() {
-    val patient = PatientMocker.patient()
+    val patient = TestData.patient()
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
 
-    screenCreated(patient, PatientMocker.address(), null)
+    screenCreated(patient, TestData.patientAddress(), null)
 
     uiEvents.onNext(DateOfBirthChanged(""))
     uiEvents.onNext(DateOfBirthFocusChanged(hasFocus = true))
@@ -142,10 +142,10 @@ class EditPatientScreenFormTest {
 
   @Test
   fun `when date of birth text changes, the date format should be shown in the label`() {
-    val patient = PatientMocker.patient()
+    val patient = TestData.patient()
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
 
-    screenCreated(patient, PatientMocker.address(), null)
+    screenCreated(patient, TestData.patientAddress(), null)
 
     uiEvents.onNext(DateOfBirthFocusChanged(hasFocus = false))
     uiEvents.onNext(DateOfBirthChanged("01/01/1990"))
@@ -158,10 +158,10 @@ class EditPatientScreenFormTest {
 
   @Test
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
-    val patient = PatientMocker.patient()
+    val patient = TestData.patient()
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
 
-    screenCreated(patient, PatientMocker.address(), null)
+    screenCreated(patient, TestData.patientAddress(), null)
     reset(ui)
 
     uiEvents.onNext(DateOfBirthChanged(""))
@@ -738,9 +738,14 @@ class EditPatientScreenFormTest {
       state: String? = null
   ): PatientProfile {
     return PatientProfile(
-        patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid),
-        address = PatientMocker.address(uuid = addressUuid),
-        phoneNumbers = phoneNumber?.let { listOf(PatientMocker.phoneNumber(patientUuid = patientUuid, number = it)) }
+        patient = TestData.patient(
+            uuid = patientUuid,
+            addressUuid = addressUuid,
+            age = null,
+            dateOfBirth = LocalDate.parse("2018-01-01")
+        ),
+        address = TestData.patientAddress(uuid = addressUuid),
+        phoneNumbers = phoneNumber?.let { listOf(TestData.patientPhoneNumber(patientUuid = patientUuid, number = it)) }
             ?: emptyList(),
         businessIds = emptyList()
     ).let { profile ->

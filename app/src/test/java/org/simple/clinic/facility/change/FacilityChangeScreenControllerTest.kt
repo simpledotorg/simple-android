@@ -30,7 +30,7 @@ import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.storage.files.DeleteFileResult
@@ -65,7 +65,7 @@ class FacilityChangeScreenControllerTest {
   private val locationRepository = mock<LocationRepository>()
   private val listItemBuilder = mock<FacilityListItemBuilder>()
   private val testComputationScheduler = TestScheduler()
-  private val user = PatientMocker.loggedInUser()
+  private val user = TestData.loggedInUser()
   private val elapsedRealtimeClock = TestElapsedRealtimeClock()
 
   private val configTemplate = FacilityChangeConfig(
@@ -104,8 +104,8 @@ class FacilityChangeScreenControllerTest {
 
   @Test
   fun `when screen starts then facilities UI models should be created`() {
-    val facility1 = PatientMocker.facility()
-    val facility2 = PatientMocker.facility()
+    val facility1 = TestData.facility()
+    val facility2 = TestData.facility()
     val facilities = listOf(facility1, facility2)
     whenever(facilityRepository.facilitiesInCurrentGroup(user = user)).thenReturn(Observable.just(facilities, facilities))
 
@@ -128,8 +128,8 @@ class FacilityChangeScreenControllerTest {
   @Test
   fun `when search query is changed then the query should be used for fetching filtered facilities`() {
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), eq(user))).thenReturn(Observable.just(facilities))
 
     uiEvents.onNext(ScreenCreated())
@@ -145,8 +145,8 @@ class FacilityChangeScreenControllerTest {
 
   @Test
   fun `when a facility is selected then the user's facility should be changed and the screen should be closed`() {
-    val newFacility = PatientMocker.facility()
-    val user = PatientMocker.loggedInUser()
+    val newFacility = TestData.facility()
+    val user = TestData.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
     whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
@@ -168,7 +168,7 @@ class FacilityChangeScreenControllerTest {
       deleteReport: Single<DeleteFileResult>,
       reportsSyncCompletable: Completable
   ) {
-    val newFacility = PatientMocker.facility()
+    val newFacility = TestData.facility()
     whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
     whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
     whenever(reportsRepository.deleteReportsFile()).thenReturn(deleteReport)
@@ -207,8 +207,8 @@ class FacilityChangeScreenControllerTest {
       deniedResult: RuntimePermissionResult
   ) {
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 
@@ -230,8 +230,8 @@ class FacilityChangeScreenControllerTest {
     configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
 
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
 
     val timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis())
@@ -256,7 +256,7 @@ class FacilityChangeScreenControllerTest {
     val config = configTemplate.copy(staleLocationThreshold = Duration.ofMinutes(10))
     configProvider.onNext(config)
 
-    val facilities = listOf(PatientMocker.facility(name = "Facility 1"))
+    val facilities = listOf(TestData.facility(name = "Facility 1"))
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
 
     val locationUpdates = PublishSubject.create<LocationUpdate>()
@@ -354,8 +354,8 @@ class FacilityChangeScreenControllerTest {
     configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
 
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
 
     val locationUpdates = PublishSubject.create<LocationUpdate>()
@@ -377,8 +377,8 @@ class FacilityChangeScreenControllerTest {
     configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
 
     val facilities = listOf(
-        PatientMocker.facility(name = "Facility 1"),
-        PatientMocker.facility(name = "Facility 2"))
+        TestData.facility(name = "Facility 1"),
+        TestData.facility(name = "Facility 2"))
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 

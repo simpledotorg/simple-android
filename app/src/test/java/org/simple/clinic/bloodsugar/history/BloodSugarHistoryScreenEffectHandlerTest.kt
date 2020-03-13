@@ -11,7 +11,7 @@ import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
@@ -39,7 +39,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   @Test
   fun `when load patient effect is received, then load patient`() {
     // given
-    val patient = PatientMocker.patient(uuid = patientUuid)
+    val patient = TestData.patient(uuid = patientUuid)
     whenever(patientRepository.patient(patientUuid)) doReturn Observable.just<Optional<Patient>>(Just(patient))
 
     // when
@@ -53,7 +53,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   @Test
   fun `when load blood sugars history effect is received, then load all blood sugars`() {
     // given
-    val bloodSugarMeasurement = PatientMocker.bloodSugarMeasurement(
+    val bloodSugarMeasurement = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("c593e506-e603-4f34-9ea8-89913cdbce9e"),
         patientUuid = patientUuid
     )
@@ -82,7 +82,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   @Test
   fun `when open blood sugar update sheet effect is received, then open blood sugar update sheet`() {
     // given
-    val measurement = PatientMocker.bloodSugarMeasurement()
+    val measurement = TestData.bloodSugarMeasurement()
 
     // when
     testCase.dispatch(OpenBloodSugarUpdateSheet(measurement))

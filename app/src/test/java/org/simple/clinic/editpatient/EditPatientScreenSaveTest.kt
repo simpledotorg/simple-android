@@ -31,7 +31,7 @@ import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
@@ -75,8 +75,8 @@ class EditPatientScreenSaveTest {
 
   @Test
   fun `when save is clicked, patient name should be validated`() {
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
@@ -97,8 +97,8 @@ class EditPatientScreenSaveTest {
 
   @Test
   fun `when save is clicked, the colony should be validated`() {
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
@@ -119,8 +119,8 @@ class EditPatientScreenSaveTest {
 
   @Test
   fun `when save is clicked, the district should be validated`() {
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
@@ -141,8 +141,8 @@ class EditPatientScreenSaveTest {
 
   @Test
   fun `when save is clicked, the state should be validated`() {
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
@@ -164,8 +164,8 @@ class EditPatientScreenSaveTest {
 
   @Test
   fun `when save is clicked, the age should be validated`() {
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
@@ -187,8 +187,8 @@ class EditPatientScreenSaveTest {
   fun `when save is clicked, the date of birth should be validated`(
       dateOfBirthTestParams: DateOfBirthTestParams
   ) {
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
@@ -298,7 +298,7 @@ class EditPatientScreenSaveTest {
             createExpectedPatient = { it.copy(fullName = "Name", gender = Gender.Male, dateOfBirth = LocalDate.of(1985, Month.MAY, 20)) },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
+              alreadyPresentPhoneNumber?.copy(number = "12345678") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "12345678")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
@@ -320,7 +320,7 @@ class EditPatientScreenSaveTest {
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
+              alreadyPresentPhoneNumber?.copy(number = "12345678") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "12345678")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = false, shouldHaveAge = false),
@@ -351,7 +351,7 @@ class EditPatientScreenSaveTest {
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
+              alreadyPresentPhoneNumber?.copy(number = "123456") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "123456")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
@@ -373,7 +373,7 @@ class EditPatientScreenSaveTest {
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
+              alreadyPresentPhoneNumber?.copy(number = "123456") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "123456")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
@@ -393,7 +393,7 @@ class EditPatientScreenSaveTest {
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
+              alreadyPresentPhoneNumber?.copy(number = "123456") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "123456")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
@@ -410,7 +410,7 @@ class EditPatientScreenSaveTest {
             createExpectedPatient = { it.copy(fullName = "Name 2", gender = Gender.Transgender) },
             createExpectedAddress = { it.copy(district = "District", state = "State 2") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
-              alreadyPresentPhoneNumber?.copy(number = "1234567") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "1234567")
+              alreadyPresentPhoneNumber?.copy(number = "1234567") ?: TestData.patientPhoneNumber(patientUuid = patientId, number = "1234567")
             }),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = true),
@@ -546,14 +546,14 @@ class EditPatientScreenSaveTest {
     val addressUuid = UUID.randomUUID()
 
     val patient = if (shouldHaveAge) {
-      PatientMocker.patient(
+      TestData.patient(
           uuid = patientUuid,
           age = Age(20, Instant.now(utcClock)),
           dateOfBirth = null,
           addressUuid = addressUuid)
 
     } else {
-      PatientMocker.patient(
+      TestData.patient(
           uuid = patientUuid,
           age = null,
           dateOfBirth = LocalDate.now(utcClock),
@@ -563,8 +563,8 @@ class EditPatientScreenSaveTest {
 
     return PatientProfile(
         patient = patient,
-        address = PatientMocker.address(uuid = addressUuid),
-        phoneNumbers = if (shouldAddNumber) listOf(PatientMocker.phoneNumber(patientUuid = patientUuid)) else emptyList(),
+        address = TestData.patientAddress(uuid = addressUuid),
+        phoneNumbers = if (shouldAddNumber) listOf(TestData.patientPhoneNumber(patientUuid = patientUuid)) else emptyList(),
         businessIds = emptyList()
     )
   }
@@ -641,8 +641,8 @@ class EditPatientScreenSaveTest {
         enteredPhoneNumber
     ) = validateFieldsTestParams
 
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
     val patientUuid = patient.uuid
     val phoneNumber = alreadyPresentPhoneNumber?.copy(patientUuid = patientUuid)
 
@@ -695,7 +695,7 @@ class EditPatientScreenSaveTest {
   private fun `params for validating all fields on save clicks`(): List<ValidateFieldsTestParams> {
     return listOf(
         ValidateFieldsTestParams(
-            PatientMocker.phoneNumber(),
+            TestData.patientPhoneNumber(),
             "",
             "",
             "",
@@ -717,7 +717,7 @@ class EditPatientScreenSaveTest {
             enteredPhoneNumber = "1234567890"
         ),
         ValidateFieldsTestParams(
-            PatientMocker.phoneNumber(),
+            TestData.patientPhoneNumber(),
             "",
             "Colony",
             "",
@@ -739,7 +739,7 @@ class EditPatientScreenSaveTest {
             enteredPhoneNumber = "1234"
         ),
         ValidateFieldsTestParams(
-            PatientMocker.phoneNumber(),
+            TestData.patientPhoneNumber(),
             "Name",
             "",
             "District",
@@ -761,7 +761,7 @@ class EditPatientScreenSaveTest {
             "12345678901234"
         ),
         ValidateFieldsTestParams(
-            PatientMocker.phoneNumber(),
+            TestData.patientPhoneNumber(),
             "",
             "Colony",
             "District",
@@ -794,7 +794,7 @@ class EditPatientScreenSaveTest {
             "12334567890"
         ),
         ValidateFieldsTestParams(
-            PatientMocker.phoneNumber(),
+            TestData.patientPhoneNumber(),
             "Name",
             "Colony",
             "District",
@@ -838,8 +838,8 @@ class EditPatientScreenSaveTest {
         expectedError
     ) = testParams
 
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
     val patientUuid = patient.uuid
 
     whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
@@ -867,9 +867,9 @@ class EditPatientScreenSaveTest {
     return listOf(
         ValidatePhoneNumberTestParams(null, "1234", PHONE_NUMBER_LENGTH_TOO_SHORT),
         ValidatePhoneNumberTestParams(null, "12345678901234", PHONE_NUMBER_LENGTH_TOO_LONG),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "12345678901234", PHONE_NUMBER_LENGTH_TOO_LONG),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "", PHONE_NUMBER_EMPTY),
-        ValidatePhoneNumberTestParams(PatientMocker.phoneNumber(), "1234", PHONE_NUMBER_LENGTH_TOO_SHORT)
+        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "12345678901234", PHONE_NUMBER_LENGTH_TOO_LONG),
+        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "", PHONE_NUMBER_EMPTY),
+        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "1234", PHONE_NUMBER_LENGTH_TOO_SHORT)
     )
   }
 
@@ -881,8 +881,8 @@ class EditPatientScreenSaveTest {
 
   @Test
   fun `when save is clicked and phone number is not already saved, entering a blank phone number should not show errors`() {
-    val patient = PatientMocker.patient()
-    val address = PatientMocker.address()
+    val patient = TestData.patient()
+    val address = TestData.patientAddress()
 
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())

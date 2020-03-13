@@ -14,7 +14,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_E
 import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -309,7 +309,7 @@ class BloodSugarEntryUpdateTest {
 
   @Test
   fun `when blood sugar measurement is fetched, then prefill date and set blood sugar reading`() {
-    val bloodSugarMeasurement = PatientMocker.bloodSugarMeasurement()
+    val bloodSugarMeasurement = TestData.bloodSugarMeasurement()
     val bloodSugarReading = bloodSugarMeasurement.reading.displayValue
 
     updateSpec

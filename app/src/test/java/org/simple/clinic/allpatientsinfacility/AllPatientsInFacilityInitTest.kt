@@ -6,7 +6,7 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityModel.Companion.FETCHING_PATIENTS
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 
 class AllPatientsInFacilityInitTest {
   private val initSpec = InitSpec<AllPatientsInFacilityModel, AllPatientsInFacilityEffect>(AllPatientsInFacilityInit())
@@ -32,7 +32,7 @@ class AllPatientsInFacilityInitTest {
   @Test
   fun `it can fetch the patients in a facility during state restoration`() {
     val noPatientsModel = fetchingPatientsModel
-        .facilityFetched(PatientMocker.facility())
+        .facilityFetched(TestData.facility())
         .noPatients()
 
     initSpec

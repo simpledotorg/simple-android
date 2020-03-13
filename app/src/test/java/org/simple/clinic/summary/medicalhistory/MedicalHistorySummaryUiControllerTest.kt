@@ -21,7 +21,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
@@ -35,17 +35,17 @@ import java.util.UUID
 class MedicalHistorySummaryUiControllerTest {
 
   private val patientUuid = UUID.fromString("31665de6-0265-4e33-888f-526bdb274699")
-  private val medicalHistory = PatientMocker.medicalHistory(
+  private val medicalHistory = TestData.medicalHistory(
       uuid = UUID.fromString("6182e51f-13b3-47d5-a479-bee127070814"),
       patientUuid = patientUuid,
       updatedAt = Instant.parse("2018-01-01T00:00:00Z")
   )
-  private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("80305d68-3b8d-4b16-8d1c-a9a87e88b227"))
-  private val facilityWithDiabetesManagementEnabled = PatientMocker.facility(
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("80305d68-3b8d-4b16-8d1c-a9a87e88b227"))
+  private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("90bedaf8-5521-490e-b725-2b41839a83c7"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
   )
-  private val facilityWithDiabetesManagementDisabled = PatientMocker.facility(
+  private val facilityWithDiabetesManagementDisabled = TestData.facility(
       uuid = UUID.fromString("7c1708a2-585c-4e80-adaa-6544368a46c4"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   )
@@ -87,7 +87,7 @@ class MedicalHistorySummaryUiControllerTest {
       newAnswer: Answer
   ) {
     // given
-    val medicalHistory = PatientMocker.medicalHistory(
+    val medicalHistory = TestData.medicalHistory(
         diagnosedWithHypertension = Answer.Unanswered,
         hasHadHeartAttack = Answer.Unanswered,
         hasHadStroke = Answer.Unanswered,

@@ -12,11 +12,12 @@ import org.junit.Test
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toPayload
 import java.util.UUID
@@ -32,9 +33,9 @@ class RegisterUserTest {
   fun `when user registers, set the registered user in analytics`() {
     // given
     val userUuid = UUID.fromString("0e7b2b09-dbb0-4de6-b66d-6afe834c14ed")
-    val user = PatientMocker.loggedInUser(userUuid)
+    val user = TestData.loggedInUser(userUuid)
     val facilityUuid = UUID.fromString("2aa4ccc3-5e4f-4c32-8df3-1304a56ae8b3")
-    val facility = PatientMocker.facility(facilityUuid)
+    val facility = TestData.facility(facilityUuid)
 
     val registrationApi = mock<RegistrationApi>()
     val userDao = mock<User.RoomDao>()
@@ -42,8 +43,9 @@ class RegisterUserTest {
     val accessTokenPreference = mock<Preference<Optional<String>>>()
 
     val payload = user.toPayload(facilityUuid)
+    val savedUser = user.copy(loggedInStatus = LOGGED_IN)
     whenever(registrationApi.createUser(RegistrationRequest(payload))) doReturn Single.just(RegistrationResponse("accessToken", payload))
-    whenever(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.associateUserWithFacilities(savedUser, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
 
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
@@ -55,7 +57,7 @@ class RegisterUserTest {
     registerUser.registerUserAtFacility(user, facility).blockingGet()
 
     // then
-    assertThat(reporter.user).isEqualTo(user)
+    assertThat(reporter.user).isEqualTo(savedUser)
     assertThat(reporter.isANewRegistration).isTrue()
   }
 }

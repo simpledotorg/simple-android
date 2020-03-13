@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
@@ -38,8 +38,8 @@ class BloodPressureRepositoryTest {
 
   @Test
   fun `when saving a measurement, correctly get IDs for the current user and facility`() {
-    val loggedInUser = PatientMocker.loggedInUser()
-    val facility = PatientMocker.facility()
+    val loggedInUser = TestData.loggedInUser()
+    val facility = TestData.facility()
 
     val patientUuid = UUID.randomUUID()
     repository.saveMeasurement(
@@ -74,10 +74,10 @@ class BloodPressureRepositoryTest {
   ) {
     val bpUuid = UUID.randomUUID()
 
-    val localCopy = PatientMocker.bloodPressureMeasurement(bpUuid, syncStatus = syncStatusOfLocalCopy)
+    val localCopy = TestData.bloodPressureMeasurement(bpUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(dao.getOne(bpUuid)).doReturn(localCopy)
 
-    val serverBp = PatientMocker.bloodPressureMeasurement(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
+    val serverBp = TestData.bloodPressureMeasurement(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
     repository.mergeWithLocalData(listOf(serverBp)).blockingAwait()
 
     if (serverRecordExpectedToBeSaved) {

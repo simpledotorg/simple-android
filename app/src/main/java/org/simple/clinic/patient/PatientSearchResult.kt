@@ -69,21 +69,43 @@ data class PatientSearchResult(
           PA.state addr_state, PA.country addr_country,
           PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
           PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
-          BP.recordedAt lastSeen_lastSeenOn, BP.facilityName lastSeen_lastSeenAtFacilityName, BP.facilityUuid lastSeen_lastSeenAtFacilityUuid
+          PatientLastSeen.lastSeenTime lastSeen_lastSeenOn, F.name lastSeen_lastSeenAtFacilityName, PatientLastSeen.lastSeenFacilityUuid lastSeen_lastSeenAtFacilityUuid
           FROM Patient P
           INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid
           LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
           LEFT JOIN (
-        		SELECT BP.patientUuid, BP.recordedAt, F.name facilityName, F.uuid facilityUuid
-        		FROM (
-                SELECT BP.patientUuid, BP.recordedAt, BP.facilityUuid
-                FROM BloodPressureMeasurement BP
+            SELECT P.uuid patientUuid,
+            (
+                CASE
+                    WHEN LatestBloodSugar.uuid IS NULL THEN LatestBP.recordedAt
+                    WHEN LatestBP.uuid IS NULL THEN LatestBloodSugar.recordedAt
+                    ELSE MAX(LatestBP.recordedAt, LatestBloodSugar.recordedAt)
+                END
+            ) lastSeenTime,
+            (
+                CASE
+                    WHEN LatestBloodSugar.uuid IS NULL THEN LatestBP.facilityUuid
+                    WHEN LatestBP.uuid IS NULL THEN LatestBloodSugar.facilityUuid
+                    WHEN LatestBP.recordedAt > LatestBloodSugar.recordedAt THEN LatestBP.facilityUuid
+                    ELSE LatestBloodSugar.facilityUuid
+                END
+            ) lastSeenFacilityUuid
+            FROM Patient P
+            LEFT JOIN (
+                SELECT BP.uuid, BP.patientUuid, BP.recordedAt, F.uuid facilityUuid FROM BloodPressureMeasurement BP
+                INNER JOIN Facility F on F.uuid = BP.facilityUuid
                 WHERE BP.deletedAt IS NULL
-                GROUP BY BP.patientUuid HAVING MAX (BP.recordedAt)
-                ORDER BY BP.recordedAt DESC
-            ) BP
-        		INNER JOIN Facility F ON BP.facilityUuid = F.uuid
-        	) BP ON (BP.patientUuid = P.uuid)
+                GROUP BY BP.patientUuid HAVING MAX(BP.recordedAt)
+            ) LatestBP ON LatestBP.patientUuid = P.uuid
+            LEFT JOIN (
+                SELECT BloodSugar.uuid, BloodSugar.patientUuid, BloodSugar.recordedAt, F.uuid facilityUuid FROM BloodSugarMeasurements BloodSugar
+                INNER JOIN Facility F ON F.uuid = BloodSugar.facilityUuid
+                WHERE BloodSugar.deletedAt IS NULL
+                GROUP BY BloodSugar.patientUuid HAVING MAX(BloodSugar.recordedAt)
+            ) LatestBloodSugar ON LatestBloodSugar.patientUuid = P.uuid
+            WHERE LatestBP.uuid IS NOT NULL OR LatestBloodSugar.uuid IS NOT NULL
+          ) PatientLastSeen ON (PatientLastSeen.patientUuid == P.uuid)
+          LEFT JOIN Facility F ON F.uuid = PatientLastSeen.lastSeenFacilityUuid
     """
     }
 

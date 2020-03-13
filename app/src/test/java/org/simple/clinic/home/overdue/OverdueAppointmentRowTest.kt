@@ -2,6 +2,8 @@ package org.simple.clinic.home.overdue
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientMocker
@@ -36,7 +38,9 @@ class OverdueAppointmentRowTest {
                 patientUuid = UUID.fromString("c88a4835-40e5-476b-9a6f-2f850c48ecdb"),
                 scheduledDate = LocalDate.parse("2019-01-01")
             ),
-            patientLastSeen = Instant.parse("2020-01-01T00:00:00Z")
+            patientLastSeen = Instant.parse("2020-01-01T00:00:00Z"),
+            diagnosedWithDiabetes = Yes,
+            diagnosedWithHypertension = No
         )
     val appointmentDelayedByOneWeek = PatientMocker
         .overdueAppointment(
@@ -51,7 +55,9 @@ class OverdueAppointmentRowTest {
                 patientUuid = UUID.fromString("0c35a015-d823-4cc5-be77-21ce026c5780"),
                 scheduledDate = LocalDate.parse("2018-12-29")
             ),
-            patientLastSeen = Instant.parse("2019-12-25T00:00:00Z")
+            patientLastSeen = Instant.parse("2019-12-25T00:00:00Z"),
+            diagnosedWithDiabetes = No,
+            diagnosedWithHypertension = null
         )
 
     val appointments = listOf(appointmentDelayedBy4Days, appointmentDelayedByOneWeek)
@@ -70,7 +76,9 @@ class OverdueAppointmentRowTest {
             phoneNumber = "123456",
             overdueDays = 4,
             isAtHighRisk = false,
-            lastSeenDate = "1-Jan-2020"
+            lastSeenDate = "1-Jan-2020",
+            diagnosedWithDiabetes = Yes,
+            diagnosedWithHypertension = No
         ),
         OverdueAppointmentRow(
             appointmentUuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
@@ -81,7 +89,9 @@ class OverdueAppointmentRowTest {
             phoneNumber = "45678912",
             overdueDays = 7,
             isAtHighRisk = true,
-            lastSeenDate = "25-Dec-2019"
+            lastSeenDate = "25-Dec-2019",
+            diagnosedWithDiabetes = No,
+            diagnosedWithHypertension = null
         )
     )
     assertThat(overdueListItems)

@@ -314,7 +314,9 @@ object PatientMocker {
       age: Age? = null,
       phoneNumber: PatientPhoneNumber? = phoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
       appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
-      patientLastSeen: Instant = Instant.parse("2018-01-01T00:00:00Z")
+      patientLastSeen: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      diagnosedWithDiabetes: Answer? = null,
+      diagnosedWithHypertension: Answer? = null
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
@@ -325,8 +327,8 @@ object PatientMocker {
         phoneNumber = phoneNumber,
         isAtHighRisk = isHighRisk,
         patientLastSeen = patientLastSeen,
-        diagnosedWithDiabetes = null,
-        diagnosedWithHypertension = null
+        diagnosedWithDiabetes = diagnosedWithDiabetes,
+        diagnosedWithHypertension = diagnosedWithHypertension
     )
   }
 

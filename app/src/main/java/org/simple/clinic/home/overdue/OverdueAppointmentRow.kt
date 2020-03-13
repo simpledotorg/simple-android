@@ -1,12 +1,14 @@
 package org.simple.clinic.home.overdue
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.item_overdue_list_patient.*
 import org.simple.clinic.R
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
@@ -33,7 +35,9 @@ data class OverdueAppointmentRow(
     val phoneNumber: String? = null,
     val overdueDays: Int,
     val isAtHighRisk: Boolean,
-    val lastSeenDate: String
+    val lastSeenDate: String,
+    val diagnosedWithDiabetes: Answer?,
+    val diagnosedWithHypertension: Answer?
 ) : ItemAdapter.Item<UiEvent> {
 
   companion object {
@@ -56,7 +60,9 @@ data class OverdueAppointmentRow(
           phoneNumber = overdueAppointment.phoneNumber?.number,
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
           isAtHighRisk = overdueAppointment.isAtHighRisk,
-          lastSeenDate = dateFormatter.format(overdueAppointment.patientLastSeen.toLocalDateAtZone(clock.zone))
+          lastSeenDate = dateFormatter.format(overdueAppointment.patientLastSeen.toLocalDateAtZone(clock.zone)),
+          diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
+          diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension
       )
     }
 
@@ -131,8 +137,21 @@ data class OverdueAppointmentRow(
         "$overdueDays"
     )
 
+    holder.diagnosisTextView.text = diagnosisText(context)
+
     updateBottomLayoutVisibility(holder)
     updatePhoneNumberViewVisibility(holder)
+  }
+
+  private fun diagnosisText(context: Context): CharSequence {
+    return listOf(
+        diagnosedWithDiabetes to R.string.overdue_list_item_diagnosis_diabetes,
+        diagnosedWithHypertension to R.string.overdue_list_item_diagnosis_hypertension
+    )
+        .filter { (answer, _) -> answer is Answer.Yes }
+        .map { (_, diagnosisTitle) -> diagnosisTitle }
+        .ifEmpty { listOf(R.string.overdue_list_item_diagnosis_none) }
+        .joinToString { context.getString(it) }
   }
 
   private fun updateBottomLayoutVisibility(holder: ViewHolderX) {

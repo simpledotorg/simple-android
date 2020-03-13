@@ -12,6 +12,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
@@ -47,6 +48,9 @@ class BloodSugarSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodSugarMeasu
   @Inject
   lateinit var user: User
 
+  @Inject
+  lateinit var facility: Facility
+
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = BatchSize.VERY_SMALL,
@@ -72,10 +76,18 @@ class BloodSugarSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodSugarMeasu
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.bloodSugarMeasurement(syncStatus = syncStatus, userUuid = user.uuid)
+  override fun generateRecord(syncStatus: SyncStatus) = testData.bloodSugarMeasurement(
+      syncStatus = syncStatus,
+      userUuid = user.uuid,
+      facilityUuid = facility.uuid
+  )
 
   // TODO (SM): Remove blood sugar type once HbA1c sync is enabled
-  override fun generatePayload() = testData.bloodSugarPayload(bloodSugarType = Random, userUuid = user.uuid)
+  override fun generatePayload() = testData.bloodSugarPayload(
+      bloodSugarType = Random,
+      userUuid = user.uuid,
+      facilityUuid = facility.uuid
+  )
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 

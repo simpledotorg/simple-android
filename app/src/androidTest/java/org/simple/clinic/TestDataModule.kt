@@ -2,6 +2,8 @@ package org.simple.clinic
 
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import javax.inject.Named
@@ -21,4 +23,12 @@ class TestDataModule {
   @Provides
   @Named("user_otp")
   fun provideTestUserOtp(): String = "000000"
+
+  @Provides
+  fun provideTestFacility(
+      user: User,
+      facilityRepository: FacilityRepository
+  ): Facility {
+    return facilityRepository.currentFacilityImmediate(user)!!
+  }
 }

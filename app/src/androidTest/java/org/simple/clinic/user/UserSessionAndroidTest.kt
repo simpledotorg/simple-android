@@ -12,6 +12,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -44,6 +45,9 @@ class UserSessionAndroidTest {
   @Inject
   lateinit var user: User
 
+  @Inject
+  lateinit var facility: Facility
+
   @get:Rule
   val ruleChain = RuleChain
       .outerRule(LocalAuthenticationRule())
@@ -56,10 +60,9 @@ class UserSessionAndroidTest {
 
   @Test
   fun when_logging_in_from_registration_entry_user_should_be_logged_in_locally() {
-    val selectedFacility = testData.qaFacility()
     val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(
         uuid = user.uuid,
-        registrationFacility = selectedFacility
+        registrationFacility = facility
     )
     userSession.saveOngoingRegistrationEntry(ongoingRegistrationEntry)
         .andThen(userSession.saveOngoingRegistrationEntryAsUser())
@@ -72,7 +75,7 @@ class UserSessionAndroidTest {
     val currentFacility = facilityRepository
         .currentFacility(user)
         .blockingFirst()
-    assertThat(currentFacility.uuid).isEqualTo(selectedFacility.uuid)
+    assertThat(currentFacility.uuid).isEqualTo(facility.uuid)
 
     val isRegistrationEntryPresent = userSession.isOngoingRegistrationEntryPresent().blockingGet()
     assertThat(isRegistrationEntryPresent).isTrue()

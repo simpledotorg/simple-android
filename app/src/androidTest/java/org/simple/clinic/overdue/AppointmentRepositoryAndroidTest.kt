@@ -92,7 +92,8 @@ class AppointmentRepositoryAndroidTest {
   @Inject
   lateinit var user: User
 
-  private val facility: Facility by lazy { testData.qaFacility() }
+  @Inject
+  lateinit var facility: Facility
 
   @get:Rule
   val ruleChain = RuleChain

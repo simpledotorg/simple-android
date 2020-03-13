@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import javax.inject.Named
 
 @Module
 class TestDataModule {
@@ -12,4 +13,8 @@ class TestDataModule {
   fun provideTestUser(userSession: UserSession): User {
     return userSession.loggedInUserImmediate()!!
   }
+
+  @Provides
+  @Named("user_pin")
+  fun provideTestUserPin(): String = "1712"
 }

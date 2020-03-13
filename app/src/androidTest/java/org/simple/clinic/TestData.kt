@@ -80,8 +80,6 @@ class TestData @Inject constructor(
 
   private fun qaUser() = userSession.loggedInUserImmediate()!!
 
-  fun qaUserPin() = "1712"
-
   fun qaUserOtp() = "000000"
 
   fun qaFacility() = facilityRepository.currentFacility(qaUser()).blockingFirst()
@@ -446,7 +444,7 @@ class TestData @Inject constructor(
   fun ongoingRegistrationEntry(
       uuid: UUID = UUID.randomUUID(),
       phoneNumber: String = faker.number.number(10),
-      pin: String = qaUserPin(),
+      pin: String = "1111",
       registrationFacility: Facility
   ): OngoingRegistrationEntry {
     return OngoingRegistrationEntry(

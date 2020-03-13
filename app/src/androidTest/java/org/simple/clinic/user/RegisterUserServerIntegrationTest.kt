@@ -17,6 +17,7 @@ import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class RegisterUserServerIntegrationTest {
 
@@ -44,6 +45,9 @@ class RegisterUserServerIntegrationTest {
   @Inject
   lateinit var passwordHasher: PasswordHasher
 
+  @field:[Inject Named("user_pin")]
+  lateinit var userPin: String
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -67,7 +71,7 @@ class RegisterUserServerIntegrationTest {
     val registerUserWithId = UUID.randomUUID()
     val user = testData.loggedInUser(
         uuid = registerUserWithId,
-        pinDigest = passwordHasher.hash(testData.qaUserPin()).blockingGet()
+        pinDigest = passwordHasher.hash(userPin).blockingGet()
     )
 
     val registrationResult = registerUser.registerUserAtFacility(user, facilityDao.getOne(registerFacility.uuid)!!)

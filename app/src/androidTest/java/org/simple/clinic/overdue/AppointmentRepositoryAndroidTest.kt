@@ -43,6 +43,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -53,6 +54,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
 class AppointmentRepositoryAndroidTest {
@@ -87,9 +89,10 @@ class AppointmentRepositoryAndroidTest {
   @Inject
   lateinit var clock: TestUtcClock
 
-  private val facility: Facility by lazy { testData.qaFacility() }
+  @Inject
+  lateinit var user: User
 
-  private val userUuid: UUID by lazy { testData.qaUserUuid() }
+  private val facility: Facility by lazy { testData.qaFacility() }
 
   @get:Rule
   val ruleChain = RuleChain
@@ -209,7 +212,7 @@ class AppointmentRepositoryAndroidTest {
           uuid = bpUuid,
           patientUuid = patientUuid,
           facilityUuid = facility.uuid,
-          userUuid = userUuid,
+          userUuid = user.uuid,
           syncStatus = DONE,
           createdAt = Instant.parse("2018-01-01T00:00:00Z"),
           updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
@@ -389,7 +392,7 @@ class AppointmentRepositoryAndroidTest {
           uuid = bpUuid,
           patientUuid = patientUuid,
           facilityUuid = facility.uuid,
-          userUuid = userUuid,
+          userUuid = user.uuid,
           syncStatus = DONE,
           createdAt = Instant.parse("2018-01-01T00:00:00Z"),
           updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
@@ -730,7 +733,7 @@ class AppointmentRepositoryAndroidTest {
             patientUuid = patientUuid,
             systolic = systolic,
             diastolic = diastolic,
-            userUuid = userUuid,
+            userUuid = user.uuid,
             facilityUuid = facility.uuid,
             recordedAt = bpTimestamp,
             createdAt = bpTimestamp,
@@ -1463,7 +1466,7 @@ class AppointmentRepositoryAndroidTest {
           uuid = bpUuid,
           patientUuid = patientUuid,
           facilityUuid = facility.uuid,
-          userUuid = userUuid,
+          userUuid = user.uuid,
           systolic = 120,
           diastolic = 80,
           recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
@@ -1549,7 +1552,7 @@ class AppointmentRepositoryAndroidTest {
           uuid = bpUuid,
           patientUuid = patientUuid,
           facilityUuid = facility.uuid,
-          userUuid = userUuid,
+          userUuid = user.uuid,
           systolic = 120,
           diastolic = 80,
           recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
@@ -1634,7 +1637,7 @@ class AppointmentRepositoryAndroidTest {
           uuid = bpUuid,
           patientUuid = patientUuid,
           facilityUuid = facility.uuid,
-          userUuid = userUuid,
+          userUuid = user.uuid,
           systolic = 120,
           diastolic = 80,
           recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
@@ -1708,7 +1711,7 @@ class AppointmentRepositoryAndroidTest {
             uuid = bpUuid,
             patientUuid = patientUuid,
             facilityUuid = facility.uuid,
-            userUuid = userUuid,
+            userUuid = user.uuid,
             systolic = 120,
             diastolic = 80,
             recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
@@ -1774,7 +1777,7 @@ class AppointmentRepositoryAndroidTest {
             uuid = bloodSugarUuid,
             patientUuid = patientUuid,
             facilityUuid = facility.uuid,
-            userUuid = userUuid,
+            userUuid = user.uuid,
             reading = BloodSugarReading("256", Random),
             recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
             deletedAt = null
@@ -1866,7 +1869,7 @@ class AppointmentRepositoryAndroidTest {
             patientUuid = patientUuid,
             systolic = systolic,
             diastolic = diastolic,
-            userUuid = userUuid,
+            userUuid = user.uuid,
             facilityUuid = facility.uuid,
             recordedAt = bpTimestamp,
             createdAt = bpTimestamp,
@@ -1883,7 +1886,7 @@ class AppointmentRepositoryAndroidTest {
         testData.bloodSugarMeasurement(
             patientUuid = patientUuid,
             reading = bloodSugarReading,
-            userUuid = userUuid,
+            userUuid = user.uuid,
             facilityUuid = facility.uuid,
             recordedAt = bloodSugarTimestamp,
             createdAt = bloodSugarTimestamp,
@@ -2081,7 +2084,7 @@ class AppointmentRepositoryAndroidTest {
           patientUuid = patientUuid,
           systolic = 200,
           diastolic = 200,
-          userUuid = userUuid,
+          userUuid = user.uuid,
           facilityUuid = facility.uuid,
           recordedAt = bpTimestamp,
           createdAt = bpTimestamp,

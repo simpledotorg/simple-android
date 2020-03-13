@@ -80,8 +80,6 @@ class TestData @Inject constructor(
 
   private fun qaUser() = userSession.loggedInUserImmediate()!!
 
-  fun qaUserUuid() = qaUser().uuid
-
   fun qaUserPin() = "1712"
 
   fun qaUserOtp() = "000000"
@@ -203,7 +201,7 @@ class TestData @Inject constructor(
   )
 
   private fun businessIdMetadata(
-      metaData: BusinessIdMetaData = BusinessIdMetaData.BpPassportMetaDataV1(qaUserUuid(), qaUserFacilityUuid()),
+      metaData: BusinessIdMetaData = BusinessIdMetaData.BpPassportMetaDataV1(UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"), qaUserFacilityUuid()),
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1
   ): String = businessIdMetaDataAdapter.serialize(metaData, metaDataVersion)
 
@@ -213,7 +211,7 @@ class TestData @Inject constructor(
       identifier: Identifier = Identifier(value = UUID.randomUUID().toString(), type = Identifier.IdentifierType.BpPassport),
       meta: String = businessIdMetadata(
           metaData = BusinessIdMetaData.BpPassportMetaDataV1(
-              assigningUserUuid = qaUserUuid(),
+              assigningUserUuid = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
               assigningFacilityUuid = qaUserFacilityUuid()
           ),
           metaDataVersion = BpPassportMetaDataV1
@@ -320,7 +318,7 @@ class TestData @Inject constructor(
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
       meta: String = businessIdMetadata(
           metaData = BusinessIdMetaData.BpPassportMetaDataV1(
-              assigningUserUuid = qaUserUuid(),
+              assigningUserUuid = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
               assigningFacilityUuid = qaUserFacilityUuid()
           )
       ),
@@ -467,7 +465,7 @@ class TestData @Inject constructor(
       facilityUuid: UUID = qaUserFacilityUuid(),
       systolic: Int = faker.number.between(0, 299),
       diastolic: Int = faker.number.between(50, 60),
-      userUuid: UUID = qaUserUuid(),
+      userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
@@ -492,7 +490,7 @@ class TestData @Inject constructor(
       bloodSugarValue: Int = faker.number.between(0, 300),
       patientUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = qaUserFacilityUuid(),
-      userUuid: UUID = qaUserUuid(),
+      userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
@@ -719,7 +717,7 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = qaUserFacilityUuid(),
-      userUuid: UUID = qaUserUuid(),
+      userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
       systolic: Int = faker.number.between(0, 299),
       diastolic: Int = faker.number.between(50, 60),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),

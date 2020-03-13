@@ -2252,6 +2252,118 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun querying_all_patients_in_a_facility_should_set_the_the_latest_recorded_measurement_recorded_on_within_any_facility() {
+
+    fun createPatient(patientUuid: UUID, patientName: String): PatientProfile {
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid).let { patientProfile ->
+        patientProfile.copy(patient = patientProfile.patient.copy(status = Active, fullName = patientName))
+      }
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      return patientProfile
+    }
+
+    fun recordBp(uuid: UUID, patientUuid: UUID, facilityUuid: UUID, recordedAt: Instant) {
+      val bp = testData.bloodPressureMeasurement(uuid = uuid, patientUuid = patientUuid, facilityUuid = facilityUuid, recordedAt = recordedAt)
+
+      bloodPressureRepository.save(listOf(bp)).blockingAwait()
+    }
+
+    fun recordBloodSugar(uuid: UUID, patientUuid: UUID, facilityUuid: UUID, recordedAt: Instant) {
+      val bloodSugar = testData.bloodSugarMeasurement(uuid = uuid, patientUuid = patientUuid, facilityUuid = facilityUuid, recordedAt = recordedAt)
+
+      bloodSugarRepository.save(listOf(bloodSugar)).blockingAwait()
+    }
+
+    // given
+    val (facilityA, facilityB) = facilityRepository.facilities().blockingFirst()
+    val now = Instant.parse("2019-06-26T00:00:00Z")
+    val oneSecondLater = now.plusSeconds(1)
+    val oneSecondEarlier = now.minusSeconds(1)
+    val fiveSecondsLater = now.plusSeconds(5)
+
+    val uuidOfPatientA = UUID.fromString("e2a49529-3b46-4c9e-a7bc-af3090f1ecbb")
+    val uuidOfBloodSugar1OfPatientA = UUID.fromString("588b0d8c-6dce-4664-863f-8c79c06c6c3c")
+    val uuidOfBp1OfPatientA = UUID.fromString("ba875b98-4ca0-4097-bbc7-56041b377cf2")
+    val uuidOfBloodSugar2OfPatientA = UUID.fromString("4b92601e-4a86-40de-b6b7-707f9122a81b")
+    createPatient(patientUuid = uuidOfPatientA, patientName = "Patient with latest BP in Facility A")
+    recordBloodSugar(uuid = uuidOfBloodSugar1OfPatientA, patientUuid = uuidOfPatientA, facilityUuid = facilityA.uuid, recordedAt = oneSecondLater)
+    recordBp(uuid = uuidOfBp1OfPatientA, patientUuid = uuidOfPatientA, facilityUuid = facilityB.uuid, recordedAt = oneSecondEarlier)
+    recordBloodSugar(uuid = uuidOfBloodSugar2OfPatientA, patientUuid = uuidOfPatientA, facilityUuid = facilityA.uuid, recordedAt = now)
+
+    val uuidOfPatientB = UUID.fromString("7925e13f-3b04-46b0-b685-7005ebb1b6fd")
+    val uuidOfBp1OfPatientB = UUID.fromString("00e39456-f5e4-4538-956d-7e973ec5da88")
+    val uuidOfBp2OfPatientB = UUID.fromString("c18b41d5-260e-4a26-8030-45c621ded98d")
+    val uuidOfBloodSugar1OfPatientB = UUID.fromString("b72e28cd-1b46-4c72-84cd-58530c2829e3")
+    createPatient(patientUuid = uuidOfPatientB, patientName = "Patient with latest BP in Facility B")
+    recordBp(uuid = uuidOfBp1OfPatientB, patientUuid = uuidOfPatientB, facilityUuid = facilityB.uuid, recordedAt = fiveSecondsLater)
+    recordBloodSugar(uuid = uuidOfBloodSugar1OfPatientB, patientUuid = uuidOfPatientB, facilityUuid = facilityA.uuid, recordedAt = oneSecondEarlier)
+    recordBp(uuid = uuidOfBp2OfPatientB, patientUuid = uuidOfPatientB, facilityUuid = facilityB.uuid, recordedAt = now)
+
+    val uuidOfPatientC = UUID.fromString("9fe841eb-5ae3-404b-99d6-87455cc87eda")
+    createPatient(patientUuid = uuidOfPatientC, patientName = "Patient with no BPs")
+
+    // when
+    fun patientsInFacility(facility: Facility): List<PatientSearchResult> {
+      return patientRepository
+          .allPatientsInFacility(facility)
+          .blockingFirst()
+    }
+
+    data class PatientUuidAndLatestMeasurementRecorded(val patientUuid: UUID, val lastSeen: LastSeen) {
+      constructor(patientSearchResult: PatientSearchResult) : this(patientSearchResult.uuid, patientSearchResult.lastSeen!!)
+    }
+
+    val patientsAndLatestBpRecordedAtFacilityA = patientsInFacility(facilityA)
+        .map(::PatientUuidAndLatestMeasurementRecorded)
+    val patientsAndLatestBpRecordedAtFacilityB = patientsInFacility(facilityB)
+        .map(::PatientUuidAndLatestMeasurementRecorded)
+
+    // then
+    assertThat(patientsAndLatestBpRecordedAtFacilityA)
+        .containsExactly(
+            PatientUuidAndLatestMeasurementRecorded(
+                patientUuid = uuidOfPatientA,
+                lastSeen = LastSeen(
+                    lastSeenOn = oneSecondLater,
+                    lastSeenAtFacilityName = facilityA.name,
+                    lastSeenAtFacilityUuid = facilityA.uuid
+                )
+            ),
+            PatientUuidAndLatestMeasurementRecorded(
+                patientUuid = uuidOfPatientB,
+                lastSeen = LastSeen(
+                    lastSeenOn = fiveSecondsLater,
+                    lastSeenAtFacilityName = facilityB.name,
+                    lastSeenAtFacilityUuid = facilityB.uuid
+                )
+            )
+        )
+        .inOrder()
+
+    assertThat(patientsAndLatestBpRecordedAtFacilityB)
+        .containsExactly(
+            PatientUuidAndLatestMeasurementRecorded(
+                patientUuid = uuidOfPatientA,
+                lastSeen = LastSeen(
+                    lastSeenOn = oneSecondLater,
+                    lastSeenAtFacilityName = facilityA.name,
+                    lastSeenAtFacilityUuid = facilityA.uuid
+                )
+            ),
+            PatientUuidAndLatestMeasurementRecorded(
+                patientUuid = uuidOfPatientB,
+                lastSeen = LastSeen(
+                    lastSeenOn = fiveSecondsLater,
+                    lastSeenAtFacilityName = facilityB.name,
+                    lastSeenAtFacilityUuid = facilityB.uuid
+                )
+            )
+        )
+        .inOrder()
+  }
+
+  @Test
   fun verify_recordedAt_is_being_used_for_bp_instead_of_updatedAt_for_recent_patients() {
     val initialTime = clock.instant()
 

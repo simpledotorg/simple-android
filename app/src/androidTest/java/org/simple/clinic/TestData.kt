@@ -50,7 +50,6 @@ import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.randomPatientPhoneNumberType
@@ -68,8 +67,7 @@ private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
 
 @AppScope
 class TestData @Inject constructor(
-    private val faker: Faker,
-    private val userClock: TestUserClock
+    private val faker: Faker
 ) {
 
   fun patientProfile(
@@ -823,7 +821,7 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       reading: BloodSugarReading = BloodSugarReading(faker.number.between(30, 1000).toString(), Random),
       patientUuid: UUID = UUID.randomUUID(),
-      recordedAt: Instant = Instant.now(userClock),
+      recordedAt: Instant = Instant.now(),
       userUuid: UUID = UUID.fromString("4e3442df-ffa4-4a66-9d5f-672d3135c460"),
       facilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       createdAt: Instant = Instant.now(),

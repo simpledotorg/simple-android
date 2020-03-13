@@ -4,6 +4,7 @@ import dagger.Component
 import org.simple.clinic.DateOfBirthHintUnfocusedAndroidTest
 import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestDataModule
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
 import org.simple.clinic.bloodsugar.sync.BloodSugarSyncAndroidTest
@@ -46,7 +47,8 @@ import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterAndroidT
 @Component(
     modules = [
       TestAppModule::class,
-      FakerModule::class
+      FakerModule::class,
+      TestDataModule::class
     ]
 )
 interface TestAppComponent {

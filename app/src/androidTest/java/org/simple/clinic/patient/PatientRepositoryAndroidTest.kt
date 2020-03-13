@@ -119,6 +119,9 @@ class PatientRepositoryAndroidTest {
   @Inject
   lateinit var businessIdMetaDataAdapter: BusinessIdMetaDataAdapter
 
+  @Inject
+  lateinit var loggedInUser: User
+
   @get:Rule
   val ruleChain = RuleChain
       .outerRule(LocalAuthenticationRule())
@@ -127,9 +130,6 @@ class PatientRepositoryAndroidTest {
 
   val config: PatientConfig
     get() = configProvider.blockingFirst()
-
-  private val loggedInUser: User
-    get() = testData.qaUser()
 
   private val currentFacility: Facility
     get() = testData.qaFacility()

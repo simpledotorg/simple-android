@@ -11,6 +11,7 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.user.User
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Duration
@@ -35,6 +36,9 @@ class BloodPressureRepositoryAndroidTest {
 
   @Inject
   lateinit var testData: TestData
+
+  @Inject
+  lateinit var user: User
 
   private val authenticationRule = LocalAuthenticationRule()
 
@@ -62,7 +66,7 @@ class BloodPressureRepositoryAndroidTest {
             patientUuid = UUID.randomUUID(),
             systolic = 120,
             diastolic = 80,
-            loggedInUser = testData.qaUser(),
+            loggedInUser = user,
             currentFacility = testData.qaFacility(),
             recordedAt = now)
         .blockingGet()

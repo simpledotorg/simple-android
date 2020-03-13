@@ -13,7 +13,6 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
@@ -84,7 +83,7 @@ class BloodSugarSummaryViewEffectHandlerTest {
   @Test
   fun `when open blood sugar update sheet effect is received, then open blood sugar update sheet`() {
     // given
-    val bloodSugar = PatientMocker.bloodSugar(
+    val bloodSugar = PatientMocker.bloodSugarMeasurement(
         UUID.fromString("3be65af9-324f-4904-9ab4-6d8c47941b99"),
         patientUuid = patientUuid
     )

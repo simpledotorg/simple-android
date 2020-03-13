@@ -230,7 +230,7 @@ class BloodPressureEntrySheetLogicTest {
     val bpUuid = UUID.fromString("8ddd7237-f331-4d34-9ce6-a3cd0c4c8133")
     return listOf(
         listOf(New(patientUuid), null),
-        listOf(Update(bpUuid), PatientMocker.bp(uuid = bpUuid, patientUuid = patientUuid))
+        listOf(Update(bpUuid), PatientMocker.bloodPressureMeasurement(uuid = bpUuid, patientUuid = patientUuid))
     )
   }
 
@@ -240,7 +240,7 @@ class BloodPressureEntrySheetLogicTest {
       openAs: OpenAs,
       shouldShowRemoveBpButton: Boolean
   ) {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bloodPressureMeasurement()))
 
     sheetCreated(openAs)
 
@@ -264,7 +264,7 @@ class BloodPressureEntrySheetLogicTest {
       openAs: OpenAs,
       showEntryTitle: Boolean
   ) {
-    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(PatientMocker.bloodPressureMeasurement()))
 
     sheetCreated(openAs)
 
@@ -284,7 +284,7 @@ class BloodPressureEntrySheetLogicTest {
 
   @Test
   fun `when the remove button is clicked, the confirmation alert must be shown`() {
-    val bloodPressure = PatientMocker.bp()
+    val bloodPressure = PatientMocker.bloodPressureMeasurement()
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bloodPressure))
 
     sheetCreatedForUpdate(bloodPressure.uuid)
@@ -329,7 +329,7 @@ class BloodPressureEntrySheetLogicTest {
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 2, 13)
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
-    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(PatientMocker.bp(patientUuid = patientUuid)))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
 
     sheetCreatedForNew(patientUuid)
@@ -365,7 +365,7 @@ class BloodPressureEntrySheetLogicTest {
   @Test
   fun `when save is clicked while updating a BP, date entry is active and input is valid then the updated BP measurement should be saved`() {
     val oldCreatedAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
-    val existingBp = PatientMocker.bp(
+    val existingBp = PatientMocker.bloodPressureMeasurement(
         userUuid = user.uuid,
         facilityUuid = facility.uuid,
         systolic = 9000,
@@ -376,7 +376,7 @@ class BloodPressureEntrySheetLogicTest {
     )
 
     val newInputDate = LocalDate.of(1991, 2, 14)
-    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).doReturn(Single.just(PatientMocker.bloodPressureMeasurement()))
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp))
     whenever(bloodPressureRepository.updateMeasurement(any())).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
@@ -553,7 +553,7 @@ class BloodPressureEntrySheetLogicTest {
   fun `when screen is opened for updating an existing BP, then the date should be prefilled with the BP's recorded date`() {
     val recordedAtDate = LocalDate.of(2018, 4, 23)
     val recordedAtDateAsInstant = recordedAtDate.atStartOfDay().toInstant(UTC)
-    val existingBp = PatientMocker.bp(recordedAt = recordedAtDateAsInstant)
+    val existingBp = PatientMocker.bloodPressureMeasurement(recordedAt = recordedAtDateAsInstant)
 
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).doReturn(Observable.just(existingBp, existingBp))
 
@@ -594,7 +594,7 @@ class BloodPressureEntrySheetLogicTest {
 
   @Test
   fun `whenever the BP sheet is shown to update an existing BP, then show the BP date`() {
-    val bp = PatientMocker.bp(patientUuid = patientUuid)
+    val bp = PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)
     val recordedDate = bp.recordedAt.toLocalDateAtZone(testUserClock.zone)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
@@ -694,7 +694,7 @@ class BloodPressureEntrySheetLogicTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    val bp = PatientMocker.bp(patientUuid = patientUuid)
+    val bp = PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
     sheetCreatedForUpdate(bp.uuid)
@@ -721,7 +721,7 @@ class BloodPressureEntrySheetLogicTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
 
-    val bp = PatientMocker.bp(patientUuid = patientUuid)
+    val bp = PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.just(bp))
 
     sheetCreatedForUpdate(bp.uuid)
@@ -802,7 +802,7 @@ class BloodPressureEntrySheetLogicTest {
     val inputDate = LocalDate.of(1916, 5, 10)
 
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any()))
-        .doReturn(Single.just(PatientMocker.bp(patientUuid = patientUuid)))
+        .doReturn(Single.just(PatientMocker.bloodPressureMeasurement(patientUuid = patientUuid)))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).doReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
 
@@ -840,7 +840,7 @@ class BloodPressureEntrySheetLogicTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
     val createdAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
-    val existingBp = PatientMocker.bp(
+    val existingBp = PatientMocker.bloodPressureMeasurement(
         userUuid = user.uuid,
         facilityUuid = facility.uuid,
         patientUuid = patientUuid,
@@ -903,7 +903,7 @@ class BloodPressureEntrySheetLogicTest {
 
     val oldCreatedAt = Instant.parse("1990-01-13T00:00:00Z")
     val patientUuid = UUID.fromString("af92b081-0131-4f91-9c28-98da5737945b")
-    val existingBp = PatientMocker.bp(
+    val existingBp = PatientMocker.bloodPressureMeasurement(
         uuid = patientUuid,
         userUuid = user.uuid,
         facilityUuid = facility.uuid,
@@ -965,7 +965,7 @@ class BloodPressureEntrySheetLogicTest {
     val systolic = 120.toString()
     val diastolic = 110.toString()
     val createdAt = LocalDate.of(1990, 1, 13).toUtcInstant(testUserClock)
-    val existingBp = PatientMocker.bp(
+    val existingBp = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("20d6aba0-80a9-4ab1-b0b6-5261a53f5fe5"),
         userUuid = user.uuid,
         facilityUuid = facility.uuid,

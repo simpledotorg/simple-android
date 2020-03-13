@@ -40,7 +40,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
 
   @Test
   fun `when remove is clicked, the blood pressure must be marked as deleted and the dialog should be dismissed`() {
-    val bloodPressure = PatientMocker.bp()
+    val bloodPressure = PatientMocker.bloodPressureMeasurement()
     val markBloodPressureDeletedCompletable = Completable.complete()
     val updatePatientRecordedAtCompletable = Completable.complete()
     whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).doReturn(Observable.just(bloodPressure))

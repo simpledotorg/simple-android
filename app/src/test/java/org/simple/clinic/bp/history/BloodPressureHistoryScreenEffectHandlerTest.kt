@@ -56,7 +56,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   @Test
   fun `when load blood pressure history effect is received, then load all blood pressures`() {
     // given
-    val bloodPressureMeasurement = PatientMocker.bp(
+    val bloodPressureMeasurement = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("51ac042d-2f70-495c-a3e3-2599d8990da2"),
         patientUuid
     )
@@ -88,7 +88,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   @Test
   fun `when open blood pressure update sheet effect is received, then open blood pressure update sheet`() {
     // given
-    val bloodPressureMeasurement = PatientMocker.bp(
+    val bloodPressureMeasurement = PatientMocker.bloodPressureMeasurement(
         UUID.fromString("3c6fb840-86b9-4b85-aa75-b24c4bb9fbfd"),
         patientUuid
     )

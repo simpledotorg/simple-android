@@ -27,14 +27,14 @@ class BloodPressureHistoryListItemTest {
     // when
     val recordedAt = Instant.parse("2020-01-01T00:00:00Z")
     val createdAt = Instant.parse("2020-01-01T00:00:00Z")
-    val bloodPressureNow = PatientMocker.bp(
+    val bloodPressureNow = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("78e876ae-3055-43d6-a132-7ad5dd930e23"),
         systolic = 120,
         diastolic = 70,
         createdAt = createdAt,
         recordedAt = recordedAt
     )
-    val bloodPressureInPast = PatientMocker.bp(
+    val bloodPressureInPast = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("2b929a33-e543-4a4f-a98e-5d0d3e8e1e03"),
         systolic = 120,
         diastolic = 70,
@@ -63,13 +63,13 @@ class BloodPressureHistoryListItemTest {
   @Test
   fun `if the blood pressure reading is high, then it must be displayed as a high BP`() {
     // when
-    val bloodPressureNormal = PatientMocker.bp(
+    val bloodPressureNormal = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("78e876ae-3055-43d6-a132-7ad5dd930e23"),
         systolic = 120,
         diastolic = 70,
         recordedAt = Instant.parse("2020-01-06T00:00:00Z")
     )
-    val bloodPressureHigh = PatientMocker.bp(
+    val bloodPressureHigh = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("2b929a33-e543-4a4f-a98e-5d0d3e8e1e03"),
         systolic = 180,
         diastolic = 70,
@@ -98,7 +98,7 @@ class BloodPressureHistoryListItemTest {
   fun `if there is only one list item, then divider should not be shown`() {
     // when
     val utcClock = TestUtcClock()
-    val bloodPressure = PatientMocker.bp(
+    val bloodPressure = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("0606d6b3-96c4-4380-8410-5dae8f3c5059"),
         systolic = 120,
         diastolic = 70,
@@ -126,19 +126,19 @@ class BloodPressureHistoryListItemTest {
   fun `if there are more than two list items, then dividers should be shown in between`() {
     // when
     val utcClock = TestUtcClock()
-    val bloodPressure1 = PatientMocker.bp(
+    val bloodPressure1 = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("0606d6b3-96c4-4380-8410-5dae8f3c5059"),
         systolic = 120,
         diastolic = 70,
         recordedAt = Instant.parse("2020-01-16T00:00:00Z")
     )
-    val bloodPressure2 = PatientMocker.bp(
+    val bloodPressure2 = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("25b10221-5ebd-4025-9274-99fade82af4d"),
         systolic = 180,
         diastolic = 85,
         recordedAt = Instant.parse("2019-12-13T00:00:00Z")
     )
-    val bloodPressure3 = PatientMocker.bp(
+    val bloodPressure3 = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("3ea1b163-9f98-4fed-80bb-c9096b5bd871"),
         systolic = 120,
         diastolic = 65,
@@ -168,19 +168,19 @@ class BloodPressureHistoryListItemTest {
   fun `if two blood pressures are recorded in same date, then show blood pressure date and time`() {
     // when
     val utcClock = TestUtcClock()
-    val bloodPressure1 = PatientMocker.bp(
+    val bloodPressure1 = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("1f15a240-90ef-4820-91f8-b09c84aa2dd1"),
         systolic = 120,
         diastolic = 70,
         recordedAt = Instant.parse("2020-01-16T10:00:00Z")
     )
-    val bloodPressure2 = PatientMocker.bp(
+    val bloodPressure2 = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("2a890924-e127-41da-a2d0-172975918181"),
         systolic = 180,
         diastolic = 85,
         recordedAt = Instant.parse("2020-01-16T09:00:00Z")
     )
-    val bloodPressure3 = PatientMocker.bp(
+    val bloodPressure3 = PatientMocker.bloodPressureMeasurement(
         uuid = UUID.fromString("717a3350-b0d6-4356-bd72-de0f70c5b09c"),
         systolic = 120,
         diastolic = 65,

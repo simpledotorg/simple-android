@@ -314,7 +314,7 @@ object TestData {
    * the server. Doing so may result in data loss due to foreign key constraints.
    */
   fun facility(
-      uuid: UUID,
+      uuid: UUID = UUID.randomUUID(),
       name: String = faker.company.name(),
       district: String = faker.address.city(),
       state: String = faker.address.state(),

@@ -19,6 +19,7 @@ import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
+import org.simple.clinic.user.User
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
@@ -42,6 +43,9 @@ class BloodSugarSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodSugarMeasu
 
   @Inject
   lateinit var testData: TestData
+
+  @Inject
+  lateinit var user: User
 
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
@@ -68,7 +72,7 @@ class BloodSugarSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodSugarMeasu
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.bloodSugarMeasurement(syncStatus = syncStatus)
+  override fun generateRecord(syncStatus: SyncStatus) = testData.bloodSugarMeasurement(syncStatus = syncStatus, userUuid = user.uuid)
 
   // TODO (SM): Remove blood sugar type once HbA1c sync is enabled
   override fun generatePayload() = testData.bloodSugarPayload(bloodSugarType = Random)

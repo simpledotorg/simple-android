@@ -292,11 +292,15 @@
   <string name="overdue_no_patients">No patients overdue</string>
   <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_diagnosis_diabetes">Diabetes</string>
+  <string name="overdue_list_item_diagnosis_hypertension">Hypertension</string>
+  <string name="overdue_list_item_diagnosis_none">None</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s day overdue</item>
     <item quantity="other">%s days overdue</item>
   </plurals>
-  <string name="overduelist_last_seen">Last seen:</string>
+  <string name="overduelist_diagnosis_label">Dx</string>
+  <string name="overduelist_visited">Visited</string>
   <string name="overduelist_agreed_to_visit">Mark patient as ‘agreed to visit’</string>
   <string name="overduelist_remind_call_later">Remind to call later…</string>
   <string name="overduelist_remove_from_list">Remove from overdue list…</string>

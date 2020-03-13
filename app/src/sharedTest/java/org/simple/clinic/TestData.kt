@@ -14,6 +14,7 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityPayload
+import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -29,7 +30,10 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
+import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.RecentPatient
+import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
@@ -46,6 +50,7 @@ import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.Timestamps
+import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
@@ -105,14 +110,15 @@ object TestData {
       addressUuid: UUID = UUID.randomUUID(),
       fullName: String = faker.name.name(),
       gender: Gender = randomGender(),
-      dateOfBirth: LocalDate? = LocalDate.now(),
+      dateOfBirth: LocalDate? = LocalDate.parse("1980-01-01"),
       age: Age? = Age(value = Math.random().times(100).toInt(), updatedAt = Instant.now()),
       status: PatientStatus = PatientStatus.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
       recordedAt: Instant = Instant.now(),
-      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      reminderConsent: ReminderConsent = Granted
   ): Patient {
     return Patient(
         uuid = uuid,
@@ -127,7 +133,7 @@ object TestData {
         deletedAt = deletedAt,
         recordedAt = recordedAt,
         syncStatus = syncStatus,
-        reminderConsent = Granted
+        reminderConsent = reminderConsent
     )
   }
 
@@ -395,7 +401,9 @@ object TestData {
       phone: String = faker.phoneNumber.phoneNumber(),
       pinDigest: String = "pin-digest",
       status: UserStatus = UserStatus.random(),
-      loggedInStatus: User.LoggedInStatus = randomOfEnum(User.LoggedInStatus::class)
+      loggedInStatus: User.LoggedInStatus = randomOfEnum(User.LoggedInStatus::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
   ): User {
     return User(
         uuid = uuid,
@@ -403,8 +411,8 @@ object TestData {
         phoneNumber = phone,
         pinDigest = pinDigest,
         status = status,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now(),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
         loggedInStatus = loggedInStatus)
   }
 
@@ -476,7 +484,9 @@ object TestData {
   fun prescription(
       uuid: UUID = UUID.randomUUID(),
       name: String = faker.food.dish(),
-      dosage: String = "${faker.number.positive(10, 50)}mg",
+      dosage: String? = "${faker.number.positive(10, 50)}mg",
+      rxNormCode: String = "rx-norm-code",
+      isDeleted: Boolean = false,
       isProtocolDrug: Boolean = false,
       patientUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = UUID.randomUUID(),
@@ -489,8 +499,8 @@ object TestData {
         uuid = uuid,
         name = name,
         dosage = dosage,
-        rxNormCode = "rx-norm-code",
-        isDeleted = false,
+        rxNormCode = rxNormCode,
+        isDeleted = isDeleted,
         isProtocolDrug = isProtocolDrug,
         patientUuid = patientUuid,
         facilityUuid = facilityUuid,
@@ -541,7 +551,7 @@ object TestData {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      creationFacilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe")
+      creationFacilityUuid: UUID? = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe")
   ): Appointment {
     return Appointment(
         uuid = uuid,
@@ -599,7 +609,6 @@ object TestData {
       hasHadStroke: Answer = randomMedicalHistoryAnswer(),
       hasHadKidneyDisease: Answer = randomMedicalHistoryAnswer(),
       diagnosedWithHypertension: Answer = randomMedicalHistoryAnswer(),
-      isOnTreatmentForHypertension: Answer = randomMedicalHistoryAnswer(),
       hasDiabetes: Answer = randomMedicalHistoryAnswer(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
@@ -834,4 +843,115 @@ object TestData {
         syncStatus = syncStatus
     )
   }
+
+  fun overdueAppointment(
+      facilityUuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      phoneNumberUuid: UUID = UUID.randomUUID(),
+      appointmentUuid: UUID = UUID.randomUUID(),
+      name: String = "somebody",
+      isHighRisk: Boolean = false,
+      gender: Gender = Gender.Transgender,
+      dateOfBirth: LocalDate? = LocalDate.now(UTC).minusYears(30),
+      age: Age? = null,
+      phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
+      appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
+      patientLastSeen: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      diagnosedWithDiabetes: Answer? = null,
+      diagnosedWithHypertension: Answer? = null
+  ): OverdueAppointment {
+    return OverdueAppointment(
+        fullName = name,
+        gender = gender,
+        dateOfBirth = dateOfBirth,
+        age = age,
+        appointment = appointment,
+        phoneNumber = phoneNumber,
+        isAtHighRisk = isHighRisk,
+        patientLastSeen = patientLastSeen,
+        diagnosedWithDiabetes = diagnosedWithDiabetes,
+        diagnosedWithHypertension = diagnosedWithHypertension
+    )
+  }
+
+  fun loggedInUserPayload(
+      uuid: UUID = UUID.randomUUID(),
+      name: String = "a name",
+      phone: String = "a phone",
+      pinDigest: String = "a hash",
+      registrationFacilityUuid: UUID = UUID.randomUUID(),
+      status: UserStatus = UserStatus.WaitingForApproval,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): LoggedInUserPayload {
+    return LoggedInUserPayload(
+        uuid = uuid,
+        fullName = name,
+        phoneNumber = phone,
+        pinDigest = pinDigest,
+        registrationFacilityId = registrationFacilityUuid,
+        createdAt = createdAt,
+        status = status,
+        updatedAt = updatedAt)
+  }
+
+  fun patientSearchResult(
+      uuid: UUID = UUID.randomUUID(),
+      fullName: String = "Ashok Kumar",
+      phoneNumber: String = "3.14159",
+      gender: Gender = Gender.Male,
+      dateOfBirth: LocalDate? = null,
+      age: Age? = Age(45, Instant.now()),
+      status: PatientStatus = PatientStatus.Active,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      address: PatientAddress = patientAddress(),
+      syncStatus: SyncStatus = SyncStatus.DONE,
+      phoneType: PatientPhoneNumberType = PatientPhoneNumberType.Mobile,
+      phoneNumberUuid: UUID = UUID.randomUUID(),
+      phoneActive: Boolean = true,
+      phoneCreatedAt: Instant = Instant.now(),
+      phoneUpdatedAt: Instant = Instant.now(),
+      lastSeen: PatientSearchResult.LastSeen = PatientSearchResult.LastSeen(
+          lastSeenOn = Instant.now(),
+          lastSeenAtFacilityName = "Some Facility",
+          lastSeenAtFacilityUuid = UUID.randomUUID()
+      )
+  ): PatientSearchResult {
+    return PatientSearchResult(
+        uuid = uuid,
+        fullName = fullName,
+        gender = gender,
+        dateOfBirth = dateOfBirth,
+        age = age,
+        status = status,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        address = address,
+        syncStatus = syncStatus,
+        phoneNumber = phoneNumber,
+        phoneType = phoneType,
+        phoneUuid = phoneNumberUuid,
+        phoneActive = phoneActive,
+        phoneCreatedAt = phoneCreatedAt,
+        phoneUpdatedAt = phoneUpdatedAt,
+        lastSeen = lastSeen
+    )
+  }
+
+  fun recentPatient(
+      uuid: UUID = UUID.randomUUID(),
+      fullName: String = "fullName",
+      gender: Gender = randomGender(),
+      dateOfBirth: LocalDate? = null,
+      age: Age? = null,
+      updatedAt: Instant = Instant.now()
+  ) = RecentPatient(
+      uuid = uuid,
+      fullName = fullName,
+      gender = gender,
+      dateOfBirth = dateOfBirth,
+      age = age,
+      updatedAt = updatedAt
+  )
 }

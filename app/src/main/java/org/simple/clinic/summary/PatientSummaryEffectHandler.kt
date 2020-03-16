@@ -169,11 +169,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
 
-            DataForDoneClickLoaded(
-                noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid),
-                noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid),
-                countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid)
-            )
+            DataForDoneClickLoaded(countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid))
           }
     }
   }
@@ -219,14 +215,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .doOnNext { dataSync.fireAndForgetSync(FREQUENT) }
           .map { SyncTriggered(it.sheetOpenedFrom) }
     }
-  }
-
-  private fun doesNotHaveBloodPressures(patientUuid: UUID): Boolean {
-    return bloodPressureRepository.bloodPressureCountImmediate(patientUuid) == 0
-  }
-
-  private fun doesNotHaveBloodSugars(patientUuid: UUID): Boolean {
-    return bloodSugarRepository.bloodSugarCountImmediate(patientUuid) == 0
   }
 
   private fun countOfRecordedMeasurements(patientUuid: UUID): Int {

@@ -50,8 +50,6 @@ data class DataForBackClickLoaded(
 ) : PatientSummaryEvent()
 
 data class DataForDoneClickLoaded(
-    val noBloodPressuresRecordedForPatient: Boolean,
-    val noBloodSugarsRecordedForPatient: Boolean,
     val countOfRecordedMeasurements: Int
 ): PatientSummaryEvent()
 

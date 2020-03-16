@@ -154,13 +154,13 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when all blood sugars are not deleted, clicking on save must show the schedule appointment sheet regardless of summary changes`() {
+  fun `when at least one measurement is present, clicking on save must show the schedule appointment sheet`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(DataForDoneClickLoaded(
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = false,
-            countOfRecordedMeasurements = 0
+            noBloodSugarsRecordedForPatient = true,
+            countOfRecordedMeasurements = 1
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -169,12 +169,12 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when all blood sugar are deleted, clicking on save must go to the home screen regardless of summary changes`() {
+  fun `when no measurements are present, clicking on save must go to the home screen`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(DataForDoneClickLoaded(
-            noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = true,
+            noBloodPressuresRecordedForPatient = false,
+            noBloodSugarsRecordedForPatient = false,
             countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(

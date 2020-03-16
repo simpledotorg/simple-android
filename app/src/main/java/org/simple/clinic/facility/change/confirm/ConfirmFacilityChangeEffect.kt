@@ -1,5 +1,7 @@
 package org.simple.clinic.facility.change.confirm
 
+import org.simple.clinic.facility.Facility
+
 sealed class ConfirmFacilityChangeEffect
 
-object ChangeFacilityEffect : ConfirmFacilityChangeEffect()
+data class ChangeFacilityEffect(val selectedFacility: Facility) : ConfirmFacilityChangeEffect()

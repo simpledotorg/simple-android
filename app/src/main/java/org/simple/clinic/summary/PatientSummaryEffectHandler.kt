@@ -172,7 +172,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             val patientUuid = loadDataForBackClick.patientUuid
             DataForDoneClickLoaded(
                 noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid),
-                noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid)
+                noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid),
+                countOfRecordedMeasurements = 0
             )
           }
     }

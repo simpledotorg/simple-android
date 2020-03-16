@@ -51,7 +51,8 @@ data class DataForBackClickLoaded(
 
 data class DataForDoneClickLoaded(
     val noBloodPressuresRecordedForPatient: Boolean,
-    val noBloodSugarsRecordedForPatient: Boolean
+    val noBloodSugarsRecordedForPatient: Boolean,
+    val countOfRecordedMeasurements: Int
 ): PatientSummaryEvent()
 
 data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom): PatientSummaryEvent()

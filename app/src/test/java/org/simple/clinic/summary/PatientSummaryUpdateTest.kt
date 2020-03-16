@@ -159,7 +159,8 @@ class PatientSummaryUpdateTest {
         .given(defaultModel)
         .whenEvent(DataForDoneClickLoaded(
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = false
+            noBloodSugarsRecordedForPatient = false,
+            countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -173,7 +174,8 @@ class PatientSummaryUpdateTest {
         .given(defaultModel)
         .whenEvent(DataForDoneClickLoaded(
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = true
+            noBloodSugarsRecordedForPatient = true,
+            countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(
             hasNoModel(),

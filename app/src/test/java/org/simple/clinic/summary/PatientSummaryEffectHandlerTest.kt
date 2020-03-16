@@ -133,8 +133,8 @@ class PatientSummaryEffectHandlerTest {
     val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
 
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-    whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 0
-    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 1
+    whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 3
+    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 2
 
     // when
     testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp))
@@ -142,9 +142,9 @@ class PatientSummaryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(DataForBackClickLoaded(
         hasPatientDataChangedSinceScreenCreated = true,
-        noBloodPressuresRecordedForPatient = true,
+        noBloodPressuresRecordedForPatient = false,
         noBloodSugarsRecordedForPatient = false,
-        countOfRecordedMeasurements = 0
+        countOfRecordedMeasurements = 5
     ))
     verifyZeroInteractions(uiActions)
   }

@@ -70,14 +70,14 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and at least one blood sugar is present, clicking on back must show the schedule appointment sheet`() {
+  fun `when there are patient summary changes and at least one measurement is present, clicking on back must show the schedule appointment sheet`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = false,
-            countOfRecordedMeasurements = 0
+            noBloodSugarsRecordedForPatient = true,
+            countOfRecordedMeasurements = 1
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -86,60 +86,12 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and all blood sugars are deleted, clicking on back for existing patient screen must go back to previous screen`() {
+  fun `when there are patient summary changes and no measurements are recorded, clicking on back for existing patient screen must go back to previous screen`() {
     updateSpec
         .given(defaultModel.forExistingPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = true,
-            countOfRecordedMeasurements = 0
-        ))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoBackToPreviousScreen as PatientSummaryEffect)
-        ))
-  }
-
-  @Test
-  fun `when there are patient summary changes and all blood sugars are deleted, clicking on back for new patient screen must go back to home screen`() {
-    updateSpec
-        .given(defaultModel.forNewPatient())
-        .whenEvent(DataForBackClickLoaded(
-            hasPatientDataChangedSinceScreenCreated = true,
-            noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = true,
-            countOfRecordedMeasurements = 0
-        ))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoToHomeScreen as PatientSummaryEffect)
-        ))
-  }
-
-  @Test
-  fun `when there are patient summary changes and all blood sugars are deleted, clicking on back link id with patient screen must go back to home screen`() {
-    updateSpec
-        .given(defaultModel.forLinkingWithExistingPatient())
-        .whenEvent(DataForBackClickLoaded(
-            hasPatientDataChangedSinceScreenCreated = true,
-            noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = true,
-            countOfRecordedMeasurements = 0
-        ))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoToHomeScreen as PatientSummaryEffect)
-        ))
-  }
-
-  @Test
-  fun `when there are no patient summary changes and all blood sugars are not deleted, clicking on back must go back`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(DataForBackClickLoaded(
-            hasPatientDataChangedSinceScreenCreated = false,
-            noBloodPressuresRecordedForPatient = true,
+            noBloodPressuresRecordedForPatient = false,
             noBloodSugarsRecordedForPatient = false,
             countOfRecordedMeasurements = 0
         ))
@@ -150,13 +102,61 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are no patient summary changes and all blood sugars are deleted, clicking on back must go back`() {
+  fun `when there are patient summary changes and no measurements are recorded, clicking on back for new patient screen must go back to home screen`() {
+    updateSpec
+        .given(defaultModel.forNewPatient())
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = true,
+            noBloodPressuresRecordedForPatient = false,
+            noBloodSugarsRecordedForPatient = false,
+            countOfRecordedMeasurements = 0
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when there are patient summary changes and no measurements are recorded, clicking on back link id with patient screen must go back to home screen`() {
+    updateSpec
+        .given(defaultModel.forLinkingWithExistingPatient())
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = true,
+            noBloodPressuresRecordedForPatient = false,
+            noBloodSugarsRecordedForPatient = false,
+            countOfRecordedMeasurements = 0
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when there are no patient summary changes and at least one measurement is recorded, clicking on back must go back`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
             noBloodPressuresRecordedForPatient = true,
             noBloodSugarsRecordedForPatient = true,
+            countOfRecordedMeasurements = 1
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBackToPreviousScreen as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when there are no patient summary changes and no measurements are recorded, clicking on back must go back`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = false,
+            noBloodPressuresRecordedForPatient = false,
+            noBloodSugarsRecordedForPatient = false,
             countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(

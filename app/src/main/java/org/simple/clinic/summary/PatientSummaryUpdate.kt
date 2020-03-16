@@ -32,8 +32,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
           patientUuid = model.patientUuid,
           hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,
-          noBloodPressuresRecorded = event.noBloodPressuresRecordedForPatient,
-          noBloodSugarsRecorded = event.noBloodSugarsRecordedForPatient,
+          countOfRecordedMeasurements = event.countOfRecordedMeasurements,
           openIntention = model.openIntention
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
@@ -61,11 +60,10 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   private fun dataForHandlingBackLoaded(
       patientUuid: UUID,
       hasPatientDataChanged: Boolean,
-      noBloodPressuresRecorded: Boolean,
-      noBloodSugarsRecorded: Boolean,
+      countOfRecordedMeasurements: Int,
       openIntention: OpenIntention
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val shouldShowScheduleAppointmentSheet = if (noBloodPressuresRecorded && noBloodSugarsRecorded) false else hasPatientDataChanged
+    val shouldShowScheduleAppointmentSheet = if (countOfRecordedMeasurements == 0) false else hasPatientDataChanged
 
     val effect = when {
       shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK)

@@ -10,7 +10,8 @@ class ConfirmFacilityChangeUpdate : Update<ConfirmFacilityChangeModel, ConfirmFa
       event: ConfirmFacilityChangeEvent
   ): Next<ConfirmFacilityChangeModel, ConfirmFacilityChangeEffect> {
     return when (event) {
-      FacilityChangeConfirmed -> dispatch(ChangeFacilityEffect)
+      is FacilityChangeConfirmed -> dispatch(ChangeFacilityEffect(event.selectedFacility))
+      FacilityChanged -> TODO()
     }
   }
 }

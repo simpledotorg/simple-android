@@ -76,7 +76,8 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = false
+            noBloodSugarsRecordedForPatient = false,
+            countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -91,7 +92,8 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = true
+            noBloodSugarsRecordedForPatient = true,
+            countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -106,7 +108,8 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = true
+            noBloodSugarsRecordedForPatient = true,
+            countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -121,7 +124,8 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = true
+            noBloodSugarsRecordedForPatient = true,
+            countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -136,7 +140,8 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = false
+            noBloodSugarsRecordedForPatient = false,
+            countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -151,7 +156,8 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
             noBloodPressuresRecordedForPatient = true,
-            noBloodSugarsRecordedForPatient = true
+            noBloodSugarsRecordedForPatient = true,
+            countOfRecordedMeasurements = 0
         ))
         .then(assertThatNext(
             hasNoModel(),

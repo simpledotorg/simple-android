@@ -156,8 +156,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             DataForBackClickLoaded(
                 hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
-                noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid),
-                noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid),
                 countOfRecordedMeasurements = countOfRecordedBloodPressures + countOfRecordedBloodSugars
             )
           }

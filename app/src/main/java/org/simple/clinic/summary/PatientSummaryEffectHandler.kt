@@ -151,12 +151,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
             val timestamp = loadDataForBackClick.screenCreatedTimestamp
-            val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
-            val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
 
             DataForBackClickLoaded(
                 hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
-                countOfRecordedMeasurements = countOfRecordedBloodPressures + countOfRecordedBloodSugars
+                countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid)
             )
           }
     }
@@ -170,10 +168,11 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
+
             DataForDoneClickLoaded(
                 noBloodPressuresRecordedForPatient = doesNotHaveBloodPressures(patientUuid),
                 noBloodSugarsRecordedForPatient = doesNotHaveBloodSugars(patientUuid),
-                countOfRecordedMeasurements = 0
+                countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid)
             )
           }
     }
@@ -228,6 +227,13 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
   private fun doesNotHaveBloodSugars(patientUuid: UUID): Boolean {
     return bloodSugarRepository.bloodSugarCountImmediate(patientUuid) == 0
+  }
+
+  private fun countOfRecordedMeasurements(patientUuid: UUID): Int {
+    val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
+    val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
+
+    return countOfRecordedBloodPressures + countOfRecordedBloodSugars
   }
 
   private fun hasInvalidPhone(patientUuid: UUID): Boolean {

@@ -142,8 +142,6 @@ class PatientSummaryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(DataForBackClickLoaded(
         hasPatientDataChangedSinceScreenCreated = true,
-        noBloodPressuresRecordedForPatient = false,
-        noBloodSugarsRecordedForPatient = false,
         countOfRecordedMeasurements = 5
     ))
     verifyZeroInteractions(uiActions)

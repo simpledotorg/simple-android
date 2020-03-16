@@ -33,13 +33,9 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
-import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.HOME
-import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -50,7 +46,6 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
-import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -267,19 +262,6 @@ class PatientSummaryScreenControllerTest {
   )
 
   @Suppress("Unused")
-  private fun `patient summary open intentions and screen to go back`(): List<List<Any>> {
-    fun testCase(openIntention: OpenIntention, goBackToScreen: GoBackToScreen): List<Any> {
-      return listOf(openIntention, goBackToScreen)
-    }
-
-    return listOf(
-        testCase(openIntention = ViewExistingPatient, goBackToScreen = PREVIOUS),
-        testCase(openIntention = ViewNewPatient, goBackToScreen = HOME),
-        testCase(openIntention = LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport)), goBackToScreen = HOME)
-    )
-  }
-
-  @Suppress("Unused")
   private fun `patient summary open intentions except new patient`() = listOf(
       ViewExistingPatient,
       LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport))
@@ -344,139 +326,6 @@ class PatientSummaryScreenControllerTest {
 
     verify(uiActions).hideLinkIdWithPatientView()
     verify(uiActions, never()).goToPreviousScreen()
-  }
-
-  enum class GoBackToScreen {
-    HOME,
-    PREVIOUS
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `when there are patient summary changes and at least one BP is present, clicking on back must show the schedule appointment sheet`(
-      openIntention: OpenIntention
-  ) {
-    whenever(patientRepository.hasPatientDataChangedSince(any(), any())).doReturn(true)
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(1)
-
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    startMobiusLoop(openIntention)
-    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
-
-    verify(uiActions, never()).goToPreviousScreen()
-    verify(uiActions, never()).goToHomeScreen()
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-  }
-
-  @Test
-  @Parameters(method = "params for going back or home when clicking back when there are no BPs")
-  fun `when there are patient summary changes and all bps are deleted, clicking on back must go back`(
-      openIntention: OpenIntention,
-      goBackToScreen: GoBackToScreen
-  ) {
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 0
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
-
-    startMobiusLoop(openIntention = openIntention)
-    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
-
-    verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-    if (goBackToScreen == HOME) {
-      verify(uiActions).goToHomeScreen()
-    } else {
-      verify(uiActions).goToPreviousScreen()
-    }
-  }
-
-  @Suppress("Unused")
-  private fun `params for going back or home when clicking back when there are no BPs`(): List<List<Any>> {
-    return listOf(
-        listOf(
-            ViewExistingPatient,
-            PREVIOUS
-        ),
-        listOf(
-            ViewNewPatient,
-            HOME
-        ),
-        listOf(
-            LinkIdWithPatient(Identifier("1f79f976-f1bc-4c8a-8a53-ad646ce09fdb", BpPassport)),
-            HOME
-        )
-    )
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions and screen to go back")
-  fun `when there are no patient summary changes and all bps are not deleted, clicking on back must go back`(
-      openIntention: OpenIntention,
-      goBackToScreen: GoBackToScreen
-  ) {
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 1
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
-
-    startMobiusLoop(openIntention = openIntention)
-    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
-
-    verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-    if (goBackToScreen == HOME) {
-      verify(uiActions).goToHomeScreen()
-    } else {
-      verify(uiActions).goToPreviousScreen()
-    }
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions and screen to go back")
-  fun `when there are no patient summary changes and all bps are deleted, clicking on back must go back`(
-      openIntention: OpenIntention,
-      goBackToScreen: GoBackToScreen
-  ) {
-    val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)) doReturn 0
-    whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
-
-    startMobiusLoop(openIntention = openIntention)
-    uiEvents.onNext(PatientSummaryBackClicked(patientUuid, screenCreatedTimestamp))
-
-    verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-    if (goBackToScreen == HOME) {
-      verify(uiActions).goToHomeScreen()
-    } else {
-      verify(uiActions).goToPreviousScreen()
-    }
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `when all bps are not deleted, clicking on save must show the schedule appointment sheet regardless of summary changes`(
-      openIntention: OpenIntention
-  ) {
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(1)
-
-    startMobiusLoop(openIntention)
-    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
-
-    verify(uiActions).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
-    verify(uiActions, never()).goToHomeScreen()
-    verify(uiActions, never()).goToPreviousScreen()
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `when all bps are deleted, clicking on save must go to the home screen regardless of summary changes`(
-      openIntention: OpenIntention
-  ) {
-    whenever(bpRepository.bloodPressureCountImmediate(patientUuid)).doReturn(0)
-
-    startMobiusLoop(openIntention)
-    uiEvents.onNext(PatientSummaryDoneClicked(patientUuid))
-
-    verify(uiActions, never()).showScheduleAppointmentSheet(patientUuid, DONE_CLICK)
-    verify(uiActions, never()).goToPreviousScreen()
-    verify(uiActions).goToHomeScreen()
   }
 
   private fun startMobiusLoop(openIntention: OpenIntention) {

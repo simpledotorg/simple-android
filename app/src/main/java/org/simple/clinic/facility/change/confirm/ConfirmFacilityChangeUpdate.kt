@@ -11,7 +11,7 @@ class ConfirmFacilityChangeUpdate : Update<ConfirmFacilityChangeModel, ConfirmFa
   ): Next<ConfirmFacilityChangeModel, ConfirmFacilityChangeEffect> {
     return when (event) {
       is FacilityChangeConfirmed -> dispatch(ChangeFacilityEffect(event.selectedFacility))
-      FacilityChanged -> TODO()
+      FacilityChanged -> dispatch(CloseSheet)
     }
   }
 }

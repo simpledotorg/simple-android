@@ -10,9 +10,10 @@ import java.util.UUID
 
 class ConfirmFacilityChangeUpdateTest {
 
+  private val updateSpec = UpdateSpec<ConfirmFacilityChangeModel, ConfirmFacilityChangeEvent, ConfirmFacilityChangeEffect>(ConfirmFacilityChangeUpdate())
+
   @Test
   fun `when facility change is confirmed then user's facility should be changed`() {
-    val updateSpec = UpdateSpec<ConfirmFacilityChangeModel, ConfirmFacilityChangeEvent, ConfirmFacilityChangeEffect>(ConfirmFacilityChangeUpdate())
     val selectedFacility = TestData.facility(UUID.fromString("ef47531f-9b8c-4045-8578-eda31f0952c4"))
     updateSpec
         .given(ConfirmFacilityChangeModel())
@@ -21,6 +22,19 @@ class ConfirmFacilityChangeUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(ChangeFacilityEffect(selectedFacility) as ConfirmFacilityChangeEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when user's facility is changed then the sheet should be closed`() {
+    updateSpec
+        .given(ConfirmFacilityChangeModel())
+        .whenEvent(FacilityChanged)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(CloseSheet as ConfirmFacilityChangeEffect)
             )
         )
   }

@@ -21,7 +21,6 @@ import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
-import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
@@ -98,7 +97,6 @@ interface TheActivityComponent :
   fun inject(target: PatientSearchScreen)
   fun inject(target: PatientSearchResultsScreen)
   fun inject(target: PatientSummaryScreen)
-  fun inject(target: CustomPrescriptionEntrySheet)
   fun inject(target: RegistrationPhoneScreen)
   fun inject(target: RegistrationFullNameScreen)
   fun inject(target: RegistrationPinScreen)

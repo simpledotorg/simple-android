@@ -12,23 +12,29 @@ import android.widget.TextView
 import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
-import org.simple.clinic.widgets.BottomSheetActivityOld
+import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
+import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.textChanges
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class CustomPrescriptionEntrySheet : BottomSheetActivityOld() {
+class CustomPrescriptionEntrySheet : BottomSheetActivity() {
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.customprescription_root)
   private val drugNameEditText by bindView<TextInputEditText>(R.id.customprescription_drug_name)
@@ -41,13 +47,17 @@ class CustomPrescriptionEntrySheet : BottomSheetActivityOld() {
   @Inject
   lateinit var controller: CustomPrescriptionEntryController
 
+  @Inject
+  lateinit var locale: Locale
+
+  private lateinit var component: CustomPrescriptionEntrySheetComponent
+
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_custom_prescription_entry)
-    TheActivity.component.inject(this)
 
     bindUiToController(
         ui = this,
@@ -65,6 +75,26 @@ class CustomPrescriptionEntrySheet : BottomSheetActivityOld() {
 
     // Dismiss this sheet when the keyboard is dismissed.
     rootLayout.backKeyPressInterceptor = { super.onBackgroundClick() }
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    setupDiGraph()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
+  }
+
+  private fun setupDiGraph() {
+    component = ClinicApp.appComponent
+        .customPrescriptionEntrySheetComponentBuilder()
+        .activity(this)
+        .build()
+
+    component.inject(this)
   }
 
   override fun onDestroy() {

@@ -30,7 +30,6 @@ import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.help.HelpScreen
 import org.simple.clinic.home.overdue.OverdueScreen
-import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
 import org.simple.clinic.home.patients.PatientsScreenKey
@@ -107,7 +106,6 @@ interface TheActivityComponent :
   fun inject(target: ConfirmResetPinDialog)
   fun inject(target: ForgotPinCreateNewPinScreen)
   fun inject(target: ForgotPinConfirmPinScreen)
-  fun inject(target: RemoveAppointmentScreen)
   fun inject(target: NewMedicalHistoryScreen)
   fun inject(target: PinEntryCardView)
   fun inject(target: ConfirmDiscardChangesDialog)

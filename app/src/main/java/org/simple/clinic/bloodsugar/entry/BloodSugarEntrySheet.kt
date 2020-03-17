@@ -35,7 +35,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.BottomSheetActivityOld
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
@@ -47,7 +47,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBloodSugarListener {
+class BloodSugarEntrySheet : BottomSheetActivityOld(), BloodSugarEntryUi, RemoveBloodSugarListener {
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
     DATE_ENTRY

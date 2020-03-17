@@ -13,14 +13,14 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.BottomSheetActivityOld
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
 
-class AppointmentReminderSheet : BottomSheetActivity() {
+class AppointmentReminderSheet : BottomSheetActivityOld() {
 
   companion object {
     private const val KEY_APPOINTMENT_UUID = "KEY_APPOINTMENT_UUID"

@@ -35,7 +35,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.BottomSheetActivityOld
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -48,7 +48,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, RemoveBloodPressureListener {
+class BloodPressureEntrySheet : BottomSheetActivityOld(), BloodPressureEntryUi, RemoveBloodPressureListener {
 
   @field:[Inject Named("exact_date")]
   lateinit var dateFormatter: DateTimeFormatter

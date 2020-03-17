@@ -25,7 +25,7 @@ import javax.inject.Inject
  *
  * TODO: Add BottomSheet behavior to dismiss the sheet by dragging it downwards.
  */
-abstract class BottomSheetActivity : AppCompatActivity() {
+abstract class BottomSheetActivityOld : AppCompatActivity() {
 
   @Inject
   lateinit var locale: Locale

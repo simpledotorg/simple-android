@@ -110,7 +110,6 @@ interface TheActivityComponent :
   fun inject(target: RegistrationFacilitySelectionScreen)
   fun inject(target: FacilityChangeScreen)
   fun inject(target: EnterOtpScreen)
-  fun inject(target: ScheduleAppointmentSheet)
   fun inject(target: ConfirmResetPinDialog)
   fun inject(target: ForgotPinCreateNewPinScreen)
   fun inject(target: ForgotPinConfirmPinScreen)

@@ -8,6 +8,7 @@ import org.simple.clinic.home.overdue.appointmentreminder.di.AppointmentReminder
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivityComponent
 import org.simple.clinic.setup.SetupActivityComponent
 import org.simple.clinic.sync.DataSync
@@ -32,6 +33,7 @@ interface AppComponent {
   fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Builder
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Builder
   fun appointmentReminderSheetComponent(): AppointmentReminderSheetComponent.Builder
+  fun scheduleAppointmentSheetComponentBuilder(): ScheduleAppointmentSheetComponent.Builder
 }
 
 @Scope

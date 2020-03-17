@@ -21,7 +21,6 @@ import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
-import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
@@ -57,7 +56,6 @@ import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.registration.register.RegistrationLoadingScreen
 import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.scanid.ScanSimpleIdScreen
-import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.searchresultsview.PatientSearchView
@@ -118,7 +116,6 @@ interface TheActivityComponent :
   fun inject(target: PinEntryCardView)
   fun inject(target: ConfirmDiscardChangesDialog)
   fun inject(target: UpdatePhoneNumberDialog)
-  fun inject(target: DosagePickerSheet)
   fun inject(target: PrescribedDrugScreen)
   fun inject(target: ConfirmRemovePrescriptionDialog)
   fun inject(target: ReportsScreen)

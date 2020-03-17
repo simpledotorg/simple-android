@@ -11,11 +11,13 @@ import android.view.inputmethod.EditorInfo
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.sheet_blood_pressure_entry.*
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
@@ -25,17 +27,20 @@ import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog.RemoveBloodPressureListener
+import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
+import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BottomSheetActivityOld
+import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -44,14 +49,18 @@ import org.simple.clinic.widgets.setTextAndCursor
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodPressureEntrySheet : BottomSheetActivityOld(), BloodPressureEntryUi, RemoveBloodPressureListener {
+class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, RemoveBloodPressureListener {
 
   @field:[Inject Named("exact_date")]
   lateinit var dateFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var locale: Locale
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
@@ -112,6 +121,8 @@ class BloodPressureEntrySheet : BottomSheetActivityOld(), BloodPressureEntryUi, 
   @Inject
   lateinit var patientRepository: PatientRepository
 
+  private lateinit var component: BloodPressureEntryComponent
+
   private val uiRenderer = BloodPressureEntryUiRenderer(this)
 
   private val delegate by unsafeLazy {
@@ -164,9 +175,28 @@ class BloodPressureEntrySheet : BottomSheetActivityOld(), BloodPressureEntryUi, 
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.sheet_blood_pressure_entry)
-    TheActivity.component.inject(this)
 
     delegate.onRestoreInstanceState(savedInstanceState)
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    setupDiGraph()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
+  }
+
+  private fun setupDiGraph() {
+    component = ClinicApp.appComponent
+        .bloodPressureEntryComponent()
+        .activity(this)
+        .build()
+
+    component.inject(this)
   }
 
   override fun onStart() {

@@ -12,7 +12,11 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.Fasting
+import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -1564,7 +1568,8 @@ class PatientRepositoryAndroidTest {
         hasDiabetes: Answer = No,
         hasHadKidneyDisease: Answer = No,
         protocolDrug: ProtocolDrug?,
-        appointmentDate: LocalDate?
+        appointmentDate: LocalDate?,
+        bloodSugarMeasurement: List<BloodSugarMeasurement>?
     ): Pair<UUID, String> {
       val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName))
           .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
@@ -1576,6 +1581,13 @@ class PatientRepositoryAndroidTest {
             patientUuid = patientUuid,
             systolic = it.systolic,
             diastolic = it.diastolic,
+            recordedAt = it.recordedAt
+        ))).blockingAwait()
+      }
+      bloodSugarMeasurement?.forEach {
+        bloodSugarRepository.save(listOf(testData.bloodSugarMeasurement(
+            patientUuid = patientUuid,
+            reading = it.reading,
             recordedAt = it.recordedAt
         ))).blockingAwait()
       }
@@ -1613,7 +1625,8 @@ class PatientRepositoryAndroidTest {
             diastolic = 80
         )),
         protocolDrug = null,
-        appointmentDate = null)
+        appointmentDate = null,
+        bloodSugarMeasurement = null)
 
     patients += savePatientRecord(
         fullName = "Diastolic > 90",
@@ -1622,17 +1635,8 @@ class PatientRepositoryAndroidTest {
             diastolic = 100
         )),
         protocolDrug = null,
-        appointmentDate = null)
-
-    patients += savePatientRecord(
-        fullName = "Has Diabetes",
-        bpMeasurement = listOf(testData.bloodPressureMeasurement(
-            systolic = 120,
-            diastolic = 70
-        )),
-        hasDiabetes = Yes,
-        protocolDrug = null,
-        appointmentDate = null)
+        appointmentDate = null,
+        bloodSugarMeasurement = null)
 
     patients += savePatientRecord(
         fullName = "Has had stroke",
@@ -1642,17 +1646,8 @@ class PatientRepositoryAndroidTest {
         )),
         hasHadStroke = Yes,
         protocolDrug = null,
-        appointmentDate = null)
-
-    patients += savePatientRecord(
-        fullName = "Has kidney disease",
-        bpMeasurement = listOf(testData.bloodPressureMeasurement(
-            systolic = 120,
-            diastolic = 70
-        )),
-        hasHadKidneyDisease = Yes,
-        protocolDrug = null,
-        appointmentDate = null)
+        appointmentDate = null,
+        bloodSugarMeasurement = null)
 
     patients += savePatientRecord(
         fullName = "Had heart attack",
@@ -1662,7 +1657,8 @@ class PatientRepositoryAndroidTest {
         )),
         hasHadHeartAttack = Yes,
         protocolDrug = null,
-        appointmentDate = null)
+        appointmentDate = null,
+        bloodSugarMeasurement = null)
 
     patients += savePatientRecord(
         fullName = "Drugs prescribed",
@@ -1671,7 +1667,8 @@ class PatientRepositoryAndroidTest {
             diastolic = 70
         )),
         protocolDrug = testData.protocolDrug(),
-        appointmentDate = null)
+        appointmentDate = null,
+        bloodSugarMeasurement = null)
 
     patients += savePatientRecord(
         fullName = "Appointment already scheduled",
@@ -1680,7 +1677,8 @@ class PatientRepositoryAndroidTest {
             diastolic = 70
         )),
         protocolDrug = null,
-        appointmentDate = LocalDate.now(clock).plusDays(10))
+        appointmentDate = LocalDate.now(clock).plusDays(10),
+        bloodSugarMeasurement = null)
 
     patients += savePatientRecord(
         fullName = "BP deleted, Has had heart attack",
@@ -1691,7 +1689,8 @@ class PatientRepositoryAndroidTest {
         )),
         hasHadHeartAttack = Yes,
         protocolDrug = null,
-        appointmentDate = null)
+        appointmentDate = null,
+        bloodSugarMeasurement = null)
 
     patients += savePatientRecord(
         fullName = "Multiple BPs",
@@ -1706,7 +1705,8 @@ class PatientRepositoryAndroidTest {
                 recordedAt = Instant.now(clock).minus(10, ChronoUnit.DAYS)
             )),
         protocolDrug = null,
-        appointmentDate = null)
+        appointmentDate = null,
+        bloodSugarMeasurement = null)
 
     patients += savePatientRecord(
         fullName = "Last recorded BP is normal",
@@ -1721,7 +1721,40 @@ class PatientRepositoryAndroidTest {
                 recordedAt = Instant.now(clock).minus(10, ChronoUnit.DAYS)
             )),
         protocolDrug = null,
-        appointmentDate = null)
+        appointmentDate = null,
+        bloodSugarMeasurement = null)
+
+    patients += savePatientRecord(
+        fullName = "1 Blood Sugar",
+        bpMeasurement = null,
+        protocolDrug = null,
+        appointmentDate = null,
+        bloodSugarMeasurement = listOf(
+            testData.bloodSugarMeasurement(
+                reading = BloodSugarReading("120", Random),
+                recordedAt = Instant.now(clock).minus(30, ChronoUnit.DAYS)
+            )
+        )
+    )
+
+    patients += savePatientRecord(
+        fullName = "Normal BP and BloodSugar",
+        bpMeasurement = listOf(
+            testData.bloodPressureMeasurement(
+                systolic = 122,
+                diastolic = 82,
+                recordedAt = Instant.now(clock).minus(32, ChronoUnit.DAYS)
+            )
+        ),
+        protocolDrug = null,
+        appointmentDate = null,
+        bloodSugarMeasurement = listOf(
+            testData.bloodSugarMeasurement(
+                reading = BloodSugarReading("145", Fasting),
+                recordedAt = Instant.now(clock).minus(36, ChronoUnit.DAYS)
+            )
+        )
+    )
 
     val defaulterPatients = mutableListOf<String>()
 
@@ -1735,13 +1768,13 @@ class PatientRepositoryAndroidTest {
     assertThat(defaulterPatients).containsExactlyElementsIn(mutableListOf(
         "Systolic > 140",
         "Diastolic > 90",
-        "Has Diabetes",
         "Has had stroke",
-        "Has kidney disease",
         "Had heart attack",
         "Drugs prescribed",
         "BP deleted, Has had heart attack",
-        "Multiple BPs"))
+        "Multiple BPs",
+        "1 Blood Sugar",
+        "Normal BP and BloodSugar"))
   }
 
   @Test

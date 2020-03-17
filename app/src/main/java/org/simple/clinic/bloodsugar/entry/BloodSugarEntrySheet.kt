@@ -11,6 +11,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
@@ -31,11 +32,14 @@ import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog.RemoveBloodSugarListener
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
+import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BottomSheetActivityOld
+import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
@@ -43,19 +47,18 @@ import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodSugarEntrySheet : BottomSheetActivityOld(), BloodSugarEntryUi, RemoveBloodSugarListener {
+class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBloodSugarListener {
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
     DATE_ENTRY
   }
 
   companion object {
-    lateinit var component: BloodSugarEntryComponent
-
     private const val KEY_OPEN_AS = "openAs"
     private const val EXTRA_WAS_BLOOD_SUGAR_SAVED = "wasBloodSugarSaved"
 
@@ -98,6 +101,11 @@ class BloodSugarEntrySheet : BottomSheetActivityOld(), BloodSugarEntryUi, Remove
   @Inject
   lateinit var bloodSugarEntryEffectHandler: BloodSugarEntryEffectHandler.Factory
 
+  @Inject
+  lateinit var locale: Locale
+
+  private lateinit var component: BloodSugarEntryComponent
+
   private val uiRenderer = BloodSugarEntryUiRenderer(this)
 
   private val openAs: OpenAs by lazy {
@@ -138,7 +146,6 @@ class BloodSugarEntrySheet : BottomSheetActivityOld(), BloodSugarEntryUi, Remove
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.sheet_blood_sugar_entry)
-    setupDi()
 
     openAs.let { openAs ->
       val measurementType = when (openAs) {
@@ -174,6 +181,17 @@ class BloodSugarEntrySheet : BottomSheetActivityOld(), BloodSugarEntryUi, Remove
   override fun onSaveInstanceState(outState: Bundle) {
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    setupDi()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
   }
 
   private fun setupDi() {

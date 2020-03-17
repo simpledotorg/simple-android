@@ -7,9 +7,11 @@ import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetC
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
+import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
 import org.simple.clinic.home.overdue.appointmentreminder.di.AppointmentReminderSheetComponent
 import org.simple.clinic.home.overdue.phonemask.di.PhoneMaskBottomSheetComponent
 import org.simple.clinic.home.overdue.removepatient.di.RemoveAppointmentScreenComponent
+
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
@@ -32,7 +34,7 @@ interface AppComponent {
 
   fun theActivityComponentBuilder(): TheActivityComponent.Builder
   fun setupActivityComponentBuilder(): SetupActivityComponent.Builder
-  fun patientFacilityChangeComponentBuilder() : FacilitySelectionActivityComponent.Builder
+  fun patientFacilityChangeComponentBuilder(): FacilitySelectionActivityComponent.Builder
   fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Builder
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Builder
   fun appointmentReminderSheetComponent(): AppointmentReminderSheetComponent.Builder
@@ -42,6 +44,7 @@ interface AppComponent {
   fun phoneMaskBottomSheetComponentBuilder(): PhoneMaskBottomSheetComponent.Builder
   fun customPrescriptionEntrySheetComponentBuilder(): CustomPrescriptionEntrySheetComponent.Builder
   fun removeAppointmentScreenComponentBuilder(): RemoveAppointmentScreenComponent.Builder
+  fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Builder
 }
 
 @Scope

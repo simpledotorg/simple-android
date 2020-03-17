@@ -574,4 +574,5 @@
   <string name="confirmfacilitychange_title">Change facility to</string>
   <string name="confirmfacilitychange_negative_button">Cancel</string>
   <string name="confirmfacilitychange_positive_button">Yes</string>
+  <string name="confirmfacilitychange_facility_name">%s?</string>
 </resources>

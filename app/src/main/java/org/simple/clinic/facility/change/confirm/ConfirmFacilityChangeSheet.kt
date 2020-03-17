@@ -62,6 +62,8 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
     setContentView(R.layout.sheet_confirm_facility_change)
     setupDi()
 
+    facilityName.text =  getString(R.string.confirmfacilitychange_facility_name, selectedFacility.name)
+
     delegate.onRestoreInstanceState(savedInstanceState)
   }
 

@@ -18,7 +18,6 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.AssistedInjectModule
@@ -123,7 +122,6 @@ interface TheActivityComponent :
   fun inject(target: PinEntryCardView)
   fun inject(target: ConfirmDiscardChangesDialog)
   fun inject(target: UpdatePhoneNumberDialog)
-  fun inject(target: ConfirmRemoveBloodPressureDialog)
   fun inject(target: DosagePickerSheet)
   fun inject(target: PrescribedDrugScreen)
   fun inject(target: ConfirmRemovePrescriptionDialog)

@@ -13,7 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -56,11 +56,6 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
   private val onStarts = PublishSubject.create<Any>()
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    TheActivity.component.inject(this)
-  }
-
   @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
@@ -89,6 +84,7 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
+    context.injector<Injector>().inject(this)
     removeBloodPressureListener = context as? RemoveBloodPressureListener
     if (removeBloodPressureListener == null) {
       throw ClassCastException("$context must implement RemoveBloodPressureListener")
@@ -119,5 +115,9 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
 
   interface RemoveBloodPressureListener {
     fun onBloodPressureRemoved()
+  }
+
+  interface Injector {
+    fun inject(target: ConfirmRemoveBloodPressureDialog)
   }
 }

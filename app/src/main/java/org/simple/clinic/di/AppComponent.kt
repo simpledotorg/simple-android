@@ -3,6 +3,7 @@ package org.simple.clinic.di
 import dagger.Component
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
+import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetComponent
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.home.overdue.appointmentreminder.di.AppointmentReminderSheetComponent
@@ -36,6 +37,7 @@ interface AppComponent {
   fun appointmentReminderSheetComponent(): AppointmentReminderSheetComponent.Builder
   fun scheduleAppointmentSheetComponentBuilder(): ScheduleAppointmentSheetComponent.Builder
   fun dosagePickerSheetComponentBuilder(): DosagePickerSheetComponent.Builder
+  fun bloodSugarTypePickerSheetComponentBuilder(): BloodSugarTypePickerSheetComponent.Builder
 }
 
 @Scope

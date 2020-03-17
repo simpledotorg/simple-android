@@ -6,27 +6,38 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
+import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.BottomSheetActivityOld
+import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class DosagePickerSheet : BottomSheetActivityOld() {
+class DosagePickerSheet : BottomSheetActivity() {
 
   @Inject
   lateinit var adapter: DosageAdapter
 
   @Inject
   lateinit var controller: DosagePickerSheetController
+
+  @Inject
+  lateinit var locale: Locale
+
+  private lateinit var component: DosagePickerSheetComponent
 
   private val recyclerView by bindView<RecyclerView>(R.id.sheet_dosage_name_list)
   private val drugNameTextView by bindView<TextView>(R.id.sheet_dosage_drug_name)
@@ -36,7 +47,6 @@ class DosagePickerSheet : BottomSheetActivityOld() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_dosage_picker)
-    TheActivity.component.inject(this)
 
     recyclerView.adapter = adapter
     recyclerView.layoutManager = LinearLayoutManager(this)
@@ -48,6 +58,26 @@ class DosagePickerSheet : BottomSheetActivityOld() {
         controller = controller,
         screenDestroys = onDestroys
     )
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    setupDiGraph()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
+  }
+
+  private fun setupDiGraph() {
+    component = ClinicApp.appComponent
+        .dosagePickerSheetComponentBuilder()
+        .activity(this)
+        .build()
+
+    component.inject(this)
   }
 
   override fun onDestroy() {

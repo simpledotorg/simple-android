@@ -7,6 +7,7 @@ import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetC
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.home.overdue.appointmentreminder.di.AppointmentReminderSheetComponent
+import org.simple.clinic.home.overdue.phonemask.di.PhoneMaskBottomSheetComponent
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
@@ -38,6 +39,7 @@ interface AppComponent {
   fun scheduleAppointmentSheetComponentBuilder(): ScheduleAppointmentSheetComponent.Builder
   fun dosagePickerSheetComponentBuilder(): DosagePickerSheetComponent.Builder
   fun bloodSugarTypePickerSheetComponentBuilder(): BloodSugarTypePickerSheetComponent.Builder
+  fun phoneMaskBottomSheetComponentBuilder(): PhoneMaskBottomSheetComponent.Builder
 }
 
 @Scope

@@ -7,31 +7,38 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.jakewharton.rxbinding2.view.RxView
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.sheet_phone_mask.*
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.home.overdue.phonemask.di.PhoneMaskBottomSheetComponent
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.ActivityPermissionResult
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.RuntimePermissions
-import org.simple.clinic.widgets.BottomSheetActivityOld
+import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
 private const val REQUESTCODE_CALL_PHONE_PERMISSION = 21
 private const val CALL_PHONE_PERMISSION = Manifest.permission.CALL_PHONE
 
-class PhoneMaskBottomSheet : BottomSheetActivityOld(), PhoneMaskBottomSheetUi {
-
-  @Inject
-  lateinit var screenRouter: ScreenRouter
+class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
 
   @Inject
   lateinit var controller: PhoneMaskBottomSheetController
+
+  @Inject
+  lateinit var locale: Locale
+
+  private lateinit var component: PhoneMaskBottomSheetComponent
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val permissionResults = PublishSubject.create<ActivityPermissionResult>()
@@ -39,8 +46,6 @@ class PhoneMaskBottomSheet : BottomSheetActivityOld(), PhoneMaskBottomSheetUi {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_phone_mask)
-
-    TheActivity.component.inject(this)
 
     bindUiToController(
         ui = this,
@@ -53,6 +58,26 @@ class PhoneMaskBottomSheet : BottomSheetActivityOld(), PhoneMaskBottomSheetUi {
         controller = controller,
         screenDestroys = onDestroys
     )
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    setupDiGraph()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
+  }
+
+  private fun setupDiGraph() {
+    component = ClinicApp.appComponent
+        .phoneMaskBottomSheetComponentBuilder()
+        .activity(this)
+        .build()
+
+    component.inject(this)
   }
 
   @SuppressLint("SetTextI18n")

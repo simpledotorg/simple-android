@@ -2,6 +2,7 @@ package org.simple.clinic.drugs.selection.entry.confirmremovedialog
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +17,7 @@ import org.simple.clinic.R
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemovePrescriptionDialogCreated
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.RemovePrescriptionClicked
+import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -58,9 +60,9 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment() {
         .observeOn(mainThread())
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    TheActivity.component.inject(this)
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
   override fun onDestroyView() {
@@ -107,5 +109,9 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment() {
           .add(fragment, TAG)
           .commitNowAllowingStateLoss()
     }
+  }
+
+  interface Injector {
+    fun inject(target: ConfirmRemovePrescriptionDialog)
   }
 }

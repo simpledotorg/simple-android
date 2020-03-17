@@ -21,7 +21,6 @@ import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
-import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
@@ -114,7 +113,6 @@ interface TheActivityComponent :
   fun inject(target: ConfirmDiscardChangesDialog)
   fun inject(target: UpdatePhoneNumberDialog)
   fun inject(target: PrescribedDrugScreen)
-  fun inject(target: ConfirmRemovePrescriptionDialog)
   fun inject(target: ReportsScreen)
   fun inject(target: ScanSimpleIdScreen)
   fun inject(target: QrCodeScannerView)

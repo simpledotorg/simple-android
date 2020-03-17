@@ -17,7 +17,7 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
-import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.BottomSheetActivityOld
 import org.simple.clinic.widgets.ScreenDestroyed
 import java.util.UUID
 import javax.inject.Inject
@@ -25,7 +25,7 @@ import javax.inject.Inject
 private const val REQUESTCODE_CALL_PHONE_PERMISSION = 21
 private const val CALL_PHONE_PERMISSION = Manifest.permission.CALL_PHONE
 
-class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
+class PhoneMaskBottomSheet : BottomSheetActivityOld(), PhoneMaskBottomSheetUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

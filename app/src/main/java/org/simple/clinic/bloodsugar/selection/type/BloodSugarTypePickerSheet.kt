@@ -12,9 +12,9 @@ import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.BottomSheetActivityOld
 
-class BloodSugarTypePickerSheet : BottomSheetActivity() {
+class BloodSugarTypePickerSheet : BottomSheetActivityOld() {
 
   private val bloodSugarTypesList by unsafeLazy {
     listOf(

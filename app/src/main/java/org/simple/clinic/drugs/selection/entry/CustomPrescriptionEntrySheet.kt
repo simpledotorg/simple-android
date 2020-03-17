@@ -20,7 +20,7 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
-import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.BottomSheetActivityOld
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
@@ -28,7 +28,7 @@ import org.simple.clinic.widgets.textChanges
 import java.util.UUID
 import javax.inject.Inject
 
-class CustomPrescriptionEntrySheet : BottomSheetActivity() {
+class CustomPrescriptionEntrySheet : BottomSheetActivityOld() {
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.customprescription_root)
   private val drugNameEditText by bindView<TextInputEditText>(R.id.customprescription_drug_name)

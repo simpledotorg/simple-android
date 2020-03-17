@@ -8,30 +8,36 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.widget.DatePicker
 import com.jakewharton.rxbinding2.view.RxView
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.sheet_schedule_appointment.*
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity.Companion.selectedFacilityUuid
+import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toUtcInstant
-import org.simple.clinic.widgets.BottomSheetActivityOld
+import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
 private typealias DatePickerDialogListener = (view: DatePicker, year: Int, month: Int, dayOfMonth: Int) -> Unit
 
-class ScheduleAppointmentSheet : BottomSheetActivityOld() {
+class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
@@ -62,6 +68,11 @@ class ScheduleAppointmentSheet : BottomSheetActivityOld() {
   @field:[Inject Named("full_date")]
   lateinit var dateFormatter: DateTimeFormatter
 
+  @Inject
+  lateinit var locale: Locale
+
+  private lateinit var component: ScheduleAppointmentSheetComponent
+
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
   private val facilityChanges: Subject<PatientFacilityChanged> = PublishSubject.create()
@@ -70,7 +81,6 @@ class ScheduleAppointmentSheet : BottomSheetActivityOld() {
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.sheet_schedule_appointment)
-    TheActivity.component.inject(this)
 
     bindUiToController(
         ui = this,
@@ -91,6 +101,26 @@ class ScheduleAppointmentSheet : BottomSheetActivityOld() {
     changeFacilityButton.setOnClickListener {
       openFacilitySelection()
     }
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    setupDiGraph()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
+  }
+
+  private fun setupDiGraph() {
+    component = ClinicApp.appComponent
+        .scheduleAppointmentSheetComponentBuilder()
+        .activity(this)
+        .build()
+
+    component.inject(this)
   }
 
   override fun onDestroy() {

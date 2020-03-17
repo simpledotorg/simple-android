@@ -569,4 +569,9 @@
   <!-- Access Denied screen -->
   <string name="accessdeniedscreen_title_access_denied">Access denied</string>
   <string name="accessdeniedscreen_description">Access to Simple is denied. Please contact your supervisor if you think this is an error.\n\nIf your access is restored, uninstall Simple and install from the Play store.</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">Change facility to</string>
+  <string name="confirmfacilitychange_negative_button">Cancel</string>
+  <string name="confirmfacilitychange_positive_button">Yes</string>
 </resources>

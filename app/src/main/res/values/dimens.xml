@@ -26,7 +26,9 @@
   <dimen name="textsize_18">18sp</dimen>
   <dimen name="textsize_20">20sp</dimen>
   <dimen name="textsize_24">24sp</dimen>
+  <dimen name="textsize_32">32sp</dimen>
   <dimen name="textsize_34">34sp</dimen>
+
 
   <dimen name="medicalhistory_selected_padding">10dp</dimen>
   <dimen name="medicalhistory_unselected_padding">20dp</dimen>

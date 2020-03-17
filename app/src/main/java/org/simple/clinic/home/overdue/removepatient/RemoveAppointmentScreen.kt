@@ -8,12 +8,15 @@ import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.home.overdue.removepatient.di.RemoveAppointmentScreenComponent
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.MovedToPrivatePractitioner
@@ -21,6 +24,7 @@ import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -44,6 +48,8 @@ class RemoveAppointmentScreen : AppCompatActivity() {
 
   @Inject
   lateinit var locale: Locale
+
+  private lateinit var component: RemoveAppointmentScreenComponent
 
   private val patientAlreadyVisitedRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_already_visited)
   private val notRespondingRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_not_responding)
@@ -78,9 +84,24 @@ class RemoveAppointmentScreen : AppCompatActivity() {
     toolbar.setNavigationOnClickListener { closeScreen() }
   }
 
-  override fun attachBaseContext(base: Context) {
-    TheActivity.component.inject(this)
-    super.attachBaseContext(LocaleOverrideContextWrapper.wrap(base, locale))
+  override fun attachBaseContext(baseContext: Context) {
+    setupDiGraph()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
+  }
+
+  private fun setupDiGraph() {
+    component = ClinicApp.appComponent
+        .removeAppointmentScreenComponentBuilder()
+        .activity(this)
+        .build()
+
+    component.inject(this)
   }
 
   override fun onDestroy() {

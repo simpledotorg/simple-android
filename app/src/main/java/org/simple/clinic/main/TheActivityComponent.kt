@@ -104,7 +104,6 @@ interface TheActivityComponent :
   fun inject(target: PatientSearchScreen)
   fun inject(target: PatientSearchResultsScreen)
   fun inject(target: PatientSummaryScreen)
-  fun inject(target: BloodPressureEntrySheet)
   fun inject(target: CustomPrescriptionEntrySheet)
   fun inject(target: RegistrationPhoneScreen)
   fun inject(target: RegistrationFullNameScreen)

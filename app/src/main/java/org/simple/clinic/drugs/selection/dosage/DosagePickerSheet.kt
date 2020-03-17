@@ -14,13 +14,13 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.BottomSheetActivityOld
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class DosagePickerSheet : BottomSheetActivity() {
+class DosagePickerSheet : BottomSheetActivityOld() {
 
   @Inject
   lateinit var adapter: DosageAdapter

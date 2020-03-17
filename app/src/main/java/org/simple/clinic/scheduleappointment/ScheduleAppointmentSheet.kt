@@ -19,7 +19,7 @@ import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelection
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity.Companion.selectedFacilityUuid
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toUtcInstant
-import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.BottomSheetActivityOld
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
@@ -31,7 +31,7 @@ import javax.inject.Named
 
 private typealias DatePickerDialogListener = (view: DatePicker, year: Int, month: Int, dayOfMonth: Int) -> Unit
 
-class ScheduleAppointmentSheet : BottomSheetActivity() {
+class ScheduleAppointmentSheet : BottomSheetActivityOld() {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100

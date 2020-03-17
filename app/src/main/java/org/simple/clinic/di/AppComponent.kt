@@ -10,7 +10,7 @@ import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelection
 import org.simple.clinic.setup.SetupActivityComponent
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncWorker
-import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.BottomSheetActivityOld
 import javax.inject.Scope
 
 @AppScope
@@ -22,7 +22,7 @@ interface AppComponent {
   fun inject(target: ClearFieldImageButton)
   fun inject(target: OtpSmsReceiver)
   fun inject(target: DataSync)
-  fun inject(target: BottomSheetActivity)
+  fun inject(target: BottomSheetActivityOld)
 
   fun theActivityComponentBuilder(): TheActivityComponent.Builder
   fun setupActivityComponentBuilder(): SetupActivityComponent.Builder

@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
+import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.util.unsafeLazy
@@ -68,8 +69,8 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
   private var removeBloodSugarListener: RemoveBloodSugarListener? = null
 
   override fun onAttach(context: Context) {
-    BloodSugarEntrySheet.component.inject(this)
     super.onAttach(context)
+    context.injector<ConfirmRemoveBloodSugarDialogInjector>().inject(this)
     removeBloodSugarListener = context as? RemoveBloodSugarListener
     if (removeBloodSugarListener == null) {
       throw ClassCastException("$context must implement RemoveBloodSugarListener")

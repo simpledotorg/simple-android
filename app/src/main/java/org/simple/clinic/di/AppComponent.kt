@@ -4,6 +4,7 @@ import dagger.Component
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
+import org.simple.clinic.home.overdue.appointmentreminder.di.AppointmentReminderSheetComponent
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
@@ -30,6 +31,7 @@ interface AppComponent {
   fun patientFacilityChangeComponentBuilder() : FacilitySelectionActivityComponent.Builder
   fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Builder
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Builder
+  fun appointmentReminderSheetComponent(): AppointmentReminderSheetComponent.Builder
 }
 
 @Scope

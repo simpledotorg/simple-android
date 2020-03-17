@@ -7,20 +7,26 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
-import org.simple.clinic.widgets.BottomSheetActivityOld
+import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.home.overdue.appointmentreminder.di.AppointmentReminderSheetComponent
+import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.wrap
+import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.temporal.ChronoUnit
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class AppointmentReminderSheet : BottomSheetActivityOld() {
+class AppointmentReminderSheet : BottomSheetActivity() {
 
   companion object {
     private const val KEY_APPOINTMENT_UUID = "KEY_APPOINTMENT_UUID"
@@ -54,6 +60,11 @@ class AppointmentReminderSheet : BottomSheetActivityOld() {
   @Inject
   lateinit var controller: AppointmentReminderSheetController
 
+  @Inject
+  lateinit var locale: Locale
+
+  private lateinit var component: AppointmentReminderSheetComponent
+
   private var currentIndex = 0
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
@@ -67,7 +78,6 @@ class AppointmentReminderSheet : BottomSheetActivityOld() {
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.sheet_appointment_reminder)
-    TheActivity.component.inject(this)
 
     bindUiToController(
         ui = this,
@@ -80,6 +90,26 @@ class AppointmentReminderSheet : BottomSheetActivityOld() {
         controller = controller,
         screenDestroys = onDestroys
     )
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    setupDiGraph()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
+  }
+
+  private fun setupDiGraph() {
+    component = ClinicApp.appComponent
+        .appointmentReminderSheetComponent()
+        .activity(this)
+        .build()
+
+    component.inject(this)
   }
 
   private fun sheetCreates(): Observable<UiEvent> {

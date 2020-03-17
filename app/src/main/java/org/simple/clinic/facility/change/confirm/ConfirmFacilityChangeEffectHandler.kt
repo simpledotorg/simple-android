@@ -14,13 +14,15 @@ class ConfirmFacilityChangeEffectHandler(
     private val userSession: UserSession,
     private val reportsRepository: ReportsRepository,
     private val reportsSync: ReportsSync,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val uiActions: ConfirmFacilityChangeUiActions
 ) {
 
   fun build(): ObservableTransformer<ConfirmFacilityChangeEffect, ConfirmFacilityChangeEvent> {
     return RxMobius
         .subtypeEffectHandler<ConfirmFacilityChangeEffect, ConfirmFacilityChangeEvent>()
         .addTransformer(ChangeFacilityEffect::class.java, changeFacility(schedulersProvider.io()))
+        .addAction(CloseSheet::class.java, { uiActions.closeSheet() }, schedulersProvider.ui())
         .build()
   }
 

@@ -154,7 +154,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             DataForBackClickLoaded(
                 hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
-                countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid)
+                countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid),
+                diagnosisRecorded = true
             )
           }
     }

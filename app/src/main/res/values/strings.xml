@@ -578,4 +578,9 @@
   <string name="registrationconfirmfacility_title">Are you at?</string>
   <string name="registrationconfirmfacility_positive_button">Yes</string>
   <string name="registrationconfirmfacility_negative_button">Cancel</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">Are you at</string>
+  <string name="alertfacilitychange_yes_button">Yes</string>
+  <string name="alertfacilitychange_change_button">Change</string>
 </resources>

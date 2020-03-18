@@ -162,9 +162,14 @@ class PatientSummaryEffectHandlerTest {
   fun `when the load data for done click effect is received, load the data`() {
     // given
     val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
+        patientUuid = patientUuid
+    )
 
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 2
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 3
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)) doReturn Just(medicalHistory)
 
     // when
     testCase.dispatch(LoadDataForDoneClick(patientUuid))
@@ -172,7 +177,7 @@ class PatientSummaryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(DataForDoneClickLoaded(
         countOfRecordedMeasurements = 5,
-        diagnosisRecorded = true
+        diagnosisRecorded = medicalHistory.diagnosisRecorded
     ))
     verifyZeroInteractions(uiActions)
   }

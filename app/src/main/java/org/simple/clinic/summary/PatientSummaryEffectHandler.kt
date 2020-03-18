@@ -175,8 +175,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
+            val medicalHistory = (medicalHistoryRepository.historyForPatient(patientUuid) as Just<MedicalHistory>).value
 
-            DataForDoneClickLoaded(countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid), diagnosisRecorded = true)
+            DataForDoneClickLoaded(countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid), diagnosisRecorded = medicalHistory.diagnosisRecorded)
           }
     }
   }

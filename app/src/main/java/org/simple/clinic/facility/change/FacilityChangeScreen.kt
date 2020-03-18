@@ -18,14 +18,18 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
+import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
 import org.simple.clinic.location.LOCATION_PERMISSION
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.facility.FacilitiesAdapter
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
@@ -72,7 +76,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             locationPermissionChanges()
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = screenDestroys
     )
 
     toolbarViewWithSearch.setNavigationOnClickListener {
@@ -91,9 +95,12 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     post { hideKeyboard() }
 
     hideKeyboardOnListScroll()
+    setupConfirmationSheetResults(screenDestroys)
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
+
+  private val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
   private fun searchQueryChanges() =
       RxTextView
@@ -123,6 +130,16 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
           hideKeyboard()
         }
   }
+
+  @SuppressLint("CheckResult")
+  private fun setupConfirmationSheetResults(screenDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == OPEN_CONFIRMATION_SHEET && it.succeeded() }
+        .takeUntil(screenDestroys)
+        .subscribe { goBack() }
+  }
+
 
   fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
     // Avoid animating the items on their first entry.
@@ -155,5 +172,16 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun showToolbarWithoutSearchField() {
     toolbarViewFlipper.displayedChildResId = R.id.facilitychange_toolbar_without_search
+  }
+
+  fun openConfirmationSheet(facility: Facility) {
+    activity.startActivityForResult(
+        ConfirmFacilityChangeSheet.intent(context, facility),
+        OPEN_CONFIRMATION_SHEET
+    )
+  }
+
+  companion object {
+    private const val OPEN_CONFIRMATION_SHEET = 1210
   }
 }

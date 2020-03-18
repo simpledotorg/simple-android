@@ -23,7 +23,7 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
   companion object {
     lateinit var component: ConfirmFacilityChangeComponent
 
-    private const val SELECTED_FACILITY = "seleceted_facility"
+    private const val SELECTED_FACILITY = "selected_facility"
     private const val FACILITY_CHANGED = "facility_changed"
 
     fun intent(

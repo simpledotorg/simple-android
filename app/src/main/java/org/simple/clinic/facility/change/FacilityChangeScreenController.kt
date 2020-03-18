@@ -4,10 +4,9 @@ import android.annotation.SuppressLint
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
@@ -18,13 +17,12 @@ import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
-import org.simple.clinic.reports.ReportsRepository
-import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.timer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -35,9 +33,7 @@ typealias UiChange = (Ui) -> Unit
 
 class FacilityChangeScreenController @Inject constructor(
     private val facilityRepository: FacilityRepository,
-    private val reportsRepository: ReportsRepository,
     private val userSession: UserSession,
-    private val reportsSync: ReportsSync,
     private val locationRepository: LocationRepository,
     private val configProvider: Observable<FacilityChangeConfig>,
     private val elapsedRealtimeClock: ElapsedRealtimeClock,
@@ -54,7 +50,7 @@ class FacilityChangeScreenController @Inject constructor(
         showProgressForReadingLocation(replayedEvents),
         showFacilities(replayedEvents),
         toggleSearchFieldInToolbar(replayedEvents),
-        changeFacilityAndExit(replayedEvents))
+        confirmFacilityChange(replayedEvents))
   }
 
   @SuppressLint("MissingPermission")
@@ -169,29 +165,28 @@ class FacilityChangeScreenController @Inject constructor(
         .startWith(Observable.just({ ui: Ui -> ui.showToolbarWithoutSearchField() }))
   }
 
-  private fun changeFacilityAndExit(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+  private fun confirmFacilityChange(events: Observable<UiEvent>): Observable<UiChange> {
+    val currentFacility = events
+        .ofType<ScreenCreated>()
+        .flatMap { userSession.loggedInUser() }
+        .filterAndUnwrapJust()
+        .switchMap { facilityRepository.currentFacility(it) }
+        .share()
+
+    val facilityStreams = events
         .ofType<FacilityChangeClicked>()
         .map { it.facility }
-        .flatMapSingle { facility ->
-          userSession.requireLoggedInUser()
-              .take(1)
-              .flatMapCompletable {
-                facilityRepository
-                    .associateUserWithFacility(it, facility)
-                    .andThen(facilityRepository.setCurrentFacility(it, facility))
-              }
-              .doOnComplete { clearAndSyncReports() }
-              .andThen(Single.just(Ui::goBack))
-        }
-  }
+        .withLatestFrom(currentFacility)
 
-  private fun clearAndSyncReports() {
-    reportsRepository
-        .deleteReportsFile()
-        .toCompletable()
-        .andThen(reportsSync.sync().onErrorComplete())
-        .subscribeOn(Schedulers.io())
-        .subscribe()
+    val newFacilitySelected = facilityStreams
+        .filter { (selectedFacility, currentFacility) -> selectedFacility.uuid != currentFacility.uuid }
+        .map { (selectedFacility, _) -> selectedFacility }
+        .map { { ui: Ui -> ui.openConfirmationSheet(it) } }
+
+    val sameFacilitySelected = facilityStreams
+        .filter { (selectedFacility, currentFacility) -> selectedFacility.uuid == currentFacility.uuid }
+        .map { Ui::goBack }
+
+    return newFacilitySelected.mergeWith(sameFacilitySelected)
   }
 }

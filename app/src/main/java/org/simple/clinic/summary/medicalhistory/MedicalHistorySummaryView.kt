@@ -3,6 +3,7 @@ package org.simple.clinic.summary.medicalhistory
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.detaches
@@ -99,6 +100,10 @@ class MedicalHistorySummaryView(
   override fun hideDiabetesHistorySection() {
     diabetesQuestionView.visibility = RelativeLayout.GONE
     kidneyDiseaseQuestionView.hideDivider()
+  }
+
+  fun showDiagnosisError() {
+    diagnosisRequiredError.visibility = View.VISIBLE
   }
 
   private fun answerToggled(question: MedicalHistoryQuestion, answer: Answer) {

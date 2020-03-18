@@ -481,7 +481,7 @@
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ইতিহাস</string>
-  <string name="medicalhistorysummaryview_diagnosis">রোগ নির্ণয়</string>
+  <string name="medicalhistorysummaryview_diagnosis">রোগ নির্ণয় (প্রয়োজন)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">কোনটাই না</string>

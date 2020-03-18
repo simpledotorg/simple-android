@@ -318,7 +318,7 @@ class PatientSummaryScreen(
   }
 
   override fun showDiagnosisError() {
-    // TODO (SM): Show diagnosis error in MedicalHistorySummaryView
+    medicalHistorySummaryView.showDiagnosisError()
   }
 }
 

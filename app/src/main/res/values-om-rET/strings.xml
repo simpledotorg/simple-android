@@ -484,7 +484,7 @@
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Seenaa</string>
-  <string name="medicalhistorysummaryview_diagnosis">Yaalii</string>
+  <string name="medicalhistorysummaryview_diagnosis">Yaalii (Barbaachisaa)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">Homaa</string>

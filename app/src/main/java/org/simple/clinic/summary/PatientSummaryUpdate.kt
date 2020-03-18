@@ -38,7 +38,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
           patientUuid = model.patientUuid,
-          countOfRecordedMeasurements = event.countOfRecordedMeasurements
+          countOfRecordedMeasurements = event.countOfRecordedMeasurements,
+          diagnosisRecorded = event.diagnosisRecorded
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       else -> noChange()
@@ -47,11 +48,17 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
 
   private fun dataForHandlingDoneClickLoaded(
       patientUuid: UUID,
-      countOfRecordedMeasurements: Int
+      countOfRecordedMeasurements: Int,
+      diagnosisRecorded: Boolean
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val hasAtLeastOneMeasurementRecorded = countOfRecordedMeasurements > 0
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && diagnosisRecorded.not()
 
-    val effect = if (hasAtLeastOneMeasurementRecorded) ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK) else GoToHomeScreen
+    val effect = when {
+      shouldShowDiagnosisError -> ShowDiagnosisError
+      hasAtLeastOneMeasurementRecorded -> ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+      else -> GoToHomeScreen
+    }
 
     return dispatch(effect)
   }

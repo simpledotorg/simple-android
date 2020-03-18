@@ -189,6 +189,20 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
+  fun `when at least one measurement is present and diagnosis is not recorded, clicking on save must show diagnosis error`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DataForDoneClickLoaded(
+            countOfRecordedMeasurements = 1,
+            diagnosisRecorded = false
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDiagnosisError as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
   fun `when no measurements are present, clicking on save must go to the home screen`() {
     updateSpec
         .given(defaultModel)

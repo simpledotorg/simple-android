@@ -75,7 +75,8 @@ class PatientSummaryUpdateTest {
         .given(defaultModel)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 1
+            countOfRecordedMeasurements = 1,
+            diagnosisRecorded = true
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -89,7 +90,8 @@ class PatientSummaryUpdateTest {
         .given(defaultModel.forExistingPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 0
+            countOfRecordedMeasurements = 0,
+            diagnosisRecorded = true
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -103,7 +105,8 @@ class PatientSummaryUpdateTest {
         .given(defaultModel.forNewPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 0
+            countOfRecordedMeasurements = 0,
+            diagnosisRecorded = true
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -117,7 +120,8 @@ class PatientSummaryUpdateTest {
         .given(defaultModel.forLinkingWithExistingPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 0
+            countOfRecordedMeasurements = 0,
+            diagnosisRecorded = true
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -131,7 +135,8 @@ class PatientSummaryUpdateTest {
         .given(defaultModel)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
-            countOfRecordedMeasurements = 1
+            countOfRecordedMeasurements = 1,
+            diagnosisRecorded = true
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -145,7 +150,8 @@ class PatientSummaryUpdateTest {
         .given(defaultModel)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
-            countOfRecordedMeasurements = 0
+            countOfRecordedMeasurements = 0,
+            diagnosisRecorded = true
         ))
         .then(assertThatNext(
             hasNoModel(),

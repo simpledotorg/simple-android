@@ -46,7 +46,8 @@ object ReportedViewedPatientToAnalytics: PatientSummaryEvent()
 
 data class DataForBackClickLoaded(
     val hasPatientDataChangedSinceScreenCreated: Boolean,
-    val countOfRecordedMeasurements: Int
+    val countOfRecordedMeasurements: Int,
+    val diagnosisRecorded: Boolean
 ) : PatientSummaryEvent()
 
 data class DataForDoneClickLoaded(

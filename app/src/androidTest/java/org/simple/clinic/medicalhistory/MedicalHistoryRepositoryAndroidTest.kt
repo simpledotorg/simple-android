@@ -11,6 +11,7 @@ import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
@@ -132,5 +133,25 @@ class MedicalHistoryRepositoryAndroidTest {
 
     val foundHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
     assertThat(foundHistory.uuid).isEqualTo(newerHistory.uuid)
+  }
+
+  @Test
+  fun when_multiple_medical_histories_are_present_for_a_patient_then_only_the_last_edited_one_should_be_returned_immediately() {
+    val patientUuid = UUID.fromString("44801303-cea8-40a2-a4c5-3e410ab8fabb")
+
+    val olderHistory = testData.medicalHistory(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).minusMillis(100),
+        updatedAt = Instant.now(clock).minusMillis(100))
+
+    val newerHistory = testData.medicalHistory(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).minusMillis(100),
+        updatedAt = Instant.now(clock))
+
+    dao.save(listOf(olderHistory, newerHistory))
+
+    val foundHistory = (repository.historyForPatient(patientUuid) as Just<MedicalHistory>).value
+    assertThat(foundHistory).isEqualTo(newerHistory)
   }
 }

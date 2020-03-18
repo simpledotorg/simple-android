@@ -1,5 +1,6 @@
 package org.simple.clinic.facility.change.confirm
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -23,6 +24,7 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
     lateinit var component: ConfirmFacilityChangeComponent
 
     private const val SELECTED_FACILITY = "seleceted_facility"
+    private const val FACILITY_CHANGED = "facility_changed"
 
     fun intent(
         context: Context,
@@ -62,7 +64,10 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
     setContentView(R.layout.sheet_confirm_facility_change)
     setupDi()
 
-    facilityName.text =  getString(R.string.confirmfacilitychange_facility_name, selectedFacility.name)
+    facilityName.text = getString(R.string.confirmfacilitychange_facility_name, selectedFacility.name)
+    cancelButton.setOnClickListener {
+      finish()
+    }
 
     delegate.onRestoreInstanceState(savedInstanceState)
   }
@@ -95,6 +100,9 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
       yesButton.clicks().map { FacilityChangeConfirmed(selectedFacility) }
 
   override fun closeSheet() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    val intent = Intent()
+    intent.putExtra(FACILITY_CHANGED, true)
+    setResult(Activity.RESULT_OK, intent)
+    finish()
   }
 }

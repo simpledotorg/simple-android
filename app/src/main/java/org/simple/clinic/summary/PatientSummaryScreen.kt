@@ -316,6 +316,10 @@ class PatientSummaryScreen(
   override fun showEditPatientScreen(patientSummaryProfile: PatientSummaryProfile) {
     screenRouter.push(createEditPatientScreenKey(patientSummaryProfile))
   }
+
+  override fun showDiagnosisError() {
+    // TODO (SM): Show diagnosis error in MedicalHistorySummaryView
+  }
 }
 
 @Parcelize

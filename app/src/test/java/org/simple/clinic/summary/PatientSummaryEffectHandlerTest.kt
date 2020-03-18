@@ -187,4 +187,15 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertOutgoingEvents(SyncTriggered(BACK_CLICK))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when show diagnosis error effect is received, then show diagnosis error`() {
+    // when
+    testCase.dispatch(ShowDiagnosisError)
+
+    // then
+    verify(uiActions).showDiagnosisError()
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
 }

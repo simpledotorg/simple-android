@@ -438,8 +438,11 @@
     <item name="android:textSize">24sp</item>
     <item name="android:fontFamily">sans-serif</item>
     <item name="android:textStyle">normal</item>
-    <item name="android:letterSpacing">0.06</item>
     <item name="android:lineSpacingExtra">8sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.H5.Grey0">
+    <item name="android:textColor">@color/grey0</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.H5.Numeric">

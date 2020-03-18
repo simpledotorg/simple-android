@@ -7,8 +7,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -81,6 +81,21 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK) as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when there are patient summary changes and at least one measurement is present and no diagnosis is recorded, then clicking on back must show diagnosis error`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = true,
+            countOfRecordedMeasurements = 1,
+            diagnosisRecorded = false
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDiagnosisError as PatientSummaryEffect)
         ))
   }
 

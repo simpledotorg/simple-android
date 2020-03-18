@@ -561,7 +561,7 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">History</string>
-  <string name="medicalhistorysummaryview_diagnosis">Diagnosis</string>
+  <string name="medicalhistorysummaryview_diagnosis">Diagnosis (Required)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">None</string>

@@ -101,6 +101,14 @@ data class MedicalHistory(
     fun historyForPatient(patientUuid: PatientUuid): Flowable<List<MedicalHistory>>
 
     @Query("""
+      SELECT * FROM MedicalHistory
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+      ORDER BY updatedAt DESC
+      LIMIT 1
+    """)
+    fun historyForPatientImmediate(patientUuid: PatientUuid): MedicalHistory?
+
+    @Query("""
         SELECT (
             CASE
                 WHEN (COUNT(uuid) > 0) THEN 1

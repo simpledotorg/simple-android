@@ -9,7 +9,9 @@ import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toOptional
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -49,6 +51,10 @@ class MedicalHistoryRepository @Inject constructor(
             histories.first()
           }
         }
+  }
+
+  fun historyForPatient(patientUuid: PatientUuid): Optional<MedicalHistory> {
+    return dao.historyForPatientImmediate(patientUuid).toOptional()
   }
 
   fun save(patientUuid: UUID, historyEntry: OngoingMedicalHistoryEntry): Completable {

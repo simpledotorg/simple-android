@@ -33,7 +33,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           patientUuid = model.patientUuid,
           hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,
           countOfRecordedMeasurements = event.countOfRecordedMeasurements,
-          openIntention = model.openIntention
+          openIntention = model.openIntention,
+          diagnosisRecorded = event.diagnosisRecorded
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
           patientUuid = model.patientUuid,
@@ -59,14 +60,19 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       patientUuid: UUID,
       hasPatientDataChanged: Boolean,
       countOfRecordedMeasurements: Int,
-      openIntention: OpenIntention
+      openIntention: OpenIntention,
+      diagnosisRecorded: Boolean
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val shouldShowScheduleAppointmentSheet = if (countOfRecordedMeasurements == 0) false else hasPatientDataChanged
+    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not()
+    val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
+    val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient
 
     val effect = when {
+      shouldShowDiagnosisError -> ShowDiagnosisError
       shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK)
-      openIntention is ViewExistingPatient -> GoBackToPreviousScreen
-      openIntention is LinkIdWithPatient || openIntention is ViewNewPatient -> GoToHomeScreen
+      shouldGoToPreviousScreen -> GoBackToPreviousScreen
+      shouldGoToHomeScreen -> GoToHomeScreen
       else -> throw IllegalStateException("This should not happen!")
     }
 

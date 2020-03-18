@@ -1725,7 +1725,7 @@ class PatientRepositoryAndroidTest {
         bloodSugarMeasurement = null)
 
     patients += savePatientRecord(
-        fullName = "1 Blood Sugar",
+        fullName = "1 Normal Random Blood Sugar",
         bpMeasurement = null,
         protocolDrug = null,
         appointmentDate = null,
@@ -1738,7 +1738,20 @@ class PatientRepositoryAndroidTest {
     )
 
     patients += savePatientRecord(
-        fullName = "Normal BP and BloodSugar",
+        fullName = "1 High Random Blood Sugar",
+        bpMeasurement = null,
+        protocolDrug = null,
+        appointmentDate = null,
+        bloodSugarMeasurement = listOf(
+            testData.bloodSugarMeasurement(
+                reading = BloodSugarReading("350", Random),
+                recordedAt = Instant.now(clock).minus(30, ChronoUnit.DAYS)
+            )
+        )
+    )
+
+    patients += savePatientRecord(
+        fullName = "Normal BP and High Fasting Blood Sugar",
         bpMeasurement = listOf(
             testData.bloodPressureMeasurement(
                 systolic = 122,
@@ -1750,7 +1763,7 @@ class PatientRepositoryAndroidTest {
         appointmentDate = null,
         bloodSugarMeasurement = listOf(
             testData.bloodSugarMeasurement(
-                reading = BloodSugarReading("145", Fasting),
+                reading = BloodSugarReading("300", Fasting),
                 recordedAt = Instant.now(clock).minus(36, ChronoUnit.DAYS)
             )
         )
@@ -1773,8 +1786,8 @@ class PatientRepositoryAndroidTest {
         "Drugs prescribed",
         "BP deleted, Has had heart attack",
         "Multiple BPs",
-        "1 Blood Sugar",
-        "Normal BP and BloodSugar"))
+        "1 High Random Blood Sugar",
+        "Normal BP and High Fasting Blood Sugar"))
   }
 
   @Test

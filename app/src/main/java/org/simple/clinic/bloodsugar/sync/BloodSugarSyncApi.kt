@@ -10,13 +10,13 @@ import retrofit2.http.Query
 
 interface BloodSugarSyncApi {
 
-  @POST("v3/blood_sugars/sync")
+  @POST("v4/blood_sugars/sync")
   fun push(
       @Body body: BloodSugarPushRequest
   ): Single<DataPushResponse>
 
   @Headers(value = ["X-RESYNC-TOKEN: 1"])
-  @GET("v3/blood_sugars/sync")
+  @GET("v4/blood_sugars/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null

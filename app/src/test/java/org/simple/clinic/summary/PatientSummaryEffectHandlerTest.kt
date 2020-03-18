@@ -9,17 +9,19 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.summary.AppointmentSheetOpenedFrom.*
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
@@ -36,6 +38,7 @@ class PatientSummaryEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
+  private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val dataSync = mock<DataSync>()
 
   private val effectHandler = PatientSummaryEffectHandler(
@@ -48,6 +51,7 @@ class PatientSummaryEffectHandlerTest {
       facilityRepository = facilityRepository,
       bloodSugarRepository = bloodSugarRepository,
       dataSync = dataSync,
+      medicalHistoryRepository = medicalHistoryRepository,
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -132,9 +136,15 @@ class PatientSummaryEffectHandlerTest {
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
     val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
 
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
+        patientUuid = patientUuid
+    )
+
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 3
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 2
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)) doReturn Just(medicalHistory)
 
     // when
     testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp))
@@ -143,7 +153,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertOutgoingEvents(DataForBackClickLoaded(
         hasPatientDataChangedSinceScreenCreated = true,
         countOfRecordedMeasurements = 5,
-        diagnosisRecorded = true
+        diagnosisRecorded = medicalHistory.diagnosisRecorded
     ))
     verifyZeroInteractions(uiActions)
   }

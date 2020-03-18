@@ -72,6 +72,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))
         .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
         .addTransformer(TriggerSync::class.java, triggerSync())
+        .addAction(ShowDiagnosisError::class.java, { uiActions.showDiagnosisError() }, schedulersProvider.ui())
         .build()
   }
 

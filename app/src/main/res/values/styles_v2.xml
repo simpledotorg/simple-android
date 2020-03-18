@@ -183,6 +183,18 @@
     <item name="android:textStyle">normal</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body2Bold">
+    <item name="android:textSize">14sp</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:lineSpacingExtra">4sp</item>
+    <item name="android:letterSpacing">0.06</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2Bold.Grey1">
+    <item name="android:textColor">@color/grey1</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body2Tag.Grey1">
     <item name="android:textColor">@color/grey1</item>
   </style>

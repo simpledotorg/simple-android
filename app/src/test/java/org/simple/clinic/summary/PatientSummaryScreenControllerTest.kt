@@ -29,6 +29,7 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.TestData
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
@@ -65,6 +66,7 @@ class PatientSummaryScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
   private val bloodSugarRepository = mock<BloodSugarRepository>()
+  private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockAnalyticsReporter()
@@ -339,6 +341,7 @@ class PatientSummaryScreenControllerTest {
         facilityRepository = facilityRepository,
         bloodSugarRepository = bloodSugarRepository,
         dataSync = mock(),
+        medicalHistoryRepository = medicalHistoryRepository,
         uiActions = uiActions
     )
 

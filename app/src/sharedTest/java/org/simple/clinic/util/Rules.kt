@@ -14,5 +14,6 @@ object Rules {
   fun global(): RuleChain = RuleChain
       .emptyRuleChain()
       .around(QuarantineTestRule(quarantineClassLoader))
+      .around(RxCompletableSubscribedRule())
       .around(RxErrorsRule())
 }

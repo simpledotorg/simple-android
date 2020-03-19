@@ -83,27 +83,31 @@ class MedicalHistorySummaryView(
   }
 
   override fun showDiagnosisView() {
-    diagnosisViewContainer.visibility = RelativeLayout.VISIBLE
+    diagnosisViewContainer.visibility = VISIBLE
     diabetesDiagnosisView.hideDivider()
   }
 
   override fun hideDiagnosisView() {
-    diagnosisViewContainer.visibility = RelativeLayout.GONE
+    diagnosisViewContainer.visibility = GONE
   }
 
   override fun showDiabetesHistorySection() {
-    diabetesQuestionView.visibility = RelativeLayout.VISIBLE
+    diabetesQuestionView.visibility = VISIBLE
     kidneyDiseaseQuestionView.showDivider()
     diabetesQuestionView.hideDivider()
   }
 
   override fun hideDiabetesHistorySection() {
-    diabetesQuestionView.visibility = RelativeLayout.GONE
+    diabetesQuestionView.visibility = GONE
     kidneyDiseaseQuestionView.hideDivider()
   }
 
+  override fun hideDiagnosisError() {
+    diagnosisRequiredError.visibility = GONE
+  }
+
   fun showDiagnosisError() {
-    diagnosisRequiredError.visibility = View.VISIBLE
+    diagnosisRequiredError.visibility = VISIBLE
   }
 
   private fun answerToggled(question: MedicalHistoryQuestion, answer: Answer) {

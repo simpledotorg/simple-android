@@ -38,9 +38,14 @@ class PatientSummaryUpdateTest {
       bangladeshNationalId = bangladeshNationalId
   )
 
-  private val facility = TestData.facility(
+  private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("abe86f8e-1828-48fe-afb5-d697b3ce36bb"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+  )
+
+  private val facilityWithDiabetesManagementDisabled = TestData.facility(
+      uuid = UUID.fromString("abe86f8e-1828-48fe-afb5-d697b3ce36bb"),
+      facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   )
 
   private val updateSpec = UpdateSpec(PatientSummaryUpdate())
@@ -49,10 +54,10 @@ class PatientSummaryUpdateTest {
   fun `when the current facility is loaded, update the UI`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(CurrentFacilityLoaded(facility))
+        .whenEvent(CurrentFacilityLoaded(facilityWithDiabetesManagementEnabled))
         .then(
             assertThatNext(
-                hasModel(defaultModel.currentFacilityLoaded(facility)),
+                hasModel(defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)),
                 hasNoEffects()
             )
         )
@@ -71,8 +76,10 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when there are patient summary changes and at least one measurement is present, clicking on back must show the schedule appointment sheet`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             countOfRecordedMeasurements = 1,
@@ -85,9 +92,11 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and at least one measurement is present and no diagnosis is recorded, then clicking on back must show diagnosis error`() {
+  fun `when there are patient summary changes and at least one measurement is present and no diagnosis is recorded and diabetes management is enabled, then clicking on back must show diagnosis error`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             countOfRecordedMeasurements = 1,
@@ -100,9 +109,28 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded, clicking on back for existing patient screen must go back to previous screen`() {
+  fun `when there are patient summary changes and at least one measurement is present and no diagnosis is recorded and diabetes management is disabled, then clicking on back must show schedule appointment sheet`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+
     updateSpec
-        .given(defaultModel.forExistingPatient())
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = true,
+            countOfRecordedMeasurements = 1,
+            diagnosisRecorded = false
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK) as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when there are patient summary changes and no measurements are recorded, clicking on back for existing patient screen must go back to previous screen`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model.forExistingPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             countOfRecordedMeasurements = 0,
@@ -116,8 +144,10 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when there are patient summary changes and no measurements are recorded, clicking on back for new patient screen must go back to home screen`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
     updateSpec
-        .given(defaultModel.forNewPatient())
+        .given(model.forNewPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             countOfRecordedMeasurements = 0,
@@ -131,8 +161,10 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when there are patient summary changes and no measurements are recorded, clicking on back link id with patient screen must go back to home screen`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
     updateSpec
-        .given(defaultModel.forLinkingWithExistingPatient())
+        .given(model.forLinkingWithExistingPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             countOfRecordedMeasurements = 0,
@@ -146,8 +178,10 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when there are no patient summary changes and at least one measurement is recorded, clicking on back must go back`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
             countOfRecordedMeasurements = 1,
@@ -161,8 +195,10 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when there are no patient summary changes and no measurements are recorded, clicking on back must go back`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
             countOfRecordedMeasurements = 0,
@@ -176,8 +212,10 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when at least one measurement is present, clicking on save must show the schedule appointment sheet`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(DataForDoneClickLoaded(
             countOfRecordedMeasurements = 1,
             diagnosisRecorded = true
@@ -189,9 +227,11 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when at least one measurement is present and diagnosis is not recorded, clicking on save must show diagnosis error`() {
+  fun `when at least one measurement is present and diagnosis is not recorded and diabetes management is enabled, clicking on save must show diagnosis error`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(DataForDoneClickLoaded(
             countOfRecordedMeasurements = 1,
             diagnosisRecorded = false
@@ -203,9 +243,27 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when no measurements are present, clicking on save must go to the home screen`() {
+  fun `when at least one measurement is present and diagnosis is not recorded and diabetes management is disabled, clicking on save must show schedule appointment sheet`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+
     updateSpec
-        .given(defaultModel)
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            countOfRecordedMeasurements = 1,
+            diagnosisRecorded = false
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK) as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when no measurements are present, clicking on save must go to the home screen`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
         .whenEvent(DataForDoneClickLoaded(
             countOfRecordedMeasurements = 0,
             diagnosisRecorded = true
@@ -219,7 +277,7 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when an appointment is scheduled, trigger a sync`() {
     val model = defaultModel
-        .currentFacilityLoaded(facility)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
         .reportedViewedPatientToAnalytics()
@@ -239,7 +297,7 @@ class PatientSummaryUpdateTest {
   fun `when the sync is triggered after clicking back from a new patient, go to home screen`() {
     val model = defaultModel
         .forNewPatient()
-        .currentFacilityLoaded(facility)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
         .reportedViewedPatientToAnalytics()
@@ -259,7 +317,7 @@ class PatientSummaryUpdateTest {
   fun `when the sync is triggered after clicking back from an existing patient, go to previous screen`() {
     val model = defaultModel
         .forExistingPatient()
-        .currentFacilityLoaded(facility)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
         .reportedViewedPatientToAnalytics()
@@ -279,7 +337,7 @@ class PatientSummaryUpdateTest {
   fun `when the sync is triggered after clicking back from linking id with patient, go to home screen`() {
     val model = defaultModel
         .forLinkingWithExistingPatient()
-        .currentFacilityLoaded(facility)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
         .reportedViewedPatientToAnalytics()
@@ -299,7 +357,7 @@ class PatientSummaryUpdateTest {
   fun `when the sync is triggered after clicking save from a new patient, go to home screen`() {
     val model = defaultModel
         .forNewPatient()
-        .currentFacilityLoaded(facility)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
         .reportedViewedPatientToAnalytics()
@@ -319,7 +377,7 @@ class PatientSummaryUpdateTest {
   fun `when the sync is triggered after clicking save from an existing patient, go to home screen`() {
     val model = defaultModel
         .forExistingPatient()
-        .currentFacilityLoaded(facility)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
         .reportedViewedPatientToAnalytics()
@@ -339,7 +397,7 @@ class PatientSummaryUpdateTest {
   fun `when the sync is triggered after clicking save from linking id with patient, go to home screen`() {
     val model = defaultModel
         .forLinkingWithExistingPatient()
-        .currentFacilityLoaded(facility)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
         .reportedViewedPatientToAnalytics()

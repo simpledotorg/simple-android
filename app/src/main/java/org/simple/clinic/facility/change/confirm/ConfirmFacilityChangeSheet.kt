@@ -24,7 +24,6 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
     lateinit var component: ConfirmFacilityChangeComponent
 
     private const val SELECTED_FACILITY = "selected_facility"
-    private const val FACILITY_CHANGED = "facility_changed"
 
     fun intent(
         context: Context,
@@ -66,7 +65,7 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
 
     facilityName.text = getString(R.string.confirmfacilitychange_facility_name, selectedFacility.name)
     cancelButton.setOnClickListener {
-      finish()
+      closeSheet()
     }
 
     delegate.onRestoreInstanceState(savedInstanceState)
@@ -101,7 +100,6 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
 
   override fun closeSheet() {
     val intent = Intent()
-    intent.putExtra(FACILITY_CHANGED, true)
     setResult(Activity.RESULT_OK, intent)
     finish()
   }

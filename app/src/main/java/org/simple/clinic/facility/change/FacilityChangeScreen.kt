@@ -3,15 +3,10 @@ package org.simple.clinic.facility.change
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.widget.EditText
 import android.widget.RelativeLayout
-import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -19,7 +14,7 @@ import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.screen_facility_change.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
@@ -51,13 +46,6 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var activity: AppCompatActivity
 
-  private val toolbarViewFlipper by bindView<ViewFlipper>(R.id.facilitychange_toolbar_container)
-  private val toolbarViewWithSearch by bindView<Toolbar>(R.id.facilitychange_toolbar_with_search)
-  private val toolbarViewWithoutSearch by bindView<Toolbar>(R.id.facilitychange_toolbar_without_search)
-  private val progressView by bindView<View>(R.id.facilitychange_progress)
-  private val facilityRecyclerView by bindView<RecyclerView>(R.id.facilitychange_list)
-  private val searchEditText by bindView<EditText>(R.id.facilitychange_search)
-
   private val recyclerViewAdapter = FacilitiesAdapter()
 
   override fun onFinishInflate() {
@@ -79,15 +67,15 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         screenDestroys = screenDestroys
     )
 
-    toolbarViewWithSearch.setNavigationOnClickListener {
+    toolbarWithSearch.setNavigationOnClickListener {
       screenRouter.pop()
     }
-    toolbarViewWithoutSearch.setNavigationOnClickListener {
+    toolbarWithoutSearch.setNavigationOnClickListener {
       screenRouter.pop()
     }
 
-    facilityRecyclerView.layoutManager = LinearLayoutManager(context)
-    facilityRecyclerView.adapter = recyclerViewAdapter
+    facilityList.layoutManager = LinearLayoutManager(context)
+    facilityList.adapter = recyclerViewAdapter
 
     // For some reasons, the keyboard stays
     // visible when coming from AppLockScreen.
@@ -119,8 +107,8 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @SuppressLint("CheckResult")
   private fun hideKeyboardOnListScroll() {
-    val scrollEvents = RxRecyclerView.scrollEvents(facilityRecyclerView)
-    val scrollStateChanges = RxRecyclerView.scrollStateChanges(facilityRecyclerView)
+    val scrollEvents = RxRecyclerView.scrollEvents(facilityList)
+    val scrollStateChanges = RxRecyclerView.scrollStateChanges(facilityList)
 
     Observables.combineLatest(scrollEvents, scrollStateChanges)
         .compose(RecyclerViewUserScrollDetector.streamDetections())
@@ -143,14 +131,14 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
     // Avoid animating the items on their first entry.
-    facilityRecyclerView.itemAnimator = when (updateType) {
+    facilityList.itemAnimator = when (updateType) {
       FIRST_UPDATE -> null
       SUBSEQUENT_UPDATE -> SlideUpAlphaAnimator()
           .withInterpolator(FastOutSlowInInterpolator())
           .apply { moveDuration = 200 }
     }
 
-    facilityRecyclerView.scrollToPosition(0)
+    facilityList.scrollToPosition(0)
     recyclerViewAdapter.submitList(facilityItems)
   }
 
@@ -159,19 +147,19 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun showProgressIndicator() {
-    progressView.visibility = VISIBLE
+    progress.visibility = VISIBLE
   }
 
   fun hideProgressIndicator() {
-    progressView.visibility = GONE
+    progress.visibility = GONE
   }
 
   fun showToolbarWithSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.facilitychange_toolbar_with_search
+    toolbarContainer.displayedChildResId = R.id.toolbarWithSearch
   }
 
   fun showToolbarWithoutSearchField() {
-    toolbarViewFlipper.displayedChildResId = R.id.facilitychange_toolbar_without_search
+    toolbarContainer.displayedChildResId = R.id.toolbarWithoutSearch
   }
 
   fun openConfirmationSheet(facility: Facility) {

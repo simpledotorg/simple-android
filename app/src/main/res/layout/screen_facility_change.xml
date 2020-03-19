@@ -10,21 +10,21 @@
   tools:ignore="Overdraw">
 
   <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
-    android:id="@+id/facilitychange_toolbar_container"
+    android:id="@+id/toolbarContainer"
     style="@style/Clinic.V2.FacilitySelection.ToolbarFlipper"
     app:debug_displayedChild="0">
 
     <androidx.appcompat.widget.Toolbar
-      android:id="@+id/facilitychange_toolbar_without_search"
+      android:id="@+id/toolbarWithoutSearch"
       style="@style/Clinic.V2.FacilitySelection.ToolbarWithoutSearch"
       app:title="@string/changefacility_screen_title" />
 
     <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-      android:id="@+id/facilitychange_toolbar_with_search"
+      android:id="@+id/toolbarWithSearch"
       style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
 
       <EditText
-        android:id="@+id/facilitychange_search"
+        android:id="@+id/searchEditText"
         style="@style/Clinic.V2.FacilitySelection.SearchField"
         android:hint="@string/facilitychange_search_hint"
         android:importantForAutofill="no"
@@ -33,18 +33,18 @@
   </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
   <include
-    android:id="@+id/facilitychange_progress"
+    android:id="@+id/progress"
     layout="@layout/screen_registration_facility_selection_progress_state"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/facilitychange_toolbar_container"
+    android:layout_below="@+id/toolbarContainer"
     android:visibility="gone" />
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/facilitychange_list"
+    android:id="@+id/facilityList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/facilitychange_toolbar_container"
+    android:layout_below="@+id/toolbarContainer"
     android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_8"
     android:scrollbarStyle="insideOverlay"

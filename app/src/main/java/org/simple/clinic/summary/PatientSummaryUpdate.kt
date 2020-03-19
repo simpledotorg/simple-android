@@ -34,12 +34,14 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,
           countOfRecordedMeasurements = event.countOfRecordedMeasurements,
           openIntention = model.openIntention,
-          diagnosisRecorded = event.diagnosisRecorded
+          diagnosisRecorded = event.diagnosisRecorded,
+          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
           patientUuid = model.patientUuid,
           countOfRecordedMeasurements = event.countOfRecordedMeasurements,
-          diagnosisRecorded = event.diagnosisRecorded
+          diagnosisRecorded = event.diagnosisRecorded,
+          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       else -> noChange()
@@ -49,10 +51,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   private fun dataForHandlingDoneClickLoaded(
       patientUuid: UUID,
       countOfRecordedMeasurements: Int,
-      diagnosisRecorded: Boolean
+      diagnosisRecorded: Boolean,
+      isDiabetesManagementEnabled: Boolean
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val hasAtLeastOneMeasurementRecorded = countOfRecordedMeasurements > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && diagnosisRecorded.not()
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && diagnosisRecorded.not() && isDiabetesManagementEnabled
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError
@@ -68,10 +71,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       hasPatientDataChanged: Boolean,
       countOfRecordedMeasurements: Int,
       openIntention: OpenIntention,
-      diagnosisRecorded: Boolean
+      diagnosisRecorded: Boolean,
+      isDiabetesManagementEnabled: Boolean
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val shouldShowScheduleAppointmentSheet = if (countOfRecordedMeasurements == 0) false else hasPatientDataChanged
-    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not()
+    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not() && isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient
 

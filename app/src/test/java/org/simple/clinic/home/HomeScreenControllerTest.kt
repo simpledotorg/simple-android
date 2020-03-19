@@ -20,7 +20,7 @@ import org.simple.clinic.widgets.UiEvent
 class HomeScreenControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: HomeScreenController

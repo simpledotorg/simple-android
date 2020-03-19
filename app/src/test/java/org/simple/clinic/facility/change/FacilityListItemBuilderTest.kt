@@ -17,7 +17,7 @@ import org.simple.clinic.util.RxErrorsRule
 class FacilityListItemBuilderTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val distanceCalculator = mock<DistanceCalculator>()
   private val listItemBuilder = FacilityListItemBuilder(distanceCalculator)

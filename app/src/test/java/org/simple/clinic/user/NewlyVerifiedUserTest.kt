@@ -17,7 +17,7 @@ import org.simple.clinic.util.RxErrorsRule
 class NewlyVerifiedUserTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private lateinit var newlyVerifiedUser: NewlyVerifiedUser
   private lateinit var receivedUsers: MutableList<User>

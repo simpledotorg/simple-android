@@ -55,7 +55,7 @@ import java.util.concurrent.TimeUnit
 class TheActivityControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val lockInMinutes = 15L
 

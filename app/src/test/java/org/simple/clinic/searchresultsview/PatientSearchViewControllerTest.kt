@@ -32,7 +32,7 @@ import java.util.UUID
 class PatientSearchViewControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val ui = mock<PatientSearchUi>()
   private val patientRepository = mock<PatientRepository>()

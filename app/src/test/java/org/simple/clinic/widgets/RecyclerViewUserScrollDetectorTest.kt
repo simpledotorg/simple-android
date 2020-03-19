@@ -18,7 +18,7 @@ import org.simple.clinic.util.RxErrorsRule
 class RecyclerViewUserScrollDetectorTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   @Test
   @Parameters(value = [

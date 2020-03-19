@@ -18,7 +18,7 @@ import java.io.File
 class HelpRepositoryTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val fileStorage = mock<FileStorage>()
   private val file = mock<File>()

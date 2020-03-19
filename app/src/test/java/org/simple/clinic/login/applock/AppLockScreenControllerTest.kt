@@ -21,7 +21,7 @@ import org.threeten.bp.Instant
 class AppLockScreenControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val screen = mock<AppLockScreen>()
   private val userSession = mock<UserSession>()

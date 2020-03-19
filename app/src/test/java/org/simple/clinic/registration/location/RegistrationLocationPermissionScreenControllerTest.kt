@@ -13,7 +13,7 @@ import org.simple.clinic.widgets.UiEvent
 class RegistrationLocationPermissionScreenControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   val uiEvents = PublishSubject.create<UiEvent>()!!
   val screen = mock<RegistrationLocationPermissionScreen>()

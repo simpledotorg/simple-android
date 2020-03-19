@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit
 class FacilitySelectionActivityControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val uiEvents = PublishSubject.create<UiEvent>()!!
   private val screen = mock<FacilitySelectionActivity>()

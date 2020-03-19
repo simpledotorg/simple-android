@@ -7,7 +7,7 @@ import org.simple.clinic.util.RxErrorsRule
 class BCryptPasswordHasherTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   @Test
   fun `comparison test`() {

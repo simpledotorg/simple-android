@@ -26,7 +26,7 @@ import org.simple.clinic.widgets.UiEvent
 class LoggedOutOfDeviceDialogControllerTest {
 
   @get:Rule
-  val rule: TestRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val dialog = mock<LoggedOutOfDeviceDialog>()
   private val userSession = mock<UserSession>()

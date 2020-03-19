@@ -17,7 +17,7 @@ import org.threeten.bp.Instant
 class BruteForceProtectionTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val clock = TestUtcClock()
   private val state = mock<Preference<BruteForceProtectionState>>()

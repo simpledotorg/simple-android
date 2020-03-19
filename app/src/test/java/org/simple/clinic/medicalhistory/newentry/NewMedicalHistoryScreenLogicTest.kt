@@ -42,7 +42,7 @@ import java.util.UUID
 class NewMedicalHistoryScreenLogicTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val screen: NewMedicalHistoryUi = mock()
   private val uiActions: NewMedicalHistoryUiActions = mock()

@@ -32,7 +32,7 @@ import java.util.UUID
 class RemoveAppointmentScreenControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val sheet = mock<RemoveAppointmentScreen>()
   private val repository = mock<AppointmentRepository>()

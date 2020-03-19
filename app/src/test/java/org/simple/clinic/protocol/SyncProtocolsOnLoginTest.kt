@@ -21,7 +21,7 @@ import org.simple.clinic.util.RxErrorsRule
 class SyncProtocolsOnLoginTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val userSession = mock<UserSession>()
   private val protocolSync = mock<ProtocolSync>()

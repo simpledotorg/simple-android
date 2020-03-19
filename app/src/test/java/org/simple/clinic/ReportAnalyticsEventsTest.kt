@@ -15,7 +15,7 @@ import org.simple.clinic.widgets.UiEvent
 class ReportAnalyticsEventsTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private data class UiEvent1(val prop: String) : UiEvent {
     override val analyticsName = "UiEvent 1"

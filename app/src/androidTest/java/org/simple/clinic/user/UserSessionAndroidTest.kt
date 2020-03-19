@@ -19,7 +19,6 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Rules
-import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import javax.inject.Inject
 
@@ -51,7 +50,6 @@ class UserSessionAndroidTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(LocalAuthenticationRule())
-      .around(RxErrorsRule())
 
   @Before
   fun setUp() {

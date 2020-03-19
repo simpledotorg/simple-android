@@ -45,7 +45,7 @@ import java.util.UUID
 class ScheduleAppointmentSheetControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val sheet = mock<ScheduleAppointmentSheet>()
   private val repository = mock<AppointmentRepository>()

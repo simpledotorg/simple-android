@@ -41,7 +41,7 @@ import java.util.UUID
 class EnterOtpScreenControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val userSession = mock<UserSession>()
   private val screen = mock<EnterOtpScreen>()

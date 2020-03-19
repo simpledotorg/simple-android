@@ -20,7 +20,7 @@ import java.util.UUID
 class SyncCoordinatorTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private lateinit var syncCoordinator: SyncCoordinator
   private lateinit var repository: SynceableRepository<Any, Any>

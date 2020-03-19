@@ -15,7 +15,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 class OnboardingScreenControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val onboardingUi = mock<OnboardingUi>()
   private val hasUserCompletedOnboarding = mock<Preference<Boolean>>()

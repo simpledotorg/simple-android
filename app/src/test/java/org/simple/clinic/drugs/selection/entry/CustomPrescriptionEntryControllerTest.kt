@@ -30,7 +30,7 @@ import java.util.UUID
 class CustomPrescriptionEntryControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val sheet = mock<CustomPrescriptionEntrySheet>()
   private val prescriptionRepository = mock<PrescriptionRepository>()

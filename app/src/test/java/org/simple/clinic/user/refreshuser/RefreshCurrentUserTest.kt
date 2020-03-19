@@ -22,7 +22,7 @@ import java.util.UUID
 class RefreshCurrentUserTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val userUuid = UUID.fromString("2a90955a-d21b-4fa9-918f-d1c4c44b7aae")
   private val phone = "1234567890"

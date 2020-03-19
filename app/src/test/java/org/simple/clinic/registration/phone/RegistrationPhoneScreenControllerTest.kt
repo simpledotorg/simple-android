@@ -40,7 +40,7 @@ import org.simple.clinic.widgets.UiEvent
 class RegistrationPhoneScreenControllerTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val screen = mock<RegistrationPhoneScreen>()
   private val userSession = mock<UserSession>()

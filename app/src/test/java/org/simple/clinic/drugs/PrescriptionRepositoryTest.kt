@@ -20,7 +20,7 @@ import java.util.UUID
 class PrescriptionRepositoryTest {
 
   @get:Rule
-  val rxErrorsRule = RxErrorsRule()
+  val rules: org.junit.rules.RuleChain = org.simple.clinic.util.Rules.global()
 
   private val database = mock<AppDatabase>()
   private val dao = mock<PrescribedDrug.RoomDao>()

@@ -185,9 +185,9 @@
 
   <style name="Clinic.V2.TextAppearance.Body2Bold">
     <item name="android:textSize">14sp</item>
-    <item name="android:fontFamily">sans-serif-medium</item>
-    <item name="android:lineSpacingExtra">4sp</item>
-    <item name="android:letterSpacing">0.06</item>
+    <item name="android:fontFamily">sans-serif</item>
+    <item name="android:lineSpacingExtra">6sp</item>
+    <item name="android:letterSpacing">0.01</item>
     <item name="android:textStyle">bold</item>
   </style>
 

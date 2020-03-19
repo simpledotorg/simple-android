@@ -45,6 +45,7 @@ import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 import javax.inject.Inject
@@ -318,7 +319,10 @@ class PatientSummaryScreen(
   }
 
   override fun showDiagnosisError() {
-    medicalHistorySummaryView.showDiagnosisError()
+    // Diagnosis error message could be obscured, scroll until the entire view is visible
+    summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
+      medicalHistorySummaryView.showDiagnosisError()
+    }
   }
 }
 

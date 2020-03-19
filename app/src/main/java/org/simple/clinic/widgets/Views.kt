@@ -24,6 +24,7 @@ import androidx.annotation.StyleRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.widget.NestedScrollView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import org.threeten.bp.Duration
@@ -196,6 +197,15 @@ fun View.locationRectOnScreen(): Rect {
   return Rect(left, top, left + width, top + height)
 }
 
+fun View.locationRectInWindow(): Rect {
+  val location = IntArray(2)
+  getLocationInWindow(location)
+
+  val left = location[0]
+  val top = location[1]
+  return Rect(left, top, left + width, top + height)
+}
+
 val View.marginLayoutParams: ViewGroup.MarginLayoutParams
   get() = layoutParams as ViewGroup.MarginLayoutParams
 
@@ -216,6 +226,16 @@ fun TextView.setTextAppearanceCompat(@StyleRes resourceId: Int) {
 }
 
 fun ScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
+  post {
+    val distanceToScrollFromTop = view.topRelativeTo(this)
+
+    smoothScrollTo(0, distanceToScrollFromTop)
+
+    postDelayed(onScrollComplete, 400)
+  }
+}
+
+fun NestedScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
   post {
     val distanceToScrollFromTop = view.topRelativeTo(this)
 

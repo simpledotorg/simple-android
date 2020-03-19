@@ -8,4 +8,5 @@ interface MedicalHistorySummaryUi {
   fun hideDiagnosisView()
   fun showDiabetesHistorySection()
   fun hideDiabetesHistorySection()
+  fun hideDiagnosisError()
 }

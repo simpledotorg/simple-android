@@ -5,17 +5,22 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.jakewharton.rxbinding3.view.clicks
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.sheet_confirm_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
+import java.util.Locale
 import javax.inject.Inject
 
 class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeUiActions {
@@ -36,6 +41,9 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
   }
 
   @Inject
+  lateinit var locale: Locale
+
+  @Inject
   lateinit var effectHandlerFactory: ConfirmFacilityChangeEffectHandler.Factory
 
   private val selectedFacility: Facility by lazy {
@@ -52,8 +60,7 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
         ConfirmFacilityChangeModel(),
         ConfirmFacilityChangeUpdate(),
         effectHandlerFactory.create(this).build(),
-        ConfirmFacilityChangeInit(),
-        { /* No-op, there's nothing to render */ }
+        ConfirmFacilityChangeInit()
     )
   }
 
@@ -61,7 +68,6 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.sheet_confirm_facility_change)
-    setupDi()
 
     facilityName.text = getString(R.string.confirmfacilitychange_facility_name, selectedFacility.name)
     cancelButton.setOnClickListener {
@@ -69,6 +75,17 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
     }
 
     delegate.onRestoreInstanceState(savedInstanceState)
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    setupDi()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
   }
 
   override fun onStart() {

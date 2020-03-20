@@ -154,14 +154,14 @@ class MedicalHistoryRepositoryAndroidTest {
 
     dao.save(listOf(olderHistory, newerHistory))
 
-    val foundHistory = repository.historyForPatient(patientUuid)
+    val foundHistory = repository.historyForPatientOrDefaultImmediate(patientUuid)
     assertThat(foundHistory).isEqualTo(newerHistory)
   }
 
   @Test
   fun when_no_medical_history_is_present_for_a_patient_then_return_detail_medical_history() {
     val patientUuid = UUID.fromString("694d1c32-048f-4d43-93d4-0cd51be686b0")
-    val emptyHistory = repository.historyForPatient(patientUuid)
+    val emptyHistory = repository.historyForPatientOrDefaultImmediate(patientUuid)
 
     assertThat(emptyHistory.hasHadHeartAttack).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasHadStroke).isEqualTo(Unanswered)

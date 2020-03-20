@@ -11,8 +11,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.medicalhistory.Answer.Unanswered
-import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientProfile
@@ -156,7 +154,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
             val timestamp = loadDataForBackClick.screenCreatedTimestamp
-            val medicalHistory = medicalHistoryRepository.historyForPatient(patientUuid)
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(patientUuid)
 
             DataForBackClickLoaded(
                 hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
@@ -175,7 +173,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
-            val medicalHistory = medicalHistoryRepository.historyForPatient(patientUuid)
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(patientUuid)
 
             DataForDoneClickLoaded(countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid), diagnosisRecorded = medicalHistory.diagnosisRecorded)
           }

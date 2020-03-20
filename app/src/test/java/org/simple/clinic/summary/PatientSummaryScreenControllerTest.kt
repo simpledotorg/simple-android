@@ -7,9 +7,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -19,18 +17,17 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.TestData
-import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
@@ -38,7 +35,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -62,7 +58,6 @@ class PatientSummaryScreenControllerTest {
   private val bpRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
-  private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
@@ -85,7 +80,6 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn None
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
     whenever(userSession.loggedInUserImmediate()).doReturn(user)
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.never())
 
@@ -180,101 +174,12 @@ class PatientSummaryScreenControllerTest {
     verify(uiActions, never()).showUpdatePhoneDialog(patientUuid)
   }
 
-  @Test
-  @Parameters(method = "patient summary open intentions except new patient")
-  fun `when an existing patient is missing a phone number, a BP is recorded, and the user has never been reminded, then add phone dialog should be shown`(
-      openIntention: OpenIntention
-  ) {
-    val patientWithoutPhone = patientProfile.copy(phoneNumbers = emptyList())
-    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientWithoutPhone))
-    whenever(missingPhoneReminderRepository.hasShownReminderForPatient(patientUuid)) doReturn false
-    whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
-
-    startMobiusLoop(openIntention)
-    uiEvents.onNext(PatientSummaryBloodPressureSaved)
-
-    verify(uiActions).showAddPhoneDialog(patientUuid)
-    verify(missingPhoneReminderRepository).markReminderAsShownFor(patientUuid)
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions except new patient")
-  fun `when an existing patient is missing a phone number, a BP hasn't been recorded yet, and the user has never been reminded, then add phone dialog should not be shown`(
-      openIntention: OpenIntention
-  ) {
-    val patientWithoutPhone = patientProfile.copy(phoneNumbers = emptyList())
-    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientWithoutPhone))
-    whenever(missingPhoneReminderRepository.hasShownReminderForPatient(patientUuid)) doReturn false
-    whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
-
-    startMobiusLoop(openIntention)
-
-    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
-    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions except new patient")
-  fun `when an existing patient is missing a phone number, and the user has been reminded before, then add phone dialog should not be shown`(
-      openIntention: OpenIntention
-  ) {
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(true))
-
-    startMobiusLoop(openIntention)
-
-    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
-    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions except new patient")
-  fun `when an existing patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
-    val phoneNumber = Just(TestData.patientPhoneNumber(number = "101"))
-    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn phoneNumber
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
-
-    startMobiusLoop(openIntention)
-
-    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
-    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions except new patient")
-  fun `when a new patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
-    val phoneNumber = Just(TestData.patientPhoneNumber(number = "101"))
-    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn phoneNumber
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
-
-    startMobiusLoop(openIntention)
-
-    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
-    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions except new patient")
-  fun `when a new patient is missing a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
-
-    startMobiusLoop(openIntention)
-
-    verify(uiActions, never()).showAddPhoneDialog(patientUuid)
-    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
-  }
-
   private fun randomPatientSummaryOpenIntention() = `patient summary open intentions`().shuffled().first()
 
   @Suppress("Unused")
   private fun `patient summary open intentions`() = listOf(
       ViewExistingPatient,
       ViewNewPatient,
-      LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport))
-  )
-
-  @Suppress("Unused")
-  private fun `patient summary open intentions except new patient`() = listOf(
-      ViewExistingPatient,
       LinkIdWithPatient(Identifier("06293b71-0f56-45dc-845e-c05ee4d74153", BpPassport))
   )
 
@@ -345,7 +250,7 @@ class PatientSummaryScreenControllerTest {
         patientRepository = patientRepository,
         bloodPressureRepository = bpRepository,
         appointmentRepository = appointmentRepository,
-        missingPhoneReminderRepository = missingPhoneReminderRepository,
+        missingPhoneReminderRepository = mock(),
         userSession = userSession,
         facilityRepository = facilityRepository,
         bloodSugarRepository = bloodSugarRepository,

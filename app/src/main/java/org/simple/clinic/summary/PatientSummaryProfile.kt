@@ -14,4 +14,8 @@ data class PatientSummaryProfile(
     val phoneNumber: PatientPhoneNumber?,
     val bpPassport: BusinessId?,
     val bangladeshNationalId: BusinessId?
-): Parcelable
+): Parcelable {
+
+  val hasPhoneNumber: Boolean
+    get() = phoneNumber != null
+}

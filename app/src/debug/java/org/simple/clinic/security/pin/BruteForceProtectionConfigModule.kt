@@ -9,12 +9,7 @@ import org.threeten.bp.Duration
 class BruteForceProtectionConfigModule {
 
   @Provides
-  fun config(): Observable<BruteForceProtectionConfig> {
-    return Observable.just(BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofSeconds(5)))
-  }
-
-  @Provides
-  fun configImmediate(): BruteForceProtectionConfig {
+  fun config(): BruteForceProtectionConfig {
     return BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofSeconds(5))
   }
 }

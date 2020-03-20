@@ -23,7 +23,7 @@ class BruteForceProtectionTest {
   private val state = mock<Preference<BruteForceProtectionState>>()
   private val config = BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
 
-  private val bruteForceProtection = BruteForceProtection(clock, Observable.just(config), config, state)
+  private val bruteForceProtection = BruteForceProtection(clock, config, state)
 
   @Test
   fun `when incrementing the count of failed attempts then the count should correctly be updated`() {

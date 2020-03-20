@@ -18,7 +18,6 @@ import kotlin.math.max
 
 class BruteForceProtection @Inject constructor(
     private val utcClock: UtcClock,
-    private val configProvider: Observable<BruteForceProtectionConfig>,
     private val config: BruteForceProtectionConfig,
     private val statePreference: Preference<BruteForceProtectionState>
 ) {

@@ -31,16 +31,13 @@ class BruteForceProtectionAndroidTest {
   lateinit var bruteForceProtection: BruteForceProtection
 
   @Inject
-  lateinit var configProvider: Observable<BruteForceProtectionConfig>
+  lateinit var config: BruteForceProtectionConfig
 
   @Inject
   lateinit var state: Preference<BruteForceProtectionState>
 
   @get:Rule
   val rules: RuleChain = Rules.global()
-
-  private val config
-    get() = configProvider.blockingFirst()
 
   private val testScheduler = TestScheduler()
 

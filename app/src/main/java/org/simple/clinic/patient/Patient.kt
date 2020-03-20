@@ -9,12 +9,16 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import kotlinx.android.parcel.Parcelize
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.storage.DaoWithUpsert
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -186,9 +190,11 @@ data class Patient(
           .map(::queryModelsToPatientProfiles)
     }
 
-    fun patientProfile(patientUuid: UUID): Flowable<PatientProfile> {
+    fun patientProfile(patientUuid: UUID): Observable<Optional<PatientProfile>> {
       return loadPatientQueryModelsForPatientUuid(patientUuid)
-          .map { queryModelsToPatientProfiles(it).first() }
+          .map { queryModelsToPatientProfiles(it) }
+          .map { if(it.isEmpty()) None else Just(it.first()) }
+          .toObservable()
     }
 
     fun patientProfileImmediate(patientUuid: UUID): PatientProfile? {

@@ -12,4 +12,9 @@ class BruteForceProtectionConfigModule {
   fun config(): Observable<BruteForceProtectionConfig> {
     return Observable.just(BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofSeconds(5)))
   }
+
+  @Provides
+  fun configImmediate(): BruteForceProtectionConfig {
+    return BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofSeconds(5))
+  }
 }

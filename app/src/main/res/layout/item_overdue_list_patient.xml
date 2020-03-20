@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView cardElevation="2dp"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="@dimen/spacing_8">
+  android:layout_marginBottom="@dimen/spacing_8"
+  app:cardCornerRadius="4dp"
+  app:cardElevation="2dp">
 
   <RelativeLayout
     android:layout_width="match_parent"
@@ -21,27 +23,27 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/spacing_16"
-        android:paddingEnd="@dimen/spacing_16"
         android:paddingTop="@dimen/spacing_16"
+        android:paddingEnd="@dimen/spacing_16"
+        android:paddingBottom="@dimen/spacing_16"
         tools:ignore="RtlSymmetry">
 
         <TextView
           android:id="@+id/patientNameTextView"
-          style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
+          style="@style/Clinic.V2.TextAppearance.Body0Left.Emphasis.Blue1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/spacing_4"
           android:layout_marginStart="@dimen/spacing_16"
-          android:drawablePadding="@dimen/spacing_16"
+          android:layout_marginBottom="@dimen/spacing_12"
           android:drawableStart="@drawable/ic_patient_female"
+          android:drawablePadding="@dimen/spacing_16"
           tools:text="Anisha Acharya" />
 
         <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_56"
-          android:layout_marginBottom="@dimen/spacing_4"
+          android:layout_marginBottom="@dimen/spacing_12"
           android:orientation="horizontal">
 
           <TextView
@@ -62,8 +64,8 @@
         <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/spacing_4"
           android:layout_marginStart="@dimen/spacing_56"
+          android:layout_marginBottom="@dimen/spacing_12"
           android:orientation="horizontal">
 
           <TextView
@@ -86,10 +88,10 @@
           style="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/spacing_4"
           android:layout_marginStart="@dimen/spacing_56"
-          android:drawablePadding="@dimen/spacing_4"
+          android:layout_marginBottom="@dimen/spacing_12"
           android:drawableStart="@drawable/ic_call_16dp"
+          android:drawablePadding="@dimen/spacing_4"
           android:gravity="center" />
 
         <LinearLayout
@@ -98,22 +100,25 @@
           android:layout_marginStart="@dimen/spacing_56">
 
           <TextView
-            android:id="@+id/isAtHighRiskTextView"
-            style="@style/Clinic.V2.TextAppearance.Body2Left.White100"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/spacing_8"
-            android:background="@drawable/background_overdue_high_risk_label"
-            android:paddingEnd="@dimen/spacing_8"
-            android:paddingStart="@dimen/spacing_8"
-            android:text="@string/overduelist_high_risk" />
-
-          <TextView
             android:id="@+id/overdueDaysTextView"
             style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_8"
             tools:text="4 day overdue" />
+
+          <TextView
+            android:id="@+id/isAtHighRiskTextView"
+            style="@style/Clinic.V2.TextAppearance.Body2Tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_overdue_high_risk_label"
+            android:paddingStart="@dimen/spacing_8"
+            android:paddingEnd="@dimen/spacing_8"
+            android:text="@string/overduelist_high_risk"
+            android:textAllCaps="true"
+            android:textColor="@color/red1" />
+
         </LinearLayout>
       </LinearLayout>
 
@@ -136,8 +141,8 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/patient_details"
       android:orientation="vertical"
-      android:paddingBottom="@dimen/spacing_8"
-      android:paddingTop="@dimen/spacing_16">
+      android:paddingTop="@dimen/spacing_16"
+      android:paddingBottom="@dimen/spacing_8">
 
       <TextView
         style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
@@ -145,8 +150,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/spacing_12"
         android:gravity="center_vertical"
-        android:paddingEnd="@dimen/spacing_4"
         android:paddingStart="@dimen/spacing_56"
+        android:paddingEnd="@dimen/spacing_4"
         android:text="@string/overduelist_result_of_call"
         android:textAllCaps="true" />
 
@@ -161,8 +166,8 @@
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginEnd="@dimen/spacing_16"
         android:layout_marginStart="@dimen/spacing_56"
+        android:layout_marginEnd="@dimen/spacing_16"
         android:background="@color/grey3" />
 
       <TextView
@@ -176,8 +181,8 @@
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginEnd="@dimen/spacing_16"
         android:layout_marginStart="@dimen/spacing_56"
+        android:layout_marginEnd="@dimen/spacing_16"
         android:background="@color/grey3" />
 
       <TextView

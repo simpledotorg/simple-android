@@ -12,7 +12,6 @@ import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-
 class MissingPhoneReminderRepositoryAndroidTest {
 
   @Inject
@@ -41,21 +40,6 @@ class MissingPhoneReminderRepositoryAndroidTest {
 
     val savedReminder = dao.get(patientUuid).blockingFirst().first()
     assertThat(savedReminder).isEqualTo(MissingPhoneReminder(patientUuid, remindedAt))
-  }
-
-  @Test
-  fun when_a_reminder_is_saved_then_retrieving_it_should_work() {
-    val nonExistentPatientUuid = UUID.randomUUID()
-    val hasASavedReminder = repository.hasShownReminderFor(nonExistentPatientUuid).blockingGet()
-    assertThat(hasASavedReminder).isFalse()
-  }
-
-  @Test
-  fun when_a_reminder_isnt_present_then_retrieving_it_shouldnt_work() {
-    repository.markReminderAsShownFor(patientUuid).blockingAwait()
-
-    val hasASavedReminder = repository.hasShownReminderFor(patientUuid).blockingGet()
-    assertThat(hasASavedReminder).isTrue()
   }
 
   @Suppress("LocalVariableName", "IllegalIdentifier")

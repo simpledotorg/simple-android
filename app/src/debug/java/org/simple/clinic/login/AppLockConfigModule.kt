@@ -11,6 +11,6 @@ class AppLockConfigModule {
 
   @Provides
   fun appLockConfig(): Single<AppLockConfig> {
-    return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.SECONDS.toMillis(4)))
+    return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.SECONDS.toMillis(30)))
   }
 }

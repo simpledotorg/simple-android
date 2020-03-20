@@ -3229,7 +3229,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun fetching_the_patient_profile_should_should_load_the_patient_details() {
+  fun fetching_the_patient_profile_should_load_the_patient_details() {
     // given
     val patientDao = database.patientDao()
     val patientAddressDao = database.addressDao()
@@ -3254,7 +3254,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun fetching_the_patient_profile_should_should_load_the_patient_phone_numbers() {
+  fun fetching_the_patient_profile_should_load_the_patient_phone_numbers() {
     // given
     val patientDao = database.patientDao()
     val patientAddressDao = database.addressDao()
@@ -3292,7 +3292,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun fetching_the_patient_profile_should_should_load_the_business_ids() {
+  fun fetching_the_patient_profile_should_load_the_business_ids() {
     // given
     val patientDao = database.patientDao()
     val patientAddressDao = database.addressDao()
@@ -3321,6 +3321,107 @@ class PatientRepositoryAndroidTest {
 
     // when
     val patientProfile = patientRepository.patientProfileImmediate(patient.uuid) as Just<PatientProfile>
+
+    // then
+    assertThat(patientProfile.value.patient).isEqualTo(patient)
+    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.value.phoneNumbers).isEmpty()
+    assertThat(patientProfile.value.businessIds).containsExactlyElementsIn(businessIds)
+  }
+
+  @Test
+  fun subscribing_to_patient_profile_changes_should_load_the_patient_details() {
+    // given
+    val patientDao = database.patientDao()
+    val patientAddressDao = database.addressDao()
+
+    val patientAddress = testData.patientAddress(uuid = UUID.fromString("b0a989ce-0298-4fdd-9c7d-074d36ddb5ad"))
+    val patient = testData.patient(
+        uuid = UUID.fromString("b0547622-96a2-48f9-bd41-bd86cbd2dee2"),
+        addressUuid = patientAddress.uuid
+    )
+
+    patientAddressDao.save(patientAddress)
+    patientDao.save(patient)
+
+    // when
+    val patientProfile = patientRepository.patientProfile(patient.uuid).blockingFirst() as Just<PatientProfile>
+
+    // then
+    assertThat(patientProfile.value.patient).isEqualTo(patient)
+    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.value.phoneNumbers).isEmpty()
+    assertThat(patientProfile.value.businessIds).isEmpty()
+  }
+
+  @Test
+  fun subscribing_to_patient_profile_changes_should_load_the_patient_phone_numbers() {
+    // given
+    val patientDao = database.patientDao()
+    val patientAddressDao = database.addressDao()
+    val patientPhoneNumberDao = database.phoneNumberDao()
+
+    val patientAddress = testData.patientAddress(uuid = UUID.fromString("b0a989ce-0298-4fdd-9c7d-074d36ddb5ad"))
+    val patient = testData.patient(
+        uuid = UUID.fromString("b0547622-96a2-48f9-bd41-bd86cbd2dee2"),
+        addressUuid = patientAddress.uuid
+    )
+    val phoneNumbers = listOf(
+        testData.patientPhoneNumber(
+            uuid = UUID.fromString("5dd1909a-2e08-4287-8858-2d2d8689bda0"),
+            patientUuid = patient.uuid,
+            number = "1234567890"
+        ),
+        testData.patientPhoneNumber(
+            uuid = UUID.fromString("1770d775-bf43-40e9-a134-33492f90f751"),
+            patientUuid = patient.uuid,
+            number = "0987654321"
+        )
+    )
+    patientAddressDao.save(patientAddress)
+    patientDao.save(patient)
+    patientPhoneNumberDao.save(phoneNumbers)
+
+    // when
+    val patientProfile = patientRepository.patientProfile(patient.uuid).blockingFirst() as Just<PatientProfile>
+
+    // then
+    assertThat(patientProfile.value.patient).isEqualTo(patient)
+    assertThat(patientProfile.value.address).isEqualTo(patientAddress)
+    assertThat(patientProfile.value.phoneNumbers).containsExactlyElementsIn(phoneNumbers)
+    assertThat(patientProfile.value.businessIds).isEmpty()
+  }
+
+  @Test
+  fun subscribing_to_patient_profile_changes_should_load_the_business_ids() {
+    // given
+    val patientDao = database.patientDao()
+    val patientAddressDao = database.addressDao()
+    val businessIdDao = database.businessIdDao()
+
+    val patientAddress = testData.patientAddress(uuid = UUID.fromString("b0a989ce-0298-4fdd-9c7d-074d36ddb5ad"))
+    val patient = testData.patient(
+        uuid = UUID.fromString("b0547622-96a2-48f9-bd41-bd86cbd2dee2"),
+        addressUuid = patientAddress.uuid
+    )
+    val businessIds = listOf(
+        testData.businessId(
+            uuid = UUID.fromString("ab909199-6f8c-4b2f-856d-021f5b2aca81"),
+            identifier = Identifier(value = "05ab1305-0d42-424d-8bea-04432df09897", type = BpPassport),
+            patientUuid = patient.uuid
+        ),
+        testData.businessId(
+            uuid = UUID.fromString("62d76ed6-5714-4b80-830f-0bd031c4d318"),
+            identifier = Identifier(value = "1234-5678-0986-5432", type = BangladeshNationalId),
+            patientUuid = patient.uuid
+        )
+    )
+    patientAddressDao.save(patientAddress)
+    patientDao.save(patient)
+    businessIdDao.save(businessIds)
+
+    // when
+    val patientProfile = patientRepository.patientProfile(patient.uuid).blockingFirst() as Just<PatientProfile>
 
     // then
     assertThat(patientProfile.value.patient).isEqualTo(patient)

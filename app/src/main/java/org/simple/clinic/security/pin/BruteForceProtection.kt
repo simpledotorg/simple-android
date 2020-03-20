@@ -12,6 +12,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.timer
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import timber.log.Timber
 import javax.inject.Inject
 
 class BruteForceProtection @Inject constructor(
@@ -41,20 +42,14 @@ class BruteForceProtection @Inject constructor(
   }
 
   fun protectedStateChanges(): Observable<ProtectedState> {
-    val bruteForceProtectionResets = statePreference
+    return statePreference
         .asObservable()
-        .map { state -> state.limitReachedAt }
-        .switchMap { blockedAt -> signalBruteForceTimerReset(blockedAt, config.blockDuration) }
-        .flatMapCompletable { resetFailedAttempts() }
-        .toObservable<Any>()
-
-    return Observables
-        .combineLatest(
-            statePreference.asObservable(),
-            bruteForceProtectionResets.startWith(Any())
-        )
-        .doOnTerminate { resetProtectionStateOnTimerExpiryDisposable?.dispose() }
-        .map { (state, _) ->
+        .doOnSubscribe { resetBruteForceProtectionTimer() }
+        .doOnDispose {
+          Timber.tag("WTF").d("DISPOSED BRUTE FORCE PROTECTION TIMER")
+          resetProtectionStateOnTimerExpiryDisposable?.dispose()
+        }
+        .map { state ->
           ProtectedState.from(
               state = state,
               maxAllowedFailedAttempts = config.limitOfFailedAttempts,
@@ -62,6 +57,15 @@ class BruteForceProtection @Inject constructor(
           )
         }
         .distinctUntilChanged()
+  }
+
+  private fun resetBruteForceProtectionTimer() {
+    resetProtectionStateOnTimerExpiryDisposable = statePreference
+        .asObservable()
+        .map { state -> state.limitReachedAt }
+        .switchMap { blockedAt -> signalBruteForceTimerReset(blockedAt, config.blockDuration) }
+        .flatMapCompletable { resetFailedAttempts() }
+        .subscribe()
   }
 
   private fun signalBruteForceTimerReset(

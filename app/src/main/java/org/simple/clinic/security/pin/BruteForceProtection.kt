@@ -63,9 +63,10 @@ class BruteForceProtection @Inject constructor(
   }
 
   fun protectedStateChanges(): Observable<ProtectedState> {
-    val bruteForceProtectionResets = Observables
-        .combineLatest(configProvider, statePreference.asObservable()) { config, state -> config.blockDuration to state.limitReachedAt }
-        .switchMap { (blockDuration, blockedAt) -> signalBruteForceTimerReset(blockedAt, blockDuration) }
+    val bruteForceProtectionResets = statePreference
+        .asObservable()
+        .map { state -> state.limitReachedAt }
+        .switchMap { blockedAt -> signalBruteForceTimerReset(blockedAt, config.blockDuration) }
         .flatMapCompletable { resetFailedAttempts() }
         .toObservable<Any>()
 

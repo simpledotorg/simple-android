@@ -1,59 +1,59 @@
 package org.simple.clinic.facility.change
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
-import android.util.AttributeSet
-import android.widget.RelativeLayout
+import android.content.Intent
+import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
-import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.ofType
-import kotlinx.android.synthetic.main.screen_facility_change.view.*
+import io.reactivex.subjects.PublishSubject
+import kotlinx.android.synthetic.main.screen_facility_change.*
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
+import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
 import org.simple.clinic.location.LOCATION_PERMISSION
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.facility.FacilitiesAdapter
-import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
+import java.util.Locale
 import javax.inject.Inject
 
-class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class FacilityChangeScreen : AppCompatActivity() {
 
   @Inject
   lateinit var controller: FacilityChangeScreenController
 
   @Inject
-  lateinit var screenRouter: ScreenRouter
+  lateinit var locale: Locale
 
-  @Inject
-  lateinit var activity: AppCompatActivity
-
+  private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val recyclerViewAdapter = FacilitiesAdapter()
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-    TheActivity.component.inject(this)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.screen_facility_change)
 
     bindUiToController(
         ui = this,
@@ -64,31 +64,57 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             locationPermissionChanges()
         ),
         controller = controller,
-        screenDestroys = screenDestroys
+        screenDestroys = onDestroys
     )
 
+    setupUiComponents()
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    setupDi()
+
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+
+    super.attachBaseContext(wrappedContext)
+  }
+
+  override fun onDestroy() {
+    onDestroys.onNext(ScreenDestroyed())
+    super.onDestroy()
+  }
+
+  private fun setupDi() {
+    component = ClinicApp.appComponent
+        .facilityChangeComponentBuilder()
+        .activity(this)
+        .build()
+
+    component.inject(this)
+  }
+
+  private fun setupUiComponents() {
     toolbarWithSearch.setNavigationOnClickListener {
-      screenRouter.pop()
+      finish()
     }
     toolbarWithoutSearch.setNavigationOnClickListener {
-      screenRouter.pop()
+      finish()
     }
 
-    facilityList.layoutManager = LinearLayoutManager(context)
+    facilityList.layoutManager = LinearLayoutManager(this)
     facilityList.adapter = recyclerViewAdapter
 
     // For some reasons, the keyboard stays
     // visible when coming from AppLockScreen.
     searchEditText.requestFocus()
-    post { hideKeyboard() }
+    rootLayout.post { rootLayout.hideKeyboard() }
 
     hideKeyboardOnListScroll()
-    setupConfirmationSheetResults(screenDestroys)
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
-
-  private val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
   private fun searchQueryChanges() =
       RxTextView
@@ -101,7 +127,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
           .map(::FacilityChangeClicked)
 
   private fun locationPermissionChanges(): Observable<UiEvent> {
-    val permissionResult = RuntimePermissions.check(activity, LOCATION_PERMISSION)
+    val permissionResult = RuntimePermissions.check(this, LOCATION_PERMISSION)
     return Observable.just(FacilityChangeLocationPermissionChanged(permissionResult))
   }
 
@@ -113,19 +139,17 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     Observables.combineLatest(scrollEvents, scrollStateChanges)
         .compose(RecyclerViewUserScrollDetector.streamDetections())
         .filter { it.byUser }
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(onDestroys)
         .subscribe {
-          hideKeyboard()
+          rootLayout.hideKeyboard()
         }
   }
 
-  @SuppressLint("CheckResult")
-  private fun setupConfirmationSheetResults(screenDestroys: Observable<ScreenDestroyed>) {
-    screenRouter.streamScreenResults()
-        .ofType<ActivityResult>()
-        .filter { it.requestCode == OPEN_CONFIRMATION_SHEET && it.succeeded() }
-        .takeUntil(screenDestroys)
-        .subscribe { goBack() }
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (requestCode == OPEN_CONFIRMATION_SHEET && resultCode == Activity.RESULT_OK) {
+      goBack()
+    }
   }
 
 
@@ -143,7 +167,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun goBack() {
-    screenRouter.pop()
+    finish()
   }
 
   fun showProgressIndicator() {
@@ -163,13 +187,18 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun openConfirmationSheet(facility: Facility) {
-    activity.startActivityForResult(
-        ConfirmFacilityChangeSheet.intent(context, facility),
+    startActivityForResult(
+        ConfirmFacilityChangeSheet.intent(this, facility),
         OPEN_CONFIRMATION_SHEET
     )
   }
 
   companion object {
+    lateinit var component: FacilityChangeComponent
     private const val OPEN_CONFIRMATION_SHEET = 1210
+
+    fun intent(context: Context): Intent {
+      return Intent(context, FacilityChangeScreen::class.java)
+    }
   }
 }

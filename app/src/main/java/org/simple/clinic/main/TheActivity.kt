@@ -170,7 +170,9 @@ class TheActivity : AppCompatActivity() {
   }
 
   fun showAppLockScreen() {
-    screenRouter.push(AppLockScreenKey())
+    if(screenRouter.top() !is AppLockScreenKey) {
+      screenRouter.push(AppLockScreenKey())
+    }
   }
 
   // This is here because we need to show the same alert in multiple

@@ -127,6 +127,10 @@ class ScreenRouter(
     }
   }
 
+  fun top(): Any {
+    return flow().history.top()
+  }
+
   private fun flow(): Flow {
     try {
       return flowSupplier.get()

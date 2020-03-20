@@ -4,8 +4,6 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
-import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
-import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -23,6 +21,26 @@ class BruteForceProtection @Inject constructor(
 ) {
 
   sealed class ProtectedState {
+
+    companion object {
+      fun from(
+          state: BruteForceProtectionState,
+          maxAllowedFailedAttempts: Int,
+          blockAttemptsFor: Duration
+      ): ProtectedState {
+        val blockedAt = state.limitReachedAt
+        val attemptsMade = state.failedAuthCount
+
+        return when (blockedAt) {
+          is None -> {
+            val attemptsRemaining = max(0, maxAllowedFailedAttempts - attemptsMade)
+            Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
+          }
+          is Just -> Blocked(attemptsMade = attemptsMade, blockedTill = blockedAt.value + blockAttemptsFor)
+        }
+      }
+    }
+
     data class Allowed(val attemptsMade: Int, val attemptsRemaining: Int) : ProtectedState()
     data class Blocked(val attemptsMade: Int, val blockedTill: Instant) : ProtectedState()
   }
@@ -59,30 +77,13 @@ class BruteForceProtection @Inject constructor(
             bruteForceProtectionResets.startWith(Any())
         )
         .map { (state, _) ->
-          generateProtectedState(
+          ProtectedState.from(
               state = state,
               maxAllowedFailedAttempts = config.limitOfFailedAttempts,
               blockAttemptsFor = config.blockDuration
           )
         }
         .distinctUntilChanged()
-  }
-
-  private fun generateProtectedState(
-      state: BruteForceProtectionState,
-      maxAllowedFailedAttempts: Int,
-      blockAttemptsFor: Duration
-  ): ProtectedState {
-    val blockedAt = state.limitReachedAt
-    val attemptsMade = state.failedAuthCount
-
-    return when (blockedAt) {
-      is None -> {
-        val attemptsRemaining = max(0, maxAllowedFailedAttempts - attemptsMade)
-        Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
-      }
-      is Just -> Blocked(attemptsMade = attemptsMade, blockedTill = blockedAt.value + blockAttemptsFor)
-    }
   }
 
   private fun signalBruteForceTimerReset(

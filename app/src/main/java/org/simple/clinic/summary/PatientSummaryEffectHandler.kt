@@ -156,7 +156,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
             val timestamp = loadDataForBackClick.screenCreatedTimestamp
-            val medicalHistory = (medicalHistoryRepository.historyForPatient(patientUuid) as Just<MedicalHistory>).value
+            val medicalHistory = medicalHistoryRepository.historyForPatient(patientUuid)
 
             DataForBackClickLoaded(
                 hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
@@ -175,7 +175,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
-            val medicalHistory = (medicalHistoryRepository.historyForPatient(patientUuid) as Just<MedicalHistory>).value
+            val medicalHistory = medicalHistoryRepository.historyForPatient(patientUuid)
 
             DataForDoneClickLoaded(countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid), diagnosisRecorded = medicalHistory.diagnosisRecorded)
           }

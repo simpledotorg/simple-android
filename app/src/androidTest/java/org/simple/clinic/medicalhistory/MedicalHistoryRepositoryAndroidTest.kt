@@ -12,7 +12,6 @@ import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.util.Just
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.UtcClock
@@ -155,7 +154,20 @@ class MedicalHistoryRepositoryAndroidTest {
 
     dao.save(listOf(olderHistory, newerHistory))
 
-    val foundHistory = (repository.historyForPatient(patientUuid) as Just<MedicalHistory>).value
+    val foundHistory = repository.historyForPatient(patientUuid)
     assertThat(foundHistory).isEqualTo(newerHistory)
+  }
+
+  @Test
+  fun when_no_medical_history_is_present_for_a_patient_then_return_detail_medical_history() {
+    val patientUuid = UUID.fromString("694d1c32-048f-4d43-93d4-0cd51be686b0")
+    val emptyHistory = repository.historyForPatient(patientUuid)
+
+    assertThat(emptyHistory.hasHadHeartAttack).isEqualTo(Unanswered)
+    assertThat(emptyHistory.hasHadStroke).isEqualTo(Unanswered)
+    assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(Unanswered)
+    assertThat(emptyHistory.diagnosedWithHypertension).isEqualTo(Unanswered)
+    assertThat(emptyHistory.diagnosedWithDiabetes).isEqualTo(Unanswered)
+    assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }
 }

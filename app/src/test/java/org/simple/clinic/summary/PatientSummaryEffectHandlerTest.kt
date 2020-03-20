@@ -144,7 +144,7 @@ class PatientSummaryEffectHandlerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 3
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 2
-    whenever(medicalHistoryRepository.historyForPatient(patientUuid)) doReturn Just(medicalHistory)
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)) doReturn medicalHistory
 
     // when
     testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp))
@@ -169,7 +169,7 @@ class PatientSummaryEffectHandlerTest {
 
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 2
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 3
-    whenever(medicalHistoryRepository.historyForPatient(patientUuid)) doReturn Just(medicalHistory)
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)) doReturn medicalHistory
 
     // when
     testCase.dispatch(LoadDataForDoneClick(patientUuid))

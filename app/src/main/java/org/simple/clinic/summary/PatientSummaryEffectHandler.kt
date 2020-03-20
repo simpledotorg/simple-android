@@ -71,6 +71,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
         .addTransformer(TriggerSync::class.java, triggerSync())
         .addAction(ShowDiagnosisError::class.java, { uiActions.showDiagnosisError() }, schedulersProvider.ui())
+        .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .build()
   }
 
@@ -257,5 +258,17 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return missingPhoneReminderRepository
         .hasShownReminderFor(patientUuid)
         .toObservable()
+  }
+
+  private fun fetchHasShownMissingPhoneReminder(
+      scheduler: Scheduler
+  ): ObservableTransformer<FetchHasShownMissingPhoneReminder, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .map { it.patientUuid }
+          .map(missingPhoneReminderRepository::hasShownReminderForPatient)
+          .map(::FetchedHasShownMissingPhoneReminder)
+    }
   }
 }

@@ -21,6 +21,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
+import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
@@ -39,14 +40,17 @@ class PatientSummaryEffectHandlerTest {
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
+  private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
   private val dataSync = mock<DataSync>()
+
+  private val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
 
   private val effectHandler = PatientSummaryEffectHandler(
       schedulersProvider = TrampolineSchedulersProvider(),
       patientRepository = patientRepository,
       bloodPressureRepository = bloodPressureRepository,
       appointmentRepository = mock(),
-      missingPhoneReminderRepository = mock(),
+      missingPhoneReminderRepository = missingPhoneReminderRepository,
       userSession = userSession,
       facilityRepository = facilityRepository,
       bloodSugarRepository = bloodSugarRepository,
@@ -81,7 +85,6 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when the load patient summary profile is received, then patient summary profile must be fetched`() {
     // given
-    val patientUuid = UUID.fromString("2bd2ad18-f532-4649-b775-efe97c38ce59")
     val patient = TestData.patient(patientUuid)
     val patientAddress = TestData.patientAddress(uuid = patient.addressUuid)
     val patientPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
@@ -110,7 +113,7 @@ class PatientSummaryEffectHandlerTest {
   fun `when edit click effect is received then show edit patient screen`() {
     //given
     val patientProfile = TestData.patientProfile(
-        patientUuid = UUID.fromString("12fdada1-57df-49de-871a-766fbdbb2f37"),
+        patientUuid = patientUuid,
         patientAddressUuid = UUID.fromString("d261cde2-b0cb-436e-9612-8b3b7bde0c63")
     )
     val patientSummaryProfile = PatientSummaryProfile(
@@ -134,7 +137,6 @@ class PatientSummaryEffectHandlerTest {
   fun `when the load data for back click effect is received, load the data`() {
     // given
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
-    val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
 
     val medicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
@@ -161,7 +163,6 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when the load data for done click effect is received, load the data`() {
     // given
-    val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
     val medicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
         patientUuid = patientUuid
@@ -203,5 +204,18 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).showDiagnosisError()
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when the fetch missing phone reminder effect is received, fetch whether reminder has been shown for the patient`() {
+    // given
+    whenever(missingPhoneReminderRepository.hasShownReminderForPatient(patientUuid)) doReturn true
+
+    // when
+    testCase.dispatch(FetchHasShownMissingPhoneReminder(patientUuid))
+
+    // then
+    verifyZeroInteractions(uiActions)
+    testCase.assertOutgoingEvents(FetchedHasShownMissingPhoneReminder(true))
   }
 }

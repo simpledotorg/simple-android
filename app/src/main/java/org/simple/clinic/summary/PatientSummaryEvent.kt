@@ -56,3 +56,5 @@ data class DataForDoneClickLoaded(
 ): PatientSummaryEvent()
 
 data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom): PatientSummaryEvent()
+
+data class FetchedHasShownMissingPhoneReminder(val hasShownReminder: Boolean): PatientSummaryEvent()

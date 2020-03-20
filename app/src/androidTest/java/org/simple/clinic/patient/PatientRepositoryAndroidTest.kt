@@ -240,8 +240,7 @@ class PatientRepositoryAndroidTest {
 
     val patientProfile = database
         .patientDao()
-        .patientProfile(savedPatientUuid)
-        .blockingFirst()
+        .patientProfileImmediate(savedPatientUuid)!!
 
     val savedBusinessId = patientProfile.businessIds.first()
 

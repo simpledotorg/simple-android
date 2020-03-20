@@ -60,8 +60,7 @@ class BruteForceProtection @Inject constructor(
         )
         .map { (state, _) ->
           generateProtectedState(
-              blockedAt = state.limitReachedAt,
-              attemptsMade = state.failedAuthCount,
+              state = state,
               maxAllowedFailedAttempts = config.limitOfFailedAttempts,
               blockAttemptsFor = config.blockDuration
           )
@@ -70,11 +69,13 @@ class BruteForceProtection @Inject constructor(
   }
 
   private fun generateProtectedState(
-      blockedAt: Optional<Instant>,
-      attemptsMade: Int,
+      state: BruteForceProtectionState,
       maxAllowedFailedAttempts: Int,
       blockAttemptsFor: Duration
   ): ProtectedState {
+    val blockedAt = state.limitReachedAt
+    val attemptsMade = state.failedAuthCount
+
     return when (blockedAt) {
       is None -> {
         val attemptsRemaining = max(0, maxAllowedFailedAttempts - attemptsMade)

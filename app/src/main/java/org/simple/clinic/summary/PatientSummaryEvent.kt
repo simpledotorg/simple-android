@@ -36,7 +36,7 @@ object CompletedCheckForInvalidPhone: PatientSummaryEvent()
 
 object PatientSummaryBloodPressureSaved : PatientSummaryEvent()
 
-data class FetchedHasShownMissingReminder(val hasShownReminder: Boolean): PatientSummaryEvent()
+data class FetchedHasShownMissingReminder_Old(val hasShownReminder: Boolean): PatientSummaryEvent()
 
 object LinkIdWithPatientSheetShown: PatientSummaryEvent()
 

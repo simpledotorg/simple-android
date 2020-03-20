@@ -56,7 +56,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(GoBackToPreviousScreen::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
         .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
         .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
-        .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
+        .addTransformer(FetchHasShownMissingPhoneReminder_Old::class.java, fetchHasShownMissingPhoneReminder_Old(schedulersProvider.io()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
         .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
         .addTransformer(ShowLinkIdWithPatientView::class.java, showLinkIdWithPatientView(schedulersProvider.ui()))
@@ -116,16 +116,16 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
   }
 
   // TODO(vs): 2020-02-19 Revisit after Mobius migration
-  private fun fetchHasShownMissingPhoneReminder(
+  private fun fetchHasShownMissingPhoneReminder_Old(
       scheduler: Scheduler
-  ): ObservableTransformer<FetchHasShownMissingPhoneReminder, PatientSummaryEvent> {
+  ): ObservableTransformer<FetchHasShownMissingPhoneReminder_Old, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
           .flatMap { effect ->
             isMissingPhoneAndHasShownReminder(effect.patientUuid)
                 .subscribeOn(scheduler)
                 .take(1)
-                .map(::FetchedHasShownMissingReminder)
+                .map(::FetchedHasShownMissingReminder_Old)
           }
     }
   }

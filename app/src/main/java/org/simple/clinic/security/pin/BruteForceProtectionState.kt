@@ -1,10 +1,10 @@
 package org.simple.clinic.security.pin
 
 import com.squareup.moshi.JsonClass
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.toOptional
 import org.threeten.bp.Instant
 
 @JsonClass(generateAdapter = true)
@@ -13,11 +13,17 @@ data class BruteForceProtectionState(
     val limitReachedAt: Optional<Instant> = None
 ) {
 
-  fun authenticationFailed(): BruteForceProtectionState {
-    return this.copy(failedAuthCount = failedAuthCount + 1)
-  }
+  fun authenticationFailed(
+      maxAllowedFailedAttempts: Int,
+      clock: UtcClock
+  ): BruteForceProtectionState {
+    val totalFailedAttempts = failedAuthCount + 1
+    val isLimitReached = totalFailedAttempts >= maxAllowedFailedAttempts
+    val limitReachedAtTimestamp = if (isLimitReached && limitReachedAt is None) Just(Instant.now(clock)) else limitReachedAt
 
-  fun failedAttemptLimitReached(utcClock: UtcClock): BruteForceProtectionState {
-    return this.copy(limitReachedAt = Instant.now(utcClock).toOptional())
+    return copy(
+        failedAuthCount = totalFailedAttempts,
+        limitReachedAt = limitReachedAtTimestamp
+    )
   }
 }

@@ -28,27 +28,11 @@ class BruteForceProtection @Inject constructor(
   }
 
   fun incrementFailedAttempt(): Completable {
-    val pinAuthenticationFailedStream = statePreference
-        .asObservable()
-        .take(1)
-        .map(BruteForceProtectionState::authenticationFailed)
+    return Completable.fromAction {
+      val currentState = statePreference.get()
+      val updatedState = currentState.authenticationFailed(config.limitOfFailedAttempts, utcClock)
 
-    val updatedState = pinAuthenticationFailedStream
-        .map { failedAuthAttemptUpdatedState -> updateFailedAttemptLimitReached(failedAuthAttemptUpdatedState, config.limitOfFailedAttempts) }
-        .doOnNext(statePreference::set)
-
-    return updatedState.ignoreElements()
-  }
-
-  private fun updateFailedAttemptLimitReached(
-      state: BruteForceProtectionState,
-      maxAllowedFailedAttempts: Int
-  ): BruteForceProtectionState {
-    val isLimitReached = state.failedAuthCount >= maxAllowedFailedAttempts
-    return if (isLimitReached && state.limitReachedAt is None) {
-      state.failedAttemptLimitReached(utcClock)
-    } else {
-      state
+      statePreference.set(updatedState)
     }
   }
 

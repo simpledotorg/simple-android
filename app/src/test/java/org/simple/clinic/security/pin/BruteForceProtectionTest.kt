@@ -28,7 +28,7 @@ class BruteForceProtectionTest {
   @Test
   fun `when incrementing the count of failed attempts then the count should correctly be updated`() {
     val bruteForceProtectionState = BruteForceProtectionState(failedAuthCount = 3)
-    whenever(state.asObservable()).thenReturn(Observable.just(bruteForceProtectionState))
+    whenever(state.get()).thenReturn(bruteForceProtectionState)
 
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
@@ -41,7 +41,7 @@ class BruteForceProtectionTest {
         failedAuthCount = config.limitOfFailedAttempts - 1,
         limitReachedAt = None
     )
-    whenever(state.asObservable()).thenReturn(Observable.just(bruteForceProtectionState))
+    whenever(state.get()).thenReturn(bruteForceProtectionState)
 
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
@@ -56,7 +56,7 @@ class BruteForceProtectionTest {
     val bruteForceProtectionState = BruteForceProtectionState(
         failedAuthCount = config.limitOfFailedAttempts,
         limitReachedAt = Just(timeOfLastAttempt))
-    whenever(state.asObservable()).thenReturn(Observable.just(bruteForceProtectionState))
+    whenever(state.get()).thenReturn(bruteForceProtectionState)
 
     clock.advanceBy(Duration.ofMinutes(2))
     bruteForceProtection.incrementFailedAttempt().blockingAwait()

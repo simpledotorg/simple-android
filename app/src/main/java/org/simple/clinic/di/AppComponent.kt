@@ -7,6 +7,7 @@ import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetC
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
+import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
 import org.simple.clinic.home.overdue.appointmentreminder.di.AppointmentReminderSheetComponent
 import org.simple.clinic.home.overdue.phonemask.di.PhoneMaskBottomSheetComponent
@@ -45,6 +46,7 @@ interface AppComponent {
   fun customPrescriptionEntrySheetComponentBuilder(): CustomPrescriptionEntrySheetComponent.Builder
   fun removeAppointmentScreenComponentBuilder(): RemoveAppointmentScreenComponent.Builder
   fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Builder
+  fun facilityChangeComponentBuilder(): FacilityChangeComponent.Builder
 }
 
 @Scope

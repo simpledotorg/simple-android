@@ -3,14 +3,15 @@ package org.simple.clinic.home
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_home.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.facility.change.FacilityChangeScreenKey
+import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.home.help.HelpScreenKey
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.SettingsScreenKey
 import org.simple.clinic.widgets.ScreenCreated
@@ -25,6 +26,9 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var activity: AppCompatActivity
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -86,6 +90,6 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   fun openFacilitySelection() {
-    screenRouter.push(FacilityChangeScreenKey())
+    activity.startActivity(FacilityChangeScreen.intent(context))
   }
 }

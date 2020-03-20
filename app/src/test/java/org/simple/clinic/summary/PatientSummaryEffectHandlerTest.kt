@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
@@ -217,5 +218,30 @@ class PatientSummaryEffectHandlerTest {
     // then
     verifyZeroInteractions(uiActions)
     testCase.assertOutgoingEvents(FetchedHasShownMissingPhoneReminder(true))
+  }
+
+  @Test
+  fun `when the show add phone popup effect is received, show the add phone alert`() {
+    // when
+    testCase.dispatch(ShowAddPhonePopup(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showAddPhoneDialog(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the mark phone reminder shown effect is received, mark the missing phone reminder as shown for the patient`() {
+    // given
+    whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)) doReturn Completable.complete()
+
+    // when
+    testCase.dispatch(MarkReminderAsShown(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verifyZeroInteractions(uiActions)
+    verify(missingPhoneReminderRepository).markReminderAsShownFor(patientUuid)
   }
 }

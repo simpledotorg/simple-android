@@ -21,7 +21,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.security.ComparisonResult
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryCardView.State
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock

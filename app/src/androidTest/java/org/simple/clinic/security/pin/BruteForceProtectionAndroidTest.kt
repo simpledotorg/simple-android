@@ -3,7 +3,6 @@ package org.simple.clinic.security.pin
 import androidx.test.annotation.UiThreadTest
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.Observable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.TestScheduler
 import org.junit.After
@@ -12,8 +11,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
-import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
+import org.simple.clinic.security.pin.ProtectedState.Allowed
+import org.simple.clinic.security.pin.ProtectedState.Blocked
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Duration

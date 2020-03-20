@@ -7,6 +7,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -76,6 +77,9 @@ class BloodSugarHistoryScreen(
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var fragmentManager: FragmentManager
 
   private val bloodSugarHistoryAdapter = ItemAdapter(BloodSugarHistoryListItemDiffCallback())
 
@@ -160,8 +164,8 @@ class BloodSugarHistoryScreen(
   }
 
   override fun openBloodSugarUpdateSheet(measurement: BloodSugarMeasurement) {
-    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, measurement.uuid, measurement.reading.type)
-    activity.startActivity(intent)
+    val bloodSugarUpdateSheet = BloodSugarEntrySheet.forUpdateBloodSugar(measurement.uuid, measurement.reading.type)
+    bloodSugarUpdateSheet.show(fragmentManager, BloodSugarEntrySheet.TAG)
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
@@ -201,12 +205,11 @@ class BloodSugarHistoryScreen(
     val screenKey = screenRouter.key<BloodSugarHistoryScreenKey>(this)
     val patientUuid = screenKey.patientUuid
 
-    val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(
-        context,
+    val bloodSugarEntrySheet = BloodSugarEntrySheet.forNewBloodSugar(
         patientUuid,
         BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
     )
-    activity.startActivity(intentForNewBloodSugar)
+    bloodSugarEntrySheet.show(fragmentManager, BloodSugarEntrySheet.TAG)
   }
 
   private fun addNewBloodSugarClicked(): Observable<BloodSugarHistoryScreenEvent> {

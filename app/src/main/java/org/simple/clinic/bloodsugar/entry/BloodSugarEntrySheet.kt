@@ -1,17 +1,19 @@
 package org.simple.clinic.bloodsugar.entry
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
@@ -32,14 +34,10 @@ import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog.RemoveBloodSugarListener
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
-import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
@@ -52,34 +50,41 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBloodSugarListener {
+class BloodSugarEntrySheet : BottomSheetDialogFragment(), BloodSugarEntryUi, RemoveBloodSugarListener {
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
     DATE_ENTRY
   }
 
   companion object {
+    const val TAG = "BloodSugarEntrySheet"
     private const val KEY_OPEN_AS = "openAs"
     private const val EXTRA_WAS_BLOOD_SUGAR_SAVED = "wasBloodSugarSaved"
 
-    fun intentForNewBloodSugar(
-        context: Context,
+    fun forNewBloodSugar(
         patientUuid: UUID,
         measurementType: BloodSugarMeasurementType
-    ): Intent {
-      val intent = Intent(context, BloodSugarEntrySheet::class.java)
-      intent.putExtra(KEY_OPEN_AS, New(patientUuid, measurementType))
-      return intent
+    ): BloodSugarEntrySheet {
+      val bundle = Bundle().apply {
+        putParcelable(KEY_OPEN_AS, New(patientUuid, measurementType))
+      }
+
+      return BloodSugarEntrySheet().apply {
+        arguments = bundle
+      }
     }
 
-    fun intentForUpdateBloodSugar(
-        context: Context,
+    fun forUpdateBloodSugar(
         bloodSugarMeasurementUuid: UUID,
         measurementType: BloodSugarMeasurementType
-    ): Intent {
-      val intent = Intent(context, BloodSugarEntrySheet::class.java)
-      intent.putExtra(KEY_OPEN_AS, Update(bloodSugarMeasurementUuid, measurementType))
-      return intent
+    ): BloodSugarEntrySheet {
+      val bundle = Bundle().apply {
+        putParcelable(KEY_OPEN_AS, Update(bloodSugarMeasurementUuid, measurementType))
+      }
+
+      return BloodSugarEntrySheet().apply {
+        arguments = bundle
+      }
     }
   }
 
@@ -109,7 +114,7 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
   private val uiRenderer = BloodSugarEntryUiRenderer(this)
 
   private val openAs: OpenAs by lazy {
-    intent.getParcelableExtra<OpenAs>(KEY_OPEN_AS)!!
+    requireArguments().getParcelable<OpenAs>(KEY_OPEN_AS)!!
   }
 
   private val delegate by unsafeLazy {
@@ -127,26 +132,37 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   private val events: Observable<UiEvent> by unsafeLazy {
     Observable.mergeArray(
-        bloodSugarTextChanges(),
-        imeDoneClicks(),
-        bloodSugarDateClicks(),
-        backClicks(),
-        hardwareBackPresses(),
-        screenTypeChanges(),
-        dayTextChanges(),
-        monthTextChanges(),
-        yearTextChanges(),
-        removeClicks()
-    )
+            bloodSugarTextChanges(),
+            imeDoneClicks(),
+            bloodSugarDateClicks(),
+            backClicks(),
+            hardwareBackPresses(),
+            screenTypeChanges(),
+            dayTextChanges(),
+            monthTextChanges(),
+            yearTextChanges(),
+            removeClicks()
+        )
         .compose(ReportAnalyticsEvents())
         .share()
   }
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    setupDi()
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    return inflater.inflate(R.layout.sheet_blood_sugar_entry, container, false)
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setStyle(DialogFragment.STYLE_NORMAL, R.style.Clinic_V2_Theme_BottomSheetFragment)
+  }
 
-    setContentView(R.layout.sheet_blood_sugar_entry)
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     openAs.let { openAs ->
       val measurementType = when (openAs) {
         is New -> openAs.measurementType
@@ -183,21 +199,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     super.onSaveInstanceState(outState)
   }
 
-  override fun attachBaseContext(baseContext: Context) {
-    setupDi()
-
-    val wrappedContext = baseContext
-        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-
-    super.attachBaseContext(wrappedContext)
-  }
-
   private fun setupDi() {
     component = ClinicApp.appComponent
         .bloodSugarEntryComponent()
-        .activity(this)
+        .activity(requireActivity() as AppCompatActivity)
         .build()
 
     component.inject(this)
@@ -264,10 +269,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
       .map { RemoveBloodSugarClicked }
 
   override fun setBloodSugarSavedResultAndFinish() {
-    val intent = Intent()
-    intent.putExtra(EXTRA_WAS_BLOOD_SUGAR_SAVED, true)
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    //    val intent = Intent()
+    //    intent.putExtra(EXTRA_WAS_BLOOD_SUGAR_SAVED, true)
+    //    setResult(Activity.RESULT_OK, intent)
+    //    finish()
   }
 
   override fun hideBloodSugarErrorMessage() {
@@ -294,11 +299,11 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   override fun showBloodSugarEntryScreen() {
     viewFlipper.inAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_reading_entry_from_left)
+        .loadAnimation(requireContext(), R.anim.measurementinput_reading_entry_from_left)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.outAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_date_exit_to_right)
+        .loadAnimation(requireContext(), R.anim.measurementinput_date_exit_to_right)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.displayedChildResId = R.id.bloodsugarentry_flipper_blood_sugar_entry
@@ -306,11 +311,11 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   override fun showDateEntryScreen() {
     viewFlipper.inAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_date_entry_from_right)
+        .loadAnimation(requireContext(), R.anim.measurementinput_date_entry_from_right)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.outAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_reading_exit_to_left)
+        .loadAnimation(requireContext(), R.anim.measurementinput_reading_exit_to_left)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.displayedChildResId = R.id.bloodsugarentry_flipper_date_entry
@@ -379,18 +384,8 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     bloodSugarReadingEditText.setTextAndCursor(bloodSugarReading)
   }
 
-  override fun dismiss() {
-    finish()
-  }
-
-  override fun onBackgroundClick() {
-    if (bloodSugarReadingEditText.text.isBlank()) {
-      super.onBackgroundClick()
-    }
-  }
-
   override fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID) {
-    ConfirmRemoveBloodSugarDialog.show(bloodSugarMeasurementUuid, supportFragmentManager)
+    ConfirmRemoveBloodSugarDialog.show(bloodSugarMeasurementUuid, childFragmentManager)
   }
 
   override fun onBloodSugarRemoved() {

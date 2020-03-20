@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.FragmentManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -90,6 +91,9 @@ class BloodSugarSummaryView(
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  @Inject
+  lateinit var fragmentManager: FragmentManager
 
   @field:[Inject Named("full_date")]
   lateinit var dateFormatter: DateTimeFormatter
@@ -196,8 +200,8 @@ class BloodSugarSummaryView(
   }
 
   override fun openBloodSugarUpdateSheet(bloodSugarMeasurementUuid: UUID, measurementType: BloodSugarMeasurementType) {
-    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, bloodSugarMeasurementUuid, measurementType)
-    context.startActivity(intent)
+    val bloodSugarUpdateSheet = BloodSugarEntrySheet.forUpdateBloodSugar(bloodSugarMeasurementUuid, measurementType)
+    bloodSugarUpdateSheet.show(fragmentManager, BloodSugarEntrySheet.TAG)
   }
 
   @SuppressLint("CheckResult")
@@ -214,12 +218,11 @@ class BloodSugarSummaryView(
     val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
     val patientUuid = screenKey.patientUuid
 
-    val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(
-        context,
+    val bloodSugarEntrySheet = BloodSugarEntrySheet.forNewBloodSugar(
         patientUuid,
         BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
     )
-    activity.startActivity(intentForNewBloodSugar)
+    bloodSugarEntrySheet.show(fragmentManager, BloodSugarEntrySheet.TAG)
   }
 
   private fun render(bloodSugarMeasurements: List<BloodSugarMeasurement>) {

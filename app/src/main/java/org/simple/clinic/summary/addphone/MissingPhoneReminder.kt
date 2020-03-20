@@ -25,5 +25,8 @@ data class MissingPhoneReminder(
 
     @Query("SELECT * FROM MissingPhoneReminder WHERE patientUuid = :patientUuid")
     fun get(patientUuid: PatientUuid): Flowable<List<MissingPhoneReminder>>
+
+    @Query("SELECT * FROM MissingPhoneReminder WHERE patientUuid = :patientUuid")
+    fun forPatient(patientUuid: PatientUuid): MissingPhoneReminder?
   }
 }

@@ -18,6 +18,10 @@ class MissingPhoneReminderRepository @Inject constructor(
         .firstOrError()
   }
 
+  fun hasShownReminderForPatient(patientUuid: PatientUuid): Boolean {
+    return dao.forPatient(patientUuid) != null
+  }
+
   fun markReminderAsShownFor(patientUuid: PatientUuid): Completable {
     return Completable.fromAction {
       dao.save(MissingPhoneReminder(patientUuid, remindedAt = Instant.now(utcClock)))

@@ -25,7 +25,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
       is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())
       is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientUuid)
-      is FetchedHasShownMissingReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
+      is FetchedHasShownMissingReminder_Old -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       is LinkIdWithPatientSheetShown -> next(model.shownLinkIdWithPatientView())
       is PatientSummaryLinkIdCompleted -> dispatch(HideLinkIdWithPatientView)
       is ReportedViewedPatientToAnalytics -> next(model.reportedViewedPatientToAnalytics())
@@ -107,7 +107,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when (openIntention) {
       ViewNewPatient -> noChange()
-      else -> dispatch(FetchHasShownMissingPhoneReminder(patientUuid))
+      else -> dispatch(FetchHasShownMissingPhoneReminder_Old(patientUuid))
     }
   }
 

@@ -51,7 +51,7 @@ class MedicalHistoryRepository @Inject constructor(
         }
   }
 
-  fun historyForPatient(patientUuid: PatientUuid): MedicalHistory {
+  fun historyForPatientOrDefaultImmediate(patientUuid: PatientUuid): MedicalHistory {
     val defaultValue = MedicalHistory(
         uuid = UUID.randomUUID(),
         patientUuid = patientUuid,

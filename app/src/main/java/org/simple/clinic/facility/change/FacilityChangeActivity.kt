@@ -40,10 +40,10 @@ import org.simple.clinic.widgets.hideKeyboard
 import java.util.Locale
 import javax.inject.Inject
 
-class FacilityChangeScreen : AppCompatActivity() {
+class FacilityChangeActivity : AppCompatActivity() {
 
   @Inject
-  lateinit var controller: FacilityChangeScreenController
+  lateinit var controller: FacilityChangeActivityController
 
   @Inject
   lateinit var locale: Locale
@@ -198,7 +198,7 @@ class FacilityChangeScreen : AppCompatActivity() {
     private const val OPEN_CONFIRMATION_SHEET = 1210
 
     fun intent(context: Context): Intent {
-      return Intent(context, FacilityChangeScreen::class.java)
+      return Intent(context, FacilityChangeActivity::class.java)
     }
   }
 }

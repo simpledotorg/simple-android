@@ -3,6 +3,7 @@ package org.simple.clinic.security.pin
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -18,6 +19,8 @@ class BruteForceProtection @Inject constructor(
     private val config: BruteForceProtectionConfig,
     private val statePreference: Preference<BruteForceProtectionState>
 ) {
+
+  private var resetProtectionStateOnTimerExpiryDisposable: Disposable? = null
 
   fun incrementFailedAttempt(): Completable {
     return Completable.fromAction {
@@ -50,6 +53,7 @@ class BruteForceProtection @Inject constructor(
             statePreference.asObservable(),
             bruteForceProtectionResets.startWith(Any())
         )
+        .doOnTerminate { resetProtectionStateOnTimerExpiryDisposable?.dispose() }
         .map { (state, _) ->
           ProtectedState.from(
               state = state,

@@ -6,7 +6,6 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
@@ -22,7 +21,6 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.UUID
@@ -56,7 +54,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(GoBackToPreviousScreen::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
         .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
         .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
-        .addTransformer(FetchHasShownMissingPhoneReminder_Old::class.java, fetchHasShownMissingPhoneReminder_Old(schedulersProvider.io()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
         .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
         .addTransformer(ShowLinkIdWithPatientView::class.java, showLinkIdWithPatientView(schedulersProvider.ui()))
@@ -113,21 +110,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             }
           }
           .map { CompletedCheckForInvalidPhone }
-    }
-  }
-
-  // TODO(vs): 2020-02-19 Revisit after Mobius migration
-  private fun fetchHasShownMissingPhoneReminder_Old(
-      scheduler: Scheduler
-  ): ObservableTransformer<FetchHasShownMissingPhoneReminder_Old, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .flatMap { effect ->
-            isMissingPhoneAndHasShownReminder(effect.patientUuid)
-                .subscribeOn(scheduler)
-                .take(1)
-                .map(::FetchedHasShownMissingReminder_Old)
-          }
     }
   }
 
@@ -245,19 +227,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         actualAppointment.wasCancelledBecauseOfInvalidPhoneNumber() && wasAppointmentUpdatedAfterPhoneNumber
       }
     }
-  }
-
-  private fun isMissingPhoneAndHasShownReminder(patientUuid: UUID): Observable<Boolean> {
-    return patientRepository
-        .phoneNumber(patientUuid)
-        .zipWith(hasShownReminderForMissingPhone(patientUuid))
-        .map { (number, reminderShown) -> number is None && reminderShown }
-  }
-
-  private fun hasShownReminderForMissingPhone(patientUuid: UUID): Observable<Boolean> {
-    return missingPhoneReminderRepository
-        .hasShownReminderFor(patientUuid)
-        .toObservable()
   }
 
   private fun fetchHasShownMissingPhoneReminder(

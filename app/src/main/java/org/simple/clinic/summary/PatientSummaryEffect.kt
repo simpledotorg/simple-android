@@ -20,8 +20,6 @@ object GoToHomeScreen: PatientSummaryEffect()
 
 data class CheckForInvalidPhone(val patientUuid: UUID): PatientSummaryEffect()
 
-data class FetchHasShownMissingPhoneReminder_Old(val patientUuid: UUID): PatientSummaryEffect()
-
 data class MarkReminderAsShown(val patientUuid: UUID): PatientSummaryEffect()
 
 data class ShowAddPhonePopup(val patientUuid: UUID): PatientSummaryEffect()

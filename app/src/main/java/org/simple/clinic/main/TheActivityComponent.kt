@@ -15,7 +15,6 @@ import org.simple.clinic.activity.RxActivityLifecycle
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
-import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenInjector
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
@@ -24,7 +23,7 @@ import org.simple.clinic.drugs.selection.PrescribedDrugScreen
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
-import org.simple.clinic.facility.change.FacilityChangeScreen
+import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreen
@@ -101,7 +100,7 @@ interface TheActivityComponent :
   fun inject(target: RegistrationConfirmPinScreen)
   fun inject(target: RegistrationLocationPermissionScreen)
   fun inject(target: RegistrationFacilitySelectionScreen)
-  fun inject(target: FacilityChangeScreen)
+  fun inject(target: FacilityChangeActivity)
   fun inject(target: EnterOtpScreen)
   fun inject(target: ConfirmResetPinDialog)
   fun inject(target: ForgotPinCreateNewPinScreen)

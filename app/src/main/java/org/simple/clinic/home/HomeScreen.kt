@@ -9,7 +9,7 @@ import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_home.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.facility.change.FacilityChangeScreen
+import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
@@ -90,6 +90,6 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   fun openFacilitySelection() {
-    activity.startActivity(FacilityChangeScreen.intent(context))
+    activity.startActivity(FacilityChangeActivity.intent(context))
   }
 }

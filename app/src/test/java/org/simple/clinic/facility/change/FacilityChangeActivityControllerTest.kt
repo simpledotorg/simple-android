@@ -47,13 +47,13 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
 
 @RunWith(JUnitParamsRunner::class)
-class FacilityChangeScreenControllerTest {
+class FacilityChangeActivityControllerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()!!
-  private val screen = mock<FacilityChangeScreen>()
+  private val screen = mock<FacilityChangeActivity>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val locationRepository = mock<LocationRepository>()
@@ -71,7 +71,7 @@ class FacilityChangeScreenControllerTest {
       staleLocationThreshold = Duration.ofSeconds(0))
   private val configProvider = BehaviorSubject.createDefault(configTemplate)
 
-  private lateinit var controller: FacilityChangeScreenController
+  private lateinit var controller: FacilityChangeActivityController
 
   @Before
   fun setUp() {
@@ -81,7 +81,7 @@ class FacilityChangeScreenControllerTest {
     // Location updates are listened on a background thread.
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    controller = FacilityChangeScreenController(
+    controller = FacilityChangeActivityController(
         facilityRepository = facilityRepository,
         userSession = userSession,
         locationRepository = locationRepository,

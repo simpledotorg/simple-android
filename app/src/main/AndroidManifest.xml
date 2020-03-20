@@ -102,7 +102,7 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".facility.change.FacilityChangeScreen"
+      android:name=".facility.change.FacilityChangeActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <receiver

@@ -24,8 +24,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
       is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())
-      is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientUuid)
-      is FetchedHasShownMissingReminder_Old -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
+      is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientSummaryProfile!!)
+      is FetchedHasShownMissingPhoneReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       is LinkIdWithPatientSheetShown -> next(model.shownLinkIdWithPatientView())
       is PatientSummaryLinkIdCompleted -> dispatch(HideLinkIdWithPatientView)
       is ReportedViewedPatientToAnalytics -> next(model.reportedViewedPatientToAnalytics())
@@ -103,11 +103,15 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
 
   private fun bloodPressureSaved(
       openIntention: OpenIntention,
-      patientUuid: UUID
+      patientSummaryProfile: PatientSummaryProfile
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when (openIntention) {
       ViewNewPatient -> noChange()
-      else -> dispatch(FetchHasShownMissingPhoneReminder_Old(patientUuid))
+      else -> if (!patientSummaryProfile.hasPhoneNumber) {
+        dispatch(FetchHasShownMissingPhoneReminder(patientSummaryProfile.patient.uuid) as PatientSummaryEffect)
+      } else {
+        noChange()
+      }
     }
   }
 

@@ -4,7 +4,6 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.util.Just
@@ -30,16 +29,13 @@ class BruteForceProtection @Inject constructor(
   }
 
   fun incrementFailedAttempt(): Completable {
-    val failedAttemptsLimitStream = configProvider.map { it.limitOfFailedAttempts }
-
     val pinAuthenticationFailedStream = statePreference
         .asObservable()
         .take(1)
         .map(BruteForceProtectionState::authenticationFailed)
 
     val updatedState = pinAuthenticationFailedStream
-        .withLatestFrom(failedAttemptsLimitStream)
-        .map { (failedAuthAttemptUpdatedState, maxAllowedFailedAttempts) -> updateFailedAttemptLimitReached(failedAuthAttemptUpdatedState, maxAllowedFailedAttempts) }
+        .map { failedAuthAttemptUpdatedState -> updateFailedAttemptLimitReached(failedAuthAttemptUpdatedState, config.limitOfFailedAttempts) }
         .doOnNext(statePreference::set)
 
     return updatedState.ignoreElements()
@@ -75,11 +71,10 @@ class BruteForceProtection @Inject constructor(
 
     return Observables
         .combineLatest(
-            configProvider,
             statePreference.asObservable(),
             bruteForceProtectionResets.startWith(Any())
         )
-        .map { (config, state) ->
+        .map { (state, _) ->
           generateProtectedState(
               blockedAt = state.limitReachedAt,
               attemptsMade = state.failedAuthCount,

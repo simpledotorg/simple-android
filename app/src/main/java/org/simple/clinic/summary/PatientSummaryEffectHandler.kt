@@ -78,7 +78,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .map { patientRepository.patientProfileImmediate(it.patientUuid) }
+          .switchMap { patientRepository.patientProfile(it.patientUuid) }
           .filterAndUnwrapJust()
           .map { it.withoutDeletedBusinessIds().withoutDeletedPhoneNumbers() }
           .map(::mapPatientProfileToSummaryProfile)

@@ -31,6 +31,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -67,6 +68,11 @@ class PatientSummaryScreenControllerTest {
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
+  private val patientProfile = TestData.patientProfile(
+      patientUuid = patientUuid,
+      generatePhoneNumber = true,
+      generateBusinessId = true
+  )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockAnalyticsReporter()
@@ -76,7 +82,7 @@ class PatientSummaryScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn None
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())
@@ -179,8 +185,9 @@ class PatientSummaryScreenControllerTest {
   fun `when an existing patient is missing a phone number, a BP is recorded, and the user has never been reminded, then add phone dialog should be shown`(
       openIntention: OpenIntention
   ) {
-    whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just<Optional<PatientPhoneNumber>>(None))
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
+    val patientWithoutPhone = patientProfile.copy(phoneNumbers = emptyList())
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientWithoutPhone))
+    whenever(missingPhoneReminderRepository.hasShownReminderForPatient(patientUuid)) doReturn false
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
     startMobiusLoop(openIntention)
@@ -195,7 +202,9 @@ class PatientSummaryScreenControllerTest {
   fun `when an existing patient is missing a phone number, a BP hasn't been recorded yet, and the user has never been reminded, then add phone dialog should not be shown`(
       openIntention: OpenIntention
   ) {
-    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.just(false))
+    val patientWithoutPhone = patientProfile.copy(phoneNumbers = emptyList())
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientWithoutPhone))
+    whenever(missingPhoneReminderRepository.hasShownReminderForPatient(patientUuid)) doReturn false
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).doReturn(Completable.complete())
 
     startMobiusLoop(openIntention)

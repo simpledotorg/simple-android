@@ -413,6 +413,169 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when a measurement is recorded for a new patient without phone number, do not show the missing phone reminder`() {
+    val model = defaultModel
+        .forNewPatient()
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+        .withoutPhoneNumber()
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryBloodPressureSaved)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when a measurement is recorded for a new patient with phone number, do not show the missing phone reminder`() {
+    val model = defaultModel
+        .forNewPatient()
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryBloodPressureSaved)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when a measurement is recorded for an existing patient without phone number, show the missing phone reminder`() {
+    val model = defaultModel
+        .forExistingPatient()
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+        .withoutPhoneNumber()
+
+    updateSpec
+        .given(model)
+        .whenEvents(PatientSummaryBloodPressureSaved)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(FetchHasShownMissingPhoneReminder(patientUuid) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when a measurement is recorded for an existing patient with phone number, do not show the missing phone reminder`() {
+    val model = defaultModel
+        .forExistingPatient()
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryBloodPressureSaved)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when a measurement is recorded after linking BP passport for patient without phone number, show the missing phone reminder`() {
+    val model = defaultModel
+        .forLinkingWithExistingPatient()
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+        .withoutPhoneNumber()
+
+    updateSpec
+        .given(model)
+        .whenEvents(PatientSummaryBloodPressureSaved)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(FetchHasShownMissingPhoneReminder(patientUuid) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when a measurement is recorded after linking BP passport for patient with phone number, do not show the missing phone reminder`() {
+    val model = defaultModel
+        .forLinkingWithExistingPatient()
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryBloodPressureSaved)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when the missing phone reminder has been shown for a patient, do not show it again`() {
+    val model = defaultModel
+        .forExistingPatient()
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(FetchedHasShownMissingPhoneReminder(true))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when the missing phone reminder has not been shown for a patient, show it`() {
+    val model = defaultModel
+        .forExistingPatient()
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .completedCheckForInvalidPhone()
+        .reportedViewedPatientToAnalytics()
+
+    updateSpec
+        .given(model)
+        .whenEvent(FetchedHasShownMissingPhoneReminder(false))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowAddPhonePopup(patientUuid), MarkReminderAsShown(patientUuid))
+            )
+        )
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }
@@ -428,5 +591,9 @@ class PatientSummaryUpdateTest {
             type = BpPassport
         )
     ))
+  }
+
+  private fun PatientSummaryModel.withoutPhoneNumber(): PatientSummaryModel {
+    return copy(patientSummaryProfile = patientSummaryProfile!!.copy(phoneNumber = null))
   }
 }

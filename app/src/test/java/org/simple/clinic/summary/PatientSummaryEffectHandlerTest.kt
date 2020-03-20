@@ -25,6 +25,7 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -88,7 +89,7 @@ class PatientSummaryEffectHandlerTest {
     val bangladeshNationId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
 
     val patientProfile = PatientProfile(patient, patientAddress, listOf(patientPhoneNumber), listOf(bangladeshNationId, bpPassport))
-    whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn Just(patientProfile)
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientProfile))
 
     // when
     testCase.dispatch(LoadPatientSummaryProfile(patientUuid))

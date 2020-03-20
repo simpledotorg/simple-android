@@ -76,7 +76,7 @@ class PatientSummaryScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn None
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.never()
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn None
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).doReturn(Single.never())

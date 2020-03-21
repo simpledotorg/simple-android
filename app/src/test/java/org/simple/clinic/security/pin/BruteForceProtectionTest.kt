@@ -1,7 +1,6 @@
 package org.simple.clinic.security.pin
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockito_kotlin.verify
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.InMemoryPreference
@@ -9,6 +8,8 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
@@ -83,9 +84,10 @@ class BruteForceProtectionTest {
   }
 
   private fun setup(
-      state: BruteForceProtectionState = statePreference.defaultValue()
+      state: BruteForceProtectionState = statePreference.defaultValue(),
+      schedulers: SchedulersProvider = TrampolineSchedulersProvider()
   ) {
     statePreference.set(state)
-    bruteForceProtection = BruteForceProtection(clock, config, statePreference)
+    bruteForceProtection = BruteForceProtection(clock, config, statePreference, schedulers)
   }
 }

@@ -2,9 +2,11 @@ package org.simple.clinic.util
 
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Timed
 import org.threeten.bp.Duration
 import java.util.concurrent.TimeUnit
@@ -13,7 +15,10 @@ inline fun <reified U> Single<*>.ofType(): Maybe<U> =
     filter { it is U }
         .cast(U::class.java)
 
-fun Observables.timer(duration: Duration): Observable<Long> = Observable.timer(duration.toMillis(), TimeUnit.MILLISECONDS)
+fun Observables.timer(
+    duration: Duration,
+    scheduler: Scheduler = Schedulers.computation()
+): Observable<Long> = Observable.timer(duration.toMillis(), TimeUnit.MILLISECONDS, scheduler)
 
 operator fun Timed<*>.minus(timed: Timed<*>): Duration {
   val durationMillis = time(TimeUnit.MILLISECONDS) - timed.time(TimeUnit.MILLISECONDS)

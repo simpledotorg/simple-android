@@ -9,6 +9,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.timer
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class BruteForceProtection @Inject constructor(
     private val utcClock: UtcClock,
     private val config: BruteForceProtectionConfig,
-    private val statePreference: Preference<BruteForceProtectionState>
+    private val statePreference: Preference<BruteForceProtectionState>,
+    private val schedulersProvider: SchedulersProvider
 ) {
 
   private var resetProtectionStateOnTimerExpiryDisposable: Disposable? = null
@@ -76,7 +78,7 @@ class BruteForceProtection @Inject constructor(
       is None -> Observable.empty()
       is Just -> {
         val resetDuration = resetBruteForceTimerIn(blockedAt.value, blockDuration)
-        Observables.timer(resetDuration)
+        Observables.timer(resetDuration, schedulersProvider.computation())
       }
     }
   }

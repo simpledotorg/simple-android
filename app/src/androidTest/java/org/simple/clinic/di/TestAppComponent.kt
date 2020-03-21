@@ -28,7 +28,6 @@ import org.simple.clinic.reports.ReportsSyncAndroidTest
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
-import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.storage.files.AndroidFileStorageAndroidTest
 import org.simple.clinic.storage.migrations.BaseDatabaseMigrationTest
@@ -71,7 +70,6 @@ interface TestAppComponent {
   fun inject(target: PatientSyncAndroidTest)
   fun inject(target: BloodPressureRepositoryAndroidTest)
   fun inject(target: OngoingLoginEntryRepositoryTest)
-  fun inject(target: BruteForceProtectionAndroidTest)
   fun inject(target: DaoWithUpsertAndroidTest)
   fun inject(target: ProtocolRepositoryAndroidTest)
   fun inject(target: RegisterPatientRule)

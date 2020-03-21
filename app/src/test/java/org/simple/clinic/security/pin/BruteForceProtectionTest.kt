@@ -23,13 +23,14 @@ class BruteForceProtectionTest {
   private val state = mock<Preference<BruteForceProtectionState>>()
   private val config = BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
 
-  private val bruteForceProtection = BruteForceProtection(clock, config, state)
+  private lateinit var bruteForceProtection: BruteForceProtection
 
   @Test
   fun `when incrementing the count of failed attempts then the count should correctly be updated`() {
     val bruteForceProtectionState = BruteForceProtectionState(failedAuthCount = 3)
     whenever(state.get()).thenReturn(bruteForceProtectionState)
 
+    setup()
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
     verify(state).set(BruteForceProtectionState(failedAuthCount = 4))
@@ -43,6 +44,7 @@ class BruteForceProtectionTest {
     )
     whenever(state.get()).thenReturn(bruteForceProtectionState)
 
+    setup()
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
     verify(state).set(BruteForceProtectionState(
@@ -58,6 +60,7 @@ class BruteForceProtectionTest {
         limitReachedAt = Just(timeOfLastAttempt))
     whenever(state.get()).thenReturn(bruteForceProtectionState)
 
+    setup()
     clock.advanceBy(Duration.ofMinutes(2))
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
@@ -68,8 +71,14 @@ class BruteForceProtectionTest {
 
   @Test
   fun `when recording a successful login then all state should be cleared`() {
+    setup()
+
     bruteForceProtection.recordSuccessfulAuthentication().blockingAwait()
 
     verify(state).delete()
+  }
+
+  private fun setup() {
+    bruteForceProtection = BruteForceProtection(clock, config, state)
   }
 }

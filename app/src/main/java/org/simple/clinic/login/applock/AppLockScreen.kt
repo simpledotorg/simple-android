@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.main.TheActivity

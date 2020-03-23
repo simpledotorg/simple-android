@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -17,7 +18,9 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
 
   @Inject
   lateinit var locale: Locale
-  
+
+  private lateinit var component: AlertFacilityChangeComponent
+
   companion object {
     private const val CURRENT_FACILITY = "current_facility"
 
@@ -48,11 +51,21 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
   }
 
   override fun attachBaseContext(baseContext: Context) {
+    setupDI()
+
     val wrappedContext = baseContext
         .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
     super.attachBaseContext(wrappedContext)
+  }
+
+  private fun setupDI() {
+    component = ClinicApp.appComponent
+        .alertFacilityChangeComponent()
+        .activity(this)
+        .build()
+    component.inject(this)
   }
 
   private fun closeSheet() {

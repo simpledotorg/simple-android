@@ -31,7 +31,7 @@ class PinEntryCardControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<PinEntryCardView>()
+  private val ui = mock<PinEntryUi>()
   private val passwordHasher = JavaHashPasswordHasher()
   private val bruteForceProtection = mock<BruteForceProtection>()
 
@@ -67,10 +67,10 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinTextChanged("1234"))
     uiEvents.onNext(PinDigestToVerify(pinDigest))
 
-    verify(screen).hideError()
-    verify(screen).moveToState(State.Progress)
-    verify(screen).dispatchAuthenticatedCallback("1234")
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideError()
+    verify(ui).moveToState(State.Progress)
+    verify(ui).dispatchAuthenticatedCallback("1234")
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -80,7 +80,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(incorrectPin))
 
-    verify(screen).moveToState(State.PinEntry)
+    verify(ui).moveToState(State.PinEntry)
   }
 
   @Test
@@ -90,7 +90,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinTextChanged(incorrectPin))
     uiEvents.onNext(PinDigestToVerify(pinDigest))
 
-    verify(screen).clearPin()
+    verify(ui).clearPin()
   }
 
   @Test
@@ -100,7 +100,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(correctPin))
 
-    verify(screen).dispatchAuthenticatedCallback(correctPin)
+    verify(ui).dispatchAuthenticatedCallback(correctPin)
   }
 
   @Test
@@ -136,8 +136,8 @@ class PinEntryCardControllerTest {
 
     uiEvents.onNext(PinEntryViewCreated)
 
-    verify(screen).moveToState(State.PinEntry)
-    verify(screen).moveToState(State.BruteForceLocked(timeTillUnlock = TimerDuration(minutes = "19", seconds = "42")))
+    verify(ui).moveToState(State.PinEntry)
+    verify(ui).moveToState(State.BruteForceLocked(timeTillUnlock = TimerDuration(minutes = "19", seconds = "42")))
   }
 
   @Test
@@ -161,7 +161,7 @@ class PinEntryCardControllerTest {
     val minutesWithPadding = minutesRemaining.toString().padStart(2, padChar = '0')
     val secondsWithPadding = secondsRemaining.toString().padStart(2, padChar = '0')
     val timerDuration = TimerDuration(minutes = minutesWithPadding, seconds = secondsWithPadding)
-    verify(screen).moveToState(State.BruteForceLocked(timeTillUnlock = timerDuration))
+    verify(ui).moveToState(State.BruteForceLocked(timeTillUnlock = timerDuration))
   }
 
   @Test
@@ -177,27 +177,27 @@ class PinEntryCardControllerTest {
 
     uiEvents.onNext(PinEntryViewCreated)
 
-    verify(screen).hideError()
-    verify(screen).showIncorrectPinErrorForFirstAttempt()
-    verify(screen).showIncorrectPinErrorOnSubsequentAttempts(1)
-    verify(screen).showIncorrectAttemptsLimitReachedError(3)
+    verify(ui).hideError()
+    verify(ui).showIncorrectPinErrorForFirstAttempt()
+    verify(ui).showIncorrectPinErrorOnSubsequentAttempts(1)
+    verify(ui).showIncorrectAttemptsLimitReachedError(3)
   }
 
   @Test
   fun `when a PIN is submitted for verification, the current error must be cleared before the PIN verification starts`() {
-    val inOrder = inOrder(screen)
+    val inOrder = inOrder(ui)
 
     setupController()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinSubmitClicked(correctPin))
 
-    inOrder.verify(screen).hideError()
-    inOrder.verify(screen).moveToState(State.Progress)
-    inOrder.verify(screen).dispatchAuthenticatedCallback(correctPin)
+    inOrder.verify(ui).hideError()
+    inOrder.verify(ui).moveToState(State.Progress)
+    inOrder.verify(ui).dispatchAuthenticatedCallback(correctPin)
 
     inOrder.verifyNoMoreInteractions()
-    verifyZeroInteractions(screen)
+    verifyZeroInteractions(ui)
   }
 
   private fun setupController() {
@@ -205,6 +205,6 @@ class PinEntryCardControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
   }
 }

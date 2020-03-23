@@ -8,9 +8,11 @@ import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,25 +39,28 @@ class PinEntryCardControllerTest {
   private val incorrectPin = "1233"
   private val pinDigest = passwordHasher.hash(correctPin).blockingGet()
 
-  private lateinit var controller: PinEntryCardController
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val clock = TestUtcClock()
+
+  private lateinit var controller: PinEntryCardController
+  private lateinit var controllerSubscription: Disposable
 
   @Before
   fun setUp() {
     whenever(bruteForceProtection.incrementFailedAttempt()).thenReturn(Completable.complete())
     whenever(bruteForceProtection.recordSuccessfulAuthentication()).thenReturn(Completable.complete())
     whenever(bruteForceProtection.protectedStateChanges()).thenReturn(Observable.never())
+  }
 
-    controller = PinEntryCardController(passwordHasher, clock, bruteForceProtection)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
+    setupController()
+
     uiEvents.onNext(PinTextChanged("1"))
     uiEvents.onNext(PinTextChanged("12"))
     uiEvents.onNext(PinTextChanged("123"))
@@ -70,6 +75,8 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation fails then the progress should be hidden`() {
+    setupController()
+
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(incorrectPin))
 
@@ -78,6 +85,8 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation fails then the PIN should be cleared`() {
+    setupController()
+
     uiEvents.onNext(PinTextChanged(incorrectPin))
     uiEvents.onNext(PinDigestToVerify(pinDigest))
 
@@ -86,6 +95,8 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation succeeds then a success callback should be sent`() {
+    setupController()
+
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(correctPin))
 
@@ -94,6 +105,8 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation fails then the count of failed attempts should be incremented`() {
+    setupController()
+
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(incorrectPin))
 
@@ -102,6 +115,8 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation succeeds then the count of failed attempts should be reset`() {
+    setupController()
+
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(correctPin))
 
@@ -116,6 +131,8 @@ class PinEntryCardControllerTest {
         .thenReturn(Observable.just(
             ProtectedState.Allowed(attemptsRemaining = 2, attemptsMade = 3),
             ProtectedState.Blocked(attemptsMade = 5, blockedTill = blockedTill)))
+
+    setupController()
 
     uiEvents.onNext(PinEntryViewCreated)
 
@@ -137,6 +154,7 @@ class PinEntryCardControllerTest {
 
     whenever(bruteForceProtection.protectedStateChanges())
         .thenReturn(Observable.just(ProtectedState.Blocked(attemptsMade = 5, blockedTill = blockedTill)))
+    setupController()
 
     uiEvents.onNext(PinEntryViewCreated)
 
@@ -155,6 +173,7 @@ class PinEntryCardControllerTest {
             ProtectedState.Allowed(attemptsMade = 2, attemptsRemaining = 1),
             ProtectedState.Blocked(attemptsMade = 3, blockedTill = Instant.now(clock) + Duration.ofSeconds(5))
         ))
+    setupController()
 
     uiEvents.onNext(PinEntryViewCreated)
 
@@ -168,6 +187,8 @@ class PinEntryCardControllerTest {
   fun `when a PIN is submitted for verification, the current error must be cleared before the PIN verification starts`() {
     val inOrder = inOrder(screen)
 
+    setupController()
+
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinSubmitClicked(correctPin))
 
@@ -177,5 +198,13 @@ class PinEntryCardControllerTest {
 
     inOrder.verifyNoMoreInteractions()
     verifyZeroInteractions(screen)
+  }
+
+  private fun setupController() {
+    controller = PinEntryCardController(passwordHasher, clock, bruteForceProtection)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

@@ -17,6 +17,7 @@ import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.TestData
+import org.simple.clinic.security.pin.JavaHashPasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED

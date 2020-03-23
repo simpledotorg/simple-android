@@ -68,7 +68,7 @@ class ChangeLanguageUpdateTest {
         .whenEvent(CurrentLanguageChangedEvent)
         .then(assertThatNext(
             hasModel(model.restarted()),
-            hasEffects(RestartActivity as ChangeLanguageEffect)
+            hasEffects(RestartActivity, TriggerSync)
         ))
   }
 

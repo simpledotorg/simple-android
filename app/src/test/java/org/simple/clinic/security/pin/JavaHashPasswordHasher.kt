@@ -1,4 +1,4 @@
-package org.simple.clinic.user.resetpin
+package org.simple.clinic.security.pin
 
 import io.reactivex.Single
 import org.simple.clinic.security.ComparisonResult

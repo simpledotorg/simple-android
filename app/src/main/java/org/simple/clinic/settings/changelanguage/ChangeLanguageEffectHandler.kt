@@ -6,13 +6,13 @@ import io.reactivex.Scheduler
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
-object ChangeLanguageEffectHandler {
+class ChangeLanguageEffectHandler(
+    private val schedulersProvider: SchedulersProvider,
+    private val settingsRepository: SettingsRepository,
+    private val uiActions: UiActions
+) {
 
-  fun create(
-      schedulersProvider: SchedulersProvider,
-      settingsRepository: SettingsRepository,
-      uiActions: UiActions
-  ): ObservableTransformer<ChangeLanguageEffect, ChangeLanguageEvent> {
+  fun build(): ObservableTransformer<ChangeLanguageEffect, ChangeLanguageEvent> {
     return RxMobius
         .subtypeEffectHandler<ChangeLanguageEffect, ChangeLanguageEvent>()
         .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage(settingsRepository, schedulersProvider.io()))

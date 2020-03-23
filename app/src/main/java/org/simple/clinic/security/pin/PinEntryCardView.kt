@@ -17,6 +17,7 @@ import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
@@ -45,6 +46,14 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     setForgotButtonVisible(true)
   }
 
+  private val events by unsafeLazy {
+    Observable.merge(
+        viewCreated(),
+        pinTextChanges(),
+        upstreamUiEvents
+    )
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -54,11 +63,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            viewCreated(),
-            pinTextChanges(),
-            upstreamUiEvents
-        ),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

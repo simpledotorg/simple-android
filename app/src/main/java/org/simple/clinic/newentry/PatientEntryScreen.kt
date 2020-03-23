@@ -28,6 +28,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_manual_patient_entry.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
@@ -118,6 +119,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   @Inject
   lateinit var inputFields: InputFields
 
+  @Inject
+  lateinit var country: Country
+
   // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
     listOf(
@@ -197,6 +201,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     identifierTextView.setCompoundDrawableStartWithTint(R.drawable.patient_id_card, R.color.grey1)
 
     setConsentText()
+    setConsentLabelText()
 
     delegate.prepare()
 
@@ -267,6 +272,14 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .append(resources.getString(R.string.patiententry_consent_second_para))
         .build()
     consentTextView.text = consentText
+  }
+
+  private fun setConsentLabelText() {
+    val consentLabelTextResId = when (country.isoCountryCode) {
+      Country.BANGLADESH -> R.string.patiententry_consent_sms_reminders
+      else -> R.string.patiententry_consent_whatsapp_sms_reminders
+    }
+    consentLabel.setText(consentLabelTextResId)
   }
 
   override fun onAttachedToWindow() {

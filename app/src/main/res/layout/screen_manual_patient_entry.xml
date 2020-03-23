@@ -445,6 +445,7 @@
           android:checked="true" />
 
         <TextView
+          android:id="@+id/consentLabel"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_8"

@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -14,6 +15,8 @@ import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.ProvidedLanguage
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.settings.SystemDefaultLanguage
+import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
 class ChangeLanguageEffectHandlerTest {
@@ -21,10 +24,12 @@ class ChangeLanguageEffectHandlerTest {
   private val settingsRepository = mock<SettingsRepository>()
   private val uiActions = mock<UiActions>()
 
+  private val dataSync = mock<DataSync>()
   private val effectHandler = ChangeLanguageEffectHandler(
       schedulersProvider = TrampolineSchedulersProvider(),
       settingsRepository = settingsRepository,
-      uiActions = uiActions
+      uiActions = uiActions,
+      dataSync = dataSync
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -89,14 +94,24 @@ class ChangeLanguageEffectHandlerTest {
 
   @Test
   fun `when the restart activity effect is received, the restart activity ui action must be invoked`() {
-    // given
+    // when
     testCase.dispatch(RestartActivity)
 
-    // when
-    testCase.assertNoOutgoingEvents()
-
     // then
+    testCase.assertNoOutgoingEvents()
     verify(uiActions).restartActivity()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when trigger sync effect is received, then sync data`() {
+    // when
+    testCase.dispatch(TriggerSync)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(dataSync).fireAndForgetSync(SyncGroup.DAILY)
+    verifyZeroInteractions(uiActions)
+  }
+
 }

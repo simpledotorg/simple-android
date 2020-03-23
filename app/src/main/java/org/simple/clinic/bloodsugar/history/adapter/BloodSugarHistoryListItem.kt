@@ -115,7 +115,10 @@ sealed class BloodSugarHistoryListItem : ItemAdapter.Item<Event> {
           .build()
       val isBloodSugarHigh = measurement.reading.isHigh
 
-      holder.readingsTextView.text = "${bloodSugarReading.displayValue} ${unitForReadingType(context, bloodSugarReading.type)} ${textForReadingType(context, bloodSugarReading.type)}"
+      val readingPrefix = bloodSugarReading.displayValue
+      val readingSuffix = "${unitForReadingType(context, bloodSugarReading.type)} ${textForReadingType(context, bloodSugarReading.type)}"
+
+      holder.readingsTextView.text = "$readingPrefix${bloodSugarReading.displayUnitSeparator}$readingSuffix"
       holder.dateTimeTextView.text = formattedBPDateTime
       if (isBloodSugarHigh) {
         holder.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)

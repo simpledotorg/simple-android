@@ -3,13 +3,21 @@ package org.simple.clinic.facility.alertchange
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
+import java.util.Locale
+import javax.inject.Inject
 
 class AlertFacilityChangeSheet : BottomSheetActivity() {
 
+  @Inject
+  lateinit var locale: Locale
+  
   companion object {
     private const val CURRENT_FACILITY = "current_facility"
 
@@ -37,6 +45,14 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
     changeButton.setOnClickListener {
       openFacilityChangeScreen()
     }
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    val wrappedContext = baseContext
+        .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
+        .wrap { ViewPumpContextWrapper.wrap(it) }
+
+    super.attachBaseContext(wrappedContext)
   }
 
   private fun closeSheet() {

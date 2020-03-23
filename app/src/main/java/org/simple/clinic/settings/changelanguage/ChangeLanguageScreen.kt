@@ -65,11 +65,11 @@ class ChangeLanguageScreen(
         defaultModel = ChangeLanguageModel.FETCHING_LANGUAGES,
         init = ChangeLanguageInit(),
         update = ChangeLanguageUpdate(),
-        effectHandler = ChangeLanguageEffectHandler.create(
+        effectHandler = ChangeLanguageEffectHandler(
             schedulersProvider = schedulersProvider,
             settingsRepository = settingsRepository,
             uiActions = this
-        ),
+        ).build(),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter
     )

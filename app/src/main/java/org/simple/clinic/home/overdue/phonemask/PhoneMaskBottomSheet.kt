@@ -120,6 +120,7 @@ class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
 
   override fun hideSecureCallButton() {
     secureCallButton.visibility = View.GONE
+    helpTextView.visibility = View.GONE
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

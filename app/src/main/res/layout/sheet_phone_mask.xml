@@ -70,6 +70,7 @@
     app:layout_constraintTop_toTopOf="@id/normalCallButton" />
 
   <TextView
+    android:id="@+id/helpTextView"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"

@@ -46,6 +46,10 @@ class PinEntryCardControllerTest {
 
   private val uiRenderer = PinEntryUiRenderer(ui)
 
+  private val pinEntryEffectHandler = PinEntryEffectHandler(
+      passwordHasher = passwordHasher
+  )
+
   private lateinit var controller: PinEntryCardController
   private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<PinEntryModel, PinEntryEvent, PinEntryEffect>
@@ -61,7 +65,7 @@ class PinEntryCardControllerTest {
         defaultModel = PinEntryModel.default(),
         init = PinEntryInit(),
         update = PinEntryUpdate(),
-        effectHandler = PinEntryEffectHandler().build(),
+        effectHandler = pinEntryEffectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
   }

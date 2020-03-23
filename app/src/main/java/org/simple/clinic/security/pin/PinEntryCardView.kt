@@ -35,6 +35,9 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   @Inject
   lateinit var controller: PinEntryCardController
 
+  @Inject
+  lateinit var effectHandlerFactory: PinEntryEffectHandler.Factory
+
   val upstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
   val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
 
@@ -69,7 +72,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
         defaultModel = PinEntryModel.default(),
         init = PinEntryInit(),
         update = PinEntryUpdate(),
-        effectHandler = PinEntryEffectHandler().build(),
+        effectHandler = effectHandlerFactory.create().build(),
         modelUpdateListener = uiRenderer::render
     )
   }

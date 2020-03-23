@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.bloodsugar.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
@@ -45,13 +46,13 @@ class BloodSugarItemView(
     bloodSugarEditButton.visibleOrGone(isBloodSugarEditable)
   }
 
+  @SuppressLint("SetTextI18n")
   private fun renderBloodSugarReading(reading: BloodSugarReading) {
-    readingTextView.text = context.getString(
-        R.string.bloodsugarhistory_blood_sugar_reading,
-        reading.displayValue,
-        unitForReadingType(context, reading.type),
-        textForReadingType(context, reading.type)
-    )
+    val readingPrefix = reading.displayValue
+    val readingSuffix = "${unitForReadingType(context, reading.type)} ${textForReadingType(context, reading.type)}"
+
+    readingTextView.text = "$readingPrefix${reading.displayUnitSeparator}$readingSuffix"
+
     if (reading.isHigh) {
       bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
     } else {

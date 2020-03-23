@@ -26,4 +26,13 @@ data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementT
         is Unknown -> value.toInt().toString()
       }
     }
+
+  val displayUnitSeparator: String
+    get() {
+      return when (type) {
+        Random, PostPrandial, Fasting, is Unknown -> " "
+        HbA1c -> ""
+      }
+    }
+
 }

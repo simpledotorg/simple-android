@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next release
+## On Demo
 ### Feature
 - Add support for recording HbA1c blood sugars
 - Add a diagnosis label on the overdue appointments

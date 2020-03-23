@@ -19,7 +19,7 @@ import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-typealias Ui = PinEntryCardView
+typealias Ui = PinEntryUi
 typealias UiChange = (Ui) -> Unit
 
 class PinEntryCardController @Inject constructor(

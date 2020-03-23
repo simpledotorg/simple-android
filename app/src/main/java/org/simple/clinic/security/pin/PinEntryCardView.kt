@@ -25,7 +25,7 @@ import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs) {
+class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs), PinEntryUi {
 
   @Inject
   lateinit var controller: PinEntryCardController
@@ -71,7 +71,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
           .map(CharSequence::toString)
           .map(::PinTextChanged)
 
-  fun moveToState(state: State) {
+  override fun moveToState(state: State) {
     val transition = AutoTransition()
         .setOrdering(AutoTransition.ORDERING_TOGETHER)
         .setDuration(200)
@@ -117,34 +117,34 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     clearPin()
   }
 
-  fun hideError() {
+  override fun hideError() {
     errorTextView.visibility = View.GONE
   }
 
-  fun showIncorrectPinErrorForFirstAttempt() {
+  override fun showIncorrectPinErrorForFirstAttempt() {
     showError(resources.getString(R.string.pinentry_error_incorrect_pin_on_first_attempt))
   }
 
   @SuppressLint("StringFormatMatches")
-  fun showIncorrectPinErrorOnSubsequentAttempts(remaining: Int) {
+  override fun showIncorrectPinErrorOnSubsequentAttempts(remaining: Int) {
     showError(resources.getString(R.string.pinentry_error_incorrect_pin_attempts_remaining, remaining.toString()))
   }
 
   @SuppressLint("StringFormatMatches")
-  fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int) {
+  override fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int) {
     showError(resources.getString(R.string.pinentry_error_incorrect_pin_attempts_limit_reached, attemptsMade.toString()))
   }
 
-  fun clearPin() {
+  override fun clearPin() {
     pinEditText.text = null
   }
 
-  fun dispatchAuthenticatedCallback(enteredPin: String) {
+  override fun dispatchAuthenticatedCallback(enteredPin: String) {
     downstreamUiEvents.onNext(PinAuthenticated(enteredPin))
   }
 
   /** Defaults to visible. */
-  fun setForgotButtonVisible(visible: Boolean) {
+  override fun setForgotButtonVisible(visible: Boolean) {
     if (visible) {
       forgotPinButton.visibility = View.VISIBLE
       contentContainer.setPaddingBottom(R.dimen.pinentry_content_bottom_spacing_with_forgot_pin)

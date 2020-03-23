@@ -22,6 +22,7 @@ import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryCardView.State
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
@@ -47,7 +48,8 @@ class PinEntryCardControllerTest {
   private val uiRenderer = PinEntryUiRenderer(ui)
 
   private val pinEntryEffectHandler = PinEntryEffectHandler(
-      passwordHasher = passwordHasher
+      passwordHasher = passwordHasher,
+      schedulersProvider = TrampolineSchedulersProvider()
   )
 
   private lateinit var controller: PinEntryCardController

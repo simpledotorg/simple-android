@@ -13,3 +13,5 @@ data class UpdateCurrentLanguageEffect(val newLanguage: Language) : ChangeLangua
 object GoBack : ChangeLanguageEffect()
 
 object RestartActivity : ChangeLanguageEffect()
+
+object TriggerSync : ChangeLanguageEffect()

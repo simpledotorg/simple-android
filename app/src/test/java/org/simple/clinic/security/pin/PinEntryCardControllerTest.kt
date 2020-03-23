@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -57,30 +58,18 @@ class PinEntryCardControllerTest {
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
     val pinDigest = "digest"
+    whenever(passwordHasher.compare(pinDigest, "1234")).thenReturn(Single.just(ComparisonResult.SAME))
+
     uiEvents.onNext(PinTextChanged("1"))
     uiEvents.onNext(PinTextChanged("12"))
     uiEvents.onNext(PinTextChanged("123"))
     uiEvents.onNext(PinTextChanged("1234"))
     uiEvents.onNext(PinDigestToVerify(pinDigest))
 
-    verify(passwordHasher).compare(pinDigest, "1234")
-  }
-
-  @Test
-  fun `when the PIN is submitted then it should be validated`() {
-    val pinDigest = "digest"
-    uiEvents.onNext(PinTextChanged("1234"))
-    uiEvents.onNext(PinDigestToVerify(pinDigest))
-
-    verify(passwordHasher).compare(pinDigest, "1234")
-  }
-
-  @Test
-  fun `when the PIN is submitted then progress should be shown`() {
-    uiEvents.onNext(PinDigestToVerify("digest"))
-    uiEvents.onNext(PinTextChanged("1234"))
-
+    verify(screen).hideError()
     verify(screen).moveToState(State.Progress)
+    verify(screen).dispatchAuthenticatedCallback("1234")
+    verifyNoMoreInteractions(screen)
   }
 
   @Test

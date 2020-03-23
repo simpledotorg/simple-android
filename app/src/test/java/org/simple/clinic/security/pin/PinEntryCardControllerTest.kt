@@ -1,6 +1,5 @@
 package org.simple.clinic.security.pin
 
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -9,7 +8,6 @@ import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -17,8 +15,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.security.ComparisonResult
-import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryCardView.State
 import org.simple.clinic.util.RxErrorsRule
@@ -34,8 +30,12 @@ class PinEntryCardControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val screen = mock<PinEntryCardView>()
-  private val passwordHasher = mock<PasswordHasher>()
+  private val passwordHasher = JavaHashPasswordHasher()
   private val bruteForceProtection = mock<BruteForceProtection>()
+
+  private val correctPin = "1234"
+  private val incorrectPin = "1233"
+  private val pinDigest = passwordHasher.hash(correctPin).blockingGet()
 
   private lateinit var controller: PinEntryCardController
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -43,7 +43,6 @@ class PinEntryCardControllerTest {
 
   @Before
   fun setUp() {
-    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.never<ComparisonResult>())
     whenever(bruteForceProtection.incrementFailedAttempt()).thenReturn(Completable.complete())
     whenever(bruteForceProtection.recordSuccessfulAuthentication()).thenReturn(Completable.complete())
     whenever(bruteForceProtection.protectedStateChanges()).thenReturn(Observable.never())
@@ -57,9 +56,6 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
-    val pinDigest = "digest"
-    whenever(passwordHasher.compare(pinDigest, "1234")).thenReturn(Single.just(ComparisonResult.SAME))
-
     uiEvents.onNext(PinTextChanged("1"))
     uiEvents.onNext(PinTextChanged("12"))
     uiEvents.onNext(PinTextChanged("123"))
@@ -74,23 +70,15 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation fails then the progress should be hidden`() {
-    val pinDigest = "digest"
-    val pin = "1234"
-    whenever(passwordHasher.compare(pinDigest, pin)).thenReturn(Single.just(ComparisonResult.DIFFERENT))
-
     uiEvents.onNext(PinDigestToVerify(pinDigest))
-    uiEvents.onNext(PinTextChanged(pin))
+    uiEvents.onNext(PinTextChanged(incorrectPin))
 
     verify(screen).moveToState(State.PinEntry)
   }
 
   @Test
   fun `when PIN validation fails then the PIN should be cleared`() {
-    val pinDigest = "digest"
-    val pin = "1234"
-    whenever(passwordHasher.compare(pinDigest, pin)).thenReturn(Single.just(ComparisonResult.DIFFERENT))
-
-    uiEvents.onNext(PinTextChanged(pin))
+    uiEvents.onNext(PinTextChanged(incorrectPin))
     uiEvents.onNext(PinDigestToVerify(pinDigest))
 
     verify(screen).clearPin()
@@ -98,36 +86,24 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation succeeds then a success callback should be sent`() {
-    val pinDigest = "digest"
-    val pin = "1234"
-    whenever(passwordHasher.compare(pinDigest, pin)).thenReturn(Single.just(ComparisonResult.SAME))
-
     uiEvents.onNext(PinDigestToVerify(pinDigest))
-    uiEvents.onNext(PinTextChanged(pin))
+    uiEvents.onNext(PinTextChanged(correctPin))
 
-    verify(screen).dispatchAuthenticatedCallback(pin)
+    verify(screen).dispatchAuthenticatedCallback(correctPin)
   }
 
   @Test
   fun `when PIN validation fails then the count of failed attempts should be incremented`() {
-    val pinDigest = "digest"
-    val pin = "1234"
-    whenever(passwordHasher.compare(pinDigest, pin)).thenReturn(Single.just(ComparisonResult.DIFFERENT))
-
     uiEvents.onNext(PinDigestToVerify(pinDigest))
-    uiEvents.onNext(PinTextChanged(pin))
+    uiEvents.onNext(PinTextChanged(incorrectPin))
 
     verify(bruteForceProtection).incrementFailedAttempt()
   }
 
   @Test
   fun `when PIN validation succeeds then the count of failed attempts should be reset`() {
-    val pinDigest = "digest"
-    val pin = "1234"
-    whenever(passwordHasher.compare(pinDigest, pin)).thenReturn(Single.just(ComparisonResult.SAME))
-
     uiEvents.onNext(PinDigestToVerify(pinDigest))
-    uiEvents.onNext(PinTextChanged(pin))
+    uiEvents.onNext(PinTextChanged(correctPin))
 
     verify(bruteForceProtection).recordSuccessfulAuthentication()
   }
@@ -190,17 +166,14 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when a PIN is submitted for verification, the current error must be cleared before the PIN verification starts`() {
-    val pinDigest = "digest"
-    val pin = "1234"
-    whenever(passwordHasher.compare(pinDigest, pin)).thenReturn(Single.just(ComparisonResult.SAME))
     val inOrder = inOrder(screen)
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
-    uiEvents.onNext(PinSubmitClicked(pin))
+    uiEvents.onNext(PinSubmitClicked(correctPin))
 
     inOrder.verify(screen).hideError()
     inOrder.verify(screen).moveToState(State.Progress)
-    inOrder.verify(screen).dispatchAuthenticatedCallback(pin)
+    inOrder.verify(screen).dispatchAuthenticatedCallback(correctPin)
 
     inOrder.verifyNoMoreInteractions()
     verifyZeroInteractions(screen)

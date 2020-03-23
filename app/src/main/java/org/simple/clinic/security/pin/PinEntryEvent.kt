@@ -7,3 +7,5 @@ sealed class PinEntryEvent: UiEvent
 data class PinTextChanged(val pin: String) : PinEntryEvent() {
   override val analyticsName = "PIN text changed"
 }
+
+data class PinDigestToVerify(val pinDigest: String): PinEntryEvent()

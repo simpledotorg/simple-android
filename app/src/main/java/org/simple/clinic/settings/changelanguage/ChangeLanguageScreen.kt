@@ -18,9 +18,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.Language
-import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.settings.changelanguage.ChangeLanguageListItem.Event.ListItemClicked
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import javax.inject.Inject
@@ -31,12 +29,6 @@ class ChangeLanguageScreen(
 ) : ConstraintLayout(context, attributeSet), ChangeLanguageUi, UiActions {
 
   @Inject
-  lateinit var schedulersProvider: SchedulersProvider
-
-  @Inject
-  lateinit var settingsRepository: SettingsRepository
-
-  @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
@@ -44,6 +36,9 @@ class ChangeLanguageScreen(
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  @Inject
+  lateinit var effectHandler: ChangeLanguageEffectHandler.Factory
 
   private val languagesAdapter = ItemAdapter(ChangeLanguageListItem.DiffCallback())
 
@@ -65,11 +60,7 @@ class ChangeLanguageScreen(
         defaultModel = ChangeLanguageModel.FETCHING_LANGUAGES,
         init = ChangeLanguageInit(),
         update = ChangeLanguageUpdate(),
-        effectHandler = ChangeLanguageEffectHandler(
-            schedulersProvider = schedulersProvider,
-            settingsRepository = settingsRepository,
-            uiActions = this
-        ).build(),
+        effectHandler = effectHandler.create(uiActions = this).build(),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter
     )

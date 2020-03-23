@@ -2,6 +2,7 @@ package org.simple.clinic.security.pin
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +12,14 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -55,6 +58,20 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
             upstreamUiEvents
         )
         .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val uiRenderer = PinEntryUiRenderer(this)
+
+  private val delegate: MobiusDelegate<PinEntryModel, PinEntryEvent, PinEntryEffect> by unsafeLazy {
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = PinEntryModel.default(),
+        init = PinEntryInit(),
+        update = PinEntryUpdate(),
+        effectHandler = PinEntryEffectHandler().build(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -70,6 +87,24 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun viewCreated() = Observable.just(PinEntryViewCreated)

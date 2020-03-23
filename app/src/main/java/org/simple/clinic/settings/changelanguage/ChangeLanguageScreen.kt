@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.screen_change_language.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.changelanguage.ChangeLanguageListItem.Event.ListItemClicked
@@ -30,9 +29,6 @@ class ChangeLanguageScreen(
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var crashReporter: CrashReporter
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -55,14 +51,13 @@ class ChangeLanguageScreen(
   private val uiRenderer = ChangeLanguageUiRenderer(this)
 
   private val delegate: MobiusDelegate<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect> by unsafeLazy {
-    MobiusDelegate(
+    MobiusDelegate.forView(
         events = events,
         defaultModel = ChangeLanguageModel.FETCHING_LANGUAGES,
         init = ChangeLanguageInit(),
         update = ChangeLanguageUpdate(),
         effectHandler = effectHandler.create(uiActions = this).build(),
-        modelUpdateListener = uiRenderer::render,
-        crashReporter = crashReporter
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -76,8 +71,6 @@ class ChangeLanguageScreen(
 
     setupLanguagesList()
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
-
-    delegate.prepare()
   }
 
   private fun setupLanguagesList() {

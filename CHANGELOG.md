@@ -1,4 +1,26 @@
 # CHANGELOG
+
+## Next release
+### Feature
+- Add support for recording HbA1c blood sugars
+- Add a diagnosis label on the overdue appointments
+
+### Internal
+- Changed api versioning to be at the endpoint level rather than global
+- Integrated tool to report flaky instrumentation tests
+- Changed automatic appointments to be scheduled when a blood sugar has been recorded in addition to a BP
+- Consider patients with only blood sugars recorded in the following screens:
+  - All patients in facility
+  - Search results when searching by name or phone number
+- Trigger syncs automatically on the following conditions:
+  - An appointment is scheduled from the patient summary screen
+  - A patient is registered
+- Bump blood sugar sync api version to v4
+- Ask the user to select a diagnosis for patients who don't have both diagnosis questions answered in patient summary
+
+### Fixes
+- Fixed occasional crash where the application would resume from background
+
 ## 2020-03-09-7161
 ### Feature
 - Added support for editing blood sugar

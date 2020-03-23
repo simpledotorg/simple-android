@@ -42,7 +42,7 @@ class FacilityChangeActivityController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(fetchLocation())
+        .compose(locationUpdates())
         .compose(ReportAnalyticsEvents())
         .replay()
 
@@ -54,17 +54,12 @@ class FacilityChangeActivityController @Inject constructor(
   }
 
   @SuppressLint("MissingPermission")
-  private fun fetchLocation() = ObservableTransformer<UiEvent, UiEvent> { events ->
-    val locationPermissionChanges = events
-        .ofType<FacilityChangeLocationPermissionChanged>()
-        .map { it.result }
-
+  private fun fetchLocation(): Observable<LocationUpdate> {
     val locationWaitExpiry = {
       configProvider
           .flatMap { Observables.timer(it.locationListenerExpiry) }
           .map { Unavailable }
     }
-
     val fetchLocation = {
       configProvider
           .flatMap { config ->
@@ -75,11 +70,19 @@ class FacilityChangeActivityController @Inject constructor(
           .onErrorResumeNext(Observable.empty())
     }
 
+    return Observable.merge(locationWaitExpiry(), fetchLocation())
+  }
+
+  private fun locationUpdates() = ObservableTransformer<UiEvent, UiEvent> { events ->
+    val locationPermissionChanges = events
+        .ofType<FacilityChangeLocationPermissionChanged>()
+        .map { it.result }
+
     val locationUpdates = Observables
         .combineLatest(events.ofType<ScreenCreated>(), locationPermissionChanges)
         .switchMap { (_, permissionResult) ->
           when (permissionResult!!) {
-            GRANTED -> Observable.merge(locationWaitExpiry(), fetchLocation())
+            GRANTED -> fetchLocation()
             DENIED, NEVER_ASK_AGAIN -> Observable.just(Unavailable)
           }
         }

@@ -21,11 +21,12 @@ class ChangeLanguageEffectHandlerTest {
   private val settingsRepository = mock<SettingsRepository>()
   private val uiActions = mock<UiActions>()
 
-  private val testCase = EffectHandlerTestCase(ChangeLanguageEffectHandler.create(
+  private val effectHandler = ChangeLanguageEffectHandler(
       schedulersProvider = TrampolineSchedulersProvider(),
       settingsRepository = settingsRepository,
       uiActions = uiActions
-  ))
+  ).build()
+  private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After
   fun tearDown() {

@@ -5,10 +5,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.ViewFlipper
 import androidx.cardview.widget.CardView
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
@@ -16,13 +12,12 @@ import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
@@ -35,14 +30,6 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   @Inject
   lateinit var controller: PinEntryCardController
 
-  val pinEditText by bindView<StaggeredEditText>(R.id.pinentry_pin)
-
-  private val progressView by bindView<View>(R.id.pinentry_progress)
-  private val contentContainer by bindView<ViewGroup>(R.id.pinentry_content_container)
-  private val pinAndLockViewFlipper by bindView<ViewFlipper>(R.id.pinentry_pin_and_bruteforcelock_viewflipper)
-  private val timeRemainingTillUnlockTextView by bindView<TextView>(R.id.pinentry_bruteforcelock_time_remaining)
-  private val errorTextView by bindView<TextView>(R.id.pinentry_error)
-  val forgotPinButton by bindView<Button>(R.id.pinentry_forgotpin)
   val upstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
   val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
 
@@ -105,7 +92,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     }
 
     pinAndLockViewFlipper.displayedChildResId = when (state) {
-      is State.PinEntry -> R.id.pinentry_pin
+      is State.PinEntry -> R.id.pinEditText
       is State.BruteForceLocked -> R.id.pinentry_bruteforcelock
       is State.Progress -> pinAndLockViewFlipper.displayedChildResId
     }

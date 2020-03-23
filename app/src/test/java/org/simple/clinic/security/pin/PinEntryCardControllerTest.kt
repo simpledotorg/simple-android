@@ -44,7 +44,7 @@ class PinEntryCardControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val clock = TestUtcClock()
 
-  private val uiRenderer = PinEntryUiRenderer()
+  private val uiRenderer = PinEntryUiRenderer(ui)
 
   private lateinit var controller: PinEntryCardController
   private lateinit var controllerSubscription: Disposable

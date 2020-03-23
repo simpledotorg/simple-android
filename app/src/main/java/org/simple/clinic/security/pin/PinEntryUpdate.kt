@@ -10,6 +10,7 @@ class PinEntryUpdate: Update<PinEntryModel, PinEntryEvent, PinEntryEffect> {
   override fun update(model: PinEntryModel, event: PinEntryEvent): Next<PinEntryModel, PinEntryEffect> {
     return when(event) {
       is PinTextChanged -> next(model.enteredPinChanged(event.pin))
+      is PinDigestToVerify -> next(model.updatePinDigest(event.pinDigest))
       else -> noChange()
     }
   }

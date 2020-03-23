@@ -14,6 +14,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.exhaustive
@@ -47,11 +48,13 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   private val events by unsafeLazy {
-    Observable.merge(
-        viewCreated(),
-        pinTextChanges(),
-        upstreamUiEvents
-    )
+    Observable
+        .merge(
+            viewCreated(),
+            pinTextChanges(),
+            upstreamUiEvents
+        )
+        .compose(ReportAnalyticsEvents())
   }
 
   override fun onFinishInflate() {

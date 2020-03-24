@@ -14,7 +14,7 @@ interface PinEntryUi {
   fun clearPin()
   fun dispatchAuthenticatedCallback(enteredPin: String)
   fun setForgotButtonVisible(visible: Boolean)
-  
+
   sealed class State: Parcelable {
 
     @Parcelize

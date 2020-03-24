@@ -5,7 +5,9 @@ import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.next
 
-class PinEntryUpdate: Update<PinEntryModel, PinEntryEvent, PinEntryEffect> {
+class PinEntryUpdate(
+    private val submitPinAtLength: Int
+) : Update<PinEntryModel, PinEntryEvent, PinEntryEffect> {
 
   override fun update(model: PinEntryModel, event: PinEntryEvent): Next<PinEntryModel, PinEntryEffect> {
     return when(event) {

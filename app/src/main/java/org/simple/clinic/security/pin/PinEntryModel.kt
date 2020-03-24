@@ -2,11 +2,11 @@ package org.simple.clinic.security.pin
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.security.pin.PinEntryCardView.State.PinEntry
+import org.simple.clinic.security.pin.PinEntryUi.State.PinEntry
 
 @Parcelize
 data class PinEntryModel(
-    val state: PinEntryCardView.State,
+    val state: PinEntryUi.State,
     val enteredPin: String,
     val pinDigestToVerify: String?
 ): Parcelable {

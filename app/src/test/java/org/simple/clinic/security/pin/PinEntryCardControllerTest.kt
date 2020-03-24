@@ -225,21 +225,17 @@ class PinEntryCardControllerTest {
   }
 
   @Test
-  fun `when a PIN is submitted for verification, the current error must be cleared before the PIN verification starts`() {
-    val inOrder = inOrder(ui)
-
+  fun `when a PIN is submitted for verification, the current error must be cleared`() {
     setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
-    uiEvents.onNext(PinSubmitClicked(correctPin))
+    uiEvents.onNext(PinTextChanged(correctPin))
 
-    inOrder.verify(ui).hideError()
-    inOrder.verify(ui).moveToState(State.Progress)
-    inOrder.verify(ui).dispatchAuthenticatedCallback(correctPin)
-
-    inOrder.verifyNoMoreInteractions()
-    verifyZeroInteractions(ui)
+    verify(ui).hideError()
+    verify(ui).moveToState(State.Progress)
+    verify(ui).dispatchAuthenticatedCallback(correctPin)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {

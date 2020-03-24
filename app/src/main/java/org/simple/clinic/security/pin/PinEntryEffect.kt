@@ -21,3 +21,5 @@ data class BlockPinEntryUntil(val blockTill: Instant): PinEntryEffect()
 object RecordSuccessfulAttempt : PinEntryEffect()
 
 object RecordFailedAttempt: PinEntryEffect()
+
+object ShowProgress: PinEntryEffect()

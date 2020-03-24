@@ -11,6 +11,7 @@ import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.PinEntryUi.State.BruteForceLocked
 import org.simple.clinic.security.pin.PinEntryUi.State.PinEntry
+import org.simple.clinic.security.pin.PinEntryUi.State.Progress
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PinEntryEffectHandler @AssistedInject constructor(
@@ -37,6 +38,7 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addConsumer(BlockPinEntryUntil::class.java, { uiActions.moveToState(BruteForceLocked(it.blockTill)) }, schedulersProvider.ui())
         .addTransformer(RecordSuccessfulAttempt::class.java, recordSuccessfulAttempt(schedulersProvider.io()))
         .addTransformer(RecordFailedAttempt::class.java, recordFailedAttempt(schedulersProvider.io()))
+        .addAction(ShowProgress::class.java, { uiActions.moveToState(Progress) }, schedulersProvider.ui())
         .build()
   }
 

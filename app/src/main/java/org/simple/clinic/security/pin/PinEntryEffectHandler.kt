@@ -11,6 +11,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PinEntryEffectHandler @AssistedInject constructor(
     private val passwordHasher: PasswordHasher,
+    private val bruteForceProtection: BruteForceProtection,
     private val schedulersProvider: SchedulersProvider
 ) {
 
@@ -23,6 +24,7 @@ class PinEntryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PinEntryEffect, PinEntryEvent>()
         .addTransformer(ValidateEnteredPin::class.java, validateEnteredPin(schedulersProvider.computation()))
+        .addTransformer(LoadPinEntryProtectedStates::class.java, loadPinEntryProtectedStates(schedulersProvider.io()))
         .build()
   }
 
@@ -42,6 +44,16 @@ class PinEntryEffectHandler @AssistedInject constructor(
               DIFFERENT -> WrongPinEntered
             }
           }
+    }
+  }
+
+  private fun loadPinEntryProtectedStates(
+      scheduler: Scheduler
+  ): ObservableTransformer<LoadPinEntryProtectedStates, PinEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap { bruteForceProtection.protectedStateChanges().subscribeOn(scheduler) }
+          .map(::PinEntryStateChanged)
     }
   }
 }

@@ -49,6 +49,7 @@ class PinEntryCardControllerTest {
 
   private val pinEntryEffectHandler = PinEntryEffectHandler(
       passwordHasher = passwordHasher,
+      bruteForceProtection = bruteForceProtection,
       schedulersProvider = TrampolineSchedulersProvider()
   )
 

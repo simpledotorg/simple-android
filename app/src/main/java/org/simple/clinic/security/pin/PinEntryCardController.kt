@@ -57,7 +57,7 @@ class PinEntryCardController @Inject constructor(
           val validationResultUiChange = cachedPinValidation
               .map {
                 when (it) {
-                  SAME -> { ui: Ui -> ui.dispatchAuthenticatedCallback(submittedPin) }
+                  SAME -> { ui: Ui ->  }
                   DIFFERENT -> { ui: Ui -> ui.clearPin() }
                 }
               }

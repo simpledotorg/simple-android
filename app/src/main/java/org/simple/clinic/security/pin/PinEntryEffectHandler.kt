@@ -1,6 +1,7 @@
 package org.simple.clinic.security.pin
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -12,12 +13,13 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class PinEntryEffectHandler @AssistedInject constructor(
     private val passwordHasher: PasswordHasher,
     private val bruteForceProtection: BruteForceProtection,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    @Assisted private val uiActions: UiActions
 ) {
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(): PinEntryEffectHandler
+    fun create(uiActions: UiActions): PinEntryEffectHandler
   }
 
   fun build(): ObservableTransformer<PinEntryEffect, PinEntryEvent> {

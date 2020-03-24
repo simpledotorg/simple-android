@@ -7,7 +7,6 @@ import org.threeten.bp.Instant
 interface PinEntryUi: UiActions {
 
   // Not yet migrated to Mobius
-  fun clearPin()
   fun dispatchAuthenticatedCallback(enteredPin: String)
   fun setForgotButtonVisible(visible: Boolean)
 

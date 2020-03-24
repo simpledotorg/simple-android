@@ -21,7 +21,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.PinDigestToVerify
 import org.simple.clinic.security.pin.PinEntryCardView
-import org.simple.clinic.security.pin.PinEntryCardView.State
+import org.simple.clinic.security.pin.PinEntryUi.State
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject

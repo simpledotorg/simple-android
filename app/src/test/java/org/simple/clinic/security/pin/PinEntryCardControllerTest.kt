@@ -19,7 +19,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
-import org.simple.clinic.security.pin.PinEntryCardView.State
+import org.simple.clinic.security.pin.PinEntryUi.State
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider

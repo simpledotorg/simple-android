@@ -14,7 +14,6 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -42,21 +41,9 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   val upstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
   val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
 
-  sealed class State: Parcelable {
-
-    @Parcelize
-    object PinEntry : State()
-
-    @Parcelize
-    object Progress : State()
-
-    @Parcelize
-    data class BruteForceLocked(val timeTillUnlock: TimerDuration) : State()
-  }
-
   init {
     LayoutInflater.from(context).inflate(R.layout.pin_entry_card, this, true)
-    moveToState(State.PinEntry)
+    moveToState(PinEntryUi.State.PinEntry)
     setForgotButtonVisible(true)
   }
 
@@ -124,7 +111,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
           .map(CharSequence::toString)
           .map(::PinTextChanged)
 
-  override fun moveToState(state: State) {
+  override fun moveToState(state: PinEntryUi.State) {
     val transition = AutoTransition()
         .setOrdering(AutoTransition.ORDERING_TOGETHER)
         .setDuration(200)
@@ -133,30 +120,30 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     TransitionManager.beginDelayedTransition(this, transition)
 
     contentContainer.visibility = when (state) {
-      is State.PinEntry -> VISIBLE
-      is State.BruteForceLocked -> VISIBLE
-      is State.Progress -> INVISIBLE
+      is PinEntryUi.State.PinEntry -> VISIBLE
+      is PinEntryUi.State.BruteForceLocked -> VISIBLE
+      is PinEntryUi.State.Progress -> INVISIBLE
     }
 
     progressView.visibility = when (state) {
-      is State.PinEntry -> GONE
-      is State.BruteForceLocked -> GONE
-      is State.Progress -> VISIBLE
+      is PinEntryUi.State.PinEntry -> GONE
+      is PinEntryUi.State.BruteForceLocked -> GONE
+      is PinEntryUi.State.Progress -> VISIBLE
     }
 
     pinAndLockViewFlipper.displayedChildResId = when (state) {
-      is State.PinEntry -> R.id.pinEditText
-      is State.BruteForceLocked -> R.id.pinentry_bruteforcelock
-      is State.Progress -> pinAndLockViewFlipper.displayedChildResId
+      is PinEntryUi.State.PinEntry -> R.id.pinEditText
+      is PinEntryUi.State.BruteForceLocked -> R.id.pinentry_bruteforcelock
+      is PinEntryUi.State.Progress -> pinAndLockViewFlipper.displayedChildResId
     }
 
     when (state) {
-      is State.PinEntry -> pinEditText.showKeyboard()
-      is State.Progress -> hideKeyboard()
-      is State.BruteForceLocked -> hideKeyboard()
+      is PinEntryUi.State.PinEntry -> pinEditText.showKeyboard()
+      is PinEntryUi.State.Progress -> hideKeyboard()
+      is PinEntryUi.State.BruteForceLocked -> hideKeyboard()
     }.exhaustive()
 
-    if (state is State.BruteForceLocked) {
+    if (state is PinEntryUi.State.BruteForceLocked) {
       timeRemainingTillUnlockTextView.text = resources.getString(
           R.string.pinentry_bruteforcelock_timer,
           state.timeTillUnlock.minutes,

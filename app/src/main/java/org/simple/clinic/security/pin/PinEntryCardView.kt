@@ -65,7 +65,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
         events = events.ofType(),
         defaultModel = PinEntryModel.default(),
         init = PinEntryInit(),
-        update = PinEntryUpdate(),
+        update = PinEntryUpdate(submitPinAtLength = 4),
         effectHandler = effectHandlerFactory.create().build(),
         modelUpdateListener = uiRenderer::render
     )

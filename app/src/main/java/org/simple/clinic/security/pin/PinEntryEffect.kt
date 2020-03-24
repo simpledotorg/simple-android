@@ -25,3 +25,5 @@ object RecordFailedAttempt: PinEntryEffect()
 object ShowProgress: PinEntryEffect()
 
 object ClearPin: PinEntryEffect()
+
+data class PinVerified(val pin: String): PinEntryEffect()

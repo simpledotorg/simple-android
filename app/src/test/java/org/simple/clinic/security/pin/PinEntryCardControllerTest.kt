@@ -50,7 +50,10 @@ class PinEntryCardControllerTest {
   private val pinEntryEffectHandler = PinEntryEffectHandler(
       passwordHasher = passwordHasher,
       bruteForceProtection = bruteForceProtection,
-      schedulersProvider = TrampolineSchedulersProvider()
+      schedulersProvider = TrampolineSchedulersProvider(),
+      uiActions = object : UiActions {
+        
+      }
   )
 
   private lateinit var controller: PinEntryCardController

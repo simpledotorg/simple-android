@@ -30,7 +30,7 @@ import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs), PinEntryUi {
+class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs), PinEntryUi, UiActions {
 
   @Inject
   lateinit var controller: PinEntryCardController
@@ -66,7 +66,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
         defaultModel = PinEntryModel.default(),
         init = PinEntryInit(),
         update = PinEntryUpdate(submitPinAtLength = 4),
-        effectHandler = effectHandlerFactory.create().build(),
+        effectHandler = effectHandlerFactory.create(uiActions = this).build(),
         modelUpdateListener = uiRenderer::render
     )
   }

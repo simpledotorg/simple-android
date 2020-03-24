@@ -16,3 +16,7 @@ object CorrectPinEntered : PinEntryEvent()
 object WrongPinEntered : PinEntryEvent()
 
 data class PinEntryStateChanged(val state: ProtectedState): PinEntryEvent()
+
+data class PinAuthenticated(val pin: String) : PinEntryEvent() {
+  override val analyticsName = "PIN authenticated"
+}

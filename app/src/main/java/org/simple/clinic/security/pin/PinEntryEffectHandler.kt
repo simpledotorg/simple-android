@@ -3,6 +3,7 @@ package org.simple.clinic.security.pin
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
@@ -34,6 +35,8 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addConsumer(ShowIncorrectPinLimitReachedError::class.java, { uiActions.showIncorrectAttemptsLimitReachedError(it.attemptsMade) }, schedulersProvider.ui())
         .addAction(AllowPinEntry::class.java, { uiActions.moveToState(PinEntry) }, schedulersProvider.ui())
         .addConsumer(BlockPinEntryUntil::class.java, { uiActions.moveToState(BruteForceLocked(it.blockTill)) }, schedulersProvider.ui())
+        .addTransformer(RecordSuccessfulAttempt::class.java, recordSuccessfulAttempt(schedulersProvider.io()))
+        .addTransformer(RecordFailedAttempt::class.java, recordFailedAttempt(schedulersProvider.io()))
         .build()
   }
 
@@ -74,6 +77,26 @@ class PinEntryEffectHandler @AssistedInject constructor(
       uiActions.showIncorrectPinErrorForFirstAttempt()
     } else {
       uiActions.showIncorrectPinErrorOnSubsequentAttempts(remaining = attemptsRemaining)
+    }
+  }
+
+  private fun recordSuccessfulAttempt(
+      scheduler: Scheduler
+  ): ObservableTransformer<RecordSuccessfulAttempt, PinEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMapCompletable { bruteForceProtection.recordSuccessfulAuthentication().subscribeOn(scheduler) }
+          .andThen(Observable.empty())
+    }
+  }
+
+  private fun recordFailedAttempt(
+      scheduler: Scheduler
+  ): ObservableTransformer<RecordFailedAttempt, PinEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMapCompletable { bruteForceProtection.incrementFailedAttempt().subscribeOn(scheduler) }
+          .andThen(Observable.empty())
     }
   }
 }

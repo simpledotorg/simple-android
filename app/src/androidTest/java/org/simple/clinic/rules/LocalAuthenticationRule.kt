@@ -42,8 +42,10 @@ class LocalAuthenticationRule : TestRule {
   }
 
   private fun createLocalUser() {
+    val registrationFacilityUuid = UUID.fromString("2c9846a0-3482-413c-be4f-f529ace55557")
+
     val facilities = listOf(
-        testData.facility(UUID.fromString("2c9846a0-3482-413c-be4f-f529ace55557")),
+        testData.facility(registrationFacilityUuid),
         testData.facility(UUID.fromString("cb143bdc-1872-459e-88fd-30ea0d6e1659")),
         testData.facility(UUID.fromString("db332209-d4cd-4c52-8082-37dab6518941"))
     )
@@ -51,8 +53,10 @@ class LocalAuthenticationRule : TestRule {
 
     val user = testData.loggedInUser(
         uuid = UUID.fromString("bc60515e-4bbe-4cf0-a2e2-a326dbbb84ee"),
-        loggedInStatus = User.LoggedInStatus.LOGGED_IN
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+        registrationFacilityUuid = registrationFacilityUuid,
+        currentFacilityUuid = registrationFacilityUuid
     )
-    userSession.storeUser(user, facilities.first().uuid).blockingAwait()
+    userSession.storeUser(user, registrationFacilityUuid).blockingAwait()
   }
 }

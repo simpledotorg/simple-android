@@ -195,7 +195,9 @@ class LoginPinScreenControllerTest {
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        loggedInStatus = User.LoggedInStatus.OTP_REQUESTED
+        loggedInStatus = User.LoggedInStatus.OTP_REQUESTED,
+        registrationFacilityUuid = registrationFacilityUuid,
+        currentFacilityUuid = registrationFacilityUuid
     )
 
     whenever(userSession.ongoingLoginEntry())

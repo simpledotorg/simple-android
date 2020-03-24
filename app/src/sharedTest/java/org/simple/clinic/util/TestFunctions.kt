@@ -46,7 +46,9 @@ fun LoggedInUserPayload.toUser(loggedInStatus: User.LoggedInStatus): User {
       status = status,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      loggedInStatus = loggedInStatus
+      loggedInStatus = loggedInStatus,
+      registrationFacilityUuid = registrationFacilityId,
+      currentFacilityUuid = registrationFacilityId
   )
 }
 

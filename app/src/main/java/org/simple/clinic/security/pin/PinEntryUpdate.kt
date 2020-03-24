@@ -33,7 +33,7 @@ class PinEntryUpdate(
         Next.dispatch(effects)
       }
       is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt)
-      is WrongPinEntered -> dispatch(RecordFailedAttempt)
+      is WrongPinEntered -> dispatch(AllowPinEntry, RecordFailedAttempt)
       else -> noChange()
     }
   }
@@ -54,7 +54,11 @@ class PinEntryUpdate(
     val effects = mutableSetOf<PinEntryEffect>()
 
     if(isReadyToSubmitPin(model)) {
-      effects.add(ValidateEnteredPin(model.enteredPin, model.pinDigestToVerify!!))
+      effects.apply {
+        add(ValidateEnteredPin(model.enteredPin, model.pinDigestToVerify!!))
+        add(HideError)
+        add(ShowProgress)
+      }
     }
 
     return effects

@@ -9,7 +9,6 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.security.pin.PinEntryUi.State
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -55,14 +54,6 @@ class PinEntryCardController @Inject constructor(
               .replay()
               .refCount()
 
-          val progressUiChanges = cachedPinValidation
-              .filter { it == DIFFERENT }
-              .map { { ui: Ui -> ui.moveToState(State.PinEntry) } }
-              .startWith { ui: Ui ->
-                ui.hideError()
-                ui.moveToState(State.Progress)
-              }
-
           val validationResultUiChange = cachedPinValidation
               .map {
                 when (it) {
@@ -71,7 +62,7 @@ class PinEntryCardController @Inject constructor(
                 }
               }
 
-          Observable.mergeArray(progressUiChanges, validationResultUiChange)
+          validationResultUiChange
         }
   }
 }

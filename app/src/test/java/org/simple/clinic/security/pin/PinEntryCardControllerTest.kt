@@ -148,8 +148,6 @@ class PinEntryCardControllerTest {
 
     startMobiusLoop()
 
-    uiEvents.onNext(PinEntryViewCreated)
-
     verify(uiActions).moveToState(State.PinEntry)
     verify(uiActions).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
   }
@@ -165,8 +163,6 @@ class PinEntryCardControllerTest {
 
     startMobiusLoop()
 
-    uiEvents.onNext(PinEntryViewCreated)
-
     verify(uiActions).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
   }
 
@@ -181,8 +177,6 @@ class PinEntryCardControllerTest {
         ))
 
     startMobiusLoop()
-
-    uiEvents.onNext(PinEntryViewCreated)
 
     verify(uiActions).hideError()
     verify(uiActions).showIncorrectPinErrorForFirstAttempt()

@@ -9,4 +9,5 @@ interface UiActions {
   fun showIncorrectPinErrorOnSubsequentAttempts(remaining: Int)
   fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int)
   fun moveToState(state: State)
+  fun clearPin()
 }

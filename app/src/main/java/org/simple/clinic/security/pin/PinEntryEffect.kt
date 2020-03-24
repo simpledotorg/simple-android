@@ -23,3 +23,5 @@ object RecordSuccessfulAttempt : PinEntryEffect()
 object RecordFailedAttempt: PinEntryEffect()
 
 object ShowProgress: PinEntryEffect()
+
+object ClearPin: PinEntryEffect()

@@ -67,6 +67,10 @@ class PinEntryCardControllerTest {
         override fun moveToState(state: State) {
           ui.moveToState(state)
         }
+
+        override fun clearPin() {
+          ui.clearPin()
+        }
       }
   )
 

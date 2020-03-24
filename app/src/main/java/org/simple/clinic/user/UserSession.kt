@@ -71,8 +71,11 @@ class UserSession @Inject constructor(
               createdAt = entry.createdAt!!,
               updatedAt = entry.createdAt,
               status = WaitingForApproval,
-              loggedInStatus = NOT_LOGGED_IN)
-          storeUser(user, entry.facilityId!!)
+              loggedInStatus = NOT_LOGGED_IN,
+              registrationFacilityUuid = entry.facilityId!!,
+              currentFacilityUuid = entry.facilityId
+          )
+          storeUser(user, entry.facilityId)
         }
   }
 
@@ -86,7 +89,10 @@ class UserSession @Inject constructor(
           status = this.status,
           createdAt = createdAt,
           updatedAt = updatedAt,
-          loggedInStatus = status)
+          loggedInStatus = status,
+          registrationFacilityUuid = payload.registrationFacilityId,
+          currentFacilityUuid = payload.registrationFacilityId
+      )
     }
   }
 

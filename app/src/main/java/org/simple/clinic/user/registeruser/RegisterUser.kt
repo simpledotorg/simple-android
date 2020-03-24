@@ -94,7 +94,9 @@ class RegisterUser @Inject constructor(
           status = status,
           createdAt = createdAt,
           updatedAt = updatedAt,
-          loggedInStatus = LOGGED_IN
+          loggedInStatus = LOGGED_IN,
+          registrationFacilityUuid = payload.registrationFacilityId,
+          currentFacilityUuid = payload.registrationFacilityId
       )
     }
   }

@@ -33,9 +33,9 @@ class RegisterUserTest {
   fun `when user registers, set the registered user in analytics`() {
     // given
     val userUuid = UUID.fromString("0e7b2b09-dbb0-4de6-b66d-6afe834c14ed")
-    val user = TestData.loggedInUser(userUuid)
     val facilityUuid = UUID.fromString("2aa4ccc3-5e4f-4c32-8df3-1304a56ae8b3")
     val facility = TestData.facility(facilityUuid)
+    val user = TestData.loggedInUser(userUuid, registrationFacilityUuid = facilityUuid, currentFacilityUuid = facilityUuid)
 
     val registrationApi = mock<RegistrationApi>()
     val userDao = mock<User.RoomDao>()

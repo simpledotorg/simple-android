@@ -403,7 +403,9 @@ object TestData {
       status: UserStatus = UserStatus.random(),
       loggedInStatus: User.LoggedInStatus = randomOfEnum(User.LoggedInStatus::class),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      registrationFacilityUuid: UUID = UUID.fromString("fa85410a-54ca-449c-b3d6-7caf9def1474"),
+      currentFacilityUuid: UUID = registrationFacilityUuid
   ): User {
     return User(
         uuid = uuid,
@@ -413,7 +415,10 @@ object TestData {
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        loggedInStatus = loggedInStatus)
+        loggedInStatus = loggedInStatus,
+        registrationFacilityUuid = registrationFacilityUuid,
+        currentFacilityUuid = currentFacilityUuid
+    )
   }
 
   fun ongoingRegistrationEntry(

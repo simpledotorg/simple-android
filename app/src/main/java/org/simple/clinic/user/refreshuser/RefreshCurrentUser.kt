@@ -26,7 +26,7 @@ class RefreshCurrentUser @Inject constructor(
         .flatMapCompletable { user ->
           userLookup.find(user.phoneNumber)
               .mapType<Found, LoggedInUserPayload> { it.user }
-              .map { payload -> mapPayloadToUser(payload, newLoggedInStatus(user, payload)) }
+              .map { payload -> mapPayloadToUser(user, payload, newLoggedInStatus(user, payload)) }
               .flatMapCompletable { updatedUserDetails ->
                 Completable.fromAction { userDao.createOrUpdate(updatedUserDetails) }
               }
@@ -50,6 +50,7 @@ class RefreshCurrentUser @Inject constructor(
   }
 
   private fun mapPayloadToUser(
+      storedUser: User,
       payload: LoggedInUserPayload,
       loggedInStatus: LoggedInStatus
   ): User {
@@ -62,7 +63,9 @@ class RefreshCurrentUser @Inject constructor(
           status = status,
           createdAt = createdAt,
           updatedAt = updatedAt,
-          loggedInStatus = loggedInStatus
+          loggedInStatus = loggedInStatus,
+          registrationFacilityUuid = payload.registrationFacilityId,
+          currentFacilityUuid = storedUser.currentFacilityUuid
       )
     }
   }

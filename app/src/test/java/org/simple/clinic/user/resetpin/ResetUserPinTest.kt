@@ -40,13 +40,14 @@ class ResetUserPinTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val userDao = mock<User.RoomDao>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
-
+  private val facilityUuid = UUID.fromString("4ffa1d2b-f023-4239-91ad-7fb7ddfddaab")
   private val currentUser = TestData.loggedInUser(
       uuid = UUID.fromString("36f6072c-0757-43e6-9a09-2bb9971cc7d3"),
       pinDigest = hash("0000"),
-      loggedInStatus = RESETTING_PIN
+      loggedInStatus = RESETTING_PIN,
+      currentFacilityUuid = facilityUuid,
+      registrationFacilityUuid = facilityUuid
   )
-  private val facilityUuid = UUID.fromString("4ffa1d2b-f023-4239-91ad-7fb7ddfddaab")
   private val newPin = "1234"
   private val newPinDigest = hash(newPin)
   private val updatedUser = currentUser.afterPinResetRequested(newPinDigest)

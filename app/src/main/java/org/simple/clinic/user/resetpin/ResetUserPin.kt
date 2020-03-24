@@ -69,7 +69,9 @@ class ResetUserPin @Inject constructor(
           status = status,
           createdAt = createdAt,
           updatedAt = updatedAt,
-          loggedInStatus = RESET_PIN_REQUESTED
+          loggedInStatus = RESET_PIN_REQUESTED,
+          registrationFacilityUuid = registrationFacilityId,
+          currentFacilityUuid = registrationFacilityId
       )
     }
   }

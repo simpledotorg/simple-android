@@ -1,8 +1,10 @@
 package org.simple.clinic.user
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
@@ -10,9 +12,10 @@ import androidx.room.Query
 import androidx.room.Transaction
 import io.reactivex.Flowable
 import io.reactivex.Single
+import org.intellij.lang.annotations.Language
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.util.room.RoomEnumTypeConverter
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.room.RoomEnumTypeConverter
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -20,7 +23,21 @@ import java.util.UUID
 // Room starts complaining if you try to rename a table which
 // is referenced by another table in a foreign key (technically,
 // SQLite supports renaming tables, but Room complains).
-@Entity(tableName = "LoggedInUser")
+@Entity(
+    tableName = "LoggedInUser",
+    foreignKeys = [
+      ForeignKey(
+          entity = Facility::class,
+          parentColumns = ["uuid"],
+          childColumns = ["registrationFacilityUuid"]
+      ),
+      ForeignKey(
+          entity = Facility::class,
+          parentColumns = ["uuid"],
+          childColumns = ["currentFacilityUuid"]
+      )
+    ]
+)
 data class User(
 
     @PrimaryKey
@@ -38,7 +55,13 @@ data class User(
 
     val updatedAt: Instant,
 
-    val loggedInStatus: LoggedInStatus
+    val loggedInStatus: LoggedInStatus,
+
+    @ColumnInfo(index = true)
+    val registrationFacilityUuid: UUID,
+
+    @ColumnInfo(index = true)
+    val currentFacilityUuid: UUID
 ) {
 
   fun withStatus(status: UserStatus, clock: UtcClock): User {
@@ -101,6 +124,24 @@ data class User(
   @Dao
   abstract class RoomDao {
 
+    companion object {
+      @Language("RoomSql")
+      private const val CURRENT_FACILITY_QUERY = """
+        SELECT 
+         F.uuid, F.name, F.facilityType,
+         F.streetAddress, F.villageOrColony, F.district,
+         F.state, F.country, F.pinCode,
+         F.protocolUuid, F.groupUuid,
+         F.location_latitude, F.location_longitude,
+         F.createdAt, F.updatedAt, F.deletedAt,
+         F.syncStatus,
+         F.config_diabetesManagementEnabled
+        FROM Facility F
+        INNER JOIN LoggedInUser ON LoggedInUser.currentFacilityUuid = F.uuid
+        WHERE LoggedInUser.uuid = :userUuid
+      """
+    }
+
     @Query("SELECT * FROM LoggedInUser LIMIT 1")
     abstract fun user(): Flowable<List<User>>
 
@@ -114,80 +155,44 @@ data class User(
     abstract fun updateLoggedInStatusForUser(userUuId: UUID, loggedInStatus: LoggedInStatus)
 
     @Delete
-    protected abstract fun deleteUser(user: User)
+    abstract fun deleteUser(user: User)
 
+    @Deprecated(
+        message = "",
+        replaceWith = ReplaceWith("deleteUser(user)")
+    )
     @Transaction
     open fun deleteUserAndFacilityMappings(user: User) {
-      deleteMappingsForUser(user.uuid)
       deleteUser(user)
     }
 
     @Query("SELECT COUNT(uuid) FROM LoggedInUser")
     abstract fun userCount(): Single<Int>
 
-    @Transaction
-    open fun insertOrUpdateFacilitiesForUser(user: User, facilityIds: List<UUID>) {
-      val mappings = facilityIds
-          .map {
-            LoggedInUserFacilityMapping(
-                userUuid = user.uuid,
-                facilityUuid = it,
-                isCurrentFacility = false)
-          }
-      insertOrUpdateFacilitiesForUser(mappings)
+    @Deprecated(message = "Does not do anything anymore")
+    fun insertOrUpdateFacilitiesForUser(user: User, facilityIds: List<UUID>) {
+      /* Not necessary anymore. Remove in later commit */
     }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertOrUpdateFacilitiesForUser(mappings: List<LoggedInUserFacilityMapping>)
-
+    @Deprecated(
+        message = "",
+        replaceWith = ReplaceWith("setCurrentFacility(userUuid, newCurrentFacilityUuid)")
+    )
     @Transaction
     open fun changeCurrentFacility(userUuid: UUID, newCurrentFacilityUuid: UUID) {
-      val oldCurrentFacilityUuid = currentFacilityUuid(userUuid)
-      if (oldCurrentFacilityUuid != null) {
-        setFacilityIsCurrent(userUuid, oldCurrentFacilityUuid, isCurrent = false)
-      }
-      val updatedRows = setFacilityIsCurrent(userUuid, newCurrentFacilityUuid, isCurrent = true)
-      if (updatedRows != 1) {
-        throw AssertionError("Couldn't update current facility. A mapping between $userUuid and $newCurrentFacilityUuid probably does not exist.")
-      }
+      setCurrentFacility(userUuid, newCurrentFacilityUuid)
     }
 
-    @Query("""
-      UPDATE LoggedInUserFacilityMapping
-      SET isCurrentFacility = :isCurrent
-      WHERE userUuid = :userUuid AND facilityUuid = :facilityUuid
-      """)
-    protected abstract fun setFacilityIsCurrent(userUuid: UUID, facilityUuid: UUID, isCurrent: Boolean): Int
+    @Query("UPDATE LoggedInUser SET currentFacilityUuid = :facilityUuid WHERE uuid = :userUuid")
+    abstract fun setCurrentFacility(userUuid: UUID, facilityUuid: UUID): Int
 
-    @Query("""
-      SELECT * FROM Facility
-      INNER JOIN LoggedInUserFacilityMapping ON LoggedInUserFacilityMapping.facilityUuid = Facility.uuid
-      WHERE LoggedInUserFacilityMapping.userUuid = :userUuid
-      AND LoggedInUserFacilityMapping.isCurrentFacility = 1
-      LIMIT 1
-      """)
+    @Query(CURRENT_FACILITY_QUERY)
     abstract fun currentFacility(userUuid: UUID): Flowable<Facility>
 
-    @Query("""
-      SELECT * FROM Facility
-      INNER JOIN LoggedInUserFacilityMapping ON LoggedInUserFacilityMapping.facilityUuid = Facility.uuid
-      WHERE LoggedInUserFacilityMapping.userUuid = :userUuid
-      AND LoggedInUserFacilityMapping.isCurrentFacility = 1
-      LIMIT 1
-      """)
+    @Query(CURRENT_FACILITY_QUERY)
     abstract fun currentFacilityImmediate(userUuid: UUID): Facility?
 
-    @Query("""
-      SELECT facilityUuid FROM LoggedInUserFacilityMapping
-      WHERE userUuid = :userUuid
-      AND isCurrentFacility = 1
-    """)
+    @Query("SELECT currentFacilityUuid FROM LoggedInUser WHERE uuid = :userUuid")
     abstract fun currentFacilityUuid(userUuid: UUID): UUID?
-
-    @Query("SELECT * FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid")
-    abstract fun mappingsForUser(userUuid: UUID): Flowable<List<LoggedInUserFacilityMapping>>
-
-    @Query("DELETE FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid")
-    abstract fun deleteMappingsForUser(userUuid: UUID)
   }
 }

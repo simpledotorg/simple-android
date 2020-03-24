@@ -14,6 +14,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -41,9 +42,15 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   val upstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
   val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
 
-  sealed class State {
+  sealed class State: Parcelable {
+
+    @Parcelize
     object PinEntry : State()
+
+    @Parcelize
     object Progress : State()
+
+    @Parcelize
     data class BruteForceLocked(val timeTillUnlock: TimerDuration) : State()
   }
 

@@ -32,7 +32,7 @@ class PinEntryUpdate(
 
         Next.dispatch(effects)
       }
-      is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt)
+      is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt, PinVerified(model.enteredPin))
       is WrongPinEntered -> dispatch(AllowPinEntry, RecordFailedAttempt)
       else -> noChange()
     }

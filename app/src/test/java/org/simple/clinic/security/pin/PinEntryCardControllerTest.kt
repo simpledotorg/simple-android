@@ -52,7 +52,21 @@ class PinEntryCardControllerTest {
       bruteForceProtection = bruteForceProtection,
       schedulersProvider = TrampolineSchedulersProvider(),
       uiActions = object : UiActions {
-        
+        override fun hideError() {
+          ui.hideError()
+        }
+
+        override fun showIncorrectPinErrorForFirstAttempt() {
+          ui.showIncorrectPinErrorForFirstAttempt()
+        }
+
+        override fun showIncorrectPinErrorOnSubsequentAttempts(remaining: Int) {
+          ui.showIncorrectPinErrorOnSubsequentAttempts(remaining)
+        }
+
+        override fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int) {
+          ui.showIncorrectAttemptsLimitReachedError(attemptsMade)
+        }
       }
   )
 

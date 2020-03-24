@@ -71,6 +71,10 @@ class PinEntryCardControllerTest {
         override fun clearPin() {
           ui.clearPin()
         }
+
+        override fun dispatchAuthenticatedCallback(enteredPin: String) {
+          ui.dispatchAuthenticatedCallback(enteredPin)
+        }
       }
   )
 

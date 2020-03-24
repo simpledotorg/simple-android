@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.Instant
 
-interface PinEntryUi: UiActions {
+interface PinEntryUi {
 
   // Not yet migrated to Mobius
   fun setForgotButtonVisible(visible: Boolean)

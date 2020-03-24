@@ -1,10 +1,8 @@
 package org.simple.clinic.security.pin
 
-import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -247,7 +245,7 @@ class PinEntryCardControllerTest {
   }
 
   private fun setupController() {
-    controller = PinEntryCardController(passwordHasher)
+    controller = PinEntryCardController()
 
     controllerSubscription = uiEvents
         .compose(controller)

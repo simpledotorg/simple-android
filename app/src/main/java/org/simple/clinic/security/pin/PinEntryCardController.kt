@@ -9,9 +9,7 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryUi.State
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -20,7 +18,6 @@ typealias UiChange = (Ui) -> Unit
 
 class PinEntryCardController @Inject constructor(
     private val passwordHasher: PasswordHasher,
-    private val utcClock: UtcClock,
     private val bruteForceProtection: BruteForceProtection
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -29,10 +26,7 @@ class PinEntryCardController @Inject constructor(
         .compose(autoSubmitPin())
         .replay()
 
-    return Observable.merge(
-        validatePin(replayedEvents),
-        blockWhenAuthenticationLimitIsReached(replayedEvents)
-    )
+    return validatePin(replayedEvents)
   }
 
   private fun autoSubmitPin(): ObservableTransformer<UiEvent, UiEvent> {
@@ -87,22 +81,6 @@ class PinEntryCardController @Inject constructor(
               }
 
           Observable.mergeArray(progressUiChanges, recordAttempts, validationResultUiChange)
-        }
-  }
-
-  private fun blockWhenAuthenticationLimitIsReached(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PinEntryViewCreated>()
-        .flatMap { bruteForceProtection.protectedStateChanges() }
-        .switchMap { state ->
-          when (state) {
-            is ProtectedState.Allowed -> {
-              Observable.just({ ui: Ui -> ui.moveToState(State.PinEntry) })
-            }
-
-            is ProtectedState.Blocked -> {
-              Observable.just({ ui: Ui -> ui.moveToState(State.BruteForceLocked(state.blockedTill)) })
-            }
-          }
         }
   }
 }

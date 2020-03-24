@@ -243,7 +243,7 @@ class PinEntryCardControllerTest {
   }
 
   private fun setupController() {
-    controller = PinEntryCardController(passwordHasher, clock, bruteForceProtection)
+    controller = PinEntryCardController(passwordHasher, bruteForceProtection)
 
     controllerSubscription = uiEvents
         .compose(controller)

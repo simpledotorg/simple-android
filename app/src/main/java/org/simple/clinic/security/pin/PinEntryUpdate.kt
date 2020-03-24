@@ -1,9 +1,9 @@
 package org.simple.clinic.security.pin
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.dispatch
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
@@ -17,12 +17,12 @@ class PinEntryUpdate(
       is PinTextChanged -> next(model.enteredPinChanged(event.pin))
       is PinDigestToVerify -> next(model.updatePinDigest(event.pinDigest))
       is PinEntryStateChanged -> {
-        val effect = when (val protectedState = event.state) {
-          is Allowed -> generateEffectForAllowingPinEntry(protectedState)
-          is Blocked -> ShowIncorrectPinLimitReachedError(protectedState.attemptsMade)
+        val effects = when (val protectedState = event.state) {
+          is Allowed -> setOf(generateEffectForAllowingPinEntry(protectedState), AllowPinEntry)
+          is Blocked -> setOf(ShowIncorrectPinLimitReachedError(protectedState.attemptsMade), BlockPinEntryUntil(protectedState.blockedTill))
         }
 
-        dispatch(effect)
+        dispatch(effects)
       }
       else -> noChange()
     }

@@ -8,6 +8,7 @@ import io.reactivex.Scheduler
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.security.PasswordHasher
+import org.simple.clinic.security.pin.PinEntryUi.State.BruteForceLocked
 import org.simple.clinic.security.pin.PinEntryUi.State.PinEntry
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -32,7 +33,7 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addConsumer(ShowIncorrectPinError::class.java, { showIncorrectPinError(it.attemptsMade, it.attemptsRemaining) }, schedulersProvider.ui())
         .addConsumer(ShowIncorrectPinLimitReachedError::class.java, { uiActions.showIncorrectAttemptsLimitReachedError(it.attemptsMade) }, schedulersProvider.ui())
         .addAction(AllowPinEntry::class.java, { uiActions.moveToState(PinEntry) }, schedulersProvider.ui())
-        .addConsumer(BlockPinEntryUntil::class.java, { /* Fill in this later after moving the timer to the UI */ }, schedulersProvider.ui())
+        .addConsumer(BlockPinEntryUntil::class.java, { uiActions.moveToState(BruteForceLocked(it.blockTill)) }, schedulersProvider.ui())
         .build()
   }
 

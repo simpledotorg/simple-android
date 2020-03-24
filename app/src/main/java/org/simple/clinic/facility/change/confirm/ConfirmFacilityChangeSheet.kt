@@ -71,10 +71,16 @@ class ConfirmFacilityChangeSheet : BottomSheetActivity(), ConfirmFacilityChangeU
 
     facilityName.text = getString(R.string.confirmfacilitychange_facility_name, selectedFacility.name)
     cancelButton.setOnClickListener {
-      closeSheet()
+      closeSheetAfterCancel()
     }
 
     delegate.onRestoreInstanceState(savedInstanceState)
+  }
+
+  private fun closeSheetAfterCancel() {
+    val intent = Intent()
+    setResult(Activity.RESULT_CANCELED, intent)
+    finish()
   }
 
   override fun attachBaseContext(baseContext: Context) {

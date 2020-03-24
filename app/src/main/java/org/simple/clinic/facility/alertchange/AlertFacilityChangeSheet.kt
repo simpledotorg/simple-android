@@ -1,5 +1,6 @@
 package org.simple.clinic.facility.alertchange
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +9,7 @@ import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -22,6 +24,7 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
   private lateinit var component: AlertFacilityChangeComponent
 
   companion object {
+    const val FACILITY_CHANGE = 101
     private const val CURRENT_FACILITY = "current_facility"
 
     fun intent(context: Context, currentFacility: Facility): Intent {
@@ -42,7 +45,7 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
 
     facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacility.name)
     yesButton.setOnClickListener {
-      closeSheet()
+      closeSheet(Activity.RESULT_OK)
     }
 
     changeButton.setOnClickListener {
@@ -68,11 +71,21 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
     component.inject(this)
   }
 
-  private fun closeSheet() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+
+    if (requestCode == FACILITY_CHANGE) {
+      closeSheet(resultCode)
+    }
+  }
+
+  private fun closeSheet(resultCode: Int) {
+    val intent = Intent()
+    setResult(resultCode, intent)
+    finish()
   }
 
   private fun openFacilityChangeScreen() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    startActivityForResult(FacilityChangeActivity.intent(this), FACILITY_CHANGE)
   }
 }

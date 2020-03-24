@@ -213,7 +213,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   /** Defaults to visible. */
-  override fun setForgotButtonVisible(visible: Boolean) {
+  fun setForgotButtonVisible(visible: Boolean) {
     if (visible) {
       forgotPinButton.visibility = View.VISIBLE
       contentContainer.setPaddingBottom(R.dimen.pinentry_content_bottom_spacing_with_forgot_pin)

@@ -27,6 +27,9 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<PinEntryEffect, PinEntryEvent>()
         .addTransformer(ValidateEnteredPin::class.java, validateEnteredPin(schedulersProvider.computation()))
         .addTransformer(LoadPinEntryProtectedStates::class.java, loadPinEntryProtectedStates(schedulersProvider.io()))
+        .addAction(HideError::class.java, { uiActions.hideError() }, schedulersProvider.ui())
+        .addConsumer(ShowIncorrectPinError::class.java, { showIncorrectPinError(it.attemptsMade, it.attemptsRemaining) }, schedulersProvider.ui())
+        .addConsumer(ShowIncorrectPinLimitReachedError::class.java, { uiActions.showIncorrectAttemptsLimitReachedError(it.attemptsMade) }, schedulersProvider.ui())
         .build()
   }
 
@@ -56,6 +59,17 @@ class PinEntryEffectHandler @AssistedInject constructor(
       effects
           .switchMap { bruteForceProtection.protectedStateChanges().subscribeOn(scheduler) }
           .map(::PinEntryStateChanged)
+    }
+  }
+
+  private fun showIncorrectPinError(
+      attemptsMade: Int,
+      attemptsRemaining: Int
+  ) {
+    if (attemptsMade == 1) {
+      uiActions.showIncorrectPinErrorForFirstAttempt()
+    } else {
+      uiActions.showIncorrectPinErrorOnSubsequentAttempts(remaining = attemptsRemaining)
     }
   }
 }

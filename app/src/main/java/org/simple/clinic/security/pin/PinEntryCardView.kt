@@ -2,6 +2,7 @@ package org.simple.clinic.security.pin
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.CountDownTimer
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -28,15 +30,26 @@ import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.showKeyboard
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs), PinEntryUi, UiActions {
+
+  companion object {
+    private const val MILLIS_IN_SECOND = 1000L
+    private const val SECONDS_IN_HOUR = 3600L
+    private const val SECONDS_IN_MINUTE = 60L
+  }
 
   @Inject
   lateinit var controller: PinEntryCardController
 
   @Inject
   lateinit var effectHandlerFactory: PinEntryEffectHandler.Factory
+
+  @Inject
+  lateinit var clock: UtcClock
 
   val upstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
   val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
@@ -71,6 +84,12 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     )
   }
 
+  private var pinEntryLockedCountdown: CountDownTimer? = null
+    set(value) {
+      field?.cancel()
+      field = value
+    }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -92,6 +111,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   override fun onDetachedFromWindow() {
+    pinEntryLockedCountdown?.cancel()
     delegate.stop()
     super.onDetachedFromWindow()
   }
@@ -144,10 +164,36 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     }.exhaustive()
 
     if (state is PinEntryUi.State.BruteForceLocked) {
-      timeRemainingTillUnlockTextView.text = resources.getString(
-          R.string.pinentry_bruteforcelock_timer,
-          state.timeTillUnlock.minutes,
-          state.timeTillUnlock.seconds)
+      val timer = startTimerCountdown(state.lockUntil)
+      timer.start()
+      pinEntryLockedCountdown = timer
+    }
+  }
+
+  private fun startTimerCountdown(until: Instant): CountDownTimer {
+    val timeRemaining = Duration.between(Instant.now(clock), until).toMillis()
+
+    return object : CountDownTimer(timeRemaining, MILLIS_IN_SECOND) {
+
+      override fun onFinish() {
+        /* Nothing to do here */
+      }
+
+      override fun onTick(millisUntilFinished: Long) {
+        val secondsRemaining = millisUntilFinished / MILLIS_IN_SECOND
+
+        val minutes = (secondsRemaining % SECONDS_IN_HOUR / SECONDS_IN_MINUTE).toString()
+        val seconds = (secondsRemaining % SECONDS_IN_MINUTE).toString()
+
+        val minutesWithPadding = minutes.padStart(2, padChar = '0')
+        val secondsWithPadding = seconds.padStart(2, padChar = '0')
+
+        timeRemainingTillUnlockTextView.text = resources.getString(
+            R.string.pinentry_bruteforcelock_timer,
+            minutesWithPadding,
+            secondsWithPadding
+        )
+      }
     }
   }
 

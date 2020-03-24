@@ -2,6 +2,7 @@ package org.simple.clinic.security.pin
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.threeten.bp.Instant
 
 interface PinEntryUi: UiActions {
 
@@ -19,6 +20,6 @@ interface PinEntryUi: UiActions {
     object Progress : State()
 
     @Parcelize
-    data class BruteForceLocked(val timeTillUnlock: TimerDuration) : State()
+    data class BruteForceLocked(val lockUntil: Instant) : State()
   }
 }

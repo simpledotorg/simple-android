@@ -11,13 +11,10 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryUi.State
 import org.simple.clinic.util.RxErrorsRule
@@ -28,7 +25,6 @@ import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
-@RunWith(JUnitParamsRunner::class)
 class PinEntryCardControllerTest {
 
   @get:Rule
@@ -187,19 +183,13 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinEntryViewCreated)
 
     verify(ui).moveToState(State.PinEntry)
-    verify(ui).moveToState(State.BruteForceLocked(timeTillUnlock = TimerDuration(minutes = "19", seconds = "42")))
+    verify(ui).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
   }
 
   @Test
-  @Parameters(value = [
-    "19,42",
-    "2,21",
-    "0,9"
-  ])
-  fun `when PIN entry is blocked due to brute force then a timer should be shown to indicate remaining time`(
-      minutesRemaining: Long,
-      secondsRemaining: Long
-  ) {
+  fun `when PIN entry is blocked due to brute force then a timer should be shown to indicate remaining time`() {
+    val minutesRemaining = 19L
+    val secondsRemaining = 42L
     val blockedTill = Instant.now(clock) + Duration.ofMinutes(minutesRemaining) + Duration.ofSeconds(secondsRemaining)
 
     whenever(bruteForceProtection.protectedStateChanges())
@@ -210,10 +200,7 @@ class PinEntryCardControllerTest {
 
     uiEvents.onNext(PinEntryViewCreated)
 
-    val minutesWithPadding = minutesRemaining.toString().padStart(2, padChar = '0')
-    val secondsWithPadding = secondsRemaining.toString().padStart(2, padChar = '0')
-    val timerDuration = TimerDuration(minutes = minutesWithPadding, seconds = secondsWithPadding)
-    verify(ui).moveToState(State.BruteForceLocked(timeTillUnlock = timerDuration))
+    verify(ui).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
   }
 
   @Test

@@ -29,6 +29,7 @@ class PinEntryCardControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<PinEntryUi>()
+  private val uiActions = mock<UiActions>()
   private val passwordHasher = JavaHashPasswordHasher()
   private val bruteForceProtection = mock<BruteForceProtection>()
 
@@ -45,35 +46,7 @@ class PinEntryCardControllerTest {
       passwordHasher = passwordHasher,
       bruteForceProtection = bruteForceProtection,
       schedulersProvider = TrampolineSchedulersProvider(),
-      uiActions = object : UiActions {
-        override fun hideError() {
-          ui.hideError()
-        }
-
-        override fun showIncorrectPinErrorForFirstAttempt() {
-          ui.showIncorrectPinErrorForFirstAttempt()
-        }
-
-        override fun showIncorrectPinErrorOnSubsequentAttempts(remaining: Int) {
-          ui.showIncorrectPinErrorOnSubsequentAttempts(remaining)
-        }
-
-        override fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int) {
-          ui.showIncorrectAttemptsLimitReachedError(attemptsMade)
-        }
-
-        override fun moveToState(state: State) {
-          ui.moveToState(state)
-        }
-
-        override fun clearPin() {
-          ui.clearPin()
-        }
-
-        override fun dispatchAuthenticatedCallback(enteredPin: String) {
-          ui.dispatchAuthenticatedCallback(enteredPin)
-        }
-      }
+      uiActions = uiActions
   )
 
   private lateinit var controller: PinEntryCardController
@@ -113,10 +86,10 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinTextChanged("1234"))
     uiEvents.onNext(PinDigestToVerify(pinDigest))
 
-    verify(ui).hideError()
-    verify(ui).moveToState(State.Progress)
-    verify(ui).dispatchAuthenticatedCallback("1234")
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).hideError()
+    verify(uiActions).moveToState(State.Progress)
+    verify(uiActions).dispatchAuthenticatedCallback("1234")
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -127,7 +100,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(incorrectPin))
 
-    verify(ui).moveToState(State.PinEntry)
+    verify(uiActions).moveToState(State.PinEntry)
   }
 
   @Test
@@ -138,7 +111,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinTextChanged(incorrectPin))
     uiEvents.onNext(PinDigestToVerify(pinDigest))
 
-    verify(ui).clearPin()
+    verify(uiActions).clearPin()
   }
 
   @Test
@@ -149,7 +122,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(correctPin))
 
-    verify(ui).dispatchAuthenticatedCallback(correctPin)
+    verify(uiActions).dispatchAuthenticatedCallback(correctPin)
   }
 
   @Test
@@ -188,8 +161,8 @@ class PinEntryCardControllerTest {
 
     uiEvents.onNext(PinEntryViewCreated)
 
-    verify(ui).moveToState(State.PinEntry)
-    verify(ui).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
+    verify(uiActions).moveToState(State.PinEntry)
+    verify(uiActions).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
   }
 
   @Test
@@ -206,7 +179,7 @@ class PinEntryCardControllerTest {
 
     uiEvents.onNext(PinEntryViewCreated)
 
-    verify(ui).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
+    verify(uiActions).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
   }
 
   @Test
@@ -224,10 +197,10 @@ class PinEntryCardControllerTest {
 
     uiEvents.onNext(PinEntryViewCreated)
 
-    verify(ui).hideError()
-    verify(ui).showIncorrectPinErrorForFirstAttempt()
-    verify(ui).showIncorrectPinErrorOnSubsequentAttempts(1)
-    verify(ui).showIncorrectAttemptsLimitReachedError(3)
+    verify(uiActions).hideError()
+    verify(uiActions).showIncorrectPinErrorForFirstAttempt()
+    verify(uiActions).showIncorrectPinErrorOnSubsequentAttempts(1)
+    verify(uiActions).showIncorrectAttemptsLimitReachedError(3)
   }
 
   @Test
@@ -238,10 +211,10 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(correctPin))
 
-    verify(ui).hideError()
-    verify(ui).moveToState(State.Progress)
-    verify(ui).dispatchAuthenticatedCallback(correctPin)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).hideError()
+    verify(uiActions).moveToState(State.Progress)
+    verify(uiActions).dispatchAuthenticatedCallback(correctPin)
+    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController() {

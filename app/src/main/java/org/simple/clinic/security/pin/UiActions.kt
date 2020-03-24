@@ -10,4 +10,5 @@ interface UiActions {
   fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int)
   fun moveToState(state: State)
   fun clearPin()
+  fun dispatchAuthenticatedCallback(enteredPin: String)
 }

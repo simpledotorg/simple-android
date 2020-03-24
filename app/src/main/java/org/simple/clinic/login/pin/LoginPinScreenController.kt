@@ -62,7 +62,9 @@ class LoginPinScreenController @Inject constructor(
         status = entry.status!!,
         createdAt = entry.createdAt!!,
         updatedAt = entry.updatedAt!!,
-        loggedInStatus = User.LoggedInStatus.OTP_REQUESTED
+        loggedInStatus = User.LoggedInStatus.OTP_REQUESTED,
+        registrationFacilityUuid = entry.registrationFacilityUuid!!,
+        currentFacilityUuid = entry.registrationFacilityUuid
     )
   }
 

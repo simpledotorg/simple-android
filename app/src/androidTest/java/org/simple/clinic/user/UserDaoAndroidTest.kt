@@ -11,6 +11,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.util.Rules
+import java.util.UUID
 import javax.inject.Inject
 
 
@@ -22,15 +23,15 @@ class UserDaoAndroidTest {
   @Inject
   lateinit var appDatabase: AppDatabase
 
-  @Inject
-  lateinit var testData: TestData
-
   @get:Rule
   val ruleChain: RuleChain = Rules.global()
+
+  private val facility = TestData.facility(uuid = UUID.fromString("2fdb95f0-f0e4-42e4-b504-2bb09f42d7dd"))
 
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
+    appDatabase.facilityDao().save(listOf(facility))
   }
 
   @After
@@ -45,7 +46,11 @@ class UserDaoAndroidTest {
    */
   @Test
   fun update_should_work_correctly() {
-    val user = testData.loggedInUser(status = UserStatus.WaitingForApproval)
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("88965136-1de2-4e2c-9ea9-36a170820286"),
+        status = UserStatus.WaitingForApproval,
+        registrationFacilityUuid = facility.uuid
+    )
     val updatedUser = user.copy(status = UserStatus.ApprovedForSyncing)
 
     appDatabase.userDao().createOrUpdate(user)

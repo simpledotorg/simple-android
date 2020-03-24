@@ -9,7 +9,6 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Rules
 import java.util.UUID
@@ -36,13 +35,10 @@ class FacilityRepositoryAndroidTest {
   @get:Rule
   val rule: RuleChain = Rules.global()
 
-  private val user: User by lazy { testData.loggedInUser(uuid = UUID.fromString("3e78fb25-2ee2-442a-b7aa-21a87e067b9d")) }
-
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
     database.clearAllTables()
-    database.userDao().createOrUpdate(user)
   }
 
   @After
@@ -77,6 +73,12 @@ class FacilityRepositoryAndroidTest {
     val facilities = listOf(facility1, facility2, facility3, facility4)
     facilityDao.save(facilities)
 
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("e8c307e4-63e4-43c6-ba74-a51fb494ada8"),
+        registrationFacilityUuid = facility1.uuid
+    )
+    userDao.createOrUpdate(user)
+
     val facilityIds = facilities.map { it.uuid }
     repository.associateUserWithFacilities(user, facilityIds).blockingAwait()
     repository.setCurrentFacility(user, facility3).blockingAwait()
@@ -84,58 +86,30 @@ class FacilityRepositoryAndroidTest {
 
     val currentFacility = repository.currentFacility(user).blockingFirst()
     assertThat(currentFacility).isEqualTo(facility4)
+    // Regression to verify that the user's registration facility does not get overriden when changing current facility
+    assertThat(userDao.userImmediate()!!.registrationFacilityUuid).isEqualTo(facility1.uuid)
   }
 
   @Test
   fun when_changing_the_current_facility_for_a_user_then_the_current_facility_should_get_set() {
-    val facility1 = testData.facility(uuid = UUID.randomUUID())
-    val facility2 = testData.facility(uuid = UUID.randomUUID())
-    val facility3 = testData.facility(uuid = UUID.randomUUID())
+    val facility1 = testData.facility(uuid = UUID.fromString("0515190c-9eab-4276-a9d7-3d5fcc2ad4c8"))
+    val facility2 = testData.facility(uuid = UUID.fromString("642e1c66-0bf9-4b50-ac5f-029c5a49fd62"))
+    val facility3 = testData.facility(uuid = UUID.fromString("75e086d1-77a9-427c-aec7-891739d2c440"))
     val facilities = listOf(facility1, facility2, facility3)
     facilityDao.save(facilities)
+
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("e8c307e4-63e4-43c6-ba74-a51fb494ada8"),
+        registrationFacilityUuid = facility1.uuid
+    )
+    userDao.createOrUpdate(user)
 
     repository.associateUserWithFacilities(user, facilities.map { it.uuid })
         .andThen(repository.setCurrentFacility(user, facility2))
         .andThen(repository.setCurrentFacility(user, facility3))
         .blockingAwait()
 
-    val mappings = userDao.mappingsForUser(user.uuid).blockingFirst()
-
-    val facility3Mapping = mappings.first { it.facilityUuid == facility3.uuid }
-    assertThat(facility3Mapping.isCurrentFacility).isTrue()
-  }
-
-  @Test
-  fun when_changing_the_facility_for_a_user_the_previous_current_facility_should_get_unset() {
-    val facility1 = testData.facility(uuid = UUID.randomUUID())
-    val facility2 = testData.facility(uuid = UUID.randomUUID())
-    val facility3 = testData.facility(uuid = UUID.randomUUID())
-    val facilities = listOf(facility1, facility2, facility3)
-    facilityDao.save(facilities)
-
-    repository.associateUserWithFacilities(user, facilities.map { it.uuid })
-        .andThen(repository.setCurrentFacility(user, facility2))
-        .andThen(repository.setCurrentFacility(user, facility3))
-        .blockingAwait()
-
-    val mappings = userDao.mappingsForUser(user.uuid).blockingFirst()
-
-    val facility1Mapping = mappings.first { it.facilityUuid == facility1.uuid }
-
-    assertThat(facility1Mapping.isCurrentFacility).isFalse()
-    val facility2Mapping = mappings.first { it.facilityUuid == facility2.uuid }
-    assertThat(facility2Mapping.isCurrentFacility).isFalse()
-  }
-
-  @Test(expected = AssertionError::class)
-  fun when_changing_the_facility_for_a_user_to_a_facility_whose_mapping_does_not_exist_then_an_error_should_be_thrown() {
-    val facility1 = testData.facility(uuid = UUID.randomUUID())
-    val facility2 = testData.facility(uuid = UUID.randomUUID())
-    val facilities = listOf(facility1, facility2)
-    facilityDao.save(facilities)
-
-    repository.associateUserWithFacility(user, facility1).blockingAwait()
-    userDao.changeCurrentFacility(user.uuid, newCurrentFacilityUuid = facility2.uuid)
+    assertThat(repository.currentFacilityImmediate(user)).isEqualTo(facility3)
   }
 
   @Test
@@ -173,6 +147,12 @@ class FacilityRepositoryAndroidTest {
     val facilitiesInGroup1 = listOf(facility1, facility2)
     val facilitiesInGroup2 = listOf(facility3)
     facilityDao.save(facilitiesInGroup1 + facilitiesInGroup2)
+
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("e8c307e4-63e4-43c6-ba74-a51fb494ada8"),
+        registrationFacilityUuid = facility1.uuid
+    )
+    userDao.createOrUpdate(user)
 
     associateCurrentFacilityToUser(user, facilitiesInGroup1.first())
 
@@ -213,6 +193,12 @@ class FacilityRepositoryAndroidTest {
     val facilitiesInGroup2 = listOf(facility2)
     facilityDao.save(facilitiesInGroup1 + facilitiesInGroup2)
 
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("e8c307e4-63e4-43c6-ba74-a51fb494ada8"),
+        registrationFacilityUuid = facility1.uuid
+    )
+    userDao.createOrUpdate(user)
+
     associateCurrentFacilityToUser(user, facilitiesInGroup2.first())
 
     val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "hac", user = user).blockingFirst()
@@ -240,6 +226,12 @@ class FacilityRepositoryAndroidTest {
     val facilities = listOf(group1Facility, group2Facility)
     facilityDao.save(facilities)
 
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("e8c307e4-63e4-43c6-ba74-a51fb494ada8"),
+        registrationFacilityUuid = group1Facility.uuid
+    )
+    userDao.createOrUpdate(user)
+
     associateCurrentFacilityToUser(user, group1Facility)
 
     val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "fac", user = user).blockingFirst()
@@ -258,6 +250,12 @@ class FacilityRepositoryAndroidTest {
     )
 
     repository.save(listOf(facility1, facility2)).blockingAwait()
+
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("e8c307e4-63e4-43c6-ba74-a51fb494ada8"),
+        registrationFacilityUuid = facility1.uuid
+    )
+    userDao.createOrUpdate(user)
 
     associateCurrentFacilityToUser(user, facility1)
 

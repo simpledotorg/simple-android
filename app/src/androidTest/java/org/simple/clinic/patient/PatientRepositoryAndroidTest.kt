@@ -458,11 +458,13 @@ class PatientRepositoryAndroidTest {
     val facilityUuid = facilityPayloads.first().uuid
     facilityRepository.mergeWithLocalData(facilityPayloads).blockingAwait()
 
-    val user = testData.loggedInUser()
+    val user = testData.loggedInUser(
+        uuid = UUID.fromString("763f291f-9995-4e42-b76c-a73fb8a79932"),
+        registrationFacilityUuid = facilityUuid
+    )
 
     with(database.userDao()) {
       createOrUpdate(user)
-      insertOrUpdateFacilitiesForUser(user, listOf(facilityUuid))
     }
 
     val patientPayloads = (1..2).map { testData.patientPayload() }
@@ -502,7 +504,6 @@ class PatientRepositoryAndroidTest {
     assertThat(database.prescriptionDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.facilityDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.userDao().userImmediate()).isNotNull()
-    assertThat(database.userDao().mappingsForUser(user.uuid).blockingFirst()).isNotEmpty()
     assertThat(database.appointmentDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(reportsFile!!.exists()).isTrue()
@@ -522,7 +523,6 @@ class PatientRepositoryAndroidTest {
 
     assertThat(database.facilityDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.userDao().userImmediate()).isNotNull()
-    assertThat(database.userDao().mappingsForUser(user.uuid).blockingFirst()).isNotEmpty()
   }
 
   @Test

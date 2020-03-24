@@ -28,7 +28,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.summary.addphone.MissingPhoneReminder
-import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
@@ -45,7 +44,6 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       PrescribedDrug::class,
       Facility::class,
       User::class,
-      LoggedInUserFacilityMapping::class,
       Appointment::class,
       MedicalHistory::class,
       OngoingLoginEntry::class,
@@ -55,7 +53,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       MissingPhoneReminder::class,
       BloodSugarMeasurement::class
     ],
-    version = 61,
+    version = 62,
     exportSchema = true
 )
 @TypeConverters(

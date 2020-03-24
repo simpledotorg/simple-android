@@ -6,9 +6,6 @@ import org.threeten.bp.Instant
 
 interface PinEntryUi {
 
-  // Not yet migrated to Mobius
-  fun setForgotButtonVisible(visible: Boolean)
-
   sealed class State: Parcelable {
 
     @Parcelize

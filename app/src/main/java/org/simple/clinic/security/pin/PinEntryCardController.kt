@@ -13,9 +13,6 @@ import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryUi.State
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 typealias Ui = PinEntryUi
@@ -103,30 +100,9 @@ class PinEntryCardController @Inject constructor(
             }
 
             is ProtectedState.Blocked -> {
-              Observable.interval(1L, TimeUnit.SECONDS)
-                  .startWith(0L)  // initial item.
-                  .map {
-                    val formattedTimeRemaining = formatTimeRemainingTill(state.blockedTill)
-                    return@map { ui: Ui ->
-                      ui.moveToState(State.BruteForceLocked(formattedTimeRemaining))
-                    }
-                  }
+              Observable.just({ ui: Ui -> ui.moveToState(State.BruteForceLocked(state.blockedTill)) })
             }
           }
         }
-  }
-
-  private fun formatTimeRemainingTill(futureTime: Instant): TimerDuration {
-    val secondsRemaining = futureTime.epochSecond - Instant.now(utcClock).epochSecond
-    val secondsPerHour = Duration.ofHours(1).seconds
-    val secondsPerMinute = Duration.ofMinutes(1).seconds
-
-    val minutes = (secondsRemaining % secondsPerHour / secondsPerMinute).toString()
-    val seconds = (secondsRemaining % secondsPerMinute).toString()
-
-    val minutesWithPadding = minutes.padStart(2, padChar = '0')
-    val secondsWithPadding = seconds.padStart(2, padChar = '0')
-
-    return TimerDuration(minutesWithPadding, secondsWithPadding)
   }
 }

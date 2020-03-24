@@ -66,7 +66,7 @@ class PinEntryCardControllerTest {
         events = uiEvents.ofType(),
         defaultModel = PinEntryModel.default(),
         init = PinEntryInit(),
-        update = PinEntryUpdate(),
+        update = PinEntryUpdate(submitPinAtLength = 4),
         effectHandler = pinEntryEffectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

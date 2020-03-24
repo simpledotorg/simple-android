@@ -11,6 +11,9 @@ data class PinEntryModel(
     val pinDigestToVerify: String?
 ): Parcelable {
 
+  val hasPinDigestBeenLoaded: Boolean
+    get() = pinDigestToVerify != null
+
   companion object {
     fun default(): PinEntryModel {
       return PinEntryModel(state = PinEntry, enteredPin = "", pinDigestToVerify = null)

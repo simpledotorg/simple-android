@@ -10,7 +10,7 @@ import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
-import org.simple.clinic.security.pin.PinEntryCardView.State
+import org.simple.clinic.security.pin.PinEntryUi.State
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration

@@ -80,7 +80,7 @@ class PinEntryCardController @Inject constructor(
                 }
               }
 
-          Observable.mergeArray(progressUiChanges, recordAttempts, validationResultUiChange)
+          Observable.mergeArray(progressUiChanges, /*recordAttempts,*/ validationResultUiChange)
         }
   }
 }

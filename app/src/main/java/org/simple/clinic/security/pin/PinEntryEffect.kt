@@ -17,3 +17,7 @@ data class ShowIncorrectPinLimitReachedError(val attemptsMade: Int): PinEntryEff
 object AllowPinEntry: PinEntryEffect()
 
 data class BlockPinEntryUntil(val blockTill: Instant): PinEntryEffect()
+
+object RecordSuccessfulAttempt : PinEntryEffect()
+
+object RecordFailedAttempt: PinEntryEffect()

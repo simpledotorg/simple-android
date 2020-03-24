@@ -67,6 +67,10 @@ class PinEntryCardControllerTest {
         override fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int) {
           ui.showIncorrectAttemptsLimitReachedError(attemptsMade)
         }
+
+        override fun moveToState(state: State) {
+          ui.moveToState(state)
+        }
       }
   )
 

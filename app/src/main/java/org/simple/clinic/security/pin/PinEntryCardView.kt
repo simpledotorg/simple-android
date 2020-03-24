@@ -11,20 +11,17 @@ import androidx.cardview.widget.CardView
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
@@ -41,9 +38,6 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     private const val SECONDS_IN_HOUR = 3600L
     private const val SECONDS_IN_MINUTE = 60L
   }
-
-  @Inject
-  lateinit var controller: PinEntryCardController
 
   @Inject
   lateinit var effectHandlerFactory: PinEntryEffectHandler.Factory
@@ -63,12 +57,10 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   private val events by unsafeLazy {
     Observable
         .merge(
-            viewCreated(),
             pinTextChanges(),
             upstreamUiEvents
         )
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val uiRenderer = PinEntryUiRenderer(this)
@@ -96,13 +88,6 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
       return
     }
     TheActivity.component.inject(this)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    )
   }
 
   override fun onAttachedToWindow() {
@@ -123,8 +108,6 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
-
-  private fun viewCreated() = Observable.just(PinEntryViewCreated)
 
   private fun pinTextChanges() =
       pinEditText.textChanges()

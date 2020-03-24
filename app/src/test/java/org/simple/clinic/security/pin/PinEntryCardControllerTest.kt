@@ -6,7 +6,6 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -49,8 +48,6 @@ class PinEntryCardControllerTest {
       uiActions = uiActions
   )
 
-  private lateinit var controller: PinEntryCardController
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<PinEntryModel, PinEntryEvent, PinEntryEffect>
 
   @Before
@@ -71,13 +68,11 @@ class PinEntryCardControllerTest {
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinTextChanged("1"))
@@ -94,7 +89,6 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation fails then the progress should be hidden`() {
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
@@ -105,7 +99,6 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation fails then the PIN should be cleared`() {
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinTextChanged(incorrectPin))
@@ -116,7 +109,6 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation succeeds then a success callback should be sent`() {
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
@@ -127,7 +119,6 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation fails then the count of failed attempts should be incremented`() {
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
@@ -138,7 +129,6 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when PIN validation succeeds then the count of failed attempts should be reset`() {
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
@@ -156,7 +146,6 @@ class PinEntryCardControllerTest {
             ProtectedState.Allowed(attemptsRemaining = 2, attemptsMade = 3),
             ProtectedState.Blocked(attemptsMade = 5, blockedTill = blockedTill)))
 
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinEntryViewCreated)
@@ -174,7 +163,6 @@ class PinEntryCardControllerTest {
     whenever(bruteForceProtection.protectedStateChanges())
         .thenReturn(Observable.just(ProtectedState.Blocked(attemptsMade = 5, blockedTill = blockedTill)))
 
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinEntryViewCreated)
@@ -192,7 +180,6 @@ class PinEntryCardControllerTest {
             ProtectedState.Blocked(attemptsMade = 3, blockedTill = Instant.now(clock) + Duration.ofSeconds(5))
         ))
 
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinEntryViewCreated)
@@ -205,7 +192,6 @@ class PinEntryCardControllerTest {
 
   @Test
   fun `when a PIN is submitted for verification, the current error must be cleared`() {
-    setupController()
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
@@ -215,14 +201,6 @@ class PinEntryCardControllerTest {
     verify(uiActions).moveToState(State.Progress)
     verify(uiActions).dispatchAuthenticatedCallback(correctPin)
     verifyNoMoreInteractions(uiActions)
-  }
-
-  private fun setupController() {
-    controller = PinEntryCardController()
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
   }
 
   private fun startMobiusLoop() {

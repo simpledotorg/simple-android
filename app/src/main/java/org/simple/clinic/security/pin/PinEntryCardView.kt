@@ -17,6 +17,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.UtcClock
@@ -87,7 +88,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
   }
 
   override fun onAttachedToWindow() {
@@ -222,6 +223,10 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
       forgotPinButton.visibility = View.GONE
       contentContainer.setPaddingBottom(R.dimen.pinentry_content_bottom_spacing_without_forgot_pin)
     }
+  }
+
+  interface Injector {
+    fun inject(target: PinEntryCardView)
   }
 }
 

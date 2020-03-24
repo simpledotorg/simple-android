@@ -82,7 +82,8 @@ interface TheActivityComponent :
     BloodPressureHistoryScreenInjector,
     BloodPressureSummaryViewInjector,
     BloodSugarHistoryScreenInjector,
-    AccessDeniedScreenInjector {
+    AccessDeniedScreenInjector,
+    PinEntryCardView.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: PatientsScreen)
@@ -105,7 +106,6 @@ interface TheActivityComponent :
   fun inject(target: ForgotPinCreateNewPinScreen)
   fun inject(target: ForgotPinConfirmPinScreen)
   fun inject(target: NewMedicalHistoryScreen)
-  fun inject(target: PinEntryCardView)
   fun inject(target: ConfirmDiscardChangesDialog)
   fun inject(target: UpdatePhoneNumberDialog)
   fun inject(target: PrescribedDrugScreen)

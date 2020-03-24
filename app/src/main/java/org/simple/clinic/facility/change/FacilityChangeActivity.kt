@@ -148,10 +148,11 @@ class FacilityChangeActivity : AppCompatActivity() {
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == OPEN_CONFIRMATION_SHEET && resultCode == Activity.RESULT_OK) {
+      exitAfterChange()
+    } else {
       goBack()
     }
   }
-
 
   fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
     // Avoid animating the items on their first entry.
@@ -166,7 +167,15 @@ class FacilityChangeActivity : AppCompatActivity() {
     recyclerViewAdapter.submitList(facilityItems)
   }
 
+  private fun exitAfterChange() {
+    val intent = Intent()
+    setResult(Activity.RESULT_OK, intent)
+    finish()
+  }
+
   fun goBack() {
+    val intent = Intent()
+    setResult(Activity.RESULT_CANCELED, intent)
     finish()
   }
 

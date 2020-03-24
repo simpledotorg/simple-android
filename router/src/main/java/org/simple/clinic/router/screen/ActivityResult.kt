@@ -8,4 +8,8 @@ data class ActivityResult(var requestCode: Int, var resultCode: Int, var data: I
   fun succeeded(): Boolean {
     return resultCode == Activity.RESULT_OK
   }
+
+  fun canceled(): Boolean{
+    return resultCode == Activity.RESULT_CANCELED
+  }
 }

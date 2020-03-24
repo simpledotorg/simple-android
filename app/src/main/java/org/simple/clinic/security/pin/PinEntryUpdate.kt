@@ -1,10 +1,10 @@
 package org.simple.clinic.security.pin
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.dispatch
+import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.mobius.next
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 
@@ -14,16 +14,26 @@ class PinEntryUpdate(
 
   override fun update(model: PinEntryModel, event: PinEntryEvent): Next<PinEntryModel, PinEntryEffect> {
     return when (event) {
-      is PinTextChanged -> next(model.enteredPinChanged(event.pin))
-      is PinDigestToVerify -> next(model.updatePinDigest(event.pinDigest))
+      is PinTextChanged -> {
+        val updatedModel = model.enteredPinChanged(event.pin)
+
+        next(updatedModel, generateEffectsForPinSubmission(updatedModel))
+      }
+      is PinDigestToVerify -> {
+        val updatedModel = model.updatePinDigest(event.pinDigest)
+
+        next(updatedModel, generateEffectsForPinSubmission(updatedModel))
+      }
       is PinEntryStateChanged -> {
         val effects = when (val protectedState = event.state) {
           is Allowed -> setOf(generateEffectForAllowingPinEntry(protectedState), AllowPinEntry)
           is Blocked -> setOf(ShowIncorrectPinLimitReachedError(protectedState.attemptsMade), BlockPinEntryUntil(protectedState.blockedTill))
         }
 
-        dispatch(effects)
+        Next.dispatch(effects)
       }
+      is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt)
+      is WrongPinEntered -> dispatch(RecordFailedAttempt)
       else -> noChange()
     }
   }
@@ -34,5 +44,19 @@ class PinEntryUpdate(
     } else {
       ShowIncorrectPinError(protectedState.attemptsMade, protectedState.attemptsRemaining)
     }
+  }
+
+  private fun isReadyToSubmitPin(model: PinEntryModel): Boolean {
+    return model.hasPinDigestBeenLoaded && model.enteredPin.length == submitPinAtLength
+  }
+
+  private fun generateEffectsForPinSubmission(model: PinEntryModel): Set<PinEntryEffect> {
+    val effects = mutableSetOf<PinEntryEffect>()
+
+    if(isReadyToSubmitPin(model)) {
+      effects.add(ValidateEnteredPin(model.enteredPin, model.pinDigestToVerify!!))
+    }
+
+    return effects
   }
 }

@@ -17,8 +17,7 @@ typealias Ui = PinEntryUi
 typealias UiChange = (Ui) -> Unit
 
 class PinEntryCardController @Inject constructor(
-    private val passwordHasher: PasswordHasher,
-    private val bruteForceProtection: BruteForceProtection
+    private val passwordHasher: PasswordHasher
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -64,14 +63,6 @@ class PinEntryCardController @Inject constructor(
                 ui.moveToState(State.Progress)
               }
 
-          val recordAttempts = cachedPinValidation
-              .switchMap {
-                when (it) {
-                  SAME -> bruteForceProtection.recordSuccessfulAuthentication()
-                  DIFFERENT -> bruteForceProtection.incrementFailedAttempt()
-                }.andThen(Observable.empty<UiChange>())
-              }
-
           val validationResultUiChange = cachedPinValidation
               .map {
                 when (it) {
@@ -80,7 +71,7 @@ class PinEntryCardController @Inject constructor(
                 }
               }
 
-          Observable.mergeArray(progressUiChanges, /*recordAttempts,*/ validationResultUiChange)
+          Observable.mergeArray(progressUiChanges, validationResultUiChange)
         }
   }
 }

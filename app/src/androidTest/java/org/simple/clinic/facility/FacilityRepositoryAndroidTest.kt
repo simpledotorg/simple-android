@@ -80,7 +80,6 @@ class FacilityRepositoryAndroidTest {
     userDao.createOrUpdate(user)
 
     val facilityIds = facilities.map { it.uuid }
-    repository.associateUserWithFacilities(user, facilityIds).blockingAwait()
     repository.setCurrentFacility(user, facility3).blockingAwait()
     repository.setCurrentFacility(user, facility4).blockingAwait()
 
@@ -104,8 +103,7 @@ class FacilityRepositoryAndroidTest {
     )
     userDao.createOrUpdate(user)
 
-    repository.associateUserWithFacilities(user, facilities.map { it.uuid })
-        .andThen(repository.setCurrentFacility(user, facility2))
+    repository.setCurrentFacility(user, facility2)
         .andThen(repository.setCurrentFacility(user, facility3))
         .blockingAwait()
 
@@ -161,10 +159,7 @@ class FacilityRepositoryAndroidTest {
   }
 
   private fun associateCurrentFacilityToUser(user: User, facility: Facility) {
-    repository
-        .associateUserWithFacility(user, facility)
-        .andThen(repository.setCurrentFacility(user, facility))
-        .blockingAwait()
+    repository.setCurrentFacility(user, facility).blockingAwait()
   }
 
   @Test

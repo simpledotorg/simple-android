@@ -39,7 +39,7 @@ data class LoggedInUserFacilityMapping(
   abstract class RoomDao {
 
     @Transaction
-    open fun insertOrUpdate(user: User, facilityIds: List<UUID>) {
+    open fun insertOrUpdateFacilitiesForUser(user: User, facilityIds: List<UUID>) {
       val mappings = facilityIds
           .map {
             LoggedInUserFacilityMapping(
@@ -47,11 +47,11 @@ data class LoggedInUserFacilityMapping(
                 facilityUuid = it,
                 isCurrentFacility = false)
           }
-      insertOrUpdate(mappings)
+      insertOrUpdateFacilitiesForUser(mappings)
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertOrUpdate(mappings: List<LoggedInUserFacilityMapping>)
+    abstract fun insertOrUpdateFacilitiesForUser(mappings: List<LoggedInUserFacilityMapping>)
 
     @Transaction
     open fun changeCurrentFacility(userUuid: UUID, newCurrentFacilityUuid: UUID) {

@@ -45,7 +45,7 @@ class RegisterUserTest {
     val payload = user.toPayload(facilityUuid)
     val savedUser = user.copy(loggedInStatus = LOGGED_IN)
     whenever(registrationApi.createUser(RegistrationRequest(payload))) doReturn Single.just(RegistrationResponse("accessToken", payload))
-    whenever(facilityRepository.associateUserWithFacilities(savedUser, listOf(facilityUuid), facilityUuid)) doReturn Completable.complete()
+    whenever(facilityRepository.setCurrentFacility(savedUser, facilityUuid)) doReturn Completable.complete()
 
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)

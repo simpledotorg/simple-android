@@ -79,7 +79,7 @@ class ResetUserPin @Inject constructor(
   private fun storeUser(user: User, facilityUuid: UUID): Completable {
     return Completable
         .fromAction { userDao.createOrUpdate(user) }
-        .andThen(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), currentFacility = facilityUuid))
+        .andThen(facilityRepository.setCurrentFacility(user, facilityUuid = facilityUuid))
         .doOnError(Timber::e)
   }
 

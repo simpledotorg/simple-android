@@ -42,8 +42,7 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
           .switchMapSingle {
             val user = userSession.loggedInUserImmediate()!!
             facilityRepository
-                .associateUserWithFacility(user, it)
-                .andThen(facilityRepository.setCurrentFacility(user, it))
+                .setCurrentFacility(user, it)
                 .subscribeOn(io)
                 .toSingleDefault(it)
           }

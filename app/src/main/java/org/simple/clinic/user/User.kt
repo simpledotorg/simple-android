@@ -157,15 +157,6 @@ data class User(
     @Delete
     abstract fun deleteUser(user: User)
 
-    @Deprecated(
-        message = "",
-        replaceWith = ReplaceWith("deleteUser(user)")
-    )
-    @Transaction
-    open fun deleteUserAndFacilityMappings(user: User) {
-      deleteUser(user)
-    }
-
     @Query("SELECT COUNT(uuid) FROM LoggedInUser")
     abstract fun userCount(): Single<Int>
 

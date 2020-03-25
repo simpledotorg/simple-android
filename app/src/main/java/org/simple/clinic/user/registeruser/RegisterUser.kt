@@ -79,7 +79,7 @@ class RegisterUser @Inject constructor(
 
     return Completable
         .fromAction { userDao.createOrUpdate(user) }
-        .andThen(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), currentFacility = facilityUuid))
+        .andThen(facilityRepository.setCurrentFacility(user, facilityUuid = facilityUuid))
         .andThen(Completable.fromAction { accessTokenPreference.set(Just(response.accessToken)) })
         .andThen(Single.just(user))
   }

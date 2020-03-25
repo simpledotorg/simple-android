@@ -127,7 +127,7 @@ class UserSession @Inject constructor(
     return Completable
         .fromAction { appDatabase.userDao().createOrUpdate(user) }
         .doOnSubscribe { Timber.i("Storing user") }
-        .andThen(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), currentFacility = facilityUuid))
+        .andThen(facilityRepository.setCurrentFacility(user, facilityUuid = facilityUuid))
         .doOnError { Timber.e(it) }
   }
 

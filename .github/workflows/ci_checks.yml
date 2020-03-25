@@ -105,6 +105,23 @@ jobs:
           -PdefaultProguardFile=proguard-android.txt \
           assembleSandboxRelease
 
+  verify_room_schemas:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+        with:
+          ref: master
+          path: master
+
+      - name: Checkout current
+        uses: actions/checkout@v2
+        with:
+          path: current
+
+      - name: Verify existing Room schemas are not modified
+        run: current/.github/scripts/compare_directory_contents.sh master/app/schemas/org.simple.clinic.AppDatabase current/app/schemas/org.simple.clinic.AppDatabase
+
   qa_purge_env:
     runs-on: [ubuntu-latest]
     needs: [qa_lint, qa_unit_tests, mobius_migration_tests, qa_android_tests, qa_build_apk]

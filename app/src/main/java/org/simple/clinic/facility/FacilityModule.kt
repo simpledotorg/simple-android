@@ -5,7 +5,6 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
@@ -19,11 +18,6 @@ class FacilityModule {
   @Provides
   fun facilityDao(appDatabase: AppDatabase): Facility.RoomDao {
     return appDatabase.facilityDao()
-  }
-
-  @Provides
-  fun userFacilityMappingDao(appDatabase: AppDatabase): LoggedInUserFacilityMapping.RoomDao {
-    return appDatabase.userFacilityMappingDao()
   }
 
   @Provides

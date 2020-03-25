@@ -31,7 +31,7 @@ class FacilityRepositoryAndroidTest {
   lateinit var facilityDao: Facility.RoomDao
 
   @Inject
-  lateinit var facilityMappingDao: LoggedInUserFacilityMapping.RoomDao
+  lateinit var userDao: User.RoomDao
 
   @get:Rule
   val rule: RuleChain = Rules.global()
@@ -99,7 +99,7 @@ class FacilityRepositoryAndroidTest {
         .andThen(repository.setCurrentFacility(user, facility3))
         .blockingAwait()
 
-    val mappings = facilityMappingDao.mappingsForUser(user.uuid).blockingFirst()
+    val mappings = userDao.mappingsForUser(user.uuid).blockingFirst()
 
     val facility3Mapping = mappings.first { it.facilityUuid == facility3.uuid }
     assertThat(facility3Mapping.isCurrentFacility).isTrue()
@@ -118,7 +118,7 @@ class FacilityRepositoryAndroidTest {
         .andThen(repository.setCurrentFacility(user, facility3))
         .blockingAwait()
 
-    val mappings = facilityMappingDao.mappingsForUser(user.uuid).blockingFirst()
+    val mappings = userDao.mappingsForUser(user.uuid).blockingFirst()
 
     val facility1Mapping = mappings.first { it.facilityUuid == facility1.uuid }
 
@@ -135,7 +135,7 @@ class FacilityRepositoryAndroidTest {
     facilityDao.save(facilities)
 
     repository.associateUserWithFacility(user, facility1).blockingAwait()
-    facilityMappingDao.changeCurrentFacility(user.uuid, newCurrentFacilityUuid = facility2.uuid)
+    userDao.changeCurrentFacility(user.uuid, newCurrentFacilityUuid = facility2.uuid)
   }
 
   @Test

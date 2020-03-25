@@ -460,7 +460,7 @@ class PatientRepositoryAndroidTest {
 
     val user = testData.loggedInUser()
     database.userDao().createOrUpdate(user)
-    database.userFacilityMappingDao().insertOrUpdate(user, listOf(facilityUuid))
+    database.userFacilityMappingDao().insertOrUpdateFacilitiesForUser(user, listOf(facilityUuid))
 
     val patientPayloads = (1..2).map { testData.patientPayload() }
 

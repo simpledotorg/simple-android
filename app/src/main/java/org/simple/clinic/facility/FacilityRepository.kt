@@ -62,11 +62,11 @@ class FacilityRepository @Inject constructor(
   }
 
   fun associateUserWithFacilities(user: User, facilityIds: List<UUID>): Completable {
-    return Completable.fromAction { userFacilityMappingDao.insertOrUpdate(user, facilityIds) }
+    return Completable.fromAction { userFacilityMappingDao.insertOrUpdateFacilitiesForUser(user, facilityIds) }
   }
 
   fun associateUserWithFacility(user: User, facility: Facility): Completable {
-    return Completable.fromAction { userFacilityMappingDao.insertOrUpdate(user, listOf(facility.uuid)) }
+    return Completable.fromAction { userFacilityMappingDao.insertOrUpdateFacilitiesForUser(user, listOf(facility.uuid)) }
   }
 
   fun setCurrentFacility(user: User, facility: Facility): Completable {

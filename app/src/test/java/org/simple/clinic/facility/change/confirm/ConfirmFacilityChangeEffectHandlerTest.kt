@@ -36,7 +36,6 @@ class ConfirmFacilityChangeEffectHandlerTest {
     val loggedInUser = TestData.loggedInUser(UUID.fromString("7d8dce15-701b-4cf9-8dee-e003c51ccde9"))
 
     whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
-    whenever(facilityRepository.associateUserWithFacility(loggedInUser, facility)) doReturn Completable.complete()
     whenever(facilityRepository.setCurrentFacility(loggedInUser, facility)) doReturn Completable.complete()
     whenever(reportsRepository.deleteReportsFile()).thenReturn(Single.just(DeleteFileResult.Success))
     whenever(reportsSync.sync()) doReturn Completable.complete()

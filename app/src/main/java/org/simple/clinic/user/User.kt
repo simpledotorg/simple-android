@@ -160,11 +160,6 @@ data class User(
     @Query("SELECT COUNT(uuid) FROM LoggedInUser")
     abstract fun userCount(): Single<Int>
 
-    @Deprecated(message = "Does not do anything anymore")
-    fun insertOrUpdateFacilitiesForUser(user: User, facilityIds: List<UUID>) {
-      /* Not necessary anymore. Remove in later commit */
-    }
-
     @Deprecated(
         message = "",
         replaceWith = ReplaceWith("setCurrentFacility(userUuid, newCurrentFacilityUuid)")

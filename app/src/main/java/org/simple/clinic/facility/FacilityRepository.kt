@@ -55,17 +55,12 @@ class FacilityRepository @Inject constructor(
         }
   }
 
+  @Deprecated(
+      message = "",
+      replaceWith = ReplaceWith("setCurrentFacility(user, currentFacility)")
+  )
   fun associateUserWithFacilities(user: User, facilityIds: List<UUID>, currentFacility: UUID): Completable {
-    return associateUserWithFacilities(user, facilityIds)
-        .andThen(setCurrentFacility(user, currentFacility))
-  }
-
-  fun associateUserWithFacilities(user: User, facilityIds: List<UUID>): Completable {
-    return Completable.fromAction { userDao.insertOrUpdateFacilitiesForUser(user, facilityIds) }
-  }
-
-  fun associateUserWithFacility(user: User, facility: Facility): Completable {
-    return Completable.fromAction { userDao.insertOrUpdateFacilitiesForUser(user, listOf(facility.uuid)) }
+    return setCurrentFacility(user, currentFacility)
   }
 
   fun setCurrentFacility(user: User, facility: Facility): Completable {

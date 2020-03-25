@@ -117,8 +117,8 @@ data class User(
     protected abstract fun deleteUser(user: User)
 
     @Transaction
-    open fun deleteUserAndFacilityMappings(user: User, userFacilityMappingDao: LoggedInUserFacilityMapping.RoomDao) {
-      userFacilityMappingDao.deleteMappingsForUser(user.uuid)
+    open fun deleteUserAndFacilityMappings(user: User) {
+      deleteMappingsForUser(user.uuid)
       deleteUser(user)
     }
 

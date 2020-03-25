@@ -160,15 +160,6 @@ data class User(
     @Query("SELECT COUNT(uuid) FROM LoggedInUser")
     abstract fun userCount(): Single<Int>
 
-    @Deprecated(
-        message = "",
-        replaceWith = ReplaceWith("setCurrentFacility(userUuid, newCurrentFacilityUuid)")
-    )
-    @Transaction
-    open fun changeCurrentFacility(userUuid: UUID, newCurrentFacilityUuid: UUID) {
-      setCurrentFacility(userUuid, newCurrentFacilityUuid)
-    }
-
     @Query("UPDATE LoggedInUser SET currentFacilityUuid = :facilityUuid WHERE uuid = :userUuid")
     abstract fun setCurrentFacility(userUuid: UUID, facilityUuid: UUID): Int
 

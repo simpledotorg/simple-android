@@ -133,7 +133,7 @@ class UserSession @Inject constructor(
         .map { (user) -> user!! }
         .flatMapCompletable {
           Completable.fromAction {
-            appDatabase.userDao().deleteUserAndFacilityMappings(it, appDatabase.userFacilityMappingDao())
+            appDatabase.userDao().deleteUserAndFacilityMappings(it)
           }
         }
   }

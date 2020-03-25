@@ -96,8 +96,6 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun userDao(): User.RoomDao
 
-  abstract fun userFacilityMappingDao(): LoggedInUserFacilityMapping.RoomDao
-
   abstract fun appointmentDao(): Appointment.RoomDao
 
   abstract fun overdueAppointmentDao(): OverdueAppointment.RoomDao

@@ -10,6 +10,5 @@ interface UiActions {
   fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int)
   fun setPinEntryMode(mode: Mode)
   fun clearPin()
-  fun dispatchAuthenticatedCallback(enteredPin: String)
   fun pinVerified(data: Any?)
 }

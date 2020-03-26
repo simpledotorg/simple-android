@@ -5,24 +5,16 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PinEntryModel(
-    val enteredPin: String,
-    val pinDigestToVerify: String?
+    val enteredPin: String
 ): Parcelable {
-
-  val hasPinDigestBeenLoaded: Boolean
-    get() = pinDigestToVerify != null
 
   companion object {
     fun default(): PinEntryModel {
-      return PinEntryModel(enteredPin = "", pinDigestToVerify = null)
+      return PinEntryModel(enteredPin = "")
     }
   }
 
   fun enteredPinChanged(pin: String): PinEntryModel {
     return copy(enteredPin = pin)
-  }
-
-  fun updatePinDigest(pinDigest: String): PinEntryModel {
-    return copy(pinDigestToVerify = pinDigest)
   }
 }

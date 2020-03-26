@@ -4,8 +4,6 @@ import org.threeten.bp.Instant
 
 sealed class PinEntryEffect
 
-data class ValidateEnteredPin(val enteredPin: String, val pinDigest: String): PinEntryEffect()
-
 object LoadPinEntryProtectedStates: PinEntryEffect()
 
 object HideError: PinEntryEffect()
@@ -25,8 +23,6 @@ object RecordFailedAttempt: PinEntryEffect()
 object ShowProgress: PinEntryEffect()
 
 object ClearPin: PinEntryEffect()
-
-data class DispatchPinVerified(val pin: String): PinEntryEffect()
 
 data class VerifyPin(val pin: String): PinEntryEffect()
 

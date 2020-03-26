@@ -229,10 +229,6 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     pinEditText.text = null
   }
 
-  override fun dispatchAuthenticatedCallback(enteredPin: String) {
-    downstreamUiEvents.onNext(PinAuthenticated(enteredPin))
-  }
-
   override fun pinVerified(data: Any?) {
     // TODO: Change the type to an `Any?`
     downstreamUiEvents.onNext(PinAuthenticated(data as String))

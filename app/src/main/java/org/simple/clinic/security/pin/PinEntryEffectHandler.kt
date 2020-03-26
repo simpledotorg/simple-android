@@ -6,9 +6,6 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import org.simple.clinic.security.ComparisonResult.DIFFERENT
-import org.simple.clinic.security.ComparisonResult.SAME
-import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.PinEntryUi.Mode.BruteForceLocked
 import org.simple.clinic.security.pin.PinEntryUi.Mode.PinEntry
 import org.simple.clinic.security.pin.PinEntryUi.Mode.Progress
@@ -16,7 +13,6 @@ import org.simple.clinic.security.pin.verification.PinVerificationMethod
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PinEntryEffectHandler @AssistedInject constructor(
-    private val passwordHasher: PasswordHasher,
     private val bruteForceProtection: BruteForceProtection,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: UiActions,
@@ -34,7 +30,6 @@ class PinEntryEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<PinEntryEffect, PinEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<PinEntryEffect, PinEntryEvent>()
-        .addTransformer(ValidateEnteredPin::class.java, validateEnteredPin(schedulersProvider.computation()))
         .addTransformer(LoadPinEntryProtectedStates::class.java, loadPinEntryProtectedStates(schedulersProvider.io()))
         .addAction(HideError::class.java, { uiActions.hideError() }, schedulersProvider.ui())
         .addConsumer(ShowIncorrectPinError::class.java, { showIncorrectPinError(it.attemptsMade, it.attemptsRemaining) }, schedulersProvider.ui())
@@ -45,26 +40,9 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addTransformer(RecordFailedAttempt::class.java, incrementIncorrectPinEntryCount(schedulersProvider.io()))
         .addAction(ShowProgress::class.java, { uiActions.setPinEntryMode(Progress) }, schedulersProvider.ui())
         .addAction(ClearPin::class.java, { uiActions.clearPin() }, schedulersProvider.ui())
-        .addConsumer(DispatchPinVerified::class.java, { uiActions.dispatchAuthenticatedCallback(it.pin) }, schedulersProvider.ui())
         .addTransformer(VerifyPin::class.java, verifyPin(schedulersProvider.io()))
         .addConsumer(DispatchCorrectPinEntered::class.java, { uiActions.pinVerified(it.pinVerifiedData) }, schedulersProvider.ui())
         .build()
-  }
-
-  private fun validateEnteredPin(
-      scheduler: Scheduler
-  ): ObservableTransformer<ValidateEnteredPin, PinEntryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(scheduler)
-          .map { passwordHasher.compare(hashed = it.pinDigest, password = it.enteredPin) }
-          .map { result ->
-            when (result) {
-              SAME -> CorrectPinEntered
-              DIFFERENT -> WrongPinEntered
-            }
-          }
-    }
   }
 
   private fun loadPinEntryProtectedStates(

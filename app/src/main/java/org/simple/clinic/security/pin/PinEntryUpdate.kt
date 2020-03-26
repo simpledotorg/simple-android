@@ -7,7 +7,6 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
-import org.simple.clinic.security.pin.verification.PinVerificationMethod
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Failure
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Incorrect
@@ -23,16 +22,9 @@ class PinEntryUpdate(
 
         next(updatedModel, generateEffectsForPinSubmission(updatedModel))
       }
-      is PinDigestToVerify -> {
-        val updatedModel = model.updatePinDigest(event.pinDigest)
-
-        next(updatedModel)
-      }
       is PinEntryStateChanged -> Next.dispatch(effectsForStateChange(event.state))
-      is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt, DispatchPinVerified(model.enteredPin))
-      is WrongPinEntered -> dispatch(AllowPinEntry, RecordFailedAttempt, ClearPin)
       is PinVerified -> {
-        when(event.result) {
+        when (event.result) {
           is Correct -> dispatch(RecordSuccessfulAttempt, DispatchCorrectPinEntered(event.result.data))
           is Incorrect -> dispatch(AllowPinEntry, RecordFailedAttempt, ClearPin)
           // Will be filled in later when we implement PIN verification

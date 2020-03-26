@@ -19,7 +19,6 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
-import org.simple.clinic.security.pin.PinDigestToVerify
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.security.pin.PinEntryUi.Mode
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -120,6 +119,6 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   fun submitWithPinDigest(pinDigest: String) {
-    pinEntryCardView.upstreamUiEvents.onNext(PinDigestToVerify(pinDigest))
+    // TODO: Delete this method
   }
 }

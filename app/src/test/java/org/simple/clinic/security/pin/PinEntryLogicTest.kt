@@ -33,21 +33,18 @@ class PinEntryLogicTest {
 
   private val ui = mock<PinEntryUi>()
   private val uiActions = mock<UiActions>()
-  private val passwordHasher = JavaHashPasswordHasher()
   private val bruteForceProtection = mock<BruteForceProtection>()
+  private val pinVerificationMethod = mock<PinVerificationMethod>()
 
   private val correctPin = "1234"
   private val incorrectPin = "1233"
-  private val pinDigest = passwordHasher.hash(correctPin)
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val clock = TestUtcClock()
 
   private val uiRenderer = PinEntryUiRenderer(ui)
-  private val pinVerificationMethod = mock<PinVerificationMethod>()
 
   private val pinEntryEffectHandler = PinEntryEffectHandler(
-      passwordHasher = passwordHasher,
       bruteForceProtection = bruteForceProtection,
       schedulersProvider = TrampolineSchedulersProvider(),
       uiActions = uiActions,
@@ -86,7 +83,6 @@ class PinEntryLogicTest {
     uiEvents.onNext(PinTextChanged("12"))
     uiEvents.onNext(PinTextChanged("123"))
     uiEvents.onNext(PinTextChanged("1234"))
-    uiEvents.onNext(PinDigestToVerify(pinDigest))
 
     verify(uiActions).hideError()
     verify(uiActions).setPinEntryMode(Mode.Progress)
@@ -99,7 +95,6 @@ class PinEntryLogicTest {
     whenever(pinVerificationMethod.verify(incorrectPin)) doReturn Incorrect()
     startMobiusLoop()
 
-    uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(incorrectPin))
 
     verify(uiActions).setPinEntryMode(Mode.PinEntry)
@@ -111,7 +106,6 @@ class PinEntryLogicTest {
     startMobiusLoop()
 
     uiEvents.onNext(PinTextChanged(incorrectPin))
-    uiEvents.onNext(PinDigestToVerify(pinDigest))
 
     verify(uiActions).clearPin()
   }
@@ -121,7 +115,6 @@ class PinEntryLogicTest {
     whenever(pinVerificationMethod.verify(correctPin)) doReturn Correct(correctPin)
     startMobiusLoop()
 
-    uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(correctPin))
 
     verify(uiActions).pinVerified(correctPin)
@@ -133,7 +126,6 @@ class PinEntryLogicTest {
 
     startMobiusLoop()
 
-    uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(incorrectPin))
 
     verify(bruteForceProtection).incrementFailedAttempt()
@@ -144,7 +136,6 @@ class PinEntryLogicTest {
     whenever(pinVerificationMethod.verify(correctPin)) doReturn Correct(correctPin)
     startMobiusLoop()
 
-    uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(correctPin))
 
     verify(bruteForceProtection).recordSuccessfulAuthentication()
@@ -203,7 +194,6 @@ class PinEntryLogicTest {
 
     startMobiusLoop()
 
-    uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(correctPin))
 
     verify(uiActions).hideError()

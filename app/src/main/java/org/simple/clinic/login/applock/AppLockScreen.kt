@@ -19,7 +19,6 @@ import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
-import org.simple.clinic.security.pin.PinDigestToVerify
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
@@ -116,6 +115,6 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun unlockWithPinDigest(pinDigest: String) {
-    pinEntryCardView.upstreamUiEvents.onNext(PinDigestToVerify(pinDigest))
+    // TODO: Delete this method
   }
 }

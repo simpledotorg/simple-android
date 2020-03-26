@@ -25,7 +25,7 @@ class PinEntryUpdate(
         next(updatedModel, generateEffectsForPinSubmission(updatedModel))
       }
       is PinEntryStateChanged -> Next.dispatch(effectsForStateChange(event.state))
-      is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt, PinVerified(model.enteredPin))
+      is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt, DispatchPinVerified(model.enteredPin))
       is WrongPinEntered -> dispatch(AllowPinEntry, RecordFailedAttempt, ClearPin)
       is PinAuthenticated -> noChange()
     }

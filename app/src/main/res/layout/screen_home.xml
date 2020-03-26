@@ -16,26 +16,49 @@
     app:logo="@drawable/ic_icons_logo"
     tools:targetApi="lollipop">
 
-    <Button
-      android:id="@+id/facilitySelectButton"
-      style="@style/Widget.AppCompat.Button.Borderless"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:drawableEnd="@drawable/ic_keyboard_arrow_down_24dp"
-      android:drawablePadding="@dimen/spacing_4"
-      android:ellipsize="end"
-      android:maxLines="1"
-      android:padding="@dimen/spacing_8"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
-      tools:text="CHC Facility Name" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
 
-    <Button
-      android:id="@+id/helpButton"
-      style="@style/Clinic.V2.ToolbarButton"
-      android:layout_gravity="end"
-      android:text="@string/home_help"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
-      tools:ignore="UnusedAttribute" />
+      <FrameLayout
+        android:id="@+id/facilitySelectButtonContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/helpButton"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+          android:id="@+id/facilitySelectButton"
+          style="@style/Widget.AppCompat.Button.Borderless"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:drawableEnd="@drawable/ic_keyboard_arrow_down_24dp"
+          android:drawablePadding="@dimen/spacing_4"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:padding="@dimen/spacing_8"
+          android:textAlignment="textStart"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
+          tools:text="CHC Facility Name" />
+
+      </FrameLayout>
+
+      <Button
+        android:id="@+id/helpButton"
+        style="@style/Clinic.V2.ToolbarButton"
+        android:layout_gravity="end"
+        android:text="@string/home_help"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/facilitySelectButtonContainer"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UnusedAttribute" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
   </androidx.appcompat.widget.Toolbar>
 

@@ -13,8 +13,8 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
@@ -112,9 +112,5 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   fun showConfirmResetPinDialog() {
     ConfirmResetPinDialog.show(activity.supportFragmentManager)
-  }
-
-  fun unlockWithPinDigest(pinDigest: String) {
-    // TODO: Delete this method
   }
 }

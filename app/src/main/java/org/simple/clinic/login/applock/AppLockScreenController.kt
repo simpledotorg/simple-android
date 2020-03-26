@@ -33,8 +33,7 @@ class AppLockScreenController @Inject constructor(
         populateFacilityName(replayedEvents),
         unlockOnAuthentication(replayedEvents),
         exitOnBackClick(replayedEvents),
-        showConfirmResetPinDialog(replayedEvents),
-        readPinDigestToVerify(replayedEvents)
+        showConfirmResetPinDialog(replayedEvents)
     )
   }
 
@@ -79,14 +78,5 @@ class AppLockScreenController @Inject constructor(
     return events
         .ofType<AppLockForgotPinClicked>()
         .map { { ui: Ui -> ui.showConfirmResetPinDialog() } }
-  }
-
-  private fun readPinDigestToVerify(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<AppLockScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
-        .take(1)
-        .map { loggedInUser -> loggedInUser.pinDigest }
-        .map { unlockWithPinDigest -> { ui: Ui -> ui.unlockWithPinDigest(unlockWithPinDigest) } }
   }
 }

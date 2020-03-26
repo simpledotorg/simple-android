@@ -120,7 +120,7 @@ jobs:
           path: current
 
       - name: Verify existing Room schemas are not modified
-        run: current/.github/scripts/compare_directory_contents.sh master/app/schemas/org.simple.clinic.AppDatabase current/app/schemas/org.simple.clinic.AppDatabase
+        run: master/.github/scripts/compare_directory_contents.sh master/app/schemas/org.simple.clinic.AppDatabase current/app/schemas/org.simple.clinic.AppDatabase
 
   qa_purge_env:
     runs-on: [ubuntu-latest]

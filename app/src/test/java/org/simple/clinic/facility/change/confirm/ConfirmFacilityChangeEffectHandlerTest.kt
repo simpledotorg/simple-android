@@ -1,5 +1,6 @@
 package org.simple.clinic.facility.change.confirm
 
+import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -26,7 +27,9 @@ class ConfirmFacilityChangeEffectHandlerTest {
   private val reportsRepository = mock<ReportsRepository>()
   private val reportsSync = mock<ReportsSync>()
   private val uiActions = mock<ConfirmFacilityChangeUiActions>()
-  private val effectHandler = ConfirmFacilityChangeEffectHandler(facilityRepository, userSession, reportsRepository, reportsSync, TrampolineSchedulersProvider(), uiActions)
+  private val isFacilitySwitchedPreference = mock<Preference<Boolean>>()
+
+  private val effectHandler = ConfirmFacilityChangeEffectHandler(facilityRepository, userSession, reportsRepository, reportsSync, TrampolineSchedulersProvider(), uiActions, isFacilitySwitchedPreference)
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 
   @Test
@@ -47,6 +50,7 @@ class ConfirmFacilityChangeEffectHandlerTest {
     testCase.assertOutgoingEvents(FacilityChanged)
     verify(reportsRepository).deleteReportsFile()
     verify(reportsSync).sync()
+    verify(isFacilitySwitchedPreference).set(true)
     verifyZeroInteractions(uiActions)
   }
 

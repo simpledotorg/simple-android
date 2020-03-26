@@ -1,5 +1,6 @@
 package org.simple.clinic.facility.change.confirm
 
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -10,6 +11,7 @@ import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import javax.inject.Named
 
 class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
     private val facilityRepository: FacilityRepository,
@@ -17,7 +19,8 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
     private val reportsRepository: ReportsRepository,
     private val reportsSync: ReportsSync,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: ConfirmFacilityChangeUiActions
+    @Assisted private val uiActions: ConfirmFacilityChangeUiActions,
+    @Named("is_facility_switched") private val isFacilitySwitchedPreference: Preference<Boolean>
 ) {
 
   @AssistedInject.Factory
@@ -46,6 +49,7 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
                 .subscribeOn(io)
                 .toSingleDefault(it)
           }
+          .doOnNext { isFacilitySwitchedPreference.set(true) }
           .doOnNext { clearAndSyncReports(io) }
           .map { FacilityChanged }
     }

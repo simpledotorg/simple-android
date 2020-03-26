@@ -11,9 +11,9 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection
@@ -116,9 +116,5 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   fun goBackToRegistrationScreen() {
     screenRouter.pop()
-  }
-
-  fun submitWithPinDigest(pinDigest: String) {
-    // TODO: Delete this method
   }
 }

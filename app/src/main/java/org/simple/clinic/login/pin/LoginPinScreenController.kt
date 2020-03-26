@@ -40,7 +40,6 @@ class LoginPinScreenController @Inject constructor(
     return Observable.mergeArray(
         screenSetups(replayedEvents),
         backClicks(replayedEvents),
-        readPinDigestToVerify(replayedEvents),
         syncFacilitiesAndLoginUser(replayedEvents)
     )
   }
@@ -72,13 +71,6 @@ class LoginPinScreenController @Inject constructor(
     return events.ofType<PinBackClicked>()
         .doOnNext { userSession.clearOngoingLoginEntry() }
         .flatMap { Observable.just(Ui::goBackToRegistrationScreen) }
-  }
-
-  private fun readPinDigestToVerify(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PinScreenCreated>()
-        .flatMapSingle { userSession.ongoingLoginEntry() }
-        .map { it.pinDigest }
-        .map { pinDigestToVerify -> { ui: Ui -> ui.submitWithPinDigest(pinDigestToVerify) } }
   }
 
   private fun syncFacilitiesAndLoginUser(events: Observable<UiEvent>): Observable<UiChange> {

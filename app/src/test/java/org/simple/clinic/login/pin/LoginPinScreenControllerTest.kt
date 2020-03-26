@@ -114,17 +114,6 @@ class LoginPinScreenControllerTest {
   }
 
   @Test
-  fun `when the screen is created, the pin digest to verify must be forwarded to the screen`() {
-    val pinDigest = "digest"
-    whenever(userSession.ongoingLoginEntry())
-        .thenReturn(Single.just(ongoingLoginEntry.copy(pinDigest = pinDigest)))
-
-    uiEvents.onNext(PinScreenCreated())
-
-    verify(screen).submitWithPinDigest(pinDigest)
-  }
-
-  @Test
   fun `when PIN is submitted, update the saved login entry with the new PIN`() {
     // given
     val newPin = "new-pin"

@@ -6,7 +6,6 @@ import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
-import io.bloco.faker.Faker
 import io.bloco.faker.components.PhoneNumber
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -183,7 +182,7 @@ class ServerAuthenticationRule : TestRule {
   private fun registerUserAtFacility(facility: Facility): RegistrationResult {
     val user = testData.loggedInUser(
         phone = fakePhoneNumber.phoneNumber(),
-        pinDigest = passwordHasher.hash(userPin).blockingGet()
+        pinDigest = passwordHasher.hash(userPin)
     )
 
     return registerUser.registerUserAtFacility(user, facility).blockingGet()

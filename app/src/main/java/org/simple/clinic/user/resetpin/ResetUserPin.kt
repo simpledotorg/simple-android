@@ -34,7 +34,7 @@ class ResetUserPin @Inject constructor(
 ) {
 
   fun resetPin(pin: String): Single<ResetPinResult> {
-    return passwordHasher.hash(pin)
+    return Single.fromCallable { passwordHasher.hash(pin) }
         .doOnSubscribe { Timber.i("Resetting PIN") }
         .map(::ResetPinRequest)
         .flatMap(loginApi::resetPin)

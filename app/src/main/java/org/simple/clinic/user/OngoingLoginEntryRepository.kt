@@ -23,6 +23,10 @@ class OngoingLoginEntryRepository @Inject constructor(
 
   }
 
+  fun entryImmediate(): OngoingLoginEntry {
+    return dao.getEntryImmediate()!!
+  }
+
   fun clearLoginEntry() {
     dao.delete()
   }

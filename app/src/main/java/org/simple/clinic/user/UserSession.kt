@@ -5,7 +5,6 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.appconfig.Country
@@ -57,11 +56,9 @@ class UserSession @Inject constructor(
   }
 
   fun saveOngoingRegistrationEntryAsUser(): Completable {
-    val ongoingEntry = ongoingRegistrationEntry().cache()
-
-    return ongoingEntry
+    return ongoingRegistrationEntry()
         .doOnSubscribe { Timber.i("Logging in from ongoing registration entry") }
-        .zipWith(ongoingEntry.flatMap { entry -> passwordHasher.hash(entry.pin!!) })
+        .map { entry -> entry to passwordHasher.hash(entry.pin!!) }
         .flatMapCompletable { (entry, passwordDigest) ->
           val user = User(
               uuid = entry.uuid!!,

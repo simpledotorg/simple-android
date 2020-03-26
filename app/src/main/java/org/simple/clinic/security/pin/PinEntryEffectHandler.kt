@@ -40,7 +40,7 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addTransformer(RecordFailedAttempt::class.java, incrementIncorrectPinEntryCount(schedulersProvider.io()))
         .addAction(ShowProgress::class.java, { uiActions.setPinEntryMode(Progress) }, schedulersProvider.ui())
         .addAction(ClearPin::class.java, { uiActions.clearPin() }, schedulersProvider.ui())
-        .addConsumer(PinVerified::class.java, { uiActions.dispatchAuthenticatedCallback(it.pin)}, schedulersProvider.ui())
+        .addConsumer(PinVerified::class.java, { uiActions.dispatchAuthenticatedCallback(it.pin) }, schedulersProvider.ui())
         .build()
   }
 
@@ -49,11 +49,8 @@ class PinEntryEffectHandler @AssistedInject constructor(
   ): ObservableTransformer<ValidateEnteredPin, PinEntryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .flatMapSingle {
-            passwordHasher
-                .compare(hashed = it.pinDigest, password = it.enteredPin)
-                .subscribeOn(scheduler)
-          }
+          .observeOn(scheduler)
+          .map { passwordHasher.compare(hashed = it.pinDigest, password = it.enteredPin) }
           .map { result ->
             when (result) {
               SAME -> CorrectPinEntered

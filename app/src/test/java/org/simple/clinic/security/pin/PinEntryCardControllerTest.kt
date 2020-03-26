@@ -34,7 +34,7 @@ class PinEntryCardControllerTest {
 
   private val correctPin = "1234"
   private val incorrectPin = "1233"
-  private val pinDigest = passwordHasher.hash(correctPin).blockingGet()
+  private val pinDigest = passwordHasher.hash(correctPin)
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val clock = TestUtcClock()

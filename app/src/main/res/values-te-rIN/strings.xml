@@ -354,8 +354,6 @@
   <string name="addidtopatientsearch_search">తదుపరి</string>
   <string name="addidtopatientsearch_error_empty_fullname">రోగి పూర్తి పేరును లేదా ఫోన్ నంబర్‌ను నమోదు చేయండి</string>
   <string name="addidtopatientsearch_hint">పేరు లేదా ఫోన్ నంబర్</string>
-  <string name="addidtopatientsearch_add">%1$s\u0020 జోడించు</string>
-  <string name="addidtopatientsearch_to_patient">\u0020కు\u2026</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">ఇటీవలి రోగులు</string>

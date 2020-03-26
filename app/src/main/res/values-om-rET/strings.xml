@@ -374,8 +374,6 @@
   <string name="addidtopatientsearch_search">Itti aanee</string>
   <string name="addidtopatientsearch_error_empty_fullname">Maqaa guutuu yookiin lakkoofsa dhukkubsataa galchi</string>
   <string name="addidtopatientsearch_hint">Maqaa yookiin Lakkoofsa bilbilaa</string>
-  <string name="addidtopatientsearch_add">%1$s\u0020dabali</string>
-  <string name="addidtopatientsearch_to_patient">\u0020hanga\u2026</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">Dhukkubsataa dhiyoo</string>

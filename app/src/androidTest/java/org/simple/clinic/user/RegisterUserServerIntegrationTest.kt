@@ -77,7 +77,7 @@ class RegisterUserServerIntegrationTest {
     val registerUserWithId = UUID.randomUUID()
     val user = testData.loggedInUser(
         uuid = registerUserWithId,
-        pinDigest = passwordHasher.hash(userPin).blockingGet()
+        pinDigest = passwordHasher.hash(userPin)
     )
 
     val registrationResult = registerUser.registerUserAtFacility(user, facilityDao.getOne(registerFacility.uuid)!!)

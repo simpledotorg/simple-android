@@ -12,11 +12,11 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
-import org.simple.clinic.TestData
 import org.simple.clinic.security.pin.JavaHashPasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
@@ -211,7 +211,7 @@ class ResetUserPinTest {
     assertThat(result).isEqualTo(UnexpectedError(exception))
   }
 
-  private fun hash(pin: String): String = passwordHasher.hash(pin).blockingGet()
+  private fun hash(pin: String): String = passwordHasher.hash(pin)
 
   private fun User.afterPinResetRequested(updatedPinDigest: String): User {
     return copy(pinDigest = updatedPinDigest, status = WaitingForApproval, loggedInStatus = RESET_PIN_REQUESTED)

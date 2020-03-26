@@ -51,6 +51,7 @@ import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.LoggedInUserPayload
+import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
@@ -957,6 +958,28 @@ object TestData {
       gender = gender,
       dateOfBirth = dateOfBirth,
       age = age,
+      updatedAt = updatedAt
+  )
+
+  fun ongoingLoginEntry(
+      uuid: UUID = UUID.fromString("e4d91a34-c475-4038-a066-a866f9ecafec"),
+      phoneNumber: String? = "1111111111",
+      pin: String? = "1234",
+      fullName: String? = "Anish Acharya",
+      pinDigest: String? = "digest",
+      registrationFacilityUuid: UUID? = UUID.fromString("d91fb2ba-9c87-4de0-b425-eea44457c746"),
+      status: UserStatus? = UserStatus.ApprovedForSyncing,
+      createdAt: Instant? = Instant.parse("2018-01-01T00:00:00Z"),
+      updatedAt: Instant? = Instant.parse("2018-01-01T00:00:00Z")
+  ) = OngoingLoginEntry(
+      uuid = uuid,
+      phoneNumber = phoneNumber,
+      pin = pin,
+      fullName = fullName,
+      pinDigest = pinDigest,
+      registrationFacilityUuid = registrationFacilityUuid,
+      status = status,
+      createdAt = createdAt,
       updatedAt = updatedAt
   )
 }

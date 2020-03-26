@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.f2prateek.rx.preferences2.Preference
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
 import org.simple.clinic.ClinicApp
@@ -14,11 +15,15 @@ import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Named
 
 class AlertFacilityChangeSheet : BottomSheetActivity() {
 
   @Inject
   lateinit var locale: Locale
+
+  @field:[Inject Named("is_facility_switched")]
+  lateinit var isFacilitySwitchedPreference: Preference<Boolean>
 
   private lateinit var component: AlertFacilityChangeComponent
 
@@ -79,6 +84,8 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
   }
 
   private fun closeSheet(resultCode: Int) {
+    if (resultCode == Activity.RESULT_OK) isFacilitySwitchedPreference.set(false)
+
     val intent = Intent()
     setResult(resultCode, intent)
     finish()

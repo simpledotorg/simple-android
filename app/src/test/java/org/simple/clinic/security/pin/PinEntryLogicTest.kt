@@ -22,7 +22,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
-class PinEntryCardControllerTest {
+class PinEntryLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

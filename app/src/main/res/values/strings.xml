@@ -171,8 +171,8 @@
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Go back</string>
   <string name="patientsummary_prescriptions_last_updated">Updated %s</string>
-  <string name="patientsummary_prescriptions_add">Add medicines</string>
-  <string name="patientsummary_prescriptions_update">Update medicines</string>
+  <string name="patientsummary_prescriptions_add">Medicines</string>
+  <string name="patientsummary_prescriptions_update">Edit medicines</string>
   <string name="patientsummary_bp_add_new">Blood Pressure</string>
   <string name="patientsummary_finish_saving_patient">Save</string>
   <string name="patientsummary_bp_none_added">No blood pressures added</string>

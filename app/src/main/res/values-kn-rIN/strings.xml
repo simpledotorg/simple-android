@@ -354,8 +354,6 @@
   <string name="addidtopatientsearch_search">ಮುಂದಿನ</string>
   <string name="addidtopatientsearch_error_empty_fullname">ರೋಗಿಯ ಪೂರ್ಣ ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್ ನಮೂದಿಸಿ</string>
   <string name="addidtopatientsearch_hint">ಹೆಸರು ಅಥವಾ ಫೋನ್ ನಂಬರ್</string>
-  <string name="addidtopatientsearch_add">%1$s\u0020 ಸೇರಿಸಿ</string>
-  <string name="addidtopatientsearch_to_patient">\u0020ಇಂದ\u2026</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">ಇತ್ತೀಚಿನ ರೋಗಿಗಳು</string>

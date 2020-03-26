@@ -12,18 +12,16 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_addidtopatientsearch.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreenKey
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
-import org.simple.clinic.util.Truss
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
@@ -70,7 +68,6 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
     toolBar.setNavigationOnClickListener {
       screenRouter.pop()
     }
-    displayScreenTitle()
     searchQueryEditText.showKeyboard()
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
@@ -86,24 +83,6 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
         controller = controller,
         screenDestroys = screenDestroys
     )
-  }
-
-  private fun displayScreenTitle() {
-    val identifierType = identifierDisplayAdapter.typeAsText(screenKey.identifier)
-    val identifierValue = identifierDisplayAdapter.valueAsText(screenKey.identifier)
-
-    val identifierTextAppearanceSpan = TextAppearanceWithLetterSpacingSpan(
-        context,
-        R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_White100
-    )
-
-    titleTextView.text = Truss()
-        .append(resources.getString(R.string.addidtopatientsearch_add, identifierType))
-        .pushSpan(identifierTextAppearanceSpan)
-        .append(identifierValue)
-        .popSpan()
-        .append(resources.getString(R.string.addidtopatientsearch_to_patient))
-        .build()
   }
 
   private fun searchQueryChanges(): Observable<UiEvent> {

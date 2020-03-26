@@ -354,8 +354,6 @@
   <string name="addidtopatientsearch_search">ዝቕጽል</string>
   <string name="addidtopatientsearch_error_empty_fullname">ናይ ተሓካሚ ምሉእ ስም ወይ ቊጽሪ ተሌፎን ኣእቱ</string>
   <string name="addidtopatientsearch_hint">ስም ወይ ቊጽሪ ተሌፎን</string>
-  <string name="addidtopatientsearch_add">ወስኽ %1$s\u0020</string>
-  <string name="addidtopatientsearch_to_patient">\u0020ናብ\u2026</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">ናይ ቀረባ ግዜ ተሓከምቲ</string>

@@ -1,5 +1,6 @@
 package org.simple.clinic.security.pin
 
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -14,6 +15,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryUi.Mode
+import org.simple.clinic.security.pin.verification.PinVerificationMethod
+import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
+import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Incorrect
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -40,13 +44,14 @@ class PinEntryLogicTest {
   private val clock = TestUtcClock()
 
   private val uiRenderer = PinEntryUiRenderer(ui)
+  private val pinVerificationMethod = mock<PinVerificationMethod>()
 
   private val pinEntryEffectHandler = PinEntryEffectHandler(
       passwordHasher = passwordHasher,
       bruteForceProtection = bruteForceProtection,
       schedulersProvider = TrampolineSchedulersProvider(),
       uiActions = uiActions,
-      pinVerificationMethod = mock()
+      pinVerificationMethod = pinVerificationMethod
   )
 
   private lateinit var testFixture: MobiusTestFixture<PinEntryModel, PinEntryEvent, PinEntryEffect>
@@ -74,6 +79,7 @@ class PinEntryLogicTest {
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
+    whenever(pinVerificationMethod.verify(correctPin)) doReturn Correct()
     startMobiusLoop()
 
     uiEvents.onNext(PinTextChanged("1"))
@@ -84,12 +90,13 @@ class PinEntryLogicTest {
 
     verify(uiActions).hideError()
     verify(uiActions).setPinEntryMode(Mode.Progress)
-    verify(uiActions).dispatchAuthenticatedCallback("1234")
+    verify(uiActions).pinVerified(null)
     verifyNoMoreInteractions(uiActions)
   }
 
   @Test
   fun `when PIN validation fails then the progress should be hidden`() {
+    whenever(pinVerificationMethod.verify(incorrectPin)) doReturn Incorrect()
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
@@ -100,6 +107,7 @@ class PinEntryLogicTest {
 
   @Test
   fun `when PIN validation fails then the PIN should be cleared`() {
+    whenever(pinVerificationMethod.verify(incorrectPin)) doReturn Incorrect()
     startMobiusLoop()
 
     uiEvents.onNext(PinTextChanged(incorrectPin))
@@ -110,16 +118,19 @@ class PinEntryLogicTest {
 
   @Test
   fun `when PIN validation succeeds then a success callback should be sent`() {
+    whenever(pinVerificationMethod.verify(correctPin)) doReturn Correct(correctPin)
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(correctPin))
 
-    verify(uiActions).dispatchAuthenticatedCallback(correctPin)
+    verify(uiActions).pinVerified(correctPin)
   }
 
   @Test
   fun `when PIN validation fails then the count of failed attempts should be incremented`() {
+    whenever(pinVerificationMethod.verify(incorrectPin)) doReturn Incorrect()
+
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
@@ -130,6 +141,7 @@ class PinEntryLogicTest {
 
   @Test
   fun `when PIN validation succeeds then the count of failed attempts should be reset`() {
+    whenever(pinVerificationMethod.verify(correctPin)) doReturn Correct(correctPin)
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
@@ -187,6 +199,8 @@ class PinEntryLogicTest {
 
   @Test
   fun `when a PIN is submitted for verification, the current error must be cleared`() {
+    whenever(pinVerificationMethod.verify(correctPin)) doReturn Correct(correctPin)
+
     startMobiusLoop()
 
     uiEvents.onNext(PinDigestToVerify(pinDigest))
@@ -194,7 +208,7 @@ class PinEntryLogicTest {
 
     verify(uiActions).hideError()
     verify(uiActions).setPinEntryMode(Mode.Progress)
-    verify(uiActions).dispatchAuthenticatedCallback(correctPin)
+    verify(uiActions).pinVerified(correctPin)
     verifyNoMoreInteractions(uiActions)
   }
 

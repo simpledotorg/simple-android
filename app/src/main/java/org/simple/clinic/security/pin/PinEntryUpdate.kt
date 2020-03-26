@@ -26,7 +26,7 @@ class PinEntryUpdate(
       is PinDigestToVerify -> {
         val updatedModel = model.updatePinDigest(event.pinDigest)
 
-        next(updatedModel, generateEffectsForPinSubmission(updatedModel))
+        next(updatedModel)
       }
       is PinEntryStateChanged -> Next.dispatch(effectsForStateChange(event.state))
       is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt, DispatchPinVerified(model.enteredPin))
@@ -60,7 +60,7 @@ class PinEntryUpdate(
   }
 
   private fun isReadyToSubmitPin(model: PinEntryModel): Boolean {
-    return model.hasPinDigestBeenLoaded && model.enteredPin.length == submitPinAtLength
+    return model.enteredPin.length == submitPinAtLength
   }
 
   private fun generateEffectsForPinSubmission(model: PinEntryModel): Set<PinEntryEffect> {
@@ -68,7 +68,7 @@ class PinEntryUpdate(
 
     if (isReadyToSubmitPin(model)) {
       effects.apply {
-        add(ValidateEnteredPin(model.enteredPin, model.pinDigestToVerify!!))
+        add(VerifyPin(model.enteredPin))
         add(HideError)
         add(ShowProgress)
       }

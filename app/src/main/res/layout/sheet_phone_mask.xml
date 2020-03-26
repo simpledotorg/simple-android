@@ -9,12 +9,12 @@
 
   <TextView
     android:id="@+id/nameTextView"
-    android:layout_width="0dp"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginLeft="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginRight="@dimen/spacing_16"
     android:gravity="center"
     android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
     app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
 
   <TextView
     android:id="@+id/phoneNumberTextView"
-    android:layout_width="0dp"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_8"
@@ -41,7 +41,7 @@
   <org.simple.clinic.widgets.OmegaCenterIconButton
     android:id="@+id/normalCallButton"
     style="@style/Clinic.V2.Button.WithIcon.Green3"
-    android:layout_width="0dp"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_16"
@@ -57,7 +57,7 @@
   <org.simple.clinic.widgets.OmegaCenterIconButton
     android:id="@+id/secureCallButton"
     style="@style/Clinic.V2.Button.WithIcon.Green1"
-    android:layout_width="0dp"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_16"
@@ -71,7 +71,7 @@
 
   <TextView
     android:id="@+id/helpTextView"
-    android:layout_width="0dp"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_12"

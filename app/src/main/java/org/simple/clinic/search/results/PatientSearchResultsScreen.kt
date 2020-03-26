@@ -4,18 +4,22 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
@@ -42,6 +46,9 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var activity: AppCompatActivity
+
   private val toolbar by bindView<Toolbar>(R.id.patientsearchresults_toolbar)
   private val searchResultsView by bindView<PatientSearchView>(R.id.patientsearchresults_searchresultsview)
 
@@ -54,6 +61,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     TheActivity.component.inject(this)
     setupScreen()
 
+    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     bindUiToController(
         ui = this,
         events = Observable.merge(
@@ -62,9 +70,21 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
             registerNewPatientClicks()
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = screenDestroys
     )
+
+    setupAlertResults(screenDestroys)
   }
+
+  @SuppressLint("CheckResult")
+  private fun setupAlertResults(screenDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == ALERT_FACILITY_CHANGE && it.succeeded() }
+        .takeUntil(screenDestroys)
+        .subscribe { openPatientEntryScreen() }
+  }
+
 
   private fun searchResultClicks(): Observable<UiEvent> {
     return searchResultsView
@@ -114,5 +134,13 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   fun openPatientEntryScreen() {
     screenRouter.push(PatientEntryScreenKey())
+  }
+
+  fun openAlertFacilityChangeSheet(facility: Facility) {
+    activity.startActivityForResult(AlertFacilityChangeSheet.intent(context, facility.name), ALERT_FACILITY_CHANGE)
+  }
+
+  companion object {
+    private const val ALERT_FACILITY_CHANGE = 1122
   }
 }

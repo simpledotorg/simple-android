@@ -10,10 +10,9 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -75,13 +74,5 @@ class AppLockScreenControllerTest {
   fun `when forgot pin is clicked then the confirm forgot pin alert must be shown`() {
     uiEvents.onNext(AppLockForgotPinClicked())
     verify(screen).showConfirmResetPinDialog()
-  }
-
-  @Test
-  fun `when the screen is created the pin digest to verify must be forwarded to the screen`() {
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.never())
-    uiEvents.onNext(AppLockScreenCreated())
-
-    verify(screen).unlockWithPinDigest(loggedInUser.pinDigest)
   }
 }

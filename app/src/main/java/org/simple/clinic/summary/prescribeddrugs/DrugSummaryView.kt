@@ -20,6 +20,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setBottomMarginRes
+import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -95,6 +96,7 @@ class DrugSummaryView(
     emptyMedicinesTextView.visibleOrGone(prescriptions.isEmpty())
 
     setButtonText(prescriptions)
+    setButtonIcon(prescriptions)
 
     drugSummaryViewRoot.setBottomMarginRes(
         if (prescriptions.isEmpty()) R.dimen.spacing_0
@@ -129,5 +131,14 @@ class DrugSummaryView(
     } else {
       context.getString(R.string.patientsummary_prescriptions_update)
     }
+  }
+
+  private fun setButtonIcon(prescriptions: List<PrescribedDrug>) {
+    val drawableRes = if (prescriptions.isEmpty()) {
+      R.drawable.ic_add_circle_blue1_24dp
+    } else {
+      R.drawable.ic_edit_medicine
+    }
+    updateButton.setCompoundDrawableStart(drawableRes)
   }
 }

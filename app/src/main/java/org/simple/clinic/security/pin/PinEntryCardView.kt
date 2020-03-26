@@ -50,7 +50,6 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   @Inject
   lateinit var verificationMethods: Map<Method, @JvmSuppressWildcards PinVerificationMethod>
 
-  val upstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
   val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
 
   private val method: Method
@@ -73,11 +72,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   private val events by unsafeLazy {
-    Observable
-        .merge(
-            pinTextChanges(),
-            upstreamUiEvents
-        )
+    pinTextChanges()
         .compose(ReportAnalyticsEvents())
   }
 

@@ -40,6 +40,9 @@ data class OngoingLoginEntry(
     @Query("SELECT * FROM OngoingLoginEntry")
     fun getEntry(): Flowable<List<OngoingLoginEntry>>
 
+    @Query("SELECT * FROM OngoingLoginEntry")
+    fun getEntryImmediate(): OngoingLoginEntry?
+
     @Query("DELETE FROM OngoingLoginEntry")
     fun delete()
   }

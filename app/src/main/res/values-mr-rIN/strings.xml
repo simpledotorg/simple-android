@@ -354,8 +354,6 @@
   <string name="addidtopatientsearch_search">पुढे</string>
   <string name="addidtopatientsearch_error_empty_fullname">रुग्णाचे पूर्ण नाव किंवा फोन नंबर प्रविष्ट करा</string>
   <string name="addidtopatientsearch_hint">नाव किंवा फोन नंबर</string>
-  <string name="addidtopatientsearch_add">%1$s\u0020</string>
-  <string name="addidtopatientsearch_to_patient">\u0020\u2026मध्ये जोडायचे</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">अलीकडेच आलेले रुग्ण</string>

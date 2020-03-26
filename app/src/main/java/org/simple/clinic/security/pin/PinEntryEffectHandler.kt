@@ -46,6 +46,7 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addAction(ShowProgress::class.java, { uiActions.setPinEntryMode(Progress) }, schedulersProvider.ui())
         .addAction(ClearPin::class.java, { uiActions.clearPin() }, schedulersProvider.ui())
         .addConsumer(DispatchPinVerified::class.java, { uiActions.dispatchAuthenticatedCallback(it.pin) }, schedulersProvider.ui())
+        .addTransformer(VerifyPin::class.java, verifyPin(schedulersProvider.io()))
         .build()
   }
 
@@ -103,6 +104,18 @@ class PinEntryEffectHandler @AssistedInject constructor(
       effects
           .flatMapCompletable { bruteForceProtection.incrementFailedAttempt().subscribeOn(scheduler) }
           .andThen(Observable.empty())
+    }
+  }
+
+  private fun verifyPin(
+      scheduler: Scheduler
+  ): ObservableTransformer<VerifyPin, PinEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .map { it.pin }
+          .map(pinVerificationMethod::verify)
+          .map(::PinVerified)
     }
   }
 }

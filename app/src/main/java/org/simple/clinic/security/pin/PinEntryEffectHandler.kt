@@ -36,8 +36,8 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addConsumer(ShowIncorrectPinLimitReachedError::class.java, { uiActions.showIncorrectAttemptsLimitReachedError(it.attemptsMade) }, schedulersProvider.ui())
         .addAction(AllowPinEntry::class.java, { uiActions.setPinEntryMode(PinEntry) }, schedulersProvider.ui())
         .addConsumer(BlockPinEntryUntil::class.java, { uiActions.setPinEntryMode(BruteForceLocked(it.blockTill)) }, schedulersProvider.ui())
-        .addTransformer(RecordSuccessfulAttempt::class.java, recordSuccessfulAttempt(schedulersProvider.io()))
-        .addTransformer(RecordFailedAttempt::class.java, recordFailedAttempt(schedulersProvider.io()))
+        .addTransformer(RecordSuccessfulAttempt::class.java, resetBruteForceProtectionState(schedulersProvider.io()))
+        .addTransformer(RecordFailedAttempt::class.java, incrementIncorrectPinEntryCount(schedulersProvider.io()))
         .addAction(ShowProgress::class.java, { uiActions.setPinEntryMode(Progress) }, schedulersProvider.ui())
         .addAction(ClearPin::class.java, { uiActions.clearPin() }, schedulersProvider.ui())
         .addConsumer(PinVerified::class.java, { uiActions.dispatchAuthenticatedCallback(it.pin)}, schedulersProvider.ui())
@@ -84,7 +84,7 @@ class PinEntryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun recordSuccessfulAttempt(
+  private fun resetBruteForceProtectionState(
       scheduler: Scheduler
   ): ObservableTransformer<RecordSuccessfulAttempt, PinEntryEvent> {
     return ObservableTransformer { effects ->
@@ -94,7 +94,7 @@ class PinEntryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun recordFailedAttempt(
+  private fun incrementIncorrectPinEntryCount(
       scheduler: Scheduler
   ): ObservableTransformer<RecordFailedAttempt, PinEntryEvent> {
     return ObservableTransformer { effects ->

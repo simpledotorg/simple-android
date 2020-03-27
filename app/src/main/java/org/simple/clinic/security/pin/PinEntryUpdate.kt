@@ -8,8 +8,10 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
-import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Failure
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Incorrect
+import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.NetworkError
+import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.OtherError
+import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.ServerError
 
 class PinEntryUpdate(
     private val submitPinAtLength: Int
@@ -29,7 +31,9 @@ class PinEntryUpdate(
           is Incorrect -> dispatch(AllowPinEntry, RecordFailedAttempt, ClearPin)
           // Will be filled in later when we implement PIN verification
           // via the server API call.
-          is Failure -> noChange()
+          is NetworkError -> noChange()
+          is ServerError -> noChange()
+          is OtherError -> noChange()
         }
       }
       is PinAuthenticated -> noChange()

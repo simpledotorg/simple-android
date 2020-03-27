@@ -57,7 +57,8 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         fetchFacilities(replayedEvents),
         showFacilities(replayedEvents),
         toggleSearchFieldInToolbar(replayedEvents),
-        proceedOnFacilityClicks(replayedEvents))
+        proceedOnFacilityClicks(replayedEvents),
+        proceedOnFacilityConfirmation(replayedEvents))
   }
 
   @SuppressLint("MissingPermission")
@@ -207,5 +208,18 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .ofType<RegistrationFacilityClicked>()
         .map { it.facility }
         .map { facility -> { ui: Ui -> ui.showConfirmFacilitySheet(facility.uuid, facility.name) } }
+  }
+
+  private fun proceedOnFacilityConfirmation(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationFacilityConfirmed>()
+        .map { it.facilityUuid }
+        .flatMap { facilityUuid ->
+          userSession.ongoingRegistrationEntry()
+              .map { it.copy(facilityId = facilityUuid) }
+              .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
+              .andThen(userSession.saveOngoingRegistrationEntryAsUser())
+              .andThen(Observable.just { ui: Ui -> ui.openRegistrationScreen() })
+        }
   }
 }

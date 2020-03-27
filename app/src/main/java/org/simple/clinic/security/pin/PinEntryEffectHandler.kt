@@ -9,9 +9,9 @@ import io.reactivex.Scheduler
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.security.pin.PinEntryUi.State.BruteForceLocked
-import org.simple.clinic.security.pin.PinEntryUi.State.PinEntry
-import org.simple.clinic.security.pin.PinEntryUi.State.Progress
+import org.simple.clinic.security.pin.PinEntryUi.Mode.BruteForceLocked
+import org.simple.clinic.security.pin.PinEntryUi.Mode.PinEntry
+import org.simple.clinic.security.pin.PinEntryUi.Mode.Progress
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PinEntryEffectHandler @AssistedInject constructor(
@@ -34,11 +34,11 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addAction(HideError::class.java, { uiActions.hideError() }, schedulersProvider.ui())
         .addConsumer(ShowIncorrectPinError::class.java, { showIncorrectPinError(it.attemptsMade, it.attemptsRemaining) }, schedulersProvider.ui())
         .addConsumer(ShowIncorrectPinLimitReachedError::class.java, { uiActions.showIncorrectAttemptsLimitReachedError(it.attemptsMade) }, schedulersProvider.ui())
-        .addAction(AllowPinEntry::class.java, { uiActions.moveToState(PinEntry) }, schedulersProvider.ui())
-        .addConsumer(BlockPinEntryUntil::class.java, { uiActions.moveToState(BruteForceLocked(it.blockTill)) }, schedulersProvider.ui())
+        .addAction(AllowPinEntry::class.java, { uiActions.setPinEntryMode(PinEntry) }, schedulersProvider.ui())
+        .addConsumer(BlockPinEntryUntil::class.java, { uiActions.setPinEntryMode(BruteForceLocked(it.blockTill)) }, schedulersProvider.ui())
         .addTransformer(RecordSuccessfulAttempt::class.java, recordSuccessfulAttempt(schedulersProvider.io()))
         .addTransformer(RecordFailedAttempt::class.java, recordFailedAttempt(schedulersProvider.io()))
-        .addAction(ShowProgress::class.java, { uiActions.moveToState(Progress) }, schedulersProvider.ui())
+        .addAction(ShowProgress::class.java, { uiActions.setPinEntryMode(Progress) }, schedulersProvider.ui())
         .addAction(ClearPin::class.java, { uiActions.clearPin() }, schedulersProvider.ui())
         .addConsumer(PinVerified::class.java, { uiActions.dispatchAuthenticatedCallback(it.pin)}, schedulersProvider.ui())
         .build()

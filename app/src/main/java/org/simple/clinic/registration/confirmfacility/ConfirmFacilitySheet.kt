@@ -1,9 +1,12 @@
 package org.simple.clinic.registration.confirmfacility
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import kotlinx.android.synthetic.main.sheet_registration_confirm_facility.*
 import org.simple.clinic.R
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.BottomSheetActivity
 import java.util.UUID
 
@@ -29,8 +32,33 @@ class ConfirmFacilitySheet : BottomSheetActivity() {
     }
   }
 
+  private val facilityName: String by unsafeLazy {
+    intent.getStringExtra(EXTRA_FACILITY_NAME)
+  }
+
+  private val facilityUuid: UUID by unsafeLazy {
+    intent.getSerializableExtra(EXTRA_FACILITY_UUID) as UUID
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_registration_confirm_facility)
+
+    facilityNameTextView.text = facilityName
+
+    yesButton.setOnClickListener {
+      confirmFacilitySelection()
+    }
+
+    cancelButton.setOnClickListener {
+      finish()
+    }
+  }
+
+  private fun confirmFacilitySelection() {
+    val intent = Intent()
+    intent.putExtra(EXTRA_FACILITY_UUID, facilityUuid)
+    setResult(Activity.RESULT_OK, intent)
+    finish()
   }
 }

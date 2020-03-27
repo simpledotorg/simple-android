@@ -16,13 +16,14 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.screen_registration_facility_selection.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.location.LOCATION_PERMISSION
+import org.simple.clinic.main.TheActivity
+import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
@@ -32,6 +33,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
+import java.util.UUID
 import javax.inject.Inject
 
 class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -169,5 +171,14 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
 
   fun openRegistrationScreen() {
     screenRouter.push(RegistrationLoadingScreenKey())
+  }
+
+  fun showConfirmFacilitySheet(facilityUuid: UUID, facilityName: String) {
+    val intent = ConfirmFacilitySheet.intentForConfirmFacilitySheet(context, facilityUuid, facilityName)
+    activity.startActivityForResult(intent, CONFIRM_FACILITY_SHEET)
+  }
+
+  companion object {
+    private const val CONFIRM_FACILITY_SHEET = 1
   }
 }

@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
-import org.simple.clinic.security.pin.PinEntryUi.State
+import org.simple.clinic.security.pin.PinEntryUi.Mode
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -82,7 +82,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinDigestToVerify(pinDigest))
 
     verify(uiActions).hideError()
-    verify(uiActions).moveToState(State.Progress)
+    verify(uiActions).setPinEntryMode(Mode.Progress)
     verify(uiActions).dispatchAuthenticatedCallback("1234")
     verifyNoMoreInteractions(uiActions)
   }
@@ -94,7 +94,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinDigestToVerify(pinDigest))
     uiEvents.onNext(PinTextChanged(incorrectPin))
 
-    verify(uiActions).moveToState(State.PinEntry)
+    verify(uiActions).setPinEntryMode(Mode.PinEntry)
   }
 
   @Test
@@ -148,8 +148,8 @@ class PinEntryCardControllerTest {
 
     startMobiusLoop()
 
-    verify(uiActions).moveToState(State.PinEntry)
-    verify(uiActions).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
+    verify(uiActions).setPinEntryMode(Mode.PinEntry)
+    verify(uiActions).setPinEntryMode(Mode.BruteForceLocked(lockUntil = blockedTill))
   }
 
   @Test
@@ -163,7 +163,7 @@ class PinEntryCardControllerTest {
 
     startMobiusLoop()
 
-    verify(uiActions).moveToState(State.BruteForceLocked(lockUntil = blockedTill))
+    verify(uiActions).setPinEntryMode(Mode.BruteForceLocked(lockUntil = blockedTill))
   }
 
   @Test
@@ -192,7 +192,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinTextChanged(correctPin))
 
     verify(uiActions).hideError()
-    verify(uiActions).moveToState(State.Progress)
+    verify(uiActions).setPinEntryMode(Mode.Progress)
     verify(uiActions).dispatchAuthenticatedCallback(correctPin)
     verifyNoMoreInteractions(uiActions)
   }

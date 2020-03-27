@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.pin_entry_card.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
@@ -51,7 +50,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
 
   init {
     LayoutInflater.from(context).inflate(R.layout.pin_entry_card, this, true)
-    moveToState(PinEntryUi.State.PinEntry)
+    setPinEntryMode(PinEntryUi.Mode.PinEntry)
     setForgotButtonVisible(true)
   }
 
@@ -115,7 +114,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
           .map(CharSequence::toString)
           .map(::PinTextChanged)
 
-  override fun moveToState(state: PinEntryUi.State) {
+  override fun setPinEntryMode(mode: PinEntryUi.Mode) {
     val transition = AutoTransition()
         .setOrdering(AutoTransition.ORDERING_TOGETHER)
         .setDuration(200)
@@ -123,32 +122,32 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
         .removeTarget(errorTextView)
     TransitionManager.beginDelayedTransition(this, transition)
 
-    contentContainer.visibility = when (state) {
-      is PinEntryUi.State.PinEntry -> VISIBLE
-      is PinEntryUi.State.BruteForceLocked -> VISIBLE
-      is PinEntryUi.State.Progress -> INVISIBLE
+    contentContainer.visibility = when (mode) {
+      is PinEntryUi.Mode.PinEntry -> VISIBLE
+      is PinEntryUi.Mode.BruteForceLocked -> VISIBLE
+      is PinEntryUi.Mode.Progress -> INVISIBLE
     }
 
-    progressView.visibility = when (state) {
-      is PinEntryUi.State.PinEntry -> GONE
-      is PinEntryUi.State.BruteForceLocked -> GONE
-      is PinEntryUi.State.Progress -> VISIBLE
+    progressView.visibility = when (mode) {
+      is PinEntryUi.Mode.PinEntry -> GONE
+      is PinEntryUi.Mode.BruteForceLocked -> GONE
+      is PinEntryUi.Mode.Progress -> VISIBLE
     }
 
-    pinAndLockViewFlipper.displayedChildResId = when (state) {
-      is PinEntryUi.State.PinEntry -> R.id.pinEditText
-      is PinEntryUi.State.BruteForceLocked -> R.id.pinentry_bruteforcelock
-      is PinEntryUi.State.Progress -> pinAndLockViewFlipper.displayedChildResId
+    pinAndLockViewFlipper.displayedChildResId = when (mode) {
+      is PinEntryUi.Mode.PinEntry -> R.id.pinEditText
+      is PinEntryUi.Mode.BruteForceLocked -> R.id.pinentry_bruteforcelock
+      is PinEntryUi.Mode.Progress -> pinAndLockViewFlipper.displayedChildResId
     }
 
-    when (state) {
-      is PinEntryUi.State.PinEntry -> pinEditText.showKeyboard()
-      is PinEntryUi.State.Progress -> hideKeyboard()
-      is PinEntryUi.State.BruteForceLocked -> hideKeyboard()
+    when (mode) {
+      is PinEntryUi.Mode.PinEntry -> pinEditText.showKeyboard()
+      is PinEntryUi.Mode.Progress -> hideKeyboard()
+      is PinEntryUi.Mode.BruteForceLocked -> hideKeyboard()
     }.exhaustive()
 
-    if (state is PinEntryUi.State.BruteForceLocked) {
-      val timer = startTimerCountdown(state.lockUntil)
+    if (mode is PinEntryUi.Mode.BruteForceLocked) {
+      val timer = startTimerCountdown(mode.lockUntil)
       timer.start()
       pinEntryLockedCountdown = timer
     }

@@ -21,7 +21,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.PinDigestToVerify
 import org.simple.clinic.security.pin.PinEntryCardView
-import org.simple.clinic.security.pin.PinEntryUi.State
+import org.simple.clinic.security.pin.PinEntryUi.Mode
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -99,7 +99,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   private fun showError(@StringRes errorRes: Int) {
-    pinEntryCardView.moveToState(State.PinEntry)
+    pinEntryCardView.setPinEntryMode(Mode.PinEntry)
     pinEntryCardView.showError(context.getString(errorRes))
   }
 

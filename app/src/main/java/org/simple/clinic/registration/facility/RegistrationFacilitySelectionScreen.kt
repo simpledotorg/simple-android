@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.textChanges
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -60,6 +60,8 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     }
     TheActivity.component.inject(this)
 
+    val onScreenDestroyed = detaches().map { ScreenDestroyed() }
+
     bindUiToController(
         ui = this,
         events = Observable.mergeArray(
@@ -68,10 +70,10 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
             retryClicks(),
             facilityClicks(),
             locationPermissionChanges(),
-            registrationFacilityConfirmations()
+            registrationFacilityConfirmations(onScreenDestroyed)
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = onScreenDestroyed
     )
 
     toolbarViewWithSearch.setNavigationOnClickListener {
@@ -88,19 +90,19 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
 
     // Hiding the keyboard without adding a post{} block doesn't seem to work.
     post { hideKeyboard() }
-    hideKeyboardOnListScroll()
+    hideKeyboardOnListScroll(onScreenDestroyed)
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun searchQueryChanges() =
-      RxTextView
-          .textChanges(searchEditText)
+      searchEditText
+          .textChanges()
           .map { text -> RegistrationFacilitySearchQueryChanged(text.toString()) }
 
   private fun retryClicks() =
-      RxView
-          .clicks(errorRetryButton)
+      errorRetryButton
+          .clicks()
           .map { RegistrationFacilitySelectionRetryClicked() }
 
   private fun facilityClicks() =
@@ -108,14 +110,12 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
           .facilityClicks
           .map(::RegistrationFacilityClicked)
 
-  private fun registrationFacilityConfirmations(): Observable<UiEvent> {
-    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
-
+  private fun registrationFacilityConfirmations(onScreenDestroyed: Observable<ScreenDestroyed>): Observable<UiEvent> {
     return screenRouter
         .streamScreenResults()
         .ofType<ActivityResult>()
         .filter { it.requestCode == CONFIRM_FACILITY_SHEET && it.succeeded() && it.data != null }
-        .takeUntil(screenDestroys)
+        .takeUntil(onScreenDestroyed)
         .map { it.data!! }
         .map { intent ->
           val confirmedFacilityUuid = ConfirmFacilitySheet.confirmedFacilityUuid(intent)
@@ -129,14 +129,14 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   }
 
   @SuppressLint("CheckResult")
-  private fun hideKeyboardOnListScroll() {
+  private fun hideKeyboardOnListScroll(onScreenDestroyed: Observable<ScreenDestroyed>) {
     val scrollEvents = RxRecyclerView.scrollEvents(facilityRecyclerView)
     val scrollStateChanges = RxRecyclerView.scrollStateChanges(facilityRecyclerView)
 
     Observables.combineLatest(scrollEvents, scrollStateChanges)
         .compose(RecyclerViewUserScrollDetector.streamDetections())
         .filter { it.byUser }
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(onScreenDestroyed)
         .subscribe {
           hideKeyboard()
         }

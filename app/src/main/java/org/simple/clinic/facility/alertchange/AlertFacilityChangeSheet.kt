@@ -8,7 +8,6 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.wrap
@@ -25,17 +24,17 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
 
   companion object {
     const val FACILITY_CHANGE = 101
-    private const val CURRENT_FACILITY = "current_facility"
+    private const val CURRENT_FACILITY_NAME = "current_facility"
 
-    fun intent(context: Context, currentFacility: Facility): Intent {
+    fun intent(context: Context, currentFacilityName: String): Intent {
       val intent = Intent(context, AlertFacilityChangeSheet::class.java)
-      intent.putExtra(CURRENT_FACILITY, currentFacility)
+      intent.putExtra(CURRENT_FACILITY_NAME, currentFacilityName)
       return intent
     }
   }
 
-  private val currentFacility by lazy {
-    intent.getParcelableExtra<Facility>(CURRENT_FACILITY)!!
+  private val currentFacilityName by lazy {
+    intent.getStringExtra(CURRENT_FACILITY_NAME)!!
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +42,7 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
 
     setContentView(R.layout.sheet_alert_facility_change)
 
-    facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacility.name)
+    facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
     yesButton.setOnClickListener {
       closeSheet(Activity.RESULT_OK)
     }

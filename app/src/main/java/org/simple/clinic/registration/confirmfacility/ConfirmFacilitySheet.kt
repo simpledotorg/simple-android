@@ -23,6 +23,10 @@ class ConfirmFacilitySheet : BottomSheetActivity() {
       intent.putExtra(EXTRA_FACILITY_NAME, facilityName)
       return intent
     }
+
+    fun confirmedFacilityUuid(intent: Intent): UUID {
+      return intent.getSerializableExtra(EXTRA_FACILITY_UUID) as UUID
+    }
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {

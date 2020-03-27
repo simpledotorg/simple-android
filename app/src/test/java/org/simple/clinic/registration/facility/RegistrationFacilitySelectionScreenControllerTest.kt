@@ -409,6 +409,27 @@ class RegistrationFacilitySelectionScreenControllerTest {
   }
 
   @Test
+  fun `when a facility is confirmed then the ongoing entry should be updated with selected facility and the user should be logged in`() {
+    val ongoingEntry = OngoingRegistrationEntry(
+        uuid = UUID.fromString("252ef188-318c-443c-9c0c-37644e84bb6d"),
+        phoneNumber = "1234567890",
+        fullName = "Ashok",
+        pin = "1234",
+        pinConfirmation = "5678",
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
+
+    val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))
+    uiEvents.onNext(RegistrationFacilityConfirmed(facility1.uuid))
+
+    verify(screen).openRegistrationScreen()
+    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
+    verify(userSession).saveOngoingRegistrationEntryAsUser()
+  }
+
+  @Test
   fun `search field should only be shown when facilities are available`() {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.never())

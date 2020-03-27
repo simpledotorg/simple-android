@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.detaches
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_facility_selection.view.*
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
@@ -25,6 +27,7 @@ import org.simple.clinic.location.LOCATION_PERMISSION
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
@@ -64,7 +67,8 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
             searchQueryChanges(),
             retryClicks(),
             facilityClicks(),
-            locationPermissionChanges()
+            locationPermissionChanges(),
+            registrationFacilityConfirmations()
         ),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
@@ -103,6 +107,21 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
       recyclerViewAdapter
           .facilityClicks
           .map(::RegistrationFacilityClicked)
+
+  private fun registrationFacilityConfirmations(): Observable<UiEvent> {
+    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+
+    return screenRouter
+        .streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == CONFIRM_FACILITY_SHEET && it.succeeded() && it.data != null }
+        .takeUntil(screenDestroys)
+        .map { it.data!! }
+        .map { intent ->
+          val confirmedFacilityUuid = ConfirmFacilitySheet.confirmedFacilityUuid(intent)
+          RegistrationFacilityConfirmed(confirmedFacilityUuid)
+        }
+  }
 
   private fun locationPermissionChanges(): Observable<UiEvent> {
     val permissionResult = RuntimePermissions.check(activity, LOCATION_PERMISSION)

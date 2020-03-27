@@ -1,6 +1,6 @@
 package org.simple.clinic.security.pin
 
-import org.simple.clinic.security.pin.PinEntryUi.State
+import org.simple.clinic.security.pin.PinEntryUi.Mode
 
 interface UiActions {
 
@@ -8,7 +8,7 @@ interface UiActions {
   fun showIncorrectPinErrorForFirstAttempt()
   fun showIncorrectPinErrorOnSubsequentAttempts(remaining: Int)
   fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int)
-  fun moveToState(state: State)
+  fun setPinEntryMode(mode: Mode)
   fun clearPin()
   fun dispatchAuthenticatedCallback(enteredPin: String)
 }

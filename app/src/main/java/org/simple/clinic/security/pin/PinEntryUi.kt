@@ -6,15 +6,15 @@ import org.threeten.bp.Instant
 
 interface PinEntryUi {
 
-  sealed class State: Parcelable {
+  sealed class Mode: Parcelable {
 
     @Parcelize
-    object PinEntry : State()
+    object PinEntry : Mode()
 
     @Parcelize
-    object Progress : State()
+    object Progress : Mode()
 
     @Parcelize
-    data class BruteForceLocked(val lockUntil: Instant) : State()
+    data class BruteForceLocked(val lockUntil: Instant) : Mode()
   }
 }

@@ -34,7 +34,7 @@ class PinEntryUpdate(
       }
       is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt, PinVerified(model.enteredPin))
       is WrongPinEntered -> dispatch(AllowPinEntry, RecordFailedAttempt, ClearPin)
-      else -> noChange()
+      is PinAuthenticated -> noChange()
     }
   }
 

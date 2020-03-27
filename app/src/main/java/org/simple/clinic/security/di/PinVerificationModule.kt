@@ -4,6 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import org.simple.clinic.security.pin.verification.LocalUserPinVerificationMethod
+import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod
 import org.simple.clinic.security.pin.verification.OngoingLoginEntryPinVerificationMethod
 import org.simple.clinic.security.pin.verification.PinVerificationMethod
 
@@ -22,5 +23,12 @@ abstract class PinVerificationModule {
   @VerificationMethodKey(Method.OngoingEntry)
   abstract fun bindsOngoingEntryPinVerificationMethod(
       pinVerificationMethod: OngoingLoginEntryPinVerificationMethod
+  ): PinVerificationMethod
+
+  @Binds
+  @IntoMap
+  @VerificationMethodKey(Method.LoginPinOnServer)
+  abstract fun bindsLoginPinServerVerificationMethod(
+      pinVerificationMethod: LoginPinServerVerificationMethod
   ): PinVerificationMethod
 }

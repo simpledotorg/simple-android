@@ -206,12 +206,6 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     return events
         .ofType<RegistrationFacilityClicked>()
         .map { it.facility }
-        .flatMap { facility ->
-          userSession.ongoingRegistrationEntry()
-              .map { it.copy(facilityId = facility.uuid) }
-              .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
-              .andThen(userSession.saveOngoingRegistrationEntryAsUser())
-              .andThen(Observable.just { ui: Ui -> ui.openRegistrationScreen() })
-        }
+        .map { facility -> { ui: Ui -> ui.showConfirmFacilitySheet(facility.uuid, facility.name) } }
   }
 }

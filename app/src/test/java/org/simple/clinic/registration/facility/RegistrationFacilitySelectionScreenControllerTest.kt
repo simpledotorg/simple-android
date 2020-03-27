@@ -22,6 +22,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
@@ -35,7 +36,6 @@ import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
-import org.simple.clinic.TestData
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
@@ -390,24 +390,22 @@ class RegistrationFacilitySelectionScreenControllerTest {
   }
 
   @Test
-  fun `when a facility is clicked then the ongoing entry should be updated with selected facility and the user should be logged in`() {
+  fun `when a facility is clicked then show confirm facility sheet`() {
     val ongoingEntry = OngoingRegistrationEntry(
-        uuid = UUID.randomUUID(),
+        uuid = UUID.fromString("eb0a9bc0-b24d-4f3f-9990-aa05e217be1a"),
         phoneNumber = "1234567890",
         fullName = "Ashok",
         pin = "1234",
         pinConfirmation = "5678",
-        createdAt = Instant.now())
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"))
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
 
-    val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.randomUUID())
+    val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
     uiEvents.onNext(RegistrationFacilityClicked(facility1))
 
-    verify(screen).openRegistrationScreen()
-    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
-    verify(userSession).saveOngoingRegistrationEntryAsUser()
+    verify(screen).showConfirmFacilitySheet(facility1.uuid, facility1.name)
   }
 
   @Test

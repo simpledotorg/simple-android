@@ -28,6 +28,7 @@
     <attr name="verificationMethod" format="enum">
       <enum name="local" value="0"/>
       <enum name="ongoingEntry" value="1" />
+      <enum name="serverLogin" value="2" />
     </attr>
   </declare-styleable>
 </resources>

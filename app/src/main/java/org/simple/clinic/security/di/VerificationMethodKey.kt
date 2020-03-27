@@ -7,5 +7,6 @@ annotation class VerificationMethodKey(val value: Method)
 
 enum class Method {
   Local,
-  OngoingEntry
+  OngoingEntry,
+  LoginPinOnServer
 }

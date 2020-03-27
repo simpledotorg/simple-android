@@ -12,6 +12,12 @@ data class ActivateUserRequest(
     val body: Body
 ) {
 
+  companion object {
+    fun create(userUuid: UUID, pin: String): ActivateUserRequest {
+      return ActivateUserRequest(Body(userUuid, pin))
+    }
+  }
+
   @JsonClass(generateAdapter = true)
   data class Body(
 

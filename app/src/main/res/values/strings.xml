@@ -573,4 +573,9 @@
   <string name="confirmfacilitychange_negative_button">Cancel</string>
   <string name="confirmfacilitychange_positive_button">Yes</string>
   <string name="confirmfacilitychange_facility_name">%s?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">Are you at?</string>
+  <string name="registrationconfirmfacility_positive_button">Yes</string>
+  <string name="registrationconfirmfacility_negative_button">Cancel</string>
 </resources>

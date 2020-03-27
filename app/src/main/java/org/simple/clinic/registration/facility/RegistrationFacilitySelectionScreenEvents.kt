@@ -4,6 +4,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 class RegistrationFacilitySelectionRetryClicked : UiEvent {
   override val analyticsName = "Registration:Facility Selection:Retry Clicked"
@@ -26,4 +27,8 @@ data class RegistrationFacilityUserLocationUpdated(val location: LocationUpdate)
 
 data class RegistrationFacilityLocationPermissionChanged(val result: RuntimePermissionResult) : UiEvent {
   override val analyticsName = "Registration:Facility Selection:Location Permission Changed to $result"
+}
+
+data class RegistrationFacilityConfirmed(val facilityUuid: UUID) : UiEvent {
+  override val analyticsName: String = "Registration:Facility Selection:Confirmed Facility Selection"
 }

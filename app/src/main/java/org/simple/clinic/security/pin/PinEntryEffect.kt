@@ -29,3 +29,5 @@ object ClearPin: PinEntryEffect()
 data class DispatchPinVerified(val pin: String): PinEntryEffect()
 
 data class VerifyPin(val pin: String): PinEntryEffect()
+
+data class DispatchCorrectPinEntered(val pinVerifiedData: Any?): PinEntryEffect()

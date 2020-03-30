@@ -6,4 +6,5 @@ interface BloodPressureSummaryViewUiActions {
   fun openBloodPressureEntrySheet(patientUuid: UUID)
   fun openBloodPressureUpdateSheet(bpUuid: UUID)
   fun showBloodPressureHistoryScreen(patientUuid: UUID)
+  fun openAlertFacilityChangeSheet(facilityName: String)
 }

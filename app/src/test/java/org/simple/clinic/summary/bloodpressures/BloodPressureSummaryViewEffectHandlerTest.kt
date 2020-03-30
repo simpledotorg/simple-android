@@ -143,4 +143,16 @@ class BloodPressureSummaryViewEffectHandlerTest {
     testCase.assertOutgoingEvents(ShowFacilityChangeAlert(true))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when open alert facility change sheet effect is received, then open alert facility change sheet`() {
+    // when
+    val currentFacility = TestData.facility(uuid = UUID.fromString("47e3267c-90c3-48b3-ad24-146fc049bb05"))
+    testCase.dispatch(OpenAlertFacilityChangeSheet(currentFacility))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openAlertFacilityChangeSheet(currentFacility.name)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

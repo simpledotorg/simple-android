@@ -200,6 +200,10 @@ class BloodPressureSummaryView(
     screenRouter.push(BloodPressureHistoryScreenKey(patientUuid))
   }
 
+  override fun openAlertFacilityChangeSheet(facilityName: String) {
+    TODO("not implemented")
+  }
+
   @SuppressLint("CheckResult")
   private fun setupBpRecordedEvents(screenDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()

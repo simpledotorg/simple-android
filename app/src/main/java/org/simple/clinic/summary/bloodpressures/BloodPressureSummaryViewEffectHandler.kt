@@ -36,6 +36,7 @@ class BloodPressureSummaryViewEffectHandler @AssistedInject constructor(
         .addConsumer(OpenBloodPressureEntrySheet::class.java, { uiActions.openBloodPressureEntrySheet(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenBloodPressureUpdateSheet::class.java, { uiActions.openBloodPressureUpdateSheet(it.measurement.uuid) }, schedulersProvider.ui())
         .addConsumer(ShowBloodPressureHistoryScreen::class.java, { uiActions.showBloodPressureHistoryScreen(it.patientUuid) }, schedulersProvider.ui())
+        .addConsumer(OpenAlertFacilityChangeSheet::class.java, { uiActions.openAlertFacilityChangeSheet(it.currentFacility.name) }, schedulersProvider.ui())
         .build()
   }
 

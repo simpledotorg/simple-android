@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.prescribeddrugs
 
+import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -10,9 +11,11 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -24,6 +27,9 @@ class DrugSummaryUiControllerTest {
   private val ui = mock<DrugSummaryUi>()
   private val repository = mock<PrescriptionRepository>()
   private val events = PublishSubject.create<UiEvent>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
+  private val isFacilitySwitchedPreference: Preference<Boolean> = mock()
 
   lateinit var controller: DrugSummaryUiController
   lateinit var controllerSubscription: Disposable
@@ -64,19 +70,40 @@ class DrugSummaryUiControllerTest {
   }
 
   @Test
-  fun `when update medicines is clicked then updated prescription screen should be shown`() {
+  fun `when update medicines is clicked and facility is not switched then updated prescription screen should be shown`() {
     // given
     whenever(repository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.never<List<PrescribedDrug>>()
+    whenever(isFacilitySwitchedPreference.get()) doReturn false
 
     // when
     setupController()
     events.onNext(PatientSummaryUpdateDrugsClicked())
 
     verify(ui).showUpdatePrescribedDrugsScreen(patientUuid)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when update medicines is clicked and facility is switched then alert facility change sheet should be shown`() {
+    // given
+    val loggedInUser = TestData.loggedInUser(UUID.fromString("e83b9b27-0a05-4750-9ef7-270cda65217b"))
+    val currentFacility = TestData.facility(UUID.fromString("af8e817c-8772-4c84-9f4f-1f331fa0b2a5"))
+
+    whenever(isFacilitySwitchedPreference.get()) doReturn true
+    whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
+    whenever(facilityRepository.currentFacilityImmediate(loggedInUser)) doReturn currentFacility
+    whenever(repository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.never<List<PrescribedDrug>>()
+
+    // when
+    setupController()
+    events.onNext(PatientSummaryUpdateDrugsClicked())
+
+    verify(ui).showAlertFacilityChangeSheet(currentFacility.name)
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController() {
-    controller = DrugSummaryUiController(patientUuid, repository)
+    controller = DrugSummaryUiController(patientUuid, repository, facilityRepository, userSession, isFacilitySwitchedPreference)
 
     controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }
 

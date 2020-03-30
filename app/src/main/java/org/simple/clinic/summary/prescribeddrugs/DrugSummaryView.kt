@@ -1,10 +1,13 @@
 package org.simple.clinic.summary.prescribeddrugs
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.drugs_summary_view.view.*
 import org.simple.clinic.R
@@ -12,6 +15,8 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestampGenerator
@@ -45,12 +50,21 @@ class DrugSummaryView(
   lateinit var screenRouter: ScreenRouter
 
   @Inject
+  lateinit var activity: AppCompatActivity
+
+  @Inject
   lateinit var controllerFactory: DrugSummaryUiController.Factory
+
+  lateinit var screenKey: PatientSummaryScreenKey
 
   private val internalEvents = PublishSubject.create<DrugSummaryEvent>()
 
   init {
     inflate(context, R.layout.drugs_summary_view, this)
+  }
+
+  companion object {
+    private const val ALERT_FACILITY_CHANGE = 101
   }
 
   override fun onFinishInflate() {
@@ -61,13 +75,24 @@ class DrugSummaryView(
 
     context.injector<DrugSummaryViewInjector>().inject(this)
 
-    val key = screenRouter.key<PatientSummaryScreenKey>(this)
+    screenKey = screenRouter.key(this)
+    val screenDestroys = detaches().map { ScreenDestroyed() }
     bindUiToController(
         ui = this,
         events = Observable.merge(screenCreates(), internalEvents),
-        controller = controllerFactory.create(key.patientUuid),
-        screenDestroys = detaches().map { ScreenDestroyed() }
+        controller = controllerFactory.create(screenKey.patientUuid),
+        screenDestroys = screenDestroys
     )
+    setupAlertResults(screenDestroys)
+  }
+
+  @SuppressLint("CheckResult")
+  private fun setupAlertResults(screenDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == ALERT_FACILITY_CHANGE && it.succeeded() }
+        .takeUntil(screenDestroys)
+        .subscribe { showUpdatePrescribedDrugsScreen(screenKey.patientUuid) }
   }
 
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
@@ -83,6 +108,10 @@ class DrugSummaryView(
 
   override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
     screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
+  }
+
+  override fun showAlertFacilityChangeSheet(facilityName: String) {
+    activity.startActivityForResult(AlertFacilityChangeSheet.intent(context, facilityName), ALERT_FACILITY_CHANGE)
   }
 
   private fun bind(

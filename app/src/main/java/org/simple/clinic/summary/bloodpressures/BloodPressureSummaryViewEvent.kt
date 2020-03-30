@@ -23,3 +23,5 @@ data class BloodPressureClicked(val measurement: BloodPressureMeasurement) : Blo
 object SeeAllClicked : BloodPressureSummaryViewEvent() {
   override val analyticsName = "Patient Summary:See All Clicked"
 }
+
+data class ShowFacilityChangeAlert(val showFacilityChangeAlert: Boolean) : BloodPressureSummaryViewEvent()

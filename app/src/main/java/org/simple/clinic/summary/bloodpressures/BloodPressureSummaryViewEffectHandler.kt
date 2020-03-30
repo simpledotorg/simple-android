@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.bloodpressures
 
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -9,13 +10,15 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import javax.inject.Named
 
 class BloodPressureSummaryViewEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val bloodPressureRepository: BloodPressureRepository,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: BloodPressureSummaryViewUiActions
+    @Assisted private val uiActions: BloodPressureSummaryViewUiActions,
+    @Named("is_facility_switched") private val isFacilitySwitchedPreference: Preference<Boolean>
 ) {
 
   @AssistedInject.Factory
@@ -29,10 +32,20 @@ class BloodPressureSummaryViewEffectHandler @AssistedInject constructor(
         .addTransformer(LoadBloodPressures::class.java, loadBloodPressureHistory(schedulersProvider.io()))
         .addTransformer(LoadBloodPressuresCount::class.java, loadBloodPressuresCount(schedulersProvider.io()))
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
+        .addTransformer(ShouldShowFacilityChangeAlert::class.java, checkFacilitySwitchFlag(schedulersProvider.io()))
         .addConsumer(OpenBloodPressureEntrySheet::class.java, { uiActions.openBloodPressureEntrySheet(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenBloodPressureUpdateSheet::class.java, { uiActions.openBloodPressureUpdateSheet(it.measurement.uuid) }, schedulersProvider.ui())
         .addConsumer(ShowBloodPressureHistoryScreen::class.java, { uiActions.showBloodPressureHistoryScreen(it.patientUuid) }, schedulersProvider.ui())
         .build()
+  }
+
+  private fun checkFacilitySwitchFlag(io: Scheduler): ObservableTransformer<ShouldShowFacilityChangeAlert, BloodPressureSummaryViewEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .observeOn(io)
+          .map { isFacilitySwitchedPreference.get() }
+          .map(::ShowFacilityChangeAlert)
+    }
   }
 
   private fun loadBloodPressureHistory(

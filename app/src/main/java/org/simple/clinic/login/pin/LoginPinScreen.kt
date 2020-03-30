@@ -68,7 +68,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
       pinEntryCardView
           .downstreamUiEvents
           .ofType<PinAuthenticated>()
-          .map { LoginPinAuthenticated(it.pin) }
+          .map { LoginPinAuthenticated(it.data as String) }
 
   private fun backClicks(): Observable<PinBackClicked> {
     val backClicksFromView = RxView.clicks(backButton).map { PinBackClicked() }

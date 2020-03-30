@@ -45,6 +45,7 @@ import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.isVisible
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
@@ -161,7 +162,13 @@ class PatientSummaryScreen(
 
     return backButton.clicks()
         .mergeWith(hardwareBackKeyClicks)
-        .map { PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp) }
+        .map {
+          if (linkIdWithPatientView.isVisible) {
+            PatientSummaryLinkIdCancelled
+          } else {
+            PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
+          }
+        }
   }
 
   private fun bloodPressureSaves(): Observable<PatientSummaryBloodPressureSaved> {

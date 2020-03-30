@@ -279,3 +279,6 @@ fun ViewPropertyAnimator.setDuration(duration: Duration): ViewPropertyAnimator {
 
 val Int.dp: Int
   get() = (Resources.getSystem().displayMetrics.density * this).toInt()
+
+inline val View.isVisible: Boolean
+  get() = visibility == View.VISIBLE

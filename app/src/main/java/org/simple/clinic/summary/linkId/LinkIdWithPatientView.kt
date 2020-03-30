@@ -14,8 +14,8 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss

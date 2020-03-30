@@ -11,4 +11,7 @@ interface UiActions {
   fun setPinEntryMode(mode: Mode)
   fun clearPin()
   fun pinVerified(data: Any?)
+  fun showNetworkError()
+  fun showServerError()
+  fun showUnexpectedError()
 }

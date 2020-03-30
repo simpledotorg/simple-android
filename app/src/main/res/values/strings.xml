@@ -14,6 +14,7 @@
   <string name="gender_unknown_letter" translatable="false">U</string>
   <string name="api_unexpected_error">Something went wrong. Please try again.</string>
   <string name="api_network_error">No internet connection</string>
+  <string name="api_server_error">Server error! Please try again later.</string>
 
   <!-- Country names -->
   <string name="country_india">India</string>

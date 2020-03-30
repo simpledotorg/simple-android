@@ -21,10 +21,12 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenKey
 import org.simple.clinic.di.injector
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.summary.ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.summary.SUMMARY_REQCODE_BP_ENTRY
@@ -91,6 +93,8 @@ class BloodPressureSummaryView(
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  lateinit var screenKey: PatientSummaryScreenKey
+
   private val viewEvents = PublishSubject.create<BloodPressureSummaryViewEvent>()
 
   private val events: Observable<BloodPressureSummaryViewEvent> by unsafeLazy {
@@ -109,7 +113,7 @@ class BloodPressureSummaryView(
   }
 
   private val delegate: MobiusDelegate<BloodPressureSummaryViewModel, BloodPressureSummaryViewEvent, BloodPressureSummaryViewEffect> by unsafeLazy {
-    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
+    screenKey = screenRouter.key(this)
     MobiusDelegate(
         events = events,
         defaultModel = BloodPressureSummaryViewModel.create(screenKey.patientUuid),
@@ -139,6 +143,7 @@ class BloodPressureSummaryView(
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
 
     setupBpRecordedEvents(screenDestroys)
+    setupAlertResults(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
@@ -201,7 +206,7 @@ class BloodPressureSummaryView(
   }
 
   override fun openAlertFacilityChangeSheet(facilityName: String) {
-    TODO("not implemented")
+    activity.startActivityForResult(AlertFacilityChangeSheet.intent(context, facilityName), ALERT_FACILITY_CHANGE)
   }
 
   @SuppressLint("CheckResult")
@@ -212,6 +217,15 @@ class BloodPressureSummaryView(
         .filter { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
         .takeUntil(screenDestroys)
         .subscribe { bpRecorded?.invoke() }
+  }
+
+  @SuppressLint("CheckResult")
+  private fun setupAlertResults(screenDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == ALERT_FACILITY_CHANGE && it.succeeded() }
+        .takeUntil(screenDestroys)
+        .subscribe { openBloodPressureEntrySheet(screenKey.patientUuid) }
   }
 
   private fun addNewBpClicked(): Observable<BloodPressureSummaryViewEvent> {

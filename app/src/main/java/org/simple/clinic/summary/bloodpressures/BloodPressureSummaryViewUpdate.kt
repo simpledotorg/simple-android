@@ -18,10 +18,13 @@ class BloodPressureSummaryViewUpdate(
       is BloodPressuresLoaded -> next(model.bloodPressuresLoaded(event.measurements))
       is BloodPressuresCountLoaded -> next(model.bloodPressuresCountLoaded(event.count))
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility), loadBloodPressures(model.patientUuid, event.facility.config))
-      is AddNewBloodPressureClicked -> dispatch(OpenBloodPressureEntrySheet(model.patientUuid))
+      is AddNewBloodPressureClicked -> dispatch(ShouldShowFacilityChangeAlert)
       is BloodPressureClicked -> dispatch(OpenBloodPressureUpdateSheet(event.measurement))
       is SeeAllClicked -> dispatch(ShowBloodPressureHistoryScreen(model.patientUuid))
-      is ShowFacilityChangeAlert -> TODO()
+      is ShowFacilityChangeAlert -> {
+        val effect = if (event.showFacilityChangeAlert) OpenAlertFacilityChangeSheet(model.facility!!) else OpenBloodPressureEntrySheet(model.patientUuid)
+        dispatch(effect)
+      }
     }
   }
 

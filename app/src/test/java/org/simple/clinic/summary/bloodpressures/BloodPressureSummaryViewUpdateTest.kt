@@ -7,8 +7,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityConfig
 import java.util.UUID
 
 class BloodPressureSummaryViewUpdateTest {
@@ -88,7 +88,7 @@ class BloodPressureSummaryViewUpdateTest {
         .whenEvent(AddNewBloodPressureClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenBloodPressureEntrySheet(patientUuid) as BloodPressureSummaryViewEffect)
+            hasEffects(ShouldShowFacilityChangeAlert as BloodPressureSummaryViewEffect)
         ))
   }
 
@@ -135,6 +135,34 @@ class BloodPressureSummaryViewUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowBloodPressureHistoryScreen(patientUuid) as BloodPressureSummaryViewEffect)
+        ))
+  }
+
+  @Test
+  fun `when show alert facility change is true, then open alert facility change sheet`() {
+    val facility = TestData.facility(uuid = UUID.fromString("924d5e18-039e-4e83-9f36-5a0974d8a299"))
+    val facilityLoadedModel = defaultModel.currentFacilityLoaded(facility)
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(ShowFacilityChangeAlert(true))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenAlertFacilityChangeSheet(facility) as BloodPressureSummaryViewEffect)
+        ))
+  }
+
+  @Test
+  fun `when show alert facility change is false, then open bp entry sheet`() {
+    val facility = TestData.facility(uuid = UUID.fromString("924d5e18-039e-4e83-9f36-5a0974d8a299"))
+    val facilityLoadedModel = defaultModel.currentFacilityLoaded(facility)
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(ShowFacilityChangeAlert(false))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenBloodPressureEntrySheet(patientUuid) as BloodPressureSummaryViewEffect)
         ))
   }
 }

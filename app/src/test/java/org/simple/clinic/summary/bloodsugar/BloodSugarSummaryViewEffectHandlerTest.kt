@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.bloodsugar
 
+import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -8,11 +9,13 @@ import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.Random
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.TestData
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
@@ -21,11 +24,17 @@ class BloodSugarSummaryViewEffectHandlerTest {
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val uiActions = mock<UiActions>()
   private val config = mock<BloodSugarSummaryConfig>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
+  private val isFacilitySwitched = mock<Preference<Boolean>>()
   private val effectHandler = BloodSugarSummaryViewEffectHandler(
       bloodSugarRepository,
       TrampolineSchedulersProvider(),
       uiActions,
-      config
+      config,
+      userSession,
+      facilityRepository,
+      isFacilitySwitched
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -95,5 +104,18 @@ class BloodSugarSummaryViewEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).openBloodSugarUpdateSheet(bloodSugar.uuid, Random)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when should show alert facility change effect is received, then return the switch facility flag value`() {
+    //given
+    whenever(isFacilitySwitched.get()) doReturn true
+
+    //when
+    testCase.dispatch(ShouldShowAlertFacilityChange)
+
+    //then
+    testCase.assertOutgoingEvents(ShowAlertFacilityChangeEvent(true))
+    verifyZeroInteractions(uiActions)
   }
 }

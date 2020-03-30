@@ -14,3 +14,5 @@ data class FetchBloodSugarCount(val patientUuid: UUID) : BloodSugarSummaryViewEf
 data class ShowBloodSugarHistoryScreen(val patientUuid: UUID) : BloodSugarSummaryViewEffect()
 
 data class OpenBloodSugarUpdateSheet(val measurement: BloodSugarMeasurement) : BloodSugarSummaryViewEffect()
+
+object ShouldShowAlertFacilityChange : BloodSugarSummaryViewEffect()

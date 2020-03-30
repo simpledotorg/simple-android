@@ -8,7 +8,8 @@ import android.widget.RelativeLayout
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.widget.editorActions
+import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_phone.view.*
 import org.simple.clinic.R
@@ -17,7 +18,6 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.name.RegistrationNameScreenKey
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.router.screen.RouterDirection
@@ -66,13 +66,14 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   private fun screenCreates() = Observable.just(RegistrationPhoneScreenCreated())
 
   private fun phoneNumberTextChanges() =
-      RxTextView.textChanges(phoneNumberEditText)
+      phoneNumberEditText
+          .textChanges()
           .map(CharSequence::toString)
           .map(::RegistrationPhoneNumberTextChanged)
 
   private fun doneClicks() =
-      RxTextView
-          .editorActions(phoneNumberEditText) { it == EditorInfo.IME_ACTION_DONE }
+      phoneNumberEditText
+          .editorActions { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationPhoneDoneClicked() }
 
   fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {

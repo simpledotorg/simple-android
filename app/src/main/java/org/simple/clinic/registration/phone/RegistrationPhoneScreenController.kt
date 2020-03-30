@@ -3,10 +3,13 @@ package org.simple.clinic.registration.phone
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.FacilityPullResult
+import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
 import org.simple.clinic.user.LoggedInUserPayload
@@ -14,6 +17,7 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.user.finduser.FindUserResult.Found
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
@@ -29,7 +33,8 @@ typealias UiChange = (Ui) -> Unit
 class RegistrationPhoneScreenController @Inject constructor(
     private val userSession: UserSession,
     private val userLookup: UserLookup,
-    private val numberValidator: PhoneNumberValidator
+    private val numberValidator: PhoneNumberValidator,
+    private val facilitySync: FacilitySync
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -97,7 +102,9 @@ class RegistrationPhoneScreenController @Inject constructor(
         .withLatestFrom(phoneNumberTextChanges)
         .filter { (_, number) -> numberValidator.validate(number, MOBILE) == VALID }
         .flatMap { (_, number) ->
-          val cachedUserFindResult = userLookup.find(number)
+          val cachedUserFindResult = facilitySync
+              .pullWithResult()
+              .flatMap { facilityPullResult -> mapFacilityPullResultToUserLookup(facilityPullResult, number) }
               .cache()
               .toObservable()
 
@@ -130,6 +137,17 @@ class RegistrationPhoneScreenController @Inject constructor(
 
           Observable.merge(uiChangesForFindUser, proceedToLogin, proceedWithRegistration)
         }
+  }
+
+  private fun mapFacilityPullResultToUserLookup(
+      facilityPullResult: FacilityPullResult,
+      number: String
+  ): Single<FindUserResult> {
+    return when (facilityPullResult) {
+      FacilityPullResult.Success -> userLookup.find(number)
+      FacilityPullResult.NetworkError -> Single.just(NetworkError)
+      FacilityPullResult.UnexpectedError -> Single.just(UnexpectedError)
+    }
   }
 
   private fun saveFoundUserLocallyAndProceedToLogin(foundUser: Found): Observable<UiChange> {

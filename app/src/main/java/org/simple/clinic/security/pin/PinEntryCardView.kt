@@ -220,6 +220,18 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     showError(resources.getString(R.string.pinentry_error_incorrect_pin_attempts_limit_reached, attemptsMade.toString()))
   }
 
+  override fun showNetworkError() {
+    showError(resources.getString(R.string.api_network_error))
+  }
+
+  override fun showServerError() {
+    showError(resources.getString(R.string.api_server_error))
+  }
+
+  override fun showUnexpectedError() {
+    showError(resources.getString(R.string.api_unexpected_error))
+  }
+
   override fun clearPin() {
     pinEditText.text = null
   }

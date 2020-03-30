@@ -31,9 +31,9 @@ class PinEntryUpdate(
           is Incorrect -> dispatch(AllowPinEntry, RecordFailedAttempt, ClearPin)
           // Will be filled in later when we implement PIN verification
           // via the server API call.
-          is NetworkError -> noChange()
-          is ServerError -> noChange()
-          is OtherError -> noChange()
+          is NetworkError -> dispatch(AllowPinEntry, ShowNetworkError)
+          is ServerError -> dispatch(AllowPinEntry, ShowServerError)
+          is OtherError -> dispatch(AllowPinEntry, ShowUnexpectedError)
         }
       }
       is PinAuthenticated -> noChange()

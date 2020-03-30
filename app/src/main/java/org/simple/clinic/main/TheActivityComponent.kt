@@ -54,7 +54,6 @@ import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.searchresultsview.PatientSearchView
-import org.simple.clinic.searchresultsview.SearchResultsModule
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.settings.SettingsScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
@@ -141,7 +140,6 @@ interface TheActivityComponent :
 
 @Module(includes = [
   PatientsModule::class,
-  SearchResultsModule::class,
   AssistedInjectModule::class
 ])
 class TheActivityModule {

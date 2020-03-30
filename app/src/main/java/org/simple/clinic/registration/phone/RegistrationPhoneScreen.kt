@@ -15,6 +15,7 @@ import org.simple.clinic.R
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
+import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.name.RegistrationNameScreenKey
@@ -46,7 +47,7 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     phoneNumberEditText.showKeyboard()
 
@@ -122,5 +123,9 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   fun showAccessDeniedScreen(fullName: String) {
     screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(fullName), RouterDirection.REPLACE)
+  }
+
+  interface Injector {
+    fun inject(target: RegistrationPhoneScreen)
   }
 }

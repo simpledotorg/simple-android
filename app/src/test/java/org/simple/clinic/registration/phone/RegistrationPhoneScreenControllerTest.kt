@@ -19,6 +19,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityPullResult
+import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
@@ -41,13 +43,15 @@ class RegistrationPhoneScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val numberValidator = IndianPhoneNumberValidator()
   private val findUserWithPhoneNumber = mock<UserLookup>()
+  private val facilitySync = mock<FacilitySync>()
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create<UiEvent>()
 
   private val controller: RegistrationPhoneScreenController = RegistrationPhoneScreenController(
       userSession = userSession,
       userLookup = findUserWithPhoneNumber,
-      numberValidator = numberValidator
+      numberValidator = numberValidator,
+      facilitySync = facilitySync
   )
 
   @Before
@@ -99,6 +103,7 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when proceed is clicked with a valid number then the ongoing entry should be updated and then the next screen should be opened`() {
     val validNumber = "1234567890"
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).doReturn(Completable.complete())
     whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
@@ -114,6 +119,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `proceed button clicks should only be accepted if the input phone number is valid`() {
     val invalidNumber = "12345"
     val validNumber = "1234567890"
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).doReturn(Completable.complete())
     whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
@@ -148,6 +154,7 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when proceed is clicked with a valid phone number then a network call should be made to check if the phone number belongs to an existing user`() {
     val inputNumber = "1234567890"
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.never())
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
@@ -161,6 +168,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `when the network call for checking phone number fails then an error should be shown`() {
     val inputNumber = "1234567890"
 
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber))
         .doReturn(Single.just<FindUserResult>(UnexpectedError))
         .doReturn(Single.just<FindUserResult>(NetworkError))
@@ -184,7 +192,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `when the phone number belongs to an existing user then an ongoing login entry should be created and login PIN entry screen should be opened`() {
     val inputNumber = "1234567890"
     val userPayload = TestData.loggedInUserPayload(phone = inputNumber)
-
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
     whenever(userSession.saveOngoingLoginEntry(any())).doReturn(Completable.complete())
     whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
@@ -212,7 +220,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `when the phone number belongs to an existing user and creating ongoing entry fails, an error should be shown`() {
     val inputNumber = "1234567890"
     val userPayload = TestData.loggedInUserPayload(phone = inputNumber)
-
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
     whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
     whenever(userSession.saveOngoingLoginEntry(any())).doReturn(Completable.error(RuntimeException()))
@@ -240,7 +248,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `when the existing user is denied access then access denied screen should show`() {
     val inputNumber = "1234567890"
     val userPayload = TestData.loggedInUserPayload(phone = inputNumber, status = UserStatus.DisapprovedForSyncing)
-
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
@@ -255,6 +263,7 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when proceed is clicked then any existing error should be cleared`() {
     val inputNumber = "1234567890"
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.never())
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
@@ -279,5 +288,70 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneScreenCreated())
 
     verify(screen, never()).showLoggedOutOfDeviceDialog()
+  }
+
+  @Test
+  fun `before a phone number is looked up, the facilities must be synced`() {
+    // given
+    val phoneNumber = "1234567890"
+    whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn Single.never<FindUserResult>()
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+
+    // when
+    uiEvents.onNext(RegistrationPhoneNumberTextChanged(phoneNumber))
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+
+    // then
+    verify(screen).showProgressIndicator()
+    verify(facilitySync).pullWithResult()
+  }
+
+  @Test
+  fun `when pulling the facilities fails, the number must not be looked up`() {
+    // given
+    val phoneNumber = "1234567890"
+    whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn Single.never<FindUserResult>()
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.NetworkError)
+
+    // when
+    uiEvents.onNext(RegistrationPhoneNumberTextChanged(phoneNumber))
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+
+    // then
+    verify(findUserWithPhoneNumber, never()).find(phoneNumber)
+  }
+
+  @Test
+  fun `when pulling the facilities fails with a network error, the network error message must be shown`() {
+    // given
+    val phoneNumber = "1234567890"
+    whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn Single.never<FindUserResult>()
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.NetworkError)
+
+    // when
+    uiEvents.onNext(RegistrationPhoneNumberTextChanged(phoneNumber))
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+
+    // then
+    verify(screen).hideProgressIndicator()
+    verify(screen).showNetworkErrorMessage()
+    verify(findUserWithPhoneNumber, never()).find(phoneNumber)
+  }
+
+  @Test
+  fun `when pulling the facilities fails with any other error, the unexpected error message must be shown`() {
+    // given
+    val phoneNumber = "1234567890"
+    whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn Single.never<FindUserResult>()
+    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.UnexpectedError)
+
+    // when
+    uiEvents.onNext(RegistrationPhoneNumberTextChanged(phoneNumber))
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+
+    // then
+    verify(screen).hideProgressIndicator()
+    verify(screen).showUnexpectedErrorMessage()
+    verify(findUserWithPhoneNumber, never()).find(phoneNumber)
   }
 }

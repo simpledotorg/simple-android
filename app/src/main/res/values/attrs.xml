@@ -23,4 +23,11 @@
     <attr name="contentPaddingStart" format="dimension" />
     <attr name="contentPaddingEnd" format="dimension" />
   </declare-styleable>
+
+  <declare-styleable name="PinEntryCardView">
+    <attr name="verificationMethod" format="enum">
+      <enum name="local" value="0"/>
+      <enum name="ongoingEntry" value="1" />
+    </attr>
+  </declare-styleable>
 </resources>

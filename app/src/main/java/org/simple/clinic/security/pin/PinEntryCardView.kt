@@ -19,6 +19,8 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.security.di.Method
+import org.simple.clinic.security.pin.verification.PinVerificationMethod
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
@@ -45,13 +47,29 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   @Inject
   lateinit var clock: UtcClock
 
+  @Inject
+  lateinit var verificationMethods: Map<Method, @JvmSuppressWildcards PinVerificationMethod>
+
   val upstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
   val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
+
+  private val method: Method
 
   init {
     LayoutInflater.from(context).inflate(R.layout.pin_entry_card, this, true)
     setPinEntryMode(PinEntryUi.Mode.PinEntry)
     setForgotButtonVisible(true)
+
+    with(context.obtainStyledAttributes(attrs, R.styleable.PinEntryCardView)) {
+      val methodIndex = getInt(R.styleable.PinEntryCardView_verificationMethod, -1)
+
+      if(methodIndex < 0) {
+        throw RuntimeException("No verification method defined!")
+      }
+      method = Method.values()[methodIndex]
+
+      recycle()
+    }
   }
 
   private val events by unsafeLazy {
@@ -71,7 +89,10 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
         defaultModel = PinEntryModel.default(),
         init = PinEntryInit(),
         update = PinEntryUpdate(submitPinAtLength = 4),
-        effectHandler = effectHandlerFactory.create(uiActions = this).build(),
+        effectHandler = effectHandlerFactory.create(
+            uiActions = this,
+            pinVerificationMethod = verificationMethods.getValue(method)
+        ).build(),
         modelUpdateListener = uiRenderer::render
     )
   }

@@ -12,8 +12,6 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.facility.FacilityPullResult
-import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.User
@@ -32,7 +30,6 @@ class LoginPinScreenControllerTest {
   private val screen = mock<LoginPinScreen>()
   private val userSession = mock<UserSession>()
   private val requestLoginOtp = mock<RequestLoginOtp>()
-  private val facilitySync = mock<FacilitySync>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
@@ -50,15 +47,12 @@ class LoginPinScreenControllerTest {
 
   private val controller = LoginPinScreenController(
       userSession = userSession,
-      requestLoginOtp = requestLoginOtp,
-      facilitySync = facilitySync
+      requestLoginOtp = requestLoginOtp
   )
 
   @Before
   fun setUp() {
     whenever(requestLoginOtp.requestForUser(loginUserUuid))
-        .thenReturn(Single.never())
-    whenever(facilitySync.pullWithResult())
         .thenReturn(Single.never())
     whenever(userSession.storeUser(any(), any()))
         .thenReturn(Completable.never())
@@ -82,8 +76,6 @@ class LoginPinScreenControllerTest {
         .thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any()))
         .thenReturn(Completable.complete())
-    whenever(facilitySync.pullWithResult())
-        .thenReturn(Single.just(FacilityPullResult.Success))
     whenever(requestLoginOtp.requestForUser(loginUserUuid))
         .thenReturn(
             Single.just(RequestLoginOtp.Result.NetworkError),
@@ -130,34 +122,7 @@ class LoginPinScreenControllerTest {
   }
 
   @Test
-  fun `when PIN is submitted and sync facilities fails, show errors`() {
-    // given
-    whenever(userSession.ongoingLoginEntry())
-        .thenReturn(Single.just(ongoingLoginEntry))
-    whenever(userSession.saveOngoingLoginEntry(any()))
-        .thenReturn(Completable.complete())
-    whenever(requestLoginOtp.requestForUser(loginUserUuid))
-        .thenReturn(Single.just(RequestLoginOtp.Result.NetworkError))
-    whenever(facilitySync.pullWithResult())
-        .thenReturn(
-            Single.just(FacilityPullResult.NetworkError),
-            Single.just(FacilityPullResult.UnexpectedError)
-        )
-
-    // when
-    uiEvents.onNext(LoginPinAuthenticated("0000"))
-    verify(screen).showNetworkError()
-
-    clearInvocations(screen)
-
-    uiEvents.onNext(LoginPinAuthenticated("0000"))
-    verify(screen).showUnexpectedError()
-
-    verify(requestLoginOtp, never()).requestForUser(loginUserUuid)
-  }
-
-  @Test
-  fun `when PIN is submitted, sync facilities, request login OTP, save the logged in user and open the home screen`() {
+  fun `when PIN is submitted, request login OTP, save the logged in user and open the home screen`() {
     // given
     val registrationFacilityUuid = UUID.fromString("5314616f-35bb-4a4d-99b1-13f5849de82e")
     val phoneNumber = "phone number"
@@ -195,8 +160,6 @@ class LoginPinScreenControllerTest {
         .thenReturn(Completable.complete())
     whenever(requestLoginOtp.requestForUser(loginUserUuid))
         .thenReturn(Single.just(RequestLoginOtp.Result.Success))
-    whenever(facilitySync.pullWithResult())
-        .thenReturn(Single.just(FacilityPullResult.Success))
     whenever(userSession.storeUser(expectedUser, registrationFacilityUuid))
         .thenReturn(Completable.complete())
 
@@ -204,7 +167,6 @@ class LoginPinScreenControllerTest {
     uiEvents.onNext(LoginPinAuthenticated("0000"))
 
     // then
-    verify(facilitySync).pullWithResult()
     verify(requestLoginOtp).requestForUser(loginUserUuid)
     verify(userSession).storeUser(user = expectedUser, facilityUuid = registrationFacilityUuid)
     verify(screen).openHomeScreen()

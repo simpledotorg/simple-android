@@ -24,17 +24,17 @@ class PinEntryUpdate(
 
         next(updatedModel, generateEffectsForPinSubmission(updatedModel))
       }
-      is PinEntryStateChanged -> {
-        val effects = when (val protectedState = event.state) {
-          is Allowed -> setOf(generateEffectForAllowingPinEntry(protectedState), AllowPinEntry)
-          is Blocked -> setOf(ShowIncorrectPinLimitReachedError(protectedState.attemptsMade), BlockPinEntryUntil(protectedState.blockedTill))
-        }
-
-        Next.dispatch(effects)
-      }
+      is PinEntryStateChanged -> Next.dispatch(effectsForStateChange(event.state))
       is CorrectPinEntered -> dispatch(RecordSuccessfulAttempt, PinVerified(model.enteredPin))
       is WrongPinEntered -> dispatch(AllowPinEntry, RecordFailedAttempt, ClearPin)
       is PinAuthenticated -> noChange()
+    }
+  }
+
+  private fun effectsForStateChange(protectedState: BruteForceProtection.ProtectedState): Set<PinEntryEffect> {
+    return when (protectedState) {
+      is Allowed -> setOf(generateEffectForAllowingPinEntry(protectedState), AllowPinEntry)
+      is Blocked -> setOf(ShowIncorrectPinLimitReachedError(protectedState.attemptsMade), BlockPinEntryUntil(protectedState.blockedTill))
     }
   }
 
@@ -53,7 +53,7 @@ class PinEntryUpdate(
   private fun generateEffectsForPinSubmission(model: PinEntryModel): Set<PinEntryEffect> {
     val effects = mutableSetOf<PinEntryEffect>()
 
-    if(isReadyToSubmitPin(model)) {
+    if (isReadyToSubmitPin(model)) {
       effects.apply {
         add(ValidateEnteredPin(model.enteredPin, model.pinDigestToVerify!!))
         add(HideError)

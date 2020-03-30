@@ -42,6 +42,9 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addAction(ClearPin::class.java, { uiActions.clearPin() }, schedulersProvider.ui())
         .addTransformer(VerifyPin::class.java, verifyPin(schedulersProvider.io()))
         .addConsumer(CorrectPinEntered::class.java, { uiActions.pinVerified(it.pinVerifiedData) }, schedulersProvider.ui())
+        .addAction(ShowNetworkError::class.java, { uiActions.showNetworkError() }, schedulersProvider.ui())
+        .addAction(ShowServerError::class.java, { uiActions.showServerError() }, schedulersProvider.ui())
+        .addAction(ShowUnexpectedError::class.java, { uiActions.showUnexpectedError() }, schedulersProvider.ui())
         .build()
   }
 

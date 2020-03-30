@@ -27,3 +27,9 @@ object ClearPin: PinEntryEffect()
 data class VerifyPin(val pin: String): PinEntryEffect()
 
 data class CorrectPinEntered(val pinVerifiedData: Any?): PinEntryEffect()
+
+object ShowNetworkError: PinEntryEffect()
+
+object ShowServerError: PinEntryEffect()
+
+object ShowUnexpectedError: PinEntryEffect()

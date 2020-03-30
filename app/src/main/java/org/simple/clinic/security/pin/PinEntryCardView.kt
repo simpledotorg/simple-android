@@ -233,6 +233,11 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     downstreamUiEvents.onNext(PinAuthenticated(enteredPin))
   }
 
+  override fun pinVerified(data: Any?) {
+    // TODO: Change the type to an `Any?`
+    downstreamUiEvents.onNext(PinAuthenticated(data as String))
+  }
+
   /** Defaults to visible. */
   fun setForgotButtonVisible(visible: Boolean) {
     if (visible) {

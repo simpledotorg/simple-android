@@ -8,8 +8,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.facility.FacilityPullResult
-import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.RequestLoginOtp.Result.NetworkError
@@ -27,8 +25,7 @@ typealias UiChange = (Ui) -> Unit
 
 class LoginPinScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val requestLoginOtp: RequestLoginOtp,
-    private val facilitySync: FacilitySync
+    private val requestLoginOtp: RequestLoginOtp
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -40,7 +37,7 @@ class LoginPinScreenController @Inject constructor(
     return Observable.mergeArray(
         screenSetups(replayedEvents),
         backClicks(replayedEvents),
-        syncFacilitiesAndLoginUser(replayedEvents)
+        loginUser(replayedEvents)
     )
   }
 
@@ -73,18 +70,13 @@ class LoginPinScreenController @Inject constructor(
         .flatMap { Observable.just(Ui::goBackToRegistrationScreen) }
   }
 
-  private fun syncFacilitiesAndLoginUser(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun loginUser(events: Observable<UiEvent>): Observable<UiChange> {
     val updatedEntryStream = events
         .ofType<LoginPinScreenUpdatedLoginEntry>()
         .map { it.ongoingLoginEntry }
 
-    val syncFacilityResults = updatedEntryStream
-        .flatMapSingle { facilitySync.pullWithResult() }
-        .share()
-
-    val requestOtpResults = syncFacilityResults
-        .ofType<FacilityPullResult.Success>()
-        .withLatestFrom(updatedEntryStream) { _, entry -> entry.uuid }
+    val requestOtpResults = updatedEntryStream
+        .map { entry -> entry.uuid }
         .flatMapSingle(requestLoginOtp::requestForUser)
         .share()
 
@@ -98,7 +90,6 @@ class LoginPinScreenController @Inject constructor(
 
     return Observable.merge(
         saveUserAndGoToHomeScreen,
-        showErrorsForFacilityPullFailures(syncFacilityResults),
         showErrorsForRequestLoginOtpFailures(requestOtpResults)
     )
   }
@@ -124,17 +115,4 @@ class LoginPinScreenController @Inject constructor(
         }
   }
 
-  private fun showErrorsForFacilityPullFailures(syncFacilityResults: Observable<FacilityPullResult>): Observable<UiChange> {
-    return syncFacilityResults
-        .filter { it !is FacilityPullResult.Success }
-        .map { result ->
-          { ui: Ui ->
-            when (result) {
-              is FacilityPullResult.NetworkError -> ui.showNetworkError()
-              is FacilityPullResult.UnexpectedError -> ui.showUnexpectedError()
-              is FacilityPullResult.Success -> throw RuntimeException("Success should not be handled here")
-            }.exhaustive()
-          }
-        }
-  }
 }

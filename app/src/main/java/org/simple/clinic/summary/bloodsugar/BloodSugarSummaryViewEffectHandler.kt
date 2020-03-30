@@ -36,6 +36,7 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
         .addAction(OpenBloodSugarTypeSelector::class.java, uiActions::showBloodSugarTypeSelector, schedulersProvider.ui())
         .addConsumer(ShowBloodSugarHistoryScreen::class.java, { uiActions.showBloodSugarHistoryScreen(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenBloodSugarUpdateSheet::class.java, { uiActions.openBloodSugarUpdateSheet(it.measurement.uuid, it.measurement.reading.type) }, schedulersProvider.ui())
+        .addConsumer(OpenAlertFacilityChangeSheet::class.java, { uiActions.showAlertFacilityChangeSheet(it.currentFacility.name) }, schedulersProvider.ui())
         .build()
   }
 

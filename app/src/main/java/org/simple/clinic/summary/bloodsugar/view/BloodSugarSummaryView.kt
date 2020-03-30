@@ -200,6 +200,10 @@ class BloodSugarSummaryView(
     context.startActivity(intent)
   }
 
+  override fun showAlertFacilityChangeSheet(facilityName: String) {
+    TODO("not implemented")
+  }
+
   @SuppressLint("CheckResult")
   private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()

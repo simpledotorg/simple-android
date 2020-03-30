@@ -118,4 +118,18 @@ class BloodSugarSummaryViewEffectHandlerTest {
     testCase.assertOutgoingEvents(ShowAlertFacilityChangeEvent(true))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when show alert facility change effect is received then alert facility change sheet should be opened`() {
+    //given
+    val facility = TestData.facility(uuid = UUID.fromString("2687bf2c-7ce0-4631-8d21-202e994534df"))
+
+    //when
+    testCase.dispatch(OpenAlertFacilityChangeSheet(facility))
+
+    //then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showAlertFacilityChangeSheet(facility.name)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

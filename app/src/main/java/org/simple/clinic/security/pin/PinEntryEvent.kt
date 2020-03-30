@@ -12,7 +12,7 @@ data class PinTextChanged(val pin: String) : PinEntryEvent() {
 
 data class PinEntryStateChanged(val state: ProtectedState) : PinEntryEvent()
 
-data class PinAuthenticated(val pin: String) : PinEntryEvent() {
+data class PinAuthenticated(val data: Any?) : PinEntryEvent() {
   override val analyticsName = "PIN authenticated"
 }
 

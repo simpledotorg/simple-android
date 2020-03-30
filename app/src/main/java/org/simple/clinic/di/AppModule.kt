@@ -26,6 +26,7 @@ import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.remoteconfig.RemoteConfigModule
 import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigModule
+import org.simple.clinic.security.di.PinVerificationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.settings.SettingsModule
 import org.simple.clinic.storage.StorageModule
@@ -77,7 +78,8 @@ import javax.inject.Named
   RetrofitModule::class,
   ClearPatientDataModule::class,
   PatientEntryModule::class,
-  FlipperModule::class
+  FlipperModule::class,
+  PinVerificationModule::class
 ])
 class AppModule(private val appContext: Application) {
 

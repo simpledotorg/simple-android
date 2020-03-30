@@ -45,7 +45,8 @@ class PinEntryCardControllerTest {
       passwordHasher = passwordHasher,
       bruteForceProtection = bruteForceProtection,
       schedulersProvider = TrampolineSchedulersProvider(),
-      uiActions = uiActions
+      uiActions = uiActions,
+      pinVerificationMethod = mock()
   )
 
   private lateinit var testFixture: MobiusTestFixture<PinEntryModel, PinEntryEvent, PinEntryEffect>

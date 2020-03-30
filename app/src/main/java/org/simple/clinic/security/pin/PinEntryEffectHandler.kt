@@ -12,18 +12,23 @@ import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.PinEntryUi.Mode.BruteForceLocked
 import org.simple.clinic.security.pin.PinEntryUi.Mode.PinEntry
 import org.simple.clinic.security.pin.PinEntryUi.Mode.Progress
+import org.simple.clinic.security.pin.verification.PinVerificationMethod
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PinEntryEffectHandler @AssistedInject constructor(
     private val passwordHasher: PasswordHasher,
     private val bruteForceProtection: BruteForceProtection,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: UiActions
+    @Assisted private val uiActions: UiActions,
+    @Assisted private val pinVerificationMethod: PinVerificationMethod
 ) {
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(uiActions: UiActions): PinEntryEffectHandler
+    fun create(
+        uiActions: UiActions,
+        pinVerificationMethod: PinVerificationMethod
+    ): PinEntryEffectHandler
   }
 
   fun build(): ObservableTransformer<PinEntryEffect, PinEntryEvent> {

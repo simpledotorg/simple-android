@@ -122,8 +122,8 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
     LoggedOutOfDeviceDialog.show(activity.supportFragmentManager)
   }
 
-  fun showAccessDeniedScreen(fullName: String) {
-    screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(fullName), RouterDirection.REPLACE)
+  fun showAccessDeniedScreen(number: String) {
+    screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(number), RouterDirection.REPLACE)
   }
 
   interface Injector {

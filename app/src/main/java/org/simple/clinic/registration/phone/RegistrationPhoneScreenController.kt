@@ -12,12 +12,12 @@ import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
-import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.finduser.FindUserResult
+import org.simple.clinic.user.finduser.FindUserResult.Found
 import org.simple.clinic.user.finduser.FindUserResult.Found_Old
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
@@ -123,8 +123,8 @@ class RegistrationPhoneScreenController @Inject constructor(
               .startWith(Observable.just({ ui: Ui -> ui.hideAnyError() }, { ui: Ui -> ui.showProgressIndicator() }))
 
           val proceedToLogin = cachedUserFindResult
-              .ofType<Found_Old>()
-              .flatMap(this::saveFoundUserLocallyAndProceedToLogin)
+              .ofType<Found>()
+              .flatMap { saveFoundUserLocallyAndProceedToLogin(number, it.uuid, it.status) }
 
           val proceedWithRegistration = cachedUserFindResult
               .ofType<NotFound>()
@@ -144,25 +144,26 @@ class RegistrationPhoneScreenController @Inject constructor(
       number: String
   ): Single<FindUserResult> {
     return when (facilityPullResult) {
-      FacilityPullResult.Success -> userLookup.find_old(number)
+      FacilityPullResult.Success -> Single.just(userLookup.find(number))
       FacilityPullResult.NetworkError -> Single.just(NetworkError)
       FacilityPullResult.UnexpectedError -> Single.just(UnexpectedError)
     }
   }
 
-  private fun saveFoundUserLocallyAndProceedToLogin(foundUser: Found_Old): Observable<UiChange> {
-    val user = Observable.just(foundUser.user)
+  private fun saveFoundUserLocallyAndProceedToLogin(
+      number: String,
+      userUuid: UUID,
+      userStatus: UserStatus
+  ): Observable<UiChange> {
 
-    return if (foundUser.user.status == UserStatus.DisapprovedForSyncing) {
-      user.map {
-        { ui: Ui ->
+    return if (userStatus == UserStatus.DisapprovedForSyncing) {
+        Observable.just { ui: Ui ->
           ui.hideProgressIndicator()
-          ui.showAccessDeniedScreen(it.fullName)
+          ui.showAccessDeniedScreen(number)
         }
-      }
     } else {
-      user
-          .map(this::loggedInUserPayloadToOngoingLoginEntry)
+      Observable
+          .fromCallable { OngoingLoginEntry(uuid = userUuid, phoneNumber = number, status = userStatus) }
           .flatMapCompletable(userSession::saveOngoingLoginEntry)
           .andThen(userSession.clearOngoingRegistrationEntry())
           .andThen(Observable.just { ui: Ui ->
@@ -177,18 +178,6 @@ class RegistrationPhoneScreenController @Inject constructor(
           }
     }
   }
-
-  private fun loggedInUserPayloadToOngoingLoginEntry(loggedInUserPayload: LoggedInUserPayload) = OngoingLoginEntry(
-      uuid = loggedInUserPayload.uuid,
-      phoneNumber = loggedInUserPayload.phoneNumber,
-      pin = null,
-      fullName = loggedInUserPayload.fullName,
-      pinDigest = loggedInUserPayload.pinDigest,
-      registrationFacilityUuid = loggedInUserPayload.registrationFacilityId,
-      status = loggedInUserPayload.status,
-      createdAt = loggedInUserPayload.createdAt,
-      updatedAt = loggedInUserPayload.updatedAt
-  )
 
   private fun showLoggedOutOnThisDeviceDialog(events: Observable<UiEvent>): Observable<UiChange> {
     return events

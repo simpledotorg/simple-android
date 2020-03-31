@@ -5,14 +5,8 @@ import org.junit.rules.RuleChain
 
 object Rules {
 
-  private var quarantineClassLoader: ClassLoader = ClassLoader.getSystemClassLoader()
-
-  fun overrideQuarantineClassloader(classLoader: ClassLoader) {
-    quarantineClassLoader = classLoader
-  }
-
   fun global(): RuleChain = RuleChain
       .emptyRuleChain()
-      .around(QuarantineTestRule(quarantineClassLoader))
+      .around(QuarantineTestRule())
       .around(RxErrorsRule())
 }

@@ -9,7 +9,7 @@ import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.RoomDao
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.user.finduser.FindUserResult.Found
+import org.simple.clinic.user.finduser.FindUserResult.Found_Old
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.mapType
 import timber.log.Timber
@@ -24,8 +24,8 @@ class RefreshCurrentUser @Inject constructor(
     return Single.fromCallable { userDao.userImmediate() }
         .doOnSuccess { Timber.i("Refreshing logged-in user") }
         .flatMapCompletable { user ->
-          userLookup.find(user.phoneNumber)
-              .mapType<Found, LoggedInUserPayload> { it.user }
+          userLookup.find_old(user.phoneNumber)
+              .mapType<Found_Old, LoggedInUserPayload> { it.user }
               .map { payload -> mapPayloadToUser(user, payload, newLoggedInStatus(user, payload)) }
               .flatMapCompletable { updatedUserDetails ->
                 Completable.fromAction { userDao.createOrUpdate(updatedUserDetails) }

@@ -13,7 +13,7 @@ import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.finduser.FindUserResult
-import org.simple.clinic.user.finduser.FindUserResult.Found
+import org.simple.clinic.user.finduser.FindUserResult.Found_Old
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toUser
@@ -36,7 +36,7 @@ class RefreshCurrentUserTest {
   fun `when refreshing the user succeeds, the updated user details must be saved in the database`() {
     // given
     val userPayload = TestData.loggedInUserPayload(uuid = userUuid, phone = phone, status = ApprovedForSyncing)
-    whenever(findUserWithPhoneNumber.find(phone)) doReturn Single.just<FindUserResult>(Found(userPayload))
+    whenever(findUserWithPhoneNumber.find_old(phone)) doReturn Single.just<FindUserResult>(Found_Old(userPayload))
 
     val savedUser = userPayload.toUser(LOGGED_IN)
     whenever(userDao.userImmediate()) doReturn savedUser
@@ -51,7 +51,7 @@ class RefreshCurrentUserTest {
   @Test
   fun `when the locally saved user has requested a PIN reset and the refreshed user has been approved for syncing, the user must be updated as logged in`() {
     val userPayload = TestData.loggedInUserPayload(uuid = userUuid, phone = phone, status = ApprovedForSyncing)
-    whenever(findUserWithPhoneNumber.find(phone)) doReturn Single.just<FindUserResult>(Found(userPayload))
+    whenever(findUserWithPhoneNumber.find_old(phone)) doReturn Single.just<FindUserResult>(Found_Old(userPayload))
 
     val savedUser = userPayload.toUser(RESET_PIN_REQUESTED)
     whenever(userDao.userImmediate()) doReturn savedUser

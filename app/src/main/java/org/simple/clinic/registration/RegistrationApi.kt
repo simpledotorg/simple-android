@@ -2,6 +2,7 @@ package org.simple.clinic.registration
 
 import io.reactivex.Single
 import org.simple.clinic.user.LoggedInUserPayload
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -18,4 +19,9 @@ interface RegistrationApi {
   fun createUser(
       @Body body: RegistrationRequest
   ): Single<RegistrationResponse>
+
+  @POST("v4/users/find")
+  fun findUserByPhoneNumber(
+      @Body request: FindUserRequest
+  ): Call<FindUserResponse>
 }

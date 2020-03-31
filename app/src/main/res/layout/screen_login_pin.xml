@@ -35,5 +35,5 @@
     android:id="@+id/loginpin_pin_entry_card"
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/loginpin_logo_container"
-    app:verificationMethod="ongoingEntry"/>
+    app:verificationMethod="serverLogin"/>
 </org.simple.clinic.login.pin.LoginPinScreen>

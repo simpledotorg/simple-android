@@ -229,7 +229,6 @@
 
   <!-- Login -->
   <string name="loginpin_go_back">Go back to phone number screen</string>
-  <string name="loginpin_error_check_internet_connection" translatable="false">@string/api_network_error</string>
 
   <!-- App lock -->
   <string name="applock_logout">Not you?</string>

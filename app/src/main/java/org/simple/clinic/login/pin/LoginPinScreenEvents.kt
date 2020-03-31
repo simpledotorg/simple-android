@@ -9,7 +9,7 @@ class PinBackClicked : UiEvent {
   override val analyticsName = "Login:Pin Entry:Back Clicked"
 }
 
-data class LoginPinAuthenticated(val pin: String) : UiEvent {
+data class LoginPinAuthenticated(val newLoginEntry: OngoingLoginEntry): UiEvent {
   override val analyticsName = "Login:Pin authenticated"
 }
 

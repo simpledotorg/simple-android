@@ -9,8 +9,8 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_login_pin.view.*
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection
@@ -36,7 +36,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
       return
     }
 
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     pinEntryCardView.setForgotButtonVisible(false)
 
@@ -112,5 +112,9 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   fun goBackToRegistrationScreen() {
     screenRouter.pop()
+  }
+
+  interface Injector {
+    fun inject(target: LoginPinScreen)
   }
 }

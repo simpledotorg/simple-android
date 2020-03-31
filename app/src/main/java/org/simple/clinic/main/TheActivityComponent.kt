@@ -84,11 +84,11 @@ interface TheActivityComponent :
     BloodSugarHistoryScreenInjector,
     AccessDeniedScreenInjector,
     PinEntryCardView.Injector,
-  RegistrationPhoneScreen.Injector {
+    RegistrationPhoneScreen.Injector,
+    LoginPinScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: PatientsScreen)
-  fun inject(target: LoginPinScreen)
   fun inject(target: AppLockScreen)
   fun inject(target: OverdueScreen)
   fun inject(target: PatientEntryScreen)

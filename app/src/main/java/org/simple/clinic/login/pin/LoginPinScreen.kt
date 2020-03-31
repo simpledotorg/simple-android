@@ -2,15 +2,12 @@ package org.simple.clinic.login.pin
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.ImageButton
 import android.widget.RelativeLayout
-import android.widget.TextView
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_login_pin.view.*
-import kotterknife.bindView
-import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
@@ -52,7 +49,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
             otpReceived()
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
   }
 
@@ -83,7 +80,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   private fun backClicks(): Observable<PinBackClicked> {
-    val backClicksFromView = RxView.clicks(backButton).map { PinBackClicked() }
+    val backClicksFromView = backButton.clicks().map { PinBackClicked() }
 
     val backClicksFromSystem = Observable.create<PinBackClicked> { emitter ->
       val backPressInterceptor = object : BackPressInterceptor {

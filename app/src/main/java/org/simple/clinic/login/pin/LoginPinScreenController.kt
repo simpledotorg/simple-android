@@ -5,7 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.OngoingLoginEntry
@@ -24,8 +23,7 @@ typealias Ui = LoginPinScreen
 typealias UiChange = (Ui) -> Unit
 
 class LoginPinScreenController @Inject constructor(
-    private val userSession: UserSession,
-    private val requestLoginOtp: RequestLoginOtp
+    private val userSession: UserSession
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -71,27 +69,13 @@ class LoginPinScreenController @Inject constructor(
   }
 
   private fun loginUser(events: Observable<UiEvent>): Observable<UiChange> {
-    val updatedEntryStream = events
+    return events
         .ofType<LoginPinScreenUpdatedLoginEntry>()
         .map { it.ongoingLoginEntry }
-
-    val requestOtpResults = updatedEntryStream
-        .map { entry -> entry.uuid }
-        .flatMapSingle(requestLoginOtp::requestForUser)
-        .share()
-
-    val saveUserAndGoToHomeScreen = requestOtpResults
-        .ofType<Success>()
-        .withLatestFrom(updatedEntryStream) { _, entry -> entry }
         .flatMap { entry ->
           createUserLocally(entry)
               .andThen(Observable.just { ui: Ui -> ui.openHomeScreen() })
         }
-
-    return Observable.merge(
-        saveUserAndGoToHomeScreen,
-        showErrorsForRequestLoginOtpFailures(requestOtpResults)
-    )
   }
 
   private fun createUserLocally(entry: OngoingLoginEntry): Completable {
@@ -100,19 +84,4 @@ class LoginPinScreenController @Inject constructor(
         facilityUuid = entry.registrationFacilityUuid!!
     )
   }
-
-  private fun showErrorsForRequestLoginOtpFailures(requestOtpResults: Observable<RequestLoginOtp.Result>): Observable<(Ui) -> Unit> {
-    return requestOtpResults
-        .filter { it !is Success }
-        .map { result ->
-          { ui: Ui ->
-            when (result) {
-              NetworkError -> ui.showNetworkError()
-              is ServerError, is OtherError -> ui.showUnexpectedError()
-              Success -> throw RuntimeException("Success should not be handled here")
-            }.exhaustive()
-          }
-        }
-  }
-
 }

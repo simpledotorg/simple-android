@@ -26,7 +26,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.finduser.FindUserResult
-import org.simple.clinic.user.finduser.FindUserResult.Found
+import org.simple.clinic.user.finduser.FindUserResult.Found_Old
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
@@ -106,7 +106,7 @@ class RegistrationPhoneScreenControllerTest {
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).doReturn(Completable.complete())
-    whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
+    whenever(findUserWithPhoneNumber.find_old(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(validNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
@@ -122,7 +122,7 @@ class RegistrationPhoneScreenControllerTest {
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).doReturn(Completable.complete())
-    whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
+    whenever(findUserWithPhoneNumber.find_old(validNumber)).doReturn(Single.just<FindUserResult>(NotFound))
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(invalidNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
@@ -155,13 +155,13 @@ class RegistrationPhoneScreenControllerTest {
   fun `when proceed is clicked with a valid phone number then a network call should be made to check if the phone number belongs to an existing user`() {
     val inputNumber = "1234567890"
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.never())
+    whenever(findUserWithPhoneNumber.find_old(inputNumber)).doReturn(Single.never())
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     verify(screen).showProgressIndicator()
-    verify(findUserWithPhoneNumber).find(inputNumber)
+    verify(findUserWithPhoneNumber).find_old(inputNumber)
   }
 
   @Test
@@ -169,7 +169,7 @@ class RegistrationPhoneScreenControllerTest {
     val inputNumber = "1234567890"
 
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(findUserWithPhoneNumber.find(inputNumber))
+    whenever(findUserWithPhoneNumber.find_old(inputNumber))
         .doReturn(Single.just<FindUserResult>(UnexpectedError))
         .doReturn(Single.just<FindUserResult>(NetworkError))
 
@@ -193,7 +193,7 @@ class RegistrationPhoneScreenControllerTest {
     val inputNumber = "1234567890"
     val userPayload = TestData.loggedInUserPayload(phone = inputNumber)
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
+    whenever(findUserWithPhoneNumber.find_old(inputNumber)).doReturn(Single.just<FindUserResult>(Found_Old(userPayload)))
     whenever(userSession.saveOngoingLoginEntry(any())).doReturn(Completable.complete())
     whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
 
@@ -221,7 +221,7 @@ class RegistrationPhoneScreenControllerTest {
     val inputNumber = "1234567890"
     val userPayload = TestData.loggedInUserPayload(phone = inputNumber)
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
+    whenever(findUserWithPhoneNumber.find_old(inputNumber)).doReturn(Single.just<FindUserResult>(Found_Old(userPayload)))
     whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
     whenever(userSession.saveOngoingLoginEntry(any())).doReturn(Completable.error(RuntimeException()))
 
@@ -249,7 +249,7 @@ class RegistrationPhoneScreenControllerTest {
     val inputNumber = "1234567890"
     val userPayload = TestData.loggedInUserPayload(phone = inputNumber, status = UserStatus.DisapprovedForSyncing)
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.just<FindUserResult>(Found(userPayload)))
+    whenever(findUserWithPhoneNumber.find_old(inputNumber)).doReturn(Single.just<FindUserResult>(Found_Old(userPayload)))
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
@@ -264,7 +264,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `when proceed is clicked then any existing error should be cleared`() {
     val inputNumber = "1234567890"
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Single.never())
+    whenever(findUserWithPhoneNumber.find_old(inputNumber)).doReturn(Single.never())
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
@@ -294,7 +294,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `before a phone number is looked up, the facilities must be synced`() {
     // given
     val phoneNumber = "1234567890"
-    whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn Single.never<FindUserResult>()
+    whenever(findUserWithPhoneNumber.find_old(phoneNumber)) doReturn Single.never<FindUserResult>()
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
 
     // when
@@ -310,7 +310,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `when pulling the facilities fails, the number must not be looked up`() {
     // given
     val phoneNumber = "1234567890"
-    whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn Single.never<FindUserResult>()
+    whenever(findUserWithPhoneNumber.find_old(phoneNumber)) doReturn Single.never<FindUserResult>()
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.NetworkError)
 
     // when
@@ -318,14 +318,14 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(findUserWithPhoneNumber, never()).find(phoneNumber)
+    verify(findUserWithPhoneNumber, never()).find_old(phoneNumber)
   }
 
   @Test
   fun `when pulling the facilities fails with a network error, the network error message must be shown`() {
     // given
     val phoneNumber = "1234567890"
-    whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn Single.never<FindUserResult>()
+    whenever(findUserWithPhoneNumber.find_old(phoneNumber)) doReturn Single.never<FindUserResult>()
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.NetworkError)
 
     // when
@@ -335,14 +335,14 @@ class RegistrationPhoneScreenControllerTest {
     // then
     verify(screen).hideProgressIndicator()
     verify(screen).showNetworkErrorMessage()
-    verify(findUserWithPhoneNumber, never()).find(phoneNumber)
+    verify(findUserWithPhoneNumber, never()).find_old(phoneNumber)
   }
 
   @Test
   fun `when pulling the facilities fails with any other error, the unexpected error message must be shown`() {
     // given
     val phoneNumber = "1234567890"
-    whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn Single.never<FindUserResult>()
+    whenever(findUserWithPhoneNumber.find_old(phoneNumber)) doReturn Single.never<FindUserResult>()
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.UnexpectedError)
 
     // when
@@ -352,6 +352,6 @@ class RegistrationPhoneScreenControllerTest {
     // then
     verify(screen).hideProgressIndicator()
     verify(screen).showUnexpectedErrorMessage()
-    verify(findUserWithPhoneNumber, never()).find(phoneNumber)
+    verify(findUserWithPhoneNumber, never()).find_old(phoneNumber)
   }
 }

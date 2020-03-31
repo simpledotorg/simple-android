@@ -111,7 +111,7 @@ class RegistrationPhoneScreenController @Inject constructor(
           val uiChangesForFindUser = cachedUserFindResult
               .flatMap {
                 when (it) {
-                  is Found_Old, is NotFound -> Observable.never()
+                  is Found_Old, is Found, is NotFound -> Observable.never()
                   is NetworkError -> Observable.just(
                       { ui: Ui -> ui.hideProgressIndicator() },
                       { ui: Ui -> ui.showNetworkErrorMessage() })

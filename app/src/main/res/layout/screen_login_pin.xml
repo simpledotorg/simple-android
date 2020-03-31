@@ -14,13 +14,13 @@
     android:background="?colorPrimary">
 
     <ImageButton
-      android:id="@+id/loginpin_back"
+      android:id="@+id/backButton"
       style="@style/Clinic.LoginBackButton"
       android:contentDescription="@string/loginpin_go_back"
       android:src="@drawable/ic_arrow_back_24dp" />
 
     <TextView
-      android:id="@+id/loginpin_phone_number"
+      android:id="@+id/phoneNumberTextView"
       style="@style/Clinic.LoginPinPhoneNumber"
       tools:text="1234567890" />
   </FrameLayout>
@@ -28,11 +28,11 @@
   <View
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:layout_alignTop="@+id/loginpin_pin_entry_card"
+    android:layout_alignTop="@+id/pinEntryCardView"
     android:background="?colorPrimary" />
 
   <org.simple.clinic.security.pin.PinEntryCardView
-    android:id="@+id/loginpin_pin_entry_card"
+    android:id="@+id/pinEntryCardView"
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/loginpin_logo_container"
     app:verificationMethod="serverLogin"/>

@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.android.synthetic.main.screen_login_pin.view.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
@@ -18,7 +19,6 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinAuthenticated
-import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.*
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -32,10 +32,6 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   @Inject
   lateinit var controller: LoginPinScreenController
-
-  private val phoneNumberTextView by bindView<TextView>(R.id.loginpin_phone_number)
-  private val backButton by bindView<ImageButton>(R.id.loginpin_back)
-  private val pinEntryCardView by bindView<PinEntryCardView>(R.id.loginpin_pin_entry_card)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

@@ -38,10 +38,10 @@ class UserLookupTest {
     whenever(registrationApi.findUser(phoneNumber)) doReturn Single.just(loggedInUserPayload)
 
     // when
-    val result = findUserWithPhoneNumber.find(phoneNumber).blockingGet()
+    val result = findUserWithPhoneNumber.find_old(phoneNumber).blockingGet()
 
     // then
-    assertThat(result).isEqualTo(Found(loggedInUserPayload))
+    assertThat(result).isEqualTo(Found_Old(loggedInUserPayload))
   }
 
   @Test
@@ -50,7 +50,7 @@ class UserLookupTest {
     whenever(registrationApi.findUser(phoneNumber)) doReturn Single.error(httpException(404))
 
     // when
-    val result = findUserWithPhoneNumber.find(phoneNumber).blockingGet()
+    val result = findUserWithPhoneNumber.find_old(phoneNumber).blockingGet()
 
     // then
     assertThat(result).isEqualTo(NotFound)
@@ -62,7 +62,7 @@ class UserLookupTest {
     whenever(registrationApi.findUser(phoneNumber)) doReturn Single.error(IOException())
 
     // when
-    val result = findUserWithPhoneNumber.find(phoneNumber).blockingGet()
+    val result = findUserWithPhoneNumber.find_old(phoneNumber).blockingGet()
 
     // then
     assertThat(result).isEqualTo(NetworkError)
@@ -74,7 +74,7 @@ class UserLookupTest {
     whenever(registrationApi.findUser(phoneNumber)) doReturn Single.error(httpException(500))
 
     // when
-    val result = findUserWithPhoneNumber.find(phoneNumber).blockingGet()
+    val result = findUserWithPhoneNumber.find_old(phoneNumber).blockingGet()
 
     // then
     assertThat(result).isEqualTo(UnexpectedError)

@@ -18,7 +18,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.finduser.FindUserResult
-import org.simple.clinic.user.finduser.FindUserResult.Found
+import org.simple.clinic.user.finduser.FindUserResult.Found_Old
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
@@ -111,7 +111,7 @@ class RegistrationPhoneScreenController @Inject constructor(
           val uiChangesForFindUser = cachedUserFindResult
               .flatMap {
                 when (it) {
-                  is Found, is NotFound -> Observable.never()
+                  is Found_Old, is NotFound -> Observable.never()
                   is NetworkError -> Observable.just(
                       { ui: Ui -> ui.hideProgressIndicator() },
                       { ui: Ui -> ui.showNetworkErrorMessage() })
@@ -123,7 +123,7 @@ class RegistrationPhoneScreenController @Inject constructor(
               .startWith(Observable.just({ ui: Ui -> ui.hideAnyError() }, { ui: Ui -> ui.showProgressIndicator() }))
 
           val proceedToLogin = cachedUserFindResult
-              .ofType<Found>()
+              .ofType<Found_Old>()
               .flatMap(this::saveFoundUserLocallyAndProceedToLogin)
 
           val proceedWithRegistration = cachedUserFindResult
@@ -144,13 +144,13 @@ class RegistrationPhoneScreenController @Inject constructor(
       number: String
   ): Single<FindUserResult> {
     return when (facilityPullResult) {
-      FacilityPullResult.Success -> userLookup.find(number)
+      FacilityPullResult.Success -> userLookup.find_old(number)
       FacilityPullResult.NetworkError -> Single.just(NetworkError)
       FacilityPullResult.UnexpectedError -> Single.just(UnexpectedError)
     }
   }
 
-  private fun saveFoundUserLocallyAndProceedToLogin(foundUser: Found): Observable<UiChange> {
+  private fun saveFoundUserLocallyAndProceedToLogin(foundUser: Found_Old): Observable<UiChange> {
     val user = Observable.just(foundUser.user)
 
     return if (foundUser.user.status == UserStatus.DisapprovedForSyncing) {

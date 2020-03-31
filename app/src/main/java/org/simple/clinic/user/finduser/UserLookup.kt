@@ -2,7 +2,7 @@ package org.simple.clinic.user.finduser
 
 import io.reactivex.Single
 import org.simple.clinic.registration.RegistrationApi
-import org.simple.clinic.user.finduser.FindUserResult.Found
+import org.simple.clinic.user.finduser.FindUserResult.Found_Old
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
@@ -15,10 +15,11 @@ class UserLookup @Inject constructor(
     private val registrationApi: RegistrationApi
 ) {
 
-  fun find(phoneNumber: String): Single<FindUserResult> {
+  // TODO: Remove this once we move to the new user refresh call
+  fun find_old(phoneNumber: String): Single<FindUserResult> {
     Timber.i("Finding user with phone number")
     return registrationApi.findUser(phoneNumber)
-        .map { user -> Found(user) as FindUserResult }
+        .map { user -> Found_Old(user) as FindUserResult }
         .onErrorReturn(::mapErrorToResult)
   }
 

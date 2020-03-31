@@ -25,7 +25,7 @@ class PinEntryUpdate(
       is PinEntryStateChanged -> Next.dispatch(effectsForStateChange(event.state))
       is PinVerified -> {
         when (event.result) {
-          is Correct -> dispatch(RecordSuccessfulAttempt, DispatchCorrectPinEntered(event.result.data))
+          is Correct -> dispatch(RecordSuccessfulAttempt, CorrectPinEntered(event.result.data))
           is Incorrect -> dispatch(AllowPinEntry, RecordFailedAttempt, ClearPin)
           // Will be filled in later when we implement PIN verification
           // via the server API call.

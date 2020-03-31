@@ -28,6 +28,9 @@ class LoginUserWithOtpServerIntegrationTest {
   @Inject
   lateinit var loginUserWithOtp: LoginUserWithOtp
 
+  @Inject
+  lateinit var loginApi: LoginApi
+
   @field:[Inject Named("user_pin")]
   lateinit var userPin: String
 
@@ -42,6 +45,8 @@ class LoginUserWithOtpServerIntegrationTest {
   @Test
   fun when_correct_login_params_are_given_then_login_should_happen_and_session_data_should_be_persisted() {
     val user = userSession.loggedInUserImmediate()!!
+
+    loginApi.requestLoginOtp(user.uuid).blockingAwait()
 
     val loginResult = loginUserWithOtp.loginWithOtp(user.phoneNumber, userPin, userOtp)
         .blockingGet()

@@ -16,7 +16,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilitySync
-import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.UserPayload
 import org.simple.clinic.login.activateuser.ActivateUserRequest
@@ -64,7 +64,7 @@ class ServerAuthenticationRule : TestRule {
   lateinit var application: Application
 
   @Inject
-  lateinit var loginApi: LoginApi
+  lateinit var usersApi: UsersApi
 
   @Inject
   lateinit var moshi: Moshi
@@ -143,9 +143,9 @@ class ServerAuthenticationRule : TestRule {
 
     // Even though the OTP does not change for QA users, the server checks whether an OTP for
     // a user has been consumed when we make the login call.
-    loginApi.activate(ActivateUserRequest.create(userUuid, userPin)).execute()
+    usersApi.activate(ActivateUserRequest.create(userUuid, userPin)).execute()
 
-    loginApi
+    usersApi
         .login(loginRequest)
         .flatMapCompletable { userSession.storeUserAndAccessToken(it.loggedInUser, it.accessToken) }
         .blockingAwait()

@@ -8,7 +8,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Test
 import org.simple.clinic.FakeCall
 import org.simple.clinic.TestData
-import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.activateuser.ActivateUser.Result.IncorrectPin
 import org.simple.clinic.login.activateuser.ActivateUser.Result.NetworkError
@@ -20,7 +20,7 @@ import java.util.UUID
 
 class ActivateUserTest {
 
-  private val api = mock<LoginApi>()
+  private val api = mock<UsersApi>()
   private val loginOtpSmsListener = mock<LoginOtpSmsListener>()
 
   private val userUuid = UUID.fromString("a2be9a8f-8aab-4ecb-b4d2-9ed74bfbd800")

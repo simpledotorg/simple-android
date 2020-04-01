@@ -43,7 +43,7 @@ class LoginUserWithOtpTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val loginApi: LoginApi = mock()
+  private val usersApi: UsersApi = mock()
   private val dataSync: DataSync = mock()
   private val userDao: User.RoomDao = mock()
   private val facilityRepository = mock<FacilityRepository>()
@@ -64,7 +64,7 @@ class LoginUserWithOtpTest {
   private val loginResponse = LoginResponse(accessToken, loggedInUserPayload)
 
   private val loginUserWithOtp = LoginUserWithOtp(
-      loginApi = loginApi,
+      usersApi = usersApi,
       dataSync = dataSync,
       userDao = userDao,
       facilityRepository = facilityRepository,
@@ -86,7 +86,7 @@ class LoginUserWithOtpTest {
   @Test
   fun `when the login call is successful, the access token must be saved`() {
     // given
-    whenever(loginApi.login(loginRequest)) doReturn Single.just(loginResponse)
+    whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
     whenever(facilityRepository.setCurrentFacility(loggedInUserPayload.toUser(LOGGED_IN), facilityUuid)) doReturn Completable.complete()
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
 
@@ -101,7 +101,7 @@ class LoginUserWithOtpTest {
   @Test
   fun `when the login call is successful, the user must be saved`() {
     // given
-    whenever(loginApi.login(loginRequest)) doReturn Single.just(loginResponse)
+    whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
     val user = loggedInUserPayload.toUser(LOGGED_IN)
     whenever(facilityRepository.setCurrentFacility(user, facilityUuid)) doReturn Completable.complete()
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
@@ -117,7 +117,7 @@ class LoginUserWithOtpTest {
   @Test
   fun `when the login call is successful, the user must be reported to analytics`() {
     // given
-    whenever(loginApi.login(loginRequest)) doReturn Single.just(loginResponse)
+    whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
     val user = loggedInUserPayload.toUser(LOGGED_IN)
     whenever(facilityRepository.setCurrentFacility(user, facilityUuid)) doReturn Completable.complete()
     whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
@@ -134,7 +134,7 @@ class LoginUserWithOtpTest {
   fun `when the login call is successful, sync all data`() {
     // given
     var allDataSynced = false
-    whenever(loginApi.login(loginRequest)) doReturn Single.just(loginResponse)
+    whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
     val user = loggedInUserPayload.toUser(LOGGED_IN)
     whenever(facilityRepository.setCurrentFacility(user, facilityUuid)) doReturn Completable.complete()
     whenever(dataSync.syncTheWorld()) doReturn Completable.fromAction { allDataSynced = true }
@@ -151,7 +151,7 @@ class LoginUserWithOtpTest {
   @Test
   fun `when the login call fails with a network error, the network error result must be returned`() {
     // given
-    whenever(loginApi.login(loginRequest)) doReturn Single.error<LoginResponse>(IOException())
+    whenever(usersApi.login(loginRequest)) doReturn Single.error<LoginResponse>(IOException())
 
     // when
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
@@ -177,7 +177,7 @@ class LoginUserWithOtpTest {
         }
       }"""
     val error = HttpException(Response.error<LoginResponse>(401, ResponseBody.create(MediaType.parse("text"), errorJson)))
-    whenever(loginApi.login(loginRequest)) doReturn Single.error<LoginResponse>(error)
+    whenever(usersApi.login(loginRequest)) doReturn Single.error<LoginResponse>(error)
 
     // when
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
@@ -193,7 +193,7 @@ class LoginUserWithOtpTest {
   @Test
   fun `when the login call fails with any other error, a generic error response should be returned`() {
     // given
-    whenever(loginApi.login(loginRequest)) doReturn Single.error<LoginResponse>(RuntimeException())
+    whenever(usersApi.login(loginRequest)) doReturn Single.error<LoginResponse>(RuntimeException())
 
     // when
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()

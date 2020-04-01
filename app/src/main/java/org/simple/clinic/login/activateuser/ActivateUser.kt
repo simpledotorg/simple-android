@@ -1,6 +1,6 @@
 package org.simple.clinic.login.activateuser
 
-import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.activateuser.ActivateUser.Result.*
 import org.simple.clinic.user.LoggedInUserPayload
@@ -10,7 +10,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ActivateUser @Inject constructor(
-    private val loginApi: LoginApi,
+    private val usersApi: UsersApi,
     private val loginOtpSmsListener: LoginOtpSmsListener
 ) {
 
@@ -27,7 +27,7 @@ class ActivateUser @Inject constructor(
   }
 
   private fun makeUserActivateCall(userUuid: UUID, pin: String): Result {
-    val response = loginApi.activate(ActivateUserRequest.create(userUuid, pin)).execute()
+    val response = usersApi.activate(ActivateUserRequest.create(userUuid, pin)).execute()
     return when (response.code()) {
       200 -> Success(response.body()!!.user)
       401 -> IncorrectPin

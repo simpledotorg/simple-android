@@ -7,8 +7,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.TestData
+import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import java.util.UUID
 
 class BloodSugarSummaryViewUpdateTest {
@@ -96,6 +96,19 @@ class BloodSugarSummaryViewUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenBloodSugarUpdateSheet(bloodSugarMeasurement) as BloodSugarSummaryViewEffect)
+        ))
+  }
+
+  @Test
+  fun `when current facility is loaded, then change current facility in model`() {
+    val currentFacility = TestData.facility(uuid = UUID.fromString("42d737e2-7525-4ed7-b84b-516bc46ad500"))
+
+    spec
+        .given(defaultModel)
+        .whenEvent(CurrentFacilityLoaded(currentFacility))
+        .then(assertThatNext(
+            hasModel(defaultModel.loadCurrentFacility(currentFacility)),
+            hasNoEffects()
         ))
   }
 

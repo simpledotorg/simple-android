@@ -14,6 +14,7 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -28,7 +29,8 @@ class EnterOtpScreenController @Inject constructor(
     private val userSession: UserSession,
     private val requestLoginOtp: RequestLoginOtp,
     private val loginUserWithOtp: LoginUserWithOtp,
-    private val ongoingLoginEntryRepository: OngoingLoginEntryRepository
+    private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
+    private val schedulersProvider: SchedulersProvider
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -58,8 +60,14 @@ class EnterOtpScreenController @Inject constructor(
   }
 
   private fun showPhoneNumberOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ScreenCreated>()
-        .flatMapSingle { userSession.requireLoggedInUser().firstOrError() }
+    return events
+        .ofType<ScreenCreated>()
+        // For unknown reasons, this is actually running on the UI
+        // thread and causing a crash. Since we are migrating to Mobius
+        // and this will be handled in the effect handler, we can
+        // manually switch the thread for now.
+        .observeOn(schedulersProvider.io())
+        .map { userSession.loggedInUserImmediate() }
         .map { user -> { ui: Ui -> ui.showUserPhoneNumber(user.phoneNumber) } }
   }
 
@@ -130,7 +138,7 @@ class EnterOtpScreenController @Inject constructor(
   private fun resendSms(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<EnterOtpResendSmsClicked>()
-        .flatMapSingle { loggedInUserUuid() }
+        .map { loggedInUserUuid() }
         .flatMap(this::requestLoginOtpForUser)
   }
 
@@ -154,11 +162,8 @@ class EnterOtpScreenController @Inject constructor(
     }
   }
 
-  private fun loggedInUserUuid(): Single<UUID> {
-    return userSession
-        .requireLoggedInUser()
-        .firstOrError()
-        .map { it.uuid }
+  private fun loggedInUserUuid(): UUID {
+    return userSession.loggedInUserImmediate()!!.uuid
   }
 
   private fun showMessageOnResendLoginSmsResult(ui: Ui, result: RequestLoginOtp.Result) {

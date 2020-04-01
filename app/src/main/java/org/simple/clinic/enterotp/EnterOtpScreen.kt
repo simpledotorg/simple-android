@@ -6,8 +6,9 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.transition.TransitionManager
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
+import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_enterotp.view.*
 import org.simple.clinic.R
@@ -49,7 +50,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
             resendSmsClicks()
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = detaches().map { ScreenDestroyed() }
     )
 
     otpEntryEditText.showKeyboard()
@@ -57,17 +58,17 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun backClicks() = RxView.clicks(backButton).map { EnterOtpBackClicked() }
+  private fun backClicks() = backButton.clicks().map { EnterOtpBackClicked() }
 
   private fun otpSubmits() =
-      RxTextView.editorActions(otpEntryEditText) { it == EditorInfo.IME_ACTION_DONE }
+      otpEntryEditText.editorActions() { it == EditorInfo.IME_ACTION_DONE }
           .map { EnterOtpSubmitted(otpEntryEditText.text.toString()) }
 
   private fun resendSmsClicks() =
-      RxView.clicks(resendSmsButton).map { EnterOtpResendSmsClicked() }
+      resendSmsButton.clicks().map { EnterOtpResendSmsClicked() }
 
   private fun otpTextChanges() =
-      RxTextView.textChanges(otpEntryEditText).map { EnterOtpTextChanges(it.toString()) }
+      otpEntryEditText.textChanges().map { EnterOtpTextChanges(it.toString()) }
 
   fun showUserPhoneNumber(phoneNumber: String) {
     val phoneNumberWithCountryCode = resources.getString(

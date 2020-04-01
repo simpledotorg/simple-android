@@ -14,6 +14,9 @@ import org.simple.clinic.newentry.form.StateField
 import org.simple.clinic.newentry.form.StreetAddressField
 import org.simple.clinic.newentry.form.VillageOrColonyField
 import org.simple.clinic.newentry.form.ZoneField
+import org.simple.clinic.patient.Gender.Female
+import org.simple.clinic.patient.Gender.Male
+import org.simple.clinic.patient.Gender.Transgender
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -36,7 +39,7 @@ class InputFieldsFactory(
         DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
         LandlineOrMobileField(R.string.patiententry_phone_number),
         StreetAddressField(R.string.patiententry_street_address),
-        GenderField(labelResId = 0),
+        GenderField(labelResId = 0, allowedGenders = setOf(Male, Female, Transgender)),
         VillageOrColonyField(R.string.patiententry_village_colony_ward),
         DistrictField(R.string.patiententry_district),
         StateField(R.string.patiententry_state)
@@ -49,7 +52,7 @@ class InputFieldsFactory(
         AgeField(R.string.patiententry_age),
         DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
         LandlineOrMobileField(R.string.patiententry_phone_number),
-        GenderField(labelResId = 0),
+        GenderField(labelResId = 0, allowedGenders = setOf(Male, Female, Transgender)),
         BangladeshNationalIdField(R.string.patiententry_bangladesh_national_id),
         StreetAddressField(R.string.patiententry_street_house_road_number),
         VillageOrColonyField(R.string.patiententry_village_ward),

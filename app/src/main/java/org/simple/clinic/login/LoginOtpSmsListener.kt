@@ -5,4 +5,6 @@ import io.reactivex.Completable
 interface LoginOtpSmsListener {
 
   fun listenForLoginOtp(): Completable
+
+  fun listenForLoginOtpBlocking()
 }

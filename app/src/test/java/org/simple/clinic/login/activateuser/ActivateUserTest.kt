@@ -2,31 +2,33 @@ package org.simple.clinic.login.activateuser
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Test
 import org.simple.clinic.FakeCall
 import org.simple.clinic.TestData
 import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.activateuser.ActivateUser.Result.IncorrectPin
 import org.simple.clinic.login.activateuser.ActivateUser.Result.NetworkError
 import org.simple.clinic.login.activateuser.ActivateUser.Result.OtherError
 import org.simple.clinic.login.activateuser.ActivateUser.Result.ServerError
 import org.simple.clinic.login.activateuser.ActivateUser.Result.Success
-import java.io.IOException
 import java.net.SocketTimeoutException
 import java.util.UUID
 
 class ActivateUserTest {
 
   private val api = mock<LoginApi>()
+  private val loginOtpSmsListener = mock<LoginOtpSmsListener>()
 
   private val userUuid = UUID.fromString("a2be9a8f-8aab-4ecb-b4d2-9ed74bfbd800")
 
   private val correctPin = "1234"
   private val incorrectPin = "1111"
 
-  private val activateUser = ActivateUser(api)
+  private val activateUser = ActivateUser(api, loginOtpSmsListener)
 
   @Test
   fun `when the activate request is successful, return the success result`() {
@@ -89,5 +91,19 @@ class ActivateUserTest {
 
     // then
     assertThat(result).isEqualTo(OtherError(cause))
+  }
+
+  @Test
+  fun `before the call to activate the user is made, listening for the login OTP SMS must be done`() {
+    // given
+    val inOrder = inOrder(loginOtpSmsListener, api)
+
+    // when
+    activateUser.activate(userUuid, correctPin)
+
+    // then
+    inOrder.verify(loginOtpSmsListener).listenForLoginOtpBlocking()
+    inOrder.verify(api).activate(ActivateUserRequest.create(userUuid, correctPin))
+    inOrder.verifyNoMoreInteractions()
   }
 }

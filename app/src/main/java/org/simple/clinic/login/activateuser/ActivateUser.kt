@@ -1,6 +1,7 @@
 package org.simple.clinic.login.activateuser
 
 import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.activateuser.ActivateUser.Result.*
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.util.ErrorResolver
@@ -9,11 +10,13 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ActivateUser @Inject constructor(
-    private val loginApi: LoginApi
+    private val loginApi: LoginApi,
+    private val loginOtpSmsListener: LoginOtpSmsListener
 ) {
 
   fun activate(userUuid: UUID, pin: String): Result {
     return try {
+      loginOtpSmsListener.listenForLoginOtpBlocking()
       makeUserActivateCall(userUuid, pin)
     } catch (e: Throwable) {
       when (ErrorResolver.resolve(e)) {

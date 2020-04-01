@@ -28,6 +28,7 @@ class InputFieldsFactory(
     return when (country.isoCountryCode) {
       Country.INDIA -> formFieldsForIndia()
       Country.BANGLADESH -> formFieldsForBangladesh()
+      Country.ETHIOPIA -> formFieldsForEthiopia()
       else -> throw IllegalArgumentException("Unknown country code: ${country.isoCountryCode}")
     }
   }
@@ -59,6 +60,20 @@ class InputFieldsFactory(
         ZoneField(R.string.patiententry_zone),
         DistrictField(R.string.patiententry_upazila),
         StateField(R.string.patiententry_district)
+    )
+  }
+
+  private fun formFieldsForEthiopia(): List<InputField<*>> {
+    return listOf(
+        PatientNameField(R.string.patiententry_full_name),
+        AgeField(R.string.patiententry_age),
+        DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
+        LandlineOrMobileField(R.string.patiententry_phone_number),
+        StreetAddressField(R.string.patiententry_street_address),
+        GenderField(labelResId = 0, allowedGenders = setOf(Male, Female)),
+        VillageOrColonyField(R.string.patiententry_village_colony_ward),
+        DistrictField(R.string.patiententry_district),
+        StateField(R.string.patiententry_state)
     )
   }
 }

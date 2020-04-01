@@ -10,7 +10,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface LoginApi {
+interface UsersApi {
 
   @POST("v3/login")
   fun login(@Body body: LoginRequest): Single<LoginResponse>

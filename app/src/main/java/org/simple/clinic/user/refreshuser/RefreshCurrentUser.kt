@@ -1,7 +1,7 @@
 package org.simple.clinic.user.refreshuser
 
 import io.reactivex.Completable
-import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class RefreshCurrentUser @Inject constructor(
     private val userDao: RoomDao,
-    private val loginApi: LoginApi
+    private val usersApi: UsersApi
 ) {
 
   fun refresh(): Completable {
@@ -43,7 +43,7 @@ class RefreshCurrentUser @Inject constructor(
   }
 
   private fun fetchUserDetails(): Optional<LoggedInUserPayload> {
-    val response = loginApi.self().execute()
+    val response = usersApi.self().execute()
 
     return if (response.code() == 200) Just(response.body()!!.user) else None
   }

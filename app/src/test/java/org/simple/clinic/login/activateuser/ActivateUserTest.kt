@@ -102,7 +102,7 @@ class ActivateUserTest {
     activateUser.activate(userUuid, correctPin)
 
     // then
-    inOrder.verify(loginOtpSmsListener).listenForLoginOtpBlocking()
+    inOrder.verify(loginOtpSmsListener).listenForLoginOtp()
     inOrder.verify(api).activate(ActivateUserRequest.create(userUuid, correctPin))
     inOrder.verifyNoMoreInteractions()
   }

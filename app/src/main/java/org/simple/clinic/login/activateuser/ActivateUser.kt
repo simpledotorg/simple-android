@@ -16,7 +16,7 @@ class ActivateUser @Inject constructor(
 
   fun activate(userUuid: UUID, pin: String): Result {
     return try {
-      loginOtpSmsListener.listenForLoginOtpBlocking()
+      loginOtpSmsListener.listenForLoginOtp()
       makeUserActivateCall(userUuid, pin)
     } catch (e: Throwable) {
       when (ErrorResolver.resolve(e)) {

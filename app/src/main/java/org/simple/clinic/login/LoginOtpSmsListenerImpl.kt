@@ -4,29 +4,17 @@ import android.app.Application
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import io.reactivex.Completable
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.util.toCompletable
 import org.threeten.bp.Duration
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoginOtpSmsListenerImpl @Inject constructor(
     private val application: Application,
-    private val schedulersProvider: SchedulersProvider,
     private val crashReporter: CrashReporter
 ) : LoginOtpSmsListener {
 
-  override fun listenForLoginOtp(): Completable {
-    return SmsRetriever
-        .getClient(application)
-        .startSmsRetriever()
-        .toCompletable()
-        .observeOn(schedulersProvider.io())
-  }
-
-  override fun listenForLoginOtpBlocking() {
+  override fun listenForLoginOtp() {
     SmsRetriever
         .getClient(application)
         .startSmsRetriever()

@@ -7,6 +7,7 @@ import org.simple.clinic.login.activateuser.ActivateUserRequest
 import org.simple.clinic.login.activateuser.ActivateUserResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface LoginApi {
@@ -19,4 +20,7 @@ interface LoginApi {
 
   @POST("v4/users/activate")
   fun activate(@Body request: ActivateUserRequest): Call<ActivateUserResponse>
+
+  @GET("v4/users/me")
+  fun self(): Call<CurrentUserResponse>
 }

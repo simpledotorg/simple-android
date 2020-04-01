@@ -132,4 +132,21 @@ class BloodSugarSummaryViewEffectHandlerTest {
     verify(uiActions).showAlertFacilityChangeSheet(facility.name)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when fetch current facility effect is received then current facility should be returned`() {
+    //given
+    val facility = TestData.facility(uuid = UUID.fromString("5e349788-c8b3-47e3-a485-961221ed12e3"))
+    val user = TestData.loggedInUser(uuid = UUID.fromString("9b3bb80b-2c92-4a42-b591-573157b5e408"))
+    whenever(userSession.loggedInUserImmediate()) doReturn user
+    whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
+
+    //when
+    testCase.dispatch(FetchCurrentFacility)
+
+    //then
+    testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
+    verifyZeroInteractions(uiActions)
+  }
+
 }

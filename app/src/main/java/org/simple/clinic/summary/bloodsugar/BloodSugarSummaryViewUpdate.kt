@@ -18,6 +18,7 @@ class BloodSugarSummaryViewUpdate : Update<BloodSugarSummaryViewModel, BloodSuga
       is SeeAllClicked -> dispatch(ShowBloodSugarHistoryScreen(model.patientUuid))
       is BloodSugarClicked -> dispatch(OpenBloodSugarUpdateSheet(event.bloodSugarMeasurement))
       is ShowAlertFacilityChangeEvent -> TODO()
+      is CurrentFacilityLoaded -> TODO()
     }
   }
 }

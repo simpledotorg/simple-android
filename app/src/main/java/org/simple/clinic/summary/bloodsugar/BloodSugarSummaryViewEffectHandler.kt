@@ -32,7 +32,8 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<BloodSugarSummaryViewEffect, BloodSugarSummaryViewEvent>()
         .addTransformer(FetchBloodSugarSummary::class.java, fetchBloodSugarMeasurements(bloodSugarRepository, schedulersProvider.ui()))
         .addTransformer(FetchBloodSugarCount::class.java, fetchBloodSugarMeasurementsCount(schedulersProvider.io()))
-        .addTransformer(ShouldShowAlertFacilityChange::class.java, fetchSwitchFacilityFlag(schedulersProvider.io()))
+        .addTransformer(ShouldShowAlertFacilityChange::class.java, fetchSwitchFacilityFlag(schedulersProvider.io(), isFacilitySwitchedPreference))
+        .addTransformer(FetchCurrentFacility::class.java, fetchCurrentFacility(schedulersProvider.io(), userSession, facilityRepository))
         .addAction(OpenBloodSugarTypeSelector::class.java, uiActions::showBloodSugarTypeSelector, schedulersProvider.ui())
         .addConsumer(ShowBloodSugarHistoryScreen::class.java, { uiActions.showBloodSugarHistoryScreen(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenBloodSugarUpdateSheet::class.java, { uiActions.openBloodSugarUpdateSheet(it.measurement.uuid, it.measurement.reading.type) }, schedulersProvider.ui())
@@ -40,7 +41,27 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  private fun fetchSwitchFacilityFlag(io: Scheduler): ObservableTransformer<ShouldShowAlertFacilityChange, BloodSugarSummaryViewEvent> {
+  private fun fetchCurrentFacility(
+      io: Scheduler,
+      userSession: UserSession,
+      facilityRepository: FacilityRepository
+  ): ObservableTransformer<FetchCurrentFacility, BloodSugarSummaryViewEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .observeOn(io)
+          .switchMap {
+            val user = userSession
+                .loggedInUserImmediate()!!
+            facilityRepository.currentFacility(user)
+          }
+          .map(::CurrentFacilityLoaded)
+    }
+  }
+
+  private fun fetchSwitchFacilityFlag(
+      io: Scheduler,
+      isFacilitySwitchedPreference: Preference<Boolean>
+  ): ObservableTransformer<ShouldShowAlertFacilityChange, BloodSugarSummaryViewEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(io)

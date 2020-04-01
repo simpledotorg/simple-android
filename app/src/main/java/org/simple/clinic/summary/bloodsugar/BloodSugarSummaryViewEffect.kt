@@ -19,3 +19,5 @@ data class OpenBloodSugarUpdateSheet(val measurement: BloodSugarMeasurement) : B
 data class OpenAlertFacilityChangeSheet(val currentFacility: Facility) : BloodSugarSummaryViewEffect()
 
 object ShouldShowAlertFacilityChange : BloodSugarSummaryViewEffect()
+
+object FetchCurrentFacility : BloodSugarSummaryViewEffect()

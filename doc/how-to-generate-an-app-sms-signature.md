@@ -19,7 +19,7 @@ This is a command line tool. If you do not have it installed, use the following 
 
 
 ### Generate a hash
-Use the [helper script](https://github.com/simpledotorg/simple-android/sms-signature) in the project root to generate the SMS signature. The usage is as follows:
+Use the [helper script](https://github.com/simpledotorg/simple-android/blob/master/sms-signature) in the project root to generate the SMS signature. The usage is as follows:
 
 `./sms-signature <keystore_location> <key_alias> <application_id>`
 

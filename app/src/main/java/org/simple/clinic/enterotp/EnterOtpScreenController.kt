@@ -8,7 +8,10 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginUserWithOtp
+import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.user.NewlyVerifiedUser
+import org.simple.clinic.user.OngoingLoginEntry
+import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
@@ -24,7 +27,8 @@ private const val OTP_LENGTH = 6
 class EnterOtpScreenController @Inject constructor(
     private val userSession: UserSession,
     private val requestLoginOtp: RequestLoginOtp,
-    private val loginUserWithOtp: LoginUserWithOtp
+    private val loginUserWithOtp: LoginUserWithOtp,
+    private val ongoingLoginEntryRepository: OngoingLoginEntryRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -75,12 +79,13 @@ class EnterOtpScreenController @Inject constructor(
 
     return Observable.merge(otpFromSubmitted, otpFromTextChanges)
         .flatMap { otp ->
-          userSession
-              .ongoingLoginEntry()
-              .flatMap { entry -> loginUserWithOtp.loginWithOtp(entry.phoneNumber!!, entry.pin!!, otp) }
+          val entry = ongoingLoginEntry()
+
+          loginUserWithOtp
+              .loginWithOtp(entry.phoneNumber!!, entry.pin!!, otp)
               .doOnSuccess { loginResult ->
                 if (loginResult is LoginResult.Success) {
-                  userSession.clearOngoingLoginEntry()
+                  ongoingLoginEntryRepository.clearLoginEntry()
                 }
               }
               .flatMapObservable { loginResult ->
@@ -167,5 +172,9 @@ class EnterOtpScreenController @Inject constructor(
   private fun hideProgressAfterRequestingOtp(ui: Ui) {
     ui.hideProgress()
     ui.clearPin()
+  }
+
+  private fun ongoingLoginEntry(): OngoingLoginEntry {
+    return ongoingLoginEntryRepository.entryImmediate()
   }
 }

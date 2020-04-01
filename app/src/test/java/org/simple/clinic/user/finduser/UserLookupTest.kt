@@ -4,24 +4,24 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Single
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.FakeCall
-import org.simple.clinic.TestData
 import org.simple.clinic.registration.FindUserRequest
 import org.simple.clinic.registration.FindUserResponse
 import org.simple.clinic.registration.FindUserResponse.Body
 import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.user.finduser.FindUserResult.*
+import org.simple.clinic.user.finduser.FindUserResult.Found
+import org.simple.clinic.user.finduser.FindUserResult.NetworkError
+import org.simple.clinic.user.finduser.FindUserResult.NotFound
+import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.util.RxErrorsRule
 import retrofit2.HttpException
 import retrofit2.Response
-import java.io.IOException
 import java.net.SocketTimeoutException
 import java.util.UUID
 
@@ -35,56 +35,6 @@ class UserLookupTest {
   private val registrationApi = mock<RegistrationApi>()
 
   private val findUserWithPhoneNumber = UserLookup(registrationApi)
-
-  @Test
-  fun `when the find user call is successful, the user payload must be returned in the result`() {
-    // given
-    val loggedInUserPayload = TestData.loggedInUserPayload(uuid = UUID.fromString("f61b59da-4e2c-4e3f-a33f-afcd45022bbc"), phone = phoneNumber)
-
-    whenever(registrationApi.findUser(phoneNumber)) doReturn Single.just(loggedInUserPayload)
-
-    // when
-    val result = findUserWithPhoneNumber.find_old(phoneNumber).blockingGet()
-
-    // then
-    assertThat(result).isEqualTo(Found_Old(loggedInUserPayload))
-  }
-
-  @Test
-  fun `when the find user call fails with http 404, the not found result must be returned`() {
-    // given
-    whenever(registrationApi.findUser(phoneNumber)) doReturn Single.error(httpException(404))
-
-    // when
-    val result = findUserWithPhoneNumber.find_old(phoneNumber).blockingGet()
-
-    // then
-    assertThat(result).isEqualTo(NotFound)
-  }
-
-  @Test
-  fun `when the find user call fails with a network error, the network error result must be returned`() {
-    // given
-    whenever(registrationApi.findUser(phoneNumber)) doReturn Single.error(IOException())
-
-    // when
-    val result = findUserWithPhoneNumber.find_old(phoneNumber).blockingGet()
-
-    // then
-    assertThat(result).isEqualTo(NetworkError)
-  }
-
-  @Test
-  fun `when the find user call fails with any other error, the unexpected error result must be returned`() {
-    // given
-    whenever(registrationApi.findUser(phoneNumber)) doReturn Single.error(httpException(500))
-
-    // when
-    val result = findUserWithPhoneNumber.find_old(phoneNumber).blockingGet()
-
-    // then
-    assertThat(result).isEqualTo(UnexpectedError)
-  }
 
   @Test
   fun `when the find user by phone number call succeeds, return the fetched data`() {

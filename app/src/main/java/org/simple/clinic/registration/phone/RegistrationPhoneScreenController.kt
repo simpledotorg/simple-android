@@ -18,7 +18,6 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.user.finduser.FindUserResult.Found
-import org.simple.clinic.user.finduser.FindUserResult.Found_Old
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
@@ -111,7 +110,7 @@ class RegistrationPhoneScreenController @Inject constructor(
           val uiChangesForFindUser = cachedUserFindResult
               .flatMap {
                 when (it) {
-                  is Found_Old, is Found, is NotFound -> Observable.never()
+                  is Found, is NotFound -> Observable.never()
                   is NetworkError -> Observable.just(
                       { ui: Ui -> ui.hideProgressIndicator() },
                       { ui: Ui -> ui.showNetworkErrorMessage() })

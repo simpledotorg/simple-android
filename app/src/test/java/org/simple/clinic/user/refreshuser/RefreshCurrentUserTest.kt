@@ -8,6 +8,7 @@ import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.login.LoginApi
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
@@ -29,8 +30,9 @@ class RefreshCurrentUserTest {
 
   private val userDao = mock<User.RoomDao>()
   private val findUserWithPhoneNumber = mock<UserLookup>()
+  private val loginApi = mock<LoginApi>()
 
-  private val refreshCurrentUser = RefreshCurrentUser(userDao, findUserWithPhoneNumber)
+  private val refreshCurrentUser = RefreshCurrentUser(userDao, findUserWithPhoneNumber, loginApi)
 
   @Test
   fun `when refreshing the user succeeds, the updated user details must be saved in the database`() {

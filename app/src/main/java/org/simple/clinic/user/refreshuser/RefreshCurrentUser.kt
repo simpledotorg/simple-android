@@ -2,6 +2,7 @@ package org.simple.clinic.user.refreshuser
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.simple.clinic.login.LoginApi
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 class RefreshCurrentUser @Inject constructor(
     private val userDao: RoomDao,
-    private val userLookup: UserLookup
+    private val userLookup: UserLookup,
+    private val loginApi: LoginApi
 ) {
 
   fun refresh(): Completable {

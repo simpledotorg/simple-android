@@ -1,7 +1,6 @@
 package org.simple.clinic.user.refreshuser
 
 import io.reactivex.Completable
-import io.reactivex.Single
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
@@ -10,29 +9,43 @@ import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.RoomDao
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.user.finduser.FindUserResult.Found_Old
-import org.simple.clinic.user.finduser.UserLookup
-import org.simple.clinic.util.mapType
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import timber.log.Timber
 import javax.inject.Inject
 
 class RefreshCurrentUser @Inject constructor(
     private val userDao: RoomDao,
-    private val userLookup: UserLookup,
     private val loginApi: LoginApi
 ) {
 
   fun refresh(): Completable {
-    return Single.fromCallable { userDao.userImmediate() }
-        .doOnSuccess { Timber.i("Refreshing logged-in user") }
-        .flatMapCompletable { user ->
-          userLookup.find_old(user.phoneNumber)
-              .mapType<Found_Old, LoggedInUserPayload> { it.user }
-              .map { payload -> mapPayloadToUser(user, payload, newLoggedInStatus(user, payload)) }
-              .flatMapCompletable { updatedUserDetails ->
-                Completable.fromAction { userDao.createOrUpdate(updatedUserDetails) }
-              }
+    return Completable
+        .fromAction {
+          val fetchedUserInfo = fetchUserDetails()
+
+          if (fetchedUserInfo is Just) {
+            val userPayload = fetchedUserInfo.value
+            val storedUser = userDao.userImmediate()!!
+            val updatedUserDetails = mapPayloadToUser(storedUser, userPayload, newLoggedInStatus(storedUser, userPayload))
+
+            userDao.createOrUpdate(updatedUserDetails)
+          }
         }
+        .doOnSubscribe { Timber.i("Refreshing logged-in user") }
+        .doOnError {
+          // We don't care about handling errors here and we'll just
+          // report it.
+          Timber.e(it)
+        }
+        .onErrorComplete()
+  }
+
+  private fun fetchUserDetails(): Optional<LoggedInUserPayload> {
+    val response = loginApi.self().execute()
+
+    return if (response.code() == 200) Just(response.body()!!.user) else None
   }
 
   private fun newLoggedInStatus(

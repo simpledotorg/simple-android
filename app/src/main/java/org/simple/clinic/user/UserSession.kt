@@ -43,14 +43,17 @@ class UserSession @Inject constructor(
 
   private var ongoingRegistrationEntry: OngoingRegistrationEntry? = null
 
+  @Deprecated(message = "Use OngoingLoginEntryRepository directly.")
   fun saveOngoingLoginEntry(entry: OngoingLoginEntry): Completable {
     return ongoingLoginEntryRepository.saveLoginEntry(entry)
   }
 
+  @Deprecated(message = "Use OngoingLoginEntryRepository directly.")
   fun ongoingLoginEntry(): Single<OngoingLoginEntry> {
     return ongoingLoginEntryRepository.entry()
   }
 
+  @Deprecated(message = "Use OngoingLoginEntryRepository directly.")
   fun clearOngoingLoginEntry() {
     ongoingLoginEntryRepository.clearLoginEntry()
   }

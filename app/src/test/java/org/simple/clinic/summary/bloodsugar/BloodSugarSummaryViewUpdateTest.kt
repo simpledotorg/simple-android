@@ -36,7 +36,7 @@ class BloodSugarSummaryViewUpdateTest {
         .whenEvent(NewBloodSugarClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenBloodSugarTypeSelector as BloodSugarSummaryViewEffect)
+            hasEffects(ShouldShowAlertFacilityChange as BloodSugarSummaryViewEffect)
         ))
   }
 
@@ -112,4 +112,31 @@ class BloodSugarSummaryViewUpdateTest {
         ))
   }
 
+  @Test
+  fun `when show alert facility change result is true then show alert change sheet`() {
+    val currentFacility = TestData.facility(uuid = UUID.fromString("42d737e2-7525-4ed7-b84b-516bc46ad500"))
+
+    spec
+        .given(defaultModel.loadCurrentFacility(currentFacility))
+        .whenEvent(ShowAlertFacilityChangeEvent(true))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenAlertFacilityChangeSheet(currentFacility) as BloodSugarSummaryViewEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when show alert facility change result is false then open blood sugar type selector`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(ShowAlertFacilityChangeEvent(false))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenBloodSugarTypeSelector as BloodSugarSummaryViewEffect)
+            )
+        )
+  }
 }

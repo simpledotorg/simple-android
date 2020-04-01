@@ -12,7 +12,6 @@ import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingLoginEntryRepository
-import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
@@ -27,7 +26,7 @@ private const val OTP_LENGTH = 6
 
 class EnterOtpScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val requestLoginOtp: RequestLoginOtp,
+    private val activateUser: ActivateUser,
     private val loginUserWithOtp: LoginUserWithOtp,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val schedulersProvider: SchedulersProvider
@@ -148,16 +147,19 @@ class EnterOtpScreenController @Inject constructor(
       ui.showProgress()
     }
 
-    return requestLoginOtp
-        .requestForUser(userUuid)
-        .toObservable()
+    return Observable
+        .fromCallable {
+          val entry = ongoingLoginEntry()
+
+          activateUser.activate(userUuid, entry.pin!!)
+        }
         .map(this::handleRequestLoginOtpResult)
         .startWith(showProgressBeforeRequestingOtp)
   }
 
-  private fun handleRequestLoginOtpResult(result: RequestLoginOtp.Result): UiChange {
+  private fun handleRequestLoginOtpResult(result: ActivateUser.Result): UiChange {
     return { ui: Ui ->
-      showMessageOnResendLoginSmsResult(ui, result)
+      showMessageOnActivateUserResult(ui, result)
       hideProgressAfterRequestingOtp(ui)
     }
   }
@@ -166,11 +168,11 @@ class EnterOtpScreenController @Inject constructor(
     return userSession.loggedInUserImmediate()!!.uuid
   }
 
-  private fun showMessageOnResendLoginSmsResult(ui: Ui, result: RequestLoginOtp.Result) {
+  private fun showMessageOnActivateUserResult(ui: Ui, result: ActivateUser.Result) {
     when (result) {
-      is RequestLoginOtp.Result.NetworkError -> ui.showNetworkError()
-      is RequestLoginOtp.Result.ServerError, is RequestLoginOtp.Result.OtherError -> ui.showUnexpectedError()
-      is RequestLoginOtp.Result.Success -> ui.showSmsSentMessage()
+      is ActivateUser.Result.NetworkError -> ui.showNetworkError()
+      is ActivateUser.Result.ServerError, is ActivateUser.Result.OtherError -> ui.showUnexpectedError()
+      is ActivateUser.Result.Success -> ui.showSmsSentMessage()
     }
   }
 

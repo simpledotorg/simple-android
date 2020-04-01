@@ -25,6 +25,7 @@ import org.simple.clinic.login.LoginResult.UnexpectedError
 import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.TestData
 import org.simple.clinic.user.OngoingLoginEntry
+import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.RequestLoginOtp.Result
 import org.simple.clinic.user.User
@@ -48,6 +49,7 @@ class EnterOtpScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val requestLoginOtp = mock<RequestLoginOtp>()
   private val loginUserWithOtp = mock<LoginUserWithOtp>()
+  private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
 
   private val otp = "111111"
   private val pin = "1234"
@@ -67,7 +69,7 @@ class EnterOtpScreenControllerTest {
       updatedAt = user.updatedAt
   )
 
-  private val controller = EnterOtpScreenController(userSession, requestLoginOtp, loginUserWithOtp)
+  private val controller = EnterOtpScreenController(userSession, requestLoginOtp, loginUserWithOtp, ongoingLoginEntryRepository)
 
   @Before
   fun setUp() {
@@ -107,7 +109,7 @@ class EnterOtpScreenControllerTest {
       otp: String,
       shouldShowError: Boolean
   ) {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -134,7 +136,7 @@ class EnterOtpScreenControllerTest {
       otp: String,
       shouldLogin: Boolean
   ) {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -149,7 +151,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the otp is submitted, the login call must be made`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -159,7 +161,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call succeeds, the screen must be closed`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -169,7 +171,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails unexpectedly, the generic error must be shown`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -179,7 +181,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a network error, the network error must be shown`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -189,7 +191,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a server error, the server error must be shown`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     val errorMessage = "Error"
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(ServerError(errorMessage)))
 
@@ -200,7 +202,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails unexpectedly, the PIN should be cleared`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -210,7 +212,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a network error, the PIN should be cleared`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -220,7 +222,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a server error, the PIN should be cleared`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(ServerError("Error")))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -230,7 +232,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the OTP changes and meets the otp length, the login call should be made`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
     uiEvents.onNext(EnterOtpTextChanges("1111"))
@@ -243,7 +245,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call is made, the network progress must be shown`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.never<LoginResult>())
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -255,7 +257,7 @@ class EnterOtpScreenControllerTest {
   @Test
   @Parameters(method = "params for login call progress test")
   fun `when the login call succeeds or fails, the network progress must be hidden`(loginResult: LoginResult) {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just(loginResult))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
@@ -459,17 +461,17 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call succeeds, the ongoing login entry must be cleared`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
-    verify(userSession).clearOngoingLoginEntry()
+    verify(ongoingLoginEntryRepository).clearLoginEntry()
   }
 
   @Test
   fun `when the login call fails, the ongoing login entry must not be cleared`() {
-    whenever(userSession.ongoingLoginEntry()).doReturn(Single.just(ongoingLoginEntry))
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(NetworkError))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))

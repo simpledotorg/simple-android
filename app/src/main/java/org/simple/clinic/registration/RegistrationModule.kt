@@ -7,16 +7,9 @@ import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.Distance
 import org.threeten.bp.Duration
-import retrofit2.Retrofit
-import javax.inject.Named
 
 @Module
 class RegistrationModule {
-
-  @Provides
-  fun api(@Named("for_country") retrofit: Retrofit): RegistrationApi {
-    return retrofit.create(RegistrationApi::class.java)
-  }
 
   @Provides
   fun config(): Single<RegistrationConfig> {

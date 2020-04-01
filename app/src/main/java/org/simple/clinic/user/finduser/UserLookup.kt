@@ -1,7 +1,7 @@
 package org.simple.clinic.user.finduser
 
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.registration.FindUserRequest
-import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.user.finduser.FindUserResult.Found
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
@@ -12,7 +12,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class UserLookup @Inject constructor(
-    private val registrationApi: RegistrationApi
+    private val usersApi: UsersApi
 ) {
 
   fun find(phoneNumber: String): FindUserResult {
@@ -29,7 +29,7 @@ class UserLookup @Inject constructor(
 
   private fun makeFindUserApiCall(phoneNumber: String): FindUserResult {
     val request = FindUserRequest(phoneNumber)
-    val response = registrationApi.findUserByPhoneNumber(request).execute()
+    val response = usersApi.findUserByPhoneNumber(request).execute()
 
     return when (val code = response.code()) {
       200 -> {

@@ -19,6 +19,7 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.UserPayload
+import org.simple.clinic.login.activateuser.ActivateUserRequest
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -140,11 +141,12 @@ class ServerAuthenticationRule : TestRule {
         )
     )
 
+    // Even though the OTP does not change for QA users, the server checks whether an OTP for
+    // a user has been consumed when we make the login call.
+    loginApi.activate(ActivateUserRequest.create(userUuid, userPin)).execute()
+
     loginApi
-        // Even though the OTP does not change for QA users, the server checks whether an OTP for
-        // a user has been consumed when we make the login call.
-        .requestLoginOtp(userUuid)
-        .andThen(loginApi.login(loginRequest))
+        .login(loginRequest)
         .flatMapCompletable { userSession.storeUserAndAccessToken(it.loggedInUser, it.accessToken) }
         .blockingAwait()
 

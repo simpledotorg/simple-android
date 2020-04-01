@@ -6,6 +6,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.login.activateuser.ActivateUserRequest
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -46,7 +47,7 @@ class LoginUserWithOtpServerIntegrationTest {
   fun when_correct_login_params_are_given_then_login_should_happen_and_session_data_should_be_persisted() {
     val user = userSession.loggedInUserImmediate()!!
 
-    loginApi.requestLoginOtp(user.uuid).blockingAwait()
+    loginApi.activate(ActivateUserRequest.create(user.uuid, userPin)).execute()
 
     val loginResult = loginUserWithOtp.loginWithOtp(user.phoneNumber, userPin, userOtp)
         .blockingGet()

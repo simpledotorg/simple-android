@@ -1,0 +1,974 @@
+/*
+ * Copyright (c) 2007-present, Stephen Colebourne & Michael Nascimento Santos
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  * Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ *  * Neither the name of JSR-310 nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.simple.threetenbp.extra;
+
+import static org.threeten.bp.temporal.ChronoField.ALIGNED_DAY_OF_WEEK_IN_MONTH;
+import static org.threeten.bp.temporal.ChronoField.ALIGNED_DAY_OF_WEEK_IN_YEAR;
+import static org.threeten.bp.temporal.ChronoField.ALIGNED_WEEK_OF_MONTH;
+import static org.threeten.bp.temporal.ChronoField.ALIGNED_WEEK_OF_YEAR;
+import static org.threeten.bp.temporal.ChronoField.AMPM_OF_DAY;
+import static org.threeten.bp.temporal.ChronoField.CLOCK_HOUR_OF_AMPM;
+import static org.threeten.bp.temporal.ChronoField.CLOCK_HOUR_OF_DAY;
+import static org.threeten.bp.temporal.ChronoField.DAY_OF_MONTH;
+import static org.threeten.bp.temporal.ChronoField.DAY_OF_WEEK;
+import static org.threeten.bp.temporal.ChronoField.DAY_OF_YEAR;
+import static org.threeten.bp.temporal.ChronoField.EPOCH_DAY;
+import static org.threeten.bp.temporal.ChronoField.ERA;
+import static org.threeten.bp.temporal.ChronoField.HOUR_OF_AMPM;
+import static org.threeten.bp.temporal.ChronoField.HOUR_OF_DAY;
+import static org.threeten.bp.temporal.ChronoField.INSTANT_SECONDS;
+import static org.threeten.bp.temporal.ChronoField.MICRO_OF_DAY;
+import static org.threeten.bp.temporal.ChronoField.MICRO_OF_SECOND;
+import static org.threeten.bp.temporal.ChronoField.MILLI_OF_DAY;
+import static org.threeten.bp.temporal.ChronoField.MILLI_OF_SECOND;
+import static org.threeten.bp.temporal.ChronoField.MINUTE_OF_DAY;
+import static org.threeten.bp.temporal.ChronoField.MINUTE_OF_HOUR;
+import static org.threeten.bp.temporal.ChronoField.MONTH_OF_YEAR;
+import static org.threeten.bp.temporal.ChronoField.NANO_OF_DAY;
+import static org.threeten.bp.temporal.ChronoField.NANO_OF_SECOND;
+import static org.threeten.bp.temporal.ChronoField.OFFSET_SECONDS;
+import static org.threeten.bp.temporal.ChronoField.PROLEPTIC_MONTH;
+import static org.threeten.bp.temporal.ChronoField.SECOND_OF_DAY;
+import static org.threeten.bp.temporal.ChronoField.SECOND_OF_MINUTE;
+import static org.threeten.bp.temporal.ChronoField.YEAR;
+import static org.threeten.bp.temporal.ChronoField.YEAR_OF_ERA;
+import static org.threeten.bp.temporal.ChronoUnit.CENTURIES;
+import static org.threeten.bp.temporal.ChronoUnit.DAYS;
+import static org.threeten.bp.temporal.ChronoUnit.DECADES;
+import static org.threeten.bp.temporal.ChronoUnit.FOREVER;
+import static org.threeten.bp.temporal.ChronoUnit.HOURS;
+import static org.threeten.bp.temporal.ChronoUnit.MICROS;
+import static org.threeten.bp.temporal.ChronoUnit.MILLENNIA;
+import static org.threeten.bp.temporal.ChronoUnit.MILLIS;
+import static org.threeten.bp.temporal.ChronoUnit.MINUTES;
+import static org.threeten.bp.temporal.ChronoUnit.MONTHS;
+import static org.threeten.bp.temporal.ChronoUnit.NANOS;
+import static org.threeten.bp.temporal.ChronoUnit.SECONDS;
+import static org.threeten.bp.temporal.ChronoUnit.WEEKS;
+import static org.threeten.bp.temporal.ChronoUnit.YEARS;
+import static org.threeten.bp.temporal.IsoFields.DAY_OF_QUARTER;
+import static org.threeten.bp.temporal.IsoFields.QUARTER_OF_YEAR;
+import static org.threeten.bp.temporal.IsoFields.QUARTER_YEARS;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.simple.threetenbp.extra.Quarter.Q1;
+import static org.simple.threetenbp.extra.Quarter.Q2;
+import static org.simple.threetenbp.extra.Quarter.Q3;
+import static org.simple.threetenbp.extra.Quarter.Q4;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import org.threeten.bp.DateTimeException;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalTime;
+import org.threeten.bp.Year;
+import org.threeten.bp.chrono.IsoChronology;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.DateTimeParseException;
+import org.threeten.bp.temporal.Temporal;
+import org.threeten.bp.temporal.TemporalAccessor;
+import org.threeten.bp.temporal.TemporalAdjuster;
+import org.threeten.bp.temporal.TemporalField;
+import org.threeten.bp.temporal.TemporalQueries;
+import org.threeten.bp.temporal.TemporalUnit;
+import org.threeten.bp.temporal.UnsupportedTemporalTypeException;
+import org.threeten.bp.temporal.ValueRange;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.junit.Test;
+
+/**
+ * Test YearQuarter.
+ */
+public class TestYearQuarter {
+
+    private static final YearQuarter TEST = YearQuarter.of(2012, Q2);
+    private static final int STANDARD_YEAR_LENGTH = 365;
+    private static final int LEAP_YEAR_LENGTH = 366;
+
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_interfaces() {
+        assertTrue(Serializable.class.isAssignableFrom(YearQuarter.class));
+        assertTrue(Comparable.class.isAssignableFrom(YearQuarter.class));
+        assertTrue(TemporalAdjuster.class.isAssignableFrom(YearQuarter.class));
+        assertTrue(TemporalAccessor.class.isAssignableFrom(YearQuarter.class));
+    }
+
+    @Test
+    public void test_serialization() throws IOException, ClassNotFoundException {
+        YearQuarter test = YearQuarter.of(2012, 1);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+            oos.writeObject(test);
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()))) {
+            assertEquals(test, ois.readObject());
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // of(int,Quarter)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_of_int_Quarter() {
+        for (int year = -100; year <= 100; year++) {
+            for (Quarter quarter : Quarter.values()) {
+                YearQuarter test = YearQuarter.of(year, quarter);
+                assertEquals(year, test.getYear());
+                assertEquals(quarter.getValue(), test.getQuarterValue());
+                assertEquals(quarter, test.getQuarter());
+            }
+        }
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_of_int_Quarter_yearTooLow() {
+        YearQuarter.of(Year.MIN_VALUE - 1, Quarter.Q2);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_of_int_Quarter_yearTooHigh() {
+        YearQuarter.of(Year.MAX_VALUE + 1, Quarter.Q2);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_of_int_Quarter_null() {
+        YearQuarter.of(2012, (Quarter) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // of(int,int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_of_int_int() {
+        for (int year = -100; year <= 100; year++) {
+            for (int quarter = 1; quarter <= 4; quarter++) {
+                YearQuarter test = YearQuarter.of(year, quarter);
+                assertEquals(year, test.getYear());
+                assertEquals(quarter, test.getQuarterValue());
+                assertEquals(Quarter.of(quarter), test.getQuarter());
+                assertEquals(test, YearQuarter.of(year, quarter));
+                assertEquals(test.hashCode(), YearQuarter.of(year, quarter).hashCode());
+            }
+        }
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_of_int_int_yearTooLow() {
+        YearQuarter.of(Year.MIN_VALUE - 1, 1);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_of_int_int_yearTooHigh() {
+        YearQuarter.of(Year.MAX_VALUE + 1, 1);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_of_int_int_quarterTooLow() {
+        YearQuarter.of(2012, 0);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_of_int_int_quarterTooHigh() {
+        YearQuarter.of(2012, 5);
+    }
+
+    //-----------------------------------------------------------------------
+    // from(TemporalAccessor)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_from_TemporalAccessor_notLeapYear() {
+        LocalDate date = LocalDate.of(2007, 1, 1);
+        for (int i = 1; i <= STANDARD_YEAR_LENGTH; i++) {
+            YearQuarter test = YearQuarter.from(date);
+            int expected = ((date.getMonthValue() - 1) / 3) + 1;
+            assertEquals(YearQuarter.of(2007, expected), test);
+            date = date.plusDays(1);
+        }
+    }
+
+    @Test
+    public void test_from_TemporalAccessor_leapYear() {
+        LocalDate date = LocalDate.of(2008, 1, 1);
+        for (int i = 1; i <= LEAP_YEAR_LENGTH; i++) {
+            YearQuarter test = YearQuarter.from(date);
+            int expected = ((date.getMonthValue() - 1) / 3) + 1;
+            assertEquals(YearQuarter.of(2008, expected), test);
+            date = date.plusDays(1);
+        }
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_from_TemporalAccessor_noDerive() {
+        YearQuarter.from(LocalTime.NOON);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_from_TemporalAccessor_null() {
+        YearQuarter.from((TemporalAccessor) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // parse(CharSequence)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_parse_CharSequence() {
+        assertEquals(YearQuarter.of(2012, Q3), YearQuarter.parse("2012-Q3"));
+    }
+
+    @Test
+    public void test_parse_CharSequence_caseInsensitive() {
+        assertEquals(YearQuarter.of(2012, Q3), YearQuarter.parse("2012-q3"));
+    }
+
+    @Test(expected = DateTimeParseException.class)
+    public void test_parse_CharSequenceDate_invalidYear() {
+        YearQuarter.parse("12345-Q3");
+    }
+
+    @Test(expected = DateTimeParseException.class)
+    public void test_parse_CharSequenceDate_invalidQuarter() {
+        YearQuarter.parse("2012-Q0");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_parse_CharSequenceDate_nullCharSequence() {
+        YearQuarter.parse((CharSequence) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // parse(CharSequence,DateTimeFormatter)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_parse_CharSequenceDateTimeFormatter() {
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("'Q'Q uuuu");
+        assertEquals(YearQuarter.of(2012, Q3), YearQuarter.parse("Q3 2012", f));
+    }
+
+    @Test(expected = DateTimeParseException.class)
+    public void test_parse_CharSequenceDateDateTimeFormatter_invalidQuarter() {
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("'Q'Q uuuu");
+        YearQuarter.parse("Q0 2012", f);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_parse_CharSequenceDateTimeFormatter_nullCharSequence() {
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("'Q'Q uuuu");
+        YearQuarter.parse((CharSequence) null, f);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_parse_CharSequenceDateTimeFormatter_nullDateTimeFormatter() {
+        YearQuarter.parse("", (DateTimeFormatter) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // isSupported(TemporalField)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_isSupported_TemporalField() {
+        assertEquals(false, TEST.isSupported((TemporalField) null));
+        assertEquals(false, TEST.isSupported(NANO_OF_SECOND));
+        assertEquals(false, TEST.isSupported(NANO_OF_DAY));
+        assertEquals(false, TEST.isSupported(MICRO_OF_SECOND));
+        assertEquals(false, TEST.isSupported(MICRO_OF_DAY));
+        assertEquals(false, TEST.isSupported(MILLI_OF_SECOND));
+        assertEquals(false, TEST.isSupported(MILLI_OF_DAY));
+        assertEquals(false, TEST.isSupported(SECOND_OF_MINUTE));
+        assertEquals(false, TEST.isSupported(SECOND_OF_DAY));
+        assertEquals(false, TEST.isSupported(MINUTE_OF_HOUR));
+        assertEquals(false, TEST.isSupported(MINUTE_OF_DAY));
+        assertEquals(false, TEST.isSupported(HOUR_OF_AMPM));
+        assertEquals(false, TEST.isSupported(CLOCK_HOUR_OF_AMPM));
+        assertEquals(false, TEST.isSupported(HOUR_OF_DAY));
+        assertEquals(false, TEST.isSupported(CLOCK_HOUR_OF_DAY));
+        assertEquals(false, TEST.isSupported(AMPM_OF_DAY));
+        assertEquals(false, TEST.isSupported(DAY_OF_WEEK));
+        assertEquals(false, TEST.isSupported(ALIGNED_DAY_OF_WEEK_IN_MONTH));
+        assertEquals(false, TEST.isSupported(ALIGNED_DAY_OF_WEEK_IN_YEAR));
+        assertEquals(false, TEST.isSupported(DAY_OF_MONTH));
+        assertEquals(false, TEST.isSupported(DAY_OF_YEAR));
+        assertEquals(false, TEST.isSupported(EPOCH_DAY));
+        assertEquals(false, TEST.isSupported(ALIGNED_WEEK_OF_MONTH));
+        assertEquals(false, TEST.isSupported(ALIGNED_WEEK_OF_YEAR));
+        assertEquals(false, TEST.isSupported(MONTH_OF_YEAR));
+        assertEquals(false, TEST.isSupported(PROLEPTIC_MONTH));
+        assertEquals(true, TEST.isSupported(YEAR_OF_ERA));
+        assertEquals(true, TEST.isSupported(YEAR));
+        assertEquals(true, TEST.isSupported(ERA));
+        assertEquals(false, TEST.isSupported(INSTANT_SECONDS));
+        assertEquals(false, TEST.isSupported(OFFSET_SECONDS));
+        assertEquals(true, TEST.isSupported(QUARTER_OF_YEAR));
+        assertEquals(false, TEST.isSupported(DAY_OF_QUARTER));
+    }
+
+    //-----------------------------------------------------------------------
+    // isSupported(TemporalUnit)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_isSupported_TemporalUnit() {
+        assertEquals(false, TEST.isSupported((TemporalUnit) null));
+        assertEquals(false, TEST.isSupported(NANOS));
+        assertEquals(false, TEST.isSupported(MICROS));
+        assertEquals(false, TEST.isSupported(MILLIS));
+        assertEquals(false, TEST.isSupported(SECONDS));
+        assertEquals(false, TEST.isSupported(MINUTES));
+        assertEquals(false, TEST.isSupported(HOURS));
+        assertEquals(false, TEST.isSupported(DAYS));
+        assertEquals(false, TEST.isSupported(WEEKS));
+        assertEquals(false, TEST.isSupported(MONTHS));
+        assertEquals(true, TEST.isSupported(YEARS));
+        assertEquals(true, TEST.isSupported(DECADES));
+        assertEquals(true, TEST.isSupported(CENTURIES));
+        assertEquals(true, TEST.isSupported(MILLENNIA));
+        assertEquals(true, TEST.isSupported(ERA));
+        assertEquals(false, TEST.isSupported(FOREVER));
+        assertEquals(true, TEST.isSupported(QUARTER_YEARS));
+    }
+
+    //-----------------------------------------------------------------------
+    // range(TemporalField)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_range() {
+        assertEquals(QUARTER_OF_YEAR.range(), TEST.range(QUARTER_OF_YEAR));
+        assertEquals(YEAR.range(), TEST.range(YEAR));
+        assertEquals(ValueRange.of(1, Year.MAX_VALUE), TEST.range(YEAR_OF_ERA));
+        assertEquals(ERA.range(), TEST.range(ERA));
+    }
+
+    @Test(expected = UnsupportedTemporalTypeException.class)
+    public void test_range_invalidField() {
+        TEST.range(MONTH_OF_YEAR);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_range_null() {
+        TEST.range((TemporalField) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // get(TemporalField)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_get() {
+        assertEquals(2, TEST.get(QUARTER_OF_YEAR));
+        assertEquals(2012, TEST.get(YEAR));
+        assertEquals(2012, TEST.get(YEAR_OF_ERA));
+        assertEquals(1, TEST.get(ERA));
+    }
+
+    @Test(expected = UnsupportedTemporalTypeException.class)
+    public void test_get_invalidField() {
+        TEST.get(MONTH_OF_YEAR);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_get_null() {
+        TEST.get((TemporalField) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // getLong(TemporalField)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_getLong() {
+        assertEquals(2L, TEST.getLong(QUARTER_OF_YEAR));
+        assertEquals(2012L, TEST.getLong(YEAR));
+        assertEquals(2012L, TEST.getLong(YEAR_OF_ERA));
+        assertEquals(1L, TEST.getLong(ERA));
+    }
+
+    @Test(expected = UnsupportedTemporalTypeException.class)
+    public void test_getLong_invalidField() {
+        TEST.getLong(MONTH_OF_YEAR);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_getLong_null() {
+        TEST.getLong((TemporalField) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // isLeapYear(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_isLeapYear_int() {
+        for (int year = -500; year <= 500; year++) {
+            for (Quarter quarter : Quarter.values()) {
+                YearQuarter test = YearQuarter.of(year, quarter);
+                assertEquals(Year.isLeap(year), test.isLeapYear());
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // isValidDay(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_isValidDay_int_nonLeap() {
+        assertEquals(true, YearQuarter.of(2011, Q1).isValidDay(90));
+        assertEquals(false, YearQuarter.of(2011, Q1).isValidDay(91));
+        assertEquals(false, YearQuarter.of(2011, Q1).isValidDay(92));
+
+        assertEquals(true, YearQuarter.of(2011, Q2).isValidDay(90));
+        assertEquals(true, YearQuarter.of(2011, Q2).isValidDay(91));
+        assertEquals(false, YearQuarter.of(2011, Q2).isValidDay(92));
+
+        assertEquals(true, YearQuarter.of(2011, Q3).isValidDay(90));
+        assertEquals(true, YearQuarter.of(2011, Q3).isValidDay(91));
+        assertEquals(true, YearQuarter.of(2011, Q4).isValidDay(90));
+
+        assertEquals(true, YearQuarter.of(2011, Q3).isValidDay(92));
+        assertEquals(true, YearQuarter.of(2011, Q4).isValidDay(91));
+        assertEquals(true, YearQuarter.of(2011, Q4).isValidDay(92));
+    }
+
+    @Test
+    public void test_isValidDay_int_leap() {
+        assertEquals(true, YearQuarter.of(2012, Q1).isValidDay(90));
+        assertEquals(true, YearQuarter.of(2012, Q1).isValidDay(91));
+        assertEquals(false, YearQuarter.of(2012, Q1).isValidDay(92));
+
+        assertEquals(true, YearQuarter.of(2012, Q2).isValidDay(90));
+        assertEquals(true, YearQuarter.of(2012, Q2).isValidDay(91));
+        assertEquals(false, YearQuarter.of(2012, Q2).isValidDay(92));
+
+        assertEquals(true, YearQuarter.of(2012, Q3).isValidDay(90));
+        assertEquals(true, YearQuarter.of(2012, Q3).isValidDay(91));
+        assertEquals(true, YearQuarter.of(2012, Q3).isValidDay(92));
+
+        assertEquals(true, YearQuarter.of(2012, Q4).isValidDay(90));
+        assertEquals(true, YearQuarter.of(2012, Q4).isValidDay(91));
+        assertEquals(true, YearQuarter.of(2012, Q4).isValidDay(92));
+    }
+
+    @Test
+    public void test_isValidDay_int_outOfRange() {
+        assertEquals(false, YearQuarter.of(2011, Q1).isValidDay(93));
+        assertEquals(false, YearQuarter.of(2011, Q2).isValidDay(93));
+        assertEquals(false, YearQuarter.of(2011, Q3).isValidDay(93));
+        assertEquals(false, YearQuarter.of(2011, Q4).isValidDay(93));
+
+        assertEquals(false, YearQuarter.of(2011, Q1).isValidDay(0));
+        assertEquals(false, YearQuarter.of(2011, Q2).isValidDay(0));
+        assertEquals(false, YearQuarter.of(2011, Q3).isValidDay(0));
+        assertEquals(false, YearQuarter.of(2011, Q4).isValidDay(0));
+    }
+
+    //-----------------------------------------------------------------------
+    // lengthOfQuarter()
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_lengthOfQuarter() {
+        for (int year = -500; year <= 500; year++) {
+            assertEquals(Year.isLeap(year) ? 91 : 90, YearQuarter.of(year, Q1).lengthOfQuarter());
+            assertEquals(91, YearQuarter.of(year, Q2).lengthOfQuarter());
+            assertEquals(92, YearQuarter.of(year, Q3).lengthOfQuarter());
+            assertEquals(92, YearQuarter.of(year, Q4).lengthOfQuarter());
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // with(TemporalAdjuster)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_with_TemporalAdjuster_Quarter() {
+        assertEquals(YearQuarter.of(2007, Q1), YearQuarter.of(2007, Q2).with(Q1));
+    }
+
+    @Test
+    public void test_with_TemporalAdjuster_Year() {
+        assertEquals(YearQuarter.of(2012, Q2), YearQuarter.of(2007, Q2).with(Year.of(2012)));
+    }
+
+    @Test
+    public void test_with_TemporalAdjuster_YearQuarter() {
+        assertEquals(YearQuarter.of(2012, Q3), YearQuarter.of(2007, Q2).with(YearQuarter.of(2012, Q3)));
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_with_TemporalAdjuster_LocalDate() {
+        YearQuarter.of(2007, Q2).with(LocalDate.of(2012, 6, 30));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_with_TemporalAdjuster_null() {
+        YearQuarter.of(2007, Q2).with((TemporalAdjuster) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // withYear(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_withYear() {
+        assertEquals(YearQuarter.of(2012, Q2), YearQuarter.of(2007, Q2).withYear(2012));
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_withYear_int_quarterTooLow() {
+        TEST.withYear(Year.MIN_VALUE - 1);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_withYear_int_quarterTooHigh() {
+        TEST.withYear(Year.MAX_VALUE + 1);
+    }
+
+    //-----------------------------------------------------------------------
+    // withQuarter(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_withQuarter_int() {
+        assertEquals(YearQuarter.of(2007, Q1), YearQuarter.of(2007, Q2).withQuarter(1));
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_withQuarter_int_quarterTooLow() {
+        TEST.withQuarter(0);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_withQuarter_int_quarterTooHigh() {
+        TEST.withQuarter(5);
+    }
+
+    //-----------------------------------------------------------------------
+    // plus(long,TemporalUnit)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_plus_longTemporalUnit() {
+        assertEquals(YearQuarter.of(2012, Q2), YearQuarter.of(2007, Q2).plus(5, YEARS));
+        assertEquals(YearQuarter.of(2007, Q2), YearQuarter.of(2007, Q2).plus(0, YEARS));
+        assertEquals(YearQuarter.of(2002, Q2), YearQuarter.of(2007, Q2).plus(-5, YEARS));
+        assertEquals(YearQuarter.of(2008, Q3), YearQuarter.of(2007, Q2).plus(5, QUARTER_YEARS));
+        assertEquals(YearQuarter.of(2007, Q2), YearQuarter.of(2007, Q2).plus(0, QUARTER_YEARS));
+        assertEquals(YearQuarter.of(2006, Q1), YearQuarter.of(2007, Q2).plus(-5, QUARTER_YEARS));
+    }
+
+    //-----------------------------------------------------------------------
+    // plusYears(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_plusYears() {
+        assertEquals(YearQuarter.of(2012, Q2), YearQuarter.of(2007, Q2).plusYears(5));
+        assertEquals(YearQuarter.of(2007, Q2), YearQuarter.of(2007, Q2).plusYears(0));
+        assertEquals(YearQuarter.of(2002, Q2), YearQuarter.of(2007, Q2).plusYears(-5));
+    }
+
+    //-----------------------------------------------------------------------
+    // plusQuarters(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_plusQuarters() {
+        assertEquals(YearQuarter.of(2008, Q3), YearQuarter.of(2007, Q2).plusQuarters(5));
+        assertEquals(YearQuarter.of(2007, Q2), YearQuarter.of(2007, Q2).plusQuarters(0));
+        assertEquals(YearQuarter.of(2006, Q1), YearQuarter.of(2007, Q2).plusQuarters(-5));
+    }
+
+    //-----------------------------------------------------------------------
+    // minus(long,TemporalUnit)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_minus_longTemporalUnit() {
+        assertEquals(YearQuarter.of(2002, Q2), YearQuarter.of(2007, Q2).minus(5, YEARS));
+        assertEquals(YearQuarter.of(2007, Q2), YearQuarter.of(2007, Q2).minus(0, YEARS));
+        assertEquals(YearQuarter.of(2012, Q2), YearQuarter.of(2007, Q2).minus(-5, YEARS));
+        assertEquals(YearQuarter.of(2006, Q1), YearQuarter.of(2007, Q2).minus(5, QUARTER_YEARS));
+        assertEquals(YearQuarter.of(2007, Q2), YearQuarter.of(2007, Q2).minus(0, QUARTER_YEARS));
+        assertEquals(YearQuarter.of(2008, Q3), YearQuarter.of(2007, Q2).minus(-5, QUARTER_YEARS));
+    }
+
+    //-----------------------------------------------------------------------
+    // minusYears(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_minusYears() {
+        assertEquals(YearQuarter.of(2002, Q2), YearQuarter.of(2007, Q2).minusYears(5));
+        assertEquals(YearQuarter.of(2007, Q2), YearQuarter.of(2007, Q2).minusYears(0));
+        assertEquals(YearQuarter.of(2012, Q2), YearQuarter.of(2007, Q2).minusYears(-5));
+    }
+
+    //-----------------------------------------------------------------------
+    // minusQuarters(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_minusQuarters() {
+        assertEquals(YearQuarter.of(2006, Q1), YearQuarter.of(2007, Q2).minusQuarters(5));
+        assertEquals(YearQuarter.of(2007, Q2), YearQuarter.of(2007, Q2).minusQuarters(0));
+        assertEquals(YearQuarter.of(2008, Q3), YearQuarter.of(2007, Q2).minusQuarters(-5));
+    }
+
+    //-----------------------------------------------------------------------
+    // lengthOfYear()
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_lengthOfYear() {
+        for (int year = -500; year <= 500; year++) {
+            for (Quarter quarter : Quarter.values()) {
+                YearQuarter test = YearQuarter.of(year, quarter);
+                assertEquals(Year.isLeap(year) ? 366 : 365, test.lengthOfYear());
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // query(TemporalQuery)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_query() {
+        assertEquals(IsoChronology.INSTANCE, TEST.query(TemporalQueries.chronology()));
+        assertEquals(null, TEST.query(TemporalQueries.localDate()));
+        assertEquals(null, TEST.query(TemporalQueries.localTime()));
+        assertEquals(null, TEST.query(TemporalQueries.offset()));
+        assertEquals(QUARTER_YEARS, TEST.query(TemporalQueries.precision()));
+        assertEquals(null, TEST.query(TemporalQueries.zone()));
+        assertEquals(null, TEST.query(TemporalQueries.zoneId()));
+    }
+
+    //-----------------------------------------------------------------------
+    // adjustInto(Temporal)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_adjustInto_Temporal() {
+        for (int month = 1; month < 12; month++) {
+            for (int dom = 1; dom < 28; dom++) {
+                LocalDate base = LocalDate.of(2007, month, dom);
+                LocalDate expected = LocalDate.of(2012, 4 + ((month - 1) % 3), dom);
+                assertEquals(expected, YearQuarter.of(2012, Q2).adjustInto(base));
+            }
+        }
+    }
+
+    @Test
+    public void test_adjustInto_Temporal_lastValidDay_nonLeap() {
+        LocalDate base = LocalDate.of(2007, 5, 31);
+        LocalDate expected = LocalDate.of(2011, 2, 28);
+        assertEquals(expected, YearQuarter.of(2011, Q1).adjustInto(base));
+    }
+
+    @Test
+    public void test_adjustInto_Temporal_lastValidDay_leap() {
+        LocalDate base = LocalDate.of(2007, 5, 31);
+        LocalDate expected = LocalDate.of(2012, 2, 29);
+        assertEquals(expected, YearQuarter.of(2012, Q1).adjustInto(base));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_adjustInto_Temporal_null() {
+        TEST.adjustInto((Temporal) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // until(Temporal,TemporalUnit)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_until_TemporalTemporalUnit_QUARTER_YEARS() {
+        assertEquals(-2, YearQuarter.of(2012, Q2).until(YearQuarter.of(2011, Q4), QUARTER_YEARS));
+        assertEquals(-1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2012, Q1), QUARTER_YEARS));
+        assertEquals(0, YearQuarter.of(2012, Q2).until(YearQuarter.of(2012, Q2), QUARTER_YEARS));
+        assertEquals(1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2012, Q3), QUARTER_YEARS));
+        assertEquals(2, YearQuarter.of(2012, Q2).until(YearQuarter.of(2012, Q4), QUARTER_YEARS));
+        assertEquals(3, YearQuarter.of(2012, Q2).until(YearQuarter.of(2013, Q1), QUARTER_YEARS));
+        assertEquals(4, YearQuarter.of(2012, Q2).until(YearQuarter.of(2013, Q2), QUARTER_YEARS));
+        assertEquals(5, YearQuarter.of(2012, Q2).until(YearQuarter.of(2013, Q3), QUARTER_YEARS));
+    }
+
+    @Test
+    public void test_until_TemporalTemporalUnit_YEARS() {
+        assertEquals(-2, YearQuarter.of(2012, Q2).until(YearQuarter.of(2010, Q2), YEARS));
+        assertEquals(-1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2010, Q3), YEARS));
+        assertEquals(-1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2010, Q4), YEARS));
+        assertEquals(-1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2011, Q1), YEARS));
+        assertEquals(-1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2011, Q2), YEARS));
+        assertEquals(0, YearQuarter.of(2012, Q2).until(YearQuarter.of(2011, Q3), YEARS));
+        assertEquals(0, YearQuarter.of(2012, Q2).until(YearQuarter.of(2011, Q4), YEARS));
+        assertEquals(0, YearQuarter.of(2012, Q2).until(YearQuarter.of(2012, Q1), YEARS));
+        assertEquals(0, YearQuarter.of(2012, Q2).until(YearQuarter.of(2012, Q2), YEARS));
+        assertEquals(0, YearQuarter.of(2012, Q2).until(YearQuarter.of(2012, Q3), YEARS));
+        assertEquals(0, YearQuarter.of(2012, Q2).until(YearQuarter.of(2012, Q4), YEARS));
+        assertEquals(0, YearQuarter.of(2012, Q2).until(YearQuarter.of(2013, Q1), YEARS));
+        assertEquals(1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2013, Q2), YEARS));
+        assertEquals(1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2013, Q3), YEARS));
+        assertEquals(1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2013, Q4), YEARS));
+        assertEquals(1, YearQuarter.of(2012, Q2).until(YearQuarter.of(2014, Q1), YEARS));
+        assertEquals(2, YearQuarter.of(2012, Q2).until(YearQuarter.of(2014, Q2), YEARS));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_until_TemporalTemporalUnit_nullTemporal() {
+        YearQuarter.of(2012, Q2).until(null, QUARTER_YEARS);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_until_TemporalTemporalUnit_nullTemporalUnit() {
+        YearQuarter.of(2012, Q2).until(YearQuarter.of(2012, Q3), null);
+    }
+
+    //-----------------------------------------------------------------------
+    // quartersUntil(YearQuarter)
+    //-----------------------------------------------------------------------
+    @Test(expected = NullPointerException.class)
+    public void test_quartersUntil_null() {
+        YearQuarter.of(2012, Q2).quartersUntil(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_quartersUntil_IllegalArgument() {
+        YearQuarter.of(2012, Q2).quartersUntil(YearQuarter.of(2012, Q1));
+    }
+
+    @Test
+    public void test_quartersUntil() {
+        assertEquals(2, YearQuarter.of(2012, Q2).quartersUntil(YearQuarter.of(2012, Q4)).count());
+        assertEquals(10, YearQuarter.of(2012, Q2).quartersUntil(YearQuarter.of(2014, Q4)).count());
+
+        YearQuarter start = YearQuarter.of(2012, Q1);
+        YearQuarter end = YearQuarter.of(2013, Q3);
+        Stream<YearQuarter> stream = start.quartersUntil(end);
+
+        List<YearQuarter> expects = Arrays.asList(
+                YearQuarter.of(start.getYear(), Q1),
+                YearQuarter.of(start.getYear(), Q2),
+                YearQuarter.of(start.getYear(), Q3),
+                YearQuarter.of(start.getYear(), Q4),
+                YearQuarter.of(end.getYear(), Q1),
+                YearQuarter.of(end.getYear(), Q2));
+        assertEquals(expects, stream.collect(Collectors.toList()));
+    }
+
+    //-----------------------------------------------------------------------
+    // format(DateTimeFormatter)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_format() {
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("'Q'Q uuuu");
+        assertEquals("Q1 2012", YearQuarter.of(2012, Q1).format(f));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_format_null() {
+        TEST.format((DateTimeFormatter) null);
+    }
+
+    //-----------------------------------------------------------------------
+    // atDay(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_atDay() {
+        for (int i = 1; i <= 90; i++) {
+            LocalDate expected = LocalDate.of(2012, 1, 1).plusDays(i - 1);
+            assertEquals(expected, YearQuarter.of(2012, Q1).atDay(i));
+        }
+        for (int i = 1; i <= 91; i++) {
+            LocalDate expected = LocalDate.of(2012, 4, 1).plusDays(i - 1);
+            assertEquals(expected, YearQuarter.of(2012, Q2).atDay(i));
+        }
+        for (int i = 1; i <= 92; i++) {
+            LocalDate expected = LocalDate.of(2012, 7, 1).plusDays(i - 1);
+            assertEquals(expected, YearQuarter.of(2012, Q3).atDay(i));
+        }
+        for (int i = 1; i <= 92; i++) {
+            LocalDate expected = LocalDate.of(2012, 10, 1).plusDays(i - 1);
+            assertEquals(expected, YearQuarter.of(2012, Q4).atDay(i));
+        }
+    }
+
+    @Test
+    public void test_atDay_Q1_91_leap() {
+        assertEquals(LocalDate.of(2012, 3, 31), YearQuarter.of(2012, Q1).atDay(91));
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_atDay_Q1_91_notLeap() {
+        YearQuarter.of(2011, Q1).atDay(91);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_atDay_Q1_92() {
+        YearQuarter.of(2012, Q1).atDay(92);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_atDay_Q2_92() {
+        YearQuarter.of(2012, Q2).atDay(92);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_atDay_tooLow() {
+        TEST.atDay(0);
+    }
+
+    @Test(expected = DateTimeException.class)
+    public void test_atDay_tooHigh() {
+        TEST.atDay(93);
+    }
+
+    //-----------------------------------------------------------------------
+    // atEndOfQuarter(int)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_atEndOfQuarter() {
+        assertEquals(LocalDate.of(2011, 3, 31), YearQuarter.of(2011, Q1).atEndOfQuarter());
+        assertEquals(LocalDate.of(2011, 6, 30), YearQuarter.of(2011, Q2).atEndOfQuarter());
+        assertEquals(LocalDate.of(2011, 9, 30), YearQuarter.of(2011, Q3).atEndOfQuarter());
+        assertEquals(LocalDate.of(2011, 12, 31), YearQuarter.of(2011, Q4).atEndOfQuarter());
+
+        assertEquals(LocalDate.of(2012, 3, 31), YearQuarter.of(2012, Q1).atEndOfQuarter());
+        assertEquals(LocalDate.of(2012, 6, 30), YearQuarter.of(2012, Q2).atEndOfQuarter());
+        assertEquals(LocalDate.of(2012, 9, 30), YearQuarter.of(2012, Q3).atEndOfQuarter());
+        assertEquals(LocalDate.of(2012, 12, 31), YearQuarter.of(2012, Q4).atEndOfQuarter());
+    }
+
+    //-----------------------------------------------------------------------
+    // compareTo()
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_compareTo() {
+        for (int year1 = -100; year1 < 100; year1++) {
+            for (Quarter quarter1 : Quarter.values()) {
+                YearQuarter a = YearQuarter.of(year1, quarter1);
+                for (int year2 = -100; year2 < 100; year2++) {
+                    for (Quarter quarter2 : Quarter.values()) {
+                        YearQuarter b = YearQuarter.of(year2, quarter2);
+                        if (year1 < year2) {
+                            assertEquals(true, a.compareTo(b) < 0);
+                            assertEquals(true, b.compareTo(a) > 0);
+                            assertEquals(false, a.isAfter(b));
+                            assertEquals(false, b.isBefore(a));
+                            assertEquals(true, b.isAfter(a));
+                            assertEquals(true, a.isBefore(b));
+                        } else if (year1 > year2) {
+                            assertEquals(true, a.compareTo(b) > 0);
+                            assertEquals(true, b.compareTo(a) < 0);
+                            assertEquals(true, a.isAfter(b));
+                            assertEquals(true, b.isBefore(a));
+                            assertEquals(false, b.isAfter(a));
+                            assertEquals(false, a.isBefore(b));
+                        } else {
+                            if (quarter1.getValue() < quarter2.getValue()) {
+                                assertEquals(true, a.compareTo(b) < 0);
+                                assertEquals(true, b.compareTo(a) > 0);
+                                assertEquals(false, a.isAfter(b));
+                                assertEquals(false, b.isBefore(a));
+                                assertEquals(true, b.isAfter(a));
+                                assertEquals(true, a.isBefore(b));
+                            } else if (quarter1.getValue() > quarter2.getValue()) {
+                                assertEquals(true, a.compareTo(b) > 0);
+                                assertEquals(true, b.compareTo(a) < 0);
+                                assertEquals(true, a.isAfter(b));
+                                assertEquals(true, b.isBefore(a));
+                                assertEquals(false, b.isAfter(a));
+                                assertEquals(false, a.isBefore(b));
+                            } else {
+                                assertEquals(0, a.compareTo(b));
+                                assertEquals(0, b.compareTo(a));
+                                assertEquals(false, a.isAfter(b));
+                                assertEquals(false, b.isBefore(a));
+                                assertEquals(false, b.isAfter(a));
+                                assertEquals(false, a.isBefore(b));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void test_compareTo_nullYearQuarter() {
+        TEST.compareTo(null);
+    }
+
+    //-----------------------------------------------------------------------
+    // equals() / hashCode()
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_equals() {
+        for (int year1 = -100; year1 < 100; year1++) {
+            for (Quarter quarter1 : Quarter.values()) {
+                YearQuarter a = YearQuarter.of(year1, quarter1);
+                for (int year2 = -100; year2 < 100; year2++) {
+                    for (Quarter quarter2 : Quarter.values()) {
+                        YearQuarter b = YearQuarter.of(year2, quarter2);
+                        if (year1 == year2 && quarter1 == quarter2) {
+                            assertEquals(a, b);
+                            assertEquals(a.hashCode(), b.hashCode());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void test_equals_nullYearQuarter() {
+        assertEquals(false, TEST.equals(null));
+    }
+
+    @Test
+    public void test_equals_incorrectType() {
+        assertEquals(false, TEST.equals("Incorrect type"));
+    }
+
+    //-----------------------------------------------------------------------
+    // toString()
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_toString() {
+        assertEquals("2012-Q2", YearQuarter.of(2012, Q2).toString());
+    }
+
+    @Test
+    public void test_toString_bigYear() {
+        assertEquals("+10000-Q2", YearQuarter.of(10000, Q2).toString());
+    }
+
+    @Test
+    public void test_toString_negativeYear() {
+        assertEquals("-0001-Q2", YearQuarter.of(-1, Q2).toString());
+    }
+
+    @Test
+    public void test_toString_negativeBigYear() {
+        assertEquals("-10000-Q2", YearQuarter.of(-10000, Q2).toString());
+    }
+
+}

@@ -1,0 +1,14 @@
+apply plugin: 'java-library'
+
+dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation "org.threeten:threetenbp:1.4.2"
+  implementation 'org.joda:joda-convert:2.2.1'
+
+  testImplementation 'junit:junit:4.13'
+  testImplementation 'com.tngtech.java:junit-dataprovider:1.13.1'
+  testImplementation "com.google.guava:guava:28.2-jre"
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"

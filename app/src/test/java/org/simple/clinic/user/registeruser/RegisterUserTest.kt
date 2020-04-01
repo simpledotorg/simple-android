@@ -13,7 +13,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.TestData
-import org.simple.clinic.registration.RegistrationApi
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.user.User
@@ -37,21 +37,21 @@ class RegisterUserTest {
     val facility = TestData.facility(facilityUuid)
     val user = TestData.loggedInUser(userUuid, registrationFacilityUuid = facilityUuid, currentFacilityUuid = facilityUuid)
 
-    val registrationApi = mock<RegistrationApi>()
+    val usersApi = mock<UsersApi>()
     val userDao = mock<User.RoomDao>()
     val facilityRepository = mock<FacilityRepository>()
     val accessTokenPreference = mock<Preference<Optional<String>>>()
 
     val payload = user.toPayload(facilityUuid)
     val savedUser = user.copy(loggedInStatus = LOGGED_IN)
-    whenever(registrationApi.createUser(RegistrationRequest(payload))) doReturn Single.just(RegistrationResponse("accessToken", payload))
+    whenever(usersApi.createUser(RegistrationRequest(payload))) doReturn Single.just(RegistrationResponse("accessToken", payload))
     whenever(facilityRepository.setCurrentFacility(savedUser, facilityUuid)) doReturn Completable.complete()
 
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
 
     // when
-    val registerUser = RegisterUser(registrationApi, userDao, facilityRepository, accessTokenPreference)
+    val registerUser = RegisterUser(usersApi, userDao, facilityRepository, accessTokenPreference)
 
     // when
     registerUser.registerUserAtFacility(user, facility).blockingGet()

@@ -5,6 +5,10 @@ import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.activateuser.ActivateUserRequest
 import org.simple.clinic.login.activateuser.ActivateUserResponse
+import org.simple.clinic.registration.FindUserRequest
+import org.simple.clinic.registration.FindUserResponse
+import org.simple.clinic.registration.RegistrationRequest
+import org.simple.clinic.registration.RegistrationResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,4 +27,10 @@ interface UsersApi {
 
   @GET("v4/users/me")
   fun self(): Call<CurrentUserResponse>
+
+  @POST("v3/users/register")
+  fun createUser(@Body body: RegistrationRequest): Single<RegistrationResponse>
+
+  @POST("v4/users/find")
+  fun findUserByPhoneNumber(@Body request: FindUserRequest): Call<FindUserResponse>
 }

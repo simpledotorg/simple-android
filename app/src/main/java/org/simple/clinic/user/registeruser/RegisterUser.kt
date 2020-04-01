@@ -6,7 +6,7 @@ import io.reactivex.Single
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.registration.RegistrationApi
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.user.LoggedInUserPayload
@@ -24,7 +24,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class RegisterUser @Inject constructor(
-    private val registrationApi: RegistrationApi,
+    private val usersApi: UsersApi,
     private val userDao: User.RoomDao,
     private val facilityRepository: FacilityRepository,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
@@ -33,7 +33,7 @@ class RegisterUser @Inject constructor(
   fun registerUserAtFacility(user: User, facility: Facility): Single<RegistrationResult> {
     val registrationRequest = RegistrationRequest(userToPayload(user, facility.uuid))
 
-    return registrationApi
+    return usersApi
         .createUser(registrationRequest)
         .doOnSubscribe { Timber.i("Registering user") }
         .flatMap { storeUserAndAccessToken(it) }

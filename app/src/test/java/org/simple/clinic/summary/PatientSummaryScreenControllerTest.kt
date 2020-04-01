@@ -256,7 +256,8 @@ class PatientSummaryScreenControllerTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = mock(),
         medicalHistoryRepository = medicalHistoryRepository,
-        uiActions = uiActions
+        uiActions = uiActions,
+        isFacilitySwitchedPreference = mock()
     )
 
     testFixture = MobiusTestFixture(

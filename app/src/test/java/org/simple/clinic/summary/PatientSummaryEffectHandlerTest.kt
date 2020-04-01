@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -43,6 +44,7 @@ class PatientSummaryEffectHandlerTest {
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
   private val dataSync = mock<DataSync>()
+  private val isFacilitySwitched = mock<Preference<Boolean>>()
 
   private val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
 
@@ -57,7 +59,8 @@ class PatientSummaryEffectHandlerTest {
       bloodSugarRepository = bloodSugarRepository,
       dataSync = dataSync,
       medicalHistoryRepository = medicalHistoryRepository,
-      uiActions = uiActions
+      uiActions = uiActions,
+      isFacilitySwitchedPreference = isFacilitySwitched
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -244,4 +247,18 @@ class PatientSummaryEffectHandlerTest {
     verifyZeroInteractions(uiActions)
     verify(missingPhoneReminderRepository).markReminderAsShownFor(patientUuid)
   }
+
+  @Test
+  fun `when should show alert facility change effect is received then fetch switch facility flag`() {
+    //given
+    whenever(isFacilitySwitched.get()) doReturn true
+
+    //when
+    testCase.dispatch(FetchFacilitySwitchedFlag)
+
+    //then
+    testCase.assertOutgoingEvents(SwitchFacilityFlagFetched(true))
+    verifyZeroInteractions(uiActions)
+  }
+
 }

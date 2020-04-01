@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -24,6 +25,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.UUID
+import javax.inject.Named
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
@@ -36,7 +38,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val dataSync: DataSync,
     val medicalHistoryRepository: MedicalHistoryRepository,
-    @Assisted private val uiActions: PatientSummaryUiActions
+    @Assisted private val uiActions: PatientSummaryUiActions,
+    @Named("is_facility_switched") private val isFacilitySwitchedPreference: Preference<Boolean>
 ) {
 
   @AssistedInject.Factory
@@ -69,7 +72,20 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(TriggerSync::class.java, triggerSync())
         .addAction(ShowDiagnosisError::class.java, { uiActions.showDiagnosisError() }, schedulersProvider.ui())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
+        .addTransformer(FetchFacilitySwitchedFlag::class.java, fetchSwitchFacilityFlag(schedulersProvider.io(), isFacilitySwitchedPreference))
         .build()
+  }
+
+  private fun fetchSwitchFacilityFlag(
+      io: Scheduler,
+      facilitySwitchedPreference: Preference<Boolean>
+  ): ObservableTransformer<FetchFacilitySwitchedFlag, PatientSummaryEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .observeOn(io)
+          .map { facilitySwitchedPreference.get() }
+          .map(::SwitchFacilityFlagFetched)
+    }
   }
 
   private fun loadPatientSummaryProfile(scheduler: Scheduler): ObservableTransformer<LoadPatientSummaryProfile, PatientSummaryEvent> {

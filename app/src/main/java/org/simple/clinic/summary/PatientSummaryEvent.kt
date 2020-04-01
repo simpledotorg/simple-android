@@ -32,15 +32,15 @@ data class ScheduledAppointment(val sheetOpenedFrom: AppointmentSheetOpenedFrom)
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
 
-object CompletedCheckForInvalidPhone: PatientSummaryEvent()
+object CompletedCheckForInvalidPhone : PatientSummaryEvent()
 
 object PatientSummaryBloodPressureSaved : PatientSummaryEvent()
 
-object LinkIdWithPatientSheetShown: PatientSummaryEvent()
+object LinkIdWithPatientSheetShown : PatientSummaryEvent()
 
 object PatientSummaryLinkIdCompleted : PatientSummaryEvent()
 
-object ReportedViewedPatientToAnalytics: PatientSummaryEvent()
+object ReportedViewedPatientToAnalytics : PatientSummaryEvent()
 
 data class DataForBackClickLoaded(
     val hasPatientDataChangedSinceScreenCreated: Boolean,
@@ -51,8 +51,10 @@ data class DataForBackClickLoaded(
 data class DataForDoneClickLoaded(
     val countOfRecordedMeasurements: Int,
     val diagnosisRecorded: Boolean
-): PatientSummaryEvent()
+) : PatientSummaryEvent()
 
-data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom): PatientSummaryEvent()
+data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent()
 
-data class FetchedHasShownMissingPhoneReminder(val hasShownReminder: Boolean): PatientSummaryEvent()
+data class FetchedHasShownMissingPhoneReminder(val hasShownReminder: Boolean) : PatientSummaryEvent()
+
+data class SwitchFacilityFlagFetched(val isFacilitySwitched: Boolean) : PatientSummaryEvent()

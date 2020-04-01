@@ -34,6 +34,7 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -69,7 +70,7 @@ class EnterOtpScreenControllerTest {
       updatedAt = user.updatedAt
   )
 
-  private val controller = EnterOtpScreenController(userSession, requestLoginOtp, loginUserWithOtp, ongoingLoginEntryRepository)
+  private val controller = EnterOtpScreenController(userSession, requestLoginOtp, loginUserWithOtp, ongoingLoginEntryRepository, TrampolineSchedulersProvider())
 
   @Before
   fun setUp() {
@@ -80,7 +81,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the screen is created, the logged in users phone number must be shown`() {
-    whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(user))
+    whenever(userSession.loggedInUserImmediate()).doReturn(user)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
 
     uiEvents.onNext(ScreenCreated())
@@ -283,7 +284,7 @@ class EnterOtpScreenControllerTest {
       shouldCloseScreen: Boolean
   ) {
     val user = TestData.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
-    whenever(userSession.requireLoggedInUser()).doReturn(Observable.just(user))
+    whenever(userSession.loggedInUserImmediate()) doReturn user
     whenever(userSession.loggedInUser()).doReturn(
         Observable.just<Optional<User>>(
             Just(user),
@@ -306,8 +307,8 @@ class EnterOtpScreenControllerTest {
         .doOnSubscribe { otpRequested = true }
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(requestOtpSingle)
-    whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
+    whenever(userSession.loggedInUserImmediate())
+        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -318,8 +319,8 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call is made, the progress must be shown`() {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(Result.Success as Result))
-    whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
+    whenever(userSession.loggedInUserImmediate())
+        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -330,8 +331,8 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call is made, any error must be hidden`() {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(Result.Success as Result))
-    whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
+    whenever(userSession.loggedInUserImmediate())
+        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -345,8 +346,8 @@ class EnterOtpScreenControllerTest {
   ) {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(result))
-    whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
+    whenever(userSession.loggedInUserImmediate())
+        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -369,8 +370,8 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call succeeds, the sms sent message must be shown`(params: SmsSendShowMessageTestParams) {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(params.result))
-    whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
+    whenever(userSession.loggedInUserImmediate())
+        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -398,8 +399,8 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call completes, the error must be shown`(params: SmsSendShowErrorParams) {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(params.result))
-    whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
+    whenever(userSession.loggedInUserImmediate())
+        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -443,8 +444,8 @@ class EnterOtpScreenControllerTest {
   fun `when the resend sms call fails, the PIN must be cleared`(result: Result) {
     whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
         .doReturn(Single.just(result))
-    whenever(userSession.requireLoggedInUser())
-        .doReturn(Observable.just(TestData.loggedInUser(uuid = loggedInUserUuid)))
+    whenever(userSession.loggedInUserImmediate())
+        .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 

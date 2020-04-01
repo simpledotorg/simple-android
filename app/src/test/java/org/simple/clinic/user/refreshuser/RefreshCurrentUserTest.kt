@@ -9,12 +9,11 @@ import org.junit.Test
 import org.simple.clinic.FakeCall
 import org.simple.clinic.TestData
 import org.simple.clinic.login.CurrentUserResponse
-import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
-import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toUser
 import java.util.UUID
@@ -28,7 +27,7 @@ class RefreshCurrentUserTest {
   private val phone = "1234567890"
 
   private val userDao = mock<User.RoomDao>()
-  private val loginApi = mock<LoginApi>()
+  private val loginApi = mock<UsersApi>()
 
   private val refreshCurrentUser = RefreshCurrentUser(userDao, loginApi)
 

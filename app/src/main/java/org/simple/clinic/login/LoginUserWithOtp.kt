@@ -2,7 +2,6 @@ package org.simple.clinic.login
 
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
-import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.analytics.Analytics
@@ -21,7 +20,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class LoginUserWithOtp @Inject constructor(
-    private val loginApi: LoginApi,
+    private val usersApi: UsersApi,
     private val dataSync: DataSync,
     private val userDao: User.RoomDao,
     private val facilityRepository: FacilityRepository,
@@ -33,7 +32,7 @@ class LoginUserWithOtp @Inject constructor(
   fun loginWithOtp(phoneNumber: String, pin: String, otp: String): Single<LoginResult> {
     return Single.just(UserPayload(phoneNumber, pin, otp))
         .map(::LoginRequest)
-        .flatMap(loginApi::login)
+        .flatMap(usersApi::login)
         .flatMap(::storeUserAndAccessToken)
         .doOnSuccess(::reportUserLoggedInToAnalytics)
         .map { LoginResult.Success as LoginResult }

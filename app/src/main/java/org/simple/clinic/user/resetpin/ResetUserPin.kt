@@ -6,7 +6,7 @@ import io.reactivex.Single
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
-import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
@@ -27,7 +27,7 @@ import javax.inject.Named
 class ResetUserPin @Inject constructor(
     private val passwordHasher: PasswordHasher,
     // TODO(vs): 2019-11-21 Unify the LoginApi and RegistrationApi into a single UserApi
-    private val loginApi: LoginApi,
+    private val usersApi: UsersApi,
     private val userDao: User.RoomDao,
     private val facilityRepository: FacilityRepository,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
@@ -37,7 +37,7 @@ class ResetUserPin @Inject constructor(
     return Single.fromCallable { passwordHasher.hash(pin) }
         .doOnSubscribe { Timber.i("Resetting PIN") }
         .map(::ResetPinRequest)
-        .flatMap(loginApi::resetPin)
+        .flatMap(usersApi::resetPin)
         .flatMapCompletable(::storeUserAndAccessToken)
         .toSingleDefault(Success as ResetPinResult)
         .onErrorReturn(::mapErrorToResetPinResult)

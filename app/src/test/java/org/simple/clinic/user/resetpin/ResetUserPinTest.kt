@@ -16,7 +16,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
-import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.UsersApi
 import org.simple.clinic.security.pin.JavaHashPasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
@@ -36,7 +36,7 @@ import java.util.UUID
 class ResetUserPinTest {
 
   private val passwordHasher = JavaHashPasswordHasher()
-  private val loginApi = mock<LoginApi>()
+  private val loginApi = mock<UsersApi>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userDao = mock<User.RoomDao>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()

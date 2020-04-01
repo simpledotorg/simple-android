@@ -1,6 +1,5 @@
 package org.simple.clinic.enterotp
 
-import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
@@ -24,10 +23,9 @@ import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
 import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.TestData
+import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingLoginEntryRepository
-import org.simple.clinic.user.RequestLoginOtp
-import org.simple.clinic.user.RequestLoginOtp.Result
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -48,7 +46,7 @@ class EnterOtpScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val screen = mock<EnterOtpScreen>()
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val requestLoginOtp = mock<RequestLoginOtp>()
+  private val activateUser = mock<ActivateUser>()
   private val loginUserWithOtp = mock<LoginUserWithOtp>()
   private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
 
@@ -69,8 +67,18 @@ class EnterOtpScreenControllerTest {
       createdAt = user.createdAt,
       updatedAt = user.updatedAt
   )
+  private val userPayload = TestData.loggedInUserPayload(
+      uuid = loggedInUserUuid,
+      name = user.fullName,
+      phone = user.phoneNumber,
+      pinDigest = user.pinDigest,
+      registrationFacilityUuid = registrationFacilityUuid,
+      status = user.status,
+      createdAt = user.createdAt,
+      updatedAt = user.updatedAt
+  )
 
-  private val controller = EnterOtpScreenController(userSession, requestLoginOtp, loginUserWithOtp, ongoingLoginEntryRepository, TrampolineSchedulersProvider())
+  private val controller = EnterOtpScreenController(userSession, activateUser, loginUserWithOtp, ongoingLoginEntryRepository, TrampolineSchedulersProvider())
 
   @Before
   fun setUp() {
@@ -301,26 +309,26 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when resend sms is clicked, the request otp flow should be triggered`() {
-    var otpRequested = false
-    val requestOtpSingle = Single
-        .just(Result.Success as Result)
-        .doOnSubscribe { otpRequested = true }
-    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .doReturn(requestOtpSingle)
+    whenever(activateUser.activate(loggedInUserUuid, pin))
+        .doReturn(ActivateUser.Result.Success(userPayload))
     whenever(userSession.loggedInUserImmediate())
         .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
+    whenever(ongoingLoginEntryRepository.entryImmediate())
+        .doReturn(ongoingLoginEntry)
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
-    assertThat(otpRequested).isTrue()
+    verify(activateUser).activate(loggedInUserUuid, pin)
   }
 
   @Test
   fun `when the resend sms call is made, the progress must be shown`() {
-    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .doReturn(Single.just(Result.Success as Result))
+    whenever(activateUser.activate(loggedInUserUuid, pin))
+        .doReturn(ActivateUser.Result.Success(userPayload))
     whenever(userSession.loggedInUserImmediate())
         .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
+    whenever(ongoingLoginEntryRepository.entryImmediate())
+        .doReturn(ongoingLoginEntry)
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -329,10 +337,12 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call is made, any error must be hidden`() {
-    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .doReturn(Single.just(Result.Success as Result))
+    whenever(activateUser.activate(loggedInUserUuid, pin))
+        .doReturn(ActivateUser.Result.Success(userPayload))
     whenever(userSession.loggedInUserImmediate())
         .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
+    whenever(ongoingLoginEntryRepository.entryImmediate())
+        .doReturn(ongoingLoginEntry)
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -342,12 +352,14 @@ class EnterOtpScreenControllerTest {
   @Test
   @Parameters(method = "params for hiding progress on request otp")
   fun `when the resend sms call completes, the progress must be hidden`(
-      result: Result
+      result: ActivateUser.Result
   ) {
-    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .doReturn(Single.just(result))
+    whenever(activateUser.activate(loggedInUserUuid, pin))
+        .doReturn(result)
     whenever(userSession.loggedInUserImmediate())
         .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
+    whenever(ongoingLoginEntryRepository.entryImmediate())
+        .doReturn(ongoingLoginEntry)
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -356,22 +368,24 @@ class EnterOtpScreenControllerTest {
 
 
   @Suppress("Unused")
-  private fun `params for hiding progress on request otp`(): List<Result> {
+  private fun `params for hiding progress on request otp`(): List<ActivateUser.Result> {
     return listOf(
-        Result.Success,
-        Result.OtherError(RuntimeException()),
-        Result.NetworkError,
-        Result.ServerError(500)
+        ActivateUser.Result.Success(userPayload),
+        ActivateUser.Result.OtherError(RuntimeException()),
+        ActivateUser.Result.NetworkError,
+        ActivateUser.Result.ServerError(500)
     )
   }
 
   @Test
   @Parameters(method = "params for showing SMS sent message")
   fun `when the resend sms call succeeds, the sms sent message must be shown`(params: SmsSendShowMessageTestParams) {
-    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .doReturn(Single.just(params.result))
+    whenever(activateUser.activate(loggedInUserUuid, pin))
+        .doReturn(params.result)
     whenever(userSession.loggedInUserImmediate())
         .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
+    whenever(ongoingLoginEntryRepository.entryImmediate())
+        .doReturn(ongoingLoginEntry)
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -382,25 +396,27 @@ class EnterOtpScreenControllerTest {
     }
   }
 
-  data class SmsSendShowMessageTestParams(val result: Result, val shouldShowMessage: Boolean)
+  data class SmsSendShowMessageTestParams(val result: ActivateUser.Result, val shouldShowMessage: Boolean)
 
   @Suppress("Unused")
   private fun `params for showing SMS sent message`(): List<SmsSendShowMessageTestParams> {
     return listOf(
-        SmsSendShowMessageTestParams(result = Result.Success, shouldShowMessage = true),
-        SmsSendShowMessageTestParams(result = Result.NetworkError, shouldShowMessage = false),
-        SmsSendShowMessageTestParams(result = Result.OtherError(RuntimeException()), shouldShowMessage = false),
-        SmsSendShowMessageTestParams(result = Result.ServerError(400), shouldShowMessage = false)
+        SmsSendShowMessageTestParams(result = ActivateUser.Result.Success(userPayload), shouldShowMessage = true),
+        SmsSendShowMessageTestParams(result = ActivateUser.Result.NetworkError, shouldShowMessage = false),
+        SmsSendShowMessageTestParams(result = ActivateUser.Result.OtherError(RuntimeException()), shouldShowMessage = false),
+        SmsSendShowMessageTestParams(result = ActivateUser.Result.ServerError(400), shouldShowMessage = false)
     )
   }
 
   @Test
   @Parameters(method = "params for show error on request otp")
   fun `when the resend sms call completes, the error must be shown`(params: SmsSendShowErrorParams) {
-    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .doReturn(Single.just(params.result))
+    whenever(activateUser.activate(loggedInUserUuid, pin))
+        .doReturn(params.result)
     whenever(userSession.loggedInUserImmediate())
         .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
+    whenever(ongoingLoginEntryRepository.entryImmediate())
+        .doReturn(ongoingLoginEntry)
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -408,7 +424,7 @@ class EnterOtpScreenControllerTest {
   }
 
   data class SmsSendShowErrorParams(
-      val result: Result,
+      val result: ActivateUser.Result,
       // FIXME 25-Jul-19: This should be broken into separate tests
       val verifications: (Ui) -> Unit
   )
@@ -417,7 +433,7 @@ class EnterOtpScreenControllerTest {
   private fun `params for show error on request otp`(): List<SmsSendShowErrorParams> {
     return listOf(
         SmsSendShowErrorParams(
-            result = Result.Success,
+            result = ActivateUser.Result.Success(userPayload),
             verifications = { screen: Ui ->
               verify(screen, never()).showNetworkError()
               verify(screen, never()).showServerError(any())
@@ -425,15 +441,15 @@ class EnterOtpScreenControllerTest {
             }
         ),
         SmsSendShowErrorParams(
-            result = Result.NetworkError,
+            result = ActivateUser.Result.NetworkError,
             verifications = { screen: Ui -> verify(screen).showNetworkError() }
         ),
         SmsSendShowErrorParams(
-            result = Result.OtherError(RuntimeException()),
+            result = ActivateUser.Result.OtherError(RuntimeException()),
             verifications = { screen: Ui -> verify(screen).showUnexpectedError() }
         ),
         SmsSendShowErrorParams(
-            result = Result.ServerError(400),
+            result = ActivateUser.Result.ServerError(400),
             verifications = { screen: Ui -> verify(screen).showUnexpectedError() }
         )
     )
@@ -441,11 +457,13 @@ class EnterOtpScreenControllerTest {
 
   @Test
   @Parameters(method = "params for clear PIN on request otp")
-  fun `when the resend sms call fails, the PIN must be cleared`(result: Result) {
-    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
-        .doReturn(Single.just(result))
+  fun `when the resend sms call fails, the PIN must be cleared`(result: ActivateUser.Result) {
+    whenever(activateUser.activate(loggedInUserUuid, pin))
+        .doReturn(result)
     whenever(userSession.loggedInUserImmediate())
         .doReturn(TestData.loggedInUser(uuid = loggedInUserUuid))
+    whenever(ongoingLoginEntryRepository.entryImmediate())
+        .doReturn(ongoingLoginEntry)
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -453,11 +471,11 @@ class EnterOtpScreenControllerTest {
   }
 
   @Suppress("Unused")
-  private fun `params for clear PIN on request otp`(): List<Result> {
+  private fun `params for clear PIN on request otp`(): List<ActivateUser.Result> {
     return listOf(
-        Result.OtherError(RuntimeException()),
-        Result.ServerError(400),
-        Result.NetworkError)
+        ActivateUser.Result.OtherError(RuntimeException()),
+        ActivateUser.Result.ServerError(400),
+        ActivateUser.Result.NetworkError)
   }
 
   @Test

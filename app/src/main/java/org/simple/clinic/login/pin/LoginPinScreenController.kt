@@ -8,14 +8,8 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.OngoingLoginEntry
-import org.simple.clinic.user.RequestLoginOtp
-import org.simple.clinic.user.RequestLoginOtp.Result.NetworkError
-import org.simple.clinic.user.RequestLoginOtp.Result.OtherError
-import org.simple.clinic.user.RequestLoginOtp.Result.ServerError
-import org.simple.clinic.user.RequestLoginOtp.Result.Success
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 

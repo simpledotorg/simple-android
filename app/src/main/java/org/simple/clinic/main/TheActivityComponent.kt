@@ -85,7 +85,8 @@ interface TheActivityComponent :
     AccessDeniedScreenInjector,
     PinEntryCardView.Injector,
     RegistrationPhoneScreen.Injector,
-    LoginPinScreen.Injector {
+    LoginPinScreen.Injector,
+    EnterOtpScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: PatientsScreen)
@@ -101,7 +102,6 @@ interface TheActivityComponent :
   fun inject(target: RegistrationLocationPermissionScreen)
   fun inject(target: RegistrationFacilitySelectionScreen)
   fun inject(target: FacilityChangeActivity)
-  fun inject(target: EnterOtpScreen)
   fun inject(target: ConfirmResetPinDialog)
   fun inject(target: ForgotPinCreateNewPinScreen)
   fun inject(target: ForgotPinConfirmPinScreen)

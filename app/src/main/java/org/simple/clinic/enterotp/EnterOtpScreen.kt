@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.screen_enterotp.view.*
 import org.simple.clinic.R
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.main.TheActivity
+import org.simple.clinic.di.injector
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -38,7 +38,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+    context.injector<Injector>().inject(this)
 
     bindUiToController(
         ui = this,
@@ -131,5 +131,9 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
 
   fun clearPin() {
     otpEntryEditText.text = null
+  }
+
+  interface Injector {
+    fun inject(target: EnterOtpScreen)
   }
 }

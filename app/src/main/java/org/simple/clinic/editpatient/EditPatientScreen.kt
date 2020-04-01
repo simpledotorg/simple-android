@@ -156,6 +156,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     showOrHideInputFields()
     setInputFieldsHint()
+    showOrHideGenderRadioButtons()
   }
 
   private fun showOrHideInputFields() {
@@ -194,6 +195,19 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     inputFields.fields.forEach {
       allTextInputFields[it::class.java]?.hint = context.getString(it.labelResId)
+    }
+  }
+
+  private fun showOrHideGenderRadioButtons() {
+    val allGendersRadioButtons = mapOf(
+        Male to maleRadioButton,
+        Female to femaleRadioButton,
+        Transgender to transgenderRadioButton
+    )
+    val genderField = inputFields.fields.find { it is GenderField } as GenderField
+
+    allGendersRadioButtons.forEach { (gender, radioButton) ->
+      radioButton.visibleOrGone(gender in genderField.allowedGenders)
     }
   }
 

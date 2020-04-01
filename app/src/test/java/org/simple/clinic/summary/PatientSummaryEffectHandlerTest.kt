@@ -261,4 +261,17 @@ class PatientSummaryEffectHandlerTest {
     verifyZeroInteractions(uiActions)
   }
 
+  @Test
+  fun `when open alert facility change sheet effect is received then open alert facility change sheet`() {
+    //given
+    val currentFacility = TestData.facility(uuid = UUID.fromString("83b23a15-1724-4ece-8ba7-9fe71231e0f3"))
+
+    //when
+    testCase.dispatch(OpenAlertFacilityChangeSheet(currentFacility))
+
+    //then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openAlertFacilityChangeSheet(currentFacility.name)
+  }
+
 }

@@ -331,6 +331,10 @@ class PatientSummaryScreen(
       medicalHistorySummaryView.showDiagnosisError()
     }
   }
+
+  override fun openAlertFacilityChangeSheet(facilityName: String) {
+    TODO("not implemented")
+  }
 }
 
 @Parcelize

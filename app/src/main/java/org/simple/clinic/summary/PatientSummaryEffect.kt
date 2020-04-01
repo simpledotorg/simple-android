@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -46,3 +47,5 @@ object ShowDiagnosisError : PatientSummaryEffect()
 data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID) : PatientSummaryEffect()
 
 object FetchFacilitySwitchedFlag : PatientSummaryEffect()
+
+data class OpenAlertFacilityChangeSheet(val currentFacility: Facility) : PatientSummaryEffect()

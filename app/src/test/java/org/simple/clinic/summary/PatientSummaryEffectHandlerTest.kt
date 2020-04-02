@@ -272,7 +272,7 @@ class PatientSummaryEffectHandlerTest {
 
     //then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).openAlertFacilityChangeSheet(currentFacility.name)
+    verify(uiActions).openAlertFacilityChangeSheet(currentFacility.name, EDIT_PATIENT_ALERT_FACILITY_CHANGE)
   }
 
 }

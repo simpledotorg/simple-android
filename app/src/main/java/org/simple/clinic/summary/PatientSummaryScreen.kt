@@ -342,8 +342,8 @@ class PatientSummaryScreen(
     }
   }
 
-  override fun openAlertFacilityChangeSheet(facilityName: String) {
-    activity.startActivityForResult(AlertFacilityChangeSheet.intent(context, facilityName), EDIT_PATIENT_ALERT_FACILITY_CHANGE)
+  override fun openAlertFacilityChangeSheet(facilityName: String, requestCode: Int) {
+    activity.startActivityForResult(AlertFacilityChangeSheet.intent(context, facilityName), requestCode)
   }
 }
 

@@ -73,7 +73,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(ShowDiagnosisError::class.java, { uiActions.showDiagnosisError() }, schedulersProvider.ui())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addTransformer(FetchFacilitySwitchedFlag::class.java, fetchSwitchFacilityFlag(schedulersProvider.io(), isFacilitySwitchedPreference))
-        .addConsumer(OpenAlertFacilityChangeSheet::class.java, { uiActions.openAlertFacilityChangeSheet(it.currentFacility.name) }, schedulersProvider.ui())
+        .addConsumer(OpenAlertFacilityChangeSheet::class.java, { uiActions.openAlertFacilityChangeSheet(it.currentFacility.name, it.openIntentRequestCode) }, schedulersProvider.ui())
         .build()
   }
 

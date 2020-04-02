@@ -3,6 +3,8 @@ package org.simple.clinic
 import android.annotation.SuppressLint
 import android.app.Application
 import androidx.arch.core.executor.ArchTaskExecutor
+import androidx.camera.camera2.Camera2Config
+import androidx.camera.core.CameraXConfig
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.gabrielittner.threetenbp.LazyThreeTen
@@ -17,7 +19,7 @@ import org.simple.clinic.util.AppArchTaskExecutorDelegate
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class ClinicApp : Application() {
+abstract class ClinicApp : Application(), CameraXConfig.Provider {
 
   companion object {
     lateinit var appComponent: AppComponent
@@ -60,6 +62,10 @@ abstract class ClinicApp : Application() {
 
     registerActivityLifecycleCallbacks(closeActivitiesWhenUserIsUnauthorized)
     closeActivitiesWhenUserIsUnauthorized.listen()
+  }
+
+  override fun getCameraXConfig(): CameraXConfig {
+    return Camera2Config.defaultConfig()
   }
 
   abstract fun buildDaggerGraph(): AppComponent

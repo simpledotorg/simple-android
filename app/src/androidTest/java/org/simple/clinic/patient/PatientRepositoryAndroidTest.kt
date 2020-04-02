@@ -574,7 +574,7 @@ class PatientRepositoryAndroidTest {
    */
   @Test
   fun when_searching_with_fuzzy_search_the_results_must_be_limited_to_the_value_set_in_the_config() {
-    val template = testData.patientProfile(syncStatus = DONE)
+    val template = testData.patientProfile(syncStatus = DONE, patientName = "Name")
 
     val patientsToSave = (1..PatientConfig.MAXIMUM_SQLITE_QUERY_LIMIT).map {
       val addressUuid = UUID.randomUUID()
@@ -584,7 +584,6 @@ class PatientRepositoryAndroidTest {
           patient = template.patient.copy(
               uuid = patientUuid,
               addressUuid = addressUuid,
-              fullName = "Name",
               dateOfBirth = LocalDate.now(clock).minusYears(10),
               status = Active
           ),
@@ -602,6 +601,47 @@ class PatientRepositoryAndroidTest {
     assertThat(
         patientRepository
             .search(Name(patientName = "ame"))
+            .blockingFirst()
+            .size
+    ).isEqualTo(config.limitOfSearchResults)
+  }
+
+  /**
+   * Added to test the case where SQLite's max query param length (999) can be
+   * exceeded during phone number search.
+   */
+  @Test
+  fun when_searching_with_phone_number_the_results_must_be_limited_to_the_value_set_in_the_config() {
+    val template = testData.patientProfile(
+        syncStatus = DONE,
+        patientPhoneNumber = "1234567890"
+    )
+
+    val patientsToSave = (1..PatientConfig.MAXIMUM_SQLITE_QUERY_LIMIT).map {
+      val addressUuid = UUID.randomUUID()
+      val patientUuid = UUID.randomUUID()
+
+      template.copy(
+          patient = template.patient.copy(
+              uuid = patientUuid,
+              addressUuid = addressUuid,
+              dateOfBirth = LocalDate.now(clock).minusYears(10),
+              status = Active
+          ),
+          address = template.address.copy(uuid = addressUuid),
+          phoneNumbers = template.phoneNumbers
+              .map { number -> number.copy(uuid = UUID.randomUUID(), patientUuid = patientUuid) },
+          businessIds = template.businessIds
+              .map { businessId -> businessId.copy(uuid = UUID.randomUUID(), patientUuid = patientUuid) }
+      )
+    }
+
+    patientRepository.save(patientsToSave).blockingAwait()
+    assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1000)
+
+    assertThat(
+        patientRepository
+            .search(PhoneNumber("1234"))
             .blockingFirst()
             .size
     ).isEqualTo(config.limitOfSearchResults)

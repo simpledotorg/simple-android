@@ -82,7 +82,8 @@ class PatientSummaryScreen(
             identifierLinkedEvents(),
             identifierLinkCancelledEvents(),
             editButtonClicks(),
-            alertFacilityChangedSheetClosed()
+            alertFacilityChangedOnEditClick(),
+            alertFacilityChangedOnDoneClick()
         )
         .compose(ReportAnalyticsEvents())
         .cast<PatientSummaryEvent>()
@@ -187,13 +188,17 @@ class PatientSummaryScreen(
       .map { ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(it.data!!) }
       .map { ScheduledAppointment(it.sheetOpenedFrom) }
 
-  @SuppressLint("CheckResult")
-  private fun alertFacilityChangedSheetClosed() =
+  private fun alertFacilityChangedOnEditClick() =
       screenRouter.streamScreenResults()
           .ofType<ActivityResult>()
           .filter { it.requestCode == EDIT_PATIENT_ALERT_FACILITY_CHANGE && it.succeeded() }
           .map { OpenPatientEditScreen }
 
+  private fun alertFacilityChangedOnDoneClick() =
+      screenRouter.streamScreenResults()
+          .ofType<ActivityResult>()
+          .filter { it.requestCode == SCHEDULE_APPOINTMENT_ALERT_FACILITY_CHANGE && it.succeeded() }
+          .map { OpenScheduleAppointmentSheetOnDoneClick }
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
     return linkIdWithPatientView

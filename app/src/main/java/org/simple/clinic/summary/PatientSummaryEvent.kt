@@ -60,3 +60,5 @@ data class FetchedHasShownMissingPhoneReminder(val hasShownReminder: Boolean) : 
 data class SwitchFacilityFlagFetched(val isFacilitySwitched: Boolean, val sourceEvent: PatientSummaryEvent) : PatientSummaryEvent()
 
 object OpenPatientEditScreen : PatientSummaryEvent()
+
+object OpenScheduleAppointmentSheetOnDoneClick : PatientSummaryEvent()

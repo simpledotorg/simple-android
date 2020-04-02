@@ -54,6 +54,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
         dispatch(effect)
       }
       OpenPatientEditScreen -> dispatch(ShowPatientEditScreen(model.patientSummaryProfile!!))
+      OpenScheduleAppointmentSheetOnDoneClick -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK))
     }
   }
 

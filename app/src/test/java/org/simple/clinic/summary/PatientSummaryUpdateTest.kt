@@ -638,6 +638,19 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when open schedule appointment sheet event is received after done click then open the sheet with done intent`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(OpenScheduleAppointmentSheetOnDoneClick)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK) as PatientSummaryEffect)
+            )
+        )
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

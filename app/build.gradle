@@ -217,6 +217,7 @@ dependencies {
   testImplementation "pl.pragmatists:JUnitParams:$versions.junitParams"
   testImplementation "com.google.truth:truth:$versions.truth"
   testImplementation "com.github.blocoio:faker:$versions.faker"
+  debugImplementation "com.github.blocoio:faker:$versions.faker"
 
   androidTestImplementation "androidx.annotation:annotation:$versions.supportLib"
 

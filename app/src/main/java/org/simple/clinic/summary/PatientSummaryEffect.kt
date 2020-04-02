@@ -46,6 +46,6 @@ object ShowDiagnosisError : PatientSummaryEffect()
 
 data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID) : PatientSummaryEffect()
 
-object FetchFacilitySwitchedFlag : PatientSummaryEffect()
+data class FetchFacilitySwitchedFlag(val sourceEvent: PatientSummaryEvent) : PatientSummaryEffect()
 
 data class OpenAlertFacilityChangeSheet(val currentFacility: Facility) : PatientSummaryEffect()

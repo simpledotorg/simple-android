@@ -587,7 +587,7 @@ class PatientSummaryUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(FetchFacilitySwitchedFlag as PatientSummaryEffect)
+                hasEffects(FetchFacilitySwitchedFlag(PatientSummaryEditClicked) as PatientSummaryEffect)
             )
         )
   }

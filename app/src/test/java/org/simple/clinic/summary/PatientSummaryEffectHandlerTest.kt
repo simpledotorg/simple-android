@@ -249,12 +249,12 @@ class PatientSummaryEffectHandlerTest {
   }
 
   @Test
-  fun `when should show alert facility change effect is received then fetch switch facility flag`() {
+  fun `when fetch switch facility flag effect is received then fetch switch facility flag`() {
     //given
     whenever(isFacilitySwitched.get()) doReturn true
 
     //when
-    testCase.dispatch(FetchFacilitySwitchedFlag)
+    testCase.dispatch(FetchFacilitySwitchedFlag(PatientSummaryEditClicked))
 
     //then
     testCase.assertOutgoingEvents(SwitchFacilityFlagFetched(true))

@@ -31,30 +31,32 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryLinkIdCompleted -> dispatch(HideLinkIdWithPatientView)
       is ReportedViewedPatientToAnalytics -> next(model.reportedViewedPatientToAnalytics())
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
-          patientUuid = model.patientUuid,
-          hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,
-          countOfRecordedMeasurements = event.countOfRecordedMeasurements,
           openIntention = model.openIntention,
-          diagnosisRecorded = event.diagnosisRecorded,
-          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled
+          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
+          event = event
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(model.isDiabetesManagementEnabled, event)
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is SwitchFacilityFlagFetched -> {
         val effect = when {
           event.isFacilitySwitched -> openAlertFacilityChangeEffect(event, model.currentFacility!!)
-          else -> {
-            when (event.sourceEvent) {
-              PatientSummaryEditClicked -> ShowPatientEditScreen(model.patientSummaryProfile!!)
-              is DataForDoneClickLoaded -> ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK)
-              else -> TODO()
-            }
-          }
+          else -> effectForShowingNextScreen(event, model)
         }
         dispatch(effect)
       }
       OpenPatientEditScreen -> dispatch(ShowPatientEditScreen(model.patientSummaryProfile!!))
       OpenScheduleAppointmentSheetOnDoneClick -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK))
+    }
+  }
+
+  private fun effectForShowingNextScreen(
+      event: SwitchFacilityFlagFetched,
+      model: PatientSummaryModel
+  ): PatientSummaryEffect {
+    return when (event.sourceEvent) {
+      PatientSummaryEditClicked -> ShowPatientEditScreen(model.patientSummaryProfile!!)
+      is DataForDoneClickLoaded, is DataForBackClickLoaded -> ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK)
+      else -> throw IllegalStateException("This should not happen!")
     }
   }
 
@@ -64,7 +66,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   ): OpenAlertFacilityChangeSheet {
     val requestCode = when (event.sourceEvent) {
       PatientSummaryEditClicked -> EDIT_PATIENT_ALERT_FACILITY_CHANGE
-      is DataForDoneClickLoaded -> SCHEDULE_APPOINTMENT_ALERT_FACILITY_CHANGE
+      is DataForDoneClickLoaded, is DataForBackClickLoaded -> SCHEDULE_APPOINTMENT_ALERT_FACILITY_CHANGE
       else -> -1
     }
     return OpenAlertFacilityChangeSheet(currentFacility, requestCode)
@@ -87,21 +89,18 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun dataForHandlingBackLoaded(
-      patientUuid: UUID,
-      hasPatientDataChanged: Boolean,
-      countOfRecordedMeasurements: Int,
       openIntention: OpenIntention,
-      diagnosisRecorded: Boolean,
-      isDiabetesManagementEnabled: Boolean
+      isDiabetesManagementEnabled: Boolean,
+      event: DataForBackClickLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val shouldShowScheduleAppointmentSheet = if (countOfRecordedMeasurements == 0) false else hasPatientDataChanged
-    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val shouldShowScheduleAppointmentSheet = if (event.countOfRecordedMeasurements == 0) false else event.hasPatientDataChangedSinceScreenCreated
+    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && event.diagnosisRecorded.not() && isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError
-      shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+      shouldShowScheduleAppointmentSheet -> FetchFacilitySwitchedFlag(event)
       shouldGoToPreviousScreen -> GoBackToPreviousScreen
       shouldGoToHomeScreen -> GoToHomeScreen
       else -> throw IllegalStateException("This should not happen!")

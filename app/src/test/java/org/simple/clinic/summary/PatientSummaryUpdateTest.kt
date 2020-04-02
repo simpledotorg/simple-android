@@ -75,19 +75,19 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and at least one measurement is present, clicking on back must show the schedule appointment sheet`() {
+  fun `when there are patient summary changes and at least one measurement is present, clicking on back must fetch switch facility flag`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-
+    val dataForBackClickLoaded = DataForBackClickLoaded(
+        hasPatientDataChangedSinceScreenCreated = true,
+        countOfRecordedMeasurements = 1,
+        diagnosisRecorded = true
+    )
     updateSpec
         .given(model)
-        .whenEvent(DataForBackClickLoaded(
-            hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 1,
-            diagnosisRecorded = true
-        ))
+        .whenEvent(dataForBackClickLoaded)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK) as PatientSummaryEffect)
+            hasEffects(FetchFacilitySwitchedFlag(dataForBackClickLoaded) as PatientSummaryEffect)
         ))
   }
 
@@ -111,17 +111,17 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when there are patient summary changes and at least one measurement is present and no diagnosis is recorded and diabetes management is disabled, then clicking on back must show schedule appointment sheet`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-
+    val dataForBackClickLoaded = DataForBackClickLoaded(
+        hasPatientDataChangedSinceScreenCreated = true,
+        countOfRecordedMeasurements = 1,
+        diagnosisRecorded = false
+    )
     updateSpec
         .given(model)
-        .whenEvent(DataForBackClickLoaded(
-            hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 1,
-            diagnosisRecorded = false
-        ))
+        .whenEvent(dataForBackClickLoaded)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK) as PatientSummaryEffect)
+            hasEffects(FetchFacilitySwitchedFlag(dataForBackClickLoaded) as PatientSummaryEffect)
         ))
   }
 
@@ -630,6 +630,27 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
+  fun `when switch facility flag is true and source event is back clicked then open alert facility change sheet`() {
+    //given
+    val facility = TestData.facility(uuid = UUID.fromString("3b44021d-d219-49fc-bd89-04d70bfc2b23"))
+    val sourceEvent = DataForBackClickLoaded(
+        hasPatientDataChangedSinceScreenCreated = true,
+        countOfRecordedMeasurements = 1,
+        diagnosisRecorded = true
+    )
+
+    updateSpec
+        .given(defaultModel.currentFacilityLoaded(facility))
+        .whenEvent(SwitchFacilityFlagFetched(true, sourceEvent))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenAlertFacilityChangeSheet(facility, SCHEDULE_APPOINTMENT_ALERT_FACILITY_CHANGE) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
   fun `when switch facility flag is false and source event is edit click, then show patient edit screen`() {
     //given
     val sourceEvent = PatientSummaryEditClicked
@@ -649,6 +670,26 @@ class PatientSummaryUpdateTest {
   fun `when switch facility flag is false and source event is done click, then show schedule appointment sheet`() {
     //given
     val sourceEvent = DataForDoneClickLoaded(
+        countOfRecordedMeasurements = 1,
+        diagnosisRecorded = true
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SwitchFacilityFlagFetched(false, sourceEvent))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when switch facility flag is false and source event is back click, then show schedule appointment sheet`() {
+    //given
+    val sourceEvent = DataForBackClickLoaded(
+        hasPatientDataChangedSinceScreenCreated = true,
         countOfRecordedMeasurements = 1,
         diagnosisRecorded = true
     )

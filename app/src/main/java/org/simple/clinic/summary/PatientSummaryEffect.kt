@@ -48,4 +48,4 @@ data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID) : PatientSum
 
 data class FetchFacilitySwitchedFlag(val sourceEvent: PatientSummaryEvent) : PatientSummaryEffect()
 
-data class OpenAlertFacilityChangeSheet(val currentFacility: Facility) : PatientSummaryEffect()
+data class OpenAlertFacilityChangeSheet(val currentFacility: Facility, val openIntentRequestCode: Int) : PatientSummaryEffect()

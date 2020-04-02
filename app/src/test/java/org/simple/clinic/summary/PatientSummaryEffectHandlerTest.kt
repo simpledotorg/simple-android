@@ -268,7 +268,7 @@ class PatientSummaryEffectHandlerTest {
     val currentFacility = TestData.facility(uuid = UUID.fromString("83b23a15-1724-4ece-8ba7-9fe71231e0f3"))
 
     //when
-    testCase.dispatch(OpenAlertFacilityChangeSheet(currentFacility))
+    testCase.dispatch(OpenAlertFacilityChangeSheet(currentFacility, EDIT_PATIENT_ALERT_FACILITY_CHANGE))
 
     //then
     testCase.assertNoOutgoingEvents()

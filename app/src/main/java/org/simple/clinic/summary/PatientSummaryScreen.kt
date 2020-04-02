@@ -191,7 +191,7 @@ class PatientSummaryScreen(
   private fun alertFacilityChangedSheetClosed() =
       screenRouter.streamScreenResults()
           .ofType<ActivityResult>()
-          .filter { it.requestCode == ALERT_FACILITY_CHANGE && it.succeeded() }
+          .filter { it.requestCode == EDIT_PATIENT_ALERT_FACILITY_CHANGE && it.succeeded() }
           .map { OpenPatientEditScreen }
 
 
@@ -343,7 +343,7 @@ class PatientSummaryScreen(
   }
 
   override fun openAlertFacilityChangeSheet(facilityName: String) {
-    activity.startActivityForResult(AlertFacilityChangeSheet.intent(context, facilityName), ALERT_FACILITY_CHANGE)
+    activity.startActivityForResult(AlertFacilityChangeSheet.intent(context, facilityName), EDIT_PATIENT_ALERT_FACILITY_CHANGE)
   }
 }
 

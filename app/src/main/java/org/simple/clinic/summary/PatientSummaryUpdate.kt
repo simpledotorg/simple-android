@@ -45,7 +45,12 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is SwitchFacilityFlagFetched -> {
-        val effect = if (event.isFacilitySwitched) OpenAlertFacilityChangeSheet(model.currentFacility!!) else ShowPatientEditScreen(model.patientSummaryProfile!!)
+        val effect = if (event.isFacilitySwitched) {
+          OpenAlertFacilityChangeSheet(model.currentFacility!!, EDIT_PATIENT_ALERT_FACILITY_CHANGE)
+        } else {
+          ShowPatientEditScreen(model.patientSummaryProfile!!)
+        }
+
         dispatch(effect)
       }
       OpenPatientEditScreen -> dispatch(ShowPatientEditScreen(model.patientSummaryProfile!!))

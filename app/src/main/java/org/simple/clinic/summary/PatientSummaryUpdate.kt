@@ -20,7 +20,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryBackClicked -> dispatch(LoadDataForBackClick(model.patientUuid, event.screenCreatedTimestamp))
       is PatientSummaryDoneClicked -> dispatch(LoadDataForDoneClick(model.patientUuid))
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
-      PatientSummaryEditClicked -> dispatch(ShowPatientEditScreen(model.patientSummaryProfile!!))
+      PatientSummaryEditClicked -> dispatch(FetchFacilitySwitchedFlag)
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
       is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())
@@ -44,7 +44,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           isDiabetesManagementEnabled = model.isDiabetesManagementEnabled
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
-      else -> noChange()
+      is SwitchFacilityFlagFetched -> {
+        val effect = if (event.isFacilitySwitched) OpenAlertFacilityChangeSheet(model.currentFacility!!) else ShowPatientEditScreen(model.patientSummaryProfile!!)
+        dispatch(effect)
+      }
+      OpenPatientEditScreen -> dispatch(ShowPatientEditScreen(model.patientSummaryProfile!!))
     }
   }
 

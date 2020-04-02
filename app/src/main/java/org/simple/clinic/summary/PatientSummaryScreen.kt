@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.editpatient.EditPatientScreenKey
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -80,7 +81,8 @@ class PatientSummaryScreen(
             appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
             identifierLinkCancelledEvents(),
-            editButtonClicks()
+            editButtonClicks(),
+            alertFacilityChangedSheetClosed()
         )
         .compose(ReportAnalyticsEvents())
         .cast<PatientSummaryEvent>()
@@ -184,6 +186,14 @@ class PatientSummaryScreen(
       .filter { it.requestCode == SUMMARY_REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
       .map { ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(it.data!!) }
       .map { ScheduledAppointment(it.sheetOpenedFrom) }
+
+  @SuppressLint("CheckResult")
+  private fun alertFacilityChangedSheetClosed() =
+      screenRouter.streamScreenResults()
+          .ofType<ActivityResult>()
+          .filter { it.requestCode == ALERT_FACILITY_CHANGE && it.succeeded() }
+          .map { OpenPatientEditScreen }
+
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
     return linkIdWithPatientView
@@ -333,7 +343,7 @@ class PatientSummaryScreen(
   }
 
   override fun openAlertFacilityChangeSheet(facilityName: String) {
-    TODO("not implemented")
+    activity.startActivityForResult(AlertFacilityChangeSheet.intent(context, facilityName), ALERT_FACILITY_CHANGE)
   }
 }
 

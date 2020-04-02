@@ -58,3 +58,5 @@ data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : Pati
 data class FetchedHasShownMissingPhoneReminder(val hasShownReminder: Boolean) : PatientSummaryEvent()
 
 data class SwitchFacilityFlagFetched(val isFacilitySwitched: Boolean) : PatientSummaryEvent()
+
+object OpenPatientEditScreen : PatientSummaryEvent()

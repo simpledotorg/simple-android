@@ -26,7 +26,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.summary.ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.summary.SUMMARY_REQCODE_BP_ENTRY
@@ -308,5 +307,9 @@ class BloodPressureSummaryView(
     val durationSinceBpCreated = Duration.between(createdAt, now)
 
     return durationSinceBpCreated <= bpEditableFor
+  }
+
+  companion object {
+    private const val ALERT_FACILITY_CHANGE = 171
   }
 }

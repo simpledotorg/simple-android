@@ -576,6 +576,64 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when edit patient is clicked then fetch switch facility flag`() {
+    //given
+    val facility = TestData.facility(uuid = UUID.fromString("3b44021d-d219-49fc-bd89-04d70bfc2b23"))
+
+    updateSpec
+        .given(defaultModel.currentFacilityLoaded(facility))
+        .whenEvent(PatientSummaryEditClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(FetchFacilitySwitchedFlag as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when switch facility flag is true then open alert facility change sheet`() {
+    //given
+    val facility = TestData.facility(uuid = UUID.fromString("3b44021d-d219-49fc-bd89-04d70bfc2b23"))
+
+    updateSpec
+        .given(defaultModel.currentFacilityLoaded(facility))
+        .whenEvent(SwitchFacilityFlagFetched(true))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenAlertFacilityChangeSheet(facility) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when switch facility flag is false then show patient edit screen`() {
+    updateSpec
+        .given(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile))
+        .whenEvent(SwitchFacilityFlagFetched(false))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowPatientEditScreen(patientSummaryProfile) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when open patient edit screen event is received then open edit screen`() {
+    updateSpec
+        .given(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile))
+        .whenEvent(OpenPatientEditScreen)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowPatientEditScreen(patientSummaryProfile) as PatientSummaryEffect)
+            )
+        )
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

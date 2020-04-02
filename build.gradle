@@ -69,7 +69,10 @@ buildscript {
       ktlint              : '0.36.0',
       quarantine          : '0.3.0',
       jackson             : '2.10.2',
-      logback             : '1.2.3'
+      logback             : '1.2.3',
+      camerax             : '1.0.0-beta02',
+      cameraView          : '1.0.0-alpha09',
+      cameraLifecycle     : '1.0.0-alpha09',
   ]
 
   repositories {
@@ -108,9 +111,9 @@ subprojects {
 
     kotlin {
       ktlint(versions.ktlint).userData([
-        'indent_style'            : 'space',
-        'indent_size'             : '2',
-        'continuation_indent_size': '4'
+          'indent_style'            : 'space',
+          'indent_size'             : '2',
+          'continuation_indent_size': '4'
       ])
 
       trimTrailingWhitespace()

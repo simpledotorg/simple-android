@@ -3,9 +3,7 @@ package org.simple.clinic.recentpatientsview
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
@@ -30,7 +28,7 @@ class RecentPatientsViewController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
     private val userClock: UserClock,
-    private val patientConfig: Observable<PatientConfig>,
+    private val patientConfig: PatientConfig,
     @Named("full_date") private val dateFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -54,13 +52,12 @@ class RecentPatientsViewController @Inject constructor(
         .replay()
         .refCount()
 
-    val recentPatientsStream = Observables
-        .combineLatest(currentFacilityStream, patientConfig)
-        .switchMap { (facility, config) ->
+    val recentPatientsStream = currentFacilityStream
+        .switchMap { facility ->
           // Fetching an extra recent patient to know whether we have more than "recentPatientLimit" number of recent patients
           patientRepository.recentPatients(
               facilityUuid = facility.uuid,
-              limit = config.recentPatientLimit + 1
+              limit = patientConfig.recentPatientLimit + 1
           )
         }
         .replay()
@@ -68,9 +65,8 @@ class RecentPatientsViewController @Inject constructor(
 
     val updateRecentPatients = recentPatientsStream
         .map { it.map(::recentPatientItem) }
-        .withLatestFrom(patientConfig)
-        .map { (recentPatients, config) ->
-          addSeeAllIfListTooLong(recentPatients, config.recentPatientLimit)
+        .map { recentPatients ->
+          addSeeAllIfListTooLong(recentPatients, patientConfig.recentPatientLimit)
         }
         .map { { ui: Ui -> ui.updateRecentPatients(it) } }
 

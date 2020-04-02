@@ -57,11 +57,10 @@ class RecentPatientsViewControllerTest {
       patientRepository = patientRepository,
       facilityRepository = facilityRepository,
       userClock = userClock,
-      patientConfig = Observable.just(PatientConfig(
+      patientConfig = PatientConfig(
           limitOfSearchResults = 1,
-          scanSimpleCardFeatureEnabled = false,
           recentPatientLimit = recentPatientLimit
-      )),
+      ),
       dateFormatter = dateFormatter
   )
 

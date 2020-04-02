@@ -4,7 +4,6 @@ import androidx.annotation.VisibleForTesting
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.RxTimingAnalytics
 import org.simple.clinic.di.AppScope
@@ -58,7 +57,7 @@ class PatientRepository @Inject constructor(
     private val numberValidator: PhoneNumberValidator,
     private val utcClock: UtcClock,
     private val searchPatientByName: SearchPatientByName,
-    private val configProvider: Observable<PatientConfig>,
+    private val config: PatientConfig,
     private val reportsRepository: ReportsRepository,
     private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
     private val schedulersProvider: SchedulersProvider,
@@ -131,8 +130,8 @@ class PatientRepository @Inject constructor(
             timestampScheduler = schedulersProvider.computation()
         ))
 
-    return Observables.combineLatest(allPatientUuidsMatchingName, configProvider)
-        .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
+    return allPatientUuidsMatchingName
+        .map { uuids -> uuids.take(config.limitOfSearchResults) }
   }
 
   private fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {

@@ -19,7 +19,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
+import kotlinx.android.synthetic.main.view_qrcode_scanner_old.view.*
 import org.simple.clinic.R
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.activity.ActivityLifecycle
@@ -29,7 +29,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import timber.log.Timber
 import javax.inject.Inject
 
-class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+class QrCodeScannerView_Old(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
   @Inject
   lateinit var lifecycle: Observable<ActivityLifecycle>
@@ -50,7 +50,7 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    LayoutInflater.from(context).inflate(R.layout.view_qrcode_scanner, this, true)
+    LayoutInflater.from(context).inflate(R.layout.view_qrcode_scanner_old, this, true)
     if (isInEditMode) {
       return
     }

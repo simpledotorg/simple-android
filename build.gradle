@@ -37,7 +37,7 @@ buildscript {
       itemAnimators       : '1.0.2',
       jbcrypt             : '0.3m',
       workManager         : '2.2.0',
-      faker               : '1.2.7',
+      faker               : '1.2.8',
       truth               : '1.0',
       junit               : '4.12',
       mockitoKotlin       : '1.6.0',

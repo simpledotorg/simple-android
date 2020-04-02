@@ -13,6 +13,8 @@ constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+  private val qrCodeScannerLifecycle = QrCodeScannerLifecycle()
+
   init {
     View.inflate(context, R.layout.view_qrcode_scanner, this)
   }
@@ -20,5 +22,12 @@ constructor(
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) return
+
+    qrCodeScannerLifecycle.bindCamera()
+  }
+
+  override fun onDetachedFromWindow() {
+    qrCodeScannerLifecycle.destroyCamera()
+    super.onDetachedFromWindow()
   }
 }

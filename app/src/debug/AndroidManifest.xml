@@ -11,6 +11,13 @@
 
     <receiver android:name=".DebugNotificationActionReceiver" />
 
+    <receiver android:name=".FakeDataGenerationReceiver"
+      tools:ignore="ExportedReceiver">
+      <intent-filter>
+        <action android:name="org.simple.clinic.debug.GENERATE_FAKE_DATA" />
+      </intent-filter>
+    </receiver>
+
     <activity
       android:name=".playground.AwaitActivity"
       android:exported="true" />

@@ -82,7 +82,7 @@ class PatientRepositoryTest {
 
   @Before
   fun setUp() {
-    config = PatientConfig(limitOfSearchResults = 100, scanSimpleCardFeatureEnabled = false, recentPatientLimit = 10)
+    config = PatientConfig(limitOfSearchResults = 100, recentPatientLimit = 10)
 
     repository = PatientRepository(
         database = database,
@@ -90,13 +90,13 @@ class PatientRepositoryTest {
         numberValidator = numberValidator,
         utcClock = clock,
         searchPatientByName = searchPatientByName,
-        configProvider = Observable.fromCallable { config },
+        config = config,
         reportsRepository = mock(),
         businessIdMetaDataAdapter = businessIdMetaAdapter,
         schedulersProvider = schedulersProvider,
-        dateOfBirthFormat = dateOfBirthFormat,
         uuidShortCodeCreator = uuidShortCodeCreator,
-            ageValidator = ageValidator)
+        dateOfBirthFormat = dateOfBirthFormat,
+        ageValidator = ageValidator)
 
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
     whenever(bloodPressureMeasurementDao.patientToFacilityIds(any())).thenReturn(Flowable.just(listOf()))

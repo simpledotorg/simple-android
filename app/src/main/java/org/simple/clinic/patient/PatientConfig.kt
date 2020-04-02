@@ -1,12 +1,10 @@
 package org.simple.clinic.patient
 
 import androidx.annotation.VisibleForTesting
-import io.reactivex.Observable
 import org.simple.clinic.remoteconfig.ConfigReader
 
 data class PatientConfig(
     val limitOfSearchResults: Int,
-    val scanSimpleCardFeatureEnabled: Boolean,
     val recentPatientLimit: Int
 ) {
 
@@ -20,28 +18,22 @@ data class PatientConfig(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     const val MAXIMUM_SQLITE_QUERY_LIMIT = 1000L
 
-    fun read(configReader: ConfigReader): Observable<PatientConfig> {
-      return Observable.fromCallable {
-        val numberOfSearchResults = configReader
-            .long("patients_searchresults_limit", 100L)
-            .coerceAtLeast(1L)
-            .coerceAtMost(MAXIMUM_SQLITE_QUERY_LIMIT)
-            .toInt()
+    fun read(configReader: ConfigReader): PatientConfig {
+      val numberOfSearchResults = configReader
+          .long("patients_searchresults_limit", 100L)
+          .coerceAtLeast(1L)
+          .coerceAtMost(MAXIMUM_SQLITE_QUERY_LIMIT)
+          .toInt()
 
-        val bpPassportFeatureEnabled = configReader
-            .boolean("patients_bppassportfeature_enabled", true)
+      val numberOfRecentPatients = configReader
+          .long("patients_recentpatients_limit", 10L)
+          .coerceAtLeast(1L)
+          .toInt()
 
-        val numberOfRecentPatients = configReader
-            .long("patients_recentpatients_limit", 10L)
-            .coerceAtLeast(1L)
-            .toInt()
-
-        PatientConfig(
-            limitOfSearchResults = numberOfSearchResults,
-            scanSimpleCardFeatureEnabled = bpPassportFeatureEnabled,
-            recentPatientLimit = numberOfRecentPatients
-        )
-      }
+      return PatientConfig(
+          limitOfSearchResults = numberOfSearchResults,
+          recentPatientLimit = numberOfRecentPatients
+      )
     }
   }
 }

@@ -67,7 +67,6 @@ class PatientsScreenControllerTest {
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
-  private val configEmitter = PublishSubject.create<PatientConfig>()
 
   private val canSyncStream = PublishSubject.create<Boolean>()
   private val appUpdatesStream = PublishSubject.create<AppUpdateState>()
@@ -76,7 +75,6 @@ class PatientsScreenControllerTest {
   fun setUp() {
     controller = PatientsScreenController(
         userSession = userSession,
-        configProvider = configEmitter,
         checkAppUpdate = checkAppUpdate,
         utcClock = utcClock,
         userClock = userClock,
@@ -96,8 +94,6 @@ class PatientsScreenControllerTest {
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
-
-    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = false, recentPatientLimit = 10))
   }
 
   @Test
@@ -352,18 +348,6 @@ class PatientsScreenControllerTest {
   fun `when the user decides to enter the login code manually, the enter otp screen must be opened`() {
     uiEvents.onNext(PatientsEnterCodeManuallyClicked())
     verify(screen).openEnterCodeManuallyScreen()
-  }
-
-  @Test
-  @Parameters(value = ["true", "false"])
-  fun `the scan card button must be toggled based on the scan simple card feature flag`(scanCardFeatureEnabled: Boolean) {
-    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = scanCardFeatureEnabled, recentPatientLimit = 10))
-    whenever(userSession.loggedInUser()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.never())
-
-    uiEvents.onNext(ScreenCreated())
-
-    verify(screen).setScanCardButtonEnabled(scanCardFeatureEnabled)
   }
 
   @Test

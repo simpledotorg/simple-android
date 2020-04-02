@@ -211,18 +211,18 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when at least one measurement is present, clicking on save must show the schedule appointment sheet`() {
+  fun `when at least one measurement is present, clicking on save must fetch facility switch flag`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-
+    val dataForDoneClickLoaded = DataForDoneClickLoaded(
+        countOfRecordedMeasurements = 1,
+        diagnosisRecorded = true
+    )
     updateSpec
         .given(model)
-        .whenEvent(DataForDoneClickLoaded(
-            countOfRecordedMeasurements = 1,
-            diagnosisRecorded = true
-        ))
+        .whenEvent(dataForDoneClickLoaded)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK) as PatientSummaryEffect)
+            hasEffects(FetchFacilitySwitchedFlag(dataForDoneClickLoaded) as PatientSummaryEffect)
         ))
   }
 
@@ -243,18 +243,18 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when at least one measurement is present and diagnosis is not recorded and diabetes management is disabled, clicking on save must show schedule appointment sheet`() {
+  fun `when at least one measurement is present and diagnosis is not recorded and diabetes management is disabled, clicking on save must fetch facility switch flag`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-
+    val dataForDoneClickLoaded = DataForDoneClickLoaded(
+        countOfRecordedMeasurements = 1,
+        diagnosisRecorded = false
+    )
     updateSpec
         .given(model)
-        .whenEvent(DataForDoneClickLoaded(
-            countOfRecordedMeasurements = 1,
-            diagnosisRecorded = false
-        ))
+        .whenEvent(dataForDoneClickLoaded)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK) as PatientSummaryEffect)
+            hasEffects(FetchFacilitySwitchedFlag(dataForDoneClickLoaded) as PatientSummaryEffect)
         ))
   }
 
@@ -593,7 +593,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when switch facility flag is true then open alert facility change sheet`() {
+  fun `when switch facility flag is true and source event is edit clicked then open alert facility change sheet`() {
     //given
     val facility = TestData.facility(uuid = UUID.fromString("3b44021d-d219-49fc-bd89-04d70bfc2b23"))
     val sourceEvent = PatientSummaryEditClicked
@@ -610,7 +610,27 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when switch facility flag is false then show patient edit screen`() {
+  fun `when switch facility flag is true and source event is done clicked then open alert facility change sheet`() {
+    //given
+    val facility = TestData.facility(uuid = UUID.fromString("3b44021d-d219-49fc-bd89-04d70bfc2b23"))
+    val sourceEvent = DataForDoneClickLoaded(
+        countOfRecordedMeasurements = 1,
+        diagnosisRecorded = true
+    )
+
+    updateSpec
+        .given(defaultModel.currentFacilityLoaded(facility))
+        .whenEvent(SwitchFacilityFlagFetched(true, sourceEvent))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenAlertFacilityChangeSheet(facility, SCHEDULE_APPOINTMENT_ALERT_FACILITY_CHANGE) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when switch facility flag is false and source event is edit click, then show patient edit screen`() {
     //given
     val sourceEvent = PatientSummaryEditClicked
 
@@ -621,6 +641,25 @@ class PatientSummaryUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(ShowPatientEditScreen(patientSummaryProfile) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when switch facility flag is false and source event is done click, then show schedule appointment sheet`() {
+    //given
+    val sourceEvent = DataForDoneClickLoaded(
+        countOfRecordedMeasurements = 1,
+        diagnosisRecorded = true
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SwitchFacilityFlagFetched(false, sourceEvent))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK) as PatientSummaryEffect)
             )
         )
   }

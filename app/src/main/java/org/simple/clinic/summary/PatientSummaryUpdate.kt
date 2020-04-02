@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
@@ -37,20 +38,19 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           diagnosisRecorded = event.diagnosisRecorded,
           isDiabetesManagementEnabled = model.isDiabetesManagementEnabled
       )
-      is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
-          patientUuid = model.patientUuid,
-          countOfRecordedMeasurements = event.countOfRecordedMeasurements,
-          diagnosisRecorded = event.diagnosisRecorded,
-          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled
-      )
+      is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(model.isDiabetesManagementEnabled, event)
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is SwitchFacilityFlagFetched -> {
-        val effect = if (event.isFacilitySwitched) {
-          OpenAlertFacilityChangeSheet(model.currentFacility!!, EDIT_PATIENT_ALERT_FACILITY_CHANGE)
-        } else {
-          ShowPatientEditScreen(model.patientSummaryProfile!!)
+        val effect = when {
+          event.isFacilitySwitched -> openAlertFacilityChangeEffect(event, model.currentFacility!!)
+          else -> {
+            when (event.sourceEvent) {
+              PatientSummaryEditClicked -> ShowPatientEditScreen(model.patientSummaryProfile!!)
+              is DataForDoneClickLoaded -> ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK)
+              else -> TODO()
+            }
+          }
         }
-
         dispatch(effect)
       }
       OpenPatientEditScreen -> dispatch(ShowPatientEditScreen(model.patientSummaryProfile!!))
@@ -58,18 +58,28 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     }
   }
 
+  private fun openAlertFacilityChangeEffect(
+      event: SwitchFacilityFlagFetched,
+      currentFacility: Facility
+  ): OpenAlertFacilityChangeSheet {
+    val requestCode = when (event.sourceEvent) {
+      PatientSummaryEditClicked -> EDIT_PATIENT_ALERT_FACILITY_CHANGE
+      is DataForDoneClickLoaded -> SCHEDULE_APPOINTMENT_ALERT_FACILITY_CHANGE
+      else -> -1
+    }
+    return OpenAlertFacilityChangeSheet(currentFacility, requestCode)
+  }
+
   private fun dataForHandlingDoneClickLoaded(
-      patientUuid: UUID,
-      countOfRecordedMeasurements: Int,
-      diagnosisRecorded: Boolean,
-      isDiabetesManagementEnabled: Boolean
+      isDiabetesManagementEnabled: Boolean,
+      event: DataForDoneClickLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val hasAtLeastOneMeasurementRecorded = countOfRecordedMeasurements > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val hasAtLeastOneMeasurementRecorded = event.countOfRecordedMeasurements > 0
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && event.diagnosisRecorded.not() && isDiabetesManagementEnabled
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError
-      hasAtLeastOneMeasurementRecorded -> ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+      hasAtLeastOneMeasurementRecorded -> FetchFacilitySwitchedFlag(event)
       else -> GoToHomeScreen
     }
 

@@ -137,7 +137,7 @@ class PatientRepository @Inject constructor(
   private fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {
     return database
         .patientSearchDao()
-        .searchByPhoneNumber(phoneNumber)
+        .searchByPhoneNumber(phoneNumber, config.limitOfSearchResults)
         .toObservable()
   }
 

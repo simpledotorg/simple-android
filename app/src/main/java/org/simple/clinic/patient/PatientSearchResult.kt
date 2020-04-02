@@ -136,9 +136,9 @@ data class PatientSearchResult(
     @Suppress("AndroidUnresolvedRoomSqlReference")
     @Query("""
         $mainQuery WHERE phoneNumber LIKE '%' || :phoneNumber || '%' AND P.deletedAt IS NULL
-        ORDER BY P.fullName COLLATE NOCASE ASC
+        ORDER BY P.fullName COLLATE NOCASE ASC LIMIT :limit
     """)
-    fun searchByPhoneNumber(phoneNumber: String): Flowable<List<PatientSearchResult>>
+    fun searchByPhoneNumber(phoneNumber: String, limit: Int): Flowable<List<PatientSearchResult>>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

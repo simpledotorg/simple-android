@@ -69,7 +69,7 @@ import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.preference.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.PatientSearchResultItemView
-import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
+import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
 import org.threeten.bp.Instant
 import javax.inject.Named
 
@@ -111,7 +111,7 @@ interface TheActivityComponent :
   fun inject(target: PrescribedDrugScreen)
   fun inject(target: ReportsScreen)
   fun inject(target: ScanSimpleIdScreen)
-  fun inject(target: QrCodeScannerView)
+  fun inject(target: QrCodeScannerView_Old)
   fun inject(target: RecentPatientsView)
   fun inject(target: PatientsScreenKey)
   fun inject(target: SyncIndicatorView)

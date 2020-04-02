@@ -13,7 +13,7 @@
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
     app:title="@string/scansimpleid_title" />
 
-  <org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
+  <org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
     android:id="@+id/qrCodeScannerView"
     android:layout_width="match_parent"
     android:layout_height="0dp"

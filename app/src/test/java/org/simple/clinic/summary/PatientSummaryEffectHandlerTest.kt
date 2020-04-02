@@ -129,7 +129,7 @@ class PatientSummaryEffectHandlerTest {
     )
 
     //when
-    testCase.dispatch(HandleEditClick(patientSummaryProfile))
+    testCase.dispatch(ShowPatientEditScreen(patientSummaryProfile))
 
     //then
     testCase.assertNoOutgoingEvents()

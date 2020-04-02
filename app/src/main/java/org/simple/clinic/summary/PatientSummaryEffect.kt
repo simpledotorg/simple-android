@@ -11,7 +11,7 @@ data class LoadPatientSummaryProfile(val patientUuid: UUID) : PatientSummaryEffe
 
 object LoadCurrentFacility : PatientSummaryEffect()
 
-data class HandleEditClick(val patientSummaryProfile: PatientSummaryProfile) : PatientSummaryEffect()
+data class ShowPatientEditScreen(val patientSummaryProfile: PatientSummaryProfile) : PatientSummaryEffect()
 
 object HandleLinkIdCancelled : PatientSummaryEffect()
 

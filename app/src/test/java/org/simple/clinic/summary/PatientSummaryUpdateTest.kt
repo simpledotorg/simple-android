@@ -596,10 +596,11 @@ class PatientSummaryUpdateTest {
   fun `when switch facility flag is true then open alert facility change sheet`() {
     //given
     val facility = TestData.facility(uuid = UUID.fromString("3b44021d-d219-49fc-bd89-04d70bfc2b23"))
+    val sourceEvent = PatientSummaryEditClicked
 
     updateSpec
         .given(defaultModel.currentFacilityLoaded(facility))
-        .whenEvent(SwitchFacilityFlagFetched(true))
+        .whenEvent(SwitchFacilityFlagFetched(true, sourceEvent))
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -610,9 +611,12 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when switch facility flag is false then show patient edit screen`() {
+    //given
+    val sourceEvent = PatientSummaryEditClicked
+
     updateSpec
         .given(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile))
-        .whenEvent(SwitchFacilityFlagFetched(false))
+        .whenEvent(SwitchFacilityFlagFetched(false, sourceEvent))
         .then(
             assertThatNext(
                 hasNoModel(),

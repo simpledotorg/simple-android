@@ -84,8 +84,12 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effect ->
       effect
           .observeOn(io)
-          .map { facilitySwitchedPreference.get() }
-          .map(::SwitchFacilityFlagFetched)
+          .map {
+            SwitchFacilityFlagFetched(
+                isFacilitySwitched = facilitySwitchedPreference.get(),
+                sourceEvent = it.sourceEvent
+            )
+          }
     }
   }
 

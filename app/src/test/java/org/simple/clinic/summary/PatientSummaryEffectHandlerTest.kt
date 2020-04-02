@@ -252,12 +252,13 @@ class PatientSummaryEffectHandlerTest {
   fun `when fetch switch facility flag effect is received then fetch switch facility flag`() {
     //given
     whenever(isFacilitySwitched.get()) doReturn true
+    val sourceEvent = PatientSummaryEditClicked
 
     //when
-    testCase.dispatch(FetchFacilitySwitchedFlag(PatientSummaryEditClicked))
+    testCase.dispatch(FetchFacilitySwitchedFlag(sourceEvent))
 
     //then
-    testCase.assertOutgoingEvents(SwitchFacilityFlagFetched(true))
+    testCase.assertOutgoingEvents(SwitchFacilityFlagFetched(true, sourceEvent))
     verifyZeroInteractions(uiActions)
   }
 

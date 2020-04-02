@@ -39,7 +39,6 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
-import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -190,10 +189,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   fun openEnterCodeManuallyScreen() {
     screenRouter.push(EnterOtpScreenKey())
-  }
-
-  fun setScanCardButtonEnabled(enabled: Boolean) {
-    scanSimpleCardButton.visibleOrGone(enabled)
   }
 
   fun openScanSimpleIdCardScreen() {

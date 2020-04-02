@@ -8,13 +8,11 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
-import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -44,7 +42,6 @@ typealias UiChange = (Ui) -> Unit
 
 class PatientsScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val configProvider: Observable<PatientConfig>,
     private val checkAppUpdate: CheckAppUpdateAvailability,
     private val utcClock: UtcClock,
     private val userClock: UserClock,
@@ -67,7 +64,6 @@ class PatientsScreenController @Inject constructor(
         refreshApprovalStatusOnStart(replayedEvents),
         displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents),
-        toggleVisibilityOfScanCardButton(replayedEvents),
         requestCameraPermissions(replayedEvents),
         openScanSimpleIdScreen(replayedEvents),
         toggleVisibilityOfSyncIndicator(replayedEvents),
@@ -166,17 +162,6 @@ class PatientsScreenController @Inject constructor(
         .flatMap {
           hasUserDismissedApprovedStatusPref.set(true)
           Observable.never<UiChange>()
-        }
-  }
-
-  private fun toggleVisibilityOfScanCardButton(events: Observable<UiEvent>): Observable<UiChange> {
-    val isScanCardFeatureEnabledStream = configProvider
-        .map { it.scanSimpleCardFeatureEnabled }
-
-    return screenCreated(events)
-        .withLatestFrom(isScanCardFeatureEnabledStream)
-        .map { (_, isScanCardFeatureEnabled) ->
-          { ui: Ui -> ui.setScanCardButtonEnabled(isScanCardFeatureEnabled) }
         }
   }
 

@@ -12,9 +12,9 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
 import org.simple.clinic.router.screen.RouterDirection
@@ -28,6 +28,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -43,6 +44,9 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var config: ScanSimpleIdConfig
+
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
   override fun onFinishInflate() {
@@ -56,6 +60,9 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     hideKeyboard()
     toolBar.setNavigationOnClickListener { screenRouter.pop() }
     setupShortCodeTextField()
+
+    qrCodeScannerView.visibleOrGone(config.useNewQrScanner)
+    qrCodeScannerViewOld.visibleOrGone(!config.useNewQrScanner)
 
     bindUiToController(
         ui = this,
@@ -73,9 +80,14 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   private fun qrScans(): Observable<UiEvent> {
-    return qrCodeScannerView
-        .scans()
-        .map(::ScanSimpleIdScreenQrCodeScanned)
+    val scans = if (config.useNewQrScanner) {
+      qrCodeScannerView
+          .scans()
+    } else {
+      qrCodeScannerViewOld
+          .scans()
+    }
+    return scans.map(::ScanSimpleIdScreenQrCodeScanned)
   }
 
   private fun qrCodeChanges(): Observable<UiEvent> {
@@ -137,11 +149,19 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   fun hideQrCodeScannerView() {
-    qrCodeScannerView.hideQrCodeScanner()
+    if (config.useNewQrScanner) {
+      qrCodeScannerView.hideQrCodeScanner()
+    } else {
+      qrCodeScannerViewOld.hideQrCodeScanner()
+    }
   }
 
   fun showQrCodeScannerView() {
-    qrCodeScannerView.showQrCodeScanner()
+    if (config.useNewQrScanner) {
+      qrCodeScannerView.showQrCodeScanner()
+    } else {
+      qrCodeScannerViewOld.showQrCodeScanner()
+    }
   }
 }
 

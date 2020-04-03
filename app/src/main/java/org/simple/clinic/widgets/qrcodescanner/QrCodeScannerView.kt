@@ -1,5 +1,6 @@
 package org.simple.clinic.widgets.qrcodescanner
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -9,11 +10,17 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
+import org.simple.clinic.activity.ActivityLifecycle
+import org.simple.clinic.main.TheActivity
+import org.simple.clinic.widgets.ScreenDestroyed
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
 class QrCodeScannerView @JvmOverloads
 constructor(
@@ -21,6 +28,9 @@ constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+
+  @Inject
+  lateinit var lifecycle: Observable<ActivityLifecycle>
 
   private val scans = PublishSubject.create<String>()
 
@@ -40,12 +50,16 @@ constructor(
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
+    TheActivity.component.inject(this)
+
     qrCodeScannerLifecycle.bindCamera()
 
     cameraProviderFuture.addListener(Runnable {
       val cameraProvider = cameraProviderFuture.get()
       startCamera(cameraProvider)
     }, ContextCompat.getMainExecutor(context))
+
+    bindCameraToActivityLifecycle()
   }
 
   private fun startCamera(cameraProvider: ProcessCameraProvider) {
@@ -87,5 +101,29 @@ constructor(
 
   fun scans(): Observable<String> {
     return scans
+  }
+
+  private fun bindCameraToActivityLifecycle() {
+    val screenDestroys = detaches()
+        .map { ScreenDestroyed() }
+
+    startScanningWhenActivityIsResumed(screenDestroys)
+    stopScanningWhenActivityIsPaused(screenDestroys)
+  }
+
+  @SuppressLint("CheckResult")
+  private fun startScanningWhenActivityIsResumed(screenDestroys: Observable<ScreenDestroyed>) {
+    lifecycle
+        .ofType<ActivityLifecycle.Resumed>()
+        .takeUntil(screenDestroys)
+        .subscribe { qrCodeScannerLifecycle.bindCamera() }
+  }
+
+  @SuppressLint("CheckResult")
+  private fun stopScanningWhenActivityIsPaused(screenDestroys: Observable<ScreenDestroyed>) {
+    lifecycle
+        .ofType<ActivityLifecycle.Paused>()
+        .takeUntil(screenDestroys)
+        .subscribe { qrCodeScannerLifecycle.unBindCamera() }
   }
 }

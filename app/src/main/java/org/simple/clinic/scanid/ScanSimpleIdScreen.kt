@@ -12,11 +12,11 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
-import org.simple.clinic.SHORT_CODE_REQUIRED_LENGTH
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport.SHORT_CODE_LENGTH
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
@@ -67,7 +67,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   private fun setupShortCodeTextField() {
     with(shortCodeText) {
-      filters = arrayOf(LengthFilter(SHORT_CODE_REQUIRED_LENGTH))
+      filters = arrayOf(LengthFilter(SHORT_CODE_LENGTH))
       addTextChangedListener(ShortCodeSpanWatcher())
     }
   }

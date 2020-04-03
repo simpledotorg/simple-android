@@ -58,4 +58,16 @@ constructor(
     qrCodeScannerLifecycle.destroyCamera()
     super.onDetachedFromWindow()
   }
+
+  fun hideQrCodeScanner() {
+    previewView.visibility = View.INVISIBLE
+    viewFinderImageView.visibility = View.INVISIBLE
+    qrCodeScannerLifecycle.unBindCamera()
+  }
+
+  fun showQrCodeScanner() {
+    previewView.visibility = View.VISIBLE
+    viewFinderImageView.visibility = View.VISIBLE
+    qrCodeScannerLifecycle.bindCamera()
+  }
 }

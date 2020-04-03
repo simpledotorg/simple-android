@@ -15,7 +15,6 @@ import org.simple.clinic.platform.crash.NoOpCrashReporter
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncModule
-import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterModule
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.ZoneId
@@ -28,7 +27,6 @@ import java.util.Locale
   AppConfigModule::class,
   TestPatientSearchModule::class,
   BruteForceProtectionModule::class,
-  IdentifierDisplayAdapterModule::class,
   LoginModule::class,
   NetworkModule::class,
   RegistrationModule::class,

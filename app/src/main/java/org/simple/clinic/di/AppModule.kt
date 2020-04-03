@@ -40,7 +40,6 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterModule
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.ZoneId
@@ -61,7 +60,6 @@ import javax.inject.Named
   PatientModule::class,
   SyncIndicatorModule::class,
   UuidShortCodeCreatorModule::class,
-  IdentifierDisplayAdapterModule::class,
   OnboardingModule::class,
   AppUpdateModule::class,
   DataSyncOnApprovalModule::class,

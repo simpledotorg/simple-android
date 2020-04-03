@@ -41,7 +41,6 @@ import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.RegisterUserServerIntegrationTest
 import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest
-import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterAndroidTest
 
 @AppScope
 @Component(
@@ -81,7 +80,6 @@ interface TestAppComponent {
   fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
   fun inject(target: BusinessIdMetaDataAdapterAndroidTest)
   fun inject(target: HelpSyncAndroidTest)
-  fun inject(target: IdentifierDisplayAdapterAndroidTest)
   fun inject(target: ServerAuthenticationRule)
   fun inject(target: RegisterUserServerIntegrationTest)
   fun inject(target: SelectedCountryPersistenceAndroidTest)

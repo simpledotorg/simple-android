@@ -9,7 +9,6 @@ import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.onboarding.OnboardingModule
-import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.platform.crash.NoOpCrashReporter
 import org.simple.clinic.registration.RegistrationModule
@@ -34,7 +33,6 @@ import java.util.Locale
   TestRetrofitModule::class,
   TestRemoteConfigModule::class,
   SyncModule::class,
-  UuidShortCodeCreatorModule::class,
   DateFormatterModule::class
 ])
 class TestAppModule(private val application: Application) {

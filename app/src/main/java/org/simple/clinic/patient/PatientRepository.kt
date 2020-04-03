@@ -25,7 +25,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.filter.SearchPatientByName
-import org.simple.clinic.patient.shortcode.UuidShortCodeCreator
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.reports.ReportsRepository
@@ -61,7 +60,6 @@ class PatientRepository @Inject constructor(
     private val reportsRepository: ReportsRepository,
     private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
     private val schedulersProvider: SchedulersProvider,
-    private val uuidShortCodeCreator: UuidShortCodeCreator,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter,
     private val ageValidator: UserInputAgeValidator
 ) : SynceableRepository<PatientProfile, PatientPayload> {
@@ -640,8 +638,8 @@ class PatientRepository @Inject constructor(
     val shortCodeSearchResult = allPatients
         .map { businessIds ->
           businessIds
-              .map { businessId -> Pair(businessId.patientUuid, uuidShortCodeCreator.createFromUuid(UUID.fromString(businessId.identifier.value))) }
-              .filter { (_, uuidShortCode) -> shortCode == uuidShortCode.shortCode }
+              .map { businessId -> Pair(businessId.patientUuid, BpPassport.shortCode(businessId.identifier)) }
+              .filter { (_, uuidShortCode) -> shortCode == uuidShortCode }
               .map { (uuid, _) -> uuid }
         }
 

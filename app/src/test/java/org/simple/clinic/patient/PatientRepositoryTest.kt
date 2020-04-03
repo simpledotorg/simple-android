@@ -32,8 +32,6 @@ import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
-import org.simple.clinic.patient.shortcode.DigitFilter
-import org.simple.clinic.patient.shortcode.UuidShortCodeCreator
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -69,10 +67,6 @@ class PatientRepositoryTest {
   private val numberValidator = mock<PhoneNumberValidator>()
   private val searchPatientByName = mock<SearchPatientByName>()
   private val businessIdMetaAdapter = mock<BusinessIdMetaDataAdapter>()
-  private val uuidShortCodeCreator = UuidShortCodeCreator(
-      requiredShortCodeLength = 7,
-      characterFilter = DigitFilter()
-  )
 
   private val clock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
@@ -94,7 +88,6 @@ class PatientRepositoryTest {
         reportsRepository = mock(),
         businessIdMetaDataAdapter = businessIdMetaAdapter,
         schedulersProvider = schedulersProvider,
-        uuidShortCodeCreator = uuidShortCodeCreator,
         dateOfBirthFormat = dateOfBirthFormat,
         ageValidator = ageValidator)
 

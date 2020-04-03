@@ -5,11 +5,15 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
 import org.simple.clinic.R
+import java.util.concurrent.Executors
 
 class QrCodeScannerView @JvmOverloads
 constructor(
@@ -18,7 +22,10 @@ constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+  private val scans = PublishSubject.create<String>()
+
   private val qrCodeScannerLifecycle = QrCodeScannerLifecycle()
+  private val cameraExecutor = Executors.newSingleThreadExecutor()
 
   private val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
 
@@ -48,9 +55,16 @@ constructor(
 
     val preview = Preview.Builder().build()
 
+    val analyzer = ImageAnalysis.Builder()
+        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+        .build()
+        .also {
+          it.setAnalyzer(cameraExecutor, ZxingQrCodeAnalyzer(scans::onNext))
+        }
+
     cameraProvider.unbindAll()
 
-    val camera = cameraProvider.bindToLifecycle(qrCodeScannerLifecycle, cameraSelector, preview)
+    val camera = cameraProvider.bindToLifecycle(qrCodeScannerLifecycle, cameraSelector, preview, analyzer)
     preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.cameraInfo))
   }
 
@@ -69,5 +83,9 @@ constructor(
     previewView.visibility = View.VISIBLE
     viewFinderImageView.visibility = View.VISIBLE
     qrCodeScannerLifecycle.bindCamera()
+  }
+
+  fun scans(): Observable<String> {
+    return scans
   }
 }

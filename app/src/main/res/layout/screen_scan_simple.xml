@@ -14,22 +14,32 @@
     app:title="@string/scansimpleid_title" />
 
   <org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
+    android:id="@+id/qrCodeScannerViewOld"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:focusable="false"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
     android:id="@+id/qrCodeScannerView"
     android:layout_width="match_parent"
     android:layout_height="0dp"
+    android:focusable="false"
+    android:visibility="gone"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:focusable="false" />
+    app:layout_constraintTop_toTopOf="parent" />
 
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_16"
     android:background="@color/white100"
     android:visibility="visible"
-    app:layout_constraintBottom_toBottomOf="@+id/qrCodeScannerView"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerView"
     app:layout_constraintStart_toStartOf="parent"
     tools:visibility="visible">
@@ -47,33 +57,33 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8"
-        android:text="@string/scansimpleid_type_bp_passport_number"
-        android:gravity="center" />
+        android:gravity="center"
+        android:text="@string/scansimpleid_type_bp_passport_number" />
 
       <EditText
         android:id="@+id/shortCodeText"
         android:layout_width="@dimen/spacing_128"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textAlignment="center"
         android:ems="10"
         android:hint="@string/scansimpleid_hint_short_code"
         android:imeOptions="actionSearch"
-        android:textSize="@dimen/textsize_20"
-        android:inputType="number" />
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="@dimen/textsize_20" />
 
       <TextView
         android:id="@+id/shortCodeErrorText"
         style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_4"
+        android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginTop="@dimen/spacing_4"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:layout_marginBottom="@dimen/spacing_4"
         android:gravity="center_horizontal"
         android:visibility="gone"
         tools:text="@string/scansimpleid_shortcode_error_not_required_length"
-        android:layout_marginStart="@dimen/spacing_8"
-        android:layout_marginEnd="@dimen/spacing_8"
         tools:visibility="visible" />
     </LinearLayout>
   </androidx.cardview.widget.CardView>

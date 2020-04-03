@@ -61,7 +61,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Truss
-import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
@@ -85,9 +84,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
   @Inject
   lateinit var crashReporter: CrashReporter
@@ -367,8 +363,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private fun prefillIdentifier(identifier: Identifier) {
-    val identifierDisplayString = identifierDisplayAdapter.valueAsText(identifier)
-    identifierTextView.text = identifierDisplayString
+    identifierTextView.text = identifier.displayValue()
   }
 
   private fun prefillGender(gender: Gender) {

@@ -12,13 +12,9 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.util.Rules
-import javax.inject.Inject
 
 
 class IdentifierDisplayAdapterAndroidTest {
-
-  @Inject
-  lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
   @get:Rule
   val ruleChain: RuleChain = Rules.global()
@@ -39,7 +35,7 @@ class IdentifierDisplayAdapterAndroidTest {
     testData.forEach { (identifier, expectedValue) ->
 
       assertWithMessage("formatting Identifier of type [${identifier.type}]")
-          .that(identifierDisplayAdapter.valueAsText(identifier))
+          .that(identifier.displayValue())
           .isEqualTo(expectedValue)
     }
   }

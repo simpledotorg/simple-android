@@ -7,6 +7,7 @@ import androidx.room.ColumnInfo
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
@@ -53,7 +54,8 @@ data class Identifier(
     @Parcelize
     object BpPassport : IdentifierType() {
 
-      private const val SHORT_CODE_LENGTH = 7
+      @IgnoredOnParcel
+      const val SHORT_CODE_LENGTH = 7
 
       fun shortCode(identifier: Identifier): String {
         require(identifier.type == BpPassport) {

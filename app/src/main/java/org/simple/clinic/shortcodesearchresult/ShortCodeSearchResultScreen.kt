@@ -25,9 +25,11 @@ import org.simple.clinic.searchresultsview.SearchResultClicked
 import org.simple.clinic.searchresultsview.SearchResultsItemType
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Truss
+import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.identifierdisplay.formatShortCodeForDisplay
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -160,5 +162,31 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
 
   override fun showNoPatientsMatched() {
     emptyStateView.visibility = View.VISIBLE
+  }
+
+  private fun formatShortCodeForDisplay(
+      textSpan: TextAppearanceWithLetterSpacingSpan,
+      shortCode: String
+  ): CharSequence {
+    // This is duplicated in `Identifier.displayValue()`, but unifying
+    // it requires us to change the screen key of this screen to accept
+    // Identifier, which will have cascading changes throughout the
+    // screen. We will look into changing this once we migrate this
+    // screen to Mobius.
+    val prefix = shortCode.substring(0, 3)
+    val suffix = shortCode.substring(3)
+    val formattedShortCode = "$prefix${Unicode.nonBreakingSpace}$suffix"
+
+    return Truss()
+        .pushSpan(textSpan)
+        .append(formattedShortCode)
+        .popSpan()
+        .build()
+
+  }
+
+  private fun formatShortCodeForDisplay(context: Context, shortCode: String): CharSequence {
+    val textSpacingSpan = TextAppearanceWithLetterSpacingSpan(context, R.style.Clinic_V2_TextAppearance_Body0Left_Numeric_White100)
+    return formatShortCodeForDisplay(textSpacingSpan, shortCode)
   }
 }

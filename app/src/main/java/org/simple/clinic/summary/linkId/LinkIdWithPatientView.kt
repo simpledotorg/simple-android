@@ -19,7 +19,6 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
-import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.animateBottomSheetIn
@@ -69,9 +68,6 @@ class LinkIdWithPatientView(
 
   @Inject
   lateinit var controller: LinkIdWithPatientViewController
-
-  @Inject
-  lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
   val downstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
   private val upstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
@@ -126,8 +122,8 @@ class LinkIdWithPatientView(
   fun uiEvents(): Observable<UiEvent> = upstreamUiEvents.hide()
 
   fun renderIdentifierText(identifier: Identifier) {
-    val identifierType = identifierDisplayAdapter.typeAsText(identifier)
-    val identifierValue = identifierDisplayAdapter.valueAsText(identifier)
+    val identifierType = identifier.displayType(resources)
+    val identifierValue = identifier.displayValue()
 
     val identifierTextAppearanceSpan = TextAppearanceWithLetterSpacingSpan(context, R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_Grey0)
 

@@ -23,7 +23,6 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -43,9 +42,6 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
 
   @Inject
   lateinit var controller: AddIdToPatientSearchScreenController
-
-  @Inject
-  lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
   @Inject
   lateinit var utcClock: UtcClock

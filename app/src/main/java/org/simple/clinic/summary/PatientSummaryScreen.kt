@@ -41,7 +41,6 @@ import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -64,9 +63,6 @@ class PatientSummaryScreen(
 
   @Inject
   lateinit var userClock: UserClock
-
-  @Inject
-  lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
   @Inject
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
@@ -247,10 +243,10 @@ class PatientSummaryScreen(
         val identifier = bpPassport.identifier
         val numericSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Numeric_White72)
         Truss()
-            .append(identifierDisplayAdapter.typeAsText(identifier))
+            .append(identifier.displayType(resources))
             .append(": ")
             .pushSpan(numericSpan)
-            .append(identifierDisplayAdapter.valueAsText(identifier))
+            .append(identifier.displayValue())
             .popSpan()
             .build()
       }
@@ -270,7 +266,7 @@ class PatientSummaryScreen(
             .append(context.getString(R.string.patientsummary_bangladesh_national_id))
             .append(": ")
             .pushSpan(numericSpan)
-            .append(identifierDisplayAdapter.valueAsText(identifier))
+            .append(identifier.displayValue())
             .popSpan()
             .build()
 

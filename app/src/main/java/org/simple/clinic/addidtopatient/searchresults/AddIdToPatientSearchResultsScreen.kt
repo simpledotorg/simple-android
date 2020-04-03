@@ -23,7 +23,6 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -42,9 +41,6 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
 
   @Inject
   lateinit var utcClock: UtcClock
-
-  @Inject
-  lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
   private val toolbar by bindView<Toolbar>(R.id.addidtopatientsearchresults_toolbar)
   private val titleTextView by bindView<TextView>(R.id.addidtopatientsearchresults_title)
@@ -91,8 +87,8 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
       screenRouter.pop()
     }
 
-    val identifierType = identifierDisplayAdapter.typeAsText(screenKey.identifier)
-    val identifierValue = identifierDisplayAdapter.valueAsText(screenKey.identifier)
+    val identifierType = screenKey.identifier.displayType(resources)
+    val identifierValue = screenKey.identifier.displayValue()
 
     val identifierTextAppearanceSpan = TextAppearanceWithLetterSpacingSpan(
         context,

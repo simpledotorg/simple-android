@@ -1,31 +1,18 @@
-package org.simple.clinic.util.identifierdisplay
+package org.simple.clinic.patient
 
 import com.google.common.truth.Truth.assertWithMessage
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.RuleChain
-import org.simple.clinic.TestClinicApp
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
-import org.simple.clinic.util.Rules
 
 
-class IdentifierDisplayAdapterAndroidTest {
-
-  @get:Rule
-  val ruleChain: RuleChain = Rules.global()
-
-  @Before
-  fun setUp() {
-    TestClinicApp.appComponent().inject(this)
-  }
+class IdentifierDisplayTest {
 
   @Test
-  fun all_types_of_identifiers_should_have_a_display_value() {
+  fun `all types of identifiers should have a display value`() {
     // given
     val testData = IdentifierType
         .values()

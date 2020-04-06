@@ -1,8 +1,1 @@
 include ':app', ':router', ':mobius-migration', ':mobius-base', ':simple-platform', ':simple-visuals'
-
-buildCache {
-    local(DirectoryBuildCache) {
-        directory = new File(rootDir, 'build-cache')
-        removeUnusedEntriesAfterDays = 30
-    }
-}

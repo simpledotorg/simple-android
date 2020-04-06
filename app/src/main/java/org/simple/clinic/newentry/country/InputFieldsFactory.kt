@@ -69,11 +69,11 @@ class InputFieldsFactory(
         AgeField(R.string.patiententry_age),
         DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
         LandlineOrMobileField(R.string.patiententry_phone_number),
-        StreetAddressField(R.string.patiententry_street_address),
+        StreetAddressField(R.string.patiententry_street_house_road_number),
         GenderField(labelResId = 0, allowedGenders = setOf(Male, Female)),
-        VillageOrColonyField(R.string.patiententry_village_colony_ward),
-        DistrictField(R.string.patiententry_district),
-        StateField(R.string.patiententry_state)
+        VillageOrColonyField(R.string.patiententry_kebele),
+        DistrictField(R.string.patiententry_woreda),
+        StateField(R.string.patiententry_region)
     )
   }
 }

@@ -32,7 +32,7 @@ fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedCount: In
 
 fun SupportSQLiteDatabase.assertTableDoesNotExist(tableName: String) {
   query("""
-    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$tableName'
+    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$tableName' and "type" = 'table'
     """).use {
     Truth.assertWithMessage("Expected that [$tableName] does not exist, but found it exists").that(it.count).isEqualTo(0)
   }
@@ -40,9 +40,25 @@ fun SupportSQLiteDatabase.assertTableDoesNotExist(tableName: String) {
 
 fun SupportSQLiteDatabase.assertTableExists(tableName: String) {
   query("""
-    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$tableName'
+    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$tableName' and "type" = 'table'
     """).use {
     Truth.assertWithMessage("Expected that [$tableName] exists, but found it does not exist").that(it.count).isEqualTo(1)
+  }
+}
+
+fun SupportSQLiteDatabase.assertViewDoesNotExist(viewName: String) {
+  query("""
+    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$viewName' and "type" = 'view'
+    """).use {
+    Truth.assertWithMessage("Expected that [$viewName] does not exist, but found it exists").that(it.count).isEqualTo(0)
+  }
+}
+
+fun SupportSQLiteDatabase.assertViewExists(viewName: String) {
+  query("""
+    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$viewName' and "type" = 'view'
+    """).use {
+    Truth.assertWithMessage("Expected that [$viewName] exists, but found it does not exist").that(it.count).isEqualTo(1)
   }
 }
 

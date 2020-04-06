@@ -2,23 +2,23 @@ package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.HbA1c
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarEmpty
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooHigh
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.ErrorBloodSugarTooLow
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.Result.Valid
+import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarEmpty
+import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarTooHigh
+import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarTooLow
+import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.Valid
 import javax.inject.Inject
 
 class BloodSugarValidator @Inject constructor() {
 
-  sealed class Result {
-    data class Valid(val bloodSugarReading: Float) : Result()
+  sealed class ValidationResult {
+    data class Valid(val bloodSugarReading: Float) : ValidationResult()
 
-    object ErrorBloodSugarEmpty : Result()
-    data class ErrorBloodSugarTooHigh(val measurementType: BloodSugarMeasurementType) : Result()
-    data class ErrorBloodSugarTooLow(val measurementType: BloodSugarMeasurementType) : Result()
+    object ErrorBloodSugarEmpty : ValidationResult()
+    data class ErrorBloodSugarTooHigh(val measurementType: BloodSugarMeasurementType) : ValidationResult()
+    data class ErrorBloodSugarTooLow(val measurementType: BloodSugarMeasurementType) : ValidationResult()
   }
 
-  fun validate(bloodSugarReading: String, measurementType: BloodSugarMeasurementType): Result {
+  fun validate(bloodSugarReading: String, measurementType: BloodSugarMeasurementType): ValidationResult {
     if (bloodSugarReading.isBlank()) {
       return ErrorBloodSugarEmpty
     }

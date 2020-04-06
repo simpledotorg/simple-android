@@ -66,11 +66,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   private fun onSaveClicked(
       model: BloodSugarEntryModel
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
-    val measurementType = when (val openAs = model.openAs) {
-      is OpenAs.New -> openAs.measurementType
-      is OpenAs.Update -> openAs.measurementType
-    }
-    val bloodSugarValidationResult = bloodSugarValidator.validate(model.bloodSugarReading, measurementType)
+    val bloodSugarValidationResult = bloodSugarValidator.validate(model.bloodSugarReading.value, model.bloodSugarReading.type)
     val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
     val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult)
 
@@ -109,13 +105,13 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
           openAs.patientId,
           userEnteredDate,
           prefillDate,
-          BloodSugarReading(model.bloodSugarReading, openAs.measurementType)
+          model.bloodSugarReading
       )
       is OpenAs.Update -> UpdateBloodSugarEntry(
           openAs.bloodSugarMeasurementUuid,
           userEnteredDate,
           prefillDate,
-          BloodSugarReading(model.bloodSugarReading, openAs.measurementType)
+          model.bloodSugarReading
       )
     }
   }
@@ -135,11 +131,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   private fun onBloodSugarDateClicked(
       model: BloodSugarEntryModel
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
-    val measurementType = when (val openAs = model.openAs) {
-      is OpenAs.New -> openAs.measurementType
-      is OpenAs.Update -> openAs.measurementType
-    }
-    val result = bloodSugarValidator.validate(model.bloodSugarReading, measurementType)
+    val result = bloodSugarValidator.validate(model.bloodSugarReading.value, model.bloodSugarReading.type)
     val effect = if (result is Valid) {
       ShowDateEntryScreen
     } else {

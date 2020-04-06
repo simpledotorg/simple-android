@@ -5,10 +5,13 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import java.util.UUID
 
-sealed class OpenAs : Parcelable {
-  @Parcelize
-  data class New(val patientId: UUID, val measurementType: BloodSugarMeasurementType) : OpenAs()
+sealed class OpenAs(
+    val measurementType: BloodSugarMeasurementType
+) : Parcelable {
 
   @Parcelize
-  data class Update(val bloodSugarMeasurementUuid: UUID, val measurementType: BloodSugarMeasurementType) : OpenAs()
+  data class New(val patientId: UUID, private val _measurementType: BloodSugarMeasurementType) : OpenAs(_measurementType)
+
+  @Parcelize
+  data class Update(val bloodSugarMeasurementUuid: UUID, private val _measurementType: BloodSugarMeasurementType) : OpenAs(_measurementType)
 }

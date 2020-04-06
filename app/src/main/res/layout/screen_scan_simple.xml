@@ -13,23 +13,10 @@
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
     app:title="@string/scansimpleid_title" />
 
-  <org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
-    android:id="@+id/qrCodeScannerViewOld"
+  <FrameLayout
+    android:id="@+id/qrCodeScannerViewContainer"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:focusable="false"
-    android:visibility="gone"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
-
-  <org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
-    android:id="@+id/qrCodeScannerView"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:focusable="false"
-    android:visibility="gone"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="match_parent" />
 
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"

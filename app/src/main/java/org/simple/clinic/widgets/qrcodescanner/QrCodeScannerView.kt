@@ -22,12 +22,12 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
-class QrCodeScannerView @JvmOverloads
+class QrCodeScannerView
 constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr), IQrCodeScannerView {
 
   @Inject
   lateinit var lifecycle: Observable<ActivityLifecycle>
@@ -37,7 +37,7 @@ constructor(
   private val qrCodeScannerLifecycle = QrCodeScannerLifecycle()
   private val cameraExecutor = Executors.newSingleThreadExecutor()
 
-  private val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+  private val cameraProviderFuture = ProcessCameraProvider.getInstance(context.applicationContext)
 
   init {
     View.inflate(context, R.layout.view_qrcode_scanner, this)
@@ -87,19 +87,19 @@ constructor(
     super.onDetachedFromWindow()
   }
 
-  fun hideQrCodeScanner() {
+  override fun hideQrCodeScanner() {
     previewView.visibility = View.INVISIBLE
     viewFinderImageView.visibility = View.INVISIBLE
     qrCodeScannerLifecycle.unBindCamera()
   }
 
-  fun showQrCodeScanner() {
+  override fun showQrCodeScanner() {
     previewView.visibility = View.VISIBLE
     viewFinderImageView.visibility = View.VISIBLE
     qrCodeScannerLifecycle.bindCamera()
   }
 
-  fun scans(): Observable<String> {
+  override fun scans(): Observable<String> {
     return scans
   }
 

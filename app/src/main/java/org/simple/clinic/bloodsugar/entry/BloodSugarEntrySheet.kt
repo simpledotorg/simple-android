@@ -148,12 +148,8 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     setContentView(R.layout.sheet_blood_sugar_entry)
 
     openAs.let { openAs ->
-      val measurementType = when (openAs) {
-        is New -> openAs.measurementType
-        is Update -> openAs.measurementType
-      }
 
-      when (measurementType) {
+      when (openAs.measurementType) {
         HbA1c -> {
           bloodSugarReadingEditText.inputType = EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
           bloodSugarReadingUnitLabel.text = getString(R.string.bloodsugarentry_percentage)

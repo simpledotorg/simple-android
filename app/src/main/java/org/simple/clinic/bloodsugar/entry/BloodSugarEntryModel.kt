@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.entry
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.threeten.bp.LocalDate
@@ -10,7 +11,7 @@ import org.threeten.bp.LocalDate
 data class BloodSugarEntryModel(
     val year: String,
     val openAs: OpenAs,
-    val bloodSugarReading: String = "",
+    val bloodSugarReading: BloodSugarReading = BloodSugarReading("", openAs.measurementType),
     val activeScreen: ScreenType = BLOOD_SUGAR_ENTRY,
     val day: String = "",
     val month: String = "",
@@ -24,7 +25,7 @@ data class BloodSugarEntryModel(
   }
 
   fun bloodSugarChanged(bloodSugarReading: String): BloodSugarEntryModel =
-      copy(bloodSugarReading = bloodSugarReading)
+      copy(bloodSugarReading = this.bloodSugarReading.readingChanged(bloodSugarReading))
 
   fun dayChanged(day: String): BloodSugarEntryModel =
       copy(day = day)

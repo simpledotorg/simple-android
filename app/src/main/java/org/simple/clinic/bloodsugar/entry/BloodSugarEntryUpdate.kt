@@ -15,7 +15,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.LocalDate
 
 class BloodSugarEntryUpdate @AssistedInject constructor(
-    private val bloodSugarValidator: BloodSugarValidator,
     private val dateValidator: UserInputDateValidator,
     @Assisted private val dateInUserTimeZone: LocalDate,
     private val inputDatePaddingCharacter: UserInputDatePaddingCharacter

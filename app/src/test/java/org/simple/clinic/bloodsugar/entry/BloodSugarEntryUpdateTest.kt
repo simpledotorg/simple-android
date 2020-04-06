@@ -26,7 +26,6 @@ import java.util.UUID
 
 class BloodSugarEntryUpdateTest {
 
-  private val bloodSugarValidator = BloodSugarValidator()
   private val testUserClock = TestUserClock()
   private val dateValidator = UserInputDateValidator(testUserClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
 
@@ -38,7 +37,6 @@ class BloodSugarEntryUpdateTest {
   private val defaultModel = BloodSugarEntryModel.create(LocalDate.now(testUserClock).year, New(patientUuid, Random))
   private val updateSpec = UpdateSpec<BloodSugarEntryModel, BloodSugarEntryEvent, BloodSugarEntryEffect>(
       BloodSugarEntryUpdate(
-          bloodSugarValidator,
           dateValidator,
           LocalDate.now(testUserClock.zone),
           UserInputDatePaddingCharacter.ZERO

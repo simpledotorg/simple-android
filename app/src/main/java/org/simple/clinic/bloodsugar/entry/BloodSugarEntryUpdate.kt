@@ -4,7 +4,6 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bloodsugar.entry.ValidationResult.Valid
@@ -66,7 +65,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   private fun onSaveClicked(
       model: BloodSugarEntryModel
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
-    val bloodSugarValidationResult = bloodSugarValidator.validate(model.bloodSugarReading.value, model.bloodSugarReading.type)
+    val bloodSugarValidationResult = bloodSugarValidator.validate(model.bloodSugarReading)
     val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
     val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult)
 
@@ -131,7 +130,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   private fun onBloodSugarDateClicked(
       model: BloodSugarEntryModel
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
-    val result = bloodSugarValidator.validate(model.bloodSugarReading.value, model.bloodSugarReading.type)
+    val result = bloodSugarValidator.validate(model.bloodSugarReading)
     val effect = if (result is Valid) {
       ShowDateEntryScreen
     } else {

@@ -1,6 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
-import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
+import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
@@ -10,18 +10,21 @@ import javax.inject.Inject
 
 class BloodSugarValidator @Inject constructor() {
 
-  fun validate(bloodSugarReading: String, measurementType: BloodSugarMeasurementType): ValidationResult {
-    if (bloodSugarReading.isBlank()) {
+  fun validate(bloodSugarReading: BloodSugarReading): ValidationResult {
+    val value = bloodSugarReading.value.trim()
+    val type = bloodSugarReading.type
+
+    if (value.isBlank()) {
       return ErrorBloodSugarEmpty
     }
 
-    val bloodSugarNumber = bloodSugarReading.trim().toFloat()
-    val minAllowedBloodSugarValue = if (measurementType is HbA1c) 3 else 30
-    val maxAllowedBloodSugarValue = if (measurementType is HbA1c) 25 else 1000
+    val bloodSugarNumber = value.toFloat()
+    val minAllowedBloodSugarValue = if (type is HbA1c) 3 else 30
+    val maxAllowedBloodSugarValue = if (type is HbA1c) 25 else 1000
 
     return when {
-      bloodSugarNumber < minAllowedBloodSugarValue -> ErrorBloodSugarTooLow(measurementType)
-      bloodSugarNumber > maxAllowedBloodSugarValue -> ErrorBloodSugarTooHigh(measurementType)
+      bloodSugarNumber < minAllowedBloodSugarValue -> ErrorBloodSugarTooLow(type)
+      bloodSugarNumber > maxAllowedBloodSugarValue -> ErrorBloodSugarTooHigh(type)
       else -> Valid(bloodSugarNumber)
     }
   }

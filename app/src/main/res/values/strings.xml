@@ -63,10 +63,13 @@
   <string name="patiententry_street_house_road_number">House and road number</string>
   <string name="patiententry_village_colony_ward">Village / colony / ward</string>
   <string name="patiententry_village_ward">Village / ward</string>
+  <string name="patiententry_kebele">Village</string>
   <string name="patiententry_zone">Union</string>
   <string name="patiententry_district">District</string>
+  <string name="patiententry_woreda">Woreda</string>
   <string name="patiententry_upazila">Upazila</string>
   <string name="patiententry_state">State</string>
+  <string name="patiententry_region">Region</string>
   <string name="patiententry_save_patient">Next</string>
   <string name="patiententry_error_empty_fullname">Enter patient’s full name</string>
   <string name="patiententry_error_empty_gender">Choose patient’s gender</string>

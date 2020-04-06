@@ -28,7 +28,9 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.widgets.visibleOrGone
+import org.simple.clinic.widgets.qrcodescanner.IQrCodeScannerView
+import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
+import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView_Old
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -49,6 +51,8 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
+  private lateinit var qrCodeScannerView: IQrCodeScannerView
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -61,8 +65,13 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     toolBar.setNavigationOnClickListener { screenRouter.pop() }
     setupShortCodeTextField()
 
-    qrCodeScannerView.visibleOrGone(config.useNewQrScanner)
-    qrCodeScannerViewOld.visibleOrGone(!config.useNewQrScanner)
+    qrCodeScannerView = if (config.useNewQrScanner) {
+      QrCodeScannerView(context)
+    } else {
+      QrCodeScannerView_Old(context)
+    }
+
+    qrCodeScannerViewContainer.addView(qrCodeScannerView as View)
 
     bindUiToController(
         ui = this,
@@ -80,13 +89,8 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   private fun qrScans(): Observable<UiEvent> {
-    val scans = if (config.useNewQrScanner) {
-      qrCodeScannerView
-          .scans()
-    } else {
-      qrCodeScannerViewOld
-          .scans()
-    }
+    val scans = qrCodeScannerView
+        .scans()
     return scans.map(::ScanSimpleIdScreenQrCodeScanned)
   }
 
@@ -149,19 +153,11 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   fun hideQrCodeScannerView() {
-    if (config.useNewQrScanner) {
-      qrCodeScannerView.hideQrCodeScanner()
-    } else {
-      qrCodeScannerViewOld.hideQrCodeScanner()
-    }
+    qrCodeScannerView.hideQrCodeScanner()
   }
 
   fun showQrCodeScannerView() {
-    if (config.useNewQrScanner) {
-      qrCodeScannerView.showQrCodeScanner()
-    } else {
-      qrCodeScannerViewOld.showQrCodeScanner()
-    }
+    qrCodeScannerView.showQrCodeScanner()
   }
 }
 

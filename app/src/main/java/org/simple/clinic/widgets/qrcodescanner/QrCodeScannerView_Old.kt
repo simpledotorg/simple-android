@@ -21,15 +21,19 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.view_qrcode_scanner_old.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Paused
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import timber.log.Timber
 import javax.inject.Inject
 
-class QrCodeScannerView_Old(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+class QrCodeScannerView_Old
+constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : FrameLayout(context, attrs), IQrCodeScannerView {
 
   @Inject
   lateinit var lifecycle: Observable<ActivityLifecycle>
@@ -48,16 +52,16 @@ class QrCodeScannerView_Old(context: Context, attrs: AttributeSet) : FrameLayout
 
   private val codeScanner by lazy(LazyThreadSafetyMode.NONE) { CodeScanner(context, scannerView) }
 
+  init {
+    LayoutInflater.from(context).inflate(R.layout.view_qrcode_scanner_old, this, true)
+    cameraView.addView(scannerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
-    LayoutInflater.from(context).inflate(R.layout.view_qrcode_scanner_old, this, true)
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
-    cameraView.addView(scannerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-    initializeCodeScanner()
-    bindCameraToActivityLifecycle()
   }
 
   private fun initializeCodeScanner() {
@@ -78,7 +82,7 @@ class QrCodeScannerView_Old(context: Context, attrs: AttributeSet) : FrameLayout
     }
   }
 
-  fun scans(): Observable<String> {
+  override fun scans(): Observable<String> {
     val qrCodeScans = Observable.create<String> { emitter ->
       codeScanner.decodeCallback = DecodeCallback { result ->
         if (result.barcodeFormat == BarcodeFormat.QR_CODE) {
@@ -98,13 +102,13 @@ class QrCodeScannerView_Old(context: Context, attrs: AttributeSet) : FrameLayout
         .map { (qrCode, _) -> qrCode }
   }
 
-  fun hideQrCodeScanner() {
+  override fun hideQrCodeScanner() {
     cameraView.visibility = View.INVISIBLE
     viewFinderImageView.visibility = View.INVISIBLE
     qrCodeScansValve.onNext(false)
   }
 
-  fun showQrCodeScanner() {
+  override fun showQrCodeScanner() {
     cameraView.visibility = View.VISIBLE
     viewFinderImageView.visibility = View.VISIBLE
     qrCodeScansValve.onNext(true)
@@ -120,6 +124,9 @@ class QrCodeScannerView_Old(context: Context, attrs: AttributeSet) : FrameLayout
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
+    TheActivity.component.inject(this)
+    initializeCodeScanner()
+    bindCameraToActivityLifecycle()
     startScanning()
   }
 

@@ -5,9 +5,9 @@ import org.junit.Test
 import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarEmpty
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarTooHigh
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarTooLow
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooLow
 
 class BloodSugarValidatorTest {
   private val bloodSugarValidator = BloodSugarValidator()

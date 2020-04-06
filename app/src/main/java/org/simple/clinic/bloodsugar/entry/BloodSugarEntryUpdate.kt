@@ -7,7 +7,7 @@ import com.squareup.inject.assisted.AssistedInject
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.Valid
+import org.simple.clinic.bloodsugar.entry.ValidationResult.Valid
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.util.UserInputDatePaddingCharacter
@@ -82,7 +82,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   }
 
   private fun getValidationErrorEffects(
-      bloodSugarValidationResult: BloodSugarValidator.ValidationResult,
+      bloodSugarValidationResult: ValidationResult,
       dateValidationResult: Result
   ): Set<BloodSugarEntryEffect> {
     val validationErrorEffects = mutableSetOf<BloodSugarEntryEffect>()

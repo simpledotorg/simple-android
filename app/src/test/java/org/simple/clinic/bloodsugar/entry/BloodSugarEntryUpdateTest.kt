@@ -11,7 +11,7 @@ import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarTooHigh
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.TestData

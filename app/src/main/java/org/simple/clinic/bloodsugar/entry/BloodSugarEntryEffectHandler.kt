@@ -10,9 +10,9 @@ import io.reactivex.rxkotlin.cast
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarEmpty
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarTooHigh
-import org.simple.clinic.bloodsugar.entry.BloodSugarValidator.ValidationResult.ErrorBloodSugarTooLow
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooLow
 import org.simple.clinic.bloodsugar.entry.PrefillDate.PrefillSpecificDate
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
@@ -85,7 +85,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   private fun getExistingBloodSugarMeasurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       bloodSugarRepository.measurement(bloodSugarMeasurementUuid)
 
-  private fun showBloodSugarValidationError(result: BloodSugarValidator.ValidationResult) {
+  private fun showBloodSugarValidationError(result: ValidationResult) {
     when (result) {
       ErrorBloodSugarEmpty -> ui.showBloodSugarEmptyError()
       is ErrorBloodSugarTooHigh -> ui.showBloodSugarHighError(result.measurementType)

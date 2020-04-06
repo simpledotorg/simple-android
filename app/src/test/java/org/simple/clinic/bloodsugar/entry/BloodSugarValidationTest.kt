@@ -10,13 +10,12 @@ import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooLow
 
-class BloodSugarValidatorTest {
-  private val bloodSugarValidator = BloodSugarValidator()
+class BloodSugarValidationTest {
 
   @Test
   fun `when blood sugar reading is empty, return error`() {
     val bloodSugarReading = ""
-    val result = bloodSugarValidator.validate(BloodSugarReading(bloodSugarReading, Random))
+    val result = BloodSugarReading(bloodSugarReading, Random).validate()
 
     assertThat(result).isEqualTo(ErrorBloodSugarEmpty)
   }
@@ -24,7 +23,7 @@ class BloodSugarValidatorTest {
   @Test
   fun `when blood sugar reading is more than 1000, return error`() {
     val bloodSugarReading = "1001"
-    val result = bloodSugarValidator.validate(BloodSugarReading(bloodSugarReading, PostPrandial))
+    val result = BloodSugarReading(bloodSugarReading, PostPrandial).validate()
 
     assertThat(result).isEqualTo(ErrorBloodSugarTooHigh(PostPrandial))
   }
@@ -32,7 +31,7 @@ class BloodSugarValidatorTest {
   @Test
   fun `when hba1c blood sugar reading is more than 25, return error`() {
     val bloodSugarReading = "26"
-    val result = bloodSugarValidator.validate(BloodSugarReading(bloodSugarReading, HbA1c))
+    val result = BloodSugarReading(bloodSugarReading, HbA1c).validate()
 
     assertThat(result).isEqualTo(ErrorBloodSugarTooHigh(HbA1c))
   }
@@ -41,7 +40,7 @@ class BloodSugarValidatorTest {
   @Test
   fun `when blood sugar reading is less than 30, return error`() {
     val bloodSugarReading = "29"
-    val result = bloodSugarValidator.validate(BloodSugarReading(bloodSugarReading, Random))
+    val result = BloodSugarReading(bloodSugarReading, Random).validate()
 
     assertThat(result).isEqualTo(ErrorBloodSugarTooLow(Random))
   }
@@ -49,7 +48,7 @@ class BloodSugarValidatorTest {
   @Test
   fun `when hba1c blood sugar reading is less than 3, return error`() {
     val bloodSugarReading = "2"
-    val result = bloodSugarValidator.validate(BloodSugarReading(bloodSugarReading, HbA1c))
+    val result = BloodSugarReading(bloodSugarReading, HbA1c).validate()
 
     assertThat(result).isEqualTo(ErrorBloodSugarTooLow(HbA1c))
   }

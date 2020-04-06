@@ -130,12 +130,11 @@ class AppointmentRepository @Inject constructor(
     return appointmentConfigProvider
         .flatMap { appointmentConfig ->
           overdueDao
-              .appointmentsForFacility(
+              .overdueAtFacility(
                   facilityUuid = facility.uuid,
-                  scheduledStatus = Scheduled,
                   scheduledBefore = since,
                   scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
-              ).toObservable()
+              )
         }
   }
 

@@ -65,7 +65,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   private fun onSaveClicked(
       model: BloodSugarEntryModel
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
-    val bloodSugarValidationResult = bloodSugarValidator.validate(model.bloodSugarReading)
+    val bloodSugarValidationResult = model.bloodSugarReading.validate()
     val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
     val validationErrorEffects = getValidationErrorEffects(bloodSugarValidationResult, dateValidationResult)
 
@@ -130,7 +130,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
   private fun onBloodSugarDateClicked(
       model: BloodSugarEntryModel
   ): Next<BloodSugarEntryModel, BloodSugarEntryEffect> {
-    val result = bloodSugarValidator.validate(model.bloodSugarReading)
+    val result = model.bloodSugarReading.validate()
     val effect = if (result is Valid) {
       ShowDateEntryScreen
     } else {

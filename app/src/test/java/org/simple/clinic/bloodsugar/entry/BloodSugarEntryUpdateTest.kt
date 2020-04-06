@@ -141,7 +141,7 @@ class BloodSugarEntryUpdateTest {
 
   @Test
   fun `when blood sugar entry is active and value is invalid and date button is pressed, then show blood sugar validation errors`() {
-    val measurementType = (defaultModel.openAs as New).measurementType
+    val measurementType = defaultModel.bloodSugarReading.type
 
     updateSpec
         .given(defaultModel.bloodSugarChanged(invalidBloodSugar))
@@ -251,7 +251,7 @@ class BloodSugarEntryUpdateTest {
         .monthChanged(validBloodSugarDate.monthValue.toString())
         .yearChanged(validBloodSugarDate.year.toString().substring(2))
         .datePrefilled(validBloodSugarDate)
-    val measurementType = (invalidBloodSugarModel.openAs as New).measurementType
+    val measurementType = invalidBloodSugarModel.bloodSugarReading.type
 
     updateSpec
         .given(invalidBloodSugarModel)

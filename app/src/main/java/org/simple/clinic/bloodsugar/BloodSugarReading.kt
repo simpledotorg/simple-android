@@ -35,4 +35,5 @@ data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementT
       }
     }
 
+  fun readingChanged(newReading: String): BloodSugarReading = copy(value = newReading)
 }

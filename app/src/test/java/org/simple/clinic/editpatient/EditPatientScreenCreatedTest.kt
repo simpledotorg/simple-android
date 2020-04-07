@@ -12,11 +12,11 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
@@ -46,6 +46,7 @@ class EditPatientScreenCreatedTest {
   private val patientRepository = mock<PatientRepository>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val country = TestData.country()
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
@@ -155,7 +156,7 @@ class EditPatientScreenCreatedTest {
         EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
         EditPatientInit(patient, address, phoneNumber, null),
         EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
-        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, TrampolineSchedulersProvider(), userSession, facilityRepository, dateOfBirthFormat).build(),
+        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, TrampolineSchedulersProvider(), userSession, facilityRepository, country, dateOfBirthFormat).build(),
         { /* nothing here */ }
     ).start()
   }

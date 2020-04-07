@@ -3,7 +3,7 @@ package org.simple.clinic.newentry.country
 import org.simple.clinic.R
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.newentry.form.AgeField
-import org.simple.clinic.newentry.form.BangladeshNationalIdField
+import org.simple.clinic.newentry.form.AlternativeIdInputField
 import org.simple.clinic.newentry.form.DateOfBirthField
 import org.simple.clinic.newentry.form.DistrictField
 import org.simple.clinic.newentry.form.GenderField
@@ -54,7 +54,7 @@ class InputFieldsFactory(
         DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
         LandlineOrMobileField(R.string.patiententry_phone_number),
         GenderField(labelResId = 0, allowedGenders = setOf(Male, Female, Transgender)),
-        BangladeshNationalIdField(R.string.patiententry_bangladesh_national_id),
+        AlternativeIdInputField(R.string.patiententry_bangladesh_national_id),
         StreetAddressField(R.string.patiententry_street_house_road_number),
         VillageOrColonyField(R.string.patiententry_village_ward),
         ZoneField(R.string.patiententry_zone),

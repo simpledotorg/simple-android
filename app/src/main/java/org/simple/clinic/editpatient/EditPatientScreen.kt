@@ -39,7 +39,7 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
-import org.simple.clinic.newentry.form.BangladeshNationalIdField
+import org.simple.clinic.newentry.form.AlternativeIdInputField
 import org.simple.clinic.newentry.form.DateOfBirthField
 import org.simple.clinic.newentry.form.DistrictField
 import org.simple.clinic.newentry.form.GenderField
@@ -166,7 +166,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         DateOfBirthField::class.java to dateOfBirthEditTextContainer,
         LandlineOrMobileField::class.java to phoneNumberTextContainer,
         GenderField::class.java to genderRadioGroup,
-        BangladeshNationalIdField::class.java to bangladeshNationalIdInputContainer,
+        AlternativeIdInputField::class.java to bangladeshNationalIdInputContainer,
         StreetAddressField::class.java to streetAddressLayout,
         VillageOrColonyField::class.java to colonyOrVillageInputContainer,
         ZoneField::class.java to zoneLayout,
@@ -185,7 +185,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     val allTextInputFields: Map<Class<*>, TextInputLayout> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         LandlineOrMobileField::class.java to phoneNumberInputLayout,
-        BangladeshNationalIdField::class.java to bangladeshNationalIdInputLayout,
+        AlternativeIdInputField::class.java to bangladeshNationalIdInputLayout,
         StreetAddressField::class.java to streetAddressInputLayout,
         VillageOrColonyField::class.java to colonyOrVillageInputLayout,
         ZoneField::class.java to zoneInputLayout,

@@ -226,7 +226,7 @@ class PatientEntryScreenLogicTest {
             zone = "zone"
         ),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890"),
-        bangladeshNationalId = bangladeshNationalId
+        alternativeId = bangladeshNationalId
     ))
     verifyNoMoreInteractions(patientRepository)
     verify(patientRegisteredCount).get()

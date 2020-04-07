@@ -689,7 +689,7 @@ object TestData {
         address = ongoingAddress,
         phoneNumber = ongoingPhoneNumber,
         identifier = identifier,
-        bangladeshNationalId = bangladeshNationalId
+        alternativeId = bangladeshNationalId
     )
   }
 

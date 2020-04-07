@@ -36,9 +36,8 @@ class PatientSearchResultsControllerTest {
   private val patientRepository: PatientRepository = mock()
   private val facilityRepository: FacilityRepository = mock()
   private val userSession: UserSession = mock()
-  private val isFacilitySwitchedPreference: Preference<Boolean> = mock()
 
-  private val controller = PatientSearchResultsController(patientRepository, facilityRepository, userSession, isFacilitySwitchedPreference)
+  private val controller = PatientSearchResultsController(patientRepository, facilityRepository, userSession)
   private val uiEvents = PublishSubject.create<UiEvent>()
 
 
@@ -71,14 +70,13 @@ class PatientSearchResultsControllerTest {
     val ongoingEntry = OngoingNewPatientEntry.fromFullName(fullName)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
-    whenever(isFacilitySwitchedPreference.get()) doReturn false
 
     // when
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName)))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen()
+    verify(screen).openAlertFacilityChangeSheet(currentFacility)
     verifyNoMoreInteractions(screen)
   }
 
@@ -89,14 +87,13 @@ class PatientSearchResultsControllerTest {
     val ongoingEntry = OngoingNewPatientEntry.fromPhoneNumber(phoneNumber)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
-    whenever(isFacilitySwitchedPreference.get()) doReturn false
 
     // when
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber)))
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openPatientEntryScreen()
+    verify(screen).openAlertFacilityChangeSheet(currentFacility)
     verifyNoMoreInteractions(screen)
   }
 
@@ -107,7 +104,6 @@ class PatientSearchResultsControllerTest {
     val ongoingEntry = OngoingNewPatientEntry.fromFullName(fullName)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry)) doReturn (Completable.complete())
-    whenever(isFacilitySwitchedPreference.get()) doReturn true
 
     // when
     uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName)))

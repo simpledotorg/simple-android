@@ -20,6 +20,7 @@ import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.router.screen.ActivityResult
+import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
@@ -81,10 +82,10 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
         .filter { it.requestCode == ALERT_FACILITY_CHANGE && it.succeeded() }
+        .map { AlertFacilityChangeSheet.readContinuationExtra<FullScreenKey>(it.data!!) }
         .takeUntil(screenDestroys)
-        .subscribe { openPatientEntryScreen() }
+        .subscribe(screenRouter::push)
   }
-
 
   private fun searchResultClicks(): Observable<UiEvent> {
     return searchResultsView
@@ -132,12 +133,11 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
-  fun openPatientEntryScreen() {
-    screenRouter.push(PatientEntryScreenKey())
-  }
-
   fun openAlertFacilityChangeSheet(facility: Facility) {
-    activity.startActivityForResult(AlertFacilityChangeSheet.intent(context, facility.name), ALERT_FACILITY_CHANGE)
+    activity.startActivityForResult(
+        AlertFacilityChangeSheet.intentForScreen(context, facility.name, PatientEntryScreenKey()),
+        ALERT_FACILITY_CHANGE
+    )
   }
 
   companion object {

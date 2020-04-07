@@ -90,7 +90,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         address = patientProfile.address,
         phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
         bpPassport = patientProfile.businessIds.filter { it.identifier.type == BpPassport }.maxBy { it.createdAt },
-        bangladeshNationalId = patientProfile.businessIds.filter { it.identifier.type == BangladeshNationalId }.maxBy { it.createdAt }
+        alternativeId = patientProfile.businessIds.filter { it.identifier.type == BangladeshNationalId }.maxBy { it.createdAt }
     )
   }
 

@@ -13,7 +13,7 @@ data class PatientSummaryProfile(
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?,
     val bpPassport: BusinessId?,
-    val bangladeshNationalId: BusinessId?
+    val alternativeId: BusinessId?
 ): Parcelable {
 
   val hasPhoneNumber: Boolean

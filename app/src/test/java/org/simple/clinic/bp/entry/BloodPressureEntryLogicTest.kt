@@ -25,6 +25,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
@@ -40,7 +41,6 @@ import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -343,7 +343,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(ScreenChanged(DATE_ENTRY))
       onNext(DayChanged("13"))
       onNext(MonthChanged("02"))
-      onNext(YearChanged("90"))
+      onNext(YearChanged("1990"))
       onNext(SaveClicked)
     }
 
@@ -393,7 +393,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(ScreenChanged(DATE_ENTRY))
       onNext(DayChanged("14"))
       onNext(MonthChanged("02"))
-      onNext(YearChanged("91"))
+      onNext(YearChanged("1991"))
       onNext(SaveClicked)
     }
 
@@ -546,7 +546,8 @@ class BloodPressureEntrySheetLogicTest {
     verify(ui).setDateOnInputFields(
         dayOfMonth = "23",
         month = "4",
-        twoDigitYear = "18")
+        fourDigitYear = "2018"
+    )
   }
 
   @Test
@@ -562,7 +563,7 @@ class BloodPressureEntrySheetLogicTest {
     verify(ui, times(1)).setDateOnInputFields(
         dayOfMonth = "23",
         month = "4",
-        twoDigitYear = "18")
+        fourDigitYear = "2018")
   }
 
   @Suppress("Unused")
@@ -585,7 +586,7 @@ class BloodPressureEntrySheetLogicTest {
     verify(ui).setDateOnInputFields(
         today.dayOfMonth.toString(),
         today.month.value.toString(),
-        today.year.toString().takeLast(2)
+        today.year.toString()
     )
     verify(ui).hideRemoveBpButton()
     verify(ui).showEnterNewBloodPressureTitle()
@@ -606,7 +607,7 @@ class BloodPressureEntrySheetLogicTest {
     verify(ui).setDateOnInputFields(
         recordedDate.dayOfMonth.toString(),
         recordedDate.month.value.toString(),
-        recordedDate.year.toString().takeLast(2)
+        recordedDate.year.toString()
     )
     verify(ui).setSystolic(bp.systolic.toString())
     verify(ui).setDiastolic(bp.diastolic.toString())
@@ -654,7 +655,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(ScreenChanged(DATE_ENTRY))
       onNext(DayChanged(bpDate.dayOfMonth.toString()))
       onNext(MonthChanged(bpDate.monthValue.toString()))
-      onNext(YearChanged(bpDate.year.toString().substring(2)))
+      onNext(YearChanged(bpDate.year.toString()))
 
       reset(ui)
       onNext(ShowBpClicked)
@@ -758,7 +759,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(ScreenChanged(DATE_ENTRY))
       onNext(DayChanged(localDate.dayOfMonth.toString()))
       onNext(MonthChanged(localDate.monthValue.toString()))
-      onNext(YearChanged(localDate.year.toString().takeLast(2)))
+      onNext(YearChanged(localDate.year.toString()))
 
       reset(ui)
       onNext(BackPressed)
@@ -784,7 +785,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(ScreenChanged(DATE_ENTRY))
       onNext(DayChanged(localDate.dayOfMonth.toString()))
       onNext(MonthChanged(localDate.monthValue.toString()))
-      onNext(YearChanged(localDate.year.toString().takeLast(2)))
+      onNext(YearChanged(localDate.year.toString()))
 
       reset(ui)
       onNext(ShowBpClicked)
@@ -813,7 +814,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(DiastolicChanged(diastolic))
       onNext(DayChanged(inputDate.dayOfMonth.toString()))
       onNext(MonthChanged(inputDate.monthValue.toString()))
-      onNext(YearChanged(inputDate.year.toString().takeLast(2)))
+      onNext(YearChanged(inputDate.year.toString()))
 
       reset(ui)
       onNext(SaveClicked)
@@ -866,7 +867,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(DiastolicChanged(diastolic))
       onNext(DayChanged(newInputDate.dayOfMonth.toString()))
       onNext(MonthChanged(newInputDate.monthValue.toString()))
-      onNext(YearChanged(newInputDate.year.toString().takeLast(2)))
+      onNext(YearChanged(newInputDate.year.toString()))
 
       reset(ui)
       onNext(SaveClicked)
@@ -930,7 +931,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(ScreenChanged(DATE_ENTRY))
       onNext(DayChanged("14"))
       onNext(MonthChanged("02"))
-      onNext(YearChanged("91"))
+      onNext(YearChanged("1991"))
       onNext(SaveClicked)
     }
 
@@ -1000,7 +1001,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(DiastolicChanged(diastolic))
       onNext(DayChanged(newInputDate.dayOfMonth.toString()))
       onNext(MonthChanged(newInputDate.monthValue.toString()))
-      onNext(YearChanged(newInputDate.year.toString().takeLast(2)))
+      onNext(YearChanged(newInputDate.year.toString()))
 
       reset(ui)
       onNext(SaveClicked)

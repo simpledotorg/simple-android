@@ -213,7 +213,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         DateOfBirthField::class.java to dateOfBirthEditTextContainer,
         LandlineOrMobileField::class.java to phoneNumberTextContainer,
         GenderField::class.java to genderRadioGroup,
-        AlternativeIdInputField::class.java to bangladeshNationalIdInputContainer,
+        AlternativeIdInputField::class.java to alternativeIdInputContainer,
         StreetAddressField::class.java to streetAddressLayout,
         VillageOrColonyField::class.java to colonyOrVillageInputContainer,
         ZoneField::class.java to zoneLayout,
@@ -232,7 +232,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     val allTextInputFields: Map<Class<*>, TextInputLayout> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         LandlineOrMobileField::class.java to phoneNumberInputLayout,
-        AlternativeIdInputField::class.java to bangladeshNationalIdInputLayout,
+        AlternativeIdInputField::class.java to alternativeIdInputLayout,
         StreetAddressField::class.java to streetAddressInputLayout,
         VillageOrColonyField::class.java to colonyOrVillageInputLayout,
         ZoneField::class.java to zoneInputLayout,
@@ -308,7 +308,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         districtEditText.textChanges(::DistrictChanged),
         stateEditText.textChanges(::StateChanged),
         genderChanges(),
-        bangladeshNationalIdEditText.textChanges { BangladeshNationalIdChanged(Identifier(it, BangladeshNationalId)) },
+        alternativeIdInputEditText.textChanges { BangladeshNationalIdChanged(Identifier(it, BangladeshNationalId)) },
         zoneEditText.textChanges(::ZoneChanged),
         streetAddressEditText.textChanges(::StreetAddressChanged)
     )

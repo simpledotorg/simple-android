@@ -308,7 +308,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         districtEditText.textChanges(::DistrictChanged),
         stateEditText.textChanges(::StateChanged),
         genderChanges(),
-        alternativeIdInputEditText.textChanges { BangladeshNationalIdChanged(Identifier(it, BangladeshNationalId)) },
+        alternativeIdInputEditText.textChanges { AlternativeIdChanged(Identifier(it, BangladeshNationalId)) },
         zoneEditText.textChanges(::ZoneChanged),
         streetAddressEditText.textChanges(::StreetAddressChanged)
     )

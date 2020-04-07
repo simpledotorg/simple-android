@@ -203,7 +203,7 @@ class PatientEntryScreenLogicTest {
     with(uiEvents) {
       onNext(FullNameChanged("Ashok"))
       onNext(PhoneNumberChanged("1234567890"))
-      onNext(BangladeshNationalIdChanged(bangladeshNationalId))
+      onNext(AlternativeIdChanged(bangladeshNationalId))
       onNext(DateOfBirthChanged("12/04/1993"))
       onNext(AgeChanged(""))
       onNext(GenderChanged(Just(Transgender)))

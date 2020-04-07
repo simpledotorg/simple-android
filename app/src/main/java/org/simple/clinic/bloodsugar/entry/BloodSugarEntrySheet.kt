@@ -325,10 +325,10 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     dateErrorTextView.visibleOrGone(false)
   }
 
-  override fun setDateOnInputFields(dayOfMonth: String, month: String, twoDigitYear: String) {
+  override fun setDateOnInputFields(dayOfMonth: String, month: String, fourDigitYear: String) {
     dayEditText.setTextAndCursor(getPaddedString(dayOfMonth))
     monthEditText.setTextAndCursor(getPaddedString(month))
-    yearEditText.setTextAndCursor(twoDigitYear)
+    yearEditText.setTextAndCursor(fourDigitYear)
   }
 
   override fun showDateOnDateButton(date: LocalDate) {

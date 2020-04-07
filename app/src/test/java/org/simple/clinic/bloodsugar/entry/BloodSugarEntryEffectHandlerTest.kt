@@ -13,6 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.HbA1c
@@ -24,7 +25,6 @@ import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooLow
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.storage.Timestamps
@@ -170,7 +170,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(DatePrefilled(entryDate))
-    verify(ui).setDateOnInputFields("7", "6", "92")
+    verify(ui).setDateOnInputFields("7", "6", "1992")
     verify(ui).showDateOnDateButton(entryDate)
     verifyNoMoreInteractions(ui)
   }
@@ -186,7 +186,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(DatePrefilled(entryDate))
-    verify(ui).setDateOnInputFields("14", "2", "20")
+    verify(ui).setDateOnInputFields("14", "2", "2020")
     verify(ui).showDateOnDateButton(entryDate)
     verifyNoMoreInteractions(ui)
   }

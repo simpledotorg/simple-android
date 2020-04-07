@@ -10,10 +10,10 @@ import io.reactivex.rxkotlin.cast
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.entry.PrefillDate.PrefillSpecificDate
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooLow
-import org.simple.clinic.bloodsugar.entry.PrefillDate.PrefillSpecificDate
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
@@ -120,12 +120,9 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     ui.setDateOnInputFields(
         dateToSet.dayOfMonth.toString(),
         dateToSet.monthValue.toString(),
-        getYear(dateToSet)
+        dateToSet.year.toString()
     )
   }
-
-  private fun getYear(date: LocalDate): String =
-      date.year.toString().substring(startIndex = 2, endIndex = 4)
 
   private fun showDateValidationError(result: UserInputDateValidator.Result) {
     when (result) {

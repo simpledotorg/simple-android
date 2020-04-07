@@ -523,7 +523,7 @@
   <string name="bloodsugarentry_error_higher_limit">Value cannot be more than 1000 mg/dl</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">Value cannot be more than 25%</string>
   <string name="bloodsugarentry_error_empty">Value cannot be empty</string>
-  <string name="bloodsugarentry_error_date_invalid_pattern">Enter a valid date in DD/MM/YY</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">Enter a valid date in DD/MM/YYYY</string>
   <string name="bloodsugarentry_error_date_is_in_future">Date cannot be in the future</string>
   <string name="bloodsugarentry_random_title">Random blood sugar</string>
   <string name="bloodsugarentry_post_prandial_title">Post prandial blood sugar</string>

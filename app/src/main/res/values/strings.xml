@@ -52,6 +52,7 @@
   <string name="patiententry_full_name">Patient\'s name</string>
   <string name="patiententry_phone_number">Phone number</string>
   <string name="patiententry_bangladesh_national_id">National ID number</string>
+  <string name="patiententry_ethiopia_national_id">National ID</string>
   <string name="patiententry_date_of_birth_unfocused">Date of birth</string>
   <string name="patiententry_date_of_birth_focused">D.O.B: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">Or</string>

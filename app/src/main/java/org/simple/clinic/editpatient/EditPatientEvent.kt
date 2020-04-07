@@ -1,7 +1,6 @@
 package org.simple.clinic.editpatient
 
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.widgets.UiEvent
 
 sealed class EditPatientEvent : UiEvent
@@ -62,6 +61,6 @@ object BackClicked: EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Back Clicked"
 }
 
-data class BangladeshNationalIdChanged(val bangladeshNationalId: String) : EditPatientEvent() {
+data class AlternativeIdChanged(val alternativeId: String) : EditPatientEvent() {
   override val analyticsName: String = "Edit Patient Entry:Bangladesh National ID Changed"
 }

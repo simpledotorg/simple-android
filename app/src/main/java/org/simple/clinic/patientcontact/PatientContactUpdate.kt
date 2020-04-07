@@ -13,6 +13,8 @@ class PatientContactUpdate : Update<PatientContactModel, PatientContactEvent, Pa
   ): Next<PatientContactModel, PatientContactEffect> {
     return when(event) {
       is PatientProfileLoaded -> next(model.patientProfileLoaded(event.patientProfile))
+      is OverdueAppointmentLoaded -> next(model.overdueAppointmentLoaded(event.overdueAppointment))
+      else -> noChange()
     }
   }
 }

@@ -6,15 +6,20 @@ import org.simple.clinic.util.Optional
 import java.util.UUID
 
 data class PatientContactModel(
-    private val patientUuid: UUID,
-    private val patientProfile: PatientProfile? = null,
-    private val appointment: Optional<OverdueAppointment>? = null
+    val patientUuid: UUID,
+    val patientProfile: PatientProfile? = null,
+    val appointment: Optional<OverdueAppointment>? = null
 ) {
-
 
   companion object {
     fun create(patientUuid: UUID): PatientContactModel = PatientContactModel(patientUuid)
   }
+
+  val hasLoadedPatientProfile: Boolean
+    get() = patientProfile != null
+
+  val hasLoadedAppointment: Boolean
+    get() = appointment != null
 
   fun patientProfileLoaded(patientProfile: PatientProfile): PatientContactModel {
     return copy(patientProfile = patientProfile)

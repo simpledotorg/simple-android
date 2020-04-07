@@ -63,7 +63,7 @@ class EditPatientEffectHandlerTest {
       address = patientAddress,
       phoneNumber = phoneNumber,
       dateOfBirthFormatter = dateOfBirthFormatter,
-      bangladeshNationalId = null
+      alternativeId = null
   )
 
   private val user = TestData.loggedInUser(uuid = UUID.fromString("3c3d0057-d6f6-42be-9bf6-5ccacb8bc54d"))
@@ -96,7 +96,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.deleteBusinessId(bangladeshNationalId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry.updateBangladeshNationalId(""), patient, patientAddress, phoneNumber, bangladeshNationalId))
+    testCase.dispatch(SavePatientEffect(entry.updateAlternativeId(""), patient, patientAddress, phoneNumber, bangladeshNationalId))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -137,7 +137,7 @@ class EditPatientEffectHandlerTest {
   fun `editing a patient with a non-blank bangladesh ID should save the business ID`() {
     // given
     val bangladeshNationalIdText = "1569273"
-    val ongoingEntryWithBangladeshId = entry.updateBangladeshNationalId(bangladeshNationalIdText)
+    val ongoingEntryWithBangladeshId = entry.updateAlternativeId(bangladeshNationalIdText)
     val updatedBangladeshNationalId = bangladeshNationalId.updateIdentifierValue(bangladeshNationalIdText)
 
     whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
@@ -174,7 +174,7 @@ class EditPatientEffectHandlerTest {
 
     //when
     testCase.dispatch(SavePatientEffect(
-        entry.updateBangladeshNationalId(identifier.value),
+        entry.updateAlternativeId(identifier.value),
         patient,
         patientAddress,
         phoneNumber,

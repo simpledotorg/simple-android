@@ -29,7 +29,7 @@ class PatientEntryUpdate(
       is ColonyOrVillageChanged -> onFieldChanged(model.colonyOrVillageChanged(event.colonyOrVillage), ColonyOrVillage)
       is DistrictChanged -> onFieldChanged(model.districtChanged(event.district), District)
       is StateChanged -> onFieldChanged(model.stateChanged(event.state), State)
-      is BangladeshNationalIdChanged -> onFieldChanged(model.bangladeshNationalIdChanged(event.bangladeshNationalId), BangladeshNationalId)
+      is AlternativeIdChanged -> onFieldChanged(model.bangladeshNationalIdChanged(event.identifier), BangladeshNationalId)
       is GenderChanged -> onGenderChanged(model, event.gender)
       is StreetAddressChanged -> onFieldChanged(model.streetAddressChanged(event.streetAddress), StreetAddress)
       is ZoneChanged -> onFieldChanged(model.zoneChanged(event.zone), Zone)

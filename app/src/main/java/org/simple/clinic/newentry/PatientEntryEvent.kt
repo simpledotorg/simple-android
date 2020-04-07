@@ -67,4 +67,4 @@ data class ReminderConsentChanged(val reminderConsent: ReminderConsent) : Patien
   override val analyticsName: String = "Create Patient Entry:Reminder Consent Changed"
 }
 
-data class BangladeshNationalIdChanged(val bangladeshNationalId: Identifier) : PatientEntryEvent()
+data class AlternativeIdChanged(val identifier: Identifier) : PatientEntryEvent()

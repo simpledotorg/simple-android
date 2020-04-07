@@ -327,12 +327,12 @@ class PatientRepository @Inject constructor(
           }
         }
 
-    val bangladeshNationalIdSave = cachedOngoingEntry
+    val alternativeIdSave = cachedOngoingEntry
         .flatMapCompletable { entry ->
-          if (entry.bangladeshNationalId == null || entry.bangladeshNationalId.value.isBlank()) {
+          if (entry.alternativeId == null || entry.alternativeId.value.isBlank()) {
             Completable.complete()
           } else {
-            addIdentifierToPatient(patientUuid, entry.bangladeshNationalId, loggedInUser, facility).toCompletable()
+            addIdentifierToPatient(patientUuid, entry.alternativeId, loggedInUser, facility).toCompletable()
           }
         }
 
@@ -360,7 +360,7 @@ class PatientRepository @Inject constructor(
         .andThen(addressSave)
         .andThen(patientSave)
         .andThen(businessIdSave)
-        .andThen(bangladeshNationalIdSave)
+        .andThen(alternativeIdSave)
         .andThen(phoneNumberSave)
         .andThen(sharedPatient)
   }

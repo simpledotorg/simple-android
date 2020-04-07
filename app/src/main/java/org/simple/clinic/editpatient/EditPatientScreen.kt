@@ -251,7 +251,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun bangladeshNationalIdChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(alternativeIdInputEditText).map { BangladeshNationalIdChanged(it.toString()) }
+    return RxTextView.textChanges(alternativeIdInputEditText).map { AlternativeIdChanged(it.toString()) }
   }
 
   private fun colonyTextChanges(): Observable<EditPatientEvent> {

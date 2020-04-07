@@ -162,8 +162,22 @@ class EditPatientEffectHandlerTest {
   }
 
   @Test
-  fun `adding an id to an empty Bangladesh id should create a new Business id`() {
+  fun `adding an id to an empty alternative id should create a new Business id if country has alternative id`() {
     //given
+    val country = TestData.country(isoCountryCode = "BD")
+    val effectHandler = EditPatientEffectHandler(
+        ui = ui,
+        userClock = userClock,
+        patientRepository = patientRepository,
+        utcClock = utcClock,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        country = country,
+        dateOfBirthFormatter = dateOfBirthFormatter
+    )
+
+    val testCase = EffectHandlerTestCase(effectHandler.build())
     val identifier = bangladeshNationalId.identifier
 
     whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()

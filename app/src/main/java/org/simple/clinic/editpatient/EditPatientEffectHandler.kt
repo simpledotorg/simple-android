@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -112,7 +113,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
       Observable.merge(
           createOrUpdatePhoneNumber(sharedSavePatientEffects),
           savePatient(sharedSavePatientEffects),
-          handleBangladeshId(sharedSavePatientEffects)
+          handleAlternativeId(sharedSavePatientEffects)
       )
     }
   }
@@ -196,17 +197,28 @@ class EditPatientEffectHandler @AssistedInject constructor(
     )
   }
 
-  private fun handleBangladeshId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
+  private fun handleAlternativeId(
+      savePatientEffects: Observable<SavePatientEffect>
+  ): Observable<EditPatientEvent> {
+    val createAlternativeIdStream = Maybe.fromCallable {
+      country.alternativeIdentifierType
+    }.flatMapObservable { identifierType ->
+      createAlternativeId(savePatientEffects, identifierType)
+    }
+
     return Observable.merge(
-        createBangladeshNationalId(savePatientEffects),
-        updateBangladeshNationalId(savePatientEffects),
-        deleteBangladeshNationalId(savePatientEffects)
+        createAlternativeIdStream,
+        updateAlternativeId(savePatientEffects),
+        deleteAlternativeId(savePatientEffects)
     )
   }
 
-  private fun createBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
+  private fun createAlternativeId(
+      savePatientEffects: Observable<SavePatientEffect>,
+      alternativeIdentifierType: Identifier.IdentifierType
+  ): Observable<EditPatientEvent> {
     return savePatientEffects
-        .filter(::isBangladeshIdAdded)
+        .filter(::isAlternativeIdAdded)
         .flatMapCompletable { savePatientEffect ->
           userAndCurrentFacility()
               .flatMap { (user, facility) ->
@@ -216,24 +228,24 @@ class EditPatientEffectHandler @AssistedInject constructor(
                     patientUuid = savePatientEffect.ongoingEntry.patientUuid,
                     identifier = Identifier(
                         value = savePatientEffect.ongoingEntry.alternativeId,
-                        type = Identifier.IdentifierType.BangladeshNationalId
+                        type = alternativeIdentifierType
                     ))
               }.ignoreElement()
         }.toObservable()
   }
 
-  private fun updateBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
+  private fun updateAlternativeId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
-        .filter(::isBangladeshIdModified)
-        .map { it.savedBangladeshId?.updateIdentifierValue(it.ongoingEntry.alternativeId) }
+        .filter(::isAlternativeIdModified)
+        .map { it.saveAlternativeId?.updateIdentifierValue(it.ongoingEntry.alternativeId) }
         .flatMapCompletable { patientRepository.saveBusinessId(it) }
         .toObservable()
   }
 
-  private fun deleteBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
+  private fun deleteAlternativeId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
-        .filter(::isBangladeshIdCleared)
-        .map { it.savedBangladeshId }
+        .filter(::isAlternativeIdCleared)
+        .map { it.saveAlternativeId }
         .flatMapCompletable(patientRepository::deleteBusinessId)
         .toObservable<EditPatientEvent>()
   }
@@ -293,9 +305,9 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .firstOrError()
   }
 
-  private fun isBangladeshIdModified(it: SavePatientEffect) = it.savedBangladeshId != null && it.ongoingEntry.alternativeId.isNotBlank()
+  private fun isAlternativeIdModified(it: SavePatientEffect) = it.saveAlternativeId != null && it.ongoingEntry.alternativeId.isNotBlank()
 
-  private fun isBangladeshIdAdded(it: SavePatientEffect) = it.savedBangladeshId == null && it.ongoingEntry.alternativeId.isNotBlank()
+  private fun isAlternativeIdAdded(it: SavePatientEffect) = it.saveAlternativeId == null && it.ongoingEntry.alternativeId.isNotBlank()
 
-  private fun isBangladeshIdCleared(it: SavePatientEffect) = it.savedBangladeshId != null && it.ongoingEntry.alternativeId.isBlank()
+  private fun isAlternativeIdCleared(it: SavePatientEffect) = it.saveAlternativeId != null && it.ongoingEntry.alternativeId.isBlank()
 }

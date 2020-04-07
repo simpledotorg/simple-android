@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.ContextThemeWrapper
 import com.f2prateek.rx.preferences2.Preference
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
@@ -38,12 +37,6 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
 
     private const val EXTRA_CONTINUE_SCREEN = "extra_continue_screen"
 
-    fun intent(context: Context, currentFacilityName: String): Intent {
-      val intent = Intent(context, AlertFacilityChangeSheet::class.java)
-      intent.putExtra(CURRENT_FACILITY_NAME, currentFacilityName)
-      return intent
-    }
-
     fun intentForScreen(
         context: Context,
         currentFacilityName: String,
@@ -72,14 +65,14 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
     super.onCreate(savedInstanceState)
 
     if (isFacilitySwitchedPreference.get().not()) {
-      closeSheetWithResult()
+      closeSheetWithContinuation()
     }
 
     setContentView(R.layout.sheet_alert_facility_change)
 
     facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
     yesButton.setOnClickListener {
-      closeSheet(Activity.RESULT_OK)
+      closeSheetWithResult(Activity.RESULT_OK)
     }
 
     changeButton.setOnClickListener {
@@ -109,19 +102,22 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
     super.onActivityResult(requestCode, resultCode, data)
 
     if (requestCode == FACILITY_CHANGE) {
-      closeSheet(resultCode)
+      closeSheetWithResult(resultCode)
     }
   }
 
-  private fun closeSheet(resultCode: Int) {
-    if (resultCode == Activity.RESULT_OK) isFacilitySwitchedPreference.set(false)
-
-    val intent = Intent()
-    setResult(resultCode, intent)
-    finish()
+  private fun closeSheetWithResult(resultCode: Int) {
+    if (resultCode == Activity.RESULT_OK) {
+      isFacilitySwitchedPreference.set(false)
+      closeSheetWithContinuation()
+    } else {
+      val intent = Intent()
+      setResult(resultCode, intent)
+      finish()
+    }
   }
 
-  private fun closeSheetWithResult() {
+  private fun closeSheetWithContinuation() {
     val intent = Intent()
     intent.putExtra(EXTRA_CONTINUE_SCREEN, continueToScreen)
     setResult(Activity.RESULT_OK, intent)

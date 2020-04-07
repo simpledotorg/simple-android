@@ -1,6 +1,5 @@
 package org.simple.clinic.search.results
 
-import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -19,7 +18,6 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
-import javax.inject.Named
 
 typealias Ui = PatientSearchResultsScreen
 typealias UiChange = (Ui) -> Unit
@@ -27,8 +25,7 @@ typealias UiChange = (Ui) -> Unit
 class PatientSearchResultsController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession,
-    @Named("is_facility_switched") private val isFacilitySwitchedPreference: Preference<Boolean>
+    private val userSession: UserSession
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -74,14 +71,8 @@ class PatientSearchResultsController @Inject constructor(
   }
 
   private fun saveEntryAndGoToRegisterPatientScreen(ongoingNewPatientEntry: OngoingNewPatientEntry, currentFacility: Facility): Observable<UiChange> {
-    val nextScreenChange = if (isFacilitySwitchedPreference.get()) {
-      { ui: Ui -> ui.openAlertFacilityChangeSheet(currentFacility) }
-    } else {
-      { ui: Ui -> ui.openPatientEntryScreen() }
-    }
-
     return patientRepository
         .saveOngoingEntry(ongoingNewPatientEntry)
-        .andThen(Observable.just(nextScreenChange))
+        .andThen(Observable.just { ui: Ui -> ui.openAlertFacilityChangeSheet(currentFacility) })
   }
 }

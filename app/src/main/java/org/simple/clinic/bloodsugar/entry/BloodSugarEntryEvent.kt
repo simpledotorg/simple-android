@@ -22,7 +22,7 @@ data class MonthChanged(
 ) : BloodSugarEntryEvent()
 
 data class YearChanged(
-    val twoDigitYear: String
+    val fourDigitYear: String
 ) : BloodSugarEntryEvent()
 
 data class ScreenChanged(val type: ScreenType) : BloodSugarEntryEvent()

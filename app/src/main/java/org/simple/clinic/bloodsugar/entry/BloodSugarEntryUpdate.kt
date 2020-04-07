@@ -35,7 +35,7 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       is BloodSugarChanged -> next(model.bloodSugarChanged(event.bloodSugarReading), HideBloodSugarErrorMessage)
       is DayChanged -> onDateChanged(model.dayChanged(event.day))
       is MonthChanged -> onDateChanged(model.monthChanged(event.month))
-      is YearChanged -> onDateChanged(model.yearChanged(event.twoDigitYear))
+      is YearChanged -> onDateChanged(model.yearChanged(event.fourDigitYear))
       BackPressed -> onBackPressed(model)
       BloodSugarDateClicked -> onBloodSugarDateClicked(model)
       ShowBloodSugarEntryClicked -> showBloodSugarClicked(model)

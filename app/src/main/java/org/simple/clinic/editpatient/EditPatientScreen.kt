@@ -166,7 +166,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         DateOfBirthField::class.java to dateOfBirthEditTextContainer,
         LandlineOrMobileField::class.java to phoneNumberTextContainer,
         GenderField::class.java to genderRadioGroup,
-        AlternativeIdInputField::class.java to bangladeshNationalIdInputContainer,
+        AlternativeIdInputField::class.java to alternativeIdInputContainer,
         StreetAddressField::class.java to streetAddressLayout,
         VillageOrColonyField::class.java to colonyOrVillageInputContainer,
         ZoneField::class.java to zoneLayout,
@@ -185,7 +185,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
     val allTextInputFields: Map<Class<*>, TextInputLayout> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
         LandlineOrMobileField::class.java to phoneNumberInputLayout,
-        AlternativeIdInputField::class.java to bangladeshNationalIdInputLayout,
+        AlternativeIdInputField::class.java to alternativeIdInputLayout,
         StreetAddressField::class.java to streetAddressInputLayout,
         VillageOrColonyField::class.java to colonyOrVillageInputLayout,
         ZoneField::class.java to zoneInputLayout,
@@ -251,7 +251,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun bangladeshNationalIdChanges(): Observable<EditPatientEvent> {
-    return RxTextView.textChanges(bangladeshNationalIdEditText).map { BangladeshNationalIdChanged(it.toString()) }
+    return RxTextView.textChanges(alternativeIdInputEditText).map { BangladeshNationalIdChanged(it.toString()) }
   }
 
   private fun colonyTextChanges(): Observable<EditPatientEvent> {
@@ -541,6 +541,6 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   override fun setBangladeshNationalId(nationalId: String) {
-    bangladeshNationalIdEditText.setTextAndCursor(nationalId)
+    alternativeIdInputEditText.setTextAndCursor(nationalId)
   }
 }

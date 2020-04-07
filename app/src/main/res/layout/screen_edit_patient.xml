@@ -224,19 +224,19 @@
         android:visibility="gone" />
 
       <FrameLayout
-        android:id="@+id/bangladeshNationalIdInputContainer"
+        android:id="@+id/alternativeIdInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16">
 
         <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/bangladeshNationalIdInputLayout"
+          android:id="@+id/alternativeIdInputLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/bangladeshNationalIdEditText"
+            android:id="@+id/alternativeIdInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_bangladesh_national_id"
@@ -249,7 +249,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
-          app:clearableField="@id/bangladeshNationalIdEditText" />
+          app:clearableField="@id/alternativeIdInputEditText" />
       </FrameLayout>
 
       <FrameLayout

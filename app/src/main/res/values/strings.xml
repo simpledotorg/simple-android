@@ -167,7 +167,7 @@
   <string name="bloodpressureentry_error_diastolic_180">Diastolic cannot be more than 180</string>
   <string name="bloodpressureentry_error_systolic_empty">Enter systolic and diastolic pressures</string>
   <string name="bloodpressureentry_error_diastolic_empty">Enter systolic and diastolic pressures</string>
-  <string name="bloodpressureentry_error_date_invalid_pattern">Enter a valid date in DD/MM/YY</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">Enter a valid date in DD/MM/YYYY</string>
   <string name="bloodpressureentry_error_date_is_in_future">Date cannot be in the future</string>
   <string name="bloodpressureentry_remove_bp_title">Remove BP</string>
   <string name="bloodpressureentry_remove_bp_message">Are you sure you want to remove this blood pressure recording?</string>

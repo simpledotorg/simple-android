@@ -34,7 +34,7 @@ class BloodPressureEntryUpdate(
       is BackPressed -> onBackPressed(model)
       is DayChanged -> onDateChanged(model.dayChanged(event.day))
       is MonthChanged -> onDateChanged(model.monthChanged(event.month))
-      is YearChanged -> onDateChanged(model.yearChanged(event.twoDigitYear))
+      is YearChanged -> onDateChanged(model.yearChanged(event.fourDigitYear))
       is BloodPressureDateClicked -> onBloodPressureDateClicked(model)
       is SaveClicked -> onSaveClicked(model)
       is ShowBpClicked -> showBpClicked(model)
@@ -169,20 +169,17 @@ class BloodPressureEntryUpdate(
   }
 
   private fun getDateText(model: BloodPressureEntryModel) =
-      formatToPaddedDate(model.day, model.month, model.twoDigitYear, model.year)
+      formatToPaddedDate(model.day, model.month, model.fourDigitYear)
 
   private fun isSystolicValueComplete(systolicText: String): Boolean {
     return (systolicText.length == 3 && systolicText.matches("^[123].*$".toRegex()))
         || (systolicText.length == 2 && systolicText.matches("^[789].*$".toRegex()))
   }
 
-  private fun formatToPaddedDate(day: String, month: String, twoDigitYear: String, fourDigitYear: String): String {
+  private fun formatToPaddedDate(day: String, month: String, fourDigitYear: String): String {
     val paddedDd = day.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
     val paddedMm = month.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
-    val paddedYy = twoDigitYear.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
 
-    val firstTwoDigitsOfYear = fourDigitYear.substring(0, 2)
-    val paddedYyyy = firstTwoDigitsOfYear + paddedYy
-    return "$paddedDd/$paddedMm/$paddedYyyy"
+    return "$paddedDd/$paddedMm/$fourDigitYear"
   }
 }

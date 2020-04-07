@@ -31,7 +31,7 @@ data class DayChanged(val day: String) : BloodPressureEntryEvent()
 
 data class MonthChanged(val month: String) : BloodPressureEntryEvent()
 
-data class YearChanged(val twoDigitYear: String) : BloodPressureEntryEvent()
+data class YearChanged(val fourDigitYear: String) : BloodPressureEntryEvent()
 
 data class BloodPressureSaved(val wasDateChanged: Boolean) : BloodPressureEntryEvent() {
   override val analyticsName = when {

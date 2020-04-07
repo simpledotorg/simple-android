@@ -13,9 +13,9 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.user.UserSession
@@ -38,6 +38,7 @@ class EditPatientEffectHandlerTest {
   private val userClock = TestUserClock(date)
   private val utcClock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
   private val patientRepository = mock<PatientRepository>()
+  private val country = TestData.country()
   private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   private val patientAddress = TestData.patientAddress(uuid = UUID.fromString("85d0b5f1-af84-4a6b-938e-5166f8c27666"))
@@ -77,6 +78,7 @@ class EditPatientEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       userSession = userSession,
       facilityRepository = facilityRepository,
+      country = country,
       dateOfBirthFormatter = dateOfBirthFormatter
   )
 

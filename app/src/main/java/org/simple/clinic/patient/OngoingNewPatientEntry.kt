@@ -48,7 +48,7 @@ data class OngoingNewPatientEntry(
     val address: Address? = null,
     val phoneNumber: PhoneNumber? = null,
     val identifier: Identifier? = null,
-    val bangladeshNationalId: Identifier? = null,
+    val alternativeId: Identifier? = null,
     val reminderConsent: ReminderConsent = Granted
 ) : Parcelable {
 
@@ -103,8 +103,8 @@ data class OngoingNewPatientEntry(
   fun withConsent(reminderConsent: ReminderConsent): OngoingNewPatientEntry =
       copy(reminderConsent = reminderConsent)
 
-  fun withBangladeshNationalId(bangladeshNationalId: Identifier): OngoingNewPatientEntry =
-      copy(bangladeshNationalId = bangladeshNationalId)
+  fun withAlternativeId(identifier: Identifier): OngoingNewPatientEntry =
+      copy(alternativeId = identifier)
 
   fun withStreetAddress(streetAddress: String): OngoingNewPatientEntry =
       copy(address = addressOrBlank().copy(streetAddress = streetAddress))

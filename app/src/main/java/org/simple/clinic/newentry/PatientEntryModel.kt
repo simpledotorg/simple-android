@@ -53,8 +53,8 @@ data class PatientEntryModel(
   fun reminderConsentChanged(consent: ReminderConsent): PatientEntryModel =
       copy(patientEntry = patientEntry.withConsent(consent))
 
-  fun bangladeshNationalIdChanged(bangladeshNationalId: Identifier): PatientEntryModel =
-      copy(patientEntry = patientEntry.withBangladeshNationalId(bangladeshNationalId))
+  fun alternativeIdChanged(identifier: Identifier): PatientEntryModel =
+      copy(patientEntry = patientEntry.withAlternativeId(identifier))
 
   fun streetAddressChanged(streetAddress: String): PatientEntryModel =
       copy(patientEntry = patientEntry.withStreetAddress(streetAddress))

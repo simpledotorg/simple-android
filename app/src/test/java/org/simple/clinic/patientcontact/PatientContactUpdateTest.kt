@@ -6,25 +6,49 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.util.Just
 import java.util.UUID
 
 class PatientContactUpdateTest {
 
+  private val patientUuid = UUID.fromString("b5eccb67-6425-4d48-9c17-65e9b267f9eb")
+  private val defaultModel = PatientContactModel.create(patientUuid)
+  private val patientProfile = TestData.patientProfile(
+      patientUuid = patientUuid,
+      generatePhoneNumber = true
+  )
+  private val overdueAppointment = TestData.overdueAppointment(
+      patientUuid = patientUuid,
+      facilityUuid = UUID.fromString("c97a8b30-8094-4c93-9ad6-ecc100130943"),
+      phoneNumber = patientProfile.phoneNumbers.first(),
+      appointmentUuid = UUID.fromString("f1b11fa6-3622-4f82-b74b-dd08dd563f1a"),
+      gender = patientProfile.patient.gender,
+      age = patientProfile.patient.age,
+      dateOfBirth = patientProfile.patient.dateOfBirth
+  )
+
+  private val spec = UpdateSpec(PatientContactUpdate())
+
   @Test
   fun `when the patient profile is loaded, the ui must be updated`() {
-    val spec = UpdateSpec(PatientContactUpdate())
-    val defaultModel = PatientContactModel.create()
-    val patientProfile = TestData.patientProfile(
-        patientUuid = UUID.fromString("b5eccb67-6425-4d48-9c17-65e9b267f9eb"),
-        generatePhoneNumber = true
-    )
-
     spec
         .given(defaultModel)
         .whenEvent(PatientProfileLoaded(patientProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientProfileLoaded(patientProfile)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when the overdue appointment is loaded, the ui must be updated`() {
+    val appointment = Just(overdueAppointment)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(OverdueAppointmentLoaded(appointment))
+        .then(assertThatNext(
+            hasModel(defaultModel.overdueAppointmentLoaded(appointment))
         ))
   }
 }

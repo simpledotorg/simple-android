@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.patient.businessid.Identifier
 import java.net.URI
 
 @JsonClass(generateAdapter = true)
@@ -23,9 +24,17 @@ data class Country(
     val isdCode: String
 ) : Parcelable {
 
-    companion object {
-        const val INDIA = "IN"
-        const val BANGLADESH = "BD"
-        const val ETHIOPIA = "ET"
+  val alternativeIdentifierType: Identifier.IdentifierType?
+    get() {
+      return when (isoCountryCode) {
+        BANGLADESH -> Identifier.IdentifierType.BangladeshNationalId
+        else -> null
+      }
     }
+
+  companion object {
+    const val INDIA = "IN"
+    const val BANGLADESH = "BD"
+    const val ETHIOPIA = "ET"
+  }
 }

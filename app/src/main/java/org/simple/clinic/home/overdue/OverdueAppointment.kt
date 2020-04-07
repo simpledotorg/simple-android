@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
@@ -114,5 +113,18 @@ data class OverdueAppointment(
         scheduledBefore: LocalDate,
         scheduledAfter: LocalDate
     ): Observable<List<OverdueAppointment>>
+
+    @Query("""
+      SELECT * FROM OverdueAppointment
+      WHERE 
+        appt_patientUuid = :patientUUID
+        AND appt_scheduledDate < :scheduledDate
+        AND (appt_remindOn < :scheduledDate OR appt_remindOn IS NULL)
+      GROUP BY appt_patientUuid HAVING MAX(appt_scheduledDate)
+    """)
+    fun latestForPatient(
+        patientUUID: UUID,
+        scheduledDate: LocalDate
+    ): OverdueAppointment?
   }
 }

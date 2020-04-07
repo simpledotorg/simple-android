@@ -12,6 +12,7 @@ import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -212,5 +213,12 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao
         .count(SyncStatus.PENDING)
         .toObservable()
+  }
+
+  fun latestOverdueAppointmentForPatient(
+      patientUuid: UUID,
+      date: LocalDate
+  ): Optional<OverdueAppointment> {
+    return overdueDao.latestForPatient(patientUuid, date).toOptional()
   }
 }

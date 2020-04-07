@@ -138,7 +138,7 @@ class PatientSummaryScreen(
         patientSummaryProfile.patient,
         patientSummaryProfile.address,
         patientSummaryProfile.phoneNumber,
-        patientSummaryProfile.bangladeshNationalId
+        patientSummaryProfile.alternativeId
     )
   }
 
@@ -204,7 +204,7 @@ class PatientSummaryScreen(
     displayPhoneNumber(patientSummaryProfile.phoneNumber)
     displayPatientAddress(patientSummaryProfile.address)
     displayBpPassport(patientSummaryProfile.bpPassport)
-    displayBangladeshNationalId(patientSummaryProfile.bangladeshNationalId, patientSummaryProfile.bpPassport != null)
+    displayAlternativeId(patientSummaryProfile.alternativeId, patientSummaryProfile.bpPassport != null)
   }
 
   private fun displayPatientAddress(address: PatientAddress) {
@@ -253,7 +253,7 @@ class PatientSummaryScreen(
     }
   }
 
-  private fun displayBangladeshNationalId(bangladeshNationalId: BusinessId?, isBpPassportVisible: Boolean) {
+  private fun displayAlternativeId(bangladeshNationalId: BusinessId?, isBpPassportVisible: Boolean) {
     bangladeshNationalIdTextView.visibleOrGone(bangladeshNationalId != null)
 
     bangladeshNationalIdTextView.text = when (bangladeshNationalId) {

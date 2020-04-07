@@ -105,7 +105,7 @@ class PatientSummaryEffectHandlerTest {
             address = patientAddress,
             phoneNumber = patientPhoneNumber,
             bpPassport = bpPassport,
-            bangladeshNationalId = bangladeshNationId
+            alternativeId = bangladeshNationId
         )
     ))
   }
@@ -122,7 +122,7 @@ class PatientSummaryEffectHandlerTest {
         phoneNumber = null,
         address = patientProfile.address,
         bpPassport = null,
-        bangladeshNationalId = null
+        alternativeId = null
     )
 
     //when

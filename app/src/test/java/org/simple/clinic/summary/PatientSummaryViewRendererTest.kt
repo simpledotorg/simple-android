@@ -68,7 +68,7 @@ class PatientSummaryViewRendererTest {
         address = patientAddress,
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
-        bangladeshNationalId = bangladeshNationalId
+        alternativeId = bangladeshNationalId
     )
 
 

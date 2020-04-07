@@ -42,9 +42,12 @@ import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.toUtcInstant
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -83,6 +86,9 @@ class AppointmentRepositoryAndroidTest {
   lateinit var clock: TestUtcClock
 
   @Inject
+  lateinit var userClock: TestUserClock
+
+  @Inject
   lateinit var user: User
 
   @Inject
@@ -100,6 +106,7 @@ class AppointmentRepositoryAndroidTest {
   fun setup() {
     TestClinicApp.appComponent().inject(this)
     clock.setDate(LocalDate.parse("2018-01-01"))
+    userClock.setDate(LocalDate.parse("2018-01-01"))
   }
 
   @After
@@ -2167,6 +2174,119 @@ class AppointmentRepositoryAndroidTest {
             diagnosedWithHypertension = Unanswered),
         MedicalHistoryResult(name = "No medical history", diagnosedWithDiabetes = null, diagnosedWithHypertension = null)
     ))
+  }
+
+  @Suppress("LocalVariableName")
+  @Test
+  fun fetching_the_latest_overdue_appointment_for_a_patient_should_get_the_latest_scheduled_appointment_which_is_past_the_scheduled_date() {
+    // given
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientUuid,
+        generatePhoneNumber = true
+    )
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val today = LocalDate.now(clock)
+    val aWeekInThePast = today.minusWeeks(1)
+    val aWeekInFuture = today.plusWeeks(1)
+    val twoWeeksInFuture = today.plusWeeks(2)
+
+    val bp_recorded_a_week_ago = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("b916ca18-3e60-4e3c-a1b9-46504ddf0662"),
+        recordedAt = aWeekInThePast.toUtcInstant(userClock),
+        patientUuid = patientUuid,
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid
+    )
+
+    val appointment_scheduled_for_today = TestData.appointment(
+        uuid = UUID.fromString("d7c7fdca-74e2-4248-93ea-ffb57c81c995"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid,
+        status = Scheduled,
+        scheduledDate = today
+    )
+    val appointment_scheduled_a_week_in_the_future = TestData.appointment(
+        uuid = UUID.fromString("81ba3bfc-2579-43fe-9af8-7de79a75d37d"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid,
+        status = Scheduled,
+        scheduledDate = aWeekInFuture
+    )
+    val visited_appointment_two_weeks_in_the_future = TestData.appointment(
+        uuid = UUID.fromString("96cc19f4-44c3-45f4-a60a-50c55ea78445"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid,
+        status = Visited,
+        scheduledDate = twoWeeksInFuture
+    )
+
+    bpRepository.save(listOf(
+        bp_recorded_a_week_ago
+    )).blockingAwait()
+
+    appointmentRepository.save(listOf(
+        appointment_scheduled_for_today,
+        appointment_scheduled_a_week_in_the_future,
+        visited_appointment_two_weeks_in_the_future
+    )).blockingAwait()
+
+    // then
+    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1)) as Just
+    assertThat(latest_appointment_today.value.appointment).isEqualTo(appointment_scheduled_for_today)
+
+    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1)) as Just
+    assertThat(latest_appointment_a_week_later.value.appointment).isEqualTo(appointment_scheduled_a_week_in_the_future)
+
+    val latest_appointment_two_weeks_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, twoWeeksInFuture.plusDays(1)) as Just
+    assertThat(latest_appointment_two_weeks_later.value.appointment).isEqualTo(appointment_scheduled_a_week_in_the_future)
+  }
+
+  @Suppress("LocalVariableName")
+  @Test
+  fun fetching_the_latest_overdue_appointment_for_a_patient_should_account_for_the_reminder_date() {
+    // given
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientUuid,
+        generatePhoneNumber = true
+    )
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val today = LocalDate.now(clock)
+    val aWeekInThePast = today.minusWeeks(1)
+    val aWeekInFuture = today.plusWeeks(1)
+
+    val bp_recorded_a_week_ago = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("b916ca18-3e60-4e3c-a1b9-46504ddf0662"),
+        recordedAt = aWeekInThePast.toUtcInstant(userClock),
+        patientUuid = patientUuid,
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid
+    )
+
+    val appointment_scheduled_for_today_with_reminder_a_week_in_the_future = TestData.appointment(
+        uuid = UUID.fromString("d7c7fdca-74e2-4248-93ea-ffb57c81c995"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid,
+        status = Scheduled,
+        scheduledDate = today,
+        remindOn = aWeekInFuture
+    )
+
+    bpRepository.save(listOf(
+        bp_recorded_a_week_ago
+    )).blockingAwait()
+
+    appointmentRepository.save(listOf(
+        appointment_scheduled_for_today_with_reminder_a_week_in_the_future
+    )).blockingAwait()
+
+    // then
+    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
+    assertThat(latest_appointment_today).isEqualTo(None)
+
+    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1)) as Just
+    assertThat(latest_appointment_a_week_later.value.appointment).isEqualTo(appointment_scheduled_for_today_with_reminder_a_week_in_the_future)
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {

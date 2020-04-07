@@ -65,8 +65,8 @@ data class EditPatientModel(
   fun updateDateOfBirth(dateOfBirth: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateDateOfBirth(dateOfBirth))
 
-  fun updateBangladeshNationalId(bangladeshNationalId: String): EditPatientModel =
-      copy(ongoingEntry = ongoingEntry.updateBangladeshNationalId(bangladeshNationalId))
+  fun updateAlternativeId(alternativeId: String): EditPatientModel =
+      copy(ongoingEntry = ongoingEntry.updateAlternativeId(alternativeId))
 
   fun updateZone(zone: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateZone(zone))

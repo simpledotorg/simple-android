@@ -213,7 +213,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
                     assigningFacility = facility,
                     patientUuid = savePatientEffect.ongoingEntry.patientUuid,
                     identifier = Identifier(
-                        value = savePatientEffect.ongoingEntry.bangladeshNationalId,
+                        value = savePatientEffect.ongoingEntry.alternativeId,
                         type = Identifier.IdentifierType.BangladeshNationalId
                     ))
               }.ignoreElement()
@@ -223,7 +223,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun updateBangladeshNationalId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
         .filter(::isBangladeshIdModified)
-        .map { it.savedBangladeshId?.updateIdentifierValue(it.ongoingEntry.bangladeshNationalId) }
+        .map { it.savedBangladeshId?.updateIdentifierValue(it.ongoingEntry.alternativeId) }
         .flatMapCompletable { patientRepository.saveBusinessId(it) }
         .toObservable()
   }
@@ -291,9 +291,9 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .firstOrError()
   }
 
-  private fun isBangladeshIdModified(it: SavePatientEffect) = it.savedBangladeshId != null && it.ongoingEntry.bangladeshNationalId.isNotBlank()
+  private fun isBangladeshIdModified(it: SavePatientEffect) = it.savedBangladeshId != null && it.ongoingEntry.alternativeId.isNotBlank()
 
-  private fun isBangladeshIdAdded(it: SavePatientEffect) = it.savedBangladeshId == null && it.ongoingEntry.bangladeshNationalId.isNotBlank()
+  private fun isBangladeshIdAdded(it: SavePatientEffect) = it.savedBangladeshId == null && it.ongoingEntry.alternativeId.isNotBlank()
 
-  private fun isBangladeshIdCleared(it: SavePatientEffect) = it.savedBangladeshId != null && it.ongoingEntry.bangladeshNationalId.isBlank()
+  private fun isBangladeshIdCleared(it: SavePatientEffect) = it.savedBangladeshId != null && it.ongoingEntry.alternativeId.isBlank()
 }

@@ -9,6 +9,16 @@ class PatientContactInit : Init<PatientContactModel, PatientContactEffect> {
   override fun init(
       model: PatientContactModel
   ): First<PatientContactModel, PatientContactEffect> {
-    return first(model)
+    val effects = mutableSetOf<PatientContactEffect>()
+
+    if (!model.hasLoadedPatientProfile) {
+      effects.add(LoadPatientProfile(model.patientUuid))
+    }
+
+    if (!model.hasLoadedAppointment) {
+      effects.add(LoadLatestOverdueAppointment(model.patientUuid))
+    }
+
+    return first(model, effects)
   }
 }

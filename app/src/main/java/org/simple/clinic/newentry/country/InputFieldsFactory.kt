@@ -71,6 +71,7 @@ class InputFieldsFactory(
         LandlineOrMobileField(R.string.patiententry_phone_number),
         StreetAddressField(R.string.patiententry_street_house_road_number),
         GenderField(labelResId = 0, allowedGenders = setOf(Male, Female)),
+        AlternativeIdInputField(R.string.patiententry_ethiopia_national_id),
         VillageOrColonyField(R.string.patiententry_kebele),
         DistrictField(R.string.patiententry_woreda),
         StateField(R.string.patiententry_region)

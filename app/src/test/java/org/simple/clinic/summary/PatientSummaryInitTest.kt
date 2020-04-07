@@ -2,7 +2,6 @@ package org.simple.clinic.summary
 
 import com.spotify.mobius.test.FirstMatchers.hasEffects
 import com.spotify.mobius.test.FirstMatchers.hasModel
-import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
@@ -42,7 +41,7 @@ class PatientSummaryInitTest {
         address = TestData.patientAddress(uuid = addressUuid),
         phoneNumber = null,
         bpPassport = null,
-        bangladeshNationalId = null
+        alternativeId = null
     )
     val facility = TestData.facility(uuid = UUID.fromString("fc5b49de-0e07-4d33-8b77-6611b47cb403"))
 

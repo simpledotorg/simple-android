@@ -35,7 +35,7 @@ class PatientSummaryUpdateTest {
       address = patientAddress,
       phoneNumber = phoneNumber,
       bpPassport = bpPassport,
-      bangladeshNationalId = bangladeshNationalId
+      alternativeId = bangladeshNationalId
   )
 
   private val facilityWithDiabetesManagementEnabled = TestData.facility(

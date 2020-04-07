@@ -7,6 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.facility.Facility
@@ -41,6 +42,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
+    private val country: Country,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) {
 

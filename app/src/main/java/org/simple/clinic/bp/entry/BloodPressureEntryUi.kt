@@ -28,7 +28,7 @@ interface BloodPressureEntryUi {
   fun showInvalidDateError()
   fun showDateIsInFutureError()
   fun hideDateErrorMessage()
-  fun setDateOnInputFields(dayOfMonth: String, month: String, twoDigitYear: String)
+  fun setDateOnInputFields(dayOfMonth: String, month: String, fourDigitYear: String)
   fun showDateOnDateButton(date: LocalDate)
   fun dismiss()
 }

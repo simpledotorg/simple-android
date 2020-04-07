@@ -15,7 +15,7 @@ data class BloodPressureEntryModel(
     val activeScreen: ScreenType = BP_ENTRY,
     val day: String = "",
     val month: String = "",
-    val twoDigitYear: String = "",
+    val fourDigitYear: String = "",
     val prefilledDate: LocalDate? = null
 ) : Parcelable {
   companion object {
@@ -48,8 +48,8 @@ data class BloodPressureEntryModel(
   fun monthChanged(month: String): BloodPressureEntryModel =
       copy(month = month)
 
-  fun yearChanged(twoDigitYear: String): BloodPressureEntryModel =
-      copy(twoDigitYear = twoDigitYear)
+  fun yearChanged(fourDigitYear: String): BloodPressureEntryModel =
+      copy(fourDigitYear = fourDigitYear)
 
   fun datePrefilled(prefilledDate: LocalDate): BloodPressureEntryModel =
       copy(prefilledDate = prefilledDate)

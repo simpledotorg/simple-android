@@ -119,12 +119,9 @@ class BloodPressureEntryEffectHandler private constructor(
     ui.setDateOnInputFields(
         dateToSet.dayOfMonth.toString(),
         dateToSet.monthValue.toString(),
-        getYear(dateToSet)
+        dateToSet.year.toString()
     )
   }
-
-  private fun getYear(date: LocalDate): String =
-      date.year.toString().substring(startIndex = 2, endIndex = 4)
 
   private fun fetchBloodPressureMeasurement(
       scheduler: Scheduler

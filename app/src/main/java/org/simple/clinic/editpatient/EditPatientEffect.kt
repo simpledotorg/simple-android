@@ -11,7 +11,7 @@ data class PrefillFormEffect(
     val patient: Patient,
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?,
-    val bangladeshNationalId: BusinessId?
+    val alternativeId: BusinessId?
 ) : EditPatientEffect()
 
 data class HideValidationErrorsEffect(
@@ -35,5 +35,5 @@ data class SavePatientEffect(
     val savedPatient: Patient,
     val savedAddress: PatientAddress,
     val savedPhoneNumber: PatientPhoneNumber?,
-    val savedBangladeshId: BusinessId?
+    val saveAlternativeId: BusinessId?
 ) : EditPatientEffect()

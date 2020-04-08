@@ -128,3 +128,12 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
     startActivityForResult(FacilityChangeActivity.intent(this), FACILITY_CHANGE)
   }
 }
+
+sealed class Continuation : Parcelable {
+
+  @Parcelize
+  data class ContinueToScreen(val screenKey: FullScreenKey) : Continuation()
+
+  @Parcelize
+  data class ContinueToActivity(val intent: Intent) : Continuation()
+}

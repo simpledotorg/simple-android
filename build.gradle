@@ -74,6 +74,7 @@ buildscript {
       cameraView          : '1.0.0-alpha09',
       cameraLifecycle     : '1.0.0-alpha09',
       zxing               : '3.3.3',
+      paging              : '2.1.2',
   ]
 
   repositories {

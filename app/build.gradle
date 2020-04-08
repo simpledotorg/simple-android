@@ -228,7 +228,7 @@ dependencies {
   androidTestImplementation "com.google.truth:truth:$versions.truth"
   androidTestImplementation "com.github.blocoio:faker:$versions.faker"
   androidTestImplementation "androidx.room:room-testing:$versions.room"
-  androidTestImplementation ("androidx.arch.core:core-testing:$versions.coreTesting") {
+  androidTestImplementation("androidx.arch.core:core-testing:$versions.coreTesting") {
     // This dependency transitively pulls in a newer version of Mockito than Mockito-Kotlin does.
     // This results in the import statements in the unit tests breaking for mockito methods because
     // the IDE uses the version of Mockito that is present in the classpath from the androidTest
@@ -259,6 +259,9 @@ dependencies {
 
   implementation "com.google.zxing:core:$versions.zxing"
 
+  implementation "androidx.paging:paging-runtime-ktx:$versions.paging"
+  implementation "androidx.paging:paging-rxjava2-ktx:$versions.paging"
+
   implementation "com.google.dagger:dagger:$versions.dagger"
   kapt "com.google.dagger:dagger-compiler:$versions.dagger"
   implementation("com.github.JakeWharton:kotterknife:$versions.kotterKnife") {
@@ -283,7 +286,7 @@ dependencies {
   implementation "com.f2prateek.rx.preferences2:rx-preferences:$versions.rxPreference"
   implementation "com.github.qoqa:Traceur:$versions.traceur"
   implementation "ru.egslava:MaskedEditText:$versions.maskedEditText"
-  implementation ("io.sentry:sentry-android:$versions.sentry") {
+  implementation("io.sentry:sentry-android:$versions.sentry") {
     exclude group: "com.fasterxml.jackson.core", module: "jackson-core"
   }
   implementation "com.xwray:groupie:$versions.groupie"
@@ -325,15 +328,15 @@ dependencies {
   debugImplementation "com.facebook.flipper:flipper-network-plugin:$versions.flipper"
   debugImplementation "com.facebook.soloader:soloader:$versions.soloader"
 
-  testRuntimeOnly ("org.ow2.asm:asm:$versions.asm") {
+  testRuntimeOnly("org.ow2.asm:asm:$versions.asm") {
     because "not mandatory, but Truth recommends adding this dependency for better error reporting"
   }
-  androidTestRuntimeOnly ("org.ow2.asm:asm:$versions.asm") {
+  androidTestRuntimeOnly("org.ow2.asm:asm:$versions.asm") {
     because "not mandatory, but Truth recommends adding this dependency for better error reporting"
   }
 
   testImplementation "com.vinaysshenoy:quarantine-junit4:$versions.quarantine"
-  androidTestImplementation ("com.vinaysshenoy:quarantine-junit4:$versions.quarantine") {
+  androidTestImplementation("com.vinaysshenoy:quarantine-junit4:$versions.quarantine") {
     exclude group: "com.fasterxml.jackson.core", module: "jackson-core"
   }
   runtimeOnly "com.fasterxml.jackson.core:jackson-core:$versions.jackson"

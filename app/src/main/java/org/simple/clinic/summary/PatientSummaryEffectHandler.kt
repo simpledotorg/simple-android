@@ -62,7 +62,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(ReportViewedPatientToAnalytics::class.java, reportViewedPatientToAnalytics())
         .addConsumer(
             ShowScheduleAppointmentSheet::class.java,
-            { uiActions.showScheduleAppointmentSheet(it.patientUuid, it.sheetOpenedFrom) },
+            { uiActions.showScheduleAppointmentSheet(it.patientUuid, it.sheetOpenedFrom, it.currentFacility) },
             schedulersProvider.ui()
         )
         .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))

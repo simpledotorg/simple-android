@@ -61,7 +61,7 @@ class BloodSugarSummaryViewEffectHandlerTest {
 
     //then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).showBloodSugarTypeSelector()
+    verify(uiActions).showBloodSugarTypeSelector(currentFacility)
     verifyNoMoreInteractions(uiActions)
   }
 

@@ -26,6 +26,9 @@ import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenKey
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.facility.alertchange.Continuation
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
@@ -143,6 +146,7 @@ class BloodSugarSummaryView(
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
     openEntrySheetAfterTypeIsSelected(screenDestroys)
+    alertFacilityChangeSheetClosed(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
@@ -181,7 +185,13 @@ class BloodSugarSummaryView(
   }
 
   override fun showBloodSugarTypeSelector(currentFacility: Facility) {
-    activity.startActivityForResult(BloodSugarTypePickerSheet.intent(context), TYPE_PICKER_SHEET)
+    val intent = BloodSugarTypePickerSheet.intent(context)
+    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intentForActivity(
+        context,
+        currentFacility.name,
+        ContinueToActivity(intent, TYPE_PICKER_SHEET)
+    )
+    activity.startActivityForResult(alertFacilityChangeIntent, ALERT_FACILITY_CHANGE_SHEET)
   }
 
   override fun showSeeAllButton() {
@@ -210,6 +220,17 @@ class BloodSugarSummaryView(
         .map { it.data!! }
         .subscribe(::showBloodSugarEntrySheet)
   }
+
+  @SuppressLint("CheckResult")
+  private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == ALERT_FACILITY_CHANGE_SHEET && it.succeeded() }
+        .map { AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(it.data!!) }
+        .takeUntil(onDestroys)
+        .subscribe { activity.startActivityForResult(it.intent, it.requestCode) }
+  }
+
 
   private fun showBloodSugarEntrySheet(intent: Intent) {
     val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
@@ -277,5 +298,9 @@ class BloodSugarSummaryView(
 
     val durationSinceBloodSugarCreated = Duration.between(createdAt, now)
     return durationSinceBloodSugarCreated <= bloodSugarSummaryConfig.bloodSugarEditableDuration
+  }
+
+  companion object {
+    private const val ALERT_FACILITY_CHANGE_SHEET = 302
   }
 }

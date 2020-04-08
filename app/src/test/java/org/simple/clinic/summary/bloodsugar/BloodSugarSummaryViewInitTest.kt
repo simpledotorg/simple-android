@@ -18,7 +18,11 @@ class BloodSugarSummaryViewInitTest {
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(FetchBloodSugarSummary(defaultModel.patientUuid), FetchBloodSugarCount(defaultModel.patientUuid))
+            hasEffects(
+                FetchBloodSugarSummary(defaultModel.patientUuid),
+                FetchBloodSugarCount(defaultModel.patientUuid),
+                FetchCurrentFacility
+            )
         ))
   }
 }

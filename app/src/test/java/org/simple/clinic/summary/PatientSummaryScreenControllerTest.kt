@@ -256,6 +256,7 @@ class PatientSummaryScreenControllerTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = mock(),
         medicalHistoryRepository = medicalHistoryRepository,
+        country = TestData.country(),
         uiActions = uiActions
     )
 

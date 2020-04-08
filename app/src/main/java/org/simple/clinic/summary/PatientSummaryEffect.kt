@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -10,7 +11,10 @@ data class LoadPatientSummaryProfile(val patientUuid: UUID) : PatientSummaryEffe
 
 object LoadCurrentFacility : PatientSummaryEffect()
 
-data class HandleEditClick(val patientSummaryProfile: PatientSummaryProfile) : PatientSummaryEffect()
+data class HandleEditClick(
+    val patientSummaryProfile: PatientSummaryProfile,
+    val currentFacility: Facility
+) : PatientSummaryEffect()
 
 object HandleLinkIdCancelled: PatientSummaryEffect()
 

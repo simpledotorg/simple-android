@@ -1,11 +1,15 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
 interface PatientSummaryUiActions {
   fun showScheduleAppointmentSheet(patientUuid: UUID, sheetOpenedFrom: AppointmentSheetOpenedFrom)
-  fun showEditPatientScreen(patientSummaryProfile: PatientSummaryProfile)
+  fun showEditPatientScreen(
+      patientSummaryProfile: PatientSummaryProfile,
+      currentFacility: Facility
+  )
   fun goToPreviousScreen()
   fun goToHomeScreen()
   fun showUpdatePhoneDialog(patientUuid: UUID)

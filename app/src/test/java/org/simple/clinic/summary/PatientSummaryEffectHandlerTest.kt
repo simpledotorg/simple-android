@@ -141,13 +141,14 @@ class PatientSummaryEffectHandlerTest {
         bpPassport = null,
         alternativeId = null
     )
+    val facility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
 
     //when
-    testCase.dispatch(HandleEditClick(patientSummaryProfile))
+    testCase.dispatch(HandleEditClick(patientSummaryProfile, facility))
 
     //then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).showEditPatientScreen(patientSummaryProfile)
+    verify(uiActions).showEditPatientScreen(patientSummaryProfile, facility)
     verifyNoMoreInteractions(uiActions)
   }
 

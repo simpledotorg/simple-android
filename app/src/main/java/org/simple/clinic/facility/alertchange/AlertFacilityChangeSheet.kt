@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.os.Parcelable
 import com.f2prateek.rx.preferences2.Preference
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -33,23 +36,34 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
   companion object {
     const val FACILITY_CHANGE = 101
     private const val CURRENT_FACILITY_NAME = "current_facility"
-    private const val CONTINUE_TO_SCREEN = "continue_to_screen"
+    private const val CONTINUE_TO = "continue_to"
 
-    private const val EXTRA_CONTINUE_SCREEN = "extra_continue_screen"
+    private const val EXTRA_CONTINUE_TO = "extra_continue_to"
 
     fun intentForScreen(
         context: Context,
         currentFacilityName: String,
-        continueToScreen: FullScreenKey
+        continueToScreen: ContinueToScreen
     ): Intent {
       val intent = Intent(context, AlertFacilityChangeSheet::class.java)
       intent.putExtra(CURRENT_FACILITY_NAME, currentFacilityName)
-      intent.putExtra(CONTINUE_TO_SCREEN, continueToScreen)
+      intent.putExtra(CONTINUE_TO, continueToScreen)
+      return intent
+    }
+
+    fun intentForActivity(
+        context: Context,
+        currentFacilityName: String,
+        continueToActivity: ContinueToActivity
+    ): Intent {
+      val intent = Intent(context, AlertFacilityChangeSheet::class.java)
+      intent.putExtra(CURRENT_FACILITY_NAME, currentFacilityName)
+      intent.putExtra(CONTINUE_TO, continueToActivity)
       return intent
     }
 
     fun <T : Parcelable> readContinuationExtra(intent: Intent): T {
-      return intent.getParcelableExtra(EXTRA_CONTINUE_SCREEN) as T
+      return intent.getParcelableExtra(EXTRA_CONTINUE_TO) as T
     }
   }
 
@@ -57,8 +71,8 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
     intent.getStringExtra(CURRENT_FACILITY_NAME)!!
   }
 
-  private val continueToScreen by unsafeLazy {
-    intent.getParcelableExtra(CONTINUE_TO_SCREEN) as FullScreenKey
+  private val continuation by unsafeLazy {
+    intent.getParcelableExtra(CONTINUE_TO) as Continuation
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +133,7 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
 
   private fun closeSheetWithContinuation() {
     val intent = Intent()
-    intent.putExtra(EXTRA_CONTINUE_SCREEN, continueToScreen)
+    intent.putExtra(EXTRA_CONTINUE_TO, continuation)
     setResult(Activity.RESULT_OK, intent)
     finish()
   }

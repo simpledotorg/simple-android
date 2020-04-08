@@ -14,6 +14,8 @@ import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.facility.alertchange.Continuation
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -82,7 +84,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
         .filter { it.requestCode == ALERT_FACILITY_CHANGE && it.succeeded() }
-        .map { AlertFacilityChangeSheet.readContinuationExtra<FullScreenKey>(it.data!!) }
+        .map { AlertFacilityChangeSheet.readContinuationExtra<ContinueToScreen>(it.data!!).screenKey }
         .takeUntil(screenDestroys)
         .subscribe(screenRouter::push)
   }
@@ -135,7 +137,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   fun openPatientEntryScreen(facility: Facility) {
     activity.startActivityForResult(
-        AlertFacilityChangeSheet.intentForScreen(context, facility.name, PatientEntryScreenKey()),
+        AlertFacilityChangeSheet.intentForScreen(context, facility.name, ContinueToScreen(PatientEntryScreenKey())),
         ALERT_FACILITY_CHANGE
     )
   }

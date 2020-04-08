@@ -99,4 +99,19 @@ class BloodSugarSummaryViewUpdateTest {
         ))
   }
 
+  @Test
+  fun `when current facility is fetched then update the current facility`() {
+    val currentFacility = TestData.facility(uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"))
+
+    spec
+        .given(defaultModel)
+        .whenEvent(CurrentFacilityFetched(currentFacility))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.currentFacilityFetched(currentFacility)),
+                hasNoEffects()
+            )
+        )
+  }
+
 }

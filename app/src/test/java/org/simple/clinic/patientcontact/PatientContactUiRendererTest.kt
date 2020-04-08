@@ -3,7 +3,6 @@ package org.simple.clinic.patientcontact
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.Age
@@ -23,15 +22,6 @@ class PatientContactUiRendererTest {
   private val ui = mock<PatientContactUi>()
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val uiRenderer = PatientContactUiRenderer(ui, clock)
-
-  @Test
-  fun `when the model is not initialized, do nothing`() {
-    // when
-    uiRenderer.render(defaultModel())
-
-    // then
-    verifyZeroInteractions(ui)
-  }
 
   @Test
   fun `when the patient details are loaded with date of birth, render the patient details`() {
@@ -54,6 +44,8 @@ class PatientContactUiRendererTest {
     uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
 
     // then
+    verify(ui).hideSecureCallUi()
+
     val expectedAge = 48 // difference between clock date and DOB
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
     verifyNoMoreInteractions(ui)
@@ -80,6 +72,8 @@ class PatientContactUiRendererTest {
     uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
 
     // then
+    verify(ui).hideSecureCallUi()
+
     val expectedAge = 48 // difference between clock date and Age
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
     verifyNoMoreInteractions(ui)
@@ -97,6 +91,8 @@ class PatientContactUiRendererTest {
     uiRenderer.render(defaultModel().overdueAppointmentLoaded(Just(overdueAppointment)))
 
     // then
+    verify(ui).hideSecureCallUi()
+
     verify(ui).showCallResultSection()
     verifyNoMoreInteractions(ui)
   }
@@ -107,7 +103,31 @@ class PatientContactUiRendererTest {
     uiRenderer.render(defaultModel().overdueAppointmentLoaded(None))
 
     // then
+    verify(ui).hideSecureCallUi()
+
     verify(ui).hideCallResultSection()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `if the secure call feature is enabled, show the secure call ui`() {
+    // when
+    val model = defaultModel(phoneMaskFeatureEnabled = true)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showSecureCallUi()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `if the secure call feature is disabled, hide the secure call ui`() {
+    // when
+    val model = defaultModel(phoneMaskFeatureEnabled = false)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSecureCallUi()
     verifyNoMoreInteractions(ui)
   }
 

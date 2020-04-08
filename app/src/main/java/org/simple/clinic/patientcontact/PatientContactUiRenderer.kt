@@ -18,8 +18,14 @@ class PatientContactUiRenderer(
       renderPatientProfile(model.patientProfile!!)
     }
 
-    if(model.hasLoadedAppointment) {
+    if (model.hasLoadedAppointment) {
       toggleCallResultSection(model.appointment!!)
+    }
+
+    if (model.secureCallingFeatureEnabled) {
+      ui.showSecureCallUi()
+    } else {
+      ui.hideSecureCallUi()
     }
   }
 

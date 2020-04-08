@@ -83,12 +83,14 @@ class BloodPressureSummaryViewUpdateTest {
 
   @Test
   fun `when add new blood pressure is clicked, then open blood pressure entry sheet`() {
+    val facility = TestData.facility(uuid = UUID.fromString("924d5e18-039e-4e83-9f36-5a0974d8a299"))
+
     updateSpec
-        .given(defaultModel)
+        .given(defaultModel.currentFacilityLoaded(facility))
         .whenEvent(AddNewBloodPressureClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenBloodPressureEntrySheet(patientUuid) as BloodPressureSummaryViewEffect)
+            hasEffects(OpenBloodPressureEntrySheet(patientUuid, facility) as BloodPressureSummaryViewEffect)
         ))
   }
 

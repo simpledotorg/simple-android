@@ -20,7 +20,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryBackClicked -> dispatch(LoadDataForBackClick(model.patientUuid, event.screenCreatedTimestamp))
       is PatientSummaryDoneClicked -> dispatch(LoadDataForDoneClick(model.patientUuid))
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
-      PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!))
+      PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!, model.currentFacility!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
       is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())

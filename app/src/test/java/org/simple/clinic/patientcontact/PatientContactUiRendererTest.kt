@@ -30,7 +30,8 @@ class PatientContactUiRendererTest {
     uiRenderer.render(defaultModel())
 
     // then
-    verifyZeroInteractions(ui)
+    verifyStandardInteractions()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -54,6 +55,8 @@ class PatientContactUiRendererTest {
     uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
 
     // then
+    verifyStandardInteractions()
+
     val expectedAge = 48 // difference between clock date and DOB
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
     verifyNoMoreInteractions(ui)
@@ -80,6 +83,8 @@ class PatientContactUiRendererTest {
     uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
 
     // then
+    verifyStandardInteractions()
+
     val expectedAge = 48 // difference between clock date and Age
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
     verifyNoMoreInteractions(ui)
@@ -97,6 +102,8 @@ class PatientContactUiRendererTest {
     uiRenderer.render(defaultModel().overdueAppointmentLoaded(Just(overdueAppointment)))
 
     // then
+    verifyStandardInteractions()
+
     verify(ui).showCallResultSection()
     verifyNoMoreInteractions(ui)
   }
@@ -107,8 +114,39 @@ class PatientContactUiRendererTest {
     uiRenderer.render(defaultModel().overdueAppointmentLoaded(None))
 
     // then
+    verifyStandardInteractions()
+
     verify(ui).hideCallResultSection()
     verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `if the secure call feature is enabled, show the secure call button and message`() {
+    // when
+    val model = defaultModel(phoneMaskFeatureEnabled = true)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showSecureCallButton()
+    verify(ui).showSecureCallMessage()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `if the secure call feature is disabled, hide the secure call button and message`() {
+    // when
+    val model = defaultModel(phoneMaskFeatureEnabled = false)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSecureCallButton()
+    verify(ui).hideSecureCallMessage()
+    verifyNoMoreInteractions(ui)
+  }
+
+  private fun verifyStandardInteractions() {
+    verify(ui).hideSecureCallButton()
+    verify(ui).hideSecureCallMessage()
   }
 
   private fun defaultModel(

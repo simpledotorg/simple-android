@@ -53,8 +53,11 @@ class BloodSugarSummaryViewEffectHandlerTest {
 
   @Test
   fun `when open blood sugar type selector effect is received then type selector sheet should be opened`() {
-    //when
-    testCase.dispatch(OpenBloodSugarTypeSelector)
+    //given
+    val currentFacility = TestData.facility(uuid = UUID.fromString("9a82720a-0445-43dd-b557-3d4b079b66ef"))
+
+    //whens
+    testCase.dispatch(OpenBloodSugarTypeSelector(currentFacility))
 
     //then
     testCase.assertNoOutgoingEvents()

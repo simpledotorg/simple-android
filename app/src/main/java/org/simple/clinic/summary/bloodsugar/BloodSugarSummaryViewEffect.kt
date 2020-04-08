@@ -1,11 +1,12 @@
 package org.simple.clinic.summary.bloodsugar
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.facility.Facility
 import java.util.UUID
 
 sealed class BloodSugarSummaryViewEffect
 
-object OpenBloodSugarTypeSelector : BloodSugarSummaryViewEffect()
+data class OpenBloodSugarTypeSelector(val currentFacility: Facility) : BloodSugarSummaryViewEffect()
 
 data class FetchBloodSugarSummary(val patientUuid: UUID) : BloodSugarSummaryViewEffect()
 

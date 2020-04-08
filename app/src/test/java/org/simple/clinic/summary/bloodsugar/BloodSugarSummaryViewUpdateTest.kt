@@ -31,12 +31,14 @@ class BloodSugarSummaryViewUpdateTest {
 
   @Test
   fun `when add new blood sugar is clicked then blood sugar type selector should open`() {
+    val currentFacility = TestData.facility(uuid = UUID.fromString("9a82720a-0445-43dd-b557-3d4b079b66ef"))
+
     spec
-        .given(defaultModel)
+        .given(defaultModel.currentFacilityFetched(currentFacility))
         .whenEvent(NewBloodSugarClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenBloodSugarTypeSelector as BloodSugarSummaryViewEffect)
+            hasEffects(OpenBloodSugarTypeSelector(currentFacility) as BloodSugarSummaryViewEffect)
         ))
   }
 

@@ -20,6 +20,9 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.facility.alertchange.Continuation
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -194,9 +197,16 @@ class PatientSummaryScreen(
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
         .filter { it.requestCode == SUMMARY_REQCODE_ALERT_FACILITY_CHANGE && it.succeeded() }
-        .map { AlertFacilityChangeSheet.readContinuationExtra<FullScreenKey>(it.data!!) }
+        .map { AlertFacilityChangeSheet.readContinuationExtra<Continuation>(it.data!!) }
         .takeUntil(onDestroys)
-        .subscribe(screenRouter::push)
+        .subscribe(::openContinuation)
+  }
+
+  private fun openContinuation(continuation: Continuation) {
+    when (continuation) {
+      is ContinueToScreen -> screenRouter.push(continuation.screenKey)
+      is ContinueToActivity -> activity.startActivity(continuation.intent)
+    }
   }
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
@@ -342,7 +352,7 @@ class PatientSummaryScreen(
     val intentForAlertSheet = AlertFacilityChangeSheet.intentForScreen(
         context,
         currentFacility.name,
-        createEditPatientScreenKey(patientSummaryProfile)
+        ContinueToScreen(createEditPatientScreenKey(patientSummaryProfile))
     )
     activity.startActivityForResult(intentForAlertSheet, SUMMARY_REQCODE_ALERT_FACILITY_CHANGE)
   }

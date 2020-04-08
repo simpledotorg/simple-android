@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
@@ -35,13 +36,15 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           countOfRecordedMeasurements = event.countOfRecordedMeasurements,
           openIntention = model.openIntention,
           diagnosisRecorded = event.diagnosisRecorded,
-          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled
+          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
+          currentFacility = model.currentFacility!!
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
           patientUuid = model.patientUuid,
           countOfRecordedMeasurements = event.countOfRecordedMeasurements,
           diagnosisRecorded = event.diagnosisRecorded,
-          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled
+          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
+          currentFacility = model.currentFacility!!
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       else -> noChange()
@@ -52,14 +55,15 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       patientUuid: UUID,
       countOfRecordedMeasurements: Int,
       diagnosisRecorded: Boolean,
-      isDiabetesManagementEnabled: Boolean
+      isDiabetesManagementEnabled: Boolean,
+      currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val hasAtLeastOneMeasurementRecorded = countOfRecordedMeasurements > 0
     val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && diagnosisRecorded.not() && isDiabetesManagementEnabled
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError
-      hasAtLeastOneMeasurementRecorded -> ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK)
+      hasAtLeastOneMeasurementRecorded -> ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK, currentFacility)
       else -> GoToHomeScreen
     }
 
@@ -72,7 +76,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       countOfRecordedMeasurements: Int,
       openIntention: OpenIntention,
       diagnosisRecorded: Boolean,
-      isDiabetesManagementEnabled: Boolean
+      isDiabetesManagementEnabled: Boolean,
+      currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val shouldShowScheduleAppointmentSheet = if (countOfRecordedMeasurements == 0) false else hasPatientDataChanged
     val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not() && isDiabetesManagementEnabled
@@ -81,7 +86,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError
-      shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK)
+      shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK, currentFacility)
       shouldGoToPreviousScreen -> GoBackToPreviousScreen
       shouldGoToHomeScreen -> GoToHomeScreen
       else -> throw IllegalStateException("This should not happen!")

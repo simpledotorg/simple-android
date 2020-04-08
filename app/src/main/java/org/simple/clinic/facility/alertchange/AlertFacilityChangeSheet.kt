@@ -66,17 +66,17 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
 
     if (isFacilitySwitchedPreference.get().not()) {
       closeSheetWithContinuation()
-    }
+    } else {
+      setContentView(R.layout.sheet_alert_facility_change)
 
-    setContentView(R.layout.sheet_alert_facility_change)
+      facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
+      yesButton.setOnClickListener {
+        closeSheetWithResult(Activity.RESULT_OK)
+      }
 
-    facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
-    yesButton.setOnClickListener {
-      closeSheetWithResult(Activity.RESULT_OK)
-    }
-
-    changeButton.setOnClickListener {
-      openFacilityChangeScreen()
+      changeButton.setOnClickListener {
+        openFacilityChangeScreen()
+      }
     }
   }
 

@@ -14,7 +14,8 @@ class PatientContactEffectHandler(
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
     private val clock: UserClock,
-    private val schedulers: SchedulersProvider
+    private val schedulers: SchedulersProvider,
+    private val uiActions: PatientContactUiActions
 ) {
 
   fun build(): ObservableTransformer<PatientContactEffect, PatientContactEvent> {

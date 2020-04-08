@@ -2,6 +2,7 @@ package org.simple.clinic.patientcontact
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.After
 import org.junit.Test
@@ -20,6 +21,7 @@ class PatientContactEffectHandlerTest {
   private val patientUuid = UUID.fromString("8a490518-a016-4818-b725-22c25dec310b")
   private val patientRepository = mock<PatientRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
+  private val uiActions = mock<PatientContactUiActions>()
 
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
 
@@ -27,7 +29,8 @@ class PatientContactEffectHandlerTest {
       patientRepository = patientRepository,
       appointmentRepository = appointmentRepository,
       clock = clock,
-      schedulers = TrampolineSchedulersProvider()
+      schedulers = TrampolineSchedulersProvider(),
+      uiActions = uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -47,6 +50,7 @@ class PatientContactEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(PatientProfileLoaded(patientProfile))
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -64,5 +68,6 @@ class PatientContactEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OverdueAppointmentLoaded(overdueAppointment))
+    verifyZeroInteractions(uiActions)
   }
 }

@@ -57,6 +57,7 @@ class PatientSummaryEffectHandlerTest {
       bloodSugarRepository = bloodSugarRepository,
       dataSync = dataSync,
       medicalHistoryRepository = medicalHistoryRepository,
+      country = TestData.country(),
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -86,6 +87,22 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when the load patient summary profile is received, then patient summary profile must be fetched`() {
     // given
+    val bangladesh = TestData.country(isoCountryCode = "BD")
+    val effectHandler = PatientSummaryEffectHandler(
+        schedulersProvider = TrampolineSchedulersProvider(),
+        patientRepository = patientRepository,
+        bloodPressureRepository = bloodPressureRepository,
+        appointmentRepository = mock(),
+        missingPhoneReminderRepository = missingPhoneReminderRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        bloodSugarRepository = bloodSugarRepository,
+        dataSync = dataSync,
+        medicalHistoryRepository = medicalHistoryRepository,
+        country = bangladesh,
+        uiActions = uiActions
+    )
+    val testCase = EffectHandlerTestCase(effectHandler.build())
     val patient = TestData.patient(patientUuid)
     val patientAddress = TestData.patientAddress(uuid = patient.addressUuid)
     val patientPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)

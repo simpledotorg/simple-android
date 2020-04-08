@@ -133,7 +133,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
-  fun openAlertFacilityChangeSheet(facility: Facility) {
+  fun openPatientEntryScreen(facility: Facility) {
     activity.startActivityForResult(
         AlertFacilityChangeSheet.intentForScreen(context, facility.name, PatientEntryScreenKey()),
         ALERT_FACILITY_CHANGE

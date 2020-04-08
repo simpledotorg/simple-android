@@ -73,6 +73,6 @@ class PatientSearchResultsController @Inject constructor(
   private fun saveEntryAndGoToRegisterPatientScreen(ongoingNewPatientEntry: OngoingNewPatientEntry, currentFacility: Facility): Observable<UiChange> {
     return patientRepository
         .saveOngoingEntry(ongoingNewPatientEntry)
-        .andThen(Observable.just { ui: Ui -> ui.openAlertFacilityChangeSheet(currentFacility) })
+        .andThen(Observable.just { ui: Ui -> ui.openPatientEntryScreen(currentFacility) })
   }
 }

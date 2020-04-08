@@ -8,6 +8,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.TestUserClock
@@ -18,7 +19,6 @@ import java.util.UUID
 class PatientContactUiRendererTest {
 
   private val patientUuid = UUID.fromString("e6ff79b9-0ac8-4d7b-ada9-7b3056db2972")
-  private val defaultModel = PatientContactModel.create(patientUuid)
 
   private val ui = mock<PatientContactUi>()
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
@@ -27,7 +27,7 @@ class PatientContactUiRendererTest {
   @Test
   fun `when the model is not initialized, do nothing`() {
     // when
-    uiRenderer.render(defaultModel)
+    uiRenderer.render(defaultModel())
 
     // then
     verifyZeroInteractions(ui)
@@ -51,7 +51,7 @@ class PatientContactUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel.patientProfileLoaded(patientProfile))
+    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
 
     // then
     val expectedAge = 48 // difference between clock date and DOB
@@ -77,7 +77,7 @@ class PatientContactUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel.patientProfileLoaded(patientProfile))
+    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile))
 
     // then
     val expectedAge = 48 // difference between clock date and Age
@@ -94,7 +94,7 @@ class PatientContactUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel.overdueAppointmentLoaded(Just(overdueAppointment)))
+    uiRenderer.render(defaultModel().overdueAppointmentLoaded(Just(overdueAppointment)))
 
     // then
     verify(ui).showCallResultSection()
@@ -104,10 +104,19 @@ class PatientContactUiRendererTest {
   @Test
   fun `hide the call result section if there is no overdue appointment`() {
     // when
-    uiRenderer.render(defaultModel.overdueAppointmentLoaded(None))
+    uiRenderer.render(defaultModel().overdueAppointmentLoaded(None))
 
     // then
     verify(ui).hideCallResultSection()
     verifyNoMoreInteractions(ui)
+  }
+
+  private fun defaultModel(
+      phoneMaskFeatureEnabled: Boolean = false,
+      proxyPhoneNumber: String = "12345678"
+  ): PatientContactModel {
+    val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
+
+    return PatientContactModel.create(patientUuid, phoneNumberMaskerConfig)
   }
 }

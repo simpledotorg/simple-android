@@ -98,7 +98,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).openBloodPressureEntrySheet(patientUuid)
+    verify(uiActions).openBloodPressureEntrySheet(patientUuid, currentFacility)
     verifyNoMoreInteractions(uiActions)
   }
 

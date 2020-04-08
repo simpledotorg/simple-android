@@ -1,6 +1,5 @@
 package org.simple.clinic.search.results
 
-import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -76,7 +75,7 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openAlertFacilityChangeSheet(currentFacility)
+    verify(screen).openPatientEntryScreen(currentFacility)
     verifyNoMoreInteractions(screen)
   }
 
@@ -93,7 +92,7 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openAlertFacilityChangeSheet(currentFacility)
+    verify(screen).openPatientEntryScreen(currentFacility)
     verifyNoMoreInteractions(screen)
   }
 
@@ -110,7 +109,7 @@ class PatientSearchResultsControllerTest {
 
     // then
     verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(screen).openAlertFacilityChangeSheet(currentFacility)
+    verify(screen).openPatientEntryScreen(currentFacility)
     verifyNoMoreInteractions(screen)
   }
 }

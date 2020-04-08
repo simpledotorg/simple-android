@@ -36,7 +36,6 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
-import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
@@ -205,7 +204,7 @@ class PatientSummaryScreen(
   private fun openContinuation(continuation: Continuation) {
     when (continuation) {
       is ContinueToScreen -> screenRouter.push(continuation.screenKey)
-      is ContinueToActivity -> activity.startActivity(continuation.intent)
+      is ContinueToActivity -> activity.startActivityForResult(continuation.intent, continuation.requestCode)
     }
   }
 
@@ -303,9 +302,19 @@ class PatientSummaryScreen(
     }
   }
 
-  override fun showScheduleAppointmentSheet(patientUuid: UUID, sheetOpenedFrom: AppointmentSheetOpenedFrom) {
-    val intent = ScheduleAppointmentSheet.intent(context, patientUuid, ScheduleAppointmentSheetExtra(sheetOpenedFrom))
-    activity.startActivityForResult(intent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
+  override fun showScheduleAppointmentSheet(
+      patientUuid: UUID,
+      sheetOpenedFrom: AppointmentSheetOpenedFrom,
+      currentFacility: Facility
+  ) {
+    val scheduleAppointmentIntent = ScheduleAppointmentSheet.intent(context, patientUuid, ScheduleAppointmentSheetExtra(sheetOpenedFrom))
+    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intentForActivity(
+        context,
+        currentFacility.name,
+        ContinueToActivity(scheduleAppointmentIntent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
+    )
+
+    activity.startActivityForResult(alertFacilityChangeIntent, SUMMARY_REQCODE_ALERT_FACILITY_CHANGE)
   }
 
   override fun goToPreviousScreen() {

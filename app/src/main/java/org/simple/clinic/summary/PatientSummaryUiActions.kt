@@ -5,7 +5,11 @@ import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
 interface PatientSummaryUiActions {
-  fun showScheduleAppointmentSheet(patientUuid: UUID, sheetOpenedFrom: AppointmentSheetOpenedFrom)
+  fun showScheduleAppointmentSheet(
+      patientUuid: UUID,
+      sheetOpenedFrom: AppointmentSheetOpenedFrom,
+      currentFacility: Facility
+  )
   fun showEditPatientScreen(
       patientSummaryProfile: PatientSummaryProfile,
       currentFacility: Facility

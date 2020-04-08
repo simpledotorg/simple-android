@@ -25,6 +25,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenKey
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.di.injector
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
@@ -179,7 +180,7 @@ class BloodSugarSummaryView(
     noBloodSugarTextView.visibility = View.VISIBLE
   }
 
-  override fun showBloodSugarTypeSelector() {
+  override fun showBloodSugarTypeSelector(currentFacility: Facility) {
     activity.startActivityForResult(BloodSugarTypePickerSheet.intent(context), TYPE_PICKER_SHEET)
   }
 

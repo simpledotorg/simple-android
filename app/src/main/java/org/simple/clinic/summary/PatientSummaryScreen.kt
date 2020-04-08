@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -17,6 +18,8 @@ import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.editpatient.EditPatientScreenKey
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -30,6 +33,7 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
+import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
@@ -42,6 +46,7 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.isVisible
@@ -117,6 +122,9 @@ class PatientSummaryScreen(
 
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
+
+    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+    alertFacilityChangeSheetClosed(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
@@ -180,6 +188,16 @@ class PatientSummaryScreen(
       .filter { it.requestCode == SUMMARY_REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
       .map { ScheduleAppointmentSheet.readExtra<ScheduleAppointmentSheetExtra>(it.data!!) }
       .map { ScheduledAppointment(it.sheetOpenedFrom) }
+
+  @SuppressLint("CheckResult")
+  private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == SUMMARY_REQCODE_ALERT_FACILITY_CHANGE && it.succeeded() }
+        .map { AlertFacilityChangeSheet.readContinuationExtra<FullScreenKey>(it.data!!) }
+        .takeUntil(onDestroys)
+        .subscribe(screenRouter::push)
+  }
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
     return linkIdWithPatientView
@@ -317,8 +335,16 @@ class PatientSummaryScreen(
     bloodSugarSummaryView.visibility = GONE
   }
 
-  override fun showEditPatientScreen(patientSummaryProfile: PatientSummaryProfile) {
-    screenRouter.push(createEditPatientScreenKey(patientSummaryProfile))
+  override fun showEditPatientScreen(
+      patientSummaryProfile: PatientSummaryProfile,
+      currentFacility: Facility
+  ) {
+    val intentForAlertSheet = AlertFacilityChangeSheet.intentForScreen(
+        context,
+        currentFacility.name,
+        createEditPatientScreenKey(patientSummaryProfile)
+    )
+    activity.startActivityForResult(intentForAlertSheet, SUMMARY_REQCODE_ALERT_FACILITY_CHANGE)
   }
 
   override fun showDiagnosisError() {
@@ -327,6 +353,7 @@ class PatientSummaryScreen(
       medicalHistorySummaryView.showDiagnosisError()
     }
   }
+
 }
 
 @Parcelize

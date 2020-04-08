@@ -13,6 +13,8 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
@@ -21,11 +23,15 @@ class BloodSugarSummaryViewEffectHandlerTest {
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val uiActions = mock<UiActions>()
   private val config = mock<BloodSugarSummaryConfig>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
   private val effectHandler = BloodSugarSummaryViewEffectHandler(
       bloodSugarRepository,
       TrampolineSchedulersProvider(),
       uiActions,
-      config
+      config,
+      userSession,
+      facilityRepository
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -96,4 +102,22 @@ class BloodSugarSummaryViewEffectHandlerTest {
     verify(uiActions).openBloodSugarUpdateSheet(bloodSugar.uuid, Random)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when fetch current facility effect is received then load current facility`() {
+    //given
+    val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("9a82720a-0445-43dd-b557-3d4b079b66ef"))
+    val currentFacility = TestData.facility(uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"))
+
+    whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
+    whenever(facilityRepository.currentFacilityImmediate(loggedInUser)) doReturn currentFacility
+
+    //when
+    testCase.dispatch(FetchCurrentFacility)
+
+    //then
+    testCase.assertOutgoingEvents(CurrentFacilityFetched(currentFacility))
+    verifyZeroInteractions(uiActions)
+  }
+
 }

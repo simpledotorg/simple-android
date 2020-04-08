@@ -92,7 +92,9 @@ class BloodPressureSummaryViewEffectHandlerTest {
   @Test
   fun `when open blood pressure entry sheet effect is received, then open blood pressure entry sheet`() {
     // when
-    testCase.dispatch(OpenBloodPressureEntrySheet(patientUuid))
+    val currentFacility = TestData.facility(uuid = UUID.fromString("2257f737-0e8a-452d-a270-66bdc2422664"))
+
+    testCase.dispatch(OpenBloodPressureEntrySheet(patientUuid, currentFacility))
 
     // then
     testCase.assertNoOutgoingEvents()

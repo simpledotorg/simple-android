@@ -6,13 +6,13 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.Just
 import java.util.UUID
 
 class PatientContactUpdateTest {
 
   private val patientUuid = UUID.fromString("b5eccb67-6425-4d48-9c17-65e9b267f9eb")
-  private val defaultModel = PatientContactModel.create(patientUuid)
   private val patientProfile = TestData.patientProfile(
       patientUuid = patientUuid,
       generatePhoneNumber = true
@@ -31,6 +31,8 @@ class PatientContactUpdateTest {
 
   @Test
   fun `when the patient profile is loaded, the ui must be updated`() {
+    val defaultModel = defaultModel()
+
     spec
         .given(defaultModel)
         .whenEvent(PatientProfileLoaded(patientProfile))
@@ -43,6 +45,7 @@ class PatientContactUpdateTest {
   @Test
   fun `when the overdue appointment is loaded, the ui must be updated`() {
     val appointment = Just(overdueAppointment)
+    val defaultModel = defaultModel()
 
     spec
         .given(defaultModel)
@@ -50,5 +53,14 @@ class PatientContactUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.overdueAppointmentLoaded(appointment))
         ))
+  }
+
+  private fun defaultModel(
+      phoneMaskFeatureEnabled: Boolean = false,
+      proxyPhoneNumber: String = "12345678"
+  ): PatientContactModel {
+    val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
+
+    return PatientContactModel.create(patientUuid, phoneNumberMaskerConfig)
   }
 }

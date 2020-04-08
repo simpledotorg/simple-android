@@ -26,4 +26,7 @@ data class BloodSugarSummaryViewModel(
 
   fun countFetched(count: Int): BloodSugarSummaryViewModel =
       copy(totalRecordedBloodSugarCount = count)
+
+  fun currentFacilityFetched(facility: Facility) =
+      copy(currentFacility = facility)
 }

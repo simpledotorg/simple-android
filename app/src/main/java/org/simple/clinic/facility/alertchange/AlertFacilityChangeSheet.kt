@@ -149,5 +149,5 @@ sealed class Continuation : Parcelable {
   data class ContinueToScreen(val screenKey: FullScreenKey) : Continuation()
 
   @Parcelize
-  data class ContinueToActivity(val intent: Intent) : Continuation()
+  data class ContinueToActivity(val intent: Intent, val requestCode: Int) : Continuation()
 }

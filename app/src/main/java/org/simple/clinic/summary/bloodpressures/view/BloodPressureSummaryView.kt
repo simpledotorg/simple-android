@@ -21,12 +21,17 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.BloodPressureHistoryScreenKey
 import org.simple.clinic.di.injector
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.facility.alertchange.Continuation
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.SUMMARY_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.SUMMARY_REQCODE_BP_ENTRY
 import org.simple.clinic.summary.bloodpressures.AddNewBloodPressureClicked
 import org.simple.clinic.summary.bloodpressures.BloodPressureClicked
@@ -139,6 +144,7 @@ class BloodPressureSummaryView(
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
 
     setupBpRecordedEvents(screenDestroys)
+    alertFacilityChangeSheetClosed(screenDestroys)
   }
 
   override fun onAttachedToWindow() {
@@ -186,9 +192,15 @@ class BloodPressureSummaryView(
     seeAll.visibility = View.GONE
   }
 
-  override fun openBloodPressureEntrySheet(patientUuid: UUID) {
-    val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
-    activity.startActivityForResult(intent, SUMMARY_REQCODE_BP_ENTRY)
+  override fun openBloodPressureEntrySheet(patientUuid: UUID, currentFacility: Facility) {
+    val bpEntrySheetIntent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
+    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intentForActivity(
+        context,
+        currentFacility.name,
+        ContinueToActivity(bpEntrySheetIntent, SUMMARY_REQCODE_BP_ENTRY)
+    )
+
+    activity.startActivityForResult(alertFacilityChangeIntent, ALERT_FACILITY_CHANGE_SHEET)
   }
 
   override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
@@ -208,6 +220,16 @@ class BloodPressureSummaryView(
         .filter { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
         .takeUntil(screenDestroys)
         .subscribe { bpRecorded?.invoke() }
+  }
+
+  @SuppressLint("CheckResult")
+  private fun alertFacilityChangeSheetClosed(onDestroys: Observable<ScreenDestroyed>) {
+    screenRouter.streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == ALERT_FACILITY_CHANGE_SHEET && it.succeeded() }
+        .map { AlertFacilityChangeSheet.readContinuationExtra<ContinueToActivity>(it.data!!) }
+        .takeUntil(onDestroys)
+        .subscribe { activity.startActivityForResult(it.intent, it.requestCode) }
   }
 
   private fun addNewBpClicked(): Observable<BloodPressureSummaryViewEvent> {
@@ -290,5 +312,9 @@ class BloodPressureSummaryView(
     val durationSinceBpCreated = Duration.between(createdAt, now)
 
     return durationSinceBpCreated <= bpEditableFor
+  }
+
+  companion object {
+    private const val ALERT_FACILITY_CHANGE_SHEET = 310
   }
 }

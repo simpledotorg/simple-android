@@ -8,6 +8,8 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -80,6 +82,32 @@ class PatientContactUiRendererTest {
     // then
     val expectedAge = 48 // difference between clock date and Age
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `display the call result section if there is an overdue appointment`() {
+    // given
+    val overdueAppointment = TestData.overdueAppointment(
+        facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
+        patientUuid = patientUuid
+    )
+
+    // when
+    uiRenderer.render(defaultModel.overdueAppointmentLoaded(Just(overdueAppointment)))
+
+    // then
+    verify(ui).showCallResultSection()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `hide the call result section if there is no overdue appointment`() {
+    // when
+    uiRenderer.render(defaultModel.overdueAppointmentLoaded(None))
+
+    // then
+    verify(ui).hideCallResultSection()
     verifyNoMoreInteractions(ui)
   }
 }

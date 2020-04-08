@@ -64,6 +64,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import java.net.URI
 import java.util.UUID
+import kotlin.random.nextInt
 
 object TestData {
 
@@ -79,7 +80,10 @@ object TestData {
       patientDeletedAt: Instant? = null,
       patientName: String = faker.name.name(),
       patientPhoneNumber: String? = if (generatePhoneNumber) faker.phoneNumber.phoneNumber() else null,
-      businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null
+      businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null,
+      dateOfBirth: LocalDate? = LocalDate.parse("1980-01-01"),
+      age: Age? = Age(value = kotlin.random.Random.nextInt(30..100), updatedAt = Instant.parse("2018-01-01T00:00:00Z")),
+      gender: Gender = randomGender()
   ): PatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber))
@@ -99,7 +103,10 @@ object TestData {
             syncStatus = syncStatus,
             addressUuid = patientAddressUuid,
             status = patientStatus,
-            deletedAt = patientDeletedAt
+            deletedAt = patientDeletedAt,
+            age = age,
+            dateOfBirth = dateOfBirth,
+            gender = gender
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,

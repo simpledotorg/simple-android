@@ -7,6 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -14,7 +15,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.sync.DataSync
@@ -36,6 +36,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val dataSync: DataSync,
     val medicalHistoryRepository: MedicalHistoryRepository,
+    val country: Country,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -90,7 +91,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         address = patientProfile.address,
         phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
         bpPassport = patientProfile.businessIds.filter { it.identifier.type == BpPassport }.maxBy { it.createdAt },
-        alternativeId = patientProfile.businessIds.filter { it.identifier.type == BangladeshNationalId }.maxBy { it.createdAt }
+        alternativeId = patientProfile.businessIds.filter { it.identifier.type == country.alternativeIdentifierType }.maxBy { it.createdAt }
     )
   }
 

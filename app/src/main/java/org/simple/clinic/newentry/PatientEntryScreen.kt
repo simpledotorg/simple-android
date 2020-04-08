@@ -22,6 +22,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -55,7 +56,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.router.screen.ScreenRouter
@@ -298,6 +298,12 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private fun formChanges(): Observable<PatientEntryEvent> {
+    val alternativeIdInputEditTextChanges = Maybe.fromCallable {
+      country.alternativeIdentifierType
+    }.flatMapObservable { identifierType ->
+      alternativeIdInputEditText.textChanges { AlternativeIdChanged(Identifier(it, identifierType)) }
+    }
+
     return Observable.mergeArray(
         fullNameEditText.textChanges(::FullNameChanged),
         phoneNumberEditText.textChanges(::PhoneNumberChanged),
@@ -308,7 +314,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         districtEditText.textChanges(::DistrictChanged),
         stateEditText.textChanges(::StateChanged),
         genderChanges(),
-        alternativeIdInputEditText.textChanges { AlternativeIdChanged(Identifier(it, BangladeshNationalId)) },
+        alternativeIdInputEditTextChanges,
         zoneEditText.textChanges(::ZoneChanged),
         streetAddressEditText.textChanges(::StreetAddressChanged)
     )

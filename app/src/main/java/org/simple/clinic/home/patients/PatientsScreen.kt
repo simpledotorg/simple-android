@@ -1,6 +1,5 @@
 package org.simple.clinic.home.patients
 
-import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -29,22 +28,17 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
+import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
 import javax.inject.Named
-
-
-private const val REQUESTCODE_CAMERA_PERMISSION = 0
-private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
 
 class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -90,15 +84,17 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(
-            screenCreates(),
-            activityStarts(),
-            searchButtonClicks(),
-            dismissApprovedStatusClicks(),
-            enterCodeManuallyClicks(),
-            scanCardIdButtonClicks(),
-            cameraPermissionChanges(),
-            simpleVideoClicked()),
+        events = Observable
+            .mergeArray(
+                screenCreates(),
+                activityStarts(),
+                searchButtonClicks(),
+                dismissApprovedStatusClicks(),
+                enterCodeManuallyClicks(),
+                scanCardIdButtonClicks(),
+                simpleVideoClicked()
+            )
+            .compose(RequestPermissions(runtimePermissions, activity, screenRouter.streamScreenResults().ofType())),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
@@ -132,7 +128,7 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   private fun enterCodeManuallyClicks() = RxView.clicks(enterCodeButton).map { PatientsEnterCodeManuallyClicked() }
 
-  private fun scanCardIdButtonClicks() = RxView.clicks(scanSimpleCardButton).map { ScanCardIdButtonClicked }
+  private fun scanCardIdButtonClicks() = RxView.clicks(scanSimpleCardButton).map { ScanCardIdButtonClicked() }
 
   private fun simpleVideoClicked() = RxView.clicks(videoTitleText)
       .mergeWith(RxView.clicks(simpleVideoImage))
@@ -157,14 +153,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   private fun showUserAccountStatus(@IdRes statusViewId: Int) {
     showStatus(statusViewId)
     currentStatusViewId = userStatusViewflipper.currentView.id
-  }
-
-  private fun cameraPermissionChanges(): Observable<UiEvent> {
-    return screenRouter.streamScreenResults()
-        .ofType<ActivityPermissionResult>()
-        .filter { result -> result.requestCode == REQUESTCODE_CAMERA_PERMISSION }
-        .map { runtimePermissions.check(activity, CAMERA_PERMISSION) }
-        .map(::PatientsScreenCameraPermissionChanged)
   }
 
   override fun onDetachedFromWindow() {
@@ -196,10 +184,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   fun openScanSimpleIdCardScreen() {
     screenRouter.push(ScanSimpleIdScreenKey())
-  }
-
-  fun requestCameraPermissions() {
-    runtimePermissions.request(activity, CAMERA_PERMISSION, REQUESTCODE_CAMERA_PERMISSION)
   }
 
   fun hideSyncIndicator() {

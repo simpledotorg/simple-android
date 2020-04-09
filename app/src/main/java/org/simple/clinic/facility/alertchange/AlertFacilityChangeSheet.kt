@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.sheet_alert_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.util.LocaleOverrideContextWrapper
@@ -40,25 +39,14 @@ class AlertFacilityChangeSheet : BottomSheetActivity() {
 
     private const val EXTRA_CONTINUE_TO = "extra_continue_to"
 
-    fun intentForScreen(
+    fun intent(
         context: Context,
         currentFacilityName: String,
-        continueToScreen: ContinueToScreen
+        continuation: Continuation
     ): Intent {
       val intent = Intent(context, AlertFacilityChangeSheet::class.java)
       intent.putExtra(CURRENT_FACILITY_NAME, currentFacilityName)
-      intent.putExtra(CONTINUE_TO, continueToScreen)
-      return intent
-    }
-
-    fun intentForActivity(
-        context: Context,
-        currentFacilityName: String,
-        continueToActivity: ContinueToActivity
-    ): Intent {
-      val intent = Intent(context, AlertFacilityChangeSheet::class.java)
-      intent.putExtra(CURRENT_FACILITY_NAME, currentFacilityName)
-      intent.putExtra(CONTINUE_TO, continueToActivity)
+      intent.putExtra(CONTINUE_TO, continuation)
       return intent
     }
 

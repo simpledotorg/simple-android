@@ -23,7 +23,6 @@ import org.simple.clinic.bp.history.BloodPressureHistoryScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
-import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
@@ -31,7 +30,6 @@ import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.summary.SUMMARY_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.SUMMARY_REQCODE_BP_ENTRY
 import org.simple.clinic.summary.bloodpressures.AddNewBloodPressureClicked
 import org.simple.clinic.summary.bloodpressures.BloodPressureClicked
@@ -194,7 +192,7 @@ class BloodPressureSummaryView(
 
   override fun openBloodPressureEntrySheet(patientUuid: UUID, currentFacility: Facility) {
     val bpEntrySheetIntent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
-    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intentForActivity(
+    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
         context,
         currentFacility.name,
         ContinueToActivity(bpEntrySheetIntent, SUMMARY_REQCODE_BP_ENTRY)

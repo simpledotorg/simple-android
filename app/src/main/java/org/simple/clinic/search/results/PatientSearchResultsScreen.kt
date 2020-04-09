@@ -14,7 +14,6 @@ import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
-import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.newentry.PatientEntryScreenKey
@@ -22,7 +21,6 @@ import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
@@ -137,7 +135,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   fun openPatientEntryScreen(facility: Facility) {
     activity.startActivityForResult(
-        AlertFacilityChangeSheet.intentForScreen(context, facility.name, ContinueToScreen(PatientEntryScreenKey())),
+        AlertFacilityChangeSheet.intent(context, facility.name, ContinueToScreen(PatientEntryScreenKey())),
         ALERT_FACILITY_CHANGE
     )
   }

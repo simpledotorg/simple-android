@@ -27,7 +27,6 @@ import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
-import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
@@ -186,7 +185,7 @@ class BloodSugarSummaryView(
 
   override fun showBloodSugarTypeSelector(currentFacility: Facility) {
     val intent = BloodSugarTypePickerSheet.intent(context)
-    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intentForActivity(
+    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
         context,
         currentFacility.name,
         ContinueToActivity(intent, TYPE_PICKER_SHEET)

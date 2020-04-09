@@ -20,8 +20,7 @@ class BloodSugarSummaryViewInitTest {
             hasModel(defaultModel),
             hasEffects(
                 FetchBloodSugarSummary(defaultModel.patientUuid),
-                FetchBloodSugarCount(defaultModel.patientUuid),
-                FetchCurrentFacility
+                FetchBloodSugarCount(defaultModel.patientUuid)
             )
         ))
   }

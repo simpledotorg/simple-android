@@ -3,6 +3,7 @@ package org.simple.clinic.summary.bloodsugar
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -29,22 +30,23 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<BloodSugarSummaryViewEffect, BloodSugarSummaryViewEvent>()
         .addTransformer(FetchBloodSugarSummary::class.java, fetchBloodSugarMeasurements(bloodSugarRepository, schedulersProvider.ui()))
         .addTransformer(FetchBloodSugarCount::class.java, fetchBloodSugarMeasurementsCount(schedulersProvider.io()))
-        .addTransformer(FetchCurrentFacility::class.java, fetchCurrentFacility(schedulersProvider.io()))
-        .addConsumer(OpenBloodSugarTypeSelector::class.java, { uiActions.showBloodSugarTypeSelector(it.currentFacility) }, schedulersProvider.ui())
+        .addTransformer(OpenBloodSugarTypeSelector::class.java, openBloodSugarSelector(schedulersProvider))
         .addConsumer(ShowBloodSugarHistoryScreen::class.java, { uiActions.showBloodSugarHistoryScreen(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenBloodSugarUpdateSheet::class.java, { uiActions.openBloodSugarUpdateSheet(it.measurement.uuid, it.measurement.reading.type) }, schedulersProvider.ui())
         .build()
   }
 
-  private fun fetchCurrentFacility(io: Scheduler): ObservableTransformer<FetchCurrentFacility, BloodSugarSummaryViewEvent> {
+  private fun openBloodSugarSelector(schedulersProvider: SchedulersProvider): ObservableTransformer<OpenBloodSugarTypeSelector, BloodSugarSummaryViewEvent> {
     return ObservableTransformer { effects ->
       effects
-          .observeOn(io)
+          .observeOn(schedulersProvider.io())
           .map {
             val user = userSession.loggedInUserImmediate()!!
             facilityRepository.currentFacilityImmediate(user)
           }
-          .map(::CurrentFacilityFetched)
+          .observeOn(schedulersProvider.ui())
+          .map { uiActions.showBloodSugarTypeSelector(it) }
+          .flatMap { Observable.empty<BloodSugarSummaryViewEvent>() }
     }
   }
 

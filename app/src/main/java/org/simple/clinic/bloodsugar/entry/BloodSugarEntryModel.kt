@@ -15,7 +15,7 @@ data class BloodSugarEntryModel(
     val activeScreen: ScreenType = BLOOD_SUGAR_ENTRY,
     val day: String = "",
     val month: String = "",
-    val twoDigitYear: String = "",
+    val fourDigitYear: String = "",
     val prefilledDate: LocalDate? = null
 ) : Parcelable {
 
@@ -33,8 +33,8 @@ data class BloodSugarEntryModel(
   fun monthChanged(month: String): BloodSugarEntryModel =
       copy(month = month)
 
-  fun yearChanged(twoDigitYear: String): BloodSugarEntryModel =
-      copy(twoDigitYear = twoDigitYear)
+  fun yearChanged(fourDigitYear: String): BloodSugarEntryModel =
+      copy(fourDigitYear = fourDigitYear)
 
   fun screenChanged(activeScreen: ScreenType): BloodSugarEntryModel =
       copy(activeScreen = activeScreen)

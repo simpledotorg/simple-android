@@ -97,7 +97,7 @@ class PhoneMaskBottomSheetController @Inject constructor(
           .flatMap { (secureCallClicked, phoneNumber) ->
             val permissionResult = (secureCallClicked.permission as Just).value
 
-            phoneCaller.secureCall(phoneNumber, dialer(permissionResult))
+            phoneCaller.secureCall(config.proxyPhoneNumber, phoneNumber, dialer(permissionResult))
                 .andThen(Observable.just(Ui::closeSheet))
           }
 

@@ -29,7 +29,6 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is FetchedHasShownMissingPhoneReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       is LinkIdWithPatientSheetShown -> next(model.shownLinkIdWithPatientView())
       is PatientSummaryLinkIdCompleted -> dispatch(HideLinkIdWithPatientView)
-      is ReportedViewedPatientToAnalytics -> next(model.reportedViewedPatientToAnalytics())
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
           patientUuid = model.patientUuid,
           hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,

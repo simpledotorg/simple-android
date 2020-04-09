@@ -49,7 +49,6 @@ class PatientSummaryInitTest {
         .completedCheckForInvalidPhone()
         .patientSummaryProfileLoaded(profile)
         .currentFacilityLoaded(facility)
-        .reportedViewedPatientToAnalytics()
 
     initSpec
         .whenInit(model)

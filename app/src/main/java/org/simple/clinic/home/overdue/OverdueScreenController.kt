@@ -5,7 +5,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.user.UserSession
@@ -35,15 +34,8 @@ class OverdueScreenController @Inject constructor(
         markedAsAgreedToVisit(replayedEvents),
         rescheduleAppointment(replayedEvents),
         removeAppointment(replayedEvents),
-        reportViewedPatientEvent(replayedEvents),
         openPhoneMaskBottomSheet(replayedEvents)
     )
-  }
-
-  private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<AppointmentExpanded>()
-        .doOnNext { (patientUuid) -> Analytics.reportViewedPatient(patientUuid, OverdueScreenKey().analyticsName) }
-        .flatMap { Observable.empty<UiChange>() }
   }
 
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {

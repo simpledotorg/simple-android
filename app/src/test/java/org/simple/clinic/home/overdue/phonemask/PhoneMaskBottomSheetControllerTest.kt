@@ -15,10 +15,10 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Patient
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
@@ -26,7 +26,7 @@ import org.simple.clinic.phone.Dialer.Automatic
 import org.simple.clinic.phone.Dialer.Manual
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
-import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RxErrorsRule
@@ -65,31 +65,9 @@ class PhoneMaskBottomSheetControllerTest {
   private lateinit var controller: PhoneMaskBottomSheetController
 
   @Test
-  @Parameters(method = "params for types of call")
-  fun `when any call button is clicked, call permission should be requested`(callTypeEvent: UiEvent) {
-    sheetCreated()
-    uiEvents.onNext(callTypeEvent)
-
-    verify(ui).requestCallPermission()
-    verify(ui).setupView(PatientDetails(
-        phoneNumber = phoneNumber.number,
-        name = patient.fullName,
-        gender = patient.gender,
-        age = patient.age!!.value
-    ))
-    verify(ui).hideSecureCallButton()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Suppress("Unused")
-  private fun `params for types of call`() =
-      listOf(NormalCallClicked, SecureCallClicked)
-
-  @Test
   @Parameters(method = "params for making normal phone calls")
-  fun `when normal call button is clicked and permission result is received, appropriate call should be made`(
+  fun `when normal call button is clicked, appropriate call should be made`(
       callTypeEvent: UiEvent,
-      permission: RuntimePermissionResult,
       dialer: Dialer
   ) {
     var isCompletableSubscribed = false
@@ -98,7 +76,6 @@ class PhoneMaskBottomSheetControllerTest {
 
     sheetCreated()
     uiEvents.onNext(callTypeEvent)
-    uiEvents.onNext(CallPhonePermissionChanged(permission))
 
     assertThat(isCompletableSubscribed).isTrue()
     verify(ui).setupView(PatientDetails(
@@ -107,7 +84,6 @@ class PhoneMaskBottomSheetControllerTest {
         gender = patient.gender,
         age = patient.age!!.value
     ))
-    verify(ui).requestCallPermission()
     verify(ui).closeSheet()
     verify(ui).hideSecureCallButton()
     verifyNoMoreInteractions(ui)
@@ -115,9 +91,8 @@ class PhoneMaskBottomSheetControllerTest {
 
   @Test
   @Parameters(method = "params for making secure phone calls")
-  fun `when secure call button is clicked and permission result is received, appropriate call should be made`(
+  fun `when secure call button is clicked, appropriate call should be made`(
       callTypeEvent: UiEvent,
-      permission: RuntimePermissionResult,
       dialer: Dialer
   ) {
     var isCompletableSubscribed = false
@@ -126,7 +101,6 @@ class PhoneMaskBottomSheetControllerTest {
 
     sheetCreated()
     uiEvents.onNext(callTypeEvent)
-    uiEvents.onNext(CallPhonePermissionChanged(permission))
 
     assertThat(isCompletableSubscribed).isTrue()
     verify(ui).setupView(PatientDetails(
@@ -135,7 +109,6 @@ class PhoneMaskBottomSheetControllerTest {
         gender = patient.gender,
         age = patient.age!!.value
     ))
-    verify(ui).requestCallPermission()
     verify(ui).closeSheet()
     verify(ui).hideSecureCallButton()
     verifyNoMoreInteractions(ui)
@@ -144,15 +117,15 @@ class PhoneMaskBottomSheetControllerTest {
   @Suppress("Unused")
   private fun `params for making normal phone calls`() =
       listOf(
-          listOf(NormalCallClicked, GRANTED, Automatic),
-          listOf(NormalCallClicked, DENIED, Manual)
+          listOf(NormalCallClicked(permission = Just(GRANTED)), Automatic),
+          listOf(NormalCallClicked(permission = Just(DENIED)), Manual)
       )
 
   @Suppress("Unused")
   private fun `params for making secure phone calls`() =
       listOf(
-          listOf(SecureCallClicked, GRANTED, Automatic),
-          listOf(SecureCallClicked, DENIED, Manual)
+          listOf(SecureCallClicked(permission = Just(GRANTED)), Automatic),
+          listOf(SecureCallClicked(permission = Just(DENIED)), Manual)
       )
 
   @Test

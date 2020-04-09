@@ -5,6 +5,8 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import org.simple.clinic.TestData
+import org.simple.clinic.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -80,6 +82,14 @@ class AnalyticsTest {
         prescribedDrugCount = 1,
         medicalHistoryCount = 1,
         since = Instant.EPOCH
+    )
+  }
+
+  @Test
+  fun `when reporting permission event without any reporters, no error should be thrown`() {
+    Analytics.reportPermissionResult(
+        permission = "permission",
+        result = GRANTED
     )
   }
 
@@ -193,6 +203,8 @@ class AnalyticsTest {
         medicalHistoryCount = 5,
         since = Instant.parse("2018-12-03T10:15:30.00Z")
     )
+    Analytics.reportPermissionResult("permission_1", GRANTED)
+    Analytics.reportPermissionResult("permission_2", DENIED)
 
     val expected = listOf(
         Event("UserInteraction", mapOf("name" to "Test 1")),
@@ -241,6 +253,14 @@ class AnalyticsTest {
             "pendingPrescribedDrugCount" to 4,
             "pendingMedicalHistoryCount" to 5,
             "since" to "2018-12-03T10:15:30Z"
+        )),
+        Event("PermissionResult", mapOf(
+            "permission" to "permission_1",
+            "result" to GRANTED
+        )),
+        Event("PermissionResult", mapOf(
+            "permission" to "permission_2",
+            "result" to DENIED
         ))
     )
 

@@ -31,14 +31,12 @@ class BloodSugarSummaryViewUpdateTest {
 
   @Test
   fun `when add new blood sugar is clicked then blood sugar type selector should open`() {
-    val currentFacility = TestData.facility(uuid = UUID.fromString("9a82720a-0445-43dd-b557-3d4b079b66ef"))
-
     spec
-        .given(defaultModel.currentFacilityFetched(currentFacility))
+        .given(defaultModel)
         .whenEvent(NewBloodSugarClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenBloodSugarTypeSelector(currentFacility) as BloodSugarSummaryViewEffect)
+            hasEffects(OpenBloodSugarTypeSelector as BloodSugarSummaryViewEffect)
         ))
   }
 
@@ -99,21 +97,6 @@ class BloodSugarSummaryViewUpdateTest {
             hasNoModel(),
             hasEffects(OpenBloodSugarUpdateSheet(bloodSugarMeasurement) as BloodSugarSummaryViewEffect)
         ))
-  }
-
-  @Test
-  fun `when current facility is fetched then update the current facility`() {
-    val currentFacility = TestData.facility(uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"))
-
-    spec
-        .given(defaultModel)
-        .whenEvent(CurrentFacilityFetched(currentFacility))
-        .then(
-            assertThatNext(
-                hasModel(defaultModel.currentFacilityFetched(currentFacility)),
-                hasNoEffects()
-            )
-        )
   }
 
 }

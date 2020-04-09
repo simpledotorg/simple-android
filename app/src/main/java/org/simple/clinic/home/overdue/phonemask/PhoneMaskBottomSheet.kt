@@ -1,6 +1,5 @@
 package org.simple.clinic.home.overdue.phonemask
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -19,6 +18,7 @@ import org.simple.clinic.home.overdue.phonemask.di.PhoneMaskBottomSheetComponent
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -26,9 +26,6 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
-
-private const val REQUESTCODE_CALL_PHONE_PERMISSION = 21
-private const val CALL_PHONE_PERMISSION = Manifest.permission.CALL_PHONE
 
 class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
 
@@ -52,12 +49,13 @@ class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(
-            sheetCreates(),
-            normalCallClicks(),
-            secureCallClicks(),
-            callPermissionChanges()
-        ),
+        events = Observable
+            .mergeArray(
+                sheetCreates(),
+                normalCallClicks(),
+                secureCallClicks()
+            )
+            .compose(RequestPermissions(runtimePermissions, this, permissionResults)),
         controller = controller,
         screenDestroys = onDestroys
     )
@@ -95,12 +93,12 @@ class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
   private fun normalCallClicks() =
       RxView
           .clicks(normalCallButton)
-          .map { NormalCallClicked }
+          .map { NormalCallClicked() }
 
   private fun secureCallClicks() =
       RxView
           .clicks(secureCallButton)
-          .map { SecureCallClicked }
+          .map { SecureCallClicked() }
 
   private fun sheetCreates() =
       Observable.just(PhoneMaskBottomSheetCreated(patientUuid()))
@@ -111,10 +109,6 @@ class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
   override fun onDestroy() {
     onDestroys.onNext(ScreenDestroyed())
     super.onDestroy()
-  }
-
-  override fun requestCallPermission() {
-    runtimePermissions.request(this, CALL_PHONE_PERMISSION, REQUESTCODE_CALL_PHONE_PERMISSION)
   }
 
   override fun closeSheet() {
@@ -130,12 +124,6 @@ class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     permissionResults.onNext(ActivityPermissionResult(requestCode))
   }
-
-  private fun callPermissionChanges() =
-      permissionResults
-          .filter { it.requestCode == REQUESTCODE_CALL_PHONE_PERMISSION }
-          .map { runtimePermissions.check(this, CALL_PHONE_PERMISSION) }
-          .map(::CallPhonePermissionChanged)
 
   companion object {
 

@@ -280,7 +280,6 @@ class PatientSummaryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -300,7 +299,6 @@ class PatientSummaryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -320,7 +318,6 @@ class PatientSummaryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -340,7 +337,6 @@ class PatientSummaryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -360,7 +356,6 @@ class PatientSummaryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -380,7 +375,6 @@ class PatientSummaryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -400,7 +394,6 @@ class PatientSummaryUpdateTest {
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -420,7 +413,6 @@ class PatientSummaryUpdateTest {
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
         .withoutPhoneNumber()
 
     updateSpec
@@ -441,7 +433,6 @@ class PatientSummaryUpdateTest {
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -461,7 +452,6 @@ class PatientSummaryUpdateTest {
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
         .withoutPhoneNumber()
 
     updateSpec
@@ -482,7 +472,6 @@ class PatientSummaryUpdateTest {
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -502,7 +491,6 @@ class PatientSummaryUpdateTest {
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
         .withoutPhoneNumber()
 
     updateSpec
@@ -523,7 +511,6 @@ class PatientSummaryUpdateTest {
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -543,7 +530,6 @@ class PatientSummaryUpdateTest {
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)
@@ -563,7 +549,6 @@ class PatientSummaryUpdateTest {
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .completedCheckForInvalidPhone()
-        .reportedViewedPatientToAnalytics()
 
     updateSpec
         .given(model)

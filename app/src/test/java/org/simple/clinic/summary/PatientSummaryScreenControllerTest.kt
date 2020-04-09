@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
@@ -18,8 +17,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
-import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -70,7 +67,6 @@ class PatientSummaryScreenControllerTest {
   )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val reporter = MockAnalyticsReporter()
   private val viewRenderer = PatientSummaryViewRenderer(ui)
 
   private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>
@@ -82,27 +78,11 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
     whenever(userSession.loggedInUserImmediate()).doReturn(user)
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.never())
-
-    Analytics.addReporter(reporter)
   }
 
   @After
   fun tearDown() {
-    Analytics.clearReporters()
-    reporter.clear()
     testFixture.dispose()
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `when the screen is opened, the viewed patient analytics event must be sent`(openIntention: OpenIntention) {
-    startMobiusLoop(openIntention)
-
-    val expectedEvent = MockAnalyticsReporter.Event("ViewedPatient", mapOf(
-        "patientId" to patientUuid.toString(),
-        "from" to openIntention.analyticsName()
-    ))
-    assertThat(reporter.receivedEvents).contains(expectedEvent)
   }
 
   @Test

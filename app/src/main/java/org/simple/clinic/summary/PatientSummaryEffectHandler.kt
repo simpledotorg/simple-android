@@ -59,7 +59,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
         .addTransformer(ShowLinkIdWithPatientView::class.java, showLinkIdWithPatientView(schedulersProvider.ui()))
         .addAction(HideLinkIdWithPatientView::class.java, { uiActions.hideLinkIdWithPatientView() }, schedulersProvider.ui())
-        .addTransformer(ReportViewedPatientToAnalytics::class.java, reportViewedPatientToAnalytics())
         .addConsumer(
             ShowScheduleAppointmentSheet::class.java,
             { uiActions.showScheduleAppointmentSheet(it.patientUuid, it.sheetOpenedFrom) },
@@ -172,14 +171,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .doOnNext { uiActions.showLinkIdWithPatientView(it.patientUuid, it.identifier) }
           .map { LinkIdWithPatientSheetShown }
-    }
-  }
-
-  private fun reportViewedPatientToAnalytics(): ObservableTransformer<ReportViewedPatientToAnalytics, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .doOnNext { Analytics.reportViewedPatient(it.patientUuid, it.openIntention.analyticsName()) }
-          .map { ReportedViewedPatientToAnalytics }
     }
   }
 

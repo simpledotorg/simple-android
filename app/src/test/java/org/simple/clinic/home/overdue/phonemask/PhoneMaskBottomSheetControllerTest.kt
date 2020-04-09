@@ -62,6 +62,8 @@ class PhoneMaskBottomSheetControllerTest {
       number = "1234567890"
   )
 
+  private val proxyPhoneNumber = "0987654321"
+
   private lateinit var controller: PhoneMaskBottomSheetController
 
   @Test
@@ -97,7 +99,7 @@ class PhoneMaskBottomSheetControllerTest {
   ) {
     var isCompletableSubscribed = false
     val secureCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
-    whenever(phoneCaller.secureCall(phoneNumber.number, dialer)).doReturn(secureCallCompletable)
+    whenever(phoneCaller.secureCall(proxyPhoneNumber, phoneNumber.number, dialer)).doReturn(secureCallCompletable)
 
     sheetCreated()
     uiEvents.onNext(callTypeEvent)
@@ -156,7 +158,7 @@ class PhoneMaskBottomSheetControllerTest {
   @Test
   fun `when the phone masking feature is enabled, the secure call button must not be hidden`() {
     // given
-    val config = PhoneNumberMaskerConfig(proxyPhoneNumber = "123456", phoneMaskingFeatureEnabled = true)
+    val config = PhoneNumberMaskerConfig(proxyPhoneNumber = proxyPhoneNumber, phoneMaskingFeatureEnabled = true)
 
     // when
     sheetCreated(config = config)
@@ -180,7 +182,7 @@ class PhoneMaskBottomSheetControllerTest {
   private fun sheetCreated(
       patient: Patient = this.patient,
       phoneNumber: PatientPhoneNumber = this.phoneNumber,
-      config: PhoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber = "123456", phoneMaskingFeatureEnabled = false)
+      config: PhoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber = proxyPhoneNumber, phoneMaskingFeatureEnabled = false)
   ) {
     whenever(patientRepository.patient(patientUuid)).doReturn(Observable.just(patient.toOptional()))
     whenever(patientRepository.phoneNumber(patientUuid)).doReturn(Observable.just(phoneNumber.toOptional()))

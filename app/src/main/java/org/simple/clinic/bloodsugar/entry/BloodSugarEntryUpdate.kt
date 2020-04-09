@@ -153,15 +153,12 @@ class BloodSugarEntryUpdate @AssistedInject constructor(
       next(updatedModel, HideDateErrorMessage)
 
   private fun getDateText(model: BloodSugarEntryModel) =
-      formatToPaddedDate(model.day, model.month, model.twoDigitYear, model.year)
+      formatToPaddedDate(model.day, model.month, model.fourDigitYear)
 
-  private fun formatToPaddedDate(day: String, month: String, twoDigitYear: String, fourDigitYear: String): String {
+  private fun formatToPaddedDate(day: String, month: String, fourDigitYear: String): String {
     val paddedDd = day.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
     val paddedMm = month.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
-    val paddedYy = twoDigitYear.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
 
-    val firstTwoDigitsOfYear = fourDigitYear.substring(0, 2)
-    val paddedYyyy = firstTwoDigitsOfYear + paddedYy
-    return "$paddedDd/$paddedMm/$paddedYyyy"
+    return "$paddedDd/$paddedMm/$fourDigitYear"
   }
 }

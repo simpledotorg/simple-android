@@ -7,14 +7,14 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.BLOOD_SUGAR_ENTRY
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_ENTRY
-import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
-import org.simple.clinic.TestData
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -58,7 +58,7 @@ class BloodSugarEntryUpdateTest {
   fun `when date values change, hide any date error message`() {
     val day = validBloodSugarDate.dayOfMonth.toString()
     val month = validBloodSugarDate.monthValue.toString()
-    val year = validBloodSugarDate.year.toString().substring(2)
+    val year = validBloodSugarDate.year.toString()
 
     updateSpec
         .given(defaultModel)
@@ -97,7 +97,7 @@ class BloodSugarEntryUpdateTest {
                 .screenChanged(DATE_ENTRY)
                 .dayChanged(validBloodSugarDate.dayOfMonth.toString())
                 .monthChanged(validBloodSugarDate.monthValue.toString())
-                .yearChanged(validBloodSugarDate.year.toString().substring(2))
+                .yearChanged(validBloodSugarDate.year.toString())
         )
         .whenEvent(BackPressed)
         .then(assertThatNext(
@@ -110,6 +110,26 @@ class BloodSugarEntryUpdateTest {
   fun `when date entry is active, date is invalid and back is pressed, then the validation error should be shown`() {
     val day = "14"
     val month = "13"
+    val year = "1994"
+    val model = defaultModel
+        .screenChanged(DATE_ENTRY)
+        .dayChanged(day)
+        .monthChanged(month)
+        .yearChanged(year)
+
+    updateSpec
+        .given(model)
+        .whenEvent(BackPressed)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDateValidationError(InvalidPattern) as BloodSugarEntryEffect)
+        ))
+  }
+
+  @Test
+  fun `when date entry is active, date is invalid and back is pressed, then the validation error should be shown v2`() {
+    val day = "14"
+    val month = "12"
     val year = "94"
     val model = defaultModel
         .screenChanged(DATE_ENTRY)
@@ -158,7 +178,7 @@ class BloodSugarEntryUpdateTest {
                 .screenChanged(DATE_ENTRY)
                 .dayChanged(validBloodSugarDate.dayOfMonth.toString())
                 .monthChanged(validBloodSugarDate.monthValue.toString())
-                .yearChanged(validBloodSugarDate.year.toString().substring(2))
+                .yearChanged(validBloodSugarDate.year.toString())
         )
         .whenEvent(ShowBloodSugarEntryClicked)
         .then(assertThatNext(
@@ -171,7 +191,7 @@ class BloodSugarEntryUpdateTest {
   fun `when blood sugar sheet has invalid date and sheet back button is pressed, then show date validation errors`() {
     val day = "14"
     val month = "13"
-    val year = "94"
+    val year = "1994"
     val model = defaultModel
         .screenChanged(DATE_ENTRY)
         .dayChanged(day)
@@ -193,7 +213,7 @@ class BloodSugarEntryUpdateTest {
         .bloodSugarChanged(validBloodSugar)
         .dayChanged(validBloodSugarDate.dayOfMonth.toString())
         .monthChanged(validBloodSugarDate.monthValue.toString())
-        .yearChanged(validBloodSugarDate.year.toString().substring(2))
+        .yearChanged(validBloodSugarDate.year.toString())
         .datePrefilled(validBloodSugarDate)
 
     val bloodSugarReading = BloodSugarReading(validBloodSugar, Random)
@@ -221,7 +241,7 @@ class BloodSugarEntryUpdateTest {
         .bloodSugarChanged(validBloodSugar)
         .dayChanged(validBloodSugarDate.dayOfMonth.toString())
         .monthChanged(validBloodSugarDate.monthValue.toString())
-        .yearChanged(validBloodSugarDate.year.toString().substring(2))
+        .yearChanged(validBloodSugarDate.year.toString())
         .datePrefilled(validBloodSugarDate)
 
     val bloodSugarReading = BloodSugarReading(validBloodSugar, Random)
@@ -247,7 +267,7 @@ class BloodSugarEntryUpdateTest {
         .bloodSugarChanged(invalidBloodSugar)
         .dayChanged(validBloodSugarDate.dayOfMonth.toString())
         .monthChanged(validBloodSugarDate.monthValue.toString())
-        .yearChanged(validBloodSugarDate.year.toString().substring(2))
+        .yearChanged(validBloodSugarDate.year.toString())
         .datePrefilled(validBloodSugarDate)
     val measurementType = invalidBloodSugarModel.bloodSugarReading.type
 
@@ -266,7 +286,7 @@ class BloodSugarEntryUpdateTest {
         .bloodSugarChanged(validBloodSugar)
         .dayChanged(validBloodSugarDate.dayOfMonth.toString())
         .monthChanged(validBloodSugarDate.monthValue.toString())
-        .yearChanged(validBloodSugarDate.year.toString().substring(2))
+        .yearChanged(validBloodSugarDate.year.toString())
         .datePrefilled(validBloodSugarDate)
     val wasDateChanged = false
 
@@ -330,7 +350,7 @@ class BloodSugarEntryUpdateTest {
         .bloodSugarChanged(validBloodSugar)
         .dayChanged(validBloodSugarDate.dayOfMonth.toString())
         .monthChanged(validBloodSugarDate.monthValue.toString())
-        .yearChanged(validBloodSugarDate.year.toString().substring(2))
+        .yearChanged(validBloodSugarDate.year.toString())
         .datePrefilled(validBloodSugarDate)
 
     updateSpec

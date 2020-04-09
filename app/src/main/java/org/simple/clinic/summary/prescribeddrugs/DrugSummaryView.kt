@@ -20,6 +20,7 @@ import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.summary.DRUGS_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
@@ -68,10 +69,6 @@ class DrugSummaryView(
     inflate(context, R.layout.drugs_summary_view, this)
   }
 
-  companion object {
-    private const val ALERT_FACILITY_CHANGE = 303
-  }
-
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -94,7 +91,7 @@ class DrugSummaryView(
   private fun setupAlertResults(screenDestroys: Observable<ScreenDestroyed>) {
     screenRouter.streamScreenResults()
         .ofType<ActivityResult>()
-        .filter { it.requestCode == ALERT_FACILITY_CHANGE && it.succeeded() }
+        .filter { it.requestCode == DRUGS_REQCODE_ALERT_FACILITY_CHANGE && it.succeeded() }
         .map { AlertFacilityChangeSheet.readContinuationExtra<ContinueToScreen>(it.data!!).screenKey }
         .takeUntil(screenDestroys)
         .subscribe(screenRouter::push)
@@ -118,7 +115,7 @@ class DrugSummaryView(
         ContinueToScreen(PrescribedDrugsScreenKey(patientUuid))
     )
 
-    activity.startActivityForResult(alertFacilityChangeIntent, ALERT_FACILITY_CHANGE)
+    activity.startActivityForResult(alertFacilityChangeIntent, DRUGS_REQCODE_ALERT_FACILITY_CHANGE)
   }
 
   private fun bind(

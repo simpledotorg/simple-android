@@ -32,10 +32,10 @@ class Migration_63 @Inject constructor(): Migration(62, 63) {
 
           (
             CASE
-              WHEN BloodSugar.reading_type = "fasting" AND CAST (BloodSugar.reading_value AS REAL) >= 200 THEN 1
-              WHEN BloodSugar.reading_type = "random" AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1
-              WHEN BloodSugar.reading_type = "post_prandial" AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1
-              WHEN BloodSugar.reading_type = "hba1c" AND CAST (BloodSugar.reading_value AS REAL) >= 9 THEN 1
+              WHEN BloodSugar.reading_type = 'fasting' AND CAST (BloodSugar.reading_value AS REAL) >= 200 THEN 1
+              WHEN BloodSugar.reading_type = 'random' AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1
+              WHEN BloodSugar.reading_type = 'post_prandial' AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1
+              WHEN BloodSugar.reading_type = 'hba1c' AND CAST (BloodSugar.reading_value AS REAL) >= 9 THEN 1
               WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 1
               WHEN (MH.hasHadHeartAttack = 'yes' OR MH.hasHadStroke = 'yes') AND (BP.systolic >= 140 OR BP.diastolic >= 110) 
                 THEN 1 

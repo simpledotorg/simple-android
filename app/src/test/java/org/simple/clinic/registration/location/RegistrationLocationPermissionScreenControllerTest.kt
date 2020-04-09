@@ -6,7 +6,9 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
@@ -31,7 +33,7 @@ class RegistrationLocationPermissionScreenControllerTest {
 
   @Test
   fun `when location permission is received then facility selection screen should be opened`() {
-    uiEvents.onNext(RegistrationLocationPermissionChanged(RuntimePermissionResult.GRANTED))
+    uiEvents.onNext(RequestLocationPermission(permission = Just(GRANTED)))
 
     verify(screen).openFacilitySelectionScreen()
   }

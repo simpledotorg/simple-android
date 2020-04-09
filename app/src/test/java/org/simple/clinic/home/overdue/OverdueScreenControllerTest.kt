@@ -1,6 +1,5 @@
 package org.simple.clinic.home.overdue
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -17,7 +16,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -36,7 +34,6 @@ class OverdueScreenControllerTest {
   private val screen = mock<OverdueScreen>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
-  private val maskedPhoneCaller = mock<PhoneCaller>()
   private val configStream: Subject<PhoneNumberMaskerConfig> = PublishSubject.create()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
@@ -54,7 +51,6 @@ class OverdueScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(maskedPhoneCaller.secureCall(any(), any())).thenReturn(Completable.complete())
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(user.toOptional()))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 

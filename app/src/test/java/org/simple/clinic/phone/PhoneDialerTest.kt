@@ -14,13 +14,12 @@ class PhoneDialerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private lateinit var phoneCaller: PhoneCaller
-  private val config: PhoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber = "987", phoneMaskingFeatureEnabled = false)
   private val dialer: Dialer = mock()
   private val activity: AppCompatActivity = mock()
 
   @Before
   fun setUp() {
-    phoneCaller = PhoneCaller(config, activity)
+    phoneCaller = PhoneCaller(activity)
   }
 
   @Test
@@ -36,7 +35,7 @@ class PhoneDialerTest {
   fun `when a secure call is made, the phone call should be made to the masked number`() {
     val plainNumber = "123"
 
-    phoneCaller.secureCall(plainNumber, dialer = dialer).blockingAwait()
+    phoneCaller.secureCall("987", plainNumber, dialer = dialer).blockingAwait()
 
     verify(dialer).call(activity, "987,123#")
   }

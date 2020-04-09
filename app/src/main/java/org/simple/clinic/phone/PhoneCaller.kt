@@ -6,26 +6,33 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 class PhoneCaller @Inject constructor(
-    private val config: PhoneNumberMaskerConfig,
     private val activity: AppCompatActivity
 ) {
 
-  fun normalCall(number: String, dialer: Dialer): Completable {
+  fun normalCall(
+      number: String,
+      dialer: Dialer
+  ): Completable {
     return Completable.fromAction {
       dialer.call(context = activity, phoneNumber = number)
     }
   }
 
-  fun secureCall(numberToMask: String, dialer: Dialer): Completable {
-    return Single.just(maskNumber(numberToMask))
+  fun secureCall(
+      visibleNumber: String,
+      hiddenNumber: String,
+      dialer: Dialer
+  ): Completable {
+    return Single.just(maskNumber(visibleNumber = visibleNumber, hiddenNumber = hiddenNumber))
         .flatMapCompletable { maskedNumber -> normalCall(maskedNumber, dialer) }
   }
 
-  private fun maskNumber(numberToMask: String): String {
-    val proxyNumber = config.proxyPhoneNumber
-
+  private fun maskNumber(
+      visibleNumber: String,
+      hiddenNumber: String
+  ): String {
     val stopCharacter = "#"
-    val dtmfTones = "$numberToMask$stopCharacter"
-    return "$proxyNumber,$dtmfTones"
+    val dtmfTones = "$hiddenNumber$stopCharacter"
+    return "$visibleNumber,$dtmfTones"
   }
 }

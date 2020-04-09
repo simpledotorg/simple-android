@@ -374,8 +374,8 @@ class PatientsScreenControllerTest {
   private fun `params for opening scan card screen on camera permissions`(): List<List<Any>> {
     return listOf(
         listOf(RuntimePermissionResult.GRANTED, true),
-        listOf(RuntimePermissionResult.DENIED, false),
-        listOf(RuntimePermissionResult.NEVER_ASK_AGAIN, false))
+        listOf(RuntimePermissionResult.DENIED, false)
+    )
   }
 
   @Test

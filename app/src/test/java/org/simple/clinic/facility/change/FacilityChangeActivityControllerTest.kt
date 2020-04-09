@@ -33,10 +33,8 @@ import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
-import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestElapsedRealtimeClock
 import org.simple.clinic.widgets.ScreenCreated
@@ -177,10 +175,7 @@ class FacilityChangeActivityControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for permission denials")
-  fun `when screen is started and location permission was denied then location should not be fetched and facilities should be shown`(
-      deniedResult: RuntimePermissionResult
-  ) {
+  fun `when screen is started and location permission was denied then location should not be fetched and facilities should be shown`() {
     val facilities = listOf(
         TestData.facility(name = "Facility 1"),
         TestData.facility(name = "Facility 2"))
@@ -189,15 +184,10 @@ class FacilityChangeActivityControllerTest {
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilityChangeSearchQueryChanged(""))
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(deniedResult))
+    uiEvents.onNext(FacilityChangeLocationPermissionChanged(DENIED))
 
     verify(locationRepository, never()).streamUserLocation(any(), any())
     verify(screen).updateFacilities(any(), any())
-  }
-
-  @Suppress("unused")
-  fun `params for permission denials`(): List<RuntimePermissionResult> {
-    return listOf(DENIED, NEVER_ASK_AGAIN)
   }
 
   @Test
@@ -293,14 +283,11 @@ class FacilityChangeActivityControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for permission denials")
-  fun `when screen starts and location permission was denied then progress indicator should not be shown`(
-      deniedResult: RuntimePermissionResult
-  ) {
+  fun `when screen starts and location permission was denied then progress indicator should not be shown`() {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(deniedResult))
+    uiEvents.onNext(FacilityChangeLocationPermissionChanged(DENIED))
 
     verify(screen, never()).showProgressIndicator()
   }

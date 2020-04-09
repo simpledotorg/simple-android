@@ -58,7 +58,7 @@ class FacilitySelectionActivityController @Inject constructor(
         .switchMap { (_, permissionResult) ->
           when (permissionResult!!) {
             RuntimePermissionResult.GRANTED -> fetchLocation()
-            RuntimePermissionResult.DENIED, RuntimePermissionResult.NEVER_ASK_AGAIN -> Observable.just(LocationUpdate.Unavailable)
+            RuntimePermissionResult.DENIED -> Observable.just(LocationUpdate.Unavailable)
           }
         }
         .take(1)

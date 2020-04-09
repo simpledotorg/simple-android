@@ -19,7 +19,6 @@ import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
-import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -121,7 +120,7 @@ class PhoneMaskBottomSheetController @Inject constructor(
   private fun dialer(permissionResult: RuntimePermissionResult) =
       when (permissionResult) {
         GRANTED -> Automatic
-        DENIED, NEVER_ASK_AGAIN -> Manual
+        DENIED -> Manual
       }
 
   private fun patientPhoneNumberStream(events: Observable<UiEvent>): Observable<String> {

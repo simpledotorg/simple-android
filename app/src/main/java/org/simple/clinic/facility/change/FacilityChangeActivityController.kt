@@ -21,7 +21,6 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
-import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.timer
 import org.simple.clinic.widgets.ScreenCreated
@@ -83,7 +82,7 @@ class FacilityChangeActivityController @Inject constructor(
         .switchMap { (_, permissionResult) ->
           when (permissionResult!!) {
             GRANTED -> fetchLocation()
-            DENIED, NEVER_ASK_AGAIN -> Observable.just(Unavailable)
+            DENIED -> Observable.just(Unavailable)
           }
         }
         .take(1)

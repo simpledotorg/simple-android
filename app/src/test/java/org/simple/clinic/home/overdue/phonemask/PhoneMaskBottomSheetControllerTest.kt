@@ -29,7 +29,6 @@ import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
-import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.toOptional
@@ -146,16 +145,14 @@ class PhoneMaskBottomSheetControllerTest {
   private fun `params for making normal phone calls`() =
       listOf(
           listOf(NormalCallClicked, GRANTED, Automatic),
-          listOf(NormalCallClicked, DENIED, Manual),
-          listOf(NormalCallClicked, NEVER_ASK_AGAIN, Manual)
+          listOf(NormalCallClicked, DENIED, Manual)
       )
 
   @Suppress("Unused")
   private fun `params for making secure phone calls`() =
       listOf(
           listOf(SecureCallClicked, GRANTED, Automatic),
-          listOf(SecureCallClicked, DENIED, Manual),
-          listOf(SecureCallClicked, NEVER_ASK_AGAIN, Manual)
+          listOf(SecureCallClicked, DENIED, Manual)
       )
 
   @Test

@@ -149,10 +149,7 @@ class FacilitySelectionActivityControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for permission denials")
-  fun `when screen is started and location permission was denied then location should not be fetched and facilities should be shown`(
-      deniedResult: RuntimePermissionResult
-  ) {
+  fun `when screen is started and location permission was denied then location should not be fetched and facilities should be shown`() {
     val facilities = listOf(
         TestData.facility(name = "Facility 1"),
         TestData.facility(name = "Facility 2"))
@@ -161,15 +158,10 @@ class FacilitySelectionActivityControllerTest {
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilitySelectionSearchQueryChanged(""))
-    uiEvents.onNext(FacilitySelectionLocationPermissionChanged(deniedResult))
+    uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.DENIED))
 
     verify(locationRepository, never()).streamUserLocation(any(), any())
     verify(screen).updateFacilities(any(), any())
-  }
-
-  @Suppress("unused")
-  fun `params for permission denials`(): List<RuntimePermissionResult> {
-    return listOf(RuntimePermissionResult.DENIED, RuntimePermissionResult.NEVER_ASK_AGAIN)
   }
 
   @Test
@@ -265,14 +257,11 @@ class FacilitySelectionActivityControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for permission denials")
-  fun `when screen starts and location permission was denied then progress indicator should not be shown`(
-      deniedResult: RuntimePermissionResult
-  ) {
+  fun `when screen starts and location permission was denied then progress indicator should not be shown`() {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(FacilitySelectionLocationPermissionChanged(deniedResult))
+    uiEvents.onNext(FacilitySelectionLocationPermissionChanged(RuntimePermissionResult.DENIED))
 
     verify(screen, never()).showProgressIndicator()
   }

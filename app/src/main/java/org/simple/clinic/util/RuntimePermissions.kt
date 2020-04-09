@@ -35,6 +35,9 @@ interface RequiresPermission {
   var permission: Optional<RuntimePermissionResult>
   val permissionString: String
   val permissionRequestCode: Int
+
+  val isPermissionGranted: Boolean
+    get() = permission == Just(GRANTED)
 }
 
 class RequestPermissions<T : Any>(

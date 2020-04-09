@@ -50,6 +50,9 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   @Inject
   lateinit var activity: AppCompatActivity
 
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
   private val recyclerViewAdapter = FacilitiesAdapter()
 
   @SuppressLint("CheckResult")
@@ -124,7 +127,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   }
 
   private fun locationPermissionChanges(): Observable<UiEvent> {
-    val permissionResult = RuntimePermissions.check(activity, LOCATION_PERMISSION)
+    val permissionResult = runtimePermissions.check(activity, LOCATION_PERMISSION)
     return Observable.just(RegistrationFacilityLocationPermissionChanged(permissionResult))
   }
 

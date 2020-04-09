@@ -48,6 +48,9 @@ class FacilitySelectionActivity : AppCompatActivity() {
   @Inject
   lateinit var controller: FacilitySelectionActivityController
 
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   private lateinit var component: FacilitySelectionActivityComponent
@@ -109,7 +112,7 @@ class FacilitySelectionActivity : AppCompatActivity() {
           .map { text -> FacilitySelectionSearchQueryChanged(text.toString()) }
 
   private fun locationPermissionChanges(): Observable<UiEvent> {
-    val permissionResult = RuntimePermissions.check(this, LOCATION_PERMISSION)
+    val permissionResult = runtimePermissions.check(this, LOCATION_PERMISSION)
     return Observable.just(FacilitySelectionLocationPermissionChanged(permissionResult))
   }
 

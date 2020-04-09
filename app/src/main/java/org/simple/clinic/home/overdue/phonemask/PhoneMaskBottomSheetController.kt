@@ -16,6 +16,7 @@ import org.simple.clinic.phone.Dialer.Automatic
 import org.simple.clinic.phone.Dialer.Manual
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
@@ -41,8 +42,6 @@ class PhoneMaskBottomSheetController @Inject constructor(
 
     return Observable.mergeArray(
         setupView(replayedEvents),
-        requestCallPermissionForNormalCalls(replayedEvents),
-        requestCallPermissionForSecureCalls(replayedEvents),
         makeNormalCall(replayedEvents),
         makeSecureCall(replayedEvents),
         hideSecureCallButton(replayedEvents)
@@ -82,34 +81,25 @@ class PhoneMaskBottomSheetController @Inject constructor(
     return DateOfBirth.fromPatient(patient, clock).estimateAge(clock)
   }
 
-  private fun requestCallPermissionForNormalCalls(events: Observable<UiEvent>) =
-      normalCallClicked(events)
-          .map { Ui::requestCallPermission }
-
-  private fun requestCallPermissionForSecureCalls(events: Observable<UiEvent>) =
-      secureCallClicked(events)
-          .map { Ui::requestCallPermission }
-
   private fun makeNormalCall(events: Observable<UiEvent>) =
-      callPermissionResult(events)
-          .withLatestFrom(normalCallClicked(events), patientPhoneNumberStream(events))
-          .flatMap { (permissionResult, _, phoneNumber) ->
+      normalCallClicked(events)
+          .withLatestFrom(patientPhoneNumberStream(events))
+          .flatMap { (normalCallClicked, phoneNumber) ->
+            val permissionResult = (normalCallClicked.permission as Just).value
+
             phoneCaller.normalCall(phoneNumber, dialer(permissionResult))
                 .andThen(Observable.just(Ui::closeSheet))
           }
 
   private fun makeSecureCall(events: Observable<UiEvent>) =
-      callPermissionResult(events)
-          .withLatestFrom(secureCallClicked(events), patientPhoneNumberStream(events))
-          .flatMap { (permissionResult, _, phoneNumber) ->
+      secureCallClicked(events)
+          .withLatestFrom(patientPhoneNumberStream(events))
+          .flatMap { (secureCallClicked, phoneNumber) ->
+            val permissionResult = (secureCallClicked.permission as Just).value
+
             phoneCaller.secureCall(phoneNumber, dialer(permissionResult))
                 .andThen(Observable.just(Ui::closeSheet))
           }
-
-  private fun callPermissionResult(events: Observable<UiEvent>) =
-      events
-          .ofType<CallPhonePermissionChanged>()
-          .map { it.result }
 
   private fun normalCallClicked(events: Observable<UiEvent>) =
       events.ofType<NormalCallClicked>()

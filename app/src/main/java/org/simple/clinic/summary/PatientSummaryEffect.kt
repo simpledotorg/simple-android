@@ -32,8 +32,6 @@ data class ShowLinkIdWithPatientView(val patientUuid: UUID, val identifier: Iden
 
 object HideLinkIdWithPatientView : PatientSummaryEffect()
 
-data class ReportViewedPatientToAnalytics(val patientUuid: UUID, val openIntention: OpenIntention): PatientSummaryEffect()
-
 data class ShowScheduleAppointmentSheet(
     val patientUuid: UUID,
     val sheetOpenedFrom: AppointmentSheetOpenedFrom,

@@ -24,7 +24,6 @@ import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.Unknown
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
-import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -64,7 +63,6 @@ class PatientsScreenController @Inject constructor(
         refreshApprovalStatusOnStart(replayedEvents),
         displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents),
-        requestCameraPermissions(replayedEvents),
         openScanSimpleIdScreen(replayedEvents),
         toggleVisibilityOfSyncIndicator(replayedEvents),
         showAppUpdateDialog(replayedEvents),
@@ -165,16 +163,10 @@ class PatientsScreenController @Inject constructor(
         }
   }
 
-  private fun requestCameraPermissions(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScanCardIdButtonClicked>()
-        .map { Ui::requestCameraPermissions }
-  }
-
   private fun openScanSimpleIdScreen(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<PatientsScreenCameraPermissionChanged>()
-        .filter { it.permissionResult == RuntimePermissionResult.GRANTED }
+        .ofType<ScanCardIdButtonClicked>()
+        .filter(ScanCardIdButtonClicked::isPermissionGranted)
         .map { Ui::openScanSimpleIdCardScreen }
   }
 

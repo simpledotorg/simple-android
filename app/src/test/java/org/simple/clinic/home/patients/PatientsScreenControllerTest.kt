@@ -18,11 +18,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
-import org.simple.clinic.patient.PatientConfig
-import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -36,7 +35,8 @@ import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -351,31 +351,15 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  fun `when the user clicks scan card id button, request for camera permissions`() {
-    uiEvents.onNext(ScanCardIdButtonClicked)
-    verify(screen).requestCameraPermissions()
+  fun `when the user clicks scan card id button and the camera permission is granted, open the scan camera screen`() {
+    uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(GRANTED)))
+    verify(screen).openScanSimpleIdCardScreen()
   }
 
   @Test
-  @Parameters(method = "params for opening scan card screen on camera permissions")
-  fun `when the camera permissions are granted, the scan card screen must be opened`(
-      permissionResult: RuntimePermissionResult,
-      shouldOpenScreen: Boolean
-  ) {
-    uiEvents.onNext(PatientsScreenCameraPermissionChanged(permissionResult))
-    if (shouldOpenScreen) {
-      verify(screen).openScanSimpleIdCardScreen()
-    } else {
-      verify(screen, never()).openScanSimpleIdCardScreen()
-    }
-  }
-
-  @Suppress("Unused")
-  private fun `params for opening scan card screen on camera permissions`(): List<List<Any>> {
-    return listOf(
-        listOf(RuntimePermissionResult.GRANTED, true),
-        listOf(RuntimePermissionResult.DENIED, false)
-    )
+  fun `when the user clicks scan card id button and the camera permission is denied, do not open the scan camera screen`() {
+    uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(DENIED)))
+    verify(screen, never()).openScanSimpleIdCardScreen()
   }
 
   @Test

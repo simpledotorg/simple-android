@@ -11,7 +11,6 @@ import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
 import org.simple.clinic.user.User
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import java.util.UUID
 
 object Analytics {
   private var reporters: List<AnalyticsReporter> = emptyList()
@@ -59,15 +58,6 @@ object Analytics {
     val props = mapOf("name" to error)
 
     reporters.forEach { it.createEvent("InputValidationError", props) }
-  }
-
-  fun reportViewedPatient(patientUuid: UUID, from: String) {
-    val props = mapOf(
-        "patientId" to patientUuid.toString(),
-        "from" to from
-    )
-
-    reporters.forEach { it.createEvent("ViewedPatient", props) }
   }
 
   fun reportNetworkCall(url: String, method: String, responseCode: Int, contentLength: Int, durationMillis: Int) {

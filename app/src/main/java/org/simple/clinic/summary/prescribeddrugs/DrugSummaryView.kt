@@ -17,9 +17,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
-import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
-import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -114,7 +112,7 @@ class DrugSummaryView(
   }
 
   override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility) {
-    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intentForScreen(
+    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
         context,
         currentFacility.name,
         ContinueToScreen(PrescribedDrugsScreenKey(patientUuid))

@@ -308,7 +308,7 @@ class PatientSummaryScreen(
       currentFacility: Facility
   ) {
     val scheduleAppointmentIntent = ScheduleAppointmentSheet.intent(context, patientUuid, ScheduleAppointmentSheetExtra(sheetOpenedFrom))
-    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intentForActivity(
+    val alertFacilityChangeIntent = AlertFacilityChangeSheet.intent(
         context,
         currentFacility.name,
         ContinueToActivity(scheduleAppointmentIntent, SUMMARY_REQCODE_SCHEDULE_APPOINTMENT)
@@ -358,7 +358,7 @@ class PatientSummaryScreen(
       patientSummaryProfile: PatientSummaryProfile,
       currentFacility: Facility
   ) {
-    val intentForAlertSheet = AlertFacilityChangeSheet.intentForScreen(
+    val intentForAlertSheet = AlertFacilityChangeSheet.intent(
         context,
         currentFacility.name,
         ContinueToScreen(createEditPatientScreenKey(patientSummaryProfile))

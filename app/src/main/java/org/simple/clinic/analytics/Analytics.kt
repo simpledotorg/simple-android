@@ -9,6 +9,7 @@ import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
 import org.simple.clinic.user.User
+import org.simple.clinic.util.RuntimePermissionResult
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
@@ -119,6 +120,17 @@ object Analytics {
     )
 
     reporters.forEach { it.createEvent("DataCleared", props) }
+  }
+
+  fun reportPermissionResult(
+      permission: String,
+      result: RuntimePermissionResult
+  ) {
+    val props = mapOf(
+        "permission" to permission,
+        "result" to result
+    )
+    reporters.forEach { it.createEvent("PermissionResult", props) }
   }
 
   enum class NetworkTransportType {

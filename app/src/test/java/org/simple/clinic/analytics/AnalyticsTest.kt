@@ -44,11 +44,6 @@ class AnalyticsTest {
   }
 
   @Test
-  fun `when reporting an audit event without any reporters, no error should be thrown`() {
-    Analytics.reportViewedPatient(UUID.fromString("7cf6ce77-bb33-437a-97aa-935b9ea432aa"), "Test")
-  }
-
-  @Test
   fun `when reporting a network call without any reporters, no error should be thrown`() {
     Analytics.reportNetworkCall(
         url = "test",
@@ -165,9 +160,6 @@ class AnalyticsTest {
 
     Analytics.addReporter(reporter1, reporter2)
 
-    val uuid1 = UUID.fromString("1eddd1cc-cd7e-4245-8eac-5e9471a9a6c0")
-    val uuid2 = UUID.fromString("62a869f6-ac56-47f4-a9b7-f86cd1a81ce0")
-
     Analytics.reportUserInteraction("Test 1")
     Analytics.reportUserInteraction("Test 2")
     Analytics.reportTimeTaken("Operation 1", Duration.ofMillis(500L))
@@ -184,8 +176,6 @@ class AnalyticsTest {
         networkTransportType = Analytics.NetworkTransportType.WIFI,
         downstreamBandwidthKbps = 100,
         upstreamBandwidthKbps = 50)
-    Analytics.reportViewedPatient(uuid1, "Test 2")
-    Analytics.reportViewedPatient(uuid2, "Test 1")
     Analytics.reportNetworkCall("Test 2", "POST", 400, 1000, 300)
     Analytics.reportNetworkTimeout(
         url = "Test 3",
@@ -229,8 +219,6 @@ class AnalyticsTest {
             "downstreamKbps" to 100,
             "upstreamKbps" to 50)
         ),
-        Event("ViewedPatient", mapOf("patientId" to uuid1.toString(), "from" to "Test 2")),
-        Event("ViewedPatient", mapOf("patientId" to uuid2.toString(), "from" to "Test 1")),
         Event("NetworkCall", mapOf(
             "url" to "Test 2", "method" to "POST", "responseCode" to 400, "contentLength" to 1000, "durationMs" to 300)
         ),

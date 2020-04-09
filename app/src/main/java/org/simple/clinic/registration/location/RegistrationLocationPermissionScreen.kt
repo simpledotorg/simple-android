@@ -33,6 +33,9 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
   @Inject
   lateinit var controller: RegistrationLocationPermissionScreenController
 
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -68,12 +71,12 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
     return screenRouter.streamScreenResults()
         .ofType<ActivityPermissionResult>()
         .filter { result -> result.requestCode == REQUESTCODE_LOCATION_PERMISSION }
-        .map { RuntimePermissions.check(activity, LOCATION_PERMISSION) }
+        .map { runtimePermissions.check(activity, LOCATION_PERMISSION) }
         .map(::RegistrationLocationPermissionChanged)
   }
 
   private fun requestLocationPermission() {
-    RuntimePermissions.request(activity, LOCATION_PERMISSION, REQUESTCODE_LOCATION_PERMISSION)
+    runtimePermissions.request(activity, LOCATION_PERMISSION, REQUESTCODE_LOCATION_PERMISSION)
   }
 
   fun openFacilitySelectionScreen() {

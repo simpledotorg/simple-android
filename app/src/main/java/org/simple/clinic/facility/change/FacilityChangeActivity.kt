@@ -48,6 +48,9 @@ class FacilityChangeActivity : AppCompatActivity() {
   @Inject
   lateinit var locale: Locale
 
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val recyclerViewAdapter = FacilitiesAdapter()
 
@@ -127,7 +130,7 @@ class FacilityChangeActivity : AppCompatActivity() {
           .map(::FacilityChangeClicked)
 
   private fun locationPermissionChanges(): Observable<UiEvent> {
-    val permissionResult = RuntimePermissions.check(this, LOCATION_PERMISSION)
+    val permissionResult = runtimePermissions.check(this, LOCATION_PERMISSION)
     return Observable.just(FacilityChangeLocationPermissionChanged(permissionResult))
   }
 

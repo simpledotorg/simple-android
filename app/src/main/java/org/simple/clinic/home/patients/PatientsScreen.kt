@@ -72,6 +72,9 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   @field:[Inject Named("training_video_youtube_id")]
   lateinit var youTubeVideoId: String
 
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
   @IdRes
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
   private var disposable = Disposables.empty()
@@ -160,7 +163,7 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     return screenRouter.streamScreenResults()
         .ofType<ActivityPermissionResult>()
         .filter { result -> result.requestCode == REQUESTCODE_CAMERA_PERMISSION }
-        .map { RuntimePermissions.check(activity, CAMERA_PERMISSION) }
+        .map { runtimePermissions.check(activity, CAMERA_PERMISSION) }
         .map(::PatientsScreenCameraPermissionChanged)
   }
 
@@ -196,7 +199,7 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   fun requestCameraPermissions() {
-    RuntimePermissions.request(activity, CAMERA_PERMISSION, REQUESTCODE_CAMERA_PERMISSION)
+    runtimePermissions.request(activity, CAMERA_PERMISSION, REQUESTCODE_CAMERA_PERMISSION)
   }
 
   fun hideSyncIndicator() {

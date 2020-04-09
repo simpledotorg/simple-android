@@ -38,6 +38,9 @@ class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
   @Inject
   lateinit var locale: Locale
 
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
   private lateinit var component: PhoneMaskBottomSheetComponent
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
@@ -111,7 +114,7 @@ class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
   }
 
   override fun requestCallPermission() {
-    RuntimePermissions.request(this, CALL_PHONE_PERMISSION, REQUESTCODE_CALL_PHONE_PERMISSION)
+    runtimePermissions.request(this, CALL_PHONE_PERMISSION, REQUESTCODE_CALL_PHONE_PERMISSION)
   }
 
   override fun closeSheet() {
@@ -131,7 +134,7 @@ class PhoneMaskBottomSheet : BottomSheetActivity(), PhoneMaskBottomSheetUi {
   private fun callPermissionChanges() =
       permissionResults
           .filter { it.requestCode == REQUESTCODE_CALL_PHONE_PERMISSION }
-          .map { RuntimePermissions.check(this, CALL_PHONE_PERMISSION) }
+          .map { runtimePermissions.check(this, CALL_PHONE_PERMISSION) }
           .map(::CallPhonePermissionChanged)
 
   companion object {

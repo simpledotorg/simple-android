@@ -9,6 +9,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
@@ -55,11 +56,12 @@ class RequestPermissions<T : Any>(
     val eventsRequiringPermission = sharedUpstream.ofType<RequiresPermission>()
     val eventsNotRequiringPermission = sharedUpstream.filter { it !is RequiresPermission }
 
-    return Observable.merge(
+    return Observable.mergeArray(
         eventsNotRequiringPermission,
         permissionCompletedEvents,
         requestPermissions(eventsRequiringPermission),
-        handlePermissionResults()
+        handlePermissionResults(),
+        reportPermissionResultsToAnalytics()
     )
   }
 
@@ -103,6 +105,19 @@ class RequestPermissions<T : Any>(
         }
         .doOnNext { requestCode ->
           inFlightPermissionRequests = inFlightPermissionRequests - requestCode
+        }
+        .flatMap { Observable.empty<T>() }
+  }
+
+  private fun reportPermissionResultsToAnalytics(): Observable<T> {
+    return permissionCompletedEvents
+        .ofType<RequiresPermission>()
+        .doOnNext { event ->
+          val permissionResult = event.permission
+
+          if(permissionResult is Just) {
+            Analytics.reportPermissionResult(event.permissionString, permissionResult.value)
+          }
         }
         .flatMap { Observable.empty<T>() }
   }

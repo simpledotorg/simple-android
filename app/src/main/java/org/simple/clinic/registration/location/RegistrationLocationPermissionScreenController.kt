@@ -6,7 +6,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -25,8 +24,8 @@ class RegistrationLocationPermissionScreenController @Inject constructor() : Obs
 
   private fun handlePermissionGrants(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<RegistrationLocationPermissionChanged>()
-        .filter { it.result == RuntimePermissionResult.GRANTED }
+        .ofType<RequestLocationPermission>()
+        .filter(RequestLocationPermission::isPermissionGranted)
         .map { { ui: Ui -> ui.openFacilitySelectionScreen() } }
   }
 }

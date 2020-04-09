@@ -55,9 +55,12 @@ class BloodSugarSummaryViewEffectHandlerTest {
   fun `when open blood sugar type selector effect is received then type selector sheet should be opened`() {
     //given
     val currentFacility = TestData.facility(uuid = UUID.fromString("9a82720a-0445-43dd-b557-3d4b079b66ef"))
+    val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("3be65af9-324f-4904-9ab4-6d8c47941b99"))
+    whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
+    whenever(facilityRepository.currentFacilityImmediate(loggedInUser)) doReturn currentFacility
 
     //whens
-    testCase.dispatch(OpenBloodSugarTypeSelector(currentFacility))
+    testCase.dispatch(OpenBloodSugarTypeSelector)
 
     //then
     testCase.assertNoOutgoingEvents()
@@ -105,22 +108,4 @@ class BloodSugarSummaryViewEffectHandlerTest {
     verify(uiActions).openBloodSugarUpdateSheet(bloodSugar.uuid, Random)
     verifyNoMoreInteractions(uiActions)
   }
-
-  @Test
-  fun `when fetch current facility effect is received then load current facility`() {
-    //given
-    val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("9a82720a-0445-43dd-b557-3d4b079b66ef"))
-    val currentFacility = TestData.facility(uuid = UUID.fromString("509ae85b-f7d5-48a6-9dfc-a6e4bae00cce"))
-
-    whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
-    whenever(facilityRepository.currentFacilityImmediate(loggedInUser)) doReturn currentFacility
-
-    //when
-    testCase.dispatch(FetchCurrentFacility)
-
-    //then
-    testCase.assertOutgoingEvents(CurrentFacilityFetched(currentFacility))
-    verifyZeroInteractions(uiActions)
-  }
-
 }

@@ -22,10 +22,6 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
       effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))
     }
 
-    if (!model.hasReportedViewedPatientToAnalytics) {
-      effects.add(ReportViewedPatientToAnalytics(model.patientUuid, model.openIntention))
-    }
-
     return first(model, effects)
   }
 }

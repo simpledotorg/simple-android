@@ -1,25 +1,32 @@
 package org.simple.clinic.bp.history
 
+import androidx.paging.PositionalDataSource
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.threeten.bp.Duration
 
 class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
+    private val dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory.Factory,
     @Assisted private val uiActions: BloodPressureHistoryScreenUiActions
 ) {
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(uiActions: BloodPressureHistoryScreenUiActions): BloodPressureHistoryScreenEffectHandler
+    fun create(
+        uiActions: BloodPressureHistoryScreenUiActions
+    ): BloodPressureHistoryScreenEffectHandler
   }
 
   fun build(): ObservableTransformer<BloodPressureHistoryScreenEffect, BloodPressureHistoryScreenEvent> {
@@ -29,6 +36,12 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
         .addTransformer(LoadBloodPressureHistory::class.java, loadBloodPressureHistory(schedulersProvider.io()))
         .addConsumer(OpenBloodPressureEntrySheet::class.java, { uiActions.openBloodPressureEntrySheet(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenBloodPressureUpdateSheet::class.java, { uiActions.openBloodPressureUpdateSheet(it.bloodPressureMeasurement.uuid) }, schedulersProvider.ui())
+        .addConsumer(ShowBloodPressures::class.java, {
+          val dataSource = bloodPressureRepository.allBloodPressuresDataSource(it.patientUuid).create() as PositionalDataSource<BloodPressureMeasurement>
+          val dataSourceFactory = dataSourceFactory.create(dataSource)
+
+          uiActions.showBloodPressures(dataSourceFactory)
+        }, schedulersProvider.ui())
         .build()
   }
 

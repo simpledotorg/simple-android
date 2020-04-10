@@ -1,6 +1,7 @@
 package org.simple.clinic.bp
 
 import android.os.Parcelable
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Index
@@ -142,5 +143,12 @@ data class BloodPressureMeasurement(
       ORDER BY recordedAt DESC
     """)
     fun allBloodPressures(patientUuid: UUID): Observable<List<BloodPressureMeasurement>>
+
+    @Query("""
+      SELECT * FROM bloodpressuremeasurement
+      WHERE patientUuid == :patientUuid AND deletedAt IS NULL
+      ORDER BY recordedAt DESC
+    """)
+    fun allBloodPressuresDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodPressureMeasurement>
   }
 }

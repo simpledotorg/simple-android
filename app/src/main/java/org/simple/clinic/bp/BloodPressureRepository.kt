@@ -1,5 +1,6 @@
 package org.simple.clinic.bp
 
+import androidx.paging.DataSource
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -134,6 +135,10 @@ class BloodPressureRepository @Inject constructor(
 
   fun allBloodPressures(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
     return dao.allBloodPressures(patientUuid)
+  }
+
+  fun allBloodPressuresDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodPressureMeasurement> {
+    return dao.allBloodPressuresDataSource(patientUuid)
   }
 
   override fun pendingSyncRecordCount(): Observable<Int> {

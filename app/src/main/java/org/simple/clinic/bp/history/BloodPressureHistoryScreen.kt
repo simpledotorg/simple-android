@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.screen_bp_history.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
-import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItemDiffCallback
 import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
@@ -143,10 +142,6 @@ class BloodPressureHistoryScreen(
     toolbar.setNavigationOnClickListener {
       screenRouter.pop()
     }
-  }
-
-  override fun showBloodPressureHistory(bloodPressures: List<BloodPressureMeasurement>) {
-    // Will remove this method in later commits
   }
 
   override fun showPatientInformation(patient: Patient) {

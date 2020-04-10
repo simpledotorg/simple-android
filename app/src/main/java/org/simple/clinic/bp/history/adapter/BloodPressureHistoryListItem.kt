@@ -10,65 +10,11 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
 import org.simple.clinic.util.Truss
-import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.format.DateTimeFormatter
 
 sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
-  companion object {
-    fun from(
-        measurements: List<BloodPressureMeasurement>,
-        canEditFor: Duration,
-        utcClock: UtcClock,
-        userClock: UserClock,
-        dateFormatter: DateTimeFormatter,
-        timeFormatter: DateTimeFormatter
-    ): List<BloodPressureHistoryListItem> {
-      val measurementsByDate = measurements.groupBy { it.recordedAt.toLocalDateAtZone(userClock.zone) }
-
-      val bpHistoryItems = measurementsByDate.mapValues { (_, measurementsList) ->
-        val hasMultipleMeasurementsInSameDate = measurementsList.size > 1
-        measurementsList.map { measurement ->
-          val isBpEditable = isBpEditable(measurement, canEditFor, utcClock)
-          val recordedAt = measurement.recordedAt.toLocalDateAtZone(userClock.zone)
-          val bpTime = if (hasMultipleMeasurementsInSameDate) {
-            timeFormatter.format(measurement.recordedAt.atZone(userClock.zone))
-          } else {
-            null
-          }
-
-          BloodPressureHistoryItem(
-              measurement = measurement,
-              isBpEditable = isBpEditable,
-              isHighBloodPressure = measurement.level.isUrgent(),
-              bpDate = dateFormatter.format(recordedAt),
-              bpTime = bpTime
-          )
-        }
-      }.values.flatten()
-
-      return listOf(NewBpButton) + bpHistoryItems
-    }
-
-    private fun isBpEditable(
-        bloodPressureMeasurement: BloodPressureMeasurement,
-        bpEditableFor: Duration,
-        utcClock: UtcClock
-    ): Boolean {
-      val now = Instant.now(utcClock)
-      val createdAt = bloodPressureMeasurement.createdAt
-
-      val durationSinceBpCreated = Duration.between(createdAt, now)
-
-      return durationSinceBpCreated <= bpEditableFor
-    }
-  }
 
   object NewBpButton : BloodPressureHistoryListItem() {
 

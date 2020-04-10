@@ -5,6 +5,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -23,6 +24,10 @@ class PatientContactEffectHandler(
         .subtypeEffectHandler<PatientContactEffect, PatientContactEvent>()
         .addTransformer(LoadPatientProfile::class.java, loadPatientProfile(schedulers.io()))
         .addTransformer(LoadLatestOverdueAppointment::class.java, loadLatestOverdueAppointment(schedulers.io()))
+        .addConsumer(DirectCallWithAutomaticDialer::class.java, { uiActions.directlyCallPatient(it.patientPhoneNumber, Dialer.Automatic) }, schedulers.ui())
+        .addConsumer(DirectCallWithManualDialer::class.java, { uiActions.directlyCallPatient(it.patientPhoneNumber, Dialer.Manual) }, schedulers.ui())
+        .addConsumer(MaskedCallWithAutomaticDialer::class.java, { uiActions.maskedCallPatient(it.patientPhoneNumber, it.proxyPhoneNumber, Dialer.Automatic) }, schedulers.ui())
+        .addConsumer(MaskedCallWithManualDialer::class.java, { uiActions.maskedCallPatient(it.patientPhoneNumber, it.proxyPhoneNumber, Dialer.Manual) }, schedulers.ui())
         .build()
   }
 

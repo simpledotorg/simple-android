@@ -59,24 +59,6 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   }
 
   @Test
-  fun `when load blood pressure history effect is received, then load all blood pressures`() {
-    // given
-    val bloodPressureMeasurement = TestData.bloodPressureMeasurement(
-        UUID.fromString("51ac042d-2f70-495c-a3e3-2599d8990da2"),
-        patientUuid
-    )
-    val bloodPressures = listOf(bloodPressureMeasurement)
-    whenever(bloodPressureRepository.allBloodPressures(patientUuid)) doReturn Observable.just(bloodPressures)
-
-    // when
-    testCase.dispatch(LoadBloodPressureHistory(patientUuid))
-
-    // then
-    testCase.assertOutgoingEvents(BloodPressureHistoryLoaded(bloodPressures))
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
   fun `when open blood pressure entry sheet effect is received, then open blood pressure entry sheet`() {
     // given
     val patientUuid = UUID.fromString("5adeb648-00a6-4073-b509-ac74cbd5f08b")

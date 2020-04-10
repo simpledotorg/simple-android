@@ -26,8 +26,9 @@ class PatientContactUpdateTest {
       age = patientProfile.patient.age,
       dateOfBirth = patientProfile.patient.dateOfBirth
   )
+  private val proxyPhoneNumberForSecureCalls = "9999988888"
 
-  private val spec = UpdateSpec(PatientContactUpdate())
+  private val spec = UpdateSpec(PatientContactUpdate(proxyPhoneNumberForMaskedCalls = proxyPhoneNumberForSecureCalls))
 
   @Test
   fun `when the patient profile is loaded, the ui must be updated`() {
@@ -57,7 +58,7 @@ class PatientContactUpdateTest {
 
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
-      proxyPhoneNumber: String = "12345678"
+      proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls
   ): PatientContactModel {
     val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
 

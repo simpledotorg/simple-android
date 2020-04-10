@@ -73,7 +73,7 @@ buildscript {
       camerax             : '1.0.0-beta02',
       cameraView          : '1.0.0-alpha09',
       cameraLifecycle     : '1.0.0-alpha09',
-      zxingAndroid        : '3.3.0',
+      zxing               : '3.3.3',
   ]
 
   repositories {

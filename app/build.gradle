@@ -257,7 +257,7 @@ dependencies {
   implementation "androidx.camera:camera-view:$versions.cameraView"
   implementation "androidx.camera:camera-lifecycle:$versions.cameraxLifecycle"
 
-  implementation "com.google.zxing:android-core:$versions.zxingAndroid"
+  implementation "com.google.zxing:core:$versions.zxing"
 
   implementation "com.google.dagger:dagger:$versions.dagger"
   kapt "com.google.dagger:dagger-compiler:$versions.dagger"

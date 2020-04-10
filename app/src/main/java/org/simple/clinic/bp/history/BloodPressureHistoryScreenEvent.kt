@@ -8,8 +8,6 @@ sealed class BloodPressureHistoryScreenEvent : UiEvent
 
 data class PatientLoaded(val patient: Patient) : BloodPressureHistoryScreenEvent()
 
-data class BloodPressureHistoryLoaded(val bloodPressures: List<BloodPressureMeasurement>) : BloodPressureHistoryScreenEvent()
-
 object NewBloodPressureClicked : BloodPressureHistoryScreenEvent()
 
 data class BloodPressureClicked(val bloodPressureMeasurement: BloodPressureMeasurement) : BloodPressureHistoryScreenEvent()

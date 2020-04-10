@@ -25,23 +25,6 @@ class BloodPressureHistoryScreenUiRendererTest {
   }
 
   @Test
-  fun `when blood pressure history is loaded, then show it on the ui`() {
-    //given
-    val bloodPressure = TestData.bloodPressureMeasurement(
-        UUID.fromString("4ca198c4-18f8-4a3d-8cc7-fc1f363241fa"),
-        patientUuid
-    )
-    val bloodPressures = listOf(bloodPressure)
-
-    //when
-    renderer.render(defaultModel.historyLoaded(bloodPressures))
-
-    //then
-    verify(ui).showBloodPressureHistory(bloodPressures)
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when patient is loaded, then show it on the ui`() {
     //given
     val patient = TestData.patient(
@@ -52,27 +35,6 @@ class BloodPressureHistoryScreenUiRendererTest {
     renderer.render(defaultModel.patientLoaded(patient))
 
     //then
-    verify(ui).showPatientInformation(patient)
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when both patient and blood pressure history is loaded, then show it on the ui`() {
-    //given
-    val patient = TestData.patient(
-        uuid = UUID.fromString("bf8b7e71-9b99-4d7b-9dfa-55f3c5e74730")
-    )
-    val bloodPressure = TestData.bloodPressureMeasurement(
-        UUID.fromString("4ca198c4-18f8-4a3d-8cc7-fc1f363241fa"),
-        patientUuid
-    )
-    val bloodPressures = listOf(bloodPressure)
-
-    //when
-    renderer.render(defaultModel.historyLoaded(bloodPressures).patientLoaded(patient))
-
-    //then
-    verify(ui).showBloodPressureHistory(bloodPressures)
     verify(ui).showPatientInformation(patient)
     verifyNoMoreInteractions(ui)
   }

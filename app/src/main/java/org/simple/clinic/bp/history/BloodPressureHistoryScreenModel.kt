@@ -23,9 +23,6 @@ data class BloodPressureHistoryScreenModel(
   val hasPatient: Boolean
     get() = patient != null
 
-  fun historyLoaded(bloodPressures: List<BloodPressureMeasurement>): BloodPressureHistoryScreenModel =
-      copy(bloodPressures = bloodPressures)
-
   fun patientLoaded(patient: Patient): BloodPressureHistoryScreenModel =
       copy(patient = patient)
 }

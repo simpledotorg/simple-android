@@ -1,21 +1,26 @@
 package org.simple.clinic.patientcontact
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import java.util.UUID
 
 class PatientContactUpdateTest {
 
   private val patientUuid = UUID.fromString("b5eccb67-6425-4d48-9c17-65e9b267f9eb")
+  private val patientPhoneNumber = "1234567890"
   private val patientProfile = TestData.patientProfile(
       patientUuid = patientUuid,
-      generatePhoneNumber = true
+      patientPhoneNumber = patientPhoneNumber
   )
   private val overdueAppointment = TestData.overdueAppointment(
       patientUuid = patientUuid,
@@ -53,6 +58,66 @@ class PatientContactUpdateTest {
         .whenEvent(OverdueAppointmentLoaded(appointment))
         .then(assertThatNext(
             hasModel(defaultModel.overdueAppointmentLoaded(appointment))
+        ))
+  }
+
+  @Test
+  fun `when normal call is selected and the call permission is granted, directly call the patient with auto dial`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(NormalCallClicked(permission = Just(GRANTED)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(DirectCallWithAutomaticDialer(patientPhoneNumber) as PatientContactEffect)
+        ))
+  }
+
+  @Test
+  fun `when normal call is selected and the call permission is denied, directly call the patient with manual dial`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(NormalCallClicked(permission = Just(DENIED)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(DirectCallWithManualDialer(patientPhoneNumber) as PatientContactEffect)
+        ))
+  }
+
+  @Test
+  fun `when secure call is selected and the call permission is granted, masked call the patient with auto dial`() {
+    val model = defaultModel(phoneMaskFeatureEnabled = true)
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(SecureCallClicked(permission = Just(GRANTED)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MaskedCallWithAutomaticDialer(patientPhoneNumber = patientPhoneNumber, proxyPhoneNumber = proxyPhoneNumberForSecureCalls) as PatientContactEffect)
+        ))
+  }
+
+  @Test
+  fun `when secure call is selected and the call permission is denied, masked call the patient with manual dial`() {
+    val model = defaultModel(phoneMaskFeatureEnabled = true)
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(SecureCallClicked(permission = Just(DENIED)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MaskedCallWithManualDialer(patientPhoneNumber = patientPhoneNumber, proxyPhoneNumber = proxyPhoneNumberForSecureCalls) as PatientContactEffect)
         ))
   }
 

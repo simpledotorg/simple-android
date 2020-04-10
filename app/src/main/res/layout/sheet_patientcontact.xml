@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  app:debug_displayedChild="0">
+
+  <org.simple.clinic.patientcontact.CallPatientView
+    android:id="@+id/callPatientView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+</org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>

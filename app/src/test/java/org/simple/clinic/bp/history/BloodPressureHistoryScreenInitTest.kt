@@ -18,7 +18,7 @@ class BloodPressureHistoryScreenInitTest {
         .then(
             assertThatFirst(
                 hasModel(model),
-                hasEffects(LoadPatient(model.patientUuid), LoadBloodPressureHistory(model.patientUuid), ShowBloodPressures(model.patientUuid))
+                hasEffects(LoadPatient(model.patientUuid), ShowBloodPressures(model.patientUuid))
             )
         )
   }

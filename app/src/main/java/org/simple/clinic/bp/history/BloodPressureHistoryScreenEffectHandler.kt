@@ -33,7 +33,6 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<BloodPressureHistoryScreenEffect, BloodPressureHistoryScreenEvent>()
         .addTransformer(LoadPatient::class.java, loadPatient(schedulersProvider.io()))
-        .addTransformer(LoadBloodPressureHistory::class.java, loadBloodPressureHistory(schedulersProvider.io()))
         .addConsumer(OpenBloodPressureEntrySheet::class.java, { uiActions.openBloodPressureEntrySheet(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenBloodPressureUpdateSheet::class.java, { uiActions.openBloodPressureUpdateSheet(it.bloodPressureMeasurement.uuid) }, schedulersProvider.ui())
         .addConsumer(ShowBloodPressures::class.java, {
@@ -43,20 +42,6 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
           uiActions.showBloodPressures(dataSourceFactory)
         }, schedulersProvider.ui())
         .build()
-  }
-
-  private fun loadBloodPressureHistory(
-      scheduler: Scheduler
-  ): ObservableTransformer<LoadBloodPressureHistory, BloodPressureHistoryScreenEvent> {
-    return ObservableTransformer { effect ->
-      effect
-          .switchMap {
-            bloodPressureRepository
-                .allBloodPressures(it.patientUuid)
-                .subscribeOn(scheduler)
-          }
-          .map(::BloodPressureHistoryLoaded)
-    }
   }
 
   private fun loadPatient(

@@ -31,23 +31,6 @@ class BloodPressureHistoryScreenUpdateTest {
   }
 
   @Test
-  fun `when blood pressure history is loaded, then show blood pressures`() {
-    val bloodPressure1 = TestData.bloodPressureMeasurement(UUID.fromString("8815d0fc-73cc-44a2-a4b3-473c4c0989aa"))
-    val bloodPressure2 = TestData.bloodPressureMeasurement(UUID.fromString("ddf87db7-1034-4618-bc0e-879d7d357adf"))
-    val bloodPressures = listOf(bloodPressure1, bloodPressure2)
-
-    updateSpec
-        .given(model)
-        .whenEvent(BloodPressureHistoryLoaded(bloodPressures))
-        .then(
-            assertThatNext(
-                hasModel(model.historyLoaded(bloodPressures)),
-                hasNoEffects()
-            )
-        )
-  }
-
-  @Test
   fun `when add new blood pressure is clicked, then open entry sheet`() {
     updateSpec
         .given(model)
@@ -66,10 +49,9 @@ class BloodPressureHistoryScreenUpdateTest {
         UUID.fromString("e42d25fb-5693-449c-9ad2-71a172eb8d92"),
         patientUuid
     )
-    val bloodPressures = listOf(bloodPressureMeasurement)
 
     updateSpec
-        .given(model.historyLoaded(bloodPressures))
+        .given(model)
         .whenEvent(BloodPressureClicked(bloodPressureMeasurement))
         .then(
             assertThatNext(

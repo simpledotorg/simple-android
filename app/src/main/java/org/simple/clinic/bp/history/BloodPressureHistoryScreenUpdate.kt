@@ -12,7 +12,6 @@ class BloodPressureHistoryScreenUpdate : Update<BloodPressureHistoryScreenModel,
   ): Next<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEffect> {
     return when (event) {
       is PatientLoaded -> next(model.patientLoaded(event.patient))
-      is BloodPressureHistoryLoaded -> next(model.historyLoaded(event.bloodPressures))
       is NewBloodPressureClicked -> dispatch(OpenBloodPressureEntrySheet(model.patientUuid))
       is BloodPressureClicked -> dispatch(OpenBloodPressureUpdateSheet(event.bloodPressureMeasurement))
     }

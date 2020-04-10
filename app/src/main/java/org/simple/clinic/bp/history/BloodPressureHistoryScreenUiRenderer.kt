@@ -5,10 +5,6 @@ import org.simple.clinic.mobius.ViewRenderer
 class BloodPressureHistoryScreenUiRenderer(private val ui: BloodPressureHistoryScreenUi) : ViewRenderer<BloodPressureHistoryScreenModel> {
 
   override fun render(model: BloodPressureHistoryScreenModel) {
-    if (model.hasBloodPressures) {
-      ui.showBloodPressureHistory(model.bloodPressures!!)
-    }
-
     if (model.hasPatient) {
       ui.showPatientInformation(model.patient!!)
     }

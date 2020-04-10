@@ -3,8 +3,13 @@ package org.simple.clinic.patientcontact
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.next
+import org.simple.clinic.phone.PhoneNumberMaskerConfig
 
-class PatientContactUpdate : Update<PatientContactModel, PatientContactEvent, PatientContactEffect> {
+class PatientContactUpdate(
+    private val proxyPhoneNumberForMaskedCalls: String
+) : Update<PatientContactModel, PatientContactEvent, PatientContactEffect> {
+
+  constructor(config: PhoneNumberMaskerConfig): this(proxyPhoneNumberForMaskedCalls = config.proxyPhoneNumber)
 
   override fun update(
       model: PatientContactModel,

@@ -1,5 +1,7 @@
 package org.simple.clinic.bp.history
 
+import androidx.paging.DataSource
+import androidx.paging.PositionalDataSource
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -9,10 +11,12 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
+import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
@@ -25,12 +29,13 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val patientUuid = UUID.fromString("433d058f-daef-47a7-8c61-95f1a220cbcb")
   private val uiActions = mock<BloodPressureHistoryScreenUiActions>()
+  private val dataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory.Factory>()
   private val effectHandler = BloodPressureHistoryScreenEffectHandler(
       bloodPressureRepository,
       patientRepository,
       TrampolineSchedulersProvider(),
-      uiActions
-  ).build()
+      dataSourceFactory,
+      uiActions).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After
@@ -99,6 +104,26 @@ class BloodPressureHistoryScreenEffectHandlerTest {
     // then
     testCase.assertNoOutgoingEvents()
     verify(uiActions).openBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show blood pressures effect is received, then show blood pressures`() {
+    // given
+    val bloodPressuresDataSourceFactory = mock<DataSource.Factory<Int, BloodPressureMeasurement>>()
+    val bloodPressuresDataSource = mock<PositionalDataSource<BloodPressureMeasurement>>()
+    val bloodPressureHistoryListItemDataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory>()
+
+    whenever(bloodPressureRepository.allBloodPressuresDataSource(patientUuid)).thenReturn(bloodPressuresDataSourceFactory)
+    whenever(bloodPressuresDataSourceFactory.create()).thenReturn(bloodPressuresDataSource)
+    whenever(dataSourceFactory.create(bloodPressuresDataSource)).thenReturn(bloodPressureHistoryListItemDataSourceFactory)
+
+    // when
+    testCase.dispatch(ShowBloodPressures(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showBloodPressures(bloodPressureHistoryListItemDataSourceFactory)
     verifyNoMoreInteractions(uiActions)
   }
 }

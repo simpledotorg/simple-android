@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_bp_history.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
@@ -166,6 +167,10 @@ class BloodPressureHistoryScreen(
   override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bpUuid)
     context.startActivity(intent)
+  }
+
+  override fun showBloodPressures(dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory) {
+
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {

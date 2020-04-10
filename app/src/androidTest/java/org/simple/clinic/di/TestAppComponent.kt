@@ -8,6 +8,7 @@ import org.simple.clinic.TestDataModule
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
 import org.simple.clinic.bloodsugar.sync.BloodSugarSyncAndroidTest
+import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceTest
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
@@ -90,4 +91,5 @@ interface TestAppComponent {
   fun inject(target: Migration57AndroidTest)
   fun inject(target: Migration58AndroidTest)
   fun inject(target: Migration59AndroidTest)
+  fun inject(target: BloodPressureHistoryListItemDataSourceTest)
 }

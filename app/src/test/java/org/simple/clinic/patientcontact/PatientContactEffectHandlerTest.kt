@@ -2,6 +2,8 @@ package org.simple.clinic.patientcontact
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
@@ -10,6 +12,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -69,5 +72,55 @@ class PatientContactEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(OverdueAppointmentLoaded(overdueAppointment))
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the call patient directly with automatic dialer effect is received, the direct phone call must be made with the automatic dialer`() {
+    // when
+    val patientPhoneNumber = "1234567890"
+    testCase.dispatch(DirectCallWithAutomaticDialer(patientPhoneNumber))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).directlyCallPatient(patientPhoneNumber, Dialer.Automatic)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the call patient directly with manual dialer effect is received, the direct phone call must be made with the manual dialer`() {
+    // when
+    val patientPhoneNumber = "1234567890"
+    testCase.dispatch(DirectCallWithManualDialer(patientPhoneNumber))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).directlyCallPatient(patientPhoneNumber, Dialer.Manual)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the call patient masked with automatic dialer effect is received, the masked phone call must be made with the automatic dialer`() {
+    // when
+    val patientPhoneNumber = "1234567890"
+    val proxyNumber = "0987654321"
+    testCase.dispatch(MaskedCallWithAutomaticDialer(patientPhoneNumber = patientPhoneNumber, proxyPhoneNumber = proxyNumber))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).maskedCallPatient(patientPhoneNumber = patientPhoneNumber, proxyNumber = proxyNumber, dialer = Dialer.Automatic)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the call patient masked with manual dialer effect is received, the masked phone call must be made with the manual dialer`() {
+    // when
+    val patientPhoneNumber = "1234567890"
+    val proxyNumber = "0987654321"
+    testCase.dispatch(MaskedCallWithManualDialer(patientPhoneNumber = patientPhoneNumber, proxyPhoneNumber = proxyNumber))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).maskedCallPatient(patientPhoneNumber = patientPhoneNumber, proxyNumber = proxyNumber, dialer = Dialer.Manual)
+    verifyNoMoreInteractions(uiActions)
   }
 }

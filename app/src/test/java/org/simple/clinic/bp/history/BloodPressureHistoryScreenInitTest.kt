@@ -12,13 +12,13 @@ class BloodPressureHistoryScreenInitTest {
   fun `when screen is created, then load patient and all blood pressures`() {
     val patientUuid = UUID.fromString("90357d41-34dc-415a-884e-a1a58a199c64")
     val model = BloodPressureHistoryScreenModel.create(patientUuid)
-    val initSpec = InitSpec<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEffect>(BloodPressureHistoryScreenInit())
+    val initSpec = InitSpec(BloodPressureHistoryScreenInit())
     initSpec
         .whenInit(model)
         .then(
             assertThatFirst(
                 hasModel(model),
-                hasEffects(LoadPatient(model.patientUuid), LoadBloodPressureHistory(model.patientUuid))
+                hasEffects(LoadPatient(model.patientUuid), LoadBloodPressureHistory(model.patientUuid), ShowBloodPressures(model.patientUuid))
             )
         )
   }

@@ -9,7 +9,7 @@ class BloodPressureHistoryScreenInit : Init<BloodPressureHistoryScreenModel, Blo
     return if (model.hasPatient) {
       first(model, LoadBloodPressureHistory(model.patientUuid))
     } else {
-      first(model, LoadPatient(model.patientUuid), LoadBloodPressureHistory(model.patientUuid))
+      first(model, LoadPatient(model.patientUuid), LoadBloodPressureHistory(model.patientUuid), ShowBloodPressures(model.patientUuid))
     }
   }
 }

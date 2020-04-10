@@ -1,10 +1,13 @@
 package org.simple.clinic.bp.history
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.paging.Config
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -14,7 +17,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItemDiffCallback
 import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
@@ -31,7 +33,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.dp
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -67,7 +69,7 @@ class BloodPressureHistoryScreen(
   @field:[Inject Named("time_for_measurement_history")]
   lateinit var timeFormatter: DateTimeFormatter
 
-  private val bloodPressureHistoryAdapter = ItemAdapter(BloodPressureHistoryListItemDiffCallback())
+  private val bloodPressureHistoryAdapter = PagingItemAdapter(BloodPressureHistoryListItemDiffCallback())
 
   private val events: Observable<BloodPressureHistoryScreenEvent> by unsafeLazy {
     Observable
@@ -144,14 +146,7 @@ class BloodPressureHistoryScreen(
   }
 
   override fun showBloodPressureHistory(bloodPressures: List<BloodPressureMeasurement>) {
-    bloodPressureHistoryAdapter.submitList(BloodPressureHistoryListItem.from(
-        bloodPressures,
-        config.bpEditableDuration,
-        utcClock,
-        userClock,
-        dateFormatter,
-        timeFormatter
-    ))
+    // Will remove this method in later commits
   }
 
   override fun showPatientInformation(patient: Patient) {
@@ -169,8 +164,19 @@ class BloodPressureHistoryScreen(
     context.startActivity(intent)
   }
 
+  @SuppressLint("CheckResult")
   override fun showBloodPressures(dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory) {
-
+    val detaches = detaches()
+    // Initial load size hint should be a multiple of page size
+    val config = Config(
+        pageSize = 20,
+        prefetchDistance = 10,
+        initialLoadSizeHint = 40,
+        enablePlaceholders = false
+    )
+    dataSourceFactory.toObservable(config = config, detaches = detaches)
+        .takeUntil(detaches)
+        .subscribe(bloodPressureHistoryAdapter::submitList)
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {

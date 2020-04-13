@@ -307,7 +307,6 @@ dependencies {
   implementation "com.google.android.play:core:$versions.playCore"
 
   implementation "com.simplecityapps:recyclerview-fastscroll:$versions.fastScroll"
-  implementation "com.google.android:flexbox:$versions.flexbox"
   implementation "com.mixpanel.android:mixpanel-android:$versions.mixpanel"
 
   implementation "androidx.work:work-runtime:$versions.workManager"

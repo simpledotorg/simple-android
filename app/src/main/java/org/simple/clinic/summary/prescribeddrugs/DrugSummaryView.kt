@@ -44,6 +44,9 @@ class DrugSummaryView(
   @field:[Inject Named("exact_date")]
   lateinit var exactDateFormatter: DateTimeFormatter
 
+  @field:[Inject Named("full_date")]
+  lateinit var fullDateFormatter: DateTimeFormatter
+
   @Inject
   lateinit var userClock: UserClock
 

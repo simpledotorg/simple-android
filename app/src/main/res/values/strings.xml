@@ -176,7 +176,6 @@
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Go back</string>
-  <string name="patientsummary_prescriptions_last_updated">Updated %s</string>
   <string name="patientsummary_prescriptions_add">Medicines</string>
   <string name="patientsummary_prescriptions_update">Edit medicines</string>
   <string name="patientsummary_bp_add_new">Blood Pressure</string>

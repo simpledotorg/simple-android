@@ -43,9 +43,6 @@ class DrugSummaryView(
     attributeSet: AttributeSet
 ) : CardView(context, attributeSet), DrugSummaryUi {
 
-  @field:[Inject Named("exact_date")]
-  lateinit var exactDateFormatter: DateTimeFormatter
-
   @field:[Inject Named("full_date")]
   lateinit var fullDateFormatter: DateTimeFormatter
 
@@ -108,7 +105,7 @@ class DrugSummaryView(
     val alphabeticallySortedPrescribedDrugs = prescribedDrugs.sortedBy { it.name }
     bind(
         prescriptions = alphabeticallySortedPrescribedDrugs,
-        dateFormatter = exactDateFormatter,
+        dateFormatter = fullDateFormatter,
         userClock = userClock
     )
   }
@@ -142,19 +139,10 @@ class DrugSummaryView(
       prescriptions
           .map { drug ->
             val drugItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_prescripton_drug, this, false) as DrugSummaryItemView
-            drugItemView.render(drug.name, drug.dosage.orEmpty(), fullDateFormatter.format(drug.updatedAt.toLocalDateAtZone(userClock.zone)))
+            drugItemView.render(drug.name, drug.dosage.orEmpty(), dateFormatter.format(drug.updatedAt.toLocalDateAtZone(userClock.zone)))
             drugItemView
           }
           .forEach(drugsSummaryContainerNew::addView)
-
-      val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt }!!
-
-      val lastUpdatedTimestamp = timestampGenerator.generate(lastUpdatedPrescription.updatedAt, userClock)
-
-      lastUpdatedTimestampTextView.text = resources.getString(
-          R.string.patientsummary_prescriptions_last_updated,
-          lastUpdatedTimestamp.displayText(context, dateFormatter)
-      )
     }
 
     val itemContainerBottomPadding = if (prescriptions.size > 1) {

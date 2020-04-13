@@ -135,7 +135,6 @@
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">వెనుకకు వెళ్లు</string>
-  <string name="patientsummary_prescriptions_last_updated">%s అప్‌డేట్ అయింది</string>
   <string name="patientsummary_prescriptions_add">మందులను జోడించు</string>
   <string name="patientsummary_prescriptions_update">మందులను అప్‌డేట్ చేయి</string>
   <string name="patientsummary_bp_add_new">రక్తపోటు</string>

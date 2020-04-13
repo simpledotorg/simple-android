@@ -561,6 +561,24 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when contact patient is clicked, open the contact patient screen`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .completedCheckForInvalidPhone()
+
+    updateSpec
+        .given(model)
+        .whenEvent(ContactPatientClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenContactPatientScreen(patientUuid) as PatientSummaryEffect)
+            )
+        )
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

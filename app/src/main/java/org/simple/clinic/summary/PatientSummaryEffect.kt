@@ -50,3 +50,5 @@ data class TriggerSync(val sheetOpenedFrom: AppointmentSheetOpenedFrom): Patient
 object ShowDiagnosisError : PatientSummaryEffect()
 
 data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID): PatientSummaryEffect()
+
+data class OpenContactPatientScreen(val patientUuid: UUID): PatientSummaryEffect()

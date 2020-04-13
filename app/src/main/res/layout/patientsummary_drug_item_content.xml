@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingStart="@dimen/spacing_12"
+  android:paddingTop="@dimen/spacing_4"
+  android:paddingEnd="@dimen/spacing_12"
+  android:paddingBottom="@dimen/spacing_4">
+
+  <ImageView
+    android:id="@+id/drugIcon"
+    android:layout_width="@dimen/spacing_16"
+    android:layout_height="@dimen/spacing_16"
+    android:contentDescription="@null"
+    android:src="@drawable/prescription_drug"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/prescribedDrugDate"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="20-Nov-2019" />
+
+  <TextView
+    android:id="@+id/prescribedDrugName"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_12"
+    android:layout_marginEnd="@dimen/spacing_8"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@id/prescribedDrugDate"
+    app:layout_constraintStart_toEndOf="@id/drugIcon"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="Metformin 500 mg BD" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

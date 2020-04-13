@@ -32,6 +32,8 @@
   <color name="yellow1">#ffc800</color>
   <color name="yellow2">#fff8e0</color>
 
+  <color name="teal">#2FA7AE</color>
+
   <color name="launcher_background">@color/white100</color>
   <color name="facility_search_query_highlight">@color/blue2</color>
   <color name="status_bar">#0a2e52</color>

@@ -127,13 +127,13 @@ class DrugSummaryView(
   ) {
     updateButton.setOnClickListener { internalEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
 
-    drugsSummaryContainerNew.visibleOrGone(prescriptions.isNotEmpty())
+    drugsSummaryContainer.visibleOrGone(prescriptions.isNotEmpty())
     emptyMedicinesTextView.visibleOrGone(prescriptions.isEmpty())
 
     setButtonText(prescriptions)
     setButtonIcon(prescriptions)
 
-    drugsSummaryContainerNew.removeAllViews()
+    drugsSummaryContainer.removeAllViews()
 
     if (prescriptions.isNotEmpty()) {
       prescriptions
@@ -142,7 +142,7 @@ class DrugSummaryView(
             drugItemView.render(drug.name, drug.dosage.orEmpty(), dateFormatter.format(drug.updatedAt.toLocalDateAtZone(userClock.zone)))
             drugItemView
           }
-          .forEach(drugsSummaryContainerNew::addView)
+          .forEach(drugsSummaryContainer::addView)
     }
 
     val itemContainerBottomPadding = if (prescriptions.size > 1) {
@@ -150,7 +150,7 @@ class DrugSummaryView(
     } else {
       R.dimen.patientsummary_drug_summary_item_container_bottom_padding_24
     }
-    drugsSummaryContainerNew.setPaddingBottom(itemContainerBottomPadding)
+    drugsSummaryContainer.setPaddingBottom(itemContainerBottomPadding)
   }
 
   private fun setButtonText(prescriptions: List<PrescribedDrug>) {

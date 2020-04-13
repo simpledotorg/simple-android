@@ -140,7 +140,7 @@ class DrugSummaryView(
 
     if (prescriptions.isNotEmpty()) {
       prescriptions
-          .map { drug -> DrugSummaryItemView.create(drugsSummaryContainer, drug) }
+          .map { drug -> DrugSummaryItemView_Old.create(drugsSummaryContainer, drug) }
           .forEach { drugView -> drugsSummaryContainer.addView(drugView) }
 
       val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt }!!

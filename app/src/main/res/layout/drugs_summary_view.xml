@@ -38,35 +38,6 @@
     android:orientation="vertical"
     tools:ignore="UselessLeaf" />
 
-  <LinearLayout
-    android:id="@+id/summaryViewGroup"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_12"
-    android:layout_marginEnd="@dimen/spacing_4"
-    android:baselineAligned="false"
-    android:orientation="vertical"
-    android:visibility="gone">
-
-    <com.google.android.flexbox.FlexboxLayout
-      android:id="@+id/drugsSummaryContainer"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      app:alignContent="stretch"
-      app:alignItems="stretch"
-      app:flexWrap="wrap" />
-
-    <TextView
-      android:id="@+id/lastUpdatedTimestampTextView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/spacing_8"
-      android:gravity="center"
-      android:textColor="@color/grey1"
-      tools:text="Updated today" />
-  </LinearLayout>
-
   <TextView
     android:id="@+id/emptyMedicinesTextView"
     android:layout_width="match_parent"

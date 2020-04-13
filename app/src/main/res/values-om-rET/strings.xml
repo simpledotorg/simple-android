@@ -137,7 +137,6 @@
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Duuba deeb’i</string>
-  <string name="patientsummary_prescriptions_last_updated">%s Haara’e</string>
   <string name="patientsummary_prescriptions_add">Qoricha dabali</string>
   <string name="patientsummary_prescriptions_update">Qoricha haaromsi</string>
   <string name="patientsummary_bp_add_new">Dhiibbaa dhiigaa</string>

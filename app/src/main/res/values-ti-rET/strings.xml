@@ -135,7 +135,6 @@
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">ናብ ድሕሪት ተመለስ</string>
-  <string name="patientsummary_prescriptions_last_updated">ዝተሓደሰ %s</string>
   <string name="patientsummary_prescriptions_add">መድሃኒታት ወስኽ</string>
   <string name="patientsummary_prescriptions_update">መድሃኒታት ኣሐድስ</string>
   <string name="patientsummary_bp_add_new">ጸቅጢ ደም</string>

@@ -137,7 +137,6 @@
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">ফিরে যান</string>
-  <string name="patientsummary_prescriptions_last_updated">আপডেট করা হয়েছে %s</string>
   <string name="patientsummary_prescriptions_add">ওষুধগুলো যোগ করুন</string>
   <string name="patientsummary_prescriptions_update">ওষুধগুলো আপডেট করুন</string>
   <string name="patientsummary_bp_add_new">রক্তচাপ</string>

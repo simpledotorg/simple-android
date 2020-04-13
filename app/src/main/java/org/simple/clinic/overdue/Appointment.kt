@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue
 
+import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.room.Dao
 import androidx.room.Entity
@@ -11,6 +12,7 @@ import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 import org.threeten.bp.Instant
@@ -18,6 +20,7 @@ import org.threeten.bp.LocalDate
 import java.util.UUID
 
 @Entity(tableName = "Appointment")
+@Parcelize
 data class Appointment(
     @PrimaryKey val uuid: UUID,
     val patientUuid: UUID,
@@ -33,18 +36,22 @@ data class Appointment(
     val updatedAt: Instant,
     val deletedAt: Instant?,
     val creationFacilityUuid: UUID?
-) {
+): Parcelable {
 
   fun wasCancelledBecauseOfInvalidPhoneNumber(): Boolean = status == Status.Cancelled && cancelReason == AppointmentCancelReason.InvalidPhoneNumber
 
-  sealed class Status {
+  sealed class Status: Parcelable {
 
+    @Parcelize
     object Scheduled : Status()
 
+    @Parcelize
     object Cancelled : Status()
 
+    @Parcelize
     object Visited : Status()
 
+    @Parcelize
     data class Unknown(val actualValue: String) : Status()
 
     object TypeAdapter : SafeEnumTypeAdapter<Status>(
@@ -79,12 +86,15 @@ data class Appointment(
     }
   }
 
-  sealed class AppointmentType {
+  sealed class AppointmentType: Parcelable {
 
+    @Parcelize
     object Manual : AppointmentType()
 
+    @Parcelize
     object Automatic : AppointmentType()
 
+    @Parcelize
     data class Unknown(val actual: String) : AppointmentType()
 
     object TypeAdapter : SafeEnumTypeAdapter<AppointmentType>(

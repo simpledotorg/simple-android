@@ -1,5 +1,7 @@
 package org.simple.clinic.patientcontact
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -8,12 +10,13 @@ import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.parcelable
 import java.util.UUID
 
+@Parcelize
 data class PatientContactModel(
     val patientUuid: UUID,
     val patientProfile: PatientProfile? = null,
     val appointment: ParcelableOptional<OverdueAppointment>? = null,
     val secureCallingFeatureEnabled: Boolean
-) {
+) : Parcelable {
 
   companion object {
     fun create(

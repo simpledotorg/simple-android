@@ -4,12 +4,14 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.ParcelableOptional
+import org.simple.clinic.util.parcelable
 import java.util.UUID
 
 data class PatientContactModel(
     val patientUuid: UUID,
     val patientProfile: PatientProfile? = null,
-    val appointment: Optional<OverdueAppointment>? = null,
+    val appointment: ParcelableOptional<OverdueAppointment>? = null,
     val secureCallingFeatureEnabled: Boolean
 ) {
 
@@ -40,6 +42,6 @@ data class PatientContactModel(
   }
 
   fun overdueAppointmentLoaded(appointment: Optional<OverdueAppointment>): PatientContactModel {
-    return copy(appointment = appointment)
+    return copy(appointment = appointment.parcelable())
   }
 }

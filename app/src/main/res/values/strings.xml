@@ -567,7 +567,7 @@
   <string name="medicalhistorysummaryview_diagnosis">Diagnosis (Required)</string>
 
   <!-- Summary prescriptions view -->
-  <string name="drugsummaryview_no_medicines">None</string>
+  <string name="drugsummaryview_no_medicines">No medicines added</string>
 
   <!-- Access Denied screen -->
   <string name="accessdeniedscreen_title_access_denied">Access denied</string>

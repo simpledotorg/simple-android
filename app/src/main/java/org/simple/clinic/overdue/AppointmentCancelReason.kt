@@ -1,12 +1,14 @@
 package org.simple.clinic.overdue
 
+import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class AppointmentCancelReason {
+sealed class AppointmentCancelReason: Parcelable {
 
   /**
    * A human-readable string that can be printed when, say a reason is logged to analytics.
@@ -16,30 +18,37 @@ sealed class AppointmentCancelReason {
    */
   abstract override fun toString(): String
 
+  @Parcelize
   object PatientNotResponding : AppointmentCancelReason() {
     override fun toString() = "PatientNotResponding"
   }
 
+  @Parcelize
   object InvalidPhoneNumber : AppointmentCancelReason() {
     override fun toString() = "InvalidPhoneNumber"
   }
 
+  @Parcelize
   object TransferredToAnotherPublicHospital : AppointmentCancelReason() {
     override fun toString() = "TransferredToAnotherPublicHospital"
   }
 
+  @Parcelize
   object MovedToPrivatePractitioner : AppointmentCancelReason() {
     override fun toString() = "MovedToPrivatePractitioner"
   }
 
+  @Parcelize
   object Dead : AppointmentCancelReason() {
     override fun toString() = "Dead"
   }
 
+  @Parcelize
   object Other : AppointmentCancelReason() {
     override fun toString() = "Other"
   }
 
+  @Parcelize
   data class Unknown(val actualValue: String) : AppointmentCancelReason() {
     override fun toString() = "Unknown ($actualValue)"
   }

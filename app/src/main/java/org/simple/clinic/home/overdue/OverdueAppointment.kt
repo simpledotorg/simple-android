@@ -1,10 +1,12 @@
 package org.simple.clinic.home.overdue
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Observable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
@@ -70,6 +72,7 @@ import java.util.UUID
             AND (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
     """
 )
+@Parcelize
 data class OverdueAppointment(
 
     val fullName: String,
@@ -94,7 +97,7 @@ data class OverdueAppointment(
     val diagnosedWithDiabetes: Answer?,
 
     val diagnosedWithHypertension: Answer?
-) {
+): Parcelable {
 
   @Dao
   interface RoomDao {

@@ -4,8 +4,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientProfile
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
+import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 
 class PatientContactUiRenderer(
@@ -29,8 +28,8 @@ class PatientContactUiRenderer(
     }
   }
 
-  private fun toggleCallResultSection(appointment: Optional<OverdueAppointment>) {
-    if (appointment is None) {
+  private fun toggleCallResultSection(appointment: ParcelableOptional<OverdueAppointment>) {
+    if (appointment.isEmpty()) {
       ui.hideCallResultSection()
     } else {
       ui.showCallResultSection()

@@ -17,6 +17,7 @@ import org.simple.clinic.home.overdue.removepatient.di.RemoveAppointmentScreenCo
 
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
+import org.simple.clinic.patientcontact.di.PatientContactBottomSheetComponent
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivityComponent
 import org.simple.clinic.setup.SetupActivityComponent
@@ -48,6 +49,7 @@ interface AppComponent {
   fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Builder
   fun facilityChangeComponentBuilder(): FacilityChangeComponent.Builder
   fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Builder
+  fun patientContactBottomSheetComponent(): PatientContactBottomSheetComponent.Builder
 }
 
 @Scope

@@ -135,7 +135,6 @@
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">ਵਾਪਸ ਜਾਓ</string>
-  <string name="patientsummary_prescriptions_last_updated">ਅਪਡੇਟ ਹੋਇਆ %s</string>
   <string name="patientsummary_prescriptions_add">ਸਾਰੀਆਂ ਦਵਾਈਆਂ</string>
   <string name="patientsummary_prescriptions_update">ਦਵਾਈਆਂ ਅੱਪਡੇਟ ਕਰੋ</string>
   <string name="patientsummary_bp_add_new">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ</string>

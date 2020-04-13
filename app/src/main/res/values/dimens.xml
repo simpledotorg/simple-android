@@ -56,4 +56,7 @@
 
   <dimen name="patientsummary_blood_sugar_summary_item_container_bottom_padding_8">8dp</dimen>
   <dimen name="patientsummary_blood_sugar_summary_item_container_bottom_padding_24">24dp</dimen>
+
+  <dimen name="patientsummary_drug_summary_item_container_bottom_padding_8">8dp</dimen>
+  <dimen name="patientsummary_drug_summary_item_container_bottom_padding_24">24dp</dimen>
 </resources>

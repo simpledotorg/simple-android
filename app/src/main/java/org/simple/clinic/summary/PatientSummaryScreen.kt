@@ -74,6 +74,9 @@ class PatientSummaryScreen(
   @Inject
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
 
+  @Inject
+  lateinit var config: PatientSummaryConfig
+
   private val events: Observable<PatientSummaryEvent> by unsafeLazy {
     Observable
         .mergeArray(

@@ -10,16 +10,16 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 
-class DrugSummaryItemView(
+class DrugSummaryItemView_Old(
     context: Context,
     attributeSet: AttributeSet
 ) : AppCompatTextView(context, attributeSet) {
 
   companion object {
-    fun create(parent: ViewGroup, drug: PrescribedDrug): DrugSummaryItemView {
+    fun create(parent: ViewGroup, drug: PrescribedDrug): DrugSummaryItemView_Old {
       val inflater = LayoutInflater.from(parent.context)
 
-      val view =  inflater.inflate(R.layout.list_patientsummary_prescription_drug, parent, false) as DrugSummaryItemView
+      val view =  inflater.inflate(R.layout.list_patientsummary_prescription_drug_old, parent, false) as DrugSummaryItemView_Old
 
       view.bind(drug)
 

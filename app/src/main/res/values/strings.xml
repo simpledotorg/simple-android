@@ -600,4 +600,5 @@
   <string name="patientcontact_call_normal">Normal</string>
   <string name="patientcontact_call_secure">Secure</string>
   <string name="patientcontact_help_text">Secure calls hide your number and are toll free</string>
+  <string name="patientcontact_patientdetails">%1$s, %2$s, %3$s</string>
 </resources>

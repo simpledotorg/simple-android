@@ -1,23 +1,40 @@
 package org.simple.clinic.patientcontact
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.sheet_patientcontact.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patientcontact.di.PatientContactBottomSheetComponent
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
+import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 class PatientContactBottomSheet : BottomSheetActivity(), PatientContactUi, PatientContactUiActions {
+
+  companion object {
+    private const val KEY_PATIENT_UUID = "patient_uuid"
+
+    fun intent(context: Context, patientUuid: UUID): Intent {
+      return Intent(context, PatientContactBottomSheet::class.java).apply {
+        putExtra(KEY_PATIENT_UUID, patientUuid)
+      }
+    }
+  }
 
   @Inject
   lateinit var phoneCaller: PhoneCaller
@@ -25,12 +42,53 @@ class PatientContactBottomSheet : BottomSheetActivity(), PatientContactUi, Patie
   @Inject
   lateinit var locale: Locale
 
+  @Inject
+  lateinit var phoneMaskConfig: PhoneNumberMaskerConfig
+
+  @Inject
+  lateinit var effectHandlerFactory: PatientContactEffectHandler.Factory
+
+  @Inject
+  lateinit var userClock: UserClock
+
   private lateinit var component: PatientContactBottomSheetComponent
+
+  private val patientUuid by unsafeLazy { intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID }
+
+  private val uiRenderer by unsafeLazy { PatientContactUiRenderer(this, userClock) }
+
+  private val delegate by unsafeLazy {
+    MobiusDelegate.forActivity(
+        events = Observable.never<PatientContactEvent>(),
+        defaultModel = PatientContactModel.create(patientUuid, phoneMaskConfig),
+        update = PatientContactUpdate(phoneMaskConfig),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = PatientContactInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.sheet_patientcontact)
+
+    delegate.onRestoreInstanceState(savedInstanceState)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    delegate.onSaveInstanceState(outState)
+    super.onSaveInstanceState(outState)
   }
 
   override fun onBackgroundClick() {

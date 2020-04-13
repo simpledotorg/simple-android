@@ -21,4 +21,5 @@ interface PatientSummaryUiActions {
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
   fun hideLinkIdWithPatientView()
   fun showDiagnosisError()
+  fun openPatientContactSheet(patientUuid: UUID)
 }

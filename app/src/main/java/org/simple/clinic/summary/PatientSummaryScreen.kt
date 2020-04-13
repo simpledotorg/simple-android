@@ -33,6 +33,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.patientcontact.PatientContactBottomSheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -86,7 +87,8 @@ class PatientSummaryScreen(
             appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
             identifierLinkCancelledEvents(),
-            editButtonClicks()
+            editButtonClicks(),
+            phoneNumberClicks()
         )
         .compose(ReportAnalyticsEvents())
         .cast<PatientSummaryEvent>()
@@ -223,6 +225,13 @@ class PatientSummaryScreen(
         .uiEvents()
         .ofType<LinkIdWithPatientCancelled>()
         .map { PatientSummaryLinkIdCancelled }
+  }
+
+  private fun phoneNumberClicks(): Observable<UiEvent> {
+    return if (config.callPatientFeatureEnabled)
+      contactTextView.clicks().map { ContactPatientClicked }
+    else
+      Observable.never()
   }
 
   @SuppressLint("SetTextI18n")
@@ -376,6 +385,9 @@ class PatientSummaryScreen(
     }
   }
 
+  override fun openPatientContactSheet(patientUuid: UUID) {
+    activity.startActivity(PatientContactBottomSheet.intent(activity, patientUuid))
+  }
 }
 
 @Parcelize

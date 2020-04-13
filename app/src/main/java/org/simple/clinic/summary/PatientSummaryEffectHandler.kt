@@ -6,7 +6,6 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
@@ -69,6 +68,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(TriggerSync::class.java, triggerSync())
         .addAction(ShowDiagnosisError::class.java, { uiActions.showDiagnosisError() }, schedulersProvider.ui())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
+        .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPatientContactSheet(it.patientUuid) }, schedulersProvider.ui())
         .build()
   }
 

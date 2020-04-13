@@ -262,4 +262,15 @@ class PatientSummaryEffectHandlerTest {
     verifyZeroInteractions(uiActions)
     verify(missingPhoneReminderRepository).markReminderAsShownFor(patientUuid)
   }
+
+  @Test
+  fun `when the show contact patient screen effect is received, the contact patient screen must be opened`() {
+    // when
+    testCase.dispatch(OpenContactPatientScreen(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openPatientContactSheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

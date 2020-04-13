@@ -12,11 +12,6 @@ import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfigModule
 class PatientSummaryModule {
 
   @Provides
-  fun providesSummaryConfig(configReader: ConfigReader): PatientSummaryConfig {
-    return PatientSummaryConfig.read(configReader)
-  }
-
-  @Provides
   fun providesBloodPressureSummaryConfig(configReader: ConfigReader): BloodPressureSummaryViewConfig {
     return BloodPressureSummaryViewConfig.read(configReader)
   }

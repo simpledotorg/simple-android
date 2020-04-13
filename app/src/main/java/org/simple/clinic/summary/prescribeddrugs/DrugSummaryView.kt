@@ -3,6 +3,7 @@ package org.simple.clinic.summary.prescribeddrugs
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.jakewharton.rxbinding3.view.detaches
@@ -24,12 +25,13 @@ import org.simple.clinic.summary.DRUGS_REQCODE_ALERT_FACILITY_CHANGE
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.setBottomMarginRes
 import org.simple.clinic.widgets.setCompoundDrawableStart
+import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -128,23 +130,22 @@ class DrugSummaryView(
   ) {
     updateButton.setOnClickListener { internalEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
 
-    summaryViewGroup.visibleOrGone(prescriptions.isNotEmpty())
+    drugsSummaryContainerNew.visibleOrGone(prescriptions.isNotEmpty())
     emptyMedicinesTextView.visibleOrGone(prescriptions.isEmpty())
 
     setButtonText(prescriptions)
     setButtonIcon(prescriptions)
 
-    drugSummaryViewRoot.setBottomMarginRes(
-        if (prescriptions.isEmpty()) R.dimen.spacing_0
-        else R.dimen.spacing_16
-    )
-
-    removeAllDrugViews()
+    drugsSummaryContainerNew.removeAllViews()
 
     if (prescriptions.isNotEmpty()) {
       prescriptions
-          .map { drug -> DrugSummaryItemView_Old.create(drugsSummaryContainer, drug) }
-          .forEach { drugView -> drugsSummaryContainer.addView(drugView) }
+          .map { drug ->
+            val drugItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_prescripton_drug, this, false) as DrugSummaryItemView
+            drugItemView.render(drug.name, drug.dosage.orEmpty(), fullDateFormatter.format(drug.updatedAt.toLocalDateAtZone(userClock.zone)))
+            drugItemView
+          }
+          .forEach(drugsSummaryContainerNew::addView)
 
       val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt }!!
 
@@ -155,10 +156,13 @@ class DrugSummaryView(
           lastUpdatedTimestamp.displayText(context, dateFormatter)
       )
     }
-  }
 
-  private fun removeAllDrugViews() {
-    drugsSummaryContainer.removeAllViews()
+    val itemContainerBottomPadding = if (prescriptions.size > 1) {
+      R.dimen.patientsummary_drug_summary_item_container_bottom_padding_8
+    } else {
+      R.dimen.patientsummary_drug_summary_item_container_bottom_padding_24
+    }
+    drugsSummaryContainerNew.setPaddingBottom(itemContainerBottomPadding)
   }
 
   private fun setButtonText(prescriptions: List<PrescribedDrug>) {

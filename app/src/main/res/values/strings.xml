@@ -589,4 +589,7 @@
   <string name="alertfacilitychange_yes_button">Yes</string>
   <string name="alertfacilitychange_change_button">Change</string>
   <string name="alertfacilitychange_facility_name">%s?</string>
+
+  <!-- Prescribed Drug Summary -->
+  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 </resources>

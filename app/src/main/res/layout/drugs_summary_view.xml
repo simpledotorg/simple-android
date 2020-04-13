@@ -30,7 +30,7 @@
     app:layout_constraintTop_toBottomOf="@id/addNewBP" />
 
   <LinearLayout
-    android:id="@+id/drugsSummaryContainerNew"
+    android:id="@+id/drugsSummaryContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_4"

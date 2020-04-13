@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.summary.prescribeddrugs.DrugSummaryItemView_Old xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:layout_marginStart="@dimen/spacing_16"
-  android:layout_marginBottom="@dimen/spacing_12"
-  android:maxLines="1"
-  android:textColor="@color/gray_800"
-  android:textSize="@dimen/textsize_16" />

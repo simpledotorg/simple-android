@@ -24,12 +24,13 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.TestData
+import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.scheduleappointment.TimeToAppointment.Days
-import org.simple.clinic.scheduleappointment.TimeToAppointment.Months
-import org.simple.clinic.scheduleappointment.TimeToAppointment.Weeks
+import org.simple.clinic.overdue.TimeToAppointment.Days
+import org.simple.clinic.overdue.TimeToAppointment.Months
+import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just

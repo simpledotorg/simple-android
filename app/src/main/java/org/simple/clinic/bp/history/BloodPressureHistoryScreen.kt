@@ -59,9 +59,6 @@ class BloodPressureHistoryScreen(
   @Inject
   lateinit var effectHandler: BloodPressureHistoryScreenEffectHandler.Factory
 
-  @Inject
-  lateinit var crashReporter: CrashReporter
-
   @field:[Inject Named("full_date")]
   lateinit var dateFormatter: DateTimeFormatter
 
@@ -84,14 +81,13 @@ class BloodPressureHistoryScreen(
 
   private val delegate: MobiusDelegate<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEvent, BloodPressureHistoryScreenEffect> by unsafeLazy {
     val screenKey = screenRouter.key<BloodPressureHistoryScreenKey>(this)
-    MobiusDelegate(
+    MobiusDelegate.forView(
         events = events,
         defaultModel = BloodPressureHistoryScreenModel.create(screenKey.patientUuid),
         init = BloodPressureHistoryScreenInit(),
         update = BloodPressureHistoryScreenUpdate(),
         effectHandler = effectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        crashReporter = crashReporter
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -101,8 +97,6 @@ class BloodPressureHistoryScreen(
       return
     }
     context.injector<BloodPressureHistoryScreenInjector>().inject(this)
-
-    delegate.prepare()
 
     setupBloodPressureHistoryList()
     handleToolbarBackClick()

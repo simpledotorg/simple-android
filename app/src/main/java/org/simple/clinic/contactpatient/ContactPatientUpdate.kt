@@ -21,6 +21,7 @@ class ContactPatientUpdate(
       is OverdueAppointmentLoaded -> next(model.overdueAppointmentLoaded(event.overdueAppointment))
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
+      is PatientMarkedAsAgreedToVisit -> dispatch(CloseScreen)
     }
   }
 

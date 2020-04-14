@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -15,13 +15,13 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-class PatientContactUiRendererTest {
+class ContactPatientUiRendererTest {
 
   private val patientUuid = UUID.fromString("e6ff79b9-0ac8-4d7b-ada9-7b3056db2972")
 
-  private val ui = mock<PatientContactUi>()
+  private val ui = mock<ContactPatientUi>()
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
-  private val uiRenderer = PatientContactUiRenderer(ui, clock)
+  private val uiRenderer = ContactPatientUiRenderer(ui, clock)
 
   @Test
   fun `when the patient details are loaded with date of birth, render the patient details`() {
@@ -134,9 +134,9 @@ class PatientContactUiRendererTest {
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = "12345678"
-  ): PatientContactModel {
+  ): ContactPatientModel {
     val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
 
-    return PatientContactModel.create(patientUuid, phoneNumberMaskerConfig)
+    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig)
   }
 }

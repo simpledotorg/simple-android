@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import android.content.Context
 import android.util.AttributeSet
@@ -57,7 +57,7 @@ class CallPatientView(
 
   fun renderPatientDetails(name: String, gender: Gender, age: Int, phoneNumber: String) {
     val genderLetter = resources.getString(gender.displayLetterRes)
-    nameTextView.text = resources.getString(R.string.patientcontact_patientdetails, name, genderLetter, age.toString())
+    nameTextView.text = resources.getString(R.string.contactpatient_patientdetails, name, genderLetter, age.toString())
     phoneNumberTextView.text = phoneNumber
   }
 }

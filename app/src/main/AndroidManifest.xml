@@ -116,7 +116,7 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".patientcontact.PatientContactBottomSheet"
+      android:name=".contactpatient.ContactPatientBottomSheet"
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 

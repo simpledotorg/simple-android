@@ -7,8 +7,8 @@
   android:clipChildren="false"
   android:clipToPadding="false"
   tools:background="@color/white100"
-  tools:context="org.simple.clinic.patientcontact.CallPatientView"
-  tools:parentTag="org.simple.clinic.patientcontact.CallPatientView">
+  tools:context="org.simple.clinic.contactpatient.CallPatientView"
+  tools:parentTag="org.simple.clinic.contactpatient.CallPatientView">
 
   <TextView
     android:id="@+id/nameTextView"
@@ -59,7 +59,7 @@
     android:layout_marginStart="@dimen/spacing_48"
     android:layout_marginTop="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_16"
-    android:text="@string/patientcontact_result_of_call"
+    android:text="@string/contactpatient_result_of_call"
     android:textAllCaps="true"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
     app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
     android:drawableStart="@drawable/ic_radio_button_unchecked_green1_24dp"
-    android:text="@string/patientcontact_agreed_to_visit"
+    android:text="@string/contactpatient_agreed_to_visit"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/resultOfCallLabel" />
@@ -95,7 +95,7 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:drawableStart="@drawable/ic_radio_button_unchecked_yellow0_24dp"
-    android:text="@string/patientcontact_remind_call_later"
+    android:text="@string/contactpatient_remind_call_later"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/agreedToVisitSeparator" />
@@ -117,7 +117,7 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:drawableStart="@drawable/ic_radio_button_unchecked_red1_24dp"
-    android:text="@string/patientcontact_remove_from_list"
+    android:text="@string/contactpatient_remove_from_list"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/remindToCallLaterSeparator" />
@@ -132,7 +132,7 @@
     android:layout_marginEnd="@dimen/spacing_16"
     android:paddingStart="@dimen/spacing_8"
     android:paddingEnd="@dimen/spacing_24"
-    android:text="@string/patientcontact_call_normal"
+    android:text="@string/contactpatient_call_normal"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
     app:icon="@drawable/ic_call_16dp"
     app:iconTint="@color/green1"
@@ -150,7 +150,7 @@
     android:layout_marginEnd="@dimen/spacing_16"
     android:paddingStart="@dimen/spacing_8"
     android:paddingEnd="@dimen/spacing_24"
-    android:text="@string/patientcontact_call_secure"
+    android:text="@string/contactpatient_call_secure"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
     app:icon="@drawable/ic_call_16dp"
     app:iconTint="@color/white100"
@@ -174,7 +174,7 @@
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginBottom="@dimen/spacing_16"
     android:gravity="center"
-    android:text="@string/patientcontact_help_text"
+    android:text="@string/contactpatient_help_text"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center.Grey1"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"

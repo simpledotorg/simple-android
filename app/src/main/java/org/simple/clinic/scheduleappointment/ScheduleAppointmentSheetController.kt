@@ -14,6 +14,7 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
@@ -312,15 +313,6 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return scheduleAppointmentsIn
         .map { timeToAppointment -> today.plus(timeToAppointment) to timeToAppointment }
         .map { (appointmentDate, timeToAppointment) -> PotentialAppointmentDate(appointmentDate, timeToAppointment) }
-  }
-
-  private data class PotentialAppointmentDate(
-      val scheduledFor: LocalDate,
-      val timeToAppointment: TimeToAppointment
-  ) : Comparable<PotentialAppointmentDate> {
-    override fun compareTo(other: PotentialAppointmentDate): Int {
-      return this.scheduledFor.compareTo(other.scheduledFor)
-    }
   }
 
   data class OngoingAppointment(

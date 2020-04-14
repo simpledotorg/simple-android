@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
@@ -13,22 +13,22 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.LocalDate
 
-class PatientContactEffectHandler @AssistedInject constructor(
+class ContactPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
     private val clock: UserClock,
     private val schedulers: SchedulersProvider,
-    @Assisted private val uiActions: PatientContactUiActions
+    @Assisted private val uiActions: ContactPatientUiActions
 ) {
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(uiActions: PatientContactUiActions): PatientContactEffectHandler
+    fun create(uiActions: ContactPatientUiActions): ContactPatientEffectHandler
   }
 
-  fun build(): ObservableTransformer<PatientContactEffect, PatientContactEvent> {
+  fun build(): ObservableTransformer<ContactPatientEffect, ContactPatientEvent> {
     return RxMobius
-        .subtypeEffectHandler<PatientContactEffect, PatientContactEvent>()
+        .subtypeEffectHandler<ContactPatientEffect, ContactPatientEvent>()
         .addTransformer(LoadPatientProfile::class.java, loadPatientProfile(schedulers.io()))
         .addTransformer(LoadLatestOverdueAppointment::class.java, loadLatestOverdueAppointment(schedulers.io()))
         .addConsumer(DirectCallWithAutomaticDialer::class.java, { uiActions.directlyCallPatient(it.patientPhoneNumber, Dialer.Automatic) }, schedulers.ui())
@@ -40,7 +40,7 @@ class PatientContactEffectHandler @AssistedInject constructor(
 
   private fun loadPatientProfile(
       scheduler: Scheduler
-  ): ObservableTransformer<LoadPatientProfile, PatientContactEvent> {
+  ): ObservableTransformer<LoadPatientProfile, ContactPatientEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
@@ -53,7 +53,7 @@ class PatientContactEffectHandler @AssistedInject constructor(
 
   private fun loadLatestOverdueAppointment(
       scheduler: Scheduler
-  ): ObservableTransformer<LoadLatestOverdueAppointment, PatientContactEvent> {
+  ): ObservableTransformer<LoadLatestOverdueAppointment, ContactPatientEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)

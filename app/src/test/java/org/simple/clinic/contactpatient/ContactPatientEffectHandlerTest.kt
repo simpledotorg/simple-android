@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -19,16 +19,16 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-class PatientContactEffectHandlerTest {
+class ContactPatientEffectHandlerTest {
 
   private val patientUuid = UUID.fromString("8a490518-a016-4818-b725-22c25dec310b")
   private val patientRepository = mock<PatientRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
-  private val uiActions = mock<PatientContactUiActions>()
+  private val uiActions = mock<ContactPatientUiActions>()
 
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
 
-  private val effectHandler = PatientContactEffectHandler(
+  private val effectHandler = ContactPatientEffectHandler(
       patientRepository = patientRepository,
       appointmentRepository = appointmentRepository,
       clock = clock,

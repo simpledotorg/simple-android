@@ -1,15 +1,15 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 
-class PatientContactInit : Init<PatientContactModel, PatientContactEffect> {
+class ContactPatientInit : Init<ContactPatientModel, ContactPatientEffect> {
 
   override fun init(
-      model: PatientContactModel
-  ): First<PatientContactModel, PatientContactEffect> {
-    val effects = mutableSetOf<PatientContactEffect>()
+      model: ContactPatientModel
+  ): First<ContactPatientModel, ContactPatientEffect> {
+    val effects = mutableSetOf<ContactPatientEffect>()
 
     if (!model.hasLoadedPatientProfile) {
       effects.add(LoadPatientProfile(model.patientUuid))

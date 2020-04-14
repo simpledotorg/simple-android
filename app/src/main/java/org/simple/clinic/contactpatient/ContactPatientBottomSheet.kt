@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import android.content.Context
 import android.content.Intent
@@ -8,14 +8,14 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.sheet_patientcontact.*
+import kotlinx.android.synthetic.main.sheet_contact_patient.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patientcontact.di.PatientContactBottomSheetComponent
+import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -31,13 +31,13 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class PatientContactBottomSheet : BottomSheetActivity(), PatientContactUi, PatientContactUiActions {
+class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, ContactPatientUiActions {
 
   companion object {
     private const val KEY_PATIENT_UUID = "patient_uuid"
 
     fun intent(context: Context, patientUuid: UUID): Intent {
-      return Intent(context, PatientContactBottomSheet::class.java).apply {
+      return Intent(context, ContactPatientBottomSheet::class.java).apply {
         putExtra(KEY_PATIENT_UUID, patientUuid)
       }
     }
@@ -53,7 +53,7 @@ class PatientContactBottomSheet : BottomSheetActivity(), PatientContactUi, Patie
   lateinit var phoneMaskConfig: PhoneNumberMaskerConfig
 
   @Inject
-  lateinit var effectHandlerFactory: PatientContactEffectHandler.Factory
+  lateinit var effectHandlerFactory: ContactPatientEffectHandler.Factory
 
   @Inject
   lateinit var userClock: UserClock
@@ -61,33 +61,33 @@ class PatientContactBottomSheet : BottomSheetActivity(), PatientContactUi, Patie
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
 
-  private lateinit var component: PatientContactBottomSheetComponent
+  private lateinit var component: ContactPatientBottomSheetComponent
 
   private val patientUuid by unsafeLazy { intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID }
 
-  private val uiRenderer by unsafeLazy { PatientContactUiRenderer(this, userClock) }
+  private val uiRenderer by unsafeLazy { ContactPatientUiRenderer(this, userClock) }
 
   private val permissionResults: Subject<ActivityPermissionResult> = PublishSubject.create()
 
-  private val events: Observable<PatientContactEvent> by unsafeLazy {
+  private val events: Observable<ContactPatientEvent> by unsafeLazy {
     Observable
         .merge(
             normalCallClicks(),
             secureCallClicks()
         )
-        .compose(RequestPermissions<PatientContactEvent>(runtimePermissions, this, permissionResults))
+        .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, this, permissionResults))
         .compose(ReportAnalyticsEvents())
-        .cast<PatientContactEvent>()
+        .cast<ContactPatientEvent>()
 
   }
 
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events = events,
-        defaultModel = PatientContactModel.create(patientUuid, phoneMaskConfig),
-        update = PatientContactUpdate(phoneMaskConfig),
+        defaultModel = ContactPatientModel.create(patientUuid, phoneMaskConfig),
+        update = ContactPatientUpdate(phoneMaskConfig),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = PatientContactInit(),
+        init = ContactPatientInit(),
         modelUpdateListener = uiRenderer::render
     )
   }
@@ -95,7 +95,7 @@ class PatientContactBottomSheet : BottomSheetActivity(), PatientContactUi, Patie
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    setContentView(R.layout.sheet_patientcontact)
+    setContentView(R.layout.sheet_contact_patient)
 
     delegate.onRestoreInstanceState(savedInstanceState)
   }
@@ -176,7 +176,7 @@ class PatientContactBottomSheet : BottomSheetActivity(), PatientContactUi, Patie
     )
   }
 
-  private fun normalCallClicks(): Observable<PatientContactEvent> {
+  private fun normalCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.normalCallButtonClicked = null }
 
@@ -184,7 +184,7 @@ class PatientContactBottomSheet : BottomSheetActivity(), PatientContactUi, Patie
     }
   }
 
-  private fun secureCallClicks(): Observable<PatientContactEvent> {
+  private fun secureCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.secureCallButtonClicked = null }
 

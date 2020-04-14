@@ -12,7 +12,6 @@ import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -83,14 +82,13 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  fun markAsAgreedToVisit(appointmentUuid: UUID, userClock: UserClock): Completable {
-    return Completable.fromAction {
-      appointmentDao.markAsAgreedToVisit(
-          appointmentUUID = appointmentUuid,
-          reminderDate = LocalDate.now(userClock).plusMonths(1),
-          newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(utcClock))
-    }
+  fun markAsAgreedToVisit(appointmentUuid: UUID, userClock: UserClock) {
+    appointmentDao.markAsAgreedToVisit(
+        appointmentUUID = appointmentUuid,
+        reminderDate = LocalDate.now(userClock).plusMonths(1),
+        newSyncStatus = SyncStatus.PENDING,
+        newUpdatedAt = Instant.now(utcClock)
+    )
   }
 
   fun markAsAlreadyVisited(appointmentUuid: UUID) {

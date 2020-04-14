@@ -615,7 +615,7 @@ class AppointmentRepositoryAndroidTest {
     val userClock = TestUserClock(LocalDate.parse("2018-01-31"))
 
     // when
-    appointmentRepository.markAsAgreedToVisit(appointmentUuid, userClock).blockingAwait()
+    appointmentRepository.markAsAgreedToVisit(appointmentUuid, userClock)
 
     // then
     val appointmentUpdatedAtTimestamp = Instant.parse("2018-01-01T00:00:01Z")

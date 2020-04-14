@@ -1,4 +1,4 @@
-package org.simple.clinic.scheduleappointment
+package org.simple.clinic.overdue
 
 sealed class TimeToAppointment(val value: Int) {
 

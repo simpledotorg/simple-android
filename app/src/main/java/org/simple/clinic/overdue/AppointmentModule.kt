@@ -6,8 +6,8 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.scheduleappointment.TimeToAppointment.Days
-import org.simple.clinic.scheduleappointment.TimeToAppointment.Months
+import org.simple.clinic.overdue.TimeToAppointment.Days
+import org.simple.clinic.overdue.TimeToAppointment.Months
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.preference.OptionalRxPreferencesConverter

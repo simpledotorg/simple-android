@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -83,10 +82,10 @@ class OverdueScreenControllerTest {
   @Test
   fun `when "mark patient as agreed to visit" is clicked, then relevant repository method should be called`() {
     val appointmentUuid = UUID.randomUUID()
-    whenever(repository.markAsAgreedToVisit(appointmentUuid, userClock)).thenReturn(Completable.complete())
 
     uiEvents.onNext(AgreedToVisitClicked(appointmentUuid))
 
+    verify(repository).markAsAgreedToVisit(appointmentUuid, userClock)
     verifyNoMoreInteractions(screen)
   }
 

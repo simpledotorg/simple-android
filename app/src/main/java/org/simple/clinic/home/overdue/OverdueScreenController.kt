@@ -72,11 +72,8 @@ class OverdueScreenController @Inject constructor(
 
   private fun markedAsAgreedToVisit(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<AgreedToVisitClicked>()
-        .flatMap {
-          appointmentRepository
-              .markAsAgreedToVisit(it.appointmentUuid, userClock)
-              .toObservable<UiChange>()
-        }
+        .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointmentUuid, userClock) }
+        .flatMap { Observable.empty<UiChange>() }
   }
 
   private fun rescheduleAppointment(events: Observable<UiEvent>): Observable<UiChange> {

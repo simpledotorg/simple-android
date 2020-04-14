@@ -68,7 +68,8 @@ class ScheduleAppointmentSheetControllerTest {
       appointmentDuePeriodForDefaulters = Period.ofDays(30),
       scheduleAppointmentsIn = listOf(Days(1)),
       defaultTimeToAppointment = Days(1),
-      periodForIncludingOverdueAppointments = Period.ofMonths(12)
+      periodForIncludingOverdueAppointments = Period.ofMonths(12),
+      remindAppointmentsIn = emptyList()
   )
 
   private lateinit var controller: ScheduleAppointmentSheetController

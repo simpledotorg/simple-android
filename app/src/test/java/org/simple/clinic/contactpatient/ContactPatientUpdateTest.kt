@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
@@ -14,7 +14,7 @@ import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import java.util.UUID
 
-class PatientContactUpdateTest {
+class ContactPatientUpdateTest {
 
   private val patientUuid = UUID.fromString("b5eccb67-6425-4d48-9c17-65e9b267f9eb")
   private val patientPhoneNumber = "1234567890"
@@ -33,7 +33,7 @@ class PatientContactUpdateTest {
   )
   private val proxyPhoneNumberForSecureCalls = "9999988888"
 
-  private val spec = UpdateSpec(PatientContactUpdate(proxyPhoneNumberForMaskedCalls = proxyPhoneNumberForSecureCalls))
+  private val spec = UpdateSpec(ContactPatientUpdate(proxyPhoneNumberForMaskedCalls = proxyPhoneNumberForSecureCalls))
 
   @Test
   fun `when the patient profile is loaded, the ui must be updated`() {
@@ -72,7 +72,7 @@ class PatientContactUpdateTest {
         .whenEvent(NormalCallClicked(permission = Just(GRANTED)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(DirectCallWithAutomaticDialer(patientPhoneNumber) as PatientContactEffect)
+            hasEffects(DirectCallWithAutomaticDialer(patientPhoneNumber) as ContactPatientEffect)
         ))
   }
 
@@ -87,7 +87,7 @@ class PatientContactUpdateTest {
         .whenEvent(NormalCallClicked(permission = Just(DENIED)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(DirectCallWithManualDialer(patientPhoneNumber) as PatientContactEffect)
+            hasEffects(DirectCallWithManualDialer(patientPhoneNumber) as ContactPatientEffect)
         ))
   }
 
@@ -102,7 +102,7 @@ class PatientContactUpdateTest {
         .whenEvent(SecureCallClicked(permission = Just(GRANTED)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(MaskedCallWithAutomaticDialer(patientPhoneNumber = patientPhoneNumber, proxyPhoneNumber = proxyPhoneNumberForSecureCalls) as PatientContactEffect)
+            hasEffects(MaskedCallWithAutomaticDialer(patientPhoneNumber = patientPhoneNumber, proxyPhoneNumber = proxyPhoneNumberForSecureCalls) as ContactPatientEffect)
         ))
   }
 
@@ -117,16 +117,16 @@ class PatientContactUpdateTest {
         .whenEvent(SecureCallClicked(permission = Just(DENIED)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(MaskedCallWithManualDialer(patientPhoneNumber = patientPhoneNumber, proxyPhoneNumber = proxyPhoneNumberForSecureCalls) as PatientContactEffect)
+            hasEffects(MaskedCallWithManualDialer(patientPhoneNumber = patientPhoneNumber, proxyPhoneNumber = proxyPhoneNumberForSecureCalls) as ContactPatientEffect)
         ))
   }
 
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls
-  ): PatientContactModel {
+  ): ContactPatientModel {
     val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
 
-    return PatientContactModel.create(patientUuid, phoneNumberMaskerConfig)
+    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig)
   }
 }

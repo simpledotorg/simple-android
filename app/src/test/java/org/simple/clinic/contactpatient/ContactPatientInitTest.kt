@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import com.spotify.mobius.test.FirstMatchers.hasEffects
 import com.spotify.mobius.test.FirstMatchers.hasModel
@@ -11,10 +11,10 @@ import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.None
 import java.util.UUID
 
-class PatientContactInitTest {
+class ContactPatientInitTest {
 
   private val patientUuid = UUID.fromString("34556bef-6221-4ffb-a5b7-4e7f30d584c1")
-  private val spec = InitSpec(PatientContactInit())
+  private val spec = InitSpec(ContactPatientInit())
 
   @Test
   fun `when the screen is created, load the patient profile and the latest appointment`() {
@@ -45,10 +45,10 @@ class PatientContactInitTest {
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = "12345678"
-  ): PatientContactModel {
+  ): ContactPatientModel {
     val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
 
-    return PatientContactModel.create(patientUuid, phoneNumberMaskerConfig)
+    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig)
   }
 }
 

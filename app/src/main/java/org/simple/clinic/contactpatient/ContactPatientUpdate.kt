@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
@@ -6,16 +6,16 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 
-class PatientContactUpdate(
+class ContactPatientUpdate(
     private val proxyPhoneNumberForMaskedCalls: String
-) : Update<PatientContactModel, PatientContactEvent, PatientContactEffect> {
+) : Update<ContactPatientModel, ContactPatientEvent, ContactPatientEffect> {
 
   constructor(config: PhoneNumberMaskerConfig) : this(proxyPhoneNumberForMaskedCalls = config.proxyPhoneNumber)
 
   override fun update(
-      model: PatientContactModel,
-      event: PatientContactEvent
-  ): Next<PatientContactModel, PatientContactEffect> {
+      model: ContactPatientModel,
+      event: ContactPatientEvent
+  ): Next<ContactPatientModel, ContactPatientEffect> {
     return when (event) {
       is PatientProfileLoaded -> next(model.patientProfileLoaded(event.patientProfile))
       is OverdueAppointmentLoaded -> next(model.overdueAppointmentLoaded(event.overdueAppointment))
@@ -25,9 +25,9 @@ class PatientContactUpdate(
   }
 
   private fun maskedCallPatient(
-      model: PatientContactModel,
+      model: ContactPatientModel,
       event: SecureCallClicked
-  ): Next<PatientContactModel, PatientContactEffect> {
+  ): Next<ContactPatientModel, ContactPatientEffect> {
     val patientPhoneNumber = model.patientProfile!!.phoneNumbers.first().number
     val effect = if (event.isPermissionGranted)
       MaskedCallWithAutomaticDialer(patientPhoneNumber = patientPhoneNumber, proxyPhoneNumber = proxyPhoneNumberForMaskedCalls)
@@ -38,9 +38,9 @@ class PatientContactUpdate(
   }
 
   private fun directlyCallPatient(
-      model: PatientContactModel,
+      model: ContactPatientModel,
       event: NormalCallClicked
-  ): Next<PatientContactModel, PatientContactEffect> {
+  ): Next<ContactPatientModel, ContactPatientEffect> {
     val patientPhoneNumber = model.patientProfile!!.phoneNumbers.first().number
     val effect = if (event.isPermissionGranted)
       DirectCallWithAutomaticDialer(patientPhoneNumber)

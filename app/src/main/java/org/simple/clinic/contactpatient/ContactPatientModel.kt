@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -11,7 +11,7 @@ import org.simple.clinic.util.parcelable
 import java.util.UUID
 
 @Parcelize
-data class PatientContactModel(
+data class ContactPatientModel(
     val patientUuid: UUID,
     val patientProfile: PatientProfile? = null,
     val appointment: ParcelableOptional<OverdueAppointment>? = null,
@@ -22,12 +22,12 @@ data class PatientContactModel(
     fun create(
         patientUuid: UUID,
         phoneNumberMaskerConfig: PhoneNumberMaskerConfig
-    ): PatientContactModel {
+    ): ContactPatientModel {
       val secureCallingFeatureEnabled = with(phoneNumberMaskerConfig) {
         phoneMaskingFeatureEnabled && proxyPhoneNumber.isNotBlank()
       }
 
-      return PatientContactModel(
+      return ContactPatientModel(
           patientUuid = patientUuid,
           secureCallingFeatureEnabled = secureCallingFeatureEnabled
       )
@@ -40,11 +40,11 @@ data class PatientContactModel(
   val hasLoadedAppointment: Boolean
     get() = appointment != null
 
-  fun patientProfileLoaded(patientProfile: PatientProfile): PatientContactModel {
+  fun patientProfileLoaded(patientProfile: PatientProfile): ContactPatientModel {
     return copy(patientProfile = patientProfile)
   }
 
-  fun overdueAppointmentLoaded(appointment: Optional<OverdueAppointment>): PatientContactModel {
+  fun overdueAppointmentLoaded(appointment: Optional<OverdueAppointment>): ContactPatientModel {
     return copy(appointment = appointment.parcelable())
   }
 }

@@ -1,18 +1,18 @@
-package org.simple.clinic.patientcontact.di
+package org.simple.clinic.contactpatient.di
 
 import dagger.Subcomponent
 import org.simple.clinic.activity.BindsActivity
 import org.simple.clinic.di.AssistedInjectModule
-import org.simple.clinic.patientcontact.PatientContactBottomSheet
+import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 
 @Subcomponent(modules = [AssistedInjectModule::class])
-interface PatientContactBottomSheetComponent {
+interface ContactPatientBottomSheetComponent {
 
-  fun inject(target: PatientContactBottomSheet)
+  fun inject(target: ContactPatientBottomSheet)
 
   @Subcomponent.Builder
   interface Builder: BindsActivity<Builder> {
 
-    fun build(): PatientContactBottomSheetComponent
+    fun build(): ContactPatientBottomSheetComponent
   }
 }

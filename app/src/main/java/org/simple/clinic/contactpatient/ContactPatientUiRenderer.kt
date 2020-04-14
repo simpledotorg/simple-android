@@ -1,4 +1,4 @@
-package org.simple.clinic.patientcontact
+package org.simple.clinic.contactpatient
 
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.mobius.ViewRenderer
@@ -7,12 +7,12 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 
-class PatientContactUiRenderer(
-    private val ui: PatientContactUi,
+class ContactPatientUiRenderer(
+    private val ui: ContactPatientUi,
     private val clock: UserClock
-) : ViewRenderer<PatientContactModel> {
+) : ViewRenderer<ContactPatientModel> {
 
-  override fun render(model: PatientContactModel) {
+  override fun render(model: ContactPatientModel) {
     if (model.hasLoadedPatientProfile) {
       renderPatientProfile(model.patientProfile!!)
     }

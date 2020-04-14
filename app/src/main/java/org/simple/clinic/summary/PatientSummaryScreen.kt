@@ -33,7 +33,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.patientcontact.PatientContactBottomSheet
+import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -386,7 +386,7 @@ class PatientSummaryScreen(
   }
 
   override fun openPatientContactSheet(patientUuid: UUID) {
-    activity.startActivity(PatientContactBottomSheet.intent(activity, patientUuid))
+    activity.startActivity(ContactPatientBottomSheet.intent(activity, patientUuid))
   }
 }
 

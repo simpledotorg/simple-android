@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
-  <style name="Clinic.V2" />
-
-  <style name="Clinic.V2.Theme" parent="Theme.Design.Light.NoActionBar">
-    <item name="colorPrimary">@color/color_primary</item>
-    <item name="colorPrimaryDark">@color/color_primary_dark</item>
-    <item name="colorAccent">@color/color_accent</item>
-    <item name="colorError">@color/color_error</item>
-    <item name="toolbarStyle">@style/Clinic.V2.ToolbarStyle</item>
-    <item name="alertDialogTheme">@style/Clinic.V2.DialogStyle</item>
-    <item name="android:windowBackground">@color/window_background</item>
-  </style>
-
   <style name="Clinic.V2.DialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
     <item name="buttonBarNeutralButtonStyle">@style/Clinic.V2.DialogNeutralButton</item>
     <item name="buttonBarNegativeButtonStyle">@style/Clinic.V2.DialogNegativeButton</item>
@@ -228,7 +216,6 @@
   <style name="Clinic.V2.TextAppearance.Subtitle1Left.Blue1">
     <item name="android:textColor">@color/blue1</item>
   </style>
-
 
   <style name="Clinic.V2.TextAppearance.Subtitle1Left.Grey1">
     <item name="android:textColor">@color/grey1</item>

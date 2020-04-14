@@ -12,7 +12,7 @@ class ReportsSync @Inject constructor(
     private val reportsApi: ReportsApi,
     private val reportsRepository: ReportsRepository,
     private val userSession: UserSession,
-    @Named("sync_config_daily") private val configProvider: Single<SyncConfig>
+    @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>
 ) : ModelSync {
   private fun canSyncData() = userSession.canSyncData().firstOrError()
 

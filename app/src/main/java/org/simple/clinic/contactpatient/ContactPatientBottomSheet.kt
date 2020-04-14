@@ -180,6 +180,10 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
     )
   }
 
+  override fun closeSheet() {
+    finish()
+  }
+
   private fun normalCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.normalCallButtonClicked = null }

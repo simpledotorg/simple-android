@@ -36,4 +36,6 @@
   <color name="facility_search_query_highlight">@color/blue2</color>
   <color name="status_bar">#0a2e52</color>
   <color name="settings_divider_background">@color/grey3</color>
+
+  <color name="scrim_color">#52000000</color>
 </resources>

@@ -36,3 +36,5 @@ data class SecureCallClicked(
 
   override val analyticsName: String = "Contact Patient:Secure Call Clicked"
 }
+
+object PatientMarkedAsAgreedToVisit: ContactPatientEvent()

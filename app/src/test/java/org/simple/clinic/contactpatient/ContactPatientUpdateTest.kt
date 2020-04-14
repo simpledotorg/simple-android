@@ -133,6 +133,21 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the patient has been marked as agreed to visit, close the screen`() {
+    val model = defaultModel(phoneMaskFeatureEnabled = true)
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(PatientMarkedAsAgreedToVisit)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseScreen as ContactPatientEffect)
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls

@@ -1,12 +1,10 @@
 package org.simple.clinic.scheduleappointment
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.widget.DatePicker
 import com.jakewharton.rxbinding2.view.RxView
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -22,20 +20,17 @@ import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelection
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity.Companion.selectedFacilityUuid
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Period
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
-
-private typealias DatePickerDialogListener = (view: DatePicker, year: Int, month: Int, dayOfMonth: Int) -> Unit
 
 class ScheduleAppointmentSheet : BottomSheetActivity() {
 
@@ -54,7 +49,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
           .putExtra(KEY_EXTRA, extra)
     }
 
-    fun <T: Parcelable> readExtra(intent: Intent): T? {
+    fun <T : Parcelable> readExtra(intent: Intent): T? {
       return intent.getParcelableExtra(KEY_EXTRA) as T
     }
   }
@@ -189,32 +184,15 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   fun showManualDateSelector(date: LocalDate) {
-    /*
-     * The DatePickerDialog uses 0-based indices for the Month (0 is January, 1 is February...),
-     * while LocalDate uses 1-based indices (1 is January, 2 is February...).
-     *
-     * So when we convert from LocalDate to the DatePicker (and vice versa), we have to adjust the
-     * month accordingly.
-     */
-    val listener: DatePickerDialogListener = { _, year, month, dayOfMonth ->
-      val selectedAppointmentDate = LocalDate.of(year, month + 1, dayOfMonth)
-      calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(selectedAppointmentDate))
-    }
-    val datePickerDialog = DatePickerDialog(this, listener, date.year, date.monthValue - 1, date.dayOfMonth)
+    val today = LocalDate.now(userClock)
 
-    datePickerDialog.datePicker.apply {
-      minDate = epochMillisForTimeInFuture(Period.ofDays(1))
-      maxDate = epochMillisForTimeInFuture(Period.ofYears(1))
-    }
-    datePickerDialog.show()
-  }
-
-  private fun epochMillisForTimeInFuture(period: Period): Long {
-    return LocalDate
-        .now(userClock)
-        .plus(period)
-        .toUtcInstant(userClock)
-        .toEpochMilli()
+    ThreeTenBpDatePickerDialog(
+        context = this,
+        preselectedDate = date,
+        allowedDateRange = today.plusDays(1)..today.plusYears(1),
+        clock = userClock,
+        datePickedListener = { pickedDate -> calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(pickedDate)) }
+    ).show()
   }
 
   fun showPatientFacility(facilityName: String) {

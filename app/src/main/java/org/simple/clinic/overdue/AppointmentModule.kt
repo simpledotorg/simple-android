@@ -8,6 +8,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Months
+import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.preference.OptionalRxPreferencesConverter
@@ -25,7 +26,8 @@ class AppointmentModule {
         appointmentDuePeriodForDefaulters = Period.ofDays(30),
         scheduleAppointmentsIn = scheduleAppointmentDays() + scheduleAppointmentMonths(),
         defaultTimeToAppointment = Days(28),
-        periodForIncludingOverdueAppointments = Period.ofMonths(12)
+        periodForIncludingOverdueAppointments = Period.ofMonths(12),
+        remindAppointmentsIn = remindAppointmentDays() + remindAppointmentWeeks()
     )
   }
 
@@ -50,7 +52,7 @@ class AppointmentModule {
     return rxSharedPrefs.getObject("last_appointment_pull_token_v3", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 
-  private fun scheduleAppointmentDays(): List<Days> {
+  private fun scheduleAppointmentDays(): List<TimeToAppointment> {
     return listOf(
         Days(1),
         Days(2),
@@ -84,7 +86,7 @@ class AppointmentModule {
     )
   }
 
-  private fun scheduleAppointmentMonths(): List<Months> {
+  private fun scheduleAppointmentMonths(): List<TimeToAppointment> {
     return listOf(
         Months(1),
         Months(2),
@@ -98,6 +100,34 @@ class AppointmentModule {
         Months(10),
         Months(11),
         Months(12)
+    )
+  }
+
+  private fun remindAppointmentDays(): List<TimeToAppointment> {
+    return listOf(
+        Days(1),
+        Days(2),
+        Days(3),
+        Days(4),
+        Days(5),
+        Days(6),
+        Days(7)
+    )
+  }
+
+  private fun remindAppointmentWeeks(): List<TimeToAppointment> {
+    return listOf(
+        Weeks(2),
+        Weeks(3),
+        Weeks(4),
+        Weeks(5),
+        Weeks(6),
+        Weeks(7),
+        Weeks(8),
+        Weeks(9),
+        Weeks(10),
+        Weeks(11),
+        Weeks(12)
     )
   }
 }

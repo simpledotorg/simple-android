@@ -15,3 +15,5 @@ data class DirectCallWithManualDialer(val patientPhoneNumber: String): ContactPa
 data class MaskedCallWithAutomaticDialer(val patientPhoneNumber: String, val proxyPhoneNumber: String): ContactPatientEffect()
 
 data class MaskedCallWithManualDialer(val patientPhoneNumber: String, val proxyPhoneNumber: String): ContactPatientEffect()
+
+object CloseScreen: ContactPatientEffect()

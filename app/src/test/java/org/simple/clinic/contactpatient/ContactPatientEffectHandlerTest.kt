@@ -123,4 +123,15 @@ class ContactPatientEffectHandlerTest {
     verify(uiActions).maskedCallPatient(patientPhoneNumber = patientPhoneNumber, proxyNumber = proxyNumber, dialer = Dialer.Manual)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when the close screen effect is received, close the sheet`() {
+    // when
+    testCase.dispatch(CloseScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).closeSheet()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

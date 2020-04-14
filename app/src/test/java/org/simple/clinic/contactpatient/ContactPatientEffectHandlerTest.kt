@@ -134,4 +134,17 @@ class ContactPatientEffectHandlerTest {
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when the mark patient as agree to visit effect is received, mark the patient as agreed to visit`() {
+    // when
+    val appointmentUuid = UUID.fromString("6d47fc9e-76dd-4aa3-b3dd-171e90cadc58")
+    testCase.dispatch(MarkPatientAsAgreedToVisit(appointmentUuid))
+
+    // then
+    verify(appointmentRepository).markAsAgreedToVisit(appointmentUuid, clock)
+    verifyNoMoreInteractions(appointmentRepository)
+    testCase.assertOutgoingEvents(PatientMarkedAsAgreedToVisit)
+    verifyZeroInteractions(uiActions)
+  }
 }

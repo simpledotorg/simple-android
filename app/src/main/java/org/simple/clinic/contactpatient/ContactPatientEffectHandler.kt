@@ -36,6 +36,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addConsumer(MaskedCallWithAutomaticDialer::class.java, { uiActions.maskedCallPatient(it.patientPhoneNumber, it.proxyPhoneNumber, Dialer.Automatic) }, schedulers.ui())
         .addConsumer(MaskedCallWithManualDialer::class.java, { uiActions.maskedCallPatient(it.patientPhoneNumber, it.proxyPhoneNumber, Dialer.Manual) }, schedulers.ui())
         .addAction(CloseScreen::class.java, uiActions::closeSheet, schedulers.ui())
+        .addTransformer(MarkPatientAsAgreedToVisit::class.java, markPatientAsAgreedToVisit(schedulers.io()))
         .build()
   }
 
@@ -60,6 +61,17 @@ class ContactPatientEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { appointmentRepository.latestOverdueAppointmentForPatient(it.patientUuid, LocalDate.now(clock)) }
           .map(::OverdueAppointmentLoaded)
+    }
+  }
+
+  private fun markPatientAsAgreedToVisit(
+      scheduler: Scheduler
+  ): ObservableTransformer<MarkPatientAsAgreedToVisit, ContactPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointmentUuid, clock) }
+          .map { PatientMarkedAsAgreedToVisit }
     }
   }
 }

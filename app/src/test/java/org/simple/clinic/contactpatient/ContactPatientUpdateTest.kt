@@ -9,8 +9,10 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.overdue.AppointmentConfig
+import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.overdue.TimeToAppointment.*
+import org.simple.clinic.overdue.TimeToAppointment.Days
+import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
@@ -163,9 +165,59 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when clicking on the next reminder date, the next appointment date from the list of potential dates must be selected as the current selected date`() {
+    val remindAppointmentsIn = listOf(
+        Days(1),
+        Weeks(1)
+    )
+
+    val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    val expectedReminderDate = PotentialAppointmentDate(
+        scheduledFor = LocalDate.parse("2018-01-08"),
+        timeToAppointment = Weeks(1)
+    )
+    spec
+        .given(model)
+        .whenEvent(NextReminderDateClicked)
+        .then(assertThatNext(
+            hasModel(model.reminderDateSelected(expectedReminderDate)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when clicking on the next reminder date, the selected date must not be changed if it is already the latest date available`() {
+    val remindAppointmentsIn = listOf(
+        Days(1),
+        Weeks(1)
+    )
+    val currentReminderDate = PotentialAppointmentDate(
+        scheduledFor = LocalDate.parse("2018-01-08"),
+        timeToAppointment = Weeks(1)
+    )
+
+    val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .reminderDateSelected(currentReminderDate)
+
+    spec
+        .given(model)
+        .whenEvent(NextReminderDateClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
-      proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls
+      proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,
+      remindAppointmentsIn: List<TimeToAppointment> = this.timeToAppointments
   ): ContactPatientModel {
     val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
     val appointmentConfig = AppointmentConfig(
@@ -173,7 +225,7 @@ class ContactPatientUpdateTest {
         scheduleAppointmentsIn = emptyList(),
         defaultTimeToAppointment = Days(0),
         periodForIncludingOverdueAppointments = Period.ZERO,
-        remindAppointmentsIn = timeToAppointments
+        remindAppointmentsIn = remindAppointmentsIn
     )
 
     return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig, appointmentConfig, clock)

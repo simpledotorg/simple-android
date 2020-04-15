@@ -7,13 +7,27 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.overdue.AppointmentConfig
+import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.overdue.TimeToAppointment.Days
+import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.None
+import org.simple.clinic.util.TestUserClock
+import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
 import java.util.UUID
 
 class ContactPatientInitTest {
 
   private val patientUuid = UUID.fromString("34556bef-6221-4ffb-a5b7-4e7f30d584c1")
+  private val timeToAppointments = listOf(
+      Days(1),
+      Weeks(1),
+      Weeks(2)
+  )
+  private val userClock = TestUserClock(LocalDate.parse("2018-01-01"))
+
   private val spec = InitSpec(ContactPatientInit())
 
   @Test
@@ -44,11 +58,19 @@ class ContactPatientInitTest {
 
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
-      proxyPhoneNumber: String = "12345678"
+      proxyPhoneNumber: String = "12345678",
+      timeToAppointments: List<TimeToAppointment> = this.timeToAppointments
   ): ContactPatientModel {
     val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
+    val appointmentConfig = AppointmentConfig(
+        appointmentDuePeriodForDefaulters = Period.ZERO,
+        scheduleAppointmentsIn = emptyList(),
+        defaultTimeToAppointment = Days(0),
+        periodForIncludingOverdueAppointments = Period.ZERO,
+        remindAppointmentsIn = timeToAppointments
+    )
 
-    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig)
+    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig, appointmentConfig, userClock)
   }
 }
 

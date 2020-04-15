@@ -68,7 +68,6 @@
         android:text="@string/home_search_patient_name_phone"
         android:textAllCaps="false"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left"
-        android:textColor="?colorAccent"
         android:textSize="@dimen/textsize_18"
         app:icon="@drawable/ic_search_24dp"
         tools:ignore="MissingPrefix,RtlSymmetry" />

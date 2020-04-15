@@ -5,7 +5,6 @@
   <color name="color_accent">@color/blue1</color>
   <color name="color_error">@color/red1</color>
 
-  <color name="ripple_blue1">@color/blue1_opacity_26</color>
   <color name="ripple_grey1">@color/grey1_opacity_26</color>
 
   <color name="window_background">@color/grey4</color>

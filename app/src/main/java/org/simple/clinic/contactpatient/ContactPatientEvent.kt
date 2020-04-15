@@ -47,3 +47,8 @@ object NextReminderDateClicked: ContactPatientEvent() {
   override val analyticsName: String
     get() = "Contact Patient:Next appointment date clicked"
 }
+
+object PreviousReminderDateClicked: ContactPatientEvent() {
+  override val analyticsName: String
+    get() = "Contact Patient:Previous appointment date clicked"
+}

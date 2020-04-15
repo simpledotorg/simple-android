@@ -214,6 +214,60 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when clicking on the previous reminder date, the previous appointment date from the list of potential dates must be selected as the current selected date`() {
+    val remindAppointmentsIn = listOf(
+        Days(1),
+        Weeks(1)
+    )
+    val currentReminderDate = PotentialAppointmentDate(
+        scheduledFor = LocalDate.parse("2018-01-08"),
+        timeToAppointment = Weeks(1)
+    )
+
+    val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .reminderDateSelected(currentReminderDate)
+
+    val expectedReminderDate = PotentialAppointmentDate(
+        scheduledFor = LocalDate.parse("2018-01-02"),
+        timeToAppointment = Days(1)
+    )
+    spec
+        .given(model)
+        .whenEvent(PreviousReminderDateClicked)
+        .then(assertThatNext(
+            hasModel(model.reminderDateSelected(expectedReminderDate)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when clicking on the previous reminder date, the selected date must not be changed if it is already the earliest date available`() {
+    val remindAppointmentsIn = listOf(
+        Days(1),
+        Weeks(1)
+    )
+    val currentReminderDate = PotentialAppointmentDate(
+        scheduledFor = LocalDate.parse("2018-01-02"),
+        timeToAppointment = Days(1)
+    )
+
+    val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .reminderDateSelected(currentReminderDate)
+
+    spec
+        .given(model)
+        .whenEvent(PreviousReminderDateClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

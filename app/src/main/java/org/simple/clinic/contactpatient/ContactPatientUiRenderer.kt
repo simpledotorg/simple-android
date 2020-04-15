@@ -26,6 +26,21 @@ class ContactPatientUiRenderer(
     } else {
       ui.hideSecureCallUi()
     }
+
+    renderSelectedAppointmentDate(model)
+  }
+
+  private fun renderSelectedAppointmentDate(
+      model: ContactPatientModel
+  ) {
+    val appointmentReminderPeriods = model.potentialAppointments.map { it.timeToAppointment }
+    val selectedReminderPeriod = model.potentialAppointments.first { it.scheduledFor == model.selectedAppointmentDate }.timeToAppointment
+
+    ui.renderSelectedAppointmentDate(
+        appointmentReminderPeriods,
+        selectedReminderPeriod,
+        model.selectedAppointmentDate
+    )
   }
 
   private fun toggleCallResultSection(appointment: ParcelableOptional<OverdueAppointment>) {

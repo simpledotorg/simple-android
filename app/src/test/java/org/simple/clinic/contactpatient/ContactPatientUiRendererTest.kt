@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.overdue.AppointmentConfig
+import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
@@ -55,6 +56,7 @@ class ContactPatientUiRendererTest {
 
     // then
     verify(ui).hideSecureCallUi()
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
 
     val expectedAge = 48 // difference between clock date and DOB
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
@@ -83,6 +85,7 @@ class ContactPatientUiRendererTest {
 
     // then
     verify(ui).hideSecureCallUi()
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
 
     val expectedAge = 48 // difference between clock date and Age
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
@@ -102,6 +105,7 @@ class ContactPatientUiRendererTest {
 
     // then
     verify(ui).hideSecureCallUi()
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
 
     verify(ui).showCallResultSection()
     verifyNoMoreInteractions(ui)
@@ -114,6 +118,7 @@ class ContactPatientUiRendererTest {
 
     // then
     verify(ui).hideSecureCallUi()
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
 
     verify(ui).hideCallResultSection()
     verifyNoMoreInteractions(ui)
@@ -126,6 +131,8 @@ class ContactPatientUiRendererTest {
     uiRenderer.render(model)
 
     // then
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
+
     verify(ui).showSecureCallUi()
     verifyNoMoreInteractions(ui)
   }
@@ -137,7 +144,29 @@ class ContactPatientUiRendererTest {
     uiRenderer.render(model)
 
     // then
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
+
     verify(ui).hideSecureCallUi()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `the current selected appointment date must be shown long with the reminder periods`() {
+    // given
+    val reminderPeriod = Weeks(1)
+    val selectedReminderDate = PotentialAppointmentDate(
+        timeToAppointment = reminderPeriod,
+        scheduledFor = LocalDate.parse("2018-01-08")
+    )
+
+    // when
+    val model = defaultModel().reminderDateSelected(selectedReminderDate)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSecureCallUi()
+
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
     verifyNoMoreInteractions(ui)
   }
 

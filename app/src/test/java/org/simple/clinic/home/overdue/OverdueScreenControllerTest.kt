@@ -14,9 +14,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.user.UserSession
@@ -70,7 +70,7 @@ class OverdueScreenControllerTest {
 
     uiEvents.onNext(OverdueScreenCreated())
 
-    verify(screen).updateList(emptyList())
+    verify(screen).updateList(emptyList(), false)
     verify(screen).handleEmptyList(true)
     verifyNoMoreInteractions(screen)
   }
@@ -118,7 +118,7 @@ class OverdueScreenControllerTest {
 
     // then
     verify(screen).handleEmptyList(false)
-    verify(screen).updateList(overdueAppointments)
+    verify(screen).updateList(overdueAppointments, false)
     verifyNoMoreInteractions(screen)
   }
 }

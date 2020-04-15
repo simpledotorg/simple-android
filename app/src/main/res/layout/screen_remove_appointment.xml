@@ -28,8 +28,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:paddingEnd="@dimen/spacing_16"
-      android:paddingStart="@dimen/spacing_12">
+      android:paddingStart="@dimen/spacing_12"
+      android:paddingEnd="@dimen/spacing_16">
 
       <RadioButton
         android:id="@+id/removeappointment_reason_patient_already_visited"
@@ -80,16 +80,15 @@
     </RadioGroup>
   </ScrollView>
 
-  <org.simple.clinic.widgets.OmegaCenterIconButton
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/removeappointment_done_button"
-    style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
+    style="?attr/materialButtonStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_16"
-    android:drawablePadding="@dimen/spacing_8"
-    android:drawableStart="@drawable/ic_done_24dp"
     android:enabled="false"
     android:text="@string/appointmentreminder_done"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+    app:icon="@drawable/ic_done_24dp" />
 
 </LinearLayout>

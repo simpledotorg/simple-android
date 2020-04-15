@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.home.patients.PatientsScreen android:id="@+id/patients_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.home.patients.PatientsScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patients_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/grey4">
@@ -24,16 +24,16 @@
         android:layout_below="@+id/illustrationLayout"
         android:animateLayoutChanges="true"
         android:background="@drawable/patients_recentpatients_header_container_background"
-        android:paddingEnd="@dimen/spacing_8"
-        android:paddingStart="@dimen/spacing_8">
+        android:paddingStart="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_8">
 
         <TextView
           style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
-          android:layout_marginBottom="2dp"
           android:layout_marginTop="2dp"
+          android:layout_marginBottom="2dp"
           android:padding="@dimen/spacing_8"
           android:text="@string/patients_recentpatients_title"
           android:textAllCaps="true" />
@@ -54,50 +54,47 @@
         android:background="@color/grey4"
         android:paddingTop="@dimen/spacing_8" />
 
-      <org.simple.clinic.widgets.OmegaCenterIconButton
+      <com.google.android.material.button.MaterialButton
         android:id="@+id/searchPatientsButton"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/spacing_56"
-        android:layout_marginEnd="@dimen/spacing_16"
         android:layout_marginStart="@dimen/spacing_16"
         android:layout_marginTop="@dimen/spacing_16"
-        android:background="@drawable/button_outline_ripple_blue1"
-        android:drawablePadding="@dimen/spacing_8"
-        android:drawableStart="@drawable/ic_search_24dp"
+        android:layout_marginEnd="@dimen/spacing_16"
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:paddingStart="20dp"
         android:text="@string/home_search_patient_name_phone"
         android:textAllCaps="false"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left"
         android:textColor="?colorAccent"
         android:textSize="@dimen/textsize_18"
-        app:drawableTint="?colorAccent"
+        app:icon="@drawable/ic_search_24dp"
         tools:ignore="MissingPrefix,RtlSymmetry" />
 
-      <org.simple.clinic.widgets.OmegaCenterIconButton
+      <com.google.android.material.button.MaterialButton
         android:id="@+id/scanSimpleCardButton"
-        style="@style/Clinic.V2.Button.WithIcon.Blue1"
+        style="?attr/materialButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/spacing_56"
         android:layout_below="@id/searchPatientsButton"
-        android:layout_marginEnd="@dimen/spacing_16"
         android:layout_marginStart="@dimen/spacing_16"
         android:layout_marginTop="@dimen/spacing_16"
-        android:drawableStart="@drawable/patient_id_card"
-        android:gravity="center"
+        android:layout_marginEnd="@dimen/spacing_16"
         android:text="@string/patients_scan_simple_card"
         android:textAllCaps="false"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White100"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left"
         app:drawableTint="@color/white100"
-        tools:ignore="MissingPrefix,RtlSymmetry" />
+        app:icon="@drawable/patient_id_card" />
 
       <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
         android:id="@+id/illustrationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/scanSimpleCardButton"
-        android:visibility="invisible"
         android:measureAllChildren="false"
+        android:visibility="invisible"
         app:debug_displayedChild="1">
 
         <ImageView
@@ -113,8 +110,8 @@
           layout="@layout/view_simple_video"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/spacing_16"
-          android:layout_marginTop="@dimen/spacing_24" />
+          android:layout_marginTop="@dimen/spacing_24"
+          android:layout_marginBottom="@dimen/spacing_16" />
       </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
     </RelativeLayout>
   </androidx.core.widget.NestedScrollView>

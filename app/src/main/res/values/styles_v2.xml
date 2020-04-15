@@ -326,41 +326,6 @@
     <item name="android:background">@color/blue1</item>
   </style>
 
-  <style name="Clinic.V2.Button.WithIcon" />
-
-  <style name="Clinic.V2.Button.WithIcon.Blue2">
-    <item name="android:background">#e0f0ff</item>
-    <item name="android:textColor">?colorAccent</item>
-    <item name="android:paddingTop">0dp</item>
-    <item name="android:paddingBottom">0dp</item>
-    <item name="android:drawablePadding">@dimen/spacing_8</item>
-  </style>
-
-  <style name="Clinic.V2.Button.WithIcon.Blue1">
-    <item name="android:background">@drawable/background_button_solid_blue1</item>
-    <item name="android:foreground">?selectableItemBackground</item>
-    <item name="android:textColor">@color/white100</item>
-    <item name="android:paddingTop">0dp</item>
-    <item name="android:paddingBottom">0dp</item>
-    <item name="android:drawablePadding">8dp</item>
-  </style>
-
-  <style name="Clinic.V2.Button.WithIcon.Green3">
-    <item name="android:background">@drawable/background_button_solid_green3</item>
-    <item name="android:foreground">?selectableItemBackground</item>
-    <item name="android:paddingTop">0dp</item>
-    <item name="android:paddingBottom">0dp</item>
-    <item name="android:drawablePadding">8dp</item>
-  </style>
-
-  <style name="Clinic.V2.Button.WithIcon.Green1">
-    <item name="android:background">@drawable/background_button_solid_green1</item>
-    <item name="android:foreground">?selectableItemBackground</item>
-    <item name="android:paddingTop">0dp</item>
-    <item name="android:paddingBottom">0dp</item>
-    <item name="android:drawablePadding">8dp</item>
-  </style>
-
   <style name="Clinic.V2.TextAppearance.Button1" parent="TextAppearance.AppCompat.Widget.Button">
     <item name="android:textAllCaps">true</item>
     <item name="android:fontFamily">sans-serif-medium</item>
@@ -375,14 +340,6 @@
 
   <style name="Clinic.V2.TextAppearance.Button1.Blue1">
     <item name="android:textColor">@color/blue1</item>
-  </style>
-
-  <style name="Clinic.V2.TextAppearance.Button1.Grey1">
-    <item name="android:textColor">@color/grey1</item>
-  </style>
-
-  <style name="Clinic.V2.TextAppearance.Button1.Green1">
-    <item name="android:textColor">@color/green1</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.H6">
@@ -472,10 +429,6 @@
     <item name="android:textColor">@color/white100</item>
   </style>
 
-  <style name="Clinic.V2.TextAppearance.Button2.Red1">
-    <item name="android:textColor">@color/red1</item>
-  </style>
-
   <style name="Clinic.V2.TextAppearance.TextFieldLarge">
     <item name="android:textSize">40sp</item>
     <item name="android:fontFamily">sans-serif</item>
@@ -507,22 +460,6 @@
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     <item name="android:tint">@color/grey2</item>
     <item name="android:src">@drawable/ic_clear_circular_24dp</item>
-  </style>
-
-  <style name="Clinic.V2.NoBackgroundRippleButton">
-    <item name="android:background">?selectableItemBackground</item>
-    <item name="android:paddingTop">@dimen/spacing_12</item>
-    <item name="android:paddingBottom">@dimen/spacing_12</item>
-    <item name="android:paddingStart">@dimen/spacing_24</item>
-    <item name="android:paddingEnd">@dimen/spacing_24</item>
-  </style>
-
-  <style name="Clinic.V2.TextOnlyButtonRipple">
-    <item name="android:background">?selectableItemBackground</item>
-    <item name="android:paddingTop">10dp</item>
-    <item name="android:paddingBottom">10dp</item>
-    <item name="android:paddingStart">@dimen/spacing_24</item>
-    <item name="android:paddingEnd">@dimen/spacing_24</item>
   </style>
 
   <style name="Clinic.V2.OverdueListAction">

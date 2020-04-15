@@ -59,4 +59,8 @@ data class ContactPatientModel(
   fun overdueAppointmentLoaded(appointment: Optional<OverdueAppointment>): ContactPatientModel {
     return copy(appointment = appointment.parcelable())
   }
+
+  fun reminderDateSelected(date: PotentialAppointmentDate): ContactPatientModel {
+    return copy(selectedAppointmentDate = date.scheduledFor)
+  }
 }

@@ -90,6 +90,9 @@ jobs:
 
   verify_release_build:
     runs-on: [ubuntu-latest]
+    strategy:
+      matrix:
+        buildType: ['Sandbox', 'Staging', 'Security', 'Production']
     steps:
       - uses: actions/checkout@v2
 
@@ -98,12 +101,12 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: SBX Release build with Proguard
+      - name: ${{ matrix.buildType }} Release build with Proguard
         run: |
           ./gradlew \
           -PrunProguard=true \
           -PdefaultProguardFile=proguard-android.txt \
-          assembleSandboxRelease
+          assemble${{ matrix.buildType }}Release
 
   verify_room_schemas:
     runs-on: [ubuntu-latest]

@@ -37,7 +37,8 @@ data class OverdueAppointmentRow(
     val isAtHighRisk: Boolean,
     val lastSeenDate: String,
     val diagnosedWithDiabetes: Answer?,
-    val diagnosedWithHypertension: Answer?
+    val diagnosedWithHypertension: Answer?,
+    val showDiagnosisLabel: Boolean
 ) : ItemAdapter.Item<UiEvent> {
 
   companion object {
@@ -45,12 +46,18 @@ data class OverdueAppointmentRow(
     fun from(
         appointments: List<OverdueAppointment>,
         clock: UserClock,
-        dateFormatter: DateTimeFormatter
+        dateFormatter: DateTimeFormatter,
+        isDiabetesManagementEnabled: Boolean
     ): List<OverdueAppointmentRow> {
-      return appointments.map { overdueAppointment -> from(overdueAppointment, clock, dateFormatter) }
+      return appointments.map { overdueAppointment -> from(overdueAppointment, clock, dateFormatter, isDiabetesManagementEnabled) }
     }
 
-    private fun from(overdueAppointment: OverdueAppointment, clock: UserClock, dateFormatter: DateTimeFormatter): OverdueAppointmentRow {
+    private fun from(
+        overdueAppointment: OverdueAppointment,
+        clock: UserClock,
+        dateFormatter: DateTimeFormatter,
+        isDiabetesManagementEnabled: Boolean
+    ): OverdueAppointmentRow {
       return OverdueAppointmentRow(
           appointmentUuid = overdueAppointment.appointment.uuid,
           patientUuid = overdueAppointment.appointment.patientUuid,
@@ -62,7 +69,8 @@ data class OverdueAppointmentRow(
           isAtHighRisk = overdueAppointment.isAtHighRisk,
           lastSeenDate = dateFormatter.format(overdueAppointment.patientLastSeen.toLocalDateAtZone(clock.zone)),
           diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
-          diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension
+          diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
+          showDiagnosisLabel = isDiabetesManagementEnabled
       )
     }
 
@@ -137,6 +145,7 @@ data class OverdueAppointmentRow(
         "$overdueDays"
     )
 
+    holder.diagnosisLabelContainer.visibleOrGone(showDiagnosisLabel)
     holder.diagnosisTextView.text = diagnosisText(context)
 
     updateBottomLayoutVisibility(holder)

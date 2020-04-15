@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_overdue.view.*
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ItemAdapter
@@ -97,8 +97,13 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
   }
 
-  fun updateList(overdueAppointments: List<OverdueAppointment>) {
-    overdueListAdapter.submitList(OverdueAppointmentRow.from(overdueAppointments, userClock, dateFormatter))
+  fun updateList(overdueAppointments: List<OverdueAppointment>, isDiabetesManagementEnabled: Boolean) {
+    overdueListAdapter.submitList(OverdueAppointmentRow.from(
+        appointments = overdueAppointments,
+        clock = userClock,
+        dateFormatter = dateFormatter,
+        isDiabetesManagementEnabled = isDiabetesManagementEnabled
+    ))
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

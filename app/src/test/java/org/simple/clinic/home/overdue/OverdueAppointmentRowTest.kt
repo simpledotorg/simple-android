@@ -2,11 +2,11 @@ package org.simple.clinic.home.overdue
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -63,7 +63,7 @@ class OverdueAppointmentRowTest {
     val appointments = listOf(appointmentDelayedBy4Days, appointmentDelayedByOneWeek)
 
     // when
-    val overdueListItems = OverdueAppointmentRow.from(appointments, userClock, dateFormatter)
+    val overdueListItems = OverdueAppointmentRow.from(appointments, userClock, dateFormatter, isDiabetesManagementEnabled = true)
 
     // then
     val expectedListItems = listOf(
@@ -78,7 +78,8 @@ class OverdueAppointmentRowTest {
             isAtHighRisk = false,
             lastSeenDate = "1-Jan-2020",
             diagnosedWithDiabetes = Yes,
-            diagnosedWithHypertension = No
+            diagnosedWithHypertension = No,
+            showDiagnosisLabel = true
         ),
         OverdueAppointmentRow(
             appointmentUuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
@@ -91,7 +92,8 @@ class OverdueAppointmentRowTest {
             isAtHighRisk = true,
             lastSeenDate = "25-Dec-2019",
             diagnosedWithDiabetes = No,
-            diagnosedWithHypertension = null
+            diagnosedWithHypertension = null,
+            showDiagnosisLabel = true
         )
     )
     assertThat(overdueListItems)

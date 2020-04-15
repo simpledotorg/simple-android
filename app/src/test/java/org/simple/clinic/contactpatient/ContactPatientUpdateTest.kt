@@ -268,6 +268,38 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when a reminder date is manually selected, the selected date must be set to an existing potential date if it matches`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    val date = LocalDate.parse("2018-01-08")
+    spec
+        .given(model)
+        .whenEvent(ManualDateSelected(date, LocalDate.now(clock)))
+        .then(assertThatNext(
+            hasModel(model.reminderDateSelected(PotentialAppointmentDate(scheduledFor = date, timeToAppointment = Weeks(1)))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when a reminder date is manually selected, the selected date must be set to a default date if there is no match`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    val date = LocalDate.parse("2018-01-06")
+    spec
+        .given(model)
+        .whenEvent(ManualDateSelected(date, LocalDate.now(clock)))
+        .then(assertThatNext(
+            hasModel(model.reminderDateSelected(PotentialAppointmentDate(scheduledFor = date, timeToAppointment = Days(5)))),
+            hasNoEffects()
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

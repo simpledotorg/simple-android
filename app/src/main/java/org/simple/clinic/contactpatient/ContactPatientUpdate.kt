@@ -6,7 +6,9 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.overdue.PotentialAppointmentDate
+import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.util.daysTill
 import org.threeten.bp.LocalDate
 
 class ContactPatientUpdate(
@@ -28,7 +30,22 @@ class ContactPatientUpdate(
       is PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment.uuid))
       is NextReminderDateClicked -> selectNextReminderDate(model)
       is PreviousReminderDateClicked -> selectPreviousReminderDate(model)
+      is ManualDateSelected -> updateWithManuallySelectedDate(event, model)
     }
+  }
+
+  private fun updateWithManuallySelectedDate(
+      event: ManualDateSelected,
+      model: ContactPatientModel
+  ): Next<ContactPatientModel, ContactPatientEffect> {
+    val selectedDate = event.selectedDate
+    val currentDate = event.currentDate
+
+    val matchingPotentialAppointmentDate = model.potentialAppointments.firstOrNull { it.scheduledFor == selectedDate }
+
+    val reminderDate = matchingPotentialAppointmentDate ?: PotentialAppointmentDate(selectedDate, Days(currentDate daysTill selectedDate))
+
+    return next(model.reminderDateSelected(reminderDate))
   }
 
   private fun selectNextReminderDate(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {

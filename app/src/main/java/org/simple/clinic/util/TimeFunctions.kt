@@ -31,3 +31,5 @@ fun LocalDate.plus(timeToAppointment: TimeToAppointment): LocalDate {
       }
   )
 }
+
+infix fun LocalDate.daysTill(other: LocalDate): Int = ChronoUnit.DAYS.between(this, other).toInt()

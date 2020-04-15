@@ -8,6 +8,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.LocalDate
 
 sealed class ContactPatientEvent : UiEvent
 
@@ -43,12 +44,19 @@ object PatientAgreedToVisitClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Agreed to visit clicked"
 }
 
-object NextReminderDateClicked: ContactPatientEvent() {
+object NextReminderDateClicked : ContactPatientEvent() {
   override val analyticsName: String
     get() = "Contact Patient:Next appointment date clicked"
 }
 
-object PreviousReminderDateClicked: ContactPatientEvent() {
+object PreviousReminderDateClicked : ContactPatientEvent() {
   override val analyticsName: String
     get() = "Contact Patient:Previous appointment date clicked"
+}
+
+data class ManualDateSelected(
+    val selectedDate: LocalDate,
+    val currentDate: LocalDate
+) : ContactPatientEvent() {
+  override val analyticsName: String = "Contact Patient:Manual date selected"
 }

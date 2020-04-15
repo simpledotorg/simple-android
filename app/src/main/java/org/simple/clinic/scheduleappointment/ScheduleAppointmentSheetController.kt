@@ -36,7 +36,7 @@ typealias UiChange = (Ui) -> Unit
 class ScheduleAppointmentSheetController @Inject constructor(
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
-    private val configProvider: Observable<AppointmentConfig>,
+    private val config: AppointmentConfig,
     private val clock: UserClock,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
@@ -66,9 +66,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun generatePotentialAppointmentDatesForScheduling(): Observable<List<PotentialAppointmentDate>> {
-    return configProvider
-        .map { it.scheduleAppointmentsIn }
-        .map(this::generatePotentialAppointmentDates)
+    return Observable.fromCallable { generatePotentialAppointmentDates(config.scheduleAppointmentsIn) }
         .map { appointmentDates -> appointmentDates.distinctBy { it.scheduledFor }.sorted() }
   }
 
@@ -130,9 +128,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .filterAndUnwrapJust()
         .switchMap(protocolRepository::protocol)
 
-    val configTimeToAppointment = configProvider
-        .map { it.defaultTimeToAppointment }
-
+    val configTimeToAppointment = Observable.fromCallable { config.defaultTimeToAppointment }
     val protocolTimeToAppointment = protocolStream.map { Days(it.followUpDays) }
 
     val timeToAppointments = Observable.concatArrayEager(configTimeToAppointment, protocolTimeToAppointment)
@@ -191,28 +187,23 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun scheduleAutomaticAppointmentForDefaulters(events: Observable<UiEvent>): Observable<UiChange> {
-    val combinedStreams = Observables.combineLatest(
-        events.ofType<SchedulingSkipped>(),
-        patientUuid(events),
-        configProvider
-    )
+    val combinedStreams = Observables.combineLatest(events.ofType<SchedulingSkipped>(), patientUuid(events))
+
     val isPatientDefaulterStream = combinedStreams
         .switchMap { (_, patientUuid) -> patientRepository.isPatientDefaulter(patientUuid) }
         .replay()
         .refCount()
 
-    val appointmentStream = Observables.combineLatest(
-        patientUuid(events),
-        configProvider,
-        currentFacilityStream()) { uuid, config, currentFacility ->
-      OngoingAppointment(
-          patientUuid = uuid,
-          appointmentDate = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
-          appointmentFacilityUuid = currentFacility.uuid,
-          creationFacilityUuid = currentFacility.uuid
-      )
-    }
-    
+    val appointmentStream = Observables
+        .combineLatest(patientUuid(events), currentFacilityStream()) { uuid, currentFacility ->
+          OngoingAppointment(
+              patientUuid = uuid,
+              appointmentDate = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
+              appointmentFacilityUuid = currentFacility.uuid,
+              creationFacilityUuid = currentFacility.uuid
+          )
+        }
+
     val saveAppointmentAndCloseSheet = isPatientDefaulterStream
         .filter { isPatientDefaulter -> isPatientDefaulter }
         .withLatestFrom(appointmentStream)

@@ -4,7 +4,6 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Observable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.scheduleappointment.TimeToAppointment.Days
@@ -21,13 +20,13 @@ import javax.inject.Named
 class AppointmentModule {
 
   @Provides
-  fun config(): Observable<AppointmentConfig> {
-    return Observable.just(AppointmentConfig(
+  fun config(): AppointmentConfig {
+    return AppointmentConfig(
         appointmentDuePeriodForDefaulters = Period.ofDays(30),
         scheduleAppointmentsIn = scheduleAppointmentDays() + scheduleAppointmentMonths(),
         defaultTimeToAppointment = Days(28),
         periodForIncludingOverdueAppointments = Period.ofMonths(12)
-    ))
+    )
   }
 
   @Provides

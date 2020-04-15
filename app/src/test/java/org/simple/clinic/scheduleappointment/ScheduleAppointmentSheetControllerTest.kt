@@ -576,7 +576,7 @@ class ScheduleAppointmentSheetControllerTest {
     controller = ScheduleAppointmentSheetController(
         appointmentRepository = repository,
         patientRepository = patientRepository,
-        configProvider = Observable.just(config),
+        config = config,
         clock = clock,
         userSession = userSession,
         facilityRepository = facilityRepository,

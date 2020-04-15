@@ -42,3 +42,8 @@ object PatientMarkedAsAgreedToVisit : ContactPatientEvent()
 object PatientAgreedToVisitClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Agreed to visit clicked"
 }
+
+object NextReminderDateClicked: ContactPatientEvent() {
+  override val analyticsName: String
+    get() = "Contact Patient:Next appointment date clicked"
+}

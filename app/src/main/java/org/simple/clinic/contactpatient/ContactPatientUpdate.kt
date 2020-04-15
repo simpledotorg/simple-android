@@ -1,10 +1,13 @@
 package org.simple.clinic.contactpatient
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.threeten.bp.LocalDate
 
 class ContactPatientUpdate(
     private val proxyPhoneNumberForMaskedCalls: String
@@ -23,6 +26,17 @@ class ContactPatientUpdate(
       is SecureCallClicked -> maskedCallPatient(model, event)
       is PatientMarkedAsAgreedToVisit -> dispatch(CloseScreen)
       is PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment.uuid))
+      is NextReminderDateClicked -> selectNextReminderDate(model)
+    }
+  }
+
+  private fun selectNextReminderDate(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {
+    val reminderDate = findPotentialDateAfter(model.potentialAppointments, model.selectedAppointmentDate)
+
+    return if (reminderDate != null) {
+      next(model.reminderDateSelected(reminderDate))
+    } else {
+      noChange()
     }
   }
 
@@ -50,5 +64,12 @@ class ContactPatientUpdate(
       DirectCallWithManualDialer(patientPhoneNumber)
 
     return dispatch(effect)
+  }
+
+  private fun findPotentialDateAfter(
+      potentialAppointmentDates: List<PotentialAppointmentDate>,
+      date: LocalDate
+  ): PotentialAppointmentDate? {
+    return potentialAppointmentDates.firstOrNull { it.scheduledFor > date }
   }
 }

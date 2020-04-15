@@ -18,15 +18,15 @@
     app:titleTextColor="?attr/colorOnSurface"
     app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
-  <org.simple.clinic.widgets.OmegaCenterIconButton
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/doneButton"
-    style="@style/Clinic.V2.Button.WithIcon.Blue1"
+    style="?attr/materialButtonStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_16"
-    android:drawableStart="@drawable/ic_done_16dp"
     android:enabled="false"
     android:text="@string/changelanguage_done"
+    app:icon="@drawable/ic_done_24dp"
     app:layout_constraintBottom_toBottomOf="parent"
     tools:enabled="true" />
 

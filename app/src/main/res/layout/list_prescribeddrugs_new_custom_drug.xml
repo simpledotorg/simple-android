@@ -8,13 +8,13 @@
   android:orientation="vertical"
   app:cardCornerRadius="0dp">
 
-  <org.simple.clinic.widgets.OmegaCenterIconButton
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/prescribeddrug_item_addnewprescription"
-    style="@style/Clinic.V2.Button.WithIcon.Blue2"
+    style="@style/Clinic.V2.MaterialButton.Blue2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:drawableStart="@drawable/ic_add_medicines"
+    android:layout_margin="@dimen/spacing_8"
     android:text="@string/patient_prescribeddrugs_add_custom_prescription"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+    app:icon="@drawable/ic_add_medicines" />
 </androidx.cardview.widget.CardView>

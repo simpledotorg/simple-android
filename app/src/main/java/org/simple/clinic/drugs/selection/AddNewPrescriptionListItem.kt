@@ -1,7 +1,6 @@
 package org.simple.clinic.drugs.selection
 
 import android.view.View
-import android.widget.Button
 import com.google.android.material.button.MaterialButton
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
@@ -28,6 +27,6 @@ class AddNewPrescriptionListItem : GroupieItemWithUiEvents<AddNewPrescriptionLis
   }
 
   class AddNewViewHolder(rootView: View) : ViewHolder(rootView) {
-    val addNewPrescriptionButton by bindView<Button>(R.id.prescribeddrug_item_addnewprescription)
+    val addNewPrescriptionButton by bindView<MaterialButton>(R.id.prescribeddrug_item_addnewprescription)
   }
 }

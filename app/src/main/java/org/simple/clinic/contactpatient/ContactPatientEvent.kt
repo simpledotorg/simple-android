@@ -60,3 +60,8 @@ data class ManualDateSelected(
 ) : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Manual date selected"
 }
+
+object AppointmentDateClicked : ContactPatientEvent() {
+  override val analyticsName: String
+    get() = "Contact Patient:Appointment date clicked"
+}

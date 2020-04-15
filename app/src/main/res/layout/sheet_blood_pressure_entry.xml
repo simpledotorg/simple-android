@@ -62,17 +62,16 @@
           android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
           android:visibility="gone" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
           android:id="@+id/removeBloodPressureButton"
-          style="@style/Widget.AppCompat.Button.Borderless"
+          style="@style/Clinic.V2.TextButton.Red1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentEnd="true"
           android:layout_centerVertical="true"
           android:layout_marginEnd="10dp"
-          android:paddingTop="14dp"
           android:text="@string/bloodpressureentry_remove"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Red1"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
           android:visibility="gone" />
       </RelativeLayout>
 
@@ -148,14 +147,14 @@
         android:visibility="gone"
         tools:text="@string/bloodpressureentry_error_diastolic_180" />
 
-      <Button
+      <com.google.android.material.button.MaterialButton
         android:id="@+id/bpDateButton"
-        style="@style/Clinic.V2.NoBackgroundRippleButton"
+        style="?attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/spacing_8"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
         tools:text="6 December, 2019" />
     </LinearLayout>
 

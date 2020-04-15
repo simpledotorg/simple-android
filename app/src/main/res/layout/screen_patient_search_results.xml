@@ -14,7 +14,8 @@
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
     app:navigationIconTint="@color/grey0"
     app:title="Anish Acharya with a really long surname"
-    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.SearchResultsTitle" />
+    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.SearchResultsTitle"
+    app:titleTextColor="?attr/colorOnSurface" />
 
   <org.simple.clinic.searchresultsview.PatientSearchView
     android:id="@+id/patientsearchresults_searchresultsview"

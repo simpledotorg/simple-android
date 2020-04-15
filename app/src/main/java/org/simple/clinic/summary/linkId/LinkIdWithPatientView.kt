@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -73,8 +74,8 @@ class LinkIdWithPatientView(
   private val upstreamUiEvents: Subject<UiEvent> = PublishSubject.create()
 
   private val idTextView by bindView<TextView>(R.id.linkidwithpatient_text)
-  private val addButton by bindView<Button>(R.id.linkidwithpatient_button_add)
-  private val cancelButton by bindView<Button>(R.id.linkidwithpatient_button_cancel)
+  private val addButton by bindView<MaterialButton>(R.id.linkidwithpatient_button_add)
+  private val cancelButton by bindView<MaterialButton>(R.id.linkidwithpatient_button_cancel)
   private val backgroundView by bindView<View>(R.id.linkidwithpatient_background)
   private val contentContainer by bindView<View>(R.id.linkidwithpatient_content)
 

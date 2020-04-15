@@ -27,14 +27,13 @@
       android:src="@drawable/ic_arrow_back_24dp"
       android:tint="@color/white" />
 
-    <Button
+    <TextView
       android:id="@+id/editPatientButton"
       style="@style/Clinic.V2.ToolbarButton"
       android:layout_alignParentEnd="true"
       android:layout_marginTop="@dimen/spacing_4"
       android:layout_marginEnd="@dimen/spacing_8"
       android:text="@string/patientsummary_edit"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
       android:visibility="invisible"
       tools:ignore="RelativeOverlap"
       tools:visibility="visible" />

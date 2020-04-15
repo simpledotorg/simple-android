@@ -27,11 +27,22 @@ class ContactPatientUpdate(
       is PatientMarkedAsAgreedToVisit -> dispatch(CloseScreen)
       is PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment.uuid))
       is NextReminderDateClicked -> selectNextReminderDate(model)
+      is PreviousReminderDateClicked -> selectPreviousReminderDate(model)
     }
   }
 
   private fun selectNextReminderDate(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {
     val reminderDate = findPotentialDateAfter(model.potentialAppointments, model.selectedAppointmentDate)
+
+    return if (reminderDate != null) {
+      next(model.reminderDateSelected(reminderDate))
+    } else {
+      noChange()
+    }
+  }
+
+  private fun selectPreviousReminderDate(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {
+    val reminderDate = findPotentialAppointmentBefore(model.potentialAppointments, model.selectedAppointmentDate)
 
     return if (reminderDate != null) {
       next(model.reminderDateSelected(reminderDate))
@@ -71,5 +82,12 @@ class ContactPatientUpdate(
       date: LocalDate
   ): PotentialAppointmentDate? {
     return potentialAppointmentDates.firstOrNull { it.scheduledFor > date }
+  }
+
+  private fun findPotentialAppointmentBefore(
+      potentialAppointmentDates: List<PotentialAppointmentDate>,
+      date: LocalDate
+  ): PotentialAppointmentDate? {
+    return potentialAppointmentDates.lastOrNull { it.scheduledFor < date }
   }
 }

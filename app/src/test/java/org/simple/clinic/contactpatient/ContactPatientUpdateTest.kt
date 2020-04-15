@@ -8,10 +8,16 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.overdue.AppointmentConfig
+import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.overdue.TimeToAppointment.*
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.util.TestUserClock
+import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
 import java.util.UUID
 
 class ContactPatientUpdateTest {
@@ -32,6 +38,12 @@ class ContactPatientUpdateTest {
       dateOfBirth = patientProfile.patient.dateOfBirth
   )
   private val proxyPhoneNumberForSecureCalls = "9999988888"
+  private val timeToAppointments = listOf(
+      Days(1),
+      Weeks(1),
+      Weeks(2)
+  )
+  private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
 
   private val spec = UpdateSpec(ContactPatientUpdate(proxyPhoneNumberForMaskedCalls = proxyPhoneNumberForSecureCalls))
 
@@ -126,7 +138,14 @@ class ContactPatientUpdateTest {
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls
   ): ContactPatientModel {
     val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
+    val appointmentConfig = AppointmentConfig(
+        appointmentDuePeriodForDefaulters = Period.ZERO,
+        scheduleAppointmentsIn = emptyList(),
+        defaultTimeToAppointment = Days(0),
+        periodForIncludingOverdueAppointments = Period.ZERO,
+        remindAppointmentsIn = timeToAppointments
+    )
 
-    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig)
+    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig, appointmentConfig, clock)
   }
 }

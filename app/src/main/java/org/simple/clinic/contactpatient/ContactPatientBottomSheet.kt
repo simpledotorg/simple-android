@@ -16,6 +16,7 @@ import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
+import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -61,6 +62,9 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
 
+  @Inject
+  lateinit var appointmentConfig: AppointmentConfig
+
   private lateinit var component: ContactPatientBottomSheetComponent
 
   private val patientUuid by unsafeLazy { intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID }
@@ -84,7 +88,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events = events,
-        defaultModel = ContactPatientModel.create(patientUuid, phoneMaskConfig),
+        defaultModel = ContactPatientModel.create(patientUuid, phoneMaskConfig, appointmentConfig, userClock),
         update = ContactPatientUpdate(phoneMaskConfig),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = ContactPatientInit(),

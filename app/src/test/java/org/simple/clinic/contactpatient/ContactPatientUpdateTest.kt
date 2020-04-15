@@ -300,6 +300,37 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the appointment date is clicked, open the manual date picker`() {
+    val remindAppointmentsIn = listOf(
+        Days(1),
+        Weeks(1),
+        Weeks(2)
+    )
+    val currentSelectedDate = LocalDate.parse("2018-01-08")
+    val currentReminderDate = PotentialAppointmentDate(
+        scheduledFor = currentSelectedDate,
+        timeToAppointment = Weeks(1)
+    )
+
+    val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .reminderDateSelected(currentReminderDate)
+
+    val expectedEffect = ShowManualDatePicker(
+        preselectedDate = currentSelectedDate,
+        datePickerBounds = LocalDate.parse("2018-01-02")..LocalDate.parse("2018-01-15")
+    )
+    spec
+        .given(model)
+        .whenEvent(AppointmentDateClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(expectedEffect as ContactPatientEffect)
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

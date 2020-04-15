@@ -5,6 +5,10 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.overdue.AppointmentConfig
+import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.overdue.TimeToAppointment.Days
+import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -13,6 +17,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
 import java.util.UUID
 
 class ContactPatientUiRendererTest {
@@ -20,6 +25,11 @@ class ContactPatientUiRendererTest {
   private val patientUuid = UUID.fromString("e6ff79b9-0ac8-4d7b-ada9-7b3056db2972")
 
   private val ui = mock<ContactPatientUi>()
+  private val timeToAppointments = listOf(
+      Days(1),
+      Weeks(1),
+      Weeks(2)
+  )
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val uiRenderer = ContactPatientUiRenderer(ui, clock)
 
@@ -133,10 +143,18 @@ class ContactPatientUiRendererTest {
 
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
-      proxyPhoneNumber: String = "12345678"
+      proxyPhoneNumber: String = "12345678",
+      timeToAppointments: List<TimeToAppointment> = this.timeToAppointments
   ): ContactPatientModel {
     val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
+    val appointmentConfig = AppointmentConfig(
+        appointmentDuePeriodForDefaulters = Period.ZERO,
+        scheduleAppointmentsIn = emptyList(),
+        defaultTimeToAppointment = Days(0),
+        periodForIncludingOverdueAppointments = Period.ZERO,
+        remindAppointmentsIn = timeToAppointments
+    )
 
-    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig)
+    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig, appointmentConfig, clock)
   }
 }

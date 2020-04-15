@@ -1,13 +1,16 @@
 package org.simple.clinic.overdue
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
 import org.threeten.bp.LocalDate
 
+@Parcelize
 data class PotentialAppointmentDate(
     val scheduledFor: LocalDate,
     val timeToAppointment: TimeToAppointment
-) : Comparable<PotentialAppointmentDate> {
+) : Parcelable, Comparable<PotentialAppointmentDate> {
 
   companion object {
     fun from(

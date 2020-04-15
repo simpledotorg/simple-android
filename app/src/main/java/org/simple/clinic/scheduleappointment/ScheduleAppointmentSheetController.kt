@@ -24,6 +24,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.plus
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -69,7 +70,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun generatePotentialAppointmentDatesForScheduling(): List<PotentialAppointmentDate> {
-    return generatePotentialAppointmentDates(config.scheduleAppointmentsIn)
+    return PotentialAppointmentDate.from(config.scheduleAppointmentsIn, clock)
         .distinctBy(PotentialAppointmentDate::scheduledFor)
         .sorted()
   }
@@ -308,28 +309,10 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return PotentialAppointmentDate(today.plus(scheduleAppointmentIn), scheduleAppointmentIn)
   }
 
-  private fun generatePotentialAppointmentDates(scheduleAppointmentsIn: List<TimeToAppointment>): List<PotentialAppointmentDate> {
-    val today = LocalDate.now(clock)
-    return scheduleAppointmentsIn
-        .map { timeToAppointment -> today.plus(timeToAppointment) to timeToAppointment }
-        .map { (appointmentDate, timeToAppointment) -> PotentialAppointmentDate(appointmentDate, timeToAppointment) }
-  }
-
   data class OngoingAppointment(
       val patientUuid: UUID,
       val appointmentDate: LocalDate,
       val appointmentFacilityUuid: UUID,
       val creationFacilityUuid: UUID
-  )
-}
-
-private fun LocalDate.plus(timeToAppointment: TimeToAppointment): LocalDate {
-  return this.plus(
-      timeToAppointment.value.toLong(),
-      when (timeToAppointment) {
-        is Days -> ChronoUnit.DAYS
-        is Weeks -> ChronoUnit.WEEKS
-        is Months -> ChronoUnit.MONTHS
-      }
   )
 }

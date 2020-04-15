@@ -1,5 +1,37 @@
 # CHANGELOG
 
+# On Demo
+### Feature
+- Introduce a facility confirmation screen whenever the user tries to perform one of the following actions immediately after changing facilities:
+  - Register a new patient
+  - Edit an existing patient
+  - Schedule an appointment for a patient
+  - Record a blood pressure measurement
+  - Record a blood sugar measurement
+  - Change the prescription
+- Introduce a confirmation screen during user sign-up after selecting a facility
+
+### Fixes
+- Fixed bug where the 'Help" button on the home screen would distort if the facility name was very long
+- Fixed occasional crash when searching for a patient by phone number
+
+### Internal
+- Sync help and progress reports when the language is changed in Settings
+- Change the default appointment schedule period to 28 days
+- Remove Whatsapp reminders from the reminder notification consent form when registering a patient for Bangladesh users
+- Hide the secure calling toll-free message if the secure calling feature is not available
+- Phone numbers are no longer hidden in search results
+- Migrated to the new secure user login API endpoints
+- Introduced an alternate QR code scanning module, built on AndroidX. This is controlled by a feature flag (`use_new_qr_scanner`)
+- Hide the "Transgender" gender option during patient registration for Ethiopia users
+- Add support for the Ethiopia address model
+- Change the date format for recording blood sugars and blood pressures to "DD/MM/YYYY"
+
+## 2020-03-30-7201
+### Feature
+- Add support for recording HbA1c blood sugars
+- Add a diagnosis label on the overdue appointments
+
 ## 2020-03-30-7201
 ### Feature
 - Add support for recording HbA1c blood sugars

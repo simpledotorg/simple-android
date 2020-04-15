@@ -15,6 +15,7 @@
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
     app:navigationIconTint="@color/grey0"
     app:title="@string/changelanguage_title"
+    app:titleTextColor="?attr/colorOnSurface"
     app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
   <org.simple.clinic.widgets.OmegaCenterIconButton

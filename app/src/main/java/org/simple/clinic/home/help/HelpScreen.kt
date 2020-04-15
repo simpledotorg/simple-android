@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotterknife.bindView
@@ -36,7 +37,7 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
   private val noContentView by bindView<View>(R.id.help_no_content)
   private val toolbar by bindView<Toolbar>(R.id.help_toolbar)
   private val errorMessageTextView by bindView<TextView>(R.id.help_error_message)
-  private val tryAgainButton by bindView<Button>(R.id.help_try_again)
+  private val tryAgainButton by bindView<MaterialButton>(R.id.help_try_again)
   private val progresBar by bindView<ProgressBar>(R.id.help_progress)
 
   @SuppressLint("SetJavaScriptEnabled")

@@ -16,27 +16,23 @@
   <FrameLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_alignTop="@+id/toolbar"
     android:layout_alignBottom="@+id/toolbar"
     android:layout_alignParentEnd="true"
-    android:layout_alignTop="@+id/toolbar"
     android:layout_marginEnd="@dimen/spacing_12"
     android:elevation="@dimen/elevation_toolbar"
     tools:ignore="UnusedAttribute">
 
-    <Button
+    <TextView
       android:id="@+id/skipButton"
+      style="@style/Clinic.V2.ToolbarButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:backgroundTint="#3D000000"
-      android:elevation="0dp"
-      android:minHeight="0dp"
-      android:minWidth="0dp"
-      android:paddingEnd="@dimen/spacing_16"
       android:paddingStart="@dimen/spacing_16"
+      android:paddingEnd="@dimen/spacing_16"
       android:stateListAnimator="@null"
       android:text="@string/registrationlocation_skip_permission"
-      android:textColor="@color/white"
       tools:ignore="UnusedAttribute" />
   </FrameLayout>
 
@@ -64,10 +60,10 @@
       android:layout_height="wrap_content"
       android:gravity="center_horizontal"
       android:orientation="vertical"
-      android:paddingBottom="@dimen/spacing_24"
-      android:paddingEnd="@dimen/spacing_24"
       android:paddingStart="@dimen/spacing_24"
-      android:paddingTop="36dp">
+      android:paddingTop="36dp"
+      android:paddingEnd="@dimen/spacing_24"
+      android:paddingBottom="@dimen/spacing_24">
 
       <TextView
         android:layout_width="wrap_content"
@@ -85,23 +81,19 @@
     </LinearLayout>
   </androidx.cardview.widget.CardView>
 
-  <Button
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/allowAccessButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_above="@id/registrationlocation_rationale_card"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="-24dp"
-    android:backgroundTint="?colorAccent"
-    android:drawablePadding="@dimen/spacing_8"
-    android:drawableStart="@drawable/ic_my_location_24dp"
     android:elevation="1dp"
-    android:paddingBottom="@dimen/spacing_16"
-    android:paddingEnd="@dimen/spacing_24"
     android:paddingStart="@dimen/spacing_24"
-    android:paddingTop="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_24"
     android:stateListAnimator="@animator/registration_permission_elevation_animator"
     android:text="@string/registrationlocation_allow_access"
-    android:textColor="@color/white"
+    app:icon="@drawable/ic_my_location_24dp"
+    app:iconGravity="textStart"
     tools:ignore="UnusedAttribute" />
 </org.simple.clinic.registration.location.RegistrationLocationPermissionScreen>

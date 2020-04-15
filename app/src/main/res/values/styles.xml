@@ -161,10 +161,12 @@
     <item name="android:background">?colorPrimary</item>
   </style>
 
-  <style name="Clinic.Button.Flat" parent="Widget.AppCompat.Button">
-    <item name="android:textColor">?android:textColorPrimaryInverse</item>
-    <item name="android:background">?colorAccent</item>
-    <item name="android:foreground">?selectableItemBackgroundBorderless</item>
+  <style name="Clinic.Button.Flat" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <item name="android:textColor">?attr/colorOnSecondary</item>
+    <item name="backgroundTint">?attr/colorSecondary</item>
+    <item name="android:insetTop">0dp</item>
+    <item name="android:insetBottom">0dp</item>
+    <item name="cornerRadius">0dp</item>
   </style>
 
   <style name="Clinic.OnboardingImage">
@@ -197,8 +199,8 @@
     <item name="android:textColor">@color/white_opacity_60</item>
   </style>
 
-  <style name="Clinic.SnackbarAction">
-    <item name="colorControlHighlight">#4099ff66</item>
+  <style name="Clinic.SnackbarAction" parent="Widget.MaterialComponents.Button.TextButton">
+    <item name="rippleColor">#4099ff66</item>
     <item name="android:textColor">@color/snackbar_action</item>
   </style>
 </resources>

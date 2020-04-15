@@ -71,9 +71,9 @@
           android:layout_marginTop="@dimen/spacing_8"
           android:text="@string/registrationconfirmpin_error_pin_mismatch" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
           android:id="@+id/resetPinButton"
-          style="@style/Widget.AppCompat.Button.Borderless.Colored"
+          style="?attr/borderlessButtonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_12"

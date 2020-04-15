@@ -31,7 +31,17 @@ class ContactPatientUpdate(
       is NextReminderDateClicked -> selectNextReminderDate(model)
       is PreviousReminderDateClicked -> selectPreviousReminderDate(model)
       is ManualDateSelected -> updateWithManuallySelectedDate(event, model)
+      is AppointmentDateClicked -> showManualDatePicker(model)
     }
+  }
+
+  private fun showManualDatePicker(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {
+    val earliestPossibleAppointmentDate = model.potentialAppointments.first().scheduledFor
+    val latestPossibleAppointmentDate = model.potentialAppointments.last().scheduledFor
+    
+    val datePickerBounds = earliestPossibleAppointmentDate..latestPossibleAppointmentDate
+
+    return dispatch(ShowManualDatePicker(model.selectedAppointmentDate, datePickerBounds))
   }
 
   private fun updateWithManuallySelectedDate(

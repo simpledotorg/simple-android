@@ -17,6 +17,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.overdue.AppointmentConfig
+import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -28,6 +29,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.threeten.bp.LocalDate
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
@@ -183,6 +185,14 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
 
   override fun closeSheet() {
     finish()
+  }
+
+  override fun renderSelectedAppointmentDate(
+      potentialAppointmentReminderPeriods: List<TimeToAppointment>,
+      selectedAppointmentReminderPeriod: TimeToAppointment,
+      selectedDate: LocalDate
+  ) {
+    // TODO(vs): 15/04/20 Implement this later
   }
 
   private fun normalCallClicks(): Observable<ContactPatientEvent> {

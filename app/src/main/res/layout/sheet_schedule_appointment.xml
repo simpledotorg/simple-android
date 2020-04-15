@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -11,9 +10,9 @@
     style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_16"
     android:ellipsize="end"
     android:gravity="center"
     android:text="@string/scheduleappointment_next_visit_in">
@@ -24,9 +23,9 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="44dp"
     android:layout_marginStart="44dp"
     android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginEnd="44dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -44,8 +43,8 @@
       android:id="@+id/currentDateTextView"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_8"
       android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
       android:gravity="center_horizontal"
       android:textColor="@color/black_opacity_80"
@@ -69,39 +68,38 @@
     style="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginBottom="@dimen/spacing_8"
     android:ellipsize="end"
     android:gravity="center"
-    tools:text="12-Nov-2019"/>
+    tools:text="12-Nov-2019" />
 
-  <Button
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/changeAppointmentDate"
-    style="@style/Clinic.V2.TextOnlyButtonRipple"
+    style="?attr/borderlessButtonStyle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_marginBottom="@dimen/spacing_4"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
-    android:text="@string/scheduleappointment_change" />
+    android:text="@string/scheduleappointment_change"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
 
   <View
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:background="@color/grey3"
     android:layout_margin="@dimen/spacing_16"
-    />
+    android:background="@color/grey3" />
 
   <TextView
     style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
     android:ellipsize="end"
     android:gravity="center"
-    android:text="@string/scheduleappointment_at"/>
+    android:text="@string/scheduleappointment_at" />
 
   <TextView
     android:id="@+id/selectedFacilityName"
@@ -112,52 +110,49 @@
     android:layout_marginBottom="8dp"
     android:ellipsize="end"
     android:gravity="center"
-    tools:text="PHC Bhatinda"/>
+    tools:text="PHC Bhatinda" />
 
-  <Button
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/changeFacilityButton"
-    style="@style/Clinic.V2.TextOnlyButtonRipple"
+    style="?attr/borderlessButtonStyle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
-    android:text="@string/scheduleappointment_change" />
+    android:text="@string/scheduleappointment_change"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_12"
-    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="@dimen/spacing_24"
+    android:paddingTop="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:paddingBottom="@dimen/spacing_12"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:gravity="center_vertical">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/notNowButton"
+      style="?attr/materialButtonOutlinedStyle"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_4"
       android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
-      android:background="@drawable/button_outline_ripple_blue1"
-      android:gravity="center"
       android:text="@string/scheduleappointment_not_now"
-      android:textColor="?colorAccent"
       tools:ignore="ButtonStyle" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/doneButton"
+      style="?attr/materialButtonStyle"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_4"
       android:layout_marginStart="@dimen/spacing_8"
       android:layout_weight="1"
+      android:backgroundTint="?attr/colorSecondary"
       android:gravity="center"
-      android:paddingBottom="21dp"
-      android:paddingTop="21dp"
       android:text="@string/scheduleappointment_done"
       android:textColor="@color/white"
-      app:backgroundTint="?colorAccent"
       tools:ignore="ButtonStyle" />
   </LinearLayout>
 </LinearLayout>

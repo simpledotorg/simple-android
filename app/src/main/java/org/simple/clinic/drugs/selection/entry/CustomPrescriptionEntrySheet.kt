@@ -9,6 +9,7 @@ import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.TextView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -39,10 +40,10 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.customprescription_root)
   private val drugNameEditText by bindView<TextInputEditText>(R.id.customprescription_drug_name)
   private val drugDosageEditText by bindView<TextInputEditText>(R.id.customprescription_drug_dosage)
-  private val saveButton by bindView<Button>(R.id.customprescription_save)
+  private val saveButton by bindView<MaterialButton>(R.id.customprescription_save)
   private val enterMedicineTextView by bindView<TextView>(R.id.customprescription_enter_prescription)
   private val editMedicineTextView by bindView<TextView>(R.id.customprescription_edit_prescription)
-  private val removeMedicineButton by bindView<Button>(R.id.customprescription_remove_button)
+  private val removeMedicineButton by bindView<MaterialButton>(R.id.customprescription_remove_button)
 
   @Inject
   lateinit var controller: CustomPrescriptionEntryController

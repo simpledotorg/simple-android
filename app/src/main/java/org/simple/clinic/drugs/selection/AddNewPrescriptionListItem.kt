@@ -2,6 +2,7 @@ package org.simple.clinic.drugs.selection
 
 import android.view.View
 import android.widget.Button
+import com.google.android.material.button.MaterialButton
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
 import kotterknife.bindView

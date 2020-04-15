@@ -7,6 +7,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -37,7 +38,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   private val facilityTextView by bindView<TextView>(R.id.applock_facility_name)
   private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)
-  private val logoutButton by bindView<Button>(R.id.applock_logout)
+  private val logoutButton by bindView<MaterialButton>(R.id.applock_logout)
   private val pinEntryCardView by bindView<PinEntryCardView>(R.id.applock_pin_entry_card)
 
   override fun onFinishInflate() {

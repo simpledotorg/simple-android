@@ -44,31 +44,24 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/facilityNameTextView">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/cancelButton"
+      style="?attr/materialButtonOutlinedStyle"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
-      android:background="@drawable/button_outline_ripple_blue1"
-      android:gravity="center"
-      android:text="@string/registrationconfirmfacility_negative_button"
-      android:textColor="?colorAccent"
-      tools:ignore="ButtonStyle" />
+      android:text="@string/registrationconfirmfacility_negative_button" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/yesButton"
+      style="?attr/materialButtonStyle"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_8"
       android:layout_weight="1"
       android:gravity="center"
-      android:paddingTop="21dp"
-      android:paddingBottom="21dp"
-      android:text="@string/registrationconfirmfacility_positive_button"
-      android:textColor="@color/white"
-      app:backgroundTint="?colorAccent"
-      tools:ignore="ButtonStyle" />
+      android:text="@string/registrationconfirmfacility_positive_button" />
   </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

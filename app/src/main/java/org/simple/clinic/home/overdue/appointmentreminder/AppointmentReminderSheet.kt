@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxbinding2.view.RxView
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -72,7 +73,7 @@ class AppointmentReminderSheet : BottomSheetActivity() {
   private val decrementDateButton by bindView<ImageButton>(R.id.appointmentreminder_decrement_date)
   private val incrementDateButton by bindView<ImageButton>(R.id.appointmentreminder_increment_date)
   private val currentDateTextView by bindView<TextView>(R.id.appointmentreminder_current_date)
-  private val doneButton by bindView<Button>(R.id.appointmentreminder_done)
+  private val doneButton by bindView<MaterialButton>(R.id.appointmentreminder_done)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

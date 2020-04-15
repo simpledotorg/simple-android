@@ -64,7 +64,7 @@
     </LinearLayout>
   </androidx.core.widget.NestedScrollView>
 
-  <Button
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/getStartedButton"
     style="@style/Clinic.Button.Flat"
     android:layout_width="match_parent"

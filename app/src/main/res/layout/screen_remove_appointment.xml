@@ -16,7 +16,8 @@
     app:navigationIcon="@drawable/ic_close_24dp"
     app:navigationIconTint="@color/grey0"
     app:title="@string/removeappointment_select_a_reason"
-    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    app:titleTextColor="?attr/colorOnSurface" />
 
   <ScrollView
     android:layout_width="match_parent"

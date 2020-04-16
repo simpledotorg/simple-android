@@ -1,5 +1,6 @@
 package org.simple.clinic.contactpatient
 
+import org.threeten.bp.LocalDate
 import java.util.UUID
 
 sealed class ContactPatientEffect
@@ -19,3 +20,8 @@ data class MaskedCallWithManualDialer(val patientPhoneNumber: String, val proxyP
 object CloseScreen : ContactPatientEffect()
 
 data class MarkPatientAsAgreedToVisit(val appointmentUuid: UUID) : ContactPatientEffect()
+
+data class ShowManualDatePicker(
+    val preselectedDate: LocalDate,
+    val datePickerBounds: ClosedRange<LocalDate>
+): ContactPatientEffect()

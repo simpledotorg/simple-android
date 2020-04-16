@@ -12,12 +12,12 @@ import kotlinx.android.synthetic.main.sheet_contact_patient.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.patient.Gender
-import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -29,6 +29,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import org.threeten.bp.LocalDate
 import java.util.Locale
 import java.util.UUID
@@ -75,12 +76,15 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
 
   private val permissionResults: Subject<ActivityPermissionResult> = PublishSubject.create()
 
+  private val dialogEvents: PublishSubject<ContactPatientEvent> = PublishSubject.create()
+
   private val events: Observable<ContactPatientEvent> by unsafeLazy {
     Observable
         .merge(
             normalCallClicks(),
             secureCallClicks(),
-            agreedToVisitClicks()
+            agreedToVisitClicks(),
+            dialogEvents
         )
         .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, this, permissionResults))
         .compose(ReportAnalyticsEvents())
@@ -193,6 +197,22 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
       selectedDate: LocalDate
   ) {
     // TODO(vs): 15/04/20 Implement this later
+  }
+
+  override fun showManualDatePicker(
+      preselectedDate: LocalDate,
+      dateBounds: ClosedRange<LocalDate>
+  ) {
+    ThreeTenBpDatePickerDialog(
+        context = this,
+        preselectedDate = preselectedDate,
+        allowedDateRange = dateBounds,
+        clock = userClock,
+        datePickedListener = { pickedDate ->
+          val event = ManualDateSelected(selectedDate = pickedDate, currentDate = LocalDate.now(userClock))
+          dialogEvents.onNext(event)
+        }
+    ).show()
   }
 
   private fun normalCallClicks(): Observable<ContactPatientEvent> {

@@ -32,6 +32,7 @@ class ContactPatientUpdate(
       is PreviousReminderDateClicked -> selectPreviousReminderDate(model)
       is ManualDateSelected -> updateWithManuallySelectedDate(event, model)
       is AppointmentDateClicked -> showManualDatePicker(model)
+      is ReminderSetForAppointment -> noChange()
     }
   }
 

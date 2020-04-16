@@ -5,6 +5,9 @@ import org.simple.clinic.patient.Gender
 import org.threeten.bp.LocalDate
 
 interface ContactPatientUi {
+  fun switchToCallPatientView()
+  fun switchToSetAppointmentReminderView()
+
   fun renderPatientDetails(name: String, gender: Gender, age: Int, phoneNumber: String)
 
   fun showCallResultSection()

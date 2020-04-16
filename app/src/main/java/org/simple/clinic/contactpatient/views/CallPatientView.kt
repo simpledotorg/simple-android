@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlinx.android.synthetic.main.patientcontact_view_callpatient.view.*
+import kotlinx.android.synthetic.main.contactpatient_callpatient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayLetterRes
@@ -46,7 +46,7 @@ class CallPatientView(
   override fun onFinishInflate() {
     super.onFinishInflate()
 
-    View.inflate(context, R.layout.patientcontact_view_callpatient, this)
+    View.inflate(context, R.layout.contactpatient_callpatient, this)
 
     agreedToVisitTextView.setOnClickListener { agreedToVisitClicked?.invoke() }
     remindToCallLaterTextView.setOnClickListener { remindToCallLaterClicked?.invoke() }

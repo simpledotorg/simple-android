@@ -5,7 +5,7 @@
   android:layout_height="wrap_content"
   app:debug_displayedChild="0">
 
-  <org.simple.clinic.contactpatient.CallPatientView
+  <org.simple.clinic.contactpatient.views.CallPatientView
     android:id="@+id/callPatientView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />

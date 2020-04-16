@@ -80,10 +80,11 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
 
   private val events: Observable<ContactPatientEvent> by unsafeLazy {
     Observable
-        .merge(
+        .mergeArray(
             normalCallClicks(),
             secureCallClicks(),
             agreedToVisitClicks(),
+            remindToCallLaterClicks(),
             dialogEvents
         )
         .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, this, permissionResults))
@@ -266,6 +267,14 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
       emitter.setCancellable { callPatientView.agreedToVisitClicked = null }
 
       callPatientView.agreedToVisitClicked = { emitter.onNext(PatientAgreedToVisitClicked) }
+    }
+  }
+
+  private fun remindToCallLaterClicks(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { callPatientView.remindToCallLaterClicked = null }
+
+      callPatientView.remindToCallLaterClicked = { emitter.onNext(RemindToCallLaterClicked) }
     }
   }
 }

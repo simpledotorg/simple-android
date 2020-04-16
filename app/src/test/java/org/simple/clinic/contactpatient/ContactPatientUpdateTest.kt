@@ -372,6 +372,21 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when remind to call later is clicked, the set appointment reminder view must be shown`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(RemindToCallLaterClicked)
+        .then(assertThatNext(
+            hasModel(model.changeUiModeTo(UiMode.SetAppointmentReminder)),
+            hasNoEffects()
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

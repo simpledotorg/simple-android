@@ -66,4 +66,8 @@ data class ContactPatientModel(
   fun reminderDateSelected(date: PotentialAppointmentDate): ContactPatientModel {
     return copy(selectedAppointmentDate = date.scheduledFor)
   }
+
+  fun changeUiModeTo(newMode: UiMode): ContactPatientModel {
+    return copy(uiMode = newMode)
+  }
 }

@@ -3,6 +3,7 @@ package org.simple.clinic.contactpatient
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.overdue.PotentialAppointmentDate
@@ -36,6 +37,7 @@ class ContactPatientUpdate(
         val appointmentUuid = model.appointment!!.get().appointment.uuid
         dispatch(SetReminderForAppointment(appointmentUuid, model.selectedAppointmentDate))
       }
+      is RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))
     }
   }
 

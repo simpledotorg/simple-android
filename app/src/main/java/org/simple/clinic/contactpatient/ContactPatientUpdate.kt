@@ -3,6 +3,7 @@ package org.simple.clinic.contactpatient
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.contactpatient.UiMode.CallPatient
 import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -27,17 +28,25 @@ class ContactPatientUpdate(
       is OverdueAppointmentLoaded -> next(model.overdueAppointmentLoaded(event.overdueAppointment))
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
-      is PatientMarkedAsAgreedToVisit, ReminderSetForAppointment -> dispatch(CloseScreen)
-      is PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment.uuid))
-      is NextReminderDateClicked -> selectNextReminderDate(model)
-      is PreviousReminderDateClicked -> selectPreviousReminderDate(model)
+      PatientMarkedAsAgreedToVisit, ReminderSetForAppointment -> dispatch(CloseScreen)
+      PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment.uuid))
+      NextReminderDateClicked -> selectNextReminderDate(model)
+      PreviousReminderDateClicked -> selectPreviousReminderDate(model)
       is ManualDateSelected -> updateWithManuallySelectedDate(event, model)
-      is AppointmentDateClicked -> showManualDatePicker(model)
-      is SaveAppointmentReminderClicked -> {
+      AppointmentDateClicked -> showManualDatePicker(model)
+      SaveAppointmentReminderClicked -> {
         val appointmentUuid = model.appointment!!.get().appointment.uuid
         dispatch(SetReminderForAppointment(appointmentUuid, model.selectedAppointmentDate))
       }
-      is RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))
+      RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))
+      BackClicked -> backClicks(model)
+    }
+  }
+
+  private fun backClicks(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {
+    return when (model.uiMode) {
+      CallPatient -> dispatch(CloseScreen as ContactPatientEffect)
+      SetAppointmentReminder -> next(model.changeUiModeTo(CallPatient))
     }
   }
 

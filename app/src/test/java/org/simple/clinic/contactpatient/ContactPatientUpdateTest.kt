@@ -387,6 +387,37 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when back is clicked on the call patient view, then the sheet must be closed`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(BackClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseScreen as ContactPatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when back is clicked while not on the call patient view, then the call patient view must be shown`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .changeUiModeTo(UiMode.SetAppointmentReminder)
+
+    spec
+        .given(model)
+        .whenEvent(BackClicked)
+        .then(assertThatNext(
+            hasModel(model.changeUiModeTo(UiMode.CallPatient)),
+            hasNoEffects()
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

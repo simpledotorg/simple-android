@@ -237,6 +237,14 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
     // TODO(vs): 16/04/20 Implement this later
   }
 
+  override fun switchToCallPatientView() {
+    contentFlipper.displayedChild = 0
+  }
+
+  override fun switchToSetAppointmentReminderView() {
+    contentFlipper.displayedChild = 1
+  }
+
   private fun normalCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.normalCallButtonClicked = null }

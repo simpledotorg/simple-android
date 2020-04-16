@@ -1,5 +1,7 @@
 package org.simple.clinic.contactpatient
 
+import org.simple.clinic.contactpatient.UiMode.CallPatient
+import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.DateOfBirth
@@ -13,6 +15,20 @@ class ContactPatientUiRenderer(
 ) : ViewRenderer<ContactPatientModel> {
 
   override fun render(model: ContactPatientModel) {
+    when (model.uiMode) {
+      CallPatient -> renderCallPatientView(model)
+      SetAppointmentReminder -> renderSetAppointmentReminderView(model)
+    }
+  }
+
+  private fun renderSetAppointmentReminderView(model: ContactPatientModel) {
+    renderSelectedAppointmentDate(model)
+    toggleStateOfReminderDateSteppers(model)
+
+    ui.switchToSetAppointmentReminderView()
+  }
+
+  private fun renderCallPatientView(model: ContactPatientModel) {
     if (model.hasLoadedPatientProfile) {
       renderPatientProfile(model.patientProfile!!)
     }
@@ -27,8 +43,7 @@ class ContactPatientUiRenderer(
       ui.hideSecureCallUi()
     }
 
-    renderSelectedAppointmentDate(model)
-    toggleStateOfReminderDateSteppers(model)
+    ui.switchToCallPatientView()
   }
 
   private fun toggleStateOfReminderDateSteppers(model: ContactPatientModel) {

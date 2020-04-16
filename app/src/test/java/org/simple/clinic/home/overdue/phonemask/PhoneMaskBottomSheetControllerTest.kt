@@ -1,13 +1,11 @@
 package org.simple.clinic.home.overdue.phonemask
 
-import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -72,14 +70,11 @@ class PhoneMaskBottomSheetControllerTest {
       callTypeEvent: UiEvent,
       dialer: Dialer
   ) {
-    var isCompletableSubscribed = false
-    val normalCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
-    whenever(phoneCaller.normalCall(phoneNumber.number, dialer)).doReturn(normalCallCompletable)
-
     sheetCreated()
     uiEvents.onNext(callTypeEvent)
 
-    assertThat(isCompletableSubscribed).isTrue()
+    verify(phoneCaller).normalCall(phoneNumber.number, dialer)
+    verifyNoMoreInteractions(phoneCaller)
     verify(ui).setupView(PatientDetails(
         phoneNumber = phoneNumber.number,
         name = patient.fullName,
@@ -97,14 +92,11 @@ class PhoneMaskBottomSheetControllerTest {
       callTypeEvent: UiEvent,
       dialer: Dialer
   ) {
-    var isCompletableSubscribed = false
-    val secureCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
-    whenever(phoneCaller.secureCall(proxyPhoneNumber, phoneNumber.number, dialer)).doReturn(secureCallCompletable)
-
     sheetCreated()
     uiEvents.onNext(callTypeEvent)
 
-    assertThat(isCompletableSubscribed).isTrue()
+    verify(phoneCaller).secureCall(proxyPhoneNumber, phoneNumber.number, dialer)
+    verifyNoMoreInteractions(phoneCaller)
     verify(ui).setupView(PatientDetails(
         phoneNumber = phoneNumber.number,
         name = patient.fullName,

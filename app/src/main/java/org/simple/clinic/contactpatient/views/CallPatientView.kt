@@ -1,4 +1,4 @@
-package org.simple.clinic.contactpatient
+package org.simple.clinic.contactpatient.views
 
 import android.content.Context
 import android.util.AttributeSet

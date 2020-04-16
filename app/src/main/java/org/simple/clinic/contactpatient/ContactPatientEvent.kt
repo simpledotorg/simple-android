@@ -62,6 +62,7 @@ data class ManualDateSelected(
 }
 
 object AppointmentDateClicked : ContactPatientEvent() {
-  override val analyticsName: String
-    get() = "Contact Patient:Appointment date clicked"
+  override val analyticsName: String = "Contact Patient:Appointment date clicked"
 }
+
+object ReminderSetForAppointment : ContactPatientEvent()

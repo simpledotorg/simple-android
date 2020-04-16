@@ -166,4 +166,20 @@ class ContactPatientEffectHandlerTest {
     verify(uiActions).showManualDatePicker(preselectedDate, datePickerMin..datePickerMax)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when the set reminder effect is received, a reminder date must be set for the appointment for the given date`() {
+    // given
+    val appointmentUuid = UUID.fromString("10fec427-9509-4237-8493-bef8c3f0a5c2")
+    val reminderDate = LocalDate.parse("2018-01-01")
+
+    // when
+    testCase.dispatch(SetReminderForAppointment(appointmentUuid, reminderDate))
+
+    // then
+    verify(appointmentRepository).createReminder(appointmentUuid, reminderDate)
+    verifyNoMoreInteractions(appointmentRepository)
+    testCase.assertOutgoingEvents(ReminderSetForAppointment)
+    verifyZeroInteractions(uiActions)
+  }
 }

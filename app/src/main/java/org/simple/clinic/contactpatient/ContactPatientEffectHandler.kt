@@ -38,6 +38,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addAction(CloseScreen::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(MarkPatientAsAgreedToVisit::class.java, markPatientAsAgreedToVisit(schedulers.io()))
         .addConsumer(ShowManualDatePicker::class.java, { uiActions.showManualDatePicker(it.preselectedDate, it.datePickerBounds) }, schedulers.ui())
+        .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))
         .build()
   }
 
@@ -73,6 +74,17 @@ class ContactPatientEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointmentUuid, clock) }
           .map { PatientMarkedAsAgreedToVisit }
+    }
+  }
+
+  private fun setReminderForAppointment(
+      scheduler: Scheduler
+  ): ObservableTransformer<SetReminderForAppointment, ContactPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .doOnNext { (appointmentUuid, reminderDate) -> appointmentRepository.createReminder(appointmentUuid, reminderDate) }
+          .map { ReminderSetForAppointment }
     }
   }
 }

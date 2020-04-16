@@ -25,3 +25,8 @@ data class ShowManualDatePicker(
     val preselectedDate: LocalDate,
     val datePickerBounds: ClosedRange<LocalDate>
 ): ContactPatientEffect()
+
+data class SetReminderForAppointment(
+    val appointmentUuid: UUID,
+    val reminderDate: LocalDate
+): ContactPatientEffect()

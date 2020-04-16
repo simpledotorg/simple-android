@@ -1,7 +1,7 @@
 package org.simple.clinic.sync
 
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable

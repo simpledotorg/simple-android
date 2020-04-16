@@ -1,9 +1,9 @@
 package org.simple.clinic.settings.changelanguage
 
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.settings.ProvidedLanguage
 import org.simple.clinic.settings.SystemDefaultLanguage

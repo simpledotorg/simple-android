@@ -1,8 +1,8 @@
 package org.simple.clinic.user
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters

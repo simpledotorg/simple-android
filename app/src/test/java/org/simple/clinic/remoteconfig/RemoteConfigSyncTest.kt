@@ -1,7 +1,7 @@
 package org.simple.clinic.remoteconfig
 
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters

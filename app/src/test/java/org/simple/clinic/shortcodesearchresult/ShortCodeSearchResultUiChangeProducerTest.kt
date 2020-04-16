@@ -1,8 +1,8 @@
 package org.simple.clinic.shortcodesearchresult
 
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test

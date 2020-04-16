@@ -3,8 +3,8 @@ package org.simple.clinic.widgets
 import androidx.recyclerview.widget.RecyclerView
 import com.google.common.truth.Truth.assertThat
 import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import junitparams.JUnitParamsRunner

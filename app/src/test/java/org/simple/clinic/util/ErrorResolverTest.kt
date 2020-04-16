@@ -1,7 +1,7 @@
 package org.simple.clinic.util
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockitokotlin2.mock
 import com.squareup.moshi.JsonDataException
 import io.reactivex.exceptions.CompositeException
 import junitparams.JUnitParamsRunner

@@ -1,9 +1,9 @@
 package org.simple.clinic.onboarding
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockito_kotlin.eq
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule

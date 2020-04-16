@@ -84,21 +84,25 @@ class PhoneMaskBottomSheetController @Inject constructor(
   private fun makeNormalCall(events: Observable<UiEvent>) =
       normalCallClicked(events)
           .withLatestFrom(patientPhoneNumberStream(events))
-          .flatMap { (normalCallClicked, phoneNumber) ->
+          .map { (normalCallClicked, phoneNumber) ->
             val permissionResult = (normalCallClicked.permission as Just).value
 
-            phoneCaller.normalCall(phoneNumber, dialer(permissionResult))
-                .andThen(Observable.just(Ui::closeSheet))
+            { ui: Ui ->
+              phoneCaller.normalCall(phoneNumber, dialer(permissionResult))
+              ui.closeSheet()
+            }
           }
 
   private fun makeSecureCall(events: Observable<UiEvent>) =
       secureCallClicked(events)
           .withLatestFrom(patientPhoneNumberStream(events))
-          .flatMap { (secureCallClicked, phoneNumber) ->
+          .map { (secureCallClicked, phoneNumber) ->
             val permissionResult = (secureCallClicked.permission as Just).value
 
-            phoneCaller.secureCall(config.proxyPhoneNumber, phoneNumber, dialer(permissionResult))
-                .andThen(Observable.just(Ui::closeSheet))
+            { ui: Ui ->
+              phoneCaller.secureCall(config.proxyPhoneNumber, phoneNumber, dialer(permissionResult))
+              ui.closeSheet()
+            }
           }
 
   private fun normalCallClicked(events: Observable<UiEvent>) =

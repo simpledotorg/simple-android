@@ -72,3 +72,5 @@ object SaveAppointmentReminderClicked : ContactPatientEvent() {
 object RemindToCallLaterClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Remind to call later clicked"
 }
+
+object BackClicked: ContactPatientEvent()

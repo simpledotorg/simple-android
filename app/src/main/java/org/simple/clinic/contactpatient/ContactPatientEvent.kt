@@ -45,13 +45,11 @@ object PatientAgreedToVisitClicked : ContactPatientEvent() {
 }
 
 object NextReminderDateClicked : ContactPatientEvent() {
-  override val analyticsName: String
-    get() = "Contact Patient:Next appointment date clicked"
+  override val analyticsName: String = "Contact Patient:Next appointment date clicked"
 }
 
 object PreviousReminderDateClicked : ContactPatientEvent() {
-  override val analyticsName: String
-    get() = "Contact Patient:Previous appointment date clicked"
+  override val analyticsName: String = "Contact Patient:Previous appointment date clicked"
 }
 
 data class ManualDateSelected(
@@ -66,3 +64,7 @@ object AppointmentDateClicked : ContactPatientEvent() {
 }
 
 object ReminderSetForAppointment : ContactPatientEvent()
+
+object SaveAppointmentReminderClicked: ContactPatientEvent() {
+  override val analyticsName: String = "Contact Patient:Save appointment reminder clicked"
+}

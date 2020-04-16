@@ -33,6 +33,10 @@ class ContactPatientUpdate(
       is ManualDateSelected -> updateWithManuallySelectedDate(event, model)
       is AppointmentDateClicked -> showManualDatePicker(model)
       is ReminderSetForAppointment -> noChange()
+      is SaveAppointmentReminderClicked -> {
+        val appointmentUuid = model.appointment!!.get().appointment.uuid
+        dispatch(SetReminderForAppointment(appointmentUuid, model.selectedAppointmentDate))
+      }
     }
   }
 

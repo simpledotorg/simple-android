@@ -26,7 +26,7 @@ class PhoneDialerTest {
   fun `when a normal call is made, the phone call should be made to the given number`() {
     val plainNumber = "123"
 
-    phoneCaller.normalCall(plainNumber, dialer = dialer).blockingAwait()
+    phoneCaller.normalCall(plainNumber, dialer = dialer)
 
     verify(dialer).call(activity, plainNumber)
   }
@@ -35,7 +35,7 @@ class PhoneDialerTest {
   fun `when a secure call is made, the phone call should be made to the masked number`() {
     val plainNumber = "123"
 
-    phoneCaller.secureCall("987", plainNumber, dialer = dialer).blockingAwait()
+    phoneCaller.secureCall("987", plainNumber, dialer = dialer)
 
     verify(dialer).call(activity, "987,123#")
   }

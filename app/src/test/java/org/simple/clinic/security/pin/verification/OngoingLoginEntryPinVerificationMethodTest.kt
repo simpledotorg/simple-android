@@ -2,9 +2,9 @@ package org.simple.clinic.security.pin.verification
 
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.*
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.security.pin.JavaHashPasswordHasher

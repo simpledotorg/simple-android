@@ -1,12 +1,12 @@
 package org.simple.clinic.bp
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockito_kotlin.argThat
-import com.nhaarman.mockito_kotlin.check
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.check
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before

@@ -213,7 +213,7 @@ dependencies {
   implementation project(path: ':router')
 
   testImplementation "junit:junit:$versions.junit"
-  testImplementation "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin"
+  testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$versions.mockitoKotlin"
   testImplementation "pl.pragmatists:JUnitParams:$versions.junitParams"
   testImplementation "com.google.truth:truth:$versions.truth"
   testImplementation "com.github.blocoio:faker:$versions.faker"
@@ -239,7 +239,6 @@ dependencies {
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
-  testImplementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 
   implementation "androidx.appcompat:appcompat:$versions.supportLib"
   implementation "androidx.recyclerview:recyclerview:$versions.recyclerView"

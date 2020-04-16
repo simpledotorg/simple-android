@@ -331,6 +331,32 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when done is clicked from the appointment reminder view, set the reminder date for the appointment to the selected date`() {
+    val currentSelectedDate = LocalDate.parse("2018-01-08")
+    val currentReminderDate = PotentialAppointmentDate(
+        scheduledFor = currentSelectedDate,
+        timeToAppointment = Weeks(1)
+    )
+
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .reminderDateSelected(currentReminderDate)
+
+    val expectedEffect = SetReminderForAppointment(
+        appointmentUuid = overdueAppointment.appointment.uuid,
+        reminderDate = currentSelectedDate
+    )
+    spec
+        .given(model)
+        .whenEvent(SaveAppointmentReminderClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(expectedEffect as ContactPatientEffect)
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

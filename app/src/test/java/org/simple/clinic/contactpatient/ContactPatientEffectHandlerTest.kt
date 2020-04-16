@@ -147,4 +147,23 @@ class ContactPatientEffectHandlerTest {
     testCase.assertOutgoingEvents(PatientMarkedAsAgreedToVisit)
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when the show manual date picker effect is received, show the date picker`() {
+    // given
+    val preselectedDate = LocalDate.parse("2018-01-01")
+    val datePickerMin = LocalDate.parse("2017-01-01")
+    val datePickerMax = LocalDate.parse("2019-01-01")
+
+    // when
+    testCase.dispatch(ShowManualDatePicker(
+        preselectedDate = preselectedDate,
+        datePickerBounds = datePickerMin..datePickerMax
+    ))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showManualDatePicker(preselectedDate, datePickerMin..datePickerMax)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

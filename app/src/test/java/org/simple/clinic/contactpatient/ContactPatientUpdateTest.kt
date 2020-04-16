@@ -357,6 +357,21 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the reminder for appointment has been set, the sheet must be closed`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(ReminderSetForAppointment)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseScreen as ContactPatientEffect)
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

@@ -18,4 +18,10 @@ interface ContactPatientUi {
       selectedAppointmentReminderPeriod: TimeToAppointment,
       selectedDate: LocalDate
   )
+
+  fun disablePreviousReminderDateStepper()
+  fun enablePreviousReminderDateStepper()
+
+  fun disableNextReminderDateStepper()
+  fun enableNextReminderDateStepper()
 }

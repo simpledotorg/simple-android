@@ -57,6 +57,8 @@ class ContactPatientUiRendererTest {
     // then
     verify(ui).hideSecureCallUi()
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
+    verify(ui).disablePreviousReminderDateStepper()
+    verify(ui).enableNextReminderDateStepper()
 
     val expectedAge = 48 // difference between clock date and DOB
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
@@ -86,6 +88,8 @@ class ContactPatientUiRendererTest {
     // then
     verify(ui).hideSecureCallUi()
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
+    verify(ui).disablePreviousReminderDateStepper()
+    verify(ui).enableNextReminderDateStepper()
 
     val expectedAge = 48 // difference between clock date and Age
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
@@ -106,6 +110,8 @@ class ContactPatientUiRendererTest {
     // then
     verify(ui).hideSecureCallUi()
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
+    verify(ui).disablePreviousReminderDateStepper()
+    verify(ui).enableNextReminderDateStepper()
 
     verify(ui).showCallResultSection()
     verifyNoMoreInteractions(ui)
@@ -119,6 +125,8 @@ class ContactPatientUiRendererTest {
     // then
     verify(ui).hideSecureCallUi()
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
+    verify(ui).disablePreviousReminderDateStepper()
+    verify(ui).enableNextReminderDateStepper()
 
     verify(ui).hideCallResultSection()
     verifyNoMoreInteractions(ui)
@@ -132,6 +140,8 @@ class ContactPatientUiRendererTest {
 
     // then
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
+    verify(ui).disablePreviousReminderDateStepper()
+    verify(ui).enableNextReminderDateStepper()
 
     verify(ui).showSecureCallUi()
     verifyNoMoreInteractions(ui)
@@ -145,6 +155,8 @@ class ContactPatientUiRendererTest {
 
     // then
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
+    verify(ui).disablePreviousReminderDateStepper()
+    verify(ui).enableNextReminderDateStepper()
 
     verify(ui).hideSecureCallUi()
     verifyNoMoreInteractions(ui)
@@ -165,8 +177,98 @@ class ContactPatientUiRendererTest {
 
     // then
     verify(ui).hideSecureCallUi()
+    verify(ui).enablePreviousReminderDateStepper()
+    verify(ui).enableNextReminderDateStepper()
 
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verifyNoMoreInteractions(ui)
+  }
+  
+  @Test
+  fun `when the current selected date is the earliest available date, disable the previous date button`() {
+    // given
+    val reminderPeriod = Days(1)
+    val selectedReminderDate = PotentialAppointmentDate(
+        timeToAppointment = reminderPeriod,
+        scheduledFor = LocalDate.parse("2018-01-02")
+    )
+
+    // when
+    val model = defaultModel().reminderDateSelected(selectedReminderDate)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSecureCallUi()
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).enableNextReminderDateStepper()
+
+    verify(ui).disablePreviousReminderDateStepper()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the current selected date is not the earliest available date, enable the previous date button`() {
+    // given
+    val reminderPeriod = Weeks(1)
+    val selectedReminderDate = PotentialAppointmentDate(
+        timeToAppointment = reminderPeriod,
+        scheduledFor = LocalDate.parse("2018-01-08")
+    )
+
+    // when
+    val model = defaultModel().reminderDateSelected(selectedReminderDate)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSecureCallUi()
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).enableNextReminderDateStepper()
+
+    verify(ui).enablePreviousReminderDateStepper()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the current selected date is the latest available date, disable the next date button`() {
+    // given
+    val reminderPeriod = Weeks(2)
+    val selectedReminderDate = PotentialAppointmentDate(
+        timeToAppointment = reminderPeriod,
+        scheduledFor = LocalDate.parse("2018-01-15")
+    )
+
+    // when
+    val model = defaultModel().reminderDateSelected(selectedReminderDate)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSecureCallUi()
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).enablePreviousReminderDateStepper()
+
+    verify(ui).disableNextReminderDateStepper()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the current selected date is not the latest available date, enable the next date button`() {
+    // given
+    val reminderPeriod = Weeks(1)
+    val selectedReminderDate = PotentialAppointmentDate(
+        timeToAppointment = reminderPeriod,
+        scheduledFor = LocalDate.parse("2018-01-08")
+    )
+
+    // when
+    val model = defaultModel().reminderDateSelected(selectedReminderDate)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSecureCallUi()
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).enablePreviousReminderDateStepper()
+
+    verify(ui).enableNextReminderDateStepper()
     verifyNoMoreInteractions(ui)
   }
 

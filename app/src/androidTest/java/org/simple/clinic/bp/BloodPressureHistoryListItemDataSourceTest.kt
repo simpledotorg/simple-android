@@ -5,14 +5,18 @@ import androidx.paging.PositionalDataSource.LoadInitialCallback
 import androidx.paging.PositionalDataSource.LoadInitialParams
 import androidx.paging.PositionalDataSource.LoadRangeParams
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.BloodPressureHistoryItem
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.NewBpButton
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Duration
@@ -41,12 +45,20 @@ class BloodPressureHistoryListItemDataSourceTest {
   @field:[Inject Named("time_for_measurement_history")]
   lateinit var timeFormatter: DateTimeFormatter
 
+  @get:Rule
+  val ruleChain: RuleChain = Rules.global()
+
   private val canEditBpFor = Duration.ofMinutes(10)
 
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
     utcClock.setDate(LocalDate.parse("2020-01-01"))
+  }
+
+  @After
+  fun tearDown() {
+    appDatabase.bloodPressureDao().clearData()
   }
 
   @Test

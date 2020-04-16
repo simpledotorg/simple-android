@@ -4,8 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -116,8 +114,6 @@ class AppointmentReminderSheetControllerTest {
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
-    whenever(repository.createReminder(any(), any())).thenReturn(Completable.complete())
-
     val current = AppointmentReminder(2, ChronoUnit.WEEKS)
     uiEvents.onNext(AppointmentReminderSheetCreated(3, appointmentUuid))
     uiEvents.onNext(ReminderCreated(current))

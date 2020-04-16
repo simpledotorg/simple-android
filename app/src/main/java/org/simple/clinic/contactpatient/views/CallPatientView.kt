@@ -35,7 +35,7 @@ class CallPatientView(
 
   var agreedToVisitClicked: AgreedToVisitClicked? = null
 
-  var remindToCallLaterClicked: RemindToCallLaterClicked? = { Toast.makeText(context, "WIP", Toast.LENGTH_SHORT).show() }
+  var remindToCallLaterClicked: RemindToCallLaterClicked? = null
 
   var removeFromOverdueListClicked: RemoveFromOverdueListClicked? = { Toast.makeText(context, "WIP", Toast.LENGTH_SHORT).show() }
 

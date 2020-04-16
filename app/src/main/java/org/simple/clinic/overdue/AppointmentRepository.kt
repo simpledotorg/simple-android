@@ -71,15 +71,13 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  fun createReminder(appointmentUuid: UUID, reminderDate: LocalDate): Completable {
-    return Completable.fromAction {
-      appointmentDao.saveRemindDate(
-          appointmentUUID = appointmentUuid,
-          reminderDate = reminderDate,
-          newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(utcClock)
-      )
-    }
+  fun createReminder(appointmentUuid: UUID, reminderDate: LocalDate) {
+    appointmentDao.saveRemindDate(
+        appointmentUUID = appointmentUuid,
+        reminderDate = reminderDate,
+        newSyncStatus = SyncStatus.PENDING,
+        newUpdatedAt = Instant.now(utcClock)
+    )
   }
 
   fun markAsAgreedToVisit(appointmentUuid: UUID, userClock: UserClock) {

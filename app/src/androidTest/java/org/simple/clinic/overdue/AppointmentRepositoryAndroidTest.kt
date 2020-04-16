@@ -581,7 +581,7 @@ class AppointmentRepositoryAndroidTest {
     val reminderDate = LocalDate.parse("2018-02-01")
 
     // when
-    appointmentRepository.createReminder(appointmentUuid, reminderDate).blockingGet()
+    appointmentRepository.createReminder(appointmentUuid, reminderDate)
 
     // then
     val appointmentUpdatedAtTimestamp = Instant.now(clock)

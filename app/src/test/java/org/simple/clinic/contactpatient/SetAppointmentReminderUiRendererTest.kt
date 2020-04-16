@@ -42,7 +42,7 @@ class SetAppointmentReminderUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).hideSecureCallUi()
+    verify(ui).switchToSetAppointmentReminderView()
     verify(ui).enablePreviousReminderDateStepper()
     verify(ui).enableNextReminderDateStepper()
 
@@ -64,7 +64,7 @@ class SetAppointmentReminderUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).hideSecureCallUi()
+    verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enableNextReminderDateStepper()
 
@@ -86,7 +86,7 @@ class SetAppointmentReminderUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).hideSecureCallUi()
+    verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enableNextReminderDateStepper()
 
@@ -108,7 +108,7 @@ class SetAppointmentReminderUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).hideSecureCallUi()
+    verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
 
@@ -130,7 +130,7 @@ class SetAppointmentReminderUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).hideSecureCallUi()
+    verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
 

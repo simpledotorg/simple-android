@@ -55,9 +55,7 @@ class CallPatientUiRendererTest {
 
     // then
     verify(ui).hideSecureCallUi()
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
-    verify(ui).disablePreviousReminderDateStepper()
-    verify(ui).enableNextReminderDateStepper()
+    verify(ui).switchToCallPatientView()
 
     val expectedAge = 48 // difference between clock date and DOB
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
@@ -86,9 +84,7 @@ class CallPatientUiRendererTest {
 
     // then
     verify(ui).hideSecureCallUi()
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
-    verify(ui).disablePreviousReminderDateStepper()
-    verify(ui).enableNextReminderDateStepper()
+    verify(ui).switchToCallPatientView()
 
     val expectedAge = 48 // difference between clock date and Age
     verify(ui).renderPatientDetails(name, gender, expectedAge, phoneNumber)
@@ -108,9 +104,7 @@ class CallPatientUiRendererTest {
 
     // then
     verify(ui).hideSecureCallUi()
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
-    verify(ui).disablePreviousReminderDateStepper()
-    verify(ui).enableNextReminderDateStepper()
+    verify(ui).switchToCallPatientView()
 
     verify(ui).showCallResultSection()
     verifyNoMoreInteractions(ui)
@@ -123,9 +117,7 @@ class CallPatientUiRendererTest {
 
     // then
     verify(ui).hideSecureCallUi()
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
-    verify(ui).disablePreviousReminderDateStepper()
-    verify(ui).enableNextReminderDateStepper()
+    verify(ui).switchToCallPatientView()
 
     verify(ui).hideCallResultSection()
     verifyNoMoreInteractions(ui)
@@ -138,9 +130,7 @@ class CallPatientUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
-    verify(ui).disablePreviousReminderDateStepper()
-    verify(ui).enableNextReminderDateStepper()
+    verify(ui).switchToCallPatientView()
 
     verify(ui).showSecureCallUi()
     verifyNoMoreInteractions(ui)
@@ -153,9 +143,7 @@ class CallPatientUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, Days(1), LocalDate.parse("2018-01-02"))
-    verify(ui).disablePreviousReminderDateStepper()
-    verify(ui).enableNextReminderDateStepper()
+    verify(ui).switchToCallPatientView()
 
     verify(ui).hideSecureCallUi()
     verifyNoMoreInteractions(ui)

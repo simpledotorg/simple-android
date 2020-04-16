@@ -211,7 +211,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
       selectedAppointmentReminderPeriod: TimeToAppointment,
       selectedDate: LocalDate
   ) {
-    // TODO(vs): 15/04/20 Implement this later
+    setAppointmentReminderView.renderSelectedAppointmentDate(selectedAppointmentReminderPeriod, selectedDate)
   }
 
   override fun showManualDatePicker(
@@ -231,19 +231,19 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   }
 
   override fun disablePreviousReminderDateStepper() {
-    // TODO(vs): 16/04/20 Implement this later
+    setAppointmentReminderView.disablePreviousReminderDateStepper()
   }
 
   override fun enablePreviousReminderDateStepper() {
-    // TODO(vs): 16/04/20 Implement this later
+    setAppointmentReminderView.enablePreviousReminderDateStepper()
   }
 
   override fun disableNextReminderDateStepper() {
-    // TODO(vs): 16/04/20 Implement this later
+    setAppointmentReminderView.disableNextReminderDateStepper()
   }
 
   override fun enableNextReminderDateStepper() {
-    // TODO(vs): 16/04/20 Implement this later
+    setAppointmentReminderView.enableNextReminderDateStepper()
   }
 
   override fun switchToCallPatientView() {

@@ -215,6 +215,22 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
     ).show()
   }
 
+  override fun disablePreviousReminderDateStepper() {
+    // TODO(vs): 16/04/20 Implement this later
+  }
+
+  override fun enablePreviousReminderDateStepper() {
+    // TODO(vs): 16/04/20 Implement this later
+  }
+
+  override fun disableNextReminderDateStepper() {
+    // TODO(vs): 16/04/20 Implement this later
+  }
+
+  override fun enableNextReminderDateStepper() {
+    // TODO(vs): 16/04/20 Implement this later
+  }
+
   private fun normalCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.normalCallButtonClicked = null }

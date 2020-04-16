@@ -28,6 +28,24 @@ class ContactPatientUiRenderer(
     }
 
     renderSelectedAppointmentDate(model)
+    toggleStateOfReminderDateSteppers(model)
+  }
+
+  private fun toggleStateOfReminderDateSteppers(model: ContactPatientModel) {
+    val earliestAvailableReminderDate = model.potentialAppointments.first().scheduledFor
+    val latestAvailableReminderDate = model.potentialAppointments.last().scheduledFor
+
+    if (model.selectedAppointmentDate == earliestAvailableReminderDate) {
+      ui.disablePreviousReminderDateStepper()
+    } else {
+      ui.enablePreviousReminderDateStepper()
+    }
+
+    if (model.selectedAppointmentDate == latestAvailableReminderDate) {
+      ui.disableNextReminderDateStepper()
+    } else {
+      ui.enableNextReminderDateStepper()
+    }
   }
 
   private fun renderSelectedAppointmentDate(

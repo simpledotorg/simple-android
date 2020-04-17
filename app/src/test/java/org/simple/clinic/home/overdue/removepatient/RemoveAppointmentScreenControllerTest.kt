@@ -6,8 +6,6 @@ import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -112,8 +110,6 @@ class RemoveAppointmentScreenControllerTest {
 
   @Test
   fun `when done is clicked, and a "Patient has already visited" reason is selected, then appointment should be marked as visited`() {
-    whenever(repository.markAsAlreadyVisited(appointmentUuid)).thenReturn(Completable.complete())
-
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(PatientAlreadyVisitedClicked)
     uiEvents.onNext(RemoveReasonDoneClicked)

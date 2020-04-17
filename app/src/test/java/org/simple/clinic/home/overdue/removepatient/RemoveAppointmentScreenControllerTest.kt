@@ -63,7 +63,6 @@ class RemoveAppointmentScreenControllerTest {
   fun `when done is clicked, and reason is "Patient dead", then patient repository should be updated`() {
     whenever(repository.cancelWithReason(appointmentUuid, Dead)).thenReturn(Completable.complete())
     val patientUuid = UUID.randomUUID()
-    whenever(patientRepository.updatePatientStatusToDead(patientUuid)).thenReturn(Completable.complete())
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(CancelReasonClicked(PatientNotResponding))

@@ -532,7 +532,7 @@ class PatientRepositoryAndroidTest {
     assertThat(searchResults).isNotEmpty()
     assertThat(searchResults.first().fullName).isEqualTo("Ashok Kumar")
 
-    patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
+    patientRepository.updatePatientStatusToDead(patient.uuid)
 
     val searchResultsAfterUpdate = patientRepository.search(Name(patientName = "Ashok")).blockingFirst()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
@@ -558,7 +558,7 @@ class PatientRepositoryAndroidTest {
     clock.advanceBy(Duration.ofDays(365))
     val timeOfDeath = Instant.now(clock)
 
-    patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
+    patientRepository.updatePatientStatusToDead(patient.uuid)
     val deadPatient: Patient = patientRepository.patient(patient.uuid)
         .unwrapJust()
         .blockingFirst()

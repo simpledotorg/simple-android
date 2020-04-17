@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="ClearFieldImageButton">
-    <attr name="clearableField" format="reference" />
-  </declare-styleable>
-
   <declare-styleable name="ViewFlipperWithLayoutEditorPreview">
     <attr name="debug_displayedChild" format="integer" />
   </declare-styleable>

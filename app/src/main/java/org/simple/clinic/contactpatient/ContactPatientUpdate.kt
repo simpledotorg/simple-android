@@ -22,6 +22,7 @@ class ContactPatientUpdate(
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
       is PatientMarkedAsAgreedToVisit -> dispatch(CloseScreen)
+      is PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment.uuid))
     }
   }
 

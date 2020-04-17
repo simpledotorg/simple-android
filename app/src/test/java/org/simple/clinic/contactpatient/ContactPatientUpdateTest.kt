@@ -148,6 +148,21 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when patient agreed to visit is clicked, the patient details must be updated`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(PatientAgreedToVisitClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkPatientAsAgreedToVisit(overdueAppointment.appointment.uuid) as ContactPatientEffect)
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls

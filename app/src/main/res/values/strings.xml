@@ -605,4 +605,21 @@
   <string name="contactpatient_call_secure">Secure</string>
   <string name="contactpatient_help_text">Secure calls hide your number and are toll free</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">Call later in</string>
+  <string name="contactpatient_done">Done</string>
+  <!--suppress UnusedResources -->
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
+  </plurals>
+  <!--suppress UnusedResources -->
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
+  </plurals>
+  <!--suppress UnusedResources -->
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s months</item>
+  </plurals>
 </resources>

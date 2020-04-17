@@ -36,7 +36,7 @@
       android:background="?selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
       android:src="@drawable/ic_remove_circle_outline_32dp"
-      android:tint="@color/scheduleappointment_increment_decrement_date"
+      android:tint="@color/appointment_date_stepper"
       tools:ignore="ContentDescription" />
 
     <TextView
@@ -58,7 +58,7 @@
       android:background="?selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
       android:src="@drawable/ic_add_circle_outline_32dp"
-      android:tint="@color/scheduleappointment_increment_decrement_date"
+      android:tint="@color/appointment_date_stepper"
       tools:ignore="ContentDescription" />
 
   </LinearLayout>

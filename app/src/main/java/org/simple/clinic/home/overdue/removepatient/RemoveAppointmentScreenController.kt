@@ -64,11 +64,8 @@ class RemoveAppointmentScreenController @Inject constructor(
 
           patientRepository.updatePatientStatusToDead(patientUuid)
         }
-        .flatMap { (_, uuid, _) ->
-          appointmentRepository
-              .cancelWithReason(uuid, Dead)
-              .andThen(Observable.just(Ui::closeScreen))
-        }
+        .doOnNext { (_, uuid, _) -> appointmentRepository.cancelWithReason(uuid, Dead) }
+        .map { Ui::closeScreen }
 
     val markPatientAlreadyVisitedStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is PatientAlreadyVisitedClicked }
@@ -79,11 +76,11 @@ class RemoveAppointmentScreenController @Inject constructor(
 
     val cancelWithReasonStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is CancelReasonClicked }
-        .flatMap { (_, uuid, reason) ->
-          appointmentRepository
-              .cancelWithReason(uuid, (reason as CancelReasonClicked).selectedReason)
-              .andThen(Observable.just(Ui::closeScreen))
+        .doOnNext { (_, uuid, reason) ->
+          val cancelReason = (reason as CancelReasonClicked).selectedReason
+          appointmentRepository.cancelWithReason(uuid, cancelReason)
         }
+        .map { Ui::closeScreen }
 
     return Observable.merge(cancelWithReasonStream, markPatientStatusDeadStream, markPatientAlreadyVisitedStream)
   }

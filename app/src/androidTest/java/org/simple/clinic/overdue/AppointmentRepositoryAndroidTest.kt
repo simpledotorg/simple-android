@@ -647,7 +647,7 @@ class AppointmentRepositoryAndroidTest {
     clock.advanceBy(Duration.ofDays(1))
 
     // when
-    appointmentRepository.cancelWithReason(appointmentUuid, PatientNotResponding).blockingGet()
+    appointmentRepository.cancelWithReason(appointmentUuid, PatientNotResponding)
 
     // then
     val updatedAppointment = getAppointmentByUuid(appointmentUuid)

@@ -103,15 +103,14 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  fun cancelWithReason(appointmentUuid: UUID, reason: AppointmentCancelReason): Completable {
-    return Completable.fromAction {
-      appointmentDao.cancelWithReason(
-          appointmentUuid = appointmentUuid,
-          cancelReason = reason,
-          newStatus = Cancelled,
-          newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(utcClock))
-    }
+  fun cancelWithReason(appointmentUuid: UUID, reason: AppointmentCancelReason) {
+    appointmentDao.cancelWithReason(
+        appointmentUuid = appointmentUuid,
+        cancelReason = reason,
+        newStatus = Cancelled,
+        newSyncStatus = SyncStatus.PENDING,
+        newUpdatedAt = Instant.now(utcClock)
+    )
   }
 
   override fun save(records: List<Appointment>): Completable {

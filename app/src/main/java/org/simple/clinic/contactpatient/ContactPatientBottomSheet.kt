@@ -3,6 +3,8 @@ package org.simple.clinic.contactpatient
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -247,11 +249,13 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   }
 
   override fun switchToCallPatientView() {
-    contentFlipper.displayedChild = 0
+    callPatientView.visibility = VISIBLE
+    setAppointmentReminderView.visibility = GONE
   }
 
   override fun switchToSetAppointmentReminderView() {
-    contentFlipper.displayedChild = 1
+    callPatientView.visibility = GONE
+    setAppointmentReminderView.visibility = VISIBLE
   }
 
   private fun normalCallClicks(): Observable<ContactPatientEvent> {

@@ -161,15 +161,15 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun showOrHideInputFields() {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
-        PatientNameField::class.java to fullNameInputContainer,
-        AgeField::class.java to ageEditTextContainer,
-        DateOfBirthField::class.java to dateOfBirthEditTextContainer,
-        LandlineOrMobileField::class.java to phoneNumberTextContainer,
+        PatientNameField::class.java to fullNameInputLayout,
+        AgeField::class.java to ageInputLayout,
+        DateOfBirthField::class.java to dateOfBirthInputLayout,
+        LandlineOrMobileField::class.java to phoneNumberInputLayout,
         GenderField::class.java to genderRadioGroup,
-        AlternativeIdInputField::class.java to alternativeIdInputContainer,
-        StreetAddressField::class.java to streetAddressLayout,
-        VillageOrColonyField::class.java to colonyOrVillageInputContainer,
-        ZoneField::class.java to zoneLayout,
+        AlternativeIdInputField::class.java to alternativeIdInputLayout,
+        StreetAddressField::class.java to streetAddressInputLayout,
+        VillageOrColonyField::class.java to colonyOrVillageInputLayout,
+        ZoneField::class.java to zoneInputLayout,
         DistrictField::class.java to districtInputLayout,
         StateField::class.java to stateInputLayout
     )
@@ -520,7 +520,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
         .setInterpolator(FastOutSlowInInterpolator())
     TransitionManager.beginDelayedTransition(this, transition)
 
-    dateOfBirthEditTextContainer.visibility = when (visibility) {
+    dateOfBirthInputLayout.visibility = when (visibility) {
       DATE_OF_BIRTH_VISIBLE, BOTH_VISIBLE -> VISIBLE
       else -> GONE
     }
@@ -530,7 +530,7 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
       else -> GONE
     }
 
-    ageEditTextContainer.visibility = when (visibility) {
+    ageInputLayout.visibility = when (visibility) {
       AGE_VISIBLE, BOTH_VISIBLE -> VISIBLE
       else -> GONE
     }

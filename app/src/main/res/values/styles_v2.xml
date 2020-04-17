@@ -435,12 +435,6 @@
     <item name="android:background">@color/blue2</item>
   </style>
 
-  <style name="Clinic.V2.ClearEditTextButton">
-    <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-    <item name="android:tint">@color/grey2</item>
-    <item name="android:src">@drawable/ic_clear_circular_24dp</item>
-  </style>
-
   <style name="Clinic.V2.OverdueListAction">
     <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left.Grey0</item>
     <item name="android:paddingStart">@dimen/spacing_16</item>
@@ -649,6 +643,27 @@
       @style/ThemeOverlay.MaterialComponents.TextInputEditText.FilledBox.Dense
     </item>
     <item name="boxCollapsedPaddingTop">8dp</item>
+  </style>
+
+  <style name="Clinic.V2.TextInputLayout.FilledBox.PatientEntry">
+    <item name="hintTextColor">?attr/colorSecondary</item>
+    <item name="boxBackgroundColor">@color/white100</item>
+    <item name="boxStrokeColor">?attr/colorSecondary</item>
+    <item name="boxCornerRadiusTopEnd">@dimen/spacing_0</item>
+    <item name="boxCornerRadiusTopStart">@dimen/spacing_0</item>
+    <item name="endIconTint">@color/grey1</item>
+    <item name="startIconTint">@color/grey1</item>
+    <item name="endIconMode">clear_text</item>
+    <item name="endIconDrawable">@drawable/ic_clear_circular_16dp</item>
+  </style>
+
+  <style name="Clinic.V2.TextInputLayout.ToolbarSearch" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+    <item name="boxBackgroundColor">@color/white100</item>
+    <item name="boxStrokeColor">@color/grey3</item>
+    <item name="hintEnabled">false</item>
+    <item name="endIconTint">@color/grey1</item>
+    <item name="startIconTint">@color/grey1</item>
+    <item name="endIconMode">clear_text</item>
   </style>
 
   <style name="Clinic.V2.MaterialButton" parent="Widget.MaterialComponents.Button">

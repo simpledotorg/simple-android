@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen android:id="@+id/patientsearch_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patientsearch_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:clipChildren="false">
@@ -19,21 +19,21 @@
       android:id="@+id/titleTextView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_8"
-      android:layout_marginEnd="@dimen/spacing_16"
       android:layout_marginTop="@dimen/spacing_16"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_8"
       android:ellipsize="end"
       android:maxLines="2"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White100"
-      android:text="@string/addidtopatientsearch_toolbar_title" />
+      android:text="@string/addidtopatientsearch_toolbar_title"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White100" />
   </androidx.appcompat.widget.Toolbar>
 
   <include
     android:id="@+id/allPatientsInFacilityView"
+    layout="@layout/view_allpatientsinfacility"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/enterPatientNameInputContainer"
-    layout="@layout/view_allpatientsinfacility" />
+    android:layout_below="@+id/enterPatientNameInputContainer" />
 
   <!-- This is placed below the all patients view so that the shadow of the toolbar can be cast -->
   <FrameLayout
@@ -64,8 +64,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/spacing_8"
         android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
         android:layout_weight="1"
         android:background="@null"
         android:hint="@string/addidtopatientsearch_hint"
@@ -93,12 +93,13 @@
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2">
 
-    <org.simple.clinic.widgets.PrimarySolidButton
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/addidtopatientsearch_search"
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_8"
       android:text="@string/addidtopatientsearch_search"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.editpatient.EditPatientScreen
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.editpatient.EditPatientScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/patientedit_root"
@@ -31,9 +30,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:paddingBottom="64dp"
-      android:paddingEnd="@dimen/spacing_16"
       android:paddingTop="@dimen/spacing_12"
+      android:paddingEnd="@dimen/spacing_16"
+      android:paddingBottom="64dp"
       tools:ignore="RtlSymmetry">
 
       <FrameLayout
@@ -43,10 +42,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/fullNameInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-          style="@style/Clinic.V2.TextInputLayout.FilledBox">
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fullNameEditText"
@@ -73,10 +72,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/phoneNumberInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-          style="@style/Clinic.V2.TextInputLayout.FilledBox">
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/phoneNumberEditText"
@@ -111,10 +110,10 @@
 
           <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ageInputLayout"
+            style="@style/Clinic.V2.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-            style="@style/Clinic.V2.TextInputLayout.FilledBox">
+            app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
             <com.google.android.material.textfield.TextInputEditText
               android:id="@+id/ageEditText"
@@ -138,9 +137,9 @@
           android:id="@+id/dateOfBirthAndAgeSeparator"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="@dimen/spacing_16"
           android:layout_marginStart="@dimen/spacing_16"
           android:layout_marginTop="@dimen/spacing_24"
+          android:layout_marginEnd="@dimen/spacing_16"
           android:background="@color/window_background"
           android:text="@string/patientedit_dateofbirth_and_age_separator"
           android:textAllCaps="true" />
@@ -153,10 +152,10 @@
 
           <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dateOfBirthInputLayout"
+            style="@style/Clinic.V2.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-            style="@style/Clinic.V2.TextInputLayout.FilledBox">
+            app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
             <org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
               android:id="@+id/dateOfBirthEditText"
@@ -234,10 +233,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/alternativeIdInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-          style="@style/Clinic.V2.TextInputLayout.FilledBox">
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/alternativeIdInputEditText"
@@ -264,10 +263,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/streetAddressInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-          style="@style/Clinic.V2.TextInputLayout.FilledBox">
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/streetAddressEditText"
@@ -294,10 +293,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/colonyOrVillageInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-          style="@style/Clinic.V2.TextInputLayout.FilledBox">
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/colonyOrVillageEditText"
@@ -326,10 +325,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/zoneInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-          style="@style/Clinic.V2.TextInputLayout.FilledBox">
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/zoneEditText"
@@ -357,12 +356,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/districtInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginEnd="@dimen/spacing_4"
           android:layout_weight="1"
-          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-          style="@style/Clinic.V2.TextInputLayout.FilledBox">
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/districtEditText"
@@ -375,13 +374,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/stateInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_4"
           android:layout_weight="1"
-          app:hintAnimationEnabled="true"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
-          style="@style/Clinic.V2.TextInputLayout.FilledBox">
+          app:hintAnimationEnabled="true">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/stateEditText"
@@ -404,11 +403,12 @@
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2">
 
-    <org.simple.clinic.widgets.PrimarySolidButton
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+    <com.google.android.material.button.MaterialButton
+      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_8"
       android:text="@string/patientedit_save_patient"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.editpatient.EditPatientScreen>

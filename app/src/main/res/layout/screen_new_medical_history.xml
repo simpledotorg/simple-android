@@ -131,12 +131,13 @@
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2">
 
-    <org.simple.clinic.widgets.PrimarySolidButton
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/newmedicalhistory_save"
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_8"
       android:text="@string/newmedicalhistory_next"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen>

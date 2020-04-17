@@ -153,16 +153,15 @@ class PatientRepository @Inject constructor(
         }
   }
 
-  fun updatePatientStatusToDead(patientUuid: UUID): Completable {
-    return Completable.fromAction {
-      database
-          .patientDao()
-          .updatePatientStatus(
-              uuid = patientUuid,
-              newStatus = PatientStatus.Dead,
-              newSyncStatus = PENDING,
-              newUpdatedAt = Instant.now(utcClock))
-    }
+  fun updatePatientStatusToDead(patientUuid: UUID) {
+    database
+        .patientDao()
+        .updatePatientStatus(
+            uuid = patientUuid,
+            newStatus = PatientStatus.Dead,
+            newSyncStatus = PENDING,
+            newUpdatedAt = Instant.now(utcClock)
+        )
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<PatientProfile>> {

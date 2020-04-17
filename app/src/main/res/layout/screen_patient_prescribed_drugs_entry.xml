@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.drugs.selection.PrescribedDrugScreen android:id="@+id/prescribeddrugs_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.drugs.selection.PrescribedDrugScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/prescribeddrugs_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
@@ -30,12 +30,13 @@
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2">
 
-    <org.simple.clinic.widgets.PrimarySolidButton
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+    <com.google.android.material.button.MaterialButton
+      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/patientsummary_finish_saving_patient"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+      android:layout_margin="@dimen/spacing_8"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 
 </org.simple.clinic.drugs.selection.PrescribedDrugScreen>

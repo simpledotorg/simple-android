@@ -11,8 +11,8 @@
     android:id="@+id/loader"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:visibility="visible"
-    android:layout_centerInParent="true" />
+    android:layout_centerInParent="true"
+    tools:visibility="visible" />
 
   <RelativeLayout
     android:id="@+id/emptyStateView"
@@ -28,19 +28,19 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
-      android:layout_marginEnd="@dimen/spacing_24"
       android:layout_marginStart="@dimen/spacing_24"
+      android:layout_marginEnd="@dimen/spacing_24"
       android:text="@string/patientsearchresults_empty_state"
       android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey2" />
 
     <View
       android:layout_width="2dp"
       android:layout_height="wrap_content"
-      android:layout_alignBottom="@+id/searchresults_empty_state_arrow"
       android:layout_below="@+id/searchresults_empty_state_text"
+      android:layout_alignBottom="@+id/searchresults_empty_state_arrow"
       android:layout_centerHorizontal="true"
-      android:layout_marginBottom="@dimen/spacing_12"
       android:layout_marginTop="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_12"
       android:background="@color/grey2" />
 
     <ImageView
@@ -79,18 +79,19 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:layout_marginBottom="@dimen/spacing_4"
       android:layout_marginTop="@dimen/spacing_4"
+      android:layout_marginBottom="@dimen/spacing_4"
       android:gravity="center_horizontal"
       android:text="@string/patientsearchresults_register_patient_rationale"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey0" />
 
-    <org.simple.clinic.widgets.PrimarySolidButton
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/newPatientButton"
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
+      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/patientsearchresults_register_patient"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+      android:layout_margin="@dimen/spacing_8"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
   </LinearLayout>
 </merge>

@@ -294,11 +294,6 @@
     <item name="titleTextAppearance">@style/Clinic.V2.TextAppearance.H6.White100</item>
   </style>
 
-  <style name="Clinic.V2.Button">
-    <item name="android:paddingTop">18dp</item>
-    <item name="android:paddingBottom">18dp</item>
-  </style>
-
   <style name="Clinic.V2.ToolbarButton">
     <item name="android:textColor">?attr/colorOnPrimary</item>
     <item name="android:layout_width">wrap_content</item>
@@ -314,28 +309,12 @@
     <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Button2</item>
   </style>
 
-  <!-- PSA: To be used with PrimarySolidButton.kt -->
-  <style name="Clinic.V2.Button.Solid">
-    <item name="android:stateListAnimator" tools:ignore="NewApi">@null</item>
-    <item name="android:background">@null</item>
-  </style>
-
-  <style name="Clinic.V2.Button.Solid.WithoutIcon" />
-
-  <style name="Clinic.V2.Button.Solid.WithoutIcon.Blue1">
-    <item name="android:background">@color/blue1</item>
-  </style>
-
   <style name="Clinic.V2.TextAppearance.Button1" parent="TextAppearance.AppCompat.Widget.Button">
     <item name="android:textAllCaps">true</item>
     <item name="android:fontFamily">sans-serif-medium</item>
     <item name="android:textSize">@dimen/textsize_16</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.08</item>
     <item name="android:lineSpacingExtra">4sp</item>
-  </style>
-
-  <style name="Clinic.V2.TextAppearance.Button1.White100">
-    <item name="android:textColor">@color/white100</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Button1.Blue1">

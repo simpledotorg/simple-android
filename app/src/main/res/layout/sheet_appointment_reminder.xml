@@ -22,10 +22,10 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_8"
-    android:layout_marginEnd="44dp"
     android:layout_marginStart="44dp"
     android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginEnd="44dp"
+    android:layout_marginBottom="@dimen/spacing_8"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -43,8 +43,8 @@
       android:id="@+id/appointmentreminder_current_date"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_8"
       android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
       android:gravity="center_horizontal"
       android:textColor="@color/black_opacity_80"
@@ -62,13 +62,13 @@
       tools:ignore="ContentDescription" />
   </LinearLayout>
 
-  <org.simple.clinic.widgets.PrimarySolidButton
+  <com.google.android.material.button.MaterialButton
     android:id="@+id/appointmentreminder_done"
-    style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
+    style="?attr/materialButtonStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_16"
     android:text="@string/appointmentreminder_done"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
 
 </LinearLayout>

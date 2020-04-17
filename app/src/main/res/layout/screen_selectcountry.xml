@@ -114,13 +114,14 @@
     app:layout_constraintStart_toStartOf="parent"
     tools:visibility="visible">
 
-    <org.simple.clinic.widgets.PrimarySolidButton
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/nextButton"
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/selectcountry_next"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+      android:layout_margin="@dimen/spacing_8"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 
 

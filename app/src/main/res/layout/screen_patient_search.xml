@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.search.PatientSearchScreen android:id="@+id/patientsearch_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.search.PatientSearchScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patientsearch_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:animateLayoutChanges="true"
@@ -10,10 +10,10 @@
 
   <include
     android:id="@+id/allPatientsInFacilityView"
+    layout="@layout/view_allpatientsinfacility"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/toolbar"
-    layout="@layout/view_allpatientsinfacility" />
+    android:layout_below="@+id/toolbar" />
 
   <!-- This is placed below the all patients view so that the shadow of the toolbar can be cast -->
   <FrameLayout
@@ -75,12 +75,13 @@
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2">
 
-    <org.simple.clinic.widgets.PrimarySolidButton
+    <com.google.android.material.button.MaterialButton
       android:id="@+id/patientsearch_search"
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_8"
       android:text="@string/patientsearch_search"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.search.PatientSearchScreen>

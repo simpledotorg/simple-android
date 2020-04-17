@@ -472,11 +472,12 @@
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2">
 
-    <org.simple.clinic.widgets.PrimarySolidButton
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+    <com.google.android.material.button.MaterialButton
+      style="?attr/materialButtonStyle"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/patiententry_save_patient"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+      android:layout_margin="@dimen/spacing_8"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.newentry.PatientEntryScreen>

@@ -69,10 +69,8 @@ class RemoveAppointmentScreenController @Inject constructor(
 
     val markPatientAlreadyVisitedStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is PatientAlreadyVisitedClicked }
-        .flatMap { (_, appointmentUuid, _) ->
-          appointmentRepository.markAsAlreadyVisited(appointmentUuid)
-              .andThen(Observable.just(Ui::closeScreen))
-        }
+        .doOnNext { (_, appointmentUuid, _) -> appointmentRepository.markAsAlreadyVisited(appointmentUuid) }
+        .map { Ui::closeScreen }
 
     val cancelWithReasonStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is CancelReasonClicked }

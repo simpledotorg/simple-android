@@ -93,14 +93,13 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  fun markAsAlreadyVisited(appointmentUuid: UUID): Completable {
-    return Completable.fromAction {
-      appointmentDao.markAsVisited(
-          appointmentUuid = appointmentUuid,
-          newStatus = Visited,
-          newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(utcClock))
-    }
+  fun markAsAlreadyVisited(appointmentUuid: UUID) {
+    appointmentDao.markAsVisited(
+        appointmentUuid = appointmentUuid,
+        newStatus = Visited,
+        newSyncStatus = SyncStatus.PENDING,
+        newUpdatedAt = Instant.now(utcClock)
+    )
   }
 
   fun cancelWithReason(appointmentUuid: UUID, reason: AppointmentCancelReason) {

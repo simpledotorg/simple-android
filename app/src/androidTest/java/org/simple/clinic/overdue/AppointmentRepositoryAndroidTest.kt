@@ -680,7 +680,7 @@ class AppointmentRepositoryAndroidTest {
     clock.advanceBy(Duration.ofDays(1))
 
     // when
-    appointmentRepository.markAsAlreadyVisited(appointmentUuid).blockingAwait()
+    appointmentRepository.markAsAlreadyVisited(appointmentUuid)
 
     // then
     val appointmentUpdatedAtTimestamp = Instant.now(clock)

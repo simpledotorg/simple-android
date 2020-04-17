@@ -77,7 +77,8 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
     Observable
         .merge(
             normalCallClicks(),
-            secureCallClicks()
+            secureCallClicks(),
+            agreedToVisitClicks()
         )
         .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, this, permissionResults))
         .compose(ReportAnalyticsEvents())
@@ -197,6 +198,14 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
       emitter.setCancellable { callPatientView.secureCallButtonClicked = null }
 
       callPatientView.secureCallButtonClicked = { emitter.onNext(SecureCallClicked()) }
+    }
+  }
+
+  private fun agreedToVisitClicks(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { callPatientView.agreedToVisitClicked = null }
+
+      callPatientView.agreedToVisitClicked = { emitter.onNext(PatientAgreedToVisitClicked) }
     }
   }
 }

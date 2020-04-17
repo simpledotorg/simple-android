@@ -1,6 +1,5 @@
 package org.simple.clinic.drugs.selection
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -13,13 +12,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
@@ -37,6 +35,12 @@ class PrescribedDrugsScreenControllerTest {
   private val protocolRepository = mock<ProtocolRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientUuid = UUID.randomUUID()
+  private val protocolUuid = UUID.fromString("905a545c-1988-441b-9139-11ae00579883")
+  val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("eb1741f5-ed0e-436b-9e73-43713a4989c6"))
+  val facility = TestData.facility(
+      uuid = UUID.fromString("a10425cb-88b6-4de9-9457-c426f5e6cfbb"),
+      protocolUuid = protocolUuid
+  )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private lateinit var controller: PrescribedDrugsScreenController
@@ -48,6 +52,9 @@ class PrescribedDrugsScreenControllerTest {
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
   }
 
   @Test
@@ -56,11 +63,6 @@ class PrescribedDrugsScreenControllerTest {
     val amlodipine10mg = TestData.protocolDrug(name = "Amlodipine", dosage = "10mg")
     val telmisartan40mg = TestData.protocolDrug(name = "Telmisartan", dosage = "40mg")
     val telmisartan80mg = TestData.protocolDrug(name = "Telmisartan", dosage = "80mg")
-
-    val protocolUuid = UUID.randomUUID()
-    val currentFacility = TestData.facility(protocolUuid = protocolUuid)
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(TestData.loggedInUser()))
-    whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(currentFacility))
 
     whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.just(listOf(
         ProtocolDrugAndDosages(amlodipine10mg.name, listOf(amlodipine5mg, amlodipine10mg)),
@@ -108,8 +110,7 @@ class PrescribedDrugsScreenControllerTest {
 
   @Test
   fun `when new prescription button is clicked then prescription entry sheet should be shown`() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.never())
-    whenever(protocolRepository.drugsForProtocolOrDefault(any())).thenReturn(Observable.never())
+    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
@@ -125,9 +126,9 @@ class PrescribedDrugsScreenControllerTest {
   )
   @Test
   fun `when a protocol drug is selected then open dosages sheet for that drug`(drugName: String) {
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.never())
-    whenever(prescriptionRepository.savePrescription(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(protocolRepository.drugsForProtocolOrDefault(any())).thenReturn(Observable.never())
+    val protocolDrug = TestData.protocolDrug(uuid = UUID.fromString("362c6a00-3ed9-4b7a-b22a-9168b736bd35"), name = drugName)
+    whenever(prescriptionRepository.savePrescription(patientUuid, protocolDrug, facility)).thenReturn(Completable.complete())
+    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))

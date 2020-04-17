@@ -42,11 +42,6 @@
 
   <dimen name="allpatientsinfacility_fastscrollpopup_size">48dp</dimen>
 
-  <dimen name="patientsearch_searchfield_bg_corners">4dp</dimen>
-  <dimen name="patientsearch_searchfield_bg_stroke">1dp</dimen>
-
-  <dimen name="addidtopatientsearch_searchfield_bg_corners">4dp</dimen>
-
   <dimen name="settings_section_top_margin">19dp</dimen>
   <dimen name="settings_content_top_margin">3dp</dimen>
   <dimen name="settings_divider_top_margin">18dp</dimen>

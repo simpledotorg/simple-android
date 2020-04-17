@@ -2,16 +2,6 @@
 
   <style name="Clinic" />
 
-  <style name="Clinic.Button" />
-
-  <style name="Clinic.Button.ClearEditText">
-    <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-    <item name="android:layout_marginTop">14dp</item>
-    <item name="android:padding">@dimen/spacing_12</item>
-    <item name="android:tint">@color/gray_500</item>
-    <item name="android:src">@drawable/ic_clear_circular_16dp</item>
-  </style>
-
   <style name="Clinic.LoginBackButton">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>

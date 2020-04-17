@@ -12,11 +12,11 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
@@ -57,7 +57,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     }
     TheActivity.component.inject(this)
 
-    backButton.setOnClickListener {
+    searchQueryTextInputLayout.setStartIconOnClickListener {
       screenRouter.pop()
     }
     searchQueryEditText.showKeyboard()

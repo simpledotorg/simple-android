@@ -45,28 +45,19 @@
     android:elevation="@dimen/elevation_toolbar"
     android:padding="@dimen/spacing_8">
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+      style="@style/Clinic.V2.TextInputLayout.ToolbarSearch"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@drawable/background_addidtopatientsearch_searchfield"
-      android:orientation="horizontal"
-      android:padding="@dimen/spacing_8">
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
+      app:startIconDrawable="@drawable/ic_search_24dp">
 
-      <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_search_24dp"
-        android:tint="@color/grey1"
-        tools:ignore="ContentDescription" />
-
-      <EditText
+      <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/searchQueryEditText"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="@dimen/spacing_8"
-        android:layout_marginEnd="@dimen/spacing_8"
-        android:layout_weight="1"
         android:background="@null"
         android:hint="@string/addidtopatientsearch_hint"
         android:imeOptions="flagNoFullscreen|actionSearch"
@@ -74,15 +65,10 @@
         android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
         android:privateImeOptions="nm"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Grey1"
-        android:textColorHint="@color/grey1"
-        tools:targetApi="o" />
+        android:textColorHint="@color/grey1" />
 
-      <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-        style="@style/Clinic.V2.ClearEditTextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:clearableField="@id/searchQueryEditText" />
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
+
   </FrameLayout>
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame

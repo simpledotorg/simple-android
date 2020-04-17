@@ -208,15 +208,15 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   private fun showOrHideInputFields() {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
-        PatientNameField::class.java to fullNameTextContainer,
-        AgeField::class.java to ageEditTextContainer,
-        DateOfBirthField::class.java to dateOfBirthEditTextContainer,
-        LandlineOrMobileField::class.java to phoneNumberTextContainer,
+        PatientNameField::class.java to fullNameInputLayout,
+        AgeField::class.java to ageEditTextInputLayout,
+        DateOfBirthField::class.java to dateOfBirthInputLayout,
+        LandlineOrMobileField::class.java to phoneNumberInputLayout,
         GenderField::class.java to genderRadioGroup,
-        AlternativeIdInputField::class.java to alternativeIdInputContainer,
-        StreetAddressField::class.java to streetAddressLayout,
-        VillageOrColonyField::class.java to colonyOrVillageInputContainer,
-        ZoneField::class.java to zoneLayout,
+        AlternativeIdInputField::class.java to alternativeIdInputLayout,
+        StreetAddressField::class.java to streetAddressInputLayout,
+        VillageOrColonyField::class.java to colonyOrVillageInputLayout,
+        ZoneField::class.java to zoneInputLayout,
         DistrictField::class.java to districtInputLayout,
         StateField::class.java to stateInputLayout
     )
@@ -400,7 +400,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .setInterpolator(FastOutSlowInInterpolator())
     TransitionManager.beginDelayedTransition(this, transition)
 
-    dateOfBirthEditTextContainer.visibility = when (visibility) {
+    dateOfBirthInputLayout.visibility = when (visibility) {
       DATE_OF_BIRTH_VISIBLE, BOTH_VISIBLE -> View.VISIBLE
       else -> View.GONE
     }
@@ -410,7 +410,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       else -> View.GONE
     }
 
-    ageEditTextContainer.visibility = when (visibility) {
+    ageEditTextInputLayout.visibility = when (visibility) {
       DateOfBirthAndAgeVisibility.AGE_VISIBLE, BOTH_VISIBLE -> View.VISIBLE
       else -> View.GONE
     }

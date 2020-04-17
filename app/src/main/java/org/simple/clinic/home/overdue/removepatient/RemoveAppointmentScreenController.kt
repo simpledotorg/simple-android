@@ -59,10 +59,14 @@ class RemoveAppointmentScreenController @Inject constructor(
 
     val markPatientStatusDeadStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is PatientDeadClicked }
-        .flatMap { (_, uuid, reason) ->
-          patientRepository
-              .updatePatientStatusToDead((reason as PatientDeadClicked).patientUuid)
-              .andThen(appointmentRepository.cancelWithReason(uuid, Dead))
+        .doOnNext { (_, _, reason) ->
+          val patientUuid = (reason as PatientDeadClicked).patientUuid
+
+          patientRepository.updatePatientStatusToDead(patientUuid)
+        }
+        .flatMap { (_, uuid, _) ->
+          appointmentRepository
+              .cancelWithReason(uuid, Dead)
               .andThen(Observable.just(Ui::closeScreen))
         }
 

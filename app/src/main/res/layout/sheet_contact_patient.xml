@@ -10,4 +10,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 
+  <org.simple.clinic.contactpatient.views.SetAppointmentReminderView
+    android:id="@+id/setAppointmentReminderView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
 </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>

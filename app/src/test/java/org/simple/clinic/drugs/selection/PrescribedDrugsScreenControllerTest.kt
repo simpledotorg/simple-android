@@ -34,7 +34,7 @@ class PrescribedDrugsScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val protocolRepository = mock<ProtocolRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
-  private val patientUuid = UUID.randomUUID()
+  private val patientUuid = UUID.fromString("2e9a1721-5472-4ebb-9d1a-7e707645eb7b")
   private val protocolUuid = UUID.fromString("905a545c-1988-441b-9139-11ae00579883")
   val loggedInUser = TestData.loggedInUser(uuid = UUID.fromString("eb1741f5-ed0e-436b-9e73-43713a4989c6"))
   val facility = TestData.facility(
@@ -69,16 +69,36 @@ class PrescribedDrugsScreenControllerTest {
         ProtocolDrugAndDosages(telmisartan40mg.name, listOf(telmisartan40mg, telmisartan80mg))
     )))
 
-    val prescriptionUuid1 = UUID.randomUUID()
-    val prescriptionUuid2 = UUID.randomUUID()
-    val prescriptionUuid3 = UUID.randomUUID()
-    val prescriptionUuid4 = UUID.randomUUID()
-
-    val amlodipine10mgPrescription = TestData.prescription(name = "Amlodipine", dosage = "10mg", isProtocolDrug = true)
-    val telmisartan9000mgPrescription = TestData.prescription(uuid = prescriptionUuid1, name = "Telmisartan", dosage = "9000mg", isProtocolDrug = false)
-    val reesesPrescription = TestData.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets", isProtocolDrug = false)
-    val fooPrescription = TestData.prescription(uuid = prescriptionUuid3, name = "Foo", dosage = "2 pills", isProtocolDrug = false)
-    val barPrescription = TestData.prescription(uuid = prescriptionUuid4, name = "Bar", dosage = null, isProtocolDrug = false)
+    val amlodipine10mgPrescription = TestData.prescription(
+        uuid = UUID.fromString("90e28866-90f6-48a0-add1-cf44aa43209c"),
+        name = "Amlodipine",
+        dosage = "10mg",
+        isProtocolDrug = true
+    )
+    val telmisartan9000mgPrescription = TestData.prescription(
+        uuid = UUID.fromString("ac3cfff0-2ebf-4c9c-adab-a41cc8a0bbeb"),
+        name = "Telmisartan",
+        dosage = "9000mg",
+        isProtocolDrug = false
+    )
+    val reesesPrescription = TestData.prescription(
+        uuid = UUID.fromString("34e466e2-3995-47b4-b1af-f4d7ea58d18c"),
+        name = "Reese's",
+        dosage = "5 packets",
+        isProtocolDrug = false
+    )
+    val fooPrescription = TestData.prescription(
+        uuid = UUID.fromString("68dc8060-bed4-4e1b-9891-7d77cad9639e"),
+        name = "Foo",
+        dosage = "2 pills",
+        isProtocolDrug = false
+    )
+    val barPrescription = TestData.prescription(
+        uuid = UUID.fromString("b5eb5dfa-f131-4d9f-a2d2-41d56aa109da"),
+        name = "Bar",
+        dosage = null,
+        isProtocolDrug = false
+    )
 
     val prescriptions = listOf(
         amlodipine10mgPrescription,
@@ -127,6 +147,7 @@ class PrescribedDrugsScreenControllerTest {
   @Test
   fun `when a protocol drug is selected then open dosages sheet for that drug`(drugName: String) {
     val protocolDrug = TestData.protocolDrug(uuid = UUID.fromString("362c6a00-3ed9-4b7a-b22a-9168b736bd35"), name = drugName)
+
     whenever(prescriptionRepository.savePrescription(patientUuid, protocolDrug, facility)).thenReturn(Completable.complete())
     whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())

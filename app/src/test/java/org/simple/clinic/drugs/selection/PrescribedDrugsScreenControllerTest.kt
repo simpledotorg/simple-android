@@ -8,7 +8,6 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,22 +42,10 @@ class PrescribedDrugsScreenControllerTest {
   )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var controller: PrescribedDrugsScreenController
-
-  @Before
-  fun setUp() {
-    controller = PrescribedDrugsScreenController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
-
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
-  }
 
   @Test
   fun `should correctly construct RecyclerView models from protocol drugs and prescribed drugs`() {
+    //given
     val amlodipine5mg = TestData.protocolDrug(name = "Amlodipine", dosage = "5mg")
     val amlodipine10mg = TestData.protocolDrug(name = "Amlodipine", dosage = "10mg")
     val telmisartan40mg = TestData.protocolDrug(name = "Telmisartan", dosage = "40mg")
@@ -108,8 +95,11 @@ class PrescribedDrugsScreenControllerTest {
         barPrescription)
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
 
+    //when
+    setupController()
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
 
+    //then
     val expectedUiModels = listOf(
         ProtocolDrugListItem(
             id = 0,
@@ -125,17 +115,22 @@ class PrescribedDrugsScreenControllerTest {
         CustomPrescribedDrugListItem(reesesPrescription, false),
         CustomPrescribedDrugListItem(fooPrescription, false),
         CustomPrescribedDrugListItem(barPrescription, true))
+
     verify(screen).populateDrugsList(expectedUiModels)
   }
 
   @Test
   fun `when new prescription button is clicked then prescription entry sheet should be shown`() {
+    //given
     whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
+    //when
+    setupController()
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
     uiEvents.onNext(AddNewPrescriptionClicked)
 
+    //then
     verify(screen).showNewPrescriptionEntrySheet(patientUuid)
   }
 
@@ -146,23 +141,43 @@ class PrescribedDrugsScreenControllerTest {
   )
   @Test
   fun `when a protocol drug is selected then open dosages sheet for that drug`(drugName: String) {
+    //given
     val protocolDrug = TestData.protocolDrug(uuid = UUID.fromString("362c6a00-3ed9-4b7a-b22a-9168b736bd35"), name = drugName)
 
     whenever(prescriptionRepository.savePrescription(patientUuid, protocolDrug, facility)).thenReturn(Completable.complete())
     whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
+    //when
+    setupController()
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
     uiEvents.onNext(ProtocolDrugClicked(drugName = drugName, prescriptionForProtocolDrug = null))
 
+    //then
     verify(screen).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid, prescribedDrugUuid = null)
   }
 
   @Test
   fun `when a custom prescription is clicked then open upate custom prescription screen`() {
+    //given
     val prescribedDrug = TestData.prescription()
+
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionClicked(prescribedDrug))
 
+    //then
     verify(screen).showUpdateCustomPrescriptionSheet(prescribedDrug)
+  }
+
+  private fun setupController() {
+    val controller = PrescribedDrugsScreenController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
+
+    uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
+
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
   }
 }

@@ -591,4 +591,13 @@
 
   <!-- Prescribed Drug Summary -->
   <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
+
+  <!-- Patient contact -->
+  <string name="patientcontact_agreed_to_visit">Mark patient as \"Agreed to visit\"</string>
+  <string name="patientcontact_remind_call_later">Remind to call later…</string>
+  <string name="patientcontact_remove_from_list">Remove from overdue list…</string>
+  <string name="patientcontact_result_of_call">Result of call</string>
+  <string name="patientcontact_call_normal">Normal</string>
+  <string name="patientcontact_call_secure">Secure</string>
+  <string name="patientcontact_help_text">Secure calls hide your number and are toll free</string>
 </resources>

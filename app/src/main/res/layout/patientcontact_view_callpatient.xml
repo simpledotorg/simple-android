@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:clipChildren="false"
+  android:clipToPadding="false"
+  tools:background="@color/white100"
+  tools:context="org.simple.clinic.patientcontact.CallPatientView"
+  tools:parentTag="org.simple.clinic.patientcontact.CallPatientView">
+
+  <TextView
+    android:id="@+id/nameTextView"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:gravity="center"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="Anish Acharya, M, 43" />
+
+  <TextView
+    android:id="@+id/phoneNumberTextView"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_4"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_24"
+    android:gravity="center"
+    android:maxLines="1"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/nameTextView"
+    tools:text="9876543210" />
+
+  <View
+    android:id="@+id/divider"
+    android:layout_width="0dp"
+    android:layout_height="1dp"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:background="@color/grey3"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/phoneNumberTextView" />
+
+  <TextView
+    android:id="@+id/resultOfCallLabel"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_48"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:text="@string/patientcontact_result_of_call"
+    android:textAllCaps="true"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/divider" />
+
+  <TextView
+    android:id="@+id/agreedToVisitTextView"
+    style="@style/Clinic.V2.PatientContactCallResultItem"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:drawableStart="@drawable/ic_radio_button_unchecked_green1_24dp"
+    android:text="@string/patientcontact_agreed_to_visit"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/resultOfCallLabel" />
+
+  <View
+    android:id="@+id/agreedToVisitSeparator"
+    android:layout_width="0dp"
+    android:layout_height="1dp"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:background="@color/grey3"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/agreedToVisitTextView" />
+
+  <TextView
+    android:id="@+id/remindToCallLaterTextView"
+    style="@style/Clinic.V2.PatientContactCallResultItem"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:drawableStart="@drawable/ic_radio_button_unchecked_yellow0_24dp"
+    android:text="@string/patientcontact_remind_call_later"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/agreedToVisitSeparator" />
+
+  <View
+    android:id="@+id/remindToCallLaterSeparator"
+    android:layout_width="0dp"
+    android:layout_height="1dp"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:background="@color/grey3"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/remindToCallLaterTextView" />
+
+  <TextView
+    android:id="@+id/removeFromOverdueListTextView"
+    style="@style/Clinic.V2.PatientContactCallResultItem"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:drawableStart="@drawable/ic_radio_button_unchecked_red1_24dp"
+    android:text="@string/patientcontact_remove_from_list"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/remindToCallLaterSeparator" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/normalCallButton"
+    style="@style/Clinic.V2.MaterialButton.Green3"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:paddingStart="@dimen/spacing_8"
+    android:paddingEnd="@dimen/spacing_24"
+    android:text="@string/patientcontact_call_normal"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+    app:icon="@drawable/ic_call_16dp"
+    app:iconTint="@color/green1"
+    app:layout_constraintEnd_toStartOf="@+id/secureCallButton"
+    app:layout_constraintHorizontal_chainStyle="spread"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/removeFromOverdueListTextView"
+    app:layout_constraintWidth_max="256dp" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/secureCallButton"
+    style="@style/Clinic.V2.MaterialButton.Green1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:paddingStart="@dimen/spacing_8"
+    android:paddingEnd="@dimen/spacing_24"
+    android:text="@string/patientcontact_call_secure"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+    app:icon="@drawable/ic_call_16dp"
+    app:iconTint="@color/white100"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/normalCallButton"
+    app:layout_constraintTop_toTopOf="@id/normalCallButton"
+    tools:visibility="visible" />
+
+  <!-- Added because bottom margin was tricky when dynamically show buttons -->
+  <Space
+    android:id="@+id/spaceBelowNormalCallButton"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_16"
+    app:layout_constraintTop_toBottomOf="@id/normalCallButton" />
+
+  <TextView
+    android:id="@+id/helpTextView"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:gravity="center"
+    android:text="@string/patientcontact_help_text"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center.Grey1"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/spaceBelowNormalCallButton" />
+
+  <androidx.constraintlayout.widget.Group
+    android:id="@+id/callResultsGroup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    app:constraint_referenced_ids="divider,resultOfCallLabel,agreedToVisitTextView, agreedToVisitSeparator, remindToCallLaterTextView, remindToCallLaterSeparator, removeFromOverdueListTextView"
+    tools:visibility="visible" />
+
+  <androidx.constraintlayout.widget.Group
+    android:id="@+id/secureCallingGroup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    app:constraint_referenced_ids="secureCallButton, helpTextView"
+    tools:visibility="visible" />
+
+</merge>

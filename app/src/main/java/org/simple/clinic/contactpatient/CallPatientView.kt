@@ -33,7 +33,7 @@ class CallPatientView(
       secureCallingGroup.visibility = if (field) View.VISIBLE else View.GONE
     }
 
-  var agreedToVisitClicked: AgreedToVisitClicked? = { Toast.makeText(context, "WIP", Toast.LENGTH_SHORT).show() }
+  var agreedToVisitClicked: AgreedToVisitClicked? = null
 
   var remindToCallLaterClicked: RemindToCallLaterClicked? = { Toast.makeText(context, "WIP", Toast.LENGTH_SHORT).show() }
 

@@ -17,7 +17,6 @@ import org.simple.clinic.home.overdue.removepatient.di.RemoveAppointmentScreenCo
 
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
-import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivityComponent
 import org.simple.clinic.setup.SetupActivityComponent
@@ -31,7 +30,6 @@ interface AppComponent {
 
   fun inject(target: ClinicApp)
   fun inject(target: SyncWorker)
-  fun inject(target: ClearFieldImageButton)
   fun inject(target: OtpSmsReceiver)
   fun inject(target: DataSync)
 

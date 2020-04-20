@@ -28,7 +28,7 @@ class ContactPatientUpdate(
       is OverdueAppointmentLoaded -> next(model.overdueAppointmentLoaded(event.overdueAppointment))
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
-      PatientMarkedAsAgreedToVisit, ReminderSetForAppointment, PatientMarkedAsVisited -> dispatch(CloseScreen)
+      PatientMarkedAsAgreedToVisit, ReminderSetForAppointment, PatientMarkedAsVisited, PatientMarkedAsDead -> dispatch(CloseScreen)
       PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment.uuid))
       NextReminderDateClicked -> selectNextReminderDate(model)
       PreviousReminderDateClicked -> selectPreviousReminderDate(model)
@@ -41,7 +41,6 @@ class ContactPatientUpdate(
       RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))
       BackClicked -> backClicks(model)
       is RemoveAppointmentReasonSelected -> next(model.removeAppointmentReasonSelected(event.reason))
-      PatientMarkedAsDead -> noChange()
     }
   }
 

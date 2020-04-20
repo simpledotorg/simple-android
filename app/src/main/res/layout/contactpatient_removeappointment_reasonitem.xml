@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/removalReasonButton"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/spacing_16"
+  android:paddingStart="@dimen/spacing_16"
+  android:paddingEnd="@dimen/spacing_16"
+  android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
+  android:textColor="@color/removeappointment_radio_button"
+  tools:text="Moved to private practitioner" />

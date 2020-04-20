@@ -623,4 +623,19 @@
     <item quantity="one">%s month</item>
     <item quantity="other">%s months</item>
   </plurals>
+  <string name="contactpatient_select_a_reason">Select a Reason</string>
+  <!--suppress UnusedResources -->
+  <string name="contactpatient_patient_already_visited">Patient has already visited</string>
+  <!--suppress UnusedResources -->
+  <string name="contactpatient_patient_is_not_responding">Patient is not responding</string>
+  <!--suppress UnusedResources -->
+  <string name="contactpatient_invalid_phone_number">Phone number does not work</string>
+  <!--suppress UnusedResources -->
+  <string name="contactpatient_public_hospital_transfer">Transferred to another public health facility</string>
+  <!--suppress UnusedResources -->
+  <string name="contactpatient_moved_to_private">Moved to private practitioner</string>
+  <!--suppress UnusedResources -->
+  <string name="contactpatient_patient_died">Died</string>
+  <!--suppress UnusedResources -->
+  <string name="contactpatient_other_reason">Other reason</string>
 </resources>

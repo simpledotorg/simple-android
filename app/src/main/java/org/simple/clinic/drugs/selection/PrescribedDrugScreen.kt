@@ -17,6 +17,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
@@ -24,6 +25,7 @@ import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -48,6 +50,13 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
 
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(screenCreates(), adapterUiEvents, doneClicks())
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -65,7 +74,7 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), adapterUiEvents, doneClicks()),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

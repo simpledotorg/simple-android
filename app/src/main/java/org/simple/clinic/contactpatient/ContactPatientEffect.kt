@@ -30,3 +30,5 @@ data class SetReminderForAppointment(
     val appointmentUuid: UUID,
     val reminderDate: LocalDate
 ): ContactPatientEffect()
+
+data class MarkPatientAsVisited(val appointmentUuid: UUID): ContactPatientEffect()

@@ -11,11 +11,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -202,6 +202,23 @@ class ContactPatientEffectHandlerTest {
     verify(appointmentRepository).markAsAlreadyVisited(appointmentUuid)
     verifyNoMoreInteractions(appointmentRepository)
     testCase.assertOutgoingEvents(PatientMarkedAsVisited)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the mark patient as dead effect is received, the patient must be marked as dead and the appointment must be cancelled`() {
+    // given
+    val appointmentUuid = UUID.fromString("5085f7b4-9fe6-4b43-9b49-975cb6b540cf")
+
+    // when
+    testCase.dispatch(MarkPatientAsDead(patientUuid = patientUuid, appointmentUuid = appointmentUuid))
+
+    // then
+    verify(patientRepository).updatePatientStatusToDead(patientUuid)
+    verifyNoMoreInteractions(patientRepository)
+    verify(appointmentRepository).cancelWithReason(appointmentUuid, AppointmentCancelReason.Dead)
+    verifyNoMoreInteractions(appointmentRepository)
+    testCase.assertOutgoingEvents(PatientMarkedAsDead)
     verifyZeroInteractions(uiActions)
   }
 }

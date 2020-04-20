@@ -91,6 +91,10 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
             previousReminderDateClicks(),
             appointmentDateClicks(),
             saveReminderDateClicks(),
+            removeFromOverdueListClicks(),
+            removeAppointmentCloseClicks(),
+            removeAppointmentDoneClicks(),
+            removeAppointmentReasonSelections(),
             hotEvents
         )
         .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, this, permissionResults))
@@ -250,27 +254,31 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   override fun switchToCallPatientView() {
     callPatientView.visibility = VISIBLE
     setAppointmentReminderView.visibility = GONE
+    removeAppointmentView.visibility = GONE
   }
 
   override fun switchToSetAppointmentReminderView() {
     callPatientView.visibility = GONE
     setAppointmentReminderView.visibility = VISIBLE
+    removeAppointmentView.visibility = GONE
   }
 
   override fun switchToRemoveAppointmentView() {
-    // TODO (vs) 20/04/20: Implement later
+    callPatientView.visibility = GONE
+    setAppointmentReminderView.visibility = GONE
+    removeAppointmentView.visibility = VISIBLE
   }
 
   override fun renderAppointmentRemoveReasons(reasons: List<RemoveAppointmentReason>, selectedReason: RemoveAppointmentReason?) {
-    // TODO (vs) 20/04/20: Implement later
+    removeAppointmentView.renderAppointmentRemoveReasons(reasons, selectedReason)
   }
 
   override fun enableRemoveAppointmentDoneButton() {
-    // TODO (vs) 20/04/20: Implement later
+    removeAppointmentView.enableRemoveAppointmentDoneButton()
   }
 
   override fun disableRemoveAppointmentDoneButton() {
-    // TODO (vs) 20/04/20: Implement later
+    removeAppointmentView.disableRemoveAppointmentDoneButton()
   }
 
   private fun normalCallClicks(): Observable<ContactPatientEvent> {
@@ -334,6 +342,38 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
       emitter.setCancellable { setAppointmentReminderView.doneClicked = null }
 
       setAppointmentReminderView.doneClicked = { emitter.onNext(SaveAppointmentReminderClicked) }
+    }
+  }
+
+  private fun removeFromOverdueListClicks(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { callPatientView.removeFromOverdueListClicked = null }
+
+      callPatientView.removeFromOverdueListClicked = { emitter.onNext(RemoveFromOverdueListClicked) }
+    }
+  }
+
+  private fun removeAppointmentCloseClicks(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { removeAppointmentView.closeClicked = null }
+
+      removeAppointmentView.closeClicked = { emitter.onNext(BackClicked) }
+    }
+  }
+
+  private fun removeAppointmentReasonSelections(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { removeAppointmentView.removeReasonClicked = null }
+
+      removeAppointmentView.removeReasonClicked = { emitter.onNext(RemoveAppointmentReasonSelected(it)) }
+    }
+  }
+
+  private fun removeAppointmentDoneClicks(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { removeAppointmentView.doneClicked = null }
+
+      removeAppointmentView.doneClicked = { emitter.onNext(RemoveAppointmentDoneClicked) }
     }
   }
 }

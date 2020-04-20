@@ -89,3 +89,5 @@ object PatientMarkedAsDead: ContactPatientEvent()
 object AppointmentMarkedAsCancelled: ContactPatientEvent()
 
 object RemoveAppointmentDoneClicked: ContactPatientEvent()
+
+object RemoveFromOverdueListClicked: ContactPatientEvent()

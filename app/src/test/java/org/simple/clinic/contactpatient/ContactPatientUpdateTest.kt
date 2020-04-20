@@ -15,6 +15,7 @@ import org.simple.clinic.contactpatient.RemoveAppointmentReason.NotResponding
 import org.simple.clinic.contactpatient.RemoveAppointmentReason.OtherReason
 import org.simple.clinic.contactpatient.RemoveAppointmentReason.PhoneNumberNotWorking
 import org.simple.clinic.contactpatient.RemoveAppointmentReason.TransferredToAnotherFacility
+import org.simple.clinic.contactpatient.UiMode.RemoveAppointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
@@ -415,11 +416,27 @@ class ContactPatientUpdateTest {
   }
 
   @Test
-  fun `when back is clicked while not on the call patient view, then the call patient view must be shown`() {
+  fun `when back is clicked while on the set appointment reminder view, then the call patient view must be shown`() {
     val model = defaultModel()
         .patientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Just(overdueAppointment))
         .changeUiModeTo(UiMode.SetAppointmentReminder)
+
+    spec
+        .given(model)
+        .whenEvent(BackClicked)
+        .then(assertThatNext(
+            hasModel(model.changeUiModeTo(UiMode.CallPatient)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when back is clicked while on the remove appointment view, then the call patient view must be shown`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .changeUiModeTo(RemoveAppointment)
 
     spec
         .given(model)
@@ -599,6 +616,21 @@ class ContactPatientUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = AppointmentCancelReason.Other) as ContactPatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when remove from overdue list is clicked, the remove appointment view should be shown`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(RemoveFromOverdueListClicked)
+        .then(assertThatNext(
+            hasModel(model.changeUiModeTo(RemoveAppointment)),
+            hasNoEffects()
         ))
   }
 

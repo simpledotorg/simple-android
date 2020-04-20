@@ -81,3 +81,5 @@ data class RemoveAppointmentReasonSelected(
   override val analyticsName: String
     get() = "Contact Patient:Appointment cancel reason selected:$reason"
 }
+
+object PatientMarkedAsVisited: ContactPatientEvent()

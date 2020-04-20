@@ -40,6 +40,7 @@ class ContactPatientUpdate(
       }
       RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))
       BackClicked -> backClicks(model)
+      is RemoveAppointmentReasonSelected -> next(model.removeAppointmentReasonSelected(event.reason))
     }
   }
 

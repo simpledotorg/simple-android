@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -14,12 +15,17 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.Rules
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
 class ContactPatientEffectHandlerTest {
+
+  @get:Rule
+  val rxErrorRule = RxErrorsRule()
 
   private val patientUuid = UUID.fromString("8a490518-a016-4818-b725-22c25dec310b")
   private val patientRepository = mock<PatientRepository>()
@@ -35,6 +41,7 @@ class ContactPatientEffectHandlerTest {
       schedulers = TrampolineSchedulersProvider(),
       uiActions = uiActions
   ).build()
+
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After
@@ -180,6 +187,21 @@ class ContactPatientEffectHandlerTest {
     verify(appointmentRepository).createReminder(appointmentUuid, reminderDate)
     verifyNoMoreInteractions(appointmentRepository)
     testCase.assertOutgoingEvents(ReminderSetForAppointment)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the mark patient as visited effect is received, the patient must be marked as visited`() {
+    // given
+    val appointmentUuid = UUID.fromString("0623a636-b4f0-4d6b-aa47-9ee89c2556da")
+
+    // when
+    testCase.dispatch(MarkPatientAsVisited(appointmentUuid))
+
+    // then
+    verify(appointmentRepository).markAsAlreadyVisited(appointmentUuid)
+    verifyNoMoreInteractions(appointmentRepository)
+    testCase.assertOutgoingEvents(PatientMarkedAsVisited)
     verifyZeroInteractions(uiActions)
   }
 }

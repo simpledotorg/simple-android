@@ -28,7 +28,7 @@ class PrescribedDrugsScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<PrescribedDrugScreen>()
+  private val screen = mock<PrescribedDrugUi>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val protocolRepository = mock<ProtocolRepository>()

@@ -17,7 +17,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = PrescribedDrugScreen
+typealias Ui = PrescribedDrugUi
 typealias UiChange = (Ui) -> Unit
 
 class PrescribedDrugsScreenController @Inject constructor(

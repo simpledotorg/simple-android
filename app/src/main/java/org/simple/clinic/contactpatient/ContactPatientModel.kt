@@ -60,6 +60,9 @@ data class ContactPatientModel(
   val hasSelectedARemoveAppointmentReason: Boolean
     get() = selectedRemoveAppointmentReason != null
 
+  val appointmentUuid: UUID
+    get() = appointment!!.get().appointment.uuid
+
   fun patientProfileLoaded(patientProfile: PatientProfile): ContactPatientModel {
     return copy(patientProfile = patientProfile)
   }

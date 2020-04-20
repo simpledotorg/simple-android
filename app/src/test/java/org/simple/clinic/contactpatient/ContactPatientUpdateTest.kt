@@ -8,6 +8,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.contactpatient.RemoveAppointmentReason.TransferredToAnotherFacility
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
@@ -414,6 +415,21 @@ class ContactPatientUpdateTest {
         .whenEvent(BackClicked)
         .then(assertThatNext(
             hasModel(model.changeUiModeTo(UiMode.CallPatient)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when the appointment cancel reason is changed, the ui should be updated`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentReasonSelected(TransferredToAnotherFacility))
+        .then(assertThatNext(
+            hasModel(model.removeAppointmentReasonSelected(TransferredToAnotherFacility)),
             hasNoEffects()
         ))
   }

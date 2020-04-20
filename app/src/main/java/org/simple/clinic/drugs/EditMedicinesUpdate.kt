@@ -6,6 +6,6 @@ import com.spotify.mobius.Update
 class EditMedicinesUpdate : Update<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> {
 
   override fun update(model: EditMedicinesModel, event: EditMedicinesEvent): Next<EditMedicinesModel, EditMedicinesEffect> {
-    TODO("not implemented")
+    return Next.next(model)
   }
 }

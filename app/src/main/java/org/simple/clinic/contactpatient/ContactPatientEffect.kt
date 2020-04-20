@@ -1,5 +1,6 @@
 package org.simple.clinic.contactpatient
 
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
@@ -36,4 +37,9 @@ data class MarkPatientAsVisited(val appointmentUuid: UUID): ContactPatientEffect
 data class MarkPatientAsDead(
     val patientUuid: UUID,
     val appointmentUuid: UUID
+): ContactPatientEffect()
+
+data class CancelAppointment(
+    val appointmentUuid: UUID,
+    val reason: AppointmentCancelReason
 ): ContactPatientEffect()

@@ -42,6 +42,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))
         .addTransformer(MarkPatientAsVisited::class.java, markPatientAsVisited(schedulers.io()))
         .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead(schedulers.io()))
+        .addTransformer(CancelAppointment::class.java, cancelAppointment(schedulers.io()))
         .build()
   }
 
@@ -111,6 +112,17 @@ class ContactPatientEffectHandler @AssistedInject constructor(
           .doOnNext { patientRepository.updatePatientStatusToDead(it.patientUuid) }
           .doOnNext { appointmentRepository.cancelWithReason(it.appointmentUuid, AppointmentCancelReason.Dead) }
           .map { PatientMarkedAsDead }
+    }
+  }
+
+  private fun cancelAppointment(
+      scheduler: Scheduler
+  ): ObservableTransformer<CancelAppointment, ContactPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentUuid, it.reason) }
+          .map { AppointmentMarkedAsCancelled }
     }
   }
 }

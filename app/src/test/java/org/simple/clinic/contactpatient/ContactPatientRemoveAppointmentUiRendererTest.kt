@@ -57,6 +57,7 @@ class ContactPatientRemoveAppointmentUiRendererTest {
         reasons = allRemoveAppointmentReasons,
         selectedReason = null
     )
+    verify(ui).disableRemoveAppointmentDoneButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -74,6 +75,7 @@ class ContactPatientRemoveAppointmentUiRendererTest {
         reasons = allRemoveAppointmentReasons,
         selectedReason = PhoneNumberNotWorking
     )
+    verify(ui).enableRemoveAppointmentDoneButton()
     verifyNoMoreInteractions(ui)
   }
 

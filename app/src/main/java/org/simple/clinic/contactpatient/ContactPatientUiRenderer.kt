@@ -31,7 +31,16 @@ class ContactPatientUiRenderer(
     val allRemoveAppointmentReasons = RemoveAppointmentReason.values().toList()
 
     ui.renderAppointmentRemoveReasons(reasons = allRemoveAppointmentReasons, selectedReason = model.selectedRemoveAppointmentReason)
+    toggleStateOfRemoveAppointmentDoneButton(model)
     ui.switchToRemoveAppointmentView()
+  }
+
+  private fun toggleStateOfRemoveAppointmentDoneButton(model: ContactPatientModel) {
+    if (model.hasSelectedARemoveAppointmentReason) {
+      ui.enableRemoveAppointmentDoneButton()
+    } else {
+      ui.disableRemoveAppointmentDoneButton()
+    }
   }
 
   private fun renderSetAppointmentReminderView(model: ContactPatientModel) {

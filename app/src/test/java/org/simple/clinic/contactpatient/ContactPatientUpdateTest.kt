@@ -8,7 +8,17 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.contactpatient.RemoveAppointmentReason.AlreadyVisited
+import org.simple.clinic.contactpatient.RemoveAppointmentReason.Died
+import org.simple.clinic.contactpatient.RemoveAppointmentReason.MovedToPrivatePractitioner
+import org.simple.clinic.contactpatient.RemoveAppointmentReason.NotResponding
+import org.simple.clinic.contactpatient.RemoveAppointmentReason.OtherReason
+import org.simple.clinic.contactpatient.RemoveAppointmentReason.PhoneNumberNotWorking
 import org.simple.clinic.contactpatient.RemoveAppointmentReason.TransferredToAnotherFacility
+import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
+import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
+import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
@@ -26,6 +36,7 @@ import java.util.UUID
 class ContactPatientUpdateTest {
 
   private val patientUuid = UUID.fromString("b5eccb67-6425-4d48-9c17-65e9b267f9eb")
+  private val appointmentUuid = UUID.fromString("f1b11fa6-3622-4f82-b74b-dd08dd563f1a")
   private val patientPhoneNumber = "1234567890"
   private val patientProfile = TestData.patientProfile(
       patientUuid = patientUuid,
@@ -35,7 +46,7 @@ class ContactPatientUpdateTest {
       patientUuid = patientUuid,
       facilityUuid = UUID.fromString("c97a8b30-8094-4c93-9ad6-ecc100130943"),
       phoneNumber = patientProfile.phoneNumbers.first(),
-      appointmentUuid = UUID.fromString("f1b11fa6-3622-4f82-b74b-dd08dd563f1a"),
+      appointmentUuid = appointmentUuid,
       gender = patientProfile.patient.gender,
       age = patientProfile.patient.age,
       dateOfBirth = patientProfile.patient.dateOfBirth
@@ -162,7 +173,7 @@ class ContactPatientUpdateTest {
         .whenEvent(PatientAgreedToVisitClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(MarkPatientAsAgreedToVisit(overdueAppointment.appointment.uuid) as ContactPatientEffect)
+            hasEffects(MarkPatientAsAgreedToVisit(appointmentUuid) as ContactPatientEffect)
         ))
   }
 
@@ -346,7 +357,7 @@ class ContactPatientUpdateTest {
         .reminderDateSelected(currentReminderDate)
 
     val expectedEffect = SetReminderForAppointment(
-        appointmentUuid = overdueAppointment.appointment.uuid,
+        appointmentUuid = appointmentUuid,
         reminderDate = currentSelectedDate
     )
     spec
@@ -476,6 +487,118 @@ class ContactPatientUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(CloseScreen as ContactPatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when the appointment is removed because the patient has already visited, the patient must be marked as visited`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .removeAppointmentReasonSelected(AlreadyVisited)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkPatientAsVisited(appointmentUuid) as ContactPatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when the appointment is removed because the patient has died, the patient must be marked as dead`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .removeAppointmentReasonSelected(Died)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkPatientAsDead(patientUuid = patientUuid, appointmentUuid = appointmentUuid) as ContactPatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when the appointment is removed because the patient is not responding, the appointment must be cancelled`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .removeAppointmentReasonSelected(NotResponding)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = PatientNotResponding) as ContactPatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when the appointment is removed because the phone number is invalid, the appointment must be cancelled`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .removeAppointmentReasonSelected(PhoneNumberNotWorking)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = InvalidPhoneNumber) as ContactPatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when the appointment is removed because the patient was transferred to another facility, the appointment must be cancelled`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .removeAppointmentReasonSelected(TransferredToAnotherFacility)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = TransferredToAnotherPublicHospital) as ContactPatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when the appointment is removed because the patient has moved to a private practitioner, the appointment must be cancelled`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .removeAppointmentReasonSelected(MovedToPrivatePractitioner)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = AppointmentCancelReason.MovedToPrivatePractitioner) as ContactPatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when the appointment is removed for any other reason, the appointment must be cancelled`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+        .removeAppointmentReasonSelected(OtherReason)
+
+    spec
+        .given(model)
+        .whenEvent(RemoveAppointmentDoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CancelAppointment(appointmentUuid = appointmentUuid, reason = AppointmentCancelReason.Other) as ContactPatientEffect)
         ))
   }
 

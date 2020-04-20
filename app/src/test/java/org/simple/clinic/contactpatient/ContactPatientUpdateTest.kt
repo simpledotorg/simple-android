@@ -434,6 +434,21 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the patient has been marked as visited, the sheet must be closed`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(PatientMarkedAsVisited)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseScreen as ContactPatientEffect)
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

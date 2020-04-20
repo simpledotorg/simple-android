@@ -32,3 +32,8 @@ data class SetReminderForAppointment(
 ): ContactPatientEffect()
 
 data class MarkPatientAsVisited(val appointmentUuid: UUID): ContactPatientEffect()
+
+data class MarkPatientAsDead(
+    val patientUuid: UUID,
+    val appointmentUuid: UUID
+): ContactPatientEffect()

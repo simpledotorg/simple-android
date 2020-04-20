@@ -5,6 +5,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
@@ -40,6 +41,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addConsumer(ShowManualDatePicker::class.java, { uiActions.showManualDatePicker(it.preselectedDate, it.datePickerBounds) }, schedulers.ui())
         .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))
         .addTransformer(MarkPatientAsVisited::class.java, markPatientAsVisited(schedulers.io()))
+        .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead(schedulers.io()))
         .build()
   }
 
@@ -97,6 +99,18 @@ class ContactPatientEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .doOnNext { appointmentRepository.markAsAlreadyVisited(it.appointmentUuid) }
           .map { PatientMarkedAsVisited }
+    }
+  }
+
+  private fun markPatientAsDead(
+      scheduler: Scheduler
+  ): ObservableTransformer<MarkPatientAsDead, ContactPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .doOnNext { patientRepository.updatePatientStatusToDead(it.patientUuid) }
+          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentUuid, AppointmentCancelReason.Dead) }
+          .map { PatientMarkedAsDead }
     }
   }
 }

@@ -83,3 +83,5 @@ data class RemoveAppointmentReasonSelected(
 }
 
 object PatientMarkedAsVisited: ContactPatientEvent()
+
+object PatientMarkedAsDead: ContactPatientEvent()

@@ -11,6 +11,7 @@ import org.simple.clinic.contactpatient.RemoveAppointmentReason.OtherReason
 import org.simple.clinic.contactpatient.RemoveAppointmentReason.PhoneNumberNotWorking
 import org.simple.clinic.contactpatient.RemoveAppointmentReason.TransferredToAnotherFacility
 import org.simple.clinic.contactpatient.UiMode.CallPatient
+import org.simple.clinic.contactpatient.UiMode.RemoveAppointment
 import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -82,6 +83,7 @@ class ContactPatientUpdate(
     return when (model.uiMode) {
       CallPatient -> dispatch(CloseScreen as ContactPatientEffect)
       SetAppointmentReminder -> next(model.changeUiModeTo(CallPatient))
+      RemoveAppointment -> noChange()
     }
   }
 

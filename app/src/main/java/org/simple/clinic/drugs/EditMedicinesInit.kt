@@ -4,9 +4,8 @@ import com.spotify.mobius.First
 import com.spotify.mobius.Init
 
 class EditMedicinesInit : Init<EditMedicinesModel, EditMedicinesEffect> {
-  
-  override fun init(model: EditMedicinesModel): First<EditMedicinesModel, EditMedicinesEffect> {
-    TODO("not implemented")
-  }
 
+  override fun init(model: EditMedicinesModel): First<EditMedicinesModel, EditMedicinesEffect> {
+    return First.first(model)
+  }
 }

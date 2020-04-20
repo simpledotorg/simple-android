@@ -258,6 +258,14 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
     setAppointmentReminderView.visibility = VISIBLE
   }
 
+  override fun switchToRemoveAppointmentView() {
+    // TODO (vs) 20/04/20: Implement later
+  }
+
+  override fun renderAppointmentRemoveReasons(reasons: List<RemoveAppointmentReason>, selectedReason: RemoveAppointmentReason?) {
+    // TODO (vs) 20/04/20: Implement later
+  }
+
   private fun normalCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.normalCallButtonClicked = null }

@@ -464,6 +464,21 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the appointment has been cancelled, the sheet must be closed`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(AppointmentMarkedAsCancelled)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseScreen as ContactPatientEffect)
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

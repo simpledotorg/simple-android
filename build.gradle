@@ -62,7 +62,7 @@ buildscript {
       guava               : '28.1-jre', // Used by the 'mobius-migration' library ONLY in tests
       uuidGenerator       : '3.2.0',
       assistedInject      : '0.5.2',
-      flipper             : '0.30.1',
+      flipper             : '0.37.0',
       soloader            : '0.5.1',
       asm                 : '7.2',
       ktlint              : '0.36.0',

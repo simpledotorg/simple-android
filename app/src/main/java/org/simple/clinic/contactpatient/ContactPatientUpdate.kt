@@ -54,6 +54,7 @@ class ContactPatientUpdate(
       BackClicked -> backClicks(model)
       is RemoveAppointmentReasonSelected -> next(model.removeAppointmentReasonSelected(event.reason))
       RemoveAppointmentDoneClicked -> removeAppointment(model)
+      RemoveFromOverdueListClicked -> next(model.changeUiModeTo(RemoveAppointment))
 
       PatientMarkedAsAgreedToVisit,
       ReminderSetForAppointment,
@@ -83,7 +84,7 @@ class ContactPatientUpdate(
     return when (model.uiMode) {
       CallPatient -> dispatch(CloseScreen as ContactPatientEffect)
       SetAppointmentReminder -> next(model.changeUiModeTo(CallPatient))
-      RemoveAppointment -> noChange()
+      RemoveAppointment -> next(model.changeUiModeTo(CallPatient))
     }
   }
 

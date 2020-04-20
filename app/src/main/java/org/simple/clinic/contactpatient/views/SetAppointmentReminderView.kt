@@ -19,7 +19,7 @@ import javax.inject.Named
 private typealias DecrementStepperClicked = () -> Unit
 private typealias IncrementStepperClicked = () -> Unit
 private typealias AppointmentDateClicked = () -> Unit
-private typealias DoneClicked = () -> Unit
+private typealias SetAppointmentReminderDoneClicked = () -> Unit
 
 class SetAppointmentReminderView(
     context: Context,
@@ -35,7 +35,7 @@ class SetAppointmentReminderView(
 
   var appointmentDateClicked: AppointmentDateClicked? = null
 
-  var doneClicked: DoneClicked? = null
+  var doneClicked: SetAppointmentReminderDoneClicked? = null
 
   override fun onFinishInflate() {
     super.onFinishInflate()

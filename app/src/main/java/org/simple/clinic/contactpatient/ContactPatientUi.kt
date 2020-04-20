@@ -7,12 +7,11 @@ import org.threeten.bp.LocalDate
 interface ContactPatientUi {
   fun switchToCallPatientView()
   fun switchToSetAppointmentReminderView()
+  fun switchToRemoveAppointmentView()
 
   fun renderPatientDetails(name: String, gender: Gender, age: Int, phoneNumber: String)
-
   fun showCallResultSection()
   fun hideCallResultSection()
-
   fun showSecureCallUi()
   fun hideSecureCallUi()
 
@@ -21,10 +20,10 @@ interface ContactPatientUi {
       selectedAppointmentReminderPeriod: TimeToAppointment,
       selectedDate: LocalDate
   )
-
   fun disablePreviousReminderDateStepper()
   fun enablePreviousReminderDateStepper()
-
   fun disableNextReminderDateStepper()
   fun enableNextReminderDateStepper()
+
+  fun renderAppointmentRemoveReasons(reasons: List<RemoveAppointmentReason>, selectedReason: RemoveAppointmentReason?)
 }

@@ -266,6 +266,14 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
     // TODO (vs) 20/04/20: Implement later
   }
 
+  override fun enableRemoveAppointmentDoneButton() {
+    // TODO (vs) 20/04/20: Implement later
+  }
+
+  override fun disableRemoveAppointmentDoneButton() {
+    // TODO (vs) 20/04/20: Implement later
+  }
+
   private fun normalCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.normalCallButtonClicked = null }

@@ -57,6 +57,9 @@ data class ContactPatientModel(
   val hasLoadedAppointment: Boolean
     get() = appointment != null
 
+  val hasSelectedARemoveAppointmentReason: Boolean
+    get() = selectedRemoveAppointmentReason != null
+
   fun patientProfileLoaded(patientProfile: PatientProfile): ContactPatientModel {
     return copy(patientProfile = patientProfile)
   }

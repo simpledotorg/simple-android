@@ -26,4 +26,6 @@ interface ContactPatientUi {
   fun enableNextReminderDateStepper()
 
   fun renderAppointmentRemoveReasons(reasons: List<RemoveAppointmentReason>, selectedReason: RemoveAppointmentReason?)
+  fun enableRemoveAppointmentDoneButton()
+  fun disableRemoveAppointmentDoneButton()
 }

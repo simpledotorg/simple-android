@@ -5,13 +5,23 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
+import org.simple.clinic.drugs.EditMedicinesEffect
+import org.simple.clinic.drugs.EditMedicinesEffectHandler
+import org.simple.clinic.drugs.EditMedicinesEvent
+import org.simple.clinic.drugs.EditMedicinesInit
+import org.simple.clinic.drugs.EditMedicinesModel
+import org.simple.clinic.drugs.EditMedicinesUiRenderer
+import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.facility.FacilityRepository
@@ -20,6 +30,7 @@ import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -28,7 +39,7 @@ class PrescribedDrugsScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<PrescribedDrugUi>()
+  private val ui = mock<PrescribedDrugUi>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val protocolRepository = mock<ProtocolRepository>()
@@ -42,6 +53,25 @@ class PrescribedDrugsScreenControllerTest {
   )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
+  private lateinit var fixture: MobiusTestFixture<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect>
+
+  @Before
+  fun setup() {
+    val editMedicinesUiRenderer = EditMedicinesUiRenderer(ui)
+    fixture = MobiusTestFixture(
+        uiEvents.ofType(),
+        EditMedicinesModel(),
+        EditMedicinesInit(),
+        EditMedicinesUpdate(),
+        EditMedicinesEffectHandler(),
+        editMedicinesUiRenderer::render
+    )
+  }
+
+  @After
+  fun tearDown() {
+    fixture.dispose()
+  }
 
   @Test
   fun `should correctly construct RecyclerView models from protocol drugs and prescribed drugs`() {
@@ -116,7 +146,7 @@ class PrescribedDrugsScreenControllerTest {
         CustomPrescribedDrugListItem(fooPrescription, false),
         CustomPrescribedDrugListItem(barPrescription, true))
 
-    verify(screen).populateDrugsList(expectedUiModels)
+    verify(ui).populateDrugsList(expectedUiModels)
   }
 
   @Test
@@ -131,7 +161,7 @@ class PrescribedDrugsScreenControllerTest {
     uiEvents.onNext(AddNewPrescriptionClicked)
 
     //then
-    verify(screen).showNewPrescriptionEntrySheet(patientUuid)
+    verify(ui).showNewPrescriptionEntrySheet(patientUuid)
   }
 
   @Parameters(
@@ -154,7 +184,7 @@ class PrescribedDrugsScreenControllerTest {
     uiEvents.onNext(ProtocolDrugClicked(drugName = drugName, prescriptionForProtocolDrug = null))
 
     //then
-    verify(screen).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid, prescribedDrugUuid = null)
+    verify(ui).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid, prescribedDrugUuid = null)
   }
 
   @Test
@@ -167,18 +197,7 @@ class PrescribedDrugsScreenControllerTest {
     uiEvents.onNext(CustomPrescriptionClicked(prescribedDrug))
 
     //then
-    verify(screen).showUpdateCustomPrescriptionSheet(prescribedDrug)
-  }
-
-  private fun setupController() {
-    val controller = PrescribedDrugsScreenController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
-
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
+    verify(ui).showUpdateCustomPrescriptionSheet(prescribedDrug)
   }
 
   @Test
@@ -188,7 +207,19 @@ class PrescribedDrugsScreenControllerTest {
     uiEvents.onNext(PrescribedDrugsDoneClicked)
 
     //then
-    verify(screen).goBackToPatientSummary()
+    verify(ui).goBackToPatientSummary()
   }
 
+  private fun setupController() {
+    val controller = PrescribedDrugsScreenController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
+
+    uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(ui) }
+
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
+
+    fixture.start()
+  }
 }

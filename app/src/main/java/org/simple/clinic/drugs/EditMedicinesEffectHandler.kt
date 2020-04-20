@@ -7,6 +7,6 @@ import io.reactivex.ObservableTransformer
 class EditMedicinesEffectHandler : ObservableTransformer<EditMedicinesEffect, EditMedicinesEvent> {
 
   override fun apply(upstream: Observable<EditMedicinesEffect>): ObservableSource<EditMedicinesEvent> {
-    TODO("not implemented")
+    return Observable.empty()
   }
 }

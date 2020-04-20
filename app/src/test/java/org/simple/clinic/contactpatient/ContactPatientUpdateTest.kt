@@ -449,6 +449,21 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the patient has been marked as dead, the sheet must be closed`() {
+    val model = defaultModel()
+        .patientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Just(overdueAppointment))
+
+    spec
+        .given(model)
+        .whenEvent(PatientMarkedAsDead)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseScreen as ContactPatientEffect)
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = proxyPhoneNumberForSecureCalls,

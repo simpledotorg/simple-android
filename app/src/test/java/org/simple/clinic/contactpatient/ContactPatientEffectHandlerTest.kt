@@ -221,4 +221,20 @@ class ContactPatientEffectHandlerTest {
     testCase.assertOutgoingEvents(PatientMarkedAsDead)
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when the cancel appointment effect is received, the appointment must be cancelled with the given reason`() {
+    // given
+    val appointmentUuid = UUID.fromString("e9a1b50b-6dfe-4d54-aa39-49ddb2ab4bb4")
+    val reason = AppointmentCancelReason.InvalidPhoneNumber
+
+    // when
+    testCase.dispatch(CancelAppointment(appointmentUuid, reason))
+
+    // then
+    verify(appointmentRepository).cancelWithReason(appointmentUuid, reason)
+    verifyNoMoreInteractions(appointmentRepository)
+    testCase.assertOutgoingEvents(AppointmentMarkedAsCancelled)
+    verifyZeroInteractions(uiActions)
+  }
 }

@@ -180,4 +180,15 @@ class PrescribedDrugsScreenControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
   }
+
+  @Test
+  fun `when done click event is received then go back to patient summary`() {
+    //when
+    setupController()
+    uiEvents.onNext(PrescribedDrugsDoneClicked)
+
+    //then
+    verify(screen).goBackToPatientSummary()
+  }
+
 }

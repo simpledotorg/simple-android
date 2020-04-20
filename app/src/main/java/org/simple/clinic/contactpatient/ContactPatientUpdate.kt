@@ -41,13 +41,13 @@ class ContactPatientUpdate(
       is OverdueAppointmentLoaded -> next(model.overdueAppointmentLoaded(event.overdueAppointment))
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
-      PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment.uuid))
+      PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointmentUuid))
       NextReminderDateClicked -> selectNextReminderDate(model)
       PreviousReminderDateClicked -> selectPreviousReminderDate(model)
       is ManualDateSelected -> updateWithManuallySelectedDate(event, model)
       AppointmentDateClicked -> showManualDatePicker(model)
       SaveAppointmentReminderClicked -> {
-        val appointmentUuid = model.appointment!!.get().appointment.uuid
+        val appointmentUuid = model.appointmentUuid
         dispatch(SetReminderForAppointment(appointmentUuid, model.selectedAppointmentDate))
       }
       RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))
@@ -64,7 +64,7 @@ class ContactPatientUpdate(
   }
 
   private fun removeAppointment(model: ContactPatientModel): Next<ContactPatientModel, ContactPatientEffect> {
-    val appointmentUuid = model.appointment!!.get().appointment.uuid
+    val appointmentUuid = model.appointmentUuid
 
     val effect = when (model.selectedRemoveAppointmentReason!!) {
       AlreadyVisited -> MarkPatientAsVisited(appointmentUuid = appointmentUuid)

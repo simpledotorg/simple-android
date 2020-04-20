@@ -22,7 +22,8 @@ data class ContactPatientModel(
     val appointment: ParcelableOptional<OverdueAppointment>? = null,
     val secureCallingFeatureEnabled: Boolean,
     val potentialAppointments: List<PotentialAppointmentDate>,
-    val selectedAppointmentDate: LocalDate
+    val selectedAppointmentDate: LocalDate,
+    val selectedRemoveAppointmentReason: RemoveAppointmentReason?
 ) : Parcelable {
 
   companion object {
@@ -44,7 +45,8 @@ data class ContactPatientModel(
           uiMode = mode,
           secureCallingFeatureEnabled = secureCallingFeatureEnabled,
           potentialAppointments = potentialAppointments,
-          selectedAppointmentDate = potentialAppointments.first().scheduledFor
+          selectedAppointmentDate = potentialAppointments.first().scheduledFor,
+          selectedRemoveAppointmentReason = null
       )
     }
   }
@@ -69,5 +71,9 @@ data class ContactPatientModel(
 
   fun changeUiModeTo(newMode: UiMode): ContactPatientModel {
     return copy(uiMode = newMode)
+  }
+
+  fun removeAppointmentReasonSelected(reason: RemoveAppointmentReason): ContactPatientModel {
+    return copy(selectedRemoveAppointmentReason = reason)
   }
 }

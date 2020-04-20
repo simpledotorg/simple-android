@@ -73,4 +73,11 @@ object RemindToCallLaterClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Remind to call later clicked"
 }
 
-object BackClicked: ContactPatientEvent()
+object BackClicked : ContactPatientEvent()
+
+data class RemoveAppointmentReasonSelected(
+    val reason: RemoveAppointmentReason
+) : ContactPatientEvent() {
+  override val analyticsName: String
+    get() = "Contact Patient:Appointment cancel reason selected:$reason"
+}

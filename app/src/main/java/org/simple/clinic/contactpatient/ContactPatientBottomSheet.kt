@@ -209,7 +209,6 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   }
 
   override fun renderSelectedAppointmentDate(
-      potentialAppointmentReminderPeriods: List<TimeToAppointment>,
       selectedAppointmentReminderPeriod: TimeToAppointment,
       selectedDate: LocalDate
   ) {

@@ -46,7 +46,7 @@ class SetAppointmentReminderUiRendererTest {
     verify(ui).enablePreviousReminderDateStepper()
     verify(ui).enableNextReminderDateStepper()
 
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verifyNoMoreInteractions(ui)
   }
 
@@ -65,7 +65,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).switchToSetAppointmentReminderView()
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enableNextReminderDateStepper()
 
     verify(ui).disablePreviousReminderDateStepper()
@@ -87,7 +87,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).switchToSetAppointmentReminderView()
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enableNextReminderDateStepper()
 
     verify(ui).enablePreviousReminderDateStepper()
@@ -109,7 +109,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).switchToSetAppointmentReminderView()
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
 
     verify(ui).disableNextReminderDateStepper()
@@ -131,7 +131,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).switchToSetAppointmentReminderView()
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
 
     verify(ui).enableNextReminderDateStepper()
@@ -153,7 +153,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).switchToSetAppointmentReminderView()
-    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
 
     verify(ui).enableNextReminderDateStepper()

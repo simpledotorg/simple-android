@@ -12,7 +12,6 @@ class BloodSugarHistoryScreenUpdate : Update<BloodSugarHistoryScreenModel, Blood
   ): Next<BloodSugarHistoryScreenModel, BloodSugarHistoryScreenEffect> {
     return when (event) {
       is PatientLoaded -> next(model.patientLoaded(event.patient))
-      is BloodSugarHistoryLoaded -> next(model.bloodSugarsLoaded(event.bloodSugars))
       is AddNewBloodSugarClicked -> dispatch(OpenBloodSugarEntrySheet(model.patientUuid))
       is BloodSugarClicked -> dispatch(OpenBloodSugarUpdateSheet(event.bloodSugarMeasurement))
     }

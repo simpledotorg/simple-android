@@ -71,25 +71,6 @@ class OverdueScreenControllerTest {
   }
 
   @Test
-  fun `when "remind to call later" is clicked, appointment reminder sheet should open`() {
-    val appointmentUuid = UUID.randomUUID()
-    uiEvents.onNext(RemindToCallLaterClicked(appointmentUuid))
-
-    verify(screen).showAppointmentReminderSheet(appointmentUuid)
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
-  fun `when "mark patient as agreed to visit" is clicked, then relevant repository method should be called`() {
-    val appointmentUuid = UUID.randomUUID()
-
-    uiEvents.onNext(AgreedToVisitClicked(appointmentUuid))
-
-    verify(repository).markAsAgreedToVisit(appointmentUuid, userClock)
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
   fun `when showPhoneMaskBottomSheet config is true and call patient is clicked then open phone mask bottom sheet`() {
     val patientUuid = UUID.randomUUID()
 

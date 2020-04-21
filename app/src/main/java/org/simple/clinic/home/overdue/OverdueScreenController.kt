@@ -32,9 +32,6 @@ class OverdueScreenController @Inject constructor(
 
     return Observable.mergeArray(
         screenSetup(replayedEvents),
-        markedAsAgreedToVisit(replayedEvents),
-        rescheduleAppointment(replayedEvents),
-        removeAppointment(replayedEvents),
         openPhoneMaskBottomSheet(replayedEvents)
     )
   }
@@ -69,22 +66,4 @@ class OverdueScreenController @Inject constructor(
       events
           .ofType<CallPatientClicked>()
           .map { { ui: Ui -> ui.openPhoneMaskBottomSheet(it.patientUuid) } }
-
-  private fun markedAsAgreedToVisit(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<AgreedToVisitClicked>()
-        .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointmentUuid, userClock) }
-        .flatMap { Observable.empty<UiChange>() }
-  }
-
-  private fun rescheduleAppointment(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RemindToCallLaterClicked>()
-        .map { { ui: Ui -> ui.showAppointmentReminderSheet(it.appointmentUuid) } }
-  }
-
-  private fun removeAppointment(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RemoveFromListClicked>()
-        .map { { ui: Ui -> ui.showRemovePatientReasonSheet(it.appointmentUuid, it.patientUuid) } }
-  }
 }

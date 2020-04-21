@@ -16,8 +16,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.locationRectOnScreen
-import org.simple.clinic.widgets.marginLayoutParams
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
@@ -82,8 +80,6 @@ data class OverdueAppointmentRow(
     }
   }
 
-  private var cardExpanded = false
-
   override fun layoutResId(): Int = R.layout.item_overdue_list_patient
 
   override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
@@ -95,32 +91,8 @@ data class OverdueAppointmentRow(
       holder: ViewHolderX,
       eventSubject: Subject<UiEvent>
   ) {
-    val containerView = holder.containerView
-    containerView.setOnClickListener {
-      cardExpanded = cardExpanded.not()
-      if (cardExpanded) {
-        eventSubject.onNext(AppointmentExpanded(patientUuid))
-      }
-      updateBottomLayoutVisibility(holder)
-      updatePhoneNumberViewVisibility(holder)
-
-      containerView.post {
-        val itemLocation = containerView.locationRectOnScreen()
-        val itemBottomWithMargin = itemLocation.bottom + containerView.marginLayoutParams.bottomMargin
-        eventSubject.onNext(CardExpansionToggled(itemBottomWithMargin))
-      }
-    }
     holder.callButton.setOnClickListener {
       eventSubject.onNext(CallPatientClicked(patientUuid))
-    }
-    holder.agreedToVisitTextView.setOnClickListener {
-      eventSubject.onNext(AgreedToVisitClicked(appointmentUuid))
-    }
-    holder.remindLaterTextView.setOnClickListener {
-      eventSubject.onNext(RemindToCallLaterClicked(appointmentUuid))
-    }
-    holder.removeFromListTextView.setOnClickListener {
-      eventSubject.onNext(RemoveFromListClicked(appointmentUuid, patientUuid))
     }
   }
 
@@ -135,7 +107,6 @@ data class OverdueAppointmentRow(
     holder.patientLastSeenTextView.text = lastSeenDate
 
     holder.callButton.visibility = if (phoneNumber == null) GONE else VISIBLE
-    holder.phoneNumberTextView.text = phoneNumber
 
     holder.isAtHighRiskTextView.visibility = if (isAtHighRisk) VISIBLE else GONE
 
@@ -147,9 +118,6 @@ data class OverdueAppointmentRow(
 
     holder.diagnosisLabelContainer.visibleOrGone(showDiagnosisLabel)
     holder.diagnosisTextView.text = diagnosisText(context)
-
-    updateBottomLayoutVisibility(holder)
-    updatePhoneNumberViewVisibility(holder)
   }
 
   private fun diagnosisText(context: Context): CharSequence {
@@ -162,17 +130,6 @@ data class OverdueAppointmentRow(
         .ifEmpty { listOf(R.string.overdue_list_item_diagnosis_none) }
         .joinToString { context.getString(it) }
   }
-
-  private fun updateBottomLayoutVisibility(holder: ViewHolderX) {
-    holder.actionsContainer.visibleOrGone(cardExpanded)
-  }
-
-  private fun updatePhoneNumberViewVisibility(holder: ViewHolderX) {
-    val shouldShowPhoneNumberView = cardExpanded && phoneNumber != null
-    holder.phoneNumberTextView.visibleOrGone(shouldShowPhoneNumberView)
-  }
-
-  data class CardExpansionToggled(val cardBottomWithMargin: Int) : UiEvent
 
   class DiffCallback : DiffUtil.ItemCallback<OverdueAppointmentRow>() {
     override fun areItemsTheSame(oldItem: OverdueAppointmentRow, newItem: OverdueAppointmentRow): Boolean {

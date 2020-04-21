@@ -306,10 +306,6 @@
   </plurals>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">Visited</string>
-  <string name="overduelist_agreed_to_visit">Mark patient as ‘agreed to visit’</string>
-  <string name="overduelist_remind_call_later">Remind to call later…</string>
-  <string name="overduelist_remove_from_list">Remove from overdue list…</string>
-  <string name="overduelist_result_of_call">Result of call</string>
   <string name="overduelist_high_risk">High risk</string>
 
   <!-- Phone number masking -->

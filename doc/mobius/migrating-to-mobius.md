@@ -48,7 +48,7 @@ This stage is where we break up the controller into the Mobius components. There
    -  Extract the event stream in the screen to a `lazy` delegated property.
    -  Move the composition of the `ReportAnalyticsEvents` from the controller to this stream in the screen.
    -  Share this stream using `Observable#share()`
-   -  Add the `MobiusDelegate` to the screen and hook into the lifecyle methods.
+   -  Add the `MobiusDelegate` to the screen and hook into the lifecyle methods. Pass `events.ofType()` as events to the delegate.
 5. If the UI interface includes one-off methods (navigating to another screen, showing a pop-up, etc), create a blank `UiActions` interface and implement this on the UI interface. This class should also be added as a dependency on the effect handler.
 
 Run all tests in the screen (from the package if the test class has been split into multiple) now to ensure that nothing has been broken. If it has, investigate and fix before proceeding.

@@ -1,6 +1,8 @@
 package org.simple.clinic.settings
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
@@ -62,6 +64,10 @@ class SettingsScreen(
     TheActivity.component.inject(this)
 
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
+
+    updateAppVersionButton.setOnClickListener {
+      launchPlayStoreForUpdate()
+    }
   }
 
   override fun onAttachedToWindow() {
@@ -101,5 +107,20 @@ class SettingsScreen(
 
   override fun displayAppVersion(version: String) {
     appVersion.text = context.getString(R.string.settings_software_version, version)
+  }
+
+  override fun showAppUpdateButton() {
+    updateAppVersionButton.visibility = View.VISIBLE
+  }
+
+  override fun hideAppUpdateButton() {
+    updateAppVersionButton.visibility = View.GONE
+  }
+
+  private fun launchPlayStoreForUpdate() {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+      data = Uri.parse("https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
+    }
+    context.startActivity(intent)
   }
 }

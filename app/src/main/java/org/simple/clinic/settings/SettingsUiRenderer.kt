@@ -34,5 +34,11 @@ class SettingsUiRenderer(private val ui: SettingsUi) : ViewRenderer<SettingsMode
     if (model.appVersionQueried) {
       ui.displayAppVersion(model.appVersion!!)
     }
+
+    if (model.isUpdateAvailable == true) {
+      ui.showAppUpdateButton()
+    } else {
+      ui.hideAppUpdateButton()
+    }
   }
 }

@@ -66,4 +66,19 @@ class SettingsUiRendererTest {
     verify(ui).setChangeLanguageButtonVisible()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when the app version is loaded, render them on the UI`() {
+    // given
+    val appVersion = "1.0.0"
+    val model = defaultModel.appVersionLoaded(appVersion)
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).displayAppVersion(appVersion)
+    verifyNoMoreInteractions(ui)
+  }
+
 }

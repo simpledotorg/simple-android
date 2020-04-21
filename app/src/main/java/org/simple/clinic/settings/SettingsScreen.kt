@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_settings.view.*
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -96,5 +97,9 @@ class SettingsScreen(
 
   override fun openLanguageSelectionScreen() {
     screenRouter.push(ChangeLanguageScreenKey())
+  }
+
+  override fun displayAppVersion(version: String) {
+    appVersion.text = context.getString(R.string.settings_software_version, version)
   }
 }

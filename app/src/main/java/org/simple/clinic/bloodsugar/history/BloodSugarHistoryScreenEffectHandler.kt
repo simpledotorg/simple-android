@@ -30,7 +30,6 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<BloodSugarHistoryScreenEffect, BloodSugarHistoryScreenEvent>()
         .addTransformer(LoadPatient::class.java, loadPatient(schedulersProvider.io()))
-        .addTransformer(LoadBloodSugarHistory::class.java, loadBloodSugarHistory(schedulersProvider.io()))
         .addConsumer(OpenBloodSugarEntrySheet::class.java, { uiActions.openBloodSugarEntrySheet(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenBloodSugarUpdateSheet::class.java, { uiActions.openBloodSugarUpdateSheet(it.bloodSugarMeasurement) }, schedulersProvider.ui())
         .addConsumer(ShowBloodSugars::class.java, {
@@ -40,20 +39,6 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
           uiActions.showBloodSugars(dataSourceFactory)
         }, schedulersProvider.ui())
         .build()
-  }
-
-  private fun loadBloodSugarHistory(
-      scheduler: Scheduler
-  ): ObservableTransformer<LoadBloodSugarHistory, BloodSugarHistoryScreenEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .switchMap {
-            bloodSugarRepository
-                .allBloodSugars(it.patientUuid)
-                .subscribeOn(scheduler)
-          }
-          .map(::BloodSugarHistoryLoaded)
-    }
   }
 
   private fun loadPatient(

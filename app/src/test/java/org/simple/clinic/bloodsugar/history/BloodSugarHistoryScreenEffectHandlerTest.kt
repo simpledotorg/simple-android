@@ -56,24 +56,6 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   }
 
   @Test
-  fun `when load blood sugars history effect is received, then load all blood sugars`() {
-    // given
-    val bloodSugarMeasurement = TestData.bloodSugarMeasurement(
-        uuid = UUID.fromString("c593e506-e603-4f34-9ea8-89913cdbce9e"),
-        patientUuid = patientUuid
-    )
-    val bloodSugars = listOf(bloodSugarMeasurement)
-    whenever(bloodSugarRepository.allBloodSugars(patientUuid)) doReturn Observable.just(bloodSugars)
-
-    // when
-    testCase.dispatch(LoadBloodSugarHistory(patientUuid))
-
-    // then
-    testCase.assertOutgoingEvents(BloodSugarHistoryLoaded(bloodSugars))
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when open blood sugar entry sheet effect is received, then open blood sugar entry sheet`() {
     // when
     testCase.dispatch(OpenBloodSugarEntrySheet(patientUuid))

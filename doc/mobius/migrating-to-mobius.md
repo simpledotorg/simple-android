@@ -48,7 +48,7 @@ This stage is where we break up the controller into the Mobius components. There
    -  Extract the event stream in the screen to a `lazy` delegated property.
    -  Move the composition of the `ReportAnalyticsEvents` from the controller to this stream in the screen.
    -  Share this stream using `Observable#share()`
-   -  Add the `MobiusDelegate` to the screen and hook into the lifecyle methods. Pass `events.ofType()` as events to the delegate.
+   -  Add the `MobiusDelegate` to the screen and hook into the lifecycle methods. Pass `events.ofType()` as events to the delegate.
 5. If the UI interface includes one-off methods (navigating to another screen, showing a pop-up, etc), create a blank `UiActions` interface and implement this on the UI interface. This class should also be added as a dependency on the effect handler.
 
 Run all tests in the screen (from the package if the test class has been split into multiple) now to ensure that nothing has been broken. If it has, investigate and fix before proceeding.
@@ -83,15 +83,16 @@ Run all tests in the screen (from the package if the test class has been split i
 
 #### Clean-up
 Now that we have migrated all the code to Mobius, we can delete the older code.
-	- Delete the controller from the tests and the `setupController` method.
-	- Stop extending `UiActions` on the `Ui` interface.
-	- Change the tests to verify one-off actions on the `UiActions` mock and replace the implementation passed to the `EffectHandler` with the mock.
-	- Remove the controller from the screen.
-	- Stop sharing the event stream in the screen.
-	- Delete the controller class.
-	- If the screen has a custom saved state that is being persisted, it might be prudent to move this saved state into the `Model`.
-	- We can also delete the event stream that sets up the `ScreenCreated` events since that will be handled by the `Init` function.
-	- Replace the `Controller` prefix in the older test classes with `Logic`.
+
+1. Delete the controller from the tests and the `setupController` method.
+2. Stop extending `UiActions` on the `Ui` interface.
+3. Change the tests to verify one-off actions on the `UiActions` mock and replace the implementation passed to the `EffectHandler` with the mock.
+4. Remove the controller from the screen.
+5. Stop sharing the event stream in the screen.
+6. Delete the controller class.
+7. If the screen has a custom saved state that is being persisted, it might be prudent to move this saved state into the `Model`.
+8. We can also delete the event stream that sets up the `ScreenCreated` events since that will be handled by the `Init` function.
+9. Replace the `Controller` prefix in the older test classes with `Logic`.
 
 ### Sterilize
 This is where we do the "final" refactoring, so to speak.

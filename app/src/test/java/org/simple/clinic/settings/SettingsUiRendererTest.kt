@@ -12,7 +12,7 @@ class SettingsUiRendererTest {
 
   private val ui = mock<SettingsUi>()
   private val renderer = SettingsUiRenderer(ui)
-  private val defaultModel = SettingsModel.FETCHING_USER_DETAILS
+  private val defaultModel = SettingsModel.default(applicationId = "org.simple")
 
   @Test
   fun `when the user details are being fetched, do nothing`() {

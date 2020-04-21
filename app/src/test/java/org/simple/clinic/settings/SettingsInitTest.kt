@@ -13,20 +13,21 @@ class SettingsInitTest {
   private val spec = InitSpec<SettingsModel, SettingsEffect>(SettingsInit())
 
   @Test
-  fun `when the screen is created, the user details and current language must be fetched`() {
+  fun `when screen is created, then user details, then load initial data`() {
     spec
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(LoadUserDetailsEffect, LoadCurrentLanguageEffect)
+            hasEffects(LoadUserDetailsEffect, LoadCurrentLanguageEffect, LoadAppVersionEffect(defaultModel.applicationId))
         ))
   }
 
   @Test
-  fun `when the screen is restored, the current language must be fetched`() {
+  fun `when the screen is restored, then load initial data`() {
     val restoredModel = defaultModel
         .userDetailsFetched(name = "Anish Acharya", phoneNumber = "1234567890")
         .currentLanguageFetched(ProvidedLanguage(displayName = "English", languageCode = "en-IN"))
+        .appVersionLoaded("1.0.0")
 
     spec
         .whenInit(restoredModel)

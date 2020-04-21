@@ -1,11 +1,11 @@
 package org.simple.clinic.settings
 
-import android.content.pm.PackageManager
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
-import io.reactivex.Scheduler
+import org.simple.clinic.appupdate.AppUpdateState
+import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -15,6 +15,7 @@ class SettingsEffectHandler @AssistedInject constructor(
     private val settingsRepository: SettingsRepository,
     private val schedulersProvider: SchedulersProvider,
     private val appVersionFetcher: AppVersionFetcher,
+    private val appUpdateAvailability: CheckAppUpdateAvailability,
     @Assisted private val uiActions: UiActions
 ) {
 
@@ -29,6 +30,7 @@ class SettingsEffectHandler @AssistedInject constructor(
       .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage())
       .addAction(OpenLanguageSelectionScreenEffect::class.java, uiActions::openLanguageSelectionScreen, schedulersProvider.ui())
       .addTransformer(LoadAppVersionEffect::class.java, loadAppVersion())
+      .addTransformer(CheckAppUpdateAvailable::class.java, checkAppUpdateAvailability())
       .build()
 
   private fun loadUserDetails(): ObservableTransformer<LoadUserDetailsEffect, SettingsEvent> {
@@ -54,6 +56,18 @@ class SettingsEffectHandler @AssistedInject constructor(
           .map { appVersionEffect ->
             val appVersionName = appVersionFetcher.appVersion(appVersionEffect.applicationId)
             AppVersionLoaded(appVersionName)
+          }
+    }
+  }
+
+  private fun checkAppUpdateAvailability(): ObservableTransformer<CheckAppUpdateAvailable, SettingsEvent> {
+    return ObservableTransformer { effectStream ->
+      effectStream
+          .switchMap {
+            appUpdateAvailability.listenAllUpdates()
+          }
+          .map {
+            AppUpdateAvailabilityChecked(it is AppUpdateState.ShowAppUpdate)
           }
     }
   }

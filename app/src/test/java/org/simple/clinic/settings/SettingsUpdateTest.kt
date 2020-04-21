@@ -69,4 +69,15 @@ class SettingsUpdateTest {
         ))
   }
 
+  @Test
+  fun `when there is app update, then ui must be updated`() {
+    val isUpdateAvailable = true
+
+    spec
+        .given(defaultModel)
+        .whenEvent(AppUpdateAvailabilityChecked(isUpdateAvailable))
+        .then(assertThatNext(
+            hasModel(defaultModel.checkedAppUpdate(isUpdateAvailable))
+        ))
+  }
 }

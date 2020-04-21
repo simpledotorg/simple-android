@@ -1,7 +1,5 @@
 package org.simple.clinic.settings
 
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -13,6 +11,9 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.appupdate.AppUpdateState
+import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
+import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -28,12 +29,14 @@ class SettingsEffectHandlerTest {
   private val settingsRepository = mock<SettingsRepository>()
   private val uiActions = mock<UiActions>()
   private val appVersionFetcher = mock<AppVersionFetcher>()
+  private val checkAppUpdateAvailability = mock<CheckAppUpdateAvailability>()
 
   private val effectHandler = SettingsEffectHandler(
       userSession = userSession,
       settingsRepository = settingsRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
       appVersionFetcher = appVersionFetcher,
+      appUpdateAvailability = checkAppUpdateAvailability,
       uiActions = uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -118,6 +121,20 @@ class SettingsEffectHandlerTest {
     // then
     verifyZeroInteractions(uiActions)
     testCase.assertOutgoingEvents(AppVersionLoaded(versionName))
+  }
+
+  @Test
+  fun `when check app update availability effect is received, then app needs to check if an update is available`() {
+    // given
+    val appUpdateState = ShowAppUpdate
+    whenever(checkAppUpdateAvailability.listenAllUpdates()) doReturn Observable.just<AppUpdateState>(appUpdateState)
+
+    // when
+    testCase.dispatch(CheckAppUpdateAvailable)
+
+    // then
+    verifyZeroInteractions(uiActions)
+    testCase.assertOutgoingEvents(AppUpdateAvailabilityChecked(true))
   }
 
 }

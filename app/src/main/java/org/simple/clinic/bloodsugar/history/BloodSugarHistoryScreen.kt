@@ -7,6 +7,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.paging.Config
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -19,7 +20,6 @@ import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryItemClicked
-import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItemDiffCallback
 import org.simple.clinic.bloodsugar.history.adapter.NewBloodSugarClicked
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
@@ -38,7 +38,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.dp
 import org.threeten.bp.format.DateTimeFormatter
@@ -78,7 +78,7 @@ class BloodSugarHistoryScreen(
   @Inject
   lateinit var utcClock: UtcClock
 
-  private val bloodSugarHistoryAdapter = ItemAdapter(BloodSugarHistoryListItemDiffCallback())
+  private val bloodSugarHistoryAdapter = PagingItemAdapter(BloodSugarHistoryListItemDiffCallback())
 
   private val events: Observable<BloodSugarHistoryScreenEvent> by unsafeLazy {
     Observable
@@ -145,14 +145,7 @@ class BloodSugarHistoryScreen(
   }
 
   override fun showBloodSugarHistory(bloodSugars: List<BloodSugarMeasurement>) {
-    bloodSugarHistoryAdapter.submitList(BloodSugarHistoryListItem.from(
-        bloodSugars,
-        userClock,
-        dateFormatter,
-        timeFormatter,
-        config.bloodSugarEditableDuration,
-        utcClock
-    ))
+    // This method will be removed in later commits
   }
 
   override fun openBloodSugarEntrySheet(patientUuid: UUID) {
@@ -165,8 +158,19 @@ class BloodSugarHistoryScreen(
     activity.startActivity(intent)
   }
 
+  @SuppressLint("CheckResult")
   override fun showBloodSugars(dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) {
-
+    val detaches = detaches()
+    // Initial load size hint should be a multiple of page size
+    val config = Config(
+        pageSize = 20,
+        prefetchDistance = 10,
+        initialLoadSizeHint = 40,
+        enablePlaceholders = false
+    )
+    dataSourceFactory.toObservable(config = config, detaches = detaches)
+        .takeUntil(detaches)
+        .subscribe(bloodSugarHistoryAdapter::submitList)
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {

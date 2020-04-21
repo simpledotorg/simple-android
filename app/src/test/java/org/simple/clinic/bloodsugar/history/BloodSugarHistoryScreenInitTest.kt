@@ -18,7 +18,7 @@ class BloodSugarHistoryScreenInitTest {
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(LoadPatient(patientUuid), LoadBloodSugarHistory(model.patientUuid), ShowBloodSugars(model.patientUuid))
+            hasEffects(LoadPatient(patientUuid), ShowBloodSugars(model.patientUuid))
         ))
   }
 }

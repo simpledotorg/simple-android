@@ -6,6 +6,7 @@ import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestDataModule
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
+import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
 import org.simple.clinic.bloodsugar.sync.BloodSugarSyncAndroidTest
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceTest
@@ -92,4 +93,5 @@ interface TestAppComponent {
   fun inject(target: Migration58AndroidTest)
   fun inject(target: Migration59AndroidTest)
   fun inject(target: BloodPressureHistoryListItemDataSourceTest)
+  fun inject(target: BloodSugarHistoryListItemDataSourceTest)
 }

@@ -15,8 +15,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreenKey
-import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -26,19 +24,13 @@ class SettingsScreen(
 ) : LinearLayout(context, attributeSet), SettingsUi, UiActions {
 
   @Inject
-  lateinit var userSession: UserSession
-
-  @Inject
-  lateinit var schedulersProvider: SchedulersProvider
-
-  @Inject
   lateinit var crashReporter: CrashReporter
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var settingsRepository: SettingsRepository
+  lateinit var settingsEffectHandler: SettingsEffectHandler.Factory
 
   private val uiRenderer: SettingsUiRenderer = SettingsUiRenderer(this)
 
@@ -54,7 +46,7 @@ class SettingsScreen(
         defaultModel = SettingsModel.FETCHING_USER_DETAILS,
         init = SettingsInit(),
         update = SettingsUpdate(),
-        effectHandler = SettingsEffectHandler.create(userSession, settingsRepository, this, schedulersProvider),
+        effectHandler = settingsEffectHandler.create(this).build(),
         modelUpdateListener = uiRenderer::render,
         crashReporter = crashReporter
     )

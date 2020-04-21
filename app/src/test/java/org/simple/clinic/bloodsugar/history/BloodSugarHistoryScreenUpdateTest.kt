@@ -29,31 +29,6 @@ class BloodSugarHistoryScreenUpdateTest {
   }
 
   @Test
-  fun `when blood sugars are loaded, then show blood sugars`() {
-    val bloodSugar1 = TestData.bloodSugarMeasurement(
-        uuid = UUID.fromString("6ac799f9-1c2f-4586-a670-297efd29f776"),
-        patientUuid = patientUuid
-    )
-    val bloodSugar2 = TestData.bloodSugarMeasurement(
-        uuid = UUID.fromString("955c7cb2-2a31-436a-a599-01f537fb7e0f"),
-        patientUuid = patientUuid
-    )
-    val bloodSugar3 = TestData.bloodSugarMeasurement(
-        uuid = UUID.fromString("7b3da121-0936-4888-8adf-66347d91ab59"),
-        patientUuid = patientUuid
-    )
-    val bloodSugars = listOf(bloodSugar1, bloodSugar2, bloodSugar3)
-
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(BloodSugarHistoryLoaded(bloodSugars))
-        .then(assertThatNext(
-            hasModel(defaultModel.bloodSugarsLoaded(bloodSugars)),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
   fun `when add new blood sugar is clicked, then open entry sheet`() {
     updateSpec
         .given(defaultModel)
@@ -67,15 +42,13 @@ class BloodSugarHistoryScreenUpdateTest {
   @Test
   fun `when blood sugar is clicked, then open update sheet`() {
     val bloodSugar = TestData.bloodSugarMeasurement()
-    val bloodSugars = listOf(bloodSugar)
 
     updateSpec
-        .given(defaultModel.bloodSugarsLoaded(bloodSugars))
+        .given(defaultModel)
         .whenEvent(BloodSugarClicked(bloodSugar))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenBloodSugarUpdateSheet(bloodSugar) as BloodSugarHistoryScreenEffect)
         ))
   }
-
 }

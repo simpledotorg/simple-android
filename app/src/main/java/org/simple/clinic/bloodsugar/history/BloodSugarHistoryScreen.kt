@@ -144,10 +144,6 @@ class BloodSugarHistoryScreen(
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
   }
 
-  override fun showBloodSugarHistory(bloodSugars: List<BloodSugarMeasurement>) {
-    // This method will be removed in later commits
-  }
-
   override fun openBloodSugarEntrySheet(patientUuid: UUID) {
     val intent = BloodSugarTypePickerSheet.intent(context)
     activity.startActivityForResult(intent, TYPE_PICKER_SHEET)

@@ -7,6 +7,7 @@ class SettingsUiRenderer(private val ui: SettingsUi) : ViewRenderer<SettingsMode
   override fun render(model: SettingsModel) {
     renderUserDetails(model)
     renderCurrentLanguage(model)
+    renderAppVersion(model)
   }
 
   private fun renderUserDetails(model: SettingsModel) {
@@ -26,6 +27,12 @@ class SettingsUiRenderer(private val ui: SettingsUi) : ViewRenderer<SettingsMode
       if (currentLanguage is ProvidedLanguage) {
         ui.displayCurrentLanguage(currentLanguage.displayName)
       }
+    }
+  }
+
+  private fun renderAppVersion(model: SettingsModel) {
+    if (model.appVersionQueried) {
+      ui.displayAppVersion(model.appVersion!!)
     }
   }
 }

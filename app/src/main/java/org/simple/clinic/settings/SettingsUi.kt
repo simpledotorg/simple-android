@@ -7,4 +7,6 @@ interface SettingsUi {
   fun displayCurrentLanguage(language: String)
 
   fun setChangeLanguageButtonVisible()
+
+  fun displayAppVersion(version: String)
 }

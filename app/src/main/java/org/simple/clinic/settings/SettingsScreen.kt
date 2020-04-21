@@ -9,6 +9,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.android.synthetic.main.screen_settings.view.*
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -39,7 +40,7 @@ class SettingsScreen(
   private val delegate: MobiusDelegate<SettingsModel, SettingsEvent, SettingsEffect> by unsafeLazy {
     MobiusDelegate.forView(
         events = events,
-        defaultModel = SettingsModel.FETCHING_USER_DETAILS,
+        defaultModel = SettingsModel.default(BuildConfig.APPLICATION_ID),
         init = SettingsInit(),
         update = SettingsUpdate(),
         effectHandler = settingsEffectHandler.create(this).build(),

@@ -250,34 +250,10 @@
   <string name="onboarding_get_started">শুরু করুন</string>
   <string name="overdue_no_patients">সময় পার হয়ে যাওয়া কোন রোগী নেই</string>
   <string name="overdue_empty_desc">যে রোগীরা ফলো আপ রক্তচাপ মাপার জন্য তাদের পূর্বনির্ধারিত সাক্ষাৎকার মিস করেছে আপনি সেই রোগীদের ফোন করতে পারবেন।</string>
-  <string name="overduelist_agreed_to_visit">\'ভিজিটে আসতে সম্মত হয়েছেন\' বলে রোগীকে চিহ্নিত করুন</string>
-  <string name="overduelist_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
-
-  <!-- Phone number masking -->
-  <string name="overduelist_remove_from_list">সময় পার হয়ে যাওয়া তালিকা থেকে সরান…</string>
-  <string name="overduelist_result_of_call">কলের ফলাফল</string>
   <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকিসম্পন্ন</string>
 
-  <!-- Appointment reminder -->
-  <string name="phonemasking_call_normal">স্বাভাবিক</string>
-  <string name="phonemasking_call_secure">নিরাপদ</string>
-
-  <!-- Remove Overdue Patients -->
-  <string name="phonemasking_help_text">সুরক্ষিত কলগুলো আপনার নম্বরটিকে গোপন রাখে এবং এগুলো টোল ফ্রি</string>
-  <string name="appointmentreminder_call_later_in">পরে ফোন করুন</string>
-  <string name="appointmentreminder_done">সম্পন্ন হয়েছে</string>
-  <string name="removeappointment_select_a_reason">একটি কারণ বাছাই করুন</string>
-  <string name="removeappointment_patient_already_visited">রোগী ইতিমধ্যে সাক্ষাৎ করেছে</string>
-  <string name="removeappointment_patient_is_not_responding">রোগী সাড়া দিচ্ছে না</string>
-  <string name="removeappointment_invalid_phone_number">ফোন নম্বর কাজ করে নি</string>
-  <string name="removeappointment_public_hospital_transfer">অন্য ক্লিনিকে স্থানান্তরিত হয়েছেন</string>
-
   <!-- Facility change -->
-  <string name="removeappointment_moved_to_private">প্রাইভেট প্র্যাকটিশনারের কাছে চলে গেছে</string>
-  <string name="removeappointment_patient_died">মারা গেছে</string>
-
   <!-- Enter OTP -->
-  <string name="removeappointment_other_reason">অন্য কারণ</string>
   <string name="changefacility_screen_title">আপনার ক্লিনিক বাছাই করুন</string>
   <string name="facilitychange_search_hint">আপনার ক্লিনিক অনুসন্ধান করুন</string>
   <string name="enterotp_check_sms_sent_to">এসএমএস পাঠানো হয়েছে কিনা পরীক্ষা করে দেখুন</string>
@@ -448,4 +424,35 @@
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <string name="bloodpressurehistory_add_bp_button">নতুন বিপি</string>
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">‘ভিজিটে আসতে সম্মত হয়েছেন’ বলে রোগীকে চিহ্নিত করুন</string>
+  <string name="contactpatient_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
+  <string name="contactpatient_remove_from_list">সময়াতীতের তালিকা থেকে সরান…</string>
+  <string name="contactpatient_result_of_call">কলের ফলাফল</string>
+  <string name="contactpatient_call_normal">স্বাভাবিক</string>
+  <string name="contactpatient_call_secure">নিরাপদ</string>
+  <string name="contactpatient_help_text">সুরক্ষিত কলগুলো আপনার নম্বরটিকে গোপন করে এবং এগুলো টোল ফ্রি</string>
+  <string name="contactpatient_call_later_in">পরে ফোন করুন</string>
+  <string name="contactpatient_done">সম্পন্ন হয়েছে</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s দিন</item>
+    <item quantity="other">%s দিন</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s সপ্তাহ</item>
+    <item quantity="other">%s সপ্তাহ</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s মাস</item>
+    <item quantity="other">%s মাস</item>
+  </plurals>
+  <string name="contactpatient_select_a_reason">একটি কারণ নির্বাচন করুন</string>
+  <string name="contactpatient_patient_already_visited">রোগী ইতিমধ্যে সাক্ষাৎ করেছে</string>
+  <string name="contactpatient_patient_is_not_responding">রোগী উত্তর দিচ্ছে না</string>
+  <string name="contactpatient_invalid_phone_number">ফোন নম্বর কাজ করে নি</string>
+  <string name="contactpatient_public_hospital_transfer">অন্য জনস্বাস্থ্য সুবিধাতে স্থানান্তরিত করা হয়েছে</string>
+  <string name="contactpatient_moved_to_private">প্রাইভেট প্র্যাকটিশনারের কাছে চলে গেছে</string>
+  <string name="contactpatient_patient_died">মারা গেছে</string>
+  <string name="contactpatient_other_reason">অন্য কারণ</string>
 </resources>

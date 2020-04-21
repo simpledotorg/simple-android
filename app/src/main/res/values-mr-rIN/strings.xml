@@ -261,38 +261,7 @@
   </plurals>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">भेट दिली</string>
-  <string name="overduelist_agreed_to_visit">रूग्णाला ‘भेटीसाठी सहमत’ चिन्हांकित करा</string>
-  <string name="overduelist_remind_call_later">नंतर कॉल करण्‍याची आठवण करून द्या…</string>
-  <string name="overduelist_remove_from_list">ओव्‍हरड्यू यादीतून दूर करा…</string>
-  <string name="overduelist_result_of_call">कॉलसाठी निकाल</string>
   <string name="overduelist_high_risk">उच्‍च धोका</string>
-
-  <!-- Phone number masking -->
-  <string name="phonemasking_call_normal">सामान्‍य</string>
-  <string name="phonemasking_call_secure">सुरक्षित</string>
-  <string name="phonemasking_help_text">सुरक्षित कॉल्‍स तुमचे नंबर लपवतात आणि टोल फ्री आहेत</string>
-
-  <!-- Appointment reminder -->
-  <string name="appointmentreminder_call_later_in">मध्‍ये नंतर कॉल करा</string>
-  <string name="appointmentreminder_done">पूर्ण झाले</string>
-  <plurals name="appointmentreminder_days">
-    <item quantity="one">%s दिवस</item>
-    <item quantity="other">%s दिवस</item>
-  </plurals>
-  <plurals name="appointmentreminder_weeks">
-    <item quantity="one">%s आठवडा</item>
-    <item quantity="other">%s आठवडे</item>
-  </plurals>
-
-  <!-- Remove Overdue Patients -->
-  <string name="removeappointment_select_a_reason">कारण निवडा</string>
-  <string name="removeappointment_patient_already_visited">रूग्णाने आधीच भेट दिली आहे</string>
-  <string name="removeappointment_patient_is_not_responding">रूग्ण प्रतिसाद देत नाही</string>
-  <string name="removeappointment_invalid_phone_number">फोन नंबर काम करत नाही</string>
-  <string name="removeappointment_public_hospital_transfer">अन्‍य सार्वजनिक आरोग्‍य सुविधेत ट्रांसफर केले</string>
-  <string name="removeappointment_moved_to_private">खाजगी सरावकर्त्‍याकडे हलवले</string>
-  <string name="removeappointment_patient_died">मृत झाले</string>
-  <string name="removeappointment_other_reason">इतर कारण</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">तुमचे क्लिनिक निवडा</string>
@@ -545,4 +514,26 @@
   <string name="contactpatient_call_secure">सुरक्षित</string>
   <string name="contactpatient_help_text">सुरक्षित कॉल्‍स तुमचे नंबर लपवतात आणि टोल फ्री आहेत</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">नंतर कॉल करा</string>
+  <string name="contactpatient_done">पूर्ण झाले</string>
+  <string name="contactpatient_select_a_reason">एक कारण निवडा</string>
+  <string name="contactpatient_patient_already_visited">रुग्णाने आधीच भेट दिली आहे</string>
+  <string name="contactpatient_patient_is_not_responding">रुग्ण प्रतिसाद देत नाही</string>
+  <string name="contactpatient_invalid_phone_number">फोन नंबर कार्यक्षम नाही</string>
+  <string name="contactpatient_public_hospital_transfer">दुसऱ्या सार्वजनिक आरोग्य सुविधेत स्थानांतरित केले</string>
+  <string name="contactpatient_moved_to_private">खाजगी प्रॅक्टिशनरकडे नेले</string>
+  <string name="contactpatient_patient_died">मरण पावले</string>
+  <string name="contactpatient_other_reason">इतर कारण</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s दिवस</item>
+    <item quantity="other">%s दिवस</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s आठवडा</item>
+    <item quantity="other">%s आठवडे</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s महिना</item>
+    <item quantity="other">%s महिने</item>
+  </plurals>
 </resources>

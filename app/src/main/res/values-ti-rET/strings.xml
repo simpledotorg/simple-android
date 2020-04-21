@@ -238,30 +238,7 @@
     <item quantity="one">%s መዓልቲ ዘሕለፈ</item>
     <item quantity="other">%s መዓልታት ዘሕለፈ</item>
   </plurals>
-  <string name="overduelist_agreed_to_visit">ንተሓካሚ ‘ምብጻሕ ንምፍጻም ተሰማሚዑ’ ዝብል ምልክት ግበረሉ</string>
-  <string name="overduelist_remind_call_later">ድሓር ንምድዋል ኣዘክር…</string>
-  <string name="overduelist_remove_from_list">ካብ ናይ ግዜ ዘሕለፉ ዝርዝር እለዮ…</string>
-  <string name="overduelist_result_of_call">ውጽኢት ናይ ጻውዒት ተሌፎን</string>
   <string name="overduelist_high_risk">ልዑል ስግኣተ-ሓደጋ</string>
-
-  <!-- Phone number masking -->
-  <string name="phonemasking_call_normal">ንቡር</string>
-  <string name="phonemasking_call_secure">ውሑስ</string>
-  <string name="phonemasking_help_text">ውሑሳት ጻውዒታት ተሌፎን፣ ቊጽሪ ዝሓብኡን ብዘይ ክፍሊትን እዮም</string>
-
-  <!-- Appointment reminder -->
-  <string name="appointmentreminder_call_later_in">ደሓር ደውል ኣብ</string>
-  <string name="appointmentreminder_done">ተግይሩ</string>
-
-  <!-- Remove Overdue Patients -->
-  <string name="removeappointment_select_a_reason">ምኽንያት ሕረ</string>
-  <string name="removeappointment_patient_already_visited">ተሓካሚ ድሮ በጺሑ ኣሎ</string>
-  <string name="removeappointment_patient_is_not_responding">ተሓካሚ ግብረመልሲ ኣይህብን ኣሎ</string>
-  <string name="removeappointment_invalid_phone_number">ቊጽሪ ተሌፎን ኣይሰርሕን’ዩ</string>
-  <string name="removeappointment_public_hospital_transfer">ናብ ካልእ ህዝባዊ መሳለጥያ ጥዕና ተሰጋጊሩ</string>
-  <string name="removeappointment_moved_to_private">ናብ ናይ ግሊ ሓኪም ግዒዙ</string>
-  <string name="removeappointment_patient_died">ሞይቱ</string>
-  <string name="removeappointment_other_reason">ካልእ ምኽንያት</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">ክሊንክካ ሕረ</string>
@@ -448,4 +425,35 @@
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <string name="bloodpressurehistory_add_bp_button">ሓድሽ ጸቕጢ ደም</string>
-  </resources>
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">ንተሓካሚ ‘ምብጻሕ ንምፍጻም ተሰማሚዑ’ ዝብል ምልክት ግበረሉ</string>
+  <string name="contactpatient_remind_call_later">ድሓር ንምድዋል ኣዘክር…</string>
+  <string name="contactpatient_remove_from_list">ካብ ናይ ግዜ ዘሕለፉ ዝርዝር እለዮ…</string>
+  <string name="contactpatient_result_of_call">ውጽኢት ናይ ጻውዒት ተሌፎን</string>
+  <string name="contactpatient_call_normal">ንቡር</string>
+  <string name="contactpatient_call_secure">ውሑስ</string>
+  <string name="contactpatient_help_text">ውሑሳት ጻውዒታት ተሌፎን፣ ቊጽሪ ዝሓብኡን ብዘይ ክፍሊትን እዮም</string>
+  <string name="contactpatient_call_later_in">ደሓር ደውል ኣብ</string>
+  <string name="contactpatient_done">ተግይሩ</string>
+  <string name="contactpatient_select_a_reason">ምኽንያት ሕረ</string>
+  <string name="contactpatient_patient_already_visited">ተሓካሚ ድሮ በጺሑ ኣሎ</string>
+  <string name="contactpatient_patient_is_not_responding">ተሓካሚ ግብረመልሲ ኣይህብን ኣሎ</string>
+  <string name="contactpatient_invalid_phone_number">ቊጽሪ ተሌፎን ኣይሰርሕን’ዩ</string>
+  <string name="contactpatient_public_hospital_transfer">ናብ ካልእ ህዝባዊ መሳለጥያ ጥዕና ተሰጋጊሩ</string>
+  <string name="contactpatient_moved_to_private">ናብ ናይ ግሊ ሓኪም ግዒዙ</string>
+  <string name="contactpatient_patient_died">ሞይቱ</string>
+  <string name="contactpatient_other_reason">ካልእ ምኽንያት</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s መዓልቲ</item>
+    <item quantity="other">%s መዓልታት</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s ሰሙን</item>
+    <item quantity="other">%s ሰሙናት</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s ወርሒ</item>
+    <item quantity="other">%s ኣዋርሕ</item>
+  </plurals>
+</resources>

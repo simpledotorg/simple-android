@@ -439,16 +439,6 @@
     <item name="android:background">@color/blue2</item>
   </style>
 
-  <style name="Clinic.V2.OverdueListAction">
-    <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left.Grey0</item>
-    <item name="android:paddingStart">@dimen/spacing_16</item>
-    <item name="android:background">?attr/selectableItemBackground</item>
-    <item name="android:drawablePadding">@dimen/spacing_16</item>
-    <item name="android:gravity">center_vertical</item>
-    <item name="android:paddingBottom">@dimen/spacing_12</item>
-    <item name="android:paddingTop">@dimen/spacing_12</item>
-  </style>
-
   <style name="Clinic.V2.SummaryMedicalHistoryQuestion">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
@@ -487,21 +477,6 @@
 
   <style name="Clinic.V2.TextAppearance.PatientSummary.PatientName" parent="Clinic.V2.TextAppearance.H6.White100">
     <item name="android:maxLines">1</item>
-  </style>
-
-  <style name="Clinic.V2.AppointmentRemovalReason">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left</item>
-    <item name="android:textColor">@color/removeappointment_radio_button</item>
-    <item name="android:padding">@dimen/spacing_16</item>
-  </style>
-
-  <style name="Clinic.V2.AppointmentRemovalReasonSeparator">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">1dp</item>
-    <item name="android:layout_marginStart">@dimen/spacing_48</item>
-    <item name="android:background">@color/grey3</item>
   </style>
 
   <style name="Clinic.V2.FacilityNameTextView">

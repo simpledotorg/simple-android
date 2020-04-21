@@ -260,38 +260,7 @@
   </plurals>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">দেখা হয়েছে</string>
-  <string name="overduelist_agreed_to_visit">‘ভিজিটে আসতে সম্মত হয়েছেন’ বলে রোগীকে চিহ্নিত করুন</string>
-  <string name="overduelist_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
-  <string name="overduelist_remove_from_list">সময়াতীতের তালিকা থেকে সরান…</string>
-  <string name="overduelist_result_of_call">কলের ফলাফল</string>
   <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকি</string>
-
-  <!-- Phone number masking -->
-  <string name="phonemasking_call_normal">স্বাভাবিক</string>
-  <string name="phonemasking_call_secure">নিরাপদ</string>
-  <string name="phonemasking_help_text">সুরক্ষিত কলগুলো আপনার নম্বরটিকে গোপন করে এবং এগুলো টোল ফ্রি</string>
-
-  <!-- Appointment reminder -->
-  <string name="appointmentreminder_call_later_in">পরে ফোন করুন</string>
-  <string name="appointmentreminder_done">সম্পন্ন</string>
-  <plurals name="appointmentreminder_days">
-    <item quantity="one">%s দিন</item>
-    <item quantity="other">%s দিন</item>
-  </plurals>
-  <plurals name="appointmentreminder_weeks">
-    <item quantity="one">%s সপ্তাহ</item>
-    <item quantity="other">%s সপ্তাহ</item>
-  </plurals>
-
-  <!-- Remove Overdue Patients -->
-  <string name="removeappointment_select_a_reason">একটি কারণ নির্বাচন করুন</string>
-  <string name="removeappointment_patient_already_visited">রোগী ইতিমধ্যে সাক্ষাৎ করেছে</string>
-  <string name="removeappointment_patient_is_not_responding">রোগী উত্তর দিচ্ছে না</string>
-  <string name="removeappointment_invalid_phone_number">ফোন নম্বর কাজ করে নি</string>
-  <string name="removeappointment_public_hospital_transfer">অন্য জনস্বাস্থ্য সুবিধাতে স্থানান্তরিত করা হয়েছে</string>
-  <string name="removeappointment_moved_to_private">প্রাইভেট প্র্যাকটিশনারের কাছে চলে গেছে</string>
-  <string name="removeappointment_patient_died">মারা গেছে</string>
-  <string name="removeappointment_other_reason">অন্য কারণ</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">আপনার ক্লিনিক নির্বাচন করুন</string>
@@ -509,7 +478,7 @@
   <string name="medicalhistorysummaryview_diagnosis">রোগ নির্ণয় (প্রয়োজন)</string>
 
   <!-- Summary prescriptions view -->
-  <string name="drugsummaryview_no_medicines">কোনো ওষুধ যোগ করা হয়নি</string>
+  <string name="drugsummaryview_no_medicines">কোনো ওষুধ যোগ করা হয়নি</string>
 
   <!-- Access Denied screen -->
   <string name="accessdeniedscreen_title_access_denied">অ্যাক্সেস প্রত্যাখাত</string>
@@ -544,4 +513,26 @@
   <string name="contactpatient_call_secure">নিরাপদ</string>
   <string name="contactpatient_help_text">সুরক্ষিত কলগুলো আপনার নম্বরটিকে গোপন করে এবং এগুলো টোল ফ্রি</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">পরে ফোন করুন</string>
+  <string name="contactpatient_done">সম্পন্ন হয়েছে</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s দিন</item>
+    <item quantity="other">%s দিন</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s সপ্তাহ</item>
+    <item quantity="other">%s সপ্তাহ</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s মাস</item>
+    <item quantity="other">%s মাস</item>
+  </plurals>
+  <string name="contactpatient_select_a_reason">একটি কারণ নির্বাচন করুন</string>
+  <string name="contactpatient_patient_already_visited">রোগী ইতিমধ্যে সাক্ষাৎ করেছে</string>
+  <string name="contactpatient_patient_is_not_responding">রোগী উত্তর দিচ্ছে না</string>
+  <string name="contactpatient_invalid_phone_number">ফোন নম্বর কাজ করে নি</string>
+  <string name="contactpatient_public_hospital_transfer">অন্য জনস্বাস্থ্য সুবিধাতে স্থানান্তরিত করা হয়েছে</string>
+  <string name="contactpatient_moved_to_private">প্রাইভেট প্র্যাকটিশনারের কাছে চলে গেছে</string>
+  <string name="contactpatient_patient_died">মারা গেছে</string>
+  <string name="contactpatient_other_reason">অন্য কারণ</string>
 </resources>

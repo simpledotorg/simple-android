@@ -261,38 +261,7 @@
   </plurals>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">ಭೇಟಿ ನೀಡಲಾಗಿದೆ</string>
-  <string name="overduelist_agreed_to_visit">ರೋಗಿಯನ್ನು ‘ಭೇಟಿಮಾಡಲು ಒಪ್ಪಿದ್ದಾರೆ’ ಎಂದು ಗುರುತಿಸಿ</string>
-  <string name="overduelist_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ…</string>
-  <string name="overduelist_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ…</string>
-  <string name="overduelist_result_of_call">ಕರೆಯ ಫಲಿತಾಂಶ</string>
   <string name="overduelist_high_risk">ಹೆಚ್ಚಿನ ಅಪಾಯ</string>
-
-  <!-- Phone number masking -->
-  <string name="phonemasking_call_normal">ಸಾಮಾನ್ಯ</string>
-  <string name="phonemasking_call_secure">ಸುರಕ್ಷಿತ</string>
-  <string name="phonemasking_help_text">ಸುರಕ್ಷಿತ ಕರೆಗಳು ನಿಮ್ಮ ಸಂಖ್ಯೆಯನ್ನು ಮರೆಮಾಡುತ್ತವೆ ಮತ್ತು ಅವು ಶುಲ್ಕ ರಹಿತವಾಗಿರುತ್ತವೆ</string>
-
-  <!-- Appointment reminder -->
-  <string name="appointmentreminder_call_later_in">ನಂತರ ಇಷ್ಟು ಸಮಯದಲ್ಲಿ ಕರೆ ಮಾಡಿ</string>
-  <string name="appointmentreminder_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
-  <plurals name="appointmentreminder_days">
-    <item quantity="one">%s ದಿನ</item>
-    <item quantity="other">%s ದಿನಗಳು</item>
-  </plurals>
-  <plurals name="appointmentreminder_weeks">
-    <item quantity="one">%s ವಾರ</item>
-    <item quantity="other">%s ವಾರಗಳು</item>
-  </plurals>
-
-  <!-- Remove Overdue Patients -->
-  <string name="removeappointment_select_a_reason">ಕಾರಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
-  <string name="removeappointment_patient_already_visited">ರೋಗಿಯನ್ನು ಈಗಾಗಲೇ ಭೇಟಿಮಾಡಲಾಗಿದೆ</string>
-  <string name="removeappointment_patient_is_not_responding">ರೋಗಿ ಉತ್ತರಿಸುತ್ತಿಲ್ಲ</string>
-  <string name="removeappointment_invalid_phone_number">ಫೋನ್ ನಂಬರ್ ಕೆಲಸ ಮಾಡುತ್ತಿಲ್ಲ</string>
-  <string name="removeappointment_public_hospital_transfer">ಇನ್ನೊಂದು ಸಾರ್ವಜನಿಕ ಆರೋಗ್ಯ ಸೌಲಭ್ಯಕ್ಕೆ ವರ್ಗಾಯಿಸಲಾಗಿದೆ</string>
-  <string name="removeappointment_moved_to_private">ಖಾಸಗಿ ವೈದ್ಯರಲ್ಲಿಗೆ ಹೋಗಿದ್ದಾರೆ</string>
-  <string name="removeappointment_patient_died">ಮರಣ ಹೊಂದಿದ್ದಾರೆ</string>
-  <string name="removeappointment_other_reason">ಇತರೆ ಕಾರಣ</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್ ಆಯ್ಕೆಮಾಡಿ</string>
@@ -545,4 +514,26 @@
   <string name="contactpatient_call_secure">ಸುರಕ್ಷಿತ</string>
   <string name="contactpatient_help_text">ಸುರಕ್ಷಿತ ಕರೆಗಳು ನಿಮ್ಮ ಸಂಖ್ಯೆಯನ್ನು ಮರೆಮಾಡುತ್ತವೆ ಮತ್ತು ಅವು ಶುಲ್ಕ ರಹಿತವಾಗಿರುತ್ತವೆ</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">ನಂತರ ಇಷ್ಟು ಸಮಯದಲ್ಲಿ ಕರೆ ಮಾಡಿ</string>
+  <string name="contactpatient_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
+  <string name="contactpatient_select_a_reason">ಕಾರಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
+  <string name="contactpatient_patient_already_visited">ರೋಗಿಯನ್ನು ಈಗಾಗಲೇ ಭೇಟಿಮಾಡಲಾಗಿದೆ</string>
+  <string name="contactpatient_patient_is_not_responding">ರೋಗಿ ಉತ್ತರಿಸುತ್ತಿಲ್ಲ</string>
+  <string name="contactpatient_invalid_phone_number">ಫೋನ್ ನಂಬರ್ ಕೆಲಸ ಮಾಡುತ್ತಿಲ್ಲ</string>
+  <string name="contactpatient_public_hospital_transfer">ಇನ್ನೊಂದು ಸಾರ್ವಜನಿಕ ಆರೋಗ್ಯ ಸೌಲಭ್ಯಕ್ಕೆ ವರ್ಗಾಯಿಸಲಾಗಿದೆ</string>
+  <string name="contactpatient_moved_to_private">ಖಾಸಗಿ ವೈದ್ಯರಲ್ಲಿಗೆ ಹೋಗಿದ್ದಾರೆ</string>
+  <string name="contactpatient_patient_died">ಮರಣ ಹೊಂದಿದ್ದಾರೆ</string>
+  <string name="contactpatient_other_reason">ಇತರೆ ಕಾರಣ</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s ದಿನ</item>
+    <item quantity="other">%s ದಿನಗಳು</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s ವಾರ</item>
+    <item quantity="other">%s ವಾರಗಳು</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s ತಿಂಗಳು</item>
+    <item quantity="other">%s ತಿಂಗಳುಗಳು</item>
+  </plurals>
 </resources>

@@ -261,38 +261,7 @@
   </plurals>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">विज़िट की गई</string>
-  <string name="overduelist_agreed_to_visit">रोगी को ‘मुलाकात के लिए सहमत’ के रूप में चिन्हित करें</string>
-  <string name="overduelist_remind_call_later">बाद में कॉल करना याद दिलाएं…</string>
-  <string name="overduelist_remove_from_list">अतिदेय सूची से हटाएं…</string>
-  <string name="overduelist_result_of_call">कॉल का परिणाम</string>
   <string name="overduelist_high_risk">उच्च जोखिम</string>
-
-  <!-- Phone number masking -->
-  <string name="phonemasking_call_normal">सामान्य</string>
-  <string name="phonemasking_call_secure">सुरक्षित</string>
-  <string name="phonemasking_help_text">सुरक्षित कॉल से आपका नंबर छिपा रहता है और यह नंबर टोल फ़्री होता है</string>
-
-  <!-- Appointment reminder -->
-  <string name="appointmentreminder_call_later_in">इतनी देर बाद कॉल करें</string>
-  <string name="appointmentreminder_done">पूरा हुआ</string>
-  <plurals name="appointmentreminder_days">
-    <item quantity="one">%s दिन</item>
-    <item quantity="other">%s दिन</item>
-  </plurals>
-  <plurals name="appointmentreminder_weeks">
-    <item quantity="one">%s सप्ताह</item>
-    <item quantity="other">%s सप्ताह</item>
-  </plurals>
-
-  <!-- Remove Overdue Patients -->
-  <string name="removeappointment_select_a_reason">किसी कारण का चयन करें</string>
-  <string name="removeappointment_patient_already_visited">रोगी पहले ही विज़िट कर चुका है</string>
-  <string name="removeappointment_patient_is_not_responding">रोगी जवाब नहीं दे रहा है</string>
-  <string name="removeappointment_invalid_phone_number">फ़ोन नंबर काम नहीं कर रहा है</string>
-  <string name="removeappointment_public_hospital_transfer">अन्य सार्वजनिक स्वास्थ्य सुविधा में भेजा गया</string>
-  <string name="removeappointment_moved_to_private">निजी डॉक्टर के पास चला गया</string>
-  <string name="removeappointment_patient_died">जीवित नहीं</string>
-  <string name="removeappointment_other_reason">अन्य कारण</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">अपने क्लिनिक का चयन करें</string>
@@ -545,4 +514,26 @@
   <string name="contactpatient_call_secure">सुरक्षित</string>
   <string name="contactpatient_help_text">सुरक्षित कॉल से आपका नंबर छिपा रहता है और यह नंबर टोल फ़्री होता है</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">बाद में कॉल करें</string>
+  <string name="contactpatient_done">पूरा हुआ</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s दिन</item>
+    <item quantity="other">%s दिन</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s हफ़्ता</item>
+    <item quantity="other">%s हफ़्ते</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s महीना</item>
+    <item quantity="other">%s महीने</item>
+  </plurals>
+  <string name="contactpatient_select_a_reason">किसी कारण का चयन करें</string>
+  <string name="contactpatient_patient_already_visited">रोगी पहले ही विज़िट कर चुका है</string>
+  <string name="contactpatient_patient_is_not_responding">रोगी जवाब नहीं दे रहा है</string>
+  <string name="contactpatient_invalid_phone_number">फ़ोन नंबर काम नहीं कर रहा है</string>
+  <string name="contactpatient_public_hospital_transfer">अन्य सार्वजनिक स्वास्थ्य सुविधा में भेजा गया</string>
+  <string name="contactpatient_moved_to_private">निजी डॉक्टर के पास चला गया</string>
+  <string name="contactpatient_patient_died">जीवित नहीं</string>
+  <string name="contactpatient_other_reason">अन्य कारण</string>
 </resources>

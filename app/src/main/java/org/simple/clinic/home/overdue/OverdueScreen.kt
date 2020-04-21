@@ -10,8 +10,8 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_overdue.view.*
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
-import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
@@ -122,6 +122,6 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun openPhoneMaskBottomSheet(patientUuid: UUID) {
-    activity.startActivity(PhoneMaskBottomSheet.intentForPhoneMaskBottomSheet(context, patientUuid))
+    activity.startActivity(ContactPatientBottomSheet.intent(context, patientUuid))
   }
 }

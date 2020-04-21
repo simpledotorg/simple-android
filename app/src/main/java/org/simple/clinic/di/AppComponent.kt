@@ -5,19 +5,14 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetComponent
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
+import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeComponent
 import org.simple.clinic.facility.change.confirm.FacilityChangeComponent
-
 import org.simple.clinic.facility.change.confirm.di.ConfirmFacilityChangeComponent
-import org.simple.clinic.home.overdue.appointmentreminder.di.AppointmentReminderSheetComponent
-import org.simple.clinic.home.overdue.phonemask.di.PhoneMaskBottomSheetComponent
-import org.simple.clinic.home.overdue.removepatient.di.RemoveAppointmentScreenComponent
-
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
-import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivityComponent
 import org.simple.clinic.setup.SetupActivityComponent
@@ -39,13 +34,10 @@ interface AppComponent {
   fun patientFacilityChangeComponentBuilder(): FacilitySelectionActivityComponent.Builder
   fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Builder
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Builder
-  fun appointmentReminderSheetComponent(): AppointmentReminderSheetComponent.Builder
   fun scheduleAppointmentSheetComponentBuilder(): ScheduleAppointmentSheetComponent.Builder
   fun dosagePickerSheetComponentBuilder(): DosagePickerSheetComponent.Builder
   fun bloodSugarTypePickerSheetComponentBuilder(): BloodSugarTypePickerSheetComponent.Builder
-  fun phoneMaskBottomSheetComponentBuilder(): PhoneMaskBottomSheetComponent.Builder
   fun customPrescriptionEntrySheetComponentBuilder(): CustomPrescriptionEntrySheetComponent.Builder
-  fun removeAppointmentScreenComponentBuilder(): RemoveAppointmentScreenComponent.Builder
   fun confirmFacilityChangeComponent(): ConfirmFacilityChangeComponent.Builder
   fun facilityChangeComponentBuilder(): FacilityChangeComponent.Builder
   fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Builder

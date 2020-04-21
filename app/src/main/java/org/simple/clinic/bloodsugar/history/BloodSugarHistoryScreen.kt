@@ -15,6 +15,7 @@ import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_blood_sugar_history.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryItemClicked
@@ -162,6 +163,10 @@ class BloodSugarHistoryScreen(
   override fun openBloodSugarUpdateSheet(measurement: BloodSugarMeasurement) {
     val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, measurement.uuid, measurement.reading.type)
     activity.startActivity(intent)
+  }
+
+  override fun showBloodSugars(dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) {
+
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {

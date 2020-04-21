@@ -15,68 +15,11 @@ import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.util.Truss
-import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import org.simple.clinic.widgets.visibleOrGone
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.format.DateTimeFormatter
 
 sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
-  companion object {
-    fun from(
-        measurements: List<BloodSugarMeasurement>,
-        userClock: UserClock,
-        dateFormatter: DateTimeFormatter,
-        timeFormatter: DateTimeFormatter,
-        canEditFor: Duration,
-        utcClock: UtcClock
-    ): List<BloodSugarHistoryListItem> {
-      val measurementsByDate = measurements.groupBy { it.recordedAt.toLocalDateAtZone(userClock.zone) }
-
-      val bloodSugarHistoryItems = measurementsByDate.mapValues { (_, measurementsList) ->
-        val hasMultipleMeasurementsInSameDate = measurementsList.size > 1
-        measurementsList.map { measurement ->
-          val recordedAt = measurement.recordedAt.toLocalDateAtZone(userClock.zone)
-          val bloodSugarTime = if (hasMultipleMeasurementsInSameDate) {
-            timeFormatter.format(measurement.recordedAt.atZone(userClock.zone))
-          } else {
-            null
-          }
-          val isBloodSugarEditable = isBloodSugarEditable(measurement, canEditFor, utcClock)
-
-          BloodSugarHistoryItem(
-              measurement = measurement,
-              bloodSugarDate = dateFormatter.format(recordedAt),
-              bloodSugarTime = bloodSugarTime,
-              isBloodSugarEditable = isBloodSugarEditable
-          )
-        }
-      }.values.flatten()
-
-      return listOf(NewBloodSugarButton) + bloodSugarHistoryItems
-    }
-
-    private fun isBloodSugarEditable(
-        bloodSugarMeasurement: BloodSugarMeasurement,
-        bpEditableFor: Duration,
-        utcClock: UtcClock
-    ): Boolean {
-      return if (bloodSugarMeasurement.reading.type is Unknown) {
-        false
-      } else {
-        val now = Instant.now(utcClock)
-        val createdAt = bloodSugarMeasurement.timestamps.createdAt
-
-        val durationSinceBpCreated = Duration.between(createdAt, now)
-
-        durationSinceBpCreated <= bpEditableFor
-      }
-    }
-  }
 
   object NewBloodSugarButton : BloodSugarHistoryListItem() {
     override fun layoutResId(): Int = R.layout.list_new_blood_sugar_button

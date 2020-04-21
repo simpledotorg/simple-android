@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar
 
 import android.os.Parcelable
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -72,6 +73,13 @@ data class BloodSugarMeasurement(
       ORDER BY recordedAt DESC
     """)
     fun allBloodSugars(patientUuid: UUID): Observable<List<BloodSugarMeasurement>>
+
+    @Query("""
+      SELECT * FROM BloodSugarMeasurements
+      WHERE patientUuid == :patientUuid AND deletedAt IS NULL
+      ORDER BY recordedAt DESC
+    """)
+    fun allBloodSugarsDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodSugarMeasurement>
 
     @Query("SELECT * FROM BloodSugarMeasurements WHERE syncStatus = :status")
     fun withSyncStatus(status: SyncStatus): Flowable<List<BloodSugarMeasurement>>

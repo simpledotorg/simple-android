@@ -55,4 +55,18 @@ class SettingsUpdateTest {
             hasEffects(OpenLanguageSelectionScreenEffect as SettingsEffect)
         ))
   }
+
+  @Test
+  fun `when the app version is loaded, then ui must be updated`() {
+    val appVersion = "1.0.0"
+
+    spec
+        .given(defaultModel)
+        .whenEvent(AppVersionLoaded(appVersion))
+        .then(assertThatNext(
+            hasModel(defaultModel.appVersionLoaded(appVersion)),
+            hasNoEffects()
+        ))
+  }
+
 }

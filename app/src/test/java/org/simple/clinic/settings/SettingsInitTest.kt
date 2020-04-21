@@ -18,7 +18,7 @@ class SettingsInitTest {
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(LoadUserDetailsEffect, LoadCurrentLanguageEffect, LoadAppVersionEffect(defaultModel.applicationId))
+            hasEffects(LoadUserDetailsEffect, LoadCurrentLanguageEffect, LoadAppVersionEffect(defaultModel.applicationId), CheckAppUpdateAvailable)
         ))
   }
 

@@ -308,33 +308,6 @@
   <string name="overduelist_visited">Visited</string>
   <string name="overduelist_high_risk">High risk</string>
 
-  <!-- Phone number masking -->
-  <string name="phonemasking_call_normal">Normal</string>
-  <string name="phonemasking_call_secure">Secure</string>
-  <string name="phonemasking_help_text">Secure calls hide your number and are toll free</string>
-
-  <!-- Appointment reminder -->
-  <string name="appointmentreminder_call_later_in">Call later in</string>
-  <string name="appointmentreminder_done">Done</string>
-  <plurals name="appointmentreminder_days">
-    <item quantity="one">%s day</item>
-    <item quantity="other">%s days</item>
-  </plurals>
-  <plurals name="appointmentreminder_weeks">
-    <item quantity="one">%s week</item>
-    <item quantity="other">%s weeks</item>
-  </plurals>
-
-  <!-- Remove Overdue Patients -->
-  <string name="removeappointment_select_a_reason">Select a Reason</string>
-  <string name="removeappointment_patient_already_visited">Patient has already visited</string>
-  <string name="removeappointment_patient_is_not_responding">Patient is not responding</string>
-  <string name="removeappointment_invalid_phone_number">Phone number does not work</string>
-  <string name="removeappointment_public_hospital_transfer">Transferred to another public health facility</string>
-  <string name="removeappointment_moved_to_private">Moved to private practitioner</string>
-  <string name="removeappointment_patient_died">Died</string>
-  <string name="removeappointment_other_reason">Other reason</string>
-
   <!-- Facility change -->
   <string name="changefacility_screen_title">Select your clinic</string>
   <string name="facilitychange_search_hint">Search for your clinic</string>

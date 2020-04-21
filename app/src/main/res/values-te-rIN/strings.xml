@@ -238,30 +238,7 @@
     <item quantity="one">%s రోజు క్రితం గడువు ముగిసింది</item>
     <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
   </plurals>
-  <string name="overduelist_agreed_to_visit">రోగి ‘సందర్శించడానికి అంగీకరించారు’ అని గుర్తుపెట్టండి</string>
-  <string name="overduelist_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి…</string>
-  <string name="overduelist_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి…</string>
-  <string name="overduelist_result_of_call">కాల్ ఫలితం</string>
   <string name="overduelist_high_risk">అధిక ప్రమాదం</string>
-
-  <!-- Phone number masking -->
-  <string name="phonemasking_call_normal">సాధారణం</string>
-  <string name="phonemasking_call_secure">సురక్షితం</string>
-  <string name="phonemasking_help_text">సురక్షిత కాల్‌లలో మీ నంబర్ కనిపించదు, ఇవి టోల్-ఫ్రీ</string>
-
-  <!-- Appointment reminder -->
-  <string name="appointmentreminder_call_later_in">తర్వాత కాల్ చేయండి</string>
-  <string name="appointmentreminder_done">పూర్తయింది</string>
-
-  <!-- Remove Overdue Patients -->
-  <string name="removeappointment_select_a_reason">కారణాన్ని ఎంచుకోండి</string>
-  <string name="removeappointment_patient_already_visited">రోగి ఇప్పటికే సందర్శించారు</string>
-  <string name="removeappointment_patient_is_not_responding">రోగి ప్రతిస్పందించడం లేదు</string>
-  <string name="removeappointment_invalid_phone_number">ఫోన్ నంబర్ పని చేయలేదు</string>
-  <string name="removeappointment_public_hospital_transfer">మరో ప్రజారోగ్య కేంద్రానికి వెళ్లారు</string>
-  <string name="removeappointment_moved_to_private">ప్రైవేట్ వేద్యుల వద్దకు వెళ్లారు</string>
-  <string name="removeappointment_patient_died">మరణించారు</string>
-  <string name="removeappointment_other_reason">మరో కారణం</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">మీ క్లినిక్‌ను ఎంచుకోండి</string>
@@ -448,4 +425,35 @@
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
   <string name="bloodpressurehistory_add_bp_button">కొత్త బిపి</string>
-  </resources>
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">రోగి ‘సందర్శించడానికి అంగీకరించారు’ అని గుర్తుపెట్టండి</string>
+  <string name="contactpatient_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి…</string>
+  <string name="contactpatient_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి…</string>
+  <string name="contactpatient_result_of_call">కాల్ ఫలితం</string>
+  <string name="contactpatient_call_normal">సాధారణం</string>
+  <string name="contactpatient_call_secure">సురక్షితం</string>
+  <string name="contactpatient_help_text">సురక్షిత కాల్‌లలో మీ నంబర్ కనిపించదు, ఇవి టోల్-ఫ్రీ</string>
+  <string name="contactpatient_call_later_in">తర్వాత కాల్ చేయండి</string>
+  <string name="contactpatient_done">పూర్తయింది</string>
+  <string name="contactpatient_select_a_reason">కారణాన్ని ఎంచుకోండి</string>
+  <string name="contactpatient_patient_already_visited">రోగి ఇప్పటికే సందర్శించారు</string>
+  <string name="contactpatient_patient_is_not_responding">రోగి ప్రతిస్పందించడం లేదు</string>
+  <string name="contactpatient_invalid_phone_number">ఫోన్ నంబర్ పని చేయలేదు</string>
+  <string name="contactpatient_public_hospital_transfer">మరో ప్రజారోగ్య కేంద్రానికి వెళ్లారు</string>
+  <string name="contactpatient_moved_to_private">ప్రైవేట్ వేద్యుల వద్దకు వెళ్లారు</string>
+  <string name="contactpatient_patient_died">మరణించారు</string>
+  <string name="contactpatient_other_reason">మరో కారణం</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s రోజు</item>
+    <item quantity="other">%s రోజులు</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s వారం</item>
+    <item quantity="other">%s వారాలు</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s నెల</item>
+    <item quantity="other">%s నెలలు</item>
+  </plurals>
+</resources>

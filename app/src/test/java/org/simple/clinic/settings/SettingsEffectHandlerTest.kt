@@ -9,8 +9,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.TestData
+import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.None
@@ -25,12 +25,13 @@ class SettingsEffectHandlerTest {
   private val settingsRepository = mock<SettingsRepository>()
   private val uiActions = mock<UiActions>()
 
-  private val testCase = EffectHandlerTestCase(SettingsEffectHandler.create(
+  private val effectHandler = SettingsEffectHandler(
       userSession = userSession,
       settingsRepository = settingsRepository,
       uiActions = uiActions,
       schedulersProvider = TrampolineSchedulersProvider()
-  ))
+  ).build()
+  private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After
   fun tearDown() {

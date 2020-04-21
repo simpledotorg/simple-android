@@ -1,5 +1,6 @@
 package org.simple.clinic.settings
 
+import android.content.pm.PackageManager
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -13,6 +14,7 @@ class SettingsEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val settingsRepository: SettingsRepository,
     private val schedulersProvider: SchedulersProvider,
+    private val appVersionFetcher: AppVersionFetcher,
     @Assisted private val uiActions: UiActions
 ) {
 
@@ -26,6 +28,7 @@ class SettingsEffectHandler @AssistedInject constructor(
       .addTransformer(LoadUserDetailsEffect::class.java, loadUserDetails())
       .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage())
       .addAction(OpenLanguageSelectionScreenEffect::class.java, uiActions::openLanguageSelectionScreen, schedulersProvider.ui())
+      .addTransformer(LoadAppVersionEffect::class.java, loadAppVersion())
       .build()
 
   private fun loadUserDetails(): ObservableTransformer<LoadUserDetailsEffect, SettingsEvent> {
@@ -42,6 +45,16 @@ class SettingsEffectHandler @AssistedInject constructor(
       effectStream
           .flatMapSingle { settingsRepository.getCurrentLanguage().subscribeOn(schedulersProvider.io()) }
           .map(::CurrentLanguageLoaded)
+    }
+  }
+
+  private fun loadAppVersion(): ObservableTransformer<LoadAppVersionEffect, SettingsEvent> {
+    return ObservableTransformer { effectStream ->
+      effectStream
+          .map { appVersionEffect ->
+            val appVersionName = appVersionFetcher.appVersion(appVersionEffect.applicationId)
+            AppVersionLoaded(appVersionName)
+          }
     }
   }
 }

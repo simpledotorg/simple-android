@@ -11,3 +11,5 @@ data class CurrentLanguageLoaded(val language: Language) : SettingsEvent()
 object ChangeLanguage : SettingsEvent() {
   override val analyticsName: String = "Settings:Change Language Clicked"
 }
+
+data class AppVersionLoaded(val appVersion: String) : SettingsEvent()

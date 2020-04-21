@@ -12,3 +12,5 @@ data class LoadBloodSugarHistory(val patientUuid: UUID) : BloodSugarHistoryScree
 data class OpenBloodSugarEntrySheet(val patientUuid: UUID) : BloodSugarHistoryScreenEffect()
 
 data class OpenBloodSugarUpdateSheet(val bloodSugarMeasurement: BloodSugarMeasurement) : BloodSugarHistoryScreenEffect()
+
+data class ShowBloodSugars(val patientUuid: UUID) : BloodSugarHistoryScreenEffect()

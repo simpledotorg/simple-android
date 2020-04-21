@@ -485,6 +485,7 @@
   <string name="settings_language_hint">Select a language</string>
   <string name="settings_software">Software</string>
   <string name="settings_update">Update</string>
+  <string name="settings_software_version">Version %1$s</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">Select your language</string>

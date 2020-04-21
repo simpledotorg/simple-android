@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.screen_settings.view.*
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreenKey
 import org.simple.clinic.util.unsafeLazy
@@ -22,9 +21,6 @@ class SettingsScreen(
     context: Context,
     attributeSet: AttributeSet
 ) : LinearLayout(context, attributeSet), SettingsUi, UiActions {
-
-  @Inject
-  lateinit var crashReporter: CrashReporter
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -41,14 +37,13 @@ class SettingsScreen(
   }
 
   private val delegate: MobiusDelegate<SettingsModel, SettingsEvent, SettingsEffect> by unsafeLazy {
-    MobiusDelegate(
+    MobiusDelegate.forView(
         events = events,
         defaultModel = SettingsModel.FETCHING_USER_DETAILS,
         init = SettingsInit(),
         update = SettingsUpdate(),
         effectHandler = settingsEffectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render,
-        crashReporter = crashReporter
+        modelUpdateListener = uiRenderer::render
     )
   }
 
@@ -65,8 +60,6 @@ class SettingsScreen(
     TheActivity.component.inject(this)
 
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
-
-    delegate.prepare()
   }
 
   override fun onAttachedToWindow() {

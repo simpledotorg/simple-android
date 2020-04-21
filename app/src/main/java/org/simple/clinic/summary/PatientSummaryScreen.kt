@@ -17,6 +17,7 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.editpatient.EditPatientScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -33,7 +34,6 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -74,9 +74,6 @@ class PatientSummaryScreen(
 
   @Inject
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
-
-  @Inject
-  lateinit var config: PatientSummaryConfig
 
   private val events: Observable<PatientSummaryEvent> by unsafeLazy {
     Observable
@@ -228,10 +225,7 @@ class PatientSummaryScreen(
   }
 
   private fun phoneNumberClicks(): Observable<UiEvent> {
-    return if (config.callPatientFeatureEnabled)
-      contactTextView.clicks().map { ContactPatientClicked }
-    else
-      Observable.never()
+    return contactTextView.clicks().map { ContactPatientClicked }
   }
 
   @SuppressLint("SetTextI18n")

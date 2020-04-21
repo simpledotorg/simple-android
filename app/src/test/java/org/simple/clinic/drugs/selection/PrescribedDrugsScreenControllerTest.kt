@@ -29,6 +29,7 @@ import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -128,7 +129,6 @@ class PrescribedDrugsScreenControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
 
     //then
     val expectedUiModels = listOf(
@@ -158,7 +158,6 @@ class PrescribedDrugsScreenControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
     uiEvents.onNext(AddNewPrescriptionClicked)
 
     //then
@@ -181,7 +180,6 @@ class PrescribedDrugsScreenControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
     uiEvents.onNext(ProtocolDrugClicked(drugName = drugName, prescriptionForProtocolDrug = null))
 
     //then
@@ -192,6 +190,9 @@ class PrescribedDrugsScreenControllerTest {
   fun `when a custom prescription is clicked then open upate custom prescription screen`() {
     //given
     val prescribedDrug = TestData.prescription()
+    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
+
 
     //when
     setupController()
@@ -203,6 +204,10 @@ class PrescribedDrugsScreenControllerTest {
 
   @Test
   fun `when done click event is received then go back to patient summary`() {
+    //given
+    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
+
     //when
     setupController()
     uiEvents.onNext(PrescribedDrugsDoneClicked)
@@ -212,7 +217,7 @@ class PrescribedDrugsScreenControllerTest {
   }
 
   private fun setupController() {
-    val controller = PrescribedDrugsScreenController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
+    val controller = PrescribedDrugsScreenController(patientUuid, userSession, facilityRepository, protocolRepository, prescriptionRepository)
 
     uiEvents
         .compose(controller)
@@ -222,5 +227,7 @@ class PrescribedDrugsScreenControllerTest {
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 
     fixture.start()
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

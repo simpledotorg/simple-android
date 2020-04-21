@@ -37,6 +37,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -48,7 +49,7 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: PrescribedDrugsScreenController
+  lateinit var controllerFactory: PrescribedDrugsScreenController.Factory
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -59,6 +60,11 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
   private val groupieAdapter = GroupAdapter<ViewHolder>()
 
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
+
+  private val patientUuid by unsafeLazy {
+    val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)
+    screenKey.patientUuid
+  }
 
   private val events by unsafeLazy {
     Observable
@@ -98,7 +104,7 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
     bindUiToController(
         ui = this,
         events = events,
-        controller = controller,
+        controller = controllerFactory.create(patientUuid),
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
   }
@@ -122,8 +128,7 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)
-    return Observable.just(PrescribedDrugsScreenCreated(screenKey.patientUuid))
+    return Observable.just(ScreenCreated())
   }
 
   private fun doneClicks() = RxView.clicks(doneButtonFrame.button).map { PrescribedDrugsDoneClicked }

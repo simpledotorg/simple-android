@@ -5,13 +5,11 @@ import org.threeten.bp.Duration
 import javax.inject.Inject
 
 data class PatientSummaryConfig(
-    val bpEditableDuration: Duration,
-    val callPatientFeatureEnabled: Boolean
+    val bpEditableDuration: Duration
 ) {
 
   @Inject
   constructor(configReader: ConfigReader) : this(
-      bpEditableDuration = Duration.ofSeconds(configReader.long("bp_editable_duration_in_seconds", 3600)),
-      callPatientFeatureEnabled = configReader.boolean("call_patient_from_summary_feature_enabled", false)
+      bpEditableDuration = Duration.ofSeconds(configReader.long("bp_editable_duration_in_seconds", 3600))
   )
 }

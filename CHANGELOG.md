@@ -1,6 +1,8 @@
 # CHANGELOG
 
-# On Demo
+## Next release
+
+## 2020-04-20-7238
 ### Feature
 - Introduce a facility confirmation screen whenever the user tries to perform one of the following actions immediately after changing facilities:
   - Register a new patient

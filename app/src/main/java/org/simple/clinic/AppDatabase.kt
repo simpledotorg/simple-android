@@ -54,9 +54,10 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       BloodSugarMeasurement::class
     ],
     views = [
-      OverdueAppointment::class
+      OverdueAppointment::class,
+      PatientSearchResult::class
     ],
-    version = 63,
+    version = 64,
     exportSchema = true
 )
 @TypeConverters(

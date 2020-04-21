@@ -38,6 +38,19 @@
       tools:ignore="RelativeOverlap"
       tools:visibility="visible" />
 
+    <TextView
+      android:id="@+id/contactTextView"
+      style="@style/Clinic.V2.ToolbarButton"
+      android:layout_alignParentTop="true"
+      android:layout_marginTop="@dimen/spacing_4"
+      android:layout_toStartOf="@id/editPatientButton"
+      android:drawableStart="@drawable/ic_summary_call_icon"
+      android:drawablePadding="@dimen/spacing_4"
+      android:visibility="invisible"
+      tools:ignore="RelativeOverlap"
+      tools:text="1111111111"
+      tools:visibility="visible" />
+
     <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -93,19 +106,6 @@
 
       </LinearLayout>
 
-      <TextView
-        android:id="@+id/contactTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/identifiersContainer"
-        android:layout_alignStart="@id/identifiersContainer"
-        android:layout_marginTop="@dimen/spacing_4"
-        android:drawableStart="@drawable/ic_call_16dp"
-        android:drawablePadding="@dimen/spacing_4"
-        android:drawableTint="@color/white72"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.White72"
-        tools:text="1111111111" />
-
     </RelativeLayout>
   </RelativeLayout>
 
@@ -157,11 +157,11 @@
     android:id="@+id/doneButtonFrame"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
     android:layout_alignParentBottom="true"
+    android:clipToPadding="false"
     app:buttonBackgroundDisabled="@color/grey2"
     app:buttonBackgroundEnabled="@color/blue1"
     app:frameBackgroundDisabled="@color/grey3"
-    app:frameBackgroundEnabled="@color/blue2"
-    android:clipToPadding="false">
+    app:frameBackgroundEnabled="@color/blue2">
 
     <com.google.android.material.button.MaterialButton
       style="?attr/materialButtonStyle"

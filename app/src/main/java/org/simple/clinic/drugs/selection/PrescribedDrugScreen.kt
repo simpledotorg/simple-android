@@ -42,7 +42,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), PrescribedDrugUi {
+class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), PrescribedDrugUi, EditMedicinesUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -74,7 +74,7 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
         events = events.ofType(),
         defaultModel = EditMedicinesModel(),
         update = EditMedicinesUpdate(),
-        effectHandler = EditMedicinesEffectHandler(),
+        effectHandler = EditMedicinesEffectHandler(this),
         init = EditMedicinesInit(),
         modelUpdateListener = uiRenderer::render
     )

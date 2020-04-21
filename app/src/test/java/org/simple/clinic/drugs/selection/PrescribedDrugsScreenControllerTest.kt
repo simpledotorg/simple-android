@@ -51,19 +51,20 @@ class PrescribedDrugsScreenControllerTest {
       uuid = UUID.fromString("a10425cb-88b6-4de9-9457-c426f5e6cfbb"),
       protocolUuid = protocolUuid
   )
-
   private val uiEvents = PublishSubject.create<UiEvent>()
+
   private lateinit var fixture: MobiusTestFixture<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect>
 
   @Before
   fun setup() {
     val editMedicinesUiRenderer = EditMedicinesUiRenderer(ui)
+    val uiActions = mock<EditMedicinesUiActions>()
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
         EditMedicinesModel(),
         EditMedicinesInit(),
         EditMedicinesUpdate(),
-        EditMedicinesEffectHandler(),
+        EditMedicinesEffectHandler(uiActions),
         editMedicinesUiRenderer::render
     )
   }

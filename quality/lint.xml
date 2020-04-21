@@ -5,13 +5,6 @@
   <issue id="UnusedResources">
     <ignore path="src/main/res/values/colors_material.xml" />
     <ignore path="src/main/res/values/colors_v2.xml" />
-
-    <!-- These are referenced from code. -->
-    <ignore path="src/main/res/drawable/ic_patient_female.xml" />
-    <ignore path="src/main/res/drawable/ic_patient_male.xml" />
-    <ignore path="src/main/res/drawable/ic_patient_transgender.xml" />
-
-    <ignore regexp="summary_call_icon_*"/>
   </issue>
 
   <!-- Ignore this for now due to time constraints. Switch to static images later. -->
@@ -27,9 +20,9 @@
   <issue id="ParcelCreator" severity="informational" />
   <issue id="GradleDependency" severity="informational" />
 
-  <!-- JCABI xml parser references a java package that is not bundled
-       with Android. We haven't run into errors yet, but we might.  -->
+  <!-- Required for Sentry  -->
   <issue id="InvalidPackage" severity="informational" />
+
   <issue id="MissingTranslation" severity="informational" />
 
   <!-- We do not expect vision impaired nurses to use the app for now. -->

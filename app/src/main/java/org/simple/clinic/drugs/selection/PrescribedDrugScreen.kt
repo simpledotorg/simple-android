@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.selection
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -14,15 +15,24 @@ import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.drugs.EditMedicinesEffect
+import org.simple.clinic.drugs.EditMedicinesEffectHandler
+import org.simple.clinic.drugs.EditMedicinesEvent
+import org.simple.clinic.drugs.EditMedicinesInit
+import org.simple.clinic.drugs.EditMedicinesModel
+import org.simple.clinic.drugs.EditMedicinesUiRenderer
+import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.unsafeLazy
@@ -57,6 +67,19 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
         .share()
   }
 
+  private val uiRenderer = EditMedicinesUiRenderer(this)
+
+  private val delegate: MobiusDelegate<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> by unsafeLazy {
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = EditMedicinesModel(),
+        update = EditMedicinesUpdate(),
+        effectHandler = EditMedicinesEffectHandler(),
+        init = EditMedicinesInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -78,6 +101,24 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates(): Observable<UiEvent> {

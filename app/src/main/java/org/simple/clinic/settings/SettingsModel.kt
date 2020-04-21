@@ -8,7 +8,8 @@ data class SettingsModel(
     val applicationId: String,
     val name: String?,
     val phoneNumber: String?,
-    val currentLanguage: Language?
+    val currentLanguage: Language?,
+    val appVersion: String?
 ) : Parcelable {
 
   companion object {
@@ -16,7 +17,8 @@ data class SettingsModel(
         applicationId = applicationId,
         name = null,
         phoneNumber = null,
-        currentLanguage = null
+        currentLanguage = null,
+        appVersion = null
     )
   }
 
@@ -32,5 +34,9 @@ data class SettingsModel(
 
   fun currentLanguageFetched(language: Language): SettingsModel {
     return copy(currentLanguage = language)
+  }
+
+  fun appVersionLoaded(appVersion: String): SettingsModel {
+    return copy(appVersion = appVersion)
   }
 }

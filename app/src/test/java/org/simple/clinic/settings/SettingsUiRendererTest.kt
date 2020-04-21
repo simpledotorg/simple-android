@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.Test
 
 class SettingsUiRendererTest {
@@ -20,7 +19,8 @@ class SettingsUiRendererTest {
     renderer.render(defaultModel)
 
     // then
-    verifyZeroInteractions(ui)
+    verify(ui).hideAppUpdateButton()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -35,6 +35,7 @@ class SettingsUiRendererTest {
 
     // then
     verify(ui).displayUserDetails(name, phoneNumber)
+    verify(ui).hideAppUpdateButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -49,6 +50,7 @@ class SettingsUiRendererTest {
     // then
     verify(ui, never()).displayCurrentLanguage(any())
     verify(ui).setChangeLanguageButtonVisible()
+    verify(ui).hideAppUpdateButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -64,6 +66,7 @@ class SettingsUiRendererTest {
     // then
     verify(ui).displayCurrentLanguage(language.displayName)
     verify(ui).setChangeLanguageButtonVisible()
+    verify(ui).hideAppUpdateButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -78,7 +81,33 @@ class SettingsUiRendererTest {
 
     // then
     verify(ui).displayAppVersion(appVersion)
+    verify(ui).hideAppUpdateButton()
     verifyNoMoreInteractions(ui)
   }
 
+  @Test
+  fun `when the app update is available then show update button`() {
+    // given
+    val model = defaultModel.checkedAppUpdate(true)
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).showAppUpdateButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the app update is not available then don't show update button`() {
+    // given
+    val model = defaultModel.checkedAppUpdate(false)
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).hideAppUpdateButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

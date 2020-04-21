@@ -9,4 +9,8 @@ interface SettingsUi {
   fun setChangeLanguageButtonVisible()
 
   fun displayAppVersion(version: String)
+
+  fun showAppUpdateButton()
+
+  fun hideAppUpdateButton()
 }

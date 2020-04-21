@@ -1,5 +1,6 @@
 package org.simple.clinic.settings
 
+import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.widgets.UiEvent
 
 sealed class SettingsEvent : UiEvent
@@ -13,3 +14,5 @@ object ChangeLanguage : SettingsEvent() {
 }
 
 data class AppVersionLoaded(val appVersion: String) : SettingsEvent()
+
+data class AppUpdateAvailabilityChecked(val isUpdateAvailable: Boolean) : SettingsEvent()

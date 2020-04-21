@@ -27,6 +27,18 @@ class CheckAppUpdateAvailability @Inject constructor(
         .onErrorReturn(::AppUpdateStateError)
   }
 
+  fun listenAllUpdates(): Observable<AppUpdateState> {
+    return appUpdateCallback()
+        .map {
+          if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(FLEXIBLE)) {
+            ShowAppUpdate
+          } else {
+            DontShowAppUpdate
+          }
+        }
+        .onErrorReturn(::AppUpdateStateError)
+  }
+
   private fun appUpdateCallback(): Observable<AppUpdateInfo> {
     val appUpdateManager = AppUpdateManagerFactory.create(appContext)
     val appUpdateInfoTask = appUpdateManager.appUpdateInfo

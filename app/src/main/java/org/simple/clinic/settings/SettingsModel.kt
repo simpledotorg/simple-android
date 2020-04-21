@@ -5,13 +5,19 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class SettingsModel(
+    val applicationId: String,
     val name: String?,
     val phoneNumber: String?,
     val currentLanguage: Language?
 ) : Parcelable {
 
   companion object {
-    val FETCHING_USER_DETAILS = SettingsModel(name = null, phoneNumber = null, currentLanguage = null)
+    fun default(applicationId: String) = SettingsModel(
+        applicationId = applicationId,
+        name = null,
+        phoneNumber = null,
+        currentLanguage = null
+    )
   }
 
   val userDetailsQueried: Boolean

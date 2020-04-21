@@ -7,11 +7,10 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.settings.changelanguage.ChangeLanguageEvent
 
 class SettingsUpdateTest {
 
-  private val defaultModel = SettingsModel.FETCHING_USER_DETAILS
+  private val defaultModel = SettingsModel.default(applicationId = "org.simple")
 
   private val spec = UpdateSpec<SettingsModel, SettingsEvent, SettingsEffect>(SettingsUpdate())
 

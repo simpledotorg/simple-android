@@ -8,7 +8,7 @@ import org.junit.Test
 
 class SettingsInitTest {
 
-  private val defaultModel = SettingsModel.FETCHING_USER_DETAILS
+  private val defaultModel = SettingsModel.default(applicationId = "org.simple")
 
   private val spec = InitSpec<SettingsModel, SettingsEffect>(SettingsInit())
 

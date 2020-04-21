@@ -7,3 +7,5 @@ object LoadUserDetailsEffect : SettingsEffect()
 object LoadCurrentLanguageEffect : SettingsEffect()
 
 object OpenLanguageSelectionScreenEffect: SettingsEffect()
+
+data class LoadAppVersionEffect(val applicationId: String) : SettingsEffect()

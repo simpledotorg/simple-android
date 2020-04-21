@@ -608,34 +608,24 @@
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">Call later in</string>
   <string name="contactpatient_done">Done</string>
-  <!--suppress UnusedResources -->
   <plurals name="contactpatient_days">
     <item quantity="one">%s day</item>
     <item quantity="other">%s days</item>
   </plurals>
-  <!--suppress UnusedResources -->
   <plurals name="contactpatient_weeks">
     <item quantity="one">%s week</item>
     <item quantity="other">%s weeks</item>
   </plurals>
-  <!--suppress UnusedResources -->
   <plurals name="contactpatient_months">
     <item quantity="one">%s month</item>
     <item quantity="other">%s months</item>
   </plurals>
   <string name="contactpatient_select_a_reason">Select a Reason</string>
-  <!--suppress UnusedResources -->
   <string name="contactpatient_patient_already_visited">Patient has already visited</string>
-  <!--suppress UnusedResources -->
   <string name="contactpatient_patient_is_not_responding">Patient is not responding</string>
-  <!--suppress UnusedResources -->
   <string name="contactpatient_invalid_phone_number">Phone number does not work</string>
-  <!--suppress UnusedResources -->
   <string name="contactpatient_public_hospital_transfer">Transferred to another public health facility</string>
-  <!--suppress UnusedResources -->
   <string name="contactpatient_moved_to_private">Moved to private practitioner</string>
-  <!--suppress UnusedResources -->
   <string name="contactpatient_patient_died">Died</string>
-  <!--suppress UnusedResources -->
   <string name="contactpatient_other_reason">Other reason</string>
 </resources>

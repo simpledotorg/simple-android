@@ -1,9 +1,12 @@
 package org.simple.clinic.settings
 
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -24,12 +27,14 @@ class SettingsEffectHandlerTest {
   private val userSession = mock<UserSession>()
   private val settingsRepository = mock<SettingsRepository>()
   private val uiActions = mock<UiActions>()
+  private val appVersionFetcher = mock<AppVersionFetcher>()
 
   private val effectHandler = SettingsEffectHandler(
       userSession = userSession,
       settingsRepository = settingsRepository,
-      uiActions = uiActions,
-      schedulersProvider = TrampolineSchedulersProvider()
+      schedulersProvider = TrampolineSchedulersProvider(),
+      appVersionFetcher = appVersionFetcher,
+      uiActions = uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -99,4 +104,20 @@ class SettingsEffectHandlerTest {
     verify(uiActions).openLanguageSelectionScreen()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when load app version effect is received, the app version must be loaded`() {
+    // given
+    val applicationId = "org.simple"
+    val versionName = "1.0.0"
+    whenever(appVersionFetcher.appVersion(applicationId)) doReturn versionName
+
+    // when
+    testCase.dispatch(LoadAppVersionEffect(applicationId))
+
+    // then
+    verifyZeroInteractions(uiActions)
+    testCase.assertOutgoingEvents(AppVersionLoaded(versionName))
+  }
+
 }

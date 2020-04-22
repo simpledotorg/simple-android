@@ -11,6 +11,7 @@ class EditMedicinesUpdate : Update<EditMedicinesModel, EditMedicinesEvent, EditM
       AddNewPrescriptionClicked -> dispatch(ShowNewPrescriptionEntrySheet(model.patientUuid))
       is ProtocolDrugClicked -> dispatch(OpenDosagePickerSheet(event.drugName, model.patientUuid, event.prescriptionForProtocolDrug?.uuid))
       is CustomPrescriptionClicked -> dispatch(ShowUpdateCustomPrescriptionSheet(event.prescribedDrug))
+      PrescribedDrugsDoneClicked -> dispatch(GoBackToPatientSummary)
     }
   }
 }

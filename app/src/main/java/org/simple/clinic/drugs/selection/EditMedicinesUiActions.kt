@@ -7,4 +7,5 @@ interface EditMedicinesUiActions {
   fun showNewPrescriptionEntrySheet(patientUuid: UUID)
   fun showDosageSelectionSheet(drugName: String, patientUuid: UUID, prescribedDrugUuid: UUID?)
   fun showUpdateCustomPrescriptionSheet(prescribedDrug: PrescribedDrug)
+  fun goBackToPatientSummary()
 }

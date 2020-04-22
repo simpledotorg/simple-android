@@ -14,4 +14,6 @@ data class OpenDosagePickerSheet(
 
 data class ShowUpdateCustomPrescriptionSheet(val prescribedDrug: PrescribedDrug) : EditMedicinesEffect()
 
+object GoBackToPatientSummary : EditMedicinesEffect()
+
 

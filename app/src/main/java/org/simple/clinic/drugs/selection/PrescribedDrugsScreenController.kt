@@ -39,7 +39,6 @@ class PrescribedDrugsScreenController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        handleDoneClicks(replayedEvents),
         populateDrugsList(replayedEvents))
   }
 
@@ -82,11 +81,5 @@ class PrescribedDrugsScreenController @AssistedInject constructor(
           protocolDrugSelectionItems + customPrescribedDrugItems
         }
         .map { { ui: Ui -> ui.populateDrugsList(it) } }
-  }
-
-  private fun handleDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PrescribedDrugsDoneClicked>()
-        .map { { ui: Ui -> ui.goBackToPatientSummary() } }
   }
 }

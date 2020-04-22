@@ -339,6 +339,8 @@ dependencies {
   }
   runtimeOnly "com.fasterxml.jackson.core:jackson-core:$versions.jackson"
   runtimeOnly "ch.qos.logback:logback-classic:$versions.logback"
+
+  implementation "androidx.appcompat:appcompat:$versions.appcompat"
 }
 
 // This must always be present at the bottom of this file, as per:

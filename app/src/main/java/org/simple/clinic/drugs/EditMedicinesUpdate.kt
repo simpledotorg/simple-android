@@ -10,6 +10,7 @@ class EditMedicinesUpdate : Update<EditMedicinesModel, EditMedicinesEvent, EditM
     return when (event) {
       AddNewPrescriptionClicked -> dispatch(ShowNewPrescriptionEntrySheet(model.patientUuid))
       is ProtocolDrugClicked -> dispatch(OpenDosagePickerSheet(event.drugName, model.patientUuid, event.prescriptionForProtocolDrug?.uuid))
+      is CustomPrescriptionClicked -> dispatch(ShowUpdateCustomPrescriptionSheet(event.prescribedDrug))
     }
   }
 }

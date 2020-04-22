@@ -11,3 +11,7 @@ data class OpenDosagePickerSheet(
     val patientUuid: UUID,
     val prescribedDrugUuid: UUID?
 ) : EditMedicinesEffect()
+
+data class ShowUpdateCustomPrescriptionSheet(val prescribedDrug: PrescribedDrug) : EditMedicinesEffect()
+
+

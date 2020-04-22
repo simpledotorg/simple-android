@@ -7,7 +7,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.paging.Config
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -77,6 +77,9 @@ class BloodSugarHistoryScreen(
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var measurementHistoryPaginationConfig: PagedList.Config
 
   private val bloodSugarHistoryAdapter = PagingItemAdapter(BloodSugarHistoryListItemDiffCallback())
 
@@ -158,13 +161,7 @@ class BloodSugarHistoryScreen(
   override fun showBloodSugars(dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) {
     val detaches = detaches()
     // Initial load size hint should be a multiple of page size
-    val config = Config(
-        pageSize = 20,
-        prefetchDistance = 10,
-        initialLoadSizeHint = 40,
-        enablePlaceholders = false
-    )
-    dataSourceFactory.toObservable(config = config, detaches = detaches)
+    dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
         .takeUntil(detaches)
         .subscribe(bloodSugarHistoryAdapter::submitList)
   }

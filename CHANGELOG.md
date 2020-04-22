@@ -2,6 +2,9 @@
 
 ## Next release
 
+### Internal
+- Add CI check for verifying that the CHANGELOG is updated
+
 ## 2020-04-20-7238
 ### Feature
 - Introduce a facility confirmation screen whenever the user tries to perform one of the following actions immediately after changing facilities:

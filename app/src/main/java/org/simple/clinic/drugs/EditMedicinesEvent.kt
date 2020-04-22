@@ -14,3 +14,8 @@ data class ProtocolDrugClicked(
 ) : EditMedicinesEvent() {
   override val analyticsName = "Drugs:Protocol:Selected"
 }
+
+data class CustomPrescriptionClicked(val prescribedDrug: PrescribedDrug) : EditMedicinesEvent() {
+  override val analyticsName = "Drugs:Protocol:Edit CustomPrescription Clicked"
+}
+

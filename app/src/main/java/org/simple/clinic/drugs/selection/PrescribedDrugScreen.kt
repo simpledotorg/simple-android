@@ -52,6 +52,9 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
   lateinit var controllerFactory: PrescribedDrugsScreenController.Factory
 
   @Inject
+  lateinit var effectHandlerFactory: EditMedicinesEffectHandler.Factory
+
+  @Inject
   lateinit var activity: AppCompatActivity
 
   private val toolbar by bindView<Toolbar>(R.id.prescribeddrugs_toolbar)
@@ -78,9 +81,9 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
   private val delegate: MobiusDelegate<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect> by unsafeLazy {
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = EditMedicinesModel(),
+        defaultModel = EditMedicinesModel.create(patientUuid),
         update = EditMedicinesUpdate(),
-        effectHandler = EditMedicinesEffectHandler(this),
+        effectHandler = effectHandlerFactory.create(this).build(),
         init = EditMedicinesInit(),
         modelUpdateListener = uiRenderer::render
     )

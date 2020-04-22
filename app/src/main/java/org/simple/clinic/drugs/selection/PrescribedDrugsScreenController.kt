@@ -8,6 +8,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
+import org.simple.clinic.drugs.AddNewPrescriptionClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.facility.FacilityRepository
@@ -41,7 +42,6 @@ class PrescribedDrugsScreenController @AssistedInject constructor(
     return Observable.mergeArray(
         handleDoneClicks(replayedEvents),
         populateDrugsList(replayedEvents),
-        openNewCustomPrescription(replayedEvents),
         openDosagePicker(replayedEvents),
         openUpdateCustomPrescription(replayedEvents))
   }
@@ -99,12 +99,6 @@ class PrescribedDrugsScreenController @AssistedInject constructor(
             )
           }
         }
-  }
-
-  private fun openNewCustomPrescription(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<AddNewPrescriptionClicked>()
-        .map { { ui: Ui -> ui.showNewPrescriptionEntrySheet(patientUuid) } }
   }
 
   private fun openUpdateCustomPrescription(events: Observable<UiEvent>): Observable<UiChange> {

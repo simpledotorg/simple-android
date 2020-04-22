@@ -15,6 +15,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
+import org.simple.clinic.drugs.AddNewPrescriptionClicked
 import org.simple.clinic.drugs.EditMedicinesEffect
 import org.simple.clinic.drugs.EditMedicinesEffectHandler
 import org.simple.clinic.drugs.EditMedicinesEvent
@@ -29,6 +30,7 @@ import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -59,13 +61,14 @@ class PrescribedDrugsScreenControllerTest {
   @Before
   fun setup() {
     val editMedicinesUiRenderer = EditMedicinesUiRenderer(ui)
-    val uiActions = mock<EditMedicinesUiActions>()
+    val effectHandler = EditMedicinesEffectHandler(ui, TrampolineSchedulersProvider())
+
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
-        EditMedicinesModel(),
+        EditMedicinesModel.create(patientUuid),
         EditMedicinesInit(),
         EditMedicinesUpdate(),
-        EditMedicinesEffectHandler(uiActions),
+        effectHandler.build(),
         editMedicinesUiRenderer::render
     )
   }

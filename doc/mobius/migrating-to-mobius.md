@@ -56,7 +56,7 @@ Run all tests in the screen (from the package if the test class has been split i
 #### Migrate the logic
 > It is critical here to *NOT* attempt to refactor the effect handler or the Mobius update loop during the process of migration. If you see duplication when migrating the methods, let it remain there. We will clean up and refactor everything in the end after all the flows are moved.
 
-1. Pick on method from the UI interface to move to Mobius.
+1. Pick one method from the UI interface to move to Mobius.
 2. Find usages of this method in the controller.
    - If there is one single flow which is invoking it, comment the flow out from the controller's `apply` method.
    - If the flow itself invokes multiple methods on the UI interface, only comment out the parts of the flow where the method is invoked.
@@ -65,7 +65,7 @@ Run all tests in the screen (from the package if the test class has been split i
    - One important thing to note here is that under no circumstances should an existing test be changed while the refactoring is happen.
    - Exceptions can be made for this, talk to someone else and be 100% sure that you know why you're changing a test during the process.
 4. If the method is a one-off method(like navigating to a different screen, showing a dialog box, etc.), move it to the previously defined `UiActions` interface.
-   - Make `Ui` interface implement `UiActions`
+   - Make `Ui` interface implement `UiActions` if not done already.
    - Run the tests again. This should end up breaking the controller tests since the implementation is still missing for the one-off method call.
    - Add the implementation in `EffectHandler#uiActions` in tests as a anonymous class and invoke the method on the mock of `Ui` in order to let compilation continue.
 5. Look at the events which trigger this method. Move it to the mobius event file and make it extend the sealed event class.

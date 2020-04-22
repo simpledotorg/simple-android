@@ -10,6 +10,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.drugs.AddNewPrescriptionClicked
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
@@ -42,7 +43,6 @@ class PrescribedDrugsScreenController @AssistedInject constructor(
     return Observable.mergeArray(
         handleDoneClicks(replayedEvents),
         populateDrugsList(replayedEvents),
-        openDosagePicker(replayedEvents),
         openUpdateCustomPrescription(replayedEvents))
   }
 
@@ -85,20 +85,6 @@ class PrescribedDrugsScreenController @AssistedInject constructor(
           protocolDrugSelectionItems + customPrescribedDrugItems
         }
         .map { { ui: Ui -> ui.populateDrugsList(it) } }
-  }
-
-  private fun openDosagePicker(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ProtocolDrugClicked>()
-        .map { selectedDrug ->
-          { ui: Ui ->
-            ui.showDosageSelectionSheet(
-                drugName = selectedDrug.drugName,
-                patientUuid = patientUuid,
-                prescribedDrugUuid = selectedDrug.prescriptionForProtocolDrug?.uuid
-            )
-          }
-        }
   }
 
   private fun openUpdateCustomPrescription(events: Observable<UiEvent>): Observable<UiChange> {

@@ -24,6 +24,7 @@ import org.simple.clinic.drugs.EditMedicinesModel
 import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages

@@ -74,6 +74,7 @@ buildscript {
       cameraLifecycle     : '1.0.0-alpha09',
       zxing               : '3.3.3',
       paging              : '2.1.2',
+      appcompat           : '1.2.0-beta01'
   ]
 
   repositories {

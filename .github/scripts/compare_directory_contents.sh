@@ -5,6 +5,7 @@ targetDirectory=${2}
 
 changedFile=
 
+# shellcheck disable=SC2045
 for file in $(ls $sourceDirectory)
 do
 	sourceFile="$sourceDirectory/$file"

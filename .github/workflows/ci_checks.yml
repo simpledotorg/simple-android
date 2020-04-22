@@ -125,6 +125,22 @@ jobs:
       - name: Verify existing Room schemas are not modified
         run: current/.github/scripts/compare_directory_contents.sh master/app/schemas/org.simple.clinic.AppDatabase current/app/schemas/org.simple.clinic.AppDatabase
 
+  verify_pr_description:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Verify PR description
+        if: github.event_name == 'pull_request'
+        run: |
+          PR_DESCRIPTION=${{github.event.pull_request.body}}
+          PIVOTAL_STORY_REGEX='https:\/\/www.pivotaltracker.com\/story\/show\/[0-9]{9}'
+
+          if [[ $PR_DESCRIPTION =~ $PIVOTAL_STORY_REGEX ]]; then
+            exit 0
+          else
+            echo "PR description doesn't contain a pivotal story"
+            exit 1
+          fi
+
   qa_purge_env:
     runs-on: [ubuntu-latest]
     needs: [qa_lint, qa_unit_tests, mobius_migration_tests, qa_android_tests, qa_build_apk]
@@ -134,4 +150,3 @@ jobs:
           curl -v --request DELETE \
           --url https://api-qa.simple.org/qa/purge \
           --header 'Authorization: Bearer ${{ secrets.QA_PURGE_TOKEN }}'
-

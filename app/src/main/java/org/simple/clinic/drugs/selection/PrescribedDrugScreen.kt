@@ -29,6 +29,7 @@ import org.simple.clinic.drugs.EditMedicinesModel
 import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.main.TheActivity

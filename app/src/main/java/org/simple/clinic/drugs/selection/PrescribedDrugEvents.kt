@@ -12,10 +12,6 @@ data class CustomPrescriptionClicked(val prescribedDrug: PrescribedDrug) : UiEve
   override val analyticsName = "Drugs:Protocol:Edit CustomPrescription Clicked"
 }
 
-object AddNewPrescriptionClicked : UiEvent {
-  override val analyticsName = "Drugs:Protocol:Add Custom Clicked"
-}
-
 object PrescribedDrugsDoneClicked : UiEvent {
   override val analyticsName = "Drugs:Protocol:Save Clicked"
 }

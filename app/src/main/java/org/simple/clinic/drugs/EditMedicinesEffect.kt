@@ -1,4 +1,7 @@
 package org.simple.clinic.drugs
 
-interface EditMedicinesEffect {
-}
+import java.util.UUID
+
+sealed class EditMedicinesEffect
+
+data class ShowNewPrescriptionEntrySheet(val patientUuid: UUID) : EditMedicinesEffect()

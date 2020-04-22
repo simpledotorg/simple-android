@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.paging.Config
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
@@ -25,7 +25,6 @@ import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
@@ -64,6 +63,9 @@ class BloodPressureHistoryScreen(
 
   @field:[Inject Named("time_for_measurement_history")]
   lateinit var timeFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var measurementHistoryPaginationConfig: PagedList.Config
 
   private val bloodPressureHistoryAdapter = PagingItemAdapter(BloodPressureHistoryListItemDiffCallback())
 
@@ -157,13 +159,7 @@ class BloodPressureHistoryScreen(
   override fun showBloodPressures(dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory) {
     val detaches = detaches()
     // Initial load size hint should be a multiple of page size
-    val config = Config(
-        pageSize = 20,
-        prefetchDistance = 10,
-        initialLoadSizeHint = 40,
-        enablePlaceholders = false
-    )
-    dataSourceFactory.toObservable(config = config, detaches = detaches)
+    dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
         .takeUntil(detaches)
         .subscribe(bloodPressureHistoryAdapter::submitList)
   }

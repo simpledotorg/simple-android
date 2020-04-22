@@ -6,6 +6,7 @@
 ### Internal
 - Add CI check for verifying that the CHANGELOG is updated
 - Paginate data in blood sugar history page
+- Use database view for `PatientSearchResult`
 
 ## 2020-04-20-7238
 ### Feature

@@ -64,17 +64,20 @@ Run all tests in the screen (from the package if the test class has been split i
 3. Run tests now and take a note of which ones break, we will migrate the functionality and make these tests pass one by one.
    - One important thing to note here is that under no circumstances should an existing test be changed while the refactoring is happen.
    - Exceptions can be made for this, talk to someone else and be 100% sure that you know why you're changing a test during the process.
-4. If the method is a one-off method, move it to the `UiActions` interface previously defined.
-	- Run the tests again. This should end up breaking the controller tests since the implementation in the test does not have this method implemented. Add the implementation and invoke the same method on the mock of `Ui` in order to let compilation continue.
+4. If the method is a one-off method(like navigating to a different screen, showing a dialog box, etc.), move it to the previously defined `UiActions` interface.
+   - Make `Ui` interface implement `UiActions`
+   - Run the tests again. This should end up breaking the controller tests since the implementation is still missing for the one-off method call.
+   - Add the implementation in `EffectHandler#uiActions` in tests as a anonymous class and invoke the method on the mock of `Ui` in order to let compilation continue.
 5. Look at the events which trigger this method. Move it to the mobius event file and make it extend the sealed event class.
 6. Look at the flows which trigger this method. The flows will be reaching into the Rx event streams (generally using `combineLatest` or `withLatestFrom`) to fetch the data that is needed to trigger this method. The data that is required to trigger these should be moved into the `Model`.
-	- 	Look at the events that are generating this data. Move these to the Mobius loop and generate the data in the model (either in `Init` or `Update`, depending on what kicks off the data generation).
-	-  If the data is required in other flows, add a `() -> Model` supplier function to the controller as an `@Assisted` parameter.
-	-  In the screen, provide the current latest model via the supplier function whenever it is invoked via the `MobiusDelegate`.
-	-  In the controller, instead of using the Rx streams to fetch this data (which is now present in the `Model`), use the injected supplier function to get access to the current `Model` and read this data. This should only be done for existing flows which are not getting migrated.
+    - Look at the events that are generating this data. Move these to the Mobius loop and generate the data in the model (either in `Init` or `Update`, depending on what kicks off the data generation).
+	- If the data is required in other flows, add a `() -> Model` supplier function to the controller as an `@Assisted` parameter.
+	- In the screen, provide the current latest model via the supplier function whenever it is invoked via the `MobiusDelegate`.
+	- In the controller, instead of using the Rx streams to fetch this data (which is now present in the `Model`), use the injected supplier function to get access to the current `Model` and read this data. This should only be done for existing flows which are not getting migrated.
 7. Once the minimum amount of data required to trigger the method is moved into the `Model`, we can move the rendering/one-off UI logic.
 	- If the method is a screen rendering method, move this rendering to the `UiRenderer`.
-	- If the method is a one-off action, add an `Effect` and a corresponding handler in the `EffectHandler` and move the method invocation over.
+	- If the method is a one-off action, add an `Effect` and a corresponding handler in the `EffectHandler` and move the method invocation over. Trigger the `Effect` in `Update` to close the loop.
+    - In tests, replace the anonymous class `EffectHandler#uiActions` with the mock of `Ui`.
 8. Run tests again and verify that they pass.
 	- If the tests fail, examine **why** they failed first before trying to change the tests. Be absolutely sure that the tests need to be changed before changing them. Usually, it will be because something was missed while the refactoring happened.
 9. Once the tests pass, remove the commented out code from the controller and commit the changes.

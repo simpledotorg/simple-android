@@ -7,3 +7,10 @@ sealed class EditMedicinesEvent : UiEvent
 object AddNewPrescriptionClicked : EditMedicinesEvent() {
   override val analyticsName = "Drugs:Protocol:Add Custom Clicked"
 }
+
+data class ProtocolDrugClicked(
+    val drugName: String,
+    val prescriptionForProtocolDrug: PrescribedDrug?
+) : EditMedicinesEvent() {
+  override val analyticsName = "Drugs:Protocol:Selected"
+}

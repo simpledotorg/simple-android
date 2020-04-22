@@ -21,6 +21,7 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<EditMedicinesEffect, EditMedicinesEvent>()
         .addConsumer(ShowNewPrescriptionEntrySheet::class.java, { uiActions.showNewPrescriptionEntrySheet(it.patientUuid) }, schedulersProvider.ui())
+        .addConsumer(OpenDosagePickerSheet::class.java, { uiActions.showDosageSelectionSheet(it.drugName, it.patientUuid, it.prescribedDrugUuid) }, schedulersProvider.ui())
         .build()
   }
 }

@@ -5,3 +5,9 @@ import java.util.UUID
 sealed class EditMedicinesEffect
 
 data class ShowNewPrescriptionEntrySheet(val patientUuid: UUID) : EditMedicinesEffect()
+
+data class OpenDosagePickerSheet(
+    val drugName: String,
+    val patientUuid: UUID,
+    val prescribedDrugUuid: UUID?
+) : EditMedicinesEffect()

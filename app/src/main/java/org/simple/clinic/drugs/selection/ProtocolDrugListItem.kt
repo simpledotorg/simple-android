@@ -9,6 +9,7 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
 

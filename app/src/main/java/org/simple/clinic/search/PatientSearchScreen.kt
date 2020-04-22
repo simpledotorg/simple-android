@@ -116,7 +116,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun setEmptyTextFieldErrorVisible(visible: Boolean) {
-    searchQueryEditText.error = if (visible) {
+    searchQueryTextInputLayout.error = if (visible) {
       resources.getString(R.string.patientsearch_error_empty_fullname)
     } else null
   }

@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## Next release
+- [In Progress: 22 Apr 2020] Add support for calling the patient directly from the summary screen
 
 ### Internal
 - Add CI check for verifying that the CHANGELOG is updated

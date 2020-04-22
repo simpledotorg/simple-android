@@ -8,6 +8,9 @@
 - Paginate data in blood sugar history page
 - Use database view for `PatientSearchResult`
 
+### Fixes
+- Fixed how empty search error is shown
+
 ## 2020-04-20-7238
 ### Feature
 - Introduce a facility confirmation screen whenever the user tries to perform one of the following actions immediately after changing facilities:

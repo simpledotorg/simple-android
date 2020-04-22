@@ -7,5 +7,4 @@ import java.util.UUID
 
 interface PrescribedDrugUi : EditMedicinesUiActions {
   fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>)
-  fun goBackToPatientSummary()
 }

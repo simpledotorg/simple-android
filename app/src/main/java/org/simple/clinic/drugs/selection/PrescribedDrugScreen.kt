@@ -50,9 +50,6 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controllerFactory: PrescribedDrugsScreenController.Factory
-
-  @Inject
   lateinit var effectHandlerFactory: EditMedicinesEffectHandler.Factory
 
   @Inject
@@ -104,13 +101,6 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
     val fadeAnimator = DefaultItemAnimator()
     fadeAnimator.supportsChangeAnimations = false
     recyclerView.itemAnimator = fadeAnimator
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controllerFactory.create(patientUuid),
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    )
   }
 
   override fun onAttachedToWindow() {

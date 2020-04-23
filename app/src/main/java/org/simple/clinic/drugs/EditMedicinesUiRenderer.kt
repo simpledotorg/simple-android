@@ -1,12 +1,12 @@
 package org.simple.clinic.drugs
 
-import org.simple.clinic.drugs.selection.PrescribedDrugUi
+import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 
-class EditMedicinesUiRenderer(private val ui: PrescribedDrugUi) : ViewRenderer<EditMedicinesModel> {
+class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<EditMedicinesModel> {
   override fun render(model: EditMedicinesModel) {
     if (model.prescribedDrugs == null || model.protocolDrugs == null)
       return

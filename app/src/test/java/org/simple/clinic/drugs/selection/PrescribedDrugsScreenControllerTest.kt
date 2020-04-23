@@ -45,7 +45,8 @@ class PrescribedDrugsScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val ui = mock<PrescribedDrugUi>()
+  private val ui = mock<EditMedicinesUi>()
+  private val uiActions = mock<EditMedicinesUiActions>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val protocolRepository = mock<ProtocolRepository>()
@@ -65,7 +66,7 @@ class PrescribedDrugsScreenControllerTest {
   fun setup() {
     val editMedicinesUiRenderer = EditMedicinesUiRenderer(ui)
     val effectHandler = EditMedicinesEffectHandler(
-        uiActions = ui,
+        uiActions = uiActions,
         schedulersProvider = TrampolineSchedulersProvider(),
         userSession = userSession,
         facilityRepository = facilityRepository,
@@ -174,7 +175,7 @@ class PrescribedDrugsScreenControllerTest {
     uiEvents.onNext(AddNewPrescriptionClicked)
 
     //then
-    verify(ui).showNewPrescriptionEntrySheet(patientUuid)
+    verify(uiActions).showNewPrescriptionEntrySheet(patientUuid)
   }
 
   @Parameters(
@@ -196,7 +197,7 @@ class PrescribedDrugsScreenControllerTest {
     uiEvents.onNext(ProtocolDrugClicked(drugName = drugName, prescriptionForProtocolDrug = null))
 
     //then
-    verify(ui).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid, prescribedDrugUuid = null)
+    verify(uiActions).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid, prescribedDrugUuid = null)
   }
 
   @Test
@@ -212,7 +213,7 @@ class PrescribedDrugsScreenControllerTest {
     uiEvents.onNext(CustomPrescriptionClicked(prescribedDrug))
 
     //then
-    verify(ui).showUpdateCustomPrescriptionSheet(prescribedDrug)
+    verify(uiActions).showUpdateCustomPrescriptionSheet(prescribedDrug)
   }
 
   @Test
@@ -226,7 +227,7 @@ class PrescribedDrugsScreenControllerTest {
     uiEvents.onNext(PrescribedDrugsDoneClicked)
 
     //then
-    verify(ui).goBackToPatientSummary()
+    verify(uiActions).goBackToPatientSummary()
   }
 
   private fun setupController() {

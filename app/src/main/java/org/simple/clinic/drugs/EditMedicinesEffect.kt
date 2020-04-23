@@ -16,4 +16,6 @@ data class ShowUpdateCustomPrescriptionSheet(val prescribedDrug: PrescribedDrug)
 
 object GoBackToPatientSummary : EditMedicinesEffect()
 
+data class FetchPrescribedAndProtocolDrugs(val patientUuid: UUID) : EditMedicinesEffect()
+
 

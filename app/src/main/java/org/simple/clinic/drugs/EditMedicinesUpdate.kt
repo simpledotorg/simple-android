@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 
@@ -12,6 +13,7 @@ class EditMedicinesUpdate : Update<EditMedicinesModel, EditMedicinesEvent, EditM
       is ProtocolDrugClicked -> dispatch(OpenDosagePickerSheet(event.drugName, model.patientUuid, event.prescriptionForProtocolDrug?.uuid))
       is CustomPrescriptionClicked -> dispatch(ShowUpdateCustomPrescriptionSheet(event.prescribedDrug))
       PrescribedDrugsDoneClicked -> dispatch(GoBackToPatientSummary)
+      else -> noChange()
     }
   }
 }

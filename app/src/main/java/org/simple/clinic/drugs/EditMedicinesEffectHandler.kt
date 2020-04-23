@@ -4,12 +4,21 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import io.reactivex.Scheduler
+import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.drugs.selection.EditMedicinesUiActions
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class EditMedicinesEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: EditMedicinesUiActions,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
+    private val protocolRepository: ProtocolRepository,
+    private val prescriptionRepository: PrescriptionRepository
 ) {
 
   @AssistedInject.Factory
@@ -20,10 +29,29 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<EditMedicinesEffect, EditMedicinesEvent> {
     return RxMobius
         .subtypeEffectHandler<EditMedicinesEffect, EditMedicinesEvent>()
+        .addTransformer(FetchPrescribedAndProtocolDrugs::class.java, fetchDrugsList(schedulersProvider.io()))
         .addConsumer(ShowNewPrescriptionEntrySheet::class.java, { uiActions.showNewPrescriptionEntrySheet(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenDosagePickerSheet::class.java, { uiActions.showDosageSelectionSheet(it.drugName, it.patientUuid, it.prescribedDrugUuid) }, schedulersProvider.ui())
         .addConsumer(ShowUpdateCustomPrescriptionSheet::class.java, { uiActions.showUpdateCustomPrescriptionSheet(it.prescribedDrug) }, schedulersProvider.ui())
         .addAction(GoBackToPatientSummary::class.java, uiActions::goBackToPatientSummary, schedulersProvider.ui())
         .build()
+  }
+
+  private fun fetchDrugsList(io: Scheduler): ObservableTransformer<FetchPrescribedAndProtocolDrugs, EditMedicinesEvent> {
+    return ObservableTransformer { effects ->
+
+      val protocolDrugsStream = effects
+          .observeOn(io)
+          .flatMap { userSession.requireLoggedInUser() }
+          .switchMap { facilityRepository.currentFacility(it) }
+          .switchMap { protocolRepository.drugsForProtocolOrDefault(it.protocolUuid) }
+
+      val prescribedDrugsStream = effects
+          .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it.patientUuid).subscribeOn(io) }
+
+      Observables
+          .combineLatest(protocolDrugsStream, prescribedDrugsStream)
+          .map { DrugsListFetched(it.first, it.second) }
+    }
   }
 }

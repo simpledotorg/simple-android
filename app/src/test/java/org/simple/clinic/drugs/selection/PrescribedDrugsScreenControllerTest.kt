@@ -64,7 +64,14 @@ class PrescribedDrugsScreenControllerTest {
   @Before
   fun setup() {
     val editMedicinesUiRenderer = EditMedicinesUiRenderer(ui)
-    val effectHandler = EditMedicinesEffectHandler(ui, TrampolineSchedulersProvider())
+    val effectHandler = EditMedicinesEffectHandler(
+        uiActions = ui,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        protocolRepository = protocolRepository,
+        prescriptionRepository = prescriptionRepository
+    )
 
     fixture = MobiusTestFixture(
         uiEvents.ofType(),

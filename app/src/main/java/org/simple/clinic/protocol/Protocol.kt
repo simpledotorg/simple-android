@@ -1,5 +1,6 @@
 package org.simple.clinic.protocol
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
@@ -8,11 +9,13 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 
 @Entity
+@Parcelize
 data class Protocol(
 
     @PrimaryKey
@@ -29,7 +32,7 @@ data class Protocol(
     val syncStatus: SyncStatus,
 
     val deletedAt: Instant?
-) {
+) : Parcelable {
 
   @Dao
   interface RoomDao {

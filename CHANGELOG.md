@@ -3,6 +3,8 @@
 ## Next release
 - [In Progress: 23 Apr 2020] Add support for calling the patient directly from the summary screen
 
+## On Demo
+
 ### Internal
 - Add CI check for verifying that the CHANGELOG is updated
 - Paginate data in blood sugar history page

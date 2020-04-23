@@ -20,7 +20,6 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.drugs.EditMedicinesEffect
 import org.simple.clinic.drugs.EditMedicinesEffectHandler
 import org.simple.clinic.drugs.EditMedicinesEvent
@@ -38,8 +37,6 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -69,9 +66,8 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
 
   private val events by unsafeLazy {
     Observable
-        .merge(screenCreates(), adapterUiEvents, doneClicks())
+        .merge(adapterUiEvents, doneClicks())
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val uiRenderer = EditMedicinesUiRenderer(this)
@@ -119,10 +115,6 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
 
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-
-  private fun screenCreates(): Observable<UiEvent> {
-    return Observable.just(ScreenCreated())
   }
 
   private fun doneClicks() = RxView.clicks(doneButtonFrame.button).map { PrescribedDrugsDoneClicked }

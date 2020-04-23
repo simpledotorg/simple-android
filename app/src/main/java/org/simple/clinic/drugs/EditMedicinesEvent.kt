@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs
 
+import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.widgets.UiEvent
 
 sealed class EditMedicinesEvent : UiEvent
@@ -22,3 +23,8 @@ data class CustomPrescriptionClicked(val prescribedDrug: PrescribedDrug) : EditM
 object PrescribedDrugsDoneClicked : EditMedicinesEvent() {
   override val analyticsName = "Drugs:Protocol:Save Clicked"
 }
+
+data class DrugsListFetched(
+    val protocolDrugs: List<ProtocolDrugAndDosages>,
+    val prescribedDrugs: List<PrescribedDrug>
+) : EditMedicinesEvent()

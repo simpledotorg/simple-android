@@ -230,12 +230,6 @@ class PrescribedDrugsScreenControllerTest {
   }
 
   private fun setupController() {
-    val controller = PrescribedDrugsScreenController(patientUuid, userSession, facilityRepository, protocolRepository, prescriptionRepository)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
     whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
 

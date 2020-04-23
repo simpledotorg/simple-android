@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Index
@@ -8,6 +9,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
@@ -17,6 +19,7 @@ import java.util.UUID
  * Drugs prescribed to a patient. This may have been picked
  * from a [ProtocolDrug] or entered manually.
  */
+@Parcelize
 @Entity(indices = [Index("patientUuid", unique = false)])
 data class PrescribedDrug(
     @PrimaryKey
@@ -43,7 +46,7 @@ data class PrescribedDrug(
     val updatedAt: Instant,
 
     val deletedAt: Instant?
-) {
+) : Parcelable {
 
   fun toPayload(): PrescribedDrugPayload {
     return PrescribedDrugPayload(

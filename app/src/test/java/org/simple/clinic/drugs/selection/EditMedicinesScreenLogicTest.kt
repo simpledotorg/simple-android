@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -231,8 +232,8 @@ class EditMedicinesScreenLogicTest {
   }
 
   private fun setupController() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
-    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
+    whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
+    whenever(facilityRepository.currentFacilityImmediate(loggedInUser)) doReturn facility
 
     fixture.start()
 

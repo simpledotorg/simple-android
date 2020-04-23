@@ -6,7 +6,7 @@
 - Show all BP passports of a patient while editing them
 
 ### Internal
-- Updated translations: `bn_BD`, `kn_IN`, `hi_IN`
+- Updated translations: `bn_BD`, `kn_IN`, `hi_IN`, `mr_IN`
 - Add CI check for fixing ellipsis's in strings.xml
 - Extracted `BloodPressureReading` model as an embedded model from `BloodPressureMeasurement`
 

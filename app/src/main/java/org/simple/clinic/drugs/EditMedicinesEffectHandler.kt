@@ -11,6 +11,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import java.util.UUID
 
 class EditMedicinesEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: EditMedicinesUiActions,
@@ -42,16 +43,20 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
 
       val protocolDrugsStream = effects
           .observeOn(io)
-          .flatMap { userSession.requireLoggedInUser() }
-          .switchMap { facilityRepository.currentFacility(it) }
-          .switchMap { protocolRepository.drugsForProtocolOrDefault(it.protocolUuid) }
+          .map { currentProtocolUuid() }
+          .switchMap { protocolRepository.drugsForProtocolOrDefault(it) }
 
       val prescribedDrugsStream = effects
-          .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it.patientUuid).subscribeOn(io) }
+          .switchMap { prescriptionRepository.newestPrescriptionsForPatient(it.patientUuid).subscribeOn(io) }
 
       Observables
           .combineLatest(protocolDrugsStream, prescribedDrugsStream)
           .map { DrugsListFetched(it.first, it.second) }
     }
+  }
+
+  private fun currentProtocolUuid(): UUID {
+    val loggedInUser = userSession.loggedInUserImmediate()!!
+    return facilityRepository.currentFacilityImmediate(loggedInUser)?.protocolUuid!!
   }
 }

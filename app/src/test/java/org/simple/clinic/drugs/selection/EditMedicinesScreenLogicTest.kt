@@ -40,7 +40,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class PrescribedDrugsScreenControllerTest {
+class EditMedicinesScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

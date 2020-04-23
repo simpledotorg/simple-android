@@ -1,18 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
   <string name="app_name">ਸਧਾਰਨ</string>
 
   <!-- Common -->
-  <string name="gender_female">ਇਸਤਰੀ</string>
+  <string name="gender_female">ਔਰਤ</string>
   <string name="gender_male">ਮਰਦ</string>
-  <string name="gender_transgender">ਟਰਾਂਸਜੈਂਡਰ</string>
+  <string name="gender_transgender">ਦੁਲਿੰਗੀ</string>
   <!--suppress UnusedResources -->
   <string name="gender_male_letter">ਮ</string>
   <!--suppress UnusedResources -->
   <string name="gender_female_letter">ਔ</string>
   <!--suppress UnusedResources -->
   <string name="gender_trans_letter">ਦੁ</string>
-  <string name="api_unexpected_error">ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ.</string>
-  <string name="api_network_error">ਕੋਈ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਨਹੀਂ</string>
+  <string name="api_unexpected_error">ਕੁਝ ਗੜਬੜ ਹੋ ਗਈ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
+  <string name="api_network_error">ਕੋਈ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਉਪਲਬਧ ਨਹੀਂ ਹੈ</string>
+  <string name="api_server_error">ਸਰਵਰ ਤਰੁੱਟੀ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
 
   <!-- Country names -->
   <string name="country_india">ਭਾਰਤ</string>
@@ -24,7 +26,7 @@
   <string name="home_settings">ਸੈਟਿੰਗਾਂ</string>
 
   <!--Business id Identifier -->
-  <string name="identifiertype_bp_passport">ਬੀਪੀ ਪਾਸਪੋਰਟ</string>
+  <string name="identifiertype_bp_passport">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਪਾਸਪੋਰਟ</string>
   <string name="identifiertype_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
   <string name="identifiertype_unknown">ਆਈਡੀ</string>
 
@@ -39,15 +41,17 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">ਮਰੀਜ਼ ਰਜਿਸਟਰਡ ਨਹੀਂ ਹੈ</string>
   <string name="patientsearchresults_register_patient">ਇੱਕ ਨਵੇਂ ਮਰੀਜ਼ ਵਜੋਂ ਰਜਿਸਟਰ ਕਰੋ</string>
   <string name="patientsearchresults_register_patient_for_empty_state">ਮਰੀਜ਼ ਨੂੰ ਰਜਿਸਟਰ ਕਰੋ</string>
+  <string name="patientsearchresults_item_last_seen">ਆਖਰੀ ਵਾਰ ਦੇਖਿਆ ਗਿਆ:</string>
   <string name="patientsearchresults_current_facility_header">%s ਦਾ ਦੌਰਾ ਕੀਤਾ ਹੈ</string>
   <string name="patientsearchresults_other_results_header">ਹੋਰ ਨਤੀਜੇ</string>
   <string name="patientsearchresults_no_patients_match">ਕੋਈ ਮਰੀਜ਼ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ ਹਨ</string>
 
   <!-- Manual patient entry -->
-  <string name="patiententry_contentdescription_up_button">ਖੋਜ ਲਈ ਵਾਪਸ ਜਾਉ</string>
+  <string name="patiententry_contentdescription_up_button">ਖੋਜ \'ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
   <string name="patiententry_full_name">ਮਰੀਜ਼ ਦਾ ਨਾਮ</string>
-  <string name="patiententry_phone_number">ਫ਼ੋਨ ਨੰਬਰ</string>
+  <string name="patiententry_phone_number">ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="patiententry_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
+  <string name="patiententry_ethiopia_national_id">ਰਾਸ਼ਟਰੀ ਆਈ.ਡੀ.</string>
   <string name="patiententry_date_of_birth_unfocused">ਜਨਮ ਮਿਤੀ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (ਜਨਮ ਮਿਤੀ): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">ਜਾਂ</string>
@@ -56,14 +60,17 @@
   <string name="patiententry_street_house_road_number">ਮਕਾਨ ਅਤੇ ਰੋਡ ਨੰਬਰ</string>
   <string name="patiententry_village_colony_ward">ਪਿੰਡ / ਕਲੋਨੀ / ਵਾਰਡ</string>
   <string name="patiententry_village_ward">ਪਿੰਡ / ਵਾਰਡ</string>
+  <string name="patiententry_kebele">ਪਿੰਡ</string>
   <string name="patiententry_zone">ਯੂਨੀਅਨ</string>
-  <string name="patiententry_district">ਜਿਲ੍ਹਾ</string>
+  <string name="patiententry_district">ਜ਼ਿਲ੍ਹਾ</string>
+  <string name="patiententry_woreda">ਵੋਰੈਡਾ</string>
   <string name="patiententry_upazila">ਅਪੈਜ਼ੀਲਾ</string>
   <string name="patiententry_state">ਰਾਜ</string>
+  <string name="patiententry_region">ਖੇਤਰ</string>
   <string name="patiententry_save_patient">ਅਗਲਾ</string>
   <string name="patiententry_error_empty_fullname">ਮਰੀਜ਼ ਦਾ ਪੂਰਾ ਨਾਮ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patiententry_error_empty_gender">ਮਰੀਜ਼ ਦਾ ਲਿੰਗ ਚੁਣੋ</string>
-  <string name="patiententry_error_empty_colony_or_village">ਕੋਲੋਨੀ/ਪਿੰਡ/ਵਾਰਡ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="patiententry_error_empty_colony_or_village">ਕਾਲੋਨੀ / ਪਿੰਡ / ਵਾਰਡ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patiententry_error_empty_district">ਮਰੀਜ਼ ਦਾ ਜ਼ਿਲ੍ਹਾ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patiententry_error_state_empty">ਮਰੀਜ਼ ਦਾ ਰਾਜ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">ਮਰੀਜ਼ ਦੀ ਉਮਰ ਦਾਖ਼ਲ ਕਰੋ</string>
@@ -71,17 +78,18 @@
   <string name="patiententry_error_dateofbirth_is_in_future">ਮਰੀਜ਼ ਦੀ ਜਨਮ ਮਿਤੀ ਸਹੀ ਕਰੋ</string>
   <string name="patiententry_error_phonenumber_length_less">ਫ਼ੋਨ ਨੰਬਰ 6 ਅੰਕਾਂ ਤੋਂ ਛੋਟਾ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
   <string name="patiententry_error_phonenumber_length_more">ਫ਼ੋਨ ਨੰਬਰ 12 ਅੰਕਾਂ ਤੋਂ ਵੱਡਾ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
-  <string name="patiententry_identifier">ਬੀਪੀ ਪਾਸਪੋਰਟ</string>
+  <string name="patiententry_identifier">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਪਾਸਪੋਰਟ</string>
   <string name="patiententry_consent_header">ਸਹਿਮਤੀ:\u0020</string>
   <string name="patiententry_consent_first_para">ਹੇਠਾਂ ਟੈਪ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤਾ ਕੋਈ ਵੀ ਮਰੀਜ਼ ਡੇਟਾ ਢੁਕਵੀਂ ਸੂਚਿਤ ਸਹਿਮਤੀ ਤਹਿਤ ਹਾਸਲ ਕੀਤਾ ਗਿਆ ਹੈ। ਇਸਦਾ ਮਤਲਬ ਇਹ ਹੈ ਕਿ ਮਰੀਜ਼ ਜਾਂ ਕਨੂੰਨੀ ਸਰਪ੍ਰਸਤ ਨੂੰ ਪਤਾ ਹੈ ਕਿ ਤੁਸੀਂ ਉਸਦਾ ਨਿੱਜੀ ਡਾਟਾ ਐਪ ਵਿੱਚ ਦਰਜ ਕਰ ਰਹੇ ਹੋ, ਸਮਝਦਾ/ਸਮਝਦੀ ਹੈ ਕਿ ਕਿਹੜਾ ਡਾਟਾ ਇਕੱਤਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ, ਅਤੇ ਜਾਣਦਾ/ਜਾਣਦੀ ਹੈ ਕਿ ਐਪ ਵਿੱਚ ਪ੍ਰਦਾਨ ਕੀਤੇ ਫ਼ੋਨ ਨੰਬਰ ਦੀ ਵਰਤੋਂ ਕਰਕੇ SMS, WhatsApp, ਜਾਂ ਹੋਰ ਵਿਧੀਆਂ ਰਾਹੀਂ ਉਹਨਾਂ ਨਾਲ ਸੰਪਰਕ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ।</string>
   <string name="patiententry_consent_second_para">ਤੁਹਾਡੇ ਵਲੋਂ ਅਧਿਕਾਰ ਦਿੱਤੇ ਵਿਅਕਤੀ ਦੀ, ਜਾਂ ਸਿਹਤ-ਸੰਭਾਲ ਪ੍ਰਦਾਤੇ ਦੀ ਜਿਸ ਲਈ ਤੁਸੀਂ ਕੰਮ ਕਰਦੇ ਹੋ, ਮਰੀਜ਼ ਡੇਟਾ ਤੱਕ ਅਤੇ ਤੁਹਾਡੇ ਵਲੋਂ ਇੱਥੇ ਦਾਖ਼ਲ ਕੀਤੀ ਜਾਣਕਾਰੀ ਤੱਕ ਪਹੁੰਚ ਹੋਵੇਗੀ। ਐਪ ਦੀ ਵਰਤੋਂ ਕਰਕੇ, ਤੁਸੀਂ ਪੁਸ਼ਟੀ ਕਰਦੇ ਹੋ ਕਿ ਮਰੀਜ਼ ਜਾਂ ਕਨੂੰਨੀ ਸਰਪ੍ਰਸਤ ਸਮਝਦਾ/ਸਮਝਦੀ ਹੈ ਕਿ ਇਸ ਐਪ ਦੁਆਰਾ ਹਾਸਲ ਕੀਤੇ ਡਾਟਾ ਤੱਕ ਕਿਸ ਵਿਅਕਤੀ ਦੀ ਪਹੁੰਚ ਹੋਵੇਗੀ ਅਤੇ ਉਸ ਪਹੁੰਚ ਲਈ ਸਹਿਮਤੀ ਦਿੰਦਾ/ਦਿੰਦੀ ਹੈ।</string>
-  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS ਸਮਰਨ ਪੱਤਰ</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS ਰਿਮਾਈਂਡਰ</string>
+  <string name="patiententry_consent_sms_reminders">SMS ਰਿਮਾਈਂਡਰ</string>
   <string name="patiententry_age_exceeds_max_limit_error">ਉਮਰ 120 ਸਾਲਾਂ ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="patiententry_age_exceeds_min_limit_error">ਉਮਰ 0 ਸਾਲ ਦੇ ਬਰਾਬਰ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
 
   <string name="patientedit_save_patient">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
-  <string name="patientedit_confirm_discard_title">ਬਦਲਾਵ ਬਰਖਾਸਤ ਕਰਨੇ ਹਨ?</string>
-  <string name="patientedit_confirm_discard_ok">ਬਰਖਾਸਤ ਕਰੋ</string>
+  <string name="patientedit_confirm_discard_title">ਬਦਲਾਵ ਖਾਰਜ ਕਰਨੇ ਹਨ?</string>
+  <string name="patientedit_confirm_discard_ok">ਖਾਰਜ ਕਰੋ</string>
   <string name="patientedit_confirm_discard_cancel">ਰੱਦ ਕਰੋ</string>
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -94,27 +102,29 @@
 
   <string name="home_search_patient_name_phone">ਮਰੀਜ਼ ਦਾ ਨਾਮ ਦਾਖਲ ਕਰੋ</string>
   <string name="patients_user_awaiting_approval_title">ਮਨਜ਼ੂਰੀ ਦੀ ਉਡੀਕ ਵਿੱਚ</string>
-  <string name="patients_user_awaiting_approval_message">ਇੱਕ ਵਾਰ ਮਨਜ਼ੂਰੀ ਮਿਲ ਜਾਵੇ, ਤੁਹਾਡੀ ਆਪਣੇ ਕਲੀਨਿਕ ਤੋਂ ਮਰੀਜ਼ ਰਿਕਾਰਡਾਂ ਤਕ ਪਹੁੰਚ ਹੋਵੇਗੀ।</string>
+  <string name="patients_user_awaiting_approval_message">ਮਨਜ਼ੂਰੀ ਮਿਲਣ ਤੋਂ ਬਾਅਦ, ਤੁਹਾਡੀ ਆਪਣੇ ਕਲੀਨਿਕ ਤੋਂ ਮਰੀਜ਼ ਰਿਕਾਰਡਾਂ ਤੱਕ ਪਹੁੰਚ ਹੋਵੇਗੀ।</string>
   <string name="patients_user_approved_title">ਤੁਹਾਨੂੰ ਮਨਜ਼ੂਰੀ ਦਿੱਤੀ ਗਈ ਹੈ!</string>
   <string name="patients_awaiting_sms_verification_title">SMS ਤਸਦੀਕੀ ਲਈ ਉਡੀਕ ਵਿੱਚ</string>
   <string name="patients_user_approved_message">ਤੁਸੀਂ ਹੁਣ ਆਪਣੇ ਕਲੀਨਿਕ ਲਈ ਸਾਰਾ ਮਰੀਜ਼ ਡੇਟਾ ਦੇਖ ਸਕਦੇ ਹੋ</string>
-  <string name="patients_awaiting_sms_verification_message">ਇੱਕ ਵਾਰ ਤਸਦੀਕ ਹੋ ਜਾਵੇ, ਤੁਹਾਡੀ ਆਪਣੇ ਕਲੀਨਿਕ ਤੋਂ ਮਰੀਜ਼ ਰਿਕਾਰਡਾਂ ਤਕ ਪਹੁੰਚ ਹੋਵੇਗੀ।</string>
+  <string name="patients_awaiting_sms_verification_message">ਤਸਦੀਕ ਹੋ ਜਾਣ ਤੋਂ ਬਾਅਦ, ਤੁਹਾਡੀ ਆਪਣੇ ਕਲੀਨਿਕ ਤੋਂ ਮਰੀਜ਼ ਰਿਕਾਰਡਾਂ ਤੱਕ ਪਹੁੰਚ ਹੋਵੇਗੀ।</string>
   <string name="patients_dismiss_user_approved_status">ਸਮਝ ਗਏ</string>
   <string name="patients_enter_code">ਕੋਡ ਦਾਖ਼ਲ ਕਰੋ</string>
-  <string name="patients_you_are_now_logged_in">ਤਸਦੀਕੀ ਸਫ਼ਲ ਹੋਈ! ਮਰੀਜ਼ ਰਿਕਾਰਡ ਹੁਣ ਦਿਖਣ-ਯੋਗ ਹਨ।</string>
+  <string name="patients_you_are_now_logged_in">ਤਸਦੀਕ ਕਰਨਾ ਸਫਲ ਰਿਹਾ! ਮਰੀਜ਼ ਰਿਕਾਰਡ ਹੁਣ ਦਿਖਾਈ ਦਿੰਦੇ ਹਨ।</string>
   <string name="patients_loggedoutalert_title">ਤੁਹਾਨੂੰ ਇੱਕ ਸਮੇਂ \'ਤੇ ਸਿਰਫ਼ ਇੱਕ ਡਿਵਾਈਸ \'ਤੇ ਲੌਗ ਇਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ</string>
   <string name="patients_loggedoutalert_message">ਤੁਹਾਨੂੰ ਤੁਹਾਡੇ ਪੁਰਾਣੇ ਡਿਵਾਈਸ ਤੋਂ ਲੌਗ ਆਉਟ ਕੀਤਾ ਗਿਆ ਹੈ।</string>
   <string name="patients_loggedoutalert_dismiss">ਸਮਝ ਗਏ</string>
   <string name="patients_scan_simple_card">ਬੀਪੀ ਪਾਸਪੋਰਟ ਸਕੈਨ ਕਰੋ</string>
-  <string name="patients_recentpatients_title">ਹਾਲ ਹੀ ਦੇ ਮਰੀਜ਼</string>
+  <string name="patients_recentpatients_title">ਹਾਲੀਆ</string>
   <string name="patients_recentpatients_no_recent_patients">ਹਾਲ ਹੀ ਦੇ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ</string>
   <string name="patients_recentpatients_see_all">ਸਭ ਦੇਖੋ</string>
+  <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ</string>
   <string name="bloodpressureentry_sheet_title_edit_blood_pressure">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਦਾ ਸੰਪਾਦਨ ਕਰੋ</string>
   <string name="bloodpressureentry_sheet_title_enter_date">ਮੁਲਾਕਾਤ ਦੀ ਮਿਤੀ</string>
   <string name="bloodpressureentry_remove">ਹਟਾਓ</string>
-  <string name="bloodpressureentry_systolic">ਸਿਸਟੌਲਿਕ</string>
+  <string name="bloodpressureentry_systolic">ਸਿਸਟੋਲਿਕ</string>
   <string name="bloodpressureentry_diastolic">ਡਾਇਸਟੋਲਿਕ</string>
   <string name="bloodpressureentry_day">ਦਿਨ</string>
   <string name="bloodpressureentry_month">ਮਹੀਨਾ</string>
@@ -126,51 +136,57 @@
   <string name="bloodpressureentry_error_diastolic_180">ਡਾਇਸਟੋਲਿਕ 180 ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
   <string name="bloodpressureentry_error_systolic_empty">ਸਿਸਟੋਲਿਕ ਅਤੇ ਡਾਇਸਟੋਲਿਕ ਪ੍ਰੈਸ਼ਰਾਂ ਨੂੰ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="bloodpressureentry_error_diastolic_empty">ਸਿਸਟੋਲਿਕ ਅਤੇ ਡਾਇਸਟੋਲਿਕ ਪ੍ਰੈਸ਼ਰਾਂ ਨੂੰ ਦਾਖ਼ਲ ਕਰੋ</string>
-  <string name="bloodpressureentry_error_date_invalid_pattern">DD/MM/YY ਵਿੱਚ ਇੱਕ ਵੈਧ ਮਿਤੀ ਦਾਖ਼ਲ ਕਰੋ</string>
-  <string name="bloodpressureentry_error_date_is_in_future">ਮਿਤੀ ਭਵਿੱਖ ਵਿੱਚ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">DD/MM/YYYY ਵਿੱਚ ਇੱਕ ਵੈਧ ਮਿਤੀ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="bloodpressureentry_error_date_is_in_future">ਮਿਤੀ ਅੱਗੇ ਦੀ ਵਿੱਚ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodpressureentry_remove_bp_title">ਬੀਪੀ ਹਟਾਓ</string>
   <string name="bloodpressureentry_remove_bp_message">ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਹੀ ਇਸ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਰਿਕਾਰਡਿੰਗ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
   <string name="bloodpressureentry_remove_bp_confirm">ਹਟਾਓ</string>
   <string name="bloodpressureentry_remove_bp_cancel">ਰੱਦ ਕਰੋ</string>
 
   <!-- Patient summary -->
-  <string name="patientsummary_contentdescription_up_button">ਵਾਪਸ ਜਾਓ</string>
-  <string name="patientsummary_prescriptions_add">ਸਾਰੀਆਂ ਦਵਾਈਆਂ</string>
-  <string name="patientsummary_prescriptions_update">ਦਵਾਈਆਂ ਅੱਪਡੇਟ ਕਰੋ</string>
+  <string name="patientsummary_contentdescription_up_button">ਪਿੱਛੇ ਜਾਓ</string>
+  <string name="patientsummary_prescriptions_add">ਦਵਾਈਆਂ</string>
+  <string name="patientsummary_prescriptions_update">ਦਵਾਈਆਂ ਵਿੱਚ ਸੋਧ ਕਰੋ</string>
   <string name="patientsummary_bp_add_new">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ</string>
   <string name="patientsummary_finish_saving_patient">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="patientsummary_bp_none_added">ਕੋਈ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਨਹੀਂ ਜੋੜੇ ਗਏ</string>
   <string name="patientsummary_edit">ਸੰਪਾਦਨ ਕਰੋ</string>
+
   <string name="patientsummary_updatephone_dialog_title">ਫ਼ੋਨ ਨੰਬਰ ਅੱਪਡੇਟ ਕਰੋ</string>
-  <string name="patientsummary_updatephone_dialog_message">ਮਰੀਜ਼ ਦਾ ਫ਼ੋਨ ਨੰਬਰ ਪਹਿਲੇ ਗ਼ਲਤ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕੀਤਾ ਗਿਆ ਸੀ</string>
-  <string name="patientsummary_updatephone_phone_hint">ਫ਼ੋਨ ਨੰਬਰ</string>
+  <string name="patientsummary_updatephone_dialog_message">ਮਰੀਜ਼ ਦਾ ਫ਼ੋਨ ਨੰਬਰ ਪਹਿਲਾਂ ਗ਼ਲਤ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕੀਤਾ ਗਿਆ ਸੀ</string>
+  <string name="patientsummary_updatephone_phone_hint">ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="patientsummary_updatephone_save">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="patientsummary_updatephone_cancel">ਛੱਡ ਦਿਓ</string>
   <string name="patientsummary_addphone_dialog_title">ਫ਼ੋਨ ਨੰਬਰ ਅੱਪਡੇਟ ਕਰੋ</string>
   <string name="patientsummary_addphone_dialog_message">ਮਰੀਜ਼ ਦਾ ਫ਼ੋਨ ਨੰਬਰ ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਦੇ ਦੌਰਾਨ ਦਾਖ਼ਲ ਨਹੀਂ ਕੀਤਾ ਗਿਆ ਸੀ</string>
-  <string name="patientsummary_addphone_phone_hint">ਫ਼ੋਨ ਨੰਬਰ</string>
+  <string name="patientsummary_addphone_phone_hint">ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="patientsummary_addphone_save">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="patientsummary_addphone_cancel">ਛੱਡ ਦਿਓ</string>
+  <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
+  <string name="patientsummary_bangladesh_national_id">ਆਈਡੀ</string>
+
+  <string name="bloodpressuresummaryview_see_all_button">ਸਭ ਦੇਖੋ</string>
+
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_low">ਘੱਟ</string>
   <!--suppress UnusedResources -->
-  <string name="bloodpressure_level_high">ਉੱਚ</string>
+  <string name="bloodpressure_level_high">ਵੱਧ</string>
 
   <string name="timestamp_today">ਅੱਜ</string>
-  <string name="timestamp_yesterday">ਕੱਲ੍ਹ</string>
+  <string name="timestamp_yesterday">ਬੀਤਿਆ ਕੱਲ੍ਹ</string>
   <!--suppress PluralsCandidate -->
   <string name="timestamp_days_ago">%s ਦਿਨ ਪਹਿਲਾਂ</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">ਬੀ ਪੀ ਦੀਆਂ ਦਵਾਈਆਂ</string>
-  <string name="patient_prescribeddrugs_add_custom_prescription">ਹੋਰ ਦਵਾਈ ਜੋੜੋ</string>
+  <string name="patient_prescribeddrugs_screen_title">ਬੀਪੀ ਦੀਆਂ ਦਵਾਈਆਂ</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">ਕੋਈ ਹੋਰ ਦਵਾਈ ਜੋੜੋ</string>
 
   <string name="customprescription_enter_medicine">ਦਵਾਈ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="customprescription_edit_medicine">ਦਵਾਈ ਦਾ ਸੰਪਾਦਨ ਕਰੋ</string>
   <string name="customprescription_save_drug">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="customprescription_drug_name_hint">ਦਵਾਈ ਦਾ ਨਾਮ</string>
-  <string name="customprescription_drug_dosage_hint">ਦਵਾਈ ਦੀ ਮਾਤਰਾ</string>
+  <string name="customprescription_drug_dosage_hint">ਖੁਰਾਕ</string>
 
   <string name="customprescription_delete_title">ਦਵਾਈ ਹਟਾਓ</string>
   <string name="customprescription_delete_message">ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਹੀ ਇਸ ਦਵਾਈ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
@@ -178,12 +194,13 @@
   <string name="customprescription_delete_cancel">ਰੱਦ ਕਰੋ</string>
 
   <!-- Login -->
-  <string name="loginpin_go_back">ਵਾਪਸ ਫੋਨ ਨੰਬਰ ਦੇ ਪਰਦੇ ਤੇ ਜਾਓ</string>
+  <string name="loginpin_go_back">ਫ਼ੋਨ ਨੰਬਰ ਸਕ੍ਰੀਨ \'ਤੇ ਵਾਪਿਸ ਜਾਓ</string>
+
   <!-- App lock -->
-  <string name="applock_logout">ਕੀ ਤੁਸੀਂ ਨਹੀਂ?</string>
-  <string name="applock_reset_pin_alert_title">ਸਕਿਓਰਟੀ PIN ਨੂੰ ਦੁਬਾਰਾ ਸੈਟ ਕਰਨਾ ਹੈ?</string>
-  <string name="applock_reset_pin_alert_message">ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਹੀ ਆਪਣੇ ਸਕਿਓਰਿਟੀ PIN ਨੂੰ ਦੁਬਾਰਾ ਸੈਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
-  <string name="applock_reset_pin_alert_confirm">ਦੁਬਾਰਾ ਸੈਟ ਕਰੋ</string>
+  <string name="applock_logout">ਕੀ ਤੁਸੀਂ ਨਹੀਂ ਹੋ?</string>
+  <string name="applock_reset_pin_alert_title">ਸਕਿਓਰਟੀ PIN ਨੂੰ ਦੁਬਾਰਾ ਸੈੱਟ ਕਰਨਾ ਹੈ?</string>
+  <string name="applock_reset_pin_alert_message">ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਹੀ ਆਪਣੇ ਸਕਿਓਰਿਟੀ PIN ਨੂੰ ਦੁਬਾਰਾ ਸੈੱਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+  <string name="applock_reset_pin_alert_confirm">ਦੁਬਾਰਾ ਸੈੱਟ ਕਰੋ</string>
   <string name="applock_reset_pin_alert_cancel">ਰੱਦ ਕਰੋ</string>
 
   <!-- PIN entry -->
@@ -199,7 +216,7 @@
   <string name="registrationphone_phone_number_label">ਤੁਹਾਡਾ ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="registrationphone_error_invalid_number">ਫ਼ੋਨ ਨੰਬਰ ਦੀ ਜਾਂਚ ਕਰੋ। ਇੰਝ ਲੱਗਦਾ ਹੈ ਜਿਵੇਂ ਇਹ ਬਹੁਤ ਛੋਟਾ ਹੈ।</string>
   <string name="registration_loggedout_dialog_title">ਤੁਹਾਨੂੰ ਲੌਗ ਆਉਟ ਕੀਤਾ ਗਿਆ ਹੈ</string>
-  <string name="registration_loggedout_dialog_message">ਜਾਰੀ ਰੱਖਣ ਲਈ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਲੌਗਿਨ ਕਰੋ</string>
+  <string name="registration_loggedout_dialog_message">ਜਾਰੀ ਰੱਖਣ ਲਈ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਲੌਗ ਇਨ ਕਰੋ</string>
   <string name="registration_loggedout_dialog_confirm">ਠੀਕ ਹੈ</string>
   <string name="registrationname_name_label">ਸਾਨੂੰ ਆਪਣਾ ਪੂਰਾ ਨਾਮ ਦੱਸੋ</string>
   <string name="registrationname_error_empty_name">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਪੂਰਾ ਨਾਮ ਦਾਖ਼ਲ ਕਰੋ</string>
@@ -210,20 +227,20 @@
 
   <string name="registrationconfirmpin_confirm_pin_label">ਸਕਿਓਰਿਟੀ PIN ਦੁਬਾਰਾ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="registrationconfirmpin_error_pin_mismatch">PIN ਮੂਲ PIN ਦੇ ਨਾਲ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ</string>
-  <string name="registrationconfirmpin_reset_pin">PIN ਨੂੰ ਦੁਬਾਰਾ ਸੈਟ ਕਰੋ</string>
+  <string name="registrationconfirmpin_reset_pin">PIN ਨੂੰ ਦੁਬਾਰਾ ਸੈੱਟ ਕਰੋ</string>
 
-  <string name="registrationlocation_screen_title">ਸਥਾਨ ਤਕ ਪਹੁੰਚ</string>
+  <string name="registrationlocation_screen_title">ਸਥਾਨ ਤੱਕ ਪਹੁੰਚ</string>
   <string name="registrationlocation_skip_permission">ਛੱਡ ਦਿਓ</string>
   <string name="registrationlocation_permission_rationale_description">ਤੁਹਾਡਾ ਸਥਾਨ ਤੁਹਾਡੇ ਕਲੀਨਿਕ ਨੂੰ ਲੱਭਣ ਵਿੱਚ ਸਾਡੀ ਮਦਦ ਕਰੇਗਾ</string>
   <string name="registrationlocation_permission_rationale_title">ਆਪਣੇ ਕਲੀਨਿਕ ਨੂੰ ਹੋਰ ਜਲਦੀ ਲੱਭੋ</string>
-  <string name="registrationlocation_allow_access">ਸਥਾਨ ਤਕ ਪਹੁੰਚ ਦੀ ਇਜਾਜ਼ਤ ਦਿਓ</string>
+  <string name="registrationlocation_allow_access">ਸਥਾਨ ਤੱਕ ਪਹੁੰਚ ਦੀ ਇਜਾਜ਼ਤ ਦਿਓ</string>
 
   <string name="registrationfacilities_screen_title">ਆਪਣਾ ਕਲੀਨਿਕ ਚੁਣੋ</string>
-  <string name="registrationfacilities_search_hint">ਆਪਣੇ ਕਲੀਨਿਕ ਲਈ ਖੋਜ ਕਰੋ</string>
+  <string name="registrationfacilities_search_hint">ਆਪਣੇ ਕਲੀਨਿਕ ਦੀ ਖੋਜ ਕਰੋ</string>
   <!-- Street, District, State -->
   <string name="registrationfacilities_error_unexpected_title">ਕੁਝ ਗੜਬੜ ਹੋ ਗਈ</string>
-  <string name="registrationfacilities_error_unexpected_message">ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਸਮੇਂ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੂਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਬਣੇ ਰਹੋ।</string>
-  <string name="registrationfacilities_error_internet_connection_title">ਕੋਈ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਨਹੀਂ</string>
+  <string name="registrationfacilities_error_unexpected_message">ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਸਮੇਂ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਬਣੇ ਰਹੋ।</string>
+  <string name="registrationfacilities_error_internet_connection_title">ਕੋਈ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਉਪਲਬਧ ਨਹੀਂ ਹੈ</string>
   <string name="registrationfacilities_retry">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
   <string name="registrationfacilities_header_suggested_facilities">ਸੁਝਾਏ ਗਏ ਕਲੀਨਿਕ</string>
   <string name="registrationfacilities_header_all_facilities">ਸਾਰੇ ਕਲੀਨਿਕ</string>
@@ -234,18 +251,24 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">ਕੋਈ ਮਰੀਜ਼ ਓਵਰਡਿਊ ਨਹੀਂ ਹਨ</string>
   <string name="overdue_empty_desc">ਤੁਸੀਂ ਇੱਕ ਫੋਲੋ-ਅੱਪ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਰੀਡਿੰਗ ਲਈ ਅਜਿਹੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਬੁਲਾਉਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ ਜੋ ਆਪਣੀ ਨਿਰਧਾਰਤ ਮੁਲਾਕਾਤ ਖੁੰਝਾ ਦਿੰਦੇ ਹਨ।</string>
+  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_diagnosis_diabetes">ਸ਼ੂਗਰ</string>
+  <string name="overdue_list_item_diagnosis_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ</string>
+  <string name="overdue_list_item_diagnosis_none">ਕੋਈ ਨਹੀਂ</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
     <item quantity="other">%s ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
   <string name="overduelist_high_risk">ਵੱਧ ਜੋਖਮ</string>
+  <string name="overduelist_diagnosis_label">Dx</string>
+  <string name="overduelist_visited">ਵਿਜ਼ਿਟਡ</string>
 
   <!-- Facility change -->
   <string name="changefacility_screen_title">ਆਪਣਾ ਕਲੀਨਿਕ ਚੁਣੋ</string>
-  <string name="facilitychange_search_hint">ਆਪਣੇ ਕਲੀਨਿਕ ਲਈ ਖੋਜ ਕਰੋ</string>
+  <string name="facilitychange_search_hint">ਆਪਣੇ ਕਲੀਨਿਕ ਦੀ ਖੋਜ ਕਰੋ</string>
 
   <!-- Enter OTP -->
-  <string name="enterotp_check_sms_sent_to">ਇਸ ਨੂੰ ਭੇਜੇ ਗਏ SMS ਦੀ ਜਾਂਚ ਕਰੋ</string>
+  <string name="enterotp_check_sms_sent_to">ਇਸ \'ਤੇ ਭੇਜੇ ਗਏ SMS ਦੀ ਜਾਂਚ ਕਰੋ</string>
   <string name="enterotp_enter_verification_code">ਤਸਦੀਕੀ ਕੋਡ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="enterotp_incorrect_code">ਗ਼ਲਤ ਕੋਡ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
   <string name="enterotp_resend_sms">SMS ਦੁਬਾਰਾ ਭੇਜੋ</string>
@@ -260,8 +283,8 @@
     <item quantity="other">%s ਦਿਨ</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
-    <item quantity="one">%s ਹਫਤਾ</item>
-    <item quantity="other">%s ਹਫਤੇ</item>
+    <item quantity="one">%s ਹਫ਼ਤਾ</item>
+    <item quantity="other">%s ਹਫ਼ਤੇ</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s ਮਹੀਨਾ</item>
@@ -273,7 +296,7 @@
   <string name="forgotpin_create_new_pin_invalid_pin">PIN ਬਹੁਤ ਛੋਟਾ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ 4 ਨੰਬਰ ਦਾਖ਼ਲ ਕਰੋ।</string>
   <string name="forgotpin_confirm_pin">ਸਕਿਓਰਿਟੀ PIN ਦੁਬਾਰਾ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="forgotpin_confirm_pin_message">ਇਸਦੀ ਪੁਸ਼ਟੀ ਕਰਨ ਲਈ ਆਪਣਾ PIN ਦੁਬਾਰਾ ਦਾਖ਼ਲ ਕਰੋ</string>
-  <string name="forgotpin_error_pin_mismatch">PIN ਮੂਲ PIN ਦੇ ਨਾਲ ਮੇਲ ਨਹੀਂ ਖਾਦਾ</string>
+  <string name="forgotpin_error_pin_mismatch">PIN ਮੂਲ PIN ਦੇ ਨਾਲ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ</string>
 
   <!-- Reports -->
   <string name="reports_come_back_later">ਬਾਅਦ ਵਿੱਚ ਵਾਪਿਸ ਆਓ</string>
@@ -281,18 +304,21 @@
 
   <!-- Medical History -->
   <!--suppress UnusedResources used in enum -->
-  <string name="medicalhistory_question_heartattack">ਪਿਛਲੇ 3 ਸਾਲਾਂ ਵਿੱਚ ਦਿਲ ਦਾ ਦੌਰਾ</string>
+  <string name="medicalhistory_question_heartattack">ਹਾਰਟ ਅਟੈਕ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_stroke">ਸਟ੍ਰੋਕ ਦਾ ਪੁਰਾਣਾ ਇਤਿਹਾਸ</string>
+  <string name="medicalhistory_question_stroke">ਸਟ੍ਰੋਕ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_kidney">ਗੁਰਦੇ ਦੀ ਬੀਮਾਰੀ ਦਾ ਪੁਰਾਣਾ ਇਤਿਹਾਸ</string>
+  <string name="medicalhistory_question_kidney">ਗੁਰਦਿਆਂ ਦੀ ਬਿਮਾਰੀ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ ਦੇ ਨਾਲ ਨਿਦਾਨ ਕੀਤਾ</string>
+  <string name="medicalhistory_question_diagnosed_with_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">ਡਾਇਬੀਟੀਜ਼ ਹੈ</string>
+  <string name="medicalhistory_question_diabetes">ਸ਼ੂਗਰ</string>
   <string name="newmedicalhistory_next">ਅਗਲਾ</string>
   <string name="newmedicalhistory_yes">ਹਾਂ</string>
   <string name="newmedicalhistory_no">ਨਹੀਂ</string>
+  <string name="newmedicalhistory_history">ਅਤੀਤ</string>
+  <string name="newmedicalhistory_diagnosis">ਡਾਇਗਨੋਸਿਸ (ਲੋੜੀਂਦਾ)</string>
+  <string name="newmedicalhistory_diagnosis_required_error">ਕਿਰਪਾ ਕਰਕੇ ਕੋਈ ਡਾਇਗਨੋਸਿਸ ਚੁਣੋ</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ਕੋਈ ਨਹੀਂ</string>
@@ -308,15 +334,15 @@
   <string name="syncindicator_status_pending">ਸਿੰਕ ਕਰਨਾ ਬਕਾਇਆ ਹੈ</string>
   <string name="syncindicator_status_failed">ਸਿੰਕ ਅਸਫ਼ਲ ਰਿਹਾ</string>
   <string name="syncindicator_status_syncing">ਸਿੰਕ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…</string>
-  <string name="syncindicator_status_synced_just_now">ਬੱਸ ਹੁਣੇ ਸਿੰਕ ਕੀਤਾ</string>
+  <string name="syncindicator_status_synced_just_now">ਬਸ ਹੁਣੇ ਸਿੰਕ ਕੀਤਾ</string>
   <string name="syncindicator_status_synced_min_ago">%s ਮਿੰ ਪਹਿਲਾਂ ਸਿੰਕ ਕੀਤਾ</string>
-  <string name="syncindicator_dialog_error_network">ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਮਰੀਜ਼ ਦੇ ਰਿਕਾਰਡਾਂ ਨੂੰ ਸਿੰਕ ਕਰਨ ਲਈ ਤੁਹਾਡੇ ਕੋਲ ਕਾਰਜਸ਼ੀਲ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਹੈ।</string>
+  <string name="syncindicator_dialog_error_network">ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਮਰੀਜ਼ ਦੇ ਰਿਕਾਰਡਾਂ ਨੂੰ ਸਿੰਕ ਕਰਨ ਲਈ ਤੁਹਾਡੇ ਕੋਲ ਕਾਰਜਸ਼ੀਲ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਹੈ।</string>
   <string name="syncindicator_dialog_button_text">ਠੀਕ ਹੈ</string>
   <string name="syncindicator_dialog_error_server">ਇਸ ਸਮੇਂ \'ਤੇ ਸਿੰਕ ਸਰਵਰ ਡਾਊਨ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਓ।</string>
 
   <!-- Help Screen -->
   <string name="help_title">ਮਦਦ</string>
-  <string name="help_no_connection">ਕੋਈ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਨਹੀਂ</string>
+  <string name="help_no_connection">ਕੋਈ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਉਪਲਬਧ ਨਹੀਂ ਹੈ</string>
   <string name="help_something_went_wrong">ਕੁਝ ਗੜਬੜ ਹੋ ਗਈ</string>
   <string name="help_try_again">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
 
@@ -327,15 +353,18 @@
   <string name="linkidwithpatient_to_patient_text">\u0020ਤੋਂ\u00A0ਮਰੀਜ਼?</string>
 
   <!-- Add ID to Patient: Search -->
+  <string name="addidtopatientsearch_toolbar_title">ਮਰੀਜ਼ ਦਾ ਨਾਮ ਦਾਖਲ ਕਰੋ</string>
   <string name="addidtopatientsearch_search">ਅਗਲਾ</string>
   <string name="addidtopatientsearch_error_empty_fullname">ਮਰੀਜ਼ ਦਾ ਪੂਰਾ ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="addidtopatientsearch_hint">ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ</string>
 
   <!-- Recent Patients -->
-  <string name="recent_patients_toolbar_title">ਹਾਲ ਹੀ ਦੇ ਮਰੀਜ਼</string>
+  <string name="recent_patients_toolbar_title">ਹਾਲੀਆ</string>
 
   <!-- Recent Patients Item View -->
   <string name="recent_patients_itemview_last_seen">ਆਖਰੀ ਵਾਰ ਦੇਖਿਆ ਗਿਆ:\u0020</string>
+  <string name="recent_patients_itemview_title">%1$s, %2$s</string>
+
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">%1$s\u0020 ਜੋੜੋ</string>
   <string name="addidtopatientsearchresults_to_patient">\u0020ਤੋਂ\u2026</string>
@@ -348,13 +377,13 @@
 
   <!-- All Patients In Facility View-->
   <string name="allpatientsinfacility_nopatients_message">ਤੁਸੀਂ ਇੱਥੇ ਆਪਣੀ ਫੈਸਿਲਿਟੀ ਵਿਖੇ ਰਜਿਸਟਰ ਕੀਤੇ ਸਾਰੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਦੇਖਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ।</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$s ਤੇ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਹਨ</string>
+  <string name="allpatientsinfacility_nopatients_title">%1$s \'ਤੇ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਹਨ</string>
   <string name="allpatientsinfacility_foundpatients_header">ਸਾਰੇ ਮਰੀਜ਼: %1$s</string>
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">ਕੁਝ ਗੜਬੜ ਹੋ ਗਈ</string>
-  <string name="registrationloader_error_unexpected_message">ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਸਮੇਂ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੂਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਬਣੇ ਰਹੋ।</string>
-  <string name="registrationloader_error_internet_connection_title">ਕੋਈ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਨਹੀਂ</string>
+  <string name="registrationloader_error_unexpected_message">ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਸਮੇਂ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਜਾਂ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਬਣੇ ਰਹੋ।</string>
+  <string name="registrationloader_error_internet_connection_title">ਕੋਈ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਉਪਲਬਧ ਨਹੀਂ ਹੈ</string>
   <!--suppress UnusedResources -->
   <string name="registrationloader_retry">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
 
@@ -371,11 +400,15 @@
   <string name="settings_user_name_icon_content">ਸੈਟਿੰਗਾਂ ਉਪਭੋਗਤਾ ਨਾਮ ਆਈਕੋਨ</string>
   <string name="settings_user_phone_icon_content">ਸੈਟਿੰਗਾਂ ਉਪਭੋਗਤਾ ਫ਼ੋਨ ਨੰਬਰ ਆਈਕੋਨ</string>
   <string name="settings_current_language_icon_content">ਸੈਟਿੰਗਾਂ ਮੌਜੂਦਾ ਭਾਸ਼ਾ ਆਈਕੋਨ</string>
+  <string name="settings_app_version_icon_content">ਸੈਟਿੰਗਜ਼ ਐਪ ਸੰਸਕਰਣ ਆਈਕਨ</string>
   <string name="settings_name">ਨਾਮ</string>
-  <string name="settings_number">ਫ਼ੋਨ ਨੰਬਰ</string>
+  <string name="settings_number">ਫ਼ੋਨ ਨੰਬਰ</string>
   <string name="settings_language">ਭਾਸ਼ਾ</string>
   <string name="settings_change">ਬਦਲੋ</string>
   <string name="settings_language_hint">ਇੱਕ ਭਾਸ਼ਾ ਚੁਣੋ</string>
+  <string name="settings_software">ਸਾਫਟਵੇਅਰ</string>
+  <string name="settings_update">ਅੱਪਡੇਟ ਕਰੋ</string>
+  <string name="settings_software_version">ਸੰਸਕਰਣ %1$s</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ</string>
@@ -402,20 +435,31 @@
   <string name="bloodsugartype_rbs">ਬੇਤਰਤੀਬੀ ਬਲੱਡ ਸ਼ੂਗਰ (RBS)</string>
   <string name="bloodsugartype_fbs">ਫਾਸਟਿੰਗ ਬਲੱਡ ਸ਼ੂਗਰ (FBS)</string>
   <string name="bloodsugartype_ppbs">ਪੋਸਟ ਪ੍ਰੈਂਡੀਅਲ ਬਲੱਡ ਸ਼ੂਗਰ (PPBS)</string>
-
-  <!-- Blood sugar entry -->
   <string name="bloodsugarentry_sheet_title_enter_date">ਮੁਲਾਕਾਤ ਦੀ ਮਿਤੀ</string>
   <string name="bloodsugarentry_day">ਦਿਨ</string>
   <string name="bloodsugarentry_month">ਮਹੀਨਾ</string>
   <string name="bloodsugarentry_year">ਸਾਲ</string>
   <string name="bloodsugarentry_error_lower_limit">ਮਾਤਰਾ 30 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">ਵੈਲਿਊ 3% ਤੋਂ ਘੱਟ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_higher_limit">ਮਾਤਰਾ 1000 ਮਿਲੀ/ਡੀਐੱਲ ਤੋਂ ਵੱਧ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">ਵੈਲਿਊ 25% ਤੋਂ ਜਿਆਦਾ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_error_empty">ਮਾਤਰਾ ਜ਼ੀਰੋ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
-  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YY ਵਿੱਚ ਇੱਕ ਵੈਧ ਮਿਤੀ ਦਾਖ਼ਲ ਕਰੋ</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY ਵਿੱਚ ਇੱਕ ਵੈਧ ਮਿਤੀ ਦਾਖ਼ਲ ਕਰੋ</string>
   <string name="bloodsugarentry_error_date_is_in_future">ਮਿਤੀ ਅੱਗੇ ਦੀ ਵਿੱਚ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
   <string name="bloodsugarentry_random_title">ਬੇਤਰਤੀਬੀ ਬਲੱਡ ਸ਼ੂਗਰ</string>
   <string name="bloodsugarentry_post_prandial_title">ਪੋਸਟ ਪ੍ਰੈਂਡੀਅਲ ਬਲੱਡ ਸ਼ੂਗਰ</string>
   <string name="bloodsugarentry_fasting_title">ਫਾਸਟਿੰਗ ਬਲੱਡ ਸ਼ੂਗਰ</string>
+  <string name="bloodsugarentry_remove">ਹਟਾਓ</string>
+  <string name="bloodsugarentry_edit_random_title">ਬੇਤਰਤੀਬੀ ਬਲੱਡ ਸ਼ੂਗਰ ਸੰਪਾਦਿਤ ਕਰੋ</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">ਪੋਸਟ ਪ੍ਰੈਂਡੀਅਲ ਬਲੱਡ ਸ਼ੂਗਰ ਸੰਪਾਦਿਤ ਕਰੋ</string>
+  <string name="bloodsugarentry_edit_fasting_title">ਫਾਸਟਿੰਗ ਬਲੱਡ ਸ਼ੂਗਰ ਸੰਪਾਦਿਤ ਕਰੋ</string>
+  <string name="bloodsugarentry_edit_hba1c_title">HbA1c ਵਿੱਚ ਸੋਧ ਕਰੋ</string>
+
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">ਬਲੱਡ ਸ਼ੂਗਰ ਹਟਾਓ</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਹੀ ਇਸ ਬਲੱਡ ਸ਼ੂਗਰ ਰਿਕਾਰਡਿੰਗ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">ਹਟਾਓ</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">ਰੱਦ ਕਰੋ</string>
 
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">ਕੋਈ ਬਲੱਡ ਸ਼ੂਗਰ ਨਹੀਂ ਜੋੜੇ ਗਏ</string>
@@ -424,10 +468,46 @@
   <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
 
-  <string name="bloodpressurehistory_add_bp_button">ਨਵਾਂ ਬੀ ਪੀ</string>
+  <!-- Blood Pressure History screen -->
+  <string name="bloodpressurehistory_add_bp_button">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ</string>
+  <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Blood Sugar History screen -->
+  <string name="bloodsugarhistory_add_blood_sugar_button">ਸ਼ੂਗਰ</string>
+  <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+  <!-- Summary CV History view -->
+  <string name="medicalhistorysummaryview_history">ਅਤੀਤ</string>
+  <string name="medicalhistorysummaryview_diagnosis">ਡਾਇਗਨੋਸਿਸ (ਲੋੜੀਂਦਾ)</string>
+
+  <!-- Summary prescriptions view -->
+  <string name="drugsummaryview_no_medicines">ਕੋਈ ਦਵਾਈ ਨਹੀਂ ਵਧਾਈ ਗਈ</string>
+
+  <!-- Access Denied screen -->
+  <string name="accessdeniedscreen_title_access_denied">ਪਹੁੰਚ ਤੇ ਪਾਬੰਦੀ ਹੈ</string>
+  <string name="accessdeniedscreen_description">ਸਿੰਪਲ ਦੀ ਪਹੁੰਚ ਤੇ ਪਾਬੰਦੀ ਹੈ। ਜੇ ਤੁਹਾਨੂੰ ਲਗਦਾ ਹੈ ਕਿ ਇਹ ਕੋਈ ਗਲਤੀ ਹੈ ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।\n\nਜੇਕਰ ਤੂਹਾਡੀ ਪਹੁੰਚ ਬਹਾਲ ਹੋ ਗਈ ਹੈ, ਤਾਂ ਸਿੰਪਲ ਅਨਇੰਸਟਾਲ ਕਰੋ ਅਤੇ ਇਸਨੂੰ ਪਲੇ ਸਟੋਰ ਤੋਂ ਇੰਸਟਾਲ ਕਰੋ।</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">ਸਹੂਲਤ ਨੂੰ ਇਸ ਵਿੱਚ ਬਦਲੋ</string>
+  <string name="confirmfacilitychange_negative_button">ਰੱਦ ਕਰੋ</string>
+  <string name="confirmfacilitychange_positive_button">ਹਾਂ</string>
+  <string name="confirmfacilitychange_facility_name">%s?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">ਕੀ ਕੁਸੀਂ ਇੱਥੇ ਹੋ?</string>
+  <string name="registrationconfirmfacility_positive_button">ਹਾਂ</string>
+  <string name="registrationconfirmfacility_negative_button">ਰੱਦ ਕਰੋ</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">ਕੀ ਤੁਸੀਂ ਇੱਥੇ ਹੋ</string>
+  <string name="alertfacilitychange_yes_button">ਹਾਂ</string>
+  <string name="alertfacilitychange_change_button">ਬਦਲੋ</string>
+  <string name="alertfacilitychange_facility_name">%s?</string>
+
+  <!-- Prescribed Drug Summary -->
+  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">ਮਰੀਜ਼ ਨੂੰ ‘ਫੇਰੀ ਲਈ ਸਹਿਮਤ ਹੋਏ’ ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ</string>
+  <string name="contactpatient_agreed_to_visit">ਮਰੀਜ਼ ਨੂੰ \"ਫੇਰੀ ਲਈ ਸਹਿਮਤ ਹੋਏ\" ਵਜੋਂ ਚਿੰਨ੍ਹਿਤ ਕਰੋ</string>
   <string name="contactpatient_remind_call_later">ਬਾਅਦ ਵਿੱਚ ਕਾਲ ਕਰਨ ਲਈ ਯਾਦ ਕਰਵਾਓ…</string>
   <string name="contactpatient_remove_from_list">ਓਵਰਡਿਊ ਸੂਚੀ ਤੋਂ ਹਟਾਓ…</string>
   <string name="contactpatient_result_of_call">ਕਾਲ ਦੀ ਨਤੀਜਾ</string>
@@ -456,4 +536,5 @@
     <item quantity="one">%s ਮਹੀਨਾ</item>
     <item quantity="other">%s ਮਹੀਨੇ</item>
   </plurals>
+  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
 </resources>

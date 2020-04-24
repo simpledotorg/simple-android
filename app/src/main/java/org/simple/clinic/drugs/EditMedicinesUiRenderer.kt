@@ -7,10 +7,8 @@ import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 
 class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<EditMedicinesModel> {
-  override fun render(model: EditMedicinesModel) {
-    if (model.prescribedDrugs == null || model.protocolDrugs == null)
-      return
 
+  override fun render(model: EditMedicinesModel) {
     if (model.prescribedDrugs != null && model.protocolDrugs != null)
       renderPrescribedProtocolDrugs(model.prescribedDrugs, model.protocolDrugs)
   }
@@ -32,7 +30,7 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
     val customDrugs = prescribedDrugs
         .filter { it.isProtocolDrug.not() }
     val customPrescribedDrugItems = customDrugs
-        .sortedBy { it.updatedAt.toEpochMilli() }
+        .sortedBy { it.updatedAt }
         .mapIndexed { index, prescribedDrug -> CustomPrescribedDrugListItem(prescribedDrug, index == customDrugs.lastIndex) }
 
     val drugsList = protocolDrugSelectionItems + customPrescribedDrugItems

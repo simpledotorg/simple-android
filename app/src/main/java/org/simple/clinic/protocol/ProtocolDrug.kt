@@ -60,7 +60,7 @@ data class ProtocolDrug(
     fun count(): Flowable<Int>
 
     @Query("SELECT * FROM ProtocolDrug WHERE protocolUuid = :protocolUuid ORDER BY `order`")
-    fun drugsForProtocolUuid(protocolUuid: UUID): Flowable<List<ProtocolDrug>>
+    fun drugsForProtocolUuid(protocolUuid: UUID): List<ProtocolDrug>
 
     @Query("SELECT * FROM ProtocolDrug WHERE protocolUuid = :protocolUuid AND name = :drugName")
     fun drugByName(drugName: String, protocolUuid: UUID): Flowable<List<ProtocolDrug>>

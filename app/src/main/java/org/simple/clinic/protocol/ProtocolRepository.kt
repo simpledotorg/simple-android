@@ -75,29 +75,21 @@ class ProtocolRepository @Inject constructor(
     )
   }
 
-  fun drugsForProtocolOrDefault(protocolUuid: UUID?): Observable<List<ProtocolDrugAndDosages>> {
+  fun drugsForProtocolOrDefault(protocolUuid: UUID?): List<ProtocolDrugAndDosages> {
     if (protocolUuid == null) {
-      return Observable.just(defaultProtocolDrugs())
+      return defaultProtocolDrugs()
     }
 
     val protocolDrugs = protocolDrugsDao
         .drugsForProtocolUuid(protocolUuid)
-        .toObservable()
-        .replay()
-        .refCount()
 
-    val syncedDrugs = protocolDrugs
-        .filter { drugs -> drugs.isNotEmpty() }
-        .map { drugs ->
-          val drugsGroupedByName = drugs.groupBy { it.name }
-          drugsGroupedByName.map { (drugName, protocolDrugs) -> ProtocolDrugAndDosages(drugName, protocolDrugs) }
-        }
-
-    val defaultDrugs = protocolDrugs
-        .filter { drugs -> drugs.isEmpty() }
-        .map { defaultProtocolDrugs() }
-
-    return syncedDrugs.mergeWith(defaultDrugs)
+    return if (protocolDrugs.isEmpty()) {
+      defaultProtocolDrugs()
+    } else {
+      protocolDrugs
+          .groupBy { it.name }
+          .map { (drugName, protocolDrugs) -> ProtocolDrugAndDosages(drugName, protocolDrugs) }
+    }
   }
 
   fun drugsByNameOrDefault(drugName: String, protocolUuid: UUID?): Observable<List<ProtocolDrug>> {

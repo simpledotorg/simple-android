@@ -195,7 +195,7 @@ class EditMedicinesScreenLogicTest {
 
     //when
     setupController()
-    uiEvents.onNext(ProtocolDrugClicked(drugName = drugName, prescriptionForProtocolDrug = null))
+    uiEvents.onNext(ProtocolDrugClicked(drugName = drugName, prescription = null))
 
     //then
     verify(uiActions).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid, prescribedDrugUuid = null)

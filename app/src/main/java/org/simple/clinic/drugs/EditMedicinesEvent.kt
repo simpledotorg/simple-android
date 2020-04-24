@@ -11,7 +11,7 @@ object AddNewPrescriptionClicked : EditMedicinesEvent() {
 
 data class ProtocolDrugClicked(
     val drugName: String,
-    val prescriptionForProtocolDrug: PrescribedDrug?
+    val prescription: PrescribedDrug?
 ) : EditMedicinesEvent() {
   override val analyticsName = "Drugs:Protocol:Selected"
 }

@@ -98,10 +98,10 @@ class EditMedicinesScreenLogicTest {
     val telmisartan40mg = TestData.protocolDrug(name = "Telmisartan", dosage = "40mg")
     val telmisartan80mg = TestData.protocolDrug(name = "Telmisartan", dosage = "80mg")
 
-    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.just(listOf(
+    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(listOf(
         ProtocolDrugAndDosages(amlodipine10mg.name, listOf(amlodipine5mg, amlodipine10mg)),
         ProtocolDrugAndDosages(telmisartan40mg.name, listOf(telmisartan40mg, telmisartan80mg))
-    )))
+    ))
 
     val amlodipine10mgPrescription = TestData.prescription(
         uuid = UUID.fromString("90e28866-90f6-48a0-add1-cf44aa43209c"),
@@ -168,7 +168,7 @@ class EditMedicinesScreenLogicTest {
   @Test
   fun `when new prescription button is clicked then prescription entry sheet should be shown`() {
     //given
-    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
+    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(emptyList())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
     //when
@@ -190,7 +190,7 @@ class EditMedicinesScreenLogicTest {
     val protocolDrug = TestData.protocolDrug(uuid = UUID.fromString("362c6a00-3ed9-4b7a-b22a-9168b736bd35"), name = drugName)
 
     whenever(prescriptionRepository.savePrescription(patientUuid, protocolDrug, facility)).thenReturn(Completable.complete())
-    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
+    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(emptyList())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
     //when
@@ -205,7 +205,7 @@ class EditMedicinesScreenLogicTest {
   fun `when a custom prescription is clicked then open upate custom prescription screen`() {
     //given
     val prescribedDrug = TestData.prescription()
-    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
+    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(emptyList())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
 
@@ -220,7 +220,7 @@ class EditMedicinesScreenLogicTest {
   @Test
   fun `when done click event is received then go back to patient summary`() {
     //given
-    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(Observable.never())
+    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(emptyList())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
     //when

@@ -44,7 +44,7 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
       val protocolDrugsStream = effects
           .observeOn(io)
           .map { currentProtocolUuid() }
-          .switchMap { protocolRepository.drugsForProtocolOrDefault(it) }
+          .map { protocolRepository.drugsForProtocolOrDefault(it) }
 
       val prescribedDrugsStream = effects
           .switchMap { prescriptionRepository.newestPrescriptionsForPatient(it.patientUuid).subscribeOn(io) }

@@ -50,13 +50,13 @@ class ProtocolRepositoryAndroidTest {
     database.clearAllTables()
 
     val randomProtocolUuid = UUID.randomUUID()
-    val drugs = protocolRepository.drugsForProtocolOrDefault(randomProtocolUuid).blockingFirst()
+    val drugs = protocolRepository.drugsForProtocolOrDefault(randomProtocolUuid)
     assertThat(drugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
   }
 
   @Test
   fun when_protocol_ID_is_null_then_default_drugs_should_be_returned() {
-    val drugs = protocolRepository.drugsForProtocolOrDefault(null).blockingFirst()
+    val drugs = protocolRepository.drugsForProtocolOrDefault(null)
     assertThat(drugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
   }
 
@@ -72,7 +72,7 @@ class ProtocolRepositoryAndroidTest {
     val drug2 = testData.protocolDrug(protocolUuid = protocol1.uuid)
     database.protocolDrugDao().save(listOf(drug1, drug2))
 
-    val drugsForProtocol2 = protocolRepository.drugsForProtocolOrDefault(protocol2.uuid).blockingFirst()
+    val drugsForProtocol2 = protocolRepository.drugsForProtocolOrDefault(protocol2.uuid)
     assertThat(drugsForProtocol2).isEqualTo(protocolRepository.defaultProtocolDrugs())
   }
 
@@ -91,7 +91,7 @@ class ProtocolRepositoryAndroidTest {
     val drug3 = testData.protocolDrug(name = "Amlodipine", protocolUuid = protocol2.uuid)
     database.protocolDrugDao().save(listOf(drug1, drug2, drug3))
 
-    val drugsForCurrentProtocol = protocolRepository.drugsForProtocolOrDefault(currentProtocolUuid).blockingFirst()
+    val drugsForCurrentProtocol = protocolRepository.drugsForProtocolOrDefault(currentProtocolUuid)
     assertThat(drugsForCurrentProtocol).containsAtLeast(
         ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(drug1)),
         ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(drug2)))
@@ -114,7 +114,7 @@ class ProtocolRepositoryAndroidTest {
     val telmisartan80mg = testData.protocolDrug(name = "Telmisartan", dosage = "80mg", protocolUuid = protocol2.uuid)
     database.protocolDrugDao().save(listOf(amlodipine5mg, amlodipine10mg, telmisartan40mg, telmisartan80mg))
 
-    val drugsForProtocol1 = protocolRepository.drugsForProtocolOrDefault(protocol1.uuid).blockingFirst()
+    val drugsForProtocol1 = protocolRepository.drugsForProtocolOrDefault(protocol1.uuid)
     assertThat(drugsForProtocol1).containsAtLeast(
         ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(amlodipine5mg, amlodipine10mg)),
         ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(telmisartan40mg)))
@@ -136,7 +136,7 @@ class ProtocolRepositoryAndroidTest {
 
     protocolRepository.mergeWithLocalData(listOf(protocolPayload)).blockingAwait()
 
-    val drugsForProtocol = protocolRepository.drugsForProtocolOrDefault(protocolUuid).blockingFirst()
+    val drugsForProtocol = protocolRepository.drugsForProtocolOrDefault(protocolUuid)
     assertThat(drugsForProtocol).containsAtLeast(
         ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(drug1)),
         ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(drug2, drug3)))

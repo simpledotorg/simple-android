@@ -124,7 +124,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
     component = ClinicApp.appComponent
         .setupActivityComponentBuilder()
         .activity(this)
-        .screenRouter(screenRouter)
         .build()
     component.inject(this)
   }

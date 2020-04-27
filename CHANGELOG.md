@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## Next release
-- [In Progress: 23 Apr 2020] Add support for calling the patient directly from the summary screen
+- [In Progress: 27 Apr 2020] Add support for calling the patient directly from the summary screen
 
 ## On Demo
 

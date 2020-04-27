@@ -2,6 +2,7 @@
 <resources>
   <declare-styleable name="ScreenNavigator">
     <attr name="layout" format="reference" />
+    <attr name="analyticsName" format="string" />
   </declare-styleable>
 
   <declare-styleable name="ScreenHostView">

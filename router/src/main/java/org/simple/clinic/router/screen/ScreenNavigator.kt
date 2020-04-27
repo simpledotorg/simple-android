@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.core.content.res.getResourceIdOrThrow
+import androidx.core.content.res.getStringOrThrow
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
@@ -89,6 +90,10 @@ class ScreenNavigator(
     var layoutRes: Int = 0
       private set
 
+    private var _analyticsName: String? = null
+    val analyticsName: String
+      get() = _analyticsName!!
+
     constructor(navigatorProvider: NavigatorProvider) : this(
         navigatorProvider.getNavigator(
             ScreenNavigator::class.java
@@ -101,6 +106,7 @@ class ScreenNavigator(
       super.onInflate(context, attrs)
       context.resources.obtainAttributes(attrs, R.styleable.ScreenNavigator).apply {
         layoutRes = getResourceIdOrThrow(R.styleable.ScreenNavigator_layout)
+        _analyticsName = getStringOrThrow(R.styleable.ScreenNavigator_analyticsName)
         recycle()
       }
     }

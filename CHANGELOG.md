@@ -1,7 +1,11 @@
 # CHANGELOG
 
 ## Next release
+### Feature
 - [In Progress: 27 Apr 2020] Add support for calling the patient directly from the summary screen
+
+### Internal
+- Updated translations: `bn_BD`
 
 ## On Demo
 

@@ -13,6 +13,7 @@
   <string name="gender_trans_letter">টি</string>
   <string name="api_unexpected_error">কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।</string>
   <string name="api_network_error">কোনও ইন্টারনেট সংযোগ নেই</string>
+  <string name="api_server_error">সার্ভার ত্রুটি! অনুগ্রহ করে পরে আবার চেষ্টা করুন।</string>
 
   <!-- Country names -->
   <string name="country_india">ভারত</string>
@@ -39,6 +40,7 @@
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">রোগী নিবন্ধিত নয়</string>
   <string name="patientsearchresults_register_patient">নতুন রোগী হিসাবে নিবন্ধন করুন</string>
   <string name="patientsearchresults_register_patient_for_empty_state">নিবন্ধিত রোগী</string>
+  <string name="patientsearchresults_item_last_seen">শেষ দেখা হয়েছিল:</string>
   <string name="patientsearchresults_current_facility_header">%s দেখেছেন</string>
   <string name="patientsearchresults_other_results_header">অন্যান্য ফলাফল</string>
   <string name="patientsearchresults_no_patients_match">কোনও রোগী খুঁজে পাওয়া যায়নি</string>
@@ -48,6 +50,7 @@
   <string name="patiententry_full_name">রোগীর নাম</string>
   <string name="patiententry_phone_number">ফোন নম্বর</string>
   <string name="patiententry_bangladesh_national_id">জাতীয় পরিচয়পত্র নম্বর</string>
+  <string name="patiententry_ethiopia_national_id">জাতীয় পরিচয়পত্র</string>
   <string name="patiententry_date_of_birth_unfocused">জন্ম তারিখ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (জন্মদিন): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">অথবা</string>
@@ -56,10 +59,13 @@
   <string name="patiententry_street_house_road_number">বাড়ির এবং রাস্তার নম্বর</string>
   <string name="patiententry_village_colony_ward">গ্রাম / কলোনি / ওয়ার্ড</string>
   <string name="patiententry_village_ward">গ্রাম / ওয়ার্ড</string>
+  <string name="patiententry_kebele">গ্রাম</string>
   <string name="patiententry_zone">ইউনিয়ন</string>
   <string name="patiententry_district">জেলা</string>
+  <string name="patiententry_woreda">প্রশাসনিক অঞ্চল</string>
   <string name="patiententry_upazila">উপজেলা</string>
   <string name="patiententry_state">রাজ্য</string>
+  <string name="patiententry_region">অঞ্চল</string>
   <string name="patiententry_save_patient">পরবর্তী</string>
   <string name="patiententry_error_empty_fullname">রোগীর পুরো নাম লিখুন</string>
   <string name="patiententry_error_empty_gender">রোগীর লিঙ্গ চয়ন করুন</string>
@@ -76,6 +82,7 @@
   <string name="patiententry_consent_first_para">নিন্মে ট্যাপ করার মাধমে আপনি নিশ্চিত হচ্ছেন যে এখানে আপনার দেওয়া যে কোনও রোগীর ডেটা যথাযথ অবহিত সম্মতিতে গ্রহণ করা হয়েছে। এর অর্থ হল রোগী বা আইনি অভিভাবক জানেন যে আপনি অ্যাপে তাদের ব্যক্তিগত ডেটা প্রদান করেছেন, কোন ডেটা সংগ্রহ করা হচ্ছে তা বুঝতে পেরেছেন এবং এটিও জানেন যে অ্যাপটিতে প্রদত্ত ফোন নম্বর ব্যবহার করে SMS, WhatsApp বা অন্যান্য পদ্ধতির মাধ্যমে তাদের সাথে যোগাযোগ করা হতে পারে।</string>
   <string name="patiententry_consent_second_para">আপনার দ্বারা অনুমোদিত যে কেউ, বা স্বাস্থ্যসেবা সরবরাহকারী যার জন্য আপনি কাজ করেন, এখানে আপনার প্রদত্ত রোগীর ডেটা এবং তথ্যে অ্যাক্সেস করতে পারবে। অ্যাপটি ব্যবহার করে আপনি নিশ্চিত করেছেন যে রোগী বা তার আইনি অভিভাবক বুঝেছেন যে এই অ্যাপ্লিকেশনটির মাধ্যমে প্রাপ্ত ডেটাতে কার অ্যাক্সেস থাকবে এবং সেই অ্যাক্সেসে রোগীর সম্মতি রয়েছে।</string>
   <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS রিমাইন্ডার</string>
+  <string name="patiententry_consent_sms_reminders">SMS রিমাইন্ডার</string>
   <string name="patiententry_age_exceeds_max_limit_error">বয়স 120 বছরের বেশি হতে পারবে না</string>
   <string name="patiententry_age_exceeds_min_limit_error">বয়স 0 বছরের সমান হতে পারবে না</string>
 
@@ -106,7 +113,7 @@
   <string name="patients_loggedoutalert_message">আপনি আপনার আগের ডিভাইসটি থেকে লগ আউট করেছেন।</string>
   <string name="patients_loggedoutalert_dismiss">বুঝতে পেরেছি</string>
   <string name="patients_scan_simple_card">বিপি পাসপোর্ট স্ক্যান করুন</string>
-  <string name="patients_recentpatients_title">সাম্প্রতিক রোগীরা</string>
+  <string name="patients_recentpatients_title">সাম্প্রতিক</string>
   <string name="patients_recentpatients_no_recent_patients">কোন সাম্প্রতিক রোগী নেই</string>
   <string name="patients_recentpatients_see_all">সবাইকে দেখুন</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
@@ -128,7 +135,7 @@
   <string name="bloodpressureentry_error_diastolic_180">ডায়াস্টোলিক 180 এর থেকে বেশি হতে পারে না</string>
   <string name="bloodpressureentry_error_systolic_empty">সিস্টোলিক এবং ডায়াস্টোলিক প্রেশার লিখুন</string>
   <string name="bloodpressureentry_error_diastolic_empty">সিস্টোলিক এবং ডায়াস্টোলিক প্রেশার লিখুন</string>
-  <string name="bloodpressureentry_error_date_invalid_pattern">DD/MM/YY-তে একটি বৈধ তারিখ লিখুন</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">DD/MM/YYYY বিন্যাসে একটি বৈধ তারিখ লিখুন</string>
   <string name="bloodpressureentry_error_date_is_in_future">তারিখটি ভবিষ্যতের হতে পারে না</string>
   <string name="bloodpressureentry_remove_bp_title">বিপি অপসারণ করুন</string>
   <string name="bloodpressureentry_remove_bp_message">আপনি কি এই রক্তচাপের রেকর্ডিং অপসারণ করার ব্যাপারে নিশ্চিত?</string>
@@ -137,8 +144,8 @@
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">ফিরে যান</string>
-  <string name="patientsummary_prescriptions_add">ওষুধগুলো যোগ করুন</string>
-  <string name="patientsummary_prescriptions_update">ওষুধগুলো আপডেট করুন</string>
+  <string name="patientsummary_prescriptions_add">ওষুধপত্র</string>
+  <string name="patientsummary_prescriptions_update">ওষুধপত্র পরীক্ষা করুন</string>
   <string name="patientsummary_bp_add_new">রক্তচাপ</string>
   <string name="patientsummary_finish_saving_patient">সংরক্ষণ করুন</string>
   <string name="patientsummary_bp_none_added">কোন রক্তচাপ যোগ করা হয়নি</string>
@@ -187,6 +194,7 @@
 
   <!-- Login -->
   <string name="loginpin_go_back">আপনার ফোন নম্বর স্ক্রিনে ফিরুন</string>
+
   <!-- App lock -->
   <string name="applock_logout">আপনি নন?</string>
   <string name="applock_reset_pin_alert_title">সুরক্ষা PIN রিসেট করবেন?</string>
@@ -243,10 +251,15 @@
   <string name="overdue_no_patients">সময়াতীত হওয়া কোন রোগী নেই</string>
   <string name="overdue_empty_desc">যে রোগীরা ফলো আপ রক্তচাপ মাপার জন্য তাদের পূর্বনির্ধারিত সাক্ষাৎকার মিস করেছে আপনি সেই রোগীদের ফোন করতে পারবেন।</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_diagnosis_diabetes">ডায়াবেটিস</string>
+  <string name="overdue_list_item_diagnosis_hypertension">হাইপারটেনশন</string>
+  <string name="overdue_list_item_diagnosis_none">কোনটিই নয়</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s দিন সময়াতীত</item>
     <item quantity="other">%s দিন সময়াতীত</item>
   </plurals>
+  <string name="overduelist_diagnosis_label">Dx</string>
+  <string name="overduelist_visited">দেখা হয়েছে</string>
   <string name="overduelist_agreed_to_visit">‘ভিজিটে আসতে সম্মত হয়েছেন’ বলে রোগীকে চিহ্নিত করুন</string>
   <string name="overduelist_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
   <string name="overduelist_remove_from_list">সময়াতীতের তালিকা থেকে সরান…</string>
@@ -260,7 +273,7 @@
 
   <!-- Appointment reminder -->
   <string name="appointmentreminder_call_later_in">পরে ফোন করুন</string>
-  <string name="appointmentreminder_done">সম্পন্ন হয়েছে</string>
+  <string name="appointmentreminder_done">সম্পন্ন</string>
   <plurals name="appointmentreminder_days">
     <item quantity="one">%s দিন</item>
     <item quantity="other">%s দিন</item>
@@ -370,12 +383,13 @@
   <string name="linkidwithpatient_to_patient_text">\u0020থেকে\u00A0রোগীর?</string>
 
   <!-- Add ID to Patient: Search -->
+  <string name="addidtopatientsearch_toolbar_title">রোগীর নাম লিখুন</string>
   <string name="addidtopatientsearch_search">পরবর্তী</string>
   <string name="addidtopatientsearch_error_empty_fullname">রোগীর পুরো নাম বা ফোন নম্বর লিখুন</string>
   <string name="addidtopatientsearch_hint">নাম বা ফোন নম্বর</string>
 
   <!-- Recent Patients -->
-  <string name="recent_patients_toolbar_title">সাম্প্রতিক রোগীরা</string>
+  <string name="recent_patients_toolbar_title">সাম্প্রতিক</string>
 
   <!-- Recent Patients Item View -->
   <string name="recent_patients_itemview_last_seen">শেষ দেখা হয়েছিল:\u0020</string>
@@ -416,15 +430,19 @@
   <string name="settings_user_name_icon_content">ইউজারনেম আইকন সেটিংস</string>
   <string name="settings_user_phone_icon_content">ইউজার ফোন নম্বর আইকন সেটিংস</string>
   <string name="settings_current_language_icon_content">বর্তমান ভাষা সেটিংস</string>
+  <string name="settings_app_version_icon_content">সেটিংস অ্যাপ সংস্করণ আইকন</string>
   <string name="settings_name">নাম</string>
   <string name="settings_number">ফোন নম্বর</string>
   <string name="settings_language">ভাষা</string>
   <string name="settings_change">পরিবর্তন</string>
   <string name="settings_language_hint">একটি ভাষা নির্বাচন করুন</string>
+  <string name="settings_software">সফটওয়্যার</string>
+  <string name="settings_update">আপডেট করুন</string>
+  <string name="settings_software_version">সংস্করণ %1$s</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">আপনার ভাষা নির্বাচন করুন</string>
-  <string name="changelanguage_done">সম্পন্ন হয়েছে</string>
+  <string name="changelanguage_done">সম্পন্ন</string>
 
   <!-- Placeholder -->
   <string name="placeholder_loading_title">দয়া করে অপেক্ষা করুন…</string>
@@ -447,21 +465,31 @@
   <string name="bloodsugartype_rbs">র‍্যান্ডম ব্লাড সুগার (RBS)</string>
   <string name="bloodsugartype_fbs">ফাস্টিং ব্লাড সুগার (FBS)</string>
   <string name="bloodsugartype_ppbs">খাওয়ার পরে ব্লাড সুগার (PPBS)</string>
-
-  <!-- Blood sugar entry -->
   <string name="bloodsugarentry_sheet_title_enter_date">সাক্ষাৎকারের তারিখ</string>
   <string name="bloodsugarentry_day">দিন</string>
   <string name="bloodsugarentry_month">মাস</string>
   <string name="bloodsugarentry_year">বছর</string>
   <string name="bloodsugarentry_error_lower_limit">মান 30 মিগ্রা/ডেসিলির কম হতে পারবে না</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">মান 3% এর কম হতে পারবে না</string>
   <string name="bloodsugarentry_error_higher_limit">মান 1000 মিগ্রা/ডেসিলির বেশি হতে পারবে না</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">মান 25% এর বেশি হতে পারবে না</string>
   <string name="bloodsugarentry_error_empty">মান খালি রাখা যাবে না</string>
-  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YY-তে একটি বৈধ তারিখ লিখুন</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YYYY বিন্যাসে একটি বৈধ তারিখ লিখুন</string>
   <string name="bloodsugarentry_error_date_is_in_future">তারিখটি ভবিষ্যতের হতে পারে না</string>
   <string name="bloodsugarentry_random_title">র‍্যান্ডম ব্লাড সুগার</string>
   <string name="bloodsugarentry_post_prandial_title">খাওয়ার পরে ব্লাড সুগার</string>
   <string name="bloodsugarentry_fasting_title">খালি পেটে ব্লাড সুগার</string>
   <string name="bloodsugarentry_remove">অপসারণ করুন</string>
+  <string name="bloodsugarentry_edit_random_title">র‍্যান্ডম ব্লাড সুগার সম্পাদনা করুন</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">খাওয়ার পরের ব্লাড সুগার সম্পাদনা করুন</string>
+  <string name="bloodsugarentry_edit_fasting_title">খালি পেটের ব্লাড সুগার সম্পাদনা করুন</string>
+  <string name="bloodsugarentry_edit_hba1c_title">HbA1c পরীক্ষা করুন</string>
+
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">ব্লাড সুগার অপসারণ করুন</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">আপনি কি এই ব্লাড সুগারের রেকর্ডিং অপসারণ করার ব্যাপারে নিশ্চিত?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">অপসারণ করুন</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">বাতিল করুন</string>
 
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">কোনও ব্লাড সুগার যোগ করা হয়নি</string>
@@ -481,5 +509,39 @@
   <string name="medicalhistorysummaryview_diagnosis">রোগ নির্ণয় (প্রয়োজন)</string>
 
   <!-- Summary prescriptions view -->
-  <string name="drugsummaryview_no_medicines">কোনটাই না</string>
+  <string name="drugsummaryview_no_medicines">কোনো ওষুধ যোগ করা হয়নি</string>
+
+  <!-- Access Denied screen -->
+  <string name="accessdeniedscreen_title_access_denied">অ্যাক্সেস প্রত্যাখাত</string>
+  <string name="accessdeniedscreen_description">সিম্পিল এ অ্যাক্সেস প্রত্যাখাত হয়েছে। এটিকে আপনার একটি ত্রুটি মনে হলে অনুগ্রহ করে আপনার সুপারভাইজারের সাথে যোগাযোগ করুন।\n\nআপনার অ্যাক্সেস রিস্টোর করা হলে, সিম্পিল আনইনস্টল করে প্লে স্টোর থেকে আবার ইনস্টল করুন।</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">সুবিধা পরিবর্তিত করুন</string>
+  <string name="confirmfacilitychange_negative_button">বাতিল করুন</string>
+  <string name="confirmfacilitychange_positive_button">হ্যাঁ</string>
+  <string name="confirmfacilitychange_facility_name">%s?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">আপনি কি আছেন?</string>
+  <string name="registrationconfirmfacility_positive_button">হ্যাঁ</string>
+  <string name="registrationconfirmfacility_negative_button">বাতিল করুন</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">আপনি কি আছেন</string>
+  <string name="alertfacilitychange_yes_button">হ্যাঁ</string>
+  <string name="alertfacilitychange_change_button">পরিবর্তন</string>
+  <string name="alertfacilitychange_facility_name">%s?</string>
+
+  <!-- Prescribed Drug Summary -->
+  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">\&quot;ভিজিটে আসতে সম্মত হয়েছেন&quot;\ বলে রোগীকে চিহ্নিত করুন</string>
+  <string name="contactpatient_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
+  <string name="contactpatient_remove_from_list">সময়াতীতের তালিকা থেকে সরান…</string>
+  <string name="contactpatient_result_of_call">কলের ফলাফল</string>
+  <string name="contactpatient_call_normal">স্বাভাবিক</string>
+  <string name="contactpatient_call_secure">নিরাপদ</string>
+  <string name="contactpatient_help_text">সুরক্ষিত কলগুলো আপনার নম্বরটিকে গোপন করে এবং এগুলো টোল ফ্রি</string>
+  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
 </resources>

@@ -20,6 +20,10 @@ class ScreenNavigator(
     private val container: ViewGroup
 ) : Navigator<ScreenNavigator.Destination>() {
 
+  companion object {
+    private const val KEY_BACK_STACK_IDS = "org.simple.clinic.router.screen:ScreenNavigator:backStackIds"
+  }
+
   private val backStack = ArrayDeque<@LayoutRes Int>()
 
   override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Extras?): NavDestination? {
@@ -58,6 +62,23 @@ class ScreenNavigator(
     container.apply {
       removeAllViews()
       addView(destinationView)
+    }
+  }
+
+  override fun onSaveState(): Bundle? {
+    val bundle = Bundle()
+    val backStack = backStack.toIntArray()
+    bundle.putIntArray(KEY_BACK_STACK_IDS, backStack)
+    return bundle
+  }
+
+  override fun onRestoreState(savedState: Bundle) {
+    val backStack = savedState.getIntArray(KEY_BACK_STACK_IDS)
+    if (backStack != null) {
+      this.backStack.clear()
+      for (destId in backStack) {
+        this.backStack.add(destId)
+      }
     }
   }
 

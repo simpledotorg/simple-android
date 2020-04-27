@@ -5,6 +5,6 @@
   </declare-styleable>
 
   <declare-styleable name="ScreenHostView">
-    <attr name="navGraph" format="reference" />
+    <attr name="screenNavGraph" format="reference" />
   </declare-styleable>
 </resources>

@@ -27,6 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
@@ -399,8 +400,7 @@ class BloodPressureEntrySheetLogicTest {
 
     val newInputDateAsInstant = newInputDate.toUtcInstant(testUserClock)
     val updatedBp = existingBp.copy(
-        systolic = 120,
-        diastolic = 110,
+        reading = BloodPressureReading(120, 110),
         updatedAt = oldCreatedAt,
         recordedAt = newInputDateAsInstant
     )
@@ -876,8 +876,7 @@ class BloodPressureEntrySheetLogicTest {
     val entryDateAsInstant = newInputDate.toUtcInstant(testUserClock)
     val newInputDateAsInstant = newInputDate.toUtcInstant(testUserClock)
     val updatedBp = existingBp.copy(
-        systolic = systolic.toInt(),
-        diastolic = diastolic.toInt(),
+        reading = BloodPressureReading(systolic.toInt(), diastolic.toInt()),
         updatedAt = createdAt,
         recordedAt = newInputDateAsInstant
     )
@@ -938,8 +937,7 @@ class BloodPressureEntrySheetLogicTest {
     val newInputDate = LocalDate.parse("1991-02-14")
     val newInputDateAsInstant = newInputDate.toUtcInstant(testUserClock)
     val updatedBp = existingBp.copy(
-        systolic = 120,
-        diastolic = 110,
+        reading = BloodPressureReading(120, 110),
         updatedAt = oldCreatedAt,
         recordedAt = newInputDateAsInstant,
         userUuid = userFromDifferentFacility.uuid,
@@ -981,8 +979,7 @@ class BloodPressureEntrySheetLogicTest {
     val newInputDate = LocalDate.of(1991, 2, 14)
     val newInputDateAsInstant = newInputDate.toUtcInstant(testUserClock)
     val updatedBp = existingBp.copy(
-        systolic = systolic.toInt(),
-        diastolic = diastolic.toInt(),
+        reading = BloodPressureReading(systolic.toInt(), diastolic.toInt()),
         userUuid = userFromDifferentFacility.uuid,
         facilityUuid = differentFacility.uuid,
         recordedAt = newInputDateAsInstant

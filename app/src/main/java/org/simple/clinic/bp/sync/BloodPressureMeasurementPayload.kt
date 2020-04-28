@@ -3,6 +3,7 @@ package org.simple.clinic.bp.sync
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -43,8 +44,7 @@ data class BloodPressureMeasurementPayload(
   fun toDatabaseModel(syncStatus: SyncStatus): BloodPressureMeasurement {
     return BloodPressureMeasurement(
         uuid = uuid,
-        systolic = systolic,
-        diastolic = diastolic,
+        reading = BloodPressureReading(systolic, diastolic),
         syncStatus = syncStatus,
         userUuid = userUuid,
         facilityUuid = facilityUuid,

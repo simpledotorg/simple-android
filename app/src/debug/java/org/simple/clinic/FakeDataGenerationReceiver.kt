@@ -6,6 +6,7 @@ import android.content.Intent
 import io.bloco.faker.Faker
 import io.reactivex.Completable
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
@@ -144,8 +145,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(
         uuid = UUID.randomUUID(),
-        systolic = Random.nextInt(90..200),
-        diastolic = Random.nextInt(60..140),
+        reading = BloodPressureReading(Random.nextInt(90..200), Random.nextInt(60..140)),
         syncStatus = SyncStatus.DONE,
         userUuid = user.uuid,
         facilityUuid = facility.uuid,

@@ -1,5 +1,7 @@
 package org.simple.clinic.drugs.selection.entry
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -13,20 +15,26 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.nullIfBlank
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
-import javax.inject.Inject
 
 private typealias Ui = CustomPrescriptionEntrySheet
 private typealias UiChange = (Ui) -> Unit
 
 const val DOSAGE_PLACEHOLDER = "mg"
 
-class CustomPrescriptionEntryController @Inject constructor(
+class CustomPrescriptionEntryController @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    @Assisted private val openAs: OpenAs
 ) : ObservableTransformer<UiEvent, UiChange> {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(openAs: OpenAs): CustomPrescriptionEntryController
+  }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
@@ -56,9 +64,9 @@ class CustomPrescriptionEntryController @Inject constructor(
 
   private fun saveNewPrescriptionsAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
-        .ofType<CustomPrescriptionSheetCreated>()
-        .filter { it.openAs is OpenAs.New }
-        .map { it.openAs as OpenAs.New }
+        .ofType<ScreenCreated>()
+        .filter { openAs is OpenAs.New }
+        .map { openAs as OpenAs.New }
         .map { it.patientUuid }
         .take(1)
 
@@ -102,9 +110,9 @@ class CustomPrescriptionEntryController @Inject constructor(
 
   private fun updatePrescriptionAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
     val prescribedDrugs = events
-        .ofType<CustomPrescriptionSheetCreated>()
-        .filter { it.openAs is OpenAs.Update }
-        .map { it.openAs as OpenAs.Update }
+        .ofType<ScreenCreated>()
+        .filter { openAs is OpenAs.Update }
+        .map { openAs as OpenAs.Update }
         .flatMap { prescriptionRepository.prescription(it.prescribedDrugUuid) }
         .take(1)
 
@@ -159,8 +167,8 @@ class CustomPrescriptionEntryController @Inject constructor(
 
   private fun updateSheetTitle(events: Observable<UiEvent>): Observable<UiChange> {
     val openAsStream = events
-        .ofType<CustomPrescriptionSheetCreated>()
-        .map { it.openAs }
+        .ofType<ScreenCreated>()
+        .map { openAs }
 
     val showEnterNewPrescription = openAsStream
         .filter { it is OpenAs.New }
@@ -175,8 +183,8 @@ class CustomPrescriptionEntryController @Inject constructor(
 
   private fun toggleRemoveButton(events: Observable<UiEvent>): Observable<UiChange> {
     val openAsStream = events
-        .ofType<CustomPrescriptionSheetCreated>()
-        .map { it.openAs }
+        .ofType<ScreenCreated>()
+        .map { openAs }
 
     val hideRemoveButton = openAsStream
         .filter { it is OpenAs.New }
@@ -191,9 +199,9 @@ class CustomPrescriptionEntryController @Inject constructor(
 
   private fun prefillPrescription(events: Observable<UiEvent>): Observable<UiChange> {
     val openAsUpdate = events
-        .ofType<CustomPrescriptionSheetCreated>()
-        .filter { it.openAs is OpenAs.Update }
-        .map { it.openAs as OpenAs.Update }
+        .ofType<ScreenCreated>()
+        .filter { openAs is OpenAs.Update }
+        .map { openAs as OpenAs.Update }
 
     return openAsUpdate
         .flatMap { prescriptionRepository.prescription(it.prescribedDrugUuid).take(1) }
@@ -207,9 +215,9 @@ class CustomPrescriptionEntryController @Inject constructor(
 
   private fun removePrescription(events: Observable<UiEvent>): Observable<UiChange> {
     val openAsUpdate = events
-        .ofType<CustomPrescriptionSheetCreated>()
-        .filter { it.openAs is OpenAs.Update }
-        .map { it.openAs as OpenAs.Update }
+        .ofType<ScreenCreated>()
+        .filter { openAs is OpenAs.Update }
+        .map { openAs as OpenAs.Update }
         .map { it.prescribedDrugUuid }
         .take(1)
 
@@ -221,9 +229,9 @@ class CustomPrescriptionEntryController @Inject constructor(
 
   private fun closeSheetWhenPrescriptionIsDeleted(events: Observable<UiEvent>): Observable<UiChange> {
     val prescribedDrugUuuids = events
-        .ofType<CustomPrescriptionSheetCreated>()
-        .filter { it.openAs is OpenAs.Update }
-        .map { it.openAs as OpenAs.Update }
+        .ofType<ScreenCreated>()
+        .filter { openAs is OpenAs.Update }
+        .map { openAs as OpenAs.Update }
         .map { it.prescribedDrugUuid }
 
     return prescribedDrugUuuids

@@ -144,7 +144,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
     MobiusDelegate.forActivity(
         events.ofType(),
         defaultModel,
-        BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(userTimeZone), userInputDatePaddingCharacter),
+        BloodPressureEntryUpdate(dateValidator, LocalDate.now(userTimeZone), userInputDatePaddingCharacter),
         effectHandler,
         BloodPressureEntryInit(),
         uiRenderer::render

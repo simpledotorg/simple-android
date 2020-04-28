@@ -232,7 +232,7 @@ class CustomPrescriptionEntryControllerTest {
   }
 
   @Test
-  fun `when remove is clicked, the prescription should be deleted`() {
+  fun `when remove is clicked, then show confirmation dialog`() {
     //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 

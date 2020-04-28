@@ -98,9 +98,6 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   lateinit var userClock: UserClock
 
   @Inject
-  lateinit var bpValidator: BpValidator
-
-  @Inject
   lateinit var userTimeZone: ZoneId
 
   @Inject

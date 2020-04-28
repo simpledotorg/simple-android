@@ -71,7 +71,7 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
       holder.itemView.isFocusable = isBpEditable
       holder.editButton.visibleOrGone(isBpEditable)
 
-      holder.readingsTextView.text = "${measurement.systolic} / ${measurement.diastolic}"
+      holder.readingsTextView.text = "${measurement.reading.systolic} / ${measurement.reading.diastolic}"
       holder.timeDateTextView.text = formattedBPDateTime
     }
   }

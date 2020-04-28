@@ -130,7 +130,7 @@ class BloodPressureEntryEffectHandler private constructor(
     return ObservableTransformer { bloodPressureMeasurements ->
       bloodPressureMeasurements
           .flatMapSingle { getExistingBloodPressureMeasurement(it.bpUuid).subscribeOn(scheduler) }
-          .map { BloodPressureMeasurementFetched(it.systolic, it.diastolic, it.recordedAt) }
+          .map { BloodPressureMeasurementFetched(it.reading.systolic, it.reading.diastolic, it.recordedAt) }
     }
   }
 

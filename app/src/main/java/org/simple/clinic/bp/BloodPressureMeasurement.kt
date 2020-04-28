@@ -3,6 +3,7 @@ package org.simple.clinic.bp
 import android.os.Parcelable
 import androidx.paging.DataSource
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.Insert
@@ -24,9 +25,8 @@ data class BloodPressureMeasurement(
     @PrimaryKey
     val uuid: UUID,
 
-    val systolic: Int,
-
-    val diastolic: Int,
+    @Embedded
+    val reading: BloodPressureReading,
 
     val syncStatus: SyncStatus,
 
@@ -44,6 +44,47 @@ data class BloodPressureMeasurement(
 
     val recordedAt: Instant
 ) : Parcelable {
+
+  @Deprecated(
+      message = "Use the constructor with reading instead",
+      replaceWith = ReplaceWith(
+          expression = "BloodPressureMeasurement(uuid, BloodPressureReading(systolic, diastolic), syncStatus, userUuid, facilityUuid, patientUuid, createdAt, updatedAt, deletedAt, recordedAt)",
+          imports = ["org.simple.clinic.bp.BloodPressureReading"]
+      )
+  )
+  constructor(
+      uuid: UUID,
+      systolic: Int,
+      diastolic: Int,
+      syncStatus: SyncStatus,
+      userUuid: UUID,
+      facilityUuid: UUID,
+      patientUuid: UUID,
+      createdAt: Instant,
+      updatedAt: Instant,
+      deletedAt: Instant?,
+      recordedAt: Instant
+  ) : this(uuid, BloodPressureReading(systolic, diastolic), syncStatus, userUuid, facilityUuid, patientUuid, createdAt, updatedAt, deletedAt, recordedAt)
+
+  @Deprecated(
+      message = "Use the reading instead",
+      replaceWith = ReplaceWith(
+          expression = "reading.systolic",
+          imports = ["org.simple.clinic.bp.BloodPressureReading"]
+      )
+  )
+  val systolic: Int
+    get() = reading.systolic
+
+  @Deprecated(
+      message = "Use the reading instead",
+      replaceWith = ReplaceWith(
+          expression = "reading.diastolic",
+          imports = ["org.simple.clinic.bp.BloodPressureReading"]
+      )
+  )
+  val diastolic: Int
+    get() = reading.diastolic
 
   @Transient
   @IgnoredOnParcel

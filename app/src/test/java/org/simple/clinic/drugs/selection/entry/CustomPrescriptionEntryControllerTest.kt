@@ -132,29 +132,29 @@ class CustomPrescriptionEntryControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for showing title")
-  fun `when sheet is created then correct title should be populated`(openAs: OpenAs, showNewEntryTitle: Boolean) {
+  fun `when sheet is opened for a new entry then enter new medicine title should be shown`() {
     //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     //when
     setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(openAs))
+    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.New(patientUuid)))
 
     //then
-    if (showNewEntryTitle) {
-      verify(sheet).showEnterNewPrescriptionTitle()
-    } else {
-      verify(sheet).showEditPrescriptionTitle()
-    }
+    verify(sheet).showEnterNewPrescriptionTitle()
   }
 
-  @Suppress("Unused")
-  private fun `params for showing title`(): List<List<Any>> {
-    return listOf(
-        listOf(OpenAs.New(patientUuid), true),
-        listOf(OpenAs.Update(prescriptionUuid), false)
-    )
+  @Test
+  fun `when sheet is opened to update a medicine then update medicine title should be shown`() {
+    //given
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
+
+    //when
+    setupController()
+    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+
+    //then
+    verify(sheet).showEditPrescriptionTitle()
   }
 
   @Parameters(method = "params for showing remove button")

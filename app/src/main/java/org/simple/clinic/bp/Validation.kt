@@ -3,10 +3,7 @@ package org.simple.clinic.bp
 // TODO: Rename to "Result".
 sealed class Validation {
   // TODO: Rename to "Valid".
-  data class Success(
-      val systolic: Int,
-      val diastolic: Int
-  ) : Validation()
+  data class Success(val reading: BloodPressureReading) : Validation()
 
   object ErrorSystolicEmpty : Validation()
   object ErrorDiastolicEmpty : Validation()

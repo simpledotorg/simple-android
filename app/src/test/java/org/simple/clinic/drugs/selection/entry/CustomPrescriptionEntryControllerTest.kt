@@ -107,33 +107,35 @@ class CustomPrescriptionEntryControllerTest {
   }
 
   @Test
-  fun `placeholder value for dosage should only be shown when dosage field is focused and empty`() {
-    //given
-    whenever(sheet.setDrugDosageText(any())).then {
-      val text = it.arguments[0] as String
-      uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(text))
-    }
-
+  fun `placeholder value for dosage should be shown when dosage field is focused and empty`() {
     //when
     setupController()
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(""))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
-    uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
-    uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
-    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("10$DOSAGE_PLACEHOLDER"))
+
+    //then
+    verify(sheet, times(1)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
+    verify(sheet, never()).setDrugDosageText(eq(""))
+  }
+
+  @Test
+  fun `value for dosage should be reset when dosage field is not focused and empty`() {
+    //when
+    setupController()
+    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("$DOSAGE_PLACEHOLDER"))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
 
     //then
     verify(sheet, times(1)).setDrugDosageText(eq(""))
-    verify(sheet, times(1)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
+    verify(sheet, never()).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
   }
 
   @Test
   fun `when dosage field is focused and the placeholder value is set then the cursor should be moved to the beginning`() {
     //when
     setupController()
-    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("mg"))
+    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("$DOSAGE_PLACEHOLDER"))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
 
     //then

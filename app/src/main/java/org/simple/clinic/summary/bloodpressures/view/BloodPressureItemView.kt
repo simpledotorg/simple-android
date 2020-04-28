@@ -25,7 +25,7 @@ class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout
       bpTime: String?,
       editMeasurementClicked: (BloodPressureMeasurement) -> Unit
   ) {
-    renderBloodPressureReading(measurement.systolic, measurement.diastolic, measurement.level.isUrgent())
+    renderBloodPressureReading(measurement.reading.systolic, measurement.reading.diastolic, measurement.level.isUrgent())
     renderDateTime(bpDate, bpTime)
 
     if (isBpEditable) bpItemRoot.setOnClickListener { editMeasurementClicked(measurement) }

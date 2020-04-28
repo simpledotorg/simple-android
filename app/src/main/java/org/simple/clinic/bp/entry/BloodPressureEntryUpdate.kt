@@ -101,7 +101,7 @@ class BloodPressureEntryUpdate(
   private fun onBloodPressureDateClicked(
       model: BloodPressureEntryModel
   ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
-    val result = bpValidator.validate(model.systolic, model.diastolic)
+    val result = validateEnteredBp(model)
     val effect = if (result is Success) {
       ShowDateEntryScreen
     } else {
@@ -113,7 +113,7 @@ class BloodPressureEntryUpdate(
   private fun onSaveClicked(
       model: BloodPressureEntryModel
   ): Next<BloodPressureEntryModel, BloodPressureEntryEffect> {
-    val bpValidationResult = bpValidator.validate(model.systolic, model.diastolic)
+    val bpValidationResult = validateEnteredBp(model)
     val dateValidationResult = dateValidator.validate(getDateText(model), dateInUserTimeZone)
     val validationErrorEffects = getValidationErrorEffects(bpValidationResult, dateValidationResult)
 
@@ -122,6 +122,14 @@ class BloodPressureEntryUpdate(
 
     } else {
       dispatch(getCreateOrUpdateEntryEffect(model, dateValidationResult))
+    }
+  }
+
+  private fun validateEnteredBp(model: BloodPressureEntryModel): Validation {
+    return when {
+      model.systolic.isBlank() -> Validation.ErrorSystolicEmpty
+      model.diastolic.isBlank() -> Validation.ErrorDiastolicEmpty
+      else -> bpValidator.validate(model.systolic, model.diastolic)
     }
   }
 

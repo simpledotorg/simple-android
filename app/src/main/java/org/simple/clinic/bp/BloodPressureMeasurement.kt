@@ -45,26 +45,6 @@ data class BloodPressureMeasurement(
     val recordedAt: Instant
 ) : Parcelable {
 
-  @Deprecated(
-      message = "Use the reading instead",
-      replaceWith = ReplaceWith(
-          expression = "reading.systolic",
-          imports = ["org.simple.clinic.bp.BloodPressureReading"]
-      )
-  )
-  val systolic: Int
-    get() = reading.systolic
-
-  @Deprecated(
-      message = "Use the reading instead",
-      replaceWith = ReplaceWith(
-          expression = "reading.diastolic",
-          imports = ["org.simple.clinic.bp.BloodPressureReading"]
-      )
-  )
-  val diastolic: Int
-    get() = reading.diastolic
-
   @Transient
   @IgnoredOnParcel
   val level = BloodPressureLevel.compute(this)
@@ -73,8 +53,8 @@ data class BloodPressureMeasurement(
     return BloodPressureMeasurementPayload(
         uuid = uuid,
         patientUuid = patientUuid,
-        systolic = systolic,
-        diastolic = diastolic,
+        systolic = reading.systolic,
+        diastolic = reading.diastolic,
         facilityUuid = facilityUuid,
         userUuid = userUuid,
         createdAt = createdAt,

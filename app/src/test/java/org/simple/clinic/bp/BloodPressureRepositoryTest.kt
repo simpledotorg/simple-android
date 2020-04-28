@@ -53,8 +53,8 @@ class BloodPressureRepositoryTest {
 
     verify(dao).save(check {
       val measurement = it.first()
-      assertThat(measurement.systolic).isEqualTo(120)
-      assertThat(measurement.diastolic).isEqualTo(65)
+      assertThat(measurement.reading.systolic).isEqualTo(120)
+      assertThat(measurement.reading.diastolic).isEqualTo(65)
       assertThat(measurement.facilityUuid).isEqualTo(facility.uuid)
       assertThat(measurement.patientUuid).isEqualTo(patientUuid)
       assertThat(measurement.createdAt).isEqualTo(Instant.now(testClock))

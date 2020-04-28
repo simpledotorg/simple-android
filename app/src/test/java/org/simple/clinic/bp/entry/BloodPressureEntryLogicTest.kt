@@ -217,8 +217,8 @@ class BloodPressureEntrySheetLogicTest {
 
     if (openAs is Update) {
       val verify = verify(ui)
-      verify.setSystolic(bloodPressureMeasurement!!.systolic.toString())
-      verify.setDiastolic(bloodPressureMeasurement.diastolic.toString())
+      verify.setSystolic(bloodPressureMeasurement!!.reading.systolic.toString())
+      verify.setDiastolic(bloodPressureMeasurement.reading.diastolic.toString())
     } else {
       val verify = verify(ui, never())
       verify.setSystolic(any())
@@ -609,8 +609,8 @@ class BloodPressureEntrySheetLogicTest {
         recordedDate.month.value.toString(),
         recordedDate.year.toString()
     )
-    verify(ui).setSystolic(bp.systolic.toString())
-    verify(ui).setDiastolic(bp.diastolic.toString())
+    verify(ui).setSystolic(bp.reading.systolic.toString())
+    verify(ui).setDiastolic(bp.reading.diastolic.toString())
     verify(ui).showRemoveBpButton()
     verify(ui).showEditBloodPressureTitle()
     verifyNoMoreInteractions(ui)

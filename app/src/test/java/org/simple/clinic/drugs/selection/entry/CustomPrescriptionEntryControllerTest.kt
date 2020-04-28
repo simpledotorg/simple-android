@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -50,20 +49,17 @@ class CustomPrescriptionEntryControllerTest {
   fun setUp() {
     whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(sheet) }
-
-    userSubject.onNext(user)
   }
 
   @Test
   fun `save should remain disabled while drug name is empty`() {
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged(""))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("A"))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Am"))
 
+    //then
     verify(sheet).setSaveButtonEnabled(false)
     verify(sheet, times(1)).setSaveButtonEnabled(true)
   }
@@ -71,6 +67,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   @Parameters(value = ["", "10mg"])
   fun `when sheet is opened in new mode and save is clicked then a new prescription should be saved`(dosage: String) {
+    //given
     whenever(prescriptionRepository.savePrescription(
         patientUuid = patientUuid,
         name = "Amlodipine",
@@ -80,11 +77,14 @@ class CustomPrescriptionEntryControllerTest {
         facility = facility
     )).thenReturn(Completable.complete())
 
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Amlodipine"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(dosage))
     uiEvents.onNext(SaveCustomPrescriptionClicked)
 
+    //then
     verify(prescriptionRepository).savePrescription(
         patientUuid = patientUuid,
         name = "Amlodipine",
@@ -99,11 +99,14 @@ class CustomPrescriptionEntryControllerTest {
 
   @Test
   fun `placeholder value for dosage should only be shown when dosage field is focused and empty`() {
+    //given
     whenever(sheet.setDrugDosageText(any())).then {
       val text = it.arguments[0] as String
       uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(text))
     }
 
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(""))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
@@ -112,25 +115,33 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("10$DOSAGE_PLACEHOLDER"))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
 
+    //then
     verify(sheet, times(1)).setDrugDosageText(eq(""))
     verify(sheet, times(1)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
   }
 
   @Test
   fun `when dosage field is focused and the placeholder value is set then the cursor should be moved to the beginning`() {
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("mg"))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
 
+    //then
     verify(sheet).moveDrugDosageCursorToBeginning()
   }
 
   @Test
   @Parameters(method = "params for showing title")
   fun `when sheet is created then correct title should be populated`(openAs: OpenAs, showNewEntryTitle: Boolean) {
+    //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionSheetCreated(openAs))
 
+    //then
     if (showNewEntryTitle) {
       verify(sheet).showEnterNewPrescriptionTitle()
     } else {
@@ -149,10 +160,14 @@ class CustomPrescriptionEntryControllerTest {
   @Parameters(method = "params for showing remove button")
   @Test
   fun `the remove button should show when the sheet is opened for edit`(openAs: OpenAs, showRemoveButton: Boolean) {
+    //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionSheetCreated(openAs))
 
+    //then
     if (showRemoveButton) {
       verify(sheet).showRemoveButton()
     } else {
@@ -170,28 +185,36 @@ class CustomPrescriptionEntryControllerTest {
 
   @Test
   fun `when sheet is opened to edit prescription then the drug name and dosage should be pre-filled`() {
+    //given
     val prescription = TestData.prescription(uuid = prescriptionUuid)
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescription))
 
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
 
+    //then
     verify(sheet).setMedicineName(prescription.name)
     verify(sheet).setDosage(prescription.dosage)
   }
 
   @Test
   fun `when sheet is opened in edit mode and save is clicked after making changes, then the prescription should be updated`() {
+    //given
     val prescribedDrug = TestData.prescription(uuid = prescriptionUuid, name = "Atnlol", dosage = "20mg")
     val updatedPrescribedDrug = prescribedDrug.copy(name = "Atenolol", dosage = "5mg")
 
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescribedDrug))
     whenever(prescriptionRepository.updatePrescription(updatedPrescribedDrug)).thenReturn(Completable.complete())
 
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Atenolol"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("5mg"))
     uiEvents.onNext(SaveCustomPrescriptionClicked)
 
+    //then
     verify(prescriptionRepository).updatePrescription(updatedPrescribedDrug)
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
     verify(sheet).finish()
@@ -199,20 +222,36 @@ class CustomPrescriptionEntryControllerTest {
 
   @Test
   fun `when remove is clicked, the prescription should be deleted`() {
+    //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
     uiEvents.onNext(RemoveCustomPrescriptionClicked)
 
+    //then
     verify(sheet).showConfirmRemoveMedicineDialog(prescriptionUuid)
   }
 
   @Test
   fun `when prescription is deleted then close the sheet`() {
+    //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(TestData.prescription(uuid = prescriptionUuid, isDeleted = true)))
 
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
 
+    //then
     verify(sheet).finish()
+  }
+
+  private fun setupController() {
+    uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(sheet) }
+
+    userSubject.onNext(user)
   }
 }

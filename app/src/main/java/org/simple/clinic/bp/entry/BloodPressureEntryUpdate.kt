@@ -2,10 +2,11 @@ package org.simple.clinic.bp.entry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.Validation
+import org.simple.clinic.bp.Validation.Success
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
-import org.simple.clinic.bp.Validation.Success
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.util.UserInputDatePaddingCharacter
@@ -119,9 +120,9 @@ class BloodPressureEntryUpdate(
 
     return if (validationErrorEffects.isNotEmpty()) {
       Next.dispatch(validationErrorEffects)
-
     } else {
-      dispatch(getCreateOrUpdateEntryEffect(model, dateValidationResult))
+      val bpReading = (bpValidationResult as Success).reading
+      dispatch(getCreateOrUpdateEntryEffect(model, dateValidationResult, bpReading))
     }
   }
 
@@ -147,10 +148,11 @@ class BloodPressureEntryUpdate(
 
   private fun getCreateOrUpdateEntryEffect(
       model: BloodPressureEntryModel,
-      dateValidationResult: Result
+      dateValidationResult: Result,
+      reading: BloodPressureReading
   ): BloodPressureEntryEffect {
-    val systolic = model.systolic.toInt()
-    val diastolic = model.diastolic.toInt()
+    val systolic = reading.systolic
+    val diastolic = reading.diastolic
     val userEnteredDate = (dateValidationResult as Valid).parsedDate
     val prefilledDate = model.prefilledDate!!
 

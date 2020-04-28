@@ -157,30 +157,30 @@ class CustomPrescriptionEntryControllerTest {
     verify(sheet).showEditPrescriptionTitle()
   }
 
-  @Parameters(method = "params for showing remove button")
   @Test
-  fun `the remove button should show when the sheet is opened for edit`(openAs: OpenAs, showRemoveButton: Boolean) {
+  fun `the remove button should show when the sheet is opened for edit`() {
     //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     //when
     setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(openAs))
+    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
 
     //then
-    if (showRemoveButton) {
-      verify(sheet).showRemoveButton()
-    } else {
-      verify(sheet).hideRemoveButton()
-    }
+    verify(sheet).showRemoveButton()
   }
 
-  @Suppress("Unused")
-  private fun `params for showing remove button`(): List<List<Any>> {
-    return listOf(
-        listOf(OpenAs.New(patientUuid), false),
-        listOf(OpenAs.Update(prescriptionUuid), true)
-    )
+  @Test
+  fun `the remove button should be hidden when the sheet is opened for new entry`() {
+    //given
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
+
+    //when
+    setupController()
+    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.New(patientUuid)))
+
+    //then
+    verify(sheet).hideRemoveButton()
   }
 
   @Test

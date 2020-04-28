@@ -24,7 +24,6 @@ class BloodPressureEntryUpdateTest {
   private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   private val update = BloodPressureEntryUpdate(
-      BpValidator(),
       UserInputDateValidator(clock, dateFormatter),
       LocalDate.now(clock),
       UserInputDatePaddingCharacter.ZERO

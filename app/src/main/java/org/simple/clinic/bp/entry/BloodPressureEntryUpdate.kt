@@ -16,7 +16,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.LocalDate
 
 class BloodPressureEntryUpdate(
-    private val bpValidator: BpValidator,
     private val dateValidator: UserInputDateValidator,
     private val dateInUserTimeZone: LocalDate,
     private val inputDatePaddingCharacter: UserInputDatePaddingCharacter
@@ -130,7 +129,10 @@ class BloodPressureEntryUpdate(
     return when {
       model.systolic.isBlank() -> Validation.ErrorSystolicEmpty
       model.diastolic.isBlank() -> Validation.ErrorDiastolicEmpty
-      else -> bpValidator.validate(model.systolic, model.diastolic)
+      else -> {
+        val bloodPressureReading = BloodPressureReading(systolic = model.systolic.trim().toInt(), diastolic = model.diastolic.trim().toInt())
+        bloodPressureReading.validate()
+      }
     }
   }
 

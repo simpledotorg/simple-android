@@ -2,10 +2,6 @@ package org.simple.clinic.drugs.selection.entry
 
 import org.simple.clinic.widgets.UiEvent
 
-data class CustomPrescriptionSheetCreated(val openAs: OpenAs) : UiEvent {
-  override val analyticsName = "Drugs:Custom:Show Prescription Sheet"
-}
-
 data class CustomPrescriptionDrugNameTextChanged(val name: String) : UiEvent {
   override val analyticsName = "Drugs:Custom:Name Changed"
 }

@@ -8,6 +8,7 @@ import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
@@ -715,8 +716,7 @@ object TestData {
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(
         uuid = uuid,
-        systolic = systolic,
-        diastolic = diastolic,
+        reading = BloodPressureReading(systolic, diastolic),
         syncStatus = syncStatus,
         userUuid = userUuid,
         facilityUuid = facilityUuid,

@@ -40,8 +40,7 @@ class BloodPressureRepository @Inject constructor(
         .just(
             BloodPressureMeasurement(
                 uuid = UUID.randomUUID(),
-                systolic = systolic,
-                diastolic = diastolic,
+                reading = BloodPressureReading(systolic, diastolic),
                 syncStatus = SyncStatus.PENDING,
                 userUuid = loggedInUser.uuid,
                 facilityUuid = currentFacility.uuid,

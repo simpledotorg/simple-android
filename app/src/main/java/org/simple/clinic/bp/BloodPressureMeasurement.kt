@@ -46,27 +46,6 @@ data class BloodPressureMeasurement(
 ) : Parcelable {
 
   @Deprecated(
-      message = "Use the constructor with reading instead",
-      replaceWith = ReplaceWith(
-          expression = "BloodPressureMeasurement(uuid, BloodPressureReading(systolic, diastolic), syncStatus, userUuid, facilityUuid, patientUuid, createdAt, updatedAt, deletedAt, recordedAt)",
-          imports = ["org.simple.clinic.bp.BloodPressureReading"]
-      )
-  )
-  constructor(
-      uuid: UUID,
-      systolic: Int,
-      diastolic: Int,
-      syncStatus: SyncStatus,
-      userUuid: UUID,
-      facilityUuid: UUID,
-      patientUuid: UUID,
-      createdAt: Instant,
-      updatedAt: Instant,
-      deletedAt: Instant?,
-      recordedAt: Instant
-  ) : this(uuid, BloodPressureReading(systolic, diastolic), syncStatus, userUuid, facilityUuid, patientUuid, createdAt, updatedAt, deletedAt, recordedAt)
-
-  @Deprecated(
       message = "Use the reading instead",
       replaceWith = ReplaceWith(
           expression = "reading.systolic",

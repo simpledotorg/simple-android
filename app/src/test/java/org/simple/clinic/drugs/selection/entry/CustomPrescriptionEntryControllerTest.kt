@@ -56,11 +56,20 @@ class CustomPrescriptionEntryControllerTest {
     //when
     setupController()
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged(""))
+    uiEvents.onNext(CustomPrescriptionDrugNameTextChanged(""))
+
+    //then
+    verify(sheet, times(1)).setSaveButtonEnabled(false)
+  }
+
+  @Test
+  fun `save should be enabled when drug name is not empty`() {
+    //when
+    setupController()
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("A"))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Am"))
 
     //then
-    verify(sheet).setSaveButtonEnabled(false)
     verify(sheet, times(1)).setSaveButtonEnabled(true)
   }
 

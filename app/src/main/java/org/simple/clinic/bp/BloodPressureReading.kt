@@ -16,7 +16,7 @@ data class BloodPressureReading(
       diastolic < 40 -> Validation.ErrorDiastolicTooLow
       diastolic > 180 -> Validation.ErrorDiastolicTooHigh
       systolic < diastolic -> Validation.ErrorSystolicLessThanDiastolic
-      else -> Validation.Success(systolic, diastolic)
+      else -> Validation.Success(this)
     }
   }
 }

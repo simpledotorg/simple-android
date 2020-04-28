@@ -9,6 +9,7 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BpValidator.Validation
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
@@ -239,8 +240,7 @@ class BloodPressureEntryEffectHandler private constructor(
     return existingMeasurement.copy(
         userUuid = userUuid,
         facilityUuid = facilityUuid,
-        systolic = systolic,
-        diastolic = diastolic,
+        reading = BloodPressureReading(systolic, diastolic),
         recordedAt = parsedDateFromForm.toUtcInstant(userClock)
     )
   }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.router.screen.ScreenHostView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.navigation.ScreenHostView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/screenHostView"

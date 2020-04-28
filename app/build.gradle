@@ -311,6 +311,10 @@ dependencies {
   implementation "androidx.work:work-runtime:$versions.workManager"
   implementation "androidx.work:work-gcm:$versions.workManager"
 
+  // If we add navigation-fragment-ktx or navigation-ui-ktx in future, we can remove this.
+  // Because this gets added as a transitive dependency.
+  implementation "androidx.navigation:navigation-runtime-ktx:$versions.navigation"
+
   implementation project(":mobius-base")
   testImplementation "com.spotify.mobius:mobius-test:$versions.mobius"
   testImplementation project(":mobius-migration")

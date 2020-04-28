@@ -1,4 +1,4 @@
-package org.simple.clinic.router.screen
+package org.simple.clinic.navigation
 
 import android.content.Context
 import android.os.Bundle

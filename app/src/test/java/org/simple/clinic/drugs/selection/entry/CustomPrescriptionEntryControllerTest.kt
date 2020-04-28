@@ -23,6 +23,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -43,7 +44,7 @@ class CustomPrescriptionEntryControllerTest {
   private val facility = TestData.facility()
   private val userSubject = PublishSubject.create<User>()
 
-  private val controller = CustomPrescriptionEntryController(prescriptionRepository, userSession, facilityRepository)
+  lateinit var controller: CustomPrescriptionEntryController
 
   @Before
   fun setUp() {
@@ -54,7 +55,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `save should remain disabled while drug name is empty`() {
     //when
-    setupController()
+    setupController(OpenAs.New(patientUuid))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged(""))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged(""))
 
@@ -65,7 +66,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `save should be enabled when drug name is not empty`() {
     //when
-    setupController()
+    setupController(OpenAs.New(patientUuid))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("A"))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Am"))
 
@@ -87,8 +88,7 @@ class CustomPrescriptionEntryControllerTest {
     )).thenReturn(Completable.complete())
 
     //when
-    setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.New(patientUuid)))
+    setupController(OpenAs.New(patientUuid))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Amlodipine"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(dosage))
     uiEvents.onNext(SaveCustomPrescriptionClicked)
@@ -109,7 +109,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `placeholder value for dosage should be shown when dosage field is focused and empty`() {
     //when
-    setupController()
+    setupController(OpenAs.New(patientUuid))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(""))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
@@ -122,7 +122,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `value for dosage should be reset when dosage field is not focused and empty`() {
     //when
-    setupController()
+    setupController(OpenAs.New(patientUuid))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("$DOSAGE_PLACEHOLDER"))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
 
@@ -134,7 +134,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `when dosage field is focused and the placeholder value is set then the cursor should be moved to the beginning`() {
     //when
-    setupController()
+    setupController(OpenAs.New(patientUuid))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("$DOSAGE_PLACEHOLDER"))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
 
@@ -148,8 +148,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     //when
-    setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.New(patientUuid)))
+    setupController(OpenAs.New(patientUuid))
 
     //then
     verify(sheet).showEnterNewPrescriptionTitle()
@@ -161,8 +160,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     //when
-    setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+    setupController(OpenAs.Update(prescriptionUuid))
 
     //then
     verify(sheet).showEditPrescriptionTitle()
@@ -174,8 +172,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     //when
-    setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+    setupController(OpenAs.Update(prescriptionUuid))
 
     //then
     verify(sheet).showRemoveButton()
@@ -187,8 +184,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     //when
-    setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.New(patientUuid)))
+    setupController(OpenAs.New(patientUuid))
 
     //then
     verify(sheet).hideRemoveButton()
@@ -201,8 +197,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescription))
 
     //when
-    setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+    setupController(OpenAs.Update(prescriptionUuid))
 
     //then
     verify(sheet).setMedicineName(prescription.name)
@@ -219,8 +214,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.updatePrescription(updatedPrescribedDrug)).thenReturn(Completable.complete())
 
     //when
-    setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+    setupController(OpenAs.Update(prescriptionUuid))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Atenolol"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("5mg"))
     uiEvents.onNext(SaveCustomPrescriptionClicked)
@@ -237,8 +231,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     //when
-    setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+    setupController(OpenAs.Update(prescriptionUuid))
     uiEvents.onNext(RemoveCustomPrescriptionClicked)
 
     //then
@@ -251,18 +244,20 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(TestData.prescription(uuid = prescriptionUuid, isDeleted = true)))
 
     //when
-    setupController()
-    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+    setupController(OpenAs.Update(prescriptionUuid))
 
     //then
     verify(sheet).finish()
   }
 
-  private fun setupController() {
+  private fun setupController(openAs: OpenAs) {
+    controller = CustomPrescriptionEntryController(prescriptionRepository, userSession, facilityRepository, openAs)
+
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(sheet) }
 
+    uiEvents.onNext(ScreenCreated())
     userSubject.onNext(user)
   }
 }

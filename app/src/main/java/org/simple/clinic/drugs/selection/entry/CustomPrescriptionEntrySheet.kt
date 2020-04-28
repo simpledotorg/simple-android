@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import android.widget.TextView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -21,12 +20,14 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
@@ -46,7 +47,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
   private val removeMedicineButton by bindView<MaterialButton>(R.id.customprescription_remove_button)
 
   @Inject
-  lateinit var controller: CustomPrescriptionEntryController
+  lateinit var controllerFactory: CustomPrescriptionEntryController.Factory
 
   @Inject
   lateinit var locale: Locale
@@ -54,6 +55,10 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
   private lateinit var component: CustomPrescriptionEntrySheetComponent
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
+
+  private val openAs by unsafeLazy {
+    intent.getParcelableExtra(KEY_OPEN_AS) as OpenAs
+  }
 
   @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +75,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
             saveClicks(),
             removeClicks()
         ),
-        controller = controller,
+        controller = controllerFactory.create(openAs),
         screenDestroys = onDestroys
     )
 
@@ -113,10 +118,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
     }
   }
 
-  private fun sheetCreates(): Observable<UiEvent> {
-    val openAs = intent.getParcelableExtra(KEY_OPEN_AS) as OpenAs
-    return Observable.just(CustomPrescriptionSheetCreated(openAs))
-  }
+  private fun sheetCreates() = Observable.just(ScreenCreated())
 
   private fun drugNameChanges() = drugNameEditText.textChanges(::CustomPrescriptionDrugNameTextChanged)
 

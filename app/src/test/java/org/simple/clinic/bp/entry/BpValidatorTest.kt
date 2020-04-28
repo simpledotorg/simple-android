@@ -50,22 +50,4 @@ class BpValidatorTest {
 
     assertThat(result).isEqualTo(BpValidator.Validation.ErrorDiastolicTooHigh)
   }
-
-  @Test
-  fun `when systolic is empty, return error`() {
-    val systolic = ""
-    val diastolic = "190"
-    val result = bpValidator.validate(systolic, diastolic)
-
-    assertThat(result).isEqualTo(BpValidator.Validation.ErrorSystolicEmpty)
-  }
-
-  @Test
-  fun `when diastolic is empty, return error`() {
-    val systolic = "120"
-    val diastolic = ""
-    val result = bpValidator.validate(systolic, diastolic)
-
-    assertThat(result).isEqualTo(BpValidator.Validation.ErrorDiastolicEmpty)
-  }
 }

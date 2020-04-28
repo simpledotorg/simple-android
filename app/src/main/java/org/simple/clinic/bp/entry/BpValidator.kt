@@ -1,9 +1,7 @@
 package org.simple.clinic.bp.entry
 
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooLow
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicEmpty
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDiastolic
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
@@ -30,13 +28,6 @@ class BpValidator @Inject constructor() {
   }
 
   fun validate(systolic: String, diastolic: String): Validation {
-    if (systolic.isBlank()) {
-      return ErrorSystolicEmpty
-    }
-    if (diastolic.isBlank()) {
-      return ErrorDiastolicEmpty
-    }
-
     val systolicNumber = systolic.trim().toInt()
     val diastolicNumber = diastolic.trim().toInt()
 

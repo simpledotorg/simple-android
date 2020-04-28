@@ -1,6 +1,5 @@
 package org.simple.clinic.bp.entry
 
-import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -18,21 +17,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
-import org.simple.clinic.bp.entry.BpValidator.Validation
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooHigh
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooLow
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicEmpty
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDiastolic
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -92,11 +83,7 @@ class BloodPressureValidationTest {
   fun `when BP entry is active, and BP readings are invalid then show error`(
       testParams: ValidationErrorsAndUiChangesTestParams
   ) {
-    val (systolic, diastolic, error, uiChangeVerification) = testParams
-
-    // This assertion is not necessary, it was added to stabilize this test for refactoring.
-    assertThat(bpValidator.validate(systolic, diastolic))
-        .isEqualTo(error)
+    val (systolic, diastolic, uiChangeVerification) = testParams
 
     sheetCreatedForNew(patientUuid)
     uiEvents.onNext(ScreenChanged(BP_ENTRY))
@@ -113,20 +100,19 @@ class BloodPressureValidationTest {
   @Suppress("unused")
   fun `params for bp validation errors and expected ui changes`(): List<ValidationErrorsAndUiChangesTestParams> {
     return listOf(
-        ValidationErrorsAndUiChangesTestParams("", "80", ErrorSystolicEmpty) { ui: Ui -> verify(ui).showSystolicEmptyError() },
-        ValidationErrorsAndUiChangesTestParams("120", "", ErrorDiastolicEmpty) { ui: Ui -> verify(ui).showDiastolicEmptyError() },
-        ValidationErrorsAndUiChangesTestParams("999", "80", ErrorSystolicTooHigh) { ui: Ui -> verify(ui).showSystolicHighError() },
-        ValidationErrorsAndUiChangesTestParams("0", "80", ErrorSystolicTooLow) { ui: Ui -> verify(ui).showSystolicLowError() },
-        ValidationErrorsAndUiChangesTestParams("120", "999", ErrorDiastolicTooHigh) { ui: Ui -> verify(ui).showDiastolicHighError() },
-        ValidationErrorsAndUiChangesTestParams("120", "0", ErrorDiastolicTooLow) { ui: Ui -> verify(ui).showDiastolicLowError() },
-        ValidationErrorsAndUiChangesTestParams("120", "121", ErrorSystolicLessThanDiastolic) { ui: Ui -> verify(ui).showSystolicLessThanDiastolicError() }
+        ValidationErrorsAndUiChangesTestParams("", "80") { ui: Ui -> verify(ui).showSystolicEmptyError() },
+        ValidationErrorsAndUiChangesTestParams("120", "") { ui: Ui -> verify(ui).showDiastolicEmptyError() },
+        ValidationErrorsAndUiChangesTestParams("999", "80") { ui: Ui -> verify(ui).showSystolicHighError() },
+        ValidationErrorsAndUiChangesTestParams("0", "80") { ui: Ui -> verify(ui).showSystolicLowError() },
+        ValidationErrorsAndUiChangesTestParams("120", "999") { ui: Ui -> verify(ui).showDiastolicHighError() },
+        ValidationErrorsAndUiChangesTestParams("120", "0") { ui: Ui -> verify(ui).showDiastolicLowError() },
+        ValidationErrorsAndUiChangesTestParams("120", "121") { ui: Ui -> verify(ui).showSystolicLessThanDiastolicError() }
     )
   }
 
   data class ValidationErrorsAndUiChangesTestParams(
       val systolic: String,
       val diastolic: String,
-      val error: Validation,
       val uiChangeVerification: (Ui) -> Unit
   )
 
@@ -135,11 +121,7 @@ class BloodPressureValidationTest {
   fun `when BP entry is active, BP readings are invalid and next arrow is pressed then date entry should not be shown`(
       testParams: ValidationErrorsAndDoNotGoToDateEntryParams
   ) {
-    val (openAs, systolic, diastolic, error) = testParams
-
-    // This assertion is not necessary, it was added to stabilize this test for refactoring.
-    assertThat(bpValidator.validate(systolic, diastolic))
-        .isEqualTo(error)
+    val (openAs, systolic, diastolic) = testParams
 
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 
@@ -158,28 +140,27 @@ class BloodPressureValidationTest {
   fun `params for OpenAs and bp validation errors`(): List<ValidationErrorsAndDoNotGoToDateEntryParams> {
     val bpUuid = UUID.fromString("99fed5e5-19a8-4ece-9d07-6beab70ee77c")
     return listOf(
-        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "", "80", ErrorSystolicEmpty),
-        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "", ErrorDiastolicEmpty),
-        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "999", "80", ErrorSystolicTooHigh),
-        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "0", "80", ErrorSystolicTooLow),
-        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "999", ErrorDiastolicTooHigh),
-        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "0", ErrorDiastolicTooLow),
-        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "140", ErrorSystolicLessThanDiastolic),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "", "80"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", ""),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "999", "80"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "0", "80"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "999"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "0"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "140"),
 
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "", "80", ErrorSystolicEmpty),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "", ErrorDiastolicEmpty),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "999", "80", ErrorSystolicTooHigh),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "0", "80", ErrorSystolicTooLow),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "999", ErrorDiastolicTooHigh),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "0", ErrorDiastolicTooLow),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "140", ErrorSystolicLessThanDiastolic))
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "", "80"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", ""),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "999", "80"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "0", "80"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "999"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "0"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "140"))
   }
 
   data class ValidationErrorsAndDoNotGoToDateEntryParams(
       val openAs: OpenAs,
       val systolic: String,
-      val diastolic: String,
-      val error: Validation
+      val diastolic: String
   )
 
   private fun sheetCreatedForNew(patientUuid: UUID) {

@@ -22,10 +22,10 @@ class ScreenNavigator(
 ) : Navigator<ScreenNavigator.Destination>() {
 
   companion object {
-    private const val KEY_BACK_STACK_IDS = "org.simple.clinic.router.screen:ScreenNavigator:backStackIds"
+    private const val KEY_BACK_STACK = "org.simple.clinic.router.screen:ScreenNavigator:backStack"
   }
 
-  private val backStack = ArrayDeque<@LayoutRes Int>()
+  private val backStack = ArrayDeque<BackStackEntry>()
 
   override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Extras?): NavDestination? {
     val destinationLayoutRes = destination.layoutRes
@@ -33,7 +33,10 @@ class ScreenNavigator(
     val destinationView = instantiateView(destinationLayoutRes)
     replaceView(destinationView)
 
-    backStack.push(destinationLayoutRes)
+    backStack.push(BackStackEntry(
+        destinationLayoutRes,
+        destination.analyticsName
+    ))
     return destination
   }
 
@@ -49,7 +52,7 @@ class ScreenNavigator(
     // and using it as destination
     val backStackItem = backStack.peekLast()
     if (backStackItem != null) {
-      val destinationView = instantiateView(backStackItem)
+      val destinationView = instantiateView(backStackItem.layoutRes)
       replaceView(destinationView)
     }
     return true
@@ -68,17 +71,17 @@ class ScreenNavigator(
 
   override fun onSaveState(): Bundle? {
     val bundle = Bundle()
-    val backStack = backStack.toIntArray()
-    bundle.putIntArray(KEY_BACK_STACK_IDS, backStack)
+    val backStack = this.backStack.toTypedArray()
+    bundle.putParcelableArray(KEY_BACK_STACK, backStack)
     return bundle
   }
 
   override fun onRestoreState(savedState: Bundle) {
-    val backStack = savedState.getIntArray(KEY_BACK_STACK_IDS)
+    val backStack = savedState.getParcelableArray(KEY_BACK_STACK)
     if (backStack != null) {
       this.backStack.clear()
-      for (destId in backStack) {
-        this.backStack.add(destId)
+      for (entry in backStack) {
+        this.backStack.add(entry as BackStackEntry)
       }
     }
   }

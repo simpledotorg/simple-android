@@ -7,4 +7,16 @@ import kotlinx.android.parcel.Parcelize
 data class BloodPressureReading(
     val systolic: Int,
     val diastolic: Int
-) : Parcelable
+) : Parcelable {
+
+  fun validate(): Validation {
+    return when {
+      systolic < 70 -> Validation.ErrorSystolicTooLow
+      systolic > 300 -> Validation.ErrorSystolicTooHigh
+      diastolic < 40 -> Validation.ErrorDiastolicTooLow
+      diastolic > 180 -> Validation.ErrorDiastolicTooHigh
+      systolic < diastolic -> Validation.ErrorSystolicLessThanDiastolic
+      else -> Validation.Success(systolic, diastolic)
+    }
+  }
+}

@@ -29,15 +29,16 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.bp.Validation
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooHigh
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooLow
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicEmpty
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDiastolic
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
-import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
+import org.simple.clinic.bp.Validation.ErrorDiastolicEmpty
+import org.simple.clinic.bp.Validation.ErrorDiastolicTooHigh
+import org.simple.clinic.bp.Validation.ErrorDiastolicTooLow
+import org.simple.clinic.bp.Validation.ErrorSystolicEmpty
+import org.simple.clinic.bp.Validation.ErrorSystolicLessThanDiastolic
+import org.simple.clinic.bp.Validation.ErrorSystolicTooHigh
+import org.simple.clinic.bp.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
@@ -188,7 +189,7 @@ class BloodPressureEntrySheetLogicTest {
   @Parameters(method = "params for OpenAs and bp validation errors")
   fun `when BP entry is active, BP readings are invalid and save is clicked then date entry should not be shown`(
       openAs: OpenAs,
-      error: BpValidator.Validation
+      error: Validation
   ) {
     whenever(bloodPressureRepository.measurement(any())).doReturn(Observable.never())
 

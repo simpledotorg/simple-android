@@ -1,6 +1,6 @@
 package org.simple.clinic.bp.entry
 
-import org.simple.clinic.bp.entry.BpValidator.Validation
+import org.simple.clinic.bp.Validation
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate

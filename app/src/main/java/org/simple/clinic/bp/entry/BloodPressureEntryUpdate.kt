@@ -2,10 +2,10 @@ package org.simple.clinic.bp.entry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.bp.Validation
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
-import org.simple.clinic.bp.entry.BpValidator.Validation
-import org.simple.clinic.bp.entry.BpValidator.Validation.Success
+import org.simple.clinic.bp.Validation.Success
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.util.UserInputDatePaddingCharacter

@@ -2,6 +2,7 @@ package org.simple.clinic.bp.entry
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import org.simple.clinic.bp.Validation
 
 class BpValidatorTest {
   private val bpValidator = BpValidator()
@@ -12,7 +13,7 @@ class BpValidatorTest {
     val diastolic = "140"
     val result = bpValidator.validate(systolic, diastolic)
 
-    assertThat(result).isEqualTo(BpValidator.Validation.ErrorSystolicLessThanDiastolic)
+    assertThat(result).isEqualTo(Validation.ErrorSystolicLessThanDiastolic)
   }
 
   @Test
@@ -21,7 +22,7 @@ class BpValidatorTest {
     val diastolic = "55"
     val result = bpValidator.validate(systolic, diastolic)
 
-    assertThat(result).isEqualTo(BpValidator.Validation.ErrorSystolicTooLow)
+    assertThat(result).isEqualTo(Validation.ErrorSystolicTooLow)
   }
 
   @Test
@@ -30,7 +31,7 @@ class BpValidatorTest {
     val diastolic = "88"
     val result = bpValidator.validate(systolic, diastolic)
 
-    assertThat(result).isEqualTo(BpValidator.Validation.ErrorSystolicTooHigh)
+    assertThat(result).isEqualTo(Validation.ErrorSystolicTooHigh)
   }
 
   @Test
@@ -39,7 +40,7 @@ class BpValidatorTest {
     val diastolic = "33"
     val result = bpValidator.validate(systolic, diastolic)
 
-    assertThat(result).isEqualTo(BpValidator.Validation.ErrorDiastolicTooLow)
+    assertThat(result).isEqualTo(Validation.ErrorDiastolicTooLow)
   }
 
   @Test
@@ -48,6 +49,6 @@ class BpValidatorTest {
     val diastolic = "190"
     val result = bpValidator.validate(systolic, diastolic)
 
-    assertThat(result).isEqualTo(BpValidator.Validation.ErrorDiastolicTooHigh)
+    assertThat(result).isEqualTo(Validation.ErrorDiastolicTooHigh)
   }
 }

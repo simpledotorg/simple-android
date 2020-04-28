@@ -17,13 +17,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetLogicTest.InvalidDateTestParams
 import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -52,7 +52,6 @@ class BloodPressureValidationMockDateValidatorTest {
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val dateValidator = mock<UserInputDateValidator>()
-  private val bpValidator = BpValidator()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val patientUuid = UUID.fromString("79145baf-7a5c-4442-ab30-2da564a32944")
@@ -200,7 +199,7 @@ class BloodPressureValidationMockDateValidatorTest {
         uiEvents.ofType(),
         BloodPressureEntryModel.create(openAs, LocalDate.now(testUserClock).year),
         BloodPressureEntryInit(),
-        BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(ZoneOffset.UTC), UserInputDatePaddingCharacter.ZERO),
+        BloodPressureEntryUpdate(dateValidator, LocalDate.now(ZoneOffset.UTC), UserInputDatePaddingCharacter.ZERO),
         effectHandler,
         uiRenderer::render
     ).also { it.start() }

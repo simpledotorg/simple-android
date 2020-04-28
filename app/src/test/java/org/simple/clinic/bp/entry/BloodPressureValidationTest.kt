@@ -52,7 +52,6 @@ class BloodPressureValidationTest {
   private val patientRepository = mock<PatientRepository>()
   private val testUserClock = TestUserClock()
   private val dateValidator = UserInputDateValidator(testUserClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
-  private val bpValidator = BpValidator()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val patientUuid = UUID.fromString("79145baf-7a5c-4442-ab30-2da564a32944")
@@ -198,7 +197,7 @@ class BloodPressureValidationTest {
         uiEvents.ofType(),
         BloodPressureEntryModel.create(openAs, LocalDate.now(testUserClock).year),
         BloodPressureEntryInit(),
-        BloodPressureEntryUpdate(bpValidator, dateValidator, LocalDate.now(UTC), UserInputDatePaddingCharacter.ZERO),
+        BloodPressureEntryUpdate(dateValidator, LocalDate.now(UTC), UserInputDatePaddingCharacter.ZERO),
         effectHandler,
         uiRenderer::render
     ).also { it.start() }

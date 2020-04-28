@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -16,9 +17,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -34,8 +35,8 @@ class CustomPrescriptionEntryControllerTest {
 
   private val sheet = mock<CustomPrescriptionEntrySheet>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
-  private val patientUuid = UUID.randomUUID()
-  private val prescriptionUuid = UUID.randomUUID()
+  private val patientUuid = UUID.fromString("a90376d0-e29a-428f-80dc-bd4bdd74d9bf")
+  private val prescriptionUuid = UUID.fromString("eef2b1c9-52cd-43d9-b109-b120b0e4c16c")
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -126,7 +127,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   @Parameters(method = "params for showing title")
   fun `when sheet is created then correct title should be populated`(openAs: OpenAs, showNewEntryTitle: Boolean) {
-    whenever(prescriptionRepository.prescription(any())).thenReturn(Observable.never())
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     uiEvents.onNext(CustomPrescriptionSheetCreated(openAs))
 
@@ -147,8 +148,8 @@ class CustomPrescriptionEntryControllerTest {
 
   @Parameters(method = "params for showing remove button")
   @Test
-  fun `the remove button should when the sheet is opened for edit`(openAs: OpenAs, showRemoveButton: Boolean) {
-    whenever(prescriptionRepository.prescription(any())).thenReturn(Observable.never())
+  fun `the remove button should show when the sheet is opened for edit`(openAs: OpenAs, showRemoveButton: Boolean) {
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     uiEvents.onNext(CustomPrescriptionSheetCreated(openAs))
 
@@ -181,23 +182,24 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `when sheet is opened in edit mode and save is clicked after making changes, then the prescription should be updated`() {
     val prescribedDrug = TestData.prescription(uuid = prescriptionUuid, name = "Atnlol", dosage = "20mg")
+    val updatedPrescribedDrug = prescribedDrug.copy(name = "Atenolol", dosage = "5mg")
 
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescribedDrug))
-    whenever(prescriptionRepository.updatePrescription(any())).thenReturn(Completable.complete())
+    whenever(prescriptionRepository.updatePrescription(updatedPrescribedDrug)).thenReturn(Completable.complete())
 
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Atenolol"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("5mg"))
     uiEvents.onNext(SaveCustomPrescriptionClicked)
 
-    verify(prescriptionRepository).updatePrescription(prescribedDrug.copy(name = "Atenolol", dosage = "5mg"))
+    verify(prescriptionRepository).updatePrescription(updatedPrescribedDrug)
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
     verify(sheet).finish()
   }
 
   @Test
   fun `when remove is clicked, the prescription should be deleted`() {
-    whenever(prescriptionRepository.prescription(any())).thenReturn(Observable.never())
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
 
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
     uiEvents.onNext(RemoveCustomPrescriptionClicked)

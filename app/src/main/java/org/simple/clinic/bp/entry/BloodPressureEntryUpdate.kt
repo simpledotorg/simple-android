@@ -153,14 +153,12 @@ class BloodPressureEntryUpdate(
       dateValidationResult: Result,
       reading: BloodPressureReading
   ): BloodPressureEntryEffect {
-    val systolic = reading.systolic
-    val diastolic = reading.diastolic
     val userEnteredDate = (dateValidationResult as Valid).parsedDate
     val prefilledDate = model.prefilledDate!!
 
     return when (val openAs = model.openAs) {
-      is OpenAs.New -> CreateNewBpEntry(openAs.patientUuid, systolic, diastolic, userEnteredDate, prefilledDate)
-      is OpenAs.Update -> UpdateBpEntry(openAs.bpUuid, systolic, diastolic, userEnteredDate, prefilledDate)
+      is OpenAs.New -> CreateNewBpEntry(openAs.patientUuid, reading, userEnteredDate, prefilledDate)
+      is OpenAs.Update -> UpdateBpEntry(openAs.bpUuid, reading.systolic, reading.diastolic, userEnteredDate, prefilledDate)
     }
   }
 

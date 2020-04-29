@@ -261,10 +261,10 @@ class BloodPressureEntryEffectHandler private constructor(
       currentFacility: Facility,
       entry: CreateNewBpEntry
   ): Single<BloodPressureMeasurement> {
-    val (patientUuid, systolic, diastolic, date) = entry
+    val (patientUuid, reading, date, _) = entry
     return bloodPressureRepository.saveMeasurement(
         patientUuid = patientUuid,
-        reading = BloodPressureReading(systolic, diastolic),
+        reading = reading,
         loggedInUser = user,
         currentFacility = currentFacility,
         recordedAt = date.toUtcInstant(userClock)

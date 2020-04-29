@@ -61,6 +61,8 @@ class EditPatientScreenCreatedTest {
 
     screenCreated(patient, address, phoneNumber)
 
+    verify(ui).displayBpPassports(patientProfile.businessIds.map { it.identifier.displayValue() })
+
     if (patientFormTestParams.shouldSetColonyOrVillage) {
       verify(ui).setColonyOrVillage(address.colonyOrVillage!!)
     } else {

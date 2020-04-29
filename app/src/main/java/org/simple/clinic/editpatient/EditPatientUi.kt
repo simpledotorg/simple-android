@@ -5,6 +5,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.threeten.bp.LocalDate
 
 interface EditPatientUi {
+  fun displayBpPassports(identifiers: List<String>)
   fun setPatientName(name: String)
   fun setPatientPhoneNumber(number: String)
   fun setColonyOrVillage(colonyOrVillage: String)

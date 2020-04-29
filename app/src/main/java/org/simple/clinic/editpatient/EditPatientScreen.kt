@@ -295,6 +295,10 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun ageTextChanges(): Observable<EditPatientEvent> = ageEditText.textChanges(::AgeChanged)
 
+  override fun displayBpPassports(identifiers: List<String>) {
+    //TODO: Implement this
+  }
+
   override fun setPatientName(name: String) {
     fullNameEditText.setTextAndCursor(name)
   }

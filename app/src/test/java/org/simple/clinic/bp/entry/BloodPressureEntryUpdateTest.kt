@@ -5,8 +5,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.bp.Validation.ErrorDiastolicEmpty
-import org.simple.clinic.bp.Validation.ErrorSystolicEmpty
+import org.simple.clinic.bp.ValidationResult.ErrorDiastolicEmpty
+import org.simple.clinic.bp.ValidationResult.ErrorSystolicEmpty
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator

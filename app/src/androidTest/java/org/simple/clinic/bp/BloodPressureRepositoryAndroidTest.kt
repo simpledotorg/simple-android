@@ -61,12 +61,12 @@ class BloodPressureRepositoryAndroidTest {
 
     val savedBloodPressure = repository
         .saveMeasurement(
-            patientUuid = UUID.randomUUID(),
-            systolic = 120,
-            diastolic = 80,
+            patientUuid = UUID.fromString("a0d7f00b-9d2a-4594-b2e0-9f12285b8f03"),
+            reading = BloodPressureReading(120, 80),
             loggedInUser = user,
             currentFacility = facility,
-            recordedAt = now)
+            recordedAt = now
+        )
         .blockingGet()
 
     assertThat(savedBloodPressure.recordedAt).isEqualTo(now)

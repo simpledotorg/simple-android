@@ -41,11 +41,10 @@ class BloodPressureRepositoryTest {
     val loggedInUser = TestData.loggedInUser()
     val facility = TestData.facility()
 
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("53e2f919-eea8-44b1-a325-b1ab094766f5")
     repository.saveMeasurement(
         patientUuid = patientUuid,
-        systolic = 120,
-        diastolic = 65,
+        reading = BloodPressureReading(120, 65),
         loggedInUser = loggedInUser,
         currentFacility = facility,
         recordedAt = Instant.now(testClock)

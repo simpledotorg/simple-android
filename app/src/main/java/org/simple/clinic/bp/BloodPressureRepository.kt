@@ -23,24 +23,6 @@ class BloodPressureRepository @Inject constructor(
     private val utcClock: UtcClock
 ) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
-  @Deprecated(
-      message = "Use the method with the reading instead",
-      replaceWith = ReplaceWith(
-          expression = "saveMeasurement(patientUuid, BloodPressureReading(systolic, diastolic), loggedInUser, currentFacility, recordedAt)",
-          imports = ["org.simple.clinic.bp.BloodPressureReading"]
-      )
-  )
-  fun saveMeasurement(
-      patientUuid: UUID,
-      systolic: Int,
-      diastolic: Int,
-      loggedInUser: User,
-      currentFacility: Facility,
-      recordedAt: Instant = Instant.now(utcClock)
-  ): Single<BloodPressureMeasurement> {
-    return saveMeasurement(patientUuid, BloodPressureReading(systolic, diastolic), loggedInUser, currentFacility, recordedAt)
-  }
-
   fun saveMeasurement(
       patientUuid: UUID,
       reading: BloodPressureReading,

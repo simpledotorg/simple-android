@@ -9,14 +9,14 @@ data class BloodPressureReading(
     val diastolic: Int
 ) : Parcelable {
 
-  fun validate(): Validation {
+  fun validate(): ValidationResult {
     return when {
-      systolic < 70 -> Validation.ErrorSystolicTooLow
-      systolic > 300 -> Validation.ErrorSystolicTooHigh
-      diastolic < 40 -> Validation.ErrorDiastolicTooLow
-      diastolic > 180 -> Validation.ErrorDiastolicTooHigh
-      systolic < diastolic -> Validation.ErrorSystolicLessThanDiastolic
-      else -> Validation.Success(this)
+      systolic < 70 -> ValidationResult.ErrorSystolicTooLow
+      systolic > 300 -> ValidationResult.ErrorSystolicTooHigh
+      diastolic < 40 -> ValidationResult.ErrorDiastolicTooLow
+      diastolic > 180 -> ValidationResult.ErrorDiastolicTooHigh
+      systolic < diastolic -> ValidationResult.ErrorSystolicLessThanDiastolic
+      else -> ValidationResult.Valid(this)
     }
   }
 }

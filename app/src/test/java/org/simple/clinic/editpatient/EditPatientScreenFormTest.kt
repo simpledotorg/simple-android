@@ -88,6 +88,7 @@ class EditPatientScreenFormTest {
     whenever(patientRepository.updatePatient(any())).doReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).doReturn(Completable.complete())
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, address, phoneNumber)
     uiEvents.onNext(SaveClicked)
@@ -128,6 +129,7 @@ class EditPatientScreenFormTest {
   fun `when data of birth has focus, the date format should be shown in the label`() {
     val patient = TestData.patient()
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, TestData.patientAddress(), null)
 
@@ -145,6 +147,7 @@ class EditPatientScreenFormTest {
   fun `when date of birth text changes, the date format should be shown in the label`() {
     val patient = TestData.patient()
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, TestData.patientAddress(), null)
 
@@ -161,6 +164,7 @@ class EditPatientScreenFormTest {
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
     val patient = TestData.patient()
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, TestData.patientAddress(), null)
     reset(ui)
@@ -187,6 +191,7 @@ class EditPatientScreenFormTest {
         shouldShowConfirmDiscardChangesPopup
     ) = testParams
     whenever(patientRepository.bangladeshNationalIdForPatient(existingSavedPatient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(existingSavedPatient.uuid)) doReturn Observable.never()
 
     screenCreated(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber)
     inputEvents.forEach { uiEvents.onNext(it) }

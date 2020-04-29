@@ -18,6 +18,8 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -56,7 +58,7 @@ class EditPatientEffectHandlerTest {
   private val bangladeshNationalId = TestData.businessId(
       uuid = UUID.fromString("77bd5387-641b-42f8-ab8d-d662bcee9b00"),
       patientUuid = patient.uuid,
-      identifier = Identifier(value = "1234567890abcd", type = Identifier.IdentifierType.BangladeshNationalId)
+      identifier = Identifier(value = "1234567890abcd", type = BangladeshNationalId)
   )
 
   private val entry = EditablePatientEntry.from(
@@ -205,6 +207,43 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository, never()).saveBusinessId(any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
+    verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when fetch bp passports effect is received then all bp passports should be fetched`() {
+    //given
+    val bpPassport1 = TestData.businessId(
+        uuid = UUID.fromString("f92e79df-7f45-4cdf-bebd-e449697083bf"),
+        identifier = Identifier("8eae0ea0-eea4-453a-8b40-f7585301957a", BpPassport),
+        patientUuid = patient.uuid
+    )
+    val bpPassport2 = TestData.businessId(
+        uuid = UUID.fromString("c234c609-5780-48ae-a586-7749c2b62e8a"),
+        identifier = Identifier("bcba83c5-8e96-4154-8376-c3f6f90eb27e", BpPassport),
+        patientUuid = patient.uuid
+    )
+
+    val bangladeshId = TestData.businessId(
+        uuid = UUID.fromString("13ab18c3-3ae1-4d6c-ba5a-418ea0c5a9d7"),
+        identifier = Identifier("fd8441b6-d3cb-45bd-99da-e8aa448f3e72", BangladeshNationalId),
+        patientUuid = patient.uuid
+    )
+
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patient.uuid,
+        patientAddressUuid = patientAddress.uuid,
+        generateBusinessId = false
+    )
+    val profileWithBusinessIds = patientProfile.copy(businessIds = listOf(bpPassport1, bpPassport2, bangladeshId))
+
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.just(profileWithBusinessIds.toOptional())
+
+    //when
+    testCase.dispatch(FetchBpPassportsEffect(patient.uuid))
+
+    //then
+    testCase.assertOutgoingEvents(BpPassportsFetched(listOf(bpPassport1, bpPassport2)))
     verifyZeroInteractions(ui)
   }
 }

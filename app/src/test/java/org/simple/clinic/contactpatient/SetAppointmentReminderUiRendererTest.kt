@@ -138,6 +138,28 @@ class SetAppointmentReminderUiRendererTest {
     verifyNoMoreInteractions(ui)
   }
 
+  @Test
+  fun `when the current selected date is not in the list of available dates, set the reminder period as the total number of days`() {
+    // given
+    val reminderPeriod = Days(3)
+    val selectedReminderDate = PotentialAppointmentDate(
+        timeToAppointment = reminderPeriod,
+        scheduledFor = LocalDate.parse("2018-01-04")
+    )
+
+    // when
+    val model = defaultModel().reminderDateSelected(selectedReminderDate)
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).switchToSetAppointmentReminderView()
+    verify(ui).renderSelectedAppointmentDate(timeToAppointments, reminderPeriod, selectedReminderDate.scheduledFor)
+    verify(ui).enablePreviousReminderDateStepper()
+
+    verify(ui).enableNextReminderDateStepper()
+    verifyNoMoreInteractions(ui)
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = "12345678",

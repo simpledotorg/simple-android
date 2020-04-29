@@ -4,4 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class MedicalHistorySummaryModel: Parcelable
+class MedicalHistorySummaryModel: Parcelable {
+
+  companion object {
+    fun create(): MedicalHistorySummaryModel = MedicalHistorySummaryModel()
+  }
+}

@@ -95,7 +95,13 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events = events,
-        defaultModel = ContactPatientModel.create(patientUuid, phoneMaskConfig, appointmentConfig, userClock),
+        defaultModel = ContactPatientModel.create(
+            patientUuid = patientUuid,
+            phoneNumberMaskerConfig = phoneMaskConfig,
+            appointmentConfig = appointmentConfig,
+            userClock = userClock,
+            mode = UiMode.CallPatient
+        ),
         update = ContactPatientUpdate(phoneMaskConfig),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = ContactPatientInit(),

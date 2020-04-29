@@ -33,7 +33,7 @@ class CustomPrescriptionEntryControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val sheet = mock<CustomPrescriptionEntrySheet>()
+  private val ui = mock<CustomPrescriptionEntryUi>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientUuid = UUID.fromString("a90376d0-e29a-428f-80dc-bd4bdd74d9bf")
   private val prescriptionUuid = UUID.fromString("eef2b1c9-52cd-43d9-b109-b120b0e4c16c")
@@ -60,7 +60,7 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged(""))
 
     //then
-    verify(sheet, times(1)).setSaveButtonEnabled(false)
+    verify(ui, times(1)).setSaveButtonEnabled(false)
   }
 
   @Test
@@ -71,7 +71,7 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Am"))
 
     //then
-    verify(sheet, times(1)).setSaveButtonEnabled(true)
+    verify(ui, times(1)).setSaveButtonEnabled(true)
   }
 
   @Test
@@ -103,7 +103,7 @@ class CustomPrescriptionEntryControllerTest {
         facility = facility
     )
     verify(prescriptionRepository, never()).updatePrescription(any())
-    verify(sheet).finish()
+    verify(ui).finish()
   }
 
   @Test
@@ -115,8 +115,8 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
 
     //then
-    verify(sheet, times(1)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
-    verify(sheet, never()).setDrugDosageText(eq(""))
+    verify(ui, times(1)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
+    verify(ui, never()).setDrugDosageText(eq(""))
   }
 
   @Test
@@ -127,8 +127,8 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
 
     //then
-    verify(sheet, times(1)).setDrugDosageText(eq(""))
-    verify(sheet, never()).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
+    verify(ui, times(1)).setDrugDosageText(eq(""))
+    verify(ui, never()).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
   }
 
   @Test
@@ -139,7 +139,7 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
 
     //then
-    verify(sheet).moveDrugDosageCursorToBeginning()
+    verify(ui).moveDrugDosageCursorToBeginning()
   }
 
   @Test
@@ -151,7 +151,7 @@ class CustomPrescriptionEntryControllerTest {
     setupController(OpenAs.New(patientUuid))
 
     //then
-    verify(sheet).showEnterNewPrescriptionTitle()
+    verify(ui).showEnterNewPrescriptionTitle()
   }
 
   @Test
@@ -163,7 +163,7 @@ class CustomPrescriptionEntryControllerTest {
     setupController(OpenAs.Update(prescriptionUuid))
 
     //then
-    verify(sheet).showEditPrescriptionTitle()
+    verify(ui).showEditPrescriptionTitle()
   }
 
   @Test
@@ -175,7 +175,7 @@ class CustomPrescriptionEntryControllerTest {
     setupController(OpenAs.Update(prescriptionUuid))
 
     //then
-    verify(sheet).showRemoveButton()
+    verify(ui).showRemoveButton()
   }
 
   @Test
@@ -187,7 +187,7 @@ class CustomPrescriptionEntryControllerTest {
     setupController(OpenAs.New(patientUuid))
 
     //then
-    verify(sheet).hideRemoveButton()
+    verify(ui).hideRemoveButton()
   }
 
   @Test
@@ -200,8 +200,8 @@ class CustomPrescriptionEntryControllerTest {
     setupController(OpenAs.Update(prescriptionUuid))
 
     //then
-    verify(sheet).setMedicineName(prescription.name)
-    verify(sheet).setDosage(prescription.dosage)
+    verify(ui).setMedicineName(prescription.name)
+    verify(ui).setDosage(prescription.dosage)
   }
 
   @Test
@@ -222,7 +222,7 @@ class CustomPrescriptionEntryControllerTest {
     //then
     verify(prescriptionRepository).updatePrescription(updatedPrescribedDrug)
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
-    verify(sheet).finish()
+    verify(ui).finish()
   }
 
   @Test
@@ -235,7 +235,7 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(RemoveCustomPrescriptionClicked)
 
     //then
-    verify(sheet).showConfirmRemoveMedicineDialog(prescriptionUuid)
+    verify(ui).showConfirmRemoveMedicineDialog(prescriptionUuid)
   }
 
   @Test
@@ -247,7 +247,7 @@ class CustomPrescriptionEntryControllerTest {
     setupController(OpenAs.Update(prescriptionUuid))
 
     //then
-    verify(sheet).finish()
+    verify(ui).finish()
   }
 
   private fun setupController(openAs: OpenAs) {
@@ -255,7 +255,7 @@ class CustomPrescriptionEntryControllerTest {
 
     uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(sheet) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
     userSubject.onNext(user)

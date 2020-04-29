@@ -9,9 +9,11 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,6 +27,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -45,11 +48,27 @@ class CustomPrescriptionEntryControllerTest {
   private val userSubject = PublishSubject.create<User>()
 
   lateinit var controller: CustomPrescriptionEntryController
+  private lateinit var fixture: MobiusTestFixture<CustomPrescriptionEntryModel, CustomPrescriptionEntryEvent, CustomPrescriptionEntryEffect>
 
   @Before
   fun setUp() {
     whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
+
+    val uiRenderer = CustomPrescriptionEntryUiRenderer()
+    fixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = CustomPrescriptionEntryModel(),
+        init = CustomPrescriptionEntryInit(),
+        update = CustomPrescriptionEntryUpdate(),
+        effectHandler = CustomPrescriptionEntryEffectHandler.create(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  @After
+  fun tearDown() {
+    fixture.dispose()
   }
 
   @Test
@@ -256,6 +275,8 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    fixture.start()
 
     uiEvents.onNext(ScreenCreated())
     userSubject.onNext(user)

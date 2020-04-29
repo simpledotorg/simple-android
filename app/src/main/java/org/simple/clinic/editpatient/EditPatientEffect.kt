@@ -4,6 +4,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
+import java.util.UUID
 
 sealed class EditPatientEffect
 
@@ -17,6 +18,8 @@ data class PrefillFormEffect(
 data class HideValidationErrorsEffect(
     val validationErrors: Set<EditPatientValidationError>
 ) : EditPatientEffect()
+
+data class FetchBpPassportsEffect(val patientUuid: UUID) : EditPatientEffect()
 
 object ShowDatePatternInDateOfBirthLabelEffect : EditPatientEffect()
 

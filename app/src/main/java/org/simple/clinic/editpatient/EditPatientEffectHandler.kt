@@ -21,8 +21,12 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
@@ -62,6 +66,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java, ui::hideDatePatternInDateOfBirthLabel, schedulersProvider.ui())
         .addAction(GoBackEffect::class.java, ui::goBack, schedulersProvider.ui())
         .addAction(ShowDiscardChangesAlertEffect::class.java, ui::showDiscardChangesAlert, schedulersProvider.ui())
+        .addTransformer(FetchBpPassportsEffect::class.java, fetchBpPassports(schedulersProvider.io()))
         .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
         .build()
   }
@@ -102,6 +107,23 @@ class EditPatientEffectHandler @AssistedInject constructor(
       showValidationErrors(effect.validationErrors)
       scrollToFirstFieldWithError()
     }
+  }
+
+  private fun fetchBpPassports(scheduler: Scheduler): ObservableTransformer<FetchBpPassportsEffect, EditPatientEvent> {
+    return ObservableTransformer { fetchBpPassportsEffect ->
+      fetchBpPassportsEffect
+          .flatMap { patientRepository.patientProfile(it.patientUuid).subscribeOn(scheduler) }
+          .filterAndUnwrapJust()
+          .map { patientProfile -> bpPassports(patientProfile) }
+          .map(::BpPassportsFetched)
+    }
+  }
+
+  private fun bpPassports(patientProfile: PatientProfile): List<BusinessId> {
+    return patientProfile
+        .withoutDeletedBusinessIds()
+        .businessIds
+        .filter { it.identifier.type == BpPassport }
   }
 
   private fun savePatientTransformer(scheduler: Scheduler): ObservableTransformer<SavePatientEffect, EditPatientEvent> {
@@ -215,7 +237,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
 
   private fun createAlternativeId(
       savePatientEffects: Observable<SavePatientEffect>,
-      alternativeIdentifierType: Identifier.IdentifierType
+      alternativeIdentifierType: IdentifierType
   ): Observable<EditPatientEvent> {
     return savePatientEffects
         .filter(::isAlternativeIdAdded)

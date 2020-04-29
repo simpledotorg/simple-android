@@ -16,6 +16,7 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.EditPatientValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -31,7 +32,6 @@ import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
@@ -81,6 +81,8 @@ class EditPatientScreenSaveTest {
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
+
     screenCreated(patient, address, phoneNumber)
 
     uiEvents.onNext(PhoneNumberChanged(""))
@@ -103,6 +105,7 @@ class EditPatientScreenSaveTest {
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
     screenCreated(patient, address, phoneNumber)
 
     uiEvents.onNext(PhoneNumberChanged(""))
@@ -125,6 +128,8 @@ class EditPatientScreenSaveTest {
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
+
     screenCreated(patient, address, phoneNumber)
 
     uiEvents.onNext(PhoneNumberChanged(""))
@@ -147,6 +152,7 @@ class EditPatientScreenSaveTest {
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, address, phoneNumber)
 
@@ -170,6 +176,8 @@ class EditPatientScreenSaveTest {
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
+
     screenCreated(patient, address, phoneNumber)
     uiEvents.onNext(PhoneNumberChanged(""))
     uiEvents.onNext(GenderChanged(Gender.Male))
@@ -193,6 +201,7 @@ class EditPatientScreenSaveTest {
     val phoneNumber: PatientPhoneNumber? = null
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, address, phoneNumber)
     uiEvents.onNext(PhoneNumberChanged(""))
@@ -241,7 +250,8 @@ class EditPatientScreenSaveTest {
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.bangladeshNationalIdForPatient(existingSavedPatient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.never()
 
     utcClock.advanceBy(advanceClockBy)
     screenCreated(existingSavedPatient, existingSavedAddress, existingSavedPhoneNumber)
@@ -652,6 +662,7 @@ class EditPatientScreenSaveTest {
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, address, phoneNumber)
 
@@ -846,7 +857,8 @@ class EditPatientScreenSaveTest {
     whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.never()
 
     screenCreated(patient, address, alreadyPresentPhoneNumber)
 
@@ -888,6 +900,7 @@ class EditPatientScreenSaveTest {
     whenever(patientRepository.updateAddressForPatient(eq(patient.uuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.never()
 
     screenCreated(patient, address, null)
 

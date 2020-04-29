@@ -14,6 +14,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.ClinicApp
@@ -23,6 +24,7 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
@@ -71,12 +73,29 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
             saveClicks(),
             removeClicks())
         .compose(ReportAnalyticsEvents())
+        .share()
   }
+
+  private val uiRenderer = CustomPrescriptionEntryUiRenderer()
+
+  private val delegate: MobiusDelegate<CustomPrescriptionEntryModel, CustomPrescriptionEntryEvent, CustomPrescriptionEntryEffect> by unsafeLazy {
+    MobiusDelegate.forActivity(
+        events = events.ofType(),
+        defaultModel = CustomPrescriptionEntryModel(),
+        update = CustomPrescriptionEntryUpdate(),
+        effectHandler = CustomPrescriptionEntryEffectHandler.create(),
+        init = CustomPrescriptionEntryInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
 
   @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_custom_prescription_entry)
+
+    delegate.onRestoreInstanceState(savedInstanceState)
 
     bindUiToController(
         ui = this,
@@ -107,6 +126,21 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
         .build()
 
     component.inject(this)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    delegate.onSaveInstanceState(outState)
+    super.onSaveInstanceState(outState)
   }
 
   override fun onDestroy() {

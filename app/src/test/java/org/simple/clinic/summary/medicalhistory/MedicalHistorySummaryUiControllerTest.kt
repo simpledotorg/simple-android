@@ -9,27 +9,37 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.values
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.TestData
-import org.simple.clinic.medicalhistory.Answer.*
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.*
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -66,10 +76,25 @@ class MedicalHistorySummaryUiControllerTest {
   private val events = PublishSubject.create<UiEvent>()
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<MedicalHistorySummaryModel, MedicalHistorySummaryEvent, MedicalHistorySummaryEffect>
+
+  @Before
+  fun setUp() {
+    val uiRenderer = MedicalHistorySummaryUiRenderer(ui)
+    testFixture = MobiusTestFixture(
+        events = events.ofType(),
+        defaultModel = MedicalHistorySummaryModel.create(),
+        init = MedicalHistorySummaryInit(),
+        update = MedicalHistorySummaryUpdate(),
+        effectHandler = MedicalHistorySummaryEffectHandler().create(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -262,5 +287,6 @@ class MedicalHistorySummaryUiControllerTest {
     controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }
 
     events.onNext(ScreenCreated())
+    testFixture.start()
   }
 }

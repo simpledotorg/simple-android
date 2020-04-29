@@ -76,7 +76,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
 
   private val permissionResults: Subject<ActivityPermissionResult> = PublishSubject.create()
 
-  private val dialogEvents: PublishSubject<ContactPatientEvent> = PublishSubject.create()
+  private val hotEvents: PublishSubject<ContactPatientEvent> = PublishSubject.create()
 
   private val events: Observable<ContactPatientEvent> by unsafeLazy {
     Observable
@@ -85,7 +85,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
             secureCallClicks(),
             agreedToVisitClicks(),
             remindToCallLaterClicks(),
-            dialogEvents
+            hotEvents
         )
         .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, this, permissionResults))
         .compose(ReportAnalyticsEvents())
@@ -157,6 +157,10 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
     component.inject(this)
   }
 
+  override fun onBackPressed() {
+    hotEvents.onNext(BackClicked)
+  }
+
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     permissionResults.onNext(ActivityPermissionResult(requestCode))
@@ -217,7 +221,7 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
         clock = userClock,
         datePickedListener = { pickedDate ->
           val event = ManualDateSelected(selectedDate = pickedDate, currentDate = LocalDate.now(userClock))
-          dialogEvents.onNext(event)
+          hotEvents.onNext(event)
         }
     ).show()
   }

@@ -19,7 +19,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-private typealias Ui = CustomPrescriptionEntrySheet
+private typealias Ui = CustomPrescriptionEntryUi
 private typealias UiChange = (Ui) -> Unit
 
 const val DOSAGE_PLACEHOLDER = "mg"

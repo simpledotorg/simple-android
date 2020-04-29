@@ -36,7 +36,7 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class CustomPrescriptionEntrySheet : BottomSheetActivity() {
+class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEntryUi {
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.customprescription_root)
   private val drugNameEditText by bindView<TextInputEditText>(R.id.customprescription_drug_name)
@@ -140,44 +140,44 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
           .clicks(removeMedicineButton)
           .map { RemoveCustomPrescriptionClicked }
 
-  fun setSaveButtonEnabled(enabled: Boolean) {
+  override fun setSaveButtonEnabled(enabled: Boolean) {
     saveButton.isEnabled = enabled
   }
 
-  fun setDrugDosageText(text: String) {
+  override fun setDrugDosageText(text: String) {
     drugDosageEditText.setText(text)
   }
 
-  fun moveDrugDosageCursorToBeginning() {
+  override fun moveDrugDosageCursorToBeginning() {
     // Posting to EditText's handler is intentional. The cursor gets overridden otherwise.
     drugDosageEditText.post { drugDosageEditText.setSelection(0) }
   }
 
-  fun showEnterNewPrescriptionTitle() {
+  override fun showEnterNewPrescriptionTitle() {
     enterMedicineTextView.visibility = VISIBLE
   }
 
-  fun showEditPrescriptionTitle() {
+  override fun showEditPrescriptionTitle() {
     editMedicineTextView.visibility = VISIBLE
   }
 
-  fun showRemoveButton() {
+  override fun showRemoveButton() {
     removeMedicineButton.visibility = VISIBLE
   }
 
-  fun hideRemoveButton() {
+  override fun hideRemoveButton() {
     removeMedicineButton.visibility = GONE
   }
 
-  fun setMedicineName(drugName: String) {
+  override fun setMedicineName(drugName: String) {
     drugNameEditText.setTextAndCursor(drugName)
   }
 
-  fun setDosage(dosage: String?) {
+  override fun setDosage(dosage: String?) {
     drugDosageEditText.setTextAndCursor(dosage ?: "")
   }
 
-  fun showConfirmRemoveMedicineDialog(prescribedDrugUuid: UUID) {
+  override fun showConfirmRemoveMedicineDialog(prescribedDrugUuid: UUID) {
     ConfirmRemovePrescriptionDialog.showForPrescription(prescribedDrugUuid, supportFragmentManager)
   }
 

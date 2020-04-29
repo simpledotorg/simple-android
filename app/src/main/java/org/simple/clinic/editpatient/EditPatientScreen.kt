@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.RadioButton
 import android.widget.RelativeLayout
@@ -18,6 +19,7 @@ import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import kotlinx.android.synthetic.main.patient_edit_bp_passport_view.view.*
 import kotlinx.android.synthetic.main.screen_edit_patient.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -296,7 +298,18 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   private fun ageTextChanges(): Observable<EditPatientEvent> = ageEditText.textChanges(::AgeChanged)
 
   override fun displayBpPassports(identifiers: List<String>) {
-    //TODO: Implement this
+    bpPassportsContainer.removeAllViews()
+    identifiers.forEach { identifier -> inflateBpPassportView(identifier) }
+
+    bpPassportsLabel.visibleOrGone(identifiers.isNotEmpty())
+
+    post { requestLayout() }
+  }
+
+  private fun inflateBpPassportView(identifier: String) {
+    val bpPassportView = LayoutInflater.from(context).inflate(R.layout.patient_edit_bp_passport_view, bpPassportsContainer, false)
+    bpPassportView.bpPassportIdentifier.text = identifier
+    bpPassportsContainer.addView(bpPassportView)
   }
 
   override fun setPatientName(name: String) {

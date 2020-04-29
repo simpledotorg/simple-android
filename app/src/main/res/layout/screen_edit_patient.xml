@@ -125,6 +125,21 @@
 
       </LinearLayout>
 
+      <TextView
+        android:id="@+id/bpPassportsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:text="@string/patientedit_bp_passports_label" />
+
+      <LinearLayout
+        android:id="@+id/bpPassportsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:orientation="vertical" />
+
       <RadioGroup
         android:id="@+id/genderRadioGroup"
         android:layout_width="match_parent"

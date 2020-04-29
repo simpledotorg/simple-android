@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.editpatient.EditPatientValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.EditPatientValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -54,6 +55,7 @@ class EditPatientUpdate(
       is PatientSaved -> dispatch(GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
       is AlternativeIdChanged -> next(model.updateAlternativeId(event.alternativeId))
+      is BpPassportsFetched -> noChange()
     }
   }
 

@@ -17,7 +17,7 @@ class EditPatientInit(
   override fun init(model: EditPatientModel): First<EditPatientModel, EditPatientEffect> {
     return first(
         model,
-        setOf(PrefillFormEffect(patient, address, phoneNumber, bangladeshNationalId))
+        setOf(PrefillFormEffect(patient, address, phoneNumber, bangladeshNationalId), FetchBpPassportsEffect(patient.uuid))
     )
   }
 }

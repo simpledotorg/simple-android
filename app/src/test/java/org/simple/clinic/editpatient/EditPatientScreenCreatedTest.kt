@@ -25,6 +25,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
@@ -54,6 +55,9 @@ class EditPatientScreenCreatedTest {
     val (patient, address, phoneNumber) = patientFormTestParams
 
     whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+
+    val patientProfile = TestData.patientProfile(patientUuid = patient.uuid, generateBusinessId = true)
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.just(patientProfile.toOptional())
 
     screenCreated(patient, address, phoneNumber)
 

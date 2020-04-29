@@ -1,9 +1,12 @@
 package org.simple.clinic.editpatient
 
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.widgets.UiEvent
 
 sealed class EditPatientEvent : UiEvent
+
+data class BpPassportsFetched(val bpPasssports: List<BusinessId>) : EditPatientEvent()
 
 data class NameChanged(val name: String) : EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Patient Name Text Changed"

@@ -39,7 +39,7 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEntryUi {
+class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEntryUi, CustomPrescriptionEntryUiActions {
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.customprescription_root)
   private val drugNameEditText by bindView<TextInputEditText>(R.id.customprescription_drug_name)
@@ -83,7 +83,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
         events = events.ofType(),
         defaultModel = CustomPrescriptionEntryModel(),
         update = CustomPrescriptionEntryUpdate(),
-        effectHandler = CustomPrescriptionEntryEffectHandler.create(),
+        effectHandler = CustomPrescriptionEntryEffectHandler.create(this),
         init = CustomPrescriptionEntryInit(),
         modelUpdateListener = uiRenderer::render
     )

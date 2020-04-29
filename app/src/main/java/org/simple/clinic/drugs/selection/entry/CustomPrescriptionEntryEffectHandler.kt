@@ -3,11 +3,11 @@ package org.simple.clinic.drugs.selection.entry
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 
-class CustomPrescriptionEntryEffectHandler {
+class CustomPrescriptionEntryEffectHandler(val uiActions: CustomPrescriptionEntryUiActions) {
 
   companion object {
-    fun create(): ObservableTransformer<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent> {
-      return CustomPrescriptionEntryEffectHandler().buildEffectHandler()
+    fun create(uiActions: CustomPrescriptionEntryUiActions): ObservableTransformer<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent> {
+      return CustomPrescriptionEntryEffectHandler(uiActions).buildEffectHandler()
     }
   }
 

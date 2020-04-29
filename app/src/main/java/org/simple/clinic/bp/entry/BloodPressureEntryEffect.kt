@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.entry
 
+import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.Validation
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.Instant
@@ -52,11 +53,11 @@ data class ShowDateValidationError(val result: Result) : BloodPressureEntryEffec
 
 data class CreateNewBpEntry(
     val patientUuid: UUID,
-    val systolic: Int,
-    val diastolic: Int,
+    val reading: BloodPressureReading,
     val userEnteredDate: LocalDate,
     val prefilledDate: LocalDate
 ) : BloodPressureEntryEffect() {
+
   val wasDateChanged: Boolean
     get() = userEnteredDate != prefilledDate
 }

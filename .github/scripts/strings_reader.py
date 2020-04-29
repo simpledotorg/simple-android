@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 
 import sys
 import re
@@ -85,7 +85,7 @@ for root, dirs, files in os.walk(os.getcwd() + rootdir):
 print("Processing strings:")
 print(seprator.join(strings_file_paths) + "\r\n")
 
-android_ellipsis = "…"
+android_ellipsis = u"\u2026"
 
 for path in strings_file_paths:
     process_strings_file(path)

@@ -10,15 +10,14 @@ import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.bp.Validation
-import org.simple.clinic.bp.Validation.ErrorDiastolicEmpty
-import org.simple.clinic.bp.Validation.ErrorDiastolicTooHigh
-import org.simple.clinic.bp.Validation.ErrorDiastolicTooLow
-import org.simple.clinic.bp.Validation.ErrorSystolicEmpty
-import org.simple.clinic.bp.Validation.ErrorSystolicLessThanDiastolic
-import org.simple.clinic.bp.Validation.ErrorSystolicTooHigh
-import org.simple.clinic.bp.Validation.ErrorSystolicTooLow
-import org.simple.clinic.bp.Validation.Success
+import org.simple.clinic.bp.ValidationResult
+import org.simple.clinic.bp.ValidationResult.ErrorDiastolicEmpty
+import org.simple.clinic.bp.ValidationResult.ErrorDiastolicTooHigh
+import org.simple.clinic.bp.ValidationResult.ErrorDiastolicTooLow
+import org.simple.clinic.bp.ValidationResult.ErrorSystolicEmpty
+import org.simple.clinic.bp.ValidationResult.ErrorSystolicLessThanDiastolic
+import org.simple.clinic.bp.ValidationResult.ErrorSystolicTooHigh
+import org.simple.clinic.bp.ValidationResult.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.PrefillDate.PrefillSpecificDate
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
@@ -35,7 +34,6 @@ import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -133,7 +131,7 @@ class BloodPressureEntryEffectHandler private constructor(
     }
   }
 
-  private fun showBpValidationError(bpValidation: Validation) {
+  private fun showBpValidationError(bpValidation: ValidationResult) {
     when (bpValidation) {
       is ErrorSystolicLessThanDiastolic -> ui.showSystolicLessThanDiastolicError()
       is ErrorSystolicTooHigh -> ui.showSystolicHighError()
@@ -142,7 +140,7 @@ class BloodPressureEntryEffectHandler private constructor(
       is ErrorDiastolicTooLow -> ui.showDiastolicLowError()
       is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
       is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
-      is Success -> {
+      is ValidationResult.Valid -> {
         /* Nothing to do here. */
       }
     }.exhaustive()
@@ -159,7 +157,7 @@ class BloodPressureEntryEffectHandler private constructor(
     when (result) {
       is InvalidPattern -> ui.showInvalidDateError()
       is DateIsInFuture -> ui.showDateIsInFutureError()
-      is Valid -> throw IllegalStateException("Date validation error cannot be $result")
+      is Result.Valid -> throw IllegalStateException("Date validation error cannot be $result")
     }.exhaustive()
   }
 

@@ -60,6 +60,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
         .addConsumer(PrefillFormEffect::class.java, ::prefillFormFields, schedulersProvider.ui())
+        .addConsumer(DisplayBpPassportsEffect::class.java, { displayBpPassports(it.bpPassports) }, schedulersProvider.ui())
         .addConsumer(ShowValidationErrorsEffect::class.java, ::showValidationErrors, schedulersProvider.ui())
         .addConsumer(HideValidationErrorsEffect::class.java, { ui.hideValidationErrors(it.validationErrors) }, schedulersProvider.ui())
         .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java, ui::showDatePatternInDateOfBirthLabel, schedulersProvider.ui())
@@ -69,6 +70,11 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .addTransformer(FetchBpPassportsEffect::class.java, fetchBpPassports(schedulersProvider.io()))
         .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
         .build()
+  }
+
+  private fun displayBpPassports(bpPassports: List<BusinessId>) {
+    val identifiers = bpPassports.map { it.identifier.displayValue() }
+    ui.displayBpPassports(identifiers)
   }
 
   private fun prefillFormFields(prefillFormFieldsEffect: PrefillFormEffect) {

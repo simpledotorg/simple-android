@@ -1,16 +1,17 @@
 package org.simple.clinic.summary.medicalhistory
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
-import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.medicalhistory_summary_view.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
@@ -21,8 +22,10 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HY
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -45,6 +48,29 @@ class MedicalHistorySummaryView(
     LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
   }
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            internalEvents
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val uiRenderer = MedicalHistorySummaryUiRenderer(this)
+
+  private val delegate by unsafeLazy {
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = MedicalHistorySummaryModel.create(),
+        update = MedicalHistorySummaryUpdate(),
+        init = MedicalHistorySummaryInit(),
+        effectHandler = MedicalHistorySummaryEffectHandler().create(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -57,10 +83,28 @@ class MedicalHistorySummaryView(
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), internalEvents),
+        events = events,
         controller = controllerFactory.create(screenKey.patientUuid),
         screenDestroys = detaches().map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())

@@ -111,6 +111,7 @@
   <string name="patientedit_date_of_birth_unfocused" translatable="false">@string/patiententry_date_of_birth_unfocused</string>
   <string name="patientedit_date_of_birth_focused" translatable="false">@string/patiententry_date_of_birth_focused</string>
   <string name="patientedit_dateofbirth_and_age_separator" translatable="false">@string/patiententry_dateofbirth_and_age_separator</string>
+  <string name="patientedit_bp_passports_label">BP Passports</string>
   <string name="patientedit_age" translatable="false">@string/patiententry_age</string>
   <string name="patientedit_error_both_dateofbirth_and_age_empty" translatable="false">@string/patiententry_error_both_dateofbirth_and_age_empty</string>
   <string name="patientedit_error_invalid_dateofbirth" translatable="false">@string/patiententry_error_invalid_dateofbirth</string>

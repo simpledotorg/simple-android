@@ -85,6 +85,10 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
             secureCallClicks(),
             agreedToVisitClicks(),
             remindToCallLaterClicks(),
+            nextReminderDateClicks(),
+            previousReminderDateClicks(),
+            appointmentDateClicks(),
+            saveReminderDateClicks(),
             hotEvents
         )
         .compose(RequestPermissions<ContactPatientEvent>(runtimePermissions, this, permissionResults))
@@ -279,6 +283,38 @@ class ContactPatientBottomSheet : BottomSheetActivity(), ContactPatientUi, Conta
       emitter.setCancellable { callPatientView.remindToCallLaterClicked = null }
 
       callPatientView.remindToCallLaterClicked = { emitter.onNext(RemindToCallLaterClicked) }
+    }
+  }
+
+  private fun nextReminderDateClicks(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { setAppointmentReminderView.incrementStepperClicked = null }
+
+      setAppointmentReminderView.incrementStepperClicked = { emitter.onNext(NextReminderDateClicked) }
+    }
+  }
+
+  private fun previousReminderDateClicks(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { setAppointmentReminderView.decrementStepperClicked = null }
+
+      setAppointmentReminderView.decrementStepperClicked = { emitter.onNext(PreviousReminderDateClicked) }
+    }
+  }
+
+  private fun appointmentDateClicks(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { setAppointmentReminderView.appointmentDateClicked = null }
+
+      setAppointmentReminderView.appointmentDateClicked = { emitter.onNext(AppointmentDateClicked) }
+    }
+  }
+
+  private fun saveReminderDateClicks(): Observable<ContactPatientEvent> {
+    return Observable.create { emitter ->
+      emitter.setCancellable { setAppointmentReminderView.doneClicked = null }
+
+      setAppointmentReminderView.doneClicked = { emitter.onNext(SaveAppointmentReminderClicked) }
     }
   }
 }

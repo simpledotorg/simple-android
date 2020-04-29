@@ -7,6 +7,7 @@
 
 ### Internal
 - Updated translations: `bn_BD`
+- Add CI check for fixing ellipsis's in strings.xml
 
 ## On Demo
 ### Internal

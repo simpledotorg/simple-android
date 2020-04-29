@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/contentFlipper"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:animateLayoutChanges="true"
+  tools:ignore="MergeRootFrame">
+
+  <org.simple.clinic.contactpatient.views.CallPatientView
+    android:id="@+id/callPatientView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:visibility="gone"
+    tools:visibility="visible" />
+
+  <org.simple.clinic.contactpatient.views.SetAppointmentReminderView
+    android:id="@+id/setAppointmentReminderView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:visibility="gone" />
+
+</FrameLayout>

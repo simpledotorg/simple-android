@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.registration.location.RegistrationLocationPermissionScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/registrationlocation_screen_title"
+    tools:ignore="UnusedAttribute" />
+
+  <FrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignTop="@+id/toolbar"
+    android:layout_alignBottom="@+id/toolbar"
+    android:layout_alignParentEnd="true"
+    android:layout_marginEnd="@dimen/spacing_12"
+    android:elevation="@dimen/elevation_toolbar"
+    tools:ignore="UnusedAttribute">
+
+    <TextView
+      android:id="@+id/skipButton"
+      style="@style/Clinic.V2.ToolbarButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:paddingStart="@dimen/spacing_16"
+      android:paddingEnd="@dimen/spacing_16"
+      android:stateListAnimator="@null"
+      android:text="@string/registrationlocation_skip_permission"
+      tools:ignore="UnusedAttribute" />
+  </FrameLayout>
+
+  <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/registrationlocation_rationale_card"
+    android:layout_below="@+id/toolbar"
+    android:layout_marginBottom="-8dp"
+    android:scaleType="centerCrop"
+    android:src="@drawable/illustration_location"
+    tools:ignore="ContentDescription" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/registrationlocation_rationale_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="1dp">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingStart="@dimen/spacing_24"
+      android:paddingTop="36dp"
+      android:paddingEnd="@dimen/spacing_24"
+      android:paddingBottom="@dimen/spacing_24">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/registrationlocation_permission_rationale_title"
+        android:textColor="@color/black_opacity_90"
+        android:textSize="@dimen/textsize_20" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:text="@string/registrationlocation_permission_rationale_description"
+        android:textColor="@color/black_opacity_50" />
+    </LinearLayout>
+  </androidx.cardview.widget.CardView>
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/allowAccessButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/registrationlocation_rationale_card"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="-24dp"
+    android:elevation="1dp"
+    android:paddingStart="@dimen/spacing_24"
+    android:paddingEnd="@dimen/spacing_24"
+    android:stateListAnimator="@animator/registration_permission_elevation_animator"
+    android:text="@string/registrationlocation_allow_access"
+    app:icon="@drawable/ic_my_location_24dp"
+    app:iconGravity="textStart"
+    tools:ignore="UnusedAttribute" />
+</org.simple.clinic.registration.location.RegistrationLocationPermissionScreen>

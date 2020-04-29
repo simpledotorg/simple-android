@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.registration.phone.RegistrationPhoneScreen android:id="@+id/registrationphone_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/window_background_auth"
+  tools:ignore="Overdraw">
+
+  <FrameLayout
+    android:id="@+id/registrationphone_logo_container"
+    style="@style/Clinic.LoginLogoContainer">
+
+    <ImageView
+      style="@style/Clinic.V2.LogoWithType.Large"
+      android:layout_gravity="center_horizontal"
+      tools:ignore="ContentDescription" />
+  </FrameLayout>
+
+  <View
+    style="@style/Clinic.LoginLogoContainerOverflow"
+    android:layout_below="@+id/registrationphone_logo_container" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/registrationphone_card"
+    style="@style/Clinic.LoginCard"
+    android:layout_below="@+id/registrationphone_logo_container">
+
+    <LinearLayout
+      style="@style/Clinic.CardContentContainer.Login"
+      android:animateLayoutChanges="true">
+
+      <TextView
+        style="@style/Clinic.LoginCardTitle"
+        android:labelFor="@+id/phoneNumberEditText"
+        android:text="@string/registrationphone_phone_number_label" />
+
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/spacing_8">
+
+        <EditText
+          android:id="@+id/isdCodeEditText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:clickable="false"
+          android:editable="false"
+          android:focusable="false"
+          android:focusableInTouchMode="false"
+          android:inputType="none"
+          android:textAppearance="@style/Clinic.LoginInputTextAppearance"
+          tools:ignore="Deprecated,LabelFor"
+          tools:text="+880"/>
+
+        <EditText
+          android:id="@id/phoneNumberEditText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:digits="1234567890"
+          android:imeOptions="actionDone"
+          android:inputType="phone"
+          android:maxLength="10"
+          android:minEms="6"
+          android:textAppearance="@style/Clinic.LoginInputTextAppearance" />
+      </LinearLayout>
+
+      <TextView
+        android:id="@+id/validationErrorTextView"
+        style="@style/Clinic.V2.RegistrationInputError"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:visibility="gone"
+        tools:text="A really long error message to test wrapping on this TextView." />
+    </LinearLayout>
+
+    <FrameLayout
+      android:id="@+id/progressView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/white"
+      android:visibility="gone">
+
+      <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+    </FrameLayout>
+  </androidx.cardview.widget.CardView>
+</org.simple.clinic.registration.phone.RegistrationPhoneScreen>

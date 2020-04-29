@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patients_user_status_approved"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_gravity="bottom"
+  android:background="@color/black"
+  android:paddingStart="@dimen/spacing_16"
+  android:paddingTop="@dimen/spacing_16"
+  android:paddingEnd="@dimen/spacing_12"
+  android:paddingBottom="@dimen/spacing_16"
+  tools:ignore="Overdraw"
+  tools:showIn="@layout/screen_patients">
+
+  <TextView
+    android:id="@+id/patients_user_approved_title"
+    style="@style/Clinic.UserApprovalStatusTitle"
+    android:layout_marginStart="@dimen/spacing_12"
+    android:layout_toStartOf="@+id/dismissApprovedStatusButton"
+    android:text="@string/patients_user_approved_title" />
+
+  <TextView
+    style="@style/Clinic.UserApprovalStatusMessage"
+    android:layout_below="@+id/patients_user_approved_title"
+    android:layout_alignStart="@+id/patients_user_approved_title"
+    android:layout_marginTop="@dimen/spacing_4"
+    android:layout_toStartOf="@+id/dismissApprovedStatusButton"
+    android:text="@string/patients_user_approved_message" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/dismissApprovedStatusButton"
+    style="@style/Clinic.SnackbarAction"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true"
+    android:text="@string/patients_dismiss_user_approved_status" />
+</RelativeLayout>

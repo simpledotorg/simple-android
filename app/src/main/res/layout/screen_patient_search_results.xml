@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.search.results.PatientSearchResultsScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
+    android:id="@+id/patientsearchresults_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white100"
+    android:foreground="?selectableItemBackground"
+    app:contentInsetStartWithNavigation="56dp"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:navigationIconTint="@color/grey0"
+    app:title="Anish Acharya with a really long surname"
+    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.SearchResultsTitle"
+    app:titleTextColor="?attr/colorOnSurface" />
+
+  <org.simple.clinic.searchresultsview.PatientSearchView
+    android:id="@+id/patientsearchresults_searchresultsview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/patientsearchresults_toolbar" />
+</org.simple.clinic.search.results.PatientSearchResultsScreen>

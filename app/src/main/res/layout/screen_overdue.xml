@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.home.overdue.OverdueScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/overdueRecyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:padding="@dimen/spacing_8"
+    android:visibility="gone" />
+
+  <LinearLayout
+    android:id="@+id/viewForEmptyList"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/spacing_32"
+    android:paddingStart="@dimen/spacing_32"
+    android:visibility="visible">
+
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_32"
+      android:layout_marginTop="@dimen/spacing_40"
+      android:contentDescription="@string/overdue_no_patients"
+      android:src="@drawable/ic_overdue_empty_list" />
+
+    <TextView
+      style="@style/Clinic.V2.TextAppearance.H6.Grey1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/overdue_no_patients"
+      tools:ignore="UnusedAttribute" />
+
+    <TextView
+      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_12"
+      android:text="@string/overdue_empty_desc" />
+  </LinearLayout>
+
+</org.simple.clinic.home.overdue.OverdueScreen>

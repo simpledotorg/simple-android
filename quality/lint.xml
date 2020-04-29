@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+  <issue id="GoogleAppIndexingWarning" severity="informational" />
+  <issue id="AllowBackup" severity="informational" />
+  <issue id="UnusedResources">
+    <ignore path="src/main/res/values/colors_material.xml" />
+    <ignore path="src/main/res/values/colors_v2.xml" />
+
+    <!-- These are referenced from code. -->
+    <ignore path="src/main/res/drawable/ic_patient_female.xml" />
+    <ignore path="src/main/res/drawable/ic_patient_male.xml" />
+    <ignore path="src/main/res/drawable/ic_patient_transgender.xml" />
+
+  </issue>
+
+  <!-- Ignore this for now due to time constraints. Switch to static images later. -->
+  <issue id="VectorPath">
+    <ignore path="src/main/res/drawable/logo_large.xml" />
+    <ignore path="src/debug/res/drawable/logo_large.xml" />
+    <ignore path="src/staging/res/drawable/logo_large.xml" />
+    <ignore path="src/sandbox/res/drawable/logo_large.xml" />
+    <ignore path="src/main/res/drawable/ic_settings_24dp.xml" />
+    <ignore path="src/main/res/drawable/ic_language_24dp.xml" />
+  </issue>
+
+  <issue id="ParcelCreator" severity="informational" />
+  <issue id="GradleDependency" severity="informational" />
+
+  <!-- JCABI xml parser references a java package that is not bundled
+       with Android. We haven't run into errors yet, but we might.  -->
+  <issue id="InvalidPackage" severity="informational" />
+  <issue id="MissingTranslation" severity="informational" />
+
+  <!-- We do not expect vision impaired nurses to use the app for now. -->
+  <issue id="ContentDescription" severity="ignore" />
+
+  <!-- Flags all screen event observables because they don't "return" in an obvious way -->
+  <issue id="CheckResult" severity="informational" />
+
+  <!-- No plans to utilize autofill services currently -->
+  <issue id="Autofill" severity="informational" />
+
+  <!--
+  Lint complains that the tag is not supported for generated images < api 24.
+
+  This was checked on a Lollipop (21) emulator and the images seem to render fine.
+  -->
+  <issue id="VectorRaster">
+    <ignore path="src/main/res/drawable/ic_settings_account_24dp.xml" />
+    <ignore path="src/main/res/drawable/ic_settings_phone_24dp.xml" />
+    <ignore path="src/main/res/drawable/ic_settings_24dp.xml" />
+  </issue>
+</lint>

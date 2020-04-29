@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:ignore="MissingPrefix">
+
+  <TextView
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:text="@string/scheduleappointment_next_visit_in">
+
+    <requestFocus />
+  </TextView>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="44dp"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginEnd="44dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageButton
+      android:id="@+id/decrementDateButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_12"
+      android:src="@drawable/ic_remove_circle_outline_32dp"
+      android:tint="@color/appointment_date_stepper"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      android:id="@+id/currentDateTextView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:textColor="@color/black_opacity_80"
+      android:textSize="@dimen/textsize_34"
+      tools:text="4 weeks" />
+
+    <ImageButton
+      android:id="@+id/incrementDateButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_12"
+      android:src="@drawable/ic_add_circle_outline_32dp"
+      android:tint="@color/appointment_date_stepper"
+      tools:ignore="ContentDescription" />
+
+  </LinearLayout>
+
+  <TextView
+    android:id="@+id/currentAppointmentDate"
+    style="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_8"
+    android:ellipsize="end"
+    android:gravity="center"
+    tools:text="12-Nov-2019" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/changeAppointmentDate"
+    style="?attr/borderlessButtonStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="@dimen/spacing_4"
+    android:text="@string/scheduleappointment_change"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_margin="@dimen/spacing_16"
+    android:background="@color/grey3" />
+
+  <TextView
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:text="@string/scheduleappointment_at" />
+
+  <TextView
+    android:id="@+id/selectedFacilityName"
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginBottom="8dp"
+    android:ellipsize="end"
+    android:gravity="center"
+    tools:text="PHC Bhatinda" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/changeFacilityButton"
+    style="?attr/borderlessButtonStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:text="@string/scheduleappointment_change"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:paddingTop="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:paddingBottom="@dimen/spacing_12"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:gravity="center_vertical">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/notNowButton"
+      style="?attr/materialButtonOutlinedStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:text="@string/scheduleappointment_not_now"
+      tools:ignore="ButtonStyle" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/doneButton"
+      style="?attr/materialButtonStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:backgroundTint="?attr/colorSecondary"
+      android:gravity="center"
+      android:text="@string/scheduleappointment_done"
+      android:textColor="@color/white"
+      tools:ignore="ButtonStyle" />
+  </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+readonly GIT_HAS_CHANGES=1 # 0 = clean, 1 = dirty
+
+USER_NAME="$1"
+USER_EMAIL="$2"
+
+git config user.name "$USER_NAME"
+git config user.email "$USER_EMAIL"
+
+# Following git command checks the git diff of staged files
+# and assigns the exit code to GIT_DIFF_STATUS variable.
+git diff --quiet; GIT_DIFF_STATUS=$?
+
+# If the GIT_DIFF_STATUS is 1 (GIT_HAS_CHANGES) then we know
+# there are changes and we can commit the changes and push
+# them to new branch
+if [[ ${GIT_DIFF_STATUS} -eq ${GIT_HAS_CHANGES} ]]; then
+    DAY=$( date +%b-%d-%Y )
+    BRANCH_NAME="bot/$DAY/code-formatting"
+
+    git checkout -b "$BRANCH_NAME"
+    git commit -am "[BOT] Code formatting fixes"
+    git push -u origin "$BRANCH_NAME"
+
+    echo "::set-output name=branch_name::${BRANCH_NAME}"
+fi

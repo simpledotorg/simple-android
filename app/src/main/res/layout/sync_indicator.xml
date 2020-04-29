@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/sync_indicator_root_layout"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="?attr/selectableItemBackground"
+  android:clickable="true"
+  android:focusable="true"
+  android:padding="@dimen/spacing_8">
+
+  <TextView
+    android:id="@+id/sync_indicator_status_text"
+    style="@style/Clinic.V2.TextAppearance.Body2Center.Grey1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:drawablePadding="@dimen/spacing_8"
+    android:drawableStart="@drawable/ic_cloud_upload_16dp"
+    android:gravity="center_vertical"
+    android:text="@string/syncindicator_status_pending" />
+
+</LinearLayout>

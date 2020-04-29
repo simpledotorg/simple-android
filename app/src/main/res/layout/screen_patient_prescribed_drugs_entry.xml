@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.drugs.selection.EditMedicinesScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/prescribeddrugs_root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/prescribeddrugs_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/patient_prescribeddrugs_screen_title" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/prescribeddrugs_recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_margin="@dimen/spacing_8"
+    android:layout_weight="1"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/spacing_16" />
+
+  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+    android:id="@+id/prescribeddrugs_done"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    app:buttonBackgroundDisabled="@color/grey2"
+    app:buttonBackgroundEnabled="@color/blue1"
+    app:frameBackgroundDisabled="@color/grey3"
+    app:frameBackgroundEnabled="@color/blue2">
+
+    <com.google.android.material.button.MaterialButton
+      style="?attr/materialButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/patientsummary_finish_saving_patient"
+      android:layout_margin="@dimen/spacing_8"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+
+</org.simple.clinic.drugs.selection.EditMedicinesScreen>

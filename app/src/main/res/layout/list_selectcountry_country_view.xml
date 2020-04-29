@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  tools:background="@color/white100">
+
+  <RadioButton
+    android:id="@+id/countryButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:padding="@dimen/spacing_16"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
+    android:textColor="@color/selectcountry_radio_button"
+    tools:ignore="RtlSymmetry"
+    tools:text="India"
+    tools:textColor="@color/grey0" />
+
+  <View
+    android:id="@+id/divider"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:background="@color/grey4" />
+</LinearLayout>

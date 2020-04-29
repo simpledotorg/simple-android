@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_marginBottom="@dimen/spacing_8"
+  android:orientation="vertical">
+
+  <TextView
+    android:id="@+id/sheet_dosage_drug_name"
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_12"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_24"
+    tools:text="Telmisartan dosage" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/sheet_dosage_name_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+</LinearLayout>

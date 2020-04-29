@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/bloodSugarItemRoot"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="@dimen/spacing_4"
+  android:background="?attr/selectableItemBackground"
+  android:clickable="true"
+  android:focusable="true"
+  tools:showIn="@layout/list_patientsummary_bloodsugar_measurement">
+
+  <ImageView
+    android:id="@+id/bloodSugarIconImageView"
+    android:layout_width="@dimen/spacing_16"
+    android:layout_height="@dimen/spacing_16"
+    android:layout_gravity="center_vertical"
+    android:layout_marginStart="@dimen/spacing_12"
+    android:layout_marginTop="@dimen/spacing_4"
+    android:layout_marginBottom="@dimen/spacing_4"
+    android:src="@drawable/ic_blood_sugar_outline"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@id/readingTextView"
+    app:layout_constraintHorizontal_bias="0"
+    app:layout_constraintHorizontal_chainStyle="packed"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="ContentDescription" />
+
+  <org.simple.clinic.widgets.TintableCompoundDrawableTextView
+    android:id="@+id/readingTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginStart="@dimen/spacing_12"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
+    app:layout_constraintStart_toEndOf="@id/bloodSugarIconImageView"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="120 mg/dl FBS" />
+
+  <TextView
+    android:id="@+id/bloodSugarEditButton"
+    style="@style/Clinic.V2.TextAppearance.Button2.Blue1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:text="@string/patientsummary_edit"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@id/dateTimeTextView"
+    app:layout_constraintStart_toEndOf="@id/readingTextView"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/dateTimeTextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_12"
+    android:textAlignment="viewEnd"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/bloodSugarEditButton"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="10-Aug-2019" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

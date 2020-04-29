@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.settings.changelanguage.ChangeLanguageScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/changeLanguageScreen"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white100"
+    app:layout_constraintTop_toTopOf="parent"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:navigationIconTint="@color/grey0"
+    app:title="@string/changelanguage_title"
+    app:titleTextColor="?attr/colorOnSurface"
+    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/doneButton"
+    style="?attr/materialButtonStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    android:enabled="false"
+    android:text="@string/changelanguage_done"
+    app:icon="@drawable/ic_done_24dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    tools:enabled="true" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/languagesList"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/spacing_16"
+    app:layout_constraintBottom_toTopOf="@id/doneButton"
+    app:layout_constraintTop_toBottomOf="@id/toolbar"
+    tools:listitem="@layout/list_change_language_view" />
+
+</org.simple.clinic.settings.changelanguage.ChangeLanguageScreen>

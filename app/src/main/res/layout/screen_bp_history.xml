@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.bp.history.BloodPressureHistoryScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
+    tools:title="Anish Acharya, M, 43" />
+
+  <androidx.cardview.widget.CardView
+    style="@style/Clinic.V2.CardView"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_margin="@dimen/spacing_8"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/bpHistoryList"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:itemCount="15"
+      tools:listitem="@layout/list_bp_history_item" />
+
+  </androidx.cardview.widget.CardView>
+
+</org.simple.clinic.bp.history.BloodPressureHistoryScreen>

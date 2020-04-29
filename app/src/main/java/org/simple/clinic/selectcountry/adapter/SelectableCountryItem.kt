@@ -1,0 +1,47 @@
+package org.simple.clinic.selectcountry.adapter
+
+import android.view.View
+import io.reactivex.subjects.Subject
+import kotlinx.android.synthetic.main.list_selectcountry_country_view.*
+import org.simple.clinic.R
+import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
+import org.simple.clinic.selectcountry.adapter.Event.CountryClicked
+import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.recyclerview.ViewHolderX
+
+data class SelectableCountryItem(
+    val country: Country,
+    private val isCountryChosenByUser: Boolean,
+    private val showDivider: Boolean,
+    private val countryDisplayNameFetcher: CountryDisplayNameFetcher
+) : ItemAdapter.Item<Event> {
+
+  companion object {
+    fun from(countries: List<Country>, chosenCountry: Country?, countryDisplayNameFetcher: CountryDisplayNameFetcher): List<SelectableCountryItem> {
+      return countries
+          .mapIndexed { index, country ->
+            val isLastCountryInList = index == countries.lastIndex
+            val hasUserChosenCountry = country == chosenCountry
+
+            SelectableCountryItem(
+                country = country,
+                isCountryChosenByUser = hasUserChosenCountry,
+                showDivider = !isLastCountryInList,
+                countryDisplayNameFetcher = countryDisplayNameFetcher
+            )
+          }
+    }
+  }
+
+  override fun layoutResId() = R.layout.list_selectcountry_country_view
+
+  override fun render(holder: ViewHolderX, subject: Subject<Event>) {
+    holder.countryButton.apply {
+      text = countryDisplayNameFetcher.displayNameForCountry(country)
+      isChecked = isCountryChosenByUser
+      holder.divider.visibility = if (showDivider) View.VISIBLE else View.INVISIBLE
+      setOnClickListener { subject.onNext(CountryClicked(country)) }
+    }
+  }
+}

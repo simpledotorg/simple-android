@@ -1,0 +1,188 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - release/*
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  qa_lint:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: QA Lint
+        run: ./gradlew lintQaDebug
+
+  qa_unit_tests:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: QA Unit Tests
+        run: ./gradlew testQaDebugUnitTest
+
+  mobius_migration_tests:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Mobius Migration Tests
+        run: ./gradlew :mobius-migration:test
+
+  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
+  # https://github.com/ReactiveCircus/android-emulator-runner
+  qa_android_tests:
+    runs-on: [macos-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Turn on capturing of flaky tests
+        run: cat app/src/androidTest/resources/quarantine_ci.properties > app/src/androidTest/resources/quarantine.properties
+
+      - name: QA Android Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew -PandroidNdkVersion=18.1.5063045 connectedQaDebugAndroidTest
+
+  qa_build_apk:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: QA Debug Build
+        run: ./gradlew assembleQaDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: app_qa_debug
+          path: app/build/outputs/apk/qa/debug/app-qa-debug.apk
+
+  verify_release_build:
+    runs-on: [ubuntu-latest]
+    strategy:
+      matrix:
+        buildType: ['Sandbox', 'Staging', 'Security', 'Production']
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: ${{ matrix.buildType }} Release build with Proguard
+        run: |
+          ./gradlew \
+          -PrunProguard=true \
+          -PdefaultProguardFile=proguard-android.txt \
+          assemble${{ matrix.buildType }}Release
+
+  verify_room_schemas:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+        with:
+          ref: master
+          path: master
+
+      - name: Checkout current
+        uses: actions/checkout@v2
+        with:
+          path: current
+
+      - name: Verify existing Room schemas are not modified
+        run: current/.github/scripts/compare_directory_contents.sh master/app/schemas/org.simple.clinic.AppDatabase current/app/schemas/org.simple.clinic.AppDatabase
+
+  verify_pr_description:
+    runs-on: [ubuntu-latest]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Verify PR description
+        run: |
+          PR_DESCRIPTION='${{github.event.pull_request.body}}'
+          PIVOTAL_STORY_REGEX='https:\/\/www.pivotaltracker.com\/story\/show\/[0-9]{9}'
+
+          if [[ $PR_DESCRIPTION =~ $PIVOTAL_STORY_REGEX ]]; then
+            exit 0
+          else
+            echo "PR description doesn't contain a pivotal story"
+            exit 1
+          fi
+
+  verify_changelog_updated:
+    runs-on: [ubuntu-latest]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+        with:
+          ref: master
+          path: master
+
+      - name: Checkout current
+        uses: actions/checkout@v2
+        with:
+          path: current
+
+      - name: Verify CHANGELOG was updated
+        run: current/.github/scripts/verify_file_was_changed.sh master/CHANGELOG.md current/CHANGELOG.md
+
+  fix_strings_ellipsise:
+    runs-on: [ubuntu-latest]
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+
+      - name: Fix ellipsise in strings
+        run: .github/scripts/strings_reader.py
+
+      - name: Commit and push
+        env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        run: .github/scripts/commit_and_amend.sh
+
+  qa_purge_env:
+    runs-on: [ubuntu-latest]
+    needs: [qa_lint, qa_unit_tests, mobius_migration_tests, qa_android_tests, qa_build_apk]
+    steps:
+      - name: Purge QA server
+        run: |
+          curl -v --request DELETE \
+          --url https://api-qa.simple.org/qa/purge \
+          --header 'Authorization: Bearer ${{ secrets.QA_PURGE_TOKEN }}'

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.registration.pin.RegistrationPinScreen android:id="@+id/registrationpin_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/window_background_auth"
+  tools:ignore="Overdraw">
+
+  <RelativeLayout
+    android:id="@+id/registrationpin_logo_container"
+    style="@style/Clinic.LoginLogoContainer">
+
+    <ImageButton
+      android:id="@+id/backButton"
+      style="@style/Clinic.LoginBackButton"
+      android:src="@drawable/ic_arrow_back_24dp"
+      tools:ignore="ContentDescription" />
+
+    <ImageView
+      android:id="@+id/registrationpin_applogo"
+      style="@style/Clinic.V2.LogoWithType.Large"
+      android:layout_centerHorizontal="true"
+      tools:ignore="ContentDescription" />
+  </RelativeLayout>
+
+  <View
+    style="@style/Clinic.LoginLogoContainerOverflow"
+    android:layout_below="@+id/registrationpin_logo_container" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/registrationpin_card"
+    style="@style/Clinic.LoginCard"
+    android:layout_below="@+id/registrationpin_logo_container">
+
+    <LinearLayout
+      android:id="@+id/registrationpin_card_content"
+      style="@style/Clinic.CardContentContainer.Login">
+
+      <TextView
+        style="@style/Clinic.LoginCardTitle"
+        android:labelFor="@+id/pinEditText"
+        android:text="@string/registrationpin_pin_label" />
+
+      <org.simple.clinic.widgets.StaggeredEditText
+        android:id="@+id/pinEditText"
+        style="@style/Clinic.StaggeredEditText.Pin"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:imeOptions="actionDone"
+        android:maxLength="4" />
+
+      <TextView
+        android:id="@+id/pinHintTextView"
+        style="@style/Clinic.RegistrationPinHint"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/registrationpin_pin_hint" />
+
+      <TextView
+        android:id="@+id/errorTextView"
+        style="@style/Clinic.V2.RegistrationInputError"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:visibility="gone"
+        tools:text="A really long error message to test wrapping on this TextView." />
+    </LinearLayout>
+  </androidx.cardview.widget.CardView>
+</org.simple.clinic.registration.pin.RegistrationPinScreen>

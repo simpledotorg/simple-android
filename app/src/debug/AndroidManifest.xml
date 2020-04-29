@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  package="org.simple.clinic">
+
+  <application
+    android:name=".DebugClinicApp"
+    android:icon="@mipmap/ic_launcher"
+    tools:ignore="GoogleAppIndexingWarning"
+    tools:replace="android:name,android:icon">
+
+    <receiver android:name=".DebugNotificationActionReceiver" />
+
+    <receiver android:name=".FakeDataGenerationReceiver"
+      tools:ignore="ExportedReceiver">
+      <intent-filter>
+        <action android:name="org.simple.clinic.debug.GENERATE_FAKE_DATA" />
+      </intent-filter>
+    </receiver>
+
+    <activity
+      android:name=".playground.AwaitActivity"
+      android:exported="true" />
+
+    <activity
+      android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"
+      android:exported="true" />
+  </application>
+</manifest>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.home.help.HelpScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/help_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/help_title" />
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <WebView
+      android:id="@+id/help_webview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
+
+    <LinearLayout
+      android:id="@+id/help_no_content"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/help_error_message"
+        style="@style/Clinic.V2.TextAppearance.H6.Grey1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/help_no_connection" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/help_try_again"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_40"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:layout_marginEnd="@dimen/spacing_40"
+        android:text="@string/help_try_again"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+    </LinearLayout>
+
+    <ProgressBar
+      android:id="@+id/help_progress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:visibility="gone"
+      tools:visibility="visible" />
+  </FrameLayout>
+</org.simple.clinic.home.help.HelpScreen>

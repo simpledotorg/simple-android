@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.newentry.PatientEntryScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patientEntryRoot"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="horizontal">
+
+  <ImageButton
+    android:id="@+id/backButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:contentDescription="@string/patiententry_contentdescription_up_button"
+    android:paddingStart="@dimen/spacing_16"
+    android:paddingTop="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_8"
+    android:paddingBottom="@dimen/spacing_16"
+    android:src="@drawable/ic_arrow_back_24dp"
+    android:tint="@color/gray_600" />
+
+  <ScrollView
+    android:id="@+id/formScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/saveButtonFrame"
+    android:layout_toEndOf="@+id/backButton"
+    android:scrollbarStyle="insideOverlay"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingTop="@dimen/spacing_12"
+      android:paddingEnd="@dimen/spacing_16"
+      android:paddingBottom="@dimen/spacing_32"
+      tools:ignore="RtlSymmetry">
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/fullNameInputLayout"
+        style="@style/Clinic.V2.TextInputLayout.FilledBox.PatientEntry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_4"
+        app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/fullNameEditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/patiententry_full_name"
+          android:imeOptions="flagNoFullscreen"
+          android:inputType="textPersonName|textCapWords" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:paddingStart="@dimen/spacing_4">
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/ageEditTextInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox.PatientEntry"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.6"
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ageEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_age"
+            android:imeOptions="flagNoFullscreen"
+            android:inputType="number"
+            android:maxLength="3" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+          android:id="@+id/dateOfBirthAndAgeSeparator"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:layout_marginTop="@dimen/spacing_24"
+          android:layout_marginEnd="@dimen/spacing_16"
+          android:text="@string/patiententry_dateofbirth_and_age_separator"
+          android:textAllCaps="true"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/dateOfBirthInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox.PatientEntry"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+          <org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
+            android:id="@+id/dateOfBirthEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_date_of_birth_unfocused"
+            android:imeOptions="flagNoFullscreen"
+            android:inputType="number"
+            app:allowed_chars="1234567890"
+            app:mask="##/##/####" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+      </LinearLayout>
+
+      <LinearLayout
+        android:id="@+id/identifierContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:orientation="vertical">
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingStart="@dimen/spacing_4"
+          android:text="@string/patiententry_identifier"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1" />
+
+        <TextView
+          android:id="@+id/identifierTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/spacing_4"
+          android:background="@drawable/background_patiententry_identifier"
+          android:drawablePadding="@dimen/spacing_12"
+          android:padding="@dimen/spacing_4"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0"
+          tools:drawableStart="@drawable/patient_id_card"
+          tools:drawableTint="@color/grey1"
+          tools:text="123 4567" />
+      </LinearLayout>
+
+      <RadioGroup
+        android:id="@+id/genderRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/spacing_4">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+          android:id="@+id/femaleRadioButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="-2dp"
+          android:text="@string/patiententry_gender_female"
+          android:textColor="@color/patiententry_radio_button"
+          android:textSize="@dimen/textsize_16" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+          android:id="@+id/maleRadioButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:text="@string/patiententry_gender_male"
+          android:textColor="@color/patiententry_radio_button"
+          android:textSize="@dimen/textsize_16" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+          android:id="@+id/transgenderRadioButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:text="@string/patiententry_gender_transgender"
+          android:textColor="@color/patiententry_radio_button"
+          android:textSize="@dimen/textsize_16" />
+      </RadioGroup>
+
+      <TextView
+        android:id="@+id/genderErrorTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:text="@string/patiententry_error_empty_gender"
+        android:textColor="@color/textinputlayout_error"
+        android:textSize="@dimen/textsize_12"
+        android:visibility="gone" />
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/phoneNumberInputLayout"
+        style="@style/Clinic.V2.TextInputLayout.FilledBox.PatientEntry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_4"
+        android:layout_marginTop="@dimen/spacing_16"
+        app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/phoneNumberEditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/patiententry_phone_number"
+          android:imeOptions="flagNoFullscreen"
+          android:inputType="phone|textCapSentences" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/alternativeIdInputLayout"
+        style="@style/Clinic.V2.TextInputLayout.FilledBox.PatientEntry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_4"
+        android:layout_marginTop="@dimen/spacing_16"
+        app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/alternativeIdInputEditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/patiententry_bangladesh_national_id"
+          android:imeOptions="flagNoFullscreen"
+          android:inputType="phone|textCapSentences" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/streetAddressInputLayout"
+        style="@style/Clinic.V2.TextInputLayout.FilledBox.PatientEntry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_4"
+        android:layout_marginTop="@dimen/spacing_16"
+        app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/streetAddressEditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/patiententry_street_address"
+          android:imeOptions="flagNoFullscreen"
+          android:inputType="textPostalAddress|textCapSentences" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/colonyOrVillageInputLayout"
+        style="@style/Clinic.V2.TextInputLayout.FilledBox.PatientEntry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_4"
+        android:layout_marginTop="@dimen/spacing_16"
+        app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/colonyOrVillageEditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/patiententry_village_colony_ward"
+          android:imeOptions="flagNoFullscreen"
+          android:inputType="textPostalAddress|textCapSentences" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/zoneInputLayout"
+        style="@style/Clinic.V2.TextInputLayout.FilledBox.PatientEntry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_4"
+        android:layout_marginTop="@dimen/spacing_16"
+        app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/zoneEditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/patiententry_zone"
+          android:imeOptions="flagNoFullscreen"
+          android:inputType="textPostalAddress|textCapSentences" />
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/spacing_4">
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/districtInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="@dimen/spacing_4"
+          android:layout_weight="1"
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/districtEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_district"
+            android:imeOptions="flagNoFullscreen"
+            android:inputType="textPostalAddress|textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/stateInputLayout"
+          style="@style/Clinic.V2.TextInputLayout.FilledBox"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_4"
+          android:layout_weight="1"
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/stateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_state"
+            android:imeOptions="flagNoFullscreen"
+            android:inputType="textPostalAddress|textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
+      </LinearLayout>
+
+      <TextView
+        android:id="@+id/consentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Center"
+        android:textColor="@color/grey0"
+        tools:text="@string/patiententry_consent_first_para" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:orientation="horizontal">
+
+        <Switch
+          android:id="@+id/consentSwitch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:checked="true" />
+
+        <TextView
+          android:id="@+id/consentLabel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_8"
+          android:text="@string/patiententry_consent_whatsapp_sms_reminders"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Center" />
+      </LinearLayout>
+    </LinearLayout>
+  </ScrollView>
+
+  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+    android:id="@id/saveButtonFrame"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    android:layout_alignParentBottom="true"
+    app:buttonBackgroundDisabled="@color/grey2"
+    app:buttonBackgroundEnabled="@color/blue1"
+    app:frameBackgroundDisabled="@color/grey3"
+    app:frameBackgroundEnabled="@color/blue2">
+
+    <com.google.android.material.button.MaterialButton
+      style="?attr/materialButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_8"
+      android:text="@string/patiententry_save_patient"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
+  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+</org.simple.clinic.newentry.PatientEntryScreen>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.home.report.ReportsScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <WebView
+    android:id="@+id/reportsscreen_webview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+  <LinearLayout
+    android:id="@+id/reportsscreen_no_report"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_40"
+      android:layout_marginTop="@dimen/spacing_40"
+      android:src="@drawable/reports_illustration"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      style="@style/Clinic.V2.TextAppearance.H6.Grey1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/reports_come_back_later" />
+
+    <TextView
+      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_12"
+      android:layout_marginEnd="@dimen/spacing_24"
+      android:layout_marginStart="@dimen/spacing_24"
+      android:layout_marginTop="@dimen/spacing_12"
+      android:text="@string/reports_you_will_be_able_to_see" />
+  </LinearLayout>
+</org.simple.clinic.home.report.ReportsScreen>

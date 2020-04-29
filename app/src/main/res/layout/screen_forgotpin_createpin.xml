@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen android:id="@+id/applock_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/window_background_auth"
+  tools:ignore="Overdraw">
+
+  <LinearLayout
+    android:id="@+id/forgotpin_createpin_logo_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?colorPrimary"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_24"
+    android:paddingStart="@dimen/spacing_24"
+    android:paddingTop="@dimen/spacing_4">
+
+    <TextView
+      android:id="@+id/forgotpin_createpin_facility_name"
+      style="@style/Clinic.V2.FacilityNameTextView"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginEnd="@dimen/spacing_24"
+      android:layout_marginStart="@dimen/spacing_24"
+      tools:text="A really long facility name that does not fit" />
+
+    <TextView
+      android:id="@+id/forgotpin_createpin_user_fullname"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_marginTop="@dimen/spacing_32"
+      android:layout_weight="1"
+      android:ellipsize="end"
+      android:gravity="center"
+      android:maxLines="1"
+      android:textColor="@color/white"
+      android:textSize="@dimen/textsize_20"
+      tools:text="A really long person name" />
+  </LinearLayout>
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_alignTop="@+id/forgotpin_createpin_card"
+    android:background="?colorPrimary" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/forgotpin_createpin_card"
+    style="@style/Clinic.LoginCard"
+    android:layout_below="@+id/forgotpin_createpin_logo_container">
+
+    <LinearLayout
+      android:id="@+id/forgotpin_createpin_pin_container"
+      style="@style/Clinic.CardContentContainer.Login">
+
+      <TextView
+        style="@style/Clinic.LoginPinLabel"
+        android:labelFor="@+id/forgotpin_createpin_pin"
+        android:text="@string/forgotpin_create_new_pin" />
+
+      <org.simple.clinic.widgets.StaggeredEditText
+        android:id="@+id/forgotpin_createpin_pin"
+        style="@style/Clinic.StaggeredEditText.Pin"
+        android:imeOptions="actionDone"
+        android:maxLength="4" />
+
+      <TextView
+        android:id="@+id/forgotpin_createpin_error"
+        style="@style/Clinic.V2.LoginPinErrorText"
+        android:text="@string/forgotpin_create_new_pin_invalid_pin"
+        tools:visibility="visible" />
+    </LinearLayout>
+  </androidx.cardview.widget.CardView>
+</org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen>

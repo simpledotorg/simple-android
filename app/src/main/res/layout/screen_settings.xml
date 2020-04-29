@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.settings.SettingsScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/settings_title" />
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:scrollbars="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="@dimen/spacing_16"
+      android:paddingEnd="@dimen/spacing_16">
+
+      <!-- User Name Section -->
+      <ImageView
+        android:id="@+id/accountIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/settings_user_name_icon_content"
+        app:layout_constraintBottom_toBottomOf="@id/userNameDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_settings_account_24dp" />
+
+      <TextView
+        android:id="@+id/userNameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/settings_section_top_margin"
+        android:lines="1"
+        android:text="@string/settings_name"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        app:layout_constraintStart_toEndOf="@id/accountIcon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+      <TextView
+        android:id="@+id/userName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_content_top_margin"
+        android:maxLines="2"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/userNameLabel"
+        app:layout_constraintTop_toBottomOf="@id/userNameLabel"
+        tools:text="Gangadhar Vidyadhar Mayadhar Omkarnath Shastri" />
+
+      <View
+        android:id="@+id/userNameDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/settings_divider_top_margin"
+        android:background="@color/settings_divider_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/userNameLabel"
+        app:layout_constraintTop_toBottomOf="@id/userName" />
+
+      <!-- User Phone Number Section -->
+      <ImageView
+        android:id="@+id/phoneIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/settings_user_phone_icon_content"
+        app:layout_constraintBottom_toBottomOf="@id/userPhoneDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userNameDivider"
+        app:srcCompat="@drawable/ic_settings_phone_24dp" />
+
+      <TextView
+        android:id="@+id/userNumberLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/settings_section_top_margin"
+        android:lines="1"
+        android:text="@string/settings_number"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        app:layout_constraintStart_toEndOf="@id/accountIcon"
+        app:layout_constraintTop_toBottomOf="@id/userNameDivider" />
+
+      <TextView
+        android:id="@+id/userNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_content_top_margin"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/userNumberLabel"
+        app:layout_constraintTop_toBottomOf="@id/userNumberLabel"
+        tools:text="1234567890" />
+
+      <View
+        android:id="@+id/userPhoneDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/settings_divider_top_margin"
+        android:background="@color/settings_divider_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/userNumberLabel"
+        app:layout_constraintTop_toBottomOf="@id/userNumber" />
+
+      <!-- Language section -->
+      <ImageView
+        android:id="@+id/languageIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/settings_current_language_icon_content"
+        app:layout_constraintBottom_toBottomOf="@id/currentLanguageDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userPhoneDivider"
+        app:srcCompat="@drawable/ic_language_24dp" />
+
+      <TextView
+        android:id="@+id/currentLanguageLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/settings_section_top_margin"
+        android:lines="1"
+        android:text="@string/settings_language"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        app:layout_constraintStart_toEndOf="@id/languageIcon"
+        app:layout_constraintTop_toBottomOf="@id/userPhoneDivider" />
+
+      <TextView
+        android:id="@+id/currentLanguage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_content_top_margin"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:hint="@string/settings_language_hint"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        app:layout_constraintEnd_toStartOf="@id/changeLanguageButton"
+        app:layout_constraintStart_toStartOf="@id/currentLanguageLabel"
+        app:layout_constraintTop_toBottomOf="@id/currentLanguageLabel"
+        tools:text="हिंदी" />
+
+      <View
+        android:id="@+id/currentLanguageDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/settings_divider_top_margin"
+        android:background="@color/settings_divider_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/currentLanguageLabel"
+        app:layout_constraintTop_toBottomOf="@id/currentLanguage" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/changeLanguageButton"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_change"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/currentLanguageDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/userPhoneDivider"
+        tools:visibility="visible" />
+
+      <!-- App version section -->
+      <ImageView
+        android:id="@+id/appVersionIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/settings_app_version_icon_content"
+        app:layout_constraintBottom_toBottomOf="@id/appVersionDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentLanguageDivider"
+        app:srcCompat="@drawable/ic_app_update_24dp" />
+
+      <TextView
+        android:id="@+id/appVersionLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/settings_section_top_margin"
+        android:lines="1"
+        android:text="@string/settings_software"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        app:layout_constraintStart_toEndOf="@id/appVersionIcon"
+        app:layout_constraintTop_toBottomOf="@id/currentLanguageDivider" />
+
+      <TextView
+        android:id="@+id/appVersion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_content_top_margin"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+        app:layout_constraintEnd_toStartOf="@id/updateAppVersionButton"
+        app:layout_constraintStart_toStartOf="@id/appVersionLabel"
+        app:layout_constraintTop_toBottomOf="@id/appVersionLabel"
+        tools:text="Version 1.0.0" />
+
+      <View
+        android:id="@+id/appVersionDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/settings_divider_top_margin"
+        android:background="@color/settings_divider_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/appVersionLabel"
+        app:layout_constraintTop_toBottomOf="@id/appVersion" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/updateAppVersionButton"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_update"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/appVersionDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/currentLanguageDivider"
+        tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </ScrollView>
+
+</org.simple.clinic.settings.SettingsScreen>

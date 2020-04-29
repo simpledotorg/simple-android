@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.scanid.ScanSimpleIdScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolBar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:tag="Tool bar Scan Simple ID"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/scansimpleid_title" />
+
+  <FrameLayout
+    android:id="@+id/qrCodeScannerViewContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+  <androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:background="@color/white100"
+    android:visibility="visible"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerView"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:visibility="visible">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_16"
+      android:orientation="vertical">
+
+      <TextView
+        style="@style/Clinic.V2.TextAppearance.H6.Grey0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:gravity="center"
+        android:text="@string/scansimpleid_type_bp_passport_number" />
+
+      <EditText
+        android:id="@+id/shortCodeText"
+        android:layout_width="@dimen/spacing_128"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ems="10"
+        android:hint="@string/scansimpleid_hint_short_code"
+        android:imeOptions="actionSearch"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="@dimen/textsize_20" />
+
+      <TextView
+        android:id="@+id/shortCodeErrorText"
+        style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:layout_marginBottom="@dimen/spacing_4"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        tools:text="@string/scansimpleid_shortcode_error_not_required_length"
+        tools:visibility="visible" />
+    </LinearLayout>
+  </androidx.cardview.widget.CardView>
+</org.simple.clinic.scanid.ScanSimpleIdScreen>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.onboarding.OnboardingScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:ignore="UnusedResources">
+
+  <FrameLayout
+    android:id="@+id/onboarding_logo_container"
+    style="@style/Clinic.LoginLogoContainer">
+
+    <ImageView
+      android:id="@+id/appLogoImageView"
+      style="@style/Clinic.V2.LogoWithType.Large"
+      android:layout_gravity="center_horizontal"
+      tools:ignore="ContentDescription" />
+  </FrameLayout>
+
+  <View
+    style="@style/Clinic.LoginLogoContainerOverflow"
+    android:layout_height="52dp"
+    android:layout_below="@+id/onboarding_logo_container" />
+
+  <androidx.core.widget.NestedScrollView
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:fillViewport="true">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingBottom="@dimen/spacing_96"
+      android:paddingEnd="@dimen/spacing_24"
+      android:paddingLeft="@dimen/spacing_24"
+      android:paddingRight="@dimen/spacing_24"
+      android:paddingStart="@dimen/spacing_24"
+      android:paddingTop="@dimen/spacing_128">
+
+      <!-- We are using "background" instead of "src" for the onboarding images because we want to get the shadow (on api 21+). We can do this because we set
+      width and height of the ImageView to match the aspect ratio of the images exactly. Otherwise, we have to workaround it by wrapping it in a CardView and
+      that seems unnecessary for now because the images are static and have a fixed aspect ratio
+      -->
+
+      <ImageView
+        style="@style/Clinic.OnboardingImage"
+        android:background="@drawable/ic_onboarding_01_take_bp"
+        tools:ignore="ContentDescription" />
+
+      <ImageView
+        style="@style/Clinic.OnboardingImage"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:background="@drawable/ic_onboarding_02_patient_summary"
+        tools:ignore="ContentDescription" />
+
+      <ImageView
+        style="@style/Clinic.OnboardingImage"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:background="@drawable/ic_onboarding_03_call_list"
+        tools:ignore="ContentDescription" />
+    </LinearLayout>
+  </androidx.core.widget.NestedScrollView>
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/getStartedButton"
+    style="@style/Clinic.Button.Flat"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:elevation="@dimen/spacing_24"
+    android:text="@string/onboarding_get_started"
+    tools:ignore="UnusedAttribute" />
+</org.simple.clinic.onboarding.OnboardingScreen>

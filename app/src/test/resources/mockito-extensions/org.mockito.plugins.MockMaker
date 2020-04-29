@@ -1,0 +1,4 @@
+# Enables mocking of final classes, because classes are final in Kotlin by default.
+# http://hadihariri.com/2016/10/04/Mocking-Kotlin-With-Mockito/
+
+mock-maker-inline

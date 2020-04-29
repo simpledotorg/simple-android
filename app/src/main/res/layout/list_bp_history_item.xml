@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="?attr/selectableItemBackground"
+  android:clickable="true"
+  android:focusable="true">
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/topGuideline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_begin="@dimen/spacing_8" />
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/bottomGuideline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintGuide_end="@dimen/spacing_8" />
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/startGuideline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_begin="@dimen/spacing_12" />
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/endGuideline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_end="@dimen/spacing_12" />
+
+  <ImageView
+    android:id="@+id/heartImageView"
+    android:layout_width="@dimen/spacing_16"
+    android:layout_height="@dimen/spacing_16"
+    android:layout_gravity="center_vertical"
+    app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+    app:layout_constraintEnd_toStartOf="@id/readingsTextView"
+    app:layout_constraintHorizontal_bias="0"
+    app:layout_constraintHorizontal_chainStyle="packed"
+    app:layout_constraintStart_toEndOf="@id/startGuideline"
+    app:layout_constraintTop_toBottomOf="@id/topGuideline"
+    tools:ignore="ContentDescription"
+    tools:src="@drawable/bp_reading_normal" />
+
+  <org.simple.clinic.widgets.TintableCompoundDrawableTextView
+    android:id="@+id/readingsTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginStart="@dimen/spacing_12"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
+    app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+    app:layout_constraintEnd_toStartOf="@id/editButton"
+    app:layout_constraintStart_toEndOf="@id/heartImageView"
+    app:layout_constraintTop_toBottomOf="@id/topGuideline"
+    tools:text="120 / 80" />
+
+  <TextView
+    android:id="@+id/bpHighTextView"
+    style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:text="@string/bloodpressure_level_high"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@id/editButton"
+    app:layout_constraintStart_toEndOf="@id/readingsTextView"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/editButton"
+    style="@style/Clinic.V2.TextAppearance.Button2.Blue1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:text="@string/patientsummary_edit"
+    app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+    app:layout_constraintEnd_toStartOf="@id/timeDateTextView"
+    app:layout_constraintStart_toEndOf="@id/bpHighTextView"
+    app:layout_constraintTop_toBottomOf="@id/topGuideline" />
+
+  <TextView
+    android:id="@+id/timeDateTextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:textAlignment="viewEnd"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center.Grey1"
+    app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+    app:layout_constraintEnd_toStartOf="@id/endGuideline"
+    app:layout_constraintStart_toEndOf="@id/editButton"
+    app:layout_constraintTop_toBottomOf="@id/topGuideline"
+    tools:text="10-Aug-2019" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

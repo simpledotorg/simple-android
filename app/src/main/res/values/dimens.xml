@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="elevation_toolbar">6dp</dimen>
+  <dimen name="elevation_cardview">4dp</dimen>
+  <dimen name="corner_radius_button">2dp</dimen>
+
+  <dimen name="spacing_0">0dp</dimen>
+  <dimen name="spacing_4">4dp</dimen>
+  <dimen name="spacing_8">8dp</dimen>
+  <dimen name="spacing_10">10dp</dimen>
+  <dimen name="spacing_12">12dp</dimen>
+  <dimen name="spacing_16">16dp</dimen>
+  <dimen name="spacing_24">24dp</dimen>
+  <dimen name="spacing_32">32dp</dimen>
+  <dimen name="spacing_40">40dp</dimen>
+  <dimen name="spacing_44">44dp</dimen>
+  <dimen name="spacing_48">48dp</dimen>
+  <dimen name="spacing_56">56dp</dimen>
+  <dimen name="spacing_64">64dp</dimen>
+  <dimen name="spacing_96">96dp</dimen>
+  <dimen name="spacing_128">128dp</dimen>
+
+  <dimen name="textsize_12">12sp</dimen>
+  <dimen name="textsize_14">14sp</dimen>
+  <dimen name="textsize_16">16sp</dimen>
+  <dimen name="textsize_18">18sp</dimen>
+  <dimen name="textsize_20">20sp</dimen>
+  <dimen name="textsize_24">24sp</dimen>
+  <dimen name="textsize_34">34sp</dimen>
+
+
+  <dimen name="medicalhistory_selected_padding">10dp</dimen>
+  <dimen name="medicalhistory_unselected_padding">20dp</dimen>
+  <dimen name="medicalhistory_answer_vertical_padding">20dp</dimen>
+
+  <dimen name="pinentry_content_bottom_spacing_with_forgot_pin">@dimen/spacing_12</dimen>
+  <dimen name="pinentry_content_bottom_spacing_without_forgot_pin">@dimen/spacing_24</dimen>
+
+  <dimen name="patientsummary_elevation_linkidwithpatient">@dimen/elevation_toolbar</dimen>
+
+  <dimen name="registrationfacilities_header_top_spacing_with_previous_section">0dp</dimen>
+
+  <dimen name="allpatientsinfacility_fastscrollpopup_size">48dp</dimen>
+
+  <dimen name="settings_section_top_margin">19dp</dimen>
+  <dimen name="settings_content_top_margin">3dp</dimen>
+  <dimen name="settings_divider_top_margin">18dp</dimen>
+
+  <dimen name="patientsummary_bp_summary_item_container_bottom_padding_24">24dp</dimen>
+  <dimen name="patientsummary_bp_summary_item_container_bottom_padding_8">8dp</dimen>
+
+  <dimen name="patientsummary_blood_sugar_summary_item_container_bottom_padding_8">8dp</dimen>
+  <dimen name="patientsummary_blood_sugar_summary_item_container_bottom_padding_24">24dp</dimen>
+
+  <dimen name="patientsummary_drug_summary_item_container_bottom_padding_8">8dp</dimen>
+  <dimen name="patientsummary_drug_summary_item_container_bottom_padding_24">24dp</dimen>
+</resources>

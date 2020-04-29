@@ -1,0 +1,626 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">Simple</string>
+
+  <!-- Common -->
+  <string name="gender_female">Female</string>
+  <string name="gender_male">Male</string>
+  <string name="gender_transgender">Transgender</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_male_letter">M</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_female_letter">F</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_trans_letter">T</string>
+  <string name="gender_unknown_letter" translatable="false">U</string>
+  <string name="api_unexpected_error">Something went wrong. Please try again.</string>
+  <string name="api_network_error">No internet connection</string>
+  <string name="api_server_error">Server error! Please try again later.</string>
+
+  <!-- Country names -->
+  <string name="country_india">India</string>
+  <string name="country_bangladesh">Bangladesh</string>
+  <string name="country_ethiopia">Ethiopia</string>
+
+  <!-- Home -->
+  <string name="home_help">Help</string>
+  <string name="home_settings">Settings</string>
+
+  <!--Business id Identifier -->
+  <string name="identifiertype_bp_passport">BP Passport</string>
+  <string name="identifiertype_bangladesh_national_id">National ID number</string>
+  <string name="identifiertype_unknown">ID</string>
+
+  <!-- Patient search -->
+  <string name="patientsearch_search">Next</string>
+  <string name="patientsearch_error_empty_fullname">Enter patient’s full name or phone number</string>
+  <string name="patientsearch_hint">Name or phone number</string>
+
+  <!-- Patient search results -->
+  <string name="patientsearchresults_empty_state">No patients match</string>
+  <string name="patientsearchresults_register_patient_rationale">Can’t find the patient in this list?</string>
+  <string name="patientsearchresults_register_patient_rationale_for_empty_state">Patient is not registered</string>
+  <string name="patientsearchresults_register_patient">Register as a new patient</string>
+  <string name="patientsearchresults_register_patient_for_empty_state">Register patient</string>
+  <string name="patientsearchresults_item_last_seen">Last Seen:</string>
+  <string name="patientsearchresults_item_last_seen_date_with_facility" translatable="false">%1$s, %2$s</string>
+  <string name="patientsearchresults_current_facility_header">Has visited %s</string>
+  <string name="patientsearchresults_other_results_header">Other Results</string>
+  <string name="patientsearchresults_no_patients_match">No patients match</string>
+
+  <!-- Manual patient entry -->
+  <string name="patiententry_contentdescription_up_button">Go back to search</string>
+  <string name="patiententry_full_name">Patient\'s name</string>
+  <string name="patiententry_phone_number">Phone number</string>
+  <string name="patiententry_bangladesh_national_id">National ID number</string>
+  <string name="patiententry_ethiopia_national_id">National ID</string>
+  <string name="patiententry_date_of_birth_unfocused">Date of birth</string>
+  <string name="patiententry_date_of_birth_focused">D.O.B: DD/MM/YYYY</string>
+  <string name="patiententry_dateofbirth_and_age_separator">Or</string>
+  <string name="patiententry_age">Age</string>
+  <string name="patiententry_gender_female" translatable="false">@string/gender_female</string>
+  <string name="patiententry_gender_male" translatable="false">@string/gender_male</string>
+  <string name="patiententry_gender_transgender" translatable="false">@string/gender_transgender</string>
+  <string name="patiententry_street_address">House address</string>
+  <string name="patiententry_street_house_road_number">House and road number</string>
+  <string name="patiententry_village_colony_ward">Village / colony / ward</string>
+  <string name="patiententry_village_ward">Village / ward</string>
+  <string name="patiententry_kebele">Village</string>
+  <string name="patiententry_zone">Union</string>
+  <string name="patiententry_district">District</string>
+  <string name="patiententry_woreda">Woreda</string>
+  <string name="patiententry_upazila">Upazila</string>
+  <string name="patiententry_state">State</string>
+  <string name="patiententry_region">Region</string>
+  <string name="patiententry_save_patient">Next</string>
+  <string name="patiententry_error_empty_fullname">Enter patient’s full name</string>
+  <string name="patiententry_error_empty_gender">Choose patient’s gender</string>
+  <string name="patiententry_error_empty_colony_or_village">Enter colony / village / ward</string>
+  <string name="patiententry_error_empty_district">Enter patient’s home district</string>
+  <string name="patiententry_error_state_empty">Enter patient’s home state</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s age</string>
+  <string name="patiententry_error_invalid_dateofbirth">Enter patient’s date of birth in DD/MM/YYYY</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
+  <string name="patiententry_error_phonenumber_length_less">Phone number cannot be less than 6 digits</string>
+  <string name="patiententry_error_phonenumber_length_more">Phone number cannot be more than 12 digits</string>
+  <string name="patiententry_identifier">BP Passport</string>
+  <string name="patiententry_consent_header">Consent:\u0020</string>
+  <string name="patiententry_consent_first_para">By tapping below, you confirm that any patient data you enter here has been obtained under appropriate informed consent. This means that the patient or legal guardian knows that you are entering their personal data into the app, understands what data is being collected, and knows that they may be contacted via SMS, WhatsApp, or other methods using the phone number provided in the app.</string>
+  <string name="patiententry_consent_second_para">Anyone authorized by you, or the healthcare provider for whom you work, will have access to the patient data and information you enter here. By using the app you confirm that the patient or legal guardian understands who will have access to the data obtained through this app and consents to that access.</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS Reminders</string>
+  <string name="patiententry_consent_sms_reminders">SMS Reminders</string>
+  <string name="patiententry_age_exceeds_max_limit_error">Age cannot be more than 120 years</string>
+  <string name="patiententry_age_exceeds_min_limit_error">Age cannot be equal to 0 years</string>
+
+  <!-- Edit patient -->
+  <string name="patientedit_full_name" translatable="false">@string/patiententry_full_name</string>
+  <string name="patientedit_phone_number" translatable="false">@string/patiententry_phone_number</string>
+  <string name="patientedit_gender_female" translatable="false">@string/gender_female</string>
+  <string name="patientedit_gender_male" translatable="false">@string/gender_male</string>
+  <string name="patientedit_gender_transgender" translatable="false">@string/gender_transgender</string>
+  <string name="patientedit_error_empty_gender" translatable="false">@string/patiententry_error_empty_gender</string>
+  <string name="patientedit_colony_or_village" translatable="false">@string/patiententry_village_colony_ward</string>
+  <string name="patientedit_district" translatable="false">@string/patiententry_district</string>
+  <string name="patientedit_state" translatable="false">@string/patiententry_state</string>
+  <string name="patientedit_save_patient">Save</string>
+  <string name="patientedit_error_empty_fullname" translatable="false">@string/patiententry_error_empty_fullname</string>
+  <string name="patientedit_error_empty_colony_or_village" translatable="false">@string/patiententry_error_empty_colony_or_village</string>
+  <string name="patientedit_error_empty_district" translatable="false">@string/patiententry_error_empty_district</string>
+  <string name="patientedit_error_state_empty" translatable="false">@string/patiententry_error_state_empty</string>
+  <string name="patientedit_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
+  <string name="patientedit_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
+  <string name="patientedit_date_of_birth_unfocused" translatable="false">@string/patiententry_date_of_birth_unfocused</string>
+  <string name="patientedit_date_of_birth_focused" translatable="false">@string/patiententry_date_of_birth_focused</string>
+  <string name="patientedit_dateofbirth_and_age_separator" translatable="false">@string/patiententry_dateofbirth_and_age_separator</string>
+  <string name="patientedit_bp_passports_label">BP Passports</string>
+  <string name="patientedit_age" translatable="false">@string/patiententry_age</string>
+  <string name="patientedit_error_both_dateofbirth_and_age_empty" translatable="false">@string/patiententry_error_both_dateofbirth_and_age_empty</string>
+  <string name="patientedit_error_invalid_dateofbirth" translatable="false">@string/patiententry_error_invalid_dateofbirth</string>
+  <string name="patientedit_error_dateofbirth_is_in_future" translatable="false">@string/patiententry_error_dateofbirth_is_in_future</string>
+  <string name="patientedit_confirm_discard_title">Discard changes?</string>
+  <string name="patientedit_confirm_discard_ok">Discard</string>
+  <string name="patientedit_confirm_discard_cancel">Cancel</string>
+  <string name="patientedit_bangladesh_national_id" translatable="false">@string/patiententry_bangladesh_national_id</string>
+  <string name="patientedit_street_address" translatable="false">@string/patiententry_street_address</string>
+  <string name="patientedit_zone" translatable="false">@string/patiententry_zone</string>
+
+  <!-- Home: Tabs -->
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="tab_patient">Patients</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_overdue">Overdue</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_progress">Progress</string>
+
+  <string name="home_search_patient_name_phone">Enter patient\'s name</string>
+  <string name="patients_user_awaiting_approval_title">Waiting for approval</string>
+  <string name="patients_user_awaiting_approval_message">Once approved, you will have access to patient records from your clinic.</string>
+  <string name="patients_user_approved_title">You’ve been approved!</string>
+  <string name="patients_awaiting_sms_verification_title">Waiting for SMS verification</string>
+  <string name="patients_user_approved_message">You can now see all patient data for your clinic</string>
+  <string name="patients_awaiting_sms_verification_message">Once verified, you will have access to patient records from your clinic.</string>
+  <string name="patients_dismiss_user_approved_status">Got it</string>
+  <string name="patients_enter_code">Enter Code</string>
+  <string name="patients_you_are_now_logged_in">Verification successful! Patient records now visible.</string>
+  <string name="patients_loggedoutalert_title">You can only be logged in on one device at a time</string>
+  <string name="patients_loggedoutalert_message">You have been logged out of your previous device.</string>
+  <string name="patients_loggedoutalert_dismiss">Got it</string>
+  <string name="patients_scan_simple_card">Scan BP Passport</string>
+  <string name="patients_recentpatients_title">Recent</string>
+  <string name="patients_recentpatients_no_recent_patients">No recent patients</string>
+  <string name="patients_recentpatients_see_all">See All</string>
+  <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+
+  <!-- Blood pressure entry -->
+  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Blood pressure</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">Edit blood pressure</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">Date of visit</string>
+  <string name="bloodpressureentry_remove">Remove</string>
+  <string name="bloodpressureentry_systolic">Systolic</string>
+  <string name="bloodpressureentry_diastolic">Diastolic</string>
+  <string name="bloodpressureentry_day">Day</string>
+  <string name="bloodpressureentry_month">Month</string>
+  <string name="bloodpressureentry_year">Year</string>
+  <string name="bloodpressureentry_error_systolic_more">Systolic should be more than diastolic</string>
+  <string name="bloodpressureentry_error_systolic_70">Systolic cannot be less than 70</string>
+  <string name="bloodpressureentry_error_systolic_300">Systolic cannot be more than 300</string>
+  <string name="bloodpressureentry_error_diastolic_40">Diastolic cannot be less than 40</string>
+  <string name="bloodpressureentry_error_diastolic_180">Diastolic cannot be more than 180</string>
+  <string name="bloodpressureentry_error_systolic_empty">Enter systolic and diastolic pressures</string>
+  <string name="bloodpressureentry_error_diastolic_empty">Enter systolic and diastolic pressures</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">Enter a valid date in DD/MM/YYYY</string>
+  <string name="bloodpressureentry_error_date_is_in_future">Date cannot be in the future</string>
+  <string name="bloodpressureentry_remove_bp_title">Remove BP</string>
+  <string name="bloodpressureentry_remove_bp_message">Are you sure you want to remove this blood pressure recording?</string>
+  <string name="bloodpressureentry_remove_bp_confirm">Remove</string>
+  <string name="bloodpressureentry_remove_bp_cancel">Cancel</string>
+
+  <!-- Patient summary -->
+  <string name="patientsummary_contentdescription_up_button">Go back</string>
+  <string name="patientsummary_prescriptions_add">Medicines</string>
+  <string name="patientsummary_prescriptions_update">Edit medicines</string>
+  <string name="patientsummary_bp_add_new">Blood Pressure</string>
+  <string name="patientsummary_finish_saving_patient">Save</string>
+  <string name="patientsummary_bp_none_added">No blood pressures added</string>
+  <string name="patientsummary_edit">Edit</string>
+
+  <string name="patientsummary_updatephone_dialog_title">Update phone number</string>
+  <string name="patientsummary_updatephone_dialog_message">Patient’s phone number was previously marked as incorrect</string>
+  <string name="patientsummary_updatephone_phone_hint">Phone number</string>
+  <string name="patientsummary_updatephone_save">Save</string>
+  <string name="patientsummary_updatephone_cancel">Skip</string>
+  <string name="patientsummary_updatephone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
+  <string name="patientsummary_updatephone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
+
+  <string name="patientsummary_addphone_dialog_title">Update phone number</string>
+  <string name="patientsummary_addphone_dialog_message">Patient’s phone number was not entered during registration</string>
+  <string name="patientsummary_addphone_phone_hint">Phone number</string>
+  <string name="patientsummary_addphone_save">Save</string>
+  <string name="patientsummary_addphone_cancel">Skip</string>
+  <string name="patientsummary_addphone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
+  <string name="patientsummary_addphone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
+  <string name="patientsummary_newbp_date_time" translatable="false">%1$s\n%2$s</string>
+  <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
+  <string name="patientsummary_bangladesh_national_id">ID</string>
+
+  <string name="bloodpressuresummaryview_see_all_button">See all</string>
+
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_low">Low</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_high">High</string>
+
+  <string name="timestamp_today">Today</string>
+  <string name="timestamp_yesterday">Yesterday</string>
+  <!--suppress PluralsCandidate -->
+  <string name="timestamp_days_ago">%s days ago</string>
+
+  <!-- Prescribed drugs -->
+  <string name="patient_prescribeddrugs_screen_title">BP Medicines</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">Add another medicine</string>
+
+  <string name="customprescription_enter_medicine">Enter medicine</string>
+  <string name="customprescription_edit_medicine">Edit medicine</string>
+  <string name="customprescription_save_drug">Save</string>
+  <string name="customprescription_drug_name_hint">Medicine name</string>
+  <string name="customprescription_dosage_placeholder" translatable="false">mg</string>
+  <string name="customprescription_drug_dosage_hint">Dosage</string>
+
+  <string name="customprescription_delete_title">Remove medicine</string>
+  <string name="customprescription_delete_message">Are you sure you want to remove this medicine?</string>
+  <string name="customprescription_delete_confirm">Remove</string>
+  <string name="customprescription_delete_cancel">Cancel</string>
+
+  <!-- Login -->
+  <string name="loginpin_go_back">Go back to phone number screen</string>
+
+  <!-- App lock -->
+  <string name="applock_logout">Not you?</string>
+  <string name="applock_reset_pin_alert_title">Reset Security PIN?</string>
+  <string name="applock_reset_pin_alert_message">Are you sure you want to reset your security PIN?</string>
+  <string name="applock_reset_pin_alert_confirm">Reset</string>
+  <string name="applock_reset_pin_alert_cancel">Cancel</string>
+
+  <!-- PIN entry -->
+  <string name="pinentry_forgotpin">Forgot PIN?</string>
+  <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN doesn’t match the original PIN</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">Incorrect PIN, %s attempts remaining</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">You have made %s incorrect attempts</string>
+  <string name="pinentry_pin_number_hint">Your security PIN</string>
+  <string name="pinentry_bruteforcelock_timer_label">Try again after</string>
+  <string name="pinentry_bruteforcelock_timer" translatable="false">%1$s:%2$s</string> <!-- minutes:seconds -->
+
+  <!-- Registration -->
+  <string name="registrationphone_phone_number_label">Your phone number</string>
+  <string name="registrationphone_error_invalid_number">Check phone number. It looks like it is too short.</string>
+  <string name="registrationphone_error_unexpected_error" translatable="false">@string/api_unexpected_error</string>
+  <string name="registrationphone_error_check_internet_connection" translatable="false">@string/api_network_error</string>
+  <string name="registration_loggedout_dialog_title">You have been logged out</string>
+  <string name="registration_loggedout_dialog_message">Please login again to continue</string>
+  <string name="registration_loggedout_dialog_confirm">Okay</string>
+  <string name="registrationphone_country_code" translatable="false">+%1$s</string>
+
+  <string name="registrationname_name_label">Tell us your full name</string>
+  <string name="registrationname_error_empty_name">Please enter your full name</string>
+
+  <string name="registrationpin_pin_label">Create your security PIN</string>
+  <string name="registrationpin_pin_hint">Remember your PIN, you’ll need it later</string>
+  <string name="registrationpin_error_incomplete_pin">PIN is too short. Please enter 4 numbers.</string>
+
+  <string name="registrationconfirmpin_confirm_pin_label">Enter security PIN again</string>
+  <string name="registrationconfirmpin_hint" translatable="false">@string/registrationpin_pin_hint</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">PIN doesn’t match the original PIN</string>
+  <string name="registrationconfirmpin_reset_pin">Reset PIN</string>
+
+  <string name="registrationlocation_screen_title">Location access</string>
+  <string name="registrationlocation_skip_permission">Skip</string>
+  <string name="registrationlocation_permission_rationale_description">Your location will help us find your clinic</string>
+  <string name="registrationlocation_permission_rationale_title">Find your clinic faster</string>
+  <string name="registrationlocation_allow_access">Allow location access</string>
+
+  <string name="registrationfacilities_screen_title">Select your clinic</string>
+  <string name="registrationfacilities_search_hint">Search for your clinic</string>
+  <string name="registrationfacilities_facility_address_without_street" translatable="false">%s, %s</string>   <!-- District, State -->
+  <string name="registrationfacilities_facility_address_with_street" translatable="false">%s, %s, %s</string>  <!-- Street, District, State -->
+  <string name="registrationfacilities_error_unexpected_title">Something went wrong</string>
+  <string name="registrationfacilities_error_unexpected_message">Please try again after some time or get in touch with your supervisor.</string>
+  <string name="registrationfacilities_error_internet_connection_title">No internet connection</string>
+  <string name="registrationfacilities_retry">Try again</string>
+  <string name="registrationfacilities_header_suggested_facilities">Suggested Clinics</string>
+  <string name="registrationfacilities_header_all_facilities">All Clinics</string>
+
+  <!-- Onboarding -->
+  <string name="onboarding_get_started">Get Started</string>
+
+  <!-- Overdue List -->
+  <string name="overdue_no_patients">No patients overdue</string>
+  <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
+  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_diagnosis_diabetes">Diabetes</string>
+  <string name="overdue_list_item_diagnosis_hypertension">Hypertension</string>
+  <string name="overdue_list_item_diagnosis_none">None</string>
+  <plurals name="overdue_list_item_appointment_overdue_days">
+    <item quantity="one">%s day overdue</item>
+    <item quantity="other">%s days overdue</item>
+  </plurals>
+  <string name="overduelist_diagnosis_label">Dx</string>
+  <string name="overduelist_visited">Visited</string>
+  <string name="overduelist_agreed_to_visit">Mark patient as ‘agreed to visit’</string>
+  <string name="overduelist_remind_call_later">Remind to call later…</string>
+  <string name="overduelist_remove_from_list">Remove from overdue list…</string>
+  <string name="overduelist_result_of_call">Result of call</string>
+  <string name="overduelist_high_risk">High risk</string>
+
+  <!-- Phone number masking -->
+  <string name="phonemasking_call_normal">Normal</string>
+  <string name="phonemasking_call_secure">Secure</string>
+  <string name="phonemasking_help_text">Secure calls hide your number and are toll free</string>
+
+  <!-- Appointment reminder -->
+  <string name="appointmentreminder_call_later_in">Call later in</string>
+  <string name="appointmentreminder_done">Done</string>
+  <plurals name="appointmentreminder_days">
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
+  </plurals>
+  <plurals name="appointmentreminder_weeks">
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
+  </plurals>
+
+  <!-- Remove Overdue Patients -->
+  <string name="removeappointment_select_a_reason">Select a Reason</string>
+  <string name="removeappointment_patient_already_visited">Patient has already visited</string>
+  <string name="removeappointment_patient_is_not_responding">Patient is not responding</string>
+  <string name="removeappointment_invalid_phone_number">Phone number does not work</string>
+  <string name="removeappointment_public_hospital_transfer">Transferred to another public health facility</string>
+  <string name="removeappointment_moved_to_private">Moved to private practitioner</string>
+  <string name="removeappointment_patient_died">Died</string>
+  <string name="removeappointment_other_reason">Other reason</string>
+
+  <!-- Facility change -->
+  <string name="changefacility_screen_title">Select your clinic</string>
+  <string name="facilitychange_search_hint">Search for your clinic</string>
+
+  <!-- Enter OTP -->
+  <string name="enterotp_check_sms_sent_to">Check SMS sent to</string>
+  <string name="enterotp_phonenumber" translatable="false">+%1$s %2$s</string>
+  <string name="enterotp_enter_verification_code">Enter verification code</string>
+  <string name="enterotp_incorrect_code">Incorrect code, please try again</string>
+  <string name="enterotp_resend_sms">Resend SMS</string>
+  <string name="enterotp_sms_sent">New verification SMS sent</string>
+
+  <!-- Schedule appointment -->
+  <string name="scheduleappointment_next_visit_in">Schedule next visit in</string>
+  <string name="scheduleappointment_not_now">Not now</string>
+  <string name="scheduleappointment_done">done</string>
+  <plurals name="scheduleappointment_appointment_in_days">
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_weeks">
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_months">
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s months</item>
+  </plurals>
+
+  <!-- Forgot PIN -->
+  <string name="forgotpin_create_new_pin">Create new security PIN</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">PIN is too short. Please enter 4 numbers.</string>
+  <string name="forgotpin_confirm_pin">Enter security PIN again</string>
+  <string name="forgotpin_confirm_pin_message">Enter your PIN again to confirm it</string>
+  <string name="forgotpin_error_pin_mismatch">PIN doesn’t match the original PIN</string>
+
+  <!-- Reports -->
+  <string name="reports_come_back_later">Come back later</string>
+  <string name="reports_you_will_be_able_to_see">You will be able to see hypertension reports for your clinic here.</string>
+
+  <!-- Medical History -->
+  <!--suppress UnusedResources used in enum -->
+  <string name="medicalhistory_question_heartattack">Heart attack</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_stroke">Stroke</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_kidney">Kidney disease</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diagnosed_with_hypertension">Hypertension</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diabetes">Diabetes</string>
+  <string name="newmedicalhistory_next">Next</string>
+  <string name="newmedicalhistory_yes">Yes</string>
+  <string name="newmedicalhistory_no">No</string>
+  <string name="newmedicalhistory_history">History</string>
+  <string name="newmedicalhistory_diagnosis">Diagnosis (Required)</string>
+  <string name="newmedicalhistory_diagnosis_required_error">Please select a diagnosis</string>
+
+  <!--Prescribed Drug with Dosages Sheet-->
+  <string name="prescribed_drugs_dosage_none">None</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">%s dosage</string>
+
+  <!--Scan Simple ID-->
+  <string name="scansimpleid_title">Scan card ID</string>
+  <string name="scansimpleid_hint_short_code" translatable="false">123 4567</string>
+  <string name="scansimpleid_shortcode_error_empty">Enter BP Passport number</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">BP Passport number length is less than 7 digits</string>
+  <string name="scansimpleid_type_bp_passport_number">or type BP Passport number</string>
+
+  <!--- Sync Indicator-->
+  <string name="syncindicator_status_pending">Sync pending</string>
+  <string name="syncindicator_status_failed">Sync failed</string>
+  <string name="syncindicator_status_syncing">Syncing…</string>
+  <string name="syncindicator_status_synced_just_now">Synced just now</string>
+  <string name="syncindicator_status_synced_min_ago">Synced %s min ago</string>
+  <string name="syncindicator_dialog_error_network">Make sure you have a working internet connection to sync patient records.</string>
+  <string name="syncindicator_dialog_button_text">okay</string>
+  <string name="syncindicator_dialog_error_server">Sync servers are down at the moment. Please try again later or get in touch with your supervisor.</string>
+
+  <!-- Help Screen -->
+  <string name="help_title">Help</string>
+  <string name="help_no_connection">No internet connection</string>
+  <string name="help_something_went_wrong">Something went wrong</string>
+  <string name="help_try_again">Try Again</string>
+
+  <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_add">Add</string>
+  <string name="linkidwithpatient_button_cancel">Cancel</string>
+  <string name="linkidwithpatient_add_id_text">Add %1$s\u0020</string>
+  <string name="linkidwithpatient_to_patient_text">\u0020to\u00A0patient?</string>
+
+  <!-- Add ID to Patient: Search -->
+  <string name="addidtopatientsearch_toolbar_title">Enter patient’s name</string>
+  <string name="addidtopatientsearch_search">Next</string>
+  <string name="addidtopatientsearch_error_empty_fullname">Enter patient’s full name or phone number</string>
+  <string name="addidtopatientsearch_hint">Name or phone number</string>
+
+  <!-- Recent Patients -->
+  <string name="recent_patients_toolbar_title">Recent</string>
+
+  <!-- Recent Patients Item View -->
+  <string name="recent_patients_itemview_last_seen">Last Seen:\u0020</string>
+  <string name="recent_patients_itemview_title">%1$s, %2$s</string>
+
+  <!-- Add ID to Patient: Search Results-->
+  <string name="addidtopatientsearchresults_add">Add %1$s\u0020</string>
+  <string name="addidtopatientsearchresults_to_patient">\u0020to\u2026</string>
+
+  <!-- App update : Dialog -->
+  <string name="appupdatedialog_title">Update app</string>
+  <string name="appupdatedialog_body">You will be taken to Play Store to update Simple</string>
+  <string name="appupdatedialog_positive_button_text">Update</string>
+  <string name="appupdatedialog_negative_button_text">Not Now</string>
+
+  <!-- All Patients In Facility View-->
+  <string name="allpatientsinfacility_nopatients_message">You will be able to see all the patients registered at your facility here.</string>
+  <string name="allpatientsinfacility_nopatients_title">No patients at %1$s</string>
+  <string name="allpatientsinfacility_foundpatients_header">All Patients: %1$s</string>
+
+  <!--Registration loader screen -->
+  <string name="registrationloader_error_unexpected_title">Something went wrong</string>
+  <string name="registrationloader_error_unexpected_message">Please try again after some time or get in touch with your supervisor.</string>
+  <string name="registrationloader_error_internet_connection_title">No internet connection</string>
+  <!--suppress UnusedResources -->
+  <string name="registrationloader_retry">Try again</string>
+
+  <!-- Short code search -->
+  <string name="shortcodesearchresult_enter_patient_name_button">Enter Patient\'s name</string>
+
+  <!-- Simple video -->
+  <string name="simple_video_watch_video">Watch Video</string>
+  <string name="simple_video_how_to_use_the_simple_app">How to use the Simple app</string>
+  <string name="simple_video_duration">%s minutes</string>
+
+  <!-- Settings -->
+  <string name="settings_title">Settings</string>
+  <string name="settings_user_name_icon_content">Settings user name icon</string>
+  <string name="settings_user_phone_icon_content">Settings user phone number icon</string>
+  <string name="settings_current_language_icon_content">Settings current language icon</string>
+  <string name="settings_app_version_icon_content">Settings app version icon</string>
+  <string name="settings_name">Name</string>
+  <string name="settings_number">Phone number</string>
+  <string name="settings_language">Language</string>
+  <string name="settings_change">Change</string>
+  <string name="settings_language_hint">Select a language</string>
+  <string name="settings_software">Software</string>
+  <string name="settings_update">Update</string>
+  <string name="settings_software_version">Version %1$s</string>
+
+  <!-- Change language screen -->
+  <string name="changelanguage_title">Select your language</string>
+  <string name="changelanguage_done">Done</string>
+
+  <!-- Placeholder -->
+  <string name="placeholder_loading_title">Please wait…</string>
+  <string name="placeholder_loading_message">Database maintenance in progress. This will only take a minute.</string>
+
+  <!-- Select Country Screen -->
+  <string name="selectcountry_logo_contentdescription">Simple Logo</string>
+  <string name="selectcountry_next">Next</string>
+  <string name="selectcountry_title">Select Your Country</string>
+  <string name="selectcountry_networkerror">No internet connection!</string>
+  <string name="selectcountry_servererror">Server error! Please try again later!</string>
+  <string name="selectcountry_genericerror">Something went wrong! Please try again later!</string>
+  <string name="selectcountry_retry">Try Again</string>
+  <string name="scheduleappointment_at">at</string>
+  <string name="scheduleappointment_change">Change</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">Select a measure</string>
+  <string name="bloodsugartype_picker_desc">Choose ‘RBS’ if you are not sure.</string>
+  <string name="bloodsugartype_rbs">Random blood sugar (RBS)</string>
+  <string name="bloodsugartype_fbs">Fasting blood sugar (FBS)</string>
+  <string name="bloodsugartype_ppbs">Post prandial blood sugar (PPBS)</string>
+  <string name="bloodsugartype_hba1c" translatable="false">HbA1c</string>
+
+  <!-- Blood sugar entry -->
+  <string name="bloodsugarentry_mg_dl" translatable="false">mg/dl</string>
+  <string name="bloodsugarentry_percentage" translatable="false">%</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">Date of visit</string>
+  <string name="bloodsugarentry_day">Day</string>
+  <string name="bloodsugarentry_month">Month</string>
+  <string name="bloodsugarentry_year">Year</string>
+  <string name="bloodsugarentry_error_lower_limit">Value cannot be less than 30 mg/dl</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">Value cannot be less than 3%</string>
+  <string name="bloodsugarentry_error_higher_limit">Value cannot be more than 1000 mg/dl</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">Value cannot be more than 25%</string>
+  <string name="bloodsugarentry_error_empty">Value cannot be empty</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">Enter a valid date in DD/MM/YYYY</string>
+  <string name="bloodsugarentry_error_date_is_in_future">Date cannot be in the future</string>
+  <string name="bloodsugarentry_random_title">Random blood sugar</string>
+  <string name="bloodsugarentry_post_prandial_title">Post prandial blood sugar</string>
+  <string name="bloodsugarentry_fasting_title">Fasting blood sugar</string>
+  <string name="bloodsugarentry_hba1c_title" translatable="false">HbA1c</string>
+  <string name="bloodsugarentry_remove">Remove</string>
+  <string name="bloodsugarentry_edit_random_title">Edit random blood sugar</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">Edit post prandial blood sugar</string>
+  <string name="bloodsugarentry_edit_fasting_title">Edit fasting blood sugar</string>
+  <string name="bloodsugarentry_edit_hba1c_title">Edit HbA1c</string>
+
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">Remove Blood Sugar</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">Are you sure you want to remove this blood sugar recording?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">Remove</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">Cancel</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_no_blood_sugars">No blood sugars added</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">Diabetes</string>
+  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_hba1c" translatable="false">HbA1c</string>
+  <string name="bloodpressurehistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
+
+  <!-- Blood Pressure History screen -->
+  <string name="bloodpressurehistory_add_bp_button">Blood Pressure</string>
+  <string name="bloodpressurehistory_bp_time_date" translatable="false">%1$s\n%2$s</string>
+  <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Blood Sugar History screen -->
+  <string name="bloodsugarhistory_add_blood_sugar_button">Diabetes</string>
+  <string name="bloodsugarhistory_blood_sugar_date_time" translatable="false">%1$s\n%2$s</string>
+  <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+  <string name="bloodsugarhistory_unit_type_mg_dl" translatable="false">mg/dl</string>
+  <string name="bloodsugarhistory_unit_type_percentage" translatable="false">%</string>
+
+  <!-- Summary CV History view -->
+  <string name="medicalhistorysummaryview_history">History</string>
+  <string name="medicalhistorysummaryview_diagnosis">Diagnosis (Required)</string>
+
+  <!-- Summary prescriptions view -->
+  <string name="drugsummaryview_no_medicines">No medicines added</string>
+
+  <!-- Access Denied screen -->
+  <string name="accessdeniedscreen_title_access_denied">Access denied</string>
+  <string name="accessdeniedscreen_description">Access to Simple is denied. Please contact your supervisor if you think this is an error.\n\nIf your access is restored, uninstall Simple and install from the Play store.</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">Change facility to</string>
+  <string name="confirmfacilitychange_negative_button">Cancel</string>
+  <string name="confirmfacilitychange_positive_button">Yes</string>
+  <string name="confirmfacilitychange_facility_name">%s?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">Are you at?</string>
+  <string name="registrationconfirmfacility_positive_button">Yes</string>
+  <string name="registrationconfirmfacility_negative_button">Cancel</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">Are you at</string>
+  <string name="alertfacilitychange_yes_button">Yes</string>
+  <string name="alertfacilitychange_change_button">Change</string>
+  <string name="alertfacilitychange_facility_name">%s?</string>
+
+  <!-- Prescribed Drug Summary -->
+  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">Mark patient as \"Agreed to visit\"</string>
+  <string name="contactpatient_remind_call_later">Remind to call later…</string>
+  <string name="contactpatient_remove_from_list">Remove from overdue list…</string>
+  <string name="contactpatient_result_of_call">Result of call</string>
+  <string name="contactpatient_call_normal">Normal</string>
+  <string name="contactpatient_call_secure">Secure</string>
+  <string name="contactpatient_help_text">Secure calls hide your number and are toll free</string>
+  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">Call later in</string>
+  <string name="contactpatient_done">Done</string>
+  <!--suppress UnusedResources -->
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
+  </plurals>
+  <!--suppress UnusedResources -->
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
+  </plurals>
+  <!--suppress UnusedResources -->
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s months</item>
+  </plurals>
+</resources>

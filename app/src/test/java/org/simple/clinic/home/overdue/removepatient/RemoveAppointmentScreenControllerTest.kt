@@ -1,0 +1,124 @@
+package org.simple.clinic.home.overdue.removepatient
+
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.atLeastOnce
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
+import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.AppointmentCancelReason.Dead
+import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
+import org.simple.clinic.overdue.AppointmentCancelReason.MovedToPrivatePractitioner
+import org.simple.clinic.overdue.AppointmentCancelReason.Other
+import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
+import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
+
+@RunWith(JUnitParamsRunner::class)
+class RemoveAppointmentScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
+
+  private val sheet = mock<RemoveAppointmentScreen>()
+  private val repository = mock<AppointmentRepository>()
+  private val patientRepository = mock<PatientRepository>()
+
+  private val appointmentUuid = UUID.randomUUID()
+  private val uiEvents = PublishSubject.create<UiEvent>()
+
+  val controller = RemoveAppointmentScreenController(repository, patientRepository)
+
+  @Before
+  fun setUp() {
+    uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
+  }
+
+  @Test
+  fun `when done is clicked, and no reason is selected, nothing should happen`() {
+    uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
+    uiEvents.onNext(RemoveReasonDoneClicked)
+    uiEvents.onNext(RemoveReasonDoneClicked)
+    uiEvents.onNext(RemoveReasonDoneClicked)
+
+    verify(sheet, never()).enableDoneButton()
+    verify(sheet, never()).closeScreen()
+  }
+
+  @Test
+  fun `when done is clicked, and reason is "Patient dead", then patient repository should be updated`() {
+    val patientUuid = UUID.randomUUID()
+
+    uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
+    uiEvents.onNext(CancelReasonClicked(PatientNotResponding))
+    uiEvents.onNext(CancelReasonClicked(Dead))
+    uiEvents.onNext(PatientDeadClicked(patientUuid))
+    uiEvents.onNext(RemoveReasonDoneClicked)
+
+    verify(repository, never()).markAsAlreadyVisited(any())
+
+    val inOrder = inOrder(sheet, repository, patientRepository)
+    inOrder.verify(sheet, atLeastOnce()).enableDoneButton()
+    inOrder.verify(patientRepository).updatePatientStatusToDead(patientUuid)
+    inOrder.verify(repository).cancelWithReason(appointmentUuid, Dead)
+    inOrder.verify(sheet).closeScreen()
+  }
+
+  @Test
+  @Parameters(method = "params for cancel reasons")
+  fun `when done is clicked, and a cancel reason is selected, then repository should update and sheet should close`(
+      finallyClickedCancelReason: AppointmentCancelReason
+  ) {
+    uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
+    uiEvents.onNext(RemoveReasonDoneClicked)
+    uiEvents.onNext(CancelReasonClicked(PatientNotResponding))
+    uiEvents.onNext(CancelReasonClicked(InvalidPhoneNumber))
+    uiEvents.onNext(CancelReasonClicked(Other))
+    uiEvents.onNext(CancelReasonClicked(finallyClickedCancelReason))
+    uiEvents.onNext(RemoveReasonDoneClicked)
+
+    verify(repository, never()).markAsAlreadyVisited(any())
+
+    val inOrder = inOrder(sheet, repository)
+    inOrder.verify(sheet, atLeastOnce()).enableDoneButton()
+    inOrder.verify(repository).cancelWithReason(appointmentUuid, finallyClickedCancelReason)
+    inOrder.verify(sheet).closeScreen()
+  }
+
+  @Suppress("Unused")
+  private fun `params for cancel reasons`(): List<AppointmentCancelReason> {
+    return listOf(
+        PatientNotResponding,
+        InvalidPhoneNumber,
+        TransferredToAnotherPublicHospital,
+        PatientNotResponding,
+        MovedToPrivatePractitioner,
+        Other)
+  }
+
+  @Test
+  fun `when done is clicked, and a "Patient has already visited" reason is selected, then appointment should be marked as visited`() {
+    uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
+    uiEvents.onNext(PatientAlreadyVisitedClicked)
+    uiEvents.onNext(RemoveReasonDoneClicked)
+
+    verify(repository, never()).cancelWithReason(any(), any())
+
+    val inOrder = inOrder(sheet, repository)
+    inOrder.verify(sheet, atLeastOnce()).enableDoneButton()
+    inOrder.verify(repository).markAsAlreadyVisited(appointmentUuid)
+    inOrder.verify(sheet).closeScreen()
+  }
+}

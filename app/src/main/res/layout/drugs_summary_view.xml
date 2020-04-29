@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/drugSummaryViewRoot"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+
+  <TextView
+    android:id="@+id/updateButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:drawableStart="@drawable/ic_add_circle_blue1_24dp"
+    android:drawablePadding="@dimen/spacing_8"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/spacing_8"
+    android:paddingTop="@dimen/spacing_10"
+    android:paddingEnd="@dimen/spacing_12"
+    android:paddingBottom="@dimen/spacing_10"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
+    tools:text="@string/patientsummary_prescriptions_update" />
+
+  <View
+    android:id="@+id/divider"
+    style="@style/Clinic.V2.ListSeparator"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/addNewBP" />
+
+  <LinearLayout
+    android:id="@+id/drugsSummaryContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_4"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    tools:ignore="UselessLeaf" />
+
+  <TextView
+    android:id="@+id/emptyMedicinesTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:gravity="center"
+    android:text="@string/drugsummaryview_no_medicines"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
+    android:visibility="gone"
+    tools:visibility="visible" />
+</LinearLayout>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.enterotp.EnterOtpScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/window_background_auth"
+  tools:ignore="Overdraw">
+
+  <LinearLayout
+    android:id="@+id/enterotp_logo_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?colorPrimary"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/spacing_4"
+    android:paddingBottom="@dimen/spacing_16">
+
+    <ImageButton
+      android:id="@+id/backButton"
+      style="@style/Clinic.LoginBackButton"
+      android:src="@drawable/ic_arrow_back_24dp"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      android:id="@+id/enterotp_check_sms_sent_to"
+      android:layout_width="wrap_content"
+      android:layout_height="0dp"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/spacing_4"
+      android:layout_weight="1"
+      android:ellipsize="end"
+      android:fontFamily="sans-serif"
+      android:maxLines="1"
+      android:text="@string/enterotp_check_sms_sent_to"
+      android:textColor="@color/white_opacity_70"
+      android:textSize="@dimen/textsize_14" />
+
+    <TextView
+      android:id="@+id/userPhoneNumberTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:textColor="@color/white"
+      android:textSize="@dimen/textsize_20"
+      tools:text="+91 1111111111" />
+  </LinearLayout>
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_alignTop="@+id/enterotp_card"
+    android:background="?colorPrimary" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/enterotp_card"
+    style="@style/Clinic.LoginCard"
+    android:layout_below="@+id/enterotp_logo_container"
+    android:animateLayoutChanges="true">
+
+    <ProgressBar
+      android:id="@+id/validateOtpProgressBar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:visibility="invisible" />
+
+    <LinearLayout
+      android:id="@+id/otpEntryContainer"
+      style="@style/Clinic.CardContentContainer.EnterOtp">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/applock_pin"
+        android:text="@string/enterotp_enter_verification_code"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+
+      <org.simple.clinic.widgets.StaggeredEditText
+        android:id="@+id/otpEntryEditText"
+        style="@style/Clinic.StaggeredEditText.Otp"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:maxLength="6"
+        app:pinCharacterMask="@null"
+        tools:text="123456" />
+
+      <TextView
+        android:id="@+id/errorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enterotp_incorrect_code"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Red1"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+      <TextView
+        android:id="@+id/smsSentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enterotp_sms_sent"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Green0"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/resendSmsButton"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:text="@string/enterotp_resend_sms" />
+    </LinearLayout>
+  </androidx.cardview.widget.CardView>
+
+</org.simple.clinic.enterotp.EnterOtpScreen>

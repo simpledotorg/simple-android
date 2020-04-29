@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1081998734768",
+    "firebase_url": "https://simple-demo-5c1b3.firebaseio.com",
+    "project_id": "simple-demo-5c1b3",
+    "storage_bucket": "simple-demo-5c1b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081998734768:android:897b0365032b903d",
+        "android_client_info": {
+          "package_name": "org.simple.clinic.staging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081998734768-3n9b43dkt1s8o5gt736qarsglas21rfs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvVz6lZdymDmWG5z3G1A6Ve3wbbiSP8KI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

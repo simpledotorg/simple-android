@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  tools:context="org.simple.clinic.recentpatientsview.RecentPatientsView"
+  tools:parentTag="org.simple.clinic.recentpatientsview.RecentPatientsView">
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recentpatients_recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/spacing_96" />
+
+  <TextView
+    android:id="@+id/recentpatients_no_recent_patients"
+    style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="104dp"
+    android:layout_marginEnd="@dimen/spacing_8"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:background="@drawable/results_row_empty_state_background"
+    android:padding="@dimen/spacing_16"
+    android:text="@string/patients_recentpatients_no_recent_patients" />
+</merge>

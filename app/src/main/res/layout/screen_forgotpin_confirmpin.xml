@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen android:id="@+id/applock_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/window_background_auth"
+  tools:ignore="Overdraw">
+
+  <RelativeLayout
+    android:id="@+id/forgotpin_confirmpin_logo_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?colorPrimary"
+    android:paddingBottom="@dimen/spacing_16"
+    android:paddingTop="@dimen/spacing_4">
+
+    <ImageButton
+      android:id="@+id/forgotpin_confirmpin_back"
+      style="@style/Clinic.LoginBackButton"
+      android:src="@drawable/ic_arrow_back_24dp"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      android:id="@+id/forgotpin_confirmpin_facility_name"
+      style="@style/Clinic.V2.FacilityNameTextView"
+      android:layout_centerHorizontal="true"
+      android:layout_marginEnd="@dimen/spacing_24"
+      android:layout_marginStart="@dimen/spacing_96"
+      android:layout_marginTop="@dimen/spacing_8"
+      tools:text="A really long facility name that does not fit" />
+
+    <TextView
+      android:id="@+id/forgotpin_confirmpin_user_fullname"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/forgotpin_confirmpin_back"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="@dimen/spacing_32"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:textColor="@color/white"
+      android:textSize="@dimen/textsize_20"
+      tools:text="A really long person name" />
+  </RelativeLayout>
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_alignTop="@+id/forgotpin_confrimpin_card"
+    android:background="?colorPrimary" />
+
+  <androidx.cardview.widget.CardView
+    android:id="@+id/forgotpin_confrimpin_card"
+    style="@style/Clinic.LoginCard"
+    android:layout_below="@+id/forgotpin_confirmpin_logo_container">
+
+    <ProgressBar
+      android:id="@+id/forgotpin_confirmpin_progress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:visibility="invisible" />
+
+    <LinearLayout
+      android:id="@+id/forgotpin_confirmpin_pin_container"
+      style="@style/Clinic.CardContentContainer.Login">
+
+      <TextView
+        style="@style/Clinic.LoginPinLabel"
+        android:labelFor="@+id/forgotpin_confirmpin_pin"
+        android:text="@string/forgotpin_confirm_pin" />
+
+      <org.simple.clinic.widgets.StaggeredEditText
+        android:id="@+id/forgotpin_confirmpin_pin"
+        style="@style/Clinic.StaggeredEditText.Pin"
+        android:imeOptions="actionDone"
+        android:maxLength="4" />
+
+      <TextView
+        android:id="@+id/forgotpin_confirmpin_error"
+        style="@style/Clinic.V2.LoginPinErrorText"
+        android:text="@string/forgotpin_error_pin_mismatch"
+        tools:visibility="visible" />
+
+      <TextView
+        android:id="@+id/forgotpin_confirmpin_confirm_message"
+        style="@style/Clinic.ConfirmPinMessageText"
+        android:text="@string/forgotpin_confirm_pin_message" />
+    </LinearLayout>
+  </androidx.cardview.widget.CardView>
+</org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen>

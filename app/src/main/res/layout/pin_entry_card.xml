@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  tools:parentTag="androidx.cardview.widget.CardView"
+  tools:showIn="@layout/screen_app_lock">
+
+  <ProgressBar
+    android:id="@+id/progressView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:visibility="invisible" />
+
+  <LinearLayout
+    android:id="@+id/contentContainer"
+    style="@style/Clinic.CardContentContainer.PinEntry">
+
+    <TextView
+      style="@style/Clinic.LoginPinLabel"
+      android:labelFor="@+id/pinEditText"
+      android:text="@string/pinentry_pin_number_hint" />
+
+    <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
+      android:id="@+id/pinAndLockViewFlipper"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:measureAllChildren="false"
+      app:debug_displayedChild="1">
+
+      <org.simple.clinic.widgets.StaggeredEditText
+        android:id="@+id/pinEditText"
+        style="@style/Clinic.StaggeredEditText.Pin"
+        android:layout_gravity="center_horizontal"
+        android:maxLength="4" />
+
+      <LinearLayout
+        android:id="@+id/pinentry_bruteforcelock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_pinentry_bruteforcelock_timer"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_16">
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/pinentry_bruteforcelock_timer_label"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Center.Grey1" />
+
+        <TextView
+          android:id="@+id/timeRemainingTillUnlockTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/spacing_8"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.H5.Numeric.Grey0"
+          tools:text="19:42" />
+      </LinearLayout>
+    </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
+
+    <TextView
+      android:id="@+id/errorTextView"
+      style="@style/Clinic.V2.LoginPinErrorText"
+      android:text="@string/api_network_error"
+      tools:visibility="visible" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/forgotPinButton"
+      style="?attr/borderlessButtonStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/pinentry_forgotpin" />
+  </LinearLayout>
+</merge>

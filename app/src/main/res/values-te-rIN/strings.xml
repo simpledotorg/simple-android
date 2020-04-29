@@ -1,0 +1,451 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">Simple</string>
+
+  <!-- Common -->
+  <string name="gender_female">మహిళ</string>
+  <string name="gender_male">పురుషుడు</string>
+  <string name="gender_transgender">ట్రాన్స్‌జండర్</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_male_letter">స్త్రీ</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_female_letter">పు</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_trans_letter">ట్రాన్స్</string>
+  <string name="api_unexpected_error">ఏదో తప్పు జరిగింది. మళ్లీ ప్రయత్నించండి.</string>
+  <string name="api_network_error">ఇంటర్నెట్ కనెక్షన్ లేదు</string>
+
+  <!-- Country names -->
+  <string name="country_india">భారతదేశం</string>
+  <string name="country_bangladesh">బంగ్లాదేశ్</string>
+  <string name="country_ethiopia">ఇథియోపియా</string>
+
+  <!-- Home -->
+  <string name="home_help">సహాయం</string>
+  <string name="home_settings">సెట్టింగ్‌లు</string>
+
+  <!--Business id Identifier -->
+  <string name="identifiertype_bp_passport">బిపి పాస్‌పోర్ట్</string>
+  <string name="identifiertype_bangladesh_national_id">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
+  <string name="identifiertype_unknown">ఐడి</string>
+
+  <!-- Patient search -->
+  <string name="patientsearch_search">తదుపరి</string>
+  <string name="patientsearch_error_empty_fullname">రోగి పూర్తి పేరును లేదా ఫోన్ నంబర్‌ను నమోదు చేయండి</string>
+  <string name="patientsearch_hint">పేరు లేదా ఫోన్ నంబర్</string>
+
+  <!-- Patient search results -->
+  <string name="patientsearchresults_empty_state">సరిపోలిన రోగులు లేరు</string>
+  <string name="patientsearchresults_register_patient_rationale">ఈ జాబితాలో రోగి కనుగొనబడలేదా?</string>
+  <string name="patientsearchresults_register_patient_rationale_for_empty_state">రోగి నమోదు చేసుకోలేదు</string>
+  <string name="patientsearchresults_register_patient">కొత్త రోగి లాగా నమోదు చేసుకోండి</string>
+  <string name="patientsearchresults_register_patient_for_empty_state">రోగిని నమోదు చేయండి</string>
+  <string name="patientsearchresults_current_facility_header">%s సందర్శించారు</string>
+  <string name="patientsearchresults_other_results_header">ఇతర ఫలితాలు</string>
+  <string name="patientsearchresults_no_patients_match">సరిపోలిన రోగులు లేరు</string>
+
+  <!-- Manual patient entry -->
+  <string name="patiententry_contentdescription_up_button">తిరిగి శోధనలోకి వెళ్లండి</string>
+  <string name="patiententry_full_name">రోగి పేరు</string>
+  <string name="patiententry_phone_number">ఫోన్ నంబర్</string>
+  <string name="patiententry_bangladesh_national_id">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
+  <string name="patiententry_date_of_birth_unfocused">పుట్టినతేదీ</string>
+  <string name="patiententry_date_of_birth_focused">పుట్టినతేదీ: DD/MM/YYYY</string>
+  <string name="patiententry_dateofbirth_and_age_separator">లేదా</string>
+  <string name="patiententry_age">వయస్సు</string>
+  <string name="patiententry_street_address">ఇంటి చిరునామా</string>
+  <string name="patiententry_street_house_road_number">ఇల్లు మరియు రోడ్డు నంబర్</string>
+  <string name="patiententry_village_colony_ward">గ్రామం / పేట / వాడ</string>
+  <string name="patiententry_village_ward">గ్రామం / వాడ</string>
+  <string name="patiententry_zone">యూనియన్</string>
+  <string name="patiententry_district">జిల్లా</string>
+  <string name="patiententry_upazila">ఉపజిలా</string>
+  <string name="patiententry_state">రాష్ట్రం</string>
+  <string name="patiententry_save_patient">తదుపరి</string>
+  <string name="patiententry_error_empty_fullname">రోగి పూర్తి పేరును నమోదు చేయండి</string>
+  <string name="patiententry_error_empty_gender">రోగి లింగాన్ని ఎంచుకోండి</string>
+  <string name="patiententry_error_empty_colony_or_village">కాలనీ / గ్రామం / వార్డ్ నమోదు చేయండి</string>
+  <string name="patiententry_error_empty_district">రోగి స్వంత జిల్లాను నమోదు చేయండి</string>
+  <string name="patiententry_error_state_empty">రోగి స్వంత రాష్ట్రాన్ని నమోదు చేయండి</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">రోగి వయస్సును నమోదు చేయండి</string>
+  <string name="patiententry_error_invalid_dateofbirth">DD/MM/YYYY ప్రకారం రోగి పుట్టినతేదీని నమోదు చేయండి</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">రోగి పుట్టినతేదీని ఫిక్స్ చేయండి</string>
+  <string name="patiententry_error_phonenumber_length_less">ఫోన్ నంబర్ 6 అంకెల కంటే తక్కువగా ఉండకూడదు</string>
+  <string name="patiententry_error_phonenumber_length_more">ఫోన్ నంబర్ 12 అంకెల కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="patiententry_identifier">బిపి పాస్‌పోర్ట్</string>
+  <string name="patiententry_consent_header">సమ్మతి:\u0020</string>
+  <string name="patiententry_consent_first_para">దిగువ నొక్కడం ద్వారా, మీరు సముచిత సూచిత సమ్మతితో తీసుకున్న రోగి డేటాను మాత్రమే నమోదు చేస్తున్నట్లు మీరు నిర్ధారిస్తున్నారు. అంటే, రోగికి లేదా చట్టపరమైన సంరక్షకునికి మీరు వారి వ్యక్తిగత డేటాను యాప్‌లో నమోదు చేస్తున్నట్లు తెలియజేయాలి, ఏ డేటా సేకరించబడుతోంది తెలియజేయాలి, యాప్‌లోని ఫోన్ నంబర్‌ను ఉపయోగించి SMS, WhatsApp లేదా మరో పద్ధతిలో వారిని సంప్రదించవచ్చు అని వారికి చెప్పాలి.</string>
+  <string name="patiententry_consent_second_para">మీరు అనుమతించిన వ్యక్తులు లేదా మీకు పని ఇచ్చిన ఆరోగ్య సంరక్షణ ప్రదాత, మీరు ఇక్కడ నమోదు చేసిన రోగి డేటాను, సమాచారాన్ని యాక్సెస్ చేయగలరు. యాప్‌ను ఉపయోగించడం ద్వారా, ఈ యాప్ నుండి సేకరించే డేటాను ఎవరు యాక్సెస్ చేయగలరో రోగికి లేదా చట్టపరమైన సంరక్షకునికి తెలియజేసినట్లు, అందుకు వారు సమ్మతించినట్లు మీరు నిర్ధారిస్తున్నారు.</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS రిమైండర్‌లు</string>
+  <string name="patiententry_age_exceeds_max_limit_error">వయస్సు 120 సంవత్సరాల కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="patiententry_age_exceeds_min_limit_error">వయస్సు 0 సంవత్సరాలకు సమానంగా ఉండకూడదు</string>
+
+  <string name="patientedit_save_patient">సేవ్ చేయి</string>
+  <string name="patientedit_confirm_discard_title">మార్పులను విస్మరించాలా?</string>
+  <string name="patientedit_confirm_discard_ok">విస్మరించు</string>
+  <string name="patientedit_confirm_discard_cancel">రద్దు చేయి</string>
+  <!-- Home: Tabs -->
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="tab_patient">రోగులు</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_overdue">గడువు ముగిసింది</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_progress">జరుగుతోంది</string>
+
+  <string name="home_search_patient_name_phone">రోగి పేరును నమోదు చేయండి</string>
+  <string name="patients_user_awaiting_approval_title">ఆమోదం పొందాలి</string>
+  <string name="patients_user_awaiting_approval_message">ఆమోదం లభించిన తర్వాత మీరు మీ క్లినిక్ నుండి రోగి రికార్డ్‌లను యాక్సెస్ చేయవచ్చు.</string>
+  <string name="patients_user_approved_title">మీకు ఆమోదం లభించింది!</string>
+  <string name="patients_awaiting_sms_verification_title">ఎస్ఎంఎస్ ధృవీకరణ కోసం వేచి ఉంది</string>
+  <string name="patients_user_approved_message">ఇప్పుడు మీరు మీ క్లినిక్ కోసం మొత్తం రోగి డేటాను చూడవచ్చు</string>
+  <string name="patients_awaiting_sms_verification_message">ధృవీకరణ పొందిన తర్వాత, మీరు మీ క్లినిక్ నుండి రోగి రికార్డ్‌లను యాక్సెస్ చేయవచ్చు.</string>
+  <string name="patients_dismiss_user_approved_status">అర్థమైంది</string>
+  <string name="patients_enter_code">కోడ్‌ను నమోదు చేయండి</string>
+  <string name="patients_you_are_now_logged_in">ధృవీకరణ విజయవంతమైంది! ఇప్పుడు రోగి రికార్డ్‌లు కనిపిస్తాయి.</string>
+  <string name="patients_loggedoutalert_title">మీరు ఒకసారికి ఒక పరికరంలో మాత్రమే లాగిన్ చేయగలరు</string>
+  <string name="patients_loggedoutalert_message">మీ మునుపటి పరికరం నుండి మీరు లాగ్ అవుట్ అయ్యారు.</string>
+  <string name="patients_loggedoutalert_dismiss">అర్థమైంది</string>
+  <string name="patients_scan_simple_card">బిపి పాస్‌పోర్ట్‌ను స్కాన్ చేయండి</string>
+  <string name="patients_recentpatients_title">ఇటీవలి రోగులు</string>
+  <string name="patients_recentpatients_no_recent_patients">ఇటీవలి రోగులు లేరు</string>
+  <string name="patients_recentpatients_see_all">మొత్తం చూడండి</string>
+  <!-- Blood pressure entry -->
+  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">రక్తపోటు</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">రక్తపోటును సవరించు</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">సందర్శన తేదీ</string>
+  <string name="bloodpressureentry_remove">తీసివేయి</string>
+  <string name="bloodpressureentry_systolic">ఊర్ధ్వరక్తపీడనం</string>
+  <string name="bloodpressureentry_diastolic">నిమ్నరక్తపీడనం</string>
+  <string name="bloodpressureentry_day">రోజు</string>
+  <string name="bloodpressureentry_month">నెల</string>
+  <string name="bloodpressureentry_year">సంవత్సరం</string>
+  <string name="bloodpressureentry_error_systolic_more">నిమ్నరక్తపీడనం అన్నది ఊర్ధ్వరక్తపీడనం కంటే ఎక్కువగా ఉండాలి</string>
+  <string name="bloodpressureentry_error_systolic_70">ఊర్ధ్వరక్తపీడనం అన్నది 70 కంటే తక్కువగా ఉండకూడదు</string>
+  <string name="bloodpressureentry_error_systolic_300">ఊర్ధ్వరక్తపీడనం అన్నది 300 కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="bloodpressureentry_error_diastolic_40">నిమ్నరక్తపీడనం అన్నది 40 కంటే తక్కువగా ఉండకూడదు</string>
+  <string name="bloodpressureentry_error_diastolic_180">నిమ్నరక్తపీడనం అన్నది 180 కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="bloodpressureentry_error_systolic_empty">నిమ్నరక్తపీడనం మరియు ఊర్ధ్వరక్తపీడనం నమోదు చేయండి</string>
+  <string name="bloodpressureentry_error_diastolic_empty">నిమ్నరక్తపీడనం మరియు ఊర్ధ్వరక్తపీడనం నమోదు చేయండి</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">DD/MM/YY ప్రకారం చెల్లుబాటు అయ్యే తేదీని నమోదు చేయండి</string>
+  <string name="bloodpressureentry_error_date_is_in_future">తేదీ భవిష్యత్తులో ఉండకూడదు</string>
+  <string name="bloodpressureentry_remove_bp_title">బిపిని తీసివేయి</string>
+  <string name="bloodpressureentry_remove_bp_message">ఈ రక్తపోటు రికార్డింగ్‌ను ఖచ్చితంగా తీసివేయాలా?</string>
+  <string name="bloodpressureentry_remove_bp_confirm">తీసివేయి</string>
+  <string name="bloodpressureentry_remove_bp_cancel">రద్దు చేయి</string>
+
+  <!-- Patient summary -->
+  <string name="patientsummary_contentdescription_up_button">వెనుకకు వెళ్లు</string>
+  <string name="patientsummary_prescriptions_add">మందులను జోడించు</string>
+  <string name="patientsummary_prescriptions_update">మందులను అప్‌డేట్ చేయి</string>
+  <string name="patientsummary_bp_add_new">రక్తపోటు</string>
+  <string name="patientsummary_finish_saving_patient">సేవ్ చేయి</string>
+  <string name="patientsummary_bp_none_added">రక్తపోటును జోడించలేదు</string>
+  <string name="patientsummary_edit">సవరించు</string>
+  <string name="patientsummary_updatephone_dialog_title">ఫోన్ నంబర్‌ను అప్‌డేట్ చేయి</string>
+  <string name="patientsummary_updatephone_dialog_message">రోగి ఫోన్ నంబర్ తప్పు అని మునుపు తేలింది</string>
+  <string name="patientsummary_updatephone_phone_hint">ఫోన్ నంబర్</string>
+  <string name="patientsummary_updatephone_save">సేవ్ చేయి</string>
+  <string name="patientsummary_updatephone_cancel">దాటవేయి</string>
+  <string name="patientsummary_addphone_dialog_title">ఫోన్ నంబర్‌ను అప్‌డేట్ చేయి</string>
+  <string name="patientsummary_addphone_dialog_message">నమోదు చేసుకునే సమయంలో రోగి ఫోన్ నంబర్‌ని నమోదు చేయలేదు</string>
+  <string name="patientsummary_addphone_phone_hint">ఫోన్ నంబర్</string>
+  <string name="patientsummary_addphone_save">సేవ్ చేయి</string>
+  <string name="patientsummary_addphone_cancel">దాటవేయి</string>
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_low">తక్కువ</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_high">ఎక్కువ</string>
+
+  <string name="timestamp_today">ఈరోజు</string>
+  <string name="timestamp_yesterday">నిన్న</string>
+  <!--suppress PluralsCandidate -->
+  <string name="timestamp_days_ago">%s రోజుల క్రితం</string>
+
+  <!-- Prescribed drugs -->
+  <string name="patient_prescribeddrugs_screen_title">బిపి మందులు</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">మరో మందును జోడించు</string>
+
+  <string name="customprescription_enter_medicine">మందులను నమోదు చేయండి</string>
+  <string name="customprescription_edit_medicine">మందులను సవరించు</string>
+  <string name="customprescription_save_drug">సేవ్ చేయి</string>
+  <string name="customprescription_drug_name_hint">మందు పేరు</string>
+  <string name="customprescription_drug_dosage_hint">మోతాదు</string>
+
+  <string name="customprescription_delete_title">మందును తీసివేయి</string>
+  <string name="customprescription_delete_message">ఈ మందును ఖచ్చితంగా తీసివేయాలా?</string>
+  <string name="customprescription_delete_confirm">తీసివేయి</string>
+  <string name="customprescription_delete_cancel">రద్దు చేయి</string>
+
+  <!-- Login -->
+  <string name="loginpin_go_back">తిరిగి ఫోన్ నంబర్ స్క్రీన్‌లోకి వెళ్లు</string>
+  <!-- App lock -->
+  <string name="applock_logout">మీరు కాదా?</string>
+  <string name="applock_reset_pin_alert_title">భద్రతా పిన్‌ను రీసెట్ చేయాలా?</string>
+  <string name="applock_reset_pin_alert_message">మీ భద్రతా పిన్‌ను ఖచ్చితంగా రీసెట్ చేయాలా?</string>
+  <string name="applock_reset_pin_alert_confirm">రీసెట్ చేయి</string>
+  <string name="applock_reset_pin_alert_cancel">రద్దు చేయి</string>
+
+  <!-- PIN entry -->
+  <string name="pinentry_forgotpin">పిన్ మర్చిపోయారా?</string>
+  <string name="pinentry_error_incorrect_pin_on_first_attempt">పిన్ మరియు అసలు పిన్ సరిపోలలేదు</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">PIN తప్పు, %s ప్రయత్నాలు మిగిలి ఉన్నాయి</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">మీరు %s సార్లు విఫలయత్నాలు చేసారు</string>
+  <string name="pinentry_pin_number_hint">మీ భద్రతా పిన్</string>
+  <string name="pinentry_bruteforcelock_timer_label">తర్వాత మళ్లీ ప్రయత్నించండి</string>
+  <!-- minutes:seconds -->
+
+  <!-- Registration -->
+  <string name="registrationphone_phone_number_label">మీ ఫోన్ నంబర్</string>
+  <string name="registrationphone_error_invalid_number">ఫోన్ నంబర్‌ను తనిఖీ చేయండి. ఇది చాలా చిన్నదిగా ఉంది.</string>
+  <string name="registration_loggedout_dialog_title">మీరు లాగ్ అవుట్ అయ్యారు</string>
+  <string name="registration_loggedout_dialog_message">కొనసాగించడం కోసం మళ్లీ లాగిన్ చేయండి</string>
+  <string name="registration_loggedout_dialog_confirm">సరే</string>
+  <string name="registrationname_name_label">మీ పూర్తి పేరును మాకు చెప్పండి</string>
+  <string name="registrationname_error_empty_name">మీ పూర్తి పేరును నమోదు చేయండి</string>
+
+  <string name="registrationpin_pin_label">మీ భద్రతా పిన్‌ను సృష్టించండి</string>
+  <string name="registrationpin_pin_hint">మీ పిన్‌ను గుర్తుపెట్టుకోండి, ఇది మీకు తర్వాత అవసరం ఉంటుంది</string>
+  <string name="registrationpin_error_incomplete_pin">పిన్ చాలా చిన్నదిగా ఉంది. 4 సంఖ్యలను నమోదు చేయండి.</string>
+
+  <string name="registrationconfirmpin_confirm_pin_label">భద్రతా పిన్‌ను మళ్లీ నమోదు చేయండి</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">పిన్ మరియు అసలు పిన్ సరిపోలలేదు</string>
+  <string name="registrationconfirmpin_reset_pin">పిన్‌ను రీసెట్ చేయి</string>
+
+  <string name="registrationlocation_screen_title">స్థానం యాక్సెస్</string>
+  <string name="registrationlocation_skip_permission">దాటవేయి</string>
+  <string name="registrationlocation_permission_rationale_description">మీ క్లినిక్‌ను కనుగొనడంలో మీ స్థానం సహాయపడుతుంది</string>
+  <string name="registrationlocation_permission_rationale_title">మీ క్లినిక్‌ను త్వరగా కనుగొనండి</string>
+  <string name="registrationlocation_allow_access">స్థానం యాక్సెస్‌ను అనుమతించు</string>
+
+  <string name="registrationfacilities_screen_title">మీ క్లినిక్‌ను ఎంచుకోండి</string>
+  <string name="registrationfacilities_search_hint">మీ క్లినిక్ కోసం వెతకండి</string>
+  <!-- Street, District, State -->
+  <string name="registrationfacilities_error_unexpected_title">ఏదో తప్పు జరిగింది</string>
+  <string name="registrationfacilities_error_unexpected_message">కొంత సమయం తర్వాత మళ్లీ ప్రయత్నించండి లేదా మీ సూపర్‌వైజర్‌ను సంప్రదించండి.</string>
+  <string name="registrationfacilities_error_internet_connection_title">ఇంటర్నెట్ కనెక్షన్ లేదు</string>
+  <string name="registrationfacilities_retry">మళ్లీ ప్రయత్నించండి</string>
+  <string name="registrationfacilities_header_suggested_facilities">సూచించిన క్లినిక్‌లు</string>
+  <string name="registrationfacilities_header_all_facilities">అన్ని క్లినిక్‌లు</string>
+
+  <!-- Onboarding -->
+  <string name="onboarding_get_started">ప్రారంభించండి</string>
+
+  <!-- Overdue List -->
+  <string name="overdue_no_patients">గడువు దాటిన రోగులు లేరు</string>
+  <string name="overdue_empty_desc">షెడ్యూల్ చేసిన సందర్శనకు హాజరుకాని రోగులకు మీరు కాల్ చేసి ఫాలో-అప్ రక్తపోటు రీడింగ్ కోసం రావాలని కోరవచ్చు.</string>
+  <plurals name="overdue_list_item_appointment_overdue_days">
+    <item quantity="one">%s రోజు క్రితం గడువు ముగిసింది</item>
+    <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
+  </plurals>
+  <string name="overduelist_agreed_to_visit">రోగి ‘సందర్శించడానికి అంగీకరించారు’ అని గుర్తుపెట్టండి</string>
+  <string name="overduelist_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి…</string>
+  <string name="overduelist_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి…</string>
+  <string name="overduelist_result_of_call">కాల్ ఫలితం</string>
+  <string name="overduelist_high_risk">అధిక ప్రమాదం</string>
+
+  <!-- Phone number masking -->
+  <string name="phonemasking_call_normal">సాధారణం</string>
+  <string name="phonemasking_call_secure">సురక్షితం</string>
+  <string name="phonemasking_help_text">సురక్షిత కాల్‌లలో మీ నంబర్ కనిపించదు, ఇవి టోల్-ఫ్రీ</string>
+
+  <!-- Appointment reminder -->
+  <string name="appointmentreminder_call_later_in">తర్వాత కాల్ చేయండి</string>
+  <string name="appointmentreminder_done">పూర్తయింది</string>
+
+  <!-- Remove Overdue Patients -->
+  <string name="removeappointment_select_a_reason">కారణాన్ని ఎంచుకోండి</string>
+  <string name="removeappointment_patient_already_visited">రోగి ఇప్పటికే సందర్శించారు</string>
+  <string name="removeappointment_patient_is_not_responding">రోగి ప్రతిస్పందించడం లేదు</string>
+  <string name="removeappointment_invalid_phone_number">ఫోన్ నంబర్ పని చేయలేదు</string>
+  <string name="removeappointment_public_hospital_transfer">మరో ప్రజారోగ్య కేంద్రానికి వెళ్లారు</string>
+  <string name="removeappointment_moved_to_private">ప్రైవేట్ వేద్యుల వద్దకు వెళ్లారు</string>
+  <string name="removeappointment_patient_died">మరణించారు</string>
+  <string name="removeappointment_other_reason">మరో కారణం</string>
+
+  <!-- Facility change -->
+  <string name="changefacility_screen_title">మీ క్లినిక్‌ను ఎంచుకోండి</string>
+  <string name="facilitychange_search_hint">మీ క్లినిక్ కోసం వెతకండి</string>
+
+  <!-- Enter OTP -->
+  <string name="enterotp_check_sms_sent_to">దీనికి పంపిన ఎస్ఎంఎస్‌ను తనిఖీ చేయండి</string>
+  <string name="enterotp_enter_verification_code">ధృవీకరణ కోడ్‌ను నమోదు చేయండి</string>
+  <string name="enterotp_incorrect_code">కోడ్ తప్పు, మళ్లీ ప్రయత్నించండి</string>
+  <string name="enterotp_resend_sms">ఎస్ఎంఎస్‌ని తిరిగి పంపు</string>
+  <string name="enterotp_sms_sent">కొత్త ధృవీకరణ ఎస్ఎంఎస్ పంపబడింది</string>
+
+  <!-- Schedule appointment -->
+  <string name="scheduleappointment_next_visit_in">షెడ్యూల్ చేసిన తదుపరి సందర్శన</string>
+  <string name="scheduleappointment_not_now">ఇప్పుడు కాదు</string>
+  <string name="scheduleappointment_done">పూర్తయింది</string>
+  <plurals name="scheduleappointment_appointment_in_days">
+    <item quantity="one">%s రోజు</item>
+    <item quantity="other">%s రోజులు</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_weeks">
+    <item quantity="one">%s వారం</item>
+    <item quantity="other">%s వారాలు</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_months">
+    <item quantity="one">%s నెల</item>
+    <item quantity="other">%s నెలలు</item>
+  </plurals>
+
+  <!-- Forgot PIN -->
+  <string name="forgotpin_create_new_pin">కొత్త భద్రతా పిన్‌ను సృష్టించండి</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">పిన్ చాలా చిన్నదిగా ఉంది. 4 సంఖ్యలను నమోదు చేయండి.</string>
+  <string name="forgotpin_confirm_pin">భద్రతా పిన్‌ను మళ్లీ నమోదు చేయండి</string>
+  <string name="forgotpin_confirm_pin_message">దీనిని నిర్ధారించడం కోసం మీ పిన్‌ను మళ్లీ నమోదు చేయండి</string>
+  <string name="forgotpin_error_pin_mismatch">పిన్ మరియు అసలు పిన్ సరిపోలలేదు</string>
+
+  <!-- Reports -->
+  <string name="reports_come_back_later">తర్వాత తిరిగి చూడండి</string>
+  <string name="reports_you_will_be_able_to_see">ఇక్కడ మీ క్లినిక్ కోసం మీరు రక్తపోటు నివేదికలను చూడవచ్చు.</string>
+
+  <!-- Medical History -->
+  <!--suppress UnusedResources used in enum -->
+  <string name="medicalhistory_question_heartattack">గత 3 సంవత్సరాలలో గుండెపోటు</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_stroke">గతంలో గుండెపోటు</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_kidney">గతంలో మూత్రపిండాల సమస్య</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diagnosed_with_hypertension">రక్తపోటు నిర్ధారణ అయింది</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diabetes">మధుమేహం ఉంది</string>
+  <string name="newmedicalhistory_next">తదుపరి</string>
+  <string name="newmedicalhistory_yes">అవును</string>
+  <string name="newmedicalhistory_no">కాదు</string>
+
+  <!--Prescribed Drug with Dosages Sheet-->
+  <string name="prescribed_drugs_dosage_none">ఏదీ కాదు</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">%s మోతాదు</string>
+
+  <!--Scan Simple ID-->
+  <string name="scansimpleid_title">కార్డ్ ఐడిని స్కాన్ చేయండి</string>
+  <string name="scansimpleid_shortcode_error_empty">బిపి పాస్‌పోర్ట్ సంఖ్యను నమోదు చేయండి</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">బిపి పాస్‌పోర్ట్ సంఖ్య 7 అంకెల కంటే తక్కువ ఉంటుంది</string>
+  <string name="scansimpleid_type_bp_passport_number">లేదా బిపి పాస్‌పోర్ట్ సంఖ్యను టైప్ చేయండి</string>
+
+  <!--- Sync Indicator-->
+  <string name="syncindicator_status_pending">సింక్ పెండింగ్‌లో ఉంది</string>
+  <string name="syncindicator_status_failed">సింక్ విఫలమైంది</string>
+  <string name="syncindicator_status_syncing">సింక్ చేస్తోంది…</string>
+  <string name="syncindicator_status_synced_just_now">ఇప్పుడే సింక్ అయింది</string>
+  <string name="syncindicator_status_synced_min_ago">%s నిమి క్రితం సింక్ చేసారు</string>
+  <string name="syncindicator_dialog_error_network">రోగి రికార్డ్‌లను సింక్ చేయడం కోసం మీ వద్ద పని చేస్తున్న ఇంటర్నెట్ కనెక్షన్ ఉండాలి.</string>
+  <string name="syncindicator_dialog_button_text">సరే</string>
+  <string name="syncindicator_dialog_error_server">ప్రస్తుతం సింక్ సర్వర్‌లు పని చేయడం లేదు. తర్వాత మళ్లీ ప్రయత్నించండి లేదా మీ సూపర్‌వైజర్‌ను సంప్రదించండి.</string>
+
+  <!-- Help Screen -->
+  <string name="help_title">సహాయం</string>
+  <string name="help_no_connection">ఇంటర్నెట్ కనెక్షన్ లేదు</string>
+  <string name="help_something_went_wrong">ఏదో తప్పు జరిగింది</string>
+  <string name="help_try_again">మళ్లీ ప్రయత్నించండి</string>
+
+  <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_add">జోడించు</string>
+  <string name="linkidwithpatient_button_cancel">రద్దు చేయి</string>
+  <string name="linkidwithpatient_add_id_text">%1$s\u0020 జోడించు</string>
+  <string name="linkidwithpatient_to_patient_text">\u0020కు\u00A0రోగి?</string>
+
+  <!-- Add ID to Patient: Search -->
+  <string name="addidtopatientsearch_search">తదుపరి</string>
+  <string name="addidtopatientsearch_error_empty_fullname">రోగి పూర్తి పేరును లేదా ఫోన్ నంబర్‌ను నమోదు చేయండి</string>
+  <string name="addidtopatientsearch_hint">పేరు లేదా ఫోన్ నంబర్</string>
+
+  <!-- Recent Patients -->
+  <string name="recent_patients_toolbar_title">ఇటీవలి రోగులు</string>
+
+  <!-- Recent Patients Item View -->
+  <string name="recent_patients_itemview_last_seen">చివరిగా చూసినది:\u0020</string>
+  <!-- Add ID to Patient: Search Results-->
+  <string name="addidtopatientsearchresults_add">%1$s\u0020 జోడించు</string>
+  <string name="addidtopatientsearchresults_to_patient">\u0020కు\u2026</string>
+
+  <!-- App update : Dialog -->
+  <string name="appupdatedialog_title">యాప్‌ను అప్‌డేట్ చేయి</string>
+  <string name="appupdatedialog_body">సింపుల్‌ను అప్‌డేట్ చేయడానికి మీరు ప్లే స్టోర్‌కు వెళతారు</string>
+  <string name="appupdatedialog_positive_button_text">అప్‌డేట్ చేయి</string>
+  <string name="appupdatedialog_negative_button_text">ఇప్పుడు కాదు</string>
+
+  <!-- All Patients In Facility View-->
+  <string name="allpatientsinfacility_nopatients_message">ఇక్కడ మీ కేంద్రంలో నమోదు చేసుకున్న అందరు రోగులను మీరు చూడగలరు.</string>
+  <string name="allpatientsinfacility_nopatients_title">%1$sలో రోగులు లేరు</string>
+  <string name="allpatientsinfacility_foundpatients_header">మొత్తం రోగులు: %1$s</string>
+
+  <!--Registration loader screen -->
+  <string name="registrationloader_error_unexpected_title">ఏదో తప్పు జరిగింది</string>
+  <string name="registrationloader_error_unexpected_message">కొంత సమయం తర్వాత మళ్లీ ప్రయత్నించండి లేదా మీ సూపర్‌వైజర్‌ను సంప్రదించండి.</string>
+  <string name="registrationloader_error_internet_connection_title">ఇంటర్నెట్ కనెక్షన్ లేదు</string>
+  <!--suppress UnusedResources -->
+  <string name="registrationloader_retry">మళ్లీ ప్రయత్నించండి</string>
+
+  <!-- Short code search -->
+  <string name="shortcodesearchresult_enter_patient_name_button">రోగి పేరును నమోదు చేయండి</string>
+
+  <!-- Simple video -->
+  <string name="simple_video_watch_video">వీడియోను చూడండి</string>
+  <string name="simple_video_how_to_use_the_simple_app">సింపుల్ యాప్‌ను ఎలా ఉపయోగించాలి</string>
+  <string name="simple_video_duration">%s నిమిషాలు</string>
+
+  <!-- Settings -->
+  <string name="settings_title">సెట్టింగ్‌లు</string>
+  <string name="settings_user_name_icon_content">వినియోగదారును సెట్ చేస్తోంది చిహ్నం</string>
+  <string name="settings_user_phone_icon_content">వినియోగదారు ఫోన్ నంబర్‌ను సెట్ చేస్తోంది చిహ్నం</string>
+  <string name="settings_current_language_icon_content">ప్రస్తుత భాషను సెట్ చేస్తోంది చిహ్నం</string>
+  <string name="settings_name">పేరు</string>
+  <string name="settings_number">ఫోన్ నంబర్</string>
+  <string name="settings_language">భాష</string>
+  <string name="settings_change">మార్చు</string>
+  <string name="settings_language_hint">భాషను ఎంచుకోండి</string>
+
+  <!-- Change language screen -->
+  <string name="changelanguage_title">మీ భాషను ఎంచుకోండి</string>
+  <string name="changelanguage_done">పూర్తయింది</string>
+
+  <!-- Placeholder -->
+  <string name="placeholder_loading_title">ఆగండి..</string>
+  <string name="placeholder_loading_message">డేటా నిర్వహణ జరుగుతోంది. నిమిషంలో అయిపోతుంది.</string>
+
+  <!-- Select Country Screen -->
+  <string name="selectcountry_logo_contentdescription">సింపుల్ లోగో</string>
+  <string name="selectcountry_next">తదుపరి</string>
+  <string name="selectcountry_title">మీ దేశాన్ని ఎంచుకోండి</string>
+  <string name="selectcountry_networkerror">ఇంటర్నెట్ కనెక్షన్ లేదు!</string>
+  <string name="selectcountry_servererror">సర్వర్లో లోపం ఏర్పడింది! తర్వాత మళ్లీ ప్రయత్నించండి!</string>
+  <string name="selectcountry_genericerror">ఏదో తప్పు జరిగింది! తర్వాత మళ్లీ ప్రయత్నించండి!</string>
+  <string name="selectcountry_retry">మళ్లీ ప్రయత్నించండి</string>
+  <string name="scheduleappointment_at">వద్ద</string>
+  <string name="scheduleappointment_change">మార్చు</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">ఒక కొలతను ఎంచుకోండి</string>
+  <string name="bloodsugartype_picker_desc">మీరు ఖచ్చితంగా లేకుంటే ‘RBS’ని ఎంచుకోండి</string>
+  <string name="bloodsugartype_rbs">యాదృచ్ఛిక రక్తంలోని చక్కెర (RBS)</string>
+  <string name="bloodsugartype_fbs">ఉపవాసం ఉన్నప్పుడు రక్తంలోని చక్కెర (FBS)</string>
+  <string name="bloodsugartype_ppbs">భోజనం తర్వాతా రక్తంలోని చక్కెర (PPBS)</string>
+
+  <!-- Blood sugar entry -->
+  <string name="bloodsugarentry_sheet_title_enter_date">సందర్శన తేదీ</string>
+  <string name="bloodsugarentry_day">రోజు</string>
+  <string name="bloodsugarentry_month">నెల</string>
+  <string name="bloodsugarentry_year">సంవత్సరం</string>
+  <string name="bloodsugarentry_error_lower_limit">విలువ 30 ఎంజి/డిఎల్ కంటే తక్కువగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_higher_limit">విలువ 1000 ఎంజి/డిఎల్ కంటే ఎక్కువగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_empty">విలువ ఖాళీగా ఉండకూడదు</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">DD/MM/YY ప్రకారం చెల్లుబాటు అయ్యే తేదీని నమోదు చేయండి</string>
+  <string name="bloodsugarentry_error_date_is_in_future">తేదీ భవిష్యత్తులో ఉండకూడదు</string>
+  <string name="bloodsugarentry_random_title">యదృచ్ఛిక రక్తంలోని చక్కెర</string>
+  <string name="bloodsugarentry_post_prandial_title">భోజనం తర్వాతా రక్తంలోని చక్కెర</string>
+  <string name="bloodsugarentry_fasting_title">ఉపవాసం ఉన్నప్పుడు రక్తంలోని చక్కెర</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_no_blood_sugars">రక్తంలోని చక్కెర జోడించలేదు</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">మధుమేహం</string>
+  <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
+  <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
+
+  <string name="bloodpressurehistory_add_bp_button">కొత్త బిపి</string>
+  </resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/seeall_button"
+  style="?attr/borderlessButtonStyle"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginStart="@dimen/spacing_4"
+  android:layout_marginEnd="@dimen/spacing_4"
+  android:text="@string/patients_recentpatients_see_all"
+  android:textAppearance="@style/Clinic.V2.TextAppearance.Button2" />

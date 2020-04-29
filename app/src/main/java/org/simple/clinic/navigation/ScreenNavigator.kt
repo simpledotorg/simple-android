@@ -13,6 +13,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.NavigatorProvider
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.router.R
 import java.util.ArrayDeque
 
@@ -23,9 +24,12 @@ class ScreenNavigator(
 
   companion object {
     private const val KEY_BACK_STACK = "org.simple.clinic.router.screen:ScreenNavigator:backStack"
+    private const val KEY_OUTGOING = "org.simple.clinic.router.screen:ScreenNavigator:outgoing"
   }
 
   private val backStack = ArrayDeque<BackStackEntry>()
+
+  private var outgoingScreen: BackStackEntry? = null
 
   override fun navigate(destination: Destination, args: Bundle?, navOptions: NavOptions?, navigatorExtras: Extras?): NavDestination? {
     val destinationLayoutRes = destination.layoutRes
@@ -33,10 +37,13 @@ class ScreenNavigator(
     val destinationView = instantiateView(destinationLayoutRes)
     replaceView(destinationView)
 
-    backStack.push(BackStackEntry(
+    val incomingScreen = BackStackEntry(
         destinationLayoutRes,
         destination.analyticsName
-    ))
+    )
+
+    Analytics.reportScreenChange(outgoingScreen?.analyticsName ?: "", incomingScreen.analyticsName)
+    backStack.push(incomingScreen)
     return destination
   }
 
@@ -45,8 +52,9 @@ class ScreenNavigator(
   override fun popBackStack(): Boolean {
     if (backStack.isEmpty()) return false
 
-    // Removing the last item from the back stack
-    backStack.pop()
+    // Removing the last item from the back stack and assiging
+    // it to
+    outgoingScreen = backStack.pop()
 
     // Once last item is removed, we are getting the new last item
     // and using it as destination
@@ -73,17 +81,18 @@ class ScreenNavigator(
     val bundle = Bundle()
     val backStack = this.backStack.toTypedArray()
     bundle.putParcelableArray(KEY_BACK_STACK, backStack)
+    bundle.putParcelable(KEY_OUTGOING, outgoingScreen)
     return bundle
   }
 
   override fun onRestoreState(savedState: Bundle) {
-    val backStack = savedState.getParcelableArray(KEY_BACK_STACK)
-    if (backStack != null) {
-      this.backStack.clear()
-      for (entry in backStack) {
-        this.backStack.add(entry as BackStackEntry)
-      }
-    }
+    val savedBackStack = savedState.getParcelableArray(KEY_BACK_STACK)
+    backStack.addAll(
+        savedBackStack?.map { entry ->
+          entry as BackStackEntry
+        }.orEmpty()
+    )
+    outgoingScreen = savedState.getParcelable(KEY_OUTGOING)
   }
 
   @NavDestination.ClassType(View::class)

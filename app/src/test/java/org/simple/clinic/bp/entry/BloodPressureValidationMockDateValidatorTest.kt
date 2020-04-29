@@ -104,7 +104,7 @@ class BloodPressureValidationMockDateValidatorTest {
       onNext(SaveClicked)
     }
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(ui, never()).setBpSavedResultAndFinish()
 
@@ -143,7 +143,7 @@ class BloodPressureValidationMockDateValidatorTest {
     uiEvents.onNext(SaveClicked)
 
     when (openAs) {
-      is New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
+      is New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
       is Update -> verify(bloodPressureRepository, never()).updateMeasurement(any())
       else -> throw AssertionError()
     }

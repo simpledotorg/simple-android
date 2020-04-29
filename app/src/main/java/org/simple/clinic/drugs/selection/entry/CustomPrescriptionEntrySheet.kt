@@ -18,6 +18,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
@@ -60,6 +61,18 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
     intent.getParcelableExtra(KEY_OPEN_AS) as OpenAs
   }
 
+  private val events by unsafeLazy {
+    Observable
+        .mergeArray(
+            sheetCreates(),
+            drugNameChanges(),
+            drugDosageChanges(),
+            drugDosageFocusChanges(),
+            saveClicks(),
+            removeClicks())
+        .compose(ReportAnalyticsEvents())
+  }
+
   @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -67,14 +80,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(
-            sheetCreates(),
-            drugNameChanges(),
-            drugDosageChanges(),
-            drugDosageFocusChanges(),
-            saveClicks(),
-            removeClicks()
-        ),
+        events = events,
         controller = controllerFactory.create(openAs),
         screenDestroys = onDestroys
     )

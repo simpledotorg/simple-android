@@ -66,11 +66,11 @@ object SetBpSavedResultAndFinish : BloodPressureEntryEffect()
 
 data class UpdateBpEntry(
     val bpUuid: UUID,
-    val systolic: Int,
-    val diastolic: Int,
+    val reading: BloodPressureReading,
     val userEnteredDate: LocalDate,
     val prefilledDate: LocalDate
 ) : BloodPressureEntryEffect() {
+
   val wasDateChanged: Boolean
     get() = userEnteredDate != prefilledDate
 }

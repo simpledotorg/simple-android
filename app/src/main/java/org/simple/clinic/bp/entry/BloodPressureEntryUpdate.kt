@@ -158,7 +158,7 @@ class BloodPressureEntryUpdate(
 
     return when (val openAs = model.openAs) {
       is OpenAs.New -> CreateNewBpEntry(openAs.patientUuid, reading, userEnteredDate, prefilledDate)
-      is OpenAs.Update -> UpdateBpEntry(openAs.bpUuid, reading.systolic, reading.diastolic, userEnteredDate, prefilledDate)
+      is OpenAs.Update -> UpdateBpEntry(openAs.bpUuid, reading, userEnteredDate, prefilledDate)
     }
   }
 

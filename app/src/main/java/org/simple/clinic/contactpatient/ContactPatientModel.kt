@@ -17,6 +17,7 @@ import java.util.UUID
 @Parcelize
 data class ContactPatientModel(
     val patientUuid: UUID,
+    val uiMode: UiMode,
     val patientProfile: PatientProfile? = null,
     val appointment: ParcelableOptional<OverdueAppointment>? = null,
     val secureCallingFeatureEnabled: Boolean,
@@ -29,7 +30,8 @@ data class ContactPatientModel(
         patientUuid: UUID,
         phoneNumberMaskerConfig: PhoneNumberMaskerConfig,
         appointmentConfig: AppointmentConfig,
-        userClock: UserClock
+        userClock: UserClock,
+        mode: UiMode
     ): ContactPatientModel {
       val secureCallingFeatureEnabled = with(phoneNumberMaskerConfig) {
         phoneMaskingFeatureEnabled && proxyPhoneNumber.isNotBlank()
@@ -39,6 +41,7 @@ data class ContactPatientModel(
 
       return ContactPatientModel(
           patientUuid = patientUuid,
+          uiMode = mode,
           secureCallingFeatureEnabled = secureCallingFeatureEnabled,
           potentialAppointments = potentialAppointments,
           selectedAppointmentDate = potentialAppointments.first().scheduledFor

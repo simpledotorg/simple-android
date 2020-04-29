@@ -59,7 +59,8 @@ class ContactPatientInitTest {
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       proxyPhoneNumber: String = "12345678",
-      timeToAppointments: List<TimeToAppointment> = this.timeToAppointments
+      timeToAppointments: List<TimeToAppointment> = this.timeToAppointments,
+      mode: UiMode = UiMode.CallPatient
   ): ContactPatientModel {
     val phoneNumberMaskerConfig = PhoneNumberMaskerConfig(proxyPhoneNumber, phoneMaskFeatureEnabled)
     val appointmentConfig = AppointmentConfig(
@@ -70,7 +71,13 @@ class ContactPatientInitTest {
         remindAppointmentsIn = timeToAppointments
     )
 
-    return ContactPatientModel.create(patientUuid, phoneNumberMaskerConfig, appointmentConfig, userClock)
+    return ContactPatientModel.create(
+        patientUuid = patientUuid,
+        phoneNumberMaskerConfig = phoneNumberMaskerConfig,
+        appointmentConfig = appointmentConfig,
+        userClock = userClock,
+        mode = mode
+    )
   }
 }
 

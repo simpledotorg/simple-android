@@ -1,141 +1,86 @@
 package org.simple.clinic.navigation
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.AttributeSet
-import android.widget.FrameLayout
-import androidx.activity.ComponentActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.NavigationRes
-import androidx.customview.view.AbsSavedState
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
-import org.simple.clinic.router.R
+import org.simple.clinic.R
 
-class ScreenHostView(
-    context: Context,
-    attrs: AttributeSet? = null
-) : FrameLayout(context, attrs), NavHost, LifecycleOwner {
 
-  private val navigationController = NavHostController(context)
-  private val lifecycleRegistry = LifecycleRegistry(this)
+class ScreenHostView : Fragment(), NavHost {
 
-  private val activity: ComponentActivity
-    get() {
-      return generateSequence({ context }) { context ->
-        when (context) {
-          is ComponentActivity -> null
-          is ContextWrapper -> context.baseContext
-          else -> null
-        }
-      }.last() as? ComponentActivity ?: throw RuntimeException("Failed to get activity in NavHostView!")
-    }
+  companion object {
+    private const val KEY_NAV_STATE = "org.simple.clinic.navigation:ScreenHostView:navState"
+    private const val KEY_GRAPH_ID = "org.simple.clinic.navigation:ScreenHostView:graphId"
+  }
 
   @NavigationRes
   private var graphId: Int = 0
 
-  init {
+  private var navigationController: NavHostController? = null
+
+  override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
+    super.onInflate(context, attrs, savedInstanceState)
     val ta = context.resources.obtainAttributes(
         attrs,
-        R.styleable.ScreenHostView
+        androidx.navigation.R.styleable.NavHost
     )
-    graphId = ta.getResourceId(R.styleable.ScreenHostView_screenNavGraph, 0)
-    val screenNavigator = ScreenNavigator(this)
-
-    Navigation.setViewNavController(this, navigationController)
-
-    navigationController.navigatorProvider.addNavigator(screenNavigator)
-    // This is to ensure the app doesn't crash when we are setting the graph dynamically.
-    // We will be setting this onInflate
-    if (graphId != 0) {
-      navigationController.setGraph(graphId)
-    }
-
-    navigationController.setLifecycleOwner(this)
-    navigationController.setOnBackPressedDispatcher(activity.onBackPressedDispatcher)
-
+    graphId = ta.getResourceId(androidx.navigation.R.styleable.NavHost_navGraph, 0)
     ta.recycle()
-
-    lifecycleRegistry.currentState = Lifecycle.State.CREATED
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) return
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-    lifecycleRegistry.currentState = Lifecycle.State.STARTED
-    lifecycleRegistry.currentState = Lifecycle.State.RESUMED
+    navigationController = NavHostController(requireContext())
+    navigationController?.setLifecycleOwner(this)
+    navigationController?.setOnBackPressedDispatcher(requireActivity().onBackPressedDispatcher)
   }
 
-  override fun onDetachedFromWindow() {
-    lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-    super.onDetachedFromWindow()
-  }
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    val screenHostView = inflater.inflate(R.layout.fragment_screen_host, container, false)
+    val screenNavigator = ScreenNavigator(screenHostView.findViewById(R.id.contentRoot))
 
-  override fun getNavController() = navigationController
+    navigationController?.navigatorProvider?.addNavigator(screenNavigator)
 
-  override fun getLifecycle() = lifecycleRegistry
-
-  override fun onSaveInstanceState(): Parcelable? {
-    val superState = super.onSaveInstanceState()
-    val savedState = SavedState(superState)
-    savedState.navControllerState = navigationController.saveState()
-    savedState.graphId = graphId
-    return savedState
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    if (state !is SavedState) {
-      super.onRestoreInstanceState(state)
-      return
+    var navState: Bundle? = null
+    if (savedInstanceState != null) {
+      navState = savedInstanceState.getBundle(KEY_NAV_STATE)
+      graphId = savedInstanceState.getInt(KEY_GRAPH_ID)
     }
-    super.onRestoreInstanceState(state.superState)
-    navigationController.restoreState(state.navControllerState)
+
+    if (navState != null) {
+      navigationController?.restoreState(navState)
+    }
     if (graphId != 0) {
-      navigationController.setGraph(state.graphId)
+      navigationController?.setGraph(graphId)
     }
+
+    return screenHostView
   }
 
-  class SavedState : AbsSavedState {
-    var navControllerState: Bundle? = null
-    var graphId: Int = 0
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    Navigation.setViewNavController(view, navigationController)
+  }
 
-    constructor(superState: Parcelable?) : super(superState!!)
-    constructor(source: Parcel, loader: ClassLoader?) : super(source, loader) {
-      navControllerState = source.readBundle(loader)
-      graphId = source.readInt()
-    }
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    val navState = navigationController?.saveState()
+    outState.putBundle(KEY_NAV_STATE, navState)
+    outState.putInt(KEY_GRAPH_ID, graphId)
+  }
 
-    override fun writeToParcel(out: Parcel, flags: Int) {
-      super.writeToParcel(out, flags)
-      out.writeBundle(navControllerState)
-      out.writeInt(graphId)
-    }
-
-    companion object {
-      @JvmField
-      val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.ClassLoaderCreator<SavedState> {
-        override fun createFromParcel(
-            `in`: Parcel,
-            loader: ClassLoader
-        ): SavedState {
-          return SavedState(`in`, loader)
-        }
-
-        override fun createFromParcel(`in`: Parcel): SavedState {
-          return SavedState(`in`, null)
-        }
-
-        override fun newArray(size: Int): Array<SavedState?> {
-          return arrayOfNulls(size)
-        }
-      }
-    }
+  override fun getNavController(): NavController {
+    checkNotNull(navigationController) { "NavController is not available before onCreate()" }
+    return navigationController!!
   }
 }

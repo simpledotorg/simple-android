@@ -113,11 +113,11 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun showOnboardingScreen() {
-    navController.navigate(R.id.action_placeholderScreen_to_onboardingScreen)
+    navController.navigate(R.id.action_global_onboardingScreen)
   }
 
   override fun showCountrySelectionScreen() {
-    navController.navigate(R.id.action_placeholderScreen_to_selectCountryScreen)
+    navController.navigate(R.id.action_global_selectCountryScreen)
   }
 
   private fun setupDiGraph() {

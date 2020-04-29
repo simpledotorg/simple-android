@@ -10,31 +10,14 @@
     android:label="PlaceholderScreen"
     app:analyticsName="Placeholder"
     app:layout="@layout/screen_placeholder"
-    tools:layout="@layout/screen_placeholder">
-    <action
-      android:id="@+id/action_placeholderScreen_to_onboardingScreen"
-      app:destination="@id/onboardingScreen"
-      app:popUpTo="@id/placeholderScreen"
-      app:popUpToInclusive="true" />
-    <action
-      android:id="@+id/action_placeholderScreen_to_selectCountryScreen"
-      app:destination="@id/selectCountryScreen"
-      app:popUpTo="@id/placeholderScreen"
-      app:popUpToInclusive="true" />
-  </screen>
+    tools:layout="@layout/screen_placeholder" />
   <screen
     android:id="@+id/onboardingScreen"
     android:name="org.simple.clinic.onboarding.OnboardingScreen"
     android:label="OnboardingScreen"
     app:analyticsName="Onboarding"
     app:layout="@layout/screen_onboarding"
-    tools:layout="@layout/screen_onboarding">
-    <action
-      android:id="@+id/action_onboardingScreen_to_selectCountryScreen"
-      app:destination="@id/selectCountryScreen"
-      app:popUpTo="@id/onboardingScreen"
-      app:popUpToInclusive="true" />
-  </screen>
+    tools:layout="@layout/screen_onboarding" />
   <screen
     android:id="@+id/selectCountryScreen"
     android:name="org.simple.clinic.selectcountry.SelectCountryScreen"
@@ -42,4 +25,14 @@
     app:analyticsName="Select Country"
     app:layout="@layout/screen_selectcountry"
     tools:layout="@layout/screen_selectcountry" />
+  <action
+    android:id="@+id/action_global_onboardingScreen"
+    app:destination="@id/onboardingScreen"
+    app:popUpTo="@id/placeholderScreen"
+    app:popUpToInclusive="true" />
+  <action
+    android:id="@+id/action_global_selectCountryScreen"
+    app:destination="@id/selectCountryScreen"
+    app:popUpTo="@id/placeholderScreen"
+    app:popUpToInclusive="true" />
 </navigation>

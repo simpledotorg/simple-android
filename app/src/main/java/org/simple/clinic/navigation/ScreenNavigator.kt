@@ -87,11 +87,13 @@ class ScreenNavigator(
 
   override fun onRestoreState(savedState: Bundle) {
     val savedBackStack = savedState.getParcelableArray(KEY_BACK_STACK)
+    backStack.clear()
     backStack.addAll(
-        savedBackStack?.map { entry ->
+        savedBackStack?.mapNotNull { entry ->
           entry as BackStackEntry
         }.orEmpty()
     )
+
     outgoingScreen = savedState.getParcelable(KEY_OUTGOING)
   }
 

@@ -4,8 +4,4 @@
     <attr name="layout" format="reference" />
     <attr name="analyticsName" format="string" />
   </declare-styleable>
-
-  <declare-styleable name="ScreenHostView">
-    <attr name="screenNavGraph" format="reference" />
-  </declare-styleable>
 </resources>

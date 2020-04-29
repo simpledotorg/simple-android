@@ -89,6 +89,6 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   }
 
   override fun moveToRegistrationScreen() {
-    findNavController().navigate(R.id.action_onboardingScreen_to_selectCountryScreen)
+    findNavController().navigate(R.id.action_global_selectCountryScreen)
   }
 }

@@ -79,7 +79,8 @@ class MedicalHistorySummaryUiControllerTest {
       schedulers = TrampolineSchedulersProvider(),
       medicalHistoryRepository = medicalHistoryRepository,
       userSession = userSession,
-      facilityRepository = facilityRepository
+      facilityRepository = facilityRepository,
+      uiActions = ui
   )
 
   private lateinit var controllerSubscription: Disposable
@@ -93,7 +94,7 @@ class MedicalHistorySummaryUiControllerTest {
         defaultModel = MedicalHistorySummaryModel.create(patientUuid),
         init = MedicalHistorySummaryInit(),
         update = MedicalHistorySummaryUpdate(),
-        effectHandler = effectHandler.create(),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
   }

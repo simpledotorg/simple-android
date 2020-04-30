@@ -167,6 +167,7 @@ jobs:
         with:
           ref: ${{github.event.pull_request.head.ref}}
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Fix ellipsise in strings
         run: .github/scripts/strings_reader.py

@@ -4,6 +4,8 @@ import java.util.UUID
 
 sealed class MedicalHistorySummaryEffect
 
-data class LoadMedicalHistory(val patientUUID: UUID): MedicalHistorySummaryEffect()
+data class LoadMedicalHistory(val patientUUID: UUID) : MedicalHistorySummaryEffect()
 
-object LoadCurrentFacility: MedicalHistorySummaryEffect()
+object LoadCurrentFacility : MedicalHistorySummaryEffect()
+
+object HideDiagnosisError : MedicalHistorySummaryEffect()

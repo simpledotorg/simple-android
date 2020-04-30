@@ -292,7 +292,7 @@ class MedicalHistorySummaryUiControllerTest {
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(facilityRepository.currentFacilityImmediate(user)) doReturn facility
 
-    val controller = MedicalHistorySummaryUiController(patientUuid, medicalHistoryRepository, userSession, facilityRepository, clock)
+    val controller = MedicalHistorySummaryUiController(patientUuid, medicalHistoryRepository, clock)
     controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }
 
     events.onNext(ScreenCreated())

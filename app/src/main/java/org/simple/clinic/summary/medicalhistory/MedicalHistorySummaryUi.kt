@@ -7,8 +7,8 @@ interface MedicalHistorySummaryUi {
   fun showDiagnosisView()
   fun hideDiagnosisView()
   fun showDiabetesHistorySection()
+  fun hideDiabetesHistorySection()
 
   // Not yet migrated to Mobius
-  fun hideDiabetesHistorySection()
   fun hideDiagnosisError()
 }

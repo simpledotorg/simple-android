@@ -2,10 +2,10 @@ name: CI
 
 on:
   push:
-    branches: 
+    branches:
       - release/*
   pull_request:
-    branches: 
+    branches:
       - master
 
 jobs:
@@ -81,7 +81,7 @@ jobs:
 
       - name: QA Debug Build
         run: ./gradlew assembleQaDebug
-        
+
       - name: Upload APK
         uses: actions/upload-artifact@v1
         with:
@@ -164,36 +164,19 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+          ref: ${{github.event.pull_request.head.ref}}
 
       - name: Fix ellipsise in strings
         run: .github/scripts/strings_reader.py
 
       - name: Commit and push
-        run: |
-          #!/usr/bin/env bash
-
-          readonly GIT_HAS_CHANGES=1 # 0 = clean, 1 = dirty
-
-          USER_NAME="${{secrets.USER_NAME}}"
-          USER_EMAIL="${{secrets.USER_EMAIL}}"
-
-          git config user.name "$USER_NAME"
-          git config user.email "$USER_EMAIL"
-
-          # Following git command checks the git diff of staged files
-          # and assigns the exit code to GIT_DIFF_STATUS variable.
-          git diff --quiet; GIT_DIFF_STATUS=$?
-
-          # If the GIT_DIFF_STATUS is 1 (GIT_HAS_CHANGES) then we know
-          # there are changes and we can commit the changes and push
-          # them to new branch
-          if [[ ${GIT_DIFF_STATUS} -eq ${GIT_HAS_CHANGES} ]]; then
-              git add .
-              git commit --amend --no-edit
-              git push -f
-
-              echo 0
-          fi
+        env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        run: .github/scripts/commit_and_amend.sh
 
   qa_purge_env:
     runs-on: [ubuntu-latest]

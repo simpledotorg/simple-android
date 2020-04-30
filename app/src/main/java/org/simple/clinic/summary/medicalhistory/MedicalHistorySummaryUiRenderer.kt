@@ -10,9 +10,21 @@ class MedicalHistorySummaryUiRenderer(
 
   private val medicalHistoryChangedCallback = ValueChangedCallback<MedicalHistory>()
 
+  private val diabetesManagementFlagChangedCallback = ValueChangedCallback<Boolean>()
+
   override fun render(model: MedicalHistorySummaryModel) {
     if (model.hasLoadedMedicalHistory) {
       medicalHistoryChangedCallback.pass(model.medicalHistory!!, ui::populateMedicalHistory)
+    }
+
+    if (model.hasLoadedCurrentFacility) {
+      diabetesManagementFlagChangedCallback.pass(model.currentFacility!!.config.diabetesManagementEnabled, ::toggleDiabetesManagementUi)
+    }
+  }
+
+  private fun toggleDiabetesManagementUi(diabetesManagementEnabled: Boolean) {
+    if (diabetesManagementEnabled) {
+      ui.showDiagnosisView()
     }
   }
 }

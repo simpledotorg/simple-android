@@ -27,6 +27,7 @@ class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<MedicalHistorySummaryEffect, MedicalHistorySummaryEvent>()
         .addTransformer(LoadMedicalHistory::class.java, loadMedicalHistory())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+        .addAction(HideDiagnosisError::class.java, uiActions::hideDiagnosisError, schedulers.ui())
         .build()
   }
 

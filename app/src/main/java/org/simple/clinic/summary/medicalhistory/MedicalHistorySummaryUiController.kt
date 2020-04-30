@@ -8,8 +8,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
@@ -35,10 +33,7 @@ class MedicalHistorySummaryUiController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.merge(
-        updateMedicalHistory(replayedEvents),
-        hideDiagnosisError(replayedEvents)
-    )
+    return updateMedicalHistory(replayedEvents)
   }
 
   private fun updateMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {
@@ -52,15 +47,5 @@ class MedicalHistorySummaryUiController @AssistedInject constructor(
               .save(medicalHistory, Instant.now(clock))
               .andThen(Observable.never<UiChange>())
         }
-  }
-
-  private fun hideDiagnosisError(events: Observable<UiEvent>): Observable<UiChange> {
-    val diagnosisQuestions = setOf(DIAGNOSED_WITH_HYPERTENSION, DIAGNOSED_WITH_DIABETES)
-
-    return events
-        .ofType<SummaryMedicalHistoryAnswerToggled>()
-        .map { it.question }
-        .filter { it in diagnosisQuestions }
-        .map { { ui: Ui -> ui.hideDiagnosisError() } }
   }
 }

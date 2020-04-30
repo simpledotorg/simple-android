@@ -70,7 +70,6 @@ class MedicalHistorySummaryUiController @AssistedInject constructor(
         .map { diabetesManagementEnabled ->
           { ui: Ui ->
             if (diabetesManagementEnabled) {
-              ui.showDiagnosisView()
               ui.hideDiabetesHistorySection()
             } else {
               ui.hideDiagnosisView()

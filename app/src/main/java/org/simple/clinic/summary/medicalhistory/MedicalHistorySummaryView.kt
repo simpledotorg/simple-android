@@ -5,14 +5,12 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.medicalhistory_summary_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -27,7 +25,6 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -40,9 +37,6 @@ class MedicalHistorySummaryView(
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var controllerFactory: MedicalHistorySummaryUiController.Factory
 
   @Inject
   lateinit var effectHandlerFactory: MedicalHistorySummaryEffectHandler.Factory
@@ -60,7 +54,6 @@ class MedicalHistorySummaryView(
             internalEvents
         )
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val uiRenderer = MedicalHistorySummaryUiRenderer(this)
@@ -83,13 +76,6 @@ class MedicalHistorySummaryView(
     }
 
     context.injector<MedicalHistorySummaryViewInjector>().inject(this)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controllerFactory.create(screenKey.patientUuid),
-        screenDestroys = detaches().map { ScreenDestroyed() }
-    )
   }
 
   override fun onAttachedToWindow() {

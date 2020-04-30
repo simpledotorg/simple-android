@@ -55,7 +55,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
-    val uiRenderer = CustomPrescriptionEntryUiRenderer()
+    val uiRenderer = CustomPrescriptionEntryUiRenderer(ui)
     fixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = CustomPrescriptionEntryModel(),

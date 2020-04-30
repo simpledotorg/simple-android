@@ -5,13 +5,8 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
 import java.util.UUID
 
 typealias Ui = MedicalHistorySummaryUi
@@ -19,9 +14,7 @@ typealias Ui = MedicalHistorySummaryUi
 typealias UiChange = (Ui) -> Unit
 
 class MedicalHistorySummaryUiController @AssistedInject constructor(
-    @Assisted private val patientUuid: UUID,
-    private val medicalHistoryRepository: MedicalHistoryRepository,
-    private val clock: UtcClock
+    @Assisted private val patientUuid: UUID
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   @AssistedInject.Factory
@@ -33,19 +26,6 @@ class MedicalHistorySummaryUiController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return updateMedicalHistory(replayedEvents)
-  }
-
-  private fun updateMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {
-    val medicalHistories = medicalHistoryRepository.historyForPatientOrDefault(patientUuid)
-
-    return events.ofType<SummaryMedicalHistoryAnswerToggled>()
-        .withLatestFrom(medicalHistories)
-        .map { (toggleEvent, medicalHistory) -> medicalHistory.answered(toggleEvent.question, toggleEvent.answer) }
-        .flatMap { medicalHistory ->
-          medicalHistoryRepository
-              .save(medicalHistory, Instant.now(clock))
-              .andThen(Observable.never<UiChange>())
-        }
+    return Observable.never()
   }
 }

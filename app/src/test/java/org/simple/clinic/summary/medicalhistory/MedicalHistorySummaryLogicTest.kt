@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -135,7 +134,6 @@ class MedicalHistorySummaryLogicTest {
     val now = Instant.now(clock)
 
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
-    whenever(medicalHistoryRepository.save(updatedMedicalHistory, now)) doReturn Completable.complete()
 
     // when
     setupController()
@@ -179,9 +177,6 @@ class MedicalHistorySummaryLogicTest {
   fun `when the diagnosed with hypertension answer is changed, clear the diagnosis error`() {
     // given
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
-    val now = Instant.now(clock)
-    val updatedMedicalHistory = medicalHistory.answered(DIAGNOSED_WITH_HYPERTENSION, Yes)
-    whenever(medicalHistoryRepository.save(updatedMedicalHistory, now)) doReturn Completable.complete()
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -199,9 +194,6 @@ class MedicalHistorySummaryLogicTest {
   fun `when the diagnosed with diabetes answer is changed, clear the diagnosis error`() {
     // given
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
-    val now = Instant.now(clock)
-    val updatedMedicalHistory = medicalHistory.answered(DIAGNOSED_WITH_DIABETES, No)
-    whenever(medicalHistoryRepository.save(updatedMedicalHistory, now)) doReturn Completable.complete()
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -219,9 +211,6 @@ class MedicalHistorySummaryLogicTest {
   fun `when the has had kidney disease answer is changed, do not clear the diagnosis error`() {
     // given
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
-    val now = Instant.now(clock)
-    val updatedMedicalHistory = medicalHistory.answered(HAS_HAD_A_KIDNEY_DISEASE, Yes)
-    whenever(medicalHistoryRepository.save(updatedMedicalHistory, now)) doReturn Completable.complete()
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -239,9 +228,6 @@ class MedicalHistorySummaryLogicTest {
   fun `when the has had heart attack answer is changed, do not clear the diagnosis error`() {
     // given
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
-    val now = Instant.now(clock)
-    val updatedMedicalHistory = medicalHistory.answered(HAS_HAD_A_HEART_ATTACK, No)
-    whenever(medicalHistoryRepository.save(updatedMedicalHistory, now)) doReturn Completable.complete()
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -259,9 +245,6 @@ class MedicalHistorySummaryLogicTest {
   fun `when the has had a stroke answer is changed, do not clear the diagnosis error`() {
     // given
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)) doReturn Observable.just(medicalHistory)
-    val now = Instant.now(clock)
-    val updatedMedicalHistory = medicalHistory.answered(HAS_HAD_A_STROKE, Yes)
-    whenever(medicalHistoryRepository.save(updatedMedicalHistory, now)) doReturn Completable.complete()
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)

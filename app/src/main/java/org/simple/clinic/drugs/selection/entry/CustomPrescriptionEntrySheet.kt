@@ -76,7 +76,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
         .share()
   }
 
-  private val uiRenderer = CustomPrescriptionEntryUiRenderer()
+  private val uiRenderer = CustomPrescriptionEntryUiRenderer(this)
 
   private val delegate: MobiusDelegate<CustomPrescriptionEntryModel, CustomPrescriptionEntryEvent, CustomPrescriptionEntryEffect> by unsafeLazy {
     MobiusDelegate.forActivity(

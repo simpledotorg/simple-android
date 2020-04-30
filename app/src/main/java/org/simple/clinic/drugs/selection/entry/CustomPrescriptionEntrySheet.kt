@@ -81,7 +81,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
   private val delegate: MobiusDelegate<CustomPrescriptionEntryModel, CustomPrescriptionEntryEvent, CustomPrescriptionEntryEffect> by unsafeLazy {
     MobiusDelegate.forActivity(
         events = events.ofType(),
-        defaultModel = CustomPrescriptionEntryModel(),
+        defaultModel = CustomPrescriptionEntryModel.create(),
         update = CustomPrescriptionEntryUpdate(),
         effectHandler = CustomPrescriptionEntryEffectHandler.create(this),
         init = CustomPrescriptionEntryInit(),

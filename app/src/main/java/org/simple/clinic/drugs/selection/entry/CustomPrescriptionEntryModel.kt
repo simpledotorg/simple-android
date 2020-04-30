@@ -4,4 +4,11 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class CustomPrescriptionEntryModel : Parcelable
+data class CustomPrescriptionEntryModel(val drugName: String?) : Parcelable {
+
+  companion object {
+    fun create() : CustomPrescriptionEntryModel {
+      return CustomPrescriptionEntryModel(null)
+    }
+  }
+}

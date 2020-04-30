@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -37,15 +36,13 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class MedicalHistorySummaryUiControllerTest {
+class MedicalHistorySummaryLogicTest {
 
   private val patientUuid = UUID.fromString("31665de6-0265-4e33-888f-526bdb274699")
   private val medicalHistory = TestData.medicalHistory(
@@ -84,7 +81,6 @@ class MedicalHistorySummaryUiControllerTest {
       uiActions = ui
   )
 
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<MedicalHistorySummaryModel, MedicalHistorySummaryEvent, MedicalHistorySummaryEffect>
 
   @Before
@@ -102,7 +98,6 @@ class MedicalHistorySummaryUiControllerTest {
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -289,15 +284,9 @@ class MedicalHistorySummaryUiControllerTest {
   }
 
   private fun setupController(facility: Facility = facilityWithDiabetesManagementDisabled) {
-    whenever(userSession.loggedInUser()) doReturn Observable.just(user.toOptional())
     whenever(userSession.loggedInUserImmediate()) doReturn user
-    whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(facilityRepository.currentFacilityImmediate(user)) doReturn facility
 
-    val controller = MedicalHistorySummaryUiController(patientUuid)
-    controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }
-
-    events.onNext(ScreenCreated())
     testFixture.start()
   }
 }

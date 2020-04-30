@@ -71,8 +71,6 @@ class MedicalHistorySummaryUiController @AssistedInject constructor(
           { ui: Ui ->
             if (diabetesManagementEnabled) {
               ui.hideDiabetesHistorySection()
-            } else {
-              ui.showDiabetesHistorySection()
             }
           }
         }

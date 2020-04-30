@@ -27,6 +27,7 @@ class MedicalHistorySummaryUiRenderer(
       ui.showDiagnosisView()
     } else {
       ui.hideDiagnosisView()
+      ui.showDiabetesHistorySection()
     }
   }
 }

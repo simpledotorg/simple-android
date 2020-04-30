@@ -25,6 +25,8 @@ class MedicalHistorySummaryUiRenderer(
   private fun toggleDiabetesManagementUi(diabetesManagementEnabled: Boolean) {
     if (diabetesManagementEnabled) {
       ui.showDiagnosisView()
+    } else {
+      ui.hideDiagnosisView()
     }
   }
 }

@@ -75,7 +75,7 @@ class MedicalHistoryRepositoryAndroidTest {
     val historyToSave = testData.medicalHistory(patientUuid = patientUuid)
 
     val instant = Instant.now(clock)
-    repository.save(historyToSave, instant).blockingAwait()
+    repository.save(historyToSave, instant)
 
     val savedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
     val expectedSavedHistory = historyToSave.copy(syncStatus = SyncStatus.PENDING, updatedAt = instant)
@@ -96,7 +96,7 @@ class MedicalHistoryRepositoryAndroidTest {
     repository.save(listOf(oldHistory)).blockingAwait()
 
     val newHistory = oldHistory.copy(hasHadHeartAttack = Yes)
-    repository.save(newHistory, now).blockingAwait()
+    repository.save(newHistory, now)
 
     val updatedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
 
@@ -131,8 +131,7 @@ class MedicalHistoryRepositoryAndroidTest {
         updatedAt = Instant.now(clock))
 
     repository.save(olderHistory, olderHistory.updatedAt)
-        .andThen(repository.save(newerHistory, newerHistory.updatedAt))
-        .blockingAwait()
+    repository.save(newerHistory, newerHistory.updatedAt)
 
     val foundHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
     assertThat(foundHistory.uuid).isEqualTo(newerHistory.uuid)

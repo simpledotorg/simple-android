@@ -1006,7 +1006,7 @@ class PatientRepositoryAndroidTest {
                 updatedAt = instant
             ),
             updateTime = instant
-        ).blockingAwait()
+        )
 
     verifyRecentPatientOrder(
         recentPatient2,

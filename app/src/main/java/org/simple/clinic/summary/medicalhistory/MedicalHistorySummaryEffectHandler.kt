@@ -3,9 +3,9 @@ package org.simple.clinic.summary.medicalhistory
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
@@ -32,7 +32,7 @@ class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadMedicalHistory::class.java, loadMedicalHistory())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .addAction(HideDiagnosisError::class.java, uiActions::hideDiagnosisError, schedulers.ui())
-        .addTransformer(SaveUpdatedMedicalHistory::class.java, updateMedicalHistory())
+        .addConsumer(SaveUpdatedMedicalHistory::class.java, { updateMedicalHistory(it.medicalHistory) }, schedulers.io())
         .build()
   }
 
@@ -53,11 +53,7 @@ class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun updateMedicalHistory(): ObservableTransformer<SaveUpdatedMedicalHistory, MedicalHistorySummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .flatMapCompletable { medicalHistoryRepository.save(it.medicalHistory, Instant.now(clock)).subscribeOn(schedulers.io()) }
-          .andThen(Observable.empty())
-    }
+  private fun updateMedicalHistory(medicalHistory: MedicalHistory) {
+    medicalHistoryRepository.save(medicalHistory, Instant.now(clock))
   }
 }

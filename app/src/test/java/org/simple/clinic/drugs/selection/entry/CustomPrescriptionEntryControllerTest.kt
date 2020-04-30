@@ -58,7 +58,7 @@ class CustomPrescriptionEntryControllerTest {
     val uiRenderer = CustomPrescriptionEntryUiRenderer(ui)
     fixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = CustomPrescriptionEntryModel(),
+        defaultModel = CustomPrescriptionEntryModel.create(),
         init = CustomPrescriptionEntryInit(),
         update = CustomPrescriptionEntryUpdate(),
         effectHandler = CustomPrescriptionEntryEffectHandler.create(mock()),

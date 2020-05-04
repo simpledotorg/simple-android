@@ -5,26 +5,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.activity.placeholder.PlaceholderScreenKey
-import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.onboarding.OnboardingScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.FullScreenKey
-import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
-import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.selectcountry.SelectCountryScreenKey
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
@@ -58,12 +53,16 @@ class SetupActivity : AppCompatActivity(), UiActions {
     )
   }
 
+  private lateinit var navController: NavController
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     @Suppress("ConstantConditionIf")
     if (BuildConfig.DISABLE_SCREENSHOT) {
       window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
     }
+    setContentView(R.layout.activity_setup)
+    navController = findNavController(R.id.screen_host_view)
 
     delegate.onRestoreInstanceState(savedInstanceState)
   }
@@ -88,7 +87,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
     val wrappedContext = baseContext
         .wrap { LocaleOverrideContextWrapper.wrap(it, locale) }
-        .wrap { wrapContextWithRouter(it) }
         .wrap { InjectorProviderContextWrapper.wrap(it, component) }
         .wrap { ViewPumpContextWrapper.wrap(it) }
 
@@ -105,18 +103,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
     screenResults.send(ActivityPermissionResult(requestCode))
   }
 
-  override fun onBackPressed() {
-    val interceptCallback = screenRouter.offerBackPressToInterceptors()
-    if (interceptCallback.intercepted) {
-      return
-    }
-    val popCallback = screenRouter.pop()
-    if (popCallback.popped) {
-      return
-    }
-    super.onBackPressed()
-  }
-
   override fun goToMainActivity() {
     val intent = TheActivity.newIntent(this).apply {
       flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
@@ -126,27 +112,19 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun showOnboardingScreen() {
-    screenRouter.popAndPush(OnboardingScreenKey(), RouterDirection.FORWARD)
+    // If onboarding screen is already being shown don't navigate again, it would cause
+    // duplicate destinations
+    if (navController.currentDestination?.id != R.id.onboardingScreen) {
+      navController.navigate(R.id.action_placeholderScreen_to_onboardingScreen)
+    }
   }
 
   override fun showCountrySelectionScreen() {
-    screenRouter.popAndPush(SelectCountryScreenKey(), RouterDirection.FORWARD)
-  }
-
-  private fun wrapContextWithRouter(baseContext: Context): Context {
-    screenRouter.registerKeyChanger(FullScreenKeyChanger(
-        activity = this,
-        screenLayoutContainerRes = android.R.id.content,
-        screenBackgroundRes = R.color.window_background,
-        onKeyChange = this::onScreenChanged
-    ))
-    return screenRouter.installInContext(baseContext, PlaceholderScreenKey())
-  }
-
-  private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {
-    val outgoingScreenName = outgoing?.analyticsName ?: ""
-    val incomingScreenName = incoming.analyticsName
-    Analytics.reportScreenChange(outgoingScreenName, incomingScreenName)
+    // If select country screen is already being shown don't navigate again, it would cause
+    // duplicate destinations
+    if (navController.currentDestination?.id != R.id.selectCountryScreen) {
+      navController.navigate(R.id.action_placeholderScreen_to_selectCountryScreen)
+    }
   }
 
   private fun setupDiGraph() {

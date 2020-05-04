@@ -25,10 +25,19 @@ def process_strings_file(path):
 
     for resource in resources_root:
         if resource.tag == 'string':
+            original = resource.text
             resource.text = replace_ellipsis(text=resource.text)
+            if original != resource.text:
+                print(u"{0} : {1} -> {2}".format(resource.attrib['name'], original, resource.text))
+
         elif resource.tag == 'plurals':
             for item in resource:
+                original = item.text
                 item.text = replace_ellipsis(text=item.text)
+                if original != item.text:
+                    formatted_name = "{0}.{1}".format(resource.attrib['name'], item.attrib['quantity'])
+                    print(u"{0} : {1} -> {2}".format(formatted_name, original, item.text))                                    
+
         else:
             "Ignoring any other tags, most likely comments"
 

@@ -22,9 +22,14 @@
 
   <declare-styleable name="PinEntryCardView">
     <attr name="verificationMethod" format="enum">
-      <enum name="local" value="0"/>
+      <enum name="local" value="0" />
       <enum name="ongoingEntry" value="1" />
       <enum name="serverLogin" value="2" />
     </attr>
+  </declare-styleable>
+
+  <declare-styleable name="ScreenNavigator">
+    <attr name="layout" format="reference" />
+    <attr name="analyticsName" format="string" />
   </declare-styleable>
 </resources>

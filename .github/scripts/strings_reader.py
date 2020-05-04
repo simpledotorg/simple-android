@@ -46,23 +46,12 @@ def process_strings_file(path):
         else:
             "Ignoring any other tags, most likely comments"
 
-    fixed_ellipsis_count = len(fixed_ellipsis_attrib)
-    if fixed_ellipsis_count > 0:
-        "Done fixing the xml file, write the file back"
-        resources_tree.write(path,
-                             encoding='utf-8', xml_declaration=True)
-        "Adding new line at end of the file"
-        with open(path, "a") as strings_file:
-            strings_file.write("\r\n")
-
-        if fixed_ellipsis_count > 1:
-            print("Fixed ellipsis for {} strings. \r\n{}\r\n".format(
-                fixed_ellipsis_count, seprator.join(fixed_ellipsis_attrib)))
-        else:
-            print("Fixed ellipsis for {} string. \r\n{}\r\n".format(
-                fixed_ellipsis_count, seprator.join(fixed_ellipsis_attrib)))
-    else:
-        print("File doesn't have any ellipsis issues!\r\n")
+    print("Write {}".format(path))
+    resources_tree.write(path, encoding='utf-8', xml_declaration=True)
+    
+    print("Adding new line at end of {}".format(path))
+    with open(path, "a") as strings_file:
+        strings_file.write("\r\n")
 
 
 ElementTree.register_namespace('tools', 'http://schemas.android.com/tools')

@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## On Demo
+## 2020-05-04-7255
 
 ### Internal
 - Add CI check for verifying that the CHANGELOG is updated

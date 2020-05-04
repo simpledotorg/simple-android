@@ -4,6 +4,7 @@
 ### Feature
 - Add support for calling the patient directly from the summary screen
 - Show all BP passports of a patient while editing them
+- New design for calling patient from the overdue list
 
 ### Internal
 - Replace flow with navigation component in `SetupActivity`

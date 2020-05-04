@@ -40,7 +40,6 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        toggleSaveButton(replayedEvents),
         saveNewPrescriptionsAndDismiss(replayedEvents),
         updatePrescriptionAndDismiss(replayedEvents),
         showDefaultDosagePlaceholder(replayedEvents),
@@ -51,15 +50,7 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
         closeSheetWhenPrescriptionIsDeleted(replayedEvents)
     )
   }
-
-  private fun toggleSaveButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<CustomPrescriptionDrugNameTextChanged>()
-        .map { it.name.isNotBlank() }
-        .distinctUntilChanged()
-        .map { canBeSaved -> { ui: Ui -> ui.setSaveButtonEnabled(canBeSaved) } }
-  }
-
+  
   private fun saveNewPrescriptionsAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
         .ofType<ScreenCreated>()

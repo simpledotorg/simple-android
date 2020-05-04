@@ -13,23 +13,18 @@ class CommentedTreeBuilder(ElementTree.TreeBuilder):
         self.data(data)
         self.end(ElementTree.Comment)
 
-
 def replace_ellipsis(text):
     return text.replace("...", android_ellipsis)
 
-
 def process_string(resource):
-    if resource.text.find("...") >= 0:
-        resource.text = replace_ellipsis(text=resource.text)
-        return resource.attrib['name']
+    resource.text = replace_ellipsis(text=resource.text)
+    return resource.attrib['name']
 
 
 def process_plural(resource):
     for item in resource:
-        if item.text.find("...") >= 0:
-            item.text = replace_ellipsis(text=item.text)
-            return resource.attrib['name']
-
+        item.text = replace_ellipsis(text=item.text)
+    return resource.attrib['name']
 
 def process_strings_file(path):
     print("Checking strings file at -> {}".format(path))

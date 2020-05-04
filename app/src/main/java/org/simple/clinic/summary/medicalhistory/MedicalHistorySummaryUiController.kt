@@ -43,18 +43,10 @@ class MedicalHistorySummaryUiController @AssistedInject constructor(
         .replay()
 
     return Observable.merge(
-        displayMedicalHistory(replayedEvents),
         updateMedicalHistory(replayedEvents),
         setupViewForDiabetesManagement(replayedEvents),
         hideDiagnosisError(replayedEvents)
     )
-  }
-
-  private fun displayMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        .switchMap { medicalHistoryRepository.historyForPatientOrDefault(patientUuid) }
-        .map { { ui: Ui -> ui.populateMedicalHistory(it) } }
   }
 
   private fun updateMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {

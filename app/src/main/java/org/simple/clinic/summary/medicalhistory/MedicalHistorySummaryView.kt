@@ -44,9 +44,14 @@ class MedicalHistorySummaryView(
   @Inject
   lateinit var controllerFactory: MedicalHistorySummaryUiController.Factory
 
+  @Inject
+  lateinit var effectHandler: MedicalHistorySummaryEffectHandler
+
   init {
     LayoutInflater.from(context).inflate(R.layout.medicalhistory_summary_view, this, true)
   }
+
+  private val screenKey by unsafeLazy { screenRouter.key<PatientSummaryScreenKey>(this) }
 
   private val events by unsafeLazy {
     Observable
@@ -63,10 +68,10 @@ class MedicalHistorySummaryView(
   private val delegate by unsafeLazy {
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = MedicalHistorySummaryModel.create(),
+        defaultModel = MedicalHistorySummaryModel.create(screenKey.patientUuid),
         update = MedicalHistorySummaryUpdate(),
         init = MedicalHistorySummaryInit(),
-        effectHandler = MedicalHistorySummaryEffectHandler().create(),
+        effectHandler = effectHandler.create(),
         modelUpdateListener = uiRenderer::render
     )
   }
@@ -78,8 +83,6 @@ class MedicalHistorySummaryView(
     }
 
     context.injector<MedicalHistorySummaryViewInjector>().inject(this)
-
-    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
 
     bindUiToController(
         ui = this,

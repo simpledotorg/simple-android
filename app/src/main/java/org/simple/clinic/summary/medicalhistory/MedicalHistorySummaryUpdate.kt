@@ -3,6 +3,7 @@ package org.simple.clinic.summary.medicalhistory
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.next
 
 class MedicalHistorySummaryUpdate : Update<MedicalHistorySummaryModel, MedicalHistorySummaryEvent, MedicalHistorySummaryEffect> {
 
@@ -10,6 +11,9 @@ class MedicalHistorySummaryUpdate : Update<MedicalHistorySummaryModel, MedicalHi
       model: MedicalHistorySummaryModel,
       event: MedicalHistorySummaryEvent
   ): Next<MedicalHistorySummaryModel, MedicalHistorySummaryEffect> {
-    return noChange()
+    return when (event) {
+      is MedicalHistoryLoaded -> next(model.medicalHistoryLoaded(event.medicalHistory))
+      is SummaryMedicalHistoryAnswerToggled -> noChange()
+    }
   }
 }

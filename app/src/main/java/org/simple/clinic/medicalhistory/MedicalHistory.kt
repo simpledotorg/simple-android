@@ -1,5 +1,6 @@
 package org.simple.clinic.medicalhistory
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
@@ -8,6 +9,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
@@ -19,6 +21,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 
+@Parcelize
 @Entity(tableName = "MedicalHistory")
 data class MedicalHistory(
     @PrimaryKey
@@ -44,7 +47,7 @@ data class MedicalHistory(
     val updatedAt: Instant,
 
     val deletedAt: Instant?
-) {
+): Parcelable {
   val diagnosisRecorded: Boolean
     get() = diagnosedWithHypertension != Unanswered && diagnosedWithDiabetes != Unanswered
 

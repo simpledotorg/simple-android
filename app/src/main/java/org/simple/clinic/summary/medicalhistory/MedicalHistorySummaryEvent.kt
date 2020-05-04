@@ -1,6 +1,7 @@
 package org.simple.clinic.summary.medicalhistory
 
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.widgets.UiEvent
 
@@ -12,3 +13,5 @@ data class SummaryMedicalHistoryAnswerToggled(
 ) : MedicalHistorySummaryEvent() {
   override val analyticsName = "Patient Summary:Answer for $question set to $answer"
 }
+
+data class MedicalHistoryLoaded(val medicalHistory: MedicalHistory) : MedicalHistorySummaryEvent()

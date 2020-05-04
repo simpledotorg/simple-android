@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item>
+    <shape android:shape="oval">
+      <solid android:color="@color/green1" />
+    </shape>
+  </item>
+
+  <item>
+    <inset
+      android:drawable="@drawable/ic_call_9dp"
+      android:inset="@dimen/spacing_4" />
+  </item>
+</layer-list>

@@ -16,14 +16,6 @@ class CommentedTreeBuilder(ElementTree.TreeBuilder):
 def replace_ellipsis(text):
     return text.replace("...", android_ellipsis)
 
-def process_string(resource):
-    resource.text = replace_ellipsis(text=resource.text)
-
-
-def process_plural(resource):
-    for item in resource:
-        item.text = replace_ellipsis(text=item.text)
-
 def process_strings_file(path):
     print("Checking strings file at -> {}".format(path))
 
@@ -33,9 +25,10 @@ def process_strings_file(path):
 
     for resource in resources_root:
         if resource.tag == 'string':
-            process_string(resource=resource)
+            resource.text = replace_ellipsis(text=resource.text)
         elif resource.tag == 'plurals':
-            process_plural(resource=resource)
+            for item in resource:
+                item.text = replace_ellipsis(text=item.text)
         else:
             "Ignoring any other tags, most likely comments"
 

@@ -11,6 +11,7 @@
     <ignore path="src/main/res/drawable/ic_patient_male.xml" />
     <ignore path="src/main/res/drawable/ic_patient_transgender.xml" />
 
+    <ignore regexp="summary_call_icon_*"/>
   </issue>
 
   <!-- Ignore this for now due to time constraints. Switch to static images later. -->

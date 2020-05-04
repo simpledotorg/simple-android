@@ -63,6 +63,7 @@ Run all tests in the screen (from the package if the test class has been split i
    - If multiple flows invoke this method, comment out the usages of this method.
 3. Run tests now and take a note of which ones break, we will migrate the functionality and make these tests pass one by one.
    - One important thing to note here is that under no circumstances should an existing test be changed while the refactoring is happen.
+   - In some cases, we might be using an `Rx` operator like `distinctUntilChanged` to render UI only when something has changed in the controller. When this is migrated to Mobius, we might run into issues where updating the model causes the regression tests to break since the UI gets rendered more than once. In order to handle such cases, we have a class called `ValueChangedCallback` which can be used in the `UiRenderer` to conditionally render a model only when it changes.
    - Exceptions can be made for this, talk to someone else and be 100% sure that you know why you're changing a test during the process.
 4. If the method is a one-off method(like navigating to a different screen, showing a dialog box, etc.), move it to the previously defined `UiActions` interface.
    - Make `Ui` interface implement `UiActions` if not done already.

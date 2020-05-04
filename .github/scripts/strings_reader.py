@@ -18,13 +18,11 @@ def replace_ellipsis(text):
 
 def process_string(resource):
     resource.text = replace_ellipsis(text=resource.text)
-    return resource.attrib['name']
 
 
 def process_plural(resource):
     for item in resource:
         item.text = replace_ellipsis(text=item.text)
-    return resource.attrib['name']
 
 def process_strings_file(path):
     print("Checking strings file at -> {}".format(path))
@@ -32,23 +30,18 @@ def process_strings_file(path):
     parser = ElementTree.XMLParser(target=CommentedTreeBuilder())
     resources_tree = ElementTree.parse(path, parser=parser)
     resources_root = resources_tree.getroot()
-    fixed_ellipsis_attrib = []
 
     for resource in resources_root:
         if resource.tag == 'string':
-            attrib_name = process_string(resource=resource)
-            if attrib_name is not None:
-                fixed_ellipsis_attrib.append(attrib_name)
+            process_string(resource=resource)
         elif resource.tag == 'plurals':
-            attrib_name = process_plural(resource=resource)
-            if attrib_name is not None:
-                fixed_ellipsis_attrib.append(attrib_name)
+            process_plural(resource=resource)
         else:
             "Ignoring any other tags, most likely comments"
 
     print("Write {}".format(path))
     resources_tree.write(path, encoding='utf-8', xml_declaration=True)
-    
+
     print("Adding new line at end of {}".format(path))
     with open(path, "a") as strings_file:
         strings_file.write("\r\n")

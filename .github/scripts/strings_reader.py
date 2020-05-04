@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import sys
@@ -42,7 +42,7 @@ def process_strings_file(path):
             original = resource.text
             resource.text = transform_text(resource.text)
             if original != resource.text:
-                print(u"{0} : {1} -> {2}".format(resource.attrib['name'], original, resource.text))
+                print("{0} : {1} -> {2}".format(resource.attrib['name'], original, resource.text))
 
         elif resource.tag == 'plurals':
             for item in resource:
@@ -50,7 +50,7 @@ def process_strings_file(path):
                 item.text = transform_text(item.text)
                 if original != item.text:
                     formatted_name = "{0}.{1}".format(resource.attrib['name'], item.attrib['quantity'])
-                    print(u"{0} : {1} -> {2}".format(formatted_name, original, item.text))                                    
+                    print("{0} : {1} -> {2}".format(formatted_name, original, item.text))                                    
 
         else:
             "Ignoring any other tags, most likely comments"

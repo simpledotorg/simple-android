@@ -18,8 +18,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.router.screen.NestedKeyChanger
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
@@ -37,10 +35,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
   lateinit var effectHandlerFactory: SetupActivityEffectHandler.Factory
 
   private val screenResults = ScreenResultBus()
-
-  private val screenRouter by unsafeLazy {
-    ScreenRouter.create(this, NestedKeyChanger(), screenResults)
-  }
 
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
@@ -131,7 +125,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
     component = ClinicApp.appComponent
         .setupActivityComponentBuilder()
         .activity(this)
-        .screenRouter(screenRouter)
         .build()
     component.inject(this)
   }

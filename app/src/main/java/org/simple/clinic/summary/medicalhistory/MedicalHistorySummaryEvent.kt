@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.medicalhistory
 
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -15,3 +16,5 @@ data class SummaryMedicalHistoryAnswerToggled(
 }
 
 data class MedicalHistoryLoaded(val medicalHistory: MedicalHistory) : MedicalHistorySummaryEvent()
+
+data class CurrentFacilityLoaded(val facility: Facility): MedicalHistorySummaryEvent()

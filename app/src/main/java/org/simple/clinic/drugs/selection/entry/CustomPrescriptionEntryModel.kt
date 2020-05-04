@@ -7,8 +7,12 @@ import kotlinx.android.parcel.Parcelize
 data class CustomPrescriptionEntryModel(val drugName: String?) : Parcelable {
 
   companion object {
-    fun create() : CustomPrescriptionEntryModel {
+    fun create(): CustomPrescriptionEntryModel {
       return CustomPrescriptionEntryModel(null)
     }
+  }
+
+  fun drugNameChanged(name: String): CustomPrescriptionEntryModel {
+    return copy(drugName = name)
   }
 }

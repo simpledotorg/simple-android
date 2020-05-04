@@ -10,7 +10,7 @@
 - Add CI check for fixing ellipsis's in strings.xml
 - Extracted `BloodPressureReading` model as an embedded model from `BloodPressureMeasurement`
 
-## On Demo
+## 2020-05-04-7255
 ### Internal
 - Add CI check for verifying that the CHANGELOG is updated
 - Paginate data in blood sugar history page

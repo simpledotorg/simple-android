@@ -77,7 +77,9 @@ class MedicalHistorySummaryUiControllerTest {
   private val events = PublishSubject.create<UiEvent>()
   private val effectHandler = MedicalHistorySummaryEffectHandler(
       schedulers = TrampolineSchedulersProvider(),
-      medicalHistoryRepository = medicalHistoryRepository
+      medicalHistoryRepository = medicalHistoryRepository,
+      userSession = userSession,
+      facilityRepository = facilityRepository
   )
 
   private lateinit var controllerSubscription: Disposable
@@ -286,7 +288,9 @@ class MedicalHistorySummaryUiControllerTest {
 
   private fun setupController(facility: Facility = facilityWithDiabetesManagementDisabled) {
     whenever(userSession.loggedInUser()) doReturn Observable.just(user.toOptional())
+    whenever(userSession.loggedInUserImmediate()) doReturn user
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
+    whenever(facilityRepository.currentFacilityImmediate(user)) doReturn facility
 
     val controller = MedicalHistorySummaryUiController(patientUuid, medicalHistoryRepository, userSession, facilityRepository, clock)
     controllerSubscription = events.compose(controller).subscribe { it.invoke(ui) }

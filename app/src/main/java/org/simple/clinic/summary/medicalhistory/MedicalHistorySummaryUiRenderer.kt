@@ -7,5 +7,8 @@ class MedicalHistorySummaryUiRenderer(
 ) : ViewRenderer<MedicalHistorySummaryModel> {
 
   override fun render(model: MedicalHistorySummaryModel) {
+    if (model.hasLoadedMedicalHistory) {
+      ui.populateMedicalHistory(model.medicalHistory!!)
+    }
   }
 }

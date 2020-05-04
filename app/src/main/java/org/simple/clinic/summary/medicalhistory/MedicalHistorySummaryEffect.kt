@@ -1,3 +1,7 @@
 package org.simple.clinic.summary.medicalhistory
 
-class MedicalHistorySummaryEffect
+import java.util.UUID
+
+sealed class MedicalHistorySummaryEffect
+
+data class LoadMedicalHistory(val patientUUID: UUID): MedicalHistorySummaryEffect()

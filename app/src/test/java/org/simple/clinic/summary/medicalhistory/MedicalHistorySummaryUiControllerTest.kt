@@ -36,6 +36,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -74,6 +75,10 @@ class MedicalHistorySummaryUiControllerTest {
   private val clock = TestUtcClock()
 
   private val events = PublishSubject.create<UiEvent>()
+  private val effectHandler = MedicalHistorySummaryEffectHandler(
+      schedulers = TrampolineSchedulersProvider(),
+      medicalHistoryRepository = medicalHistoryRepository
+  )
 
   private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<MedicalHistorySummaryModel, MedicalHistorySummaryEvent, MedicalHistorySummaryEffect>
@@ -83,10 +88,10 @@ class MedicalHistorySummaryUiControllerTest {
     val uiRenderer = MedicalHistorySummaryUiRenderer(ui)
     testFixture = MobiusTestFixture(
         events = events.ofType(),
-        defaultModel = MedicalHistorySummaryModel.create(),
+        defaultModel = MedicalHistorySummaryModel.create(patientUuid),
         init = MedicalHistorySummaryInit(),
         update = MedicalHistorySummaryUpdate(),
-        effectHandler = MedicalHistorySummaryEffectHandler().create(),
+        effectHandler = effectHandler.create(),
         modelUpdateListener = uiRenderer::render
     )
   }

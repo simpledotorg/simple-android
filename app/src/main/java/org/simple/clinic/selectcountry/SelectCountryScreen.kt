@@ -186,5 +186,6 @@ class SelectCountryScreen(
     }
     activity.startActivity(intent)
     activity.overridePendingTransition(0, 0)
+    activity.finish()
   }
 }

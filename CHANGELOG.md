@@ -2,7 +2,7 @@
 
 ## Next release
 ### Feature
-- [In Progress: 29 Apr 2020] Add support for calling the patient directly from the summary screen
+- Add support for calling the patient directly from the summary screen
 - Show all BP passports of a patient while editing them
 
 ### Internal

@@ -16,6 +16,20 @@ class CommentedTreeBuilder(ElementTree.TreeBuilder):
 def replace_ellipsis(text):
     return text.replace("...", android_ellipsis)
 
+def escape_characters(text):
+    text_as_list = list(text)
+
+    for index, character in enumerate(text_as_list):
+        if(character in strings_to_escape):
+            if(index == 0 or text_as_list[index - 1] != escape_char):
+                text_as_list.insert(index, escape_char)
+        
+    return ''.join(text_as_list)
+
+def transform_text(text):
+    return replace_ellipsis(escape_characters(text))
+
+
 def process_strings_file(path):
     print("Checking strings file at -> {}".format(path))
 
@@ -26,14 +40,14 @@ def process_strings_file(path):
     for resource in resources_root:
         if resource.tag == 'string':
             original = resource.text
-            resource.text = replace_ellipsis(text=resource.text)
+            resource.text = transform_text(resource.text)
             if original != resource.text:
                 print(u"{0} : {1} -> {2}".format(resource.attrib['name'], original, resource.text))
 
         elif resource.tag == 'plurals':
             for item in resource:
                 original = item.text
-                item.text = replace_ellipsis(text=item.text)
+                item.text = transform_text(item.text)
                 if original != item.text:
                     formatted_name = "{0}.{1}".format(resource.attrib['name'], item.attrib['quantity'])
                     print(u"{0} : {1} -> {2}".format(formatted_name, original, item.text))                                    
@@ -65,6 +79,8 @@ print("Processing strings:")
 print(seprator.join(strings_file_paths) + "\r\n")
 
 android_ellipsis = u"\u2026"
+strings_to_escape = ["\"", "\'"]
+escape_char = '\\'
 
 for path in strings_file_paths:
     process_strings_file(path)

@@ -14,6 +14,7 @@ class MedicalHistorySummaryUpdate : Update<MedicalHistorySummaryModel, MedicalHi
     return when (event) {
       is MedicalHistoryLoaded -> next(model.medicalHistoryLoaded(event.medicalHistory))
       is SummaryMedicalHistoryAnswerToggled -> noChange()
+      is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
     }
   }
 }

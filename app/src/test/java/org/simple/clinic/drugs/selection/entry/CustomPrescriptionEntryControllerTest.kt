@@ -54,16 +54,6 @@ class CustomPrescriptionEntryControllerTest {
   fun setUp() {
     whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
-
-    val uiRenderer = CustomPrescriptionEntryUiRenderer(ui)
-    fixture = MobiusTestFixture(
-        events = uiEvents.ofType(),
-        defaultModel = CustomPrescriptionEntryModel.create(),
-        init = CustomPrescriptionEntryInit(),
-        update = CustomPrescriptionEntryUpdate(),
-        effectHandler = CustomPrescriptionEntryEffectHandler.create(mock()),
-        modelUpdateListener = uiRenderer::render
-    )
   }
 
   @After
@@ -276,6 +266,15 @@ class CustomPrescriptionEntryControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
 
+    val uiRenderer = CustomPrescriptionEntryUiRenderer(ui)
+    fixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = CustomPrescriptionEntryModel.create(openAs),
+        init = CustomPrescriptionEntryInit(),
+        update = CustomPrescriptionEntryUpdate(),
+        effectHandler = CustomPrescriptionEntryEffectHandler.create(mock()),
+        modelUpdateListener = uiRenderer::render
+    )
     fixture.start()
 
     uiEvents.onNext(ScreenCreated())

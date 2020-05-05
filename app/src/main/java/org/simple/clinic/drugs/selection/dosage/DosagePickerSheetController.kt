@@ -101,9 +101,6 @@ class DosagePickerSheetController @AssistedInject constructor(
               .andThen(Observable.empty<UiChange>())
         }
 
-    val patientUuids = sheetCreated
-        .map { it.patientUuid }
-
     val protocolDrug = dosageSelected
         .map { it.protocolDrug }
 
@@ -112,8 +109,8 @@ class DosagePickerSheetController @AssistedInject constructor(
         .switchMap { facilityRepository.currentFacility(it) }
 
     val savePrescription = protocolDrug
-        .withLatestFrom(patientUuids, currentFacilityStream)
-        .flatMap { (drug, patientUuid, currentFacility) ->
+        .withLatestFrom(currentFacilityStream)
+        .flatMap { (drug, currentFacility) ->
           prescriptionRepository
               .savePrescription(
                   patientUuid = patientUuid,

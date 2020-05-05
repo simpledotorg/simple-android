@@ -20,6 +20,7 @@ import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
@@ -90,10 +91,7 @@ class DosagePickerSheet : BottomSheetActivity() {
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
-    val drugName = intent.getStringExtra(KEY_DRUG_NAME)
-    val patientUuid = intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID
-    val prescribedDrugUuid = intent.getSerializableExtra(KEY_PRESCRIBED_DRUG_UUID).toOptional() as Optional<UUID>
-    return Observable.just(DosagePickerSheetCreated())
+    return Observable.just(ScreenCreated())
   }
 
   private fun displayDrugName() {

@@ -18,9 +18,11 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.dp
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
@@ -37,19 +39,22 @@ class DosagePickerSheet : BottomSheetActivity() {
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
-  private val adapter = ItemAdapter(DosageDiffer())
+  private val dosageAdapter = ItemAdapter(DosageDiffer())
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_dosage_picker)
 
-    recyclerView.adapter = adapter
-    recyclerView.layoutManager = LinearLayoutManager(this)
+    recyclerView.apply {
+      adapter = dosageAdapter
+      layoutManager = LinearLayoutManager(this@DosagePickerSheet)
+      addItemDecoration(DividerItemDecorator(this@DosagePickerSheet, 24.dp, 24.dp))
+    }
     displayDrugName()
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(sheetCreates(), adapter.itemEvents),
+        events = Observable.merge(sheetCreates(), dosageAdapter.itemEvents),
         controller = controller,
         screenDestroys = onDestroys
     )
@@ -93,7 +98,7 @@ class DosagePickerSheet : BottomSheetActivity() {
   }
 
   fun populateDosageList(list: List<DosageListItem>) {
-    adapter.submitList(list)
+    dosageAdapter.submitList(list)
   }
 
   companion object {

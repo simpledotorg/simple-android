@@ -55,6 +55,9 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
   @Inject
   lateinit var locale: Locale
 
+  @Inject
+  lateinit var effectHandlerFactory: CustomPrescriptionEntryEffectHandler.Factory
+
   private lateinit var component: CustomPrescriptionEntrySheetComponent
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
@@ -83,7 +86,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
         events = events.ofType(),
         defaultModel = CustomPrescriptionEntryModel.create(openAs),
         update = CustomPrescriptionEntryUpdate(),
-        effectHandler = CustomPrescriptionEntryEffectHandler.create(this),
+        effectHandler = effectHandlerFactory.create(this).build(),
         init = CustomPrescriptionEntryInit(),
         modelUpdateListener = uiRenderer::render
     )

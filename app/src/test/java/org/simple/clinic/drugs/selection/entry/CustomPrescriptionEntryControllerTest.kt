@@ -272,7 +272,7 @@ class CustomPrescriptionEntryControllerTest {
         defaultModel = CustomPrescriptionEntryModel.create(openAs),
         init = CustomPrescriptionEntryInit(),
         update = CustomPrescriptionEntryUpdate(),
-        effectHandler = CustomPrescriptionEntryEffectHandler.create(mock()),
+        effectHandler = CustomPrescriptionEntryEffectHandler(mock()).build(),
         modelUpdateListener = uiRenderer::render
     )
     fixture.start()

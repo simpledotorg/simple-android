@@ -9,8 +9,9 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -52,18 +53,12 @@ class DosagePickerSheetControllerTest {
   private val patientUuid = UUID.fromString("c4df02bd-d9d7-4120-9ff7-41f1e35aa8dd")
   private val userSubject = PublishSubject.create<User>()
 
-  private val controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
+  private lateinit var controller: DosagePickerSheetController
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(sheet) }
-
-    userSubject.onNext(user)
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -74,6 +69,8 @@ class DosagePickerSheetControllerTest {
     val protocolDrug2 = TestData.protocolDrug(uuid = UUID.fromString("29cf2315-d2b5-4a7f-b19a-34f998b82513"), name = drugName, dosage = "10 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.just(listOf(protocolDrug1, protocolDrug2)))
+
+    setupController()
 
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, None))
     userSubject.onNext(user)
@@ -94,6 +91,8 @@ class DosagePickerSheetControllerTest {
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.savePrescription(patientUuid, dosageSelected, currentFacility)).thenReturn(Completable.complete())
 
+    setupController()
+
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, None))
     uiEvents.onNext(DosageSelected(dosageSelected))
 
@@ -113,6 +112,8 @@ class DosagePickerSheetControllerTest {
     whenever(prescriptionRepository.savePrescription(patientUuid, dosageSelected, currentFacility)).thenReturn(Completable.complete())
     whenever(prescriptionRepository.softDeletePrescription(existingPrescription.uuid)).thenReturn(Completable.complete())
 
+    setupController()
+
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, existingPrescription.uuid.toOptional()))
     uiEvents.onNext(DosageSelected(dosageSelected))
 
@@ -130,6 +131,8 @@ class DosagePickerSheetControllerTest {
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.softDeletePrescription(existingPrescription.uuid)).thenReturn(Completable.complete())
 
+    setupController()
+
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, existingPrescription.uuid.toOptional()))
     uiEvents.onNext(NoneSelected)
 
@@ -137,5 +140,18 @@ class DosagePickerSheetControllerTest {
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
     verify(sheet).finish()
     verifyNoMoreInteractions(sheet)
+  }
+
+  private fun setupController() {
+    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
+
+    controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(sheet) }
+
+    userSubject.onNext(user)
   }
 }

@@ -3,13 +3,11 @@ package org.simple.clinic.drugs.selection.dosage
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.sheet_dosage_picker.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
@@ -38,9 +36,6 @@ class DosagePickerSheet : BottomSheetActivity() {
   lateinit var locale: Locale
 
   private lateinit var component: DosagePickerSheetComponent
-
-  private val recyclerView by bindView<RecyclerView>(R.id.sheet_dosage_name_list)
-  private val drugNameTextView by bindView<TextView>(R.id.sheet_dosage_drug_name)
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 

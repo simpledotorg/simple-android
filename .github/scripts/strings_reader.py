@@ -14,7 +14,7 @@ class CommentedTreeBuilder(ElementTree.TreeBuilder):
         self.end(ElementTree.Comment)
 
 def replace_ellipsis(text):
-    return text.replace("...", android_ellipsis)
+    return text.replace("...", ellipsis_unicode)
 
 def escape_characters(text):
     text_as_list = list(text)
@@ -31,7 +31,7 @@ def transform_text(text):
 
 
 def process_strings_file(path):
-    print("Checking strings file at -> {}".format(path))
+    print("\n\n----- BEGIN: {} -----\n".format(path))
 
     parser = ElementTree.XMLParser(target=CommentedTreeBuilder())
     resources_tree = ElementTree.parse(path, parser=parser)
@@ -42,7 +42,7 @@ def process_strings_file(path):
             original = resource.text
             resource.text = transform_text(resource.text)
             if original != resource.text:
-                print("{0} : {1} -> {2}".format(resource.attrib['name'], original, resource.text))
+                print("{3}> {0} : {1} -> {2}".format(resource.attrib['name'], original, resource.text, indent_char))
 
         elif resource.tag == 'plurals':
             for item in resource:
@@ -50,17 +50,20 @@ def process_strings_file(path):
                 item.text = transform_text(item.text)
                 if original != item.text:
                     formatted_name = "{0}.{1}".format(resource.attrib['name'], item.attrib['quantity'])
-                    print("{0} : {1} -> {2}".format(formatted_name, original, item.text))                                    
+                    print("{3}> {0} : {1} -> {2}".format(formatted_name, original, item.text, indent_char))
 
         else:
             "Ignoring any other tags, most likely comments"
 
-    print("Write {}".format(path))
+    print()
+    print("{}Writing transformed resources to file{}".format(indent_char, ellipsis_unicode))
     resources_tree.write(path, encoding='utf-8', xml_declaration=True)
 
-    print("Adding new line at end of {}".format(path))
+    print("{}Adding new line at end of file{}".format(indent_char, ellipsis_unicode))
     with open(path, "a") as strings_file:
         strings_file.write("\r\n")
+
+    print("\n----- END: {} -----\n".format(path))
 
 
 ElementTree.register_namespace('tools', 'http://schemas.android.com/tools')
@@ -78,11 +81,10 @@ for root, dirs, files in os.walk(os.getcwd() + rootdir):
 print("Processing strings:")
 print(seprator.join(strings_file_paths) + "\r\n")
 
-android_ellipsis = u"\u2026"
+ellipsis_unicode = "\u2026"
 strings_to_escape = ["\"", "\'"]
 escape_char = '\\'
+indent_char = '  '
 
 for path in strings_file_paths:
     process_strings_file(path)
-
-print("Done!")

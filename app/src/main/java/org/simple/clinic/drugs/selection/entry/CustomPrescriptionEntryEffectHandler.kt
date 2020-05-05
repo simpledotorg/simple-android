@@ -1,17 +1,20 @@
 package org.simple.clinic.drugs.selection.entry
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 
-class CustomPrescriptionEntryEffectHandler(val uiActions: CustomPrescriptionEntryUiActions) {
+class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
+    @Assisted val uiActions: CustomPrescriptionEntryUiActions
+) {
 
-  companion object {
-    fun create(uiActions: CustomPrescriptionEntryUiActions): ObservableTransformer<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent> {
-      return CustomPrescriptionEntryEffectHandler(uiActions).buildEffectHandler()
-    }
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(uiActions: CustomPrescriptionEntryUiActions): CustomPrescriptionEntryEffectHandler
   }
 
-  private fun buildEffectHandler()
+  fun build()
       : ObservableTransformer<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent>()

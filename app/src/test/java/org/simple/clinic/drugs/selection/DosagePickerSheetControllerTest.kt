@@ -154,6 +154,6 @@ class DosagePickerSheetControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(sheet) }
 
-    uiEvents.onNext(DosagePickerSheetCreated(existingPrescriptionUuid))
+    uiEvents.onNext(DosagePickerSheetCreated())
   }
 }

@@ -93,7 +93,7 @@ class DosagePickerSheet : BottomSheetActivity() {
     val drugName = intent.getStringExtra(KEY_DRUG_NAME)
     val patientUuid = intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID
     val prescribedDrugUuid = intent.getSerializableExtra(KEY_PRESCRIBED_DRUG_UUID).toOptional() as Optional<UUID>
-    return Observable.just(DosagePickerSheetCreated(prescribedDrugUuid))
+    return Observable.just(DosagePickerSheetCreated())
   }
 
   private fun displayDrugName() {

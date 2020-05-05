@@ -18,6 +18,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -25,9 +26,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class DosagePickerSheet : BottomSheetActivity() {
-
-  @Inject
-  lateinit var adapter: DosageAdapter
 
   @Inject
   lateinit var controller: DosagePickerSheetController
@@ -39,6 +37,8 @@ class DosagePickerSheet : BottomSheetActivity() {
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
+  private val adapter = ItemAdapter(DosageDiffer())
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_dosage_picker)
@@ -49,7 +49,7 @@ class DosagePickerSheet : BottomSheetActivity() {
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(sheetCreates(), adapter.itemClicks),
+        events = Observable.merge(sheetCreates(), adapter.itemEvents),
         controller = controller,
         screenDestroys = onDestroys
     )

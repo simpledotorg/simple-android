@@ -10,7 +10,7 @@
   tools:ignore="UnusedAttribute">
 
   <TextView
-    android:id="@+id/prescribed_drug_list_item_dosage_name"
+    android:id="@+id/dosageTextView"
     style="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
     tools:text="20 mg" />
 
   <View
-    android:id="@+id/prescribed_drug_list_item_divider"
+    android:id="@+id/dividerView"
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:layout_marginEnd="@dimen/spacing_24"

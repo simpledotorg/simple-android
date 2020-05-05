@@ -1,31 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/dosageTextView"
+  style="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:clickable="true"
-  android:focusable="true"
-  android:foreground="?selectableItemBackground"
-  android:orientation="vertical"
-  tools:ignore="UnusedAttribute">
-
-  <TextView
-    android:id="@+id/dosageTextView"
-    style="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/spacing_16"
-    android:paddingEnd="@dimen/spacing_24"
-    android:paddingStart="@dimen/spacing_24"
-    android:paddingTop="@dimen/spacing_16"
-    tools:text="20 mg" />
-
-  <View
-    android:id="@+id/dividerView"
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:layout_marginEnd="@dimen/spacing_24"
-    android:layout_marginStart="@dimen/spacing_24"
-    android:background="@color/grey3" />
-
-</LinearLayout>
+  android:background="?attr/selectableItemBackground"
+  android:paddingStart="@dimen/spacing_24"
+  android:paddingTop="@dimen/spacing_16"
+  android:paddingEnd="@dimen/spacing_24"
+  android:paddingBottom="@dimen/spacing_16"
+  tools:text="20 mg" />

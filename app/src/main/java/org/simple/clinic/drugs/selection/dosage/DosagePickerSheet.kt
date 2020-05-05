@@ -30,7 +30,7 @@ import javax.inject.Inject
 class DosagePickerSheet : BottomSheetActivity() {
 
   @Inject
-  lateinit var controller: DosagePickerSheetController
+  lateinit var controllerFactory: DosagePickerSheetController.Factory
 
   @Inject
   lateinit var locale: Locale
@@ -52,10 +52,14 @@ class DosagePickerSheet : BottomSheetActivity() {
     }
     displayDrugName()
 
+    val drugName = intent.getStringExtra(KEY_DRUG_NAME) as String
+    val patientUuid = intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID
+    val prescribedDrugUuid = intent.getSerializableExtra(KEY_PRESCRIBED_DRUG_UUID).toOptional() as Optional<UUID>
+
     bindUiToController(
         ui = this,
         events = Observable.merge(sheetCreates(), dosageAdapter.itemEvents),
-        controller = controller,
+        controller = controllerFactory.create(drugName, patientUuid, prescribedDrugUuid),
         screenDestroys = onDestroys
     )
   }

@@ -1,5 +1,7 @@
 package org.simple.clinic.drugs.selection.dosage
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -15,20 +17,28 @@ import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
-import javax.inject.Inject
 
 private typealias Ui = DosagePickerSheet
 private typealias UiChange = (Ui) -> Unit
 
-class DosagePickerSheetController @Inject constructor(
+class DosagePickerSheetController @AssistedInject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val protocolRepository: ProtocolRepository,
-    private val prescriptionRepository: PrescriptionRepository
+    private val prescriptionRepository: PrescriptionRepository,
+    @Assisted private val drugName: String,
+    @Assisted private val patientUuid: UUID,
+    @Assisted private val existingPrescribedDrugUuid: Optional<UUID>
 ) : ObservableTransformer<UiEvent, UiChange> {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(drugName: String, patientUuid: UUID, existingPrescribedDrugUuid: Optional<UUID>): DosagePickerSheetController
+  }
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)

@@ -140,7 +140,15 @@ class DosagePickerSheetControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
 
-    controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
+    controller = DosagePickerSheetController(
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        protocolRepository = protocolRepository,
+        prescriptionRepository = prescriptionRepository,
+        drugName = drugName,
+        patientUuid = patientUuid,
+        existingPrescribedDrugUuid = existingPrescriptionUuid
+    )
 
     controllerSubscription = uiEvents
         .compose(controller)

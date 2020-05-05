@@ -25,7 +25,6 @@ import org.simple.clinic.drugs.selection.dosage.DosageSelected
 import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
@@ -51,7 +50,6 @@ class DosagePickerSheetControllerTest {
       protocolUuid = protocolUuid
   )
   private val patientUuid = UUID.fromString("c4df02bd-d9d7-4120-9ff7-41f1e35aa8dd")
-  private val userSubject = PublishSubject.create<User>()
 
   private lateinit var controller: DosagePickerSheetController
   private lateinit var controllerSubscription: Disposable
@@ -73,7 +71,6 @@ class DosagePickerSheetControllerTest {
     setupController()
 
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, None))
-    userSubject.onNext(user)
 
     verify(sheet).populateDosageList(listOf(
         DosageListItem(DosageOption.Dosage(protocolDrug1)),
@@ -143,7 +140,7 @@ class DosagePickerSheetControllerTest {
   }
 
   private fun setupController() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
 
     controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
@@ -151,7 +148,5 @@ class DosagePickerSheetControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(sheet) }
-
-    userSubject.onNext(user)
   }
 }

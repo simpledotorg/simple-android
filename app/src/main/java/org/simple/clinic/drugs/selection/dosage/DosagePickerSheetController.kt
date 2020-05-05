@@ -6,7 +6,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
@@ -54,18 +53,14 @@ class DosagePickerSheetController @AssistedInject constructor(
   }
 
   private fun displayDosageList(events: Observable<UiEvent>): Observable<UiChange> {
-    val drugName = events
+    val protocolUuidStream: Observable<UUID> = events
         .ofType<DosagePickerSheetCreated>()
-        .map { it.drugName }
-
-    val protocolUuid: Observable<UUID> = drugName
         .flatMap { userSession.requireLoggedInUser() }
         .switchMap { facilityRepository.currentFacility(it) }
         .map { it.protocolUuid }
 
-    return Observables
-        .combineLatest(drugName, protocolUuid)
-        .switchMap { (drugName, protocolUuid) -> protocolRepository.drugsByNameOrDefault(drugName = drugName, protocolUuid = protocolUuid) }
+    return protocolUuidStream
+        .switchMap { protocolUuid -> protocolRepository.drugsByNameOrDefault(drugName = drugName, protocolUuid = protocolUuid) }
         .map { dosages ->
           val dosageItems = dosages.map { DosageListItem(DosageOption.Dosage(it)) }
           dosageItems + DosageListItem(DosageOption.None)

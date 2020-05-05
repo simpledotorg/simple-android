@@ -18,6 +18,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -54,7 +55,7 @@ class DosagePickerSheetController @AssistedInject constructor(
 
   private fun displayDosageList(events: Observable<UiEvent>): Observable<UiChange> {
     val protocolUuidStream: Observable<UUID> = events
-        .ofType<DosagePickerSheetCreated>()
+        .ofType<ScreenCreated>()
         .flatMap { userSession.requireLoggedInUser() }
         .switchMap { facilityRepository.currentFacility(it) }
         .map { it.protocolUuid }

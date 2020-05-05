@@ -20,7 +20,6 @@ import org.simple.clinic.drugs.selection.dosage.DosageListItem
 import org.simple.clinic.drugs.selection.dosage.DosageOption
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheetController
-import org.simple.clinic.drugs.selection.dosage.DosagePickerSheetCreated
 import org.simple.clinic.drugs.selection.dosage.DosageSelected
 import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.facility.FacilityRepository
@@ -30,6 +29,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -154,6 +154,6 @@ class DosagePickerSheetControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(sheet) }
 
-    uiEvents.onNext(DosagePickerSheetCreated())
+    uiEvents.onNext(ScreenCreated())
   }
 }

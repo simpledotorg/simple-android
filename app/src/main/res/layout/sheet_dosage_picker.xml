@@ -7,7 +7,7 @@
   android:orientation="vertical">
 
   <TextView
-    android:id="@+id/sheet_dosage_drug_name"
+    android:id="@+id/drugNameTextView"
     style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
     tools:text="Telmisartan dosage" />
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/sheet_dosage_name_list"
+    android:id="@+id/recyclerView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 </LinearLayout>

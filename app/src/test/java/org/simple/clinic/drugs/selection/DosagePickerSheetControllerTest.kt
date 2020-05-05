@@ -27,6 +27,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
@@ -49,6 +50,7 @@ class DosagePickerSheetControllerTest {
       uuid = UUID.fromString("105d4904-8d34-43e9-b208-edffd22a628f"),
       protocolUuid = protocolUuid
   )
+  private val drugName = "Amlodipine"
   private val patientUuid = UUID.fromString("c4df02bd-d9d7-4120-9ff7-41f1e35aa8dd")
 
   private lateinit var controller: DosagePickerSheetController
@@ -61,16 +63,12 @@ class DosagePickerSheetControllerTest {
 
   @Test
   fun `when sheet is created, list of dosages for that drug should be displayed`() {
-    val drugName = "Amlodipine"
-
     val protocolDrug1 = TestData.protocolDrug(uuid = UUID.fromString("22751f47-4a4a-4459-bb2b-e137ec47757e"), name = drugName, dosage = "5 mg")
     val protocolDrug2 = TestData.protocolDrug(uuid = UUID.fromString("29cf2315-d2b5-4a7f-b19a-34f998b82513"), name = drugName, dosage = "10 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.just(listOf(protocolDrug1, protocolDrug2)))
 
     setupController()
-
-    uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, None))
 
     verify(sheet).populateDosageList(listOf(
         DosageListItem(DosageOption.Dosage(protocolDrug1)),
@@ -90,7 +88,6 @@ class DosagePickerSheetControllerTest {
 
     setupController()
 
-    uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, None))
     uiEvents.onNext(DosageSelected(dosageSelected))
 
     verify(prescriptionRepository).savePrescription(patientUuid, dosageSelected, currentFacility)
@@ -109,9 +106,8 @@ class DosagePickerSheetControllerTest {
     whenever(prescriptionRepository.savePrescription(patientUuid, dosageSelected, currentFacility)).thenReturn(Completable.complete())
     whenever(prescriptionRepository.softDeletePrescription(existingPrescription.uuid)).thenReturn(Completable.complete())
 
-    setupController()
+    setupController(existingPrescriptionUuid = existingPrescription.uuid.toOptional())
 
-    uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, existingPrescription.uuid.toOptional()))
     uiEvents.onNext(DosageSelected(dosageSelected))
 
     verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
@@ -128,9 +124,8 @@ class DosagePickerSheetControllerTest {
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.softDeletePrescription(existingPrescription.uuid)).thenReturn(Completable.complete())
 
-    setupController()
+    setupController(existingPrescriptionUuid = existingPrescription.uuid.toOptional())
 
-    uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, existingPrescription.uuid.toOptional()))
     uiEvents.onNext(NoneSelected)
 
     verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
@@ -139,7 +134,9 @@ class DosagePickerSheetControllerTest {
     verifyNoMoreInteractions(sheet)
   }
 
-  private fun setupController() {
+  private fun setupController(
+      existingPrescriptionUuid: Optional<UUID> = None
+  ) {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
 
@@ -148,5 +145,7 @@ class DosagePickerSheetControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(sheet) }
+
+    uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, existingPrescriptionUuid))
   }
 }

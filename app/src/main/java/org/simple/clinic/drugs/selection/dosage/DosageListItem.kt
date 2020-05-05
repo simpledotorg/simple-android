@@ -1,7 +1,6 @@
 package org.simple.clinic.drugs.selection.dosage
 
 import android.annotation.SuppressLint
-import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.prescribed_drug_with_dosage_list_item.*
@@ -18,14 +17,8 @@ data class DosageListItem(val dosageOption: DosageOption) : ItemAdapter.Item<UiE
   override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
     val dosageOption = dosageOption
     when (dosageOption) {
-      is DosageOption.None -> {
-        holder.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none)
-        holder.dividerView.visibility = View.GONE
-      }
-      is DosageOption.Dosage -> {
-        holder.dosageTextView.text = dosageOption.protocolDrug.dosage
-        holder.dividerView.visibility = View.VISIBLE
-      }
+      is DosageOption.None -> holder.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none)
+      is DosageOption.Dosage -> holder.dosageTextView.text = dosageOption.protocolDrug.dosage
     }.exhaustive()
 
     holder.itemView.setOnClickListener { subject.onNext(DosageItemClicked(dosageOption)) }

@@ -32,6 +32,7 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent>()
         .addTransformer(SaveCustomPrescription::class.java, saveCustomPrescription(schedulersProvider.io()))
+        .addAction(CloseSheet::class.java, uiActions::finish, schedulersProvider.ui())
         .build()
   }
 

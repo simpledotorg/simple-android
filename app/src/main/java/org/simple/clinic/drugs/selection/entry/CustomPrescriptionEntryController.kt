@@ -11,9 +11,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -25,8 +22,6 @@ const val DOSAGE_PLACEHOLDER = "mg"
 
 class CustomPrescriptionEntryController @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     @Assisted private val openAs: OpenAs
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -40,7 +35,6 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        saveNewPrescriptionsAndDismiss(replayedEvents),
         updatePrescriptionAndDismiss(replayedEvents),
         showDefaultDosagePlaceholder(replayedEvents),
         updateSheetTitle(replayedEvents),
@@ -49,52 +43,6 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
         removePrescription(replayedEvents),
         closeSheetWhenPrescriptionIsDeleted(replayedEvents)
     )
-  }
-  
-  private fun saveNewPrescriptionsAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuids = events
-        .ofType<ScreenCreated>()
-        .filter { openAs is OpenAs.New }
-        .map { openAs as OpenAs.New }
-        .map { it.patientUuid }
-        .take(1)
-
-    val nameChanges = events
-        .ofType<CustomPrescriptionDrugNameTextChanged>()
-        .map { it.name }
-
-    val dosageChanges = events
-        .ofType<CustomPrescriptionDrugDosageTextChanged>()
-        .map { it.dosage }
-
-    val saveClicks = events
-        .ofType<SaveCustomPrescriptionClicked>()
-
-    val currentFacilityStream = userSession
-        .requireLoggedInUser()
-        .switchMap { facilityRepository.currentFacility(it) }
-
-    return saveClicks
-        .withLatestFrom(patientUuids, nameChanges, dosageChanges, currentFacilityStream) { _, uuid, name, dosage, currentFacility ->
-          SavePrescription(
-              patientUuid = uuid,
-              name = name,
-              dosage = dosage,
-              facility = currentFacility
-          )
-        }
-        .flatMap { savePrescription ->
-          prescriptionRepository
-              .savePrescription(
-                  patientUuid = savePrescription.patientUuid,
-                  name = savePrescription.name,
-                  dosage = savePrescription.dosage.nullIfBlank(),
-                  rxNormCode = null,
-                  isProtocolDrug = false,
-                  facility = savePrescription.facility
-              )
-              .andThen(Observable.just({ ui: Ui -> ui.finish() }))
-        }
   }
 
   private fun updatePrescriptionAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {

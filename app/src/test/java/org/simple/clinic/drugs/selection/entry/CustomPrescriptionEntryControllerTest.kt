@@ -21,7 +21,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
@@ -36,8 +35,8 @@ class CustomPrescriptionEntryControllerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
-
   private val ui = mock<CustomPrescriptionEntryUi>()
+  private val uiActions = mock<CustomPrescriptionEntryUiActions>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientUuid = UUID.fromString("a90376d0-e29a-428f-80dc-bd4bdd74d9bf")
   private val prescriptionUuid = UUID.fromString("eef2b1c9-52cd-43d9-b109-b120b0e4c16c")
@@ -46,15 +45,14 @@ class CustomPrescriptionEntryControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val user = TestData.loggedInUser()
   private val facility = TestData.facility()
-  private val userSubject = PublishSubject.create<User>()
 
   lateinit var controller: CustomPrescriptionEntryController
   private lateinit var fixture: MobiusTestFixture<CustomPrescriptionEntryModel, CustomPrescriptionEntryEvent, CustomPrescriptionEntryEffect>
 
   @Before
   fun setUp() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
+    whenever(facilityRepository.currentFacilityImmediate(user)).thenReturn(facility)
   }
 
   @After
@@ -113,7 +111,7 @@ class CustomPrescriptionEntryControllerTest {
         facility = facility
     )
     verify(prescriptionRepository, never()).updatePrescription(any())
-    verify(ui).finish()
+    verify(uiActions).finish()
   }
 
   @Test
@@ -261,7 +259,7 @@ class CustomPrescriptionEntryControllerTest {
   }
 
   private fun setupController(openAs: OpenAs) {
-    controller = CustomPrescriptionEntryController(prescriptionRepository, userSession, facilityRepository, openAs)
+    controller = CustomPrescriptionEntryController(prescriptionRepository, openAs)
 
     uiEvents
         .compose(controller)
@@ -269,7 +267,7 @@ class CustomPrescriptionEntryControllerTest {
 
     val uiRenderer = CustomPrescriptionEntryUiRenderer(ui)
     val effectHandler = CustomPrescriptionEntryEffectHandler(
-        mock(),
+        uiActions,
         TrampolineSchedulersProvider(),
         userSession,
         facilityRepository,
@@ -287,6 +285,5 @@ class CustomPrescriptionEntryControllerTest {
     fixture.start()
 
     uiEvents.onNext(ScreenCreated())
-    userSubject.onNext(user)
   }
 }

@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s দিন সময়াতীত</item>

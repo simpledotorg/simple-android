@@ -13,6 +13,23 @@ class CommentedTreeBuilder(ElementTree.TreeBuilder):
         self.data(data)
         self.end(ElementTree.Comment)
 
+def noop_processor(resource):
+        print("Ignoring any other tags, most likely comments")
+
+def string_processor(resource):
+    original = resource.text
+    resource.text = transform_text(resource.text)
+    if original != resource.text:
+        print("{3}> {0} : {1} -> {2}".format(resource.attrib['name'], original, resource.text, indent_char))
+
+def plural_processor(resource):
+    for item in resource:
+        original = item.text
+        item.text = transform_text(item.text)
+        if original != item.text:
+            formatted_name = "{0}.{1}".format(resource.attrib['name'], item.attrib['quantity'])
+            print("{3}> {0} : {1} -> {2}".format(formatted_name, original, item.text, indent_char))
+
 def replace_ellipsis(text):
     return text.replace("...", ellipsis_unicode)
 
@@ -29,6 +46,16 @@ def escape_characters(text):
 def transform_text(text):
     return replace_ellipsis(escape_characters(text))
 
+class ResourceTagProcessor(dict):
+
+    def __init__(self, *args):
+        dict.__init__(self, args)
+        self['string'] = string_processor
+        self['plurals'] = plural_processor
+
+    def __missing__(self, key):
+        return noop_processor
+
 
 def process_strings_file(path):
     print("\n\n----- BEGIN: {} -----\n".format(path))
@@ -37,23 +64,10 @@ def process_strings_file(path):
     resources_tree = ElementTree.parse(path, parser=parser)
     resources_root = resources_tree.getroot()
 
+    processor = ResourceTagProcessor()
+
     for resource in resources_root:
-        if resource.tag == 'string':
-            original = resource.text
-            resource.text = transform_text(resource.text)
-            if original != resource.text:
-                print("{3}> {0} : {1} -> {2}".format(resource.attrib['name'], original, resource.text, indent_char))
-
-        elif resource.tag == 'plurals':
-            for item in resource:
-                original = item.text
-                item.text = transform_text(item.text)
-                if original != item.text:
-                    formatted_name = "{0}.{1}".format(resource.attrib['name'], item.attrib['quantity'])
-                    print("{3}> {0} : {1} -> {2}".format(formatted_name, original, item.text, indent_char))
-
-        else:
-            "Ignoring any other tags, most likely comments"
+        processor[resource.tag](resource)
 
     print()
     print("{}Writing transformed resources to file{}".format(indent_char, ellipsis_unicode))

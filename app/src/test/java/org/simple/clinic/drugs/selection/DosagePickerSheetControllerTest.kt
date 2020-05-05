@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -82,6 +83,7 @@ class DosagePickerSheetControllerTest {
         DosageListItem(DosageOption.Dosage(protocolDrug2)),
         DosageListItem(DosageOption.None)
     ))
+    verifyNoMoreInteractions(sheet)
   }
 
   @Test
@@ -95,9 +97,10 @@ class DosagePickerSheetControllerTest {
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, None))
     uiEvents.onNext(DosageSelected(dosageSelected))
 
-    verify(prescriptionRepository, times(1)).savePrescription(patientUuid, dosageSelected, currentFacility)
+    verify(prescriptionRepository).savePrescription(patientUuid, dosageSelected, currentFacility)
     verify(prescriptionRepository, never()).softDeletePrescription(any())
     verify(sheet).finish()
+    verifyNoMoreInteractions(sheet)
   }
 
   @Test
@@ -113,9 +116,10 @@ class DosagePickerSheetControllerTest {
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, existingPrescription.uuid.toOptional()))
     uiEvents.onNext(DosageSelected(dosageSelected))
 
-    verify(prescriptionRepository, times(1)).softDeletePrescription(existingPrescription.uuid)
+    verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
     verify(prescriptionRepository, times(1)).savePrescription(patientUuid, dosageSelected, currentFacility)
     verify(sheet).finish()
+    verifyNoMoreInteractions(sheet)
   }
 
   @Test
@@ -129,7 +133,9 @@ class DosagePickerSheetControllerTest {
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUuid, existingPrescription.uuid.toOptional()))
     uiEvents.onNext(NoneSelected)
 
-    verify(prescriptionRepository, times(1)).softDeletePrescription(existingPrescription.uuid)
+    verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
+    verify(sheet).finish()
+    verifyNoMoreInteractions(sheet)
   }
 }

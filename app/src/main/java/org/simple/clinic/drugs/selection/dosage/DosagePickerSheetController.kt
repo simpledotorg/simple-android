@@ -83,17 +83,11 @@ class DosagePickerSheetController @AssistedInject constructor(
   }
 
   private fun savePrescription(events: Observable<UiEvent>): Observable<UiChange> {
-    val sheetCreated = events
-        .ofType<DosagePickerSheetCreated>()
-
-    val existingPrescriptionStream = sheetCreated
-        .map { it.existingPrescribedDrugUuid }
-
     val dosageSelected = events
         .ofType<DosageSelected>()
 
     val softDeleteOldPrescription = dosageSelected
-        .withLatestFrom(existingPrescriptionStream) { _, existingPrescriptionUuid -> existingPrescriptionUuid }
+        .map { existingPrescribedDrugUuid }
         .filterAndUnwrapJust()
         .flatMap { existingPrescriptionUuid ->
           prescriptionRepository
@@ -124,21 +118,14 @@ class DosagePickerSheetController @AssistedInject constructor(
   }
 
   private fun noneSelected(events: Observable<UiEvent>): Observable<UiChange> {
-    val sheetCreated = events
-        .ofType<DosagePickerSheetCreated>()
-
-    val existingPrescription = sheetCreated
-        .map { it.existingPrescribedDrugUuid }
-
     val noneSelected = events
         .ofType<NoneSelected>()
 
     return noneSelected
-        .withLatestFrom(existingPrescription)
         .firstOrError()
-        .flatMapCompletable { (_, existingPrescriptionUuid) ->
-          when (existingPrescriptionUuid) {
-            is Just -> prescriptionRepository.softDeletePrescription(existingPrescriptionUuid.value)
+        .flatMapCompletable {
+          when (existingPrescribedDrugUuid) {
+            is Just -> prescriptionRepository.softDeletePrescription(existingPrescribedDrugUuid.value)
             is None -> Completable.complete()
           }
         }.andThen(Observable.just { ui: Ui -> ui.finish() })

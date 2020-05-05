@@ -25,6 +25,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -267,12 +268,20 @@ class CustomPrescriptionEntryControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     val uiRenderer = CustomPrescriptionEntryUiRenderer(ui)
+    val effectHandler = CustomPrescriptionEntryEffectHandler(
+        mock(),
+        TrampolineSchedulersProvider(),
+        userSession,
+        facilityRepository,
+        prescriptionRepository
+    )
+
     fixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = CustomPrescriptionEntryModel.create(openAs),
         init = CustomPrescriptionEntryInit(),
         update = CustomPrescriptionEntryUpdate(),
-        effectHandler = CustomPrescriptionEntryEffectHandler(mock()).build(),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
     fixture.start()

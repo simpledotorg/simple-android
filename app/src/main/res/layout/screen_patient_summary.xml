@@ -153,26 +153,59 @@
     </LinearLayout>
   </androidx.core.widget.NestedScrollView>
 
-  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+  <LinearLayout
     android:id="@+id/doneButtonFrame"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
-    android:layout_alignParentBottom="true"
+    android:background="@color/blue2"
+    android:clipChildren="false"
     android:clipToPadding="false"
-    app:buttonBackgroundDisabled="@color/grey2"
-    app:buttonBackgroundEnabled="@color/blue1"
-    app:frameBackgroundDisabled="@color/grey3"
-    app:frameBackgroundEnabled="@color/blue2">
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/spacing_8"
+    android:paddingBottom="@dimen/spacing_8">
 
     <com.google.android.material.button.MaterialButton
+      android:id="@+id/doneButton"
       style="?attr/materialButtonStyle"
-      android:layout_width="match_parent"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/spacing_8"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_weight="1"
       android:text="@string/patientsummary_finish_saving_patient"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       app:icon="@drawable/ic_done_24dp"
       app:iconGravity="textStart" />
-  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+
+    <FrameLayout
+      android:id="@+id/contactDoctorFrame"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:visibility="gone">
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/contactDoctorButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
+        android:visibility="visible"
+        style="@style/Clinic.V2.MaterialButton.Green1"
+        tools:visibility="visible" />
+
+      <ProgressBar
+        android:id="@+id/contactDoctorProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/spacing_32"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/white100"
+        android:translationZ="@dimen/spacing_8" />
+
+    </FrameLayout>
+
+  </LinearLayout>
 
   <org.simple.clinic.summary.linkId.LinkIdWithPatientView
     android:id="@+id/linkIdWithPatientView"

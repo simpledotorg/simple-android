@@ -63,12 +63,17 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
   private val uiRenderer = DosagePickerUiRenderer(this)
 
   private val delegate by unsafeLazy {
+    val patientUuid = intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID
     val drugName = intent.getStringExtra(KEY_DRUG_NAME) as String
     val prescribedDrugUuid = intent.getSerializableExtra(KEY_PRESCRIBED_DRUG_UUID) as UUID?
 
     MobiusDelegate.forActivity(
         events = events.ofType(),
-        defaultModel = DosagePickerModel.create(drugName = drugName, existingPrescriptionUuid = prescribedDrugUuid),
+        defaultModel = DosagePickerModel.create(
+            patientUuid = patientUuid,
+            drugName = drugName,
+            existingPrescriptionUuid = prescribedDrugUuid
+        ),
         update = DosagePickerUpdate(),
         init = DosagePickerInit(),
         effectHandler = effectHandlerFactory.create(this).build(),
@@ -152,7 +157,7 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
         .map { NoneSelected }
   }
 
-  private fun dosageClicks(): Observable<UiEvent> {
+  private fun dosageClicks(): Observable<DosagePickerEvent> {
     return dosageAdapter
         .itemEvents
         .ofType<DosageItemClicked>()

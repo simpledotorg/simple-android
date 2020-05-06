@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -24,6 +25,7 @@ import org.simple.clinic.drugs.selection.dosage.DosagePickerEvent
 import org.simple.clinic.drugs.selection.dosage.DosagePickerInit
 import org.simple.clinic.drugs.selection.dosage.DosagePickerModel
 import org.simple.clinic.drugs.selection.dosage.DosagePickerUi
+import org.simple.clinic.drugs.selection.dosage.DosagePickerUiActions
 import org.simple.clinic.drugs.selection.dosage.DosagePickerUiRenderer
 import org.simple.clinic.drugs.selection.dosage.DosagePickerUpdate
 import org.simple.clinic.drugs.selection.dosage.DosageSelected
@@ -61,13 +63,14 @@ class DosagePickerSheetLogicTest {
   private val patientUuid = UUID.fromString("c4df02bd-d9d7-4120-9ff7-41f1e35aa8dd")
 
   private val uiRenderer = DosagePickerUiRenderer(ui)
+  private val uiActions = mock<DosagePickerUiActions>()
   private val dosagePickerEffectHandler = DosagePickerEffectHandler(
       userSession = userSession,
       facilityRepository = facilityRepository,
       protocolRepository = protocolRepository,
       prescriptionRepository = prescriptionRepository,
       schedulers = TrampolineSchedulersProvider(),
-      uiActions = ui
+      uiActions = uiActions
   )
 
   private lateinit var testFixture: MobiusTestFixture<DosagePickerModel, DosagePickerEvent, DosagePickerEffect>
@@ -92,6 +95,7 @@ class DosagePickerSheetLogicTest {
         DosageListItem(DosageOption.None)
     ))
     verifyNoMoreInteractions(ui)
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -108,8 +112,9 @@ class DosagePickerSheetLogicTest {
 
     verify(prescriptionRepository).savePrescription(patientUuid, dosageSelected, currentFacility)
     verify(prescriptionRepository, never()).softDeletePrescription(any())
-    verify(ui).close()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).close()
+    verifyNoMoreInteractions(uiActions)
+    verifyZeroInteractions(ui)
   }
 
   @Test
@@ -128,8 +133,9 @@ class DosagePickerSheetLogicTest {
 
     verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
     verify(prescriptionRepository, times(1)).savePrescription(patientUuid, dosageSelected, currentFacility)
-    verify(ui).close()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).close()
+    verifyNoMoreInteractions(uiActions)
+    verifyZeroInteractions(ui)
   }
 
   @Test
@@ -146,8 +152,9 @@ class DosagePickerSheetLogicTest {
 
     verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
-    verify(ui).close()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).close()
+    verifyNoMoreInteractions(uiActions)
+    verifyZeroInteractions(ui)
   }
 
   private fun setupController(

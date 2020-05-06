@@ -15,5 +15,6 @@ data class FacilityConfig(
 
     // TODO (SM): Make this non nullable and remove default value once the feature is in PROD
     @ColumnInfo(name = "teleconsultationEnabled")
+    @Json(name = "enable_teleconsultation")
     val teleconsultationEnabled: Boolean? = false
 ) : Parcelable

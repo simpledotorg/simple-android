@@ -27,7 +27,7 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
+class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi, DosagePickerUiActions {
 
   @Inject
   lateinit var locale: Locale

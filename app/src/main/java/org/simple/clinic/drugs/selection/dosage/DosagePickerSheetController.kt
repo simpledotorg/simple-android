@@ -17,7 +17,6 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -45,26 +44,9 @@ class DosagePickerSheetController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        displayDosageList(replayedEvents),
         savePrescription(replayedEvents),
         noneSelected(replayedEvents)
     )
-  }
-
-  private fun displayDosageList(events: Observable<UiEvent>): Observable<UiChange> {
-    val protocolUuidStream: Observable<UUID> = events
-        .ofType<ScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
-        .switchMap { facilityRepository.currentFacility(it) }
-        .map { it.protocolUuid }
-
-    return protocolUuidStream
-        .switchMap { protocolUuid -> protocolRepository.drugsByNameOrDefault(drugName = drugName, protocolUuid = protocolUuid) }
-        .map { dosages ->
-          val dosageItems = dosages.map { DosageListItem(DosageOption.Dosage(it)) }
-          dosageItems + DosageListItem(DosageOption.None)
-        }
-        .map { dosages -> { ui: Ui -> ui.populateDosageList(dosages) } }
   }
 
   private fun mergeWithDosageSelected(): ObservableTransformer<UiEvent, UiEvent> {

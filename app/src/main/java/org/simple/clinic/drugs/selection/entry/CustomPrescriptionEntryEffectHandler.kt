@@ -35,6 +35,7 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent>()
         .addTransformer(SaveCustomPrescription::class.java, saveCustomPrescription(schedulersProvider.io()))
         .addTransformer(UpdatePrescription::class.java, updatePrescription(schedulersProvider.io()))
+        .addTransformer(FetchPrescription::class.java, fetchPrescription(schedulersProvider.io()))
         .addAction(CloseSheet::class.java, uiActions::finish, schedulersProvider.ui())
         .build()
   }
@@ -83,6 +84,16 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
                 )
                 .andThen(Observable.just(CustomPrescriptionSaved))
           }
+    }
+  }
+
+  private fun fetchPrescription(io: Scheduler): ObservableTransformer<FetchPrescription, CustomPrescriptionEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(io)
+          .map { prescriptionRepository.prescriptionImmediate(it.prescriptionUuid) }
+          .filterAndUnwrapJust()
+          .map(::CustomPrescriptionFetched)
     }
   }
 }

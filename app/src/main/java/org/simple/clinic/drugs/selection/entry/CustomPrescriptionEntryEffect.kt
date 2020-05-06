@@ -9,3 +9,5 @@ data class SaveCustomPrescription(val patientUuid: UUID, val drugName: String, v
 data class UpdatePrescription(val prescriptionUuid: UUID, val drugName: String, val dosage: String?) : CustomPrescriptionEntryEffect()
 
 object CloseSheet : CustomPrescriptionEntryEffect()
+
+data class FetchPrescription(val prescriptionUuid: UUID) : CustomPrescriptionEntryEffect()

@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.selection.entry
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -15,7 +16,7 @@ class CustomPrescriptionEntryUpdate : Update<CustomPrescriptionEntryModel, Custo
       is CustomPrescriptionDrugDosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
       SaveCustomPrescriptionClicked -> createOrUpdatePrescriptionEntry(model)
       CustomPrescriptionSaved -> dispatch(CloseSheet)
-      is CustomPrescriptionFetched -> TODO()
+      is CustomPrescriptionFetched -> noChange()
     }
   }
 

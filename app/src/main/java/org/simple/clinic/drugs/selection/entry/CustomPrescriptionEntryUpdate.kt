@@ -17,6 +17,10 @@ class CustomPrescriptionEntryUpdate : Update<CustomPrescriptionEntryModel, Custo
       SaveCustomPrescriptionClicked -> createOrUpdatePrescriptionEntry(model)
       CustomPrescriptionSaved -> dispatch(CloseSheet)
       is CustomPrescriptionFetched -> onPrescriptionFetched(model, event.prescription)
+      RemoveCustomPrescriptionClicked -> {
+        val update = model.openAs as OpenAs.Update
+        dispatch(ShowConfirmRemoveMedicineDialog(update.prescribedDrugUuid))
+      }
     }
   }
 

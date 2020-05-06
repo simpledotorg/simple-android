@@ -21,6 +21,10 @@ object SaveCustomPrescriptionClicked : CustomPrescriptionEntryEvent() {
   override val analyticsName = "Drugs:Custom:Saved"
 }
 
+object RemoveCustomPrescriptionClicked : CustomPrescriptionEntryEvent() {
+  override val analyticsName = "Drugs:Custom:Remove Clicked"
+}
+
 object CustomPrescriptionSaved : CustomPrescriptionEntryEvent()
 
 data class CustomPrescriptionFetched(val prescription: PrescribedDrug) : CustomPrescriptionEntryEvent()

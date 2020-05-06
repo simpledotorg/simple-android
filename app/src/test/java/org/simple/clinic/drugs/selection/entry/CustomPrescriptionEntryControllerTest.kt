@@ -199,14 +199,14 @@ class CustomPrescriptionEntryControllerTest {
     //given
     val prescription = TestData.prescription(uuid = prescriptionUuid)
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescription))
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(Just(prescription))
 
     //when
     setupController(OpenAs.Update(prescriptionUuid))
 
     //then
-    verify(ui).setMedicineName(prescription.name)
-    verify(ui).setDosage(prescription.dosage)
+    verify(uiActions).setMedicineName(prescription.name)
+    verify(uiActions).setDosage(prescription.dosage)
   }
 
   @Test

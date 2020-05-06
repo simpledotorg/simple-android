@@ -242,7 +242,7 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(RemoveCustomPrescriptionClicked)
 
     //then
-    verify(ui).showConfirmRemoveMedicineDialog(prescriptionUuid)
+    verify(uiActions).showConfirmRemoveMedicineDialog(prescriptionUuid)
   }
 
   @Test

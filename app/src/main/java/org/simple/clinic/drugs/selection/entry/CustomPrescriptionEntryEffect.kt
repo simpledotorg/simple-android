@@ -15,3 +15,5 @@ data class FetchPrescription(val prescriptionUuid: UUID) : CustomPrescriptionEnt
 data class SetMedicineName(val drugName: String) : CustomPrescriptionEntryEffect()
 
 data class SetDosage(val dosage: String?) : CustomPrescriptionEntryEffect()
+
+data class ShowConfirmRemoveMedicineDialog(val prescriptionUuid: UUID) : CustomPrescriptionEntryEffect()

@@ -35,7 +35,6 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        updatePrescriptionAndDismiss(replayedEvents),
         showDefaultDosagePlaceholder(replayedEvents),
         updateSheetTitle(replayedEvents),
         toggleRemoveButton(replayedEvents),
@@ -43,32 +42,6 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
         removePrescription(replayedEvents),
         closeSheetWhenPrescriptionIsDeleted(replayedEvents)
     )
-  }
-
-  private fun updatePrescriptionAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
-    val prescribedDrugs = events
-        .ofType<ScreenCreated>()
-        .filter { openAs is OpenAs.Update }
-        .map { openAs as OpenAs.Update }
-        .flatMap { prescriptionRepository.prescription(it.prescribedDrugUuid) }
-        .take(1)
-
-    val nameChanges = events
-        .ofType<CustomPrescriptionDrugNameTextChanged>()
-        .map { it.name }
-
-    val dosageChanges = events
-        .ofType<CustomPrescriptionDrugDosageTextChanged>()
-        .map { it.dosage }
-
-    val saveClicks = events
-        .ofType<SaveCustomPrescriptionClicked>()
-
-    return Observables.combineLatest(prescribedDrugs, nameChanges, dosageChanges, saveClicks) { prescribedDrug, name, dosage, _ -> Triple(prescribedDrug, name, dosage) }
-        .flatMap { (prescribedDrug, name, dosage) ->
-          prescriptionRepository.updatePrescription(prescribedDrug.copy(name = name, dosage = dosage))
-              .andThen(Observable.just({ ui: Ui -> ui.finish() }))
-        }
   }
 
   /**

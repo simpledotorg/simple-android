@@ -102,6 +102,9 @@ data class PrescribedDrug(
     @Query("SELECT * FROM PrescribedDrug WHERE uuid = :prescriptionUuid")
     fun prescription(prescriptionUuid: UUID): Flowable<PrescribedDrug>
 
+    @Query("SELECT * FROM PrescribedDrug WHERE uuid = :prescriptionUuid")
+    fun prescriptionImmediate(prescriptionUuid: UUID): PrescribedDrug?
+
     @Query("""
         SELECT (
             CASE

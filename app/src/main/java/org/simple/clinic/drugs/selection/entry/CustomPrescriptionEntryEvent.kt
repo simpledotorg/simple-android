@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection.entry
 
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.widgets.UiEvent
 
 sealed class CustomPrescriptionEntryEvent : UiEvent
@@ -21,3 +22,5 @@ object SaveCustomPrescriptionClicked : CustomPrescriptionEntryEvent() {
 }
 
 object CustomPrescriptionSaved : CustomPrescriptionEntryEvent()
+
+data class CustomPrescriptionFetched(val prescription: PrescribedDrug) : CustomPrescriptionEntryEvent()

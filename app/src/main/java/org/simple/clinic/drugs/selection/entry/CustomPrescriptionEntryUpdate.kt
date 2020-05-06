@@ -15,6 +15,7 @@ class CustomPrescriptionEntryUpdate : Update<CustomPrescriptionEntryModel, Custo
       is CustomPrescriptionDrugDosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
       SaveCustomPrescriptionClicked -> createOrUpdatePrescriptionEntry(model)
       CustomPrescriptionSaved -> dispatch(CloseSheet)
+      is CustomPrescriptionFetched -> TODO()
     }
   }
 

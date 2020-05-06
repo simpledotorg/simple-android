@@ -22,6 +22,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -219,6 +220,7 @@ class CustomPrescriptionEntryControllerTest {
     val updatedPrescribedDrug = prescribedDrug.copy(name = "Atenolol", dosage = "5mg")
 
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescribedDrug))
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(Just(prescribedDrug))
     whenever(prescriptionRepository.updatePrescription(updatedPrescribedDrug)).thenReturn(Completable.complete())
 
     //when
@@ -230,7 +232,7 @@ class CustomPrescriptionEntryControllerTest {
     //then
     verify(prescriptionRepository).updatePrescription(updatedPrescribedDrug)
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
-    verify(ui).finish()
+    verify(uiActions).finish()
   }
 
   @Test

@@ -94,8 +94,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/customprescription_drug_dosage_hint"
         android:imeOptions="actionDone"
-        android:inputType="textCapSentences"
-        android:text="@string/customprescription_dosage_placeholder" />
+        android:inputType="textCapSentences" />
     </com.google.android.material.textfield.TextInputLayout>
   </LinearLayout>
 

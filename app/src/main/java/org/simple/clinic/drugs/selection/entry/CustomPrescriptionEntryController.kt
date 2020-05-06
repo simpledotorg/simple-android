@@ -35,44 +35,12 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showDefaultDosagePlaceholder(replayedEvents),
         updateSheetTitle(replayedEvents),
         toggleRemoveButton(replayedEvents),
         prefillPrescription(replayedEvents),
         removePrescription(replayedEvents),
         closeSheetWhenPrescriptionIsDeleted(replayedEvents)
     )
-  }
-
-  /**
-   * The dosage field shows a default text as "mg". When it is focused, the cursor will
-   * by default be moved to the end. This will force the user to either move the cursor
-   * to the end manually or delete everything and essentially making the placeholder
-   * useless. As a workaround, we move the cursor to the starting again.
-   */
-  private fun showDefaultDosagePlaceholder(events: Observable<UiEvent>): Observable<UiChange> {
-    val dosageTextChanges = events
-        .ofType<CustomPrescriptionDrugDosageTextChanged>()
-        .map { it.dosage }
-
-    val dosageFocusChanges = events
-        .ofType<CustomPrescriptionDrugDosageFocusChanged>()
-        .map { it.hasFocus }
-
-    val setPlaceholder = Observables.combineLatest(dosageFocusChanges, dosageTextChanges)
-        .filter { (hasFocus, text) -> hasFocus && text.isBlank() }
-        .take(1)
-        .map { { ui: Ui -> ui.setDrugDosageText(DOSAGE_PLACEHOLDER) } }
-
-    val resetPlaceholder = Observables.combineLatest(dosageFocusChanges, dosageTextChanges)
-        .filter { (hasFocus, text) -> !hasFocus && text.trim() == DOSAGE_PLACEHOLDER }
-        .map { { ui: Ui -> ui.setDrugDosageText("") } }
-
-    val moveCursorToStart = Observables.combineLatest(dosageFocusChanges, dosageTextChanges)
-        .filter { (hasFocus, text) -> hasFocus && text.trim() == DOSAGE_PLACEHOLDER }
-        .map { { ui: Ui -> ui.moveDrugDosageCursorToBeginning() } }
-
-    return Observable.merge(setPlaceholder, resetPlaceholder, moveCursorToStart)
   }
 
   private fun updateSheetTitle(events: Observable<UiEvent>): Observable<UiChange> {

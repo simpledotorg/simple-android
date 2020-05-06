@@ -116,7 +116,7 @@ class CustomPrescriptionEntryControllerTest {
   }
 
   @Test
-  fun `placeholder value for dosage should be shown when dosage field is focused and empty`() {
+  fun `when dosage field is focused and empty then placeholder value for dosage should be shown and cursor should be moved to the start`() {
     //when
     setupController(OpenAs.New(patientUuid))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(""))
@@ -125,6 +125,7 @@ class CustomPrescriptionEntryControllerTest {
 
     //then
     verify(ui, times(1)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
+    verify(ui).moveDrugDosageCursorToBeginning()
     verify(ui, never()).setDrugDosageText(eq(""))
   }
 
@@ -138,17 +139,6 @@ class CustomPrescriptionEntryControllerTest {
     //then
     verify(ui, times(1)).setDrugDosageText(eq(""))
     verify(ui, never()).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
-  }
-
-  @Test
-  fun `when dosage field is focused and the placeholder value is set then the cursor should be moved to the beginning`() {
-    //when
-    setupController(OpenAs.New(patientUuid))
-    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("$DOSAGE_PLACEHOLDER"))
-    uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
-
-    //then
-    verify(ui).moveDrugDosageCursorToBeginning()
   }
 
   @Test

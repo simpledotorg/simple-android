@@ -5,14 +5,9 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.Facility
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 
 private typealias Ui = CustomPrescriptionEntryUi
 private typealias UiChange = (Ui) -> Unit
@@ -33,29 +28,6 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        closeSheetWhenPrescriptionIsDeleted(replayedEvents)
-    )
+    return Observable.never()
   }
-
-  private fun closeSheetWhenPrescriptionIsDeleted(events: Observable<UiEvent>): Observable<UiChange> {
-    val prescribedDrugUuuids = events
-        .ofType<ScreenCreated>()
-        .filter { openAs is OpenAs.Update }
-        .map { openAs as OpenAs.Update }
-        .map { it.prescribedDrugUuid }
-
-    return prescribedDrugUuuids
-        .flatMap(prescriptionRepository::prescription)
-        .filter { it.isDeleted }
-        .take(1)
-        .map { { ui: Ui -> ui.finish() } }
-  }
-
-  private data class SavePrescription(
-      val patientUuid: UUID,
-      val name: String,
-      val dosage: String,
-      val facility: Facility
-  )
 }

@@ -3,21 +3,25 @@ package org.simple.clinic.drugs.selection.dosage
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.protocol.ProtocolDrug
+import java.util.UUID
 
 @Parcelize
 data class DosagePickerModel(
     val drugName: String,
-    val protocolDrugs: List<ProtocolDrug>?
+    val protocolDrugs: List<ProtocolDrug>?,
+    val existingPrescriptionUuid: UUID?
 ) : Parcelable {
 
   companion object {
 
     fun create(
-        drugName: String
+        drugName: String,
+        existingPrescriptionUuid: UUID?
     ): DosagePickerModel {
       return DosagePickerModel(
           drugName = drugName,
-          protocolDrugs = null
+          protocolDrugs = null,
+          existingPrescriptionUuid = existingPrescriptionUuid
       )
     }
   }

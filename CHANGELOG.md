@@ -12,6 +12,7 @@
 - Add CI check for fixing ellipsis's in strings.xml
 - Extracted `BloodPressureReading` model as an embedded model from `BloodPressureMeasurement`
 - Migrated `MedicalHistorySummaryView` to Mobius
+- Add teleconsultation fields to the facility model
 
 ## 2020-05-04-7255
 ### Internal

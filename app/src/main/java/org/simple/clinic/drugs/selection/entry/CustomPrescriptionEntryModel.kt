@@ -7,12 +7,13 @@ import kotlinx.android.parcel.Parcelize
 data class CustomPrescriptionEntryModel(
     val openAs: OpenAs,
     val drugName: String?,
-    val dosage: String?
+    val dosage: String?,
+    val dosageHasFocus: Boolean?
 ) : Parcelable {
 
   companion object {
     fun create(openAs: OpenAs): CustomPrescriptionEntryModel {
-      return CustomPrescriptionEntryModel(openAs, null, null)
+      return CustomPrescriptionEntryModel(openAs, null, null, null)
     }
   }
 
@@ -22,5 +23,9 @@ data class CustomPrescriptionEntryModel(
 
   fun dosageChanged(dosage: String): CustomPrescriptionEntryModel {
     return copy(dosage = dosage)
+  }
+
+  fun dosageFocusChanged(hasFocus: Boolean): CustomPrescriptionEntryModel {
+    return copy(dosageHasFocus = hasFocus)
   }
 }

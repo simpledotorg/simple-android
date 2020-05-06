@@ -12,6 +12,7 @@ class CustomPrescriptionEntryUpdate : Update<CustomPrescriptionEntryModel, Custo
     return when (event) {
       is CustomPrescriptionDrugNameTextChanged -> next(model.drugNameChanged(event.name))
       is CustomPrescriptionDrugDosageTextChanged -> next(model.dosageChanged(event.dosage))
+      is CustomPrescriptionDrugDosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
       SaveCustomPrescriptionClicked -> createOrUpdatePrescriptionEntry(model)
       CustomPrescriptionSaved -> dispatch(CloseSheet)
     }

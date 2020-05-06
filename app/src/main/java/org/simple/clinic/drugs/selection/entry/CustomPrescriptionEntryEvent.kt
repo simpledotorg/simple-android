@@ -12,6 +12,10 @@ data class CustomPrescriptionDrugDosageTextChanged(val dosage: String) : CustomP
   override val analyticsName = "Drugs:Custom:Dosage Changed"
 }
 
+data class CustomPrescriptionDrugDosageFocusChanged(val hasFocus: Boolean) : CustomPrescriptionEntryEvent() {
+  override val analyticsName = "Drugs:Custom:Focused On Text Field"
+}
+
 object SaveCustomPrescriptionClicked : CustomPrescriptionEntryEvent() {
   override val analyticsName = "Drugs:Custom:Saved"
 }

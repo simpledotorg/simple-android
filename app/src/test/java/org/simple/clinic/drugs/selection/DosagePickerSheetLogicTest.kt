@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -24,7 +23,6 @@ import org.simple.clinic.drugs.selection.dosage.DosagePickerEffectHandler
 import org.simple.clinic.drugs.selection.dosage.DosagePickerEvent
 import org.simple.clinic.drugs.selection.dosage.DosagePickerInit
 import org.simple.clinic.drugs.selection.dosage.DosagePickerModel
-import org.simple.clinic.drugs.selection.dosage.DosagePickerSheetController
 import org.simple.clinic.drugs.selection.dosage.DosagePickerUi
 import org.simple.clinic.drugs.selection.dosage.DosagePickerUiRenderer
 import org.simple.clinic.drugs.selection.dosage.DosagePickerUpdate
@@ -38,12 +36,11 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class DosagePickerSheetControllerTest {
+class DosagePickerSheetLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -63,9 +60,6 @@ class DosagePickerSheetControllerTest {
   private val drugName = "Amlodipine"
   private val patientUuid = UUID.fromString("c4df02bd-d9d7-4120-9ff7-41f1e35aa8dd")
 
-  private lateinit var controller: DosagePickerSheetController
-  private lateinit var controllerSubscription: Disposable
-
   private val uiRenderer = DosagePickerUiRenderer(ui)
   private val dosagePickerEffectHandler = DosagePickerEffectHandler(
       userSession = userSession,
@@ -80,7 +74,6 @@ class DosagePickerSheetControllerTest {
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -163,20 +156,6 @@ class DosagePickerSheetControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
 
-    controller = DosagePickerSheetController(
-        userSession = userSession,
-        facilityRepository = facilityRepository,
-        protocolRepository = protocolRepository,
-        prescriptionRepository = prescriptionRepository,
-        drugName = drugName,
-        patientUuid = patientUuid,
-        existingPrescribedDrugUuid = existingPrescriptionUuid
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = DosagePickerModel.create(
@@ -190,7 +169,5 @@ class DosagePickerSheetControllerTest {
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
-
-    uiEvents.onNext(ScreenCreated())
   }
 }

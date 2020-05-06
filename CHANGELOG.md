@@ -13,6 +13,7 @@
 - Extracted `BloodPressureReading` model as an embedded model from `BloodPressureMeasurement`
 - Migrated `MedicalHistorySummaryView` to Mobius
 - Add teleconsultation fields to the facility model
+- [In Progress: 06th May 2020] Migrate `DosagePickerSheet` to Mobius
 
 ## 2020-05-04-7255
 ### Internal

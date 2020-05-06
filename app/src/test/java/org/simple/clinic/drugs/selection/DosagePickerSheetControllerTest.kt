@@ -19,7 +19,9 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.dosage.DosageListItem
 import org.simple.clinic.drugs.selection.dosage.DosageOption
+import org.simple.clinic.drugs.selection.dosage.DosagePickerEffect
 import org.simple.clinic.drugs.selection.dosage.DosagePickerEffectHandler
+import org.simple.clinic.drugs.selection.dosage.DosagePickerEvent
 import org.simple.clinic.drugs.selection.dosage.DosagePickerInit
 import org.simple.clinic.drugs.selection.dosage.DosagePickerModel
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheetController
@@ -73,14 +75,7 @@ class DosagePickerSheetControllerTest {
       uiActions = ui
   )
 
-  private val testFixture = MobiusTestFixture(
-      events = uiEvents.ofType(),
-      defaultModel = DosagePickerModel.create(drugName),
-      init = DosagePickerInit(),
-      update = DosagePickerUpdate(),
-      effectHandler = dosagePickerEffectHandler.build(),
-      modelUpdateListener = uiRenderer::render
-  )
+  private lateinit var testFixture: MobiusTestFixture<DosagePickerModel, DosagePickerEvent, DosagePickerEffect>
 
   @After
   fun tearDown() {
@@ -180,6 +175,15 @@ class DosagePickerSheetControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = DosagePickerModel.create(drugName = drugName, existingPrescriptionUuid = existingPrescriptionUuid.toNullable()),
+        init = DosagePickerInit(),
+        update = DosagePickerUpdate(),
+        effectHandler = dosagePickerEffectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
     testFixture.start()
 
     uiEvents.onNext(ScreenCreated())

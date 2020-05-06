@@ -13,7 +13,9 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.sync.SynceableRepository
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toOptional
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -127,7 +129,10 @@ class PrescriptionRepository @Inject constructor(
         .toObservable()
   }
 
+  @Deprecated("Use prescriptionImmediate() instead")
   fun prescription(prescriptionUuid: UUID): Observable<PrescribedDrug> = dao.prescription(prescriptionUuid).toObservable()
+
+  fun prescriptionImmediate(prescriptionUuid: UUID): Optional<PrescribedDrug> = dao.prescriptionImmediate(prescriptionUuid).toOptional()
 
   fun updatePrescription(prescription: PrescribedDrug): Completable {
     return Completable.fromAction {

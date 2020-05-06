@@ -10,28 +10,35 @@ class DosagePickerUpdate : Update<DosagePickerModel, DosagePickerEvent, DosagePi
   override fun update(model: DosagePickerModel, event: DosagePickerEvent): Next<DosagePickerModel, DosagePickerEffect> {
     return when (event) {
       is DrugsLoaded -> next(model.protocolDrugsLoaded(event.protocolDrugs))
-      NoneSelected -> {
-        val effect = if (model.hasExistingPrescription) DeleteExistingPrescription(model.existingPrescriptionUuid!!) else CloseScreen
-
-        dispatch(effect)
-      }
+      NoneSelected -> noneSelected(model)
       ExistingPrescriptionDeleted, NewPrescriptionCreated, ExistingPrescriptionChanged -> dispatch(CloseScreen)
-      is DosageSelected -> {
-        val effect = if (model.hasExistingPrescription) {
-          ChangeExistingPrescription(
-              patientUuid = model.patientUuid,
-              prescriptionUuid = model.existingPrescriptionUuid!!,
-              protocolDrug = event.protocolDrug
-          )
-        } else {
-          CreateNewPrescription(
-              patientUuid = model.patientUuid,
-              protocolDrug = event.protocolDrug
-          )
-        }
-
-        dispatch(effect)
-      }
+      is DosageSelected -> protocolDosageSelected(model, event)
     }
+  }
+
+  private fun noneSelected(model: DosagePickerModel): Next<DosagePickerModel, DosagePickerEffect> {
+    val effect = if (model.hasExistingPrescription) DeleteExistingPrescription(model.existingPrescriptionUuid!!) else CloseScreen
+
+    return dispatch(effect)
+  }
+
+  private fun protocolDosageSelected(
+      model: DosagePickerModel,
+      event: DosageSelected
+  ): Next<DosagePickerModel, DosagePickerEffect> {
+    val effect = if (model.hasExistingPrescription) {
+      ChangeExistingPrescription(
+          patientUuid = model.patientUuid,
+          prescriptionUuid = model.existingPrescriptionUuid!!,
+          protocolDrug = event.protocolDrug
+      )
+    } else {
+      CreateNewPrescription(
+          patientUuid = model.patientUuid,
+          protocolDrug = event.protocolDrug
+      )
+    }
+
+    return dispatch(effect)
   }
 }

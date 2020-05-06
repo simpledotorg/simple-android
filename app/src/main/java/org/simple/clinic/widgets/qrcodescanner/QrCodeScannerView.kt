@@ -83,6 +83,7 @@ constructor(
   }
 
   override fun onDetachedFromWindow() {
+    cameraExecutor.shutdown()
     qrCodeScannerLifecycle.destroyCamera()
     super.onDetachedFromWindow()
   }

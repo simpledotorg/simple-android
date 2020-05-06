@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
@@ -60,10 +61,15 @@ class PatientSummaryScreenControllerTest {
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
+  private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientProfile = TestData.patientProfile(
       patientUuid = patientUuid,
       generatePhoneNumber = true,
       generateBusinessId = true
+  )
+  private val patientSummaryConfig = PatientSummaryConfig(
+      bpEditableDuration = Duration.ofMinutes(10),
+      numberOfMeasurementsForTeleconsultation = 3
   )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -236,7 +242,9 @@ class PatientSummaryScreenControllerTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = mock(),
         medicalHistoryRepository = medicalHistoryRepository,
+        prescriptionRepository = prescriptionRepository,
         country = TestData.country(),
+        patientSummaryConfig = patientSummaryConfig,
         uiActions = uiActions
     )
 

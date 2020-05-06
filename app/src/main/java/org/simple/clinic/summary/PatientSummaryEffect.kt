@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -52,3 +53,5 @@ object ShowDiagnosisError : PatientSummaryEffect()
 data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID): PatientSummaryEffect()
 
 data class OpenContactPatientScreen(val patientUuid: UUID): PatientSummaryEffect()
+
+data class LoadPatientTeleconsultationInfo(val patientUuid: UUID, val bpPassport: BusinessId?, val currentFacility: Facility?) : PatientSummaryEffect()

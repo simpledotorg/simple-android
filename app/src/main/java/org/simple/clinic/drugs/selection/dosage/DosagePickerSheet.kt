@@ -53,7 +53,8 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
     Observable
         .merge(
             sheetCreates(),
-            dosageAdapter.itemEvents
+            dosageClicks(),
+            noneClicks()
         )
         .compose(ReportAnalyticsEvents())
         .share()
@@ -141,6 +142,25 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
 
   private fun sheetCreates(): Observable<UiEvent> {
     return Observable.just(ScreenCreated())
+  }
+
+  private fun noneClicks(): Observable<UiEvent> {
+    return dosageAdapter
+        .itemEvents
+        .ofType<DosageItemClicked>()
+        .filter { it.dosageOption == DosageOption.None }
+        .map { NoneSelected }
+  }
+
+  private fun dosageClicks(): Observable<UiEvent> {
+    return dosageAdapter
+        .itemEvents
+        .ofType<DosageItemClicked>()
+        .filter { it.dosageOption is DosageOption.Dosage }
+        .map {
+          val protocolDrug = (it.dosageOption as DosageOption.Dosage).protocolDrug
+          DosageSelected(protocolDrug)
+        }
   }
 
   private fun displayDrugName() {

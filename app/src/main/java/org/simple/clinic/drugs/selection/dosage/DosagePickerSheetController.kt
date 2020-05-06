@@ -40,27 +40,12 @@ class DosagePickerSheetController @AssistedInject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(mergeWithDosageSelected())
         .replay()
 
     return Observable.mergeArray(
         savePrescription(replayedEvents),
         noneSelected(replayedEvents)
     )
-  }
-
-  private fun mergeWithDosageSelected(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { events ->
-      val dosageType = events
-          .ofType<DosageItemClicked>()
-          .map {
-            when (it.dosageOption) {
-              is DosageOption.Dosage -> DosageSelected(it.dosageOption.protocolDrug)
-              is DosageOption.None -> NoneSelected
-            }
-          }
-      events.mergeWith(dosageType)
-    }
   }
 
   private fun savePrescription(events: Observable<UiEvent>): Observable<UiChange> {

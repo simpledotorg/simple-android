@@ -34,23 +34,8 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        removePrescription(replayedEvents),
         closeSheetWhenPrescriptionIsDeleted(replayedEvents)
     )
-  }
-
-  private fun removePrescription(events: Observable<UiEvent>): Observable<UiChange> {
-    val openAsUpdate = events
-        .ofType<ScreenCreated>()
-        .filter { openAs is OpenAs.Update }
-        .map { openAs as OpenAs.Update }
-        .map { it.prescribedDrugUuid }
-        .take(1)
-
-    return events
-        .ofType<RemoveCustomPrescriptionClicked>()
-        .withLatestFrom(openAsUpdate)
-        .map { (_, prescribedDrugUuid) -> { ui: Ui -> ui.showConfirmRemoveMedicineDialog(prescribedDrugUuid) } }
   }
 
   private fun closeSheetWhenPrescriptionIsDeleted(events: Observable<UiEvent>): Observable<UiChange> {

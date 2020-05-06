@@ -9,7 +9,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
@@ -43,7 +42,6 @@ class DosagePickerSheetController @AssistedInject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(mergeWithDosageSelected())
-        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(

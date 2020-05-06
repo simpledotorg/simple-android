@@ -6,16 +6,20 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.sheet_dosage_picker.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.DividerItemDecorator
@@ -42,8 +46,32 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
 
   private val dosageAdapter = ItemAdapter(DosageDiffer())
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            sheetCreates(),
+            dosageAdapter.itemEvents
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val uiRenderer = DosagePickerUiRenderer(this)
+
+  private val delegate by unsafeLazy {
+    MobiusDelegate.forActivity(
+        events = events.ofType(),
+        defaultModel = DosagePickerModel.create(),
+        update = DosagePickerUpdate(),
+        init = DosagePickerInit(),
+        effectHandler = DosagePickerEffectHandler().build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    delegate.onRestoreInstanceState(savedInstanceState)
     setContentView(R.layout.sheet_dosage_picker)
 
     recyclerView.apply {
@@ -59,7 +87,7 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(sheetCreates(), dosageAdapter.itemEvents),
+        events = events,
         controller = controllerFactory.create(drugName, patientUuid, prescribedDrugUuid),
         screenDestroys = onDestroys
     )
@@ -83,6 +111,21 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
         .build()
 
     component.inject(this)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    delegate.onSaveInstanceState(outState)
+    super.onSaveInstanceState(outState)
   }
 
   override fun onDestroy() {

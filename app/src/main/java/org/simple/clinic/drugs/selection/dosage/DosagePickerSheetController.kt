@@ -2,7 +2,6 @@ package org.simple.clinic.drugs.selection.dosage
 
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -13,8 +12,6 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -42,10 +39,7 @@ class DosagePickerSheetController @AssistedInject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        savePrescription(replayedEvents),
-        noneSelected(replayedEvents)
-    )
+    return savePrescription(replayedEvents)
   }
 
   private fun savePrescription(events: Observable<UiEvent>): Observable<UiChange> {
@@ -81,19 +75,5 @@ class DosagePickerSheetController @AssistedInject constructor(
         }
 
     return softDeleteOldPrescription.mergeWith(savePrescription)
-  }
-
-  private fun noneSelected(events: Observable<UiEvent>): Observable<UiChange> {
-    val noneSelected = events
-        .ofType<NoneSelected>()
-
-    return noneSelected
-        .firstOrError()
-        .flatMapCompletable {
-          when (existingPrescribedDrugUuid) {
-            is Just -> prescriptionRepository.softDeletePrescription(existingPrescribedDrugUuid.value)
-            is None -> Completable.complete()
-          }
-        }.andThen(Observable.just { ui: Ui -> ui.close() })
   }
 }

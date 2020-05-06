@@ -71,6 +71,7 @@ class DosagePickerSheetControllerTest {
       userSession = userSession,
       facilityRepository = facilityRepository,
       protocolRepository = protocolRepository,
+      prescriptionRepository = prescriptionRepository,
       schedulers = TrampolineSchedulersProvider(),
       uiActions = ui
   )

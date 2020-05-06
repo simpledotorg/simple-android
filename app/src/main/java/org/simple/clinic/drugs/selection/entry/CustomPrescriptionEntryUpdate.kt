@@ -28,13 +28,17 @@ class CustomPrescriptionEntryUpdate : Update<CustomPrescriptionEntryModel, Custo
       model: CustomPrescriptionEntryModel,
       prescription: PrescribedDrug
   ): Next<CustomPrescriptionEntryModel, CustomPrescriptionEntryEffect> {
-    var updatedModel = model
-        .drugNameChanged(prescription.name)
+    return if (prescription.isDeleted) {
+      dispatch(CloseSheet)
+    } else {
+      var updatedModel = model
+          .drugNameChanged(prescription.name)
 
-    if (prescription.dosage != null)
-      updatedModel = updatedModel.dosageChanged(prescription.dosage)
+      if (prescription.dosage != null)
+        updatedModel = updatedModel.dosageChanged(prescription.dosage)
 
-    return next(updatedModel, SetMedicineName(prescription.name), SetDosage(prescription.dosage))
+      next(updatedModel, SetMedicineName(prescription.name), SetDosage(prescription.dosage))
+    }
   }
 
   private fun createOrUpdatePrescriptionEntry(model: CustomPrescriptionEntryModel): Next<CustomPrescriptionEntryModel, CustomPrescriptionEntryEffect> {

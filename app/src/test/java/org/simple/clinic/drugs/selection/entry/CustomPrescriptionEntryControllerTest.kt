@@ -256,7 +256,7 @@ class CustomPrescriptionEntryControllerTest {
     setupController(OpenAs.Update(prescriptionUuid))
 
     //then
-    verify(ui).finish()
+    verify(uiActions).finish()
   }
 
   private fun setupController(openAs: OpenAs) {

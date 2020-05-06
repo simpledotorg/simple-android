@@ -10,7 +10,5 @@ interface CustomPrescriptionEntryUi : CustomPrescriptionEntryUiActions {
   fun showEditPrescriptionTitle()
   fun hideRemoveButton()
   fun showRemoveButton()
-  fun setMedicineName(name: String)
-  fun setDosage(dosage: String?)
   fun showConfirmRemoveMedicineDialog(prescribedDrugUuid: UUID)
 }

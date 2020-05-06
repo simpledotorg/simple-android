@@ -36,6 +36,8 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
         .addTransformer(SaveCustomPrescription::class.java, saveCustomPrescription(schedulersProvider.io()))
         .addTransformer(UpdatePrescription::class.java, updatePrescription(schedulersProvider.io()))
         .addTransformer(FetchPrescription::class.java, fetchPrescription(schedulersProvider.io()))
+        .addConsumer(SetMedicineName::class.java, { uiActions.setMedicineName(it.drugName) }, schedulersProvider.ui())
+        .addConsumer(SetDosage::class.java, { uiActions.setDosage(it.dosage) }, schedulersProvider.ui())
         .addAction(CloseSheet::class.java, uiActions::finish, schedulersProvider.ui())
         .build()
   }

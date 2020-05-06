@@ -11,3 +11,7 @@ data class UpdatePrescription(val prescriptionUuid: UUID, val drugName: String, 
 object CloseSheet : CustomPrescriptionEntryEffect()
 
 data class FetchPrescription(val prescriptionUuid: UUID) : CustomPrescriptionEntryEffect()
+
+data class SetMedicineName(val drugName: String) : CustomPrescriptionEntryEffect()
+
+data class SetDosage(val dosage: String?) : CustomPrescriptionEntryEffect()

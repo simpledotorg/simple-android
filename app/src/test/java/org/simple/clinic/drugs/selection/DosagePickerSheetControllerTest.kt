@@ -18,8 +18,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.dosage.DosageListItem
 import org.simple.clinic.drugs.selection.dosage.DosageOption
-import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheetController
+import org.simple.clinic.drugs.selection.dosage.DosagePickerUi
 import org.simple.clinic.drugs.selection.dosage.DosageSelected
 import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.facility.FacilityRepository
@@ -40,7 +40,7 @@ class DosagePickerSheetControllerTest {
 
   private val protocolRepository = mock<ProtocolRepository>()
   private val userSession = mock<UserSession>()
-  private val sheet = mock<DosagePickerSheet>()
+  private val ui = mock<DosagePickerUi>()
   private val facilityRepository = mock<FacilityRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -70,12 +70,12 @@ class DosagePickerSheetControllerTest {
 
     setupController()
 
-    verify(sheet).populateDosageList(listOf(
+    verify(ui).populateDosageList(listOf(
         DosageListItem(DosageOption.Dosage(protocolDrug1)),
         DosageListItem(DosageOption.Dosage(protocolDrug2)),
         DosageListItem(DosageOption.None)
     ))
-    verifyNoMoreInteractions(sheet)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -92,8 +92,8 @@ class DosagePickerSheetControllerTest {
 
     verify(prescriptionRepository).savePrescription(patientUuid, dosageSelected, currentFacility)
     verify(prescriptionRepository, never()).softDeletePrescription(any())
-    verify(sheet).finish()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).close()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -112,8 +112,8 @@ class DosagePickerSheetControllerTest {
 
     verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
     verify(prescriptionRepository, times(1)).savePrescription(patientUuid, dosageSelected, currentFacility)
-    verify(sheet).finish()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).close()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -130,8 +130,8 @@ class DosagePickerSheetControllerTest {
 
     verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
-    verify(sheet).finish()
-    verifyNoMoreInteractions(sheet)
+    verify(ui).close()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(
@@ -152,7 +152,7 @@ class DosagePickerSheetControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(sheet) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

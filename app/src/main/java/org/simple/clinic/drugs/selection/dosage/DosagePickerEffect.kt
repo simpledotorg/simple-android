@@ -1,3 +1,5 @@
 package org.simple.clinic.drugs.selection.dosage
 
-class DosagePickerEffect
+sealed class DosagePickerEffect
+
+data class LoadProtocolDrugsByName(val drugName: String) : DosagePickerEffect()

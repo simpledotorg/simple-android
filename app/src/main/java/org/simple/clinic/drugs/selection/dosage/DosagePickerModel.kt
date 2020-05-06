@@ -4,4 +4,9 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class DosagePickerModel: Parcelable
+class DosagePickerModel: Parcelable {
+
+  companion object {
+    fun create(): DosagePickerModel = DosagePickerModel()
+  }
+}

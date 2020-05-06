@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -18,8 +19,13 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.dosage.DosageListItem
 import org.simple.clinic.drugs.selection.dosage.DosageOption
+import org.simple.clinic.drugs.selection.dosage.DosagePickerEffectHandler
+import org.simple.clinic.drugs.selection.dosage.DosagePickerInit
+import org.simple.clinic.drugs.selection.dosage.DosagePickerModel
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheetController
 import org.simple.clinic.drugs.selection.dosage.DosagePickerUi
+import org.simple.clinic.drugs.selection.dosage.DosagePickerUiRenderer
+import org.simple.clinic.drugs.selection.dosage.DosagePickerUpdate
 import org.simple.clinic.drugs.selection.dosage.DosageSelected
 import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.facility.FacilityRepository
@@ -31,6 +37,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class DosagePickerSheetControllerTest {
@@ -56,9 +63,20 @@ class DosagePickerSheetControllerTest {
   private lateinit var controller: DosagePickerSheetController
   private lateinit var controllerSubscription: Disposable
 
+  private val uiRenderer = DosagePickerUiRenderer(ui)
+  private val testFixture = MobiusTestFixture(
+      events = uiEvents.ofType(),
+      defaultModel = DosagePickerModel.create(),
+      init = DosagePickerInit(),
+      update = DosagePickerUpdate(),
+      effectHandler = DosagePickerEffectHandler().build(),
+      modelUpdateListener = uiRenderer::render
+  )
+
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -153,6 +171,7 @@ class DosagePickerSheetControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+    testFixture.start()
 
     uiEvents.onNext(ScreenCreated())
   }

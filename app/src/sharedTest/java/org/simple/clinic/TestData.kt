@@ -341,7 +341,7 @@ object TestData {
       updatedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       deletedAt: Instant? = null,
-      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false)
   ): Facility {
     return Facility(
         uuid = uuid,
@@ -381,7 +381,7 @@ object TestData {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false)
   ): FacilityPayload {
     return FacilityPayload(
         uuid = uuid,

@@ -40,6 +40,9 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
   @Inject
   lateinit var locale: Locale
 
+  @Inject
+  lateinit var effectHandler: DosagePickerEffectHandler
+
   private lateinit var component: DosagePickerSheetComponent
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
@@ -59,12 +62,14 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
   private val uiRenderer = DosagePickerUiRenderer(this)
 
   private val delegate by unsafeLazy {
+    val drugName = intent.getStringExtra(KEY_DRUG_NAME) as String
+
     MobiusDelegate.forActivity(
         events = events.ofType(),
-        defaultModel = DosagePickerModel.create(),
+        defaultModel = DosagePickerModel.create(drugName = drugName),
         update = DosagePickerUpdate(),
         init = DosagePickerInit(),
-        effectHandler = DosagePickerEffectHandler().build(),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
   }

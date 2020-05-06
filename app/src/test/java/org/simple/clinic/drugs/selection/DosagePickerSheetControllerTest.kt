@@ -34,6 +34,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -64,12 +65,19 @@ class DosagePickerSheetControllerTest {
   private lateinit var controllerSubscription: Disposable
 
   private val uiRenderer = DosagePickerUiRenderer(ui)
+  private val dosagePickerEffectHandler = DosagePickerEffectHandler(
+      userSession = userSession,
+      facilityRepository = facilityRepository,
+      protocolRepository = protocolRepository,
+      schedulers = TrampolineSchedulersProvider()
+  )
+
   private val testFixture = MobiusTestFixture(
       events = uiEvents.ofType(),
-      defaultModel = DosagePickerModel.create(),
+      defaultModel = DosagePickerModel.create(drugName),
       init = DosagePickerInit(),
       update = DosagePickerUpdate(),
-      effectHandler = DosagePickerEffectHandler().build(),
+      effectHandler = dosagePickerEffectHandler.build(),
       modelUpdateListener = uiRenderer::render
   )
 

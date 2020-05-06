@@ -1,5 +1,8 @@
 package org.simple.clinic.drugs.selection.dosage
 
+import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.widgets.UiEvent
 
-class DosagePickerEvent: UiEvent
+sealed class DosagePickerEvent : UiEvent
+
+data class DrugsLoaded(val protocolDrugs: List<ProtocolDrug>) : DosagePickerEvent()

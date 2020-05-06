@@ -135,7 +135,8 @@ data class User(
          F.location_latitude, F.location_longitude,
          F.createdAt, F.updatedAt, F.deletedAt,
          F.syncStatus,
-         F.config_diabetesManagementEnabled
+         F.config_diabetesManagementEnabled,
+         F.config_teleconsultationEnabled
         FROM Facility F
         INNER JOIN LoggedInUser ON LoggedInUser.currentFacilityUuid = F.uuid
         WHERE LoggedInUser.uuid = :userUuid

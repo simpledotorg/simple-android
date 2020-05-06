@@ -11,5 +11,9 @@ import kotlinx.android.parcel.Parcelize
 data class FacilityConfig(
     @ColumnInfo(name = "diabetesManagementEnabled")
     @Json(name = "enable_diabetes_management")
-    val diabetesManagementEnabled: Boolean
-): Parcelable
+    val diabetesManagementEnabled: Boolean,
+
+    // TODO (SM): Make this non nullable and remove default value once the feature is in PROD
+    @ColumnInfo(name = "teleconsultationEnabled")
+    val teleconsultationEnabled: Boolean? = false
+) : Parcelable

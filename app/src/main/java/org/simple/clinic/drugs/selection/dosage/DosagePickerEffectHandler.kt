@@ -6,6 +6,7 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
@@ -32,6 +33,8 @@ class DosagePickerEffectHandler @AssistedInject constructor(
         .addTransformer(LoadProtocolDrugsByName::class.java, loadProtocolDrugs())
         .addTransformer(DeleteExistingPrescription::class.java, deleteExistingPrescription())
         .addAction(CloseScreen::class.java, uiActions::close, schedulers.ui())
+        .addTransformer(ChangeExistingPrescription::class.java, changeExistingPrescription())
+        .addTransformer(CreateNewPrescription::class.java, createNewPrescription())
         .build()
   }
 
@@ -63,10 +66,66 @@ class DosagePickerEffectHandler @AssistedInject constructor(
     }
   }
 
+  private fun changeExistingPrescription(): ObservableTransformer<ChangeExistingPrescription, DosagePickerEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .flatMap { effect ->
+            // This is nasty, fix in the final clean up phase by making
+            // a blocking call for the current facility
+            currentFacility().map { effect to it }
+          }
+          .flatMap { (effect, currentFacility) ->
+            val patientUuid = effect.patientUuid
+            val existingPrescriptionUuid = effect.prescriptionUuid
+            val newPrescriptionDrug = effect.protocolDrug
+
+            prescriptionRepository
+                .softDeletePrescription(existingPrescriptionUuid)
+                .andThen(prescriptionRepository.savePrescription(
+                    patientUuid = patientUuid,
+                    drug = newPrescriptionDrug,
+                    facility = currentFacility
+                ))
+                .andThen(Observable.just(ExistingPrescriptionChanged))
+          }
+    }
+  }
+
+  private fun createNewPrescription(): ObservableTransformer<CreateNewPrescription, DosagePickerEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .flatMap { effect ->
+            // This is nasty, fix in the final clean up phase by making
+            // a blocking call for the current facility
+            currentFacility().map { effect to it }
+          }
+          .flatMap { (effect, currentFacility) ->
+            val patientUuid = effect.patientUuid
+            val newPrescriptionDrug = effect.protocolDrug
+
+            prescriptionRepository
+                .savePrescription(
+                    patientUuid = patientUuid,
+                    drug = newPrescriptionDrug,
+                    facility = currentFacility
+                )
+                .andThen(Observable.just(NewPrescriptionCreated))
+          }
+    }
+  }
+
   private fun currentProtocolUuid(): Observable<UUID> {
     return userSession
         .requireLoggedInUser()
         .switchMap(facilityRepository::currentFacility)
         .map { it.protocolUuid }
+  }
+
+  private fun currentFacility(): Observable<Facility> {
+    return userSession
+        .requireLoggedInUser()
+        .switchMap(facilityRepository::currentFacility)
   }
 }

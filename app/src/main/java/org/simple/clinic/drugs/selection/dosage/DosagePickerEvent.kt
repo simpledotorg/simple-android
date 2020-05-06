@@ -13,3 +13,12 @@ object NoneSelected : DosagePickerEvent() {
 }
 
 object ExistingPrescriptionDeleted : DosagePickerEvent()
+
+data class DosageSelected(val protocolDrug: ProtocolDrug) : DosagePickerEvent() {
+  override val analyticsName: String
+    get() = "Protocol Drug Dosage Selection:Dosage Selected"
+}
+
+object NewPrescriptionCreated : DosagePickerEvent()
+
+object ExistingPrescriptionChanged : DosagePickerEvent()

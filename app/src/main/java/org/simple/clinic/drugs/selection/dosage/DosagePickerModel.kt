@@ -7,6 +7,7 @@ import java.util.UUID
 
 @Parcelize
 data class DosagePickerModel(
+    val patientUuid: UUID,
     val drugName: String,
     val protocolDrugs: List<ProtocolDrug>?,
     val existingPrescriptionUuid: UUID?
@@ -15,10 +16,12 @@ data class DosagePickerModel(
   companion object {
 
     fun create(
+        patientUuid: UUID,
         drugName: String,
         existingPrescriptionUuid: UUID?
     ): DosagePickerModel {
       return DosagePickerModel(
+          patientUuid = patientUuid,
           drugName = drugName,
           protocolDrugs = null,
           existingPrescriptionUuid = existingPrescriptionUuid

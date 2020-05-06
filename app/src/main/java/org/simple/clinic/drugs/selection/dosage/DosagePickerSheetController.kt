@@ -22,7 +22,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-private typealias Ui = DosagePickerSheet
+private typealias Ui = DosagePickerUi
 private typealias UiChange = (Ui) -> Unit
 
 class DosagePickerSheetController @AssistedInject constructor(
@@ -112,7 +112,7 @@ class DosagePickerSheetController @AssistedInject constructor(
                   drug = drug,
                   facility = currentFacility
               )
-              .andThen(Observable.just { ui: Ui -> ui.finish() })
+              .andThen(Observable.just { ui: Ui -> ui.close() })
         }
 
     return softDeleteOldPrescription.mergeWith(savePrescription)
@@ -129,6 +129,6 @@ class DosagePickerSheetController @AssistedInject constructor(
             is Just -> prescriptionRepository.softDeletePrescription(existingPrescribedDrugUuid.value)
             is None -> Completable.complete()
           }
-        }.andThen(Observable.just { ui: Ui -> ui.finish() })
+        }.andThen(Observable.just { ui: Ui -> ui.close() })
   }
 }

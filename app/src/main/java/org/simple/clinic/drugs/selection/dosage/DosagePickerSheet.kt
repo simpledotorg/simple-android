@@ -28,7 +28,7 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-class DosagePickerSheet : BottomSheetActivity() {
+class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
 
   @Inject
   lateinit var controllerFactory: DosagePickerSheetController.Factory
@@ -99,8 +99,12 @@ class DosagePickerSheet : BottomSheetActivity() {
     drugNameTextView.text = getString(R.string.prescribed_drug_with_dosages_sheet_drug_name, drugName)
   }
 
-  fun populateDosageList(list: List<DosageListItem>) {
+  override fun populateDosageList(list: List<DosageListItem>) {
     dosageAdapter.submitList(list)
+  }
+
+  override fun close() {
+    finish()
   }
 
   companion object {

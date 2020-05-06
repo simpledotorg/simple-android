@@ -98,8 +98,10 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(io)
-          .map { prescriptionRepository.prescriptionImmediate(it.prescriptionUuid) }
-          .filterAndUnwrapJust()
+          // FIXME: The logic to close sheet after a prescription is deleted is dependant on this prescription stream
+          //  being reactive. So we have to use the deprecated method here. This should be fixed.
+          //  This is being tracked here: https://www.pivotaltracker.com/story/show/172737790
+          .flatMap { prescriptionRepository.prescription(it.prescriptionUuid) }
           .map(::CustomPrescriptionFetched)
     }
   }

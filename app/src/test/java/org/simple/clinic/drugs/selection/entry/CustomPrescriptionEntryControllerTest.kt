@@ -23,6 +23,7 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -145,6 +146,7 @@ class CustomPrescriptionEntryControllerTest {
   fun `when sheet is opened for a new entry then enter new medicine title should be shown`() {
     //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
     setupController(OpenAs.New(patientUuid))
@@ -157,6 +159,7 @@ class CustomPrescriptionEntryControllerTest {
   fun `when sheet is opened to update a medicine then update medicine title should be shown`() {
     //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
     setupController(OpenAs.Update(prescriptionUuid))
@@ -169,6 +172,7 @@ class CustomPrescriptionEntryControllerTest {
   fun `the remove button should show when the sheet is opened for edit`() {
     //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
     setupController(OpenAs.Update(prescriptionUuid))
@@ -181,6 +185,7 @@ class CustomPrescriptionEntryControllerTest {
   fun `the remove button should be hidden when the sheet is opened for new entry`() {
     //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
     setupController(OpenAs.New(patientUuid))
@@ -194,6 +199,7 @@ class CustomPrescriptionEntryControllerTest {
     //given
     val prescription = TestData.prescription(uuid = prescriptionUuid)
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescription))
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
     setupController(OpenAs.Update(prescriptionUuid))
@@ -229,6 +235,7 @@ class CustomPrescriptionEntryControllerTest {
   fun `when remove is clicked, then show confirmation dialog`() {
     //given
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
     setupController(OpenAs.Update(prescriptionUuid))
@@ -241,7 +248,9 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `when prescription is deleted then close the sheet`() {
     //given
-    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(TestData.prescription(uuid = prescriptionUuid, isDeleted = true)))
+    val prescription = TestData.prescription(uuid = prescriptionUuid, isDeleted = true)
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescription))
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(Just(prescription))
 
     //when
     setupController(OpenAs.Update(prescriptionUuid))

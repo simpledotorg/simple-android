@@ -35,28 +35,11 @@ class CustomPrescriptionEntryController @AssistedInject constructor(
         .replay()
 
     return Observable.mergeArray(
-        updateSheetTitle(replayedEvents),
         toggleRemoveButton(replayedEvents),
         prefillPrescription(replayedEvents),
         removePrescription(replayedEvents),
         closeSheetWhenPrescriptionIsDeleted(replayedEvents)
     )
-  }
-
-  private fun updateSheetTitle(events: Observable<UiEvent>): Observable<UiChange> {
-    val openAsStream = events
-        .ofType<ScreenCreated>()
-        .map { openAs }
-
-    val showEnterNewPrescription = openAsStream
-        .filter { it is OpenAs.New }
-        .map { { ui: Ui -> ui.showEnterNewPrescriptionTitle() } }
-
-    val showEditPrescription = openAsStream
-        .filter { it is OpenAs.Update }
-        .map { { ui: Ui -> ui.showEditPrescriptionTitle() } }
-
-    return showEnterNewPrescription.mergeWith(showEditPrescription)
   }
 
   private fun toggleRemoveButton(events: Observable<UiEvent>): Observable<UiChange> {

@@ -14,6 +14,7 @@ class CustomPrescriptionEntryUiRenderer(val ui: CustomPrescriptionEntryUi) : Vie
 
     val isDrugNameNotBlank = model.drugName.isNotBlank()
     drugNameValueCallback.pass(isDrugNameNotBlank, ui::setSaveButtonEnabled)
+    displaySheetTitle(model.openAs)
 
   }
 
@@ -32,6 +33,13 @@ class CustomPrescriptionEntryUiRenderer(val ui: CustomPrescriptionEntryUi) : Vie
         ui.setDrugDosageText(DOSAGE_PLACEHOLDER)
         ui.moveDrugDosageCursorToBeginning()
       }
+    }
+  }
+
+  private fun displaySheetTitle(openAs: OpenAs) {
+    when (openAs) {
+      is OpenAs.New -> ui.showEnterNewPrescriptionTitle()
+      is OpenAs.Update -> ui.showEditPrescriptionTitle()
     }
   }
 }

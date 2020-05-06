@@ -69,7 +69,8 @@ class DosagePickerSheetControllerTest {
       userSession = userSession,
       facilityRepository = facilityRepository,
       protocolRepository = protocolRepository,
-      schedulers = TrampolineSchedulersProvider()
+      schedulers = TrampolineSchedulersProvider(),
+      uiActions = ui
   )
 
   private val testFixture = MobiusTestFixture(

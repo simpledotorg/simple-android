@@ -179,7 +179,11 @@ class DosagePickerSheetControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = DosagePickerModel.create(drugName = drugName, existingPrescriptionUuid = existingPrescriptionUuid.toNullable()),
+        defaultModel = DosagePickerModel.create(
+            patientUuid = patientUuid,
+            drugName = drugName,
+            existingPrescriptionUuid = existingPrescriptionUuid.toNullable()
+        ),
         init = DosagePickerInit(),
         update = DosagePickerUpdate(),
         effectHandler = dosagePickerEffectHandler.build(),

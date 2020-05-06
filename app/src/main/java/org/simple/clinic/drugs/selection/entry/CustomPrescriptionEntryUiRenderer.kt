@@ -10,12 +10,16 @@ class CustomPrescriptionEntryUiRenderer(val ui: CustomPrescriptionEntryUi) : Vie
   override fun render(model: CustomPrescriptionEntryModel) {
     showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
 
-    if (model.drugName == null) return
+    toggleSaveButton(model.drugName)
 
-    val isDrugNameNotBlank = model.drugName.isNotBlank()
-    drugNameValueCallback.pass(isDrugNameNotBlank, ui::setSaveButtonEnabled)
     displaySheetTitle(model.openAs)
+  }
 
+  private fun toggleSaveButton(drugName: String?) {
+    if (drugName == null) return
+
+    val isDrugNameNotBlank = drugName.isNotBlank()
+    drugNameValueCallback.pass(isDrugNameNotBlank, ui::setSaveButtonEnabled)
   }
 
   /**

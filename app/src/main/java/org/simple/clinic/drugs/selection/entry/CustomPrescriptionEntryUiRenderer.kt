@@ -8,11 +8,9 @@ class CustomPrescriptionEntryUiRenderer(val ui: CustomPrescriptionEntryUi) : Vie
   private val drugNameValueCallback = ValueChangedCallback<Boolean>()
 
   override fun render(model: CustomPrescriptionEntryModel) {
+    initialSetup(model.openAs)
     showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
-
     toggleSaveButton(model.drugName)
-
-    displaySheetTitle(model.openAs)
   }
 
   private fun toggleSaveButton(drugName: String?) {
@@ -40,10 +38,16 @@ class CustomPrescriptionEntryUiRenderer(val ui: CustomPrescriptionEntryUi) : Vie
     }
   }
 
-  private fun displaySheetTitle(openAs: OpenAs) {
+  private fun initialSetup(openAs: OpenAs) {
     when (openAs) {
-      is OpenAs.New -> ui.showEnterNewPrescriptionTitle()
-      is OpenAs.Update -> ui.showEditPrescriptionTitle()
+      is OpenAs.New -> {
+        ui.showEnterNewPrescriptionTitle()
+        ui.hideRemoveButton()
+      }
+      is OpenAs.Update -> {
+        ui.showEditPrescriptionTitle()
+        ui.showRemoveButton()
+      }
     }
   }
 }

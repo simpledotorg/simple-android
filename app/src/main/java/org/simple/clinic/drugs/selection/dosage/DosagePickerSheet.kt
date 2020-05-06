@@ -144,7 +144,7 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
     return Observable.just(ScreenCreated())
   }
 
-  private fun noneClicks(): Observable<UiEvent> {
+  private fun noneClicks(): Observable<DosagePickerEvent> {
     return dosageAdapter
         .itemEvents
         .ofType<DosageItemClicked>()

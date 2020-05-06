@@ -29,6 +29,9 @@ data class DosagePickerModel(
   val hasLoadedProtocolDrugs: Boolean
     get() = protocolDrugs != null
 
+  val hasExistingPrescription: Boolean
+    get() = existingPrescriptionUuid != null
+
   fun protocolDrugsLoaded(protocolDrugs: List<ProtocolDrug>): DosagePickerModel {
     return copy(protocolDrugs = protocolDrugs)
   }

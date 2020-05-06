@@ -5,6 +5,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
@@ -15,6 +16,7 @@ class DosagePickerEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val protocolRepository: ProtocolRepository,
+    private val prescriptionRepository: PrescriptionRepository,
     private val schedulers: SchedulersProvider,
     @Assisted private val uiActions: DosagePickerUiActions
 ) {
@@ -28,6 +30,8 @@ class DosagePickerEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<DosagePickerEffect, DosagePickerEvent>()
         .addTransformer(LoadProtocolDrugsByName::class.java, loadProtocolDrugs())
+        .addTransformer(DeleteExistingPrescription::class.java, deleteExistingPrescription())
+        .addAction(CloseScreen::class.java, uiActions::close, schedulers.ui())
         .build()
   }
 
@@ -43,6 +47,19 @@ class DosagePickerEffectHandler @AssistedInject constructor(
           }
           .switchMap { (drugName, protocolUuid) -> protocolRepository.drugsByNameOrDefault(drugName, protocolUuid) }
           .map(::DrugsLoaded)
+    }
+  }
+
+  private fun deleteExistingPrescription(): ObservableTransformer<DeleteExistingPrescription, DosagePickerEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { it.prescriptionUuid }
+          .flatMap {
+            prescriptionRepository
+                .softDeletePrescription(it)
+                .andThen(Observable.just(ExistingPrescriptionDeleted as DosagePickerEvent))
+          }
     }
   }
 

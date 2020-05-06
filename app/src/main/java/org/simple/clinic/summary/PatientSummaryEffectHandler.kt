@@ -9,6 +9,7 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
@@ -34,8 +35,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val facilityRepository: FacilityRepository,
     private val bloodSugarRepository: BloodSugarRepository,
     private val dataSync: DataSync,
-    val medicalHistoryRepository: MedicalHistoryRepository,
-    val country: Country,
+    private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val prescriptionRepository: PrescriptionRepository,
+    private val country: Country,
+    private val patientSummaryConfig: PatientSummaryConfig,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -69,6 +72,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(ShowDiagnosisError::class.java, { uiActions.showDiagnosisError() }, schedulersProvider.ui())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPatientContactSheet(it.patientUuid) }, schedulersProvider.ui())
+        .addTransformer(LoadPatientTeleconsultationInfo::class.java, fetchPatientTeleconsulationInfo())
         .build()
   }
 
@@ -230,6 +234,25 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { it.patientUuid }
           .map(missingPhoneReminderRepository::hasShownReminderForPatient)
           .map(::FetchedHasShownMissingPhoneReminder)
+    }
+  }
+
+  private fun fetchPatientTeleconsulationInfo(): ObservableTransformer<LoadPatientTeleconsultationInfo, PatientSummaryEvent> {
+    return ObservableTransformer { loadPatientInformationStream ->
+      loadPatientInformationStream
+          .observeOn(schedulersProvider.io())
+          .map {
+            val bloodPressures = bloodPressureRepository.newestMeasurementsForPatientImmediate(it.patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
+            val prescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(it.patientUuid)
+            PatientTeleconsultationInfo(
+                it.patientUuid,
+                it.bpPassport?.identifier?.displayValue(),
+                it.currentFacility!!,
+                bloodPressures,
+                prescriptions
+            )
+          }
+          .map(::PatientTeleconsultationInfoLoaded)
     }
   }
 }

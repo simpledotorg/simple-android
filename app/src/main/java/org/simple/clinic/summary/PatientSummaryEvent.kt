@@ -58,3 +58,5 @@ data class FetchedHasShownMissingPhoneReminder(val hasShownReminder: Boolean) : 
 object ContactPatientClicked : PatientSummaryEvent() {
   override val analyticsName: String = "Patient Summary:Phone Number Clicked"
 }
+
+data class PatientTeleconsultationInfoLoaded(val patientTeleconsultationInfo: PatientTeleconsultationInfo) : PatientSummaryEvent()

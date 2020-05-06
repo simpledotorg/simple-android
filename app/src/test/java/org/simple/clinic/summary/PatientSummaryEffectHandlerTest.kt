@@ -13,11 +13,13 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -29,6 +31,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -42,7 +45,13 @@ class PatientSummaryEffectHandlerTest {
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
+  private val prescriptionRepository = mock<PrescriptionRepository>()
   private val dataSync = mock<DataSync>()
+
+  private val patientSummaryConfig = PatientSummaryConfig(
+      bpEditableDuration = Duration.ofMinutes(10),
+      numberOfMeasurementsForTeleconsultation = 3
+  )
 
   private val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
 
@@ -57,7 +66,9 @@ class PatientSummaryEffectHandlerTest {
       bloodSugarRepository = bloodSugarRepository,
       dataSync = dataSync,
       medicalHistoryRepository = medicalHistoryRepository,
+      prescriptionRepository = prescriptionRepository,
       country = TestData.country(),
+      patientSummaryConfig = patientSummaryConfig,
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -99,7 +110,9 @@ class PatientSummaryEffectHandlerTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
+        prescriptionRepository = prescriptionRepository,
         country = bangladesh,
+        patientSummaryConfig = patientSummaryConfig,
         uiActions = uiActions
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -272,5 +285,56 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).openPatientContactSheet(patientUuid)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load patient teleconsultation information effect is received, then fetch patient information`() {
+    // given
+    val facilityUuid = UUID.fromString("360b1318-9ea5-4dbb-8023-24067722b613")
+
+    val bpPassport = TestData.businessId(
+        uuid = UUID.fromString("7ebf2c49-8018-41b9-af7c-43afe02483d4"),
+        patientUuid = patientUuid,
+        identifier = Identifier("1234567", BpPassport),
+        metaDataVersion = BusinessId.MetaDataVersion.BpPassportMetaDataV1
+    )
+    val facility = TestData.facility(
+        uuid = facilityUuid
+    )
+
+    val bloodPressure1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("ad827cfa-1436-4b98-88be-28831543b9f9"),
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid
+    )
+    val bloodPressure2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("95aaf3f5-cafe-4b1f-a91a-14cbae2de12a"),
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid
+    )
+    val bloodPressures = listOf(bloodPressure1, bloodPressure2)
+
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("38fffa68-bc29-4a67-a6c8-ece61071fe3b"),
+        patientUuid = patientUuid
+    )
+    val prescriptions = listOf(prescription)
+
+    val patientInformation = PatientTeleconsultationInfo(
+        patientUuid = patientUuid,
+        bpPassport = bpPassport.identifier.displayValue(),
+        facility = facility,
+        bloodPressures = bloodPressures,
+        prescriptions = prescriptions
+    )
+
+    whenever(bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)) doReturn bloodPressures
+    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescriptions
+
+    // when
+    testCase.dispatch(LoadPatientTeleconsultationInfo(patientUuid, bpPassport, facility))
+
+    // then
+    testCase.assertOutgoingEvents(PatientTeleconsultationInfoLoaded(patientInformation))
   }
 }

@@ -41,7 +41,7 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
   lateinit var locale: Locale
 
   @Inject
-  lateinit var effectHandler: DosagePickerEffectHandler
+  lateinit var effectHandlerFactory: DosagePickerEffectHandler.Factory
 
   private lateinit var component: DosagePickerSheetComponent
 
@@ -69,7 +69,7 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi {
         defaultModel = DosagePickerModel.create(drugName = drugName),
         update = DosagePickerUpdate(),
         init = DosagePickerInit(),
-        effectHandler = effectHandler.build(),
+        effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
     )
   }

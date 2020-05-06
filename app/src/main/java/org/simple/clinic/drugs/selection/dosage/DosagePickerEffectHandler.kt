@@ -1,6 +1,8 @@
 package org.simple.clinic.drugs.selection.dosage
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.FacilityRepository
@@ -8,14 +10,19 @@ import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.UUID
-import javax.inject.Inject
 
-class DosagePickerEffectHandler @Inject constructor(
+class DosagePickerEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val protocolRepository: ProtocolRepository,
-    private val schedulers: SchedulersProvider
+    private val schedulers: SchedulersProvider,
+    @Assisted private val uiActions: DosagePickerUiActions
 ) {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(uiActions: DosagePickerUiActions): DosagePickerEffectHandler
+  }
 
   fun build(): ObservableTransformer<DosagePickerEffect, DosagePickerEvent> {
     return RxMobius

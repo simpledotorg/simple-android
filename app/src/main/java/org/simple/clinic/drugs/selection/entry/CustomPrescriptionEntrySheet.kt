@@ -65,7 +65,6 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
   private val events by unsafeLazy {
     Observable
         .mergeArray(
-            sheetCreates(),
             drugNameChanges(),
             drugDosageChanges(),
             drugDosageFocusChanges(),
@@ -148,8 +147,6 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
       super.onBackgroundClick()
     }
   }
-
-  private fun sheetCreates() = Observable.just(ScreenCreated())
 
   private fun drugNameChanges() = drugNameEditText.textChanges(::CustomPrescriptionDrugNameTextChanged)
 

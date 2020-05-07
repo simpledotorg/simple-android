@@ -8,20 +8,18 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import java.util.UUID
 
 class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
-    @Assisted val uiActions: CustomPrescriptionEntryUiActions,
-    val schedulersProvider: SchedulersProvider,
-    val userSession: UserSession,
-    val facilityRepository: FacilityRepository,
-    val prescriptionRepository: PrescriptionRepository
+    @Assisted private val uiActions: CustomPrescriptionEntryUiActions,
+    private val schedulersProvider: SchedulersProvider,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
+    private val prescriptionRepository: PrescriptionRepository
 ) {
 
   @AssistedInject.Factory
@@ -33,7 +31,7 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
       : ObservableTransformer<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent>()
-        .addTransformer(SaveCustomPrescription::class.java, saveCustomPrescription(schedulersProvider.io()))
+        .addTransformer(SaveCustomPrescription::class.java, saveNewPrescription(schedulersProvider.io()))
         .addTransformer(UpdatePrescription::class.java, updatePrescription(schedulersProvider.io()))
         .addTransformer(FetchPrescription::class.java, fetchPrescription(schedulersProvider.io()))
         .addConsumer(SetMedicineName::class.java, { uiActions.setMedicineName(it.drugName) }, schedulersProvider.ui())
@@ -65,29 +63,22 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun saveCustomPrescription(io: Scheduler): ObservableTransformer<SaveCustomPrescription, CustomPrescriptionEntryEvent> {
+  private fun saveNewPrescription(io: Scheduler): ObservableTransformer<SaveCustomPrescription, CustomPrescriptionEntryEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(io)
-          .map {
+          .flatMap { savePrescription ->
             val user = userSession.loggedInUserImmediate()!!
             val currentFacility = facilityRepository.currentFacilityImmediate(user)!!
-            SavePrescription(
-                patientUuid = it.patientUuid,
-                name = it.drugName,
-                dosage = it.dosage,
-                facility = currentFacility
-            )
-          }
-          .flatMap { savePrescription ->
+
             prescriptionRepository
                 .savePrescription(
                     patientUuid = savePrescription.patientUuid,
-                    name = savePrescription.name,
+                    name = savePrescription.drugName,
                     dosage = savePrescription.dosage.nullIfBlank(),
                     rxNormCode = null,
                     isProtocolDrug = false,
-                    facility = savePrescription.facility
+                    facility = currentFacility
                 )
                 .andThen(Observable.just(CustomPrescriptionSaved))
           }
@@ -106,11 +97,3 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     }
   }
 }
-
-private data class SavePrescription(
-    val patientUuid: UUID,
-    val name: String,
-    val dosage: String?,
-    val facility: Facility
-)
-

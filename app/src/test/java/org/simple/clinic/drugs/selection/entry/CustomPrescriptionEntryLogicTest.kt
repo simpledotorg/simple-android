@@ -31,7 +31,7 @@ import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class CustomPrescriptionEntryControllerTest {
+class CustomPrescriptionEntryLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

@@ -50,4 +50,8 @@ class CustomPrescriptionEntryUiRenderer(val ui: CustomPrescriptionEntryUi) : Vie
       }
     }
   }
+
+  companion object {
+    const val DOSAGE_PLACEHOLDER = "mg"
+  }
 }

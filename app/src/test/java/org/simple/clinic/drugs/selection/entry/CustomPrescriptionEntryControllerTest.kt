@@ -28,7 +28,6 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -288,7 +287,5 @@ class CustomPrescriptionEntryControllerTest {
         modelUpdateListener = uiRenderer::render
     )
     fixture.start()
-
-    uiEvents.onNext(ScreenCreated())
   }
 }

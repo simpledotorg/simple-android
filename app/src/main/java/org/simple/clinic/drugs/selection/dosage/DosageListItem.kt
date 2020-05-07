@@ -5,48 +5,57 @@ import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.prescribed_drug_with_dosage_list_item.*
 import org.simple.clinic.R
+import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithDosage
+import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithoutDosage
 import org.simple.clinic.drugs.selection.dosage.DosageOption.Dosage
 import org.simple.clinic.drugs.selection.dosage.DosageOption.None
 import org.simple.clinic.protocol.ProtocolDrug
-import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 
-data class DosageListItem(val dosageOption: DosageOption) : ItemAdapter.Item<UiEvent> {
+sealed class DosageListItem(val dosageOption: DosageOption) : ItemAdapter.Item<UiEvent> {
 
   companion object {
     fun from(protocolDrugs: List<ProtocolDrug>): List<DosageListItem> {
       return protocolDrugs
-          .map { DosageListItem(Dosage(it)) }
-          .plus(DosageListItem(None))
+          .map(::WithDosage)
+          .plus(WithoutDosage)
     }
   }
 
-  override fun layoutResId() = R.layout.prescribed_drug_with_dosage_list_item
+  data class WithDosage(val protocolDrug: ProtocolDrug) : DosageListItem(Dosage(protocolDrug)) {
 
-  override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
-    val dosageOption = dosageOption
-    when (dosageOption) {
-      is None -> holder.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none)
-      is Dosage -> holder.dosageTextView.text = dosageOption.protocolDrug.dosage
-    }.exhaustive()
+    override fun layoutResId() = R.layout.prescribed_drug_with_dosage_list_item
 
-    holder.itemView.setOnClickListener { subject.onNext(DosageItemClicked(dosageOption)) }
+    override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
+      holder.dosageTextView.text = protocolDrug.dosage
+      holder.itemView.setOnClickListener { subject.onNext(DosageItemClicked(dosageOption)) }
+    }
+  }
+
+  object WithoutDosage : DosageListItem(None) {
+
+    override fun layoutResId() = R.layout.prescribed_drug_with_dosage_list_item
+
+    override fun render(holder: ViewHolderX, subject: Subject<UiEvent>) {
+      holder.dosageTextView.text = holder.itemView.context.getString(R.string.prescribed_drugs_dosage_none)
+      holder.itemView.setOnClickListener { subject.onNext(DosageItemClicked(dosageOption)) }
+    }
   }
 }
 
 class DosageDiffer : DiffUtil.ItemCallback<DosageListItem>() {
   override fun areItemsTheSame(oldItem: DosageListItem, newItem: DosageListItem): Boolean {
-    return if (oldItem.dosageOption is Dosage && newItem.dosageOption is Dosage) {
-      oldItem.dosageOption.protocolDrug.uuid == newItem.dosageOption.protocolDrug.uuid
-    } else {
-      false
+    return when {
+      oldItem is WithDosage && newItem is WithDosage -> oldItem.protocolDrug.uuid == newItem.protocolDrug.uuid
+      oldItem is WithoutDosage && newItem is WithoutDosage -> true
+      else -> false
     }
   }
 
   @SuppressLint("DiffUtilEquals")
   override fun areContentsTheSame(oldItem: DosageListItem, newItem: DosageListItem): Boolean {
-    return oldItem.dosageOption == newItem.dosageOption
+    return oldItem == newItem
   }
 }

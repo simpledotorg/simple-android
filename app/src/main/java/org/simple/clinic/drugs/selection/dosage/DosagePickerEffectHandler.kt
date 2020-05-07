@@ -42,13 +42,7 @@ class DosagePickerEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { it.drugName }
-          .switchMap { drugName ->
-            // This is nasty, fix in the final clean up phase by making
-            // a blocking call for the protocol UUID
-            currentProtocolUuid().map { drugName to it }
-          }
-          .switchMap { (drugName, protocolUuid) -> protocolRepository.drugsByNameOrDefault(drugName, protocolUuid) }
+          .switchMap { protocolRepository.drugsByNameOrDefault(it.drugName, currentProtocolUuid()) }
           .map(::DrugsLoaded)
     }
   }
@@ -116,11 +110,9 @@ class DosagePickerEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun currentProtocolUuid(): Observable<UUID> {
-    return userSession
-        .requireLoggedInUser()
-        .switchMap(facilityRepository::currentFacility)
-        .map { it.protocolUuid }
+  private fun currentProtocolUuid(): UUID {
+    val currentFacility = facilityRepository.currentFacilityImmediate(userSession.loggedInUserImmediate()!!)!!
+    return currentFacility.protocolUuid!!
   }
 
   private fun currentFacility(): Observable<Facility> {

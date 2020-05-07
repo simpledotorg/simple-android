@@ -65,11 +65,6 @@ class DosagePickerEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulers.io())
           .flatMap { effect ->
-            // This is nasty, fix in the final clean up phase by making
-            // a blocking call for the current facility
-            currentFacility().map { effect to it }
-          }
-          .flatMap { (effect, currentFacility) ->
             val patientUuid = effect.patientUuid
             val existingPrescriptionUuid = effect.prescriptionUuid
             val newPrescriptionDrug = effect.protocolDrug
@@ -79,7 +74,7 @@ class DosagePickerEffectHandler @AssistedInject constructor(
                 .andThen(prescriptionRepository.savePrescription(
                     patientUuid = patientUuid,
                     drug = newPrescriptionDrug,
-                    facility = currentFacility
+                    facility = currentFacility()
                 ))
                 .andThen(Observable.just(ExistingPrescriptionChanged))
           }
@@ -91,11 +86,6 @@ class DosagePickerEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulers.io())
           .flatMap { effect ->
-            // This is nasty, fix in the final clean up phase by making
-            // a blocking call for the current facility
-            currentFacility().map { effect to it }
-          }
-          .flatMap { (effect, currentFacility) ->
             val patientUuid = effect.patientUuid
             val newPrescriptionDrug = effect.protocolDrug
 
@@ -103,7 +93,7 @@ class DosagePickerEffectHandler @AssistedInject constructor(
                 .savePrescription(
                     patientUuid = patientUuid,
                     drug = newPrescriptionDrug,
-                    facility = currentFacility
+                    facility = currentFacility()
                 )
                 .andThen(Observable.just(NewPrescriptionCreated))
           }
@@ -111,13 +101,10 @@ class DosagePickerEffectHandler @AssistedInject constructor(
   }
 
   private fun currentProtocolUuid(): UUID {
-    val currentFacility = facilityRepository.currentFacilityImmediate(userSession.loggedInUserImmediate()!!)!!
-    return currentFacility.protocolUuid!!
+    return currentFacility().protocolUuid!!
   }
 
-  private fun currentFacility(): Observable<Facility> {
-    return userSession
-        .requireLoggedInUser()
-        .switchMap(facilityRepository::currentFacility)
+  private fun currentFacility(): Facility {
+    return facilityRepository.currentFacilityImmediate(userSession.loggedInUserImmediate()!!)!!
   }
 }

@@ -12,25 +12,22 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.protocol.Protocol
-import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Months
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.protocol.Protocol
+import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -42,7 +39,6 @@ import org.threeten.bp.Period
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
-@RunWith(JUnitParamsRunner::class)
 class ScheduleAppointmentSheetControllerTest {
 
   @get:Rule
@@ -99,15 +95,8 @@ class ScheduleAppointmentSheetControllerTest {
   }
 
   @Test
-  @Parameters(value = [
-    "true, true",
-    "false, false"]
-  )
-  fun `when scheduling an appointment is skipped and the patient is a defaulter, an automatic appointment should be scheduled`(
-      isPatientDefaulter: Boolean,
-      shouldAutomaticAppointmentBeScheduled: Boolean
-  ) {
-    whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(isPatientDefaulter))
+  fun `when scheduling an appointment is skipped and the patient is a defaulter, an automatic appointment should be scheduled`() {
+    whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(true))
     whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(TestData.appointment()))
 
     sheetCreated(
@@ -119,18 +108,32 @@ class ScheduleAppointmentSheetControllerTest {
     )
     uiEvents.onNext(SchedulingSkipped)
 
-    if (shouldAutomaticAppointmentBeScheduled) {
-      verify(repository).schedule(
-          patientUuid = eq(patientUuid),
-          appointmentUuid = any(),
-          appointmentDate = eq(LocalDate.now(clock).plus(Period.ofDays(30))),
-          appointmentType = eq(Automatic),
-          appointmentFacilityUuid = eq(facility.uuid),
-          creationFacilityUuid = eq(facility.uuid)
-      )
-    } else {
-      verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
-    }
+    verify(repository).schedule(
+        patientUuid = eq(patientUuid),
+        appointmentUuid = any(),
+        appointmentDate = eq(LocalDate.now(clock).plus(Period.ofDays(30))),
+        appointmentType = eq(Automatic),
+        appointmentFacilityUuid = eq(facility.uuid),
+        creationFacilityUuid = eq(facility.uuid)
+    )
+    verify(sheet).closeSheet()
+  }
+
+  @Test
+  fun `when scheduling an appointment is skipped and the patient is not a defaulter, an automatic appointment should not be scheduled`() {
+    whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(false))
+    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(TestData.appointment()))
+
+    sheetCreated(
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocol.uuid,
+        protocol = Observable.just(protocol)
+    )
+    uiEvents.onNext(SchedulingSkipped)
+
+    verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
     verify(sheet).closeSheet()
   }
 

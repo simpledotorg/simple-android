@@ -14,6 +14,7 @@
 - Migrated `MedicalHistorySummaryView` to Mobius
 - Add teleconsultation fields to the facility model
 - Migrated `DosagePickerSheet` to Mobius
+- Migrated `CustomPrescriptionEntryController` to Mobius
 
 ## 2020-05-04-7255
 ### Internal

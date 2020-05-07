@@ -60,3 +60,7 @@ object ContactPatientClicked : PatientSummaryEvent() {
 }
 
 data class PatientTeleconsultationInfoLoaded(val patientTeleconsultationInfo: PatientTeleconsultationInfo) : PatientSummaryEvent()
+
+object ContactDoctorClicked : PatientSummaryEvent() {
+  override val analyticsName: String = "Patient Summary:Contact Doctor Clicked"
+}

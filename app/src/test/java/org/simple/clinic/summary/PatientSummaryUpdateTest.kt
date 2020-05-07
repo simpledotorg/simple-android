@@ -608,6 +608,27 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when contact doctor button is clicked, then load patient teleconsultation information`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(ContactDoctorClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(LoadPatientTeleconsultationInfo(
+                    model.patientUuid,
+                    model.patientSummaryProfile?.bpPassport,
+                    model.currentFacility
+                ) as PatientSummaryEffect)
+            )
+        )
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

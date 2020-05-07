@@ -5,7 +5,6 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.Scheduler
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
@@ -29,9 +28,9 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
       : ObservableTransformer<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<CustomPrescriptionEntryEffect, CustomPrescriptionEntryEvent>()
-        .addTransformer(SaveCustomPrescription::class.java, saveNewPrescription(schedulersProvider.io()))
-        .addTransformer(UpdatePrescription::class.java, updatePrescription(schedulersProvider.io()))
-        .addTransformer(FetchPrescription::class.java, fetchPrescription(schedulersProvider.io()))
+        .addTransformer(SaveCustomPrescription::class.java, saveNewPrescription())
+        .addTransformer(UpdatePrescription::class.java, updatePrescription())
+        .addTransformer(FetchPrescription::class.java, fetchPrescription())
         .addConsumer(SetMedicineName::class.java, { uiActions.setMedicineName(it.drugName) }, schedulersProvider.ui())
         .addConsumer(SetDosage::class.java, { uiActions.setDosage(it.dosage) }, schedulersProvider.ui())
         .addConsumer(
@@ -43,10 +42,9 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  private fun updatePrescription(io: Scheduler): ObservableTransformer<UpdatePrescription, CustomPrescriptionEntryEvent> {
+  private fun updatePrescription(): ObservableTransformer<UpdatePrescription, CustomPrescriptionEntryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .observeOn(io)
           .flatMap { effect ->
             val prescription = prescriptionRepository.prescriptionImmediate(effect.prescriptionUuid)
             prescriptionRepository
@@ -56,10 +54,9 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun saveNewPrescription(io: Scheduler): ObservableTransformer<SaveCustomPrescription, CustomPrescriptionEntryEvent> {
+  private fun saveNewPrescription(): ObservableTransformer<SaveCustomPrescription, CustomPrescriptionEntryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .observeOn(io)
           .flatMap { savePrescription ->
             val user = userSession.loggedInUserImmediate()!!
             val currentFacility = facilityRepository.currentFacilityImmediate(user)!!
@@ -78,10 +75,9 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun fetchPrescription(io: Scheduler): ObservableTransformer<FetchPrescription, CustomPrescriptionEntryEvent> {
+  private fun fetchPrescription(): ObservableTransformer<FetchPrescription, CustomPrescriptionEntryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .observeOn(io)
           // FIXME: The logic to close sheet after a prescription is deleted is dependant on this prescription stream
           //  being reactive. So we have to use the deprecated method here. This should be fixed.
           //  This is being tracked here: https://www.pivotaltracker.com/story/show/172737790

@@ -579,6 +579,35 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when patient teleconsultation information is loaded, then contact doctor`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    val patientInformation = PatientTeleconsultationInfo(
+        patientUuid = patientUuid,
+        bpPassport = "123 456",
+        facility = TestData.facility(uuid = UUID.fromString("b1e1dde7-a279-4239-833a-c0af70a3c8a2")),
+        bloodPressures = listOf(
+            TestData.bloodPressureMeasurement(uuid = UUID.fromString("7de25235-8b8f-41bc-b2e6-60db60b60455"))
+        ),
+        prescriptions = listOf(
+            TestData.prescription(uuid = UUID.fromString("e0cfae5c-36ca-4206-8e6b-11d22693bc64"))
+        )
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientTeleconsultationInfoLoaded(patientInformation))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ContactDoctor(patientInformation) as PatientSummaryEffect)
+            )
+        )
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

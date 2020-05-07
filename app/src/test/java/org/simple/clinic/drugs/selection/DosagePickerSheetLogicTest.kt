@@ -18,7 +18,6 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.dosage.DosageListItem
-import org.simple.clinic.drugs.selection.dosage.DosageOption
 import org.simple.clinic.drugs.selection.dosage.DosagePickerEffect
 import org.simple.clinic.drugs.selection.dosage.DosagePickerEffectHandler
 import org.simple.clinic.drugs.selection.dosage.DosagePickerEvent
@@ -90,9 +89,9 @@ class DosagePickerSheetLogicTest {
     setupController()
 
     verify(ui).populateDosageList(listOf(
-        DosageListItem(DosageOption.Dosage(protocolDrug1)),
-        DosageListItem(DosageOption.Dosage(protocolDrug2)),
-        DosageListItem(DosageOption.None)
+        DosageListItem.WithDosage(protocolDrug1),
+        DosageListItem.WithDosage(protocolDrug2),
+        DosageListItem.WithoutDosage
     ))
     verifyNoMoreInteractions(ui)
     verifyZeroInteractions(uiActions)

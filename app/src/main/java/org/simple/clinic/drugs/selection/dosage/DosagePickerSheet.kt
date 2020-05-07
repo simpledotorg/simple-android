@@ -125,20 +125,15 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi, DosagePickerUiA
   private fun noneClicks(): Observable<DosagePickerEvent> {
     return dosageAdapter
         .itemEvents
-        .ofType<DosageItemClicked>()
-        .filter { it.dosageOption == DosageOption.None }
+        .ofType<DosageListItem.Event.NoneClicked>()
         .map { NoneSelected }
   }
 
   private fun dosageClicks(): Observable<DosagePickerEvent> {
     return dosageAdapter
         .itemEvents
-        .ofType<DosageItemClicked>()
-        .filter { it.dosageOption is DosageOption.Dosage }
-        .map {
-          val protocolDrug = (it.dosageOption as DosageOption.Dosage).protocolDrug
-          DosageSelected(protocolDrug)
-        }
+        .ofType<DosageListItem.Event.DosageClicked>()
+        .map { DosageSelected(it.protocolDrug) }
   }
 
   private fun displayDrugName() {

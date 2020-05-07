@@ -48,7 +48,6 @@ class CustomPrescriptionEntryControllerTest {
   private val user = TestData.loggedInUser()
   private val facility = TestData.facility()
 
-  lateinit var controller: CustomPrescriptionEntryController
   private lateinit var fixture: MobiusTestFixture<CustomPrescriptionEntryModel, CustomPrescriptionEntryEvent, CustomPrescriptionEntryEffect>
 
   @Before
@@ -65,7 +64,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `save should remain disabled while drug name is empty`() {
     //when
-    setupController(OpenAs.New(patientUuid))
+    createSheetForNewPrescription(patientUuid)
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged(""))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged(""))
 
@@ -76,7 +75,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `save should be enabled when drug name is not empty`() {
     //when
-    setupController(OpenAs.New(patientUuid))
+    createSheetForNewPrescription(patientUuid)
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("A"))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Am"))
 
@@ -98,7 +97,7 @@ class CustomPrescriptionEntryControllerTest {
     )).thenReturn(Completable.complete())
 
     //when
-    setupController(OpenAs.New(patientUuid))
+    createSheetForNewPrescription(patientUuid)
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Amlodipine"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(dosage))
     uiEvents.onNext(SaveCustomPrescriptionClicked)
@@ -119,7 +118,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `when dosage field is focused and empty then placeholder value for dosage should be shown and cursor should be moved to the start`() {
     //when
-    setupController(OpenAs.New(patientUuid))
+    createSheetForNewPrescription(patientUuid)
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(""))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
@@ -133,7 +132,7 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `value for dosage should be reset when dosage field is not focused and empty`() {
     //when
-    setupController(OpenAs.New(patientUuid))
+    createSheetForNewPrescription(patientUuid)
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("$DOSAGE_PLACEHOLDER"))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
 
@@ -149,7 +148,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
-    setupController(OpenAs.New(patientUuid))
+    createSheetForNewPrescription(patientUuid)
 
     //then
     verify(ui).showEnterNewPrescriptionTitle()
@@ -162,7 +161,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
-    setupController(OpenAs.Update(prescriptionUuid))
+    createSheetForUpdatingPrescription(prescriptionUuid)
 
     //then
     verify(ui).showEditPrescriptionTitle()
@@ -175,7 +174,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
-    setupController(OpenAs.Update(prescriptionUuid))
+    createSheetForUpdatingPrescription(prescriptionUuid)
 
     //then
     verify(ui).showRemoveButton()
@@ -188,7 +187,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
-    setupController(OpenAs.New(patientUuid))
+    createSheetForNewPrescription(patientUuid)
 
     //then
     verify(ui).hideRemoveButton()
@@ -202,7 +201,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(Just(prescription))
 
     //when
-    setupController(OpenAs.Update(prescriptionUuid))
+    createSheetForUpdatingPrescription(prescriptionUuid)
 
     //then
     verify(uiActions).setMedicineName(prescription.name)
@@ -220,7 +219,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.updatePrescription(updatedPrescribedDrug)).thenReturn(Completable.complete())
 
     //when
-    setupController(OpenAs.Update(prescriptionUuid))
+    createSheetForUpdatingPrescription(prescriptionUuid)
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Atenolol"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("5mg"))
     uiEvents.onNext(SaveCustomPrescriptionClicked)
@@ -238,7 +237,7 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
 
     //when
-    setupController(OpenAs.Update(prescriptionUuid))
+    createSheetForUpdatingPrescription(prescriptionUuid)
     uiEvents.onNext(RemoveCustomPrescriptionClicked)
 
     //then
@@ -253,19 +252,23 @@ class CustomPrescriptionEntryControllerTest {
     whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(Just(prescription))
 
     //when
-    setupController(OpenAs.Update(prescriptionUuid))
+    createSheetForUpdatingPrescription(prescriptionUuid)
 
     //then
     verify(uiActions).finish()
   }
 
-  private fun setupController(openAs: OpenAs) {
-    controller = CustomPrescriptionEntryController(prescriptionRepository, openAs)
+  private fun createSheetForNewPrescription(patientUuid: UUID) {
+    val openAsNew = OpenAs.New(patientUuid)
+    instantiateFixture(openAsNew)
+  }
 
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
+  private fun createSheetForUpdatingPrescription(prescriptionUuid: UUID) {
+    val openAsUpdate = OpenAs.Update(prescriptionUuid)
+    instantiateFixture(openAsUpdate)
+  }
 
+  private fun instantiateFixture(openAs: OpenAs) {
     val uiRenderer = CustomPrescriptionEntryUiRenderer(ui)
     val effectHandler = CustomPrescriptionEntryEffectHandler(
         uiActions,

@@ -337,4 +337,55 @@ class PatientSummaryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(PatientTeleconsultationInfoLoaded(patientInformation))
   }
+
+  @Test
+  fun `when contact doctor effect is received, then contact the doctor`() {
+    // given
+    val patientUuid = UUID.fromString("b00f5efc-8742-420a-b746-d0641f4a65ab")
+    val facilityUuid = UUID.fromString("360b1318-9ea5-4dbb-8023-24067722b613")
+
+    val bpPassport = TestData.businessId(
+        uuid = UUID.fromString("7ebf2c49-8018-41b9-af7c-43afe02483d4"),
+        patientUuid = patientUuid,
+        identifier = Identifier("1234567", BpPassport),
+        metaDataVersion = BusinessId.MetaDataVersion.BpPassportMetaDataV1
+    )
+    val facility = TestData.facility(
+        uuid = facilityUuid
+    )
+
+    val bloodPressure1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("ad827cfa-1436-4b98-88be-28831543b9f9"),
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid
+    )
+    val bloodPressure2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("95aaf3f5-cafe-4b1f-a91a-14cbae2de12a"),
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid
+    )
+    val bloodPressures = listOf(bloodPressure1, bloodPressure2)
+
+    val prescription1 = TestData.prescription(
+        uuid = UUID.fromString("38fffa68-bc29-4a67-a6c8-ece61071fe3b"),
+        patientUuid = patientUuid
+    )
+    val prescriptions = listOf(prescription1)
+
+    val patientInformation = PatientTeleconsultationInfo(
+        patientUuid = patientUuid,
+        bpPassport = bpPassport.identifier.displayValue(),
+        facility = facility,
+        bloodPressures = bloodPressures,
+        prescriptions = prescriptions
+    )
+
+    // when
+    testCase.dispatch(ContactDoctor(patientInformation))
+
+    // then
+    verify(uiActions).contactDoctor(patientInformation)
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
 }

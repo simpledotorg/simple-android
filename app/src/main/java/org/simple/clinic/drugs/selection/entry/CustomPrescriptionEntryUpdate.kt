@@ -16,7 +16,7 @@ class CustomPrescriptionEntryUpdate : Update<CustomPrescriptionEntryModel, Custo
       is CustomPrescriptionDrugDosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
       SaveCustomPrescriptionClicked -> createOrUpdatePrescriptionEntry(model)
       CustomPrescriptionSaved -> dispatch(CloseSheet)
-      is CustomPrescriptionFetched -> onPrescriptionFetched(model, event.prescription)
+      is CustomPrescriptionFetched -> prescriptionFetched(event.prescription)
       RemoveCustomPrescriptionClicked -> {
         val update = model.openAs as OpenAs.Update
         dispatch(ShowConfirmRemoveMedicineDialog(update.prescribedDrugUuid))
@@ -24,20 +24,13 @@ class CustomPrescriptionEntryUpdate : Update<CustomPrescriptionEntryModel, Custo
     }
   }
 
-  private fun onPrescriptionFetched(
-      model: CustomPrescriptionEntryModel,
+  private fun prescriptionFetched(
       prescription: PrescribedDrug
   ): Next<CustomPrescriptionEntryModel, CustomPrescriptionEntryEffect> {
     return if (prescription.isDeleted) {
       dispatch(CloseSheet)
     } else {
-      var updatedModel = model
-          .drugNameChanged(prescription.name)
-
-      if (prescription.dosage != null)
-        updatedModel = updatedModel.dosageChanged(prescription.dosage)
-
-      next(updatedModel, SetMedicineName(prescription.name), SetDosage(prescription.dosage))
+      dispatch(SetMedicineName(prescription.name), SetDosage(prescription.dosage))
     }
   }
 

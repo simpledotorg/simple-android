@@ -132,7 +132,7 @@ class PrescriptionRepository @Inject constructor(
   @Deprecated("Use prescriptionImmediate() instead")
   fun prescription(prescriptionUuid: UUID): Observable<PrescribedDrug> = dao.prescription(prescriptionUuid).toObservable()
 
-  fun prescriptionImmediate(prescriptionUuid: UUID): Optional<PrescribedDrug> = dao.prescriptionImmediate(prescriptionUuid).toOptional()
+  fun prescriptionImmediate(prescriptionUuid: UUID): PrescribedDrug = dao.prescriptionImmediate(prescriptionUuid)!!
 
   fun updatePrescription(prescription: PrescribedDrug): Completable {
     return Completable.fromAction {

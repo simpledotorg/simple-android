@@ -36,7 +36,6 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
-import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
 class ScheduleAppointmentSheetControllerTest {
@@ -72,32 +71,41 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
-    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(TestData.appointment()))
-
-    val date = LocalDate.now(clock).plus(1, ChronoUnit.MONTHS)
     val defaultTimeToAppointment = Months(1)
     val periodsToScheduleAppointmentsIn = listOf(defaultTimeToAppointment)
+    whenever(repository.schedule(
+        patientUuid = eq(patientUuid),
+        appointmentUuid = any(),
+        appointmentDate = eq(LocalDate.parse("2019-01-28")),
+        appointmentType = eq(Manual),
+        appointmentFacilityUuid = eq(facility.uuid),
+        creationFacilityUuid = eq(facility.uuid)
+    )).thenReturn(Single.just(TestData.appointment()))
 
-    val protocol = TestData.protocol(protocolUuid, followUpDays = 31)
     sheetCreated(
         patientUuid = patientUuid,
         user = user,
         facility = facility,
         protocolUuid = protocol.uuid,
-        protocol = Observable.just(protocol),
         config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn)
     )
 
     uiEvents.onNext(AppointmentDone)
 
-    verify(repository).schedule(eq(patientUuid), any(), eq(date), eq(Manual), eq(facility.uuid), eq(facility.uuid))
     verify(sheet).closeSheet()
   }
 
   @Test
   fun `when scheduling an appointment is skipped and the patient is a defaulter, an automatic appointment should be scheduled`() {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(true))
-    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(TestData.appointment()))
+    whenever(repository.schedule(
+        patientUuid = eq(patientUuid),
+        appointmentUuid = any(),
+        appointmentDate = eq(LocalDate.parse("2019-01-31")),
+        appointmentType = eq(Automatic),
+        appointmentFacilityUuid = eq(facility.uuid),
+        creationFacilityUuid = eq(facility.uuid)
+    )).thenReturn(Single.just(TestData.appointment()))
 
     sheetCreated(
         patientUuid = patientUuid,
@@ -108,21 +116,12 @@ class ScheduleAppointmentSheetControllerTest {
     )
     uiEvents.onNext(SchedulingSkipped)
 
-    verify(repository).schedule(
-        patientUuid = eq(patientUuid),
-        appointmentUuid = any(),
-        appointmentDate = eq(LocalDate.now(clock).plus(Period.ofDays(30))),
-        appointmentType = eq(Automatic),
-        appointmentFacilityUuid = eq(facility.uuid),
-        creationFacilityUuid = eq(facility.uuid)
-    )
     verify(sheet).closeSheet()
   }
 
   @Test
   fun `when scheduling an appointment is skipped and the patient is not a defaulter, an automatic appointment should not be scheduled`() {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(false))
-    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(TestData.appointment()))
 
     sheetCreated(
         patientUuid = patientUuid,
@@ -521,9 +520,17 @@ class ScheduleAppointmentSheetControllerTest {
     //given
     val updatedFacilityUuid = TestData.facility().uuid
     val appointment = TestData.appointment()
+    val date = LocalDate.parse("2019-01-28")
 
     whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(TestData.facility(uuid = updatedFacilityUuid)))
-    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
+    whenever(repository.schedule(
+        patientUuid = eq(patientUuid),
+        appointmentUuid = any(),
+        appointmentDate = eq(date),
+        appointmentType = eq(Manual),
+        appointmentFacilityUuid = eq(updatedFacilityUuid),
+        creationFacilityUuid = eq(facility.uuid)
+    )).thenReturn(Single.just(appointment))
 
     //when
     sheetCreated()
@@ -531,7 +538,6 @@ class ScheduleAppointmentSheetControllerTest {
     uiEvents.onNext(AppointmentDone)
 
     //then
-    verify(repository).schedule(eq(patientUuid), any(), any(), any(), eq(updatedFacilityUuid), eq(facility.uuid))
     verify(sheet).closeSheet()
   }
 
@@ -539,15 +545,20 @@ class ScheduleAppointmentSheetControllerTest {
   fun `when patient facility is not changed then appointment should be scheduled in the current facility`() {
     //given
     val appointment = TestData.appointment()
-
-    whenever(repository.schedule(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(appointment))
+    whenever(repository.schedule(
+        patientUuid = eq(patientUuid),
+        appointmentUuid = any(),
+        appointmentDate = eq(LocalDate.parse("2019-01-28")),
+        appointmentType = eq(Manual),
+        appointmentFacilityUuid = eq(facility.uuid),
+        creationFacilityUuid = eq(facility.uuid)
+    )).thenReturn(Single.just(appointment))
 
     //when
     sheetCreated()
     uiEvents.onNext(AppointmentDone)
 
     //then
-    verify(repository).schedule(eq(patientUuid), any(), any(), any(), eq(facility.uuid), eq(facility.uuid))
     verify(sheet).closeSheet()
   }
 

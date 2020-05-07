@@ -20,6 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntryUiRenderer.Companion.DOSAGE_PLACEHOLDER
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just

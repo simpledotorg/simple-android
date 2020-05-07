@@ -23,8 +23,6 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntryUiRenderer.Companion.DOSAGE_PLACEHOLDER
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -40,13 +38,15 @@ class CustomPrescriptionEntryControllerTest {
   private val ui = mock<CustomPrescriptionEntryUi>()
   private val uiActions = mock<CustomPrescriptionEntryUiActions>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
-  private val patientUuid = UUID.fromString("a90376d0-e29a-428f-80dc-bd4bdd74d9bf")
-  private val prescriptionUuid = UUID.fromString("eef2b1c9-52cd-43d9-b109-b120b0e4c16c")
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
+
   private val user = TestData.loggedInUser()
   private val facility = TestData.facility()
+  private val patientUuid = UUID.fromString("a90376d0-e29a-428f-80dc-bd4bdd74d9bf")
+  private val prescriptionUuid = UUID.fromString("eef2b1c9-52cd-43d9-b109-b120b0e4c16c")
+  private val updatePrescription = TestData.prescription(uuid = prescriptionUuid)
 
   private lateinit var fixture: MobiusTestFixture<CustomPrescriptionEntryModel, CustomPrescriptionEntryEvent, CustomPrescriptionEntryEffect>
 
@@ -143,10 +143,6 @@ class CustomPrescriptionEntryControllerTest {
 
   @Test
   fun `when sheet is opened for a new entry then enter new medicine title should be shown`() {
-    //given
-    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
-
     //when
     createSheetForNewPrescription(patientUuid)
 
@@ -157,8 +153,8 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `when sheet is opened to update a medicine then update medicine title should be shown`() {
     //given
-    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(updatePrescription))
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(updatePrescription)
 
     //when
     createSheetForUpdatingPrescription(prescriptionUuid)
@@ -170,8 +166,8 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `the remove button should show when the sheet is opened for edit`() {
     //given
-    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(updatePrescription))
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(updatePrescription)
 
     //when
     createSheetForUpdatingPrescription(prescriptionUuid)
@@ -182,10 +178,6 @@ class CustomPrescriptionEntryControllerTest {
 
   @Test
   fun `the remove button should be hidden when the sheet is opened for new entry`() {
-    //given
-    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
-
     //when
     createSheetForNewPrescription(patientUuid)
 
@@ -198,7 +190,7 @@ class CustomPrescriptionEntryControllerTest {
     //given
     val prescription = TestData.prescription(uuid = prescriptionUuid)
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescription))
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(Just(prescription))
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(prescription)
 
     //when
     createSheetForUpdatingPrescription(prescriptionUuid)
@@ -215,8 +207,8 @@ class CustomPrescriptionEntryControllerTest {
     val updatedPrescribedDrug = prescribedDrug.copy(name = "Atenolol", dosage = "5mg")
 
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescribedDrug))
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(Just(prescribedDrug))
     whenever(prescriptionRepository.updatePrescription(updatedPrescribedDrug)).thenReturn(Completable.complete())
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(prescribedDrug)
 
     //when
     createSheetForUpdatingPrescription(prescriptionUuid)
@@ -233,8 +225,8 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   fun `when remove is clicked, then show confirmation dialog`() {
     //given
-    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(None)
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(updatePrescription))
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(updatePrescription)
 
     //when
     createSheetForUpdatingPrescription(prescriptionUuid)
@@ -249,7 +241,7 @@ class CustomPrescriptionEntryControllerTest {
     //given
     val prescription = TestData.prescription(uuid = prescriptionUuid, isDeleted = true)
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescription))
-    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(Just(prescription))
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(prescription)
 
     //when
     createSheetForUpdatingPrescription(prescriptionUuid)

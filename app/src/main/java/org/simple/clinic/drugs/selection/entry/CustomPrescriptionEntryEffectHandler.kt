@@ -6,11 +6,9 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -47,15 +45,10 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
 
   private fun updatePrescription(io: Scheduler): ObservableTransformer<UpdatePrescription, CustomPrescriptionEntryEvent> {
     return ObservableTransformer { effects ->
-
-      val prescription = effects
-          .map { prescriptionRepository.prescriptionImmediate(it.prescriptionUuid) }
-          .filterAndUnwrapJust()
-
       effects
           .observeOn(io)
-          .withLatestFrom(prescription)
-          .flatMap { (effect, prescription) ->
+          .flatMap { effect ->
+            val prescription = prescriptionRepository.prescriptionImmediate(effect.prescriptionUuid)
             prescriptionRepository
                 .updatePrescription(prescription.copy(name = effect.drugName, dosage = effect.dosage))
                 .andThen(Observable.just(CustomPrescriptionSaved))

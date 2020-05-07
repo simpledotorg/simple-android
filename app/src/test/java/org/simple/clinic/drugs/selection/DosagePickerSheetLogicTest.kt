@@ -160,9 +160,6 @@ class DosagePickerSheetLogicTest {
   private fun setupController(
       existingPrescriptionUuid: Optional<UUID> = None
   ) {
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
-
     whenever(userSession.loggedInUserImmediate()).thenReturn(user)
     whenever(facilityRepository.currentFacilityImmediate(user)).thenReturn(currentFacility)
 

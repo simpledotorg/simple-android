@@ -47,7 +47,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is ContactPatientClicked -> dispatch(OpenContactPatientScreen(model.patientUuid))
-      is PatientTeleconsultationInfoLoaded -> noChange()
+      is PatientTeleconsultationInfoLoaded -> dispatch(ContactDoctor(event.patientTeleconsultationInfo))
     }
   }
 

@@ -1,8 +1,6 @@
 package org.simple.clinic.drugs.selection.entry
 
-import java.util.UUID
-
-interface CustomPrescriptionEntryUi : CustomPrescriptionEntryUiActions {
+interface CustomPrescriptionEntryUi {
   fun setSaveButtonEnabled(canBeSaved: Boolean)
   fun setDrugDosageText(dosagePlaceholder: String)
   fun moveDrugDosageCursorToBeginning()

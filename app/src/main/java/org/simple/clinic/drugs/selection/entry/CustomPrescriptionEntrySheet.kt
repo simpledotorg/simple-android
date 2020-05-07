@@ -20,7 +20,6 @@ import kotterknife.bindView
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
@@ -50,9 +49,6 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
   private val removeMedicineButton by bindView<MaterialButton>(R.id.customprescription_remove_button)
 
   @Inject
-  lateinit var controllerFactory: CustomPrescriptionEntryController.Factory
-
-  @Inject
   lateinit var locale: Locale
 
   @Inject
@@ -76,7 +72,6 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
             saveClicks(),
             removeClicks())
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val uiRenderer = CustomPrescriptionEntryUiRenderer(this)
@@ -99,13 +94,6 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEn
     setContentView(R.layout.sheet_custom_prescription_entry)
 
     delegate.onRestoreInstanceState(savedInstanceState)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controllerFactory.create(openAs),
-        screenDestroys = onDestroys
-    )
 
     // Dismiss this sheet when the keyboard is dismissed.
     rootLayout.backKeyPressInterceptor = { super.onBackgroundClick() }

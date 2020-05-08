@@ -137,7 +137,7 @@ class ScheduleAppointmentSheetControllerTest {
   }
 
   @Test
-  fun `when default appointment is set, then update scheduled appointment`() {
+  fun `the initial appointment date must be selected from the protocol`() {
     val scheduleAppointmentsIn = listOf(
         Days(1),
         Days(2),
@@ -160,6 +160,32 @@ class ScheduleAppointmentSheetControllerTest {
     verify(sheet).enableDecrementButton(true)
 
     verifyNoMoreInteractions(sheet)
+  }
+
+  @Test
+  fun `when there is no protocol for the facility, the initial appointment date must be selected from the default value`() {
+    // given
+    val scheduleAppointmentsIn = listOf(
+        Days(1),
+        Days(2),
+        Days(7)
+    )
+
+    // when
+    val defaultTimeToAppointment = Days(2)
+    sheetCreated(
+        patientUuid = patientUuid,
+        user = user,
+        facility = facility,
+        protocolUuid = protocolUuid,
+        protocol = Observable.never(),
+        config = appointmentConfig
+            .withScheduledAppointments(scheduleAppointmentsIn)
+            .withDefaultTimeToAppointment(defaultTimeToAppointment)
+    )
+
+    //then
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"), defaultTimeToAppointment)
   }
 
   @Test
@@ -226,30 +252,6 @@ class ScheduleAppointmentSheetControllerTest {
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-07")))
     uiEvents.onNext(AppointmentDateDecremented)
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
-  }
-
-  @Test
-  fun `when protocol is not provided, then config default follow up days must be set`() {
-    // given
-    val scheduleAppointmentsIn = listOf(
-        Days(1),
-        Days(2),
-        Days(7)
-    )
-
-    // when
-    val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
-    sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
-        protocol = Observable.never(),
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
-    )
-
-    //then
-    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
   }
 
   @Test
@@ -612,4 +614,8 @@ class ScheduleAppointmentSheetControllerTest {
 
 private fun AppointmentConfig.withScheduledAppointments(scheduleAppointmentsIn: List<TimeToAppointment>): AppointmentConfig {
   return this.copy(scheduleAppointmentsIn = scheduleAppointmentsIn)
+}
+
+private fun AppointmentConfig.withDefaultTimeToAppointment(timeToAppointment: TimeToAppointment): AppointmentConfig {
+  return copy(defaultTimeToAppointment = timeToAppointment)
 }

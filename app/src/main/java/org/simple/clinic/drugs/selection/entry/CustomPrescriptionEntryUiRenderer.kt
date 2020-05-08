@@ -3,7 +3,7 @@ package org.simple.clinic.drugs.selection.entry
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.util.ValueChangedCallback
 
-class CustomPrescriptionEntryUiRenderer(val ui: CustomPrescriptionEntryUi) : ViewRenderer<CustomPrescriptionEntryModel> {
+class CustomPrescriptionEntryUiRenderer(private val ui: CustomPrescriptionEntryUi) : ViewRenderer<CustomPrescriptionEntryModel> {
 
   private val drugNameValueCallback = ValueChangedCallback<Boolean>()
 
@@ -14,10 +14,11 @@ class CustomPrescriptionEntryUiRenderer(val ui: CustomPrescriptionEntryUi) : Vie
   }
 
   private fun toggleSaveButton(drugName: String?) {
-    if (drugName == null) return
+    if (drugName != null) {
 
-    val isDrugNameNotBlank = drugName.isNotBlank()
-    drugNameValueCallback.pass(isDrugNameNotBlank, ui::setSaveButtonEnabled)
+      val isDrugNameNotBlank = drugName.isNotBlank()
+      drugNameValueCallback.pass(isDrugNameNotBlank, ui::setSaveButtonEnabled)
+    }
   }
 
   /**
@@ -40,15 +41,19 @@ class CustomPrescriptionEntryUiRenderer(val ui: CustomPrescriptionEntryUi) : Vie
 
   private fun initialSetup(openAs: OpenAs) {
     when (openAs) {
-      is OpenAs.New -> {
-        ui.showEnterNewPrescriptionTitle()
-        ui.hideRemoveButton()
-      }
-      is OpenAs.Update -> {
-        ui.showEditPrescriptionTitle()
-        ui.showRemoveButton()
-      }
+      is OpenAs.New -> setupUiForNewPrescription()
+      is OpenAs.Update -> setupUiForEditingPrescription()
     }
+  }
+
+  private fun setupUiForEditingPrescription() {
+    ui.showEditPrescriptionTitle()
+    ui.showRemoveButton()
+  }
+
+  private fun setupUiForNewPrescription() {
+    ui.showEnterNewPrescriptionTitle()
+    ui.hideRemoveButton()
   }
 
   companion object {

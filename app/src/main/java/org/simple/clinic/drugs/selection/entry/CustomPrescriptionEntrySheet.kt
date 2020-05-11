@@ -7,16 +7,13 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.sheet_custom_prescription_entry.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -28,8 +25,6 @@ import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
-import org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
@@ -39,14 +34,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class CustomPrescriptionEntrySheet : BottomSheetActivity(), CustomPrescriptionEntryUi, CustomPrescriptionEntryUiActions {
-
-  private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.customprescription_root)
-  private val drugNameEditText by bindView<TextInputEditText>(R.id.customprescription_drug_name)
-  private val drugDosageEditText by bindView<TextInputEditText>(R.id.customprescription_drug_dosage)
-  private val saveButton by bindView<MaterialButton>(R.id.customprescription_save)
-  private val enterMedicineTextView by bindView<TextView>(R.id.customprescription_enter_prescription)
-  private val editMedicineTextView by bindView<TextView>(R.id.customprescription_edit_prescription)
-  private val removeMedicineButton by bindView<MaterialButton>(R.id.customprescription_remove_button)
 
   @Inject
   lateinit var locale: Locale

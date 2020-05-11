@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/customprescription_root"
+  android:id="@+id/rootLayout"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
@@ -12,7 +12,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-      android:id="@+id/customprescription_enter_prescription"
+      android:id="@+id/enterMedicineTextView"
       style="@style/Clinic.V2.TextAppearance.H6.Grey0"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
       tools:visibility="gone" />
 
     <TextView
-      android:id="@+id/customprescription_edit_prescription"
+      android:id="@+id/editMedicineTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentStart="true"
@@ -32,7 +32,7 @@
       android:layout_marginStart="@dimen/spacing_16"
       android:layout_marginTop="@dimen/spacing_24"
       android:layout_marginBottom="@dimen/spacing_32"
-      android:layout_toStartOf="@id/customprescription_remove_button"
+      android:layout_toStartOf="@id/removeMedicineButton"
       android:ellipsize="end"
       android:lines="1"
       android:text="@string/customprescription_edit_medicine"
@@ -42,7 +42,7 @@
       tools:visibility="visible" />
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/customprescription_remove_button"
+      android:id="@+id/removeMedicineButton"
       style="@style/Clinic.V2.TextButton.Red1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
       android:layout_weight="1">
 
       <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/customprescription_drug_name"
+        android:id="@+id/drugNameEditText"
         style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
       android:layout_weight="0.46">
 
       <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/customprescription_drug_dosage"
+        android:id="@+id/drugDosageEditText"
         style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
   </LinearLayout>
 
   <com.google.android.material.button.MaterialButton
-    android:id="@+id/customprescription_save"
+    android:id="@+id/saveButton"
     style="@style/Clinic.Button.Flat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

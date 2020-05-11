@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next release
+## On Demo
 ### Feature
 - Add support for calling the patient directly from the summary screen
 - Show all BP passports of a patient while editing them

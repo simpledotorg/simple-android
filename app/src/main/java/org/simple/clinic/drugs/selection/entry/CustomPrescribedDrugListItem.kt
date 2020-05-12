@@ -23,17 +23,18 @@ data class CustomPrescribedDrugListItem(
   override fun getLayout() = R.layout.list_prescribeddrugs_custom_drug
 
   override fun createViewHolder(itemView: View): DrugViewHolder {
-    val holder = DrugViewHolder(itemView)
-    holder.itemView.setOnClickListener {
-      uiEvents.onNext(CustomPrescriptionClicked(prescription))
-    }
-    return holder
+    return DrugViewHolder(itemView)
   }
 
   override fun bind(holder: DrugViewHolder, position: Int) {
     holder.nameTextView.text = prescription.name
     holder.dosageTextView.text = prescription.dosage
     holder.dividerView.visibility = if (hideDivider) GONE else VISIBLE
+
+    holder.itemView.setOnClickListener {
+      uiEvents.onNext(CustomPrescriptionClicked(prescription))
+    }
+
   }
 
   class DrugViewHolder(rootView: View) : ViewHolder(rootView) {

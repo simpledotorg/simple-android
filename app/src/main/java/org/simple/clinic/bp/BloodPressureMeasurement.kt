@@ -111,6 +111,13 @@ data class BloodPressureMeasurement(
     """)
     fun newestMeasurementsForPatient(patientUuid: UUID, limit: Int): Flowable<List<BloodPressureMeasurement>>
 
+    @Query("""
+      SELECT * FROM bloodpressuremeasurement
+        WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+        ORDER BY recordedAt DESC LIMIT :limit
+    """)
+    fun newestMeasurementsForPatientImmediate(patientUuid: UUID, limit: Int): List<BloodPressureMeasurement>
+
     @Query("DELETE FROM bloodpressuremeasurement")
     fun clearData(): Int
 

@@ -113,6 +113,10 @@ class BloodPressureRepository @Inject constructor(
         .toObservable()
   }
 
+  fun newestMeasurementsForPatientImmediate(patientUuid: UUID, limit: Int): List<BloodPressureMeasurement> {
+    return dao.newestMeasurementsForPatientImmediate(patientUuid, limit)
+  }
+
   fun measurement(uuid: UUID): Observable<BloodPressureMeasurement> = dao.bloodPressure(uuid).toObservable()
 
   fun markBloodPressureAsDeleted(bloodPressureMeasurement: BloodPressureMeasurement): Completable {

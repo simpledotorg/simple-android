@@ -34,6 +34,7 @@ import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.DataSyncOnApprovalModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.indicator.SyncIndicatorModule
+import org.simple.clinic.user.SessionModule
 import org.simple.clinic.user.clearpatientdata.ClearPatientDataModule
 import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.Optional
@@ -76,7 +77,8 @@ import javax.inject.Named
   ClearPatientDataModule::class,
   PatientEntryModule::class,
   FlipperModule::class,
-  PinVerificationModule::class
+  PinVerificationModule::class,
+  SessionModule::class
 ])
 class AppModule(private val appContext: Application) {
 

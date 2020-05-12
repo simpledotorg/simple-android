@@ -73,67 +73,66 @@ class ScheduleAppointmentSheetControllerTest {
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
     val defaultTimeToAppointment = Months(1)
     val periodsToScheduleAppointmentsIn = listOf(defaultTimeToAppointment)
+    val scheduledDate = LocalDate.parse("2019-01-28")
     whenever(repository.schedule(
         patientUuid = eq(patientUuid),
         appointmentUuid = any(),
-        appointmentDate = eq(LocalDate.parse("2019-01-28")),
+        appointmentDate = eq(scheduledDate),
         appointmentType = eq(Manual),
         appointmentFacilityUuid = eq(facility.uuid),
         creationFacilityUuid = eq(facility.uuid)
     )).thenReturn(Single.just(TestData.appointment()))
 
-    sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
-        config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn)
-    )
+    sheetCreated(config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn))
 
     uiEvents.onNext(AppointmentDone)
 
+    verify(sheet).showPatientFacility(facility.name)
+    verify(sheet).enableIncrementButton(true)
+    verify(sheet).enableDecrementButton(false)
+    verify(sheet).updateScheduledAppointment(scheduledDate, Days(protocol.followUpDays))
     verify(sheet).closeSheet()
+    verifyNoMoreInteractions(sheet)
   }
 
   @Test
   fun `when scheduling an appointment is skipped and the patient is a defaulter, an automatic appointment should be scheduled`() {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(true))
+    val scheduledDate = LocalDate.parse("2019-01-31")
     whenever(repository.schedule(
         patientUuid = eq(patientUuid),
         appointmentUuid = any(),
-        appointmentDate = eq(LocalDate.parse("2019-01-31")),
+        appointmentDate = eq(scheduledDate),
         appointmentType = eq(Automatic),
         appointmentFacilityUuid = eq(facility.uuid),
         creationFacilityUuid = eq(facility.uuid)
     )).thenReturn(Single.just(TestData.appointment()))
 
-    sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
-        protocol = Observable.just(protocol)
-    )
+    sheetCreated()
     uiEvents.onNext(SchedulingSkipped)
 
+    verify(sheet).showPatientFacility(facility.name)
+    verify(sheet).enableIncrementButton(false)
+    verify(sheet).enableDecrementButton(true)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-28"), Days(protocol.followUpDays))
     verify(sheet).closeSheet()
+    verifyNoMoreInteractions(sheet)
   }
 
   @Test
   fun `when scheduling an appointment is skipped and the patient is not a defaulter, an automatic appointment should not be scheduled`() {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(false))
 
-    sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
-        protocol = Observable.just(protocol)
-    )
+    sheetCreated()
     uiEvents.onNext(SchedulingSkipped)
 
     verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
+    verify(sheet).showPatientFacility(facility.name)
+    verify(sheet).enableIncrementButton(false)
+    verify(sheet).enableDecrementButton(true)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-28"), Days(protocol.followUpDays))
     verify(sheet).closeSheet()
+    verifyNoMoreInteractions(sheet)
   }
 
   @Test
@@ -146,10 +145,6 @@ class ScheduleAppointmentSheetControllerTest {
 
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
         protocol = Observable.just(protocol),
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
@@ -174,10 +169,6 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val defaultTimeToAppointment = Days(2)
     sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocolUuid,
         protocol = Observable.never(),
         config = appointmentConfig
             .withScheduledAppointments(scheduleAppointmentsIn)
@@ -186,6 +177,10 @@ class ScheduleAppointmentSheetControllerTest {
 
     //then
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"), defaultTimeToAppointment)
+    verify(sheet).showPatientFacility(facility.name)
+    verify(sheet).enableIncrementButton(true)
+    verify(sheet).enableDecrementButton(true)
+    verifyNoMoreInteractions(sheet)
   }
 
   @Test
@@ -200,10 +195,6 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
         protocol = Observable.just(protocol),
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
@@ -233,10 +224,6 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
         protocol = Observable.just(protocol),
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
@@ -266,10 +253,6 @@ class ScheduleAppointmentSheetControllerTest {
 
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
         protocol = Observable.just(protocol),
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
@@ -308,10 +291,6 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
         protocol = Observable.just(protocol),
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
@@ -356,10 +335,6 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 1)
     sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
         protocol = Observable.just(protocol),
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
@@ -405,10 +380,6 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 1)
     sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
         protocol = Observable.just(protocol),
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
@@ -452,14 +423,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     // when
-    sheetCreated(
-        patientUuid = patientUuid,
-        user = user,
-        facility = facility,
-        protocolUuid = protocol.uuid,
-        protocol = Observable.just(protocol),
-        config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
-    )
+    sheetCreated(config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn))
 
     // then
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-02")))

@@ -386,7 +386,7 @@ class PatientSummaryScreen(
     activity.startActivity(ContactPatientBottomSheet.intent(activity, patientUuid))
   }
 
-  override fun contactDoctor(patientTeleconsultationInfo: PatientTeleconsultationInfo) {
+  override fun contactDoctor(patientTeleconsultationInfo: PatientTeleconsultationInfo, teleconsultationPhoneNumber: String) {
     // TODO (SM): Build WhatsApp message and start implicit intent.
   }
 

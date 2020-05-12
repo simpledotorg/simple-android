@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import java.util.UUID
 
 @Parcelize
@@ -12,7 +13,8 @@ data class PatientSummaryModel(
     val patientSummaryProfile: PatientSummaryProfile?,
     val currentFacility: Facility?,
     val hasCheckedForInvalidPhone: Boolean,
-    val linkIdWithPatientViewShown: Boolean
+    val linkIdWithPatientViewShown: Boolean,
+    val teleconsultInfo: TeleconsultInfo?
 ) : Parcelable {
 
   companion object {
@@ -23,7 +25,8 @@ data class PatientSummaryModel(
           patientSummaryProfile = null,
           currentFacility = null,
           hasCheckedForInvalidPhone = false,
-          linkIdWithPatientViewShown = false
+          linkIdWithPatientViewShown = false,
+          teleconsultInfo = null
       )
     }
   }
@@ -51,5 +54,9 @@ data class PatientSummaryModel(
 
   fun shownLinkIdWithPatientView(): PatientSummaryModel {
     return copy(linkIdWithPatientViewShown = true)
+  }
+
+  fun fetchedTeleconsultationInfo(teleconsultInfo: TeleconsultInfo): PatientSummaryModel {
+    return copy(teleconsultInfo = teleconsultInfo)
   }
 }

@@ -348,6 +348,7 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when contact doctor effect is received, then contact the doctor`() {
     // given
+    val teleconsultationPhoneNumber = "+911111111111"
     val patientUuid = UUID.fromString("b00f5efc-8742-420a-b746-d0641f4a65ab")
     val facilityUuid = UUID.fromString("360b1318-9ea5-4dbb-8023-24067722b613")
 
@@ -388,10 +389,10 @@ class PatientSummaryEffectHandlerTest {
     )
 
     // when
-    testCase.dispatch(ContactDoctor(patientInformation))
+    testCase.dispatch(ContactDoctor(patientInformation, teleconsultationPhoneNumber))
 
     // then
-    verify(uiActions).contactDoctor(patientInformation)
+    verify(uiActions).contactDoctor(patientInformation, teleconsultationPhoneNumber)
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }

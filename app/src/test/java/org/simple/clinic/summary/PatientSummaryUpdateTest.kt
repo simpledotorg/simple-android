@@ -583,9 +583,12 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when patient teleconsultation information is loaded, then contact doctor`() {
+    val phoneNumber = "+918981273898"
+    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumber)
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchedTeleconsultationInfo(teleconsultInfo)
 
     val patientInformation = PatientTeleconsultationInfo(
         patientUuid = patientUuid,
@@ -605,7 +608,7 @@ class PatientSummaryUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(ContactDoctor(patientInformation) as PatientSummaryEffect)
+                hasEffects(ContactDoctor(patientInformation, phoneNumber) as PatientSummaryEffect)
             )
         )
   }

@@ -76,7 +76,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPatientContactSheet(it.patientUuid) }, schedulersProvider.ui())
         .addTransformer(LoadPatientTeleconsultationInfo::class.java, fetchPatientTeleconsulationInfo())
-        .addConsumer(ContactDoctor::class.java, { uiActions.contactDoctor(it.patientInformation) }, schedulersProvider.ui())
+        .addConsumer(ContactDoctor::class.java, { uiActions.contactDoctor(it.patientTeleconsultationInfo, it.teleconsultationPhoneNumber) }, schedulersProvider.ui())
         .addTransformer(FetchTeleconsultationInfo::class.java, fetchFacilityTeleconsultationInfo())
         .build()
   }

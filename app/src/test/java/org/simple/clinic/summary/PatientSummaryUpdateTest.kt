@@ -17,6 +17,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import java.util.UUID
 
 class PatientSummaryUpdateTest {
@@ -625,6 +626,25 @@ class PatientSummaryUpdateTest {
                     model.patientSummaryProfile?.bpPassport,
                     model.currentFacility
                 ) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when facility teleconsultation info is loaded, then update the UI`() {
+    val teleconsultationPhoneNumber = "+918927391392"
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+    val teleconsultInfo = TeleconsultInfo.Fetched(teleconsultationPhoneNumber)
+
+    updateSpec
+        .given(model)
+        .whenEvent(FetchedTeleconsultationInfo(teleconsultInfo))
+        .then(
+            assertThatNext(
+                hasModel(model.fetchedTeleconsultationInfo(teleconsultInfo)),
+                hasNoEffects()
             )
         )
   }

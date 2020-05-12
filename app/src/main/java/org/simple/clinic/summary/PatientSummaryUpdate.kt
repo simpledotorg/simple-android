@@ -53,7 +53,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           model.patientSummaryProfile?.bpPassport,
           model.currentFacility
       ))
-      is FetchedTeleconsultationInfo -> noChange()
+      is FetchedTeleconsultationInfo -> next(model.fetchedTeleconsultationInfo(event.teleconsultInfo))
     }
   }
 

@@ -389,6 +389,16 @@ class PatientSummaryScreen(
   override fun contactDoctor(patientTeleconsultationInfo: PatientTeleconsultationInfo) {
     // TODO (SM): Build WhatsApp message and start implicit intent.
   }
+
+  override fun showContactDoctorButtonTextAndIcon() {
+    contactDoctorButton.text = context.getString(R.string.patientsummary_contact_doctor)
+    contactDoctorButton.setIconResource(R.drawable.ic_whatsapp)
+    contactDoctorProgress.visibility = View.GONE
+  }
+
+  override fun enableContactDoctorButton() {
+    contactDoctorButton.isEnabled = true
+  }
 }
 
 @Parcelize

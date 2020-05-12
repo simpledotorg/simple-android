@@ -192,7 +192,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
         android:visibility="visible"
-        style="@style/Clinic.V2.MaterialButton.Green1"
+        app:backgroundTint="@color/contact_doctor_button"
         tools:visibility="visible" />
 
       <ProgressBar

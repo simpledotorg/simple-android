@@ -44,10 +44,12 @@ import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
+import org.simple.clinic.summary.teleconsultation.TeleconsultationMessageBuilder
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.WhatsAppMessageSender
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -55,8 +57,10 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.isVisible
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.visibleOrGone
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class PatientSummaryScreen(
     context: Context,
@@ -72,8 +76,17 @@ class PatientSummaryScreen(
   @Inject
   lateinit var userClock: UserClock
 
+  @field:[Inject Named("full_date")]
+  lateinit var dateFormatter: DateTimeFormatter
+
   @Inject
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
+
+  @Inject
+  lateinit var teleconsultationMessageBuilder: TeleconsultationMessageBuilder
+
+  @Inject
+  lateinit var whatsAppMessageSender: WhatsAppMessageSender
 
   private val events: Observable<PatientSummaryEvent> by unsafeLazy {
     Observable
@@ -387,7 +400,8 @@ class PatientSummaryScreen(
   }
 
   override fun contactDoctor(patientTeleconsultationInfo: PatientTeleconsultationInfo, teleconsultationPhoneNumber: String) {
-    // TODO (SM): Build WhatsApp message and start implicit intent.
+    val message = teleconsultationMessageBuilder.message(patientTeleconsultationInfo)
+    whatsAppMessageSender.send(teleconsultationPhoneNumber, message.toString())
   }
 
   override fun showContactDoctorButtonTextAndIcon() {

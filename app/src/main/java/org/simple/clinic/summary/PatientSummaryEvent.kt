@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -64,3 +65,5 @@ data class PatientTeleconsultationInfoLoaded(val patientTeleconsultationInfo: Pa
 object ContactDoctorClicked : PatientSummaryEvent() {
   override val analyticsName: String = "Patient Summary:Contact Doctor Clicked"
 }
+
+data class FetchedTeleconsultationInfo(val teleconsultInfo: TeleconsultInfo) : PatientSummaryEvent()

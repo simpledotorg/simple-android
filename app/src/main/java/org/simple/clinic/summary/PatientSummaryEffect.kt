@@ -57,3 +57,5 @@ data class OpenContactPatientScreen(val patientUuid: UUID): PatientSummaryEffect
 data class LoadPatientTeleconsultationInfo(val patientUuid: UUID, val bpPassport: BusinessId?, val currentFacility: Facility?) : PatientSummaryEffect()
 
 data class ContactDoctor(val patientInformation: PatientTeleconsultationInfo) : PatientSummaryEffect()
+
+data class FetchTeleconsultationInfo(val facilityUuid: UUID) : PatientSummaryEffect()

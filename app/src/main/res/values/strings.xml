@@ -204,6 +204,8 @@
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
   <string name="patientsummary_bangladesh_national_id">ID</string>
 
+  <string name="patientsummary_contact_doctor">Doctor</string>
+
   <string name="bloodpressuresummaryview_see_all_button">See all</string>
 
   <!-- Lint fails to find usages for these strings. -->

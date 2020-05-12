@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi
@@ -15,6 +16,16 @@ class PatientSummaryViewRenderer(
 
       if (model.hasLoadedCurrentFacility) {
         setupUiForDiabetesManagement(model.isDiabetesManagementEnabled)
+        setupUiForTeleconsult(model)
+      }
+    }
+  }
+
+  private fun setupUiForTeleconsult(model: PatientSummaryModel) {
+    when (model.teleconsultInfo) {
+      is TeleconsultInfo.Fetched -> {
+        ui.showContactDoctorButtonTextAndIcon()
+        ui.enableContactDoctorButton()
       }
     }
   }

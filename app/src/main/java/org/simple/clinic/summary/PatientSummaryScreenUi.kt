@@ -5,4 +5,6 @@ interface PatientSummaryScreenUi {
   fun showEditButton()
   fun showDiabetesView()
   fun hideDiabetesView()
+  fun showContactDoctorButtonTextAndIcon()
+  fun enableContactDoctorButton()
 }

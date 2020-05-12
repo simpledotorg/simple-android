@@ -205,6 +205,10 @@
   <string name="patientsummary_bangladesh_national_id">ID</string>
 
   <string name="patientsummary_contact_doctor">Doctor</string>
+  <plurals name="patientsummary_contact_doctor_patient_info_bps" translatable="false">
+    <item quantity="one">*Last %s BP reading*:</item>
+    <item quantity="other">*Last %s BP readings*:</item>
+  </plurals>
 
   <string name="bloodpressuresummaryview_see_all_button">See all</string>
 

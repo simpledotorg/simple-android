@@ -11,6 +11,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import java.util.UUID
 
 class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
@@ -48,12 +49,19 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is ContactPatientClicked -> dispatch(OpenContactPatientScreen(model.patientUuid))
       is PatientTeleconsultationInfoLoaded -> dispatch(ContactDoctor(event.patientTeleconsultationInfo))
-      ContactDoctorClicked -> dispatch(LoadPatientTeleconsultationInfo(
+      ContactDoctorClicked -> contactDoctorClicked(model)
+      is FetchedTeleconsultationInfo -> next(model.fetchedTeleconsultationInfo(event.teleconsultInfo))
+    }
+  }
+
+  private fun contactDoctorClicked(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return when (model.teleconsultInfo) {
+      is TeleconsultInfo.Fetched -> dispatch(LoadPatientTeleconsultationInfo(
           model.patientUuid,
           model.patientSummaryProfile?.bpPassport,
           model.currentFacility
-      ))
-      is FetchedTeleconsultationInfo -> next(model.fetchedTeleconsultationInfo(event.teleconsultInfo))
+      ) as PatientSummaryEffect)
+      else -> noChange()
     }
   }
 

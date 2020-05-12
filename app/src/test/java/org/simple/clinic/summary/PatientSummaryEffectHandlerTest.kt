@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -25,6 +26,8 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
@@ -33,6 +36,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import java.net.UnknownHostException
 import java.util.UUID
 
 class PatientSummaryEffectHandlerTest {
@@ -47,6 +51,7 @@ class PatientSummaryEffectHandlerTest {
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val dataSync = mock<DataSync>()
+  private val teleconsultationApi = mock<TeleconsultationApi>()
 
   private val patientSummaryConfig = PatientSummaryConfig(
       bpEditableDuration = Duration.ofMinutes(10),
@@ -69,6 +74,7 @@ class PatientSummaryEffectHandlerTest {
       prescriptionRepository = prescriptionRepository,
       country = TestData.country(),
       patientSummaryConfig = patientSummaryConfig,
+      teleconsultationApi = teleconsultationApi,
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -113,6 +119,7 @@ class PatientSummaryEffectHandlerTest {
         prescriptionRepository = prescriptionRepository,
         country = bangladesh,
         patientSummaryConfig = patientSummaryConfig,
+        teleconsultationApi = teleconsultationApi,
         uiActions = uiActions
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -387,5 +394,51 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).contactDoctor(patientInformation)
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when fetch teleconsultation phone number effect is received, then fetch the phone number`() {
+    // given
+    val facilityUuid = UUID.fromString("bb9ab21d-d0eb-402e-af29-7c83430fa4d0")
+    val phoneNumber = "+911111111111"
+
+    whenever(teleconsultationApi.get(facilityUuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(phoneNumber))
+
+    // when
+    testCase.dispatch(FetchTeleconsultationInfo(facilityUuid))
+
+    // then
+    verifyZeroInteractions(uiActions)
+    testCase.assertOutgoingEvents(FetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumber)))
+  }
+
+  @Test
+  fun `when fetched teleconsultation info contains no phone number, then set teleconsult info to missing number`() {
+    // given
+    val facilityUuid = UUID.fromString("bb9ab21d-d0eb-402e-af29-7c83430fa4d0")
+
+    whenever(teleconsultationApi.get(facilityUuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(null))
+
+    // when
+    testCase.dispatch(FetchTeleconsultationInfo(facilityUuid))
+
+    // then
+    verifyZeroInteractions(uiActions)
+    testCase.assertOutgoingEvents(FetchedTeleconsultationInfo(TeleconsultInfo.MissingPhoneNumber))
+  }
+
+  @Test
+  fun `when fetching teleconsultation info fails with a network error, then set teleconsult info to network error`() {
+    // given
+    val facilityUuid = UUID.fromString("bb9ab21d-d0eb-402e-af29-7c83430fa4d0")
+
+    whenever(teleconsultationApi.get(facilityUuid)) doReturn Single.error(UnknownHostException("Failed to connect to server"))
+
+    // when
+    testCase.dispatch(FetchTeleconsultationInfo(facilityUuid))
+
+    // then
+    verifyZeroInteractions(uiActions)
+    testCase.assertOutgoingEvents(FetchedTeleconsultationInfo(TeleconsultInfo.NetworkError))
   }
 }

@@ -51,6 +51,7 @@ import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.Timestamps
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultationsResponse
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -988,5 +989,11 @@ object TestData {
       status = status,
       createdAt = createdAt,
       updatedAt = updatedAt
+  )
+
+  fun facilityTeleconsultationsResponse(
+      phoneNumber: String? = "+911111111111"
+  ) = TeleconsultationsResponse(
+      teleconsultationPhoneNumber = phoneNumber
   )
 }

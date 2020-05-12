@@ -4,6 +4,7 @@ import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
+import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -611,9 +612,11 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when contact doctor button is clicked, then load patient teleconsultation information`() {
+    val phoneNumber = "+918912893922"
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumber))
 
     updateSpec
         .given(model)
@@ -627,6 +630,21 @@ class PatientSummaryUpdateTest {
                     model.currentFacility
                 ) as PatientSummaryEffect)
             )
+        )
+  }
+
+  @Test
+  fun `when tele consult info is not fetched and contact doctor button is clicked, then do nothing`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchingTeleconsultationInfo()
+
+    updateSpec
+        .given(model)
+        .whenEvent(ContactDoctorClicked)
+        .then(
+            assertThatNext(hasNothing())
         )
   }
 

@@ -102,4 +102,21 @@ class PatientSummaryViewRendererTest {
     verify(ui).enableContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when teleconsultation phone number is missing, then disable contact doctor button`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchedTeleconsultationInfo(TeleconsultInfo.MissingPhoneNumber)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDiabetesView()
+    verify(ui).showContactDoctorButtonTextAndIcon()
+    verify(ui).disableContactDoctorButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

@@ -59,4 +59,8 @@ data class PatientSummaryModel(
   fun fetchedTeleconsultationInfo(teleconsultInfo: TeleconsultInfo): PatientSummaryModel {
     return copy(teleconsultInfo = teleconsultInfo)
   }
+
+  fun fetchingTeleconsultationInfo(): PatientSummaryModel {
+    return copy(teleconsultInfo = TeleconsultInfo.Fetching)
+  }
 }

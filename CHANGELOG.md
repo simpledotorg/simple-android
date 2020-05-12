@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next release
+### Fixes
+- Fix the click issue in custom prescription on Medicines screen
+
 ## On Demo
 ### Feature
 - Add support for calling the patient directly from the summary screen

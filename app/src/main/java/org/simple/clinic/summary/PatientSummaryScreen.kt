@@ -399,6 +399,10 @@ class PatientSummaryScreen(
   override fun enableContactDoctorButton() {
     contactDoctorButton.isEnabled = true
   }
+
+  override fun disableContactDoctorButton() {
+    contactDoctorButton.isEnabled = false
+  }
 }
 
 @Parcelize

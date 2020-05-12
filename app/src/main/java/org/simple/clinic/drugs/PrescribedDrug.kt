@@ -96,6 +96,9 @@ data class PrescribedDrug(
     @Query("SELECT * FROM prescribeddrug WHERE patientUuid = :patientUuid AND isDeleted = 0 ORDER BY updatedAt DESC")
     fun forPatient(patientUuid: UUID): Flowable<List<PrescribedDrug>>
 
+    @Query("SELECT * FROM prescribeddrug WHERE patientUuid = :patientUuid AND isDeleted = 0 ORDER BY updatedAt DESC")
+    fun forPatientImmediate(patientUuid: UUID): List<PrescribedDrug>
+
     @Query("DELETE FROM prescribeddrug")
     fun clearData(): Int
 

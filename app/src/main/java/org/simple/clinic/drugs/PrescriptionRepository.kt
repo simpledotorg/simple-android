@@ -129,6 +129,10 @@ class PrescriptionRepository @Inject constructor(
         .toObservable()
   }
 
+  fun newestPrescriptionsForPatientImmediate(patientUuid: UUID): List<PrescribedDrug> {
+    return dao.forPatientImmediate(patientUuid)
+  }
+
   @Deprecated("Use prescriptionImmediate() instead")
   fun prescription(prescriptionUuid: UUID): Observable<PrescribedDrug> = dao.prescription(prescriptionUuid).toObservable()
 

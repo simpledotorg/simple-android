@@ -3,23 +3,22 @@ package org.simple.clinic.drugs
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.drugs.selection.EditMedicinesUiActions
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.UUID
 
 class EditMedicinesEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: EditMedicinesUiActions,
     private val schedulersProvider: SchedulersProvider,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val protocolRepository: ProtocolRepository,
-    private val prescriptionRepository: PrescriptionRepository
+    private val prescriptionRepository: PrescriptionRepository,
+    private val facility: Lazy<Facility>
 ) {
 
   @AssistedInject.Factory
@@ -56,7 +55,6 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
   }
 
   private fun currentProtocolUuid(): UUID {
-    val loggedInUser = userSession.loggedInUserImmediate()!!
-    return facilityRepository.currentFacilityImmediate(loggedInUser)?.protocolUuid!!
+    return facility.get().protocolUuid!!
   }
 }

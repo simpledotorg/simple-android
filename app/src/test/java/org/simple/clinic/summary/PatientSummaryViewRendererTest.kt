@@ -8,6 +8,7 @@ import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import java.util.UUID
 
 class PatientSummaryViewRendererTest {
@@ -80,6 +81,25 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
     verify(ui).showEditButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when teleconsultation info is loaded, then enable contact doctor button`() {
+    // given
+    val phoneNumber = "+918923749323"
+    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumber)
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchedTeleconsultationInfo(teleconsultInfo)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDiabetesView()
+    verify(ui).showContactDoctorButtonTextAndIcon()
+    verify(ui).enableContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
 }

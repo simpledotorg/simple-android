@@ -33,6 +33,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -58,6 +59,7 @@ class PatientSummaryScreenControllerTest {
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val teleconsultationApi = mock<TeleconsultationApi>()
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
@@ -245,6 +247,7 @@ class PatientSummaryScreenControllerTest {
         prescriptionRepository = prescriptionRepository,
         country = TestData.country(),
         patientSummaryConfig = patientSummaryConfig,
+        teleconsultationApi = teleconsultationApi,
         uiActions = uiActions
     )
 

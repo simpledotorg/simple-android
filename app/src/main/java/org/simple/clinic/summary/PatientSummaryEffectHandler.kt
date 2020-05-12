@@ -17,6 +17,8 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.UserSession
@@ -39,6 +41,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val country: Country,
     private val patientSummaryConfig: PatientSummaryConfig,
+    private val teleconsultationApi: TeleconsultationApi,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -74,6 +77,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPatientContactSheet(it.patientUuid) }, schedulersProvider.ui())
         .addTransformer(LoadPatientTeleconsultationInfo::class.java, fetchPatientTeleconsulationInfo())
         .addConsumer(ContactDoctor::class.java, { uiActions.contactDoctor(it.patientInformation) }, schedulersProvider.ui())
+        .addTransformer(FetchTeleconsultationInfo::class.java, fetchFacilityTeleconsultationInfo())
         .build()
   }
 
@@ -255,5 +259,29 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           }
           .map(::PatientTeleconsultationInfoLoaded)
     }
+  }
+
+  private fun fetchFacilityTeleconsultationInfo(): ObservableTransformer<FetchTeleconsultationInfo, PatientSummaryEvent> {
+    return ObservableTransformer { effectStream ->
+      effectStream
+          .observeOn(schedulersProvider.io())
+          .switchMap { fetchPhoneNumber(it.facilityUuid) }
+          .map { teleconsultInfo -> FetchedTeleconsultationInfo(teleconsultInfo) }
+    }
+  }
+
+  private fun fetchPhoneNumber(facilityUuid: UUID): Observable<TeleconsultInfo> {
+    return teleconsultationApi
+        .get(facilityUuid)
+        .map {
+          val phoneNumber = it.teleconsultationPhoneNumber
+          if (phoneNumber.isNullOrBlank()) {
+            TeleconsultInfo.MissingPhoneNumber
+          } else {
+            TeleconsultInfo.Fetched(phoneNumber)
+          }
+        }
+        .onErrorReturn { TeleconsultInfo.NetworkError }
+        .toObservable()
   }
 }

@@ -33,7 +33,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
-typealias Ui = ScheduleAppointmentSheet
+typealias Ui = ScheduleAppointmentUi
 typealias UiChange = (Ui) -> Unit
 
 class ScheduleAppointmentSheetController @AssistedInject constructor(

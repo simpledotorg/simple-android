@@ -27,7 +27,7 @@ class PatientSummaryViewRenderer(
         ui.showContactDoctorButtonTextAndIcon()
         ui.enableContactDoctorButton()
       }
-      is TeleconsultInfo.MissingPhoneNumber -> {
+      is TeleconsultInfo.MissingPhoneNumber, is TeleconsultInfo.NetworkError -> {
         ui.showContactDoctorButtonTextAndIcon()
         ui.disableContactDoctorButton()
       }

@@ -51,7 +51,15 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientTeleconsultationInfoLoaded -> patientInformationLoaded(event, model)
       ContactDoctorClicked -> contactDoctorClicked(model)
       is FetchedTeleconsultationInfo -> next(model.fetchedTeleconsultationInfo(event.teleconsultInfo))
+      RetryFetchTeleconsultInfo -> retryFetchTeleconsultInfo(model)
     }
+  }
+
+  private fun retryFetchTeleconsultInfo(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return next(
+        model.fetchingTeleconsultationInfo(),
+        FetchTeleconsultationInfo(model.currentFacility!!.uuid)
+    )
   }
 
   private fun patientInformationLoaded(

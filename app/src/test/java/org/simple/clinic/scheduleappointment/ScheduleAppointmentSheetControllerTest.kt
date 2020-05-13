@@ -33,6 +33,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
@@ -573,7 +574,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid))
+    uiEvents.onNext(ScreenCreated())
   }
 }
 

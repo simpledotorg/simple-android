@@ -4,10 +4,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-data class ScheduleAppointmentSheetCreated(
-    val patientUuid: UUID
-) : UiEvent
-
 object AppointmentDateIncremented : UiEvent {
   override val analyticsName = "Schedule Appointment:Increment appointment due date"
 }

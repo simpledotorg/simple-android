@@ -34,7 +34,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class ScheduleAppointmentSheet : BottomSheetActivity() {
+class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
@@ -153,14 +153,14 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     startActivityForResult(Intent(this, FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)
   }
 
-  fun closeSheet() {
+  override fun closeSheet() {
     val resultIntent = Intent().putExtra(KEY_EXTRA, intent.getParcelableExtra<Parcelable>(KEY_EXTRA))
 
     setResult(Activity.RESULT_OK, resultIntent)
     finish()
   }
 
-  fun updateScheduledAppointment(appointmentDate: LocalDate, timeToAppointment: TimeToAppointment) {
+  override fun updateScheduledAppointment(appointmentDate: LocalDate, timeToAppointment: TimeToAppointment) {
     currentAppointmentDate.text = dateFormatter.format(appointmentDate)
     currentDateTextView.text = displayTextForTimeToAppointment(timeToAppointment)
   }
@@ -175,15 +175,15 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     return resources.getQuantityString(quantityStringResourceId, timeToAppointment.value, "${timeToAppointment.value}")
   }
 
-  fun enableIncrementButton(state: Boolean) {
+  override fun enableIncrementButton(state: Boolean) {
     incrementDateButton.isEnabled = state
   }
 
-  fun enableDecrementButton(state: Boolean) {
+  override fun enableDecrementButton(state: Boolean) {
     decrementDateButton.isEnabled = state
   }
 
-  fun showManualDateSelector(date: LocalDate) {
+  override fun showManualDateSelector(date: LocalDate) {
     val today = LocalDate.now(userClock)
 
     ThreeTenBpDatePickerDialog(
@@ -195,7 +195,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     ).show()
   }
 
-  fun showPatientFacility(facilityName: String) {
+  override fun showPatientFacility(facilityName: String) {
     selectedFacilityName.text = facilityName
   }
 }

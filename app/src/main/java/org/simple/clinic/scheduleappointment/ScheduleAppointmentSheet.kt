@@ -8,6 +8,7 @@ import android.os.Parcelable
 import com.jakewharton.rxbinding2.view.RxView
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.sheet_schedule_appointment.*
@@ -16,6 +17,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
@@ -70,6 +72,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
   @Inject
   lateinit var locale: Locale
 
+  @Inject
+  lateinit var effectHandler: ScheduleAppointmentEffectHandler
+
   private lateinit var component: ScheduleAppointmentSheetComponent
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
@@ -89,12 +94,26 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
             facilityChanges
         )
         .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = ScheduleAppointmentUiRenderer(this)
+
+    MobiusDelegate.forActivity(
+        events = events.ofType(),
+        defaultModel = ScheduleAppointmentModel.create(),
+        update = ScheduleAppointmentUpdate(),
+        init = ScheduleAppointmentInit(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
     setContentView(R.layout.sheet_schedule_appointment)
+    delegate.onRestoreInstanceState(savedInstanceState)
 
     val patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID
     bindUiToController(
@@ -107,6 +126,21 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
     changeFacilityButton.setOnClickListener {
       openFacilitySelection()
     }
+  }
+
+  override fun onStart() {
+    super.onStart()
+    delegate.start()
+  }
+
+  override fun onStop() {
+    delegate.stop()
+    super.onStop()
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    delegate.onSaveInstanceState(outState)
   }
 
   override fun attachBaseContext(baseContext: Context) {

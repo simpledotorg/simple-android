@@ -2,6 +2,8 @@ package org.simple.clinic.deeplink
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import org.junit.After
@@ -15,10 +17,12 @@ import java.util.UUID
 class DeepLinkEffectHandlerTest {
 
   private val userSession = mock<UserSession>()
+  private val uiActions = mock<DeepLinkUiActions>()
 
   private val effectHandler = DeepLinkEffectHandler(
       userSession = Lazy { userSession },
-      schedulerProvider = TrampolineSchedulersProvider()
+      schedulerProvider = TrampolineSchedulersProvider(),
+      uiActions = uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -40,5 +44,17 @@ class DeepLinkEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(UserFetched(user))
+  }
+
+  @Test
+  fun `when navigate to setup effect is received, then navigate to setup activity`() {
+    // when
+    testCase.dispatch(NavigateToSetupActivity)
+
+    // then
+    verify(uiActions).navigateToSetupActivity()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
   }
 }

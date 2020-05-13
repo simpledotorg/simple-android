@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next release
+### Feature
+- [In progress: 13th May 2020] Add support for teleconsultation
+
 ### Internal
 - Lazy inject `facility` and `user` as dependencies in `EditMedicineEffectHandler`
 - [In Progress: 12th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius

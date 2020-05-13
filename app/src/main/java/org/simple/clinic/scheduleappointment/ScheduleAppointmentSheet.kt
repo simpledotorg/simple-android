@@ -13,6 +13,7 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.sheet_schedule_appointment.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.overdue.TimeToAppointment
@@ -76,16 +77,18 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
   private val facilityChanges: Subject<PatientFacilityChanged> = PublishSubject.create()
 
   private val events by unsafeLazy {
-    Observable.mergeArray(
-        screenCreates(),
-        decrementClicks(),
-        incrementClicks(),
-        notNowClicks(),
-        doneClicks(),
-        appointmentDateClicks(),
-        calendarDateSelectedEvents,
-        facilityChanges
-    )
+    Observable
+        .mergeArray(
+            screenCreates(),
+            decrementClicks(),
+            incrementClicks(),
+            notNowClicks(),
+            doneClicks(),
+            appointmentDateClicks(),
+            calendarDateSelectedEvents,
+            facilityChanges
+        )
+        .compose(ReportAnalyticsEvents())
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {

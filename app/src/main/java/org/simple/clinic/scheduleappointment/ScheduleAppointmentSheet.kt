@@ -21,6 +21,7 @@ import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelection
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity.Companion.selectedFacilityUuid
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenCreated
@@ -74,6 +75,19 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
   private val facilityChanges: Subject<PatientFacilityChanged> = PublishSubject.create()
 
+  private val events by unsafeLazy {
+    Observable.mergeArray(
+        screenCreates(),
+        decrementClicks(),
+        incrementClicks(),
+        notNowClicks(),
+        doneClicks(),
+        appointmentDateClicks(),
+        calendarDateSelectedEvents,
+        facilityChanges
+    )
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -82,16 +96,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
     val patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(
-            screenCreates(),
-            decrementClicks(),
-            incrementClicks(),
-            notNowClicks(),
-            doneClicks(),
-            appointmentDateClicks(),
-            calendarDateSelectedEvents,
-            facilityChanges
-        ),
+        events = events,
         controller = controller.create(patientUuid),
         screenDestroys = onDestroys
     )

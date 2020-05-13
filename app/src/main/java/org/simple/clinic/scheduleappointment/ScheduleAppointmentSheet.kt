@@ -56,7 +56,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   @Inject
-  lateinit var controller: ScheduleAppointmentSheetController
+  lateinit var controller: ScheduleAppointmentSheetController.Factory
 
   @Inject
   lateinit var userClock: UserClock
@@ -78,6 +78,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
     setContentView(R.layout.sheet_schedule_appointment)
 
+    val patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID
     bindUiToController(
         ui = this,
         events = Observable.mergeArray(
@@ -90,7 +91,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
             calendarDateSelectedEvents,
             facilityChanges
         ),
-        controller = controller,
+        controller = controller.create(patientUuid),
         screenDestroys = onDestroys
     )
 

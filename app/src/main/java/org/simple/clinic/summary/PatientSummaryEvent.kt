@@ -67,3 +67,5 @@ object ContactDoctorClicked : PatientSummaryEvent() {
 }
 
 data class FetchedTeleconsultationInfo(val teleconsultInfo: TeleconsultInfo) : PatientSummaryEvent()
+
+object RetryFetchTeleconsultInfo : PatientSummaryEvent()

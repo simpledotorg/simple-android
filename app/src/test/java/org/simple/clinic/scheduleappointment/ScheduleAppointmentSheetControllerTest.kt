@@ -11,7 +11,10 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -35,6 +38,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
 import java.util.UUID
@@ -69,6 +73,26 @@ class ScheduleAppointmentSheetControllerTest {
   )
 
   private lateinit var controller: ScheduleAppointmentSheetController
+  private lateinit var testFixture: MobiusTestFixture<ScheduleAppointmentModel, ScheduleAppointmentEvent, ScheduleAppointmentEffect>
+
+  @Before
+  fun setUp() {
+    val uiRenderer = ScheduleAppointmentUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = ScheduleAppointmentModel.create(),
+        init = ScheduleAppointmentInit(),
+        update = ScheduleAppointmentUpdate(),
+        effectHandler = ScheduleAppointmentEffectHandler().build(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
+  @After
+  fun tearDown() {
+    testFixture.dispose()
+  }
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
@@ -573,6 +597,7 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(protocolRepository.protocol(protocolUuid)).thenReturn(protocol)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
+    testFixture.start()
 
     uiEvents.onNext(ScreenCreated())
   }

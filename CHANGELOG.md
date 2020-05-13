@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next release
+### Internal
+- Lazy inject `facility` and `user` as dependencies in `EditMedicineEffectHandler`
+
 ### Fixes
 - Fix the click issue in custom prescription on Medicines screen
 

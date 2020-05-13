@@ -67,7 +67,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew -PandroidNdkVersion=18.1.5063045 connectedQaDebugAndroidTest
+          script: ./gradlew connectedQaDebugAndroidTest
 
   qa_build_apk:
     runs-on: [ubuntu-latest]

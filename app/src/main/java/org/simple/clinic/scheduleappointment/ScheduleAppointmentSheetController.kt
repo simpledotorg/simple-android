@@ -1,5 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
@@ -16,11 +18,9 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.overdue.TimeToAppointment.Days
-import org.simple.clinic.overdue.TimeToAppointment.Months
-import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -31,12 +31,12 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
-import javax.inject.Inject
 
 typealias Ui = ScheduleAppointmentSheet
 typealias UiChange = (Ui) -> Unit
 
-class ScheduleAppointmentSheetController @Inject constructor(
+class ScheduleAppointmentSheetController @AssistedInject constructor(
+    @Assisted val patientUuid: UUID,
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
     private val config: AppointmentConfig,
@@ -45,6 +45,11 @@ class ScheduleAppointmentSheetController @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val protocolRepository: ProtocolRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(patientUuid: UUID): ScheduleAppointmentSheetController
+  }
 
   private val latestAppointmentDateScheduledSubject = BehaviorSubject.create<PotentialAppointmentDate>()
 

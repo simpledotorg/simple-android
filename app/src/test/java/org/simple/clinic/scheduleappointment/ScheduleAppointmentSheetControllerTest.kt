@@ -556,6 +556,7 @@ class ScheduleAppointmentSheetControllerTest {
       config: AppointmentConfig = this.appointmentConfig
   ) {
     controller = ScheduleAppointmentSheetController(
+        patientUuid = patientUuid,
         appointmentRepository = repository,
         patientRepository = patientRepository,
         config = config,

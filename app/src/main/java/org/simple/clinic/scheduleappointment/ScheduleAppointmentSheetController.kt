@@ -188,17 +188,17 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   }
 
   private fun scheduleAutomaticAppointmentForDefaulters(events: Observable<UiEvent>): Observable<UiChange> {
-    val combinedStreams = Observables.combineLatest(events.ofType<SchedulingSkipped>(), patientUuid(events))
+    val schedulingSkippedStream = events.ofType<SchedulingSkipped>()
 
-    val isPatientDefaulterStream = combinedStreams
-        .switchMap { (_, patientUuid) -> patientRepository.isPatientDefaulter(patientUuid) }
+    val isPatientDefaulterStream = schedulingSkippedStream
+        .switchMap { patientRepository.isPatientDefaulter(patientUuid) }
         .replay()
         .refCount()
 
     val appointmentStream = Observables
-        .combineLatest(patientUuid(events), currentFacilityStream()) { uuid, currentFacility ->
+        .combineLatest(schedulingSkippedStream, currentFacilityStream()) { _, currentFacility ->
           OngoingAppointment(
-              patientUuid = uuid,
+              patientUuid = patientUuid,
               appointmentDate = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
               appointmentFacilityUuid = currentFacility.uuid,
               creationFacilityUuid = currentFacility.uuid
@@ -236,12 +236,11 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
     val patientFacilityUuidStream = currentFacilityUuid.mergeWith(facilityChanged)
 
     val appointmentStream = Observables.combineLatest(
-        patientUuid(events),
         latestAppointmentDateScheduledSubject,
         patientFacilityUuidStream,
-        currentFacilityUuid) { uuid, date, facilityUuid, currentFacility ->
+        currentFacilityUuid) { date, facilityUuid, currentFacility ->
       OngoingAppointment(
-          patientUuid = uuid,
+          patientUuid = patientUuid,
           appointmentDate = date.scheduledFor,
           appointmentFacilityUuid = facilityUuid,
           creationFacilityUuid = currentFacility
@@ -277,12 +276,6 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .map { facilityRepository.facility(it.facilityUuid) }
         .unwrapJust()
         .map { { ui: Ui -> ui.showPatientFacility(it.name) } }
-  }
-
-  private fun patientUuid(events: Observable<UiEvent>): Observable<UUID> {
-    return events
-        .ofType<ScheduleAppointmentSheetCreated>()
-        .map { it.patientUuid }
   }
 
   private fun currentFacilityStream(): Observable<Facility> {

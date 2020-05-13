@@ -670,6 +670,24 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when retry fetching teleconsultation info is clicked, then fetch the teleconsultation info`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchedTeleconsultationInfo(TeleconsultInfo.NetworkError)
+
+    updateSpec
+        .given(model)
+        .whenEvent(RetryFetchTeleconsultInfo)
+        .then(
+            assertThatNext(
+                hasModel(model.fetchingTeleconsultationInfo()),
+                hasEffects(FetchTeleconsultationInfo(facilityWithDiabetesManagementEnabled.uuid) as PatientSummaryEffect)
+            )
+        )
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

@@ -119,4 +119,21 @@ class PatientSummaryViewRendererTest {
     verify(ui).disableContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when there is a network error when fetching tele consult info, then disable contact doctor button`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchedTeleconsultationInfo(TeleconsultInfo.NetworkError)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDiabetesView()
+    verify(ui).showContactDoctorButtonTextAndIcon()
+    verify(ui).disableContactDoctorButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

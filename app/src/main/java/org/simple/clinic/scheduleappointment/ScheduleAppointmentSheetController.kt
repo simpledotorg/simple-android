@@ -27,6 +27,7 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.plus
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unwrapJust
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
@@ -137,7 +138,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
     val timeToAppointments = Observable.concatArrayEager(configTimeToAppointment, protocolTimeToAppointment)
 
     return Observables.combineLatest(
-        events.ofType<ScheduleAppointmentSheetCreated>(),
+        events.ofType<ScreenCreated>(),
         timeToAppointments
     ) { _, timeToAppointment ->
       timeToAppointment
@@ -266,7 +267,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
 
   private fun showPatientDefaultFacility(events: Observable<UiEvent>): Observable<UiChange> {
     val creates = events
-        .ofType<ScheduleAppointmentSheetCreated>()
+        .ofType<ScreenCreated>()
     return Observables.combineLatest(creates, currentFacilityStream()) { _, facility -> { ui: Ui -> ui.showPatientFacility(facility.name) } }
   }
 

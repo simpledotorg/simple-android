@@ -23,6 +23,7 @@ import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
 import org.simple.clinic.widgets.UiEvent
@@ -135,10 +136,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID
-    return Observable.just(ScheduleAppointmentSheetCreated(
-        patientUuid = patientUuid
-    ))
+    return Observable.just(ScreenCreated())
   }
 
   private fun incrementClicks() = RxView.clicks(incrementDateButton).map { AppointmentDateIncremented }

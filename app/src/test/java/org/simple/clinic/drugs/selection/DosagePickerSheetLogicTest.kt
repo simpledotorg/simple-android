@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -64,11 +65,10 @@ class DosagePickerSheetLogicTest {
   private val uiRenderer = DosagePickerUiRenderer(ui)
   private val uiActions = mock<DosagePickerUiActions>()
   private val dosagePickerEffectHandler = DosagePickerEffectHandler(
-      userSession = userSession,
-      facilityRepository = facilityRepository,
       protocolRepository = protocolRepository,
       prescriptionRepository = prescriptionRepository,
       schedulers = TrampolineSchedulersProvider(),
+      currentFacility = Lazy { currentFacility },
       uiActions = uiActions
   )
 
@@ -159,9 +159,6 @@ class DosagePickerSheetLogicTest {
   private fun setupController(
       existingPrescriptionUuid: Optional<UUID> = None
   ) {
-    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
-    whenever(facilityRepository.currentFacilityImmediate(user)).thenReturn(currentFacility)
-
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = DosagePickerModel.create(

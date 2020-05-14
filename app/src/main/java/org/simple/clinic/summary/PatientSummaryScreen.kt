@@ -410,6 +410,12 @@ class PatientSummaryScreen(
     contactDoctorProgress.visibility = View.GONE
   }
 
+  override fun showContactButtonProgress() {
+    contactDoctorButton.text = null
+    contactDoctorButton.icon = null
+    contactDoctorProgress.visibility = View.VISIBLE
+  }
+
   override fun enableContactDoctorButton() {
     contactDoctorButton.isEnabled = true
   }

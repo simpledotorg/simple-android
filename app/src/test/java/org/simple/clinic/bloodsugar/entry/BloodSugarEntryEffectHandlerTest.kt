@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -46,21 +47,22 @@ class BloodSugarEntryEffectHandlerTest {
   private val ui = mock<BloodSugarEntryUi>()
   private val userClock = TestUserClock()
 
-  private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val bloodSugarRepository = mock<BloodSugarRepository>()
 
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
+
   private val effectHandler = BloodSugarEntryEffectHandler(
       ui,
-      userSession,
       facilityRepository,
       bloodSugarRepository,
       patientRepository,
       appointmentRepository,
       userClock,
-      TrampolineSchedulersProvider()
+      TrampolineSchedulersProvider(),
+      Lazy { user }
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -239,7 +241,6 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `create new blood sugar entry when create blood sugar entry effect is received`() {
     // given
-    val user = TestData.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
     val facility = TestData.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
 
     val date = LocalDate.parse("2020-01-02")
@@ -252,7 +253,6 @@ class BloodSugarEntryEffectHandlerTest {
         bloodSugarReading = bloodSugarReading
     )
 
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
     whenever(bloodSugarRepository.saveMeasurement(eq(bloodSugar.reading), eq(bloodSugar.patientUuid), eq(user), eq(facility), eq(date.toUtcInstant(userClock)), any())).doReturn(Single.just(bloodSugar))
     whenever(patientRepository.compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))).doReturn(Completable.complete())
@@ -269,7 +269,6 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `create new hba1c blood sugar entry when create blood sugar entry effect is received`() {
     // given
-    val user = TestData.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
     val facility = TestData.facility(uuid = UUID.fromString("f895b54f-ee32-4471-bc0c-a91b80368778"))
 
     val date = LocalDate.parse("2020-01-02")
@@ -282,7 +281,6 @@ class BloodSugarEntryEffectHandlerTest {
         bloodSugarReading = bloodSugarReading
     )
 
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(facilityRepository.currentFacility(user)).doReturn(Observable.just(facility))
     whenever(bloodSugarRepository.saveMeasurement(eq(bloodSugar.reading), eq(bloodSugar.patientUuid), eq(user), eq(facility), eq(date.toUtcInstant(userClock)), any())).doReturn(Single.just(bloodSugar))
     whenever(patientRepository.compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))).doReturn(Completable.complete())
@@ -313,7 +311,6 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `update blood sugar entry when update blood sugar entry effect is received`() {
     // given
-    val user = TestData.loggedInUser(uuid = UUID.fromString("50da2a45-3680-41e8-b46d-8a5896eadce0"))
     val facility = TestData.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
     val patientUuid = UUID.fromString("260a831f-bc31-4341-bc0d-46325e85e32d")
 
@@ -345,7 +342,6 @@ class BloodSugarEntryEffectHandlerTest {
         bloodSugarReading = updateBloodSugarReading
     )
 
-    whenever(userSession.loggedInUserImmediate()).doReturn(user)
     whenever(facilityRepository.currentFacilityImmediate(user)).doReturn(facility)
     whenever(bloodSugarRepository.measurement(bloodSugarMeasurementUuid)).doReturn(bloodSugar)
 
@@ -360,7 +356,6 @@ class BloodSugarEntryEffectHandlerTest {
   @Test
   fun `update hba1c blood sugar entry when update blood sugar entry effect is received`() {
     // given
-    val user = TestData.loggedInUser(uuid = UUID.fromString("50da2a45-3680-41e8-b46d-8a5896eadce0"))
     val facility = TestData.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
     val patientUuid = UUID.fromString("260a831f-bc31-4341-bc0d-46325e85e32d")
 
@@ -392,7 +387,6 @@ class BloodSugarEntryEffectHandlerTest {
         bloodSugarReading = updateBloodSugarReading
     )
 
-    whenever(userSession.loggedInUserImmediate()).doReturn(user)
     whenever(facilityRepository.currentFacilityImmediate(user)).doReturn(facility)
     whenever(bloodSugarRepository.measurement(bloodSugarMeasurementUuid)).doReturn(bloodSugar)
 

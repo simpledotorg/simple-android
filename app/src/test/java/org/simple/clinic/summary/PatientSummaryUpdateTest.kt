@@ -50,6 +50,11 @@ class PatientSummaryUpdateTest {
       facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
   )
 
+  private val facilityWithTeleconsultationEnabled = TestData.facility(
+      uuid = UUID.fromString("e3582a1a-baed-4e1c-95e0-d8f0ad7a05a2"),
+      facilityConfig = FacilityConfig(diabetesManagementEnabled = true, teleconsultationEnabled = true)
+  )
+
   private val updateSpec = UpdateSpec(PatientSummaryUpdate())
 
   @Test
@@ -701,6 +706,24 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(model.failedToFetchTeleconsultationInfo()),
             hasEffects(ShowTeleconsultInfoError as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when current facility is loaded and teleconsultation is enabled, then fetch teleconsultation info`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(CurrentFacilityLoaded(facilityWithTeleconsultationEnabled))
+        .then(assertThatNext(
+            hasModel(
+                model
+                    .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
+                    .fetchingTeleconsultationInfo()
+            ),
+            hasEffects(FetchTeleconsultationInfo(facilityWithTeleconsultationEnabled.uuid) as PatientSummaryEffect)
         ))
   }
 

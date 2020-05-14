@@ -445,6 +445,10 @@ class PatientSummaryScreen(
       teleconsultationErrorSnackbar.show()
     }
   }
+
+  override fun showContactDoctorButton() {
+    contactDoctorFrame.visibility = View.VISIBLE
+  }
 }
 
 @Parcelize

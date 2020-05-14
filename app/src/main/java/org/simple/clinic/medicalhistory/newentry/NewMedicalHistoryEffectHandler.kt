@@ -3,6 +3,7 @@ package org.simple.clinic.medicalhistory.newentry
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
@@ -19,11 +20,11 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: NewMedicalHistoryUiActions,
     private val schedulersProvider: SchedulersProvider,
-    private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
-    private val dataSync: DataSync
+    private val dataSync: DataSync,
+    private val currentUser: Lazy<User>
 ) {
 
   @AssistedInject.Factory
@@ -47,8 +48,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
       effects
           .observeOn(scheduler)
           .flatMap { registerPatientEffect ->
-            val loggedInUser = userSession.loggedInUserImmediate()
-            requireNotNull(loggedInUser)
+            val loggedInUser = currentUser.get()
 
             facilityRepository
                 .currentFacility(loggedInUser)
@@ -83,8 +83,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
       effects
           .observeOn(scheduler)
           .flatMap {
-            val loggedInUser = userSession.loggedInUserImmediate()
-            requireNotNull(loggedInUser)
+            val loggedInUser = currentUser.get()
 
             facilityRepository
                 .currentFacility(loggedInUser)

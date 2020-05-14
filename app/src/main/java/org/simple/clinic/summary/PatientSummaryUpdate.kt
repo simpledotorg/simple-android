@@ -21,7 +21,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryProfileLoaded -> next(model.patientSummaryProfileLoaded(event.patientSummaryProfile))
       is PatientSummaryBackClicked -> dispatch(LoadDataForBackClick(model.patientUuid, event.screenCreatedTimestamp))
       is PatientSummaryDoneClicked -> dispatch(LoadDataForDoneClick(model.patientUuid))
-      is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
+      is CurrentFacilityLoaded -> currentFacilityLoaded(model, event)
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!, model.currentFacility!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
@@ -60,6 +60,19 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
         model.fetchingTeleconsultationInfo(),
         FetchTeleconsultationInfo(model.currentFacility!!.uuid)
     )
+  }
+
+  private fun currentFacilityLoaded(model: PatientSummaryModel, event: CurrentFacilityLoaded): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val updatedModel = model.currentFacilityLoaded(event.facility)
+
+    return if (event.facility.config.teleconsultationEnabled == true) {
+      next(
+          updatedModel.fetchingTeleconsultationInfo(),
+          FetchTeleconsultationInfo(event.facility.uuid)
+      )
+    } else {
+      next(updatedModel)
+    }
   }
 
   private fun fetchedTeleconsultationInfo(

@@ -31,6 +31,10 @@ class PatientSummaryViewRenderer(
         ui.showContactDoctorButtonTextAndIcon()
         ui.disableContactDoctorButton()
       }
+      is TeleconsultInfo.Fetching -> {
+        ui.showContactButtonProgress()
+        ui.enableContactDoctorButton()
+      }
     }
   }
 

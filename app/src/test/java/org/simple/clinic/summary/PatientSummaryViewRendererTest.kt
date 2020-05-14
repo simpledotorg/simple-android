@@ -136,4 +136,21 @@ class PatientSummaryViewRendererTest {
     verify(ui).disableContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when teleconsult info is being fetched, then show contact button progress`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchingTeleconsultationInfo()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDiabetesView()
+    verify(ui).showContactButtonProgress()
+    verify(ui).enableContactDoctorButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

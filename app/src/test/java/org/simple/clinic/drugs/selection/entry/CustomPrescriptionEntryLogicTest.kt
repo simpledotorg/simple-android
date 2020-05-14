@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -14,15 +15,12 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntryUiRenderer.Companion.DOSAGE_PLACEHOLDER
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -39,22 +37,13 @@ class CustomPrescriptionEntryLogicTest {
   private val uiActions = mock<CustomPrescriptionEntryUiActions>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
 
-  private val user = TestData.loggedInUser()
-  private val facility = TestData.facility()
+  private val facility = TestData.facility(uuid = UUID.fromString("951269a6-a960-468c-96ef-a95a6706c91e"))
   private val patientUuid = UUID.fromString("a90376d0-e29a-428f-80dc-bd4bdd74d9bf")
   private val prescriptionUuid = UUID.fromString("eef2b1c9-52cd-43d9-b109-b120b0e4c16c")
   private val updatePrescription = TestData.prescription(uuid = prescriptionUuid)
 
   private lateinit var fixture: MobiusTestFixture<CustomPrescriptionEntryModel, CustomPrescriptionEntryEvent, CustomPrescriptionEntryEffect>
-
-  @Before
-  fun setUp() {
-    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
-    whenever(facilityRepository.currentFacilityImmediate(user)).thenReturn(facility)
-  }
 
   @After
   fun tearDown() {
@@ -265,9 +254,8 @@ class CustomPrescriptionEntryLogicTest {
     val effectHandler = CustomPrescriptionEntryEffectHandler(
         uiActions,
         TrampolineSchedulersProvider(),
-        userSession,
-        facilityRepository,
-        prescriptionRepository
+        prescriptionRepository,
+        Lazy { facility }
     )
 
     fixture = MobiusTestFixture(

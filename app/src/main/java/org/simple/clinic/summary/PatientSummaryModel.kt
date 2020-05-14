@@ -63,4 +63,8 @@ data class PatientSummaryModel(
   fun fetchingTeleconsultationInfo(): PatientSummaryModel {
     return copy(teleconsultInfo = TeleconsultInfo.Fetching)
   }
+
+  fun failedToFetchTeleconsultationInfo(): PatientSummaryModel {
+    return copy(teleconsultInfo = TeleconsultInfo.NetworkError)
+  }
 }

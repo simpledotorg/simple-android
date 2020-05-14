@@ -59,3 +59,5 @@ data class LoadPatientTeleconsultationInfo(val patientUuid: UUID, val bpPassport
 data class ContactDoctor(val patientTeleconsultationInfo: PatientTeleconsultationInfo, val teleconsultationPhoneNumber: String) : PatientSummaryEffect()
 
 data class FetchTeleconsultationInfo(val facilityUuid: UUID) : PatientSummaryEffect()
+
+object ShowTeleconsultInfoError : PatientSummaryEffect()

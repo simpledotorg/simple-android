@@ -8,11 +8,14 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.screen_patient_summary.view.*
 import org.simple.clinic.R
@@ -88,6 +91,7 @@ class PatientSummaryScreen(
   @Inject
   lateinit var whatsAppMessageSender: WhatsAppMessageSender
 
+  private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
   private val events: Observable<PatientSummaryEvent> by unsafeLazy {
     Observable
         .mergeArray(
@@ -99,7 +103,8 @@ class PatientSummaryScreen(
             identifierLinkCancelledEvents(),
             editButtonClicks(),
             phoneNumberClicks(),
-            contactDoctorClicks()
+            contactDoctorClicks(),
+            snackbarActionClicks
         )
         .compose(ReportAnalyticsEvents())
         .cast<PatientSummaryEvent>()
@@ -120,6 +125,14 @@ class PatientSummaryScreen(
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = viewRenderer::render
     )
+  }
+  private val teleconsultationErrorSnackbar by unsafeLazy {
+    Snackbar.make(rootLayout, R.string.patientsummary_teleconsult_network_error, Snackbar.LENGTH_INDEFINITE)
+        .setAction(R.string.patientsummary_teleconsult_network_error_retry) {
+          snackbarActionClicks.onNext(RetryFetchTeleconsultInfo)
+        }
+        .setActionTextColor(ContextCompat.getColor(context, R.color.green2))
+        .setAnchorView(R.id.doneButtonFrame)
   }
 
   override fun onSaveInstanceState(): Parcelable {
@@ -151,6 +164,9 @@ class PatientSummaryScreen(
   }
 
   override fun onDetachedFromWindow() {
+    if (teleconsultationErrorSnackbar.isShownOrQueued) {
+      teleconsultationErrorSnackbar.dismiss()
+    }
     mobiusDelegate.stop()
     super.onDetachedFromWindow()
   }
@@ -422,6 +438,12 @@ class PatientSummaryScreen(
 
   override fun disableContactDoctorButton() {
     contactDoctorButton.isEnabled = false
+  }
+
+  override fun showTeleconsultInfoError() {
+    if (teleconsultationErrorSnackbar.isShown.not()) {
+      teleconsultationErrorSnackbar.show()
+    }
   }
 }
 

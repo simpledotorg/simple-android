@@ -28,6 +28,11 @@ class PatientSummaryViewRendererTest {
       facilityConfig = FacilityConfig(diabetesManagementEnabled = true, teleconsultationEnabled = true)
   )
 
+  private val facilityWithTeleconsultationDisabled = TestData.facility(
+      uuid = UUID.fromString("138ad942-0b8d-4aff-868d-96e98b15dcc3"),
+      facilityConfig = FacilityConfig(diabetesManagementEnabled = true, teleconsultationEnabled = false)
+  )
+
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470"))
   private val ui = mock<PatientSummaryScreenUi>()
 
@@ -43,6 +48,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
+    verify(ui).hideContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -56,6 +62,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).hideDiabetesView()
+    verify(ui).hideContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -175,6 +182,21 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).showContactDoctorButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `hide contact doctor button if teleconsultation is disabled`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithTeleconsultationDisabled)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDiabetesView()
+    verify(ui).hideContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
 }

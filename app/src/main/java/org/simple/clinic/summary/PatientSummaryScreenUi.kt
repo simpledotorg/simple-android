@@ -10,4 +10,5 @@ interface PatientSummaryScreenUi {
   fun enableContactDoctorButton()
   fun disableContactDoctorButton()
   fun showContactDoctorButton()
+  fun hideContactDoctorButton()
 }

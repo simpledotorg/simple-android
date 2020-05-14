@@ -24,6 +24,8 @@ class PatientSummaryViewRenderer(
   private fun setupUiForTeleconsult(model: PatientSummaryModel) {
     if (model.isTeleconsultationEnabled) {
       ui.showContactDoctorButton()
+    } else {
+      ui.hideContactDoctorButton()
     }
 
     when (model.teleconsultInfo) {

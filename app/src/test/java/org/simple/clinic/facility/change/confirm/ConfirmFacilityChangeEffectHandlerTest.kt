@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Test
@@ -28,15 +29,23 @@ class ConfirmFacilityChangeEffectHandlerTest {
   private val reportsSync = mock<ReportsSync>()
   private val uiActions = mock<ConfirmFacilityChangeUiActions>()
   private val isFacilitySwitchedPreference = mock<Preference<Boolean>>()
+  private val loggedInUser = TestData.loggedInUser(UUID.fromString("7d8dce15-701b-4cf9-8dee-e003c51ccde9"))
 
-  private val effectHandler = ConfirmFacilityChangeEffectHandler(facilityRepository, userSession, reportsRepository, reportsSync, TrampolineSchedulersProvider(), uiActions, isFacilitySwitchedPreference)
+  private val effectHandler = ConfirmFacilityChangeEffectHandler(
+      facilityRepository,
+      reportsRepository,
+      reportsSync,
+      TrampolineSchedulersProvider(),
+      Lazy { loggedInUser },
+      uiActions,
+      isFacilitySwitchedPreference
+  )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 
   @Test
   fun `when facility change effect is received, then change user's current facility`() {
     //given
     val facility = TestData.facility(UUID.fromString("98a260cb-45b1-46f7-a7ca-d217a27c43c0"))
-    val loggedInUser = TestData.loggedInUser(UUID.fromString("7d8dce15-701b-4cf9-8dee-e003c51ccde9"))
 
     whenever(userSession.loggedInUserImmediate()) doReturn loggedInUser
     whenever(facilityRepository.setCurrentFacility(loggedInUser, facility)) doReturn Completable.complete()

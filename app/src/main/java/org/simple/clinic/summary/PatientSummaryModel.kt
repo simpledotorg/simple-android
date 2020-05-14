@@ -40,6 +40,9 @@ data class PatientSummaryModel(
   val isDiabetesManagementEnabled: Boolean
     get() = currentFacility!!.config.diabetesManagementEnabled
 
+  val isTeleconsultationEnabled: Boolean
+    get() = currentFacility!!.config.teleconsultationEnabled == true
+
   fun patientSummaryProfileLoaded(patientSummaryProfile: PatientSummaryProfile): PatientSummaryModel {
     return copy(patientSummaryProfile = patientSummaryProfile)
   }

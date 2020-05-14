@@ -78,6 +78,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientTeleconsultationInfo::class.java, fetchPatientTeleconsulationInfo())
         .addConsumer(ContactDoctor::class.java, { uiActions.contactDoctor(it.patientTeleconsultationInfo, it.teleconsultationPhoneNumber) }, schedulersProvider.ui())
         .addTransformer(FetchTeleconsultationInfo::class.java, fetchFacilityTeleconsultationInfo())
+        .addAction(ShowTeleconsultInfoError::class.java, { uiActions.showTeleconsultInfoError() }, schedulersProvider.ui())
         .build()
   }
 

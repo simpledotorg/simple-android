@@ -442,4 +442,15 @@ class PatientSummaryEffectHandlerTest {
     verifyZeroInteractions(uiActions)
     testCase.assertOutgoingEvents(FetchedTeleconsultationInfo(TeleconsultInfo.NetworkError))
   }
+
+  @Test
+  fun `when show teleconsult info error is received, then show teleconsult info error snackbar`() {
+    // when
+    testCase.dispatch(ShowTeleconsultInfoError)
+
+    // then
+    verify(uiActions).showTeleconsultInfoError()
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
 }

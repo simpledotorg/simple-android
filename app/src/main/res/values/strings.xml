@@ -209,6 +209,8 @@
     <item quantity="one">*Last %s BP reading*:</item>
     <item quantity="other">*Last %s BP readings*:</item>
   </plurals>
+  <string name="patientsummary_teleconsult_network_error">Cannot connect due to poor internet</string>
+  <string name="patientsummary_teleconsult_network_error_retry">Retry</string>
 
   <string name="bloodpressuresummaryview_see_all_button">See all</string>
 

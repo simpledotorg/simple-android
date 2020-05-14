@@ -3,22 +3,20 @@ package org.simple.clinic.drugs.selection.dosage
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.UUID
 
 class DosagePickerEffectHandler @AssistedInject constructor(
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val protocolRepository: ProtocolRepository,
     private val prescriptionRepository: PrescriptionRepository,
     private val schedulers: SchedulersProvider,
+    private val currentFacility: Lazy<Facility>,
     @Assisted private val uiActions: DosagePickerUiActions
 ) {
 
@@ -105,6 +103,6 @@ class DosagePickerEffectHandler @AssistedInject constructor(
   }
 
   private fun currentFacility(): Facility {
-    return facilityRepository.currentFacilityImmediate(userSession.loggedInUserImmediate()!!)!!
+    return currentFacility.get()
   }
 }

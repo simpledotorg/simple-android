@@ -4,8 +4,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
@@ -21,6 +21,11 @@ class PatientSummaryViewRendererTest {
   private val facilityWithDiabetesManagementDisabled = TestData.facility(
       uuid = UUID.fromString("9eb182ee-1ec8-4d19-89b8-abe66ed993d9"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+  )
+
+  private val facilityWithTeleconsultationEnabled = TestData.facility(
+      uuid = UUID.fromString("138ad942-0b8d-4aff-868d-96e98b15dcc3"),
+      facilityConfig = FacilityConfig(diabetesManagementEnabled = true, teleconsultationEnabled = true)
   )
 
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470"))
@@ -90,7 +95,7 @@ class PatientSummaryViewRendererTest {
     val phoneNumber = "+918923749323"
     val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumber)
     val model = defaultModel
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .fetchedTeleconsultationInfo(teleconsultInfo)
 
     // when
@@ -98,6 +103,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
+    verify(ui).showContactDoctorButton()
     verify(ui).showContactDoctorButtonTextAndIcon()
     verify(ui).enableContactDoctorButton()
     verifyNoMoreInteractions(ui)
@@ -107,7 +113,7 @@ class PatientSummaryViewRendererTest {
   fun `when teleconsultation phone number is missing, then disable contact doctor button`() {
     // given
     val model = defaultModel
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .fetchedTeleconsultationInfo(TeleconsultInfo.MissingPhoneNumber)
 
     // when
@@ -115,6 +121,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
+    verify(ui).showContactDoctorButton()
     verify(ui).showContactDoctorButtonTextAndIcon()
     verify(ui).disableContactDoctorButton()
     verifyNoMoreInteractions(ui)
@@ -124,7 +131,7 @@ class PatientSummaryViewRendererTest {
   fun `when there is a network error when fetching tele consult info, then disable contact doctor button`() {
     // given
     val model = defaultModel
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .fetchedTeleconsultationInfo(TeleconsultInfo.NetworkError)
 
     // when
@@ -132,6 +139,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
+    verify(ui).showContactDoctorButton()
     verify(ui).showContactDoctorButtonTextAndIcon()
     verify(ui).disableContactDoctorButton()
     verifyNoMoreInteractions(ui)
@@ -141,7 +149,7 @@ class PatientSummaryViewRendererTest {
   fun `when teleconsult info is being fetched, then show contact button progress`() {
     // given
     val model = defaultModel
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .fetchingTeleconsultationInfo()
 
     // when
@@ -149,8 +157,24 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
+    verify(ui).showContactDoctorButton()
     verify(ui).showContactButtonProgress()
     verify(ui).enableContactDoctorButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `show contact doctor button if teleconsultation is enabled`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDiabetesView()
+    verify(ui).showContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
 }

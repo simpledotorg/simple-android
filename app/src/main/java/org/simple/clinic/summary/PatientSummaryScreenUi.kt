@@ -9,4 +9,5 @@ interface PatientSummaryScreenUi {
   fun showContactButtonProgress()
   fun enableContactDoctorButton()
   fun disableContactDoctorButton()
+  fun showContactDoctorButton()
 }

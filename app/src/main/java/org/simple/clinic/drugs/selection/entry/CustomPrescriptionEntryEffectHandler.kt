@@ -3,20 +3,19 @@ package org.simple.clinic.drugs.selection.entry
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: CustomPrescriptionEntryUiActions,
     private val schedulersProvider: SchedulersProvider,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
-    private val prescriptionRepository: PrescriptionRepository
+    private val prescriptionRepository: PrescriptionRepository,
+    private val currentFacility: Lazy<Facility>
 ) {
 
   @AssistedInject.Factory
@@ -58,8 +57,7 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .flatMap { savePrescription ->
-            val user = userSession.loggedInUserImmediate()!!
-            val currentFacility = facilityRepository.currentFacilityImmediate(user)!!
+            val currentFacility = currentFacility.get()
 
             prescriptionRepository
                 .savePrescription(

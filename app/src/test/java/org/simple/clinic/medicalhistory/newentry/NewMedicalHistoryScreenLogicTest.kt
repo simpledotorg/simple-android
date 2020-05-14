@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -16,12 +17,13 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
@@ -30,9 +32,7 @@ import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -50,7 +50,6 @@ class NewMedicalHistoryScreenLogicTest {
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository: PatientRepository = mock()
-  private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val user = TestData.loggedInUser(uuid = UUID.fromString("4eb3d692-7362-4b10-848a-a7d679aee23a"))
@@ -63,17 +62,16 @@ class NewMedicalHistoryScreenLogicTest {
   fun setUp() {
     whenever(medicalHistoryRepository.save(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
-    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     val effectHandler = NewMedicalHistoryEffectHandler(
         uiActions = uiActions,
         schedulersProvider = TrampolineSchedulersProvider(),
-        userSession = userSession,
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
         medicalHistoryRepository = medicalHistoryRepository,
-        dataSync = mock()
+        dataSync = mock(),
+        currentUser = Lazy { user }
     ).build()
 
     testFixture = MobiusTestFixture(

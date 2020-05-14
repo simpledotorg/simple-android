@@ -449,6 +449,10 @@ class PatientSummaryScreen(
   override fun showContactDoctorButton() {
     contactDoctorFrame.visibility = View.VISIBLE
   }
+
+  override fun hideContactDoctorButton() {
+    contactDoctorFrame.visibility = View.GONE
+  }
 }
 
 @Parcelize

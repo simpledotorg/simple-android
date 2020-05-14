@@ -688,6 +688,22 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when fetching teleconsultation info fails with network error, then show teleconsultation info error`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+    val teleconsultInfo = TeleconsultInfo.NetworkError
+
+    updateSpec
+        .given(model)
+        .whenEvent(FetchedTeleconsultationInfo(teleconsultInfo))
+        .then(assertThatNext(
+            hasModel(model.failedToFetchTeleconsultationInfo()),
+            hasEffects(ShowTeleconsultInfoError as PatientSummaryEffect)
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

@@ -50,7 +50,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is ContactPatientClicked -> dispatch(OpenContactPatientScreen(model.patientUuid))
       is PatientTeleconsultationInfoLoaded -> patientInformationLoaded(event, model)
       ContactDoctorClicked -> contactDoctorClicked(model)
-      is FetchedTeleconsultationInfo -> next(model.fetchedTeleconsultationInfo(event.teleconsultInfo))
+      is FetchedTeleconsultationInfo -> fetchedTeleconsultationInfo(model, event)
       RetryFetchTeleconsultInfo -> retryFetchTeleconsultInfo(model)
     }
   }
@@ -60,6 +60,17 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
         model.fetchingTeleconsultationInfo(),
         FetchTeleconsultationInfo(model.currentFacility!!.uuid)
     )
+  }
+
+  private fun fetchedTeleconsultationInfo(
+      model: PatientSummaryModel,
+      event: FetchedTeleconsultationInfo
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    if (event.teleconsultInfo is TeleconsultInfo.NetworkError) {
+      return next(model.failedToFetchTeleconsultationInfo(), ShowTeleconsultInfoError)
+    }
+
+    return next(model.fetchedTeleconsultationInfo(event.teleconsultInfo))
   }
 
   private fun patientInformationLoaded(

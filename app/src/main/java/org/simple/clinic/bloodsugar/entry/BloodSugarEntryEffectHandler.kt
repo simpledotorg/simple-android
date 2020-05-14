@@ -3,6 +3,7 @@ package org.simple.clinic.bloodsugar.entry
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -19,10 +20,8 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.exhaustive
-import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.toUtcInstant
@@ -36,13 +35,13 @@ import java.util.UUID
 
 class BloodSugarEntryEffectHandler @AssistedInject constructor(
     @Assisted private val ui: BloodSugarEntryUi,
-    private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val bloodSugarRepository: BloodSugarRepository,
     private val patientRepository: PatientRepository,
     private val appointmentsRepository: AppointmentRepository,
     private val userClock: UserClock,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val currentUser: Lazy<User>
 ) {
   @AssistedInject.Factory
   interface Factory {
@@ -146,14 +145,10 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   }
 
   private fun userAndCurrentFacility(): Single<Pair<User, Facility>> {
-    return userSession
-        .loggedInUser()
-        .filterAndUnwrapJust()
-        .flatMap { user ->
-          facilityRepository
-              .currentFacility(user)
-              .map { facility -> user to facility }
-        }
+    val user = currentUser.get()
+    return facilityRepository
+        .currentFacility(user)
+        .map { facility -> user to facility }
         .firstOrError()
   }
 
@@ -197,7 +192,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   private fun updateBloodSugarMeasurement(updateBloodSugarEntry: UpdateBloodSugarEntry): BloodSugarMeasurement {
     val (_, userEnteredDate, _, bloodSugarReading) = updateBloodSugarEntry
     val bloodSugarMeasurement = getExistingBloodSugarMeasurement(updateBloodSugarEntry.bloodSugarMeasurementUuid)!!
-    val user = userSession.loggedInUserImmediate()
+    val user = currentUser.get()
     val facility = facilityRepository.currentFacilityImmediate(user!!)
 
     return bloodSugarMeasurement.copy(

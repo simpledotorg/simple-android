@@ -5,7 +5,7 @@
 - [In progress: 15th May 2020] Add support for teleconsultation
 
 ### Internal
-- Lazy inject `facility` and `user` as dependencies in `EditMedicineEffectHandler`
+- Lazy inject `facility` and `user` in all `EffectHandler` classes
 - [In Progress: 18th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
 
 ### Fixes

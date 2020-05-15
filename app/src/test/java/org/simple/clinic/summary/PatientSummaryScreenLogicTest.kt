@@ -45,7 +45,7 @@ import org.threeten.bp.Duration
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class PatientSummaryScreenControllerTest {
+class PatientSummaryScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

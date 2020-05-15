@@ -3,18 +3,17 @@ package org.simple.clinic.summary.bloodpressures
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class BloodPressureSummaryViewEffectHandler @AssistedInject constructor(
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val bloodPressureRepository: BloodPressureRepository,
     private val schedulersProvider: SchedulersProvider,
+    private val facility: Lazy<Facility>,
     @Assisted private val uiActions: BloodPressureSummaryViewUiActions
 ) {
 
@@ -67,14 +66,7 @@ class BloodPressureSummaryViewEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .flatMap {
-            val user = userSession.loggedInUserImmediate()
-            requireNotNull(user)
-
-            facilityRepository
-                .currentFacility(user)
-                .take(1)
-          }
+          .map { facility.get() }
           .map(::CurrentFacilityLoaded)
     }
   }

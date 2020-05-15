@@ -4,14 +4,20 @@ import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 
 class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
 
   override fun init(model: PatientSummaryModel): First<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf<PatientSummaryEffect>(LoadPatientSummaryProfile(model.patientUuid))
-
     if (!model.hasLoadedCurrentFacility) {
       effects.add(LoadCurrentFacility)
+    } else {
+      when (model.teleconsultInfo) {
+        is TeleconsultInfo.Fetching -> {
+          effects.add(FetchTeleconsultationInfo(model.currentFacility!!.uuid))
+        }
+      }
     }
 
     if (!model.hasCheckedForInvalidPhone) {

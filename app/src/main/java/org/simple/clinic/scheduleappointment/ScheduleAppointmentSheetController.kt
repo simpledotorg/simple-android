@@ -21,7 +21,6 @@ import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
 import org.simple.clinic.util.unwrapJust
@@ -40,7 +39,6 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val config: AppointmentConfig,
     private val clock: UserClock,
-    private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val protocolRepository: ProtocolRepository,
     private val currentFacility: Lazy<Facility>

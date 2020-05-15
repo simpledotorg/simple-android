@@ -11,3 +11,5 @@ object NavigateToSetupActivity : DeepLinkEffect()
 object NavigateToMainActivity : DeepLinkEffect()
 
 data class FetchPatient(val patientUuid: UUID) : DeepLinkEffect()
+
+data class NavigateToPatientSummary(val patientUuid: UUID) : DeepLinkEffect()

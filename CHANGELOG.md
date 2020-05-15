@@ -2,7 +2,7 @@
 
 ## Next release
 ### Feature
-- [In progress: 13th May 2020] Add support for teleconsultation
+- [In progress: 15th May 2020] Add support for teleconsultation
 
 ### Internal
 - Lazy inject `facility` and `user` as dependencies in `EditMedicineEffectHandler`

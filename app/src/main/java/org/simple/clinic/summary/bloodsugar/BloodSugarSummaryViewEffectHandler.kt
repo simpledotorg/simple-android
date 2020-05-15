@@ -3,12 +3,12 @@ package org.simple.clinic.summary.bloodsugar
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.bloodsugar.BloodSugarRepository
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
@@ -16,8 +16,7 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: UiActions,
     private val config: BloodSugarSummaryConfig,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val currentFacility: Lazy<Facility>
 ) {
 
   @AssistedInject.Factory
@@ -40,10 +39,7 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map {
-            val user = userSession.loggedInUserImmediate()!!
-            facilityRepository.currentFacilityImmediate(user)
-          }
+          .map { currentFacility.get() }
           .observeOn(schedulersProvider.ui())
           .map { uiActions.showBloodSugarTypeSelector(it) }
           .flatMap { Observable.empty<BloodSugarSummaryViewEvent>() }

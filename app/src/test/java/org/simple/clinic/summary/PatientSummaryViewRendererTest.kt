@@ -9,6 +9,7 @@ import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
+import org.simple.clinic.user.User
 import java.util.UUID
 
 class PatientSummaryViewRendererTest {
@@ -110,9 +111,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showDiabetesView()
-    verify(ui).showContactDoctorButton()
-    verify(ui).showContactDoctorButtonTextAndIcon()
-    verify(ui).enableContactDoctorButton()
+    verify(ui).hideContactDoctorButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -120,6 +119,7 @@ class PatientSummaryViewRendererTest {
   fun `when teleconsultation phone number is missing, then disable contact doctor button`() {
     // given
     val model = defaultModel
+        .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .fetchedTeleconsultationInfo(TeleconsultInfo.MissingPhoneNumber)
 
@@ -138,6 +138,7 @@ class PatientSummaryViewRendererTest {
   fun `when there is a network error when fetching tele consult info, then disable contact doctor button`() {
     // given
     val model = defaultModel
+        .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .fetchedTeleconsultationInfo(TeleconsultInfo.NetworkError)
 
@@ -156,6 +157,7 @@ class PatientSummaryViewRendererTest {
   fun `when teleconsult info is being fetched, then show contact button progress`() {
     // given
     val model = defaultModel
+        .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .fetchingTeleconsultationInfo()
 
@@ -171,9 +173,10 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `show contact doctor button if teleconsultation is enabled`() {
+  fun `show contact doctor button if teleconsultation is enabled and user is logged in`() {
     // given
     val model = defaultModel
+        .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
 
     // when
@@ -186,9 +189,10 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `hide contact doctor button if teleconsultation is disabled`() {
+  fun `hide contact doctor button if teleconsultation is disabled or user is not logged in`() {
     // given
     val model = defaultModel
+        .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
         .currentFacilityLoaded(facilityWithTeleconsultationDisabled)
 
     // when

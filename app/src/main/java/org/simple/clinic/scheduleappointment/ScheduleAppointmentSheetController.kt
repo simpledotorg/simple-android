@@ -99,6 +99,20 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         }
   }
 
+  private fun enableIncrements(ui: Ui) {
+    val latestAppointmentScheduledDate = latestAppointmentDateScheduledSubject.value!!
+    val areLaterPotentialAppointmentsAvailable = latestAppointmentScheduledDate < allPotentialAppointmentDates.last()
+
+    ui.enableIncrementButton(areLaterPotentialAppointmentsAvailable)
+  }
+
+  private fun enableDecrements(ui: Ui) {
+    val latestAppointmentScheduledDate = latestAppointmentDateScheduledSubject.value!!
+    val areEarlierPotentialAppointmentsAvailable = latestAppointmentScheduledDate > allPotentialAppointmentDates.first()
+
+    ui.enableDecrementButton(areEarlierPotentialAppointmentsAvailable)
+  }
+
   private fun scheduleOnExactDate(
       events: Observable<UiEvent>
   ): Observable<PotentialAppointmentDate> {
@@ -146,20 +160,6 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
       timeToAppointment
     }
         .map(::generatePotentialAppointmentDate)
-  }
-
-  private fun enableIncrements(ui: Ui) {
-    val latestAppointmentScheduledDate = latestAppointmentDateScheduledSubject.value!!
-    val areLaterPotentialAppointmentsAvailable = latestAppointmentScheduledDate < allPotentialAppointmentDates.last()
-
-    ui.enableIncrementButton(areLaterPotentialAppointmentsAvailable)
-  }
-
-  private fun enableDecrements(ui: Ui) {
-    val latestAppointmentScheduledDate = latestAppointmentDateScheduledSubject.value!!
-    val areEarlierPotentialAppointmentsAvailable = latestAppointmentScheduledDate > allPotentialAppointmentDates.first()
-
-    ui.enableDecrementButton(areEarlierPotentialAppointmentsAvailable)
   }
 
   private fun showManualAppointmentDateSelector(events: Observable<UiEvent>): Observable<UiChange> {

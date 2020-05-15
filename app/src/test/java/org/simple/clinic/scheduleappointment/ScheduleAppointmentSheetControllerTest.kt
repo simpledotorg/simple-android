@@ -32,8 +32,6 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -54,12 +52,10 @@ class ScheduleAppointmentSheetControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val protocolRepository = mock<ProtocolRepository>()
-  private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val today = LocalDate.parse("2019-01-01")
   private val clock = TestUserClock(today)
-  private val user = TestData.loggedInUser()
   private val patientUuid = UUID.fromString("d44bf81f-4369-4bbc-a51b-52d88c54f065")
   private val protocolUuid = UUID.fromString("8782e890-2fb0-4204-8647-6d20006cec02")
   private val facility = TestData.facility(protocolUuid = protocolUuid)
@@ -579,7 +575,6 @@ class ScheduleAppointmentSheetControllerTest {
 
   private fun sheetCreated(
       patientUuid: UUID = this.patientUuid,
-      user: User = this.user,
       facility: Facility = this.facility,
       protocolUuid: UUID = this.protocolUuid,
       protocol: Observable<Protocol> = Observable.just(this.protocol),
@@ -591,14 +586,10 @@ class ScheduleAppointmentSheetControllerTest {
         patientRepository = patientRepository,
         config = config,
         clock = clock,
-        userSession = userSession,
         facilityRepository = facilityRepository,
         protocolRepository = protocolRepository,
         currentFacility = Lazy { facility }
     )
-
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     whenever(protocolRepository.protocol(protocolUuid)).thenReturn(protocol)
 

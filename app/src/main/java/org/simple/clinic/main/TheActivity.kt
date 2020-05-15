@@ -18,6 +18,8 @@ import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Destroyed
 import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.deeplink.DeepLinkResult
+import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
@@ -31,19 +33,33 @@ import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.util.LocaleOverrideContextWrapper
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
+import org.threeten.bp.Instant
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 class TheActivity : AppCompatActivity() {
 
   companion object {
+    private const val EXTRA_DEEP_LINK_RESULT = "deep_link_result"
+
     fun newIntent(context: Context): Intent {
       return Intent(context, TheActivity::class.java)
+    }
+
+    fun intentForOpenPatientSummary(context: Context, patientUuid: UUID): Intent {
+      return Intent(context, TheActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        putExtra(EXTRA_DEEP_LINK_RESULT, OpenPatientSummary(patientUuid))
+      }
     }
 
     lateinit var component: TheActivityComponent
@@ -66,6 +82,9 @@ class TheActivity : AppCompatActivity() {
 
   @Inject
   lateinit var unauthorizeUser: UnauthorizeUser
+
+  @Inject
+  lateinit var utcClock: UtcClock
 
   private val disposables = CompositeDisposable()
 
@@ -96,6 +115,12 @@ class TheActivity : AppCompatActivity() {
         .observeOn(mainThread())
         .takeUntil(lifecycle.ofType<Destroyed>())
         .subscribe { uiChange -> uiChange(this) }
+
+    if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {
+      when (val deepLinkResult = intent.getParcelableExtra<DeepLinkResult>(EXTRA_DEEP_LINK_RESULT)) {
+        is OpenPatientSummary -> showPatientSummaryForDeepLink(deepLinkResult)
+      }
+    }
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -185,5 +210,14 @@ class TheActivity : AppCompatActivity() {
 
   fun showAccessDeniedScreen(fullName: String) {
     screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(fullName), RouterDirection.REPLACE)
+  }
+
+  private fun showPatientSummaryForDeepLink(deepLinkResult: OpenPatientSummary) {
+    screenRouter
+        .push(PatientSummaryScreenKey(
+            patientUuid = deepLinkResult.patientUuid,
+            intention = OpenIntention.ViewExistingPatient,
+            screenCreatedTimestamp = Instant.now(utcClock)
+        ))
   }
 }

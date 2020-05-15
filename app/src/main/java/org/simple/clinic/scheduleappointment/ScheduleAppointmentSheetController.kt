@@ -233,33 +233,28 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .ofType<PatientFacilityChanged>()
         .map { it.facilityUuid }
 
-    val currentFacilityUuid = currentFacilityStream().map { it.uuid }
+    val currentFacilityUuid = Observable.fromCallable { currentFacility.get().uuid }
     val patientFacilityUuidStream = currentFacilityUuid.mergeWith(facilityChanged)
-
-    val appointmentStream = Observables.combineLatest(
-        latestAppointmentDateScheduledSubject,
-        patientFacilityUuidStream,
-        currentFacilityUuid) { date, facilityUuid, currentFacility ->
-      OngoingAppointment(
-          patientUuid = patientUuid,
-          appointmentDate = date.scheduledFor,
-          appointmentFacilityUuid = facilityUuid,
-          creationFacilityUuid = currentFacility
-      )
-    }
 
     return events
         .ofType<AppointmentDone>()
-        .withLatestFrom(appointmentStream)
-        .flatMapSingle { (_, appointment) ->
+        .withLatestFrom(patientFacilityUuidStream, latestAppointmentDateScheduledSubject) { _, patientFacilityUuid, appointmentDate ->
+          OngoingAppointment(
+              patientUuid = patientUuid,
+              appointmentDate = appointmentDate.scheduledFor,
+              appointmentFacilityUuid = patientFacilityUuid,
+              creationFacilityUuid = currentFacility.get().uuid
+          )
+        }
+        .flatMapSingle { appointmentEntry ->
           appointmentRepository
               .schedule(
-                  patientUuid = appointment.patientUuid,
+                  patientUuid = appointmentEntry.patientUuid,
                   appointmentUuid = UUID.randomUUID(),
-                  appointmentDate = appointment.appointmentDate,
+                  appointmentDate = appointmentEntry.appointmentDate,
                   appointmentType = Manual,
-                  appointmentFacilityUuid = appointment.appointmentFacilityUuid,
-                  creationFacilityUuid = appointment.creationFacilityUuid
+                  appointmentFacilityUuid = appointmentEntry.appointmentFacilityUuid,
+                  creationFacilityUuid = appointmentEntry.creationFacilityUuid
               )
         }
         .map { Ui::closeSheet }

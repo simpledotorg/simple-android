@@ -22,7 +22,18 @@ class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
         }
         dispatch(effect)
       }
-      is PatientFetched -> noChange()
+      is PatientFetched -> patientFetched(event)
+    }
+  }
+
+  private fun patientFetched(
+      event: PatientFetched
+  ): Next<DeepLinkModel, DeepLinkEffect> {
+    val patient = event.patient
+    return if (patient != null) {
+      dispatch(NavigateToPatientSummary(patient.uuid) as DeepLinkEffect)
+    } else {
+      noChange()
     }
   }
 }

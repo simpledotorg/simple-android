@@ -74,4 +74,19 @@ class DeepLinkUpdateTest {
             hasEffects(FetchPatient(patientUuid) as DeepLinkEffect)
         ))
   }
+
+  @Test
+  fun `if patient exists, then navigate to patient summary`() {
+    val patient = TestData.patient(
+        uuid = patientUuid
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientFetched(patient))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(NavigateToPatientSummary(patientUuid) as DeepLinkEffect)
+        ))
+  }
 }

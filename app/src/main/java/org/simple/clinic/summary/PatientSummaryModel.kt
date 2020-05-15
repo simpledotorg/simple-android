@@ -49,6 +49,9 @@ data class PatientSummaryModel(
   val isUserLoggedIn: Boolean
     get() = userLoggedInStatus == User.LoggedInStatus.LOGGED_IN
 
+  val hasUserLoggedInStatus: Boolean
+    get() = userLoggedInStatus != null
+
   fun patientSummaryProfileLoaded(patientSummaryProfile: PatientSummaryProfile): PatientSummaryModel {
     return copy(patientSummaryProfile = patientSummaryProfile)
   }

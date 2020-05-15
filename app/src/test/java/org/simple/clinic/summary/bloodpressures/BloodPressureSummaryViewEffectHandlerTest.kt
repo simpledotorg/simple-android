@@ -6,14 +6,13 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.TestData
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
@@ -21,17 +20,16 @@ class BloodPressureSummaryViewEffectHandlerTest {
 
   private val uiActions = mock<BloodPressureSummaryViewUiActions>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
-  private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
+  private val patientUuid = UUID.fromString("6b00207f-a613-4adc-9a72-dff68481a3ff")
+  private val currentFacility = TestData.facility(uuid = UUID.fromString("2257f737-0e8a-452d-a270-66bdc2422664"))
+
   private val effectHandler = BloodPressureSummaryViewEffectHandler(
-      userSession = userSession,
-      facilityRepository = facilityRepository,
       bloodPressureRepository = bloodPressureRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
+      facility = Lazy { currentFacility },
       uiActions = uiActions
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
-  private val patientUuid = UUID.fromString("6b00207f-a613-4adc-9a72-dff68481a3ff")
 
   @After
   fun tearDown() {
@@ -73,13 +71,6 @@ class BloodPressureSummaryViewEffectHandlerTest {
 
   @Test
   fun `when load current facility effect is received, then load current facility`() {
-    // given
-    val user = TestData.loggedInUser(uuid = UUID.fromString("ca84abfe-1236-4b98-8efa-747123e7c608"))
-    val currentFacility = TestData.facility(uuid = UUID.fromString("2257f737-0e8a-452d-a270-66bdc2422664"))
-
-    whenever(userSession.loggedInUserImmediate()) doReturn user
-    whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(currentFacility)
-
     // when
     testCase.dispatch(LoadCurrentFacility)
 
@@ -92,8 +83,6 @@ class BloodPressureSummaryViewEffectHandlerTest {
   @Test
   fun `when open blood pressure entry sheet effect is received, then open blood pressure entry sheet`() {
     // when
-    val currentFacility = TestData.facility(uuid = UUID.fromString("2257f737-0e8a-452d-a270-66bdc2422664"))
-
     testCase.dispatch(OpenBloodPressureEntrySheet(patientUuid, currentFacility))
 
     // then

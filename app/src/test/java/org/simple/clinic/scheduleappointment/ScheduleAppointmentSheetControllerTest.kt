@@ -282,25 +282,29 @@ class ScheduleAppointmentSheetControllerTest {
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
+    verify(ui).showPatientFacility(facility.name)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
+    verifyNoMoreInteractions(ui)
 
     val threeDaysFromNow = LocalDate.now(clock).plusDays(3)
     val year = threeDaysFromNow.year
     val month = threeDaysFromNow.monthValue
     val dayOfMonth = threeDaysFromNow.dayOfMonth
 
+    reset(ui)
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.of(year, month, dayOfMonth)))
-
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-04"), Days(3))
+    verify(ui).enableIncrementButton(true)
+    verify(ui).enableDecrementButton(true)
+    verifyNoMoreInteractions(ui)
 
+    reset(ui)
     uiEvents.onNext(AppointmentDateIncremented)
-
-    verify(ui).showPatientFacility(facility.name)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-05"), Days(4))
     verify(ui).enableIncrementButton(false)
-
+    verify(ui).enableDecrementButton(true)
     verifyNoMoreInteractions(ui)
   }
 

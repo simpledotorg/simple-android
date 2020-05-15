@@ -153,6 +153,11 @@ class PatientRepository @Inject constructor(
         }
   }
 
+  fun patientImmediate(uuid: UUID): Patient? {
+    return database.patientDao()
+        .patientImmediate(uuid)
+  }
+
   fun updatePatientStatusToDead(patientUuid: UUID) {
     database
         .patientDao()

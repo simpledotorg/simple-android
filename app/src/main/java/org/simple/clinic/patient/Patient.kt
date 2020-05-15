@@ -91,6 +91,9 @@ data class Patient(
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
     abstract fun patient(uuid: UUID): Flowable<List<Patient>>
 
+    @Query("SELECT * FROM patient WHERE uuid = :uuid LIMIT 1")
+    abstract fun patientImmediate(uuid: UUID): Patient?
+
     fun save(patient: Patient) {
       save(listOf(patient))
     }
@@ -193,7 +196,7 @@ data class Patient(
     fun patientProfile(patientUuid: UUID): Observable<Optional<PatientProfile>> {
       return loadPatientQueryModelsForPatientUuid(patientUuid)
           .map { queryModelsToPatientProfiles(it) }
-          .map { if(it.isEmpty()) None else Just(it.first()) }
+          .map { if (it.isEmpty()) None else Just(it.first()) }
           .toObservable()
     }
 

@@ -7,24 +7,22 @@ import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: NewMedicalHistoryUiActions,
     private val schedulersProvider: SchedulersProvider,
-    private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val dataSync: DataSync,
-    private val currentUser: Lazy<User>
+    private val currentUser: Lazy<User>,
+    private val currentFacility: Lazy<Facility>
 ) {
 
   @AssistedInject.Factory
@@ -47,17 +45,12 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .flatMap { registerPatientEffect ->
+          .map { registerPatientEffect ->
             val loggedInUser = currentUser.get()
+            val facility = currentFacility.get()
+            val ongoingMedicalHistoryEntry = registerPatientEffect.ongoingMedicalHistoryEntry
 
-            facilityRepository
-                .currentFacility(loggedInUser)
-                .take(1)
-                .map { facility ->
-                  val ongoingMedicalHistoryEntry = registerPatientEffect.ongoingMedicalHistoryEntry
-
-                  RegisterPatientData(loggedInUser, facility, ongoingMedicalHistoryEntry)
-                }
+            RegisterPatientData(loggedInUser, facility, ongoingMedicalHistoryEntry)
           }
           .flatMapSingle { (user, facility, ongoingMedicalHistoryEntry) ->
             patientRepository.saveOngoingEntryAsPatient(user, facility)
@@ -82,13 +75,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .flatMap {
-            val loggedInUser = currentUser.get()
-
-            facilityRepository
-                .currentFacility(loggedInUser)
-                .take(1)
-          }
+          .map { currentFacility.get() }
           .map(::CurrentFacilityLoaded)
     }
   }

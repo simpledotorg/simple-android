@@ -52,7 +52,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       ContactDoctorClicked -> contactDoctorClicked(model)
       is FetchedTeleconsultationInfo -> fetchedTeleconsultationInfo(model, event)
       RetryFetchTeleconsultInfo -> retryFetchTeleconsultInfo(model)
-      is UserLoggedInStatusLoaded -> noChange()
+      is UserLoggedInStatusLoaded -> next(model.userLoggedInStatusLoaded(event.loggedInStatus))
     }
   }
 

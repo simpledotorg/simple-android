@@ -28,6 +28,7 @@ class DeepLinkEffectHandler @AssistedInject constructor(
       .addAction(NavigateToMainActivity::class.java, { uiActions.navigateToMainActivity() }, schedulerProvider.ui())
       .addTransformer(FetchPatient::class.java, fetchPatient())
       .addConsumer(NavigateToPatientSummary::class.java, { uiActions.navigateToPatientSummary(it.patientUuid) }, schedulerProvider.ui())
+      .addAction(ShowPatientDoesNotExist::class.java, { uiActions.showPatientDoesNotExist() }, schedulerProvider.ui())
       .build()
 
   private fun fetchUser(): ObservableTransformer<FetchUser, DeepLinkEvent> {

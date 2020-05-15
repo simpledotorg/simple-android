@@ -23,9 +23,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.plus
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -145,10 +143,8 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   }
 
   private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<PotentialAppointmentDate> {
-    val protocolStream = currentFacilityStream()
-        .map { it.protocolUuid.toOptional() }
-        .filterAndUnwrapJust()
-        .switchMap(protocolRepository::protocol)
+    val protocolUuid = currentFacility.get().protocolUuid!!
+    val protocolStream = protocolRepository.protocol(protocolUuid)
 
     val configTimeToAppointment = Observable.fromCallable { config.defaultTimeToAppointment }
     val protocolTimeToAppointment = protocolStream.map { Days(it.followUpDays) }
@@ -196,15 +192,16 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .replay()
         .refCount()
 
-    val appointmentStream = Observables
-        .combineLatest(schedulingSkippedStream, currentFacilityStream()) { _, currentFacility ->
-          OngoingAppointment(
-              patientUuid = patientUuid,
-              appointmentDate = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
-              appointmentFacilityUuid = currentFacility.uuid,
-              creationFacilityUuid = currentFacility.uuid
-          )
-        }
+    val appointmentStream = schedulingSkippedStream.map {
+      val currentFacilityUuid = currentFacility.get().uuid
+
+      OngoingAppointment(
+          patientUuid = patientUuid,
+          appointmentDate = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
+          appointmentFacilityUuid = currentFacilityUuid,
+          creationFacilityUuid = currentFacilityUuid
+      )
+    }
 
     val saveAppointmentAndCloseSheet = isPatientDefaulterStream
         .filter { isPatientDefaulter -> isPatientDefaulter }
@@ -261,9 +258,14 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   }
 
   private fun showPatientDefaultFacility(events: Observable<UiEvent>): Observable<UiChange> {
-    val creates = events
+    return events
         .ofType<ScreenCreated>()
-    return Observables.combineLatest(creates, currentFacilityStream()) { _, facility -> { ui: Ui -> ui.showPatientFacility(facility.name) } }
+        .map { currentFacility.get() }
+        .map { facility ->
+          { ui: Ui ->
+            ui.showPatientFacility(facility.name)
+          }
+        }
   }
 
   private fun showPatientSelectedFacility(events: Observable<UiEvent>): Observable<UiChange> {
@@ -272,12 +274,6 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .map { facilityRepository.facility(it.facilityUuid) }
         .unwrapJust()
         .map { { ui: Ui -> ui.showPatientFacility(it.name) } }
-  }
-
-  private fun currentFacilityStream(): Observable<Facility> {
-    return userSession
-        .requireLoggedInUser()
-        .switchMap(facilityRepository::currentFacility)
   }
 
   private fun generatePotentialAppointmentDate(

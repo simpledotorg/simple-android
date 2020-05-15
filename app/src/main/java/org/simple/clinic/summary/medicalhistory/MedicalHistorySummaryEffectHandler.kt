@@ -3,11 +3,11 @@ package org.simple.clinic.summary.medicalhistory
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
@@ -15,9 +15,8 @@ import org.threeten.bp.Instant
 class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val medicalHistoryRepository: MedicalHistoryRepository,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val clock: UtcClock,
+    private val currentFacility: Lazy<Facility>,
     @Assisted private val uiActions: MedicalHistorySummaryUiActions
 ) {
 
@@ -48,7 +47,7 @@ class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { facilityRepository.currentFacilityImmediate(userSession.loggedInUserImmediate()!!) }
+          .map { currentFacility.get() }
           .map(::CurrentFacilityLoaded)
     }
   }

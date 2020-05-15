@@ -11,13 +11,12 @@ import java.util.UUID
 
 class DeepLinkUpdateTest {
 
+  private val defaultModel = DeepLinkModel.default(null)
   private val updateSpec = UpdateSpec(DeepLinkUpdate())
   private val patientUuid = UUID.fromString("f88cc05b-620a-490a-92f3-1c0c43fb76ab")
 
   @Test
   fun `if there is no user logged in, then open setup activity`() {
-    val defaultModel = DeepLinkModel.default()
-
     updateSpec
         .given(defaultModel)
         .whenEvent(UserFetched(null))
@@ -29,10 +28,26 @@ class DeepLinkUpdateTest {
 
   @Test
   fun `if there is a logged in user and patient uuid is null, then navigate to main activity`() {
-    val model = DeepLinkModel.default()
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("dc0a9d11-aee4-4792-820f-c5cb66ae5e47"),
         loggedInStatus = User.LoggedInStatus.LOGGED_IN
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(UserFetched(user))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(NavigateToMainActivity as DeepLinkEffect)
+        ))
+  }
+
+  @Test
+  fun `if user didn't complete the login, then navigate to main activity`() {
+    val model = DeepLinkModel.default(patientUuid = patientUuid)
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("dc0a9d11-aee4-4792-820f-c5cb66ae5e47"),
+        loggedInStatus = User.LoggedInStatus.OTP_REQUESTED
     )
 
     updateSpec

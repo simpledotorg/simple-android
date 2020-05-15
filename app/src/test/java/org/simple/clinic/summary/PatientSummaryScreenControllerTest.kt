@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -20,7 +21,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason
@@ -34,7 +34,6 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -57,10 +56,9 @@ class PatientSummaryScreenControllerTest {
   private val bpRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
-  private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
   private val teleconsultationApi = mock<TeleconsultationApi>()
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
+  private val facility = TestData.facility(uuid = UUID.fromString("b84a6311-6faf-4de3-9336-ccd64de629f9"))
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
@@ -84,8 +82,6 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn None
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
-    whenever(userSession.loggedInUserImmediate()).doReturn(user)
-    whenever(facilityRepository.currentFacility(user)).doReturn(Observable.never())
   }
 
   @After
@@ -239,8 +235,6 @@ class PatientSummaryScreenControllerTest {
         bloodPressureRepository = bpRepository,
         appointmentRepository = appointmentRepository,
         missingPhoneReminderRepository = mock(),
-        userSession = userSession,
-        facilityRepository = facilityRepository,
         bloodSugarRepository = bloodSugarRepository,
         dataSync = mock(),
         medicalHistoryRepository = medicalHistoryRepository,
@@ -248,6 +242,8 @@ class PatientSummaryScreenControllerTest {
         country = TestData.country(),
         patientSummaryConfig = patientSummaryConfig,
         teleconsultationApi = teleconsultationApi,
+        currentUser = Lazy { user },
+        currentFacility = Lazy { facility },
         uiActions = uiActions
     )
 

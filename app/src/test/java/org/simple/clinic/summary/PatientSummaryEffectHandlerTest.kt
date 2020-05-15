@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -42,8 +43,6 @@ import java.util.UUID
 class PatientSummaryEffectHandlerTest {
 
   private val uiActions = mock<PatientSummaryUiActions>()
-  private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
@@ -59,6 +58,8 @@ class PatientSummaryEffectHandlerTest {
   )
 
   private val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("39f96341-c043-4059-880e-e32754341a04"))
+  private val facility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
 
   private val effectHandler = PatientSummaryEffectHandler(
       schedulersProvider = TrampolineSchedulersProvider(),
@@ -66,8 +67,6 @@ class PatientSummaryEffectHandlerTest {
       bloodPressureRepository = bloodPressureRepository,
       appointmentRepository = mock(),
       missingPhoneReminderRepository = missingPhoneReminderRepository,
-      userSession = userSession,
-      facilityRepository = facilityRepository,
       bloodSugarRepository = bloodSugarRepository,
       dataSync = dataSync,
       medicalHistoryRepository = medicalHistoryRepository,
@@ -75,6 +74,8 @@ class PatientSummaryEffectHandlerTest {
       country = TestData.country(),
       patientSummaryConfig = patientSummaryConfig,
       teleconsultationApi = teleconsultationApi,
+      currentUser = Lazy { user },
+      currentFacility = Lazy { facility },
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -86,13 +87,6 @@ class PatientSummaryEffectHandlerTest {
 
   @Test
   fun `when the load current facility effect is received, the current facility must be fetched`() {
-    // given
-    val user = TestData.loggedInUser(uuid = UUID.fromString("39f96341-c043-4059-880e-e32754341a04"))
-    val facility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
-
-    whenever(userSession.loggedInUserImmediate()) doReturn user
-    whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
-
     // when
     testCase.dispatch(LoadCurrentFacility)
 
@@ -111,8 +105,6 @@ class PatientSummaryEffectHandlerTest {
         bloodPressureRepository = bloodPressureRepository,
         appointmentRepository = mock(),
         missingPhoneReminderRepository = missingPhoneReminderRepository,
-        userSession = userSession,
-        facilityRepository = facilityRepository,
         bloodSugarRepository = bloodSugarRepository,
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
@@ -120,6 +112,8 @@ class PatientSummaryEffectHandlerTest {
         country = bangladesh,
         patientSummaryConfig = patientSummaryConfig,
         teleconsultationApi = teleconsultationApi,
+        currentUser = Lazy { user },
+        currentFacility = Lazy { facility },
         uiActions = uiActions
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -297,27 +291,22 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when load patient teleconsultation information effect is received, then fetch patient information`() {
     // given
-    val facilityUuid = UUID.fromString("360b1318-9ea5-4dbb-8023-24067722b613")
-
     val bpPassport = TestData.businessId(
         uuid = UUID.fromString("7ebf2c49-8018-41b9-af7c-43afe02483d4"),
         patientUuid = patientUuid,
         identifier = Identifier("1234567", BpPassport),
         metaDataVersion = BusinessId.MetaDataVersion.BpPassportMetaDataV1
     )
-    val facility = TestData.facility(
-        uuid = facilityUuid
-    )
 
     val bloodPressure1 = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("ad827cfa-1436-4b98-88be-28831543b9f9"),
         patientUuid = patientUuid,
-        facilityUuid = facilityUuid
+        facilityUuid = facility.uuid
     )
     val bloodPressure2 = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("95aaf3f5-cafe-4b1f-a91a-14cbae2de12a"),
         patientUuid = patientUuid,
-        facilityUuid = facilityUuid
+        facilityUuid = facility.uuid
     )
     val bloodPressures = listOf(bloodPressure1, bloodPressure2)
 
@@ -400,13 +389,12 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when fetch teleconsultation phone number effect is received, then fetch the phone number`() {
     // given
-    val facilityUuid = UUID.fromString("bb9ab21d-d0eb-402e-af29-7c83430fa4d0")
     val phoneNumber = "+911111111111"
 
-    whenever(teleconsultationApi.get(facilityUuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(phoneNumber))
+    whenever(teleconsultationApi.get(facility.uuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(phoneNumber))
 
     // when
-    testCase.dispatch(FetchTeleconsultationInfo(facilityUuid))
+    testCase.dispatch(FetchTeleconsultationInfo(facility.uuid))
 
     // then
     verifyZeroInteractions(uiActions)
@@ -416,12 +404,10 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when fetched teleconsultation info contains no phone number, then set teleconsult info to missing number`() {
     // given
-    val facilityUuid = UUID.fromString("bb9ab21d-d0eb-402e-af29-7c83430fa4d0")
-
-    whenever(teleconsultationApi.get(facilityUuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(null))
+    whenever(teleconsultationApi.get(facility.uuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(null))
 
     // when
-    testCase.dispatch(FetchTeleconsultationInfo(facilityUuid))
+    testCase.dispatch(FetchTeleconsultationInfo(facility.uuid))
 
     // then
     verifyZeroInteractions(uiActions)
@@ -431,12 +417,10 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when fetching teleconsultation info fails with a network error, then set teleconsult info to network error`() {
     // given
-    val facilityUuid = UUID.fromString("bb9ab21d-d0eb-402e-af29-7c83430fa4d0")
-
-    whenever(teleconsultationApi.get(facilityUuid)) doReturn Single.error(UnknownHostException("Failed to connect to server"))
+    whenever(teleconsultationApi.get(facility.uuid)) doReturn Single.error(UnknownHostException("Failed to connect to server"))
 
     // when
-    testCase.dispatch(FetchTeleconsultationInfo(facilityUuid))
+    testCase.dispatch(FetchTeleconsultationInfo(facility.uuid))
 
     // then
     verifyZeroInteractions(uiActions)
@@ -456,13 +440,6 @@ class PatientSummaryEffectHandlerTest {
 
   @Test
   fun `when fetch user effect is received, then fetch the user`() {
-    // given
-    val user = TestData.loggedInUser(
-        uuid = UUID.fromString("48dfb7a3-aa5c-46e4-a391-8bcf95af7db3")
-    )
-
-    whenever(userSession.loggedInUserImmediate()) doReturn user
-
     // when
     testCase.dispatch(LoadUserLoggedInStatus)
 

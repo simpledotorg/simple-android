@@ -88,4 +88,33 @@ class PatientSummaryInitTest {
             )
         )
   }
+
+  @Test
+  fun `when the screen is restored and current facility is already loaded, then show error snackbar if teleconsultation info is network error`() {
+    val addressUuid = UUID.fromString("27f25667-44de-4717-b235-f75f5456af1d")
+
+    val profile = PatientSummaryProfile(
+        patient = TestData.patient(uuid = patientUuid, addressUuid = addressUuid),
+        address = TestData.patientAddress(uuid = addressUuid),
+        phoneNumber = null,
+        bpPassport = null,
+        alternativeId = null
+    )
+    val facility = TestData.facility(uuid = UUID.fromString("fc5b49de-0e07-4d33-8b77-6611b47cb403"))
+
+    val model = defaultModel
+        .completedCheckForInvalidPhone()
+        .patientSummaryProfileLoaded(profile)
+        .currentFacilityLoaded(facility)
+        .failedToFetchTeleconsultationInfo()
+
+    initSpec
+        .whenInit(model)
+        .then(
+            assertThatFirst(
+                hasModel(model),
+                hasEffects(ShowTeleconsultInfoError as PatientSummaryEffect)
+            )
+        )
+  }
 }

@@ -2,6 +2,7 @@ package org.simple.clinic.scheduleappointment
 
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
@@ -43,7 +44,8 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
     private val clock: UserClock,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val protocolRepository: ProtocolRepository
+    private val protocolRepository: ProtocolRepository,
+    private val currentFacility: Lazy<Facility>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   @AssistedInject.Factory

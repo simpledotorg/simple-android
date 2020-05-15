@@ -16,7 +16,6 @@ import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooLow
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
@@ -35,13 +34,13 @@ import java.util.UUID
 
 class BloodSugarEntryEffectHandler @AssistedInject constructor(
     @Assisted private val ui: BloodSugarEntryUi,
-    private val facilityRepository: FacilityRepository,
     private val bloodSugarRepository: BloodSugarRepository,
     private val patientRepository: PatientRepository,
     private val appointmentsRepository: AppointmentRepository,
     private val userClock: UserClock,
     private val schedulersProvider: SchedulersProvider,
-    private val currentUser: Lazy<User>
+    private val currentUser: Lazy<User>,
+    private val currentFacility: Lazy<Facility>
 ) {
   @AssistedInject.Factory
   interface Factory {
@@ -135,8 +134,9 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { createNewBloodSugarEntries ->
       createNewBloodSugarEntries
           .flatMapSingle { createNewBloodSugarEntry ->
-            userAndCurrentFacility()
-                .flatMap { (user, facility) -> storeNewBloodSugarMeasurement(user, facility, createNewBloodSugarEntry) }
+            val user = currentUser.get()
+            val facility = currentFacility.get()
+            storeNewBloodSugarMeasurement(user, facility, createNewBloodSugarEntry)
                 .flatMap { updateAppointmentsAsVisited(createNewBloodSugarEntry, it) }
           }
           .compose(reportAnalyticsEvents)
@@ -144,12 +144,10 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun userAndCurrentFacility(): Single<Pair<User, Facility>> {
+  private fun userAndCurrentFacility(): Pair<User, Facility> {
     val user = currentUser.get()
-    return facilityRepository
-        .currentFacility(user)
-        .map { facility -> user to facility }
-        .firstOrError()
+    val facility = currentFacility.get()
+    return user to facility
   }
 
   private fun storeNewBloodSugarMeasurement(
@@ -193,7 +191,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     val (_, userEnteredDate, _, bloodSugarReading) = updateBloodSugarEntry
     val bloodSugarMeasurement = getExistingBloodSugarMeasurement(updateBloodSugarEntry.bloodSugarMeasurementUuid)!!
     val user = currentUser.get()
-    val facility = facilityRepository.currentFacilityImmediate(user!!)
+    val facility = currentFacility.get()
 
     return bloodSugarMeasurement.copy(
         userUuid = user.uuid,

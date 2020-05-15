@@ -14,8 +14,11 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
       effects.add(LoadCurrentFacility)
     } else {
       when (model.teleconsultInfo) {
-        is TeleconsultInfo.Fetching -> {
+        null, is TeleconsultInfo.Fetching -> {
           effects.add(FetchTeleconsultationInfo(model.currentFacility!!.uuid))
+        }
+        is TeleconsultInfo.NetworkError -> {
+          effects.add(ShowTeleconsultInfoError)
         }
       }
     }

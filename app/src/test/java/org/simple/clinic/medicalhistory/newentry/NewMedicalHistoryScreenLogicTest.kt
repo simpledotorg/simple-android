@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -18,7 +17,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -48,7 +46,6 @@ class NewMedicalHistoryScreenLogicTest {
   private val uiActions: NewMedicalHistoryUiActions = mock()
   private val viewRenderer = NewMedicalHistoryUiRenderer(screen)
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
-  private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository: PatientRepository = mock()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -62,16 +59,15 @@ class NewMedicalHistoryScreenLogicTest {
   fun setUp() {
     whenever(medicalHistoryRepository.save(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     val effectHandler = NewMedicalHistoryEffectHandler(
         uiActions = uiActions,
         schedulersProvider = TrampolineSchedulersProvider(),
-        facilityRepository = facilityRepository,
         patientRepository = patientRepository,
         medicalHistoryRepository = medicalHistoryRepository,
         dataSync = mock(),
-        currentUser = Lazy { user }
+        currentUser = Lazy { user },
+        currentFacility = Lazy { facility }
     ).build()
 
     testFixture = MobiusTestFixture(

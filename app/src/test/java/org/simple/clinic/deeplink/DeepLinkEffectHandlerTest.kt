@@ -112,4 +112,16 @@ class DeepLinkEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when show patient does not exist effect is received, then show patient does not exist`() {
+    // when
+    testCase.dispatch(ShowPatientDoesNotExist)
+
+    // then
+    verify(uiActions).showPatientDoesNotExist()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

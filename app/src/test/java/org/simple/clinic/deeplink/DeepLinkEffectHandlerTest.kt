@@ -57,4 +57,16 @@ class DeepLinkEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when navigate to main activity effect is received, then navigate to main activity`() {
+    // when
+    testCase.dispatch(NavigateToMainActivity)
+
+    // then
+    verify(uiActions).navigateToMainActivity()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

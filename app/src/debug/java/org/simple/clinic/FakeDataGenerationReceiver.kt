@@ -3,6 +3,7 @@ package org.simple.clinic
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import dagger.Lazy
 import io.bloco.faker.Faker
 import io.reactivex.Completable
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -21,7 +22,6 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
@@ -53,7 +53,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
   lateinit var bloodPressureRepository: BloodPressureRepository
 
   @Inject
-  lateinit var userSession: UserSession
+  lateinit var user: Lazy<User>
 
   @Inject
   lateinit var clock: UtcClock
@@ -76,11 +76,11 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
   private fun generateFakeData(recordsToGenerate: Int): Completable {
     return Completable.fromAction {
 
-      val user = userSession.loggedInUserImmediate()!!
-      val currentFacility = facilityRepository.currentFacilityImmediate(user)!!
-      val otherFacility = anyFacilityExceptCurrent(user, currentFacility)
+      val currentUser = user.get()
+      val currentFacility = facilityRepository.currentFacilityImmediate(currentUser)!!
+      val otherFacility = anyFacilityExceptCurrent(currentUser, currentFacility)
 
-      val records = generateRecords(recordsToGenerate, currentFacility, otherFacility, user)
+      val records = generateRecords(recordsToGenerate, currentFacility, otherFacility, currentUser)
 
       val patients = records.map { it.patientProfile }
       val bps = records.map { it.bloodPressureMeasurements }.flatten()

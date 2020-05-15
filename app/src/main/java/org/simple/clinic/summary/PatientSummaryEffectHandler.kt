@@ -79,7 +79,19 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(ContactDoctor::class.java, { uiActions.contactDoctor(it.patientTeleconsultationInfo, it.teleconsultationPhoneNumber) }, schedulersProvider.ui())
         .addTransformer(FetchTeleconsultationInfo::class.java, fetchFacilityTeleconsultationInfo())
         .addAction(ShowTeleconsultInfoError::class.java, { uiActions.showTeleconsultInfoError() }, schedulersProvider.ui())
+        .addTransformer(LoadUserLoggedInStatus::class.java, loadUserLoggedInStatus())
         .build()
+  }
+
+  private fun loadUserLoggedInStatus(): ObservableTransformer<LoadUserLoggedInStatus, PatientSummaryEvent> {
+    return ObservableTransformer { effectsStream ->
+      effectsStream
+          .observeOn(schedulersProvider.io())
+          .map {
+            val user = userSession.loggedInUserImmediate()
+            UserLoggedInStatusLoaded(user?.loggedInStatus)
+          }
+    }
   }
 
   private fun loadPatientSummaryProfile(scheduler: Scheduler): ObservableTransformer<LoadPatientSummaryProfile, PatientSummaryEvent> {

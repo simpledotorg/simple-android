@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -10,7 +11,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientProfile
@@ -21,7 +22,7 @@ import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -33,8 +34,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val appointmentRepository: AppointmentRepository,
     private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val bloodSugarRepository: BloodSugarRepository,
     private val dataSync: DataSync,
     private val medicalHistoryRepository: MedicalHistoryRepository,
@@ -42,6 +41,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val country: Country,
     private val patientSummaryConfig: PatientSummaryConfig,
     private val teleconsultationApi: TeleconsultationApi,
+    private val currentUser: Lazy<User>,
+    private val currentFacility: Lazy<Facility>,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -88,7 +89,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
       effectsStream
           .observeOn(schedulersProvider.io())
           .map {
-            val user = userSession.loggedInUserImmediate()
+            val user = currentUser.get()
             UserLoggedInStatusLoaded(user?.loggedInStatus)
           }
     }
@@ -200,14 +201,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .flatMap {
-            val user = userSession.loggedInUserImmediate()
-            requireNotNull(user)
-
-            facilityRepository
-                .currentFacility(user)
-                .take(1)
-          }
+          .map { currentFacility.get() }
           .map(::CurrentFacilityLoaded)
     }
   }

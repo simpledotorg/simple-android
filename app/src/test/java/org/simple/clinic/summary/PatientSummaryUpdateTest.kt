@@ -711,9 +711,10 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when current facility is loaded and teleconsultation is enabled, then fetch teleconsultation info`() {
+  fun `when current facility is loaded, user is logged in and teleconsultation is enabled, then fetch teleconsultation info`() {
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
+        .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
 
     updateSpec
         .given(model)

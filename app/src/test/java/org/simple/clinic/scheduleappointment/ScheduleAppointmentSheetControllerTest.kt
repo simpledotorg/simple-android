@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
@@ -592,7 +593,8 @@ class ScheduleAppointmentSheetControllerTest {
         clock = clock,
         userSession = userSession,
         facilityRepository = facilityRepository,
-        protocolRepository = protocolRepository
+        protocolRepository = protocolRepository,
+        currentFacility = Lazy { facility }
     )
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

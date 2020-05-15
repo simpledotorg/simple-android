@@ -6,13 +6,13 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
@@ -71,29 +71,8 @@ class MedicalHistorySummaryLogicTest {
   private val clock = TestUtcClock()
 
   private val events = PublishSubject.create<UiEvent>()
-  private val effectHandler = MedicalHistorySummaryEffectHandler(
-      schedulers = TrampolineSchedulersProvider(),
-      medicalHistoryRepository = medicalHistoryRepository,
-      userSession = userSession,
-      facilityRepository = facilityRepository,
-      clock = clock,
-      uiActions = ui
-  )
 
   private lateinit var testFixture: MobiusTestFixture<MedicalHistorySummaryModel, MedicalHistorySummaryEvent, MedicalHistorySummaryEffect>
-
-  @Before
-  fun setUp() {
-    val uiRenderer = MedicalHistorySummaryUiRenderer(ui)
-    testFixture = MobiusTestFixture(
-        events = events.ofType(),
-        defaultModel = MedicalHistorySummaryModel.create(patientUuid),
-        init = MedicalHistorySummaryInit(),
-        update = MedicalHistorySummaryUpdate(),
-        effectHandler = effectHandler.build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   @After
   fun tearDown() {
@@ -267,8 +246,23 @@ class MedicalHistorySummaryLogicTest {
   }
 
   private fun setupController(facility: Facility = facilityWithDiabetesManagementDisabled) {
-    whenever(userSession.loggedInUserImmediate()) doReturn user
-    whenever(facilityRepository.currentFacilityImmediate(user)) doReturn facility
+    val effectHandler = MedicalHistorySummaryEffectHandler(
+        schedulers = TrampolineSchedulersProvider(),
+        medicalHistoryRepository = medicalHistoryRepository,
+        clock = clock,
+        currentFacility = Lazy { facility },
+        uiActions = ui
+    )
+
+    val uiRenderer = MedicalHistorySummaryUiRenderer(ui)
+    testFixture = MobiusTestFixture(
+        events = events.ofType(),
+        defaultModel = MedicalHistorySummaryModel.create(patientUuid),
+        init = MedicalHistorySummaryInit(),
+        update = MedicalHistorySummaryUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
 
     testFixture.start()
   }

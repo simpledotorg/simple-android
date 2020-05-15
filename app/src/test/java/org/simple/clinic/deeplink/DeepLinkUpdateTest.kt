@@ -44,18 +44,34 @@ class DeepLinkUpdateTest {
 
   @Test
   fun `if user didn't complete the login, then navigate to main activity`() {
-    val model = DeepLinkModel.default(patientUuid = patientUuid)
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("dc0a9d11-aee4-4792-820f-c5cb66ae5e47"),
         loggedInStatus = User.LoggedInStatus.OTP_REQUESTED
     )
 
     updateSpec
-        .given(model)
+        .given(defaultModel)
         .whenEvent(UserFetched(user))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(NavigateToMainActivity as DeepLinkEffect)
+        ))
+  }
+
+  @Test
+  fun `if user is logged in and patient uuid is not null, then fetch patient`() {
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("fa0dfb7b-a0ea-425a-987d-2056f1a9e93b"),
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN
+    )
+    val model = DeepLinkModel.default(patientUuid)
+
+    updateSpec
+        .given(model)
+        .whenEvent(UserFetched(user))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(FetchPatient(patientUuid) as DeepLinkEffect)
         ))
   }
 }

@@ -61,3 +61,5 @@ data class ContactDoctor(val patientTeleconsultationInfo: PatientTeleconsultatio
 data class FetchTeleconsultationInfo(val facilityUuid: UUID) : PatientSummaryEffect()
 
 object ShowTeleconsultInfoError : PatientSummaryEffect()
+
+object LoadUserLoggedInStatus : PatientSummaryEffect()

@@ -453,4 +453,23 @@ class PatientSummaryEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when fetch user effect is received, then fetch the user`() {
+    // given
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("48dfb7a3-aa5c-46e4-a391-8bcf95af7db3")
+    )
+
+    whenever(userSession.loggedInUserImmediate()) doReturn user
+
+    // when
+    testCase.dispatch(LoadUserLoggedInStatus)
+
+    // then
+    verifyZeroInteractions(uiActions)
+
+    testCase.assertOutgoingEvents(UserLoggedInStatusLoaded(user.loggedInStatus))
+  }
+
 }

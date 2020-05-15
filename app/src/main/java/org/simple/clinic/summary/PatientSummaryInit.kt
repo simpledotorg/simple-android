@@ -10,6 +10,11 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
 
   override fun init(model: PatientSummaryModel): First<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf<PatientSummaryEffect>(LoadPatientSummaryProfile(model.patientUuid))
+
+    if (!model.hasUserLoggedInStatus) {
+      effects.add(LoadUserLoggedInStatus)
+    }
+
     if (!model.hasLoadedCurrentFacility) {
       effects.add(LoadCurrentFacility)
     } else {

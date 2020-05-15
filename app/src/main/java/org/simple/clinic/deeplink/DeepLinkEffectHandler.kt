@@ -5,12 +5,14 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class DeepLinkEffectHandler @AssistedInject constructor(
     private val userSession: Lazy<UserSession>,
     private val schedulerProvider: SchedulersProvider,
+    private val patientRepository: PatientRepository,
     @Assisted private val uiActions: DeepLinkUiActions
 ) {
 
@@ -24,6 +26,7 @@ class DeepLinkEffectHandler @AssistedInject constructor(
       .addTransformer(FetchUser::class.java, fetchUser())
       .addAction(NavigateToSetupActivity::class.java, { uiActions.navigateToSetupActivity() }, schedulerProvider.ui())
       .addAction(NavigateToMainActivity::class.java, { uiActions.navigateToMainActivity() }, schedulerProvider.ui())
+      .addTransformer(FetchPatient::class.java, fetchPatient())
       .build()
 
   private fun fetchUser(): ObservableTransformer<FetchUser, DeepLinkEvent> {
@@ -33,6 +36,17 @@ class DeepLinkEffectHandler @AssistedInject constructor(
           .map {
             val user = userSession.get().loggedInUserImmediate()
             UserFetched(user)
+          }
+    }
+  }
+
+  private fun fetchPatient(): ObservableTransformer<FetchPatient, DeepLinkEvent> {
+    return ObservableTransformer { effectsStream ->
+      effectsStream
+          .observeOn(schedulerProvider.io())
+          .map {
+            val patient = patientRepository.patientImmediate(it.patientUuid)
+            PatientFetched(patient)
           }
     }
   }

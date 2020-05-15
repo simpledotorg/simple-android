@@ -92,4 +92,24 @@ class DeepLinkEffectHandlerTest {
 
     testCase.assertOutgoingEvents(PatientFetched(patient))
   }
+
+  @Test
+  fun `when navigate to patient summary effect is received, then navigate to patient summary screen`() {
+    // given
+    val patientUuid = UUID.fromString("4db4acb9-5b0e-459f-b81d-650938029666")
+    val patient = TestData.patient(
+        uuid = patientUuid
+    )
+
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn patient
+
+    // when
+    testCase.dispatch(NavigateToPatientSummary(patientUuid))
+
+    // then
+    verify(uiActions).navigateToPatientSummary(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

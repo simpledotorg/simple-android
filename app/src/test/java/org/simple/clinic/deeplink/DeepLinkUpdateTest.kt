@@ -89,4 +89,15 @@ class DeepLinkUpdateTest {
             hasEffects(NavigateToPatientSummary(patientUuid) as DeepLinkEffect)
         ))
   }
+
+  @Test
+  fun `if patient does not exist, then show patient does not exist`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientFetched(null))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowPatientDoesNotExist as DeepLinkEffect)
+        ))
+  }
 }

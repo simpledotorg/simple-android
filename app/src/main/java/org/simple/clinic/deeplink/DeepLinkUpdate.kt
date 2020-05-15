@@ -1,7 +1,6 @@
 package org.simple.clinic.deeplink
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
@@ -30,10 +29,11 @@ class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
       event: PatientFetched
   ): Next<DeepLinkModel, DeepLinkEffect> {
     val patient = event.patient
-    return if (patient != null) {
-      dispatch(NavigateToPatientSummary(patient.uuid) as DeepLinkEffect)
+    val effect = if (patient != null) {
+      NavigateToPatientSummary(patient.uuid)
     } else {
-      noChange()
+      ShowPatientDoesNotExist
     }
+    return dispatch(effect)
   }
 }

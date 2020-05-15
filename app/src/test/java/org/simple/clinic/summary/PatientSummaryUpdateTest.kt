@@ -19,6 +19,7 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
+import org.simple.clinic.user.User
 import java.util.UUID
 
 class PatientSummaryUpdateTest {
@@ -726,6 +727,20 @@ class PatientSummaryUpdateTest {
             hasEffects(FetchTeleconsultationInfo(facilityWithTeleconsultationEnabled.uuid) as PatientSummaryEffect)
         ))
   }
+
+  @Test
+  fun `when user logged in status is loaded, then update the UI`() {
+    val loggedInStatus = User.LoggedInStatus.LOGGED_IN
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(UserLoggedInStatusLoaded(loggedInStatus))
+        .then(assertThatNext(
+            hasModel(defaultModel.userLoggedInStatusLoaded(loggedInStatus)),
+            hasNoEffects()
+        ))
+  }
+
 
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)

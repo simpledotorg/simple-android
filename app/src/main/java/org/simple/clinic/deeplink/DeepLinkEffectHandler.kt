@@ -23,6 +23,7 @@ class DeepLinkEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<DeepLinkEffect, DeepLinkEvent>()
       .addTransformer(FetchUser::class.java, fetchUser())
       .addAction(NavigateToSetupActivity::class.java, { uiActions.navigateToSetupActivity() }, schedulerProvider.ui())
+      .addAction(NavigateToMainActivity::class.java, { uiActions.navigateToMainActivity() }, schedulerProvider.ui())
       .build()
 
   private fun fetchUser(): ObservableTransformer<FetchUser, DeepLinkEvent> {

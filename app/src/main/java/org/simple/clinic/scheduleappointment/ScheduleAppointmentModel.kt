@@ -7,8 +7,9 @@ import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.util.UserClock
 
 @Parcelize
-class ScheduleAppointmentModel(
-    val potentialAppointmentDates: List<PotentialAppointmentDate>
+data class ScheduleAppointmentModel(
+    val potentialAppointmentDates: List<PotentialAppointmentDate>,
+    val selectedAppointmentDate: PotentialAppointmentDate?
 ) : Parcelable {
 
   companion object {
@@ -16,8 +17,11 @@ class ScheduleAppointmentModel(
         timeToAppointments: List<TimeToAppointment>,
         userClock: UserClock
     ): ScheduleAppointmentModel {
+      val potentialAppointmentDates = generatePotentialAppointmentDatesForScheduling(timeToAppointments, userClock)
+
       return ScheduleAppointmentModel(
-          potentialAppointmentDates = generatePotentialAppointmentDatesForScheduling(timeToAppointments, userClock)
+          potentialAppointmentDates = potentialAppointmentDates,
+          selectedAppointmentDate = null
       )
     }
 
@@ -29,5 +33,12 @@ class ScheduleAppointmentModel(
           .distinctBy(PotentialAppointmentDate::scheduledFor)
           .sorted()
     }
+  }
+
+  val hasLoadedAppointmentDate: Boolean
+    get() = selectedAppointmentDate != null
+
+  fun appointmentDateSelected(potentialAppointmentDate: PotentialAppointmentDate): ScheduleAppointmentModel {
+    return copy(selectedAppointmentDate = potentialAppointmentDate)
   }
 }

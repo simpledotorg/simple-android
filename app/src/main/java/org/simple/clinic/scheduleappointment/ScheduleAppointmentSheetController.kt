@@ -20,6 +20,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -39,7 +40,8 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
     private val clock: UserClock,
     private val facilityRepository: FacilityRepository,
     private val protocolRepository: ProtocolRepository,
-    private val currentFacility: Lazy<Facility>
+    private val currentFacility: Lazy<Facility>,
+    private val schedulers: SchedulersProvider
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   @AssistedInject.Factory
@@ -166,16 +168,18 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .replay()
         .refCount()
 
-    val appointmentStream = schedulingSkippedStream.map {
-      val currentFacilityUuid = currentFacility.get().uuid
+    val appointmentStream = schedulingSkippedStream
+        .map {
+          val currentFacilityUuid = currentFacility.get().uuid
 
-      OngoingAppointment(
-          patientUuid = patientUuid,
-          appointmentDate = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
-          appointmentFacilityUuid = currentFacilityUuid,
-          creationFacilityUuid = currentFacilityUuid
-      )
-    }
+          OngoingAppointment(
+              patientUuid = patientUuid,
+              appointmentDate = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
+              appointmentFacilityUuid = currentFacilityUuid,
+              creationFacilityUuid = currentFacilityUuid
+          )
+        }
+        .subscribeOn(schedulers.io())
 
     val saveAppointmentAndCloseSheet = isPatientDefaulterStream
         .filter { isPatientDefaulter -> isPatientDefaulter }
@@ -204,7 +208,9 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .ofType<PatientFacilityChanged>()
         .map { it.facilityUuid }
 
-    val currentFacilityUuid = Observable.fromCallable { currentFacility.get().uuid }
+    val currentFacilityUuid = Observable
+        .fromCallable { currentFacility.get().uuid }
+        .subscribeOn(schedulers.io())
     val patientFacilityUuidStream = currentFacilityUuid.mergeWith(facilityChanged)
 
     return events
@@ -234,6 +240,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   private fun showPatientDefaultFacility(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ScreenCreated>()
+        .observeOn(schedulers.io())
         .map { currentFacility.get() }
         .map { facility ->
           { ui: Ui ->

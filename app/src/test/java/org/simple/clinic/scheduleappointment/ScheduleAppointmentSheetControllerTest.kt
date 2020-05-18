@@ -34,6 +34,7 @@ import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -594,7 +595,8 @@ class ScheduleAppointmentSheetControllerTest {
         clock = clock,
         facilityRepository = facilityRepository,
         protocolRepository = protocolRepository,
-        currentFacility = Lazy { facility }
+        currentFacility = Lazy { facility },
+        schedulers = TrampolineSchedulersProvider()
     )
 
     if(protocol != null) {

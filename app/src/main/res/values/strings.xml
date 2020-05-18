@@ -606,4 +606,9 @@
   <string name="contactpatient_moved_to_private">Moved to private practitioner</string>
   <string name="contactpatient_patient_died">Died</string>
   <string name="contactpatient_other_reason">Other reason</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">Patient profile not found</string>
+  <string name="deeplink_patient_profile_not_found_desc">Kindly check your internet and sync patients</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">Okay</string>
 </resources>

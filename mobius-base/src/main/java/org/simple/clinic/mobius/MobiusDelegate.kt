@@ -104,6 +104,10 @@ class MobiusDelegate<M : Parcelable, E, F> private constructor(
         .init(init)
   }
 
+  @Deprecated(message = "Added to aid refactoring to Mobius. Do not use anywhere else.")
+  val currentModel: M
+    get() = controller.model
+
   @Deprecated(message = "left to not break existing code. Do not use anymore.")
   fun prepare() {
     // No-Op

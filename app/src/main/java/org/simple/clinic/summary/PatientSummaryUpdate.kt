@@ -66,7 +66,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   private fun currentFacilityLoaded(model: PatientSummaryModel, event: CurrentFacilityLoaded): Next<PatientSummaryModel, PatientSummaryEffect> {
     val updatedModel = model.currentFacilityLoaded(event.facility)
 
-    return if (event.facility.config.teleconsultationEnabled == true && model.isUserLoggedIn) {
+    return if (updatedModel.isTeleconsultationEnabled && model.isUserLoggedIn) {
       next(
           updatedModel.fetchingTeleconsultationInfo(),
           FetchTeleconsultationInfo(event.facility.uuid)

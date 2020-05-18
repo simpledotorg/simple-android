@@ -43,7 +43,7 @@ class DeepLinkUpdateTest {
   }
 
   @Test
-  fun `if user didn't complete the login, then navigate to main activity`() {
+  fun `if user didn't complete the login, then navigate to setup activity`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("dc0a9d11-aee4-4792-820f-c5cb66ae5e47"),
         loggedInStatus = User.LoggedInStatus.OTP_REQUESTED
@@ -54,7 +54,7 @@ class DeepLinkUpdateTest {
         .whenEvent(UserFetched(user))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(NavigateToMainActivity as DeepLinkEffect)
+            hasEffects(NavigateToSetupActivity as DeepLinkEffect)
         ))
   }
 

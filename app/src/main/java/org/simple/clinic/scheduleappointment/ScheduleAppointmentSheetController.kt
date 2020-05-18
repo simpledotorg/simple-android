@@ -71,35 +71,16 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
 
 
     return Observable.mergeArray(
-        scheduleAppointments(replayedEvents),
         showManualAppointmentDateSelector(replayedEvents),
         scheduleAutomaticAppointmentForDefaulters(replayedEvents),
         scheduleManualAppointment(replayedEvents),
         showPatientDefaultFacility(replayedEvents),
-        showPatientSelectedFacility(replayedEvents)
+        showPatientSelectedFacility(replayedEvents),
+        scheduleDefaultAppointmentDateForSheetCreates(replayedEvents),
+        scheduleOnNextConfiguredAppointmentDate(events),
+        scheduleOnPreviousConfiguredAppointmentDate(events),
+        scheduleOnExactDate(events)
     )
-  }
-
-  private fun scheduleAppointments(
-      events: Observable<UiEvent>
-  ): Observable<UiChange> {
-
-    return Observable
-        .merge(
-            scheduleDefaultAppointmentDateForSheetCreates(events),
-            scheduleOnNextConfiguredAppointmentDate(events),
-            scheduleOnPreviousConfiguredAppointmentDate(events),
-            scheduleOnExactDate(events)
-        )
-        .distinctUntilChanged()
-        .doOnNext { latestAppointmentScheduled = it }
-        .map { appointmentDate ->
-          { ui: Ui ->
-            ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
-            enableIncrements(ui)
-            enableDecrements(ui)
-          }
-        }
   }
 
   private fun enableIncrements(ui: Ui) {
@@ -116,30 +97,54 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
 
   private fun scheduleOnExactDate(
       events: Observable<UiEvent>
-  ): Observable<PotentialAppointmentDate> {
+  ): Observable<UiChange> {
     return events
         .ofType<AppointmentCalendarDateSelected>()
         .map { it.selectedDate }
         .map(::generatePotentialAppointmentDate)
+        .doOnNext { latestAppointmentScheduled = it }
+        .map { appointmentDate ->
+          { ui: Ui ->
+            ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
+            enableIncrements(ui)
+            enableDecrements(ui)
+          }
+        }
   }
 
   private fun scheduleOnPreviousConfiguredAppointmentDate(
       events: Observable<UiEvent>
-  ): Observable<PotentialAppointmentDate> {
+  ): Observable<UiChange> {
     return events
         .ofType<AppointmentDateDecremented>()
         .map { previousConfiguredAppointmentDate(latestAppointmentScheduled) }
+        .doOnNext { latestAppointmentScheduled = it }
+        .map { appointmentDate ->
+          { ui: Ui ->
+            ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
+            enableIncrements(ui)
+            enableDecrements(ui)
+          }
+        }
   }
 
   private fun scheduleOnNextConfiguredAppointmentDate(
       events: Observable<UiEvent>
-  ): Observable<PotentialAppointmentDate> {
+  ): Observable<UiChange> {
     return events
         .ofType<AppointmentDateIncremented>()
         .map { nextConfiguredAppointmentDate(latestAppointmentScheduled) }
+        .doOnNext { latestAppointmentScheduled = it }
+        .map { appointmentDate ->
+          { ui: Ui ->
+            ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
+            enableIncrements(ui)
+            enableDecrements(ui)
+          }
+        }
   }
 
-  private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<PotentialAppointmentDate> {
+  private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<UiChange> {
     val protocolUuid = currentFacility.get().protocolUuid!!
     val protocolStream = protocolRepository.protocol(protocolUuid)
 
@@ -148,13 +153,20 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
 
     val timeToAppointments = Observable.concatArrayEager(configTimeToAppointment, protocolTimeToAppointment)
 
-    return Observables.combineLatest(
-        events.ofType<ScreenCreated>(),
-        timeToAppointments
-    ) { _, timeToAppointment ->
-      timeToAppointment
-    }
+    return Observables
+        .combineLatest(
+            events.ofType<ScreenCreated>(),
+            timeToAppointments
+        ) { _, timeToAppointment -> timeToAppointment }
         .map(::generatePotentialAppointmentDate)
+        .doOnNext { latestAppointmentScheduled = it }
+        .map { appointmentDate ->
+          { ui: Ui ->
+            ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
+            enableIncrements(ui)
+            enableDecrements(ui)
+          }
+        }
   }
 
   private fun showManualAppointmentDateSelector(events: Observable<UiEvent>): Observable<UiChange> {

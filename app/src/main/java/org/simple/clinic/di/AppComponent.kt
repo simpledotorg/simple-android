@@ -6,6 +6,7 @@ import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetComponent
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.contactpatient.di.ContactPatientBottomSheetComponent
+import org.simple.clinic.deeplink.di.DeepLinkComponent
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeComponent
@@ -42,6 +43,7 @@ interface AppComponent {
   fun facilityChangeComponentBuilder(): FacilityChangeComponent.Builder
   fun alertFacilityChangeComponent(): AlertFacilityChangeComponent.Builder
   fun patientContactBottomSheetComponent(): ContactPatientBottomSheetComponent.Builder
+  fun deepLinkComponent(): DeepLinkComponent.Builder
 }
 
 @Scope

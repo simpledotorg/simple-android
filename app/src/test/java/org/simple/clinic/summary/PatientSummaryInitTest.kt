@@ -94,7 +94,7 @@ class PatientSummaryInitTest {
   }
 
   @Test
-  fun `when the screen is restored and current facility is already loaded, then show error snackbar if teleconsultation info is network error`() {
+  fun `when the screen is restored and fetching the teleconsulation info had failed, the fetch failure error must be shown`() {
     val addressUuid = UUID.fromString("27f25667-44de-4717-b235-f75f5456af1d")
 
     val profile = PatientSummaryProfile(

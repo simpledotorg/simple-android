@@ -9,7 +9,7 @@ import org.simple.clinic.util.UserClock
 @Parcelize
 class ScheduleAppointmentModel(
     val potentialAppointmentDates: List<PotentialAppointmentDate>,
-    val selectedAppointmentDate: PotentialAppointmentDate
+    val selectedAppointmentDate: CurrentAppointmentDateHolder
 ) : Parcelable {
 
   companion object {
@@ -21,7 +21,7 @@ class ScheduleAppointmentModel(
 
       return ScheduleAppointmentModel(
           potentialAppointmentDates = potentialAppointmentDates,
-          selectedAppointmentDate = potentialAppointmentDates.first()
+          selectedAppointmentDate = CurrentAppointmentDateHolder(potentialAppointmentDates.first())
       )
     }
 

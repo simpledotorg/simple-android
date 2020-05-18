@@ -52,18 +52,11 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
     ): ScheduleAppointmentSheetController
   }
 
-  private var latestAppointmentScheduled: PotentialAppointmentDate
-
   private val allPotentialAppointmentDates: List<PotentialAppointmentDate>
-    get() = modelSupplier().potentialAppointmentDates
+    get() = model.potentialAppointmentDates
 
-  init {
-    // This is needed since the observable streams will try to load this
-    // information when they are setup. Once the stream to set the
-    // default appointment from the protocol runs, this will get updated
-    // with the actual date.
-    latestAppointmentScheduled = allPotentialAppointmentDates.first()
-  }
+  private val model: ScheduleAppointmentModel
+    get() = modelSupplier()
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
@@ -84,13 +77,13 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   }
 
   private fun enableIncrements(ui: Ui) {
-    val areLaterPotentialAppointmentsAvailable = latestAppointmentScheduled < allPotentialAppointmentDates.last()
+    val areLaterPotentialAppointmentsAvailable = model.selectedAppointmentDate.date < allPotentialAppointmentDates.last()
 
     ui.enableIncrementButton(areLaterPotentialAppointmentsAvailable)
   }
 
   private fun enableDecrements(ui: Ui) {
-    val areEarlierPotentialAppointmentsAvailable = latestAppointmentScheduled > allPotentialAppointmentDates.first()
+    val areEarlierPotentialAppointmentsAvailable = model.selectedAppointmentDate.date > allPotentialAppointmentDates.first()
 
     ui.enableDecrementButton(areEarlierPotentialAppointmentsAvailable)
   }
@@ -102,7 +95,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .ofType<AppointmentCalendarDateSelected>()
         .map { it.selectedDate }
         .map(::generatePotentialAppointmentDate)
-        .doOnNext { latestAppointmentScheduled = it }
+        .doOnNext { model.selectedAppointmentDate.date = it }
         .map { appointmentDate ->
           { ui: Ui ->
             ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
@@ -117,8 +110,8 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   ): Observable<UiChange> {
     return events
         .ofType<AppointmentDateDecremented>()
-        .map { previousConfiguredAppointmentDate(latestAppointmentScheduled) }
-        .doOnNext { latestAppointmentScheduled = it }
+        .map { previousConfiguredAppointmentDate(model.selectedAppointmentDate.date) }
+        .doOnNext { model.selectedAppointmentDate.date = it }
         .map { appointmentDate ->
           { ui: Ui ->
             ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
@@ -133,8 +126,8 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   ): Observable<UiChange> {
     return events
         .ofType<AppointmentDateIncremented>()
-        .map { nextConfiguredAppointmentDate(latestAppointmentScheduled) }
-        .doOnNext { latestAppointmentScheduled = it }
+        .map { nextConfiguredAppointmentDate(model.selectedAppointmentDate.date) }
+        .doOnNext { model.selectedAppointmentDate.date = it }
         .map { appointmentDate ->
           { ui: Ui ->
             ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
@@ -159,7 +152,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
             timeToAppointments
         ) { _, timeToAppointment -> timeToAppointment }
         .map(::generatePotentialAppointmentDate)
-        .doOnNext { latestAppointmentScheduled = it }
+        .doOnNext { model.selectedAppointmentDate.date = it }
         .map { appointmentDate ->
           { ui: Ui ->
             ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
@@ -173,7 +166,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
     return events
         .ofType<ManuallySelectAppointmentDateClicked>()
         .map {
-          { ui: Ui -> ui.showManualDateSelector(latestAppointmentScheduled.scheduledFor) }
+          { ui: Ui -> ui.showManualDateSelector(model.selectedAppointmentDate.date.scheduledFor) }
         }
   }
 
@@ -247,7 +240,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .withLatestFrom(patientFacilityUuidStream) { _, patientFacilityUuid ->
           OngoingAppointment(
               patientUuid = patientUuid,
-              appointmentDate = latestAppointmentScheduled.scheduledFor,
+              appointmentDate = model.selectedAppointmentDate.date.scheduledFor,
               appointmentFacilityUuid = patientFacilityUuid,
               creationFacilityUuid = currentFacility.get().uuid
           )

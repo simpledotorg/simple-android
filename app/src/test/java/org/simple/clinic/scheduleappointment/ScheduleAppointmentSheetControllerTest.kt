@@ -153,7 +153,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        protocol = Observable.just(protocol),
+        protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
@@ -177,7 +177,7 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val defaultTimeToAppointment = Days(2)
     sheetCreated(
-        protocol = Observable.never(),
+        protocol = null,
         config = appointmentConfig
             .withScheduledAppointments(scheduleAppointmentsIn)
             .withDefaultTimeToAppointment(defaultTimeToAppointment)
@@ -203,7 +203,7 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        protocol = Observable.just(protocol),
+        protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
@@ -232,7 +232,7 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        protocol = Observable.just(protocol),
+        protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
@@ -261,7 +261,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        protocol = Observable.just(protocol),
+        protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
@@ -303,7 +303,7 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
-        protocol = Observable.just(protocol),
+        protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
@@ -347,7 +347,7 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 1)
     sheetCreated(
-        protocol = Observable.just(protocol),
+        protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
@@ -392,7 +392,7 @@ class ScheduleAppointmentSheetControllerTest {
     // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 1)
     sheetCreated(
-        protocol = Observable.just(protocol),
+        protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
@@ -562,11 +562,17 @@ class ScheduleAppointmentSheetControllerTest {
   private fun sheetCreated(
       patientUuid: UUID = this.patientUuid,
       facility: Facility = this.facility,
-      protocolUuid: UUID = this.protocolUuid,
-      protocol: Observable<Protocol> = Observable.just(this.protocol),
+      protocol: Protocol? = this.protocol,
       config: AppointmentConfig = this.appointmentConfig
   ) {
     val uiRenderer = ScheduleAppointmentUiRenderer(ui)
+
+    val effectHandler = ScheduleAppointmentEffectHandler(
+        currentFacility = Lazy { facility },
+        protocolRepository = protocolRepository,
+        appointmentConfig = config,
+        userClock = clock
+    )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
@@ -575,8 +581,8 @@ class ScheduleAppointmentSheetControllerTest {
             userClock = clock
         ),
         init = ScheduleAppointmentInit(),
-        update = ScheduleAppointmentUpdate(),
-        effectHandler = ScheduleAppointmentEffectHandler().build(),
+        update = ScheduleAppointmentUpdate(clock),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
 
@@ -593,7 +599,15 @@ class ScheduleAppointmentSheetControllerTest {
         schedulers = TrampolineSchedulersProvider()
     )
 
-    whenever(protocolRepository.protocol(protocolUuid)).thenReturn(protocol)
+    if(protocol != null) {
+      whenever(protocolRepository.protocol(protocolUuid)).thenReturn(Observable.just(protocol))
+      whenever(protocolRepository.protocolImmediate(protocolUuid)).thenReturn(protocol)
+    } else {
+      whenever(protocolRepository.protocol(protocolUuid)).thenReturn(Observable.never())
+      whenever(protocolRepository.protocolImmediate(protocolUuid)).thenReturn(null)
+    }
+
+
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
 

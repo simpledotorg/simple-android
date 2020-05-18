@@ -8,3 +8,6 @@ sealed class DeepLinkResult : Parcelable
 
 @Parcelize
 data class OpenPatientSummary(val patientUuid: UUID) : DeepLinkResult()
+
+@Parcelize
+object ShowPatientNotFound : DeepLinkResult()

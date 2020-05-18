@@ -1,3 +1,5 @@
 package org.simple.clinic.scheduleappointment
 
-class ScheduleAppointmentEffect
+sealed class ScheduleAppointmentEffect
+
+object LoadDefaultAppointmentDate: ScheduleAppointmentEffect()

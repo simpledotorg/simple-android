@@ -5,7 +5,6 @@ import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
@@ -21,7 +20,6 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.plus
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -69,7 +67,6 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         scheduleManualAppointment(replayedEvents),
         showPatientDefaultFacility(replayedEvents),
         showPatientSelectedFacility(replayedEvents),
-        scheduleDefaultAppointmentDateForSheetCreates(replayedEvents),
         scheduleOnNextConfiguredAppointmentDate(events),
         scheduleOnPreviousConfiguredAppointmentDate(events),
         scheduleOnExactDate(events)
@@ -77,13 +74,13 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   }
 
   private fun enableIncrements(ui: Ui) {
-    val areLaterPotentialAppointmentsAvailable = model.selectedAppointmentDate.date < allPotentialAppointmentDates.last()
+    val areLaterPotentialAppointmentsAvailable = model.selectedAppointmentDate!!.date < allPotentialAppointmentDates.last()
 
     ui.enableIncrementButton(areLaterPotentialAppointmentsAvailable)
   }
 
   private fun enableDecrements(ui: Ui) {
-    val areEarlierPotentialAppointmentsAvailable = model.selectedAppointmentDate.date > allPotentialAppointmentDates.first()
+    val areEarlierPotentialAppointmentsAvailable = model.selectedAppointmentDate!!.date > allPotentialAppointmentDates.first()
 
     ui.enableDecrementButton(areEarlierPotentialAppointmentsAvailable)
   }
@@ -95,7 +92,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .ofType<AppointmentCalendarDateSelected>()
         .map { it.selectedDate }
         .map(::generatePotentialAppointmentDate)
-        .doOnNext { model.selectedAppointmentDate.date = it }
+        .doOnNext { model.selectedAppointmentDate!!.date = it }
         .map { appointmentDate ->
           { ui: Ui ->
             ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
@@ -110,8 +107,8 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   ): Observable<UiChange> {
     return events
         .ofType<AppointmentDateDecremented>()
-        .map { previousConfiguredAppointmentDate(model.selectedAppointmentDate.date) }
-        .doOnNext { model.selectedAppointmentDate.date = it }
+        .map { previousConfiguredAppointmentDate(model.selectedAppointmentDate!!.date) }
+        .doOnNext { model.selectedAppointmentDate!!.date = it }
         .map { appointmentDate ->
           { ui: Ui ->
             ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
@@ -126,33 +123,8 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   ): Observable<UiChange> {
     return events
         .ofType<AppointmentDateIncremented>()
-        .map { nextConfiguredAppointmentDate(model.selectedAppointmentDate.date) }
-        .doOnNext { model.selectedAppointmentDate.date = it }
-        .map { appointmentDate ->
-          { ui: Ui ->
-            ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
-            enableIncrements(ui)
-            enableDecrements(ui)
-          }
-        }
-  }
-
-  private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<UiChange> {
-    val protocolUuid = currentFacility.get().protocolUuid!!
-    val protocolStream = protocolRepository.protocol(protocolUuid)
-
-    val configTimeToAppointment = Observable.fromCallable { config.defaultTimeToAppointment }
-    val protocolTimeToAppointment = protocolStream.map { Days(it.followUpDays) }
-
-    val timeToAppointments = Observable.concatArrayEager(configTimeToAppointment, protocolTimeToAppointment)
-
-    return Observables
-        .combineLatest(
-            events.ofType<ScreenCreated>(),
-            timeToAppointments
-        ) { _, timeToAppointment -> timeToAppointment }
-        .map(::generatePotentialAppointmentDate)
-        .doOnNext { model.selectedAppointmentDate.date = it }
+        .map { nextConfiguredAppointmentDate(model.selectedAppointmentDate!!.date) }
+        .doOnNext { model.selectedAppointmentDate!!.date = it }
         .map { appointmentDate ->
           { ui: Ui ->
             ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment)
@@ -166,7 +138,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
     return events
         .ofType<ManuallySelectAppointmentDateClicked>()
         .map {
-          { ui: Ui -> ui.showManualDateSelector(model.selectedAppointmentDate.date.scheduledFor) }
+          { ui: Ui -> ui.showManualDateSelector(model.selectedAppointmentDate!!.date.scheduledFor) }
         }
   }
 
@@ -240,7 +212,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .withLatestFrom(patientFacilityUuidStream) { _, patientFacilityUuid ->
           OngoingAppointment(
               patientUuid = patientUuid,
-              appointmentDate = model.selectedAppointmentDate.date.scheduledFor,
+              appointmentDate = model.selectedAppointmentDate!!.date.scheduledFor,
               appointmentFacilityUuid = patientFacilityUuid,
               creationFacilityUuid = currentFacility.get().uuid
           )
@@ -294,11 +266,6 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         ?.timeToAppointment
 
     return exactMatchingTimeToAppointment ?: Days(ChronoUnit.DAYS.between(today, date).toInt())
-  }
-
-  private fun generatePotentialAppointmentDate(scheduleAppointmentIn: TimeToAppointment): PotentialAppointmentDate {
-    val today = LocalDate.now(clock)
-    return PotentialAppointmentDate(today.plus(scheduleAppointmentIn), scheduleAppointmentIn)
   }
 
   data class OngoingAppointment(

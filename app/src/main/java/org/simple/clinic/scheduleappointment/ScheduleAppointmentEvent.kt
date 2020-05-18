@@ -1,3 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
-class ScheduleAppointmentEvent
+import org.simple.clinic.overdue.PotentialAppointmentDate
+
+sealed class ScheduleAppointmentEvent
+
+data class DefaultAppointmentDateLoaded(val potentialAppointmentDate: PotentialAppointmentDate): ScheduleAppointmentEvent()

@@ -9,9 +9,9 @@
 - [In Progress: 18th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
 
 ### Fixes
-- Fix the click issue in custom prescription on Medicines screen
+- Fix the [click issue](https://www.pivotaltracker.com/story/show/172784091) in custom prescription on Medicines screen
 
-## On Demo
+## 2020-05-18-7270
 ### Feature
 - Add support for calling the patient directly from the summary screen
 - Show all BP passports of a patient while editing them

@@ -582,6 +582,7 @@ class ScheduleAppointmentSheetControllerTest {
   ) {
     controller = ScheduleAppointmentSheetController(
         patientUuid = patientUuid,
+        modelSupplier = { testFixture.model },
         appointmentRepository = repository,
         patientRepository = patientRepository,
         config = config,

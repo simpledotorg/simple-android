@@ -2,7 +2,7 @@
 
 ## Next release
 ### Feature
-- [In progress: 15th May 2020] Add support for teleconsultation
+- Add support for teleconsultation & deep-linking to open patient summary.
 
 ### Internal
 - Lazy inject `facility` and `user` in all `EffectHandler` classes

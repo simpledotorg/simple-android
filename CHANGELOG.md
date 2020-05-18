@@ -6,7 +6,7 @@
 
 ### Internal
 - Lazy inject `facility` and `user` as dependencies in `EditMedicineEffectHandler`
-- [In Progress: 13th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
+- [In Progress: 18th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
 
 ### Fixes
 - Fix the click issue in custom prescription on Medicines screen

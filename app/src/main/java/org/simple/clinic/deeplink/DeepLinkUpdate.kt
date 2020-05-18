@@ -9,19 +9,27 @@ class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
 
   override fun update(model: DeepLinkModel, event: DeepLinkEvent): Next<DeepLinkModel, DeepLinkEffect> {
     return when (event) {
-      is UserFetched -> {
-        val effect = if (event.user == null) {
-          NavigateToSetupActivity
+      is UserFetched -> userFetched(model, event)
+      is PatientFetched -> patientFetched(event)
+    }
+  }
+
+  private fun userFetched(
+      model: DeepLinkModel,
+      event: UserFetched
+  ): Next<DeepLinkModel, DeepLinkEffect> {
+    return when {
+      event.user?.loggedInStatus == User.LoggedInStatus.LOGGED_IN -> {
+        val effect = if (model.patientUuid != null) {
+          FetchPatient(model.patientUuid)
         } else {
-          if (event.user.loggedInStatus == User.LoggedInStatus.LOGGED_IN && model.patientUuid != null) {
-            FetchPatient(model.patientUuid)
-          } else {
-            NavigateToMainActivity
-          }
+          NavigateToMainActivity
         }
         dispatch(effect)
       }
-      is PatientFetched -> patientFetched(event)
+      else -> {
+        dispatch(NavigateToSetupActivity)
+      }
     }
   }
 

@@ -18,6 +18,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
@@ -75,6 +76,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
   @Inject
   lateinit var effectHandler: ScheduleAppointmentEffectHandler
 
+  @Inject
+  lateinit var config: AppointmentConfig
+
   private lateinit var component: ScheduleAppointmentSheetComponent
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
@@ -102,7 +106,10 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
 
     MobiusDelegate.forActivity(
         events = events.ofType(),
-        defaultModel = ScheduleAppointmentModel.create(),
+        defaultModel = ScheduleAppointmentModel.create(
+            timeToAppointments = config.scheduleAppointmentsIn,
+            userClock = userClock
+        ),
         update = ScheduleAppointmentUpdate(),
         init = ScheduleAppointmentInit(),
         effectHandler = effectHandler.build(),

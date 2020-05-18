@@ -119,7 +119,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
     bindUiToController(
         ui = this,
         events = events,
-        controller = controller.create(patientUuid),
+        controller = controller.create(patientUuid) { delegate.currentModel },
         screenDestroys = onDestroys
     )
 

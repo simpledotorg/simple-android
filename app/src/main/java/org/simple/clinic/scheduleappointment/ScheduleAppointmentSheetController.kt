@@ -34,7 +34,8 @@ typealias Ui = ScheduleAppointmentUi
 typealias UiChange = (Ui) -> Unit
 
 class ScheduleAppointmentSheetController @AssistedInject constructor(
-    @Assisted val patientUuid: UUID,
+    @Assisted private val patientUuid: UUID,
+    @Assisted private val modelSupplier: () -> ScheduleAppointmentModel,
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
     private val config: AppointmentConfig,
@@ -47,7 +48,10 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(patientUuid: UUID): ScheduleAppointmentSheetController
+    fun create(
+        patientUuid: UUID,
+        modelSupplier: () -> ScheduleAppointmentModel
+    ): ScheduleAppointmentSheetController
   }
 
   private var latestAppointmentScheduled: PotentialAppointmentDate

@@ -54,10 +54,10 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
 
   private var latestAppointmentScheduled: PotentialAppointmentDate
 
-  private var allPotentialAppointmentDates: List<PotentialAppointmentDate>
+  private val allPotentialAppointmentDates: List<PotentialAppointmentDate>
+    get() = modelSupplier().potentialAppointmentDates
 
   init {
-    allPotentialAppointmentDates = generatePotentialAppointmentDatesForScheduling()
     // This is needed since the observable streams will try to load this
     // information when they are setup. Once the stream to set the
     // default appointment from the protocol runs, this will get updated
@@ -78,12 +78,6 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         showPatientDefaultFacility(replayedEvents),
         showPatientSelectedFacility(replayedEvents)
     )
-  }
-
-  private fun generatePotentialAppointmentDatesForScheduling(): List<PotentialAppointmentDate> {
-    return PotentialAppointmentDate.from(config.scheduleAppointmentsIn, clock)
-        .distinctBy(PotentialAppointmentDate::scheduledFor)
-        .sorted()
   }
 
   private fun scheduleAppointments(

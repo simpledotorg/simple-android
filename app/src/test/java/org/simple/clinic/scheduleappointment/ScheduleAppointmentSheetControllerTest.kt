@@ -15,7 +15,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -71,20 +70,6 @@ class ScheduleAppointmentSheetControllerTest {
 
   private lateinit var controller: ScheduleAppointmentSheetController
   private lateinit var testFixture: MobiusTestFixture<ScheduleAppointmentModel, ScheduleAppointmentEvent, ScheduleAppointmentEffect>
-
-  @Before
-  fun setUp() {
-    val uiRenderer = ScheduleAppointmentUiRenderer(ui)
-
-    testFixture = MobiusTestFixture(
-        events = uiEvents.ofType(),
-        defaultModel = ScheduleAppointmentModel.create(),
-        init = ScheduleAppointmentInit(),
-        update = ScheduleAppointmentUpdate(),
-        effectHandler = ScheduleAppointmentEffectHandler().build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   @After
   fun tearDown() {
@@ -580,6 +565,20 @@ class ScheduleAppointmentSheetControllerTest {
       protocol: Observable<Protocol> = Observable.just(this.protocol),
       config: AppointmentConfig = this.appointmentConfig
   ) {
+    val uiRenderer = ScheduleAppointmentUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = ScheduleAppointmentModel.create(
+            timeToAppointments = config.scheduleAppointmentsIn,
+            userClock = clock
+        ),
+        init = ScheduleAppointmentInit(),
+        update = ScheduleAppointmentUpdate(),
+        effectHandler = ScheduleAppointmentEffectHandler().build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
     controller = ScheduleAppointmentSheetController(
         patientUuid = patientUuid,
         modelSupplier = { testFixture.model },
@@ -595,6 +594,7 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(protocolRepository.protocol(protocolUuid)).thenReturn(protocol)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
+
     testFixture.start()
 
     uiEvents.onNext(ScreenCreated())

@@ -71,4 +71,4 @@ data class FetchedTeleconsultationInfo(val teleconsultInfo: TeleconsultInfo) : P
 
 object RetryFetchTeleconsultInfo : PatientSummaryEvent()
 
-data class UserLoggedInStatusLoaded(val loggedInStatus: User.LoggedInStatus?) : PatientSummaryEvent()
+data class UserLoggedInStatusLoaded(val loggedInStatus: User.LoggedInStatus) : PatientSummaryEvent()

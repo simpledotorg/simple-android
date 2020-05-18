@@ -90,7 +90,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map {
             val user = currentUser.get()
-            UserLoggedInStatusLoaded(user?.loggedInStatus)
+            UserLoggedInStatusLoaded(user!!.loggedInStatus)
           }
     }
   }

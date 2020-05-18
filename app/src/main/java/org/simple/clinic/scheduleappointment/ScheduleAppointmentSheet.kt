@@ -110,7 +110,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
             timeToAppointments = config.scheduleAppointmentsIn,
             userClock = userClock
         ),
-        update = ScheduleAppointmentUpdate(),
+        update = ScheduleAppointmentUpdate(userClock),
         init = ScheduleAppointmentInit(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render

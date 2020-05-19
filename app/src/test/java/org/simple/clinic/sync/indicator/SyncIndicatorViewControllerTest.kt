@@ -35,6 +35,7 @@ import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -65,7 +66,7 @@ class SyncIndicatorViewControllerTest {
   fun `when sync progress is not set, sync status indicator should show sync pending`() {
     //when
     setupController()
-    uiEvents.onNext(SyncIndicatorViewCreated)
+    uiEvents.onNext(ScreenCreated())
     lastSyncStateStream.onNext(LastSyncedState())
 
     //then
@@ -84,7 +85,7 @@ class SyncIndicatorViewControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(SyncIndicatorViewCreated)
+    uiEvents.onNext(ScreenCreated())
     configSubject.onNext(config)
     lastSyncStateStream.onNext(lastSyncState)
 
@@ -186,7 +187,7 @@ class SyncIndicatorViewControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(SyncIndicatorViewCreated)
+    uiEvents.onNext(ScreenCreated())
 
     //then
     verify(indicator).updateState(SyncPending)

@@ -25,7 +25,6 @@ class DeepLinkEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<DeepLinkEffect, DeepLinkEvent>()
       .addTransformer(FetchUser::class.java, fetchUser())
       .addAction(NavigateToSetupActivity::class.java, { uiActions.navigateToSetupActivity() }, schedulerProvider.ui())
-      .addAction(NavigateToMainActivity::class.java, { uiActions.navigateToMainActivity() }, schedulerProvider.ui())
       .addTransformer(FetchPatient::class.java, fetchPatient())
       .addConsumer(NavigateToPatientSummary::class.java, { uiActions.navigateToPatientSummary(it.patientUuid) }, schedulerProvider.ui())
       .addAction(ShowPatientDoesNotExist::class.java, { uiActions.showPatientDoesNotExist() }, schedulerProvider.ui())

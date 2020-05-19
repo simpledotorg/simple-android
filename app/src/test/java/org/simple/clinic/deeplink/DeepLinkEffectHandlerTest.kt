@@ -63,18 +63,6 @@ class DeepLinkEffectHandlerTest {
   }
 
   @Test
-  fun `when navigate to main activity effect is received, then navigate to main activity`() {
-    // when
-    testCase.dispatch(NavigateToMainActivity)
-
-    // then
-    verify(uiActions).navigateToMainActivity()
-    verifyNoMoreInteractions(uiActions)
-
-    testCase.assertNoOutgoingEvents()
-  }
-
-  @Test
   fun `when fetch patient effect is received, then fetch the patient`() {
     // given
     val patientUuid = UUID.fromString("4db4acb9-5b0e-459f-b81d-650938029666")

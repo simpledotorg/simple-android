@@ -16,7 +16,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientProfile
@@ -31,7 +30,6 @@ import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -86,12 +84,12 @@ class PatientSummaryEffectHandlerTest {
   }
 
   @Test
-  fun `when the load current facility effect is received, the current facility must be fetched`() {
+  fun `when the load current user and facility effect is received, the user and current facility must be fetched`() {
     // when
-    testCase.dispatch(LoadCurrentFacility)
+    testCase.dispatch(LoadCurrentUserAndFacility)
 
     // then
-    testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
+    testCase.assertOutgoingEvents(CurrentUserAndFacilityLoaded(user, facility))
     verifyZeroInteractions(uiActions)
   }
 
@@ -437,16 +435,4 @@ class PatientSummaryEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }
-
-  @Test
-  fun `when fetch user effect is received, then fetch the user`() {
-    // when
-    testCase.dispatch(LoadUserLoggedInStatus)
-
-    // then
-    verifyZeroInteractions(uiActions)
-
-    testCase.assertOutgoingEvents(UserLoggedInStatusLoaded(user.loggedInStatus))
-  }
-
 }

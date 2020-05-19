@@ -10,7 +10,7 @@ sealed class PatientSummaryEffect
 
 data class LoadPatientSummaryProfile(val patientUuid: UUID) : PatientSummaryEffect()
 
-object LoadCurrentFacility : PatientSummaryEffect()
+object LoadCurrentUserAndFacility : PatientSummaryEffect()
 
 data class HandleEditClick(
     val patientSummaryProfile: PatientSummaryProfile,
@@ -61,5 +61,3 @@ data class ContactDoctor(val patientTeleconsultationInfo: PatientTeleconsultatio
 data class FetchTeleconsultationInfo(val facilityUuid: UUID) : PatientSummaryEffect()
 
 object ShowTeleconsultInfoError : PatientSummaryEffect()
-
-object LoadUserLoggedInStatus : PatientSummaryEffect()

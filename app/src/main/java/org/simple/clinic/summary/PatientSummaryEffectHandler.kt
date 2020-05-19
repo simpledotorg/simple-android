@@ -55,7 +55,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientSummaryEffect, PatientSummaryEvent>()
         .addTransformer(LoadPatientSummaryProfile::class.java, loadPatientSummaryProfile(schedulersProvider.io()))
-        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
+        .addTransformer(LoadCurrentUserAndFacility::class.java, loadUserAndCurrentFacility())
         .addConsumer(HandleEditClick::class.java, { uiActions.showEditPatientScreen(it.patientSummaryProfile, it.currentFacility) }, schedulersProvider.ui())
         .addAction(HandleLinkIdCancelled::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
         .addAction(GoBackToPreviousScreen::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
@@ -80,17 +80,18 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(ContactDoctor::class.java, { uiActions.contactDoctor(it.patientTeleconsultationInfo, it.teleconsultationPhoneNumber) }, schedulersProvider.ui())
         .addTransformer(FetchTeleconsultationInfo::class.java, fetchFacilityTeleconsultationInfo())
         .addAction(ShowTeleconsultInfoError::class.java, { uiActions.showTeleconsultInfoError() }, schedulersProvider.ui())
-        .addTransformer(LoadUserLoggedInStatus::class.java, loadUserLoggedInStatus())
         .build()
   }
 
-  private fun loadUserLoggedInStatus(): ObservableTransformer<LoadUserLoggedInStatus, PatientSummaryEvent> {
+  private fun loadUserAndCurrentFacility(): ObservableTransformer<LoadCurrentUserAndFacility, PatientSummaryEvent> {
     return ObservableTransformer { effectsStream ->
       effectsStream
           .observeOn(schedulersProvider.io())
           .map {
             val user = currentUser.get()
-            UserLoggedInStatusLoaded(user!!.loggedInStatus)
+            val facility = currentFacility.get()
+
+            CurrentUserAndFacilityLoaded(user, facility)
           }
     }
   }
@@ -194,15 +195,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .doOnNext { uiActions.showLinkIdWithPatientView(it.patientUuid, it.identifier) }
           .map { LinkIdWithPatientSheetShown }
-    }
-  }
-
-  private fun loadCurrentFacility(scheduler: Scheduler): ObservableTransformer<LoadCurrentFacility, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(scheduler)
-          .map { currentFacility.get() }
-          .map(::CurrentFacilityLoaded)
     }
   }
 

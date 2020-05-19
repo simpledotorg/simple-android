@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = SyncIndicatorView
+typealias Ui = SyncIndicatorUi
 typealias UiChange = (Ui) -> Unit
 
 class SyncIndicatorViewController @Inject constructor(

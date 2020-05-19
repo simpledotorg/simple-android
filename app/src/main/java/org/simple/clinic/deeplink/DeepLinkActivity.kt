@@ -110,4 +110,10 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
     startActivity(intent)
     finish()
   }
+
+  override fun showNoPatientUuidError() {
+    val intent = TheActivity.intentForShowNoPatientUuidError(this)
+    startActivity(intent)
+    finish()
+  }
 }

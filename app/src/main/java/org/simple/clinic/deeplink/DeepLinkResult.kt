@@ -11,3 +11,6 @@ data class OpenPatientSummary(val patientUuid: UUID) : DeepLinkResult()
 
 @Parcelize
 object ShowPatientNotFound : DeepLinkResult()
+
+@Parcelize
+object ShowNoPatientUuid : DeepLinkResult()

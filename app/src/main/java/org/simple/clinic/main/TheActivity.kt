@@ -21,6 +21,7 @@ import org.simple.clinic.activity.ActivityLifecycle.Started
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
+import org.simple.clinic.deeplink.ShowNoPatientUuid
 import org.simple.clinic.deeplink.ShowPatientNotFound
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.InjectorProviderContextWrapper
@@ -68,6 +69,13 @@ class TheActivity : AppCompatActivity() {
       return Intent(context, TheActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         putExtra(EXTRA_DEEP_LINK_RESULT, ShowPatientNotFound)
+      }
+    }
+
+    fun intentForShowNoPatientUuidError(context: Context): Intent {
+      return Intent(context, TheActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        putExtra(EXTRA_DEEP_LINK_RESULT, ShowNoPatientUuid)
       }
     }
 
@@ -129,6 +137,7 @@ class TheActivity : AppCompatActivity() {
       when (val deepLinkResult = intent.getParcelableExtra<DeepLinkResult>(EXTRA_DEEP_LINK_RESULT)) {
         is OpenPatientSummary -> showPatientSummaryForDeepLink(deepLinkResult)
         is ShowPatientNotFound -> showPatientNotFoundErrorDialog()
+        is ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
       }
     }
   }
@@ -232,10 +241,18 @@ class TheActivity : AppCompatActivity() {
   }
 
   private fun showPatientNotFoundErrorDialog() {
-    AlertDialog.Builder(this)
+    AlertDialog.Builder(this, R.style.Clinic_V2_DialogStyle)
         .setTitle(R.string.deeplink_patient_profile_not_found)
         .setMessage(R.string.deeplink_patient_profile_not_found_desc)
         .setPositiveButton(R.string.deeplink_patient_profile_not_found_positive_action, null)
+        .show()
+  }
+
+  private fun showNoPatientUuidErrorDialog() {
+    AlertDialog.Builder(this, R.style.Clinic_V2_DialogStyle)
+        .setTitle(R.string.deeplink_no_patient)
+        .setMessage(R.string.deeplink_no_patient_desc)
+        .setPositiveButton(R.string.deeplink_no_patient_positive_action, null)
         .show()
   }
 }

@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next release
+### Feature
+- Handle cases where the patient ID is not set correctly in the deeplink
+
 ### Internal
 - [In Progress: 18th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
 

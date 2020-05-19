@@ -60,12 +60,16 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when the current facility is loaded, update the UI`() {
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("c2ac78df-0dcc-4a42-abc0-ebc2f89c68c6")
+    )
+
     updateSpec
         .given(defaultModel)
-        .whenEvent(CurrentFacilityLoaded(facilityWithDiabetesManagementEnabled))
+        .whenEvent(CurrentUserAndFacilityLoaded(user, facilityWithDiabetesManagementEnabled))
         .then(
             assertThatNext(
-                hasModel(defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)),
+                hasModel(defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled).userLoggedInStatusLoaded(user.loggedInStatus)),
                 hasNoEffects()
             )
         )
@@ -711,37 +715,27 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when current facility is loaded, user is logged in and teleconsultation is enabled, then fetch teleconsultation info`() {
+  fun `when current user and facility is loaded, user is logged in and teleconsultation is enabled, then fetch teleconsultation info`() {
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("1a004469-cd65-4f43-910c-7f4cb2127c86"),
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN
+    )
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
-        .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
 
     updateSpec
         .given(model)
-        .whenEvent(CurrentFacilityLoaded(facilityWithTeleconsultationEnabled))
+        .whenEvent(CurrentUserAndFacilityLoaded(user, facilityWithTeleconsultationEnabled))
         .then(assertThatNext(
             hasModel(
                 model
                     .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
+                    .userLoggedInStatusLoaded(user.loggedInStatus)
                     .fetchingTeleconsultationInfo()
             ),
             hasEffects(FetchTeleconsultationInfo(facilityWithTeleconsultationEnabled.uuid) as PatientSummaryEffect)
         ))
   }
-
-  @Test
-  fun `when user logged in status is loaded, then update the UI`() {
-    val loggedInStatus = User.LoggedInStatus.LOGGED_IN
-
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(UserLoggedInStatusLoaded(loggedInStatus))
-        .then(assertThatNext(
-            hasModel(defaultModel.userLoggedInStatusLoaded(loggedInStatus)),
-            hasNoEffects()
-        ))
-  }
-
 
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)

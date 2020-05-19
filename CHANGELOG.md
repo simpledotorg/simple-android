@@ -1,12 +1,15 @@
 # CHANGELOG
 
 ## Next release
+### Internal
+- [In Progress: 18th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
+
+## On Demo
 ### Feature
 - Add support for teleconsultation & deep-linking to open patient summary.
 
 ### Internal
 - Lazy inject `facility` and `user` in all `EffectHandler` classes
-- [In Progress: 18th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
 
 ### Fixes
 - Fix the click issue in custom prescription on Medicines screen. [LINK](https://www.pivotaltracker.com/story/show/172784091)

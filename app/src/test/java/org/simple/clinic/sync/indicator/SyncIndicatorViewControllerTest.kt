@@ -61,12 +61,13 @@ class SyncIndicatorViewControllerTest {
   private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
 
   private val uiRenderer = SyncIndicatorUiRenderer()
+  private val effectHandler = SyncIndicatorEffectHandler(indicator)
   private val testFixture = MobiusTestFixture(
       events = uiEvents.ofType(),
       defaultModel = SyncIndicatorModel.create(),
       init = SyncIndicatorInit(),
       update = SyncIndicatorUpdate(),
-      effectHandler = SyncIndicatorEffectHandler.create(),
+      effectHandler = effectHandler.build(),
       modelUpdateListener = uiRenderer::render
   )
 

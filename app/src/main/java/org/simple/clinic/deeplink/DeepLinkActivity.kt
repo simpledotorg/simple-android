@@ -93,12 +93,6 @@ class DeepLinkActivity : AppCompatActivity(), DeepLinkUiActions {
     finish()
   }
 
-  override fun navigateToMainActivity() {
-    val intent = TheActivity.newIntent(this)
-    startActivity(intent)
-    finish()
-  }
-
   override fun navigateToPatientSummary(patientUuid: UUID) {
     val intent = TheActivity.intentForOpenPatientSummary(this, patientUuid)
     startActivity(intent)

@@ -43,6 +43,9 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   @Inject
   lateinit var activity: AppCompatActivity
 
+  @Inject
+  lateinit var effectHandlerFactory: SyncIndicatorEffectHandler.Factory
+
   private val events by unsafeLazy {
     Observable
         .merge(screenCreates(), viewClicks())
@@ -57,7 +60,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
         events = events.ofType(),
         defaultModel = SyncIndicatorModel.create(),
         update = SyncIndicatorUpdate(),
-        effectHandler = SyncIndicatorEffectHandler.create(),
+        effectHandler = effectHandlerFactory.create(this).build(),
         init = SyncIndicatorInit(),
         modelUpdateListener = uiRenderer::render
     )

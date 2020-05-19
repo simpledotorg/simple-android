@@ -4,10 +4,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-object AppointmentDateIncremented : UiEvent {
-  override val analyticsName = "Schedule Appointment:Increment appointment due date"
-}
-
 object AppointmentDateDecremented : UiEvent {
   override val analyticsName = "Schedule Appointment:Decrement appointment due date"
 }

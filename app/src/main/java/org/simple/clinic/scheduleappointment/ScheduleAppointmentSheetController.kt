@@ -69,7 +69,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         scheduleManualAppointment(replayedEvents),
         showPatientDefaultFacility(replayedEvents),
         showPatientSelectedFacility(replayedEvents),
-        scheduleOnNextConfiguredAppointmentDate(events),
+//        scheduleOnNextConfiguredAppointmentDate(events),
         scheduleOnPreviousConfiguredAppointmentDate(events),
         scheduleOnExactDate(events)
     )

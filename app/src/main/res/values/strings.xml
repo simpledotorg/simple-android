@@ -611,4 +611,7 @@
   <string name="deeplink_patient_profile_not_found">Patient profile not found</string>
   <string name="deeplink_patient_profile_not_found_desc">Kindly check your internet and sync patients</string>
   <string name="deeplink_patient_profile_not_found_positive_action">Okay</string>
+  <string name="deeplink_no_patient">Patient not found</string>
+  <string name="deeplink_no_patient_desc">Start teleconsultation and ask healthcare worker for patient information</string>
+  <string name="deeplink_no_patient_positive_action">OK</string>
 </resources>

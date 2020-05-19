@@ -124,4 +124,16 @@ class DeepLinkEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when show no patient uuid error effect is received, then show no patient uuid error`() {
+    // when
+    testCase.dispatch(ShowNoPatientUuidError)
+
+    // then
+    verify(uiActions).showNoPatientUuidError()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

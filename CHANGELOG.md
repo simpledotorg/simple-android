@@ -6,6 +6,7 @@
 
 ### Internal
 - [In Progress: 18th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
+- Fix PR description CI when using markdown syntax
 
 ## On Demo
 ### Feature

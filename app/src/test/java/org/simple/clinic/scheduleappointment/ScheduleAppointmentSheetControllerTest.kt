@@ -563,48 +563,13 @@ class ScheduleAppointmentSheetControllerTest {
       protocol: Protocol = this.protocol,
       config: AppointmentConfig = this.appointmentConfig
   ) {
-    val uiRenderer = ScheduleAppointmentUiRenderer(ui)
-
-    val effectHandler = ScheduleAppointmentEffectHandler(
-        currentFacility = Lazy { facility },
-        protocolRepository = protocolRepository,
-        appointmentConfig = config,
-        userClock = clock
-    )
-
-    testFixture = MobiusTestFixture(
-        events = uiEvents.ofType(),
-        defaultModel = ScheduleAppointmentModel.create(
-            timeToAppointments = config.scheduleAppointmentsIn,
-            userClock = clock
-        ),
-        init = ScheduleAppointmentInit(),
-        update = ScheduleAppointmentUpdate(clock),
-        effectHandler = effectHandler.build(),
-        modelUpdateListener = uiRenderer::render
-    )
-
-    controller = ScheduleAppointmentSheetController(
-        patientUuid = patientUuid,
-        modelSupplier = { testFixture.model },
-        appointmentRepository = repository,
-        patientRepository = patientRepository,
-        config = config,
-        clock = clock,
-        facilityRepository = facilityRepository,
-        protocolRepository = protocolRepository,
-        currentFacility = Lazy { facility },
-        schedulers = TrampolineSchedulersProvider()
-    )
+    setupMobiusTestFixture(facility, config)
+    setupController(patientUuid, config, facility)
 
     whenever(protocolRepository.protocol(protocol.uuid)).thenReturn(Observable.just(protocol))
     whenever(protocolRepository.protocolImmediate(protocol.uuid)).thenReturn(protocol)
 
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
-
-    testFixture.start()
-
-    uiEvents.onNext(ScreenCreated())
+    activateUi()
   }
 
   private fun sheetCreatedWithoutProtocol(
@@ -612,6 +577,16 @@ class ScheduleAppointmentSheetControllerTest {
       facility: Facility = this.facility,
       config: AppointmentConfig = this.appointmentConfig
   ) {
+    setupMobiusTestFixture(facility, config)
+    setupController(patientUuid, config, facility)
+
+    whenever(protocolRepository.protocol(protocolUuid)).thenReturn(Observable.never())
+    whenever(protocolRepository.protocolImmediate(protocolUuid)).thenReturn(null)
+
+    activateUi()
+  }
+
+  private fun setupMobiusTestFixture(facility: Facility, config: AppointmentConfig) {
     val uiRenderer = ScheduleAppointmentUiRenderer(ui)
 
     val effectHandler = ScheduleAppointmentEffectHandler(
@@ -632,7 +607,13 @@ class ScheduleAppointmentSheetControllerTest {
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
+  }
 
+  private fun setupController(
+      patientUuid: UUID,
+      config: AppointmentConfig,
+      facility: Facility
+  ) {
     controller = ScheduleAppointmentSheetController(
         patientUuid = patientUuid,
         modelSupplier = { testFixture.model },
@@ -645,10 +626,9 @@ class ScheduleAppointmentSheetControllerTest {
         currentFacility = Lazy { facility },
         schedulers = TrampolineSchedulersProvider()
     )
+  }
 
-    whenever(protocolRepository.protocol(protocolUuid)).thenReturn(Observable.never())
-    whenever(protocolRepository.protocolImmediate(protocolUuid)).thenReturn(null)
-
+  private fun activateUi() {
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
 
     testFixture.start()

@@ -11,13 +11,11 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
   override fun init(model: PatientSummaryModel): First<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf<PatientSummaryEffect>(LoadPatientSummaryProfile(model.patientUuid))
 
-    if (!model.hasUserLoggedInStatus) {
-      effects.add(LoadUserLoggedInStatus)
+    if (!model.hasUserLoggedInStatus || !model.hasLoadedCurrentFacility) {
+      effects.add(LoadCurrentUserAndFacility)
     }
 
-    if (!model.hasLoadedCurrentFacility) {
-      effects.add(LoadCurrentFacility)
-    } else {
+    if (model.hasLoadedCurrentFacility) {
       when (model.teleconsultInfo) {
         null, is TeleconsultInfo.Fetching -> {
           effects.add(FetchTeleconsultationInfo(model.currentFacility!!.uuid))

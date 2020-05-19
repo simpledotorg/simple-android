@@ -21,7 +21,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryProfileLoaded -> next(model.patientSummaryProfileLoaded(event.patientSummaryProfile))
       is PatientSummaryBackClicked -> dispatch(LoadDataForBackClick(model.patientUuid, event.screenCreatedTimestamp))
       is PatientSummaryDoneClicked -> dispatch(LoadDataForDoneClick(model.patientUuid))
-      is CurrentFacilityLoaded -> currentFacilityLoaded(model, event)
+      is CurrentUserAndFacilityLoaded -> currentUserAndFacilityLoaded(model, event)
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!, model.currentFacility!!))
       is PatientSummaryLinkIdCancelled -> dispatch(HandleLinkIdCancelled)
       is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
@@ -52,7 +52,6 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       ContactDoctorClicked -> contactDoctorClicked(model)
       is FetchedTeleconsultationInfo -> fetchedTeleconsultationInfo(model, event)
       RetryFetchTeleconsultInfo -> retryFetchTeleconsultInfo(model)
-      is UserLoggedInStatusLoaded -> next(model.userLoggedInStatusLoaded(event.loggedInStatus))
     }
   }
 
@@ -63,10 +62,15 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     )
   }
 
-  private fun currentFacilityLoaded(model: PatientSummaryModel, event: CurrentFacilityLoaded): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val updatedModel = model.currentFacilityLoaded(event.facility)
+  private fun currentUserAndFacilityLoaded(
+      model: PatientSummaryModel,
+      event: CurrentUserAndFacilityLoaded
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val updatedModel = model
+        .userLoggedInStatusLoaded(event.user.loggedInStatus)
+        .currentFacilityLoaded(event.facility)
 
-    return if (updatedModel.isTeleconsultationEnabled && model.isUserLoggedIn) {
+    return if (updatedModel.isTeleconsultationEnabled && updatedModel.isUserLoggedIn) {
       next(
           updatedModel.fetchingTeleconsultationInfo(),
           FetchTeleconsultationInfo(event.facility.uuid)

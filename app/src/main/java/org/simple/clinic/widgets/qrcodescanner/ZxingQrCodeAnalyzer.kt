@@ -48,6 +48,7 @@ class ZxingQrCodeAnalyzer(
     // https://developer.android.com/reference/androidx/camera/core/ImageProxy.html#getImage()
     // https://developer.android.com/reference/android/media/Image.html#getFormat()
     if (image.format !in yuvFormats) {
+      image.close()
       return
     }
 

@@ -5,7 +5,7 @@
 - Handle cases where the patient ID is not set correctly in the deeplink
 
 ### Internal
-- [In Progress: 18th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
+- [In Progress: 19th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
 - Fix PR description CI when using markdown syntax
 
 ## On Demo

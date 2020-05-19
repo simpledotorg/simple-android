@@ -176,8 +176,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     // when
     val defaultTimeToAppointment = Days(2)
-    sheetCreated(
-        protocol = null,
+    sheetCreatedWithoutProtocol(
         config = appointmentConfig
             .withScheduledAppointments(scheduleAppointmentsIn)
             .withDefaultTimeToAppointment(defaultTimeToAppointment)
@@ -558,11 +557,10 @@ class ScheduleAppointmentSheetControllerTest {
     inOrder.verify(ui).showPatientFacility(updatedFacility.name)
   }
 
-
   private fun sheetCreated(
       patientUuid: UUID = this.patientUuid,
       facility: Facility = this.facility,
-      protocol: Protocol? = this.protocol,
+      protocol: Protocol = this.protocol,
       config: AppointmentConfig = this.appointmentConfig
   ) {
     val uiRenderer = ScheduleAppointmentUiRenderer(ui)
@@ -599,15 +597,57 @@ class ScheduleAppointmentSheetControllerTest {
         schedulers = TrampolineSchedulersProvider()
     )
 
-    if(protocol != null) {
-      whenever(protocolRepository.protocol(protocolUuid)).thenReturn(Observable.just(protocol))
-      whenever(protocolRepository.protocolImmediate(protocolUuid)).thenReturn(protocol)
-    } else {
-      whenever(protocolRepository.protocol(protocolUuid)).thenReturn(Observable.never())
-      whenever(protocolRepository.protocolImmediate(protocolUuid)).thenReturn(null)
-    }
+    whenever(protocolRepository.protocol(protocol.uuid)).thenReturn(Observable.just(protocol))
+    whenever(protocolRepository.protocolImmediate(protocol.uuid)).thenReturn(protocol)
 
+    uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
 
+    testFixture.start()
+
+    uiEvents.onNext(ScreenCreated())
+  }
+
+  private fun sheetCreatedWithoutProtocol(
+      patientUuid: UUID = this.patientUuid,
+      facility: Facility = this.facility,
+      config: AppointmentConfig = this.appointmentConfig
+  ) {
+    val uiRenderer = ScheduleAppointmentUiRenderer(ui)
+
+    val effectHandler = ScheduleAppointmentEffectHandler(
+        currentFacility = Lazy { facility },
+        protocolRepository = protocolRepository,
+        appointmentConfig = config,
+        userClock = clock
+    )
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = ScheduleAppointmentModel.create(
+            timeToAppointments = config.scheduleAppointmentsIn,
+            userClock = clock
+        ),
+        init = ScheduleAppointmentInit(),
+        update = ScheduleAppointmentUpdate(clock),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
+    controller = ScheduleAppointmentSheetController(
+        patientUuid = patientUuid,
+        modelSupplier = { testFixture.model },
+        appointmentRepository = repository,
+        patientRepository = patientRepository,
+        config = config,
+        clock = clock,
+        facilityRepository = facilityRepository,
+        protocolRepository = protocolRepository,
+        currentFacility = Lazy { facility },
+        schedulers = TrampolineSchedulersProvider()
+    )
+
+    whenever(protocolRepository.protocol(protocolUuid)).thenReturn(Observable.never())
+    whenever(protocolRepository.protocolImmediate(protocolUuid)).thenReturn(null)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
 

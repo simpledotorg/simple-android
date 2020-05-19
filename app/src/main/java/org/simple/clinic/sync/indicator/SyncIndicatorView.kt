@@ -2,6 +2,7 @@ package org.simple.clinic.sync.indicator
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
@@ -11,11 +12,13 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.sync_indicator.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
@@ -47,6 +50,19 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
         .share()
   }
 
+  private val uiRenderer = SyncIndicatorUiRenderer()
+
+  private val delegate: MobiusDelegate<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect> by unsafeLazy {
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = SyncIndicatorModel.create(),
+        update = SyncIndicatorUpdate(),
+        effectHandler = SyncIndicatorEffectHandler.create(),
+        init = SyncIndicatorInit(),
+        modelUpdateListener = uiRenderer::render
+    )
+  }
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -61,6 +77,24 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

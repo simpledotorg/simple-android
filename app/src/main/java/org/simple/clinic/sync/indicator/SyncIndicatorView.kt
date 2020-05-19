@@ -31,7 +31,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
 
-class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), SyncIndicatorUi {
 
   private val syncStatusTextView by bindView<TextView>(R.id.sync_indicator_status_text)
   private val syncIndicatorLayout by bindView<LinearLayout>(R.id.sync_indicator_root_layout)
@@ -63,7 +63,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   private fun viewClicks() = RxView.clicks(syncIndicatorLayout).map { SyncIndicatorViewClicked }
 
   @SuppressLint("StringFormatMatches")
-  fun updateState(syncState: SyncIndicatorState) {
+  override fun updateState(syncState: SyncIndicatorState) {
     val transition = AutoTransition().setInterpolator(FastOutSlowInInterpolator())
     TransitionManager.beginDelayedTransition(this, transition)
 
@@ -95,7 +95,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
     }
   }
 
-  fun showErrorDialog(errorType: ResolvedError) {
+  override fun showErrorDialog(errorType: ResolvedError) {
     val message = when (errorType) {
       is NetworkRelated -> context.getString(R.string.syncindicator_dialog_error_network)
       // TODO(vs): 2019-10-31 Add a separate error message for server errors

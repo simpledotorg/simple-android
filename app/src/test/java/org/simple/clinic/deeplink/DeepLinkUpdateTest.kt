@@ -27,7 +27,7 @@ class DeepLinkUpdateTest {
   }
 
   @Test
-  fun `if there is a logged in user and patient uuid is null, then navigate to main activity`() {
+  fun `if there is a logged in user and patient uuid is null, then show no patient error`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("dc0a9d11-aee4-4792-820f-c5cb66ae5e47"),
         loggedInStatus = User.LoggedInStatus.LOGGED_IN
@@ -38,7 +38,7 @@ class DeepLinkUpdateTest {
         .whenEvent(UserFetched(user))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(NavigateToMainActivity as DeepLinkEffect)
+            hasEffects(ShowNoPatientUuidError as DeepLinkEffect)
         ))
   }
 

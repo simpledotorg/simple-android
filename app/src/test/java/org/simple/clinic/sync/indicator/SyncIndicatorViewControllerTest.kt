@@ -8,9 +8,11 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,6 +39,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
@@ -57,9 +60,24 @@ class SyncIndicatorViewControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
 
+  private val uiRenderer = SyncIndicatorUiRenderer()
+  private val testFixture = MobiusTestFixture(
+      events = uiEvents.ofType(),
+      defaultModel = SyncIndicatorModel.create(),
+      init = SyncIndicatorInit(),
+      update = SyncIndicatorUpdate(),
+      effectHandler = SyncIndicatorEffectHandler.create(),
+      modelUpdateListener = uiRenderer::render
+  )
+
   @Before
   fun setUp() {
     whenever(lastSyncStatePreference.asObservable()).thenReturn(lastSyncStateStream)
+  }
+
+  @After
+  fun tearDown() {
+    testFixture.dispose()
   }
 
   @Test
@@ -201,6 +219,8 @@ class SyncIndicatorViewControllerTest {
         dataSync = dataSync,
         frequentlySyncingRepositories = frequentlySyncingRepositories
     )
+
+    testFixture.start()
 
     uiEvents
         .compose(controller)

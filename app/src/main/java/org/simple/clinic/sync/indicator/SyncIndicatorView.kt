@@ -13,6 +13,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.sync_indicator.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
@@ -25,6 +26,7 @@ import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setCompoundDrawableStart
@@ -38,6 +40,13 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   @Inject
   lateinit var activity: AppCompatActivity
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(screenCreates(), viewClicks())
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -48,7 +57,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(screenCreates(), viewClicks()),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

@@ -49,7 +49,7 @@ class SyncIndicatorViewControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val lastSyncStatePreference = mock<Preference<LastSyncedState>>()
-  private val indicator = mock<SyncIndicatorView>()
+  private val indicator = mock<SyncIndicatorUi>()
   private val dataSync = mock<DataSync>()
   private val utcClock = TestUtcClock()
   private val frequentlySyncingRepositories = arrayListOf<SynceableRepository<*, *>>()

@@ -122,19 +122,10 @@ class SyncIndicatorViewControllerTest {
     verify(dataSync).fireAndForgetSync(FREQUENT)
   }
 
-  data class ShowFailureDialogParams(
-      val error: ResolvedError,
-      val shouldShowErrorDialog: Boolean
-  )
-
   @Test
   @Parameters(method = "params for showing failure dialog")
-  fun `appropriate failure dialog should be shown for all sync errors except Unauthorized`(
-      testCase: ShowFailureDialogParams
-  ) {
+  fun `failure dialog should be shown for all types of sync errors except unauthenticated`(error: ResolvedError) {
     // given
-    val (error: ResolvedError,
-        shouldShowErrorDialog: Boolean) = testCase
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
 
     // when
@@ -143,22 +134,31 @@ class SyncIndicatorViewControllerTest {
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     // then
-    if (shouldShowErrorDialog) {
-      verify(indicator).showErrorDialog(error)
-    } else {
-      verify(indicator, never()).showErrorDialog(any())
-    }
+    verify(indicator).showErrorDialog(error)
   }
 
   @Suppress("Unused")
-  private fun `params for showing failure dialog`(): List<ShowFailureDialogParams> {
+  private fun `params for showing failure dialog`(): List<ResolvedError> {
     return listOf(
-        ShowFailureDialogParams(NetworkRelated(UnknownHostException()), true),
-        ShowFailureDialogParams(NetworkRelated(UnknownHostException()), true),
-        ShowFailureDialogParams(Unexpected(RuntimeException()), true),
-        ShowFailureDialogParams(ServerError(RuntimeException()), true),
-        ShowFailureDialogParams(Unauthenticated(RuntimeException()), false)
+        NetworkRelated(UnknownHostException()),
+        NetworkRelated(UnknownHostException()),
+        Unexpected(RuntimeException()),
+        ServerError(RuntimeException())
     )
+  }
+
+  @Test
+  fun `failure dialog should not be shown for unauthenticated as sync error`() {
+    // given
+    whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(Unauthenticated(RuntimeException())))
+
+    // when
+    setupController()
+    lastSyncStateStream.onNext(LastSyncedState())
+    uiEvents.onNext(SyncIndicatorViewClicked)
+
+    // then
+    verify(indicator, never()).showErrorDialog(any())
   }
 
   @Test
@@ -192,7 +192,7 @@ class SyncIndicatorViewControllerTest {
     verify(indicator).updateState(SyncPending)
   }
 
-  fun setupController() {
+  private fun setupController() {
     val controller = SyncIndicatorViewController(
         lastSyncState = lastSyncStatePreference,
         utcClock = utcClock,

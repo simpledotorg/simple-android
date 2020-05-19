@@ -56,28 +56,19 @@ class SyncIndicatorViewControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
 
-  private val controller = SyncIndicatorViewController(
-      lastSyncState = lastSyncStatePreference,
-      utcClock = utcClock,
-      configProvider = configSubject,
-      dataSync = dataSync,
-      frequentlySyncingRepositories = frequentlySyncingRepositories
-  )
-
   @Before
   fun setUp() {
     whenever(lastSyncStatePreference.asObservable()).thenReturn(lastSyncStateStream)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(indicator) }
   }
 
   @Test
   fun `when sync progress is not set, sync status indicator should show sync pending`() {
+    //when
+    setupController()
     uiEvents.onNext(SyncIndicatorViewCreated)
     lastSyncStateStream.onNext(LastSyncedState())
 
+    //then
     verify(indicator).updateState(SyncPending)
   }
 
@@ -88,12 +79,16 @@ class SyncIndicatorViewControllerTest {
       expectedSyncState: SyncIndicatorState,
       syncFailureThreshold: Long
   ) {
-    uiEvents.onNext(SyncIndicatorViewCreated)
+    //given
     val config = SyncIndicatorConfig(Duration.of(syncFailureThreshold, ChronoUnit.HOURS))
 
+    //when
+    setupController()
+    uiEvents.onNext(SyncIndicatorViewCreated)
     configSubject.onNext(config)
     lastSyncStateStream.onNext(lastSyncState)
 
+    //then
     verify(indicator).updateState(expectedSyncState)
   }
 
@@ -115,11 +110,15 @@ class SyncIndicatorViewControllerTest {
 
   @Test
   fun `when sync indicator is clicked, sync should be triggered`() {
+    //given
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.never())
 
+    //when
+    setupController()
     lastSyncStateStream.onNext(LastSyncedState())
     uiEvents.onNext(SyncIndicatorViewClicked)
 
+    //then
     verify(dataSync).fireAndForgetSync(FREQUENT)
   }
 
@@ -133,14 +132,14 @@ class SyncIndicatorViewControllerTest {
   fun `appropriate failure dialog should be shown for all sync errors except Unauthorized`(
       testCase: ShowFailureDialogParams
   ) {
+    // given
     val (error: ResolvedError,
         shouldShowErrorDialog: Boolean) = testCase
-
-    // given
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
-    lastSyncStateStream.onNext(LastSyncedState())
 
     // when
+    setupController()
+    lastSyncStateStream.onNext(LastSyncedState())
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     // then
@@ -164,15 +163,19 @@ class SyncIndicatorViewControllerTest {
 
   @Test
   fun `when last sync state is syncing then we should not trigger a manual sync on click`() {
+    //when
+    setupController()
     lastSyncStateStream.onNext(LastSyncedState(lastSyncProgress = SYNCING))
     uiEvents.onNext(SyncIndicatorViewClicked)
 
+    //then
     verifyZeroInteractions(dataSync)
     verifyZeroInteractions(indicator)
   }
 
   @Test
   fun `if pending sync are present, then sync indicator should show Sync Pending`() {
+    //given
     val patientRepository = mock<PatientRepository>()
     whenever(patientRepository.pendingSyncRecordCount()).thenReturn(Observable.just(1))
     frequentlySyncingRepositories.add(patientRepository)
@@ -181,8 +184,25 @@ class SyncIndicatorViewControllerTest {
     whenever(appointmentRepository.pendingSyncRecordCount()).thenReturn(Observable.just(0))
     frequentlySyncingRepositories.add(appointmentRepository)
 
+    //when
+    setupController()
     uiEvents.onNext(SyncIndicatorViewCreated)
 
+    //then
     verify(indicator).updateState(SyncPending)
+  }
+
+  fun setupController() {
+    val controller = SyncIndicatorViewController(
+        lastSyncState = lastSyncStatePreference,
+        utcClock = utcClock,
+        configProvider = configSubject,
+        dataSync = dataSync,
+        frequentlySyncingRepositories = frequentlySyncingRepositories
+    )
+
+    uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(indicator) }
   }
 }

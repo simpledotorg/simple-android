@@ -26,6 +26,7 @@ import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
@@ -57,7 +58,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
     )
   }
 
-  private fun screenCreates() = Observable.just(SyncIndicatorViewCreated)
+  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun viewClicks() = RxView.clicks(syncIndicatorLayout).map { SyncIndicatorViewClicked }
 

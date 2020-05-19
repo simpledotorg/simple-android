@@ -131,7 +131,8 @@ jobs:
     steps:
       - name: Verify PR description
         run: |
-          PR_DESCRIPTION='${{github.event.pull_request.body}}'
+          QUOTED_PR_DESCRIPTION="$(printf "%q" "${{github.event.pull_request.body}}")"
+          PR_DESCRIPTION="$QUOTED_PR_DESCRIPTION"
           PIVOTAL_STORY_REGEX='https:\/\/www.pivotaltracker.com\/story\/show\/[0-9]{9}'
 
           if [[ $PR_DESCRIPTION =~ $PIVOTAL_STORY_REGEX ]]; then

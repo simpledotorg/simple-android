@@ -26,6 +26,7 @@ import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -62,7 +63,7 @@ class SyncIndicatorViewController @Inject constructor(
   }
 
   private fun updateIndicatorView(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreated = events.ofType<SyncIndicatorViewCreated>()
+    val screenCreated = events.ofType<ScreenCreated>()
     val lastSyncedStateStream = lastSyncState
         .asObservable()
         .distinctUntilChanged()
@@ -142,7 +143,7 @@ class SyncIndicatorViewController @Inject constructor(
   }
 
   private fun showPendingSyncStatus(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreates = events.ofType<SyncIndicatorViewCreated>()
+    val screenCreates = events.ofType<ScreenCreated>()
 
     return screenCreates
         .flatMap {

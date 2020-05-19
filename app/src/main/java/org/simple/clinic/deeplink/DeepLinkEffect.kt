@@ -15,3 +15,6 @@ data class FetchPatient(val patientUuid: UUID) : DeepLinkEffect()
 data class NavigateToPatientSummary(val patientUuid: UUID) : DeepLinkEffect()
 
 object ShowPatientDoesNotExist : DeepLinkEffect()
+
+// We will show this error when patient uuid is null
+object ShowNoPatientUuidError : DeepLinkEffect()

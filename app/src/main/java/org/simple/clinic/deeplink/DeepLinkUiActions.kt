@@ -7,4 +7,5 @@ interface DeepLinkUiActions {
   fun navigateToMainActivity()
   fun navigateToPatientSummary(patientUuid: UUID)
   fun showPatientDoesNotExist()
+  fun showNoPatientUuidError()
 }

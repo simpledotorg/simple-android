@@ -23,7 +23,7 @@ class DeepLinkUpdate : Update<DeepLinkModel, DeepLinkEvent, DeepLinkEffect> {
         val effect = if (model.patientUuid != null) {
           FetchPatient(model.patientUuid)
         } else {
-          NavigateToMainActivity
+          ShowNoPatientUuidError
         }
         dispatch(effect)
       }

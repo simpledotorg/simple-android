@@ -9,10 +9,13 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
 
 class ScheduleAppointmentUpdate(
     // Added for mobius migration, clock should not be here. Remove this later.
-    private val userClock: UserClock
+    private val userClock: UserClock,
+    private val currentDate: LocalDate,
+    private val defaulterAppointmentPeriod: Period
 ) : Update<ScheduleAppointmentModel, ScheduleAppointmentEvent, ScheduleAppointmentEffect> {
 
   override fun update(

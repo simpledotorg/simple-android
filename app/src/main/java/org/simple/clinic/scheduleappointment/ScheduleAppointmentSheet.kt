@@ -104,7 +104,11 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
             timeToAppointments = config.scheduleAppointmentsIn,
             userClock = userClock
         ),
-        update = ScheduleAppointmentUpdate(userClock),
+        update = ScheduleAppointmentUpdate(
+            userClock = userClock,
+            currentDate = LocalDate.now(userClock),
+            defaulterAppointmentPeriod = config.appointmentDuePeriodForDefaulters
+        ),
         init = ScheduleAppointmentInit(),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render

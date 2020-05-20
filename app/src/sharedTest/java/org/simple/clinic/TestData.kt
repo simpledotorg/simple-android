@@ -16,6 +16,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -858,6 +859,18 @@ object TestData {
     )
   }
 
+  fun overduePatientAddress(
+      streetAddress: String? = faker.address.streetName(),
+      colonyOrVillage: String? = faker.address.streetAddress(),
+      district: String = faker.address.city(),
+      state: String = faker.address.state()
+  ) = OverduePatientAddress(
+      streetAddress = streetAddress,
+      colonyOrVillage = colonyOrVillage,
+      district = district,
+      state = state
+  )
+
   fun overdueAppointment(
       facilityUuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
@@ -872,7 +885,8 @@ object TestData {
       appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
       patientLastSeen: Instant = Instant.parse("2018-01-01T00:00:00Z"),
       diagnosedWithDiabetes: Answer? = null,
-      diagnosedWithHypertension: Answer? = null
+      diagnosedWithHypertension: Answer? = null,
+      patientAddress: OverduePatientAddress = overduePatientAddress()
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
@@ -881,6 +895,7 @@ object TestData {
         age = age,
         appointment = appointment,
         phoneNumber = phoneNumber,
+        patientAddress = patientAddress,
         isAtHighRisk = isHighRisk,
         patientLastSeen = patientLastSeen,
         diagnosedWithDiabetes = diagnosedWithDiabetes,

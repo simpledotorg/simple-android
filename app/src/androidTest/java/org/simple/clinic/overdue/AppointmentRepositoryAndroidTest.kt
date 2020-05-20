@@ -22,6 +22,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -2333,6 +2334,12 @@ class AppointmentRepositoryAndroidTest {
           bloodSugarMeasurement == null -> bloodPressureMeasurement.recordedAt
           else -> maxOf(bloodPressureMeasurement.recordedAt, bloodSugarMeasurement.recordedAt)
         }
+        val overduePatientAddress = OverduePatientAddress(
+            streetAddress = patientProfile.address.streetAddress,
+            colonyOrVillage = patientProfile.address.colonyOrVillage,
+            district = patientProfile.address.district,
+            state = patientProfile.address.state
+        )
         return OverdueAppointment(
             fullName = patientProfile.patient.fullName,
             gender = patientProfile.patient.gender,
@@ -2340,6 +2347,7 @@ class AppointmentRepositoryAndroidTest {
             age = patientProfile.patient.age,
             appointment = appointment,
             phoneNumber = patientProfile.phoneNumbers.first(),
+            patientAddress = overduePatientAddress,
             isAtHighRisk = false,
             patientLastSeen = patientLastSeen,
             diagnosedWithDiabetes = null,

@@ -37,7 +37,21 @@ class AppointmentRepository @Inject constructor(
       appointmentFacilityUuid: UUID,
       creationFacilityUuid: UUID
   ): Single<Appointment> {
-    val newAppointmentStream = Single.just(Appointment(
+    return Single.fromCallable {
+      scheduleImmediate(patientUuid, appointmentUuid, appointmentDate, appointmentType, appointmentFacilityUuid, creationFacilityUuid)
+    }
+  }
+
+  fun scheduleImmediate(
+      patientUuid: UUID,
+      appointmentUuid: UUID,
+      appointmentDate: LocalDate,
+      appointmentType: AppointmentType,
+      appointmentFacilityUuid: UUID,
+      creationFacilityUuid: UUID
+  ): Appointment {
+
+    val appointment = Appointment(
         uuid = appointmentUuid,
         patientUuid = patientUuid,
         facilityUuid = appointmentFacilityUuid,
@@ -51,24 +65,23 @@ class AppointmentRepository @Inject constructor(
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
         deletedAt = null,
-        creationFacilityUuid = creationFacilityUuid)
-    ).flatMap { appointment ->
-      save(listOf(appointment)).andThen(Single.just(appointment))
-    }
+        creationFacilityUuid = creationFacilityUuid
+    )
 
-    return markOlderAppointmentsAsVisited(patientUuid).andThen(newAppointmentStream)
+    // TODO (vs) 20/05/20: Remove this side effect from this method
+    markOlderAppointmentsAsVisited(patientUuid)
+    appointmentDao.save(listOf(appointment))
+    return appointment
   }
 
-  private fun markOlderAppointmentsAsVisited(patientUuid: UUID): Completable {
-    return Completable.fromAction {
-      appointmentDao.markOlderAppointmentsAsVisited(
-          patientUuid = patientUuid,
-          updatedStatus = Visited,
-          scheduledStatus = Scheduled,
-          newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(utcClock)
-      )
-    }
+  private fun markOlderAppointmentsAsVisited(patientUuid: UUID) {
+    appointmentDao.markOlderAppointmentsAsVisited(
+        patientUuid = patientUuid,
+        updatedStatus = Visited,
+        scheduledStatus = Scheduled,
+        newSyncStatus = SyncStatus.PENDING,
+        newUpdatedAt = Instant.now(utcClock)
+    )
   }
 
   fun createReminder(appointmentUuid: UUID, reminderDate: LocalDate) {

@@ -20,6 +20,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilityChangeConfig
@@ -28,7 +29,6 @@ import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
-import org.simple.clinic.TestData
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RuntimePermissionResult
@@ -134,7 +134,7 @@ class FacilitySelectionActivityControllerTest {
 
     uiEvents.onNext(FacilitySelected(newFacility))
 
-    verify(screen).sendSelectedFacility(newFacility.uuid)
+    verify(screen).sendSelectedFacility(newFacility)
   }
 
   @Test

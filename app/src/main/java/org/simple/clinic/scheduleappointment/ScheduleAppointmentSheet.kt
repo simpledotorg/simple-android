@@ -22,7 +22,6 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.scheduleappointment.di.ScheduleAppointmentSheetComponent
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
-import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity.Companion.selectedFacilityUuid
 import org.simple.clinic.util.LocaleOverrideContextWrapper
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
@@ -179,7 +178,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
     super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == REQCODE_FACILITY_SELECT && resultCode == Activity.RESULT_OK) {
       if (data != null) {
-        facilityChanges.onNext(PatientFacilityChanged(selectedFacilityUuid(data!!)))
+        val selectedFacility = FacilitySelectionActivity.selectedFacility(data)
+        val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
+        facilityChanges.onNext(patientFacilityChanged)
       }
     }
   }

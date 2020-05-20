@@ -91,7 +91,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .doOnNext { scheduleAppointment ->
-            appointmentRepository.scheduleImmediate(
+            appointmentRepository.schedule(
                 patientUuid = scheduleAppointment.patientUuid,
                 appointmentUuid = UUID.randomUUID(),
                 appointmentDate = scheduleAppointment.scheduledForDate,

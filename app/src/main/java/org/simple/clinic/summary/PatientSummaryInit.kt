@@ -15,15 +15,8 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
       effects.add(LoadCurrentUserAndFacility)
     }
 
-    if (model.hasLoadedCurrentFacility) {
-      when (model.teleconsultInfo) {
-        null, is TeleconsultInfo.Fetching -> {
-          effects.add(FetchTeleconsultationInfo(model.currentFacility!!.uuid))
-        }
-        is TeleconsultInfo.NetworkError -> {
-          effects.add(ShowTeleconsultInfoError)
-        }
-      }
+    if (model.canCheckTeleconsultationInfo) {
+      effectForTeleconsultInfoState(model, effects)
     }
 
     if (!model.hasCheckedForInvalidPhone) {
@@ -35,5 +28,19 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
     }
 
     return first(model, effects)
+  }
+
+  private fun effectForTeleconsultInfoState(
+      model: PatientSummaryModel,
+      effects: MutableSet<PatientSummaryEffect>
+  ) {
+    when (model.teleconsultInfo) {
+      null, is TeleconsultInfo.Fetching -> {
+        effects.add(FetchTeleconsultationInfo(model.currentFacility!!.uuid))
+      }
+      is TeleconsultInfo.NetworkError -> {
+        effects.add(ShowTeleconsultInfoError)
+      }
+    }
   }
 }

@@ -593,7 +593,9 @@ class ScheduleAppointmentSheetControllerTest {
         currentFacility = Lazy { facility },
         protocolRepository = protocolRepository,
         appointmentConfig = config,
-        userClock = clock
+        userClock = clock,
+        schedulers = TrampolineSchedulersProvider(),
+        uiActions = ui
     )
 
     testFixture = MobiusTestFixture(

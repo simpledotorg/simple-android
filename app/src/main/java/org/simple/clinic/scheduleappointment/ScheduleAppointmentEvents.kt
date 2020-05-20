@@ -7,10 +7,6 @@ object AppointmentDone : UiEvent {
   override val analyticsName = "Schedule Appointment:Appointment done"
 }
 
-object ManuallySelectAppointmentDateClicked : UiEvent {
-  override val analyticsName = "Schedule Appointment:Manually Select Appointment Date"
-}
-
 object SchedulingSkipped : UiEvent {
   override val analyticsName = "Schedule Appointment:Scheduling skipped"
 }

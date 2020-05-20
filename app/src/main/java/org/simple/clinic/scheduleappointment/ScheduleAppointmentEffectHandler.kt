@@ -1,6 +1,8 @@
 package org.simple.clinic.scheduleappointment
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
@@ -14,21 +16,29 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.threeten.bp.LocalDate
-import javax.inject.Inject
 
-class ScheduleAppointmentEffectHandler @Inject constructor(
+class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val protocolRepository: ProtocolRepository,
     private val appointmentConfig: AppointmentConfig,
-    private val userClock: UserClock
+    private val userClock: UserClock,
+    private val schedulers: SchedulersProvider,
+    @Assisted private val uiActions: ScheduleAppointmentUiActions
 ) {
+
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(uiActions: ScheduleAppointmentUiActions): ScheduleAppointmentEffectHandler
+  }
 
   fun build(): ObservableTransformer<ScheduleAppointmentEffect, ScheduleAppointmentEvent> {
     return RxMobius
         .subtypeEffectHandler<ScheduleAppointmentEffect, ScheduleAppointmentEvent>()
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
+        .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate)}, schedulers.ui())
         .build()
   }
 

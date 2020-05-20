@@ -57,20 +57,11 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
 
 
     return Observable.mergeArray(
-        showManualAppointmentDateSelector(replayedEvents),
         scheduleAutomaticAppointmentForDefaulters(replayedEvents),
         scheduleManualAppointment(replayedEvents),
         showPatientDefaultFacility(replayedEvents),
         showPatientSelectedFacility(replayedEvents)
     )
-  }
-
-  private fun showManualAppointmentDateSelector(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ManuallySelectAppointmentDateClicked>()
-        .map {
-          { ui: Ui -> ui.showManualDateSelector(model.selectedAppointmentDate!!.scheduledFor) }
-        }
   }
 
   private fun scheduleAutomaticAppointmentForDefaulters(events: Observable<UiEvent>): Observable<UiChange> {

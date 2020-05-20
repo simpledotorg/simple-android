@@ -2,6 +2,7 @@ package org.simple.clinic.scheduleappointment
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
@@ -23,6 +24,7 @@ class ScheduleAppointmentUpdate(
       is AppointmentDateIncremented -> selectLaterAppointmentDate(model)
       is AppointmentDateDecremented -> selectEarlierAppointmentDate(model)
       is AppointmentCalendarDateSelected -> selectExactAppointmentDate(event, model)
+      ManuallySelectAppointmentDateClicked -> dispatch(ShowDatePicker(model.selectedAppointmentDate!!.scheduledFor))
     }
   }
 

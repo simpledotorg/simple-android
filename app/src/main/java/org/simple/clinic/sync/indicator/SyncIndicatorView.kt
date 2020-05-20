@@ -11,6 +11,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.sync_indicator.view.*
@@ -102,7 +103,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun viewClicks() = RxView.clicks(rootLayout).map { SyncIndicatorViewClicked }
+  private fun viewClicks() = rootLayout.clicks().map { SyncIndicatorViewClicked }
 
   @SuppressLint("StringFormatMatches")
   override fun updateState(syncState: SyncIndicatorState) {

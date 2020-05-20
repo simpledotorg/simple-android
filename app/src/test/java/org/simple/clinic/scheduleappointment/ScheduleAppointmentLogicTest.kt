@@ -35,14 +35,13 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
 import java.util.UUID
 
-class ScheduleAppointmentSheetControllerTest {
+class ScheduleAppointmentLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -69,7 +68,6 @@ class ScheduleAppointmentSheetControllerTest {
       remindAppointmentsIn = emptyList()
   )
 
-  private lateinit var controller: ScheduleAppointmentSheetController
   private lateinit var testFixture: MobiusTestFixture<ScheduleAppointmentModel, ScheduleAppointmentEvent, ScheduleAppointmentEffect>
 
   @After
@@ -559,32 +557,28 @@ class ScheduleAppointmentSheetControllerTest {
   }
 
   private fun sheetCreated(
-      patientUuid: UUID = this.patientUuid,
       facility: Facility = this.facility,
       protocol: Protocol = this.protocol,
       config: AppointmentConfig = this.appointmentConfig
   ) {
     setupMobiusTestFixture(facility, config)
-    setupController(patientUuid, config, facility)
 
     whenever(protocolRepository.protocol(protocol.uuid)).thenReturn(Observable.just(protocol))
     whenever(protocolRepository.protocolImmediate(protocol.uuid)).thenReturn(protocol)
 
-    activateUi()
+    testFixture.start()
   }
 
   private fun sheetCreatedWithoutProtocol(
-      patientUuid: UUID = this.patientUuid,
       facility: Facility = this.facility,
       config: AppointmentConfig = this.appointmentConfig
   ) {
     setupMobiusTestFixture(facility, config)
-    setupController(patientUuid, config, facility)
 
     whenever(protocolRepository.protocol(protocolUuid)).thenReturn(Observable.never())
     whenever(protocolRepository.protocolImmediate(protocolUuid)).thenReturn(null)
 
-    activateUi()
+    testFixture.start()
   }
 
   private fun setupMobiusTestFixture(facility: Facility, config: AppointmentConfig) {
@@ -613,33 +607,6 @@ class ScheduleAppointmentSheetControllerTest {
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
-  }
-
-  private fun setupController(
-      patientUuid: UUID,
-      config: AppointmentConfig,
-      facility: Facility
-  ) {
-    controller = ScheduleAppointmentSheetController(
-        patientUuid = patientUuid,
-        modelSupplier = { testFixture.model },
-        appointmentRepository = repository,
-        patientRepository = patientRepository,
-        config = config,
-        clock = clock,
-        facilityRepository = facilityRepository,
-        protocolRepository = protocolRepository,
-        currentFacility = Lazy { facility },
-        schedulers = TrampolineSchedulersProvider()
-    )
-  }
-
-  private fun activateUi() {
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(ui) }
-
-    testFixture.start()
-
-    uiEvents.onNext(ScreenCreated())
   }
 }
 

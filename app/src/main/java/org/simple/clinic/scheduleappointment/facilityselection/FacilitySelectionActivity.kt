@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.screen_patient_facility_change.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.location.LOCATION_PERMISSION
@@ -29,16 +30,15 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import java.util.Locale
-import java.util.UUID
 import javax.inject.Inject
 
 class FacilitySelectionActivity : AppCompatActivity() {
 
   companion object {
-    const val EXTRA_SELECTED_FACILITY_UUID = "selected_facility_uuid"
+    const val EXTRA_SELECTED_FACILITY = "selected_facility"
 
-    fun selectedFacilityUuid(data: Intent): UUID {
-      return data.getSerializableExtra(EXTRA_SELECTED_FACILITY_UUID) as UUID
+    fun selectedFacility(data: Intent): Facility {
+      return data.getParcelableExtra(EXTRA_SELECTED_FACILITY)!!
     }
   }
 
@@ -150,9 +150,9 @@ class FacilitySelectionActivity : AppCompatActivity() {
     progress.visibility = RelativeLayout.GONE
   }
 
-  fun sendSelectedFacility(selectedFacilityUuid: UUID) {
+  fun sendSelectedFacility(selectedFacility: Facility) {
     val intent = Intent()
-    intent.putExtra(EXTRA_SELECTED_FACILITY_UUID, selectedFacilityUuid)
+    intent.putExtra(EXTRA_SELECTED_FACILITY, selectedFacility)
     setResult(Activity.RESULT_OK, intent)
     finish()
   }

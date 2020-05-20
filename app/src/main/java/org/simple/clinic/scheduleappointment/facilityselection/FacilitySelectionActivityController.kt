@@ -166,7 +166,6 @@ class FacilitySelectionActivityController @Inject constructor(
   private fun changeFacilityAndExit(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<FacilitySelected>()
-        .map { it.facility.uuid }
-        .map { { ui: Ui -> ui.sendSelectedFacility(it) } }
+        .map { { ui: Ui -> ui.sendSelectedFacility(it.facility) } }
   }
 }

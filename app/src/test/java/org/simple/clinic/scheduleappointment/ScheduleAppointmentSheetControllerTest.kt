@@ -495,11 +495,12 @@ class ScheduleAppointmentSheetControllerTest {
   @Test
   fun `when patient facility is changed then appointment should be scheduled in the changed facility`() {
     //given
-    val updatedFacilityUuid = TestData.facility().uuid
+    val updatedFacility = TestData.facility(uuid = UUID.fromString("2bb13dc3-305e-4bb2-bea7-ea853acf47cb"))
+    val updatedFacilityUuid = updatedFacility.uuid
     val appointment = TestData.appointment()
     val date = LocalDate.parse("2019-01-28")
 
-    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(TestData.facility(uuid = updatedFacilityUuid)))
+    whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(updatedFacility))
     whenever(repository.schedule(
         patientUuid = eq(patientUuid),
         appointmentUuid = any(),
@@ -511,7 +512,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     //when
     sheetCreated()
-    uiEvents.onNext(PatientFacilityChanged(updatedFacilityUuid))
+    uiEvents.onNext(PatientFacilityChanged(updatedFacility))
     uiEvents.onNext(AppointmentDone)
 
     //then
@@ -549,7 +550,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     //when
     sheetCreated()
-    uiEvents.onNext(PatientFacilityChanged(updatedFacilityUuid))
+    uiEvents.onNext(PatientFacilityChanged(updatedFacility))
 
     //then
     val inOrder = inOrder(ui)

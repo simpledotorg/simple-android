@@ -36,3 +36,9 @@ object AppointmentScheduled : ScheduleAppointmentEvent()
 object AppointmentDone : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Appointment done"
 }
+
+data class PatientDefaulterStatusLoaded(val isPatientADefaulter: Boolean) : ScheduleAppointmentEvent()
+
+object SchedulingSkipped : ScheduleAppointmentEvent() {
+  override val analyticsName = "Schedule Appointment:Scheduling skipped"
+}

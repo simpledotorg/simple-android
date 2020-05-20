@@ -594,6 +594,7 @@ class ScheduleAppointmentSheetControllerTest {
         currentFacility = Lazy { facility },
         protocolRepository = protocolRepository,
         appointmentRepository = repository,
+        patientRepository = patientRepository,
         appointmentConfig = config,
         userClock = clock,
         schedulers = TrampolineSchedulersProvider(),

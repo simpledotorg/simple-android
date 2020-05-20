@@ -74,7 +74,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
   lateinit var locale: Locale
 
   @Inject
-  lateinit var effectHandler: ScheduleAppointmentEffectHandler
+  lateinit var effectHandlerFactory: ScheduleAppointmentEffectHandler.Factory
 
   @Inject
   lateinit var config: AppointmentConfig
@@ -112,7 +112,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
         ),
         update = ScheduleAppointmentUpdate(userClock),
         init = ScheduleAppointmentInit(),
-        effectHandler = effectHandler.build(),
+        effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
     )
   }

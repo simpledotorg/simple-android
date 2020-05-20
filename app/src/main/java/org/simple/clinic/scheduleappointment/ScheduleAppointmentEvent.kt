@@ -19,3 +19,7 @@ object AppointmentDateDecremented : ScheduleAppointmentEvent() {
 data class AppointmentCalendarDateSelected(val selectedDate: LocalDate) : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Appointment calendar date selected"
 }
+
+object ManuallySelectAppointmentDateClicked : ScheduleAppointmentEvent() {
+  override val analyticsName = "Schedule Appointment:Manually Select Appointment Date"
+}

@@ -11,6 +11,7 @@
 
 ### Fixes
 - Fix camera crash when QR scanner view is paused/closed
+- Fix fetching teleconsultation error when `PatientSummaryScreen` is restored
 
 ## On Demo
 ### Feature

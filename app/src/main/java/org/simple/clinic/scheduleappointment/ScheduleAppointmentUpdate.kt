@@ -4,6 +4,8 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
+import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.util.daysTill
@@ -69,10 +71,11 @@ class ScheduleAppointmentUpdate(
   }
 
   private fun scheduleManualAppointment(model: ScheduleAppointmentModel): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
-    val effect = ScheduleManualAppointment(
+    val effect = ScheduleAppointmentForPatient(
         patientUuid = model.patientUuid,
         scheduledForDate = model.selectedAppointmentDate!!.scheduledFor,
-        scheduledAtFacility = model.appointmentFacility!!
+        scheduledAtFacility = model.appointmentFacility!!,
+        type = Manual
     )
 
     return dispatch(effect)
@@ -85,10 +88,11 @@ class ScheduleAppointmentUpdate(
     val shouldAutomaticAppointmentBeScheduled = event.isPatientADefaulter
 
     val effect = if (shouldAutomaticAppointmentBeScheduled) {
-      ScheduleAutomaticAppointment(
+      ScheduleAppointmentForPatient(
           patientUuid = model.patientUuid,
           scheduledForDate = currentDate + defaulterAppointmentPeriod,
-          scheduledAtFacility = model.appointmentFacility!!
+          scheduledAtFacility = model.appointmentFacility!!,
+          type = Automatic
       )
     } else {
       CloseSheet

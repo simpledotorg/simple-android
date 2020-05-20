@@ -5,8 +5,6 @@ import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentConfig
@@ -15,9 +13,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.LocalDate
 import java.util.UUID
 
 typealias Ui = ScheduleAppointmentUi
@@ -48,38 +44,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
     get() = modelSupplier()
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
-    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .replay()
-
-
-    return Observable.mergeArray(
-        showPatientDefaultFacility(replayedEvents),
-        showPatientSelectedFacility(replayedEvents)
-    )
+    return Observable.never()
   }
 
-  private fun showPatientDefaultFacility(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
-        .observeOn(schedulers.io())
-        .map { currentFacility.get() }
-        .map { facility ->
-          { ui: Ui ->
-            ui.showPatientFacility(facility.name)
-          }
-        }
-  }
-
-  private fun showPatientSelectedFacility(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientFacilityChanged>()
-        .map { { ui: Ui -> ui.showPatientFacility(it.facility.name) } }
-  }
-
-  data class OngoingAppointment(
-      val patientUuid: UUID,
-      val appointmentDate: LocalDate,
-      val appointmentFacilityUuid: UUID,
-      val creationFacilityUuid: UUID
-  )
 }

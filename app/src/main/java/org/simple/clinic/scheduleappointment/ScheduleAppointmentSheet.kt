@@ -101,11 +101,14 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
   }
 
   private val delegate by unsafeLazy {
+    val patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID
+
     val uiRenderer = ScheduleAppointmentUiRenderer(this)
 
     MobiusDelegate.forActivity(
         events = events.ofType(),
         defaultModel = ScheduleAppointmentModel.create(
+            patientUuid = patientUuid,
             timeToAppointments = config.scheduleAppointmentsIn,
             userClock = userClock
         ),

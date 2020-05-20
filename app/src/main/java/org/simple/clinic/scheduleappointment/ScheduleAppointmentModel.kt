@@ -6,9 +6,11 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.util.UserClock
+import java.util.UUID
 
 @Parcelize
 data class ScheduleAppointmentModel(
+    val patientUuid: UUID,
     val potentialAppointmentDates: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: PotentialAppointmentDate?,
     val appointmentFacility: Facility?
@@ -16,12 +18,14 @@ data class ScheduleAppointmentModel(
 
   companion object {
     fun create(
+        patientUuid: UUID,
         timeToAppointments: List<TimeToAppointment>,
         userClock: UserClock
     ): ScheduleAppointmentModel {
       val potentialAppointmentDates = generatePotentialAppointmentDatesForScheduling(timeToAppointments, userClock)
 
       return ScheduleAppointmentModel(
+          patientUuid = patientUuid,
           potentialAppointmentDates = potentialAppointmentDates,
           selectedAppointmentDate = null,
           appointmentFacility = null

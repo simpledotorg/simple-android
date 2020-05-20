@@ -593,6 +593,7 @@ class ScheduleAppointmentSheetControllerTest {
     val effectHandler = ScheduleAppointmentEffectHandler(
         currentFacility = Lazy { facility },
         protocolRepository = protocolRepository,
+        appointmentRepository = repository,
         appointmentConfig = config,
         userClock = clock,
         schedulers = TrampolineSchedulersProvider(),
@@ -602,6 +603,7 @@ class ScheduleAppointmentSheetControllerTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = ScheduleAppointmentModel.create(
+            patientUuid = patientUuid,
             timeToAppointments = config.scheduleAppointmentsIn,
             userClock = clock
         ),

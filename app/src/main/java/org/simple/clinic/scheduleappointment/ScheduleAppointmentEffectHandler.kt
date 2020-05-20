@@ -7,6 +7,7 @@ import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentConfig
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.protocol.Protocol
@@ -19,10 +20,12 @@ import org.simple.clinic.util.plus
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.threeten.bp.LocalDate
+import java.util.UUID
 
 class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val protocolRepository: ProtocolRepository,
+    private val appointmentRepository: AppointmentRepository,
     private val appointmentConfig: AppointmentConfig,
     private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
@@ -40,6 +43,8 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
         .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate) }, schedulers.ui())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+        .addTransformer(ScheduleAppointment::class.java, scheduleAppointment())
+        .addAction(CloseSheet::class.java, uiActions::closeSheet, schedulers.ui())
         .build()
   }
 
@@ -76,6 +81,24 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ScheduleAppointmentEvent> {
     return ObservableTransformer { effects ->
       effects.map { CurrentFacilityLoaded(currentFacility.get()) }
+    }
+  }
+
+  private fun scheduleAppointment(): ObservableTransformer<ScheduleAppointment, ScheduleAppointmentEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMapSingle { scheduleAppointment ->
+            appointmentRepository
+                .schedule(
+                    patientUuid = scheduleAppointment.patientUuid,
+                    appointmentUuid = UUID.randomUUID(),
+                    appointmentDate = scheduleAppointment.scheduledForDate,
+                    appointmentType = scheduleAppointment.type,
+                    appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,
+                    creationFacilityUuid = currentFacility.get().uuid
+                )
+          }
+          .map { AppointmentScheduled }
     }
   }
 }

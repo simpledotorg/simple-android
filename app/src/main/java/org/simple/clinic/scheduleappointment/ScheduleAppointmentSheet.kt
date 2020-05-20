@@ -26,10 +26,8 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.BottomSheetActivity
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.ThreeTenBpDatePickerDialog
-import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
@@ -83,7 +81,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   private val events by unsafeLazy {
     Observable
         .mergeArray(
-            screenCreates(),
             decrementClicks(),
             incrementClicks(),
             notNowClicks(),
@@ -173,10 +170,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
         facilityChanges.onNext(patientFacilityChanged)
       }
     }
-  }
-
-  private fun screenCreates(): Observable<UiEvent> {
-    return Observable.just(ScreenCreated())
   }
 
   private fun incrementClicks() = RxView.clicks(incrementDateButton).map { AppointmentDateIncremented }

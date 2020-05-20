@@ -6,14 +6,11 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
 
 class ScheduleAppointmentUpdate(
-    // Added for mobius migration, clock should not be here. Remove this later.
-    private val userClock: UserClock,
     private val currentDate: LocalDate,
     private val defaulterAppointmentPeriod: Period
 ) : Update<ScheduleAppointmentModel, ScheduleAppointmentEvent, ScheduleAppointmentEffect> {
@@ -61,12 +58,11 @@ class ScheduleAppointmentUpdate(
   ): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
     val userSelectedDate = event.selectedDate
 
-    val today = LocalDate.now(userClock)
     val matchingTimeToAppointmentFromPotentials = model.potentialAppointmentDates
         .find { potentialAppointmentDate -> potentialAppointmentDate.scheduledFor == userSelectedDate }
         ?.timeToAppointment
 
-    val timeToAppointment = matchingTimeToAppointmentFromPotentials ?: Days(today.daysTill(userSelectedDate))
+    val timeToAppointment = matchingTimeToAppointmentFromPotentials ?: Days(currentDate.daysTill(userSelectedDate))
     val potentialAppointmentDate = PotentialAppointmentDate(userSelectedDate, timeToAppointment)
 
     return next(model.appointmentDateSelected(potentialAppointmentDate))

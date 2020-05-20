@@ -105,7 +105,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
             userClock = userClock
         ),
         update = ScheduleAppointmentUpdate(
-            userClock = userClock,
             currentDate = LocalDate.now(userClock),
             defaulterAppointmentPeriod = config.appointmentDuePeriodForDefaulters
         ),

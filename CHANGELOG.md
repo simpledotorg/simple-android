@@ -3,6 +3,7 @@
 ## Next release
 ### Feature
 - Handle cases where the patient ID is not set correctly in the deeplink
+- Show address for overdue patient
 
 ### Internal
 - [In Progress: 19th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius

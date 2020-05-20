@@ -631,7 +631,6 @@ class ScheduleAppointmentLogicTest {
         ),
         init = ScheduleAppointmentInit(),
         update = ScheduleAppointmentUpdate(
-            userClock = clock,
             currentDate = LocalDate.now(clock),
             defaulterAppointmentPeriod = config.appointmentDuePeriodForDefaulters
         ),

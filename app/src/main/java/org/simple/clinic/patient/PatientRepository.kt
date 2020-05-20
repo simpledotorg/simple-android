@@ -618,12 +618,10 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {
+  fun isPatientDefaulter(patientUuid: UUID): Boolean {
     return database
         .patientDao()
-        .isPatientDefaulter(
-            patientUuid = patientUuid
-        ).toObservable()
+        .isPatientDefaulter(patientUuid)
   }
 
   fun allPatientsInFacility(facility: Facility): Observable<List<PatientSearchResult>> {

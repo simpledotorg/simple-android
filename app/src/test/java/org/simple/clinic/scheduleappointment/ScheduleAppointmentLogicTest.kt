@@ -95,7 +95,7 @@ class ScheduleAppointmentLogicTest {
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
 
-    verify(repository).scheduleImmediate(
+    verify(repository).schedule(
         patientUuid = eq(patientUuid),
         appointmentUuid = any(),
         appointmentDate = eq(scheduledDate),
@@ -122,7 +122,7 @@ class ScheduleAppointmentLogicTest {
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
 
-    verify(repository).scheduleImmediate(
+    verify(repository).schedule(
         patientUuid = eq(patientUuid),
         appointmentUuid = any(),
         appointmentDate = eq(scheduledDate),
@@ -139,7 +139,7 @@ class ScheduleAppointmentLogicTest {
     sheetCreated()
     uiEvents.onNext(SchedulingSkipped)
 
-    verify(repository, never()).scheduleImmediate(any(), any(), any(), any(), any(), any())
+    verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
@@ -532,7 +532,7 @@ class ScheduleAppointmentLogicTest {
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
 
-    verify(repository).scheduleImmediate(
+    verify(repository).schedule(
         patientUuid = eq(patientUuid),
         appointmentUuid = any(),
         appointmentDate = eq(date),
@@ -555,7 +555,7 @@ class ScheduleAppointmentLogicTest {
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
 
-    verify(repository).scheduleImmediate(
+    verify(repository).schedule(
         patientUuid = eq(patientUuid),
         appointmentUuid = any(),
         appointmentDate = eq(LocalDate.parse("2019-01-28")),

@@ -1650,7 +1650,7 @@ class PatientRepositoryAndroidTest {
             appointmentType = Manual,
             appointmentFacilityUuid = currentFacility.uuid,
             creationFacilityUuid = currentFacility.uuid
-        ).blockingGet()
+        )
       }
 
       return patientUuid to fullName

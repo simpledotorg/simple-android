@@ -36,19 +36,6 @@ class AppointmentRepository @Inject constructor(
       appointmentType: AppointmentType,
       appointmentFacilityUuid: UUID,
       creationFacilityUuid: UUID
-  ): Single<Appointment> {
-    return Single.fromCallable {
-      scheduleImmediate(patientUuid, appointmentUuid, appointmentDate, appointmentType, appointmentFacilityUuid, creationFacilityUuid)
-    }
-  }
-
-  fun scheduleImmediate(
-      patientUuid: UUID,
-      appointmentUuid: UUID,
-      appointmentDate: LocalDate,
-      appointmentType: AppointmentType,
-      appointmentFacilityUuid: UUID,
-      creationFacilityUuid: UUID
   ): Appointment {
 
     val appointment = Appointment(

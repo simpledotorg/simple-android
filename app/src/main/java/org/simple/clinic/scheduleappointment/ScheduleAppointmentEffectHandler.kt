@@ -6,7 +6,6 @@ import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.PotentialAppointmentDate
@@ -46,8 +45,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
         .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate) }, schedulers.ui())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-        .addTransformer(ScheduleManualAppointment::class.java, scheduleManualAppointment())
-        .addTransformer(ScheduleAutomaticAppointment::class.java, scheduleAutomaticAppointment())
+        .addTransformer(ScheduleAppointmentForPatient::class.java, scheduleAppointmentForPatient())
         .addAction(CloseSheet::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(LoadPatientDefaulterStatus::class.java, loadPatientDefaulterStatus())
         .build()
@@ -89,7 +87,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun scheduleManualAppointment(): ObservableTransformer<ScheduleManualAppointment, ScheduleAppointmentEvent> {
+  private fun scheduleAppointmentForPatient(): ObservableTransformer<ScheduleAppointmentForPatient, ScheduleAppointmentEvent> {
     return ObservableTransformer { effects ->
       effects
           .flatMapSingle { scheduleAppointment ->
@@ -98,25 +96,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
                     patientUuid = scheduleAppointment.patientUuid,
                     appointmentUuid = UUID.randomUUID(),
                     appointmentDate = scheduleAppointment.scheduledForDate,
-                    appointmentType = Appointment.AppointmentType.Manual,
-                    appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,
-                    creationFacilityUuid = currentFacility.get().uuid
-                )
-          }
-          .map { AppointmentScheduled }
-    }
-  }
-
-  private fun scheduleAutomaticAppointment(): ObservableTransformer<ScheduleAutomaticAppointment, ScheduleAppointmentEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .flatMapSingle { scheduleAppointment ->
-            appointmentRepository
-                .schedule(
-                    patientUuid = scheduleAppointment.patientUuid,
-                    appointmentUuid = UUID.randomUUID(),
-                    appointmentDate = scheduleAppointment.scheduledForDate,
-                    appointmentType = Appointment.AppointmentType.Automatic,
+                    appointmentType = scheduleAppointment.type,
                     appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,
                     creationFacilityUuid = currentFacility.get().uuid
                 )

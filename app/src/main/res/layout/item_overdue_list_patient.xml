@@ -30,10 +30,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_16"
-        android:layout_marginBottom="@dimen/spacing_12"
+        android:layout_marginBottom="@dimen/spacing_4"
         android:drawableStart="@drawable/ic_patient_female"
         android:drawablePadding="@dimen/spacing_16"
         tools:text="Anisha Acharya" />
+
+      <TextView
+        android:id="@+id/patientAddressTextView"
+        style="@style/Clinic.V2.TextAppearance.Body2Left.Grey0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_56"
+        android:layout_marginBottom="@dimen/spacing_12"
+        tools:text="Bathinda, Punjab" />
 
       <LinearLayout
         android:id="@+id/diagnosisLabelContainer"

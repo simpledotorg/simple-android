@@ -6,10 +6,12 @@ import com.squareup.inject.assisted.AssistedInject
 import dagger.Lazy
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.util.Just
@@ -26,6 +28,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val protocolRepository: ProtocolRepository,
     private val appointmentRepository: AppointmentRepository,
+    private val patientRepository: PatientRepository,
     private val appointmentConfig: AppointmentConfig,
     private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
@@ -43,8 +46,10 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
         .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate) }, schedulers.ui())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-        .addTransformer(ScheduleAppointment::class.java, scheduleAppointment())
+        .addTransformer(ScheduleManualAppointment::class.java, scheduleManualAppointment())
+        .addTransformer(ScheduleAutomaticAppointment::class.java, scheduleAutomaticAppointment())
         .addAction(CloseSheet::class.java, uiActions::closeSheet, schedulers.ui())
+        .addTransformer(LoadPatientDefaulterStatus::class.java, loadPatientDefaulterStatus())
         .build()
   }
 
@@ -84,7 +89,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun scheduleAppointment(): ObservableTransformer<ScheduleAppointment, ScheduleAppointmentEvent> {
+  private fun scheduleManualAppointment(): ObservableTransformer<ScheduleManualAppointment, ScheduleAppointmentEvent> {
     return ObservableTransformer { effects ->
       effects
           .flatMapSingle { scheduleAppointment ->
@@ -93,12 +98,45 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
                     patientUuid = scheduleAppointment.patientUuid,
                     appointmentUuid = UUID.randomUUID(),
                     appointmentDate = scheduleAppointment.scheduledForDate,
-                    appointmentType = scheduleAppointment.type,
+                    appointmentType = Appointment.AppointmentType.Manual,
                     appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,
                     creationFacilityUuid = currentFacility.get().uuid
                 )
           }
           .map { AppointmentScheduled }
+    }
+  }
+
+  private fun scheduleAutomaticAppointment(): ObservableTransformer<ScheduleAutomaticAppointment, ScheduleAppointmentEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMapSingle { scheduleAppointment ->
+            val appointmentDate = LocalDate.now(userClock) + appointmentConfig.appointmentDuePeriodForDefaulters
+
+            appointmentRepository
+                .schedule(
+                    patientUuid = scheduleAppointment.patientUuid,
+                    appointmentUuid = UUID.randomUUID(),
+                    appointmentDate = appointmentDate,
+                    appointmentType = Appointment.AppointmentType.Automatic,
+                    appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,
+                    creationFacilityUuid = currentFacility.get().uuid
+                )
+          }
+          .map { AppointmentScheduled }
+    }
+  }
+
+  private fun loadPatientDefaulterStatus(): ObservableTransformer<LoadPatientDefaulterStatus, ScheduleAppointmentEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          // TODO (vs) 20/05/20: Make this a synchronous call
+          .switchMapSingle {
+            patientRepository
+                .isPatientDefaulter(it.patientUuid)
+                .firstOrError()
+          }
+          .map(::PatientDefaulterStatusLoaded)
     }
   }
 }

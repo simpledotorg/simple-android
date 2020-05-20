@@ -1,7 +1,6 @@
 package org.simple.clinic.scheduleappointment
 
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.overdue.Appointment
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
@@ -13,11 +12,17 @@ data class ShowDatePicker(val selectedDate: LocalDate) : ScheduleAppointmentEffe
 
 object LoadCurrentFacility : ScheduleAppointmentEffect()
 
-data class ScheduleAppointment(
+data class ScheduleManualAppointment(
     val patientUuid: UUID,
     val scheduledForDate: LocalDate,
-    val scheduledAtFacility: Facility,
-    val type: Appointment.AppointmentType
+    val scheduledAtFacility: Facility
+) : ScheduleAppointmentEffect()
+
+data class ScheduleAutomaticAppointment(
+    val patientUuid: UUID,
+    val scheduledAtFacility: Facility
 ) : ScheduleAppointmentEffect()
 
 object CloseSheet: ScheduleAppointmentEffect()
+
+data class LoadPatientDefaulterStatus(val patientUuid: UUID): ScheduleAppointmentEffect()

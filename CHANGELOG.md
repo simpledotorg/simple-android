@@ -8,6 +8,9 @@
 - [In Progress: 19th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
 - Fix PR description CI when using markdown syntax
 
+### Fixes
+- Fix camera crash when QR scanner view is paused/closed
+
 ## On Demo
 ### Feature
 - Add support for teleconsultation & deep-linking to open patient summary.

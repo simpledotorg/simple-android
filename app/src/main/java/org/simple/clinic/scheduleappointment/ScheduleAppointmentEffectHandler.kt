@@ -90,16 +90,15 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
   private fun scheduleAppointmentForPatient(): ObservableTransformer<ScheduleAppointmentForPatient, ScheduleAppointmentEvent> {
     return ObservableTransformer { effects ->
       effects
-          .flatMapSingle { scheduleAppointment ->
-            appointmentRepository
-                .schedule(
-                    patientUuid = scheduleAppointment.patientUuid,
-                    appointmentUuid = UUID.randomUUID(),
-                    appointmentDate = scheduleAppointment.scheduledForDate,
-                    appointmentType = scheduleAppointment.type,
-                    appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,
-                    creationFacilityUuid = currentFacility.get().uuid
-                )
+          .doOnNext { scheduleAppointment ->
+            appointmentRepository.scheduleImmediate(
+                patientUuid = scheduleAppointment.patientUuid,
+                appointmentUuid = UUID.randomUUID(),
+                appointmentDate = scheduleAppointment.scheduledForDate,
+                appointmentType = scheduleAppointment.type,
+                appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,
+                creationFacilityUuid = currentFacility.get().uuid
+            )
           }
           .map { AppointmentScheduled }
     }

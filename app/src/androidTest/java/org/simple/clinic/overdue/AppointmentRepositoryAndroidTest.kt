@@ -129,7 +129,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = creationFacility.uuid
-    ).blockingGet()
+    )
 
     // then
     val savedAppointment = getAppointmentByUuid(appointmentUuid)
@@ -158,7 +158,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
-    ).blockingGet()
+    )
     markAppointmentSyncStatusAsDone(firstAppointmentUuid)
 
     clock.advanceBy(Duration.ofHours(24))
@@ -175,7 +175,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
-    ).blockingGet()
+    )
 
     // then
     val firstAppointment = getAppointmentByUuid(firstAppointmentUuid)
@@ -574,7 +574,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
-    ).blockingGet()
+    )
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
     clock.advanceBy(Duration.ofHours(24))
@@ -609,7 +609,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
-    ).blockingGet()
+    )
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
     clock.advanceBy(Duration.ofSeconds(1))
@@ -642,7 +642,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
-    ).blockingGet()
+    )
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
     clock.advanceBy(Duration.ofDays(1))
@@ -675,7 +675,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
-    ).blockingGet()
+    )
     markAppointmentSyncStatusAsDone(appointmentUuid)
 
     clock.advanceBy(Duration.ofDays(1))
@@ -725,7 +725,7 @@ class AppointmentRepositoryAndroidTest {
           appointmentType = Manual,
           appointmentFacilityUuid = facility.uuid,
           creationFacilityUuid = facility.uuid
-      ).blockingGet()
+      )
 
       val bloodPressureMeasurements = bps.mapIndexed { index, (systolic, diastolic) ->
 
@@ -956,7 +956,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
-    ).blockingGet()
+    )
 
     clock.advanceBy(Duration.ofDays(1))
 
@@ -968,7 +968,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Manual,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
-    ).blockingGet()
+    )
 
     // when
     val appointment = appointmentRepository.lastCreatedAppointmentForPatient(patientUuid).toNullable()!!
@@ -1047,7 +1047,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentType = Automatic,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
-    ).blockingGet()
+    )
 
     // then
     val savedAppointment = getAppointmentByUuid(appointmentUuid)
@@ -1073,14 +1073,14 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid: UUID,
         patientProfile: PatientProfile
     ): Single<Appointment> {
-      return appointmentRepository.schedule(
+      return Single.just(appointmentRepository.schedule(
           patientUuid = patientProfile.patient.uuid,
           appointmentUuid = appointmentUuid,
           appointmentDate = LocalDate.parse("2017-12-30"),
           appointmentType = Manual,
           appointmentFacilityUuid = facility.uuid,
           creationFacilityUuid = facility.uuid
-      )
+      ))
     }
 
     // given
@@ -1148,14 +1148,14 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid: UUID,
         patientProfile: PatientProfile
     ): Single<Appointment> {
-      return appointmentRepository.schedule(
+      return Single.just(appointmentRepository.schedule(
           patientUuid = patientProfile.patient.uuid,
           appointmentUuid = appointmentUuid,
           appointmentDate = LocalDate.parse("2017-12-30"),
           appointmentType = Manual,
           appointmentFacilityUuid = facility.uuid,
           creationFacilityUuid = facility.uuid
-      )
+      ))
     }
 
     // given
@@ -1230,14 +1230,14 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid: UUID,
         patientProfile: PatientProfile
     ): Single<Appointment> {
-      return appointmentRepository.schedule(
+      return Single.just(appointmentRepository.schedule(
           patientUuid = patientProfile.patient.uuid,
           appointmentUuid = appointmentUuid,
           appointmentDate = LocalDate.parse("2017-12-30"),
           appointmentType = Manual,
           appointmentFacilityUuid = facility.uuid,
           creationFacilityUuid = facility.uuid
-      )
+      ))
     }
 
     // given
@@ -1298,14 +1298,14 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid: UUID,
         patientProfile: PatientProfile
     ): Single<Appointment> {
-      return appointmentRepository.schedule(
+      return Single.just(appointmentRepository.schedule(
           patientUuid = patientProfile.patient.uuid,
           appointmentUuid = appointmentUuid,
           appointmentDate = LocalDate.parse("2017-12-30"),
           appointmentType = Manual,
           appointmentFacilityUuid = facility.uuid,
           creationFacilityUuid = facility.uuid
-      )
+      ))
     }
 
     // given
@@ -1860,7 +1860,7 @@ class AppointmentRepositoryAndroidTest {
           appointmentType = Manual,
           appointmentFacilityUuid = facility.uuid,
           creationFacilityUuid = facility.uuid
-      ).blockingGet()
+      )
 
       val bloodPressureMeasurements = bps.mapIndexed { index, (systolic, diastolic) ->
 
@@ -2078,7 +2078,7 @@ class AppointmentRepositoryAndroidTest {
           appointmentType = Manual,
           appointmentFacilityUuid = facility.uuid,
           creationFacilityUuid = facility.uuid
-      ).blockingGet()
+      )
 
       val bpTimestamp = Instant.now(clock)
 

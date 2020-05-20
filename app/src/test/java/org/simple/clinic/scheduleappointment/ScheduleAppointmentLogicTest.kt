@@ -630,7 +630,11 @@ class ScheduleAppointmentLogicTest {
             userClock = clock
         ),
         init = ScheduleAppointmentInit(),
-        update = ScheduleAppointmentUpdate(clock),
+        update = ScheduleAppointmentUpdate(
+            userClock = clock,
+            currentDate = LocalDate.now(clock),
+            defaulterAppointmentPeriod = config.appointmentDuePeriodForDefaulters
+        ),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

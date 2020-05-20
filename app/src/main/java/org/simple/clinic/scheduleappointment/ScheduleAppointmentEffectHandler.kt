@@ -38,7 +38,8 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<ScheduleAppointmentEffect, ScheduleAppointmentEvent>()
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
-        .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate)}, schedulers.ui())
+        .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate) }, schedulers.ui())
+        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .build()
   }
 
@@ -70,5 +71,11 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
   private fun generatePotentialAppointmentDate(scheduleAppointmentIn: TimeToAppointment): PotentialAppointmentDate {
     val today = LocalDate.now(userClock)
     return PotentialAppointmentDate(today.plus(scheduleAppointmentIn), scheduleAppointmentIn)
+  }
+
+  private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ScheduleAppointmentEvent> {
+    return ObservableTransformer { effects ->
+      effects.map { CurrentFacilityLoaded(currentFacility.get()) }
+    }
   }
 }

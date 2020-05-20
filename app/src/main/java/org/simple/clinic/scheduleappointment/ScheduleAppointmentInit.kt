@@ -13,6 +13,10 @@ class ScheduleAppointmentInit : Init<ScheduleAppointmentModel, ScheduleAppointme
       effects.add(LoadDefaultAppointmentDate)
     }
 
+    if (!model.hasLoadedAppointmentFacility) {
+      effects.add(LoadCurrentFacility)
+    }
+
     return first(model, effects)
   }
 }

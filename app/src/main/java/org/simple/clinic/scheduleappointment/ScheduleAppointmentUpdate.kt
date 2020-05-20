@@ -25,6 +25,8 @@ class ScheduleAppointmentUpdate(
       is AppointmentDateDecremented -> selectEarlierAppointmentDate(model)
       is AppointmentCalendarDateSelected -> selectExactAppointmentDate(event, model)
       ManuallySelectAppointmentDateClicked -> dispatch(ShowDatePicker(model.selectedAppointmentDate!!.scheduledFor))
+      is CurrentFacilityLoaded -> next(model.appointmentFacilitySelected(event.facility))
+      is PatientFacilityChanged -> next(model.appointmentFacilitySelected(event.facility))
     }
   }
 

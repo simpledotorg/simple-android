@@ -18,7 +18,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
@@ -107,22 +106,13 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   }
 
   private fun scheduleManualAppointment(events: Observable<UiEvent>): Observable<UiChange> {
-    val facilityChanged = events
-        .ofType<PatientFacilityChanged>()
-        .map { it.facilityUuid }
-
-    val currentFacilityUuid = Observable
-        .fromCallable { currentFacility.get().uuid }
-        .subscribeOn(schedulers.io())
-    val patientFacilityUuidStream = currentFacilityUuid.mergeWith(facilityChanged)
-
     return events
         .ofType<AppointmentDone>()
-        .withLatestFrom(patientFacilityUuidStream) { _, patientFacilityUuid ->
+        .map {
           OngoingAppointment(
               patientUuid = patientUuid,
               appointmentDate = model.selectedAppointmentDate!!.scheduledFor,
-              appointmentFacilityUuid = patientFacilityUuid,
+              appointmentFacilityUuid = model.appointmentFacility!!.uuid,
               creationFacilityUuid = currentFacility.get().uuid
           )
         }
@@ -155,9 +145,7 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
   private fun showPatientSelectedFacility(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<PatientFacilityChanged>()
-        .map { facilityRepository.facility(it.facilityUuid) }
-        .unwrapJust()
-        .map { { ui: Ui -> ui.showPatientFacility(it.name) } }
+        .map { { ui: Ui -> ui.showPatientFacility(it.facility.name) } }
   }
 
   data class OngoingAppointment(

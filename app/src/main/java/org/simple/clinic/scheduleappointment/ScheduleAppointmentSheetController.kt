@@ -6,11 +6,9 @@ import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
@@ -55,52 +53,9 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
 
 
     return Observable.mergeArray(
-        scheduleAutomaticAppointmentForDefaulters(replayedEvents),
         showPatientDefaultFacility(replayedEvents),
         showPatientSelectedFacility(replayedEvents)
     )
-  }
-
-  private fun scheduleAutomaticAppointmentForDefaulters(events: Observable<UiEvent>): Observable<UiChange> {
-    val schedulingSkippedStream = events.ofType<SchedulingSkipped>()
-
-    val isPatientDefaulterStream = schedulingSkippedStream
-        .switchMap { patientRepository.isPatientDefaulter(patientUuid) }
-        .replay()
-        .refCount()
-
-    val appointmentStream = schedulingSkippedStream
-        .map {
-          val currentFacilityUuid = currentFacility.get().uuid
-
-          OngoingAppointment(
-              patientUuid = patientUuid,
-              appointmentDate = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
-              appointmentFacilityUuid = currentFacilityUuid,
-              creationFacilityUuid = currentFacilityUuid
-          )
-        }
-
-    val saveAppointmentAndCloseSheet = isPatientDefaulterStream
-        .filter { isPatientDefaulter -> isPatientDefaulter }
-        .withLatestFrom(appointmentStream)
-        .flatMapSingle { (_, appointment) ->
-          appointmentRepository.schedule(
-              patientUuid = appointment.patientUuid,
-              appointmentUuid = UUID.randomUUID(),
-              appointmentDate = appointment.appointmentDate,
-              appointmentFacilityUuid = appointment.appointmentFacilityUuid,
-              appointmentType = Automatic,
-              creationFacilityUuid = appointment.creationFacilityUuid
-          )
-        }
-        .map { Ui::closeSheet }
-
-    val closeSheetWithoutSavingAppointment = isPatientDefaulterStream
-        .filter { isPatientDefaulter -> isPatientDefaulter.not() }
-        .map { Ui::closeSheet }
-
-    return Observable.merge(saveAppointmentAndCloseSheet, closeSheetWithoutSavingAppointment)
   }
 
   private fun showPatientDefaultFacility(events: Observable<UiEvent>): Observable<UiChange> {

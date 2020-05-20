@@ -4,7 +4,6 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
-import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.util.UserClock
@@ -30,6 +29,8 @@ class ScheduleAppointmentUpdate(
       is PatientFacilityChanged -> next(model.appointmentFacilitySelected(event.facility))
       is AppointmentDone -> scheduleManualAppointment(model)
       is AppointmentScheduled -> dispatch(CloseSheet)
+      SchedulingSkipped -> dispatch(LoadPatientDefaulterStatus(model.patientUuid))
+      is PatientDefaulterStatusLoaded -> scheduleAutomaticAppointment(event, model)
     }
   }
 
@@ -69,12 +70,29 @@ class ScheduleAppointmentUpdate(
   }
 
   private fun scheduleManualAppointment(model: ScheduleAppointmentModel): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
-    val effect = ScheduleAppointment(
+    val effect = ScheduleManualAppointment(
         patientUuid = model.patientUuid,
         scheduledForDate = model.selectedAppointmentDate!!.scheduledFor,
-        scheduledAtFacility = model.appointmentFacility!!,
-        type = Appointment.AppointmentType.Manual
+        scheduledAtFacility = model.appointmentFacility!!
     )
+
+    return dispatch(effect)
+  }
+
+  private fun scheduleAutomaticAppointment(
+      event: PatientDefaulterStatusLoaded,
+      model: ScheduleAppointmentModel
+  ): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
+    val shouldAutomaticAppointmentBeScheduled = event.isPatientADefaulter
+
+    val effect = if (shouldAutomaticAppointmentBeScheduled) {
+      ScheduleAutomaticAppointment(
+          patientUuid = model.patientUuid,
+          scheduledAtFacility = model.appointmentFacility!!
+      )
+    } else {
+      CloseSheet
+    }
 
     return dispatch(effect)
   }

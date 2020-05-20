@@ -38,7 +38,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi {
+class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100

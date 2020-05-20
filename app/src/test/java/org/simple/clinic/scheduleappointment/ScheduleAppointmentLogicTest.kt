@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import io.reactivex.Observable
@@ -47,6 +48,7 @@ class ScheduleAppointmentLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<ScheduleAppointmentUi>()
+  private val uiActions = mock<ScheduleAppointmentUiActions>()
   private val repository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -97,8 +99,10 @@ class ScheduleAppointmentLogicTest {
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(false)
     verify(ui).updateScheduledAppointment(scheduledDate, Days(protocol.followUpDays))
-    verify(ui).closeSheet()
     verifyNoMoreInteractions(ui)
+
+    verify(uiActions).closeSheet()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -121,8 +125,10 @@ class ScheduleAppointmentLogicTest {
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-28"), Days(protocol.followUpDays))
-    verify(ui).closeSheet()
     verifyNoMoreInteractions(ui)
+
+    verify(uiActions).closeSheet()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -137,8 +143,10 @@ class ScheduleAppointmentLogicTest {
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-28"), Days(protocol.followUpDays))
-    verify(ui).closeSheet()
     verifyNoMoreInteractions(ui)
+
+    verify(uiActions).closeSheet()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -159,8 +167,9 @@ class ScheduleAppointmentLogicTest {
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
-
     verifyNoMoreInteractions(ui)
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -186,6 +195,8 @@ class ScheduleAppointmentLogicTest {
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
     verifyNoMoreInteractions(ui)
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -215,6 +226,8 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-04")))
     uiEvents.onNext(AppointmentDateIncremented)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -244,6 +257,8 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-07")))
     uiEvents.onNext(AppointmentDateDecremented)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -286,6 +301,8 @@ class ScheduleAppointmentLogicTest {
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
     verifyNoMoreInteractions(ui)
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -306,25 +323,25 @@ class ScheduleAppointmentLogicTest {
 
     // then
     uiEvents.onNext(ManuallySelectAppointmentDateClicked)
-    verify(ui).showManualDateSelector(LocalDate.parse("2019-01-03"))
-    reset(ui)
+    verify(uiActions).showManualDateSelector(LocalDate.parse("2019-01-03"))
+    reset(uiActions)
 
     uiEvents.onNext(AppointmentDateIncremented)
     uiEvents.onNext(ManuallySelectAppointmentDateClicked)
-    verify(ui).showManualDateSelector(LocalDate.parse("2019-01-08"))
-    reset(ui)
+    verify(uiActions).showManualDateSelector(LocalDate.parse("2019-01-08"))
+    reset(uiActions)
 
     uiEvents.onNext(AppointmentDateDecremented)
     uiEvents.onNext(AppointmentDateDecremented)
     uiEvents.onNext(ManuallySelectAppointmentDateClicked)
-    verify(ui).showManualDateSelector(LocalDate.parse("2019-01-02"))
-    reset(ui)
+    verify(uiActions).showManualDateSelector(LocalDate.parse("2019-01-02"))
+    reset(uiActions)
 
     val lastSelectedCalendarDate = LocalDate.parse("2019-01-05")
     uiEvents.onNext(AppointmentCalendarDateSelected(lastSelectedCalendarDate))
     uiEvents.onNext(ManuallySelectAppointmentDateClicked)
-    verify(ui).showManualDateSelector(lastSelectedCalendarDate)
-    reset(ui)
+    verify(uiActions).showManualDateSelector(lastSelectedCalendarDate)
+    reset(uiActions)
   }
 
   @Test
@@ -372,6 +389,8 @@ class ScheduleAppointmentLogicTest {
 
     uiEvents.onNext(AppointmentDateDecremented)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -416,6 +435,8 @@ class ScheduleAppointmentLogicTest {
 
     uiEvents.onNext(AppointmentDateDecremented)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -479,6 +500,8 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-03-01")))
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-03-01"), Months(2))
     reset(ui)
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -514,7 +537,8 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(AppointmentDone)
 
     //then
-    verify(ui).closeSheet()
+    verify(uiActions).closeSheet()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -535,7 +559,8 @@ class ScheduleAppointmentLogicTest {
     uiEvents.onNext(AppointmentDone)
 
     //then
-    verify(ui).closeSheet()
+    verify(uiActions).closeSheet()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -554,6 +579,8 @@ class ScheduleAppointmentLogicTest {
     val inOrder = inOrder(ui)
     inOrder.verify(ui).showPatientFacility(facility.name)
     inOrder.verify(ui).showPatientFacility(updatedFacility.name)
+
+    verifyZeroInteractions(uiActions)
   }
 
   private fun sheetCreated(
@@ -592,7 +619,7 @@ class ScheduleAppointmentLogicTest {
         appointmentConfig = config,
         userClock = clock,
         schedulers = TrampolineSchedulersProvider(),
-        uiActions = ui
+        uiActions = uiActions
     )
 
     testFixture = MobiusTestFixture(

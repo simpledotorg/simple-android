@@ -36,7 +36,8 @@ data class OverdueAppointmentRow(
     val lastSeenDate: String,
     val diagnosedWithDiabetes: Answer?,
     val diagnosedWithHypertension: Answer?,
-    val showDiagnosisLabel: Boolean
+    val showDiagnosisLabel: Boolean,
+    val patientAddress: OverduePatientAddress
 ) : ItemAdapter.Item<UiEvent> {
 
   companion object {
@@ -68,7 +69,8 @@ data class OverdueAppointmentRow(
           lastSeenDate = dateFormatter.format(overdueAppointment.patientLastSeen.toLocalDateAtZone(clock.zone)),
           diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
           diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
-          showDiagnosisLabel = isDiabetesManagementEnabled
+          showDiagnosisLabel = isDiabetesManagementEnabled,
+          patientAddress = overdueAppointment.patientAddress
       )
     }
 
@@ -103,6 +105,14 @@ data class OverdueAppointmentRow(
 
     holder.patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, name, age.toString())
     holder.patientNameTextView.setCompoundDrawableStart(gender.displayIconRes)
+    holder.patientAddressTextView.text = when {
+      !patientAddress.streetAddress.isNullOrBlank() && !patientAddress.colonyOrVillage.isNullOrBlank() -> {
+        "${patientAddress.streetAddress}, ${patientAddress.colonyOrVillage}"
+      }
+      !patientAddress.streetAddress.isNullOrBlank() -> patientAddress.streetAddress
+      !patientAddress.colonyOrVillage.isNullOrBlank() -> patientAddress.colonyOrVillage
+      else -> "${patientAddress.district}, ${patientAddress.state}"
+    }
 
     holder.patientLastSeenTextView.text = lastSeenDate
 

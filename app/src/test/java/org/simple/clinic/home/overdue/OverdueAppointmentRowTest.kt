@@ -24,6 +24,8 @@ class OverdueAppointmentRowTest {
   fun `overdue appointments must be converted to list items`() {
     // given
     val oneYear = Duration.ofDays(365)
+    val patientAddress1 = TestData.overduePatientAddress()
+    val patientAddress2 = TestData.overduePatientAddress()
 
     val appointmentDelayedBy4Days = TestData
         .overdueAppointment(
@@ -40,7 +42,8 @@ class OverdueAppointmentRowTest {
             ),
             patientLastSeen = Instant.parse("2020-01-01T00:00:00Z"),
             diagnosedWithDiabetes = Yes,
-            diagnosedWithHypertension = No
+            diagnosedWithHypertension = No,
+            patientAddress = patientAddress1
         )
     val appointmentDelayedByOneWeek = TestData
         .overdueAppointment(
@@ -57,7 +60,8 @@ class OverdueAppointmentRowTest {
             ),
             patientLastSeen = Instant.parse("2019-12-25T00:00:00Z"),
             diagnosedWithDiabetes = No,
-            diagnosedWithHypertension = null
+            diagnosedWithHypertension = null,
+            patientAddress = patientAddress2
         )
 
     val appointments = listOf(appointmentDelayedBy4Days, appointmentDelayedByOneWeek)
@@ -79,7 +83,8 @@ class OverdueAppointmentRowTest {
             lastSeenDate = "1-Jan-2020",
             diagnosedWithDiabetes = Yes,
             diagnosedWithHypertension = No,
-            showDiagnosisLabel = true
+            showDiagnosisLabel = true,
+            patientAddress = patientAddress1
         ),
         OverdueAppointmentRow(
             appointmentUuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
@@ -93,7 +98,8 @@ class OverdueAppointmentRowTest {
             lastSeenDate = "25-Dec-2019",
             diagnosedWithDiabetes = No,
             diagnosedWithHypertension = null,
-            showDiagnosisLabel = true
+            showDiagnosisLabel = true,
+            patientAddress = patientAddress2
         )
     )
     assertThat(overdueListItems)

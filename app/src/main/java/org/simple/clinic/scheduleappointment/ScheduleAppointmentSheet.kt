@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -172,15 +172,15 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
     }
   }
 
-  private fun incrementClicks() = RxView.clicks(incrementDateButton).map { AppointmentDateIncremented }
+  private fun incrementClicks() = incrementDateButton.clicks().map { AppointmentDateIncremented }
 
-  private fun decrementClicks() = RxView.clicks(decrementDateButton).map { AppointmentDateDecremented }
+  private fun decrementClicks() = decrementDateButton.clicks().map { AppointmentDateDecremented }
 
-  private fun notNowClicks() = RxView.clicks(notNowButton).map { SchedulingSkipped }
+  private fun notNowClicks() = notNowButton.clicks().map { SchedulingSkipped }
 
-  private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentDone }
+  private fun doneClicks() = doneButton.clicks().map { AppointmentDone }
 
-  private fun appointmentDateClicks() = RxView.clicks(changeAppointmentDate).map { ManuallySelectAppointmentDateClicked }
+  private fun appointmentDateClicks() = changeAppointmentDate.clicks().map { ManuallySelectAppointmentDateClicked }
 
   private fun openFacilitySelection() {
     startActivityForResult(Intent(this, FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)

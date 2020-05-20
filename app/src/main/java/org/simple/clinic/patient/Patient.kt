@@ -277,7 +277,7 @@ data class Patient(
         patientUuid: UUID,
         yesAnswer: Answer = Answer.Yes,
         scheduled: Appointment.Status = Appointment.Status.Scheduled
-    ): Flowable<Boolean>
+    ): Boolean
 
     @Query("""
         SELECT (

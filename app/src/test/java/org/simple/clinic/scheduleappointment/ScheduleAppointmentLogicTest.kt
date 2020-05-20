@@ -107,7 +107,7 @@ class ScheduleAppointmentLogicTest {
 
   @Test
   fun `when scheduling an appointment is skipped and the patient is a defaulter, an automatic appointment should be scheduled`() {
-    whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(true))
+    whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(true)
     val scheduledDate = LocalDate.parse("2019-01-31")
 
     sheetCreated()
@@ -134,7 +134,7 @@ class ScheduleAppointmentLogicTest {
 
   @Test
   fun `when scheduling an appointment is skipped and the patient is not a defaulter, an automatic appointment should not be scheduled`() {
-    whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(false))
+    whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(false)
 
     sheetCreated()
     uiEvents.onNext(SchedulingSkipped)

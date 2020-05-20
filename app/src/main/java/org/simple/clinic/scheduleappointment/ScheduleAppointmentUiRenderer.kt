@@ -1,5 +1,6 @@
 package org.simple.clinic.scheduleappointment
 
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.util.ValueChangedCallback
@@ -9,6 +10,7 @@ class ScheduleAppointmentUiRenderer(
 ) : ViewRenderer<ScheduleAppointmentModel> {
 
   private val selectedDateChangedCallback = ValueChangedCallback<PotentialAppointmentDate>()
+  private val facilityChangedCallback = ValueChangedCallback<Facility>()
 
   override fun render(model: ScheduleAppointmentModel) {
     if (model.hasLoadedAppointmentDate) {
@@ -16,6 +18,12 @@ class ScheduleAppointmentUiRenderer(
         ui.updateScheduledAppointment(selectedDate.scheduledFor, selectedDate.timeToAppointment)
         toggleStateOfIncrementButton(selectedDate, model.potentialAppointmentDates)
         toggleStateOfDecrementButton(selectedDate, model.potentialAppointmentDates)
+      }
+    }
+
+    if(model.hasLoadedAppointmentFacility) {
+      facilityChangedCallback.pass(model.appointmentFacility!!) { facility ->
+        ui.showPatientFacility(facility.name)
       }
     }
   }

@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.sheet_schedule_appointment.*
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.overdue.AppointmentConfig
@@ -61,9 +60,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
   }
 
   @Inject
-  lateinit var controller: ScheduleAppointmentSheetController.Factory
-
-  @Inject
   lateinit var userClock: UserClock
 
   @field:[Inject Named("full_date")]
@@ -97,7 +93,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
             facilityChanges
         )
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate by unsafeLazy {
@@ -123,14 +118,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity(), ScheduleAppointmentUi, S
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_schedule_appointment)
     delegate.onRestoreInstanceState(savedInstanceState)
-
-    val patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller.create(patientUuid) { delegate.currentModel },
-        screenDestroys = onDestroys
-    )
 
     changeFacilityButton.setOnClickListener {
       openFacilitySelection()

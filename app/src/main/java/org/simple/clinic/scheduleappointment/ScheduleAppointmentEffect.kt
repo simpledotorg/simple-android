@@ -20,6 +20,7 @@ data class ScheduleManualAppointment(
 
 data class ScheduleAutomaticAppointment(
     val patientUuid: UUID,
+    val scheduledForDate: LocalDate,
     val scheduledAtFacility: Facility
 ) : ScheduleAppointmentEffect()
 

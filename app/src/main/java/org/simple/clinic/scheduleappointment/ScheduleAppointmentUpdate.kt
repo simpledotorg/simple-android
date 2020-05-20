@@ -87,6 +87,7 @@ class ScheduleAppointmentUpdate(
     val effect = if (shouldAutomaticAppointmentBeScheduled) {
       ScheduleAutomaticAppointment(
           patientUuid = model.patientUuid,
+          scheduledForDate = currentDate + defaulterAppointmentPeriod,
           scheduledAtFacility = model.appointmentFacility!!
       )
     } else {

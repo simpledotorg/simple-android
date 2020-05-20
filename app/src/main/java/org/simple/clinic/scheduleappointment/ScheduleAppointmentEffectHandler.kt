@@ -111,13 +111,11 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .flatMapSingle { scheduleAppointment ->
-            val appointmentDate = LocalDate.now(userClock) + appointmentConfig.appointmentDuePeriodForDefaulters
-
             appointmentRepository
                 .schedule(
                     patientUuid = scheduleAppointment.patientUuid,
                     appointmentUuid = UUID.randomUUID(),
-                    appointmentDate = appointmentDate,
+                    appointmentDate = scheduleAppointment.scheduledForDate,
                     appointmentType = Appointment.AppointmentType.Automatic,
                     appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,
                     creationFacilityUuid = currentFacility.get().uuid

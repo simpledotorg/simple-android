@@ -107,13 +107,10 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
   private fun loadPatientDefaulterStatus(): ObservableTransformer<LoadPatientDefaulterStatus, ScheduleAppointmentEvent> {
     return ObservableTransformer { effects ->
       effects
-          // TODO (vs) 20/05/20: Make this a synchronous call
-          .switchMapSingle {
-            patientRepository
-                .isPatientDefaulter(it.patientUuid)
-                .firstOrError()
+          .map {
+            val isPatientDefaulter = patientRepository.isPatientDefaulter(it.patientUuid)
+            PatientDefaulterStatusLoaded(isPatientDefaulter)
           }
-          .map(::PatientDefaulterStatusLoaded)
     }
   }
 }

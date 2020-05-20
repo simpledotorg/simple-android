@@ -1812,8 +1812,7 @@ class PatientRepositoryAndroidTest {
     val defaulterPatients = mutableListOf<String>()
 
     patients.map { (uuid, name) ->
-      val isDefaulter = patientRepository.isPatientDefaulter(uuid).blockingFirst()
-      if (isDefaulter) {
+      if (patientRepository.isPatientDefaulter(uuid)) {
         defaulterPatients += name
       }
     }

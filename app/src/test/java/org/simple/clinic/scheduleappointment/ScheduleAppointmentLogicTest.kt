@@ -12,7 +12,6 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -82,14 +81,6 @@ class ScheduleAppointmentLogicTest {
     val defaultTimeToAppointment = Months(1)
     val periodsToScheduleAppointmentsIn = listOf(defaultTimeToAppointment)
     val scheduledDate = LocalDate.parse("2019-01-28")
-    whenever(repository.schedule(
-        patientUuid = eq(patientUuid),
-        appointmentUuid = any(),
-        appointmentDate = eq(scheduledDate),
-        appointmentType = eq(Manual),
-        appointmentFacilityUuid = eq(facility.uuid),
-        creationFacilityUuid = eq(facility.uuid)
-    )).thenReturn(Single.just(TestData.appointment()))
 
     sheetCreated(config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn))
 
@@ -103,20 +94,21 @@ class ScheduleAppointmentLogicTest {
 
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
+
+    verify(repository).scheduleImmediate(
+        patientUuid = eq(patientUuid),
+        appointmentUuid = any(),
+        appointmentDate = eq(scheduledDate),
+        appointmentType = eq(Manual),
+        appointmentFacilityUuid = eq(facility.uuid),
+        creationFacilityUuid = eq(facility.uuid)
+    )
   }
 
   @Test
   fun `when scheduling an appointment is skipped and the patient is a defaulter, an automatic appointment should be scheduled`() {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(true))
     val scheduledDate = LocalDate.parse("2019-01-31")
-    whenever(repository.schedule(
-        patientUuid = eq(patientUuid),
-        appointmentUuid = any(),
-        appointmentDate = eq(scheduledDate),
-        appointmentType = eq(Automatic),
-        appointmentFacilityUuid = eq(facility.uuid),
-        creationFacilityUuid = eq(facility.uuid)
-    )).thenReturn(Single.just(TestData.appointment()))
 
     sheetCreated()
     uiEvents.onNext(SchedulingSkipped)
@@ -129,6 +121,15 @@ class ScheduleAppointmentLogicTest {
 
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
+
+    verify(repository).scheduleImmediate(
+        patientUuid = eq(patientUuid),
+        appointmentUuid = any(),
+        appointmentDate = eq(scheduledDate),
+        appointmentType = eq(Automatic),
+        appointmentFacilityUuid = eq(facility.uuid),
+        creationFacilityUuid = eq(facility.uuid)
+    )
   }
 
   @Test
@@ -138,7 +139,7 @@ class ScheduleAppointmentLogicTest {
     sheetCreated()
     uiEvents.onNext(SchedulingSkipped)
 
-    verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
+    verify(repository, never()).scheduleImmediate(any(), any(), any(), any(), any(), any())
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
@@ -518,18 +519,9 @@ class ScheduleAppointmentLogicTest {
     //given
     val updatedFacility = TestData.facility(uuid = UUID.fromString("2bb13dc3-305e-4bb2-bea7-ea853acf47cb"))
     val updatedFacilityUuid = updatedFacility.uuid
-    val appointment = TestData.appointment()
     val date = LocalDate.parse("2019-01-28")
 
     whenever(facilityRepository.facility(updatedFacilityUuid)).thenReturn(Just(updatedFacility))
-    whenever(repository.schedule(
-        patientUuid = eq(patientUuid),
-        appointmentUuid = any(),
-        appointmentDate = eq(date),
-        appointmentType = eq(Manual),
-        appointmentFacilityUuid = eq(updatedFacilityUuid),
-        creationFacilityUuid = eq(facility.uuid)
-    )).thenReturn(Single.just(appointment))
 
     //when
     sheetCreated()
@@ -539,20 +531,21 @@ class ScheduleAppointmentLogicTest {
     //then
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
+
+    verify(repository).scheduleImmediate(
+        patientUuid = eq(patientUuid),
+        appointmentUuid = any(),
+        appointmentDate = eq(date),
+        appointmentType = eq(Manual),
+        appointmentFacilityUuid = eq(updatedFacilityUuid),
+        creationFacilityUuid = eq(facility.uuid)
+    )
   }
 
   @Test
   fun `when patient facility is not changed then appointment should be scheduled in the current facility`() {
     //given
     val appointment = TestData.appointment()
-    whenever(repository.schedule(
-        patientUuid = eq(patientUuid),
-        appointmentUuid = any(),
-        appointmentDate = eq(LocalDate.parse("2019-01-28")),
-        appointmentType = eq(Manual),
-        appointmentFacilityUuid = eq(facility.uuid),
-        creationFacilityUuid = eq(facility.uuid)
-    )).thenReturn(Single.just(appointment))
 
     //when
     sheetCreated()
@@ -561,6 +554,15 @@ class ScheduleAppointmentLogicTest {
     //then
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
+
+    verify(repository).scheduleImmediate(
+        patientUuid = eq(patientUuid),
+        appointmentUuid = any(),
+        appointmentDate = eq(LocalDate.parse("2019-01-28")),
+        appointmentType = eq(Manual),
+        appointmentFacilityUuid = eq(facility.uuid),
+        creationFacilityUuid = eq(facility.uuid)
+    )
   }
 
   @Test

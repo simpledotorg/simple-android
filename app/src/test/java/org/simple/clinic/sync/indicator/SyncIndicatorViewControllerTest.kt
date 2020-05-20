@@ -61,7 +61,7 @@ class SyncIndicatorViewControllerTest {
   private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
 
   private val uiRenderer = SyncIndicatorUiRenderer()
-  private val effectHandler = SyncIndicatorEffectHandler(indicator)
+  private val effectHandler = SyncIndicatorEffectHandler(lastSyncStatePreference, indicator)
   private val testFixture = MobiusTestFixture(
       events = uiEvents.ofType(),
       defaultModel = SyncIndicatorModel.create(),
@@ -70,6 +70,8 @@ class SyncIndicatorViewControllerTest {
       effectHandler = effectHandler.build(),
       modelUpdateListener = uiRenderer::render
   )
+
+  private val defaultLastSyncedState = LastSyncedState()
 
   @Before
   fun setUp() {
@@ -85,7 +87,7 @@ class SyncIndicatorViewControllerTest {
   fun `when sync progress is not set, sync status indicator should show sync pending`() {
     //when
     setupController()
-    lastSyncStateStream.onNext(LastSyncedState())
+    lastSyncStateStream.onNext(defaultLastSyncedState)
 
     //then
     verify(indicator).updateState(SyncPending)
@@ -133,7 +135,7 @@ class SyncIndicatorViewControllerTest {
 
     //when
     setupController()
-    lastSyncStateStream.onNext(LastSyncedState())
+    lastSyncStateStream.onNext(defaultLastSyncedState)
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     //then
@@ -148,7 +150,7 @@ class SyncIndicatorViewControllerTest {
 
     // when
     setupController()
-    lastSyncStateStream.onNext(LastSyncedState())
+    lastSyncStateStream.onNext(defaultLastSyncedState)
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     // then
@@ -172,7 +174,7 @@ class SyncIndicatorViewControllerTest {
 
     // when
     setupController()
-    lastSyncStateStream.onNext(LastSyncedState())
+    lastSyncStateStream.onNext(defaultLastSyncedState)
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     // then
@@ -181,9 +183,12 @@ class SyncIndicatorViewControllerTest {
 
   @Test
   fun `when last sync state is syncing then we should not trigger a manual sync on click`() {
+    //given
+    val syncingState = LastSyncedState(lastSyncProgress = SYNCING)
+
     //when
     setupController()
-    lastSyncStateStream.onNext(LastSyncedState(lastSyncProgress = SYNCING))
+    lastSyncStateStream.onNext(syncingState)
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     //then
@@ -218,11 +223,11 @@ class SyncIndicatorViewControllerTest {
         frequentlySyncingRepositories = frequentlySyncingRepositories
     )
 
-    testFixture.start()
-
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(indicator) }
+
+    testFixture.start()
 
     uiEvents.onNext(ScreenCreated())
   }

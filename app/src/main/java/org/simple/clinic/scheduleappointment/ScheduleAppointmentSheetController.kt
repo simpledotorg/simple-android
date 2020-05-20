@@ -11,7 +11,6 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
-import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
@@ -57,7 +56,6 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
 
     return Observable.mergeArray(
         scheduleAutomaticAppointmentForDefaulters(replayedEvents),
-        scheduleManualAppointment(replayedEvents),
         showPatientDefaultFacility(replayedEvents),
         showPatientSelectedFacility(replayedEvents)
     )
@@ -103,31 +101,6 @@ class ScheduleAppointmentSheetController @AssistedInject constructor(
         .map { Ui::closeSheet }
 
     return Observable.merge(saveAppointmentAndCloseSheet, closeSheetWithoutSavingAppointment)
-  }
-
-  private fun scheduleManualAppointment(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<AppointmentDone>()
-        .map {
-          OngoingAppointment(
-              patientUuid = patientUuid,
-              appointmentDate = model.selectedAppointmentDate!!.scheduledFor,
-              appointmentFacilityUuid = model.appointmentFacility!!.uuid,
-              creationFacilityUuid = currentFacility.get().uuid
-          )
-        }
-        .flatMapSingle { appointmentEntry ->
-          appointmentRepository
-              .schedule(
-                  patientUuid = appointmentEntry.patientUuid,
-                  appointmentUuid = UUID.randomUUID(),
-                  appointmentDate = appointmentEntry.appointmentDate,
-                  appointmentType = Manual,
-                  appointmentFacilityUuid = appointmentEntry.appointmentFacilityUuid,
-                  creationFacilityUuid = appointmentEntry.creationFacilityUuid
-              )
-        }
-        .map { Ui::closeSheet }
   }
 
   private fun showPatientDefaultFacility(events: Observable<UiEvent>): Observable<UiChange> {

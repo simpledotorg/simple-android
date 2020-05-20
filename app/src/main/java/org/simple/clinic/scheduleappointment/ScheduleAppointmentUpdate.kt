@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.util.UserClock
@@ -27,6 +28,8 @@ class ScheduleAppointmentUpdate(
       ManuallySelectAppointmentDateClicked -> dispatch(ShowDatePicker(model.selectedAppointmentDate!!.scheduledFor))
       is CurrentFacilityLoaded -> next(model.appointmentFacilitySelected(event.facility))
       is PatientFacilityChanged -> next(model.appointmentFacilitySelected(event.facility))
+      is AppointmentDone -> scheduleManualAppointment(model)
+      is AppointmentScheduled -> dispatch(CloseSheet)
     }
   }
 
@@ -63,5 +66,16 @@ class ScheduleAppointmentUpdate(
     val potentialAppointmentDate = PotentialAppointmentDate(userSelectedDate, timeToAppointment)
 
     return next(model.appointmentDateSelected(potentialAppointmentDate))
+  }
+
+  private fun scheduleManualAppointment(model: ScheduleAppointmentModel): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
+    val effect = ScheduleAppointment(
+        patientUuid = model.patientUuid,
+        scheduledForDate = model.selectedAppointmentDate!!.scheduledFor,
+        scheduledAtFacility = model.appointmentFacility!!,
+        type = Appointment.AppointmentType.Manual
+    )
+
+    return dispatch(effect)
   }
 }

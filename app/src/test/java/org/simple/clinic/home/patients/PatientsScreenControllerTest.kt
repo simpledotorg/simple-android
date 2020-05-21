@@ -10,8 +10,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -67,7 +68,6 @@ class PatientsScreenControllerTest {
   private val refreshCurrentUser = mock<RefreshCurrentUser>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
-  private lateinit var controller: PatientsScreenController
 
   private val canSyncStream = PublishSubject.create<Boolean>()
   private val appUpdatesStream = PublishSubject.create<AppUpdateState>()
@@ -77,33 +77,18 @@ class PatientsScreenControllerTest {
   private val userWaitingForApproval = TestData.loggedInUser(uuid = userUuid, loggedInStatus = LOGGED_IN, status = WaitingForApproval)
   private val userPendingVerification = userApprovedForSyncing.copy(loggedInStatus = OTP_REQUESTED)
 
-  @Before
-  fun setUp() {
-    controller = PatientsScreenController(
-        userSession = userSession,
-        checkAppUpdate = checkAppUpdate,
-        utcClock = utcClock,
-        userClock = userClock,
-        refreshCurrentUser = refreshCurrentUser,
-        schedulersProvider = TrampolineSchedulersProvider(),
-        approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
-        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
-        appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPref
-    )
+  private lateinit var controller: PatientsScreenController
+  private lateinit var controllerSubscription: Disposable
 
-    whenever(userSession.canSyncData()).doReturn(canSyncStream)
-    whenever(refreshCurrentUser.refresh()).doReturn(Completable.never())
-    whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
-    whenever(numberOfPatientsRegisteredPref.get()).doReturn(0)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
   fun `when new patient is clicked then patient search screen should open`() {
+    setupController()
+
     // when
     uiEvents.onNext(NewPatientClicked)
 
@@ -121,6 +106,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -144,6 +130,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -160,6 +147,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -176,6 +164,7 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(Duration.ofDays(2)))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -191,6 +180,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -206,6 +196,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -221,6 +212,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -237,6 +229,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -253,6 +246,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(UserApprovedStatusDismissed())
 
@@ -270,6 +264,7 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -286,6 +281,7 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -302,6 +298,7 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -318,6 +315,7 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -335,6 +333,7 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -351,6 +350,7 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // then
@@ -369,6 +369,7 @@ class PatientsScreenControllerTest {
 
     val user = userPendingVerification
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // when
@@ -391,6 +392,8 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user decides to enter the login code manually, the enter otp screen must be opened`() {
+    setupController()
+
     // when
     uiEvents.onNext(PatientsEnterCodeManuallyClicked())
 
@@ -400,6 +403,8 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user clicks scan card id button and the camera permission is granted, open the scan camera screen`() {
+    setupController()
+
     // when
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(GRANTED)))
 
@@ -409,6 +414,8 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user clicks scan card id button and the camera permission is denied, do not open the scan camera screen`() {
+    setupController()
+
     // when
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(DENIED)))
 
@@ -423,6 +430,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     // when
@@ -449,6 +457,7 @@ class PatientsScreenControllerTest {
     whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant.minusMillis(1))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(AppUpdateState.ShowAppUpdate)
 
@@ -465,6 +474,7 @@ class PatientsScreenControllerTest {
     whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant)
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(AppUpdateState.ShowAppUpdate)
 
@@ -481,6 +491,7 @@ class PatientsScreenControllerTest {
     whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant.minusMillis(1))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(DontShowAppUpdate)
 
@@ -497,6 +508,7 @@ class PatientsScreenControllerTest {
     whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant.minusMillis(1))
 
     // when
+    setupController()
     uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(AppUpdateStateError(RuntimeException()))
 
@@ -513,6 +525,7 @@ class PatientsScreenControllerTest {
     whenever(numberOfPatientsRegisteredPref.get()).doReturn(9)
 
     //when
+    setupController()
     uiEvents.onNext(ScreenCreated())
 
     //then
@@ -521,14 +534,14 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  fun `when screen is created then display illustration if patient registered count is exceeds 10`() {
+  fun `when screen is created then display illustration if patient registered count is at least 10`() {
     //given
     whenever(userSession.loggedInUser()).doReturn(Observable.just(userApprovedForSyncing.toOptional()))
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant)
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(numberOfPatientsRegisteredPref.get()).doReturn(10)
 
     //when
+    setupController(numberOfPatientsRegistered = 10)
     uiEvents.onNext(ScreenCreated())
 
     //then
@@ -538,10 +551,38 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when simple video is clicked then open the video in youtube`() {
+    setupController()
+
     //when
     uiEvents.onNext(SimpleVideoClicked)
 
     //then
     verify(screen).openYouTubeLinkForSimpleVideo()
+  }
+
+  private fun setupController(
+      numberOfPatientsRegistered: Int = 0
+  ) {
+    controller = PatientsScreenController(
+        userSession = userSession,
+        checkAppUpdate = checkAppUpdate,
+        utcClock = utcClock,
+        userClock = userClock,
+        refreshCurrentUser = refreshCurrentUser,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
+        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
+        appUpdateDialogShownAtPref = appUpdateDialogShownPref,
+        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPref
+    )
+
+    whenever(userSession.canSyncData()).doReturn(canSyncStream)
+    whenever(refreshCurrentUser.refresh()).doReturn(Completable.complete())
+    whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
+    whenever(numberOfPatientsRegisteredPref.get()).doReturn(numberOfPatientsRegistered)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

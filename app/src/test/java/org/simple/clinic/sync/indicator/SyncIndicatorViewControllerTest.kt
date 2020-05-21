@@ -60,8 +60,15 @@ class SyncIndicatorViewControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
 
+  private val defaultLastSyncedState = LastSyncedState()
+
   private val uiRenderer = SyncIndicatorUiRenderer()
-  private val effectHandler = SyncIndicatorEffectHandler(lastSyncStatePreference, indicator)
+  private val effectHandler = SyncIndicatorEffectHandler(
+      lastSyncStatePreference,
+      utcClock,
+      configSubject,
+      indicator
+  )
   private val testFixture = MobiusTestFixture(
       events = uiEvents.ofType(),
       defaultModel = SyncIndicatorModel.create(),
@@ -70,8 +77,6 @@ class SyncIndicatorViewControllerTest {
       effectHandler = effectHandler.build(),
       modelUpdateListener = uiRenderer::render
   )
-
-  private val defaultLastSyncedState = LastSyncedState()
 
   @Before
   fun setUp() {
@@ -105,8 +110,8 @@ class SyncIndicatorViewControllerTest {
 
     //when
     setupController()
-    configSubject.onNext(config)
     lastSyncStateStream.onNext(lastSyncState)
+    configSubject.onNext(config)
 
     //then
     verify(indicator).updateState(expectedSyncState)

@@ -4,11 +4,17 @@ import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.sync.LastSyncedState
+import org.simple.clinic.util.UtcClock
+import org.threeten.bp.Instant
 
 class SyncIndicatorEffectHandler @AssistedInject constructor(
     private val lastSyncedState: Preference<LastSyncedState>,
+    private val utcClock: UtcClock,
+    //TODO: Fetch the `SyncIndicatorConfig` instead of a stream
+    private val syncIndicatorConfig: Observable<SyncIndicatorConfig>,
     @Assisted private val uiActions: SyncIndicatorUiActions
 ) {
 
@@ -21,6 +27,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
       RxMobius
           .subtypeEffectHandler<SyncIndicatorEffect, SyncIndicatorEvent>()
           .addTransformer(FetchLastSyncedStatus::class.java, fetchLastSyncedState())
+          .addTransformer(FetchDataForSyncIndicatorState::class.java, fetchDataForSyncIndicatorState())
           .build()
 
   private fun fetchLastSyncedState(): ObservableTransformer<FetchLastSyncedStatus, SyncIndicatorEvent> {
@@ -28,6 +35,17 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
       effect
           .switchMap { lastSyncedState.asObservable() }
           .map(::LastSyncedStateFetched)
+    }
+  }
+
+  private fun fetchDataForSyncIndicatorState(): ObservableTransformer<FetchDataForSyncIndicatorState, SyncIndicatorEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .flatMap {
+            syncIndicatorConfig.map {
+              DataForSyncIndicatorStateFetched(Instant.now(utcClock), it.syncFailureThreshold)
+            }
+          }
     }
   }
 }

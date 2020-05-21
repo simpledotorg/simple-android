@@ -25,7 +25,6 @@ import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserSession
@@ -335,14 +334,9 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for verification status of approved user")
-  fun `when an approved user is verified, the verification status must be hidden`(
-      userStatus: UserStatus,
-      loggedInStatus: LoggedInStatus,
-      shouldHideMessage: Boolean
-  ) {
+  fun `when an approved user is pending OTP verification, the verification status must not be hidden`() {
     // given
-    val user = TestData.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
+    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = OTP_REQUESTED)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
@@ -353,26 +347,59 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     // then
-    if (shouldHideMessage) {
-      verify(screen).hideUserAccountStatus()
-    } else {
-      verify(screen, never()).hideUserAccountStatus()
-    }
+    verify(screen, never()).hideUserAccountStatus()
   }
 
-  @Suppress("unused")
-  private fun `params for verification status of approved user`() =
-      listOf(
-          listOf(WaitingForApproval, NOT_LOGGED_IN, false),
-          listOf(WaitingForApproval, OTP_REQUESTED, false),
-          listOf(WaitingForApproval, LOGGED_IN, false),
-          listOf(ApprovedForSyncing, NOT_LOGGED_IN, false),
-          listOf(ApprovedForSyncing, OTP_REQUESTED, false),
-          listOf(ApprovedForSyncing, LOGGED_IN, true),
-          listOf(DisapprovedForSyncing, NOT_LOGGED_IN, false),
-          listOf(DisapprovedForSyncing, OTP_REQUESTED, false),
-          listOf(DisapprovedForSyncing, LOGGED_IN, true)
-      )
+  @Test
+  fun `when an approved user has finished OTP verification, the verification status must be hidden`() {
+    // given
+    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = LOGGED_IN)
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(userSession.canSyncData()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
+    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(screen).hideUserAccountStatus()
+  }
+
+  @Test
+  fun `when a waiting for approval user is pending OTP verification, the verification status must not be hidden`() {
+    // given
+    val user = TestData.loggedInUser(status = WaitingForApproval, loggedInStatus = OTP_REQUESTED)
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(userSession.canSyncData()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
+    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(screen, never()).hideUserAccountStatus()
+  }
+
+  @Test
+  fun `when a waiting for approval user has finished OTP verification, the verification status not must be hidden`() {
+    // given
+    val user = TestData.loggedInUser(status = WaitingForApproval, loggedInStatus = LOGGED_IN)
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(userSession.canSyncData()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
+    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(screen, never()).hideUserAccountStatus()
+  }
 
   @Test
   @Parameters(

@@ -85,7 +85,6 @@ class SyncIndicatorViewControllerTest {
   fun `when sync progress is not set, sync status indicator should show sync pending`() {
     //when
     setupController()
-    uiEvents.onNext(ScreenCreated())
     lastSyncStateStream.onNext(LastSyncedState())
 
     //then
@@ -104,7 +103,6 @@ class SyncIndicatorViewControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(ScreenCreated())
     configSubject.onNext(config)
     lastSyncStateStream.onNext(lastSyncState)
 
@@ -206,7 +204,6 @@ class SyncIndicatorViewControllerTest {
 
     //when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     //then
     verify(indicator).updateState(SyncPending)
@@ -226,5 +223,7 @@ class SyncIndicatorViewControllerTest {
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(indicator) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

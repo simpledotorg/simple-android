@@ -54,8 +54,8 @@ class PatientsScreenControllerTest {
 
   private val screen: PatientsScreen = mock()
   private val userSession = mock<UserSession>()
-  private val approvalStatusApprovedAt = mock<Preference<Instant>>()
-  private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
+  private val approvalStatusApprovedAtPreference = mock<Preference<Instant>>()
+  private val hasUserDismissedApprovedStatusPreference = mock<Preference<Boolean>>()
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
 
@@ -64,7 +64,7 @@ class PatientsScreenControllerTest {
   private val utcClock = TestUtcClock(date)
   private val userClock = TestUserClock(date)
 
-  private val numberOfPatientsRegisteredPref = mock<Preference<Int>>()
+  private val numberOfPatientsRegisteredPreference = mock<Preference<Int>>()
   private val refreshCurrentUser = mock<RefreshCurrentUser>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
@@ -99,15 +99,13 @@ class PatientsScreenControllerTest {
   @Test
   fun `when screen is created or resumed then the user's status should refresh regardless of current status`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userApprovedForSyncing)))
     whenever(refreshCurrentUser.refresh()).doReturn(Completable.complete())
-    whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(Instant.now())
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(refreshCurrentUser).refresh()
@@ -124,14 +122,12 @@ class PatientsScreenControllerTest {
   @Test
   fun `when the user is awaiting approval after registration, then the waiting approval status should be shown`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userWaitingForApproval)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
 
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(user = userWaitingForApproval)
 
     // then
     verify(screen).showUserStatusAsWaiting()
@@ -140,15 +136,13 @@ class PatientsScreenControllerTest {
   @Test
   fun `when the user is awaiting approval after resetting the PIN, then the waiting approval status should be shown`() {
     // given
-    val user = userWaitingForApproval.copy(loggedInStatus = RESET_PIN_REQUESTED)
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
 
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    val user = userWaitingForApproval.copy(loggedInStatus = RESET_PIN_REQUESTED)
+    setupController(user = user)
 
     // then
     verify(screen).showUserStatusAsWaiting()
@@ -157,15 +151,13 @@ class PatientsScreenControllerTest {
   @Test
   fun `when the user is approved for syncing, then the waiting approval status should not be shown`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userApprovedForSyncing)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(Duration.ofDays(2)))
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(Duration.ofDays(2)))
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(screen, never()).showUserStatusAsWaiting()
@@ -174,14 +166,12 @@ class PatientsScreenControllerTest {
   @Test
   fun `when the user has been approved within the last 24h and has not dismissed the approval status, then the approval status should be shown`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userApprovedForSyncing)))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(23, ChronoUnit.HOURS))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(23, ChronoUnit.HOURS))
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     // then
     verify(screen).showUserStatusAsApproved()
@@ -189,15 +179,11 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user has been approved within the last 24h and has dismissed the approval status, then the approval status should not be shown`() {
-    // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userApprovedForSyncing)))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(23, ChronoUnit.HOURS))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(
+        approvalStatusApprovedAt = dateAsInstant.minus(23, ChronoUnit.HOURS),
+        hasUserDismissedApprovedStatus = true
+    )
 
     // then
     verify(screen, never()).showUserStatusAsApproved()
@@ -205,15 +191,11 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user has been approved before the last 24h and has not dismissed the approval status, then the approval status should not be shown`() {
-    // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userApprovedForSyncing)))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
-
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(
+        hasUserDismissedApprovedStatus = false,
+        approvalStatusApprovedAt = dateAsInstant.minus(25, ChronoUnit.HOURS)
+    )
 
     // then
     verify(screen, never()).showUserStatusAsApproved()
@@ -223,49 +205,44 @@ class PatientsScreenControllerTest {
   fun `when checking the user's status fails with any error then the error should be silently swallowed`() {
     // given
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userWaitingForApproval)))
     whenever(refreshCurrentUser.refresh()).doReturn(Completable.error(SocketTimeoutException()))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
 
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(user = userWaitingForApproval)
 
     // then
     verify(refreshCurrentUser).refresh()
-    verify(approvalStatusApprovedAt).set(any())
+    verify(approvalStatusApprovedAtPreference).set(any())
   }
 
   @Test
   fun `when the user dismisses the approved status then the status should be hidden`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userApprovedForSyncing)))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(23, ChronoUnit.HOURS))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(23, ChronoUnit.HOURS))
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(UserApprovedStatusDismissed())
 
     // then
-    verify(hasUserDismissedApprovedStatus).set(true)
+    verify(hasUserDismissedApprovedStatusPreference).set(true)
   }
 
   @Test
   fun `when an approved user is awaiting sms verification, the pending SMS verification status must be shown`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userPendingVerification)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(
+        user = userPendingVerification,
+        hasUserDismissedApprovedStatus = true,
+        approvalStatusApprovedAt = dateAsInstant.minus(25, ChronoUnit.HOURS)
+    )
 
     // then
     verify(screen).showUserStatusAsPendingVerification()
@@ -274,15 +251,13 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an approved user has completed sms verification, the verification status must be shown`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userApprovedForSyncing)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(
+        hasUserDismissedApprovedStatus = true,
+        approvalStatusApprovedAt = dateAsInstant.minus(25, ChronoUnit.HOURS)
+    )
 
     // then
     verify(screen, never()).showUserStatusAsPendingVerification()
@@ -291,15 +266,13 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an approved user is pending OTP verification, the verification status must not be hidden`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userPendingVerification)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(true))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(true)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(user = userPendingVerification)
 
     // then
     verify(screen, never()).hideUserAccountStatus()
@@ -308,15 +281,13 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an approved user has finished OTP verification, the verification status must be hidden`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userApprovedForSyncing)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(
+        hasUserDismissedApprovedStatus = true,
+        approvalStatusApprovedAt = dateAsInstant.minus(25, ChronoUnit.HOURS)
+    )
 
     // then
     verify(screen).hideUserAccountStatus()
@@ -325,16 +296,14 @@ class PatientsScreenControllerTest {
   @Test
   fun `when a waiting for approval user is pending OTP verification, the verification status must not be hidden`() {
     // given
-    val user = userWaitingForApproval.copy(loggedInStatus = OTP_REQUESTED)
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(true))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(true)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    val user = userWaitingForApproval.copy(loggedInStatus = OTP_REQUESTED)
+    setupController(user = user)
 
     // then
     verify(screen, never()).hideUserAccountStatus()
@@ -343,15 +312,13 @@ class PatientsScreenControllerTest {
   @Test
   fun `when a waiting for approval user has finished OTP verification, the verification status not must be hidden`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(userWaitingForApproval)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(true))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(true)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(user = userWaitingForApproval)
 
     // then
     verify(screen, never()).hideUserAccountStatus()
@@ -360,17 +327,15 @@ class PatientsScreenControllerTest {
   @Test
   fun `when a user is verified for login, the account status status must be hidden`() {
     // given
-    val userSubject = PublishSubject.create<Optional<User>>()
-    whenever(userSession.loggedInUser()).doReturn(userSubject)
-
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
-
     val user = userPendingVerification
+    val userAfterLoggingIn = userPendingVerification.copy(loggedInStatus = LOGGED_IN)
 
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    val userSubject = PublishSubject.create<Optional<User>>()
+    setupControllerWithUserStream(
+        userStream = userSubject,
+        hasUserDismissedApprovedStatus = true,
+        approvalStatusApprovedAt = dateAsInstant.minus(25, ChronoUnit.HOURS)
+    )
 
     // when
     userSubject.onNext(user.toOptional())
@@ -379,14 +344,14 @@ class PatientsScreenControllerTest {
     verify(screen, never()).hideUserAccountStatus()
 
     // when
-    userSubject.onNext(user.copy(loggedInStatus = LOGGED_IN).toOptional())
+    userSubject.onNext(userAfterLoggingIn.toOptional())
 
     // then
     verify(screen).hideUserAccountStatus()
     clearInvocations(screen)
 
     // when
-    userSubject.onNext(user.copy(loggedInStatus = LOGGED_IN).toOptional())
+    userSubject.onNext(userAfterLoggingIn.toOptional())
     verify(screen).hideUserAccountStatus()
   }
 
@@ -426,12 +391,10 @@ class PatientsScreenControllerTest {
   @Test
   fun `sync indicator should be visible only when user is approved for syncing`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just(userWaitingForApproval.toOptional()))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
 
-    setupController()
-    uiEvents.onNext(ScreenCreated())
+    setupController(user = userWaitingForApproval)
 
     // when
     canSyncStream.onNext(false)
@@ -451,14 +414,12 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an app update is available and the app update dialog has not been shown on the current date, show the app update dialog`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just(userApprovedForSyncing.toOptional()))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant)
     whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant.minusMillis(1))
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(AppUpdateState.ShowAppUpdate)
 
     // then
@@ -468,14 +429,12 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an app update is available and the app update dialog has been shown on the current date, show the app update dialog`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just(userApprovedForSyncing.toOptional()))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant)
     whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant)
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(AppUpdateState.ShowAppUpdate)
 
     // then
@@ -485,14 +444,12 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an app update is not available, do not show the app update dialog`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just(userApprovedForSyncing.toOptional()))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant)
     whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant.minusMillis(1))
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(DontShowAppUpdate)
 
     // then
@@ -502,14 +459,12 @@ class PatientsScreenControllerTest {
   @Test
   fun `when check for app update fails, do not show the app update dialog`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just(userApprovedForSyncing.toOptional()))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant)
     whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant.minusMillis(1))
 
     // when
     setupController()
-    uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(AppUpdateStateError(RuntimeException()))
 
     // then
@@ -519,14 +474,12 @@ class PatientsScreenControllerTest {
   @Test
   fun `when screen is created then display simple video if patient registered count is less than 10`() {
     //given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just(userApprovedForSyncing.toOptional()))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant)
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(numberOfPatientsRegisteredPref.get()).doReturn(9)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
+    whenever(numberOfPatientsRegisteredPreference.get()).doReturn(9)
 
     //when
     setupController()
-    uiEvents.onNext(ScreenCreated())
 
     //then
     verify(screen).showSimpleVideo()
@@ -536,13 +489,11 @@ class PatientsScreenControllerTest {
   @Test
   fun `when screen is created then display illustration if patient registered count is at least 10`() {
     //given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just(userApprovedForSyncing.toOptional()))
-    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant)
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
 
     //when
     setupController(numberOfPatientsRegistered = 10)
-    uiEvents.onNext(ScreenCreated())
 
     //then
     verify(screen, never()).showSimpleVideo()
@@ -561,7 +512,10 @@ class PatientsScreenControllerTest {
   }
 
   private fun setupController(
-      numberOfPatientsRegistered: Int = 0
+      user: User = userApprovedForSyncing,
+      numberOfPatientsRegistered: Int = 0,
+      hasUserDismissedApprovedStatus: Boolean = false,
+      approvalStatusApprovedAt: Instant = dateAsInstant
   ) {
     controller = PatientsScreenController(
         userSession = userSession,
@@ -570,19 +524,60 @@ class PatientsScreenControllerTest {
         userClock = userClock,
         refreshCurrentUser = refreshCurrentUser,
         schedulersProvider = TrampolineSchedulersProvider(),
-        approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
-        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
+        approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
+        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPref
+        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference
     )
 
+    whenever(userSession.loggedInUser()).doReturn(Observable.just(user.toOptional()))
     whenever(userSession.canSyncData()).doReturn(canSyncStream)
     whenever(refreshCurrentUser.refresh()).doReturn(Completable.complete())
     whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
-    whenever(numberOfPatientsRegisteredPref.get()).doReturn(numberOfPatientsRegistered)
+    whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(hasUserDismissedApprovedStatus))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(hasUserDismissedApprovedStatus)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(approvalStatusApprovedAt)
 
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
+  }
+
+  private fun setupControllerWithUserStream(
+      userStream: Observable<Optional<User>>,
+      numberOfPatientsRegistered: Int = 0,
+      hasUserDismissedApprovedStatus: Boolean = false,
+      approvalStatusApprovedAt: Instant = dateAsInstant
+  ) {
+    controller = PatientsScreenController(
+        userSession = userSession,
+        checkAppUpdate = checkAppUpdate,
+        utcClock = utcClock,
+        userClock = userClock,
+        refreshCurrentUser = refreshCurrentUser,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
+        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
+        appUpdateDialogShownAtPref = appUpdateDialogShownPref,
+        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference
+    )
+
+    whenever(userSession.loggedInUser()).doReturn(userStream)
+    whenever(userSession.canSyncData()).doReturn(canSyncStream)
+    whenever(refreshCurrentUser.refresh()).doReturn(Completable.complete())
+    whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
+    whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)
+    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(hasUserDismissedApprovedStatus))
+    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(hasUserDismissedApprovedStatus)
+    whenever(approvalStatusApprovedAtPreference.get()).doReturn(approvalStatusApprovedAt)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(ScreenCreated())
   }
 }

@@ -137,7 +137,7 @@ class PatientsScreenController @Inject constructor(
               .map { (user, userDismissedStatus) ->
                 when (user.status) {
                   WaitingForApproval -> { ui: Ui -> ui.showUserStatusAsWaiting() }
-                  DisapprovedForSyncing -> { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
+                  DisapprovedForSyncing -> { _: Ui -> /* Nothing to do here since we block the user from accessing the app */ }
                   ApprovedForSyncing -> {
                     val twentyFourHoursAgo = Instant.now(utcClock).minus(24, ChronoUnit.HOURS)
                     val wasApprovedInLast24Hours = twentyFourHoursAgo < approvalStatusUpdatedAtPref.get()

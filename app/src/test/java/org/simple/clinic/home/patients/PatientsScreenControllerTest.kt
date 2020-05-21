@@ -20,6 +20,8 @@ import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState
+import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
+import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
@@ -485,74 +487,63 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for testing app update dialog")
-  fun `when app update is available and the update dialog was not shown for the day, then it should be shown`(
-      appUpdateState: AppUpdateState,
-      lastAppUpdateDialogShownAt: Instant,
-      shouldShow: Boolean
-  ) {
+  fun `when an app update is available and the app update dialog has not been shown on the current date, show the app update dialog`() {
     // given
     whenever(userSession.loggedInUser()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(appUpdateDialogShownPref.get()).doReturn(lastAppUpdateDialogShownAt)
+    whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant.minusMillis(1))
 
     // when
     uiEvents.onNext(ScreenCreated())
-    appUpdatesStream.onNext(appUpdateState)
+    appUpdatesStream.onNext(AppUpdateState.ShowAppUpdate)
 
     // then
-    if (shouldShow) {
-      verify(screen).showAppUpdateDialog()
-    } else {
-      verify(screen, never()).showAppUpdateDialog()
-    }
+    verify(screen).showAppUpdateDialog()
   }
 
-  fun `params for testing app update dialog`(): List<Any> {
+  @Test
+  fun `when an app update is available and the app update dialog has been shown on the current date, show the app update dialog`() {
+    // given
+    whenever(userSession.loggedInUser()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant)
 
-    fun testCase(
-        appUpdateState: AppUpdateState,
-        lastAppUpdateDialogShownAt: Instant,
-        shouldShow: Boolean
-    ) = listOf(appUpdateState, lastAppUpdateDialogShownAt, shouldShow)
+    // when
+    uiEvents.onNext(ScreenCreated())
+    appUpdatesStream.onNext(AppUpdateState.ShowAppUpdate)
 
-    return listOf(
-        testCase(
-            appUpdateState = AppUpdateState.ShowAppUpdate,
-            lastAppUpdateDialogShownAt = dateAsInstant.minus(1, ChronoUnit.DAYS),
-            shouldShow = true
-        ),
-        testCase(
-            appUpdateState = AppUpdateState.ShowAppUpdate,
-            lastAppUpdateDialogShownAt = dateAsInstant,
-            shouldShow = false
-        ),
-        testCase(
-            appUpdateState = AppUpdateState.ShowAppUpdate,
-            lastAppUpdateDialogShownAt = dateAsInstant.plus(1, ChronoUnit.DAYS),
-            shouldShow = false
-        ),
-        testCase(
-            appUpdateState = AppUpdateState.DontShowAppUpdate,
-            lastAppUpdateDialogShownAt = dateAsInstant,
-            shouldShow = false
-        ),
-        testCase(
-            appUpdateState = AppUpdateState.DontShowAppUpdate,
-            lastAppUpdateDialogShownAt = dateAsInstant.minus(2, ChronoUnit.DAYS),
-            shouldShow = false
-        ),
-        testCase(
-            appUpdateState = AppUpdateState.AppUpdateStateError(IllegalStateException()),
-            lastAppUpdateDialogShownAt = dateAsInstant,
-            shouldShow = false
-        ),
-        testCase(
-            appUpdateState = AppUpdateState.AppUpdateStateError(IllegalStateException()),
-            lastAppUpdateDialogShownAt = dateAsInstant.minus(1, ChronoUnit.DAYS),
-            shouldShow = false
-        )
-    )
+    // then
+    verify(screen, never()).showAppUpdateDialog()
+  }
+
+  @Test
+  fun `when an app update is not available, do not show the app update dialog`() {
+    // given
+    whenever(userSession.loggedInUser()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant.minusMillis(1))
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+    appUpdatesStream.onNext(DontShowAppUpdate)
+
+    // then
+    verify(screen, never()).showAppUpdateDialog()
+  }
+
+  @Test
+  fun `when check for app update fails, do not show the app update dialog`() {
+    // given
+    whenever(userSession.loggedInUser()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(appUpdateDialogShownPref.get()).doReturn(dateAsInstant.minusMillis(1))
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+    appUpdatesStream.onNext(AppUpdateStateError(RuntimeException()))
+
+    // then
+    verify(screen, never()).showAppUpdateDialog()
   }
 
   @Test

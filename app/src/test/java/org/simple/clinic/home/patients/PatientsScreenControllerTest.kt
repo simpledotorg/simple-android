@@ -445,6 +445,42 @@ class PatientsScreenControllerTest {
       refreshCurrentUserCompletable: Completable = Completable.complete(),
       appUpdateDialogShownAt: Instant = dateAsInstant
   ) {
+    createController()
+    setupStubs(
+        userStream = Observable.just(user.toOptional()),
+        canSync = canSync,
+        refreshCurrentUserCompletable = refreshCurrentUserCompletable,
+        numberOfPatientsRegistered = numberOfPatientsRegistered,
+        hasUserDismissedApprovedStatus = hasUserDismissedApprovedStatus,
+        approvalStatusApprovedAt = approvalStatusApprovedAt,
+        appUpdateDialogShownAt = appUpdateDialogShownAt
+    )
+    activateUi()
+  }
+
+  private fun setupControllerWithUserStream(
+      userStream: Observable<Optional<User>>,
+      canSync: Observable<Boolean> = userStream.map { if (it is Just) it.value.canSyncData else false },
+      numberOfPatientsRegistered: Int = 0,
+      hasUserDismissedApprovedStatus: Boolean = false,
+      approvalStatusApprovedAt: Instant = dateAsInstant,
+      refreshCurrentUserCompletable: Completable = Completable.complete(),
+      appUpdateDialogShownAt: Instant = dateAsInstant
+  ) {
+    createController()
+    setupStubs(
+        userStream = userStream,
+        canSync = canSync,
+        refreshCurrentUserCompletable = refreshCurrentUserCompletable,
+        numberOfPatientsRegistered = numberOfPatientsRegistered,
+        hasUserDismissedApprovedStatus = hasUserDismissedApprovedStatus,
+        approvalStatusApprovedAt = approvalStatusApprovedAt,
+        appUpdateDialogShownAt = appUpdateDialogShownAt
+    )
+    activateUi()
+  }
+
+  private fun createController() {
     controller = PatientsScreenController(
         userSession = userSession,
         checkAppUpdate = checkAppUpdate,
@@ -457,8 +493,18 @@ class PatientsScreenControllerTest {
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
         numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference
     )
+  }
 
-    whenever(userSession.loggedInUser()).doReturn(Observable.just(user.toOptional()))
+  private fun setupStubs(
+      userStream: Observable<Optional<User>>,
+      canSync: Observable<Boolean>,
+      refreshCurrentUserCompletable: Completable,
+      numberOfPatientsRegistered: Int,
+      hasUserDismissedApprovedStatus: Boolean,
+      approvalStatusApprovedAt: Instant,
+      appUpdateDialogShownAt: Instant
+  ) {
+    whenever(userSession.loggedInUser()).doReturn(userStream)
     whenever(userSession.canSyncData()).doReturn(canSync)
     whenever(refreshCurrentUser.refresh()).doReturn(refreshCurrentUserCompletable)
     whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
@@ -467,43 +513,9 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(hasUserDismissedApprovedStatus)
     whenever(approvalStatusApprovedAtPreference.get()).doReturn(approvalStatusApprovedAt)
     whenever(appUpdateDialogShownPref.get()).doReturn(appUpdateDialogShownAt)
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
-
-    uiEvents.onNext(ScreenCreated())
   }
 
-  private fun setupControllerWithUserStream(
-      userStream: Observable<Optional<User>>,
-      canSync: Observable<Boolean> = userStream.map { if (it is Just) it.value.canSyncData else false },
-      numberOfPatientsRegistered: Int = 0,
-      hasUserDismissedApprovedStatus: Boolean = false,
-      approvalStatusApprovedAt: Instant = dateAsInstant
-  ) {
-    controller = PatientsScreenController(
-        userSession = userSession,
-        checkAppUpdate = checkAppUpdate,
-        utcClock = utcClock,
-        userClock = userClock,
-        refreshCurrentUser = refreshCurrentUser,
-        schedulersProvider = TrampolineSchedulersProvider(),
-        approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
-        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
-        appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference
-    )
-
-    whenever(userSession.loggedInUser()).doReturn(userStream)
-    whenever(userSession.canSyncData()).doReturn(canSync)
-    whenever(refreshCurrentUser.refresh()).doReturn(Completable.complete())
-    whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
-    whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)
-    whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(hasUserDismissedApprovedStatus))
-    whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(hasUserDismissedApprovedStatus)
-    whenever(approvalStatusApprovedAtPreference.get()).doReturn(approvalStatusApprovedAt)
-
+  private fun activateUi() {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }

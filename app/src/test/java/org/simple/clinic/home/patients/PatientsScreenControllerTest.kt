@@ -20,6 +20,7 @@ import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
 import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
+import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -67,7 +68,6 @@ class PatientsScreenControllerTest {
   private val refreshCurrentUser = mock<RefreshCurrentUser>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
-  private val appUpdatesStream = PublishSubject.create<AppUpdateState>()
 
   private val userUuid = UUID.fromString("df863f94-a6f9-4409-89f8-1c7e18a0b6ed")
   private val userApprovedForSyncing = TestData.loggedInUser(uuid = userUuid, loggedInStatus = LOGGED_IN, status = ApprovedForSyncing)
@@ -368,8 +368,10 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an app update is available and the app update dialog has not been shown on the current date, show the app update dialog`() {
     // when
-    setupController(appUpdateDialogShownAt = dateAsInstant.minusMillis(1))
-    appUpdatesStream.onNext(AppUpdateState.ShowAppUpdate)
+    setupController(
+        appUpdateDialogShownAt = dateAsInstant.minusMillis(1),
+        appUpdateState = ShowAppUpdate
+    )
 
     // then
     verify(screen).showAppUpdateDialog()
@@ -378,8 +380,7 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an app update is available and the app update dialog has been shown on the current date, do not show the app update dialog`() {
     // when
-    setupController()
-    appUpdatesStream.onNext(AppUpdateState.ShowAppUpdate)
+    setupController(appUpdateState = ShowAppUpdate)
 
     // then
     verify(screen, never()).showAppUpdateDialog()
@@ -388,8 +389,10 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an app update is not available, do not show the app update dialog`() {
     // when
-    setupController(appUpdateDialogShownAt = dateAsInstant.minusMillis(1))
-    appUpdatesStream.onNext(DontShowAppUpdate)
+    setupController(
+        appUpdateDialogShownAt = dateAsInstant.minusMillis(1),
+        appUpdateState = DontShowAppUpdate
+    )
 
     // then
     verify(screen, never()).showAppUpdateDialog()
@@ -398,8 +401,10 @@ class PatientsScreenControllerTest {
   @Test
   fun `when check for app update fails, do not show the app update dialog`() {
     // when
-    setupController(appUpdateDialogShownAt = dateAsInstant.minusMillis(1))
-    appUpdatesStream.onNext(AppUpdateStateError(RuntimeException()))
+    setupController(
+        appUpdateDialogShownAt = dateAsInstant.minusMillis(1),
+        appUpdateState = AppUpdateStateError(RuntimeException())
+    )
 
     // then
     verify(screen, never()).showAppUpdateDialog()
@@ -443,7 +448,8 @@ class PatientsScreenControllerTest {
       hasUserDismissedApprovedStatus: Boolean = false,
       approvalStatusApprovedAt: Instant = dateAsInstant,
       refreshCurrentUserCompletable: Completable = Completable.complete(),
-      appUpdateDialogShownAt: Instant = dateAsInstant
+      appUpdateDialogShownAt: Instant = dateAsInstant,
+      appUpdateState: AppUpdateState = DontShowAppUpdate
   ) {
     createController()
     setupStubs(
@@ -453,7 +459,8 @@ class PatientsScreenControllerTest {
         numberOfPatientsRegistered = numberOfPatientsRegistered,
         hasUserDismissedApprovedStatus = hasUserDismissedApprovedStatus,
         approvalStatusApprovedAt = approvalStatusApprovedAt,
-        appUpdateDialogShownAt = appUpdateDialogShownAt
+        appUpdateDialogShownAt = appUpdateDialogShownAt,
+        appUpdateStream = Observable.just(appUpdateState)
     )
     activateUi()
   }
@@ -465,7 +472,8 @@ class PatientsScreenControllerTest {
       hasUserDismissedApprovedStatus: Boolean = false,
       approvalStatusApprovedAt: Instant = dateAsInstant,
       refreshCurrentUserCompletable: Completable = Completable.complete(),
-      appUpdateDialogShownAt: Instant = dateAsInstant
+      appUpdateDialogShownAt: Instant = dateAsInstant,
+      appUpdateState: AppUpdateState = DontShowAppUpdate
   ) {
     createController()
     setupStubs(
@@ -475,7 +483,8 @@ class PatientsScreenControllerTest {
         numberOfPatientsRegistered = numberOfPatientsRegistered,
         hasUserDismissedApprovedStatus = hasUserDismissedApprovedStatus,
         approvalStatusApprovedAt = approvalStatusApprovedAt,
-        appUpdateDialogShownAt = appUpdateDialogShownAt
+        appUpdateDialogShownAt = appUpdateDialogShownAt,
+        appUpdateStream = Observable.just(appUpdateState)
     )
     activateUi()
   }
@@ -502,12 +511,13 @@ class PatientsScreenControllerTest {
       numberOfPatientsRegistered: Int,
       hasUserDismissedApprovedStatus: Boolean,
       approvalStatusApprovedAt: Instant,
-      appUpdateDialogShownAt: Instant
+      appUpdateDialogShownAt: Instant,
+      appUpdateStream: Observable<AppUpdateState>
   ) {
     whenever(userSession.loggedInUser()).doReturn(userStream)
     whenever(userSession.canSyncData()).doReturn(canSync)
     whenever(refreshCurrentUser.refresh()).doReturn(refreshCurrentUserCompletable)
-    whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
+    whenever(checkAppUpdate.listen()).doReturn(appUpdateStream)
     whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(hasUserDismissedApprovedStatus))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(hasUserDismissedApprovedStatus)

@@ -98,8 +98,10 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when new patient is clicked then patient search screen should open`() {
+    // when
     uiEvents.onNext(NewPatientClicked)
 
+    // then
     verify(screen).openPatientSearchScreen()
   }
 
@@ -108,6 +110,7 @@ class PatientsScreenControllerTest {
   fun `when screen is created or resumed then the user's status should refresh regardless of current status`(
       status: UserStatus
   ) {
+    // given
     val user = TestData.loggedInUser(status = status)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(refreshCurrentUser.refresh()).doReturn(Completable.complete())
@@ -115,12 +118,18 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
+    // when
     uiEvents.onNext(ScreenCreated())
+
+    // then
     verify(refreshCurrentUser).refresh()
 
     clearInvocations(refreshCurrentUser)
 
+    // when
     uiEvents.onNext(Resumed(null))
+
+    // then
     verify(refreshCurrentUser).refresh()
   }
 
@@ -137,14 +146,17 @@ class PatientsScreenControllerTest {
       loggedInStatus: LoggedInStatus,
       shouldShowApprovalStatus: Boolean
   ) {
+    // given
     val user = TestData.loggedInUser(status = WaitingForApproval, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
+    // when
     uiEvents.onNext(ScreenCreated())
 
+    // then
     if (shouldShowApprovalStatus) {
       verify(screen).showUserStatusAsWaiting()
     } else {
@@ -154,13 +166,16 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user has been disapproved then the approval status shouldn't be shown`() {
+    // given
     val user = TestData.loggedInUser(status = DisapprovedForSyncing, loggedInStatus = LOGGED_IN)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
+    // when
     uiEvents.onNext(ScreenCreated())
 
+    // then
     verify(screen).hideUserAccountStatus()
   }
 
@@ -177,14 +192,17 @@ class PatientsScreenControllerTest {
       hasUserDismissedStatus: Boolean,
       shouldShowApprovedStatus: Boolean
   ) {
+    // given
     val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(hasUserDismissedStatus))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(hasUserDismissedStatus)
 
+    // when
     uiEvents.onNext(ScreenCreated())
 
+    // then
     if (shouldShowApprovedStatus) {
       verify(screen).showUserStatusAsApproved()
     } else {
@@ -197,19 +215,23 @@ class PatientsScreenControllerTest {
   fun `when the user was approved earlier than 24h then the approval status should not be shown`(
       hasUserDismissedStatus: Boolean
   ) {
+    // given
     val user = TestData.loggedInUser(status = ApprovedForSyncing)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(25, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(hasUserDismissedStatus))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(hasUserDismissedStatus)
 
+    // when
     uiEvents.onNext(ScreenCreated())
 
+    // then
     verify(screen, never()).showUserStatusAsApproved()
   }
 
   @Test
   fun `when checking the user's status fails with any error then the error should be silently swallowed`() {
+    // given
     val user = TestData.loggedInUser(status = WaitingForApproval)
     whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
@@ -217,23 +239,28 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
+    // when
     uiEvents.onNext(ScreenCreated())
 
+    // then
     verify(refreshCurrentUser).refresh()
     verify(approvalStatusApprovedAt).set(any())
   }
 
   @Test
   fun `when the user dismisses the approved status then the status should be hidden`() {
+    // given
     val user = TestData.loggedInUser(status = ApprovedForSyncing)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
+    // when
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(UserApprovedStatusDismissed())
 
+    // then
     verify(hasUserDismissedApprovedStatus).set(true)
   }
 
@@ -244,6 +271,7 @@ class PatientsScreenControllerTest {
       loggedInStatus: LoggedInStatus,
       shouldShowMessage: Boolean
   ) {
+    // given
     val user = TestData.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
@@ -251,8 +279,10 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
     whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(25, ChronoUnit.HOURS))
 
+    // when
     uiEvents.onNext(ScreenCreated())
 
+    // then
     if (shouldShowMessage) {
       verify(screen).showUserStatusAsPendingVerification()
     } else {
@@ -281,6 +311,7 @@ class PatientsScreenControllerTest {
       loggedInStatus: LoggedInStatus,
       shouldHideMessage: Boolean
   ) {
+    // given
     val user = TestData.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
@@ -288,8 +319,10 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
     whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(25, ChronoUnit.HOURS))
 
+    // when
     uiEvents.onNext(ScreenCreated())
 
+    // then
     if (shouldHideMessage) {
       verify(screen).hideUserAccountStatus()
     } else {
@@ -324,6 +357,7 @@ class PatientsScreenControllerTest {
       nextLoggedInStatus: LoggedInStatus,
       shouldHideUserAccountStatus: Boolean
   ) {
+    // given
     val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
     whenever(userSession.loggedInUser()).doReturn(
         Observable.just<Optional<User>>(
@@ -335,8 +369,10 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
     whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(25, ChronoUnit.HOURS))
 
+    // when
     uiEvents.onNext(ScreenCreated())
 
+    // then
     if (shouldHideUserAccountStatus) {
       verify(screen, atLeastOnce()).hideUserAccountStatus()
     } else {
@@ -346,24 +382,34 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user decides to enter the login code manually, the enter otp screen must be opened`() {
+    // when
     uiEvents.onNext(PatientsEnterCodeManuallyClicked())
+
+    // then
     verify(screen).openEnterCodeManuallyScreen()
   }
 
   @Test
   fun `when the user clicks scan card id button and the camera permission is granted, open the scan camera screen`() {
+    // when
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(GRANTED)))
+
+    // then
     verify(screen).openScanSimpleIdCardScreen()
   }
 
   @Test
   fun `when the user clicks scan card id button and the camera permission is denied, do not open the scan camera screen`() {
+    // when
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(DENIED)))
+
+    // then
     verify(screen, never()).openScanSimpleIdCardScreen()
   }
 
   @Test
   fun `sync indicator should be visible only when user is approved for syncing`() {
+    // given
     val user = TestData.loggedInUser(status = WaitingForApproval).toOptional()
     whenever(userSession.loggedInUser()).doReturn(Observable.just(user))
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
@@ -371,12 +417,18 @@ class PatientsScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
+    // when
     canSyncStream.onNext(false)
+
+    // then
     verify(screen).hideSyncIndicator()
     verify(screen, never()).showSyncIndicator()
 
+    // when
     canSyncStream.onNext(true)
     canSyncStream.onNext(true)
+
+    // then
     verify(screen).showSyncIndicator()
   }
 
@@ -387,14 +439,16 @@ class PatientsScreenControllerTest {
       lastAppUpdateDialogShownAt: Instant,
       shouldShow: Boolean
   ) {
-
+    // given
     whenever(userSession.loggedInUser()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(appUpdateDialogShownPref.get()).doReturn(lastAppUpdateDialogShownAt)
 
+    // when
     uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(appUpdateState)
 
+    // then
     if (shouldShow) {
       verify(screen).showAppUpdateDialog()
     } else {

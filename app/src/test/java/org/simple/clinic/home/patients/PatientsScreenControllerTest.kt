@@ -47,6 +47,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
 
@@ -62,8 +63,12 @@ class PatientsScreenControllerTest {
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
-  private val utcClock = TestUtcClock()
-  private val userClock = TestUserClock()
+
+  private val date = LocalDate.parse("2018-01-01")
+  private val dateAsInstant = Instant.parse("2018-01-01T00:00:00Z")
+  private val utcClock = TestUtcClock(date)
+  private val userClock = TestUserClock(date)
+
   private val numberOfPatientsRegisteredPref = mock<Preference<Int>>()
   private val refreshCurrentUser = mock<RefreshCurrentUser>()
 
@@ -179,7 +184,7 @@ class PatientsScreenControllerTest {
     whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
-    whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now(utcClock).minus(Duration.ofDays(2)))
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(Duration.ofDays(2)))
 
     // when
     uiEvents.onNext(ScreenCreated())
@@ -219,7 +224,7 @@ class PatientsScreenControllerTest {
     // given
     val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
-    whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(23, ChronoUnit.HOURS))
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(hasUserDismissedStatus))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(hasUserDismissedStatus)
 
@@ -242,7 +247,7 @@ class PatientsScreenControllerTest {
     // given
     val user = TestData.loggedInUser(status = ApprovedForSyncing)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
-    whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(25, ChronoUnit.HOURS))
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(hasUserDismissedStatus))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(hasUserDismissedStatus)
 
@@ -276,7 +281,7 @@ class PatientsScreenControllerTest {
     // given
     val user = TestData.loggedInUser(status = ApprovedForSyncing)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
-    whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(23, ChronoUnit.HOURS))
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
@@ -301,7 +306,7 @@ class PatientsScreenControllerTest {
     whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(25, ChronoUnit.HOURS))
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
     uiEvents.onNext(ScreenCreated())
@@ -341,7 +346,7 @@ class PatientsScreenControllerTest {
     whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(25, ChronoUnit.HOURS))
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
     uiEvents.onNext(ScreenCreated())
@@ -391,7 +396,7 @@ class PatientsScreenControllerTest {
     )
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
-    whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now().minus(25, ChronoUnit.HOURS))
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
     // when
     uiEvents.onNext(ScreenCreated())
@@ -530,37 +535,37 @@ class PatientsScreenControllerTest {
     return listOf(
         testCase(
             appUpdateState = AppUpdateState.ShowAppUpdate,
-            lastAppUpdateDialogShownAt = Instant.now(utcClock).minus(1, ChronoUnit.DAYS),
+            lastAppUpdateDialogShownAt = dateAsInstant.minus(1, ChronoUnit.DAYS),
             shouldShow = true
         ),
         testCase(
             appUpdateState = AppUpdateState.ShowAppUpdate,
-            lastAppUpdateDialogShownAt = Instant.now(utcClock),
+            lastAppUpdateDialogShownAt = dateAsInstant,
             shouldShow = false
         ),
         testCase(
             appUpdateState = AppUpdateState.ShowAppUpdate,
-            lastAppUpdateDialogShownAt = Instant.now(utcClock).plus(1, ChronoUnit.DAYS),
+            lastAppUpdateDialogShownAt = dateAsInstant.plus(1, ChronoUnit.DAYS),
             shouldShow = false
         ),
         testCase(
             appUpdateState = AppUpdateState.DontShowAppUpdate,
-            lastAppUpdateDialogShownAt = Instant.now(utcClock),
+            lastAppUpdateDialogShownAt = dateAsInstant,
             shouldShow = false
         ),
         testCase(
             appUpdateState = AppUpdateState.DontShowAppUpdate,
-            lastAppUpdateDialogShownAt = Instant.now(utcClock).minus(2, ChronoUnit.DAYS),
+            lastAppUpdateDialogShownAt = dateAsInstant.minus(2, ChronoUnit.DAYS),
             shouldShow = false
         ),
         testCase(
             appUpdateState = AppUpdateState.AppUpdateStateError(IllegalStateException()),
-            lastAppUpdateDialogShownAt = Instant.now(utcClock),
+            lastAppUpdateDialogShownAt = dateAsInstant,
             shouldShow = false
         ),
         testCase(
             appUpdateState = AppUpdateState.AppUpdateStateError(IllegalStateException()),
-            lastAppUpdateDialogShownAt = Instant.now(utcClock).minus(1, ChronoUnit.DAYS),
+            lastAppUpdateDialogShownAt = dateAsInstant.minus(1, ChronoUnit.DAYS),
             shouldShow = false
         )
     )

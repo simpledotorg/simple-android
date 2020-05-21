@@ -12,6 +12,8 @@ class TestUtcClock(instant: Instant) : UtcClock() {
 
   constructor() : this(Instant.EPOCH)
 
+  constructor(localDate: LocalDate, zoneOffset: ZoneOffset = UTC) : this(instantFromDateAtZone(localDate, zoneOffset))
+
   private var clock = fixed(instant, UTC)
 
   override fun withZone(zone: ZoneId): Clock = clock.withZone(zone)

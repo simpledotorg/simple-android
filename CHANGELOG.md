@@ -13,7 +13,7 @@
 - Fix camera crash when QR scanner view is paused/closed
 - Fix fetching teleconsultation error when `PatientSummaryScreen` is restored
 
-## On Demo
+## 2020-05-21-7276
 ### Feature
 - Add support for teleconsultation & deep-linking to open patient summary.
 

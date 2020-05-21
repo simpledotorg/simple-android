@@ -27,6 +27,7 @@ import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
@@ -44,6 +45,7 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
@@ -138,16 +140,9 @@ class PatientsScreenControllerTest {
       listOf(ApprovedForSyncing, DisapprovedForSyncing, WaitingForApproval)
 
   @Test
-  @Parameters(value = [
-    "LOGGED_IN|true",
-    "RESET_PIN_REQUESTED|true"
-  ])
-  fun `when the user is awaiting approval then the waiting approval status should be shown`(
-      loggedInStatus: LoggedInStatus,
-      shouldShowApprovalStatus: Boolean
-  ) {
+  fun `when the user is awaiting approval after registration, then the waiting approval status should be shown`() {
     // given
-    val user = TestData.loggedInUser(status = WaitingForApproval, loggedInStatus = loggedInStatus)
+    val user = TestData.loggedInUser(status = WaitingForApproval, loggedInStatus = LOGGED_IN)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
@@ -157,15 +152,44 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     // then
-    if (shouldShowApprovalStatus) {
-      verify(screen).showUserStatusAsWaiting()
-    } else {
-      verify(screen, never()).showUserStatusAsWaiting()
-    }
+    verify(screen).showUserStatusAsWaiting()
   }
 
   @Test
-  fun `when the user has been disapproved then the approval status shouldn't be shown`() {
+  fun `when the user is awaiting approval after resetting the PIN, then the waiting approval status should be shown`() {
+    // given
+    val user = TestData.loggedInUser(status = WaitingForApproval, loggedInStatus = RESET_PIN_REQUESTED)
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(userSession.canSyncData()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(screen).showUserStatusAsWaiting()
+  }
+
+  @Test
+  fun `when the user is approved for syncing, then the waiting approval status should not be shown`() {
+    // given
+    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = LOGGED_IN)
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(userSession.canSyncData()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
+    whenever(approvalStatusApprovedAt.get()).doReturn(Instant.now(utcClock).minus(Duration.ofDays(2)))
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(screen, never()).showUserStatusAsWaiting()
+  }
+
+  @Test
+  fun `when the user has been disapproved for syncing, then the approval status should not be shown`() {
     // given
     val user = TestData.loggedInUser(status = DisapprovedForSyncing, loggedInStatus = LOGGED_IN)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))

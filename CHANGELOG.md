@@ -9,6 +9,7 @@
 - Migrated `ScheduleAppointmentSheet` to Mobius
 - Fix PR description CI when using markdown syntax
 - Add `DeletedReason` for `Patient`
+- [In Progress: 21 May 2020] Migrate `PatientsScreen` to Mobius
 
 ### Fixes
 - Fix camera crash when QR scanner view is paused/closed

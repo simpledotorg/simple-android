@@ -68,8 +68,6 @@ class PatientsScreenControllerTest {
   private val refreshCurrentUser = mock<RefreshCurrentUser>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
-
-  private val canSyncStream = PublishSubject.create<Boolean>()
   private val appUpdatesStream = PublishSubject.create<AppUpdateState>()
 
   private val userUuid = UUID.fromString("df863f94-a6f9-4409-89f8-1c7e18a0b6ed")
@@ -122,7 +120,6 @@ class PatientsScreenControllerTest {
   @Test
   fun `when the user is awaiting approval after registration, then the waiting approval status should be shown`() {
     // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
 
@@ -136,7 +133,6 @@ class PatientsScreenControllerTest {
   @Test
   fun `when the user is awaiting approval after resetting the PIN, then the waiting approval status should be shown`() {
     // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
 
@@ -151,7 +147,6 @@ class PatientsScreenControllerTest {
   @Test
   fun `when the user is approved for syncing, then the waiting approval status should not be shown`() {
     // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
     whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(Duration.ofDays(2)))
@@ -204,7 +199,6 @@ class PatientsScreenControllerTest {
   @Test
   fun `when checking the user's status fails with any error then the error should be silently swallowed`() {
     // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(refreshCurrentUser.refresh()).doReturn(Completable.error(SocketTimeoutException()))
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
@@ -234,9 +228,6 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when an approved user is awaiting sms verification, the pending SMS verification status must be shown`() {
-    // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
-
     // when
     setupController(
         user = userPendingVerification,
@@ -250,9 +241,6 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when an approved user has completed sms verification, the verification status must be shown`() {
-    // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
-
     // when
     setupController(
         hasUserDismissedApprovedStatus = true,
@@ -266,7 +254,6 @@ class PatientsScreenControllerTest {
   @Test
   fun `when an approved user is pending OTP verification, the verification status must not be hidden`() {
     // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(true)
     whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
@@ -280,9 +267,6 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when an approved user has finished OTP verification, the verification status must be hidden`() {
-    // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
-
     // when
     setupController(
         hasUserDismissedApprovedStatus = true,
@@ -296,7 +280,6 @@ class PatientsScreenControllerTest {
   @Test
   fun `when a waiting for approval user is pending OTP verification, the verification status must not be hidden`() {
     // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(true)
     whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
@@ -312,7 +295,6 @@ class PatientsScreenControllerTest {
   @Test
   fun `when a waiting for approval user has finished OTP verification, the verification status not must be hidden`() {
     // given
-    whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(true)
     whenever(approvalStatusApprovedAtPreference.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
@@ -393,8 +375,12 @@ class PatientsScreenControllerTest {
     // given
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(false)
+    val canSyncStream = PublishSubject.create<Boolean>()
 
-    setupController(user = userWaitingForApproval)
+    setupController(
+        user = userWaitingForApproval,
+        canSync = canSyncStream
+    )
 
     // when
     canSyncStream.onNext(false)
@@ -513,6 +499,7 @@ class PatientsScreenControllerTest {
 
   private fun setupController(
       user: User = userApprovedForSyncing,
+      canSync: Observable<Boolean> = Observable.just(user).map { it.canSyncData },
       numberOfPatientsRegistered: Int = 0,
       hasUserDismissedApprovedStatus: Boolean = false,
       approvalStatusApprovedAt: Instant = dateAsInstant
@@ -531,7 +518,7 @@ class PatientsScreenControllerTest {
     )
 
     whenever(userSession.loggedInUser()).doReturn(Observable.just(user.toOptional()))
-    whenever(userSession.canSyncData()).doReturn(canSyncStream)
+    whenever(userSession.canSyncData()).doReturn(canSync)
     whenever(refreshCurrentUser.refresh()).doReturn(Completable.complete())
     whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
     whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)
@@ -548,6 +535,7 @@ class PatientsScreenControllerTest {
 
   private fun setupControllerWithUserStream(
       userStream: Observable<Optional<User>>,
+      canSync: Observable<Boolean> = userStream.map { if (it is Just) it.value.canSyncData else false },
       numberOfPatientsRegistered: Int = 0,
       hasUserDismissedApprovedStatus: Boolean = false,
       approvalStatusApprovedAt: Instant = dateAsInstant
@@ -566,7 +554,7 @@ class PatientsScreenControllerTest {
     )
 
     whenever(userSession.loggedInUser()).doReturn(userStream)
-    whenever(userSession.canSyncData()).doReturn(canSyncStream)
+    whenever(userSession.canSyncData()).doReturn(canSync)
     whenever(refreshCurrentUser.refresh()).doReturn(Completable.complete())
     whenever(checkAppUpdate.listen()).doReturn(appUpdatesStream)
     whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)

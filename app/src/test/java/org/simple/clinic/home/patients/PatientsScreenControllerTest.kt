@@ -209,47 +209,54 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  @Parameters(value = [
-    "LOGGED_IN|true|false",
-    "LOGGED_IN|false|true",
-    "RESET_PIN_REQUESTED|true|false",
-    "RESET_PIN_REQUESTED|false|true"
-  ]
-  )
-  fun `when the user has been approved within the last 24h then the approval status should be shown`(
-      loggedInStatus: LoggedInStatus,
-      hasUserDismissedStatus: Boolean,
-      shouldShowApprovedStatus: Boolean
+  @Parameters(value = ["LOGGED_IN", "RESET_PIN_REQUESTED"])
+  fun `when the user has been approved within the last 24h and has not dismissed the approval status, then the approval status should be shown`(
+      loggedInStatus: LoggedInStatus
   ) {
     // given
     val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(23, ChronoUnit.HOURS))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(hasUserDismissedStatus))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(hasUserDismissedStatus)
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     // when
     uiEvents.onNext(ScreenCreated())
 
     // then
-    if (shouldShowApprovedStatus) {
-      verify(screen).showUserStatusAsApproved()
-    } else {
-      verify(screen, never()).showUserStatusAsApproved()
-    }
+    verify(screen).showUserStatusAsApproved()
   }
 
   @Test
-  @Parameters("true", "false")
-  fun `when the user was approved earlier than 24h then the approval status should not be shown`(
-      hasUserDismissedStatus: Boolean
+  @Parameters(value = ["LOGGED_IN", "RESET_PIN_REQUESTED"])
+  fun `when the user has been approved within the last 24h and has dismissed the approval status, then the approval status should not be shown`(
+      loggedInStatus: LoggedInStatus
   ) {
     // given
-    val user = TestData.loggedInUser(status = ApprovedForSyncing)
+    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = loggedInStatus)
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(23, ChronoUnit.HOURS))
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
+    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(screen,  never()).showUserStatusAsApproved()
+  }
+
+  @Test
+  @Parameters(value = ["LOGGED_IN", "RESET_PIN_REQUESTED"])
+  fun `when the user has been approved before the last 24h and has not dismissed the approval status, then the approval status should not be shown`(
+      loggedInStatus: LoggedInStatus
+  ) {
+    // given
+    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(hasUserDismissedStatus))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(hasUserDismissedStatus)
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
 
     // when
     uiEvents.onNext(ScreenCreated())

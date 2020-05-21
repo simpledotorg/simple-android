@@ -78,14 +78,16 @@ class ScheduleAppointmentLogicTest {
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
+    // given
     val defaultTimeToAppointment = Months(1)
     val periodsToScheduleAppointmentsIn = listOf(defaultTimeToAppointment)
     val scheduledDate = LocalDate.parse("2019-01-28")
 
+    // when
     sheetCreated(config = appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn))
-
     uiEvents.onNext(AppointmentDone)
 
+    // then
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(false)
@@ -107,12 +109,15 @@ class ScheduleAppointmentLogicTest {
 
   @Test
   fun `when scheduling an appointment is skipped and the patient is a defaulter, an automatic appointment should be scheduled`() {
+    // given
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(true)
     val scheduledDate = LocalDate.parse("2019-01-31")
 
+    // when
     sheetCreated()
     uiEvents.onNext(SchedulingSkipped)
 
+    // then
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
@@ -134,11 +139,14 @@ class ScheduleAppointmentLogicTest {
 
   @Test
   fun `when scheduling an appointment is skipped and the patient is not a defaulter, an automatic appointment should not be scheduled`() {
+    // given
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(false)
 
+    // when
     sheetCreated()
     uiEvents.onNext(SchedulingSkipped)
 
+    // then
     verify(repository, never()).schedule(any(), any(), any(), any(), any(), any())
     verify(ui).showPatientFacility(facility.name)
     verify(ui).enableIncrementButton(false)
@@ -152,18 +160,21 @@ class ScheduleAppointmentLogicTest {
 
   @Test
   fun `the initial appointment date must be selected from the protocol`() {
+    // given
     val scheduleAppointmentsIn = listOf(
         Days(1),
         Days(2),
         Days(3)
     )
-
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
+
+    // when
     sheetCreated(
         protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
+    // then
     verify(ui).showPatientFacility(facility.name)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
@@ -220,12 +231,18 @@ class ScheduleAppointmentLogicTest {
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateIncremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-04")))
     uiEvents.onNext(AppointmentDateIncremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
 
     verifyZeroInteractions(uiActions)
@@ -251,12 +268,18 @@ class ScheduleAppointmentLogicTest {
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateDecremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-07")))
     uiEvents.onNext(AppointmentDateDecremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
 
     verifyZeroInteractions(uiActions)
@@ -272,32 +295,39 @@ class ScheduleAppointmentLogicTest {
         Days(4)
     )
 
+    // when
     val protocol = TestData.protocol(protocolUuid, followUpDays = 2)
     sheetCreated(
         protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
+    // then
     verify(ui).showPatientFacility(facility.name)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
     verifyNoMoreInteractions(ui)
+    reset(ui)
 
+    // when
     val threeDaysFromNow = LocalDate.now(clock).plusDays(3)
     val year = threeDaysFromNow.year
     val month = threeDaysFromNow.monthValue
     val dayOfMonth = threeDaysFromNow.dayOfMonth
-
-    reset(ui)
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.of(year, month, dayOfMonth)))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-04"), Days(3))
     verify(ui).enableIncrementButton(true)
     verify(ui).enableDecrementButton(true)
     verifyNoMoreInteractions(ui)
-
     reset(ui)
+
+    // when
     uiEvents.onNext(AppointmentDateIncremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-05"), Days(4))
     verify(ui).enableIncrementButton(false)
     verify(ui).enableDecrementButton(true)
@@ -327,22 +357,30 @@ class ScheduleAppointmentLogicTest {
     verify(uiActions).showManualDateSelector(LocalDate.parse("2019-01-03"))
     reset(uiActions)
 
+    // when
     uiEvents.onNext(AppointmentDateIncremented)
     uiEvents.onNext(ManuallySelectAppointmentDateClicked)
+
+    // then
     verify(uiActions).showManualDateSelector(LocalDate.parse("2019-01-08"))
     reset(uiActions)
 
+    // when
     uiEvents.onNext(AppointmentDateDecremented)
     uiEvents.onNext(AppointmentDateDecremented)
     uiEvents.onNext(ManuallySelectAppointmentDateClicked)
+
+    // then
     verify(uiActions).showManualDateSelector(LocalDate.parse("2019-01-02"))
     reset(uiActions)
 
+    // when
     val lastSelectedCalendarDate = LocalDate.parse("2019-01-05")
     uiEvents.onNext(AppointmentCalendarDateSelected(lastSelectedCalendarDate))
     uiEvents.onNext(ManuallySelectAppointmentDateClicked)
+
+    // then
     verify(uiActions).showManualDateSelector(lastSelectedCalendarDate)
-    reset(uiActions)
   }
 
   @Test
@@ -365,30 +403,45 @@ class ScheduleAppointmentLogicTest {
         protocol = protocol,
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
+    uiEvents.onNext(AppointmentDateIncremented)
 
     // then
-    uiEvents.onNext(AppointmentDateIncremented)
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateIncremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateIncremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-15"), Weeks(2))
     verify(ui).enableIncrementButton(false)
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateDecremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateDecremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateDecremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
 
     verifyZeroInteractions(uiActions)
@@ -413,28 +466,44 @@ class ScheduleAppointmentLogicTest {
         config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn)
     )
 
-    // then
     uiEvents.onNext(AppointmentDateIncremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateIncremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateIncremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-15"), Weeks(2))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateDecremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateDecremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentDateDecremented)
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
 
     verifyZeroInteractions(uiActions)
@@ -456,49 +525,79 @@ class ScheduleAppointmentLogicTest {
     // when
     sheetCreated(config = appointmentConfig.withScheduledAppointments(scheduleAppointmentsIn))
 
-    // then
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-02")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-03")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-04")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-04"), Days(3))
     reset(ui)
 
-
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-06")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-06"), Days(5))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-08")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Weeks(1))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-13")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-13"), Days(12))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-15")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-15"), Weeks(2))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-22")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-22"), Days(21))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-31")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-31"), Days(30))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-02-01")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-02-01"), Days(31))
     reset(ui)
 
+    // when
     uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-03-01")))
+
+    // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-03-01"), Months(2))
     reset(ui)
 

@@ -243,7 +243,7 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     // then
-    verify(screen,  never()).showUserStatusAsApproved()
+    verify(screen, never()).showUserStatusAsApproved()
   }
 
   @Test
@@ -301,14 +301,9 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for verification status when when waiting for sms verification")
-  fun `when an approved user is awaiting sms verification, the verification status must be shown`(
-      userStatus: UserStatus,
-      loggedInStatus: LoggedInStatus,
-      shouldShowMessage: Boolean
-  ) {
+  fun `when an approved user is awaiting sms verification, the pending SMS verification status must be shown`() {
     // given
-    val user = TestData.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
+    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = OTP_REQUESTED)
     whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
     whenever(userSession.canSyncData()).doReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
@@ -319,26 +314,25 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     // then
-    if (shouldShowMessage) {
-      verify(screen).showUserStatusAsPendingVerification()
-    } else {
-      verify(screen, never()).showUserStatusAsPendingVerification()
-    }
+    verify(screen).showUserStatusAsPendingVerification()
   }
 
-  @Suppress("unused")
-  private fun `params for verification status when when waiting for sms verification`() =
-      listOf(
-          listOf(WaitingForApproval, NOT_LOGGED_IN, false),
-          listOf(WaitingForApproval, OTP_REQUESTED, false),
-          listOf(WaitingForApproval, LOGGED_IN, false),
-          listOf(ApprovedForSyncing, NOT_LOGGED_IN, true),
-          listOf(ApprovedForSyncing, OTP_REQUESTED, true),
-          listOf(ApprovedForSyncing, LOGGED_IN, false),
-          listOf(DisapprovedForSyncing, NOT_LOGGED_IN, true),
-          listOf(DisapprovedForSyncing, OTP_REQUESTED, true),
-          listOf(DisapprovedForSyncing, LOGGED_IN, false)
-      )
+  @Test
+  fun `when an approved user has completed sms verification, the verification status must be shown`() {
+    // given
+    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = LOGGED_IN)
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
+    whenever(userSession.canSyncData()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
+    whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
+    whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(screen, never()).showUserStatusAsPendingVerification()
+  }
 
   @Test
   @Parameters(method = "params for verification status of approved user")

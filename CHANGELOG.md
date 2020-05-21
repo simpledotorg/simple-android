@@ -6,7 +6,7 @@
 - Show address for overdue patient
 
 ### Internal
-- [In Progress: 20th May 2020] Migrate `ScheduleAppointmentSheet` to Mobius
+- Migrated `ScheduleAppointmentSheet` to Mobius
 - Fix PR description CI when using markdown syntax
 
 ### Fixes

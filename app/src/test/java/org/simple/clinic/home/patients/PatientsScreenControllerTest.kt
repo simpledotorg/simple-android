@@ -11,11 +11,9 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState
@@ -48,7 +46,6 @@ import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
 import java.util.UUID
 
-@RunWith(JUnitParamsRunner::class)
 class PatientsScreenControllerTest {
 
   @get:Rule

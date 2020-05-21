@@ -31,7 +31,6 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
-import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.Just
@@ -142,7 +141,7 @@ class PatientsScreenControllerTest {
 
   @Suppress("unused")
   private fun `params for user status for syncing`() =
-      listOf(ApprovedForSyncing, DisapprovedForSyncing, WaitingForApproval)
+      listOf(ApprovedForSyncing, WaitingForApproval)
 
   @Test
   fun `when the user is awaiting approval after registration, then the waiting approval status should be shown`() {
@@ -191,21 +190,6 @@ class PatientsScreenControllerTest {
 
     // then
     verify(screen, never()).showUserStatusAsWaiting()
-  }
-
-  @Test
-  fun `when the user has been disapproved for syncing, then the approval status should not be shown`() {
-    // given
-    val user = TestData.loggedInUser(status = DisapprovedForSyncing, loggedInStatus = LOGGED_IN)
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(Just(user)))
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).doReturn(false)
-
-    // when
-    uiEvents.onNext(ScreenCreated())
-
-    // then
-    verify(screen).hideUserAccountStatus()
   }
 
   @Test

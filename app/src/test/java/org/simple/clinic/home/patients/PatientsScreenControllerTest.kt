@@ -2,7 +2,6 @@ package org.simple.clinic.home.patients
 
 import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -402,39 +401,35 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  @Parameters(
-      "OTP_REQUESTED|OTP_REQUESTED|OTP_REQUESTED|false",
-      "OTP_REQUESTED|OTP_REQUESTED|LOGGED_IN|true",
-      "OTP_REQUESTED|LOGGED_IN|LOGGED_IN|true",
-      "LOGGED_IN|LOGGED_IN|LOGGED_IN|true"
-  )
-  fun `when a user is verified for login, the account status status must be hidden`(
-      prevloggedInStatus: LoggedInStatus,
-      curLoggedInStatus: LoggedInStatus,
-      nextLoggedInStatus: LoggedInStatus,
-      shouldHideUserAccountStatus: Boolean
-  ) {
+  fun `when a user is verified for login, the account status status must be hidden`() {
     // given
-    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
-    whenever(userSession.loggedInUser()).doReturn(
-        Observable.just<Optional<User>>(
-            Just(user),
-            Just(user.copy(loggedInStatus = curLoggedInStatus)),
-            Just(user.copy(loggedInStatus = nextLoggedInStatus)))
-    )
+    val userSubject = PublishSubject.create<Optional<User>>()
+    whenever(userSession.loggedInUser()).doReturn(userSubject)
+
     whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).doReturn(true)
     whenever(approvalStatusApprovedAt.get()).doReturn(dateAsInstant.minus(25, ChronoUnit.HOURS))
 
-    // when
+    val user = TestData.loggedInUser(status = ApprovedForSyncing, loggedInStatus = OTP_REQUESTED)
+
     uiEvents.onNext(ScreenCreated())
 
+    // when
+    userSubject.onNext(user.toOptional())
+
+    //then
+    verify(screen, never()).hideUserAccountStatus()
+
+    // when
+    userSubject.onNext(user.copy(loggedInStatus = LOGGED_IN).toOptional())
+
     // then
-    if (shouldHideUserAccountStatus) {
-      verify(screen, atLeastOnce()).hideUserAccountStatus()
-    } else {
-      verify(screen, never()).hideUserAccountStatus()
-    }
+    verify(screen).hideUserAccountStatus()
+    clearInvocations(screen)
+
+    // when
+    userSubject.onNext(user.copy(loggedInStatus = LOGGED_IN).toOptional())
+    verify(screen).hideUserAccountStatus()
   }
 
   @Test

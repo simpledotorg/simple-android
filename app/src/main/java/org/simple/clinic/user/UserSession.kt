@@ -16,7 +16,6 @@ import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -234,12 +233,7 @@ class UserSession @Inject constructor(
 
   fun canSyncData(): Observable<Boolean> {
     return loggedInUser()
-        .map { (user) ->
-          when {
-            user?.loggedInStatus == LOGGED_IN && user.status == ApprovedForSyncing -> true
-            else -> false
-          }
-        }
+        .map { (user) -> user?.canSyncData ?: false }
   }
 
   fun unauthorize(): Completable {

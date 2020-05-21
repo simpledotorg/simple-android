@@ -508,45 +508,6 @@ class PatientsScreenControllerTest {
     }
   }
 
-  @Test
-  fun `when screen is created then display simple video if patient registered count is less than 10`() {
-    //given
-    whenever(userSession.loggedInUser()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(numberOfPatientsRegisteredPref.get()).doReturn(9)
-
-    //when
-    uiEvents.onNext(ScreenCreated())
-
-    //then
-    verify(screen).showSimpleVideo()
-    verify(screen, never()).showIllustration()
-  }
-
-  @Test
-  fun `when screen is created then display illustration if patient registered count is exceeds 10`() {
-    //given
-    whenever(userSession.loggedInUser()).doReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
-    whenever(numberOfPatientsRegisteredPref.get()).doReturn(10)
-
-    //when
-    uiEvents.onNext(ScreenCreated())
-
-    //then
-    verify(screen, never()).showSimpleVideo()
-    verify(screen).showIllustration()
-  }
-
-  @Test
-  fun `when simple video is clicked then open the video in youtube`() {
-    //when
-    uiEvents.onNext(SimpleVideoClicked)
-
-    //then
-    verify(screen).openYouTubeLinkForSimpleVideo()
-  }
-
   fun `params for testing app update dialog`(): List<Any> {
 
     fun testCase(
@@ -592,5 +553,44 @@ class PatientsScreenControllerTest {
             shouldShow = false
         )
     )
+  }
+
+  @Test
+  fun `when screen is created then display simple video if patient registered count is less than 10`() {
+    //given
+    whenever(userSession.loggedInUser()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(numberOfPatientsRegisteredPref.get()).doReturn(9)
+
+    //when
+    uiEvents.onNext(ScreenCreated())
+
+    //then
+    verify(screen).showSimpleVideo()
+    verify(screen, never()).showIllustration()
+  }
+
+  @Test
+  fun `when screen is created then display illustration if patient registered count is exceeds 10`() {
+    //given
+    whenever(userSession.loggedInUser()).doReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).doReturn(Observable.just(false))
+    whenever(numberOfPatientsRegisteredPref.get()).doReturn(10)
+
+    //when
+    uiEvents.onNext(ScreenCreated())
+
+    //then
+    verify(screen, never()).showSimpleVideo()
+    verify(screen).showIllustration()
+  }
+
+  @Test
+  fun `when simple video is clicked then open the video in youtube`() {
+    //when
+    uiEvents.onNext(SimpleVideoClicked)
+
+    //then
+    verify(screen).openYouTubeLinkForSimpleVideo()
   }
 }

@@ -9,7 +9,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Transaction
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.intellij.lang.annotations.Language
@@ -63,6 +62,9 @@ data class User(
     @ColumnInfo(index = true)
     val currentFacilityUuid: UUID
 ) {
+
+  val canSyncData: Boolean
+    get() = loggedInStatus == LoggedInStatus.LOGGED_IN && status == UserStatus.ApprovedForSyncing
 
   fun withStatus(status: UserStatus, clock: UtcClock): User {
     return copy(status = status, updatedAt = Instant.now(clock))

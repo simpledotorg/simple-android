@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -13,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
 import kotlinx.android.synthetic.main.patients_user_status_awaitingsmsverification.view.*
@@ -28,6 +28,7 @@ import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
@@ -72,9 +73,11 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
 
+  @Inject
+  lateinit var effectHandler: PatientsEffectHandler
+
   @IdRes
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
-  private var disposable = Disposables.empty()
 
   private val events: Observable<UiEvent> by unsafeLazy {
     Observable
@@ -90,6 +93,19 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
         .compose<UiEvent>(RequestPermissions(runtimePermissions, activity, screenRouter.streamScreenResults().ofType()))
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate: MobiusDelegate<PatientsModel, PatientsEvent, PatientsEffect> by unsafeLazy {
+    val uiRenderer = PatientsUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = PatientsModel.create(),
+        update = PatientsUpdate(),
+        init = PatientsInit(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -108,6 +124,24 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     )
 
     homeIllustration.setImageResource(illustrationResourceId())
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun illustrationResourceId(): Int =
@@ -161,11 +195,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   private fun showUserAccountStatus(@IdRes statusViewId: Int) {
     showStatus(statusViewId)
     currentStatusViewId = userStatusViewflipper.currentView.id
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    disposable.dispose()
   }
 
   override fun showUserStatusAsWaiting() {

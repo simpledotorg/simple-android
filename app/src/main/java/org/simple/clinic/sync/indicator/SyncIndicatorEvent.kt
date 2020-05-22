@@ -13,3 +13,5 @@ data class DataForSyncIndicatorStateFetched(
     val currentTime: Instant,
     val syncIndicatorFailureThreshold: Duration
 ) : SyncIndicatorEvent()
+
+data class IncrementTimerTick(val minutes: Long) : SyncIndicatorEvent()

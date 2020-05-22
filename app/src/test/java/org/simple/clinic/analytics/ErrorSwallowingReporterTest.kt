@@ -2,7 +2,7 @@ package org.simple.clinic.analytics
 
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.user.User
+import org.simple.clinic.platform.analytics.AnalyticsUser
 
 class ErrorSwallowingReporterTest {
 
@@ -14,7 +14,7 @@ class ErrorSwallowingReporterTest {
     val user = TestData.loggedInUser()
 
     // when
-    reporter.setLoggedInUser(user, isANewRegistration = true)
+    reporter.setLoggedInUser(AnalyticsUser(user.uuid, user.fullName), isANewRegistration = true)
   }
 
   @Test(expected = Test.None::class)
@@ -23,7 +23,7 @@ class ErrorSwallowingReporterTest {
     val user = TestData.loggedInUser()
 
     // when
-    reporter.setLoggedInUser(user, isANewRegistration = false)
+    reporter.setLoggedInUser(AnalyticsUser(user.uuid, user.fullName), isANewRegistration = false)
   }
 
   @Test(expected = Test.None::class)
@@ -40,7 +40,7 @@ class ErrorSwallowingReporterTest {
 
   private class FailingAnalyticsReporter : AnalyticsReporter {
 
-    override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
+    override fun setLoggedInUser(user: AnalyticsUser, isANewRegistration: Boolean) {
       throw RuntimeException()
     }
 

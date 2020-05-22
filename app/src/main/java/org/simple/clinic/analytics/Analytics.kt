@@ -8,7 +8,7 @@ import android.net.NetworkCapabilities.TRANSPORT_LOWPAN
 import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
-import org.simple.clinic.user.User
+import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.util.RuntimePermissionResult
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -28,11 +28,11 @@ object Analytics {
     reporters = reporters - reporter
   }
 
-  fun setLoggedInUser(user: User) {
+  fun setLoggedInUser(user: AnalyticsUser) {
     reporters.forEach { it.setLoggedInUser(user, false) }
   }
 
-  fun setNewlyRegisteredUser(user: User) {
+  fun setNewlyRegisteredUser(user: AnalyticsUser) {
     reporters.forEach { it.setLoggedInUser(user, true) }
   }
 

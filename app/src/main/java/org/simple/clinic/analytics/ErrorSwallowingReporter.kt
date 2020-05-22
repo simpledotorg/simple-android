@@ -1,6 +1,6 @@
 package org.simple.clinic.analytics
 
-import org.simple.clinic.user.User
+import org.simple.clinic.platform.analytics.AnalyticsUser
 import timber.log.Timber
 
 /**
@@ -10,7 +10,7 @@ import timber.log.Timber
  **/
 class ErrorSwallowingReporter(private val reporter: AnalyticsReporter) : AnalyticsReporter {
 
-  override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
+  override fun setLoggedInUser(user: AnalyticsUser, isANewRegistration: Boolean) {
     val errorMessage = if (isANewRegistration) {
       "Error setting newly registered user!"
     } else {

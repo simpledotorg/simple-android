@@ -144,7 +144,8 @@ object TestData {
         deletedAt = deletedAt,
         recordedAt = recordedAt,
         syncStatus = syncStatus,
-        reminderConsent = reminderConsent
+        reminderConsent = reminderConsent,
+        deletedReason = null
     )
   }
 

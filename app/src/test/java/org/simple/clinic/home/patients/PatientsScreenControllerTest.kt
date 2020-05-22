@@ -449,36 +449,6 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  fun `sync indicator should be visible only when user is approved for syncing`() {
-    // given
-    val canSyncStream = PublishSubject.create<Boolean>()
-
-    setupController(
-        user = userWaitingForApproval,
-        canSync = canSyncStream
-    )
-
-    // when
-    canSyncStream.onNext(false)
-
-    // then
-    verify(screen).showUserStatusAsWaiting()
-    verify(screen).showSimpleVideo()
-    verify(screen).hideSyncIndicator()
-    verify(screen, never()).showSyncIndicator()
-    verifyNoMoreInteractions(screen)
-    clearInvocations(screen)
-
-    // when
-    canSyncStream.onNext(true)
-    canSyncStream.onNext(true)
-
-    // then
-    verify(screen).showSyncIndicator()
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
   fun `when an app update is available and the app update dialog has not been shown on the current date, show the app update dialog`() {
     // when
     setupController(
@@ -583,7 +553,6 @@ class PatientsScreenControllerTest {
 
   private fun setupController(
       user: User = userApprovedForSyncing,
-      canSync: Observable<Boolean> = Observable.just(user).map { it.canSyncData },
       numberOfPatientsRegistered: Int = 0,
       hasUserDismissedApprovedStatus: Boolean = false,
       approvalStatusApprovedAt: Instant = dateAsInstant.minus(1, ChronoUnit.DAYS),
@@ -594,7 +563,6 @@ class PatientsScreenControllerTest {
     createController()
     setupStubs(
         userStream = Observable.just(user.toOptional()),
-        canSync = canSync,
         refreshCurrentUserCompletable = refreshCurrentUserCompletable,
         numberOfPatientsRegistered = numberOfPatientsRegistered,
         hasUserDismissedApprovedStatus = hasUserDismissedApprovedStatus,
@@ -607,7 +575,6 @@ class PatientsScreenControllerTest {
 
   private fun setupControllerWithUserStream(
       userStream: Observable<Optional<User>>,
-      canSync: Observable<Boolean> = userStream.map { if (it is Just) it.value.canSyncData else false },
       numberOfPatientsRegistered: Int = 0,
       hasUserDismissedApprovedStatus: Boolean = false,
       approvalStatusApprovedAt: Instant = dateAsInstant.minus(1, ChronoUnit.DAYS),
@@ -618,7 +585,6 @@ class PatientsScreenControllerTest {
     createController()
     setupStubs(
         userStream = userStream,
-        canSync = canSync,
         refreshCurrentUserCompletable = refreshCurrentUserCompletable,
         numberOfPatientsRegistered = numberOfPatientsRegistered,
         hasUserDismissedApprovedStatus = hasUserDismissedApprovedStatus,
@@ -646,7 +612,6 @@ class PatientsScreenControllerTest {
 
   private fun setupStubs(
       userStream: Observable<Optional<User>>,
-      canSync: Observable<Boolean>,
       refreshCurrentUserCompletable: Completable,
       numberOfPatientsRegistered: Int,
       hasUserDismissedApprovedStatus: Boolean,
@@ -655,7 +620,7 @@ class PatientsScreenControllerTest {
       appUpdateStream: Observable<AppUpdateState>
   ) {
     whenever(userSession.loggedInUser()).doReturn(userStream)
-    whenever(userSession.canSyncData()).doReturn(canSync)
+    whenever(userSession.canSyncData()).doReturn(userStream.map { if (it is Just) it.value.canSyncData else false })
     whenever(refreshCurrentUser.refresh()).doReturn(refreshCurrentUserCompletable)
     whenever(checkAppUpdate.listen()).doReturn(appUpdateStream)
     whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)

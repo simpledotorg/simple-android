@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.patients_user_status_awaitingsmsverificati
 import kotlinx.android.synthetic.main.screen_patients.view.*
 import kotlinx.android.synthetic.main.view_simple_video.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appconfig.Country
@@ -34,8 +35,10 @@ import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
 import javax.inject.Named
@@ -73,6 +76,22 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
   private var disposable = Disposables.empty()
 
+  private val events: Observable<UiEvent> by unsafeLazy {
+    Observable
+        .mergeArray(
+            screenCreates(),
+            activityStarts(),
+            searchButtonClicks(),
+            dismissApprovedStatusClicks(),
+            enterCodeManuallyClicks(),
+            scanCardIdButtonClicks(),
+            simpleVideoClicked()
+        )
+        .compose<UiEvent>(RequestPermissions(runtimePermissions, activity, screenRouter.streamScreenResults().ofType()))
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -81,20 +100,9 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     TheActivity.component.inject(this)
 
     setupApprovalStatusAnimations()
-
     bindUiToController(
         ui = this,
-        events = Observable
-            .mergeArray(
-                screenCreates(),
-                activityStarts(),
-                searchButtonClicks(),
-                dismissApprovedStatusClicks(),
-                enterCodeManuallyClicks(),
-                scanCardIdButtonClicks(),
-                simpleVideoClicked()
-            )
-            .compose(RequestPermissions(runtimePermissions, activity, screenRouter.streamScreenResults().ofType())),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

@@ -1,11 +1,10 @@
 package org.simple.clinic.analytics
 
-import org.simple.clinic.user.User
-import timber.log.Timber
+import org.simple.clinic.platform.analytics.AnalyticsUser
 
 interface AnalyticsReporter {
 
-  fun setLoggedInUser(user: User, isANewRegistration: Boolean)
+  fun setLoggedInUser(user: AnalyticsUser, isANewRegistration: Boolean)
 
   fun resetUser()
 

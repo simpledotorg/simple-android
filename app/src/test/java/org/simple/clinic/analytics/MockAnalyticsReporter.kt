@@ -1,14 +1,14 @@
 package org.simple.clinic.analytics
 
-import org.simple.clinic.user.User
+import org.simple.clinic.platform.analytics.AnalyticsUser
 
 class MockAnalyticsReporter : AnalyticsReporter {
 
-  var user: User? = null
+  var user: AnalyticsUser? = null
   var isANewRegistration: Boolean? = null
   val receivedEvents = mutableListOf<Event>()
 
-  override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
+  override fun setLoggedInUser(user: AnalyticsUser, isANewRegistration: Boolean) {
     this.user = user
     this.isANewRegistration = isANewRegistration
   }

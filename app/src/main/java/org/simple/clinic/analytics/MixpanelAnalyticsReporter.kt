@@ -3,15 +3,15 @@ package org.simple.clinic.analytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.user.User
+import org.simple.clinic.platform.analytics.AnalyticsUser
 
 class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
 
   private val mixpanel: MixpanelAPI = MixpanelAPI.getInstance(app, BuildConfig.MIXPANEL_TOKEN)
 
-  override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
+  override fun setLoggedInUser(user: AnalyticsUser, isANewRegistration: Boolean) {
     synchronized(mixpanel) {
-      val userId = user.uuid.toString()
+      val userId = user.id.toString()
 
       if (isANewRegistration) {
         mixpanel.alias(userId, null)
@@ -20,9 +20,10 @@ class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
       mixpanel.identify(userId)
       with(mixpanel.people) {
         identify(userId)
-        set("name", user.fullName)
+        set("name", user.name)
       }
     }
+
   }
 
   override fun resetUser() {

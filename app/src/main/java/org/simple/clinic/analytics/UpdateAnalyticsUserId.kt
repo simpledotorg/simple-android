@@ -1,6 +1,7 @@
 package org.simple.clinic.analytics
 
 import android.annotation.SuppressLint
+import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
@@ -25,6 +26,7 @@ class UpdateAnalyticsUserId @Inject constructor(
         .take(1)
         .filterAndUnwrapJust()
         .filter { it.loggedInStatus in statesToSetUserIdFor }
+        .map { AnalyticsUser(it.uuid, it.fullName) }
         .doOnNext(Analytics::setLoggedInUser)
         .subscribeOn(schedulersProvider.io())
         .subscribe()

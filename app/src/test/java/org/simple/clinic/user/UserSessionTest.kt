@@ -23,12 +23,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult
@@ -433,7 +434,7 @@ class UserSessionTest {
     whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
 
     val user = TestData.loggedInUser(uuid = userUuid)
-    reporter.setLoggedInUser(user, false)
+    reporter.setLoggedInUser(AnalyticsUser(user.uuid, user.fullName), false)
     assertThat(reporter.user).isNotNull()
 
     // when

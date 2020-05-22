@@ -35,7 +35,7 @@ import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 import javax.inject.Named
 
-typealias Ui = PatientsScreen
+typealias Ui = PatientsUi
 typealias UiChange = (Ui) -> Unit
 
 class PatientsScreenController @Inject constructor(
@@ -79,7 +79,7 @@ class PatientsScreenController @Inject constructor(
 
   private fun newPatientClicks(events: Observable<UiEvent>): ObservableSource<UiChange> {
     return events.ofType<NewPatientClicked>()
-        .map { { ui: PatientsScreen -> ui.openPatientSearchScreen() } }
+        .map { { ui: Ui -> ui.openPatientSearchScreen() } }
   }
 
   private fun refreshApprovalStatusOnStart(events: Observable<UiEvent>): Observable<UiChange> {

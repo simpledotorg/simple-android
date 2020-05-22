@@ -13,6 +13,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -57,7 +58,7 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 66,
+    version = 67,
     exportSchema = true
 )
 @TypeConverters(
@@ -78,7 +79,8 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
     Appointment.AppointmentType.RoomTypeConverter::class,
     PatientStatus.RoomTypeConverter::class,
     ReminderConsent.RoomTypeConverter::class,
-    BloodSugarMeasurementType.RoomTypeConverter::class
+    BloodSugarMeasurementType.RoomTypeConverter::class,
+    DeletedReason.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

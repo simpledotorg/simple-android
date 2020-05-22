@@ -63,7 +63,9 @@ data class Patient(
 
     val syncStatus: SyncStatus,
 
-    val reminderConsent: ReminderConsent
+    val reminderConsent: ReminderConsent,
+
+    val deletedReason: DeletedReason?
 ) : Parcelable {
 
   fun withNameAndGender(fullName: String, gender: Gender): Patient =

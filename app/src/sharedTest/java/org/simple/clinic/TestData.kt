@@ -25,6 +25,7 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.Patient
@@ -58,6 +59,7 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.randomDeletedReason
 import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.randomOfEnum
@@ -227,7 +229,8 @@ object TestData {
       recordedAt: Instant = Instant.now(),
       address: PatientAddressPayload = addressPayload(),
       phoneNumbers: List<PatientPhoneNumberPayload>? = listOf(phoneNumberPayload()),
-      businessIds: List<BusinessIdPayload> = listOf(businessIdPayload())
+      businessIds: List<BusinessIdPayload> = listOf(businessIdPayload()),
+      deletedReason: DeletedReason? = randomDeletedReason()
   ): PatientPayload {
     return PatientPayload(
         uuid = uuid,
@@ -244,7 +247,8 @@ object TestData {
         phoneNumbers = phoneNumbers,
         businessIds = businessIds,
         recordedAt = recordedAt,
-        reminderConsent = Granted
+        reminderConsent = Granted,
+        deletedReason = deletedReason
     )
   }
 

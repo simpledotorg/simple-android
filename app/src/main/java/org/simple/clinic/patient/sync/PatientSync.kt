@@ -74,7 +74,8 @@ class PatientSync @Inject constructor(
                 phoneNumbers = numberPayloads,
                 businessIds = businessIdPayloads,
                 recordedAt = recordedAt,
-                reminderConsent = reminderConsent
+                reminderConsent = reminderConsent,
+                deletedReason = deletedReason
             )
           }
         }

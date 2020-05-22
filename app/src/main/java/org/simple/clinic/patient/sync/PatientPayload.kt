@@ -3,6 +3,7 @@ package org.simple.clinic.patient.sync
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -10,7 +11,6 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.ReminderConsent
-import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
@@ -63,9 +63,11 @@ data class PatientPayload(
     @Json(name = "recorded_at")
     val recordedAt: Instant,
 
-    // TODO Make reminderConsent a non-nullable field once it is pushed to production
     @Json(name = "reminder_consent")
-    val reminderConsent: ReminderConsent?
+    val reminderConsent: ReminderConsent,
+
+    @Json(name = "deleted_reason")
+    val deletedReason: DeletedReason?
 ) {
 
   fun toDatabaseModel(newStatus: SyncStatus): Patient {
@@ -82,8 +84,8 @@ data class PatientPayload(
         deletedAt = deletedAt,
         recordedAt = recordedAt,
         syncStatus = newStatus,
-        reminderConsent = reminderConsent ?: Granted,
-        deletedReason = null
+        reminderConsent = reminderConsent,
+        deletedReason = deletedReason
     )
   }
 }

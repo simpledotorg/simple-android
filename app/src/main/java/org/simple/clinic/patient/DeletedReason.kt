@@ -3,6 +3,8 @@ package org.simple.clinic.patient
 import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.ToJson
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
@@ -34,5 +36,14 @@ sealed class DeletedReason : Parcelable {
 
     @TypeConverter
     fun fromEnum(reason: DeletedReason?): String? = TypeAdapter.fromEnum(reason)
+  }
+
+  class MoshiTypeConverter {
+
+    @FromJson
+    fun toEnum(value: String?): DeletedReason? = TypeAdapter.toEnum(value)
+
+    @ToJson
+    fun fromEnum(reason: DeletedReason): String? = TypeAdapter.fromEnum(reason)
   }
 }

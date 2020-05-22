@@ -37,6 +37,7 @@ import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -52,6 +53,7 @@ class SyncIndicatorViewControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val lastSyncStatePreference = mock<Preference<LastSyncedState>>()
+  private val indicatorUiActions = mock<SyncIndicatorUiActions>()
   private val indicator = mock<SyncIndicatorUi>()
   private val dataSync = mock<DataSync>()
   private val utcClock = TestUtcClock()
@@ -67,7 +69,8 @@ class SyncIndicatorViewControllerTest {
       lastSyncStatePreference,
       utcClock,
       configSubject,
-      indicator
+      TrampolineSchedulersProvider(),
+      indicatorUiActions
   )
   private val testFixture = MobiusTestFixture(
       events = uiEvents.ofType(),

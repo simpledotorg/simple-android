@@ -5,6 +5,7 @@ import io.reactivex.schedulers.TestScheduler
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.user.LoggedInUserPayload
@@ -27,6 +28,10 @@ fun randomMedicalHistoryAnswer(): Answer {
 
 fun randomGender(): Gender {
   return Gender.TypeAdapter.knownMappings.keys.shuffled().first()
+}
+
+fun randomDeletedReason(): DeletedReason {
+  return DeletedReason.TypeAdapter.knownMappings.keys.random()
 }
 
 fun randomPatientPhoneNumberType(): PatientPhoneNumberType {

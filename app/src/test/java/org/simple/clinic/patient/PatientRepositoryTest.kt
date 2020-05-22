@@ -137,7 +137,8 @@ class PatientRepositoryTest {
         phoneNumbers = null,
         businessIds = emptyList(),
         recordedAt = mock(),
-        reminderConsent = Granted
+        reminderConsent = Granted,
+        deletedReason = null
     )
 
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
@@ -194,7 +195,8 @@ class PatientRepositoryTest {
             deletedAt = mock())),
         businessIds = emptyList(),
         recordedAt = mock(),
-        reminderConsent = Granted
+        reminderConsent = Granted,
+        deletedReason = null
     )
 
     repository.mergeWithLocalData(listOf(serverPatientWithPhone)).blockingAwait()

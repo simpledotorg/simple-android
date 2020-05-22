@@ -12,6 +12,7 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
     return when (event) {
       is LastSyncedStateFetched -> next(model.lastSyncedStateChanged(event.lastSyncState))
       is DataForSyncIndicatorStateFetched -> noChange()
+      is IncrementTimerTick -> noChange()
     }
   }
 }

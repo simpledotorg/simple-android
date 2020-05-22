@@ -8,6 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
 
 class SyncIndicatorEffectHandler @AssistedInject constructor(
@@ -15,6 +16,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     //TODO: Fetch the `SyncIndicatorConfig` instead of a stream
     private val syncIndicatorConfig: Observable<SyncIndicatorConfig>,
+    private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: SyncIndicatorUiActions
 ) {
 
@@ -28,7 +30,16 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
           .subtypeEffectHandler<SyncIndicatorEffect, SyncIndicatorEvent>()
           .addTransformer(FetchLastSyncedStatus::class.java, fetchLastSyncedState())
           .addTransformer(FetchDataForSyncIndicatorState::class.java, fetchDataForSyncIndicatorState())
+          .addTransformer(StartSyncedStateTimer::class.java, startTimer())
           .build()
+
+  private fun startTimer(): ObservableTransformer<StartSyncedStateTimer, SyncIndicatorEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .switchMap { Observable.interval(it.intervalAmount, it.timeUnit) }
+          .map(::IncrementTimerTick)
+    }
+  }
 
   private fun fetchLastSyncedState(): ObservableTransformer<FetchLastSyncedStatus, SyncIndicatorEvent> {
     return ObservableTransformer { effect ->

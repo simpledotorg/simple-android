@@ -38,4 +38,19 @@ class DeletePatientEffectHandlerTest {
     verify(uiActions).showConfirmDeleteDialog(patientName, deletedReason)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show confirm died dialog effect is received, then show confirm died dialog`() {
+    // given
+    val patientName = "John Doe"
+
+    // when
+    testCase.dispatch(ShowConfirmDiedDialog(patientName = patientName))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showConfirmDiedDialog(patientName)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

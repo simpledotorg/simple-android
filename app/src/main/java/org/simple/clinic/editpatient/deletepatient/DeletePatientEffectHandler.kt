@@ -20,6 +20,7 @@ class DeletePatientEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<DeletePatientEffect, DeletePatientEvent>()
         .addConsumer(ShowConfirmDeleteDialog::class.java, { uiActions.showConfirmDeleteDialog(it.patientName, it.deletedReason) }, schedulersProvider.ui())
+        .addConsumer(ShowConfirmDiedDialog::class.java, { uiActions.showConfirmDiedDialog(it.patientName) }, schedulersProvider.ui())
         .build()
   }
 }

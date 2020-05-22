@@ -9,11 +9,12 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.TestData
 import org.simple.clinic.login.UsersApi
+import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.user.User
@@ -57,7 +58,7 @@ class RegisterUserTest {
     registerUser.registerUserAtFacility(user, facility).blockingGet()
 
     // then
-    assertThat(reporter.user).isEqualTo(savedUser)
+    assertThat(reporter.user).isEqualTo(AnalyticsUser(savedUser.uuid, savedUser.fullName))
     assertThat(reporter.isANewRegistration).isTrue()
   }
 }

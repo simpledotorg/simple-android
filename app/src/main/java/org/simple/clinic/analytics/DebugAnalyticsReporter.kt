@@ -1,11 +1,11 @@
 package org.simple.clinic.analytics
 
-import org.simple.clinic.user.User
+import org.simple.clinic.platform.analytics.AnalyticsUser
 import timber.log.Timber
 
 class DebugAnalyticsReporter : AnalyticsReporter {
 
-  override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
+  override fun setLoggedInUser(user: AnalyticsUser, isANewRegistration: Boolean) {
     Timber.tag("Analytics").d("User: $user; Is new registration: $isANewRegistration")
   }
 

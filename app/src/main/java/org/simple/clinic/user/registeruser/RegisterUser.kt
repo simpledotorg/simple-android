@@ -7,6 +7,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.UsersApi
+import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.user.LoggedInUserPayload
@@ -37,7 +38,8 @@ class RegisterUser @Inject constructor(
         .createUser(registrationRequest)
         .doOnSubscribe { Timber.i("Registering user") }
         .flatMap { storeUserAndAccessToken(it) }
-        .doOnSuccess { Analytics.setNewlyRegisteredUser(it) }
+        .map { AnalyticsUser(it.uuid, it.fullName) }
+        .doOnSuccess(Analytics::setNewlyRegisteredUser)
         .map { Success as RegistrationResult }
         .doOnError { reportErrors(it) }
         .onErrorReturn { mapErrorToRegistrationResult(it) }

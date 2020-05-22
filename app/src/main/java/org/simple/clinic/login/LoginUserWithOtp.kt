@@ -6,6 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
@@ -84,7 +85,7 @@ class LoginUserWithOtp @Inject constructor(
   }
 
   private fun reportUserLoggedInToAnalytics(user: User) {
-    Analytics.setLoggedInUser(user)
+    Analytics.setLoggedInUser(AnalyticsUser(user.uuid, user.fullName))
   }
 
   private fun syncOnLoginResult() {

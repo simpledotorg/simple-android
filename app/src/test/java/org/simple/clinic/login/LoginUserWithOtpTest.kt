@@ -16,6 +16,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
@@ -23,7 +24,7 @@ import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
-import org.simple.clinic.TestData
+import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -126,7 +127,7 @@ class LoginUserWithOtpTest {
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
 
     // then
-    assertThat(analyticsReporter.user).isEqualTo(user)
+    assertThat(analyticsReporter.user).isEqualTo(AnalyticsUser(user.uuid, user.fullName))
     assertThat(loginResult).isEqualTo(Success)
   }
 
@@ -143,7 +144,7 @@ class LoginUserWithOtpTest {
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
 
     // then
-    assertThat(analyticsReporter.user).isEqualTo(user)
+    assertThat(analyticsReporter.user).isEqualTo(AnalyticsUser(user.uuid, user.fullName))
     assertThat(allDataSynced).isTrue()
     assertThat(loginResult).isEqualTo(Success)
   }

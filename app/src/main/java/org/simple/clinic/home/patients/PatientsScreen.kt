@@ -40,7 +40,7 @@ import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -134,7 +134,7 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
       .mergeWith(RxView.clicks(simpleVideoImage))
       .map { SimpleVideoClicked }
 
-  fun openPatientSearchScreen() {
+  override fun openPatientSearchScreen() {
     screenRouter.push(PatientSearchScreenKey())
   }
 
@@ -160,41 +160,41 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     disposable.dispose()
   }
 
-  fun showUserStatusAsWaiting() {
+  override fun showUserStatusAsWaiting() {
     showUserAccountStatus(R.id.patients_user_status_awaitingapproval)
   }
 
-  fun showUserStatusAsApproved() {
+  override fun showUserStatusAsApproved() {
     showUserAccountStatus(R.id.patients_user_status_approved)
   }
 
-  fun showUserStatusAsPendingVerification() {
+  override fun showUserStatusAsPendingVerification() {
     showUserAccountStatus(R.id.patients_user_status_awaitingsmsverification)
   }
 
-  fun hideUserAccountStatus() {
+  override fun hideUserAccountStatus() {
     // By changing to an empty child instead of hiding the ViewFlipper entirely,
     // ViewFlipper's change animations can be re-used for this transition.
     showUserAccountStatus(R.id.userStatusHiddenView)
   }
 
-  fun openEnterCodeManuallyScreen() {
+  override fun openEnterCodeManuallyScreen() {
     screenRouter.push(EnterOtpScreenKey())
   }
 
-  fun openScanSimpleIdCardScreen() {
+  override fun openScanSimpleIdCardScreen() {
     screenRouter.push(ScanSimpleIdScreenKey())
   }
 
-  fun hideSyncIndicator() {
+  override fun hideSyncIndicator() {
     syncIndicator.visibility = View.GONE
   }
 
-  fun showSyncIndicator() {
+  override fun showSyncIndicator() {
     syncIndicator.visibility = View.VISIBLE
   }
 
-  fun showAppUpdateDialog() {
+  override fun showAppUpdateDialog() {
     AppUpdateDialog.show(activity.supportFragmentManager)
   }
 
@@ -205,7 +205,7 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     illustrationLayout.visibility = View.VISIBLE
   }
 
-  fun showSimpleVideo() {
+  override fun showSimpleVideo() {
     // Hard-coding to show this simple video view exists because, as of now,
     // we are not sure if we will have variations of this training video.
     // We should make the title, duration and video thumbnail configurable in order to improve this.
@@ -213,11 +213,11 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     showHomeScreenBackground(simpleVideoLayout.id)
   }
 
-  fun showIllustration() {
+  override fun showIllustration() {
     showHomeScreenBackground(homeIllustration.id)
   }
 
-  fun openYouTubeLinkForSimpleVideo() {
+  override fun openYouTubeLinkForSimpleVideo() {
     val packageManager = context.packageManager
     val appUri = "vnd.youtube:$youTubeVideoId"
     val webUri = "http://www.youtube.com/watch?v=$youTubeVideoId"

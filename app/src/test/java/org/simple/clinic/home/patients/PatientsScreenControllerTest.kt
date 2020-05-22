@@ -53,7 +53,7 @@ class PatientsScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen: PatientsScreen = mock()
+  private val ui: PatientsUi = mock()
   private val userSession = mock<UserSession>()
   private val approvalStatusApprovedAtPreference = mock<Preference<Instant>>()
   private val hasUserDismissedApprovedStatusPreference = mock<Preference<Boolean>>()
@@ -91,13 +91,13 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(NewPatientClicked)
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen).openPatientSearchScreen()
+    verify(ui).openPatientSearchScreen()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -114,10 +114,10 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(Resumed(null))
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSyncIndicator()
-    verify(screen).showSimpleVideo()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSyncIndicator()
+    verify(ui).showSimpleVideo()
+    verifyNoMoreInteractions(ui)
 
     verify(refreshCurrentUser).refresh()
   }
@@ -128,12 +128,12 @@ class PatientsScreenControllerTest {
     setupController(user = userWaitingForApproval)
 
     // then
-    verify(screen).hideSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).hideSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen).showUserStatusAsWaiting()
+    verify(ui).showUserStatusAsWaiting()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -143,12 +143,12 @@ class PatientsScreenControllerTest {
     setupController(user = user)
 
     // then
-    verify(screen).hideSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).hideSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen).showUserStatusAsWaiting()
+    verify(ui).showUserStatusAsWaiting()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -157,13 +157,13 @@ class PatientsScreenControllerTest {
     setupController(user = userApprovedForSyncing)
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen, never()).showUserStatusAsWaiting()
+    verify(ui, never()).showUserStatusAsWaiting()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -175,12 +175,12 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).showSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen).showUserStatusAsApproved()
+    verify(ui).showUserStatusAsApproved()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -193,13 +193,13 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).showSyncIndicator()
-    verify(screen).showSimpleVideo()
-    verify(screen).hideUserAccountStatus()
+    verify(ui).showSyncIndicator()
+    verify(ui).showSimpleVideo()
+    verify(ui).hideUserAccountStatus()
 
-    verify(screen, never()).showUserStatusAsApproved()
+    verify(ui, never()).showUserStatusAsApproved()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -212,13 +212,13 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).showSyncIndicator()
-    verify(screen).showSimpleVideo()
-    verify(screen).hideUserAccountStatus()
+    verify(ui).showSyncIndicator()
+    verify(ui).showSimpleVideo()
+    verify(ui).hideUserAccountStatus()
 
-    verify(screen, never()).showUserStatusAsApproved()
+    verify(ui, never()).showUserStatusAsApproved()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -233,10 +233,10 @@ class PatientsScreenControllerTest {
     verify(refreshCurrentUser).refresh()
     verify(approvalStatusApprovedAtPreference).set(any())
 
-    verify(screen).showUserStatusAsWaiting()
-    verify(screen).hideSyncIndicator()
-    verify(screen).showSimpleVideo()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserStatusAsWaiting()
+    verify(ui).hideSyncIndicator()
+    verify(ui).showSimpleVideo()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -248,10 +248,10 @@ class PatientsScreenControllerTest {
     // then
     verify(hasUserDismissedApprovedStatusPreference).set(true)
 
-    verify(screen).showUserStatusAsApproved()
-    verify(screen).showSyncIndicator()
-    verify(screen).showSimpleVideo()
-    verifyNoMoreInteractions(screen)
+    verify(ui).showUserStatusAsApproved()
+    verify(ui).showSyncIndicator()
+    verify(ui).showSimpleVideo()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -264,12 +264,12 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).hideSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).hideSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen).showUserStatusAsPendingVerification()
+    verify(ui).showUserStatusAsPendingVerification()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -281,13 +281,13 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen, never()).showUserStatusAsPendingVerification()
+    verify(ui, never()).showUserStatusAsPendingVerification()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -300,13 +300,13 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).showUserStatusAsPendingVerification()
-    verify(screen).hideSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).showUserStatusAsPendingVerification()
+    verify(ui).hideSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen, never()).hideUserAccountStatus()
+    verify(ui, never()).hideUserAccountStatus()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -318,11 +318,11 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).showSyncIndicator()
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -336,13 +336,13 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).showUserStatusAsWaiting()
-    verify(screen).hideSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).showUserStatusAsWaiting()
+    verify(ui).hideSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen, never()).hideUserAccountStatus()
+    verify(ui, never()).hideUserAccountStatus()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -355,13 +355,13 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).showUserStatusAsWaiting()
-    verify(screen).hideSyncIndicator()
-    verify(screen).showSimpleVideo()
+    verify(ui).showUserStatusAsWaiting()
+    verify(ui).hideSyncIndicator()
+    verify(ui).showSimpleVideo()
 
-    verify(screen, never()).hideUserAccountStatus()
+    verify(ui, never()).hideUserAccountStatus()
 
-    verifyNoMoreInteractions(screen)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -381,26 +381,26 @@ class PatientsScreenControllerTest {
     userSubject.onNext(user.toOptional())
 
     //then
-    verify(screen).showSimpleVideo()
-    verify(screen).hideSyncIndicator()
-    verify(screen).showUserStatusAsPendingVerification()
-    verify(screen, never()).hideUserAccountStatus()
-    verifyNoMoreInteractions(screen)
-    clearInvocations(screen)
+    verify(ui).showSimpleVideo()
+    verify(ui).hideSyncIndicator()
+    verify(ui).showUserStatusAsPendingVerification()
+    verify(ui, never()).hideUserAccountStatus()
+    verifyNoMoreInteractions(ui)
+    clearInvocations(ui)
 
     // when
     userSubject.onNext(userAfterLoggingIn.toOptional())
 
     // then
-    verify(screen).showSyncIndicator()
-    verify(screen).hideUserAccountStatus()
-    verifyNoMoreInteractions(screen)
-    clearInvocations(screen)
+    verify(ui).showSyncIndicator()
+    verify(ui).hideUserAccountStatus()
+    verifyNoMoreInteractions(ui)
+    clearInvocations(ui)
 
     // when
     userSubject.onNext(userAfterLoggingIn.toOptional())
-    verify(screen).hideUserAccountStatus()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -411,11 +411,11 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(PatientsEnterCodeManuallyClicked())
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
-    verify(screen).showSyncIndicator()
-    verify(screen).openEnterCodeManuallyScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui).openEnterCodeManuallyScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -426,11 +426,11 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(GRANTED)))
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
-    verify(screen).showSyncIndicator()
-    verify(screen).openScanSimpleIdCardScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui).openScanSimpleIdCardScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -441,11 +441,11 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(DENIED)))
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
-    verify(screen).showSyncIndicator()
-    verify(screen, never()).openScanSimpleIdCardScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui, never()).openScanSimpleIdCardScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -457,11 +457,11 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
-    verify(screen).showSyncIndicator()
-    verify(screen).showAppUpdateDialog()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui).showAppUpdateDialog()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -470,11 +470,11 @@ class PatientsScreenControllerTest {
     setupController(appUpdateState = ShowAppUpdate)
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
-    verify(screen).showSyncIndicator()
-    verify(screen, never()).showAppUpdateDialog()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui, never()).showAppUpdateDialog()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -486,11 +486,11 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
-    verify(screen).showSyncIndicator()
-    verify(screen, never()).showAppUpdateDialog()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui, never()).showAppUpdateDialog()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -502,11 +502,11 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
-    verify(screen).showSyncIndicator()
-    verify(screen, never()).showAppUpdateDialog()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui, never()).showAppUpdateDialog()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -515,12 +515,12 @@ class PatientsScreenControllerTest {
     setupController(numberOfPatientsRegistered = 9)
 
     //then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
-    verify(screen).showSyncIndicator()
-    verify(screen).showSimpleVideo()
-    verify(screen, never()).showIllustration()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui).showSimpleVideo()
+    verify(ui, never()).showIllustration()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -529,11 +529,11 @@ class PatientsScreenControllerTest {
     setupController(numberOfPatientsRegistered = 10)
 
     //then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSyncIndicator()
-    verify(screen, never()).showSimpleVideo()
-    verify(screen).showIllustration()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSyncIndicator()
+    verify(ui, never()).showSimpleVideo()
+    verify(ui).showIllustration()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -544,11 +544,11 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(SimpleVideoClicked)
 
     //then
-    verify(screen).hideUserAccountStatus()
-    verify(screen).showSimpleVideo()
-    verify(screen).showSyncIndicator()
-    verify(screen).openYouTubeLinkForSimpleVideo()
-    verifyNoMoreInteractions(screen)
+    verify(ui).hideUserAccountStatus()
+    verify(ui).showSimpleVideo()
+    verify(ui).showSyncIndicator()
+    verify(ui).openYouTubeLinkForSimpleVideo()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(
@@ -633,7 +633,7 @@ class PatientsScreenControllerTest {
   private fun activateUi() {
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(ScreenCreated())
   }

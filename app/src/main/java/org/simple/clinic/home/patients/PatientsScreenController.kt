@@ -55,7 +55,6 @@ class PatientsScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        enterCodeManuallyClicks(replayedEvents),
         newPatientClicks(replayedEvents),
         refreshApprovalStatusOnStart(replayedEvents),
         displayUserAccountStatusNotification(replayedEvents),
@@ -69,11 +68,6 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
-
-  private fun enterCodeManuallyClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PatientsEnterCodeManuallyClicked>()
-        .map { { ui: Ui -> ui.openEnterCodeManuallyScreen() } }
-  }
 
   private fun newPatientClicks(events: Observable<UiEvent>): ObservableSource<UiChange> {
     return events.ofType<NewPatientClicked>()

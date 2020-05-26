@@ -86,13 +86,17 @@ class PatientsScreenControllerTest {
   @Before
   fun setUp() {
     val uiRenderer = PatientsUiRenderer(ui)
+    val patientsEffectHandler = PatientsEffectHandler(
+        schedulers = TrampolineSchedulersProvider(),
+        uiActions = ui
+    )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = PatientsModel.create(),
         init = PatientsInit(),
         update = PatientsUpdate(),
-        effectHandler = PatientsEffectHandler().build(),
+        effectHandler = patientsEffectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
   }

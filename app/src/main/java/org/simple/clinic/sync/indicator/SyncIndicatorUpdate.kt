@@ -3,6 +3,7 @@ package org.simple.clinic.sync.indicator
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncInterval
@@ -13,6 +14,11 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
+import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.ServerError
+import org.simple.clinic.util.ResolvedError.Unauthenticated
+import org.simple.clinic.util.ResolvedError.Unexpected
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
@@ -26,7 +32,14 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
       is LastSyncedStateFetched -> next(model.lastSyncedStateChanged(event.lastSyncState), FetchDataForSyncIndicatorState)
       is DataForSyncIndicatorStateFetched -> updateSyncIndicatorState(model, event.currentTime, event.syncIndicatorFailureThreshold)
       is IncrementTimerTick -> incrementTimer(model, event)
-      is DataSyncErrorReceived -> noChange()
+      is DataSyncErrorReceived -> handleDataSyncErrors(event.errorType)
+    }
+  }
+
+  private fun handleDataSyncErrors(errorType: ResolvedError): Next<SyncIndicatorModel, SyncIndicatorEffect> {
+    return when (errorType) {
+      is NetworkRelated, is Unexpected, is ServerError -> dispatch(ShowDataSyncErrorDialog(errorType))
+      is Unauthenticated -> noChange()
     }
   }
 

@@ -4,7 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.sync.DataSync

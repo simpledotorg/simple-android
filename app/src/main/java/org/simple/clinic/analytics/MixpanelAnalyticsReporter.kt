@@ -3,6 +3,7 @@ package org.simple.clinic.analytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.analytics.AnalyticsUser
 
 class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {

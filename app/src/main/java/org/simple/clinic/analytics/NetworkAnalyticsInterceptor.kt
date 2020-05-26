@@ -4,6 +4,7 @@ import android.net.NetworkCapabilities
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Response
+import org.simple.clinic.platform.analytics.Analytics
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 

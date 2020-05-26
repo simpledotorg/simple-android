@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchValidationError.INPUT_EMPTY
-import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject

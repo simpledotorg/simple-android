@@ -9,9 +9,11 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncGroup
+import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
+import javax.inject.Named
 
 class SyncIndicatorEffectHandler @AssistedInject constructor(
     private val lastSyncedState: Preference<LastSyncedState>,
@@ -20,6 +22,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
     private val syncIndicatorConfig: Observable<SyncIndicatorConfig>,
     private val schedulersProvider: SchedulersProvider,
     private val dataSync: DataSync,
+    @Named("frequently_syncing_repositories") private val frequentlySyncingRepositories: ArrayList<SynceableRepository<*, *>>,
     @Assisted private val uiActions: SyncIndicatorUiActions
 ) {
 
@@ -35,8 +38,21 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
           .addTransformer(FetchDataForSyncIndicatorState::class.java, fetchDataForSyncIndicatorState())
           .addTransformer(StartSyncedStateTimer::class.java, startTimer())
           .addTransformer(InitiateDataSync::class.java, startDataSync())
+          .addTransformer(FetchPendingSyncRecordCount::class.java, fetchPendingSyncCount())
           .addConsumer(ShowDataSyncErrorDialog::class.java, { uiActions.showErrorDialog(it.errorType) }, schedulersProvider.ui())
           .build()
+
+  private fun fetchPendingSyncCount(): ObservableTransformer<FetchPendingSyncRecordCount, SyncIndicatorEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .map {
+            frequentlySyncingRepositories
+                .map { it.pendingSyncRecordCountImmediate() }
+                .sum()
+          }
+          .map(::PendingSyncRecordCountFetched)
+    }
+  }
 
   private fun startTimer(): ObservableTransformer<StartSyncedStateTimer, SyncIndicatorEvent> {
     return ObservableTransformer { effect ->

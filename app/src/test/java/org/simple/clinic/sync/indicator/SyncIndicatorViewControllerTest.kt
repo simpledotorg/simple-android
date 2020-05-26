@@ -71,6 +71,7 @@ class SyncIndicatorViewControllerTest {
       configSubject,
       TrampolineSchedulersProvider(),
       dataSync,
+      frequentlySyncingRepositories,
       indicatorUiActions
   )
   private val testFixture = MobiusTestFixture(

@@ -18,3 +18,5 @@ data class StartSyncedStateTimer(
 object InitiateDataSync : SyncIndicatorEffect()
 
 data class ShowDataSyncErrorDialog(val errorType: ResolvedError) : SyncIndicatorEffect()
+
+object FetchPendingSyncRecordCount : SyncIndicatorEffect()

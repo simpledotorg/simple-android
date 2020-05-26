@@ -34,6 +34,7 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
       is IncrementTimerTick -> incrementTimer(model, event)
       is DataSyncErrorReceived -> handleDataSyncErrors(event.errorType)
       SyncIndicatorViewClicked -> syncIndicatorClicked(model.lastSyncedState)
+      is PendingSyncRecordCountFetched -> noChange()
     }
   }
 

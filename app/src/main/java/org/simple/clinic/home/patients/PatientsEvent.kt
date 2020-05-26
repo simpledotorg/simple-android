@@ -16,3 +16,5 @@ object NewPatientClicked : PatientsEvent() {
 data class UserDetailsLoaded(val user: User): PatientsEvent()
 
 object ActivityResumed: PatientsEvent()
+
+data class DismissedApprovalStatusLoaded(val hasBeenDismissed: Boolean): PatientsEvent()

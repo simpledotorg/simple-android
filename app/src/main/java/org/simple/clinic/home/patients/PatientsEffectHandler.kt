@@ -20,6 +20,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val utcClock: UtcClock,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
+    @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @Assisted private val uiActions: PatientsUiActions
 ) {
 
@@ -35,6 +36,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addAction(OpenPatientSearchScreen::class.java, uiActions::openPatientSearchScreen, schedulers.ui())
         .addTransformer(RefreshUserDetails::class.java, refreshCurrentUser())
         .addTransformer(LoadUser::class.java, loadUser())
+        .addTransformer(LoadDismissedApprovalStatus::class.java, loadDismissedApprovalStatus())
         .build()
   }
 
@@ -62,6 +64,15 @@ class PatientsEffectHandler @AssistedInject constructor(
           .switchMap { userSession.loggedInUser() }
           .filterAndUnwrapJust()
           .map(::UserDetailsLoaded)
+    }
+  }
+
+  private fun loadDismissedApprovalStatus(): ObservableTransformer<LoadDismissedApprovalStatus, PatientsEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { hasUserDismissedApprovedStatusPref.get() }
+          .map(::DismissedApprovalStatusLoaded)
     }
   }
 }

@@ -5,3 +5,5 @@ sealed class PatientsEffect
 object OpenEnterOtpScreen: PatientsEffect()
 
 object OpenPatientSearchScreen: PatientsEffect()
+
+object RefreshUserDetails: PatientsEffect()

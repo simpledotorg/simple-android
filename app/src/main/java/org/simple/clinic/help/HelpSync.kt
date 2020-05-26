@@ -14,6 +14,8 @@ class HelpSync @Inject constructor(
     @Named("sync_config_daily") private val configProvider: Single<SyncConfig>
 ) : ModelSync {
 
+  override val name: String = "Help"
+
   override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
 
   override fun push(): Completable = Completable.complete()

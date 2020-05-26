@@ -22,6 +22,8 @@ class AppointmentSync @Inject constructor(
 
   private fun canSyncData() = userSession.canSyncData().firstOrError()
 
+  override val name: String = "Appointment"
+
   override fun sync(): Completable =
       canSyncData()
           .flatMapCompletable { canSync ->

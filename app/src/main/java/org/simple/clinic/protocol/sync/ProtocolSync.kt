@@ -20,6 +20,8 @@ class ProtocolSync @Inject constructor(
     @Named("sync_config_daily") private val configProvider: Single<SyncConfig>
 ) : ModelSync {
 
+  override val name: String = "Protocol"
+
   override fun sync(): Completable = pull()
 
   override fun push(): Completable = Completable.complete()

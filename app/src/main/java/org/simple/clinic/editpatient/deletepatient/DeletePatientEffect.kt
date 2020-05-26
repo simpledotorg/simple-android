@@ -12,3 +12,5 @@ data class ShowConfirmDiedDialog(val patientName: String) : DeletePatientEffect(
 data class DeletePatient(val patientUuid: UUID, val deletedReason: DeletedReason) : DeletePatientEffect()
 
 data class MarkPatientAsDead(val patientUuid: UUID) : DeletePatientEffect()
+
+object ShowHomeScreen : DeletePatientEffect()

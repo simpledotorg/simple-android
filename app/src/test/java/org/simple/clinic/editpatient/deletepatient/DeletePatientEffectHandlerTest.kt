@@ -99,4 +99,19 @@ class DeletePatientEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when show home screen effect is received, the navigate to home screen`() {
+    // when
+    testCase.dispatch(ShowHomeScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verifyZeroInteractions(patientRepository)
+
+    verify(uiActions).showHomeScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
+
 }

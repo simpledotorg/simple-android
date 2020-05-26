@@ -4,6 +4,10 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Completed
+import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Failed
+import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Started
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError
@@ -44,7 +48,13 @@ class DataSync @Inject constructor(
               .map { config -> config to modelSync }
         }
         .filter { (config, _) -> config.syncGroup == syncGroup }
-        .map { (_, modelSync) -> modelSync.sync() }
+        .map { (_, modelSync) ->
+          modelSync
+              .sync()
+              .doOnSubscribe { Analytics.reportSyncEvent(modelSync.name, Started) }
+              .doOnComplete { Analytics.reportSyncEvent(modelSync.name, Completed) }
+              .doOnError { Analytics.reportSyncEvent(modelSync.name, Failed) }
+        }
         .toList()
         .flatMapCompletable { runAndSwallowErrors(it, syncGroup) }
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }

@@ -35,6 +35,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
           .addTransformer(FetchDataForSyncIndicatorState::class.java, fetchDataForSyncIndicatorState())
           .addTransformer(StartSyncedStateTimer::class.java, startTimer())
           .addTransformer(InitiateDataSync::class.java, startDataSync())
+          .addConsumer(ShowDataSyncErrorDialog::class.java, { uiActions.showErrorDialog(it.errorType) }, schedulersProvider.ui())
           .build()
 
   private fun startTimer(): ObservableTransformer<StartSyncedStateTimer, SyncIndicatorEvent> {

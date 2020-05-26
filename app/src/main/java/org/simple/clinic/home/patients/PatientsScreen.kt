@@ -74,7 +74,7 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   lateinit var runtimePermissions: RuntimePermissions
 
   @Inject
-  lateinit var effectHandler: PatientsEffectHandler
+  lateinit var effectHandlerFactory: PatientsEffectHandler.Factory
 
   @IdRes
   private var currentStatusViewId: Int = R.id.userStatusHiddenView
@@ -103,7 +103,7 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
         defaultModel = PatientsModel.create(),
         update = PatientsUpdate(),
         init = PatientsInit(),
-        effectHandler = effectHandler.build(),
+        effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
     )
   }

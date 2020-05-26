@@ -1,3 +1,5 @@
 package org.simple.clinic.home.patients
 
-class PatientsEffect
+sealed class PatientsEffect
+
+object OpenEnterOtpScreen: PatientsEffect()

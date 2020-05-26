@@ -25,6 +25,7 @@ class DeletePatientEffectHandler @AssistedInject constructor(
         .addConsumer(ShowConfirmDiedDialog::class.java, { uiActions.showConfirmDiedDialog(it.patientName) }, schedulersProvider.ui())
         .addTransformer(DeletePatient::class.java, deletePatient())
         .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead())
+        .addAction(ShowHomeScreen::class.java, { uiActions.showHomeScreen() }, schedulersProvider.ui())
         .build()
   }
 

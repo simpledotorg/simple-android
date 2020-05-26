@@ -18,3 +18,7 @@ data class DataForSyncIndicatorStateFetched(
 data class IncrementTimerTick(val minutes: Long) : SyncIndicatorEvent()
 
 data class DataSyncErrorReceived(val errorType: ResolvedError) : SyncIndicatorEvent()
+
+object SyncIndicatorViewClicked : SyncIndicatorEvent() {
+  override val analyticsName = "Sync Indicator: View Clicked"
+}

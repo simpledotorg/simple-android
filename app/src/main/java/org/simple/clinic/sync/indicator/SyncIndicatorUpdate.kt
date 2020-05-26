@@ -33,6 +33,18 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
       is DataForSyncIndicatorStateFetched -> updateSyncIndicatorState(model, event.currentTime, event.syncIndicatorFailureThreshold)
       is IncrementTimerTick -> incrementTimer(model, event)
       is DataSyncErrorReceived -> handleDataSyncErrors(event.errorType)
+      SyncIndicatorViewClicked -> syncIndicatorClicked(model.lastSyncedState)
+    }
+  }
+
+  private fun syncIndicatorClicked(lastSyncedState: LastSyncedState?): Next<SyncIndicatorModel, SyncIndicatorEffect> {
+    val isSyncing = lastSyncedState != null && lastSyncedState.lastSyncProgress != SYNCING
+    val hasNotSyncedBefore = lastSyncedState != null && lastSyncedState.lastSyncProgress == null
+
+    return if (hasNotSyncedBefore || isSyncing) {
+      dispatch(InitiateDataSync)
+    } else {
+      noChange()
     }
   }
 
@@ -115,5 +127,4 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
       SYNCING -> Syncing
     }
   }
-
 }

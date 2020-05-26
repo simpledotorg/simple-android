@@ -26,8 +26,8 @@ import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ElapsedRealtimeClock
-import org.simple.clinic.util.RuntimePermissionResult.DENIED
-import org.simple.clinic.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.timer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent

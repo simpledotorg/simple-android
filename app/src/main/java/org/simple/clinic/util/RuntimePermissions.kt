@@ -10,15 +10,11 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.router.screen.ActivityPermissionResult
-import org.simple.clinic.util.RuntimePermissionResult.DENIED
-import org.simple.clinic.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import javax.inject.Inject
-
-enum class RuntimePermissionResult {
-  GRANTED,
-  DENIED
-}
 
 class RuntimePermissions @Inject constructor() {
 

@@ -31,7 +31,7 @@ import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
-import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestElapsedRealtimeClock
 import org.simple.clinic.widgets.ScreenCreated

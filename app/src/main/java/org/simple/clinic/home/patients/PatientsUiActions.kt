@@ -5,4 +5,6 @@ interface PatientsUiActions {
   fun openPatientSearchScreen()
   fun showUserStatusAsWaiting()
   fun showUserStatusAsApproved()
+  fun showUserStatusAsPendingVerification()
+  fun hideUserAccountStatus()
 }

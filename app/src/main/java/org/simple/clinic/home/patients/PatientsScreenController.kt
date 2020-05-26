@@ -71,7 +71,7 @@ class PatientsScreenController @Inject constructor(
 
           val setVerificationStatusMessageVisible = { loggedInStatus: User.LoggedInStatus, ui: Ui ->
             when (loggedInStatus) {
-              OTP_REQUESTED -> ui.showUserStatusAsPendingVerification()
+              OTP_REQUESTED -> { }
               LOGGED_IN, RESETTING_PIN -> ui.hideUserAccountStatus()
             }
           }

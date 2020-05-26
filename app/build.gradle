@@ -276,8 +276,6 @@ dependencies {
   implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$versions.rxBinding"
   implementation "com.jakewharton.rxbinding3:rxbinding:$versions.rxBinding3"
   implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
-  implementation "org.threeten:threetenbp:$versions.threeTenBp:no-tzdb"
-  implementation "com.gabrielittner.threetenbp:lazythreetenbp:$versions.lazyThreeTenBp"
   implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
   implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
   implementation "com.squareup.retrofit2:converter-moshi:$versions.retrofit"

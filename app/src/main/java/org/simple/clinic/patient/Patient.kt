@@ -190,6 +190,23 @@ data class Patient(
     @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
     protected abstract fun loadPatientQueryModelsForPatientUuidImmediate(patientUuid: UUID): List<PatientQueryModel>
 
+    @Query("""
+      UPDATE Patient
+      SET
+        updatedAt = :updatedAt,
+        deletedAt = :deletedAt,
+        deletedReason = :deletedReason,
+        syncStatus = :pendingStatus
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun deletePatient(
+        patientUuid: UUID,
+        updatedAt: Instant,
+        deletedAt: Instant,
+        deletedReason: DeletedReason,
+        pendingStatus: SyncStatus
+    )
+
     fun recordsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientProfile>> {
       return loadPatientQueryModelsWithSyncStatus(syncStatus)
           .map(::queryModelsToPatientProfiles)

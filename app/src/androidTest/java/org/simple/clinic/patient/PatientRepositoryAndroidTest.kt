@@ -3467,4 +3467,35 @@ class PatientRepositoryAndroidTest {
     assertThat(patientProfile.value.phoneNumbers).isEmpty()
     assertThat(patientProfile.value.businessIds).containsExactlyElementsIn(businessIds)
   }
+
+  @Test
+  fun deleting_patient_should_work_as_expected() {
+    // given
+    val now = Instant.now(clock)
+    val patientUuid = UUID.fromString("d5c41c17-ff61-4c06-8499-ab2d3bf4e9e7")
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientUuid,
+        patientCreatedAt = now,
+        patientUpdatedAt = now
+    )
+    val expectedDeletedReason = DeletedReason.Duplicate
+
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    // when
+    clock.advanceBy(Duration.ofHours(1))
+    patientRepository.deletePatient(patientUuid = patientUuid, deletedReason = expectedDeletedReason)
+
+    // then
+    val deletedPatient = patientRepository.patientImmediate(patientUuid)!!
+    val oneHourLater = Instant.now(clock)
+
+    with(deletedPatient) {
+      assertThat(createdAt).isEqualTo(now)
+      assertThat(updatedAt).isEqualTo(oneHourLater)
+      assertThat(deletedAt).isEqualTo(oneHourLater)
+      assertThat(deletedReason).isEqualTo(expectedDeletedReason)
+      assertThat(syncStatus).isEqualTo(PENDING)
+    }
+  }
 }

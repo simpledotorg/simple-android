@@ -163,7 +163,7 @@ class SyncIndicatorViewControllerTest {
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     // then
-    verify(indicator).showErrorDialog(error)
+    verify(indicatorUiActions).showErrorDialog(error)
   }
 
   @Suppress("Unused")
@@ -187,7 +187,7 @@ class SyncIndicatorViewControllerTest {
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     // then
-    verify(indicator, never()).showErrorDialog(any())
+    verify(indicatorUiActions, never()).showErrorDialog(any())
   }
 
   @Test

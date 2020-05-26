@@ -1,11 +1,14 @@
 package org.simple.clinic.editpatient.deletepatient
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.PatientRepository
@@ -114,4 +117,25 @@ class DeletePatientEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
   }
 
+  @Test
+  fun `when load patient effect is received, then load the patient`() {
+    // given
+    val patientUuid = UUID.fromString("d478b859-9a35-4898-9ecd-24f86d2a48dd")
+    val patient = TestData.patient(
+        uuid = patientUuid
+    )
+
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn patient
+
+    // when
+    testCase.dispatch(LoadPatient(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(PatientLoaded(patient))
+
+    verify(patientRepository).patientImmediate(patientUuid)
+    verifyNoMoreInteractions(patientRepository)
+
+    verifyZeroInteractions(uiActions)
+  }
 }

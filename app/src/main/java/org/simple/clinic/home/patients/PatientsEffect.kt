@@ -7,3 +7,5 @@ object OpenEnterOtpScreen: PatientsEffect()
 object OpenPatientSearchScreen: PatientsEffect()
 
 object RefreshUserDetails: PatientsEffect()
+
+object LoadUser: PatientsEffect()

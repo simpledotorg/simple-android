@@ -13,4 +13,4 @@ object NewPatientClicked : PatientsEvent() {
   override val analyticsName = "Patients:Search For Patient Clicked"
 }
 
-data class UserDetailsRefreshed(val user: User): PatientsEvent()
+data class UserDetailsLoaded(val user: User): PatientsEvent()

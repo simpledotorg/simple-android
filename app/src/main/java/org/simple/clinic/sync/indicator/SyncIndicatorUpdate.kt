@@ -26,6 +26,7 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
       is LastSyncedStateFetched -> next(model.lastSyncedStateChanged(event.lastSyncState), FetchDataForSyncIndicatorState)
       is DataForSyncIndicatorStateFetched -> updateSyncIndicatorState(model, event.currentTime, event.syncIndicatorFailureThreshold)
       is IncrementTimerTick -> incrementTimer(model, event)
+      is DataSyncErrorReceived -> noChange()
     }
   }
 

@@ -6,7 +6,9 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
+import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
@@ -17,6 +19,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
     //TODO: Fetch the `SyncIndicatorConfig` instead of a stream
     private val syncIndicatorConfig: Observable<SyncIndicatorConfig>,
     private val schedulersProvider: SchedulersProvider,
+    private val dataSync: DataSync,
     @Assisted private val uiActions: SyncIndicatorUiActions
 ) {
 
@@ -31,6 +34,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
           .addTransformer(FetchLastSyncedStatus::class.java, fetchLastSyncedState())
           .addTransformer(FetchDataForSyncIndicatorState::class.java, fetchDataForSyncIndicatorState())
           .addTransformer(StartSyncedStateTimer::class.java, startTimer())
+          .addTransformer(InitiateDataSync::class.java, startDataSync())
           .build()
 
   private fun startTimer(): ObservableTransformer<StartSyncedStateTimer, SyncIndicatorEvent> {
@@ -57,6 +61,15 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
               DataForSyncIndicatorStateFetched(Instant.now(utcClock), it.syncFailureThreshold)
             }
           }
+    }
+  }
+
+  private fun startDataSync(): ObservableTransformer<InitiateDataSync, SyncIndicatorEvent> {
+    return ObservableTransformer { effect ->
+      effect
+          .doOnNext { dataSync.fireAndForgetSync(SyncGroup.FREQUENT) }
+          .switchMap { dataSync.streamSyncErrors() }
+          .map(::DataSyncErrorReceived)
     }
   }
 }

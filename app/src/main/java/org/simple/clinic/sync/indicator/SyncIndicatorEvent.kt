@@ -1,6 +1,7 @@
 package org.simple.clinic.sync.indicator
 
 import org.simple.clinic.sync.LastSyncedState
+import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -15,3 +16,5 @@ data class DataForSyncIndicatorStateFetched(
 ) : SyncIndicatorEvent()
 
 data class IncrementTimerTick(val minutes: Long) : SyncIndicatorEvent()
+
+data class DataSyncErrorReceived(val errorType: ResolvedError) : SyncIndicatorEvent()

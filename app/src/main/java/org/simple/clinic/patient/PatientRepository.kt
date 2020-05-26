@@ -727,5 +727,16 @@ class PatientRepository @Inject constructor(
     return database.patientDao().patientProfile(patientUuid)
   }
 
+  fun deletePatient(patientUuid: UUID, deletedReason: DeletedReason) {
+    val now = Instant.now(utcClock)
+    return database.patientDao().deletePatient(
+        patientUuid = patientUuid,
+        updatedAt = now,
+        deletedAt = now,
+        deletedReason = deletedReason,
+        pendingStatus = PENDING
+    )
+  }
+
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
 }

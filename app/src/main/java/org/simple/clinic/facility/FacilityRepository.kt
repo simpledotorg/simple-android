@@ -123,6 +123,10 @@ class FacilityRepository @Inject constructor(
     return facilityDao.count(SyncStatus.PENDING).toObservable()
   }
 
+  override fun pendingSyncRecordCountImmediate(): Int {
+    return facilityDao.countImmediate(SyncStatus.PENDING)
+  }
+
   fun facility(uuid: UUID): Optional<Facility> {
     return facilityDao.getOne(uuid).toOptional()
   }

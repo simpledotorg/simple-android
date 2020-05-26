@@ -5,10 +5,7 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 
 class SyncIndicatorUiRenderer(private val ui: SyncIndicatorUi) : ViewRenderer<SyncIndicatorModel> {
   override fun render(model: SyncIndicatorModel) {
-    if (model.lastSyncedState == null)
-      return
-
-    if (model.lastSyncedState.isEmpty()) {
+    if (model.lastSyncedState != null && model.lastSyncedState.isEmpty()) {
       ui.updateState(SyncPending)
     }
 

@@ -2,11 +2,21 @@ package org.simple.clinic.home.patients
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.simple.clinic.user.User
 
 @Parcelize
-class PatientsModel: Parcelable {
+data class PatientsModel(
+    val user: User?
+) : Parcelable {
 
   companion object {
-    fun create(): PatientsModel = PatientsModel()
+
+    fun create(): PatientsModel = PatientsModel(
+        user = null
+    )
+  }
+
+  fun userLoaded(user: User): PatientsModel {
+    return copy(user = user)
   }
 }

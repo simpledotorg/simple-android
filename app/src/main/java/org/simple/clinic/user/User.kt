@@ -1,5 +1,6 @@
 package org.simple.clinic.user
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
@@ -11,6 +12,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.android.parcel.Parcelize
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.UtcClock
@@ -37,6 +39,7 @@ import java.util.UUID
       )
     ]
 )
+@Parcelize
 data class User(
 
     @PrimaryKey
@@ -61,7 +64,7 @@ data class User(
 
     @ColumnInfo(index = true)
     val currentFacilityUuid: UUID
-) {
+): Parcelable {
 
   val canSyncData: Boolean
     get() = loggedInStatus == LoggedInStatus.LOGGED_IN && status == UserStatus.ApprovedForSyncing

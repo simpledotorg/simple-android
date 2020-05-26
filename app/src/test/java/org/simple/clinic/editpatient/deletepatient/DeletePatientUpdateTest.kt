@@ -64,4 +64,30 @@ class DeletePatientUpdateTest {
             hasEffects(ShowConfirmDiedDialog(patientName = patientName) as DeletePatientEffect)
         ))
   }
+
+  @Test
+  fun `when patient is deleted, then show the home screen`() {
+    val model = defaultModel.patientNameLoaded(patientName)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientDeleted)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen as DeletePatientEffect)
+        ))
+  }
+
+  @Test
+  fun `when patient is marked as dead, then show the home screen`() {
+    val model = defaultModel.patientNameLoaded(patientName)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientMarkedAsDead)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen as DeletePatientEffect)
+        ))
+  }
 }

@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">সিম্পিল</string>
+  <string name="app_name">সিম্পল</string>
 
   <!-- Common -->
   <string name="gender_female">মহিলা</string>
   <string name="gender_male">পুরুষ</string>
   <string name="gender_transgender">ট্রান্সজেন্ডার</string>
   <!--suppress UnusedResources -->
-  <string name="gender_male_letter">এম</string>
+  <string name="gender_male_letter">ম:</string>
   <!--suppress UnusedResources -->
-  <string name="gender_female_letter">এফ</string>
+  <string name="gender_female_letter">পু:</string>
   <!--suppress UnusedResources -->
-  <string name="gender_trans_letter">টি</string>
+  <string name="gender_trans_letter">তৃ </string>
   <string name="api_unexpected_error">কিছু ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।</string>
-  <string name="api_network_error">কোনও ইন্টারনেট সংযোগ নেই</string>
-  <string name="api_server_error">সার্ভার ত্রুটি! অনুগ্রহ করে পরে আবার চেষ্টা করুন।</string>
+  <string name="api_network_error">কোন ইন্টারনেট সংযোগ নেই</string>
+  <string name="api_server_error">সার্ভারে ত্রূটি! অনুগ্রহ করে পরে আবার চেষ্টা করুন।</string>
 
   <!-- Country names -->
   <string name="country_india">ভারত</string>
@@ -36,15 +36,15 @@
   <string name="patientsearch_hint">নাম বা ফোন নম্বর</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresults_empty_state">কোনও রোগী খুঁজে পাওয়া যায়নি</string>
-  <string name="patientsearchresults_register_patient_rationale">এই তালিকায় রোগীকে খুঁজে পাচ্ছেন না?</string>
+  <string name="patientsearchresults_empty_state">কোন  রোগী খুঁজে পাওয়া যায়নি</string>
+  <string name="patientsearchresults_register_patient_rationale">এই তালিকা রোগীকে খুঁজে পাচ্ছে না?</string>
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">রোগী নিবন্ধিত নয়</string>
   <string name="patientsearchresults_register_patient">নতুন রোগী হিসাবে নিবন্ধন করুন</string>
   <string name="patientsearchresults_register_patient_for_empty_state">নিবন্ধিত রোগী</string>
   <string name="patientsearchresults_item_last_seen">শেষ দেখা হয়েছিল:</string>
   <string name="patientsearchresults_current_facility_header">%s দেখেছেন</string>
   <string name="patientsearchresults_other_results_header">অন্যান্য ফলাফল</string>
-  <string name="patientsearchresults_no_patients_match">কোনও রোগী খুঁজে পাওয়া যায়নি</string>
+  <string name="patientsearchresults_no_patients_match">কোন রোগী খুঁজে পাওয়া যায়নি</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">অনুসন্ধানে ফিরে যান</string>

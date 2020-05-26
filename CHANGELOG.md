@@ -12,6 +12,7 @@
 - Add `DeletedReason` for `Patient`
 - [In Progress: 26 May 2020] Migrate `PatientsScreen` to Mobius
 - Improved analytics around sync events
+- Updated translations: `bn_BD`
 
 ### Fixes
 - Fix camera crash when QR scanner view is paused/closed

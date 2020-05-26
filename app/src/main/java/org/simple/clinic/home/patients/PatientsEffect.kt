@@ -9,3 +9,5 @@ object OpenPatientSearchScreen: PatientsEffect()
 object RefreshUserDetails: PatientsEffect()
 
 object LoadUser: PatientsEffect()
+
+object LoadDismissedApprovalStatus: PatientsEffect()

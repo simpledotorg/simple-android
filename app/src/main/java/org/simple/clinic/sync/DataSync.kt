@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.platform.analytics.SyncAnalyticsEvent
 import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Completed
 import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Failed
 import org.simple.clinic.platform.analytics.SyncAnalyticsEvent.Started
@@ -49,15 +50,22 @@ class DataSync @Inject constructor(
         }
         .filter { (config, _) -> config.syncGroup == syncGroup }
         .map { (_, modelSync) ->
+          val syncName = modelSync.name
+
           modelSync
               .sync()
-              .doOnSubscribe { Analytics.reportSyncEvent(modelSync.name, Started) }
-              .doOnComplete { Analytics.reportSyncEvent(modelSync.name, Completed) }
-              .doOnError { Analytics.reportSyncEvent(modelSync.name, Failed) }
+              .doOnSubscribe { reportSyncEvent(syncName, Started) }
+              .doOnComplete { reportSyncEvent(syncName, Completed) }
+              .doOnError { reportSyncEvent(syncName, Failed) }
         }
         .toList()
         .flatMapCompletable { runAndSwallowErrors(it, syncGroup) }
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
+  }
+
+  private fun reportSyncEvent(name: String, event: SyncAnalyticsEvent) {
+    Timber.tag("Sync").i("Started sync: $name")
+    Analytics.reportSyncEvent(name, event)
   }
 
   fun fireAndForgetSync(syncGroup: SyncGroup) {

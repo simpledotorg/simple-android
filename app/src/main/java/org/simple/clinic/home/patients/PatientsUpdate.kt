@@ -2,7 +2,6 @@ package org.simple.clinic.home.patients
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.threeten.bp.Duration
@@ -50,6 +49,8 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
         // User was just approved
         effects.add(LoadInfoForShowingApprovalStatus)
       }
+
+      else -> effects.add(HideUserAccountStatus)
     }
 
     return next(updatedModel, effects)
@@ -64,6 +65,6 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
     return if (!event.hasBeenDismissed && wasApprovedInLastTwentyFourHours)
       dispatch(ShowUserWasApproved as PatientsEffect)
     else
-      noChange()
+      dispatch(HideUserAccountStatus)
   }
 }

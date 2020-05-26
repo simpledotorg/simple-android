@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients
 
+import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
 
 sealed class PatientsEvent : UiEvent
@@ -11,3 +12,5 @@ class PatientsEnterCodeManuallyClicked : PatientsEvent() {
 object NewPatientClicked : PatientsEvent() {
   override val analyticsName = "Patients:Search For Patient Clicked"
 }
+
+data class UserDetailsRefreshed(val user: User): PatientsEvent()

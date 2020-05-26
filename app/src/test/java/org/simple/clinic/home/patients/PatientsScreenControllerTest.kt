@@ -23,6 +23,8 @@ import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
 import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
+import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
@@ -33,8 +35,6 @@ import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
-import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
-import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -353,7 +353,7 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  fun `when a waiting for approval user is pending OTP verification, the verification status must not be hidden`() {
+  fun `when a waiting for approval user is pending OTP verification, the pending verification status must be shown`() {
     // when
     val user = userWaitingForApproval.copy(loggedInStatus = OTP_REQUESTED)
     setupController(
@@ -363,7 +363,7 @@ class PatientsScreenControllerTest {
     )
 
     // then
-    verify(ui).showUserStatusAsWaiting()
+    verify(ui).showUserStatusAsPendingVerification()
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 

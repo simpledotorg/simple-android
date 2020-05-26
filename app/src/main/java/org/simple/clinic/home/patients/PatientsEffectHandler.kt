@@ -40,6 +40,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addAction(ShowUserAwaitingApproval::class.java, uiActions::showUserStatusAsWaiting, schedulers.ui())
         .addConsumer(SetDismissedApprovalStatus::class.java, { hasUserDismissedApprovedStatusPref.set(it.dismissedStatus) }, schedulers.io())
         .addAction(ShowUserWasApproved::class.java, uiActions::showUserStatusAsApproved, schedulers.ui())
+        .addAction(ShowUserPendingSmsVerification::class.java, uiActions::showUserStatusAsPendingVerification, schedulers.ui())
         .build()
   }
 

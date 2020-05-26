@@ -75,6 +75,9 @@ data class User(
   val isApprovedForSyncing: Boolean
     get() = status == UserStatus.ApprovedForSyncing
 
+  val isPendingSmsVerification: Boolean
+    get() = loggedInStatus == LoggedInStatus.OTP_REQUESTED
+
   fun withStatus(status: UserStatus, clock: UtcClock): User {
     return copy(status = status, updatedAt = Instant.now(clock))
   }

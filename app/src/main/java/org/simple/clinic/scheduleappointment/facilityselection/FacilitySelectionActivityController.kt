@@ -17,7 +17,7 @@ import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ElapsedRealtimeClock
-import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.util.timer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent

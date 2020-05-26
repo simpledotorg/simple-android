@@ -9,7 +9,7 @@ import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
 import org.simple.clinic.platform.analytics.AnalyticsUser
-import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 

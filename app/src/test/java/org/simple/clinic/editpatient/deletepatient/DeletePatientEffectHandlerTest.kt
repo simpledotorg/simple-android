@@ -82,4 +82,21 @@ class DeletePatientEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when patient died effect is received, then mark patient status as died`() {
+    // given
+    val patientUuid = UUID.fromString("3dc6d1bc-cb47-44ed-b05d-ff64d92a9897")
+
+    // when
+    testCase.dispatch(MarkPatientAsDead(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(PatientMarkedAsDead)
+
+    verify(patientRepository).updatePatientStatusToDead(patientUuid)
+    verifyNoMoreInteractions(patientRepository)
+
+    verifyZeroInteractions(uiActions)
+  }
 }

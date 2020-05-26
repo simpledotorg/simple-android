@@ -24,7 +24,18 @@ class DeletePatientEffectHandler @AssistedInject constructor(
         .addConsumer(ShowConfirmDeleteDialog::class.java, { uiActions.showConfirmDeleteDialog(it.patientName, it.deletedReason) }, schedulersProvider.ui())
         .addConsumer(ShowConfirmDiedDialog::class.java, { uiActions.showConfirmDiedDialog(it.patientName) }, schedulersProvider.ui())
         .addTransformer(DeletePatient::class.java, deletePatient())
+        .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead())
         .build()
+  }
+
+  private fun markPatientAsDead(): ObservableTransformer<MarkPatientAsDead, DeletePatientEvent> {
+    return ObservableTransformer { effectStream ->
+      effectStream
+          .doOnNext { (patientUuid) ->
+            patientRepository.updatePatientStatusToDead(patientUuid)
+          }
+          .map { PatientMarkedAsDead }
+    }
   }
 
   private fun deletePatient(): ObservableTransformer<DeletePatient, DeletePatientEvent> {

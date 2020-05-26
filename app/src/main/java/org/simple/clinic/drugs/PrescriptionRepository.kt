@@ -8,14 +8,11 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.sync.SynceableRepository
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.toOptional
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -152,5 +149,9 @@ class PrescriptionRepository @Inject constructor(
     return dao
         .count(SyncStatus.PENDING)
         .toObservable()
+  }
+
+  override fun pendingSyncRecordCountImmediate(): Int {
+    return dao.countImmediate(SyncStatus.PENDING)
   }
 }

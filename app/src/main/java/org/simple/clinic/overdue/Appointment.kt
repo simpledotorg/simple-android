@@ -36,11 +36,11 @@ data class Appointment(
     val updatedAt: Instant,
     val deletedAt: Instant?,
     val creationFacilityUuid: UUID?
-): Parcelable {
+) : Parcelable {
 
   fun wasCancelledBecauseOfInvalidPhoneNumber(): Boolean = status == Status.Cancelled && cancelReason == AppointmentCancelReason.InvalidPhoneNumber
 
-  sealed class Status: Parcelable {
+  sealed class Status : Parcelable {
 
     @Parcelize
     object Scheduled : Status()
@@ -86,7 +86,7 @@ data class Appointment(
     }
   }
 
-  sealed class AppointmentType: Parcelable {
+  sealed class AppointmentType : Parcelable {
 
     @Parcelize
     object Manual : AppointmentType()
@@ -161,6 +161,9 @@ data class Appointment(
 
     @Query("SELECT COUNT(uuid) FROM Appointment WHERE syncStatus = :syncStatus")
     fun count(syncStatus: SyncStatus): Flowable<Int>
+
+    @Query("SELECT COUNT(uuid) FROM Appointment WHERE syncStatus = :syncStatus")
+    fun countImmediate(syncStatus: SyncStatus): Int
 
     @Query("""
       UPDATE Appointment

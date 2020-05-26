@@ -3,6 +3,8 @@ package org.simple.clinic.sync.indicator
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.sync.LastSyncedState
+import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
+import org.threeten.bp.Duration
 
 @Parcelize
 data class SyncIndicatorModel(
@@ -22,5 +24,11 @@ data class SyncIndicatorModel(
 
   fun syncIndicatorStateChanged(newState: SyncIndicatorState): SyncIndicatorModel {
     return copy(syncIndicatorState = newState)
+  }
+
+  fun syncIndicatorSyncedTimerIncremented(duration: Duration): SyncIndicatorModel {
+    val syncedState = syncIndicatorState as Synced
+    val incrementedSyncedState = syncedState.incrementDuration(duration)
+    return copy(syncIndicatorState = incrementedSyncedState)
   }
 }

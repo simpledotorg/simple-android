@@ -64,7 +64,7 @@ class SyncIndicatorViewControllerTest {
 
   private val defaultLastSyncedState = LastSyncedState()
 
-  private val uiRenderer = SyncIndicatorUiRenderer()
+  private val uiRenderer = SyncIndicatorUiRenderer(indicator)
   private val effectHandler = SyncIndicatorEffectHandler(
       lastSyncStatePreference,
       utcClock,

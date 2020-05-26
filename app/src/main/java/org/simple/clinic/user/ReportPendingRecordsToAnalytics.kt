@@ -2,7 +2,7 @@ package org.simple.clinic.user
 
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.Singles
-import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescribedDrug

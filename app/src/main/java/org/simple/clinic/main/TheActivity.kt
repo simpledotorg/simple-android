@@ -18,7 +18,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Destroyed
 import org.simple.clinic.activity.ActivityLifecycle.Started
-import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.ShowNoPatientUuid

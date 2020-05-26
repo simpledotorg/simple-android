@@ -1,5 +1,6 @@
 package org.simple.clinic.analytics
 
+import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.analytics.AnalyticsUser
 
 class MockAnalyticsReporter : AnalyticsReporter {

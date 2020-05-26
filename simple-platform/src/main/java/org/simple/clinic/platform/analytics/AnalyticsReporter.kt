@@ -1,4 +1,4 @@
-package org.simple.clinic.analytics
+package org.simple.clinic.platform.analytics
 
 import org.simple.clinic.platform.analytics.AnalyticsUser
 

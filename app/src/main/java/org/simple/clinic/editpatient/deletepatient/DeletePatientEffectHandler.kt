@@ -26,7 +26,18 @@ class DeletePatientEffectHandler @AssistedInject constructor(
         .addTransformer(DeletePatient::class.java, deletePatient())
         .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead())
         .addAction(ShowHomeScreen::class.java, { uiActions.showHomeScreen() }, schedulersProvider.ui())
+        .addTransformer(LoadPatient::class.java, loadPatient())
         .build()
+  }
+
+  private fun loadPatient(): ObservableTransformer<LoadPatient, DeletePatientEvent> {
+    return ObservableTransformer { effectStream ->
+      effectStream
+          .map {
+            val patient = patientRepository.patientImmediate(it.patientUuid)
+            PatientLoaded(patient!!)
+          }
+    }
   }
 
   private fun markPatientAsDead(): ObservableTransformer<MarkPatientAsDead, DeletePatientEvent> {

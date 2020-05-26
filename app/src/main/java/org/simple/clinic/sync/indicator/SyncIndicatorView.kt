@@ -54,7 +54,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
         .share()
   }
 
-  private val uiRenderer = SyncIndicatorUiRenderer()
+  private val uiRenderer = SyncIndicatorUiRenderer(this)
 
   private val delegate: MobiusDelegate<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect> by unsafeLazy {
     MobiusDelegate.forView(

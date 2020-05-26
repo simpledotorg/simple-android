@@ -13,3 +13,5 @@ data class StartSyncedStateTimer(
     val intervalAmount: Long,
     val timeUnit: TimeUnit
 ) : SyncIndicatorEffect()
+
+object InitiateDataSync : SyncIndicatorEffect()

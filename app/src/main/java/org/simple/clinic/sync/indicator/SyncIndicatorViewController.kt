@@ -6,17 +6,11 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.combineLatest
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup.FREQUENT
-import org.simple.clinic.sync.SyncProgress.SYNCING
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
-import org.simple.clinic.util.ResolvedError.NetworkRelated
-import org.simple.clinic.util.ResolvedError.ServerError
-import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -33,43 +27,12 @@ class SyncIndicatorViewController @Inject constructor(
     private val dataSync: DataSync,
     @Named("frequently_syncing_repositories") private val frequentlySyncingRepositories: ArrayList<SynceableRepository<*, *>>
 ) : ObservableTransformer<UiEvent, UiChange> {
-
-  private val errorTypesToShowErrorFor = setOf(
-      NetworkRelated::class,
-      Unexpected::class,
-      ServerError::class
-  )
-
+  
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.merge(
-        startSync(replayedEvents),
-        showPendingSyncStatus(replayedEvents))
-  }
-
-  private fun startSync(events: Observable<UiEvent>): Observable<UiChange> {
-    val lastSyncedStateStream = lastSyncState
-        .asObservable()
-        .distinctUntilChanged()
-
-    return events
-        .ofType<SyncIndicatorViewClicked>()
-        .withLatestFrom(lastSyncedStateStream)
-        .filter { (_, lastSyncedState) ->
-          lastSyncedState.lastSyncProgress == null || lastSyncedState.lastSyncProgress != SYNCING
-        }
-        .doOnNext { dataSync.fireAndForgetSync(FREQUENT) }
-        .switchMap { showErrorDialogOnSyncError() }
-  }
-
-  private fun showErrorDialogOnSyncError(): Observable<UiChange> {
-    return dataSync
-        .streamSyncErrors()
-        .take(1)
-        .filter { error -> error::class in errorTypesToShowErrorFor }
-        .map { { ui: Ui -> ui.showErrorDialog(it) } }
+    return showPendingSyncStatus(replayedEvents)
   }
 
   private fun showPendingSyncStatus(events: Observable<UiEvent>): Observable<UiChange> {

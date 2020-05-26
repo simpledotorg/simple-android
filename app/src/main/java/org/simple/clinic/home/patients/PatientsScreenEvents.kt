@@ -7,10 +7,6 @@ import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 
-object NewPatientClicked : UiEvent {
-  override val analyticsName = "Patients:Search For Patient Clicked"
-}
-
 class UserApprovedStatusDismissed : UiEvent {
   override val analyticsName = "Patients:Dismissed User Approved Status"
 }

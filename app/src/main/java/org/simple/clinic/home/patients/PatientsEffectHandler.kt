@@ -20,6 +20,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientsEffect, PatientsEvent>()
         .addAction(OpenEnterOtpScreen::class.java, uiActions::openEnterCodeManuallyScreen, schedulers.ui())
+        .addAction(OpenPatientSearchScreen::class.java, uiActions::openPatientSearchScreen, schedulers.ui())
         .build()
   }
 }

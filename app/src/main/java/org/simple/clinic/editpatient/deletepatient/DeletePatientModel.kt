@@ -7,6 +7,9 @@ data class DeletePatientModel(
     val patientName: String? = null
 ) {
 
+  val hasPatientName: Boolean
+    get() = patientName.isNullOrBlank().not()
+
   fun patientNameLoaded(patientName: String): DeletePatientModel {
     return copy(patientName = patientName)
   }

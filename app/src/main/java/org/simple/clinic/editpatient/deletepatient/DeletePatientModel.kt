@@ -4,7 +4,8 @@ import java.util.UUID
 
 data class DeletePatientModel(
     val patientUuid: UUID,
-    val patientName: String? = null
+    val patientName: String? = null,
+    val selectedReason: PatientDeleteReason?
 ) {
 
   val hasPatientName: Boolean
@@ -16,6 +17,6 @@ data class DeletePatientModel(
 
   companion object {
 
-    fun default(patientUuid: UUID) = DeletePatientModel(patientUuid = patientUuid, patientName = null)
+    fun default(patientUuid: UUID) = DeletePatientModel(patientUuid = patientUuid, patientName = null, selectedReason = null)
   }
 }

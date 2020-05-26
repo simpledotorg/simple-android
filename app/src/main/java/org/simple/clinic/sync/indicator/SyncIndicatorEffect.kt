@@ -1,5 +1,6 @@
 package org.simple.clinic.sync.indicator
 
+import org.simple.clinic.util.ResolvedError
 import java.util.concurrent.TimeUnit
 
 sealed class SyncIndicatorEffect
@@ -15,3 +16,5 @@ data class StartSyncedStateTimer(
 ) : SyncIndicatorEffect()
 
 object InitiateDataSync : SyncIndicatorEffect()
+
+data class ShowDataSyncErrorDialog(val errorType: ResolvedError) : SyncIndicatorEffect()

@@ -31,6 +31,12 @@ This stage is where we prepare the controller in order for easier migration. We 
    - If some tests have broken, skim through them and verify that the current behaviour is captured completely. If it's not, add tests to capture it.
    - Repeat the above steps for all the flow setup methods in the controller.
 7. If the controller accepts runtime dependencies via a custom `ScreenCreated` type, change the controller to accept the dependencies via `@AssistedInject` and remove the custom screen created event.
+8. Ensure that the `ScreenCreated` event is being triggered in all the tests. A good place to do this would be immediately after composing the event stream on the controller.
+   - Some tests might break because they were not triggering the `ScreenCreated` event before. In these cases, they should be fixed because we are aiming to get the tests to behave as close to production as possible.
+9. If the screen is sufficiently complex, it might be useful to capture **all** existing behaviour by the following process:
+   - Add `verifyNoMoreInteractions(ui)` at the end of every test.
+   - Run the tests, find the behaviour that was not captured from the assertion failures.
+   - Add these assertions and run the tests again until they pass.
 
 ### Strangulate
 This stage is where we break up the controller into the Mobius components. There are three sub-phases here:

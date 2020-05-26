@@ -4,9 +4,9 @@ import com.spotify.mobius.First
 import com.spotify.mobius.Init
 import org.simple.clinic.mobius.first
 
-class PatientsInit: Init<PatientsModel, PatientsEffect> {
+class PatientsInit : Init<PatientsModel, PatientsEffect> {
 
   override fun init(model: PatientsModel): First<PatientsModel, PatientsEffect> {
-    return first(model, LoadUser)
+    return first(model, LoadUser, RefreshUserDetails)
   }
 }

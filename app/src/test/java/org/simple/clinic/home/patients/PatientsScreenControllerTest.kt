@@ -1,7 +1,6 @@
 package org.simple.clinic.home.patients
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -19,7 +18,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
 import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
@@ -90,7 +88,9 @@ class PatientsScreenControllerTest {
         schedulers = TrampolineSchedulersProvider(),
         refreshCurrentUser = refreshCurrentUser,
         userSession = userSession,
-        uiActions = ui
+        uiActions = ui,
+        utcClock = utcClock,
+        approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference
     )
 
     testFixture = MobiusTestFixture(
@@ -137,7 +137,7 @@ class PatientsScreenControllerTest {
     clearInvocations(refreshCurrentUser)
 
     // when
-    uiEvents.onNext(Resumed(null))
+    uiEvents.onNext(ActivityResumed)
 
     // then
     verify(ui).hideUserAccountStatus()
@@ -257,7 +257,7 @@ class PatientsScreenControllerTest {
 
     // then
     verify(refreshCurrentUser).refresh()
-    verify(approvalStatusApprovedAtPreference).set(any())
+    verify(approvalStatusApprovedAtPreference).set(dateAsInstant)
 
     verify(ui).showUserStatusAsWaiting()
     verify(ui).hideSyncIndicator()

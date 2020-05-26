@@ -33,8 +33,8 @@ import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.RuntimePermissionResult.DENIED
-import org.simple.clinic.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestElapsedRealtimeClock
 import org.simple.clinic.widgets.ScreenCreated

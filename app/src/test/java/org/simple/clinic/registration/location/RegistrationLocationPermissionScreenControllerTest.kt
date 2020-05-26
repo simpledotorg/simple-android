@@ -7,8 +7,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.RuntimePermissionResult
-import org.simple.clinic.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 

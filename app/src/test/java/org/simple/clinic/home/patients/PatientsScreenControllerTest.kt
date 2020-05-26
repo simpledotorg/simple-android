@@ -32,8 +32,8 @@ import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.RuntimePermissionResult.DENIED
-import org.simple.clinic.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock

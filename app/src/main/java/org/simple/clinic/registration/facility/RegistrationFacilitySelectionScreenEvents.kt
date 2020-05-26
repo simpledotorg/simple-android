@@ -2,7 +2,7 @@ package org.simple.clinic.registration.facility
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.location.LocationUpdate
-import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 

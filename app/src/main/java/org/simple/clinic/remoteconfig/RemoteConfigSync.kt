@@ -8,13 +8,6 @@ import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
-import org.simple.clinic.util.ErrorResolver
-import org.simple.clinic.util.ResolvedError.NetworkRelated
-import org.simple.clinic.util.ResolvedError.ServerError
-import org.simple.clinic.util.ResolvedError.Unauthenticated
-import org.simple.clinic.util.ResolvedError.Unexpected
-import org.simple.clinic.util.exhaustive
-import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteConfigSync @Inject constructor(
@@ -30,19 +23,6 @@ class RemoteConfigSync @Inject constructor(
 
   override fun pull(): Completable {
     return remoteConfigService.update()
-        .doOnError(::logError)
-        .onErrorComplete()
-  }
-
-  private fun logError(error: Throwable) {
-    val resolvedError = ErrorResolver.resolve(error)
-    when (resolvedError) {
-      is Unexpected, is ServerError -> {
-        crashReporter.report(resolvedError.actualCause)
-        Timber.e(resolvedError.actualCause)
-      }
-      is NetworkRelated, is Unauthenticated -> Timber.e(error)
-    }.exhaustive()
   }
 
   override fun syncConfig(): Single<SyncConfig> {

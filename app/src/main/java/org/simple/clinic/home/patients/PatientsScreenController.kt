@@ -9,15 +9,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
-import org.simple.clinic.user.User
-import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.UserStatus.ApprovedForSyncing
-import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
-import org.simple.clinic.user.UserStatus.Unknown
-import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -27,7 +19,6 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -52,7 +43,6 @@ class PatientsScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents),
         openScanSimpleIdScreen(replayedEvents),
         toggleVisibilityOfSyncIndicator(replayedEvents),
@@ -63,38 +53,6 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
-
-  private fun displayUserAccountStatusNotification(events: Observable<UiEvent>): Observable<UiChange> {
-    return screenCreated(events)
-        .flatMap {
-          val user = userSession.loggedInUser().map { (user) -> user!! }
-
-          val setVerificationStatusMessageVisible = { loggedInStatus: User.LoggedInStatus, ui: Ui ->
-            when (loggedInStatus) {
-              OTP_REQUESTED -> { }
-              LOGGED_IN, RESETTING_PIN -> ui.hideUserAccountStatus()
-            }
-          }
-
-          Observables.combineLatest(user, hasUserDismissedApprovedStatusPref.asObservable())
-              .map { (user, userDismissedStatus) ->
-                when (user.status) {
-                  DisapprovedForSyncing -> { _: Ui -> /* Nothing to do here since we block the user from accessing the app */ }
-                  ApprovedForSyncing -> {
-                    val twentyFourHoursAgo = Instant.now(utcClock).minus(24, ChronoUnit.HOURS)
-                    val wasApprovedInLast24Hours = twentyFourHoursAgo < approvalStatusUpdatedAtPref.get()
-
-                    if (userDismissedStatus.not() && wasApprovedInLast24Hours) {
-                      { ui: Ui ->  }
-                    } else {
-                      { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
-                    }
-                  }
-                  is Unknown, WaitingForApproval -> { _ -> }
-                }
-              }
-        }
-  }
 
   private fun dismissApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {
     return events

@@ -19,3 +19,5 @@ data class SetDismissedApprovalStatus(val dismissedStatus: Boolean) : PatientsEf
 object ShowUserWasApproved: PatientsEffect()
 
 object ShowUserPendingSmsVerification: PatientsEffect()
+
+object HideUserAccountStatus: PatientsEffect()

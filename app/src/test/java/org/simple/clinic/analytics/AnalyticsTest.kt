@@ -6,6 +6,7 @@ import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
+import org.simple.clinic.platform.analytics.SyncAnalyticsEvent
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.threeten.bp.Duration
@@ -100,6 +101,11 @@ class AnalyticsTest {
   @Test
   fun `when clearing the user without any reporters, no error should be thrown`() {
     Analytics.clearUser()
+  }
+
+  @Test
+  fun `when reporting the sync events without any reporters, no error should be thrown`() {
+    Analytics.reportSyncEvent("Sync", SyncAnalyticsEvent.Completed)
   }
 
   @Test
@@ -209,6 +215,9 @@ class AnalyticsTest {
     )
     Analytics.reportPermissionResult("permission_1", GRANTED)
     Analytics.reportPermissionResult("permission_2", DENIED)
+    Analytics.reportSyncEvent("Sync 1", SyncAnalyticsEvent.Started)
+    Analytics.reportSyncEvent("Sync 3", SyncAnalyticsEvent.Failed)
+    Analytics.reportSyncEvent("Sync 2", SyncAnalyticsEvent.Completed)
 
     val expected = listOf(
         Event("UserInteraction", mapOf("name" to "Test 1")),
@@ -265,6 +274,18 @@ class AnalyticsTest {
         Event("PermissionResult", mapOf(
             "permission" to "permission_2",
             "result" to DENIED
+        )),
+        Event("SyncEvent", mapOf(
+            "name" to "Sync 1",
+            "syncEvent" to "Started"
+        )),
+        Event("SyncEvent", mapOf(
+            "name" to "Sync 3",
+            "syncEvent" to "Failed"
+        )),
+        Event("SyncEvent", mapOf(
+            "name" to "Sync 2",
+            "syncEvent" to "Completed"
         ))
     )
 

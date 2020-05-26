@@ -4,9 +4,11 @@ import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class DeletePatientEffectHandler @AssistedInject constructor(
+    val patientRepository: PatientRepository,
     val schedulersProvider: SchedulersProvider,
     @Assisted val uiActions: UiActions
 ) {
@@ -21,6 +23,18 @@ class DeletePatientEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<DeletePatientEffect, DeletePatientEvent>()
         .addConsumer(ShowConfirmDeleteDialog::class.java, { uiActions.showConfirmDeleteDialog(it.patientName, it.deletedReason) }, schedulersProvider.ui())
         .addConsumer(ShowConfirmDiedDialog::class.java, { uiActions.showConfirmDiedDialog(it.patientName) }, schedulersProvider.ui())
+        .addTransformer(DeletePatient::class.java, deletePatient())
         .build()
+  }
+
+  private fun deletePatient(): ObservableTransformer<DeletePatient, DeletePatientEvent> {
+    return ObservableTransformer { effectStream ->
+      effectStream
+          .observeOn(schedulersProvider.io())
+          .doOnNext { (patientUuid, deletedReason) ->
+            patientRepository.deletePatient(patientUuid, deletedReason)
+          }
+          .map { PatientDeleted }
+    }
   }
 }

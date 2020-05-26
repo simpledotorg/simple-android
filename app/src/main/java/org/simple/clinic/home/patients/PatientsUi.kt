@@ -1,12 +1,11 @@
 package org.simple.clinic.home.patients
 
-interface PatientsUi {
+interface PatientsUi: PatientsUiActions {
   fun openPatientSearchScreen()
   fun showUserStatusAsWaiting()
   fun showUserStatusAsApproved()
   fun showUserStatusAsPendingVerification()
   fun hideUserAccountStatus()
-  fun openEnterCodeManuallyScreen()
   fun openScanSimpleIdCardScreen()
   fun hideSyncIndicator()
   fun showSyncIndicator()

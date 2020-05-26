@@ -15,10 +15,6 @@ class UserApprovedStatusDismissed : UiEvent {
   override val analyticsName = "Patients:Dismissed User Approved Status"
 }
 
-class PatientsEnterCodeManuallyClicked : UiEvent {
-  override val analyticsName = "Patients:Enter Code Manually Clicked"
-}
-
 data class ScanCardIdButtonClicked(
     override var permission: Optional<RuntimePermissionResult> = None,
     override val permissionString: String = Manifest.permission.CAMERA,

@@ -84,6 +84,7 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
         .mergeArray(
             screenCreates(),
             activityStarts(),
+            activityResumes(),
             searchButtonClicks(),
             dismissApprovedStatusClicks(),
             enterCodeManuallyClicks(),
@@ -162,7 +163,12 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
+  // TODO (vs) 26/05/20: Remove after Mobius migration is complete
   private fun activityStarts() = activityLifecycle.ofType<Resumed>()
+
+  private fun activityResumes() = activityLifecycle
+      .ofType<Resumed>()
+      .map { ActivityResumed }
 
   private fun searchButtonClicks() = RxView.clicks(searchPatientsButton).map { NewPatientClicked }
 

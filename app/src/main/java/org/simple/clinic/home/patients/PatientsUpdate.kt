@@ -12,6 +12,7 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       is PatientsEnterCodeManuallyClicked -> dispatch(OpenEnterOtpScreen)
       NewPatientClicked -> dispatch(OpenPatientSearchScreen)
       is UserDetailsLoaded -> next(model.userLoaded(event.user))
+      is ActivityResumed -> dispatch(RefreshUserDetails)
     }
   }
 }

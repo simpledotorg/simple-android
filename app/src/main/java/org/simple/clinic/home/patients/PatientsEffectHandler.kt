@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients
 
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -7,13 +8,18 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.threeten.bp.Instant
+import javax.inject.Named
 
 class PatientsEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val refreshCurrentUser: RefreshCurrentUser,
     private val userSession: UserSession,
+    private val utcClock: UtcClock,
+    @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Assisted private val uiActions: PatientsUiActions
 ) {
 
@@ -40,6 +46,11 @@ class PatientsEffectHandler @AssistedInject constructor(
             refreshCurrentUser
                 .refresh()
                 .subscribeOn(schedulers.io())
+                .onErrorComplete()
+                .doOnComplete {
+                  // TODO (vs) 26/05/20: Move triggering this to the `Update` class later
+                  approvalStatusUpdatedAtPref.set(Instant.now(utcClock))
+                }
                 .andThen(Observable.empty<PatientsEvent>())
           }
     }

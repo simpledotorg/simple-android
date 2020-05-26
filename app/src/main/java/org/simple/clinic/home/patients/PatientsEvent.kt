@@ -14,3 +14,5 @@ object NewPatientClicked : PatientsEvent() {
 }
 
 data class UserDetailsLoaded(val user: User): PatientsEvent()
+
+object ActivityResumed: PatientsEvent()

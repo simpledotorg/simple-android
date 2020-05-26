@@ -88,6 +88,8 @@ class PatientsScreenControllerTest {
     val uiRenderer = PatientsUiRenderer(ui)
     val patientsEffectHandler = PatientsEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
+        refreshCurrentUser = refreshCurrentUser,
+        userSession = userSession,
         uiActions = ui
     )
 

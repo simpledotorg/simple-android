@@ -87,23 +87,10 @@ class PatientsScreenController @Inject constructor(
                 if (userStatus != ApprovedForSyncing && hasUserDismissedApprovedStatusPref.get()) {
                   hasUserDismissedApprovedStatusPref.set(false)
                 }
-
-                // The refresh call should not get canceled when the app is closed
-                // (i.e., this chain gets disposed). So it's not a part of this Rx chain.
-                refreshUserStatus()
               }
               .flatMap { Maybe.empty<UiChange>() }
         }, false, 1)
         .toObservable()
-  }
-
-  private fun refreshUserStatus() {
-    refreshCurrentUser
-        .refresh()
-        .subscribeOn(schedulersProvider.io())
-        .onErrorComplete()
-        .doOnComplete { approvalStatusUpdatedAtPref.set(Instant.now()) }
-        .subscribe()
   }
 
   private fun displayUserAccountStatusNotification(events: Observable<UiEvent>): Observable<UiChange> {

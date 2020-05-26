@@ -55,7 +55,6 @@ class PatientsScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        newPatientClicks(replayedEvents),
         refreshApprovalStatusOnStart(replayedEvents),
         displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents),
@@ -68,11 +67,6 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
-
-  private fun newPatientClicks(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return events.ofType<NewPatientClicked>()
-        .map { { ui: Ui -> ui.openPatientSearchScreen() } }
-  }
 
   private fun refreshApprovalStatusOnStart(events: Observable<UiEvent>): Observable<UiChange> {
     val screenResumes = events.ofType<Resumed>()

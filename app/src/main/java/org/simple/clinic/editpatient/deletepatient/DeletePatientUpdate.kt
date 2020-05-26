@@ -1,6 +1,7 @@
 package org.simple.clinic.editpatient.deletepatient
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
@@ -10,10 +11,17 @@ class DeletePatientUpdate : Update<DeletePatientModel, DeletePatientEvent, Delet
   override fun update(model: DeletePatientModel, event: DeletePatientEvent): Next<DeletePatientModel, DeletePatientEffect> {
     return when (event) {
       is PatientDeleteReasonClicked -> patientDeleteReasonClicked(model, event)
+      is PatientLoaded -> patientNameLoaded(model, event)
       PatientDeleted -> noChange()
       PatientMarkedAsDead -> noChange()
     }
   }
+
+  private fun patientNameLoaded(
+      model: DeletePatientModel,
+      event: PatientLoaded
+  ): Next<DeletePatientModel, DeletePatientEffect> =
+      next(model.patientNameLoaded(event.patient.fullName))
 
   private fun patientDeleteReasonClicked(
       model: DeletePatientModel,

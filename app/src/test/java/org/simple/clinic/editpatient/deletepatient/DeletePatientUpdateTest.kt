@@ -1,10 +1,13 @@
 package org.simple.clinic.editpatient.deletepatient
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.DeletedReason
 import java.util.UUID
 
@@ -16,6 +19,23 @@ class DeletePatientUpdateTest {
   private val defaultModel = DeletePatientModel.default(
       patientUuid = patientUuid
   )
+
+  @Test
+  fun `when patient name is loaded, then update ui`() {
+    val patientName = "John Doe"
+    val patient = TestData.patient(
+        uuid = UUID.fromString("c2d4dbb0-a045-4461-b3e6-890e0ba9fc6b"),
+        fullName = patientName
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientLoaded(patient))
+        .then(assertThatNext(
+            hasModel(defaultModel.patientNameLoaded(patientName)),
+            hasNoEffects()
+        ))
+  }
 
   @Test
   fun `when patient is being deleted, then the delete patient confirmation alert should be shown`() {

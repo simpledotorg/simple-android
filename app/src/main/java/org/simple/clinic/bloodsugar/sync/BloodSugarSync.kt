@@ -24,6 +24,8 @@ class BloodSugarSync @Inject constructor(
 
   private fun canSyncData() = userSession.canSyncData().firstOrError()
 
+  override val name: String = "Blood Sugar"
+
   override fun sync(): Completable =
       canSyncData()
           .flatMapCompletable { canSync ->

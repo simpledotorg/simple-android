@@ -14,7 +14,10 @@ class ReportsSync @Inject constructor(
     private val userSession: UserSession,
     @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>
 ) : ModelSync {
+
   private fun canSyncData() = userSession.canSyncData().firstOrError()
+
+  override val name: String = "Reports"
 
   override fun sync(): Completable =
       canSyncData()

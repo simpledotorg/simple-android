@@ -30,6 +30,10 @@ data class LastSyncedState(
     return this.copy(lastSyncProgress = SUCCESS, lastSyncSucceededAt = Instant.now(clock))
   }
 
+  fun isEmpty(): Boolean {
+    return lastSyncProgress == null
+  }
+
   class RxPreferenceConverter(moshi: Moshi) : Preference.Converter<LastSyncedState> {
 
     private val adapter by lazy { moshi.adapter(LastSyncedState::class.java) }

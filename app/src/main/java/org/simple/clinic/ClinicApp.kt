@@ -9,8 +9,8 @@ import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.gabrielittner.threetenbp.LazyThreeTen
 import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
-import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.analytics.AnalyticsReporter
+import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.di.AppComponent

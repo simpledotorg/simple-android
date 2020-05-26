@@ -6,7 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
-import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.Field.Age
 import org.simple.clinic.newentry.Field.ColonyOrVillage

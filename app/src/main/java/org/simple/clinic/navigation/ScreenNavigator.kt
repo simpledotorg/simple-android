@@ -14,7 +14,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
 import androidx.navigation.NavigatorProvider
 import org.simple.clinic.R
-import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.platform.analytics.Analytics
 import java.util.ArrayDeque
 
 @Navigator.Name("screen")

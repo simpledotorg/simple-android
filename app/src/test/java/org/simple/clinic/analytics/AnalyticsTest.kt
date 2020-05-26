@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED

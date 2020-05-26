@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.minus
 import java.util.concurrent.atomic.AtomicBoolean
 

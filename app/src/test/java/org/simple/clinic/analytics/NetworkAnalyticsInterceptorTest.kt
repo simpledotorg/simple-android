@@ -18,6 +18,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.platform.analytics.Analytics
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException

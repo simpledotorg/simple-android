@@ -1,4 +1,4 @@
-package org.simple.clinic.analytics
+package org.simple.clinic.platform.analytics
 
 import android.net.NetworkCapabilities
 import android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH
@@ -8,7 +8,6 @@ import android.net.NetworkCapabilities.TRANSPORT_LOWPAN
 import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
-import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant

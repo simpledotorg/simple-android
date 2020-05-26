@@ -9,7 +9,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED

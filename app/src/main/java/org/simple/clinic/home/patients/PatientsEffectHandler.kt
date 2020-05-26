@@ -7,6 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PatientsEffectHandler @AssistedInject constructor(
@@ -27,6 +28,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addAction(OpenEnterOtpScreen::class.java, uiActions::openEnterCodeManuallyScreen, schedulers.ui())
         .addAction(OpenPatientSearchScreen::class.java, uiActions::openPatientSearchScreen, schedulers.ui())
         .addTransformer(RefreshUserDetails::class.java, refreshCurrentUser())
+        .addTransformer(LoadUser::class.java, loadUser())
         .build()
   }
 
@@ -38,9 +40,17 @@ class PatientsEffectHandler @AssistedInject constructor(
             refreshCurrentUser
                 .refresh()
                 .subscribeOn(schedulers.io())
-                .andThen(Observable.fromCallable { userSession.loggedInUserImmediate()!! })
+                .andThen(Observable.empty<PatientsEvent>())
           }
-          .map(::UserDetailsRefreshed)
+    }
+  }
+
+  private fun loadUser(): ObservableTransformer<LoadUser, PatientsEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap { userSession.loggedInUser() }
+          .filterAndUnwrapJust()
+          .map(::UserDetailsLoaded)
     }
   }
 }

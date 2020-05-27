@@ -5,10 +5,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Observable
 import org.simple.clinic.sync.LastSyncedState
-import org.threeten.bp.Duration
-import org.threeten.bp.temporal.ChronoUnit
 
 @Module
 class SyncIndicatorModule {
@@ -20,7 +17,7 @@ class SyncIndicatorModule {
   }
 
   @Provides
-  fun syncIndicatorConfig(): Observable<SyncIndicatorConfig> {
-    return Observable.just(SyncIndicatorConfig(syncFailureThreshold = Duration.of(12, ChronoUnit.HOURS)))
+  fun syncIndicatorConfig(): SyncIndicatorConfig {
+    return SyncIndicatorConfig.read()
   }
 }

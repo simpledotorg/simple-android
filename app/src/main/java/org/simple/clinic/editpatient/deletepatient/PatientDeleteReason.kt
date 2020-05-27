@@ -1,16 +1,10 @@
 package org.simple.clinic.editpatient.deletepatient
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.annotation.StringRes
+import org.simple.clinic.R
 
-sealed class PatientDeleteReason : Parcelable {
-
-  @Parcelize
-  object Duplicate : PatientDeleteReason()
-
-  @Parcelize
-  object AccidentalRegistration : PatientDeleteReason()
-
-  @Parcelize
-  object Died : PatientDeleteReason()
+enum class PatientDeleteReason(@StringRes val displayText: Int) {
+  Duplicate(R.string.deletereason_duplicate_patient),
+  AccidentalRegistration(R.string.deletereason_accidental_registration),
+  Died(R.string.deletereason_died)
 }

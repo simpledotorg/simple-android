@@ -10,7 +10,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -40,7 +39,6 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Instant
@@ -49,7 +47,7 @@ import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
 import java.util.UUID
 
-class PatientsScreenControllerTest {
+class PatientsLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -75,9 +73,6 @@ class PatientsScreenControllerTest {
   private val userApprovedForSyncing = TestData.loggedInUser(uuid = userUuid, loggedInStatus = LOGGED_IN, status = ApprovedForSyncing)
   private val userWaitingForApproval = TestData.loggedInUser(uuid = userUuid, loggedInStatus = LOGGED_IN, status = WaitingForApproval)
   private val userPendingVerification = userApprovedForSyncing.copy(loggedInStatus = OTP_REQUESTED)
-
-  private lateinit var controller: PatientsScreenController
-  private lateinit var controllerSubscription: Disposable
 
   private lateinit var testFixture: MobiusTestFixture<PatientsModel, PatientsEvent, PatientsEffect>
 
@@ -110,7 +105,6 @@ class PatientsScreenControllerTest {
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -592,7 +586,6 @@ class PatientsScreenControllerTest {
       appUpdateDialogShownAt: Instant = dateAsInstant,
       appUpdateState: AppUpdateState = DontShowAppUpdate
   ) {
-    createController()
     setupStubs(
         userStream = Observable.just(user.toOptional()),
         refreshCurrentUserCompletable = refreshCurrentUserCompletable,
@@ -614,7 +607,6 @@ class PatientsScreenControllerTest {
       appUpdateDialogShownAt: Instant = dateAsInstant,
       appUpdateState: AppUpdateState = DontShowAppUpdate
   ) {
-    createController()
     setupStubs(
         userStream = userStream,
         refreshCurrentUserCompletable = refreshCurrentUserCompletable,
@@ -625,21 +617,6 @@ class PatientsScreenControllerTest {
         appUpdateStream = Observable.just(appUpdateState)
     )
     activateUi()
-  }
-
-  private fun createController() {
-    controller = PatientsScreenController(
-        userSession = userSession,
-        checkAppUpdate = checkAppUpdate,
-        utcClock = utcClock,
-        userClock = userClock,
-        refreshCurrentUser = refreshCurrentUser,
-        schedulersProvider = TrampolineSchedulersProvider(),
-        approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
-        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
-        appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference
-    )
   }
 
   private fun setupStubs(
@@ -665,11 +642,5 @@ class PatientsScreenControllerTest {
 
   private fun activateUi() {
     testFixture.start()
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
-
-    uiEvents.onNext(ScreenCreated())
   }
 }

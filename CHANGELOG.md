@@ -4,7 +4,7 @@
 ### Feature
 - Handle cases where the patient ID is not set correctly in the deeplink
 - Show address for overdue patient
-- [In Progress: 26 May 2020] User can delete patient
+- User can delete patient
 
 ### Internal
 - Migrated `ScheduleAppointmentSheet` to Mobius

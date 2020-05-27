@@ -1,5 +1,5 @@
 package org.simple.clinic.sync.indicator
 
-interface SyncIndicatorUi : SyncIndicatorUiActions {
+interface SyncIndicatorUi {
   fun updateState(syncState: SyncIndicatorState)
 }

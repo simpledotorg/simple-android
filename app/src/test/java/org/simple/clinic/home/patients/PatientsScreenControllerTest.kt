@@ -92,7 +92,10 @@ class PatientsScreenControllerTest {
         utcClock = utcClock,
         approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
-        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference
+        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
+        checkAppUpdate = checkAppUpdate,
+        userClock = userClock,
+        appUpdateDialogShownAtPref = appUpdateDialogShownPref
     )
 
     testFixture = MobiusTestFixture(

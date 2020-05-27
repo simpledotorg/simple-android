@@ -614,4 +614,14 @@
   <string name="deeplink_no_patient">Patient not found</string>
   <string name="deeplink_no_patient_desc">Start teleconsultation and ask healthcare worker for patient information</string>
   <string name="deeplink_no_patient_positive_action">OK</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">Select a reason</string>
+  <string name="deletereason_duplicate_patient">This is a duplicate patient</string>
+  <string name="deletereason_accidental_registration">Patient registered by mistake</string>
+  <string name="deletereason_died">Died</string>
+  <string name="deletereason_confirm_title">Delete patient?</string>
+  <string name="deletereason_confirm_message">This will remove %1$s</string>
+  <string name="deletereason_confirm_positive">Delete</string>
+  <string name="deletereason_confirm_negative">Cancel</string>
 </resources>

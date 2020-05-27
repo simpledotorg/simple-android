@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.editpatient.deletepatient.DeletePatientScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white100">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/deletepatient_select_a_reason" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/deleteReasonsRecyclerView"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+</org.simple.clinic.editpatient.deletepatient.DeletePatientScreen>

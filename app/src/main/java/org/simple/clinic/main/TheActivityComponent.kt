@@ -22,6 +22,7 @@ import org.simple.clinic.di.AssistedInjectModule
 import org.simple.clinic.drugs.selection.EditMedicinesScreen
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
+import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenInjector
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.change.FacilityChangeActivity
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
@@ -87,7 +88,8 @@ interface TheActivityComponent :
     PinEntryCardView.Injector,
     RegistrationPhoneScreen.Injector,
     LoginPinScreen.Injector,
-    EnterOtpScreen.Injector {
+    EnterOtpScreen.Injector,
+    DeletePatientScreenInjector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: PatientsScreen)

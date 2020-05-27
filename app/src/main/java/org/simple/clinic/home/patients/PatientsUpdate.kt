@@ -2,6 +2,7 @@ package org.simple.clinic.home.patients
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
@@ -16,9 +17,8 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       is UserDetailsLoaded -> showAccountNotifications(model, event)
       is ActivityResumed -> dispatch(RefreshUserDetails)
       is DataForShowingApprovedStatusLoaded -> showUserApprovedStatus(event)
-      is UserApprovedStatusDismissed -> {
-        dispatch(HideUserAccountStatus, SetDismissedApprovalStatus(dismissedStatus = true))
-      }
+      is UserApprovedStatusDismissed -> dispatch(HideUserAccountStatus, SetDismissedApprovalStatus(dismissedStatus = true))
+      is ScanCardIdButtonClicked -> openScanBpPassportScreen(event)
     }
   }
 
@@ -75,5 +75,12 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       dispatch(ShowUserWasApproved as PatientsEffect)
     else
       dispatch(HideUserAccountStatus)
+  }
+
+  private fun openScanBpPassportScreen(event: ScanCardIdButtonClicked): Next<PatientsModel, PatientsEffect> {
+    return if (event.isPermissionGranted)
+      dispatch(OpenScanBpPassportScreen)
+    else
+      noChange()
   }
 }

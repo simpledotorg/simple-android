@@ -43,7 +43,6 @@ class PatientsScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        openScanSimpleIdScreen(replayedEvents),
         toggleVisibilityOfSyncIndicator(replayedEvents),
         showAppUpdateDialog(replayedEvents),
         showSimpleVideo(replayedEvents),
@@ -52,13 +51,6 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
-
-  private fun openScanSimpleIdScreen(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<ScanCardIdButtonClicked>()
-        .filter(ScanCardIdButtonClicked::isPermissionGranted)
-        .map { Ui::openScanSimpleIdCardScreen }
-  }
 
   private fun toggleVisibilityOfSyncIndicator(events: Observable<UiEvent>): Observable<UiChange> {
     val canUserSync =

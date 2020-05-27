@@ -1,7 +1,7 @@
 package org.simple.clinic.sync.indicator
 
 import org.simple.clinic.util.ResolvedError
-import java.util.concurrent.TimeUnit
+import org.threeten.bp.Duration
 
 sealed class SyncIndicatorEffect
 
@@ -9,11 +9,7 @@ object FetchLastSyncedStatus : SyncIndicatorEffect()
 
 object FetchDataForSyncIndicatorState : SyncIndicatorEffect()
 
-//TODO: Replace the two arguments with a Duration instead
-data class StartSyncedStateTimer(
-    val intervalAmount: Long,
-    val timeUnit: TimeUnit
-) : SyncIndicatorEffect()
+data class StartSyncedStateTimer(val timerDuration: Duration) : SyncIndicatorEffect()
 
 object InitiateDataSync : SyncIndicatorEffect()
 

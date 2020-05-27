@@ -6,12 +6,14 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.combineLatest
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.interval
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.Instant
 import javax.inject.Named
@@ -63,7 +65,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
   private fun startTimer(): ObservableTransformer<StartSyncedStateTimer, SyncIndicatorEvent> {
     return ObservableTransformer { effect ->
       effect
-          .switchMap { Observable.interval(it.intervalAmount, it.timeUnit) }
+          .switchMap { Observables.interval(it.timerDuration) }
           .map(::IncrementTimerTick)
     }
   }

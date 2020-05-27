@@ -1341,7 +1341,7 @@ class PatientRepositoryAndroidTest {
         testData.patientProfile(syncStatus = DONE)
     )).blockingAwait()
 
-    val count = patientRepository.pendingSyncRecordCountImmediate()
+    val count = patientRepository.pendingSyncRecordCount()
     assertThat(count).isEqualTo(2)
   }
 

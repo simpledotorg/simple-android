@@ -24,5 +24,5 @@ interface SynceableRepository<T, P> {
 
   fun recordCount(): Observable<Int>
 
-  fun pendingSyncRecordCountImmediate(): Int
+  fun pendingSyncRecordCount(): Int
 }

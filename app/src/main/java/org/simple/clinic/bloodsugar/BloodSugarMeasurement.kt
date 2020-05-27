@@ -97,10 +97,7 @@ data class BloodSugarMeasurement(
     fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM BloodSugarMeasurements WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
-
-    @Query("SELECT COUNT(uuid) FROM BloodSugarMeasurements WHERE syncStatus = :syncStatus")
-    fun countImmediate(syncStatus: SyncStatus): Int
+    fun count(syncStatus: SyncStatus): Int
 
     @Query("""
       SELECT COUNT(uuid)

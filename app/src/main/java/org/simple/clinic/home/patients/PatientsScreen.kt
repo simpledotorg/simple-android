@@ -36,13 +36,12 @@ import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsUi {
+class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsUi, PatientsUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter

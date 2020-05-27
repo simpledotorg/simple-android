@@ -13,6 +13,7 @@
 - [In Progress: 26 May 2020] Migrate `PatientsScreen` to Mobius
 - Improved analytics around sync events
 - Updated translations: `bn_BD`
+- Tighten Code Climate checks
 
 ### Fixes
 - Fix camera crash when QR scanner view is paused/closed

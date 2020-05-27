@@ -143,7 +143,7 @@ class BloodPressureRepository @Inject constructor(
     return dao.allBloodPressuresDataSource(patientUuid)
   }
 
-  override fun pendingSyncRecordCountImmediate(): Int {
-    return dao.countImmediate(SyncStatus.PENDING)
+  override fun pendingSyncRecordCount(): Int {
+    return dao.count(SyncStatus.PENDING)
   }
 }

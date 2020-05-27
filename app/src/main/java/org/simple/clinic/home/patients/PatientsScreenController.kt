@@ -44,7 +44,6 @@ class PatientsScreenController @Inject constructor(
 
     return Observable.mergeArray(
         showAppUpdateDialog(replayedEvents),
-        showSimpleVideo(replayedEvents),
         openSimpleVideo(replayedEvents)
     )
   }
@@ -70,17 +69,6 @@ class PatientsScreenController @Inject constructor(
         .filter { hasADayPassedSinceLastUpdateShown() }
         .doOnNext { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }
         .map { Ui::showAppUpdateDialog }
-  }
-
-  private fun showSimpleVideo(events: Observable<UiEvent>): Observable<UiChange> {
-    return screenCreated(events)
-        .map {
-          if (numberOfPatientsRegisteredPref.get() < 10) {
-            { ui: Ui -> ui.showSimpleVideo() }
-          } else {
-            { ui: Ui -> ui.showIllustration() }
-          }
-        }
   }
 
   private fun openSimpleVideo(events: Observable<UiEvent>): Observable<UiChange> {

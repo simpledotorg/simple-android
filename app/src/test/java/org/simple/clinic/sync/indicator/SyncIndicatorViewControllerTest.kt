@@ -38,7 +38,6 @@ import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
@@ -96,7 +95,7 @@ class SyncIndicatorViewControllerTest {
   @Test
   fun `when sync progress is not set, sync status indicator should show sync pending`() {
     //when
-    setupController()
+    startMobiusLoop()
     lastSyncStateStream.onNext(defaultLastSyncedState)
 
     //then
@@ -114,7 +113,7 @@ class SyncIndicatorViewControllerTest {
     val config = SyncIndicatorConfig(Duration.of(syncFailureThreshold, ChronoUnit.HOURS))
 
     //when
-    setupController()
+    startMobiusLoop()
     lastSyncStateStream.onNext(lastSyncState)
     configSubject.onNext(config)
 
@@ -144,7 +143,7 @@ class SyncIndicatorViewControllerTest {
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.never())
 
     //when
-    setupController()
+    startMobiusLoop()
     lastSyncStateStream.onNext(defaultLastSyncedState)
     uiEvents.onNext(SyncIndicatorViewClicked)
 
@@ -159,7 +158,7 @@ class SyncIndicatorViewControllerTest {
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
 
     // when
-    setupController()
+    startMobiusLoop()
     lastSyncStateStream.onNext(defaultLastSyncedState)
     uiEvents.onNext(SyncIndicatorViewClicked)
 
@@ -183,7 +182,7 @@ class SyncIndicatorViewControllerTest {
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(Unauthenticated(RuntimeException())))
 
     // when
-    setupController()
+    startMobiusLoop()
     lastSyncStateStream.onNext(defaultLastSyncedState)
     uiEvents.onNext(SyncIndicatorViewClicked)
 
@@ -197,7 +196,7 @@ class SyncIndicatorViewControllerTest {
     val syncingState = LastSyncedState(lastSyncProgress = SYNCING)
 
     //when
-    setupController()
+    startMobiusLoop()
     lastSyncStateStream.onNext(syncingState)
     uiEvents.onNext(SyncIndicatorViewClicked)
 
@@ -218,27 +217,13 @@ class SyncIndicatorViewControllerTest {
     frequentlySyncingRepositories.add(appointmentRepository)
 
     //when
-    setupController()
+    startMobiusLoop()
 
     //then
     verify(indicator).updateState(SyncPending)
   }
 
-  private fun setupController() {
-    val controller = SyncIndicatorViewController(
-        lastSyncState = lastSyncStatePreference,
-        utcClock = utcClock,
-        configProvider = configSubject,
-        dataSync = dataSync,
-        frequentlySyncingRepositories = frequentlySyncingRepositories
-    )
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(indicator) }
-
+  private fun startMobiusLoop() {
     testFixture.start()
-
-    uiEvents.onNext(ScreenCreated())
   }
 }

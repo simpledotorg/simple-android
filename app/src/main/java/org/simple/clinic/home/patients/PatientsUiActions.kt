@@ -7,4 +7,5 @@ interface PatientsUiActions {
   fun showUserStatusAsApproved()
   fun showUserStatusAsPendingVerification()
   fun hideUserAccountStatus()
+  fun openScanSimpleIdCardScreen()
 }

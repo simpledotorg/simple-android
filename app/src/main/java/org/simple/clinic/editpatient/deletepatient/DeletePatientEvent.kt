@@ -14,3 +14,5 @@ data class PatientDeleteReasonClicked(val patientDeleteReason: PatientDeleteReas
 data class PatientLoaded(val patient: Patient) : DeletePatientEvent()
 
 data class ConfirmPatientDeleteClicked(val deletedReason: DeletedReason) : DeletePatientEvent()
+
+object ConfirmPatientDiedClicked : DeletePatientEvent()

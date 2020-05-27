@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.DeletedReason
 
 class DeletePatientUpdate : Update<DeletePatientModel, DeletePatientEvent, DeletePatientEffect> {
@@ -33,6 +34,6 @@ class DeletePatientUpdate : Update<DeletePatientModel, DeletePatientEvent, Delet
       PatientDeleteReason.Died -> ShowConfirmDiedDialog(model.patientName!!)
     }
 
-    return dispatch(effect)
+    return next(model.deleteReasonSelected(event.patientDeleteReason), effect)
   }
 }

@@ -15,6 +15,10 @@ data class DeletePatientModel(
     return copy(patientName = patientName)
   }
 
+  fun deleteReasonSelected(patientDeleteReason: PatientDeleteReason): DeletePatientModel {
+    return copy(selectedReason = patientDeleteReason)
+  }
+
   companion object {
 
     fun default(patientUuid: UUID) = DeletePatientModel(patientUuid = patientUuid, patientName = null, selectedReason = null)

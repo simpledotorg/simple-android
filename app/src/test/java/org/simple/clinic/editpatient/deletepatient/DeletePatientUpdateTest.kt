@@ -46,7 +46,7 @@ class DeletePatientUpdateTest {
         .given(model)
         .whenEvent(PatientDeleteReasonClicked(patientDeleteReason))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.deleteReasonSelected(patientDeleteReason)),
             hasEffects(ShowConfirmDeleteDialog(patientName = patientName, deletedReason = DeletedReason.Duplicate) as DeletePatientEffect)
         ))
   }
@@ -60,7 +60,7 @@ class DeletePatientUpdateTest {
         .given(model)
         .whenEvent(PatientDeleteReasonClicked(patientDeleteReason))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.deleteReasonSelected(patientDeleteReason)),
             hasEffects(ShowConfirmDiedDialog(patientName = patientName) as DeletePatientEffect)
         ))
   }

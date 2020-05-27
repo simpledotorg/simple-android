@@ -9,4 +9,5 @@ interface PatientsUiActions {
   fun hideUserAccountStatus()
   fun openScanSimpleIdCardScreen()
   fun openYouTubeLinkForSimpleVideo()
+  fun showAppUpdateDialog()
 }

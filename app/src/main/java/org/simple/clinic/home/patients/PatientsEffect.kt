@@ -29,3 +29,7 @@ object LoadNumberOfPatientsRegistered: PatientsEffect()
 object OpenTrainingVideo: PatientsEffect()
 
 object LoadInfoForShowingAppUpdateMessage: PatientsEffect()
+
+object TouchAppUpdateShownAtTime: PatientsEffect()
+
+object ShowAppUpdateAvailable: PatientsEffect()

@@ -57,6 +57,8 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadNumberOfPatientsRegistered::class.java, loadNumberOfPatientsRegistered())
         .addAction(OpenTrainingVideo::class.java, uiActions::openYouTubeLinkForSimpleVideo, schedulers.ui())
         .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
+        .addConsumer(TouchAppUpdateShownAtTime::class.java, { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }, schedulers.io())
+        .addAction(ShowAppUpdateAvailable::class.java, uiActions::showAppUpdateDialog, schedulers.ui())
         .build()
   }
 

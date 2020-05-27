@@ -42,3 +42,5 @@ data class ScanCardIdButtonClicked(
   override val analyticsName: String = "Patients:Scan Simple Card Clicked:"
 }
 
+data class LoadedNumberOfPatientsRegistered(val numberOfPatientsRegistered: Int): PatientsEvent()
+

@@ -6,13 +6,15 @@ import org.simple.clinic.user.User
 
 @Parcelize
 data class PatientsModel(
-    val user: User?
+    val user: User?,
+    val numberOfPatientsRegistered: Int?
 ) : Parcelable {
 
   companion object {
 
     fun create(): PatientsModel = PatientsModel(
-        user = null
+        user = null,
+        numberOfPatientsRegistered = null
     )
   }
 
@@ -21,5 +23,9 @@ data class PatientsModel(
 
   fun userLoaded(user: User): PatientsModel {
     return copy(user = user)
+  }
+
+  fun numberOfPatientsRegisteredUpdated(numberOfPatientsRegistered: Int): PatientsModel {
+    return copy(numberOfPatientsRegistered = numberOfPatientsRegistered)
   }
 }

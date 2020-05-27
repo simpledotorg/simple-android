@@ -23,3 +23,7 @@ data class DataForShowingApprovedStatusLoaded(
     val approvalStatusUpdatedAt: Instant,
     val hasBeenDismissed: Boolean
 ): PatientsEvent()
+
+class UserApprovedStatusDismissed : PatientsEvent() {
+  override val analyticsName = "Patients:Dismissed User Approved Status"
+}

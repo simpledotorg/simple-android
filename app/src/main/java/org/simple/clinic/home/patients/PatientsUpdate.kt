@@ -15,6 +15,9 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       is UserDetailsLoaded -> showAccountNotifications(model, event)
       is ActivityResumed -> dispatch(RefreshUserDetails)
       is DataForShowingApprovedStatusLoaded -> showUserApprovedStatus(event)
+      is UserApprovedStatusDismissed -> {
+        dispatch(HideUserAccountStatus, SetDismissedApprovalStatus(dismissedStatus = true))
+      }
     }
   }
 
@@ -42,7 +45,7 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       previousUser != null && previousUser.isApprovedForSyncing && newUser.isWaitingForApproval -> {
         // User was approved, but decided to proceed with the Reset PIN flow.
         effects.add(ShowUserAwaitingApproval)
-        effects.add(SetDismissedApprovalStatus(false))
+        effects.add(SetDismissedApprovalStatus(dismissedStatus = false))
       }
 
       newUser.isApprovedForSyncing && (previousUser == null || previousUser.isWaitingForApproval) -> {

@@ -278,6 +278,7 @@ class PatientsScreenControllerTest {
     verify(ui).showUserStatusAsApproved()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
+    verify(ui).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
   }
 

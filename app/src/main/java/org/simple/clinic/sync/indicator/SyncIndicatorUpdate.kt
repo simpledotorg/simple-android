@@ -89,7 +89,7 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
     }
 
     val syncIndicatorState = when (model.lastSyncedState.lastSyncProgress!!) {
-      SUCCESS, FAILURE -> syncIndicatorState(model.lastSyncedState, failureThreshold, currentTime)
+      SUCCESS, FAILURE -> calculateSyncIndicatorState(model.lastSyncedState, failureThreshold, currentTime)
       SYNCING -> Syncing
     }
 
@@ -102,28 +102,25 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
     }
   }
 
-  //TODO: Refactor this method after migration to Mobius is complete.
-  // This method is copied as is from `SyncIndicatorController` for migration purpose.
-  private fun syncIndicatorState(
+  private fun calculateSyncIndicatorState(
       syncState: LastSyncedState,
-      maxIntervalSinceLastSync: Duration,
+      maxFailureThresholdSinceLastSync: Duration,
       currentTime: Instant
   ): SyncIndicatorState {
-    //TODO: Convert to use `if`
-    val timestamp = syncState.lastSyncSucceededAt ?: return SyncPending
+    val lastSucceededSyncTimestamp = syncState.lastSyncSucceededAt ?: return SyncPending
 
-    val timeSinceLastSync = Duration.between(timestamp, currentTime)
-    val mostFrequentSyncInterval = enumValues<SyncInterval>()
-        .map { it.frequency }
-        .min()!!
+    val timeSinceLastSync = Duration.between(lastSucceededSyncTimestamp, currentTime)
+    val mostFrequentSyncIntervalDuration = SyncInterval.mostFrequent()
 
     // This check is added for cases where the device time is changed to be in the future.
     val syncHappenedInTheFuture = timeSinceLastSync.isNegative
 
+    val hasLastSyncTimeExceededFailureThreshold = timeSinceLastSync > maxFailureThresholdSinceLastSync
+    val isLastFrequentSyncPending = timeSinceLastSync > mostFrequentSyncIntervalDuration
+
     return when {
-      //TODO: Extract conditions to variables with relevant names
-      timeSinceLastSync > maxIntervalSinceLastSync -> ConnectToSync
-      timeSinceLastSync > mostFrequentSyncInterval -> SyncPending
+      hasLastSyncTimeExceededFailureThreshold -> ConnectToSync
+      isLastFrequentSyncPending -> SyncPending
       syncHappenedInTheFuture -> SyncPending
       else -> syncStateFromProgress(syncState, timeSinceLastSync)
     }

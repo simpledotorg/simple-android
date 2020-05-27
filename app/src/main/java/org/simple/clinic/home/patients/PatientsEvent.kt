@@ -8,6 +8,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 
 sealed class PatientsEvent : UiEvent
 
@@ -47,4 +48,10 @@ data class LoadedNumberOfPatientsRegistered(val numberOfPatientsRegistered: Int)
 object SimpleVideoClicked : PatientsEvent() {
   override val analyticsName = "Patients:Simple Video Clicked"
 }
+
+data class RequiredInfoForShowingAppUpdateLoaded(
+    val isAppUpdateAvailable: Boolean,
+    val appUpdateLastShownOn: LocalDate,
+    val currentDate: LocalDate
+): PatientsEvent()
 

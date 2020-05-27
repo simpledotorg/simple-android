@@ -27,3 +27,5 @@ object OpenScanBpPassportScreen: PatientsEffect()
 object LoadNumberOfPatientsRegistered: PatientsEffect()
 
 object OpenTrainingVideo: PatientsEffect()
+
+object LoadInfoForShowingAppUpdateMessage: PatientsEffect()

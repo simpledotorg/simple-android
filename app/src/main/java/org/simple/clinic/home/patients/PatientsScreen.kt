@@ -12,7 +12,7 @@ import android.widget.RelativeLayout
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.patients_user_status_approved.view.*
@@ -147,16 +147,16 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
       .ofType<Resumed>()
       .map { ActivityResumed }
 
-  private fun searchButtonClicks() = RxView.clicks(searchPatientsButton).map { NewPatientClicked }
+  private fun searchButtonClicks() = searchPatientsButton.clicks().map { NewPatientClicked }
 
-  private fun dismissApprovedStatusClicks() = RxView.clicks(dismissApprovedStatusButton).map { UserApprovedStatusDismissed() }
+  private fun dismissApprovedStatusClicks() = dismissApprovedStatusButton.clicks().map { UserApprovedStatusDismissed() }
 
-  private fun enterCodeManuallyClicks() = RxView.clicks(enterCodeButton).map { PatientsEnterCodeManuallyClicked() }
+  private fun enterCodeManuallyClicks() = enterCodeButton.clicks().map { PatientsEnterCodeManuallyClicked() }
 
-  private fun scanCardIdButtonClicks() = RxView.clicks(scanSimpleCardButton).map { ScanCardIdButtonClicked() }
+  private fun scanCardIdButtonClicks() = scanSimpleCardButton.clicks().map { ScanCardIdButtonClicked() }
 
-  private fun simpleVideoClicked() = RxView.clicks(videoTitleText)
-      .mergeWith(RxView.clicks(simpleVideoImage))
+  private fun simpleVideoClicked() = videoTitleText.clicks()
+      .mergeWith(simpleVideoImage.clicks())
       .map { SimpleVideoClicked }
 
   override fun openPatientSearchScreen() {

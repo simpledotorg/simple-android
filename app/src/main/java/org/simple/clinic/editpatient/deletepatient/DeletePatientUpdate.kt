@@ -12,6 +12,7 @@ class DeletePatientUpdate : Update<DeletePatientModel, DeletePatientEvent, Delet
       is PatientDeleteReasonClicked -> patientDeleteReasonClicked(model, event)
       is PatientLoaded -> patientNameLoaded(model, event)
       PatientDeleted, PatientMarkedAsDead -> dispatch(ShowHomeScreen)
+      is ConfirmPatientDeleteClicked -> dispatch(DeletePatient(model.patientUuid, event.deletedReason))
     }
   }
 
@@ -25,7 +26,7 @@ class DeletePatientUpdate : Update<DeletePatientModel, DeletePatientEvent, Delet
       model: DeletePatientModel,
       event: PatientDeleteReasonClicked
   ): Next<DeletePatientModel, DeletePatientEffect> {
-    val effect = when(event.patientDeleteReason) {
+    val effect = when (event.patientDeleteReason) {
       PatientDeleteReason.Duplicate -> ShowConfirmDeleteDialog(model.patientName!!, DeletedReason.Duplicate)
       PatientDeleteReason.AccidentalRegistration -> ShowConfirmDeleteDialog(model.patientName!!, DeletedReason.AccidentalRegistration)
       PatientDeleteReason.Died -> ShowConfirmDiedDialog(model.patientName!!)

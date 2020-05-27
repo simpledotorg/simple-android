@@ -8,12 +8,17 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.appupdate.AppUpdateState
+import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import javax.inject.Named
 
 class PatientsEffectHandler @AssistedInject constructor(
@@ -21,9 +26,12 @@ class PatientsEffectHandler @AssistedInject constructor(
     private val refreshCurrentUser: RefreshCurrentUser,
     private val userSession: UserSession,
     private val utcClock: UtcClock,
+    private val userClock: UserClock,
+    private val checkAppUpdate: CheckAppUpdateAvailability,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @Named("number_of_patients_registered") private val numberOfPatientsRegisteredPref: Preference<Int>,
+    @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
     @Assisted private val uiActions: PatientsUiActions
 ) {
 
@@ -48,6 +56,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addAction(OpenScanBpPassportScreen::class.java, uiActions::openScanSimpleIdCardScreen, schedulers.ui())
         .addTransformer(LoadNumberOfPatientsRegistered::class.java, loadNumberOfPatientsRegistered())
         .addAction(OpenTrainingVideo::class.java, uiActions::openYouTubeLinkForSimpleVideo, schedulers.ui())
+        .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
         .build()
   }
 
@@ -106,6 +115,23 @@ class PatientsEffectHandler @AssistedInject constructor(
       effects
           .switchMap { numberOfPatientsRegisteredPref.asObservable().subscribeOn(schedulers.io()) }
           .map(::LoadedNumberOfPatientsRegistered)
+    }
+  }
+
+  private fun loadInfoForShowingAppUpdate(): ObservableTransformer<LoadInfoForShowingAppUpdateMessage, PatientsEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap { checkAppUpdate.listen() }
+          .map {
+            val today = LocalDate.now(userClock)
+            val updateLastShownOn = appUpdateDialogShownAtPref.get().toLocalDateAtZone(userClock.zone)
+
+            RequiredInfoForShowingAppUpdateLoaded(
+                isAppUpdateAvailable = it is AppUpdateState.ShowAppUpdate,
+                appUpdateLastShownOn = updateLastShownOn,
+                currentDate = today
+            )
+          }
     }
   }
 }

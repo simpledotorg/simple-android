@@ -21,6 +21,7 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       is ScanCardIdButtonClicked -> openScanBpPassportScreen(event)
       is LoadedNumberOfPatientsRegistered -> next(model.numberOfPatientsRegisteredUpdated(event.numberOfPatientsRegistered))
       SimpleVideoClicked -> dispatch(OpenTrainingVideo)
+      is RequiredInfoForShowingAppUpdateLoaded -> noChange()
     }
   }
 

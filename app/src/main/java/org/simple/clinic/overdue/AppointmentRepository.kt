@@ -199,12 +199,6 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  override fun pendingSyncRecordCount(): Observable<Int> {
-    return appointmentDao
-        .count(SyncStatus.PENDING)
-        .toObservable()
-  }
-
   override fun pendingSyncRecordCountImmediate(): Int {
     return appointmentDao.countImmediate(SyncStatus.PENDING)
   }

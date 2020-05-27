@@ -674,6 +674,12 @@
     <item name="iconTint">@color/green1</item>
   </style>
 
+  <style name="Clinic.V2.MaterialButton.Red2">
+    <item name="backgroundTint">@color/red2</item>
+    <item name="android:textColor">@color/red1</item>
+    <item name="iconTint">@color/red1</item>
+  </style>
+
   <style name="Clinic.V2.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
     <item name="android:textColor">?attr/colorSecondary</item>
     <item name="android:insetTop">@dimen/spacing_0</item>

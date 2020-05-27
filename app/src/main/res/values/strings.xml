@@ -123,6 +123,7 @@
   <string name="patientedit_bangladesh_national_id" translatable="false">@string/patiententry_bangladesh_national_id</string>
   <string name="patientedit_street_address" translatable="false">@string/patiententry_street_address</string>
   <string name="patientedit_zone" translatable="false">@string/patiententry_zone</string>
+  <string name="patientedit_delete_patient">Delete</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->

@@ -6,5 +6,4 @@ interface PatientsUi: PatientsUiActions {
   fun showAppUpdateDialog()
   fun showSimpleVideo()
   fun showIllustration()
-  fun openYouTubeLinkForSimpleVideo()
 }

@@ -25,3 +25,5 @@ object HideUserAccountStatus: PatientsEffect()
 object OpenScanBpPassportScreen: PatientsEffect()
 
 object LoadNumberOfPatientsRegistered: PatientsEffect()
+
+object OpenTrainingVideo: PatientsEffect()

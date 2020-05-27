@@ -25,7 +25,6 @@ import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -38,7 +37,6 @@ import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
@@ -48,9 +46,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   @Inject
   lateinit var screenRouter: ScreenRouter
-
-  @Inject
-  lateinit var controller: PatientsScreenController
 
   @Inject
   lateinit var activityLifecycle: Observable<ActivityLifecycle>
@@ -82,8 +77,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   private val events: Observable<UiEvent> by unsafeLazy {
     Observable
         .mergeArray(
-            screenCreates(),
-            activityStarts(),
             activityResumes(),
             searchButtonClicks(),
             dismissApprovedStatusClicks(),
@@ -93,7 +86,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
         )
         .compose<UiEvent>(RequestPermissions(runtimePermissions, activity, screenRouter.streamScreenResults().ofType()))
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val delegate: MobiusDelegate<PatientsModel, PatientsEvent, PatientsEffect> by unsafeLazy {
@@ -117,12 +109,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     TheActivity.component.inject(this)
 
     setupApprovalStatusAnimations()
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    )
 
     homeIllustration.setImageResource(illustrationResourceId())
   }
@@ -160,11 +146,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     val exitAnimation = AnimationUtils.loadAnimation(context, R.anim.user_approval_status_exit)
     userStatusViewflipper.outAnimation = exitAnimation.apply { interpolator = FastOutSlowInInterpolator() }
   }
-
-  private fun screenCreates() = Observable.just(ScreenCreated())
-
-  // TODO (vs) 26/05/20: Remove after Mobius migration is complete
-  private fun activityStarts() = activityLifecycle.ofType<Resumed>()
 
   private fun activityResumes() = activityLifecycle
       .ofType<Resumed>()

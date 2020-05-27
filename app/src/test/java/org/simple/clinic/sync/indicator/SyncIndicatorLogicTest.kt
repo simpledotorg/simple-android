@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
@@ -59,28 +60,9 @@ class SyncIndicatorLogicTest {
   private val frequentlySyncingRepositories = arrayListOf<SynceableRepository<*, *>>()
   private val lastSyncStateStream = PublishSubject.create<LastSyncedState>()
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
 
   private val defaultLastSyncedState = LastSyncedState()
-
-  private val uiRenderer = SyncIndicatorUiRenderer(indicator)
-  private val effectHandler = SyncIndicatorEffectHandler(
-      lastSyncStatePreference,
-      utcClock,
-      configSubject,
-      TrampolineSchedulersProvider(),
-      dataSync,
-      frequentlySyncingRepositories,
-      indicatorUiActions
-  )
-  private val testFixture = MobiusTestFixture(
-      events = uiEvents.ofType(),
-      defaultModel = SyncIndicatorModel.create(),
-      init = SyncIndicatorInit(),
-      update = SyncIndicatorUpdate(),
-      effectHandler = effectHandler.build(),
-      modelUpdateListener = uiRenderer::render
-  )
+  lateinit var testFixture: MobiusTestFixture<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect>
 
   @Before
   fun setUp() {
@@ -113,9 +95,8 @@ class SyncIndicatorLogicTest {
     val config = SyncIndicatorConfig(Duration.of(syncFailureThreshold, ChronoUnit.HOURS))
 
     //when
-    startMobiusLoop()
+    startMobiusLoop(config)
     lastSyncStateStream.onNext(lastSyncState)
-    configSubject.onNext(config)
 
     //then
     verify(indicator).updateState(expectedSyncState)
@@ -201,8 +182,9 @@ class SyncIndicatorLogicTest {
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     //then
+    verify(indicator).updateState(Syncing)
     verifyZeroInteractions(dataSync)
-    verifyZeroInteractions(indicator)
+    verifyNoMoreInteractions(indicator)
   }
 
   @Test
@@ -223,7 +205,27 @@ class SyncIndicatorLogicTest {
     verify(indicator).updateState(SyncPending)
   }
 
-  private fun startMobiusLoop() {
+  private fun startMobiusLoop(config: SyncIndicatorConfig = SyncIndicatorConfig(Duration.of(12, ChronoUnit.HOURS))) {
+    val uiRenderer = SyncIndicatorUiRenderer(indicator)
+    val effectHandler = SyncIndicatorEffectHandler(
+        lastSyncStatePreference,
+        utcClock,
+        config,
+        TrampolineSchedulersProvider(),
+        dataSync,
+        frequentlySyncingRepositories,
+        indicatorUiActions
+    )
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = SyncIndicatorModel.create(),
+        init = SyncIndicatorInit(),
+        update = SyncIndicatorUpdate(),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
+    )
+
     testFixture.start()
   }
 }

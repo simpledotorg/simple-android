@@ -21,8 +21,7 @@ import javax.inject.Named
 class SyncIndicatorEffectHandler @AssistedInject constructor(
     private val lastSyncedState: Preference<LastSyncedState>,
     private val utcClock: UtcClock,
-    //TODO: Fetch the `SyncIndicatorConfig` instead of a stream
-    private val syncIndicatorConfig: Observable<SyncIndicatorConfig>,
+    private val syncIndicatorConfig: SyncIndicatorConfig,
     private val schedulersProvider: SchedulersProvider,
     private val dataSync: DataSync,
     @Named("frequently_syncing_repositories") private val frequentlySyncingRepositories: ArrayList<SynceableRepository<*, *>>,
@@ -80,12 +79,12 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
 
   private fun fetchDataForSyncIndicatorState(): ObservableTransformer<FetchDataForSyncIndicatorState, SyncIndicatorEvent> {
     return ObservableTransformer { effect ->
-      effect
-          .flatMap {
-            syncIndicatorConfig.map {
-              DataForSyncIndicatorStateFetched(Instant.now(utcClock), it.syncFailureThreshold)
-            }
-          }
+      effect.map {
+        DataForSyncIndicatorStateFetched(
+            currentTime = Instant.now(utcClock),
+            syncIndicatorFailureThreshold = syncIndicatorConfig.syncFailureThreshold
+        )
+      }
     }
   }
 

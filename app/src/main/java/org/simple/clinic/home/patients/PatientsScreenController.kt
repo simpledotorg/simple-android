@@ -43,7 +43,6 @@ class PatientsScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        dismissApprovalStatus(replayedEvents),
         openScanSimpleIdScreen(replayedEvents),
         toggleVisibilityOfSyncIndicator(replayedEvents),
         showAppUpdateDialog(replayedEvents),
@@ -53,15 +52,6 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
-
-  private fun dismissApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<UserApprovedStatusDismissed>()
-        .flatMap {
-          hasUserDismissedApprovedStatusPref.set(true)
-          Observable.never<UiChange>()
-        }
-  }
 
   private fun openScanSimpleIdScreen(events: Observable<UiEvent>): Observable<UiChange> {
     return events

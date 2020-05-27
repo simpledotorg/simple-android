@@ -10,14 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
-import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding3.view.clicks
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.sync_indicator.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
@@ -31,15 +28,10 @@ import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
 
 class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), SyncIndicatorUi, SyncIndicatorUiActions {
-
-  @Inject
-  lateinit var controller: SyncIndicatorViewController
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -48,10 +40,8 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   lateinit var effectHandlerFactory: SyncIndicatorEffectHandler.Factory
 
   private val events by unsafeLazy {
-    Observable
-        .merge(screenCreates(), viewClicks())
+    viewClicks()
         .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private val uiRenderer = SyncIndicatorUiRenderer(this)
@@ -74,13 +64,6 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
     LayoutInflater.from(context).inflate(R.layout.sync_indicator, this, true)
 
     TheActivity.component.inject(this)
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    )
   }
 
   override fun onAttachedToWindow() {
@@ -100,8 +83,6 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
-
-  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun viewClicks() = rootLayout.clicks().map { SyncIndicatorViewClicked }
 

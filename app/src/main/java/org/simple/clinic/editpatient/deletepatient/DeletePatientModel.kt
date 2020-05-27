@@ -1,12 +1,15 @@
 package org.simple.clinic.editpatient.deletepatient
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.util.UUID
 
+@Parcelize
 data class DeletePatientModel(
     val patientUuid: UUID,
     val patientName: String? = null,
     val selectedReason: PatientDeleteReason?
-) {
+) : Parcelable {
 
   val hasPatientName: Boolean
     get() = patientName.isNullOrBlank().not()

@@ -2,8 +2,9 @@ package org.simple.clinic.editpatient.deletepatient
 
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.widgets.UiEvent
 
-sealed class DeletePatientEvent
+sealed class DeletePatientEvent : UiEvent
 
 object PatientDeleted : DeletePatientEvent()
 

@@ -25,8 +25,8 @@ import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
+import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreenKey
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.screen.ScreenRouter
@@ -34,7 +34,6 @@ import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
@@ -51,9 +50,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   @Inject
   lateinit var activity: AppCompatActivity
-
-  @Inject
-  lateinit var userClock: UserClock
 
   @Inject
   lateinit var crashReporter: CrashReporter
@@ -105,7 +101,8 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     if (isInEditMode) {
       return
     }
-    TheActivity.component.inject(this)
+
+    context.injector<Injector>().inject(this)
 
     setupApprovalStatusAnimations()
 
@@ -255,5 +252,9 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     } else {
       crashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
+  }
+
+  interface Injector {
+    fun inject(target: PatientsScreen)
   }
 }

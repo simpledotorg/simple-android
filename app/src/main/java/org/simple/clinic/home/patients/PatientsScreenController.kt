@@ -43,7 +43,6 @@ class PatientsScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        toggleVisibilityOfSyncIndicator(replayedEvents),
         showAppUpdateDialog(replayedEvents),
         showSimpleVideo(replayedEvents),
         openSimpleVideo(replayedEvents)
@@ -51,24 +50,6 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
-
-  private fun toggleVisibilityOfSyncIndicator(events: Observable<UiEvent>): Observable<UiChange> {
-    val canUserSync =
-        userSession
-            .canSyncData()
-            .distinctUntilChanged()
-
-    return Observables
-        .combineLatest(screenCreated(events), canUserSync)
-        .map { (_, canSync) ->
-          { ui: Ui ->
-            when {
-              canSync -> ui.showSyncIndicator()
-              else -> ui.hideSyncIndicator()
-            }
-          }
-        }
-  }
 
   private fun showAppUpdateDialog(events: Observable<UiEvent>): Observable<UiChange> {
 

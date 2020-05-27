@@ -22,14 +22,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/saveButton"
-    android:layout_toEndOf="@+id/backButton"
+    android:layout_marginStart="@dimen/spacing_48"
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical">
 
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:clipToPadding="false"
       android:orientation="vertical"
+      android:paddingStart="@dimen/spacing_8"
       android:paddingTop="@dimen/spacing_12"
       android:paddingEnd="@dimen/spacing_16"
       android:paddingBottom="64dp"
@@ -305,6 +307,15 @@
             android:inputType="textPostalAddress|textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
       </LinearLayout>
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/deletePatient"
+        style="@style/Clinic.V2.MaterialButton.Red2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:text="@string/patientedit_delete_patient" />
+
     </LinearLayout>
   </ScrollView>
 

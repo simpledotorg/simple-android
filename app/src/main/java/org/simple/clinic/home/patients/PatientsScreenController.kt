@@ -42,10 +42,7 @@ class PatientsScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        showAppUpdateDialog(replayedEvents),
-        openSimpleVideo(replayedEvents)
-    )
+    return showAppUpdateDialog(replayedEvents)
   }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
@@ -69,11 +66,5 @@ class PatientsScreenController @Inject constructor(
         .filter { hasADayPassedSinceLastUpdateShown() }
         .doOnNext { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }
         .map { Ui::showAppUpdateDialog }
-  }
-
-  private fun openSimpleVideo(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<SimpleVideoClicked>()
-        .map { Ui::openYouTubeLinkForSimpleVideo }
   }
 }

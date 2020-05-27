@@ -8,4 +8,5 @@ interface PatientsUiActions {
   fun showUserStatusAsPendingVerification()
   fun hideUserAccountStatus()
   fun openScanSimpleIdCardScreen()
+  fun openYouTubeLinkForSimpleVideo()
 }

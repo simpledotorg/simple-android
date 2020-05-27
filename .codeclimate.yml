@@ -1,7 +1,7 @@
 version: "2"
 checks:
   argument-count:
-    enabled: false
+    enabled: true
     config:
       threshold: 4
   complex-logic:
@@ -15,7 +15,7 @@ checks:
   method-complexity:
     enabled: true
     config:
-      threshold: 15
+      threshold: 5
   method-count:
     enabled: false
     config:
@@ -27,7 +27,7 @@ checks:
   nested-control-flow:
     enabled: true
     config:
-      threshold: 2
+      threshold: 1
   return-statements:
     enabled: true
     config:
@@ -43,6 +43,7 @@ checks:
 exclude_patterns:
   - "**/androidTest/"
   - "**/test/"
+  - "**/sharedTest/"
   - "**/src/main/java/org/simple/clinic/storage/migrations/Migration_*.kt"
   - "**/build/"
   - "router/"

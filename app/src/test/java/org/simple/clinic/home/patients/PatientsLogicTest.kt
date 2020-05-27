@@ -52,7 +52,8 @@ class PatientsLogicTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val ui: PatientsUi = mock()
+  private val ui = mock<PatientsUi>()
+  private val uiActions = mock<PatientsUiActions>()
   private val userSession = mock<UserSession>()
   private val approvalStatusApprovedAtPreference = mock<Preference<Instant>>()
   private val hasUserDismissedApprovedStatusPreference = mock<Preference<Boolean>>()
@@ -83,7 +84,7 @@ class PatientsLogicTest {
         schedulers = TrampolineSchedulersProvider(),
         refreshCurrentUser = refreshCurrentUser,
         userSession = userSession,
-        uiActions = ui,
+        uiActions = uiActions,
         utcClock = utcClock,
         approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
@@ -116,13 +117,14 @@ class PatientsLogicTest {
     uiEvents.onNext(NewPatientClicked)
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui).openPatientSearchScreen()
+    verify(uiActions).openPatientSearchScreen()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -139,10 +141,11 @@ class PatientsLogicTest {
     uiEvents.onNext(ActivityResumed)
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
 
     verify(refreshCurrentUser).refresh()
   }
@@ -156,9 +159,10 @@ class PatientsLogicTest {
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui).showUserStatusAsWaiting()
+    verify(uiActions).showUserStatusAsWaiting()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -171,9 +175,10 @@ class PatientsLogicTest {
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui).showUserStatusAsWaiting()
+    verify(uiActions).showUserStatusAsWaiting()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -182,13 +187,14 @@ class PatientsLogicTest {
     setupController(user = userApprovedForSyncing)
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui, never()).showUserStatusAsWaiting()
+    verify(uiActions, never()).showUserStatusAsWaiting()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -203,9 +209,10 @@ class PatientsLogicTest {
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui).showUserStatusAsApproved()
+    verify(uiActions).showUserStatusAsApproved()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -220,11 +227,12 @@ class PatientsLogicTest {
     // then
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
 
-    verify(ui, never()).showUserStatusAsApproved()
+    verify(uiActions, never()).showUserStatusAsApproved()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -239,11 +247,12 @@ class PatientsLogicTest {
     // then
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
 
-    verify(ui, never()).showUserStatusAsApproved()
+    verify(uiActions, never()).showUserStatusAsApproved()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -258,10 +267,11 @@ class PatientsLogicTest {
     verify(refreshCurrentUser).refresh()
     verify(approvalStatusApprovedAtPreference).set(dateAsInstant)
 
-    verify(ui).showUserStatusAsWaiting()
+    verify(uiActions).showUserStatusAsWaiting()
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -273,11 +283,12 @@ class PatientsLogicTest {
     // then
     verify(hasUserDismissedApprovedStatusPreference).set(true)
 
-    verify(ui).showUserStatusAsApproved()
+    verify(uiActions).showUserStatusAsApproved()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -293,9 +304,10 @@ class PatientsLogicTest {
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui).showUserStatusAsPendingVerification()
+    verify(uiActions).showUserStatusAsPendingVerification()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -307,13 +319,14 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui, never()).showUserStatusAsPendingVerification()
+    verify(uiActions, never()).showUserStatusAsPendingVerification()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -326,13 +339,14 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui).showUserStatusAsPendingVerification()
+    verify(uiActions).showUserStatusAsPendingVerification()
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui, never()).hideUserAccountStatus()
+    verify(uiActions, never()).hideUserAccountStatus()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -345,10 +359,11 @@ class PatientsLogicTest {
 
     // then
     verify(ui).showSyncIndicator()
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -362,13 +377,14 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui).showUserStatusAsPendingVerification()
+    verify(uiActions).showUserStatusAsPendingVerification()
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui, never()).hideUserAccountStatus()
+    verify(uiActions, never()).hideUserAccountStatus()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -381,13 +397,14 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui).showUserStatusAsWaiting()
+    verify(uiActions).showUserStatusAsWaiting()
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui, never()).hideUserAccountStatus()
+    verify(uiActions, never()).hideUserAccountStatus()
 
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -409,24 +426,29 @@ class PatientsLogicTest {
     //then
     verify(ui).showSimpleVideo()
     verify(ui).hideSyncIndicator()
-    verify(ui).showUserStatusAsPendingVerification()
-    verify(ui, never()).hideUserAccountStatus()
+    verify(uiActions).showUserStatusAsPendingVerification()
+    verify(uiActions, never()).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
     clearInvocations(ui)
+    clearInvocations(uiActions)
 
     // when
     userSubject.onNext(userAfterLoggingIn.toOptional())
 
     // then
     verify(ui).showSyncIndicator()
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
     clearInvocations(ui)
+    clearInvocations(uiActions)
 
     // when
     userSubject.onNext(userAfterLoggingIn.toOptional())
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -437,11 +459,12 @@ class PatientsLogicTest {
     uiEvents.onNext(PatientsEnterCodeManuallyClicked())
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
-    verify(ui).openEnterCodeManuallyScreen()
+    verify(uiActions).openEnterCodeManuallyScreen()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -452,11 +475,12 @@ class PatientsLogicTest {
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(GRANTED)))
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
-    verify(ui).openScanSimpleIdCardScreen()
+    verify(uiActions).openScanSimpleIdCardScreen()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -467,11 +491,12 @@ class PatientsLogicTest {
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Just(DENIED)))
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
-    verify(ui, never()).openScanSimpleIdCardScreen()
+    verify(uiActions, never()).openScanSimpleIdCardScreen()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -483,11 +508,12 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
-    verify(ui).showAppUpdateDialog()
+    verify(uiActions).showAppUpdateDialog()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -496,11 +522,12 @@ class PatientsLogicTest {
     setupController(appUpdateState = ShowAppUpdate)
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
-    verify(ui, never()).showAppUpdateDialog()
+    verify(uiActions, never()).showAppUpdateDialog()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -512,11 +539,12 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
-    verify(ui, never()).showAppUpdateDialog()
+    verify(uiActions, never()).showAppUpdateDialog()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -528,11 +556,12 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
-    verify(ui, never()).showAppUpdateDialog()
+    verify(uiActions, never()).showAppUpdateDialog()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -541,12 +570,13 @@ class PatientsLogicTest {
     setupController(numberOfPatientsRegistered = 9)
 
     //then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
     verify(ui, never()).showIllustration()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -555,11 +585,12 @@ class PatientsLogicTest {
     setupController(numberOfPatientsRegistered = 10)
 
     //then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui, never()).showSimpleVideo()
     verify(ui).showIllustration()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -570,11 +601,12 @@ class PatientsLogicTest {
     uiEvents.onNext(SimpleVideoClicked)
 
     //then
-    verify(ui).hideUserAccountStatus()
+    verify(uiActions).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
-    verify(ui).openYouTubeLinkForSimpleVideo()
+    verify(uiActions).openYouTubeLinkForSimpleVideo()
     verifyNoMoreInteractions(ui)
+    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController(

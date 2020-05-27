@@ -36,7 +36,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
 
-class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), SyncIndicatorUi {
+class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), SyncIndicatorUi, SyncIndicatorUiActions {
 
   @Inject
   lateinit var controller: SyncIndicatorViewController

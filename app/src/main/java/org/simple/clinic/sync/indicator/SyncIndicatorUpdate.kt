@@ -22,7 +22,6 @@ import org.simple.clinic.util.ResolvedError.Unexpected
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
-import java.util.concurrent.TimeUnit
 
 class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect> {
   override fun update(model: SyncIndicatorModel, event: SyncIndicatorEvent):
@@ -94,10 +93,10 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
     }
 
     return when (syncIndicatorState) {
-      is Synced -> next(model.syncIndicatorStateChanged(syncIndicatorState), StartSyncedStateTimer(
-          intervalAmount = 1,
-          timeUnit = TimeUnit.MINUTES
-      ))
+      is Synced -> next(
+          model.syncIndicatorStateChanged(syncIndicatorState),
+          StartSyncedStateTimer(Duration.of(1, ChronoUnit.MINUTES))
+      )
       else -> next(model.syncIndicatorStateChanged(syncIndicatorState))
     }
   }

@@ -42,3 +42,5 @@ inline fun <reified T : Any, R> Single<in T>.mapType(
 ): Maybe<R> {
   return this.ofType<T>().map { mapper(it) }
 }
+
+fun Observables.interval(duration: Duration): Observable<Long> = Observable.interval(duration.toMinutes(), TimeUnit.MINUTES)

@@ -46,7 +46,7 @@ import org.threeten.bp.temporal.ChronoUnit
 import java.net.UnknownHostException
 
 @RunWith(JUnitParamsRunner::class)
-class SyncIndicatorViewControllerTest {
+class SyncIndicatorLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

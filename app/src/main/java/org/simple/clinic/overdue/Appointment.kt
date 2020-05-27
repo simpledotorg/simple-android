@@ -160,10 +160,7 @@ data class Appointment(
     fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM Appointment WHERE syncStatus = :syncStatus")
-    fun count(syncStatus: SyncStatus): Flowable<Int>
-
-    @Query("SELECT COUNT(uuid) FROM Appointment WHERE syncStatus = :syncStatus")
-    fun countImmediate(syncStatus: SyncStatus): Int
+    fun count(syncStatus: SyncStatus): Int
 
     @Query("""
       UPDATE Appointment

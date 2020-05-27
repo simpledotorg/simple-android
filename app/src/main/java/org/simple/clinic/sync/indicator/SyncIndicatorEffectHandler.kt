@@ -47,7 +47,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
       effect
           .map {
             frequentlySyncingRepositories
-                .map { it.pendingSyncRecordCountImmediate() }
+                .map { it.pendingSyncRecordCount() }
                 .sum()
           }
           .map(::PendingSyncRecordCountFetched)

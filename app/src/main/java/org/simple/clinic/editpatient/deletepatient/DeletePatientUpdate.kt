@@ -13,6 +13,7 @@ class DeletePatientUpdate : Update<DeletePatientModel, DeletePatientEvent, Delet
       is PatientLoaded -> patientNameLoaded(model, event)
       PatientDeleted, PatientMarkedAsDead -> dispatch(ShowHomeScreen)
       is ConfirmPatientDeleteClicked -> dispatch(DeletePatient(model.patientUuid, event.deletedReason))
+      is ConfirmPatientDiedClicked -> dispatch(MarkPatientAsDead(model.patientUuid))
     }
   }
 

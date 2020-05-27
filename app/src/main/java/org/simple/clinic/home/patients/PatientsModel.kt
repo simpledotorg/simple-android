@@ -16,6 +16,9 @@ data class PatientsModel(
     )
   }
 
+  val hasLoadedUser: Boolean
+    get() = user != null
+
   fun userLoaded(user: User): PatientsModel {
     return copy(user = user)
   }

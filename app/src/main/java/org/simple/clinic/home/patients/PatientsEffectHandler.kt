@@ -23,6 +23,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
+    @Named("number_of_patients_registered") private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Assisted private val uiActions: PatientsUiActions
 ) {
 
@@ -45,6 +46,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addAction(ShowUserPendingSmsVerification::class.java, uiActions::showUserStatusAsPendingVerification, schedulers.ui())
         .addAction(HideUserAccountStatus::class.java, uiActions::hideUserAccountStatus, schedulers.ui())
         .addAction(OpenScanBpPassportScreen::class.java, uiActions::openScanSimpleIdCardScreen, schedulers.ui())
+        .addTransformer(LoadNumberOfPatientsRegistered::class.java, loadNumberOfPatientsRegistered())
         .build()
   }
 
@@ -95,6 +97,14 @@ class PatientsEffectHandler @AssistedInject constructor(
                 hasBeenDismissed = hasUserDismissedApprovedStatusPref.get()
             )
           }
+    }
+  }
+
+  private fun loadNumberOfPatientsRegistered(): ObservableTransformer<LoadNumberOfPatientsRegistered, PatientsEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap { numberOfPatientsRegisteredPref.asObservable().subscribeOn(schedulers.io()) }
+          .map(::LoadedNumberOfPatientsRegistered)
     }
   }
 }

@@ -23,3 +23,5 @@ object ShowUserPendingSmsVerification: PatientsEffect()
 object HideUserAccountStatus: PatientsEffect()
 
 object OpenScanBpPassportScreen: PatientsEffect()
+
+object LoadNumberOfPatientsRegistered: PatientsEffect()

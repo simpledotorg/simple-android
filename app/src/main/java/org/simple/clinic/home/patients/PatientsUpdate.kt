@@ -19,6 +19,7 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       is DataForShowingApprovedStatusLoaded -> showUserApprovedStatus(event)
       is UserApprovedStatusDismissed -> dispatch(HideUserAccountStatus, SetDismissedApprovalStatus(dismissedStatus = true))
       is ScanCardIdButtonClicked -> openScanBpPassportScreen(event)
+      is LoadedNumberOfPatientsRegistered -> next(model.numberOfPatientsRegisteredUpdated(event.numberOfPatientsRegistered))
     }
   }
 

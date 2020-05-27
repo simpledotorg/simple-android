@@ -21,7 +21,7 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       is ScanCardIdButtonClicked -> openScanBpPassportScreen(event)
       is LoadedNumberOfPatientsRegistered -> next(model.numberOfPatientsRegisteredUpdated(event.numberOfPatientsRegistered))
       SimpleVideoClicked -> dispatch(OpenTrainingVideo)
-      is RequiredInfoForShowingAppUpdateLoaded -> noChange()
+      is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessage(event)
     }
   }
 
@@ -83,6 +83,20 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
   private fun openScanBpPassportScreen(event: ScanCardIdButtonClicked): Next<PatientsModel, PatientsEffect> {
     return if (event.isPermissionGranted)
       dispatch(OpenScanBpPassportScreen)
+    else
+      noChange()
+  }
+
+  private fun showAppUpdateAvailableMessage(event: RequiredInfoForShowingAppUpdateLoaded): Next<PatientsModel, PatientsEffect> {
+    val appUpdateLastShownOn = event.appUpdateLastShownOn
+    val currentDate = event.currentDate
+
+    val hasADayPassedSinceUpdateLastShown = appUpdateLastShownOn.isBefore(currentDate)
+
+    val shouldShowAppUpdate = event.isAppUpdateAvailable && hasADayPassedSinceUpdateLastShown
+
+    return if (shouldShowAppUpdate)
+      dispatch(ShowAppUpdateAvailable, TouchAppUpdateShownAtTime)
     else
       noChange()
   }

@@ -119,8 +119,8 @@ class FacilityRepository @Inject constructor(
     return facilityDao.count().toObservable()
   }
 
-  override fun pendingSyncRecordCountImmediate(): Int {
-    return facilityDao.countImmediate(SyncStatus.PENDING)
+  override fun pendingSyncRecordCount(): Int {
+    return facilityDao.count(SyncStatus.PENDING)
   }
 
   fun facility(uuid: UUID): Optional<Facility> {

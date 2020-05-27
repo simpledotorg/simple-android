@@ -118,8 +118,8 @@ class BloodSugarRepository @Inject constructor(
   override fun recordCount(): Observable<Int> =
       dao.count().toObservable()
 
-  override fun pendingSyncRecordCountImmediate(): Int {
-    return dao.countImmediate(PENDING)
+  override fun pendingSyncRecordCount(): Int {
+    return dao.count(PENDING)
   }
 
   fun measurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =

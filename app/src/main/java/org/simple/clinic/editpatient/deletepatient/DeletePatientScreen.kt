@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_delete_patient.view.*
 import org.simple.clinic.R
@@ -20,6 +21,7 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.dp
 import javax.inject.Inject
 
@@ -37,10 +39,14 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     screenRouter.key<DeletePatientScreenKey>(this)
   }
 
+  private val deleteReasonsAdapter = ItemAdapter(DeleteReasonItem.DiffCallback())
   private val dialogEvents = PublishSubject.create<DeletePatientEvent>()
   private val events: Observable<DeletePatientEvent> by unsafeLazy {
     Observable
-        .mergeArray(dialogEvents)
+        .mergeArray(
+            dialogEvents,
+            adapterEvents()
+        )
         .compose(ReportAnalyticsEvents())
         .cast<DeletePatientEvent>()
   }
@@ -65,6 +71,7 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
 
     toolbar.setNavigationOnClickListener { screenRouter.pop() }
     with(deleteReasonsRecyclerView) {
+      adapter = deleteReasonsAdapter
       addItemDecoration(DividerItemDecorator(context, marginStart = 56.dp, marginEnd = 16.dp))
     }
   }
@@ -89,6 +96,7 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   override fun showDeleteReasons(patientDeleteReasons: List<PatientDeleteReason>, selectedReason: PatientDeleteReason?) {
+    deleteReasonsAdapter.submitList(DeleteReasonItem.from(patientDeleteReasons, selectedReason))
   }
 
   override fun showConfirmDeleteDialog(patientName: String, deletedReason: DeletedReason) {
@@ -119,5 +127,12 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
 
   override fun showHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.BACKWARD)
+  }
+
+  private fun adapterEvents(): Observable<DeletePatientEvent> {
+    return deleteReasonsAdapter
+        .itemEvents
+        .ofType<DeleteReasonItem.Event.Clicked>()
+        .map { PatientDeleteReasonClicked(it.reason) }
   }
 }

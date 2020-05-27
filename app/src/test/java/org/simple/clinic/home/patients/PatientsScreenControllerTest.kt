@@ -91,7 +91,8 @@ class PatientsScreenControllerTest {
         uiActions = ui,
         utcClock = utcClock,
         approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
-        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference
+        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
+        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference
     )
 
     testFixture = MobiusTestFixture(
@@ -652,6 +653,7 @@ class PatientsScreenControllerTest {
     whenever(refreshCurrentUser.refresh()).doReturn(refreshCurrentUserCompletable)
     whenever(checkAppUpdate.listen()).doReturn(appUpdateStream)
     whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)
+    whenever(numberOfPatientsRegisteredPreference.asObservable()).doReturn(Observable.just(numberOfPatientsRegistered))
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(hasUserDismissedApprovedStatus))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(hasUserDismissedApprovedStatus)
     whenever(approvalStatusApprovedAtPreference.get()).doReturn(approvalStatusApprovedAt)

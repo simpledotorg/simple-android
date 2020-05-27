@@ -7,6 +7,6 @@ import org.simple.clinic.mobius.first
 class PatientsInit : Init<PatientsModel, PatientsEffect> {
 
   override fun init(model: PatientsModel): First<PatientsModel, PatientsEffect> {
-    return first(model, LoadUser, RefreshUserDetails)
+    return first(model, LoadUser, RefreshUserDetails, LoadNumberOfPatientsRegistered)
   }
 }

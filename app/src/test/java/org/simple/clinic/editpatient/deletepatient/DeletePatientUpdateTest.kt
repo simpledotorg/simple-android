@@ -90,4 +90,18 @@ class DeletePatientUpdateTest {
             hasEffects(ShowHomeScreen as DeletePatientEffect)
         ))
   }
+
+  @Test
+  fun `when confirm patient delete is clicked, then delete the patient`() {
+    val model = defaultModel.patientNameLoaded(patientName)
+    val deletedReason = DeletedReason.AccidentalRegistration
+
+    updateSpec
+        .given(model)
+        .whenEvent(ConfirmPatientDeleteClicked(deletedReason))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(DeletePatient(patientUuid, deletedReason) as DeletePatientEffect)
+        ))
+  }
 }

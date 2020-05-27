@@ -104,4 +104,17 @@ class DeletePatientUpdateTest {
             hasEffects(DeletePatient(patientUuid, deletedReason) as DeletePatientEffect)
         ))
   }
+
+  @Test
+  fun `when confirm patient died is clicked, then mark the patient as dead`() {
+    val model = defaultModel.patientNameLoaded(patientName)
+
+    updateSpec
+        .given(model)
+        .whenEvent(ConfirmPatientDiedClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkPatientAsDead(patientUuid) as DeletePatientEffect)
+        ))
+  }
 }

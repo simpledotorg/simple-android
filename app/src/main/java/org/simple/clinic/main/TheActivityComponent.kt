@@ -89,10 +89,10 @@ interface TheActivityComponent :
     RegistrationPhoneScreen.Injector,
     LoginPinScreen.Injector,
     EnterOtpScreen.Injector,
-    DeletePatientScreenInjector {
+    DeletePatientScreenInjector,
+    PatientsScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
-  fun inject(target: PatientsScreen)
   fun inject(target: AppLockScreen)
   fun inject(target: OverdueScreen)
   fun inject(target: PatientEntryScreen)

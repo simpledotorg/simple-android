@@ -1,9 +1,11 @@
 package org.simple.clinic.home.patients
 
+import android.annotation.SuppressLint
 import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.user.UserSession
@@ -48,19 +50,28 @@ class PatientsEffectHandler @AssistedInject constructor(
   private fun refreshCurrentUser(): ObservableTransformer<RefreshUserDetails, PatientsEvent> {
     return ObservableTransformer { effects ->
       effects
-          .switchMap {
-            // TODO (vs) 26/05/20: Make this a blocking call
-            refreshCurrentUser
-                .refresh()
-                .subscribeOn(schedulers.io())
-                .onErrorComplete()
-                .doOnComplete {
-                  // TODO (vs) 26/05/20: Move triggering this to the `Update` class later
-                  approvalStatusUpdatedAtPref.set(Instant.now(utcClock))
-                }
-                .andThen(Observable.empty<PatientsEvent>())
-          }
+          .map { createRefreshUserCompletable() }
+          .doOnNext(::runRefreshUserTask)
+          .flatMap { Observable.empty<PatientsEvent>() }
     }
+  }
+
+  private fun createRefreshUserCompletable(): Completable {
+    return refreshCurrentUser
+        .refresh()
+        .onErrorComplete()
+  }
+
+  @SuppressLint("CheckResult")
+  private fun runRefreshUserTask(refreshUser: Completable) {
+    // The refresh call should not get canceled when the screen is closed
+    // (i.e., this chain gets disposed). So it's not a part of this Rx chain.
+    refreshUser
+        .subscribeOn(schedulers.io())
+        .subscribe {
+          // TODO (vs) 26/05/20: Move triggering this to the `Update` class later
+          approvalStatusUpdatedAtPref.set(Instant.now(utcClock))
+        }
   }
 
   private fun loadUser(): ObservableTransformer<LoadUser, PatientsEvent> {

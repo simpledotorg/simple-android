@@ -39,6 +39,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadInfoForShowingApprovalStatus::class.java, loadRequiredInfoForShowingApprovalStatus())
         .addAction(ShowUserAwaitingApproval::class.java, uiActions::showUserStatusAsWaiting, schedulers.ui())
         .addConsumer(SetDismissedApprovalStatus::class.java, { hasUserDismissedApprovedStatusPref.set(it.dismissedStatus) }, schedulers.io())
+        .addAction(ShowUserWasApproved::class.java, uiActions::showUserStatusAsApproved, schedulers.ui())
         .build()
   }
 

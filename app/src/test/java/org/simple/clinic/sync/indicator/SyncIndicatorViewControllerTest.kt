@@ -210,11 +210,11 @@ class SyncIndicatorViewControllerTest {
   fun `if pending sync are present, then sync indicator should show Sync Pending`() {
     //given
     val patientRepository = mock<PatientRepository>()
-    whenever(patientRepository.pendingSyncRecordCountImmediate()).thenReturn(1)
+    whenever(patientRepository.pendingSyncRecordCount()).thenReturn(Observable.just(1))
     frequentlySyncingRepositories.add(patientRepository)
 
     val appointmentRepository = mock<AppointmentRepository>()
-    whenever(appointmentRepository.pendingSyncRecordCountImmediate()).thenReturn(0)
+    whenever(appointmentRepository.pendingSyncRecordCount()).thenReturn(Observable.just(0))
     frequentlySyncingRepositories.add(appointmentRepository)
 
     //when

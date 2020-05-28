@@ -19,4 +19,4 @@ object InitiateDataSync : SyncIndicatorEffect()
 
 data class ShowDataSyncErrorDialog(val errorType: ResolvedError) : SyncIndicatorEffect()
 
-object FetchPendingSyncRecordCount : SyncIndicatorEffect()
+object FetchPendingSyncRecordsState : SyncIndicatorEffect()

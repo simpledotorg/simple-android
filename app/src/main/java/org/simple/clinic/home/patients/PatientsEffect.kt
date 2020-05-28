@@ -13,3 +13,5 @@ object LoadUser : PatientsEffect()
 object LoadDismissedApprovalStatus : PatientsEffect()
 
 object ShowUserAwaitingApproval : PatientsEffect()
+
+data class SetDismissedApprovalStatus(val dismissedStatus: Boolean) : PatientsEffect()

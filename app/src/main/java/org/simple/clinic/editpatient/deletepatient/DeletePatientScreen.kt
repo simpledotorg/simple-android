@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient.deletepatient
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.appcompat.app.AlertDialog
@@ -62,6 +63,13 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
     )
   }
 
+  private val deleteConfirmationDialog by unsafeLazy {
+    AlertDialog.Builder(context, R.style.Clinic_V2_DialogStyle_Destructive)
+        .setTitle(R.string.deletereason_confirm_title)
+        .setNegativeButton(R.string.deletereason_confirm_negative, null)
+        .create()
+  }
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -82,6 +90,7 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   }
 
   override fun onDetachedFromWindow() {
+    deleteConfirmationDialog.dismiss()
     delegate.stop()
     super.onDetachedFromWindow()
   }
@@ -102,27 +111,25 @@ class DeletePatientScreen(context: Context, attrs: AttributeSet) : ConstraintLay
   override fun showConfirmDeleteDialog(patientName: String, deletedReason: DeletedReason) {
     val message = context.getString(R.string.deletereason_confirm_message, patientName)
 
-    AlertDialog.Builder(context, R.style.Clinic_V2_DialogStyle_Destructive)
-        .setTitle(R.string.deletereason_confirm_title)
-        .setMessage(message)
-        .setPositiveButton(R.string.deletereason_confirm_positive) { _, _ ->
-          dialogEvents.onNext(ConfirmPatientDeleteClicked(deletedReason))
-        }
-        .setNegativeButton(R.string.deletereason_confirm_negative, null)
-        .show()
+    with(deleteConfirmationDialog) {
+      setMessage(message)
+      setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.deletereason_confirm_positive)) { _, _ ->
+        dialogEvents.onNext(ConfirmPatientDeleteClicked(deletedReason))
+      }
+      show()
+    }
   }
 
   override fun showConfirmDiedDialog(patientName: String) {
     val message = context.getString(R.string.deletereason_confirm_message, patientName)
 
-    AlertDialog.Builder(context, R.style.Clinic_V2_DialogStyle_Destructive)
-        .setTitle(R.string.deletereason_confirm_title)
-        .setMessage(message)
-        .setPositiveButton(R.string.deletereason_confirm_positive) { _, _ ->
-          dialogEvents.onNext(ConfirmPatientDiedClicked)
-        }
-        .setNegativeButton(R.string.deletereason_confirm_negative, null)
-        .show()
+    with(deleteConfirmationDialog) {
+      setMessage(message)
+      setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.deletereason_confirm_positive)) { _, _ ->
+        dialogEvents.onNext(ConfirmPatientDiedClicked)
+      }
+      show()
+    }
   }
 
   override fun showHomeScreen() {

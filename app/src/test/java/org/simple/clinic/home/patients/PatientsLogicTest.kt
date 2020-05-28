@@ -52,8 +52,8 @@ class PatientsLogicTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val ui = mock<PatientsUi>()
-  private val uiActions = mock<PatientsUiActions>()
+  private val ui = mock<PatientsTabUi>()
+  private val uiActions = mock<PatientsTabUiActions>()
   private val userSession = mock<UserSession>()
   private val approvalStatusApprovedAtPreference = mock<Preference<Instant>>()
   private val hasUserDismissedApprovedStatusPreference = mock<Preference<Boolean>>()
@@ -75,11 +75,11 @@ class PatientsLogicTest {
   private val userWaitingForApproval = TestData.loggedInUser(uuid = userUuid, loggedInStatus = LOGGED_IN, status = WaitingForApproval)
   private val userPendingVerification = userApprovedForSyncing.copy(loggedInStatus = OTP_REQUESTED)
 
-  private lateinit var testFixture: MobiusTestFixture<PatientsModel, PatientsEvent, PatientsEffect>
+  private lateinit var testFixture: MobiusTestFixture<PatientsTabModel, PatientsTabEvent, PatientsTabEffect>
 
   @Before
   fun setUp() {
-    val uiRenderer = PatientsUiRenderer(ui)
+    val uiRenderer = PatientsTabUiRenderer(ui)
     val patientsEffectHandler = PatientsEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
         refreshCurrentUser = refreshCurrentUser,
@@ -96,9 +96,9 @@ class PatientsLogicTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = PatientsModel.create(),
+        defaultModel = PatientsTabModel.create(),
         init = PatientsInit(),
-        update = PatientsUpdate(),
+        update = PatientsTabUpdate(),
         effectHandler = patientsEffectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

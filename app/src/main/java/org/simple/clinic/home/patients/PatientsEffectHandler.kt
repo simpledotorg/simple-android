@@ -32,17 +32,17 @@ class PatientsEffectHandler @AssistedInject constructor(
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @Named("number_of_patients_registered") private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
-    @Assisted private val uiActions: PatientsUiActions
+    @Assisted private val uiActions: PatientsTabUiActions
 ) {
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(uiActions: PatientsUiActions): PatientsEffectHandler
+    fun create(uiActions: PatientsTabUiActions): PatientsEffectHandler
   }
 
-  fun build(): ObservableTransformer<PatientsEffect, PatientsEvent> {
+  fun build(): ObservableTransformer<PatientsTabEffect, PatientsTabEvent> {
     return RxMobius
-        .subtypeEffectHandler<PatientsEffect, PatientsEvent>()
+        .subtypeEffectHandler<PatientsTabEffect, PatientsTabEvent>()
         .addAction(OpenEnterOtpScreen::class.java, uiActions::openEnterCodeManuallyScreen, schedulers.ui())
         .addAction(OpenPatientSearchScreen::class.java, uiActions::openPatientSearchScreen, schedulers.ui())
         .addTransformer(RefreshUserDetails::class.java, refreshCurrentUser())
@@ -62,12 +62,12 @@ class PatientsEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  private fun refreshCurrentUser(): ObservableTransformer<RefreshUserDetails, PatientsEvent> {
+  private fun refreshCurrentUser(): ObservableTransformer<RefreshUserDetails, PatientsTabEvent> {
     return ObservableTransformer { effects ->
       effects
           .map { createRefreshUserCompletable() }
           .doOnNext(::runRefreshUserTask)
-          .flatMap { Observable.empty<PatientsEvent>() }
+          .flatMap { Observable.empty<PatientsTabEvent>() }
     }
   }
 
@@ -89,7 +89,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         }
   }
 
-  private fun loadUser(): ObservableTransformer<LoadUser, PatientsEvent> {
+  private fun loadUser(): ObservableTransformer<LoadUser, PatientsTabEvent> {
     return ObservableTransformer { effects ->
       effects
           .switchMap { userSession.loggedInUser() }
@@ -98,7 +98,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadRequiredInfoForShowingApprovalStatus(): ObservableTransformer<LoadInfoForShowingApprovalStatus, PatientsEvent> {
+  private fun loadRequiredInfoForShowingApprovalStatus(): ObservableTransformer<LoadInfoForShowingApprovalStatus, PatientsTabEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
@@ -112,7 +112,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadNumberOfPatientsRegistered(): ObservableTransformer<LoadNumberOfPatientsRegistered, PatientsEvent> {
+  private fun loadNumberOfPatientsRegistered(): ObservableTransformer<LoadNumberOfPatientsRegistered, PatientsTabEvent> {
     return ObservableTransformer { effects ->
       effects
           .switchMap { numberOfPatientsRegisteredPref.asObservable().subscribeOn(schedulers.io()) }
@@ -120,7 +120,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadInfoForShowingAppUpdate(): ObservableTransformer<LoadInfoForShowingAppUpdateMessage, PatientsEvent> {
+  private fun loadInfoForShowingAppUpdate(): ObservableTransformer<LoadInfoForShowingAppUpdateMessage, PatientsTabEvent> {
     return ObservableTransformer { effects ->
       effects
           .switchMap { checkAppUpdate.listen() }

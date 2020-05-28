@@ -5,14 +5,14 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.user.User
 
 @Parcelize
-data class PatientsModel(
+data class PatientsTabModel(
     val user: User?,
     val numberOfPatientsRegistered: Int?
 ) : Parcelable {
 
   companion object {
 
-    fun create(): PatientsModel = PatientsModel(
+    fun create(): PatientsTabModel = PatientsTabModel(
         user = null,
         numberOfPatientsRegistered = null
     )
@@ -24,11 +24,11 @@ data class PatientsModel(
   val hasLoadedNumberOfPatientsRegistered: Boolean
     get() = numberOfPatientsRegistered != null
 
-  fun userLoaded(user: User): PatientsModel {
+  fun userLoaded(user: User): PatientsTabModel {
     return copy(user = user)
   }
 
-  fun numberOfPatientsRegisteredUpdated(numberOfPatientsRegistered: Int): PatientsModel {
+  fun numberOfPatientsRegisteredUpdated(numberOfPatientsRegistered: Int): PatientsTabModel {
     return copy(numberOfPatientsRegistered = numberOfPatientsRegistered)
   }
 }

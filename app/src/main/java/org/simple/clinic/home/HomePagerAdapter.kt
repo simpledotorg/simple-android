@@ -9,7 +9,7 @@ import androidx.annotation.StringRes
 import androidx.viewpager.widget.PagerAdapter
 import org.simple.clinic.R
 import org.simple.clinic.home.overdue.OverdueScreenKey
-import org.simple.clinic.home.patients.PatientsScreenKey
+import org.simple.clinic.home.patients.PatientsTabScreenKey
 import org.simple.clinic.home.report.ReportsScreenKey
 
 class HomePagerAdapter(private val context: Context) : PagerAdapter() {
@@ -36,7 +36,7 @@ class HomePagerAdapter(private val context: Context) : PagerAdapter() {
 
 enum class HomeTab(@LayoutRes val key: Int, @StringRes val title: Int) {
 
-  PATIENTS(PatientsScreenKey().layoutRes(), R.string.tab_patient),
+  PATIENTS(PatientsTabScreenKey().layoutRes(), R.string.tab_patient),
 
   OVERDUE(OverdueScreenKey().layoutRes(), R.string.tab_overdue),
 

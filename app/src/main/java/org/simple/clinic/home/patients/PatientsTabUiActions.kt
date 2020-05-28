@@ -1,6 +1,6 @@
 package org.simple.clinic.home.patients
 
-interface PatientsUiActions {
+interface PatientsTabUiActions {
   fun openEnterCodeManuallyScreen()
   fun openPatientSearchScreen()
   fun showUserStatusAsWaiting()

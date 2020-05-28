@@ -1,6 +1,6 @@
 package org.simple.clinic.home.patients
 
-interface PatientsUi {
+interface PatientsTabUi {
   fun hideSyncIndicator()
   fun showSyncIndicator()
   fun showSimpleVideo()

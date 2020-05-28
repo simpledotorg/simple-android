@@ -72,6 +72,9 @@ data class User(
   val isWaitingForApproval: Boolean
     get() = status == UserStatus.WaitingForApproval
 
+  val isApprovedForSyncing: Boolean
+    get() = status == UserStatus.ApprovedForSyncing
+
   fun withStatus(status: UserStatus, clock: UtcClock): User {
     return copy(status = status, updatedAt = Instant.now(clock))
   }

@@ -85,7 +85,7 @@ class PatientsScreenController @Inject constructor(
                     val wasApprovedInLast24Hours = twentyFourHoursAgo < approvalStatusUpdatedAtPref.get()
 
                     if (userDismissedStatus.not() && wasApprovedInLast24Hours) {
-                      { ui: Ui -> ui.showUserStatusAsApproved() }
+                      { ui: Ui ->  }
                     } else {
                       { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
                     }

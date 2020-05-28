@@ -10,7 +10,7 @@ object RefreshUserDetails : PatientsEffect()
 
 object LoadUser : PatientsEffect()
 
-object LoadDismissedApprovalStatus : PatientsEffect()
+object LoadInfoForShowingApprovalStatus : PatientsEffect()
 
 object ShowUserAwaitingApproval : PatientsEffect()
 

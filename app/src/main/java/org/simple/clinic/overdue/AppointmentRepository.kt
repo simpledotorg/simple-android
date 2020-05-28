@@ -199,8 +199,8 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  override fun pendingSyncRecordCount(): Int {
-    return appointmentDao.count(SyncStatus.PENDING)
+  override fun pendingSyncRecordCountImmediate(): Int {
+    return appointmentDao.countImmediate(SyncStatus.PENDING)
   }
 
   fun latestOverdueAppointmentForPatient(

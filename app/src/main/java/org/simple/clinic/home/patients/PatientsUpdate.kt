@@ -28,9 +28,17 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
 
     val effects = mutableSetOf<PatientsEffect>()
 
-    if (previousUser == null && newUser.isWaitingForApproval) {
-      // User is waiting for approval (new registration or login on a new device before being approved).
-      effects.add(ShowUserAwaitingApproval)
+    when {
+      previousUser == null && newUser.isWaitingForApproval -> {
+        // User is waiting for approval (new registration or login on a new device before being approved).
+        effects.add(ShowUserAwaitingApproval)
+      }
+
+      previousUser != null && previousUser.isApprovedForSyncing && newUser.isWaitingForApproval -> {
+        // User was approved, but decided to proceed with the Reset PIN flow.
+        effects.add(ShowUserAwaitingApproval)
+        effects.add(SetDismissedApprovalStatus(false))
+      }
     }
 
     return next(updatedModel, effects)

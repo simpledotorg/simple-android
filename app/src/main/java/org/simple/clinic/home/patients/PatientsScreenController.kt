@@ -1,15 +1,12 @@
 package org.simple.clinic.home.patients
 
 import com.f2prateek.rx.preferences2.Preference
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
-import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.user.User
@@ -55,7 +52,6 @@ class PatientsScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        refreshApprovalStatusOnStart(replayedEvents),
         displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents),
         openScanSimpleIdScreen(replayedEvents),
@@ -67,31 +63,6 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun screenCreated(events: Observable<UiEvent>): Observable<ScreenCreated> = events.ofType()
-
-  private fun refreshApprovalStatusOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenResumes = events.ofType<Resumed>()
-
-    return Observable.merge(screenCreated(events), screenResumes)
-        // Depending upon the entry point of Patients screen, both screen-create
-        // and screen-resume events may or may not happen at the same time.
-        // So duplicate triggers are dropped by restricting flatMap's
-        // concurrency to 1.
-        .toFlowable(BackpressureStrategy.LATEST)
-        .flatMapMaybe({
-          userSession.loggedInUser()
-              .firstOrError()
-              .filter { (user) -> user != null }
-              .doOnSuccess { (user) ->
-                val userStatus = user?.status
-                // Resetting this flag here to show the approved status later
-                if (userStatus != ApprovedForSyncing && hasUserDismissedApprovedStatusPref.get()) {
-                  hasUserDismissedApprovedStatusPref.set(false)
-                }
-              }
-              .flatMap { Maybe.empty<UiChange>() }
-        }, false, 1)
-        .toObservable()
-  }
 
   private fun displayUserAccountStatusNotification(events: Observable<UiEvent>): Observable<UiChange> {
     return screenCreated(events)

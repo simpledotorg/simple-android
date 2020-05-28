@@ -10,12 +10,12 @@
 - Migrated `ScheduleAppointmentSheet` to Mobius
 - Fix PR description CI when using markdown syntax
 - Add `DeletedReason` for `Patient`
-- [In Progress: 27 May 2020] Migrate `PatientsScreen` to Mobius
 - Improved analytics around sync events
 - Updated translations: `bn_BD`
 - Tighten Code Climate checks
 - Add support for Android Studio 4.0
 - Add support for building Android App Bundles (AABs)
+- Migrate `PatientsScreen` to Mobius
 
 ### Fixes
 - Fix camera crash when QR scanner view is paused/closed

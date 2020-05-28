@@ -509,11 +509,6 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
-  override fun pendingSyncRecordCountImmediate(): Int {
-    return database.patientDao()
-        .patientCountImmediate(PENDING)
-  }
-
 
   fun addIdentifierToPatient(
       patientUuid: UUID,

@@ -33,15 +33,15 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
       is IncrementTimerTick -> incrementTimer(model, event)
       is DataSyncErrorReceived -> handleDataSyncErrors(event.errorType)
       SyncIndicatorViewClicked -> syncIndicatorClicked(model.lastSyncedState)
-      is PendingSyncRecordCountFetched -> markStatusAsPending(event, model)
+      is PendingSyncRecordsStateFetched -> markStatusAsPending(event, model)
     }
   }
 
   private fun markStatusAsPending(
-      event: PendingSyncRecordCountFetched,
+      event: PendingSyncRecordsStateFetched,
       model: SyncIndicatorModel
   ): Next<SyncIndicatorModel, SyncIndicatorEffect> {
-    return if (event.syncPendingRecordCount > 0) {
+    return if (event.isSyncPending) {
       next(model.syncIndicatorStateChanged(SyncPending))
     } else {
       noChange()

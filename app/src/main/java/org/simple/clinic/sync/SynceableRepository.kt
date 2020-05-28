@@ -24,7 +24,6 @@ interface SynceableRepository<T, P> {
 
   fun recordCount(): Observable<Int>
 
-  @Deprecated("Use pendingSyncRecordCountImmediate instead")
   fun pendingSyncRecordCount(): Observable<Int>
 
   fun pendingSyncRecordCountImmediate(): Int

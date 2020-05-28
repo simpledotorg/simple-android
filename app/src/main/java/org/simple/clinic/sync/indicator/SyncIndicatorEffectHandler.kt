@@ -6,6 +6,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.combineLatest
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncGroup
@@ -38,19 +39,22 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
           .addTransformer(FetchDataForSyncIndicatorState::class.java, fetchDataForSyncIndicatorState())
           .addTransformer(StartSyncedStateTimer::class.java, startTimer())
           .addTransformer(InitiateDataSync::class.java, startDataSync())
-          .addTransformer(FetchPendingSyncRecordCount::class.java, fetchPendingSyncCount())
+          .addTransformer(FetchPendingSyncRecordsState::class.java, fetchPendingSync())
           .addConsumer(ShowDataSyncErrorDialog::class.java, { uiActions.showErrorDialog(it.errorType) }, schedulersProvider.ui())
           .build()
 
-  private fun fetchPendingSyncCount(): ObservableTransformer<FetchPendingSyncRecordCount, SyncIndicatorEvent> {
+  private fun fetchPendingSync(): ObservableTransformer<FetchPendingSyncRecordsState, SyncIndicatorEvent> {
     return ObservableTransformer { effect ->
       effect
-          .map {
-            frequentlySyncingRepositories
-                .map { it.pendingSyncRecordCountImmediate() }
-                .sum()
+          .flatMap {
+            val recordCounts = frequentlySyncingRepositories
+                .map { it.pendingSyncRecordCount() }
+
+            recordCounts
+                .combineLatest { counts -> counts.any { it > 0 } }
+                .filter { isSyncPending -> isSyncPending }
+                .map(::PendingSyncRecordsStateFetched)
           }
-          .map(::PendingSyncRecordCountFetched)
     }
   }
 

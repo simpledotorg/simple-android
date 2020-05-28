@@ -108,7 +108,6 @@ class PatientsScreenController @Inject constructor(
           Observables.combineLatest(user, hasUserDismissedApprovedStatusPref.asObservable())
               .map { (user, userDismissedStatus) ->
                 when (user.status) {
-                  WaitingForApproval -> { ui: Ui -> ui.showUserStatusAsWaiting() }
                   DisapprovedForSyncing -> { _: Ui -> /* Nothing to do here since we block the user from accessing the app */ }
                   ApprovedForSyncing -> {
                     val twentyFourHoursAgo = Instant.now(utcClock).minus(24, ChronoUnit.HOURS)
@@ -120,7 +119,7 @@ class PatientsScreenController @Inject constructor(
                       { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
                     }
                   }
-                  is Unknown -> { _ -> }
+                  is Unknown, WaitingForApproval -> { _ -> }
                 }
               }
         }

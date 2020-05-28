@@ -37,6 +37,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(RefreshUserDetails::class.java, refreshCurrentUser())
         .addTransformer(LoadUser::class.java, loadUser())
         .addTransformer(LoadDismissedApprovalStatus::class.java, loadDismissedApprovalStatus())
+        .addAction(ShowUserAwaitingApproval::class.java, uiActions::showUserStatusAsWaiting, schedulers.ui())
         .build()
   }
 

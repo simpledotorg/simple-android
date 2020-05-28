@@ -2,12 +2,14 @@ package org.simple.clinic.home.patients
 
 sealed class PatientsEffect
 
-object OpenEnterOtpScreen: PatientsEffect()
+object OpenEnterOtpScreen : PatientsEffect()
 
-object OpenPatientSearchScreen: PatientsEffect()
+object OpenPatientSearchScreen : PatientsEffect()
 
-object RefreshUserDetails: PatientsEffect()
+object RefreshUserDetails : PatientsEffect()
 
-object LoadUser: PatientsEffect()
+object LoadUser : PatientsEffect()
 
-object LoadDismissedApprovalStatus: PatientsEffect()
+object LoadDismissedApprovalStatus : PatientsEffect()
+
+object ShowUserAwaitingApproval : PatientsEffect()

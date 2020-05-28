@@ -1,7 +1,6 @@
 package org.simple.clinic.home.patients
 
 interface PatientsUi: PatientsUiActions {
-  fun showUserStatusAsWaiting()
   fun showUserStatusAsApproved()
   fun showUserStatusAsPendingVerification()
   fun hideUserAccountStatus()

@@ -63,8 +63,8 @@ class ProtocolRepository @Inject constructor(
     return protocolDao.count().toObservable()
   }
 
-  override fun pendingSyncRecordCount(): Int {
-    return protocolDao.count(SyncStatus.PENDING)
+  override fun pendingSyncRecordCountImmediate(): Int {
+    return protocolDao.countImmediate(SyncStatus.PENDING)
   }
 
   private fun payloadToProtocolAndDrugs(payload: ProtocolPayload): ProtocolAndProtocolDrugs {

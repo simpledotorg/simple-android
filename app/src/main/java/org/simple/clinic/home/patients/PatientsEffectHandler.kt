@@ -36,7 +36,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addAction(OpenPatientSearchScreen::class.java, uiActions::openPatientSearchScreen, schedulers.ui())
         .addTransformer(RefreshUserDetails::class.java, refreshCurrentUser())
         .addTransformer(LoadUser::class.java, loadUser())
-        .addTransformer(LoadDismissedApprovalStatus::class.java, loadDismissedApprovalStatus())
+        .addTransformer(LoadInfoForShowingApprovalStatus::class.java, loadRequiredInfoForShowingApprovalStatus())
         .addAction(ShowUserAwaitingApproval::class.java, uiActions::showUserStatusAsWaiting, schedulers.ui())
         .addConsumer(SetDismissedApprovalStatus::class.java, { hasUserDismissedApprovedStatusPref.set(it.dismissedStatus) }, schedulers.io())
         .build()
@@ -69,12 +69,17 @@ class PatientsEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadDismissedApprovalStatus(): ObservableTransformer<LoadDismissedApprovalStatus, PatientsEvent> {
+  private fun loadRequiredInfoForShowingApprovalStatus(): ObservableTransformer<LoadInfoForShowingApprovalStatus, PatientsEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { hasUserDismissedApprovedStatusPref.get() }
-          .map(::DismissedApprovalStatusLoaded)
+          .map {
+            DataForShowingApprovedStatusLoaded(
+                currentTime = Instant.now(utcClock),
+                approvalStatusUpdatedAt = approvalStatusUpdatedAtPref.get(),
+                hasBeenDismissed = hasUserDismissedApprovedStatusPref.get()
+            )
+          }
     }
   }
 }

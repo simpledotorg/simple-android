@@ -5,6 +5,7 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
+import org.threeten.bp.Duration
 
 class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
 
@@ -14,10 +15,11 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       NewPatientClicked -> dispatch(OpenPatientSearchScreen)
       is UserDetailsLoaded -> showAccountNotifications(model, event)
       is ActivityResumed -> dispatch(RefreshUserDetails)
-      is DataForShowingApprovedStatusLoaded -> noChange()
+      is DataForShowingApprovedStatusLoaded -> showUserApprovedStatus(event)
     }
   }
 
+  // TODO (vs) 26/05/20: This should actually be rendered and not be as effects. Move later.
   private fun showAccountNotifications(
       model: PatientsModel,
       event: UserDetailsLoaded
@@ -39,8 +41,25 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
         effects.add(ShowUserAwaitingApproval)
         effects.add(SetDismissedApprovalStatus(false))
       }
+
+      newUser.isApprovedForSyncing && (previousUser == null || previousUser.isWaitingForApproval) -> {
+        // User was just approved
+        effects.add(LoadInfoForShowingApprovalStatus)
+      }
     }
 
     return next(updatedModel, effects)
+  }
+
+  private fun showUserApprovedStatus(
+      event: DataForShowingApprovedStatusLoaded
+  ): Next<PatientsModel, PatientsEffect> {
+    val twentyFourHoursAgo = event.currentTime.minus(Duration.ofHours(24))
+    val wasApprovedInLastTwentyFourHours = event.approvalStatusUpdatedAt.isAfter(twentyFourHoursAgo)
+
+    return if (!event.hasBeenDismissed && wasApprovedInLastTwentyFourHours)
+      dispatch(ShowUserWasApproved as PatientsEffect)
+    else
+      noChange()
   }
 }

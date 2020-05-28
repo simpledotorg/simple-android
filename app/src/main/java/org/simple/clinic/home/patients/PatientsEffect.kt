@@ -15,3 +15,5 @@ object LoadInfoForShowingApprovalStatus : PatientsEffect()
 object ShowUserAwaitingApproval : PatientsEffect()
 
 data class SetDismissedApprovalStatus(val dismissedStatus: Boolean) : PatientsEffect()
+
+object ShowUserWasApproved: PatientsEffect()

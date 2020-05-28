@@ -47,7 +47,7 @@ data class MedicalHistory(
     val updatedAt: Instant,
 
     val deletedAt: Instant?
-): Parcelable {
+) : Parcelable {
   val diagnosisRecorded: Boolean
     get() = diagnosedWithHypertension != Unanswered && diagnosedWithDiabetes != Unanswered
 
@@ -88,9 +88,6 @@ data class MedicalHistory(
 
     @Query("SELECT COUNT(uuid) FROM MedicalHistory WHERE syncStatus = :syncStatus")
     fun count(syncStatus: SyncStatus): Flowable<Int>
-
-    @Query("SELECT COUNT(uuid) FROM MedicalHistory WHERE syncStatus = :syncStatus")
-    fun countImmediate(syncStatus: SyncStatus): Int
 
     @Query("DELETE FROM MedicalHistory")
     fun clear()

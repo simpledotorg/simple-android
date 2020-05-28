@@ -151,7 +151,4 @@ class PrescriptionRepository @Inject constructor(
         .toObservable()
   }
 
-  override fun pendingSyncRecordCountImmediate(): Int {
-    return dao.countImmediate(SyncStatus.PENDING)
-  }
 }

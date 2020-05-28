@@ -23,4 +23,4 @@ object SyncIndicatorViewClicked : SyncIndicatorEvent() {
   override val analyticsName = "Sync Indicator: View Clicked"
 }
 
-data class PendingSyncRecordCountFetched(val syncPendingRecordCount: Int) : SyncIndicatorEvent()
+data class PendingSyncRecordsStateFetched(val isSyncPending: Boolean) : SyncIndicatorEvent()

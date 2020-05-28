@@ -31,8 +31,7 @@ import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.help.HelpScreen
 import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsModule
-import org.simple.clinic.home.patients.PatientsScreen
-import org.simple.clinic.home.patients.PatientsScreenKey
+import org.simple.clinic.home.patients.PatientsTabScreen
 import org.simple.clinic.home.report.ReportsScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
@@ -90,7 +89,7 @@ interface TheActivityComponent :
     LoginPinScreen.Injector,
     EnterOtpScreen.Injector,
     DeletePatientScreenInjector,
-    PatientsScreen.Injector {
+    PatientsTabScreen.Injector {
   fun inject(target: TheActivity)
   fun inject(target: HomeScreen)
   fun inject(target: AppLockScreen)
@@ -117,7 +116,6 @@ interface TheActivityComponent :
   fun inject(target: QrCodeScannerView_Old)
   fun inject(target: QrCodeScannerView)
   fun inject(target: RecentPatientsView)
-  fun inject(target: PatientsScreenKey)
   fun inject(target: SyncIndicatorView)
   fun inject(target: AddPhoneNumberDialog)
   fun inject(target: HelpScreen)

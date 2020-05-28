@@ -8,9 +8,9 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import org.threeten.bp.Duration
 
-class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
+class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> {
 
-  override fun update(model: PatientsModel, event: PatientsEvent): Next<PatientsModel, PatientsEffect> {
+  override fun update(model: PatientsTabModel, event: PatientsTabEvent): Next<PatientsTabModel, PatientsTabEffect> {
     return when (event) {
       is PatientsEnterCodeManuallyClicked -> dispatch(OpenEnterOtpScreen)
       NewPatientClicked -> dispatch(OpenPatientSearchScreen)
@@ -27,14 +27,14 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
 
   // TODO (vs) 26/05/20: This should actually be rendered and not be as effects. Move later.
   private fun showAccountNotifications(
-      model: PatientsModel,
+      model: PatientsTabModel,
       event: UserDetailsLoaded
-  ): Next<PatientsModel, PatientsEffect> {
+  ): Next<PatientsTabModel, PatientsTabEffect> {
     val previousUser = model.user
     val newUser = event.user
     val updatedModel = model.userLoaded(newUser)
 
-    val effects = mutableSetOf<PatientsEffect>()
+    val effects = mutableSetOf<PatientsTabEffect>()
 
     when {
       previousUser == null && newUser.isPendingSmsVerification -> {
@@ -60,7 +60,7 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
 
   private fun clearDismissedApprovalStatusIfNeeded(
       user: User?,
-      effects: MutableSet<PatientsEffect>
+      effects: MutableSet<PatientsTabEffect>
   ) {
     if (user != null && user.isApprovedForSyncing) {
       // User was approved, but decided to proceed with the Reset PIN flow.
@@ -70,24 +70,24 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
 
   private fun showUserApprovedStatus(
       event: DataForShowingApprovedStatusLoaded
-  ): Next<PatientsModel, PatientsEffect> {
+  ): Next<PatientsTabModel, PatientsTabEffect> {
     val twentyFourHoursAgo = event.currentTime.minus(Duration.ofHours(24))
     val wasApprovedInLastTwentyFourHours = event.approvalStatusUpdatedAt.isAfter(twentyFourHoursAgo)
 
     return if (!event.hasBeenDismissed && wasApprovedInLastTwentyFourHours)
-      dispatch(ShowUserWasApproved as PatientsEffect)
+      dispatch(ShowUserWasApproved as PatientsTabEffect)
     else
       dispatch(HideUserAccountStatus)
   }
 
-  private fun openScanBpPassportScreen(event: ScanCardIdButtonClicked): Next<PatientsModel, PatientsEffect> {
+  private fun openScanBpPassportScreen(event: ScanCardIdButtonClicked): Next<PatientsTabModel, PatientsTabEffect> {
     return if (event.isPermissionGranted)
       dispatch(OpenScanBpPassportScreen)
     else
       noChange()
   }
 
-  private fun showAppUpdateAvailableMessage(event: RequiredInfoForShowingAppUpdateLoaded): Next<PatientsModel, PatientsEffect> {
+  private fun showAppUpdateAvailableMessage(event: RequiredInfoForShowingAppUpdateLoaded): Next<PatientsTabModel, PatientsTabEffect> {
     val appUpdateLastShownOn = event.appUpdateLastShownOn
     val currentDate = event.currentDate
 

@@ -40,7 +40,7 @@ import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsUi, PatientsUiActions {
+class PatientsTabScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), PatientsTabUi, PatientsTabUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -83,13 +83,13 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
         .compose(ReportAnalyticsEvents())
   }
 
-  private val delegate: MobiusDelegate<PatientsModel, PatientsEvent, PatientsEffect> by unsafeLazy {
-    val uiRenderer = PatientsUiRenderer(this)
+  private val delegate: MobiusDelegate<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> by unsafeLazy {
+    val uiRenderer = PatientsTabUiRenderer(this)
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = PatientsModel.create(),
-        update = PatientsUpdate(),
+        defaultModel = PatientsTabModel.create(),
+        update = PatientsTabUpdate(),
         init = PatientsInit(),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = uiRenderer::render
@@ -255,6 +255,6 @@ class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   interface Injector {
-    fun inject(target: PatientsScreen)
+    fun inject(target: PatientsTabScreen)
   }
 }

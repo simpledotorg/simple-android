@@ -10,27 +10,27 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 
-sealed class PatientsEvent : UiEvent
+sealed class PatientsTabEvent : UiEvent
 
-class PatientsEnterCodeManuallyClicked : PatientsEvent() {
+class PatientsEnterCodeManuallyClicked : PatientsTabEvent() {
   override val analyticsName = "Patients:Enter Code Manually Clicked"
 }
 
-object NewPatientClicked : PatientsEvent() {
+object NewPatientClicked : PatientsTabEvent() {
   override val analyticsName = "Patients:Search For Patient Clicked"
 }
 
-data class UserDetailsLoaded(val user: User) : PatientsEvent()
+data class UserDetailsLoaded(val user: User) : PatientsTabEvent()
 
-object ActivityResumed : PatientsEvent()
+object ActivityResumed : PatientsTabEvent()
 
 data class DataForShowingApprovedStatusLoaded(
     val currentTime: Instant,
     val approvalStatusUpdatedAt: Instant,
     val hasBeenDismissed: Boolean
-) : PatientsEvent()
+) : PatientsTabEvent()
 
-class UserApprovedStatusDismissed : PatientsEvent() {
+class UserApprovedStatusDismissed : PatientsTabEvent() {
   override val analyticsName = "Patients:Dismissed User Approved Status"
 }
 
@@ -38,14 +38,14 @@ data class ScanCardIdButtonClicked(
     override var permission: Optional<RuntimePermissionResult> = None,
     override val permissionString: String = Manifest.permission.CAMERA,
     override val permissionRequestCode: Int = 1
-) : PatientsEvent(), RequiresPermission {
+) : PatientsTabEvent(), RequiresPermission {
 
   override val analyticsName: String = "Patients:Scan Simple Card Clicked:"
 }
 
-data class LoadedNumberOfPatientsRegistered(val numberOfPatientsRegistered: Int): PatientsEvent()
+data class LoadedNumberOfPatientsRegistered(val numberOfPatientsRegistered: Int): PatientsTabEvent()
 
-object SimpleVideoClicked : PatientsEvent() {
+object SimpleVideoClicked : PatientsTabEvent() {
   override val analyticsName = "Patients:Simple Video Clicked"
 }
 
@@ -53,5 +53,5 @@ data class RequiredInfoForShowingAppUpdateLoaded(
     val isAppUpdateAvailable: Boolean,
     val appUpdateLastShownOn: LocalDate,
     val currentDate: LocalDate
-): PatientsEvent()
+): PatientsTabEvent()
 

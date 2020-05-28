@@ -14,7 +14,7 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       NewPatientClicked -> dispatch(OpenPatientSearchScreen)
       is UserDetailsLoaded -> showAccountNotifications(model, event)
       is ActivityResumed -> dispatch(RefreshUserDetails)
-      is DismissedApprovalStatusLoaded -> noChange()
+      is DataForShowingApprovedStatusLoaded -> noChange()
     }
   }
 

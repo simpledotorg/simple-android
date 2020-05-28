@@ -2,6 +2,7 @@ package org.simple.clinic.home.patients
 
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 
 sealed class PatientsEvent : UiEvent
 
@@ -17,4 +18,8 @@ data class UserDetailsLoaded(val user: User): PatientsEvent()
 
 object ActivityResumed: PatientsEvent()
 
-data class DismissedApprovalStatusLoaded(val hasBeenDismissed: Boolean): PatientsEvent()
+data class DataForShowingApprovedStatusLoaded(
+    val currentTime: Instant,
+    val approvalStatusUpdatedAt: Instant,
+    val hasBeenDismissed: Boolean
+): PatientsEvent()

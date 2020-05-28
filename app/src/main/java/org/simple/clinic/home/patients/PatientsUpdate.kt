@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.user.User
 import org.threeten.bp.Duration
 
 class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
@@ -40,12 +41,7 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
       newUser.isWaitingForApproval -> {
         // User is waiting for approval (new registration or login on a new device before being approved).
         effects.add(ShowUserAwaitingApproval)
-      }
-
-      previousUser != null && previousUser.isApprovedForSyncing && newUser.isWaitingForApproval -> {
-        // User was approved, but decided to proceed with the Reset PIN flow.
-        effects.add(ShowUserAwaitingApproval)
-        effects.add(SetDismissedApprovalStatus(dismissedStatus = false))
+        clearDismissedApprovalStatusIfNeeded(previousUser, effects)
       }
 
       newUser.isApprovedForSyncing && (previousUser == null || previousUser.isWaitingForApproval) -> {
@@ -57,6 +53,16 @@ class PatientsUpdate : Update<PatientsModel, PatientsEvent, PatientsEffect> {
     }
 
     return next(updatedModel, effects)
+  }
+
+  private fun clearDismissedApprovalStatusIfNeeded(
+      user: User?,
+      effects: MutableSet<PatientsEffect>
+  ) {
+    if (user != null && user.isApprovedForSyncing) {
+      // User was approved, but decided to proceed with the Reset PIN flow.
+      effects.add(SetDismissedApprovalStatus(dismissedStatus = false))
+    }
   }
 
   private fun showUserApprovedStatus(

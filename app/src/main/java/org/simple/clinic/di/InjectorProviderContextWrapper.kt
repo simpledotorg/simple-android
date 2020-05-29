@@ -1,5 +1,6 @@
 package org.simple.clinic.di
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
 
@@ -32,6 +33,7 @@ class InjectorProviderContextWrapper(
   }
 }
 
+@SuppressLint("WrongConstant")
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T> Context.injector(): T {
   val injectorProvider = getSystemService(INJECTOR_SERVICE_KEY) as InjectorProviderContextWrapper

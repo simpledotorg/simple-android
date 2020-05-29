@@ -64,25 +64,6 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".home.overdue.appointmentreminder.AppointmentReminderSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
-      android:name=".home.overdue.removepatient.RemoveAppointmentScreen"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
-      android:name=".drugs.selection.dosage.DosagePickerSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
-      android:name=".home.overdue.phonemask.PhoneMaskBottomSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".scheduleappointment.facilityselection.FacilitySelectionActivity"
       android:windowSoftInputMode="adjustResize" />
 

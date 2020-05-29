@@ -14,6 +14,7 @@
 - Improved analytics around sync events
 - Updated translations: `bn_BD`
 - Tighten Code Climate checks
+- Migrated `SyncIndicatorController` to Mobius
 
 ### Fixes
 - Fix camera crash when QR scanner view is paused/closed

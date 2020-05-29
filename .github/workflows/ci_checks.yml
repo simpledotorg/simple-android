@@ -69,25 +69,6 @@ jobs:
           api-level: 29
           script: ./gradlew connectedQaDebugAndroidTest
 
-  qa_build_apk:
-    runs-on: [ubuntu-latest]
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-
-      - name: QA Debug Build
-        run: ./gradlew assembleQaDebug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v1
-        with:
-          name: app_qa_debug
-          path: app/build/outputs/apk/qa/debug/app-qa-debug.apk
-
   verify_release_bundles:
     runs-on: [ubuntu-latest]
     strategy:
@@ -182,7 +163,7 @@ jobs:
 
   qa_purge_env:
     runs-on: [ubuntu-latest]
-    needs: [qa_lint, qa_unit_tests, mobius_migration_tests, qa_android_tests, qa_build_apk]
+    needs: [qa_lint, qa_unit_tests, mobius_migration_tests, qa_android_tests]
     steps:
       - name: Purge QA server
         run: |

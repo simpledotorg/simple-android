@@ -31,8 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_16"
         android:layout_marginBottom="@dimen/spacing_4"
-        android:drawableStart="@drawable/ic_patient_female"
         android:drawablePadding="@dimen/spacing_16"
+        app:drawableStartCompat="@drawable/ic_patient_female"
         tools:text="Anisha Acharya" />
 
       <TextView

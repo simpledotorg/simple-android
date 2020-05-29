@@ -21,9 +21,6 @@
   <issue id="ParcelCreator" severity="informational" />
   <issue id="GradleDependency" severity="informational" />
 
-  <!-- TODO (SM): Remove these rules once all the new lint issues are fixed -->
-  <issue id="UseCompatTextViewDrawableXml" severity="informational" />
-
   <!-- Required for Sentry  -->
   <issue id="InvalidPackage" severity="informational" />
 

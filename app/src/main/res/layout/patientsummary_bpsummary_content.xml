@@ -9,7 +9,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:drawableStart="@drawable/ic_add_circle_blue1_24dp"
+    app:drawableStartCompat="@drawable/ic_add_circle_blue1_24dp"
     android:drawablePadding="@dimen/spacing_8"
     android:gravity="center_vertical"
     android:paddingStart="@dimen/spacing_8"
@@ -28,7 +28,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:drawableEnd="@drawable/ic_chevron_right_blue1_24dp"
     android:gravity="center_vertical"
     android:paddingStart="@dimen/spacing_16"
     android:paddingTop="@dimen/spacing_10"
@@ -41,7 +40,8 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="1"
     app:layout_constraintStart_toEndOf="@id/addNewBP"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent"
+    app:drawableEndCompat="@drawable/ic_chevron_right_blue1_24dp" />
 
   <View
     android:id="@+id/divider"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
@@ -11,10 +12,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/spacing_16"
-    android:paddingEnd="@dimen/spacing_16"
     android:paddingStart="@dimen/spacing_16"
-    android:paddingTop="@dimen/spacing_16">
+    android:paddingTop="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_16"
+    android:paddingBottom="@dimen/spacing_16">
 
     <ImageView
       android:id="@+id/genderLabel"
@@ -44,8 +45,8 @@
         style="@style/Clinic.V2.TextAppearance.Body2Left.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="51dp"
         android:layout_marginTop="6dp"
+        android:layout_marginEnd="51dp"
         android:textColor="@color/gray_950"
         tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar, Bathinda" />
 
@@ -57,8 +58,8 @@
           android:id="@+id/dateOfBirthLabel"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="@dimen/spacing_12"
           android:layout_marginTop="6dp"
+          android:layout_marginEnd="@dimen/spacing_12"
           android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
           tools:text="24-Mar-1975" />
 
@@ -68,8 +69,8 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="6dp"
           android:drawablePadding="@dimen/spacing_4"
-          android:drawableStart="@drawable/ic_call_16dp"
           android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
+          app:drawableStartCompat="@drawable/ic_call_16dp"
           tools:text="98*****365" />
       </LinearLayout>
 

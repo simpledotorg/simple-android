@@ -14,7 +14,8 @@
 - Improved analytics around sync events
 - Updated translations: `bn_BD`
 - Tighten Code Climate checks
-- Bump AGP to 4.0.0
+- Add support for Android Studio 4.0
+- Add support for building Android App Bundles (AABs)
 
 ### Fixes
 - Fix camera crash when QR scanner view is paused/closed

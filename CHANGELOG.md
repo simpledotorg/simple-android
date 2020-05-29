@@ -16,6 +16,7 @@
 - Add support for Android Studio 4.0
 - Add support for building Android App Bundles (AABs)
 - Migrate `PatientsScreen` to Mobius
+- Migrated `SyncIndicatorController` to Mobius
 
 ### Fixes
 - Fix camera crash when QR scanner view is paused/closed

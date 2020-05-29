@@ -88,7 +88,7 @@ jobs:
           name: app_qa_debug
           path: app/build/outputs/apk/qa/debug/app-qa-debug.apk
 
-  verify_release_build:
+  verify_release_bundles:
     runs-on: [ubuntu-latest]
     strategy:
       matrix:
@@ -101,12 +101,12 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: ${{ matrix.buildType }} Release build with Proguard
+      - name: Build ${{ matrix.buildType }} Release bundle
         run: |
           ./gradlew \
           -PrunProguard=true \
           -PdefaultProguardFile=proguard-android.txt \
-          assemble${{ matrix.buildType }}Release
+          bundle${{ matrix.buildType }}Release
 
   verify_room_schemas:
     runs-on: [ubuntu-latest]

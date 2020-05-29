@@ -44,9 +44,9 @@
       android:layout_alignParentTop="true"
       android:layout_marginTop="@dimen/spacing_4"
       android:layout_toStartOf="@id/editPatientButton"
-      android:drawableStart="@drawable/ic_summary_call_icon"
       android:drawablePadding="@dimen/spacing_4"
       android:visibility="invisible"
+      app:drawableStartCompat="@drawable/ic_summary_call_icon"
       tools:ignore="RelativeOverlap"
       tools:text="1111111111"
       tools:visibility="visible" />

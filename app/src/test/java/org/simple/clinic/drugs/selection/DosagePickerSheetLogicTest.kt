@@ -30,14 +30,13 @@ import org.simple.clinic.drugs.selection.dosage.DosagePickerUiRenderer
 import org.simple.clinic.drugs.selection.dosage.DosagePickerUpdate
 import org.simple.clinic.drugs.selection.dosage.DosageSelected
 import org.simple.clinic.drugs.selection.dosage.NoneSelected
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -48,19 +47,17 @@ class DosagePickerSheetLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val protocolRepository = mock<ProtocolRepository>()
-  private val userSession = mock<UserSession>()
   private val ui = mock<DosagePickerUi>()
-  private val facilityRepository = mock<FacilityRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val protocolUuid = UUID.fromString("812aa343-40dd-495c-97b7-9e058442f4f9")
-  private val user = TestData.loggedInUser(uuid = UUID.fromString("4c1da47b-3a01-4e5b-afd2-2ca544495cae"))
   private val currentFacility = TestData.facility(
       uuid = UUID.fromString("105d4904-8d34-43e9-b208-edffd22a628f"),
       protocolUuid = protocolUuid
   )
   private val drugName = "Amlodipine"
   private val patientUuid = UUID.fromString("c4df02bd-d9d7-4120-9ff7-41f1e35aa8dd")
+  private val prescribedDrugUuid = UUID.fromString("4c6b34ef-60ea-437b-b20e-3f09cf068cf9")
 
   private val uiRenderer = DosagePickerUiRenderer(ui)
   private val uiActions = mock<DosagePickerUiActions>()
@@ -69,6 +66,7 @@ class DosagePickerSheetLogicTest {
       prescriptionRepository = prescriptionRepository,
       schedulers = TrampolineSchedulersProvider(),
       currentFacility = Lazy { currentFacility },
+      uuidGenerator = FakeUuidGenerator.fixed(prescribedDrugUuid),
       uiActions = uiActions
   )
 
@@ -103,13 +101,18 @@ class DosagePickerSheetLogicTest {
     val dosageSelected = TestData.protocolDrug(uuid = UUID.fromString("8e5d4f3a-aa57-4f1c-957b-1994a2c3f4a1"), name = drugName, dosage = "5 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.savePrescription(patientUuid, dosageSelected, currentFacility)).thenReturn(Completable.complete())
+    whenever(prescriptionRepository.savePrescription(
+        uuid = prescribedDrugUuid,
+        patientUuid = patientUuid,
+        drug = dosageSelected,
+        facility = currentFacility
+    )).thenReturn(Completable.complete())
 
     setupController()
 
     uiEvents.onNext(DosageSelected(dosageSelected))
 
-    verify(prescriptionRepository).savePrescription(patientUuid, dosageSelected, currentFacility)
+    verify(prescriptionRepository).savePrescription(prescribedDrugUuid, patientUuid, dosageSelected, currentFacility)
     verify(prescriptionRepository, never()).softDeletePrescription(any())
     verify(uiActions).close()
     verifyNoMoreInteractions(uiActions)
@@ -123,7 +126,12 @@ class DosagePickerSheetLogicTest {
     val existingPrescription = TestData.prescription(uuid = UUID.fromString("aaac79dc-ea26-4a52-b9e9-e26d3920371c"), name = drugName, dosage = "10 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.savePrescription(patientUuid, dosageSelected, currentFacility)).thenReturn(Completable.complete())
+    whenever(prescriptionRepository.savePrescription(
+        uuid = prescribedDrugUuid,
+        patientUuid = patientUuid,
+        drug = dosageSelected,
+        facility = currentFacility
+    )).thenReturn(Completable.complete())
     whenever(prescriptionRepository.softDeletePrescription(existingPrescription.uuid)).thenReturn(Completable.complete())
 
     setupController(existingPrescriptionUuid = existingPrescription.uuid.toOptional())
@@ -131,7 +139,7 @@ class DosagePickerSheetLogicTest {
     uiEvents.onNext(DosageSelected(dosageSelected))
 
     verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
-    verify(prescriptionRepository, times(1)).savePrescription(patientUuid, dosageSelected, currentFacility)
+    verify(prescriptionRepository, times(1)).savePrescription(prescribedDrugUuid, patientUuid, dosageSelected, currentFacility)
     verify(uiActions).close()
     verifyNoMoreInteractions(uiActions)
     verifyZeroInteractions(ui)
@@ -150,7 +158,7 @@ class DosagePickerSheetLogicTest {
     uiEvents.onNext(NoneSelected)
 
     verify(prescriptionRepository).softDeletePrescription(existingPrescription.uuid)
-    verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
+    verify(prescriptionRepository, never()).savePrescription(any(), any(), any(), any())
     verify(uiActions).close()
     verifyNoMoreInteractions(uiActions)
     verifyZeroInteractions(ui)

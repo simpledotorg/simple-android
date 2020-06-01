@@ -25,11 +25,13 @@ class PrescriptionRepository @Inject constructor(
 ) : SynceableRepository<PrescribedDrug, PrescribedDrugPayload> {
 
   fun savePrescription(
+      uuid: UUID,
       patientUuid: UUID,
       drug: ProtocolDrug,
       facility: Facility
   ): Completable {
     return savePrescription(
+        uuid = uuid,
         patientUuid = patientUuid,
         name = drug.name,
         dosage = drug.dosage,
@@ -40,6 +42,7 @@ class PrescriptionRepository @Inject constructor(
   }
 
   fun savePrescription(
+      uuid: UUID,
       patientUuid: UUID,
       name: String,
       dosage: String?,
@@ -54,7 +57,7 @@ class PrescriptionRepository @Inject constructor(
     return Single.just(Instant.now(utcClock))
         .map { now ->
           PrescribedDrug(
-              uuid = UUID.randomUUID(),
+              uuid = uuid,
               name = name,
               dosage = dosage,
               rxNormCode = rxNormCode,

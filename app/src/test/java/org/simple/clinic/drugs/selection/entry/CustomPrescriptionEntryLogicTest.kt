@@ -24,6 +24,7 @@ import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntryUiRenderer
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -77,6 +78,7 @@ class CustomPrescriptionEntryLogicTest {
   fun `when sheet is opened in new mode and save is clicked then a new prescription should be saved`(dosage: String) {
     //given
     whenever(prescriptionRepository.savePrescription(
+        uuid = prescriptionUuid,
         patientUuid = patientUuid,
         name = "Amlodipine",
         dosage = dosage.nullIfBlank(),
@@ -93,6 +95,7 @@ class CustomPrescriptionEntryLogicTest {
 
     //then
     verify(prescriptionRepository).savePrescription(
+        uuid = prescriptionUuid,
         patientUuid = patientUuid,
         name = "Amlodipine",
         dosage = dosage.nullIfBlank(),
@@ -207,7 +210,7 @@ class CustomPrescriptionEntryLogicTest {
 
     //then
     verify(prescriptionRepository).updatePrescription(updatedPrescribedDrug)
-    verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
+    verify(prescriptionRepository, never()).savePrescription(any(), any(), any(), any())
     verify(uiActions).finish()
   }
 
@@ -252,10 +255,11 @@ class CustomPrescriptionEntryLogicTest {
   private fun instantiateFixture(openAs: OpenAs) {
     val uiRenderer = CustomPrescriptionEntryUiRenderer(ui)
     val effectHandler = CustomPrescriptionEntryEffectHandler(
-        uiActions,
-        TrampolineSchedulersProvider(),
-        prescriptionRepository,
-        Lazy { facility }
+        uiActions = uiActions,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        prescriptionRepository = prescriptionRepository,
+        currentFacility = Lazy { facility },
+        uuidGenerator = FakeUuidGenerator.fixed(prescriptionUuid)
     )
 
     fixture = MobiusTestFixture(

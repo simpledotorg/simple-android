@@ -968,7 +968,12 @@ class PatientRepositoryAndroidTest {
 
     clock.advanceBy(Duration.ofSeconds(1))
 
-    prescriptionRepository.savePrescription(recentPatient1.uuid, testData.protocolDrug(), currentFacility).blockingAwait()
+    prescriptionRepository.savePrescription(
+        uuid = UUID.fromString("f5533aa1-e4ea-4564-9e19-02428dd68eb9"),
+        patientUuid = recentPatient1.uuid,
+        drug = testData.protocolDrug(),
+        facility = currentFacility
+    ).blockingAwait()
 
     recentPatient1 = recentPatient1.copy(updatedAt = clock.instant())
     verifyRecentPatientOrder(
@@ -1639,7 +1644,12 @@ class PatientRepositoryAndroidTest {
           hasHadStroke = hasHadStroke))).blockingAwait()
 
       protocolDrug?.let {
-        prescriptionRepository.savePrescription(patientUuid = patientUuid, drug = it, facility = currentFacility).blockingAwait()
+        prescriptionRepository.savePrescription(
+            uuid = UUID.fromString("270dbf0b-604e-4b33-a11c-3b57e2f2125c"),
+            patientUuid = patientUuid,
+            drug = it,
+            facility = currentFacility
+        ).blockingAwait()
       }
 
       appointmentDate?.let {

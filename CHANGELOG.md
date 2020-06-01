@@ -11,6 +11,9 @@
 ### Internal
 - Change syncs on login to trigger at the usage site instead of in the `LoginUserWithOtp` class
 
+### Internal
+- [In Progress: 01 Jun 2020] Introduce a `UUID` generator class to ease testing record creation
+
 ## On Demo
 ### Feature
 - Handle cases where the patient ID is not set correctly in the deeplink

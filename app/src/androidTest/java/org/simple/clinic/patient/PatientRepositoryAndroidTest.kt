@@ -3234,6 +3234,41 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun loading_patient_records_with_pending_status_should_work_correctly() {
+    // given
+    val patientUuid = UUID.fromString("894e6fed-4f0f-4c4b-9537-4284cdc0ae63")
+    val patientAddressUuid = UUID.fromString("1d4aaa08-ca1e-4690-b9fe-6f2f043d0859")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        addressUuid = patientAddressUuid,
+        status = Active,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        deletedAt = Instant.now(clock),
+        deletedReason = DeletedReason.AccidentalRegistration,
+        syncStatus = PENDING
+    )
+    val patientAddress = TestData.patientAddress(
+        uuid = patientAddressUuid
+    )
+
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientUuid
+    ).run {
+      copy(
+          patient = patient,
+          address = patientAddress
+      )
+    }
+
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    // when
+    val patients = patientRepository.recordsWithSyncStatus(PENDING).blockingGet()
+    assertThat(patients.first()).isEqualTo(patientProfile)
+  }
+
+  @Test
   fun deleting_Bangladesh_Id_should_mark_it_as_soft_deleted() {
     //given
     val now = Instant.now(clock)

@@ -19,9 +19,13 @@ class MedicalHistoryRepository @Inject constructor(
     private val utcClock: UtcClock
 ) : SynceableRepository<MedicalHistory, MedicalHistoryPayload> {
 
-  fun historyForPatientOrDefault(patientUuid: PatientUuid): Observable<MedicalHistory> {
+  fun historyForPatientOrDefault(
+      defaultHistoryUuid: UUID,
+      patientUuid: PatientUuid
+  ): Observable<MedicalHistory> {
+    // TODO (vs) 01/06/20: This should not be done here and should be left to the caller. Move later.
     val defaultValue = MedicalHistory(
-        uuid = UUID.randomUUID(),
+        uuid = defaultHistoryUuid,
         patientUuid = patientUuid,
         diagnosedWithHypertension = Unanswered,
         hasHadHeartAttack = Unanswered,
@@ -51,9 +55,13 @@ class MedicalHistoryRepository @Inject constructor(
         }
   }
 
-  fun historyForPatientOrDefaultImmediate(patientUuid: PatientUuid): MedicalHistory {
+  fun historyForPatientOrDefaultImmediate(
+      defaultHistoryUuid: UUID,
+      patientUuid: PatientUuid
+  ): MedicalHistory {
+    // TODO (vs) 01/06/20: This should not be done here and should be left to the caller. Move later.
     val defaultValue = MedicalHistory(
-        uuid = UUID.randomUUID(),
+        uuid = defaultHistoryUuid,
         patientUuid = patientUuid,
         diagnosedWithHypertension = Unanswered,
         hasHadHeartAttack = Unanswered,

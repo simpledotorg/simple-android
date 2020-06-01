@@ -20,9 +20,9 @@ import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PhoneNumberDetails
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
@@ -311,8 +311,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
           patientRepository.createPhoneNumberForPatient(
               uuid = uuidGenerator.v4(),
               patientUuid = patientUuid,
-              number = enteredPhoneNumber,
-              phoneNumberType = Mobile,
+              numberDetails = PhoneNumberDetails.mobile(enteredPhoneNumber),
               active = true
           )
         }.toObservable()

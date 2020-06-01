@@ -33,9 +33,9 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PhoneNumberDetails
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -251,7 +251,7 @@ class EditPatientScreenSaveTest {
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(eq(generatedPhoneUuid), eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(eq(generatedPhoneUuid), eq(patientUuid), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)) doReturn Observable.never()
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.never()
 
@@ -264,7 +264,7 @@ class EditPatientScreenSaveTest {
       verify(patientRepository, never()).updatePatient(any())
       verify(patientRepository, never()).updateAddressForPatient(any(), any())
       verify(patientRepository, never()).updatePhoneNumberForPatient(any(), any())
-      verify(patientRepository, never()).createPhoneNumberForPatient(any(), any(), any(), any(), any())
+      verify(patientRepository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
       verify(ui, never()).goBack()
       return
     }
@@ -274,11 +274,12 @@ class EditPatientScreenSaveTest {
 
     if (expectedSavedPatientPhoneNumber != null) {
       if (existingSavedPhoneNumber == null) {
+        val numberDetails = PhoneNumberDetails.mobile(expectedSavedPatientPhoneNumber.number)
+
         verify(patientRepository).createPhoneNumberForPatient(
             uuid = generatedPhoneUuid,
             patientUuid = expectedSavedPatientPhoneNumber.patientUuid,
-            number = expectedSavedPatientPhoneNumber.number,
-            phoneNumberType = PatientPhoneNumberType.Mobile,
+            numberDetails = numberDetails,
             active = true
         )
       } else {
@@ -286,7 +287,7 @@ class EditPatientScreenSaveTest {
       }
 
     } else {
-      verify(patientRepository, never()).createPhoneNumberForPatient(any(), any(), any(), any(), any())
+      verify(patientRepository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
       verify(patientRepository, never()).updatePhoneNumberForPatient(any(), any())
     }
     verify(ui).goBack()
@@ -660,7 +661,7 @@ class EditPatientScreenSaveTest {
     val patientUuid = patient.uuid
     val phoneNumber = alreadyPresentPhoneNumber?.copy(patientUuid = patientUuid)
 
-    whenever(patientRepository.createPhoneNumberForPatient(eq(generatedPhoneUuid), eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(eq(generatedPhoneUuid), eq(patientUuid), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
@@ -857,7 +858,7 @@ class EditPatientScreenSaveTest {
     val address = TestData.patientAddress()
     val patientUuid = patient.uuid
 
-    whenever(patientRepository.createPhoneNumberForPatient(eq(generatedPhoneUuid), eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(eq(generatedPhoneUuid), eq(patientUuid), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)) doReturn Observable.never()

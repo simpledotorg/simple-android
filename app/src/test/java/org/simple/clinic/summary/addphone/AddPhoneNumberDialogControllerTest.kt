@@ -13,8 +13,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PhoneNumberDetails
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
@@ -57,12 +57,13 @@ class AddPhoneNumberDialogControllerTest {
   @Test
   fun `when save is clicked, the number should be saved if it's valid`() {
     val newNumber = "1234567890"
+    val numberDetails = PhoneNumberDetails.mobile(newNumber)
+
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(VALID)
     whenever(repository.createPhoneNumberForPatient(
         uuid = generatedPhoneUuid,
         patientUuid = patientUuid,
-        number = newNumber,
-        phoneNumberType = Mobile,
+        numberDetails = numberDetails,
         active = true
     )).thenReturn(Completable.complete())
 
@@ -72,8 +73,7 @@ class AddPhoneNumberDialogControllerTest {
     verify(repository).createPhoneNumberForPatient(
         uuid = generatedPhoneUuid,
         patientUuid = patientUuid,
-        number = newNumber,
-        phoneNumberType = Mobile,
+        numberDetails = numberDetails,
         active = true
     )
   }
@@ -88,15 +88,14 @@ class AddPhoneNumberDialogControllerTest {
     whenever(repository.createPhoneNumberForPatient(
         uuid = generatedPhoneUuid,
         patientUuid = patientUuid,
-        number = newNumber,
-        phoneNumberType = Mobile,
+        numberDetails = PhoneNumberDetails.mobile(newNumber),
         active = true
     )).thenReturn(Completable.complete())
 
     uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
-    verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any(), any())
+    verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
   }
 
   @Test

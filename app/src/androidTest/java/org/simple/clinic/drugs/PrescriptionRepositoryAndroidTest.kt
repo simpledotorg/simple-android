@@ -67,17 +67,30 @@ class PrescriptionRepositoryAndroidTest {
     val amlodipine5mg = testData.protocolDrug(name = "Amlodipine", dosage = "5mg", protocolUuid = protocolUuid)
     val amlodipine10mg = testData.protocolDrug(name = "Amlodipine", dosage = "10mg", protocolUuid = protocolUuid)
 
-    repository.savePrescription(patientUuid, amlodipine5mg, facility).blockingAwait()
+    val uuidOfFirstPrescribedDrug = UUID.fromString("ff3bed7a-e8aa-41a4-a205-cbd10e2ab754")
+    repository.savePrescription(
+        uuid = uuidOfFirstPrescribedDrug,
+        patientUuid = patientUuid,
+        drug = amlodipine5mg,
+        facility = facility
+    ).blockingAwait()
 
     val savedPrescriptions = repository.newestPrescriptionsForPatient(patientUuid).blockingFirst()
     assertThat(savedPrescriptions).hasSize(1)
 
-    repository.savePrescription(patientUuid, amlodipine10mg, facility)
+    val uuidOfSecondPrescribedDrug = UUID.fromString("cdb88cdf-b903-4a85-b2f1-b167a735607f")
+    repository
+        .savePrescription(
+            uuid = uuidOfSecondPrescribedDrug,
+            patientUuid = patientUuid,
+            drug = amlodipine10mg,
+            facility = facility
+        )
         .andThen(repository.softDeletePrescription(savedPrescriptions.first().uuid))
         .blockingAwait()
 
     val savedPrescriptionsAfterDelete = repository.newestPrescriptionsForPatient(patientUuid).blockingFirst()
-    assertThat(savedPrescriptionsAfterDelete).hasSize(1)
+    assertThat(savedPrescriptionsAfterDelete.first().uuid).isEqualTo(uuidOfSecondPrescribedDrug)
   }
 
   @Test
@@ -85,7 +98,12 @@ class PrescriptionRepositoryAndroidTest {
     val patientUUID = UUID.randomUUID()
 
     val amlodipine5mg = testData.protocolDrug(name = "Amlodipine", dosage = "5mg")
-    repository.savePrescription(patientUUID, amlodipine5mg, facility).blockingAwait()
+    repository.savePrescription(
+        uuid = UUID.fromString("64f9b33d-eed3-4cf9-be17-6a9e430e882d"),
+        patientUuid = patientUUID,
+        drug = amlodipine5mg,
+        facility = facility
+    ).blockingAwait()
 
     val savedPrescriptions = repository.newestPrescriptionsForPatient(patientUUID).blockingFirst()
     assertThat(savedPrescriptions).hasSize(1)

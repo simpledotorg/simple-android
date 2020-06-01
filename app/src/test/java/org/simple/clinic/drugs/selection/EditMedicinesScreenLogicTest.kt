@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -184,7 +183,6 @@ class EditMedicinesScreenLogicTest {
     //given
     val protocolDrug = TestData.protocolDrug(uuid = UUID.fromString("362c6a00-3ed9-4b7a-b22a-9168b736bd35"), name = drugName)
 
-    whenever(prescriptionRepository.savePrescription(patientUuid, protocolDrug, facility)).thenReturn(Completable.complete())
     whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(emptyList())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 

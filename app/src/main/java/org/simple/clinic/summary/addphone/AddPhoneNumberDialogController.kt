@@ -7,8 +7,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PhoneNumberDetails
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
@@ -63,8 +63,7 @@ class AddPhoneNumberDialogController @Inject constructor(
               .createPhoneNumberForPatient(
                   uuid = uuidGenerator.v4(),
                   patientUuid = patientUuid,
-                  number = newNumber,
-                  phoneNumberType = Mobile,
+                  numberDetails = PhoneNumberDetails.mobile(newNumber),
                   active = true
               )
               .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))

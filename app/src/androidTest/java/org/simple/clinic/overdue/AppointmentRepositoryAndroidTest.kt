@@ -744,12 +744,16 @@ class AppointmentRepositoryAndroidTest {
       }
       bpRepository.save(bloodPressureMeasurements).blockingAwait()
 
-      medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
-          hasHadHeartAttack = hasHadHeartAttack,
-          hasHadStroke = hasHadStroke,
-          hasHadKidneyDisease = hasHadKidneyDisease,
-          hasDiabetes = hasDiabetes
-      )).blockingAwait()
+      medicalHistoryRepository.save(
+          uuid = UUID.randomUUID(),
+          patientUuid = patientUuid,
+          historyEntry = OngoingMedicalHistoryEntry(
+              hasHadHeartAttack = hasHadHeartAttack,
+              hasHadStroke = hasHadStroke,
+              hasHadKidneyDisease = hasHadKidneyDisease,
+              hasDiabetes = hasDiabetes
+          )
+      ).blockingAwait()
       clock.advanceBy(Duration.ofSeconds(bps.size.toLong() + 1))
     }
 
@@ -1897,12 +1901,16 @@ class AppointmentRepositoryAndroidTest {
       }
       bloodSugarRepository.save(bloodSugarMeasurements).blockingAwait()
 
-      medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
-          hasHadHeartAttack = hasHadHeartAttack,
-          hasHadStroke = hasHadStroke,
-          hasHadKidneyDisease = hasHadKidneyDisease,
-          hasDiabetes = hasDiabetes
-      )).blockingAwait()
+      medicalHistoryRepository.save(
+          uuid = UUID.fromString("29a124c9-b6d4-4faa-91a8-a294f848c912"),
+          patientUuid = patientUuid,
+          historyEntry = OngoingMedicalHistoryEntry(
+              hasHadHeartAttack = hasHadHeartAttack,
+              hasHadStroke = hasHadStroke,
+              hasHadKidneyDisease = hasHadKidneyDisease,
+              hasDiabetes = hasDiabetes
+          )
+      ).blockingAwait()
     }
 
     // when
@@ -2096,10 +2104,14 @@ class AppointmentRepositoryAndroidTest {
       bpRepository.save(listOf(bloodPressureMeasurement)).blockingAwait()
 
       medicalHistoryAnswers?.run {
-        medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
-            hasDiabetes = hasDiabetes,
-            diagnosedWithHypertension = hasHypertension
-        )).blockingAwait()
+        medicalHistoryRepository.save(
+            uuid = UUID.randomUUID(),
+            patientUuid = patientUuid,
+            historyEntry = OngoingMedicalHistoryEntry(
+                hasDiabetes = hasDiabetes,
+                diagnosedWithHypertension = hasHypertension
+            )
+        ).blockingAwait()
       }
     }
 

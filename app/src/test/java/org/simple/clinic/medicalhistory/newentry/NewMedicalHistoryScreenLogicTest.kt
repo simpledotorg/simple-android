@@ -33,6 +33,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -52,12 +53,13 @@ class NewMedicalHistoryScreenLogicTest {
   private val user = TestData.loggedInUser(uuid = UUID.fromString("4eb3d692-7362-4b10-848a-a7d679aee23a"))
   private val facility = TestData.facility(uuid = UUID.fromString("6fc07446-c508-47e7-998e-8c475f9114d1"))
   private val patientUuid = UUID.fromString("d4f0fb3a-0146-4bc6-afec-95b76c61edca")
+  private val medicalHistoryUuid = UUID.fromString("779ae5fb-667b-435e-888c-8386397ed1f1")
 
   private lateinit var testFixture: MobiusTestFixture<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect>
 
   @Before
   fun setUp() {
-    whenever(medicalHistoryRepository.save(eq(patientUuid), any())).thenReturn(Completable.complete())
+    whenever(medicalHistoryRepository.save(eq(medicalHistoryUuid), eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
 
     val effectHandler = NewMedicalHistoryEffectHandler(
@@ -67,7 +69,8 @@ class NewMedicalHistoryScreenLogicTest {
         medicalHistoryRepository = medicalHistoryRepository,
         dataSync = mock(),
         currentUser = Lazy { user },
-        currentFacility = Lazy { facility }
+        currentFacility = Lazy { facility },
+        uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
     ).build()
 
     testFixture = MobiusTestFixture(
@@ -123,6 +126,7 @@ class NewMedicalHistoryScreenLogicTest {
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
       verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
       verify(medicalHistoryRepository).save(
+          uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
           historyEntry = OngoingMedicalHistoryEntry(
               hasHadHeartAttack = No,
@@ -151,6 +155,7 @@ class NewMedicalHistoryScreenLogicTest {
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
       verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
       verify(medicalHistoryRepository).save(
+          uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
           historyEntry = OngoingMedicalHistoryEntry(
               // We currently default the hypertension diagnosis answer to 'Yes' if the facility
@@ -194,6 +199,7 @@ class NewMedicalHistoryScreenLogicTest {
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
       verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
       verify(medicalHistoryRepository).save(
+          uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
           historyEntry = OngoingMedicalHistoryEntry(
               hasHadHeartAttack = Unanswered,

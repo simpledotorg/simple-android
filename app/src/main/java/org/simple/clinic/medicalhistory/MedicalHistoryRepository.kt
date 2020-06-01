@@ -68,9 +68,13 @@ class MedicalHistoryRepository @Inject constructor(
     return dao.historyForPatientImmediate(patientUuid) ?: defaultValue
   }
 
-  fun save(patientUuid: UUID, historyEntry: OngoingMedicalHistoryEntry): Completable {
+  fun save(
+      uuid: UUID,
+      patientUuid: UUID,
+      historyEntry: OngoingMedicalHistoryEntry
+  ): Completable {
     val medicalHistory = MedicalHistory(
-        uuid = UUID.randomUUID(),
+        uuid = uuid,
         patientUuid = patientUuid,
         diagnosedWithHypertension = historyEntry.diagnosedWithHypertension,
         hasHadHeartAttack = historyEntry.hasHadHeartAttack,

@@ -33,7 +33,8 @@ import java.util.Locale
   TestRetrofitModule::class,
   TestRemoteConfigModule::class,
   SyncModule::class,
-  DateFormatterModule::class
+  DateFormatterModule::class,
+  UuidGeneratorModule::class
 ])
 class TestAppModule(private val application: Application) {
 

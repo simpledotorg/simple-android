@@ -394,13 +394,19 @@ class PatientRepository @Inject constructor(
         .andThen(setSyncStatus(listOf(patientUuid), PENDING))
   }
 
-  fun createPhoneNumberForPatient(patientUuid: UUID, number: String, phoneNumberType: PatientPhoneNumberType, active: Boolean): Completable {
+  fun createPhoneNumberForPatient(
+      uuid: UUID,
+      patientUuid: UUID,
+      number: String,
+      phoneNumberType: PatientPhoneNumberType,
+      active: Boolean
+  ): Completable {
     return Single
         .fromCallable {
           val now = Instant.now(utcClock)
 
           PatientPhoneNumber(
-              uuid = UUID.randomUUID(),
+              uuid = uuid,
               patientUuid = patientUuid,
               number = number,
               phoneType = phoneNumberType,

@@ -45,6 +45,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
@@ -798,13 +799,26 @@ class EditPatientScreenFormTest {
   }
 
   private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
+    val editPatientEffectHandler = EditPatientEffectHandler(
+        ui = ui,
+        userClock = TestUserClock(),
+        patientRepository = patientRepository,
+        utcClock = utcClock,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        country = country,
+        uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("d1593ec2-cf7e-44dd-a057-69f71fb920ee")),
+        dateOfBirthFormatter = dateOfBirthFormat
+    )
+
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
-        uiEvents,
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
-        EditPatientInit(patient, address, phoneNumber, null),
-        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
-        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, TrampolineSchedulersProvider(), userSession, facilityRepository, country, dateOfBirthFormat).build(),
-        viewRenderer::render
+        events = uiEvents,
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
+        init = EditPatientInit(patient, address, phoneNumber, null),
+        update = EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
+        effectHandler = editPatientEffectHandler.build(),
+        modelUpdateListener = viewRenderer::render
     )
 
     fixture.start()

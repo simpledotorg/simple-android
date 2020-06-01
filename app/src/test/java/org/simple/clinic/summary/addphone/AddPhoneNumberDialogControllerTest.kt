@@ -25,6 +25,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.values
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -40,12 +41,13 @@ class AddPhoneNumberDialogControllerTest {
   private val validator = mock<PhoneNumberValidator>()
 
   private val patientUuid = UUID.randomUUID()
+  private val generatedPhoneUuid = UUID.fromString("f94bd99b-b182-4138-8e77-d91908b7ada5")
 
   private lateinit var controller: AddPhoneNumberDialogController
 
   @Before
   fun setup() {
-    controller = AddPhoneNumberDialogController(repository, validator)
+    controller = AddPhoneNumberDialogController(repository, validator, FakeUuidGenerator.fixed(generatedPhoneUuid))
 
     uiEvents
         .compose(controller)
@@ -56,12 +58,24 @@ class AddPhoneNumberDialogControllerTest {
   fun `when save is clicked, the number should be saved if it's valid`() {
     val newNumber = "1234567890"
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(VALID)
-    whenever(repository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(repository.createPhoneNumberForPatient(
+        uuid = generatedPhoneUuid,
+        patientUuid = patientUuid,
+        number = newNumber,
+        phoneNumberType = Mobile,
+        active = true
+    )).thenReturn(Completable.complete())
 
     uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
-    verify(repository).createPhoneNumberForPatient(patientUuid, newNumber, phoneNumberType = Mobile, active = true)
+    verify(repository).createPhoneNumberForPatient(
+        uuid = generatedPhoneUuid,
+        patientUuid = patientUuid,
+        number = newNumber,
+        phoneNumberType = Mobile,
+        active = true
+    )
   }
 
   @Test
@@ -71,12 +85,18 @@ class AddPhoneNumberDialogControllerTest {
   ) {
     val newNumber = "123"
     whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
-    whenever(repository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(repository.createPhoneNumberForPatient(
+        uuid = generatedPhoneUuid,
+        patientUuid = patientUuid,
+        number = newNumber,
+        phoneNumberType = Mobile,
+        active = true
+    )).thenReturn(Completable.complete())
 
     uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
-    verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any())
+    verify(repository, never()).createPhoneNumberForPatient(any(), any(), any(), any(), any())
   }
 
   @Test

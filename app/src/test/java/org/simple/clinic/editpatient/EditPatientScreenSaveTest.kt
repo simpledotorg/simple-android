@@ -42,6 +42,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
@@ -73,6 +74,7 @@ class EditPatientScreenSaveTest {
   private val userClock: TestUserClock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val nextYear = "2019"
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val generatedPhoneUuid = UUID.fromString("ada3ea24-819b-42e4-ac21-51bcf61cebac")
 
   @Test
   fun `when save is clicked, patient name should be validated`() {
@@ -249,7 +251,7 @@ class EditPatientScreenSaveTest {
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(eq(generatedPhoneUuid), eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)) doReturn Observable.never()
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.never()
 
@@ -260,9 +262,9 @@ class EditPatientScreenSaveTest {
 
     if (!shouldSavePatient) {
       verify(patientRepository, never()).updatePatient(any())
-      verify(patientRepository, never()).updateAddressForPatient(eq(patientUuid), any())
-      verify(patientRepository, never()).updatePhoneNumberForPatient(eq(patientUuid), any())
-      verify(patientRepository, never()).createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())
+      verify(patientRepository, never()).updateAddressForPatient(any(), any())
+      verify(patientRepository, never()).updatePhoneNumberForPatient(any(), any())
+      verify(patientRepository, never()).createPhoneNumberForPatient(any(), any(), any(), any(), any())
       verify(ui, never()).goBack()
       return
     }
@@ -273,6 +275,7 @@ class EditPatientScreenSaveTest {
     if (expectedSavedPatientPhoneNumber != null) {
       if (existingSavedPhoneNumber == null) {
         verify(patientRepository).createPhoneNumberForPatient(
+            uuid = generatedPhoneUuid,
             patientUuid = expectedSavedPatientPhoneNumber.patientUuid,
             number = expectedSavedPatientPhoneNumber.number,
             phoneNumberType = PatientPhoneNumberType.Mobile,
@@ -283,8 +286,8 @@ class EditPatientScreenSaveTest {
       }
 
     } else {
-      verify(patientRepository, never()).createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())
-      verify(patientRepository, never()).updatePhoneNumberForPatient(eq(patientUuid), any())
+      verify(patientRepository, never()).createPhoneNumberForPatient(any(), any(), any(), any(), any())
+      verify(patientRepository, never()).updatePhoneNumberForPatient(any(), any())
     }
     verify(ui).goBack()
   }
@@ -657,7 +660,7 @@ class EditPatientScreenSaveTest {
     val patientUuid = patient.uuid
     val phoneNumber = alreadyPresentPhoneNumber?.copy(patientUuid = patientUuid)
 
-    whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(eq(generatedPhoneUuid), eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
@@ -854,7 +857,7 @@ class EditPatientScreenSaveTest {
     val address = TestData.patientAddress()
     val patientUuid = patient.uuid
 
-    whenever(patientRepository.createPhoneNumberForPatient(eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(eq(generatedPhoneUuid), eq(patientUuid), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.bangladeshNationalIdForPatient(patientUuid)) doReturn Observable.never()
@@ -918,13 +921,26 @@ class EditPatientScreenSaveTest {
   }
 
   private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
+    val editPatientEffectHandler = EditPatientEffectHandler(
+        ui = ui,
+        userClock = TestUserClock(),
+        patientRepository = patientRepository,
+        utcClock = utcClock,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        country = country,
+        uuidGenerator = FakeUuidGenerator.fixed(generatedPhoneUuid),
+        dateOfBirthFormatter = dateOfBirthFormat
+    )
+
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
-        uiEvents,
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
-        EditPatientInit(patient, address, phoneNumber, null),
-        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
-        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, TrampolineSchedulersProvider(), userSession, facilityRepository, country, dateOfBirthFormat).build(),
-        viewRenderer::render
+        events = uiEvents,
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
+        init = EditPatientInit(patient, address, phoneNumber, null),
+        update = EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
+        effectHandler = editPatientEffectHandler.build(),
+        modelUpdateListener = viewRenderer::render
     )
 
     fixture.start()

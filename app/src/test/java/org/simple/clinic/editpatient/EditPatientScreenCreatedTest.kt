@@ -26,6 +26,7 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
@@ -33,6 +34,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
+import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class EditPatientScreenCreatedTest {
@@ -157,13 +159,26 @@ class EditPatientScreenCreatedTest {
   }
 
   private fun screenCreated(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber?) {
+    val editPatientEffectHandler = EditPatientEffectHandler(
+        ui = ui,
+        userClock = TestUserClock(),
+        patientRepository = patientRepository,
+        utcClock = utcClock,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        country = country,
+        uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("4a08c52c-ebef-44a2-9de4-02916e703a47")),
+        dateOfBirthFormatter = dateOfBirthFormat
+    )
+
     MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
-        Observable.never<EditPatientEvent>(),
-        EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
-        EditPatientInit(patient, address, phoneNumber, null),
-        EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
-        EditPatientEffectHandler(ui, TestUserClock(), patientRepository, utcClock, TrampolineSchedulersProvider(), userSession, facilityRepository, country, dateOfBirthFormat).build(),
-        { /* nothing here */ }
+        events = Observable.never<EditPatientEvent>(),
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null),
+        init = EditPatientInit(patient, address, phoneNumber, null),
+        update = EditPatientUpdate(IndianPhoneNumberValidator(), UserInputDateValidator(userClock, dateOfBirthFormat), UserInputAgeValidator(userClock, dateOfBirthFormat)),
+        effectHandler = editPatientEffectHandler.build(),
+        modelUpdateListener = { /* nothing here */ }
     ).start()
   }
 }

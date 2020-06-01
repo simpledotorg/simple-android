@@ -397,8 +397,7 @@ class PatientRepository @Inject constructor(
   fun createPhoneNumberForPatient(
       uuid: UUID,
       patientUuid: UUID,
-      number: String,
-      phoneNumberType: PatientPhoneNumberType,
+      numberDetails: PhoneNumberDetails,
       active: Boolean
   ): Completable {
     return Single
@@ -408,8 +407,8 @@ class PatientRepository @Inject constructor(
           PatientPhoneNumber(
               uuid = uuid,
               patientUuid = patientUuid,
-              number = number,
-              phoneType = phoneNumberType,
+              number = numberDetails.number,
+              phoneType = numberDetails.type,
               active = active,
               createdAt = now,
               updatedAt = now,

@@ -1,8 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -30,6 +28,7 @@ import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toUtcInstant
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.threeten.bp.Instant
@@ -46,17 +45,20 @@ class BloodSugarEntryEffectHandlerTest {
   private val bloodSugarRepository = mock<BloodSugarRepository>()
 
   private val user = TestData.loggedInUser(uuid = UUID.fromString("4844b826-a162-49fe-b92c-962da172e86c"))
-  val facility = TestData.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
+  private val facility = TestData.facility(uuid = UUID.fromString("7fabe36b-8fc3-457d-b9a8-68df71def7bd"))
+  private val measurementUuid = UUID.fromString("175fb078-87b1-4c01-b5f0-91c3d2cefdfd")
 
   private val effectHandler = BloodSugarEntryEffectHandler(
-      ui,
-      bloodSugarRepository,
-      patientRepository,
-      appointmentRepository,
-      userClock,
-      TrampolineSchedulersProvider(),
-      Lazy { user },
-      Lazy { facility }
+      ui = ui,
+      bloodSugarRepository = bloodSugarRepository,
+      patientRepository = patientRepository,
+      appointmentsRepository = appointmentRepository,
+      userClock = userClock,
+      schedulersProvider = TrampolineSchedulersProvider(),
+      currentUser = Lazy { user },
+      currentFacility = Lazy { facility },
+      uuidGenerator = FakeUuidGenerator.fixed(measurementUuid)
+
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -245,7 +247,14 @@ class BloodSugarEntryEffectHandlerTest {
         bloodSugarReading = bloodSugarReading
     )
 
-    whenever(bloodSugarRepository.saveMeasurement(eq(bloodSugar.reading), eq(bloodSugar.patientUuid), eq(user), eq(facility), eq(date.toUtcInstant(userClock)), any())).doReturn(Single.just(bloodSugar))
+    whenever(bloodSugarRepository.saveMeasurement(
+        reading = bloodSugar.reading,
+        patientUuid = bloodSugar.patientUuid,
+        loggedInUser = user,
+        facility = facility,
+        recordedAt = date.toUtcInstant(userClock),
+        uuid = measurementUuid
+    )).doReturn(Single.just(bloodSugar))
     whenever(patientRepository.compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))).doReturn(Completable.complete())
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)).doReturn(Completable.complete())
 
@@ -270,7 +279,14 @@ class BloodSugarEntryEffectHandlerTest {
         bloodSugarReading = bloodSugarReading
     )
 
-    whenever(bloodSugarRepository.saveMeasurement(eq(bloodSugar.reading), eq(bloodSugar.patientUuid), eq(user), eq(facility), eq(date.toUtcInstant(userClock)), any())).doReturn(Single.just(bloodSugar))
+    whenever(bloodSugarRepository.saveMeasurement(
+        reading = bloodSugar.reading,
+        patientUuid = bloodSugar.patientUuid,
+        loggedInUser = user,
+        facility = facility,
+        recordedAt = date.toUtcInstant(userClock),
+        uuid = measurementUuid
+    )).doReturn(Single.just(bloodSugar))
     whenever(patientRepository.compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))).doReturn(Completable.complete())
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)).doReturn(Completable.complete())
 

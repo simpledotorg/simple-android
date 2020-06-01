@@ -78,7 +78,8 @@ import javax.inject.Named
   PatientEntryModule::class,
   FlipperModule::class,
   PinVerificationModule::class,
-  SessionModule::class
+  SessionModule::class,
+  UuidGeneratorModule::class
 ])
 class AppModule(private val appContext: Application) {
 

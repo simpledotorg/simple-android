@@ -24,6 +24,7 @@ import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.toUtcInstant
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -40,7 +41,8 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     private val userClock: UserClock,
     private val schedulersProvider: SchedulersProvider,
     private val currentUser: Lazy<User>,
-    private val currentFacility: Lazy<Facility>
+    private val currentFacility: Lazy<Facility>,
+    private val uuidGenerator: UuidGenerator
 ) {
   @AssistedInject.Factory
   interface Factory {
@@ -156,7 +158,14 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
       entry: CreateNewBloodSugarEntry
   ): Single<BloodSugarMeasurement> {
     val (patientUuid, date, _, reading) = entry
-    return bloodSugarRepository.saveMeasurement(reading, patientUuid, user, currentFacility, date.toUtcInstant(userClock))
+    return bloodSugarRepository.saveMeasurement(
+        uuid = uuidGenerator.v4(),
+        reading = reading,
+        patientUuid = patientUuid,
+        loggedInUser = user,
+        facility = currentFacility,
+        recordedAt = date.toUtcInstant(userClock)
+    )
   }
 
   private fun updateAppointmentsAsVisited(

@@ -34,7 +34,7 @@ class BloodSugarRepository @Inject constructor(
       loggedInUser: User,
       facility: Facility,
       recordedAt: Instant,
-      uuid: UUID = UUID.randomUUID()
+      uuid: UUID
   ): Single<BloodSugarMeasurement> {
     return Single
         .just(

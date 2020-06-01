@@ -3,15 +3,17 @@ package org.simple.clinic.storage.migrations
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.uuid.UuidGenerator
 import org.threeten.bp.Instant
-import java.util.UUID
 import javax.inject.Inject
 
 /**
  * Adds an empty [MedicalHistory] for all patients.
  */
 @Suppress("ClassName")
-class Migration_13_14 @Inject constructor() : Migration(13, 14) {
+class Migration_13_14 @Inject constructor(
+    private val uuidGenerator: UuidGenerator
+) : Migration(13, 14) {
 
   override fun migrate(db: SupportSQLiteDatabase) {
     db.execSQL("DELETE FROM `MedicalHistory`")
@@ -22,7 +24,7 @@ class Migration_13_14 @Inject constructor() : Migration(13, 14) {
 
       while (it.moveToNext()) {
         val patientUuid = it.getString(it.getColumnIndex("uuid"))
-        val historyUuid = UUID.randomUUID()
+        val historyUuid = uuidGenerator.v4()
         db.execSQL("""
           INSERT INTO `MedicalHistory` VALUES(
             '$historyUuid',

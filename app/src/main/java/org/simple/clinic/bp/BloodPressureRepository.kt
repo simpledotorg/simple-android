@@ -28,7 +28,8 @@ class BloodPressureRepository @Inject constructor(
       reading: BloodPressureReading,
       loggedInUser: User,
       currentFacility: Facility,
-      recordedAt: Instant = Instant.now(utcClock)
+      recordedAt: Instant = Instant.now(utcClock),
+      uuid: UUID
   ): Single<BloodPressureMeasurement> {
     if (reading.systolic < 0 || reading.diastolic < 0) {
       throw AssertionError("Cannot have negative BP readings.")
@@ -38,7 +39,7 @@ class BloodPressureRepository @Inject constructor(
     return Single
         .just(
             BloodPressureMeasurement(
-                uuid = UUID.randomUUID(),
+                uuid = uuid,
                 reading = reading,
                 syncStatus = SyncStatus.PENDING,
                 userUuid = loggedInUser.uuid,

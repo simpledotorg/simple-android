@@ -1,8 +1,6 @@
 package org.simple.clinic.bp
 
-import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.argThat
-import com.nhaarman.mockitokotlin2.check
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -42,24 +40,31 @@ class BloodPressureRepositoryTest {
     val facility = TestData.facility()
 
     val patientUuid = UUID.fromString("53e2f919-eea8-44b1-a325-b1ab094766f5")
+    val bpUuid = UUID.fromString("6d1b8875-c659-4dbd-a5c9-d642e0960504")
+    val reading = BloodPressureReading(120, 65)
     repository.saveMeasurement(
+        uuid = bpUuid,
         patientUuid = patientUuid,
-        reading = BloodPressureReading(120, 65),
+        reading = reading,
         loggedInUser = loggedInUser,
         currentFacility = facility,
         recordedAt = Instant.now(testClock)
     ).subscribe()
 
-    verify(dao).save(check {
-      val measurement = it.first()
-      assertThat(measurement.reading.systolic).isEqualTo(120)
-      assertThat(measurement.reading.diastolic).isEqualTo(65)
-      assertThat(measurement.facilityUuid).isEqualTo(facility.uuid)
-      assertThat(measurement.patientUuid).isEqualTo(patientUuid)
-      assertThat(measurement.createdAt).isEqualTo(Instant.now(testClock))
-      assertThat(measurement.updatedAt).isEqualTo(Instant.now(testClock))
-      assertThat(measurement.userUuid).isEqualTo(loggedInUser.uuid)
-    })
+    verify(dao).save(listOf(
+        BloodPressureMeasurement(
+            uuid = bpUuid,
+            syncStatus = SyncStatus.PENDING,
+            patientUuid = patientUuid,
+            reading = reading,
+            userUuid = loggedInUser.uuid,
+            facilityUuid = facility.uuid,
+            createdAt = Instant.now(testClock),
+            updatedAt = Instant.now(testClock),
+            recordedAt = Instant.now(testClock),
+            deletedAt = null
+        )
+    ))
   }
 
   @Test

@@ -108,7 +108,8 @@ class EditPatientScreen(context: Context, attributeSet: AttributeSet) : Relative
   @Inject
   lateinit var inputFields: InputFields
 
-  private val editPatientConfig = EditPatientConfig()
+  @Inject
+  lateinit var editPatientConfig: EditPatientConfig
 
   private val screenKey by unsafeLazy {
     screenRouter.key<EditPatientScreenKey>(this)

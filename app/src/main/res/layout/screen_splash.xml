@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.splash.SplashScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/blue0">
+
+  <ImageView
+    android:id="@+id/splashSimpleLogo"
+    android:layout_width="@dimen/spacing_200"
+    android:layout_height="@dimen/spacing_40"
+    android:src="@drawable/logo_large"
+    app:layout_constraintBottom_toTopOf="@+id/splashLottieView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="ContentDescription" />
+
+  <com.airbnb.lottie.LottieAnimationView
+    android:id="@+id/splashLottieView"
+    android:layout_width="0dp"
+    android:layout_height="272dp"
+    android:scaleType="fitXY"
+    android:adjustViewBounds="true"
+    app:layout_constraintBottom_toTopOf="@+id/nextButtonFrame"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+
+  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+    android:id="@+id/nextButtonFrame"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    app:buttonBackgroundDisabled="@color/grey2"
+    app:buttonBackgroundEnabled="@color/blue1"
+    app:frameBackgroundDisabled="@color/grey3"
+    app:frameBackgroundEnabled="@color/blue2"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/nextButton"
+      style="?attr/materialButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_4"
+      android:text="@string/screensplash_next" />
+
+  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+
+</org.simple.clinic.splash.SplashScreen>

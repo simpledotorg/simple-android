@@ -10,6 +10,7 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import java.util.UUID
 
 class DosagePickerEffectHandler @AssistedInject constructor(
@@ -17,6 +18,7 @@ class DosagePickerEffectHandler @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
+    private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: DosagePickerUiActions
 ) {
 
@@ -70,6 +72,7 @@ class DosagePickerEffectHandler @AssistedInject constructor(
             prescriptionRepository
                 .softDeletePrescription(existingPrescriptionUuid)
                 .andThen(prescriptionRepository.savePrescription(
+                    uuid = uuidGenerator.v4(),
                     patientUuid = patientUuid,
                     drug = newPrescriptionDrug,
                     facility = currentFacility()
@@ -89,6 +92,7 @@ class DosagePickerEffectHandler @AssistedInject constructor(
 
             prescriptionRepository
                 .savePrescription(
+                    uuid = uuidGenerator.v4(),
                     patientUuid = patientUuid,
                     drug = newPrescriptionDrug,
                     facility = currentFacility()

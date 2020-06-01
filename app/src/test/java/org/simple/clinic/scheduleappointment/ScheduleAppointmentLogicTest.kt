@@ -1,7 +1,6 @@
 package org.simple.clinic.scheduleappointment
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -35,6 +34,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.LocalDate
@@ -58,6 +58,7 @@ class ScheduleAppointmentLogicTest {
   private val clock = TestUserClock(today)
   private val patientUuid = UUID.fromString("d44bf81f-4369-4bbc-a51b-52d88c54f065")
   private val protocolUuid = UUID.fromString("8782e890-2fb0-4204-8647-6d20006cec02")
+  private val appointmentUuid = UUID.fromString("66168713-32b5-40e8-aa06-eb9821c3c141")
   private val facility = TestData.facility(protocolUuid = protocolUuid)
   private val protocol = TestData.protocol(protocolUuid, followUpDays = 27)
 
@@ -98,12 +99,12 @@ class ScheduleAppointmentLogicTest {
     verifyNoMoreInteractions(uiActions)
 
     verify(repository).schedule(
-        patientUuid = eq(patientUuid),
-        appointmentUuid = any(),
-        appointmentDate = eq(scheduledDate),
-        appointmentType = eq(Manual),
-        appointmentFacilityUuid = eq(facility.uuid),
-        creationFacilityUuid = eq(facility.uuid)
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = scheduledDate,
+        appointmentType = Manual,
+        appointmentFacilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid
     )
   }
 
@@ -128,12 +129,12 @@ class ScheduleAppointmentLogicTest {
     verifyNoMoreInteractions(uiActions)
 
     verify(repository).schedule(
-        patientUuid = eq(patientUuid),
-        appointmentUuid = any(),
-        appointmentDate = eq(scheduledDate),
-        appointmentType = eq(Automatic),
-        appointmentFacilityUuid = eq(facility.uuid),
-        creationFacilityUuid = eq(facility.uuid)
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = scheduledDate,
+        appointmentType = Automatic,
+        appointmentFacilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid
     )
   }
 
@@ -632,20 +633,17 @@ class ScheduleAppointmentLogicTest {
     verifyNoMoreInteractions(uiActions)
 
     verify(repository).schedule(
-        patientUuid = eq(patientUuid),
-        appointmentUuid = any(),
-        appointmentDate = eq(date),
-        appointmentType = eq(Manual),
-        appointmentFacilityUuid = eq(updatedFacilityUuid),
-        creationFacilityUuid = eq(facility.uuid)
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = date,
+        appointmentType = Manual,
+        appointmentFacilityUuid = updatedFacilityUuid,
+        creationFacilityUuid = facility.uuid
     )
   }
 
   @Test
   fun `when patient facility is not changed then appointment should be scheduled in the current facility`() {
-    //given
-    val appointment = TestData.appointment()
-
     //when
     sheetCreated()
     uiEvents.onNext(AppointmentDone)
@@ -655,12 +653,12 @@ class ScheduleAppointmentLogicTest {
     verifyNoMoreInteractions(uiActions)
 
     verify(repository).schedule(
-        patientUuid = eq(patientUuid),
-        appointmentUuid = any(),
-        appointmentDate = eq(LocalDate.parse("2019-01-28")),
-        appointmentType = eq(Manual),
-        appointmentFacilityUuid = eq(facility.uuid),
-        creationFacilityUuid = eq(facility.uuid)
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = LocalDate.parse("2019-01-28"),
+        appointmentType = Manual,
+        appointmentFacilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid
     )
   }
 
@@ -720,6 +718,7 @@ class ScheduleAppointmentLogicTest {
         appointmentConfig = config,
         userClock = clock,
         schedulers = TrampolineSchedulersProvider(),
+        uuidGenerator = FakeUuidGenerator.fixed(appointmentUuid),
         uiActions = uiActions
     )
 

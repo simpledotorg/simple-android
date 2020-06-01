@@ -12,6 +12,7 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import java.util.UUID
 
 class NewMedicalHistoryEffectHandlerTest {
@@ -19,7 +20,8 @@ class NewMedicalHistoryEffectHandlerTest {
   private val uiActions = mock<NewMedicalHistoryUiActions>()
   private val dataSync = mock<DataSync>()
   private val user = TestData.loggedInUser(uuid = UUID.fromString("c70eb25b-c665-4f9d-a889-bf5504ec8af0"))
-  val facility = TestData.facility(uuid = UUID.fromString("5b9629f3-042b-4b0a-8bd6-f7658130eee7"))
+  private val facility = TestData.facility(uuid = UUID.fromString("5b9629f3-042b-4b0a-8bd6-f7658130eee7"))
+  private val medicalHistoryUuid = UUID.fromString("b0ea3e17-2c6b-4afd-a52b-98a49dfe8147")
 
   private val effectHandler = NewMedicalHistoryEffectHandler(
       uiActions = uiActions,
@@ -28,7 +30,8 @@ class NewMedicalHistoryEffectHandlerTest {
       medicalHistoryRepository = mock(),
       dataSync = dataSync,
       currentUser = Lazy { user },
-      currentFacility = Lazy { facility }
+      currentFacility = Lazy { facility },
+      uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())

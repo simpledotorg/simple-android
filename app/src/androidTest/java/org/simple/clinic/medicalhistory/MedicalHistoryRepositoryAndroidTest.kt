@@ -58,7 +58,11 @@ class MedicalHistoryRepositoryAndroidTest {
         hasHadKidneyDisease = Yes,
         hasDiabetes = No)
 
-    repository.save(patientUuid, historyEntry).blockingAwait()
+    repository.save(
+        uuid = UUID.fromString("d33a3dfc-3da9-43a9-a543-095232c55597"),
+        patientUuid = patientUuid,
+        historyEntry = historyEntry
+    ).blockingAwait()
 
     val savedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
 

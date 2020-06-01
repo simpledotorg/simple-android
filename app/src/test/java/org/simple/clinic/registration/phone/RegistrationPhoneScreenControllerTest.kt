@@ -24,13 +24,13 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.user.finduser.FindUserResult.Found
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -46,12 +46,14 @@ class RegistrationPhoneScreenControllerTest {
   private val facilitySync = mock<FacilitySync>()
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create<UiEvent>()
+  private val userUuid = UUID.fromString("a5c55e97-dcad-4cd8-9832-4da9f7b3d4b7")
 
   private val controller: RegistrationPhoneScreenController = RegistrationPhoneScreenController(
       userSession = userSession,
       userLookup = findUserWithPhoneNumber,
       numberValidator = numberValidator,
-      facilitySync = facilitySync
+      facilitySync = facilitySync,
+      uuidGenerator = FakeUuidGenerator.fixed(userUuid)
   )
 
   @Before

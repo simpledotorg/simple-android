@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Feature
-- [In Progress: 01 Jun 2020] User can delete patient
+- User can soft delete patient
 
 ## On Demo
 ### Feature

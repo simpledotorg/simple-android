@@ -10,6 +10,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import org.threeten.bp.Instant
 
 class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
@@ -17,6 +18,7 @@ class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val clock: UtcClock,
     private val currentFacility: Lazy<Facility>,
+    private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: MedicalHistorySummaryUiActions
 ) {
 
@@ -38,7 +40,14 @@ class MedicalHistorySummaryEffectHandler @AssistedInject constructor(
   private fun loadMedicalHistory(): ObservableTransformer<LoadMedicalHistory, MedicalHistorySummaryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .switchMap { medicalHistoryRepository.historyForPatientOrDefault(it.patientUUID).subscribeOn(schedulers.io()) }
+          .switchMap {
+            medicalHistoryRepository
+                .historyForPatientOrDefault(
+                    defaultHistoryUuid = uuidGenerator.v4(),
+                    patientUuid = it.patientUUID
+                )
+                .subscribeOn(schedulers.io())
+          }
           .map(::MedicalHistoryLoaded)
     }
   }

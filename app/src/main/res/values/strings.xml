@@ -625,4 +625,7 @@
   <string name="deletereason_confirm_message">This will remove %1$s</string>
   <string name="deletereason_confirm_positive">Delete</string>
   <string name="deletereason_confirm_negative">Cancel</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">Next</string>
 </resources>

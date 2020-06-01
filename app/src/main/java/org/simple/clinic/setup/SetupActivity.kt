@@ -34,6 +34,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
   @Inject
   lateinit var effectHandlerFactory: SetupActivityEffectHandler.Factory
 
+  @Inject
+  lateinit var setupActivityConfig: SetupActivityConfig
+
   private val screenResults = ScreenResultBus()
 
   private val delegate by unsafeLazy {
@@ -106,6 +109,21 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun showOnboardingScreen() {
+    // TODO (HS): Show splash screen once the new onboarding screen is implemented
+    if (setupActivityConfig.newOnboardingScreenEnabled) {
+      navigateToSplashScreen()
+    } else {
+      navigateToOnboardingScreen()
+    }
+  }
+
+  private fun navigateToSplashScreen() {
+    if (navController.currentDestination?.id != R.id.splashScreen) {
+      navController.navigate(R.id.action_placeholderScreen_to_splashScreen)
+    }
+  }
+
+  private fun navigateToOnboardingScreen() {
     // If onboarding screen is already being shown don't navigate again, it would cause
     // duplicate destinations
     if (navController.currentDestination?.id != R.id.onboardingScreen) {

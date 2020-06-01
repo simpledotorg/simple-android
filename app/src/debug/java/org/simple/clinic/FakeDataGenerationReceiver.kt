@@ -24,6 +24,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -60,6 +61,9 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
+
+  @Inject
+  lateinit var uuidGenerator: UuidGenerator
 
   private val faker = Faker("en-IND")
 
@@ -144,7 +148,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
       timestamp: Instant
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(
-        uuid = UUID.randomUUID(),
+        uuid = uuidGenerator.v4(),
         reading = BloodPressureReading(Random.nextInt(90..200), Random.nextInt(60..140)),
         syncStatus = SyncStatus.DONE,
         userUuid = user.uuid,
@@ -162,7 +166,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
       timestamp: Instant
   ): PatientPhoneNumber {
     return PatientPhoneNumber(
-        uuid = UUID.randomUUID(),
+        uuid = uuidGenerator.v4(),
         patientUuid = patient.uuid,
         number = faker.phoneNumber.phoneNumber(),
         phoneType = PatientPhoneNumberType.Mobile,
@@ -175,7 +179,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
 
   private fun patient(address: PatientAddress, timestamp: Instant): Patient {
     return Patient(
-        uuid = UUID.randomUUID(),
+        uuid = uuidGenerator.v4(),
         addressUuid = address.uuid,
         fullName = faker.name.name(),
         gender = randomGender(),
@@ -194,7 +198,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
 
   private fun patientAddress(timestamp: Instant): PatientAddress {
     return PatientAddress(
-        uuid = UUID.randomUUID(),
+        uuid = uuidGenerator.v4(),
         streetAddress = faker.address.streetAddress(),
         colonyOrVillage = faker.address.streetAddress(),
         district = faker.address.city(),

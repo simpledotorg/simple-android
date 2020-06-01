@@ -14,6 +14,7 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 
 class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: NewMedicalHistoryUiActions,
@@ -22,7 +23,8 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val dataSync: DataSync,
     private val currentUser: Lazy<User>,
-    private val currentFacility: Lazy<Facility>
+    private val currentFacility: Lazy<Facility>,
+    private val uuidGenerator: UuidGenerator
 ) {
 
   @AssistedInject.Factory
@@ -56,7 +58,11 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
             patientRepository.saveOngoingEntryAsPatient(user, facility)
                 .flatMap { registeredPatient ->
                   medicalHistoryRepository
-                      .save(registeredPatient.uuid, ongoingMedicalHistoryEntry)
+                      .save(
+                          uuid = uuidGenerator.v4(),
+                          patientUuid = registeredPatient.uuid,
+                          historyEntry = ongoingMedicalHistoryEntry
+                      )
                       .toSingleDefault(PatientRegistered(registeredPatient.uuid))
                 }
           }

@@ -76,6 +76,7 @@ buildscript {
       paging              : '2.1.2',
       appcompat           : '1.2.0-beta01',
       navigation          : '2.2.2',
+      lottie              : '3.4.0',
   ]
 
   repositories {

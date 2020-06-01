@@ -1,10 +1,13 @@
 # CHANGELOG
 
-## Next release
+## Next Release
+### Feature
+- [In Progress: 01 Jun 2020] User can delete patient
+
+## On Demo
 ### Feature
 - Handle cases where the patient ID is not set correctly in the deeplink
 - Show address for overdue patient
-- [In Progress: 01 Jun 2020] User can delete patient
 
 ### Internal
 - Migrated `ScheduleAppointmentSheet` to Mobius

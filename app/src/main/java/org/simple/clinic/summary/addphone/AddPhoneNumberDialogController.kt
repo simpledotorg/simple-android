@@ -15,6 +15,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_T
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -23,7 +24,8 @@ typealias UiChange = (Ui) -> Unit
 
 class AddPhoneNumberDialogController @Inject constructor(
     private val repository: PatientRepository,
-    private val validator: PhoneNumberValidator
+    private val validator: PhoneNumberValidator,
+    private val uuidGenerator: UuidGenerator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -58,7 +60,13 @@ class AddPhoneNumberDialogController @Inject constructor(
         .withLatestFrom(patientUuidStream)
         .flatMap { (newNumber, patientUuid) ->
           repository
-              .createPhoneNumberForPatient(patientUuid, newNumber, phoneNumberType = Mobile, active = true)
+              .createPhoneNumberForPatient(
+                  uuid = uuidGenerator.v4(),
+                  patientUuid = patientUuid,
+                  number = newNumber,
+                  phoneNumberType = Mobile,
+                  active = true
+              )
               .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))
         }
 

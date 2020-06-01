@@ -921,6 +921,7 @@ class PatientRepositoryAndroidTest {
     clock.advanceBy(updatedAfter)
 
     patientRepository.createPhoneNumberForPatient(
+        uuid = UUID.fromString("a7ed8601-7609-4559-8c2d-4df2d812c43f"),
         patientUuid = originalSavedPatient.uuid,
         number = "2222222222",
         phoneNumberType = PatientPhoneNumberType.Mobile,

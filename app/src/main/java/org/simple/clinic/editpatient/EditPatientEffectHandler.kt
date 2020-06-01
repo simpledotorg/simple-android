@@ -33,6 +33,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -48,6 +49,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val country: Country,
+    private val uuidGenerator: UuidGenerator,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) {
 
@@ -306,7 +308,13 @@ class EditPatientEffectHandler @AssistedInject constructor(
           noExistingPhoneNumberButHasEnteredPhoneNumber(existingPhoneNumber, enteredPhoneNumber)
         }
         .flatMapCompletable { (patientUuid, _, enteredPhoneNumber) ->
-          patientRepository.createPhoneNumberForPatient(patientUuid, enteredPhoneNumber, Mobile, true)
+          patientRepository.createPhoneNumberForPatient(
+              uuid = uuidGenerator.v4(),
+              patientUuid = patientUuid,
+              number = enteredPhoneNumber,
+              phoneNumberType = Mobile,
+              active = true
+          )
         }.toObservable()
   }
 

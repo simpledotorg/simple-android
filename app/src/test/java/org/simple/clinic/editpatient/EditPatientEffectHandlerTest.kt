@@ -25,6 +25,7 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -71,6 +72,9 @@ class EditPatientEffectHandlerTest {
 
   private val user = TestData.loggedInUser(uuid = UUID.fromString("3c3d0057-d6f6-42be-9bf6-5ccacb8bc54d"))
   private val facility = TestData.facility(uuid = UUID.fromString("d6685d51-f882-4995-b922-a6c637eed0a5"))
+  private val phoneNumberUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
+
+  private val uuidGenerator = FakeUuidGenerator.fixed(phoneNumberUuid)
 
   private val effectHandler = EditPatientEffectHandler(
       ui = ui,
@@ -81,6 +85,7 @@ class EditPatientEffectHandlerTest {
       userSession = userSession,
       facilityRepository = facilityRepository,
       country = country,
+      uuidGenerator = uuidGenerator,
       dateOfBirthFormatter = dateOfBirthFormatter
   )
 
@@ -176,6 +181,7 @@ class EditPatientEffectHandlerTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         country = country,
+        uuidGenerator = uuidGenerator,
         dateOfBirthFormatter = dateOfBirthFormatter
     )
 

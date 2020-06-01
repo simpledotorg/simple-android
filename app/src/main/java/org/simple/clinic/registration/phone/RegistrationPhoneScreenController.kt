@@ -22,6 +22,7 @@ import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -33,7 +34,8 @@ class RegistrationPhoneScreenController @Inject constructor(
     private val userSession: UserSession,
     private val userLookup: UserLookup,
     private val numberValidator: PhoneNumberValidator,
-    private val facilitySync: FacilitySync
+    private val facilitySync: FacilitySync,
+    private val uuidGenerator: UuidGenerator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -57,7 +59,7 @@ class RegistrationPhoneScreenController @Inject constructor(
           userSession.isOngoingRegistrationEntryPresent()
               .filter { present -> present.not() }
               .flatMapCompletable {
-                userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(uuid = UUID.randomUUID()))
+                userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(uuid = uuidGenerator.v4()))
               }
               .andThen(Observable.empty<UiChange>())
         }

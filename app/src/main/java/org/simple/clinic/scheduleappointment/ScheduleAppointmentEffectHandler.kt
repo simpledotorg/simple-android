@@ -20,8 +20,8 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.uuid.UuidGenerator
 import org.threeten.bp.LocalDate
-import java.util.UUID
 
 class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
@@ -31,6 +31,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val appointmentConfig: AppointmentConfig,
     private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
+    private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: ScheduleAppointmentUiActions
 ) {
 
@@ -93,7 +94,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
           .doOnNext { scheduleAppointment ->
             appointmentRepository.schedule(
                 patientUuid = scheduleAppointment.patientUuid,
-                appointmentUuid = UUID.randomUUID(),
+                appointmentUuid = uuidGenerator.v4(),
                 appointmentDate = scheduleAppointment.scheduledForDate,
                 appointmentType = scheduleAppointment.type,
                 appointmentFacilityUuid = scheduleAppointment.scheduledAtFacility.uuid,

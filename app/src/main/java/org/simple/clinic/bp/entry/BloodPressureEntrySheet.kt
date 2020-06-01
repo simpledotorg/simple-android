@@ -40,6 +40,7 @@ import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.wrap
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -118,6 +119,9 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   @Inject
   lateinit var patientRepository: PatientRepository
 
+  @Inject
+  lateinit var uuidGenerator: UuidGenerator
+
   private lateinit var component: BloodPressureEntryComponent
 
   private val uiRenderer = BloodPressureEntryUiRenderer(this)
@@ -127,15 +131,15 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
     val defaultModel = BloodPressureEntryModel.create(openAs, LocalDate.now(userClock).year)
 
     val effectHandler = BloodPressureEntryEffectHandler.create(
-        this,
-        userSession,
-        facilityRepository,
-        patientRepository,
-        bloodPressureRepository,
-        appointmentsRepository,
-        userClock,
-        userInputDatePaddingCharacter,
-        schedulersProvider
+        ui = this,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        patientRepository = patientRepository,
+        bloodPressureRepository = bloodPressureRepository,
+        appointmentsRepository = appointmentsRepository,
+        userClock = userClock,
+        schedulersProvider = schedulersProvider,
+        uuidGenerator = uuidGenerator
     )
 
     MobiusDelegate.forActivity(

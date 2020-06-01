@@ -51,6 +51,7 @@ import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.toUtcInstant
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -84,9 +85,10 @@ class BloodPressureEntrySheetLogicTest {
   private val userSession = mock<UserSession>()
 
   private val facilityRepository = mock<FacilityRepository>()
-  private val user = TestData.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
 
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("1367a583-12b1-48c6-ae9d-fb34f9aac449"))
   private val facility = TestData.facility(uuid = UUID.fromString("2a70f82e-92c6-4fce-b60e-6f083a8e725b"))
+  private val measurementUuid = UUID.fromString("25fcfb8b-af3e-40ae-a868-41bd92583f5f")
 
   private val uiRenderer = BloodPressureEntryUiRenderer(ui)
   private lateinit var fixture: MobiusTestFixture<BloodPressureEntryModel, BloodPressureEntryEvent, BloodPressureEntryEffect>
@@ -180,7 +182,7 @@ class BloodPressureEntrySheetLogicTest {
     uiEvents.onNext(DiastolicChanged(diastolic))
     uiEvents.onNext(SaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(ui, never()).setBpSavedResultAndFinish()
   }
 
@@ -309,7 +311,7 @@ class BloodPressureEntrySheetLogicTest {
     uiEvents.onNext(SaveClicked)
 
     when (openAs) {
-      is New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+      is New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
       is Update -> verify(bloodPressureRepository, never()).updateMeasurement(any())
       else -> throw AssertionError()
     }
@@ -332,6 +334,7 @@ class BloodPressureEntrySheetLogicTest {
     val entryDateAsInstant = inputDate.toUtcInstant(testUserClock)
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).doReturn(Completable.complete())
     whenever(bloodPressureRepository.saveMeasurement(
+        uuid = measurementUuid,
         patientUuid = patientUuid,
         reading = BloodPressureReading(130, 110),
         loggedInUser = user,
@@ -377,6 +380,7 @@ class BloodPressureEntrySheetLogicTest {
     val newInputDate = LocalDate.of(1991, 2, 14)
     val newInputDateAsInstant = newInputDate.toUtcInstant(testUserClock)
     whenever(bloodPressureRepository.saveMeasurement(
+        uuid = measurementUuid,
         patientUuid = patientUuid,
         reading = BloodPressureReading(120, 110),
         loggedInUser = user,
@@ -411,7 +415,7 @@ class BloodPressureEntrySheetLogicTest {
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
     verify(patientRepository).compareAndUpdateRecordedAt(updatedBp.patientUuid, updatedBp.recordedAt)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
     verify(ui).setBpSavedResultAndFinish()
   }
@@ -438,7 +442,7 @@ class BloodPressureEntrySheetLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(ui, never()).setBpSavedResultAndFinish()
 
@@ -808,6 +812,7 @@ class BloodPressureEntrySheetLogicTest {
     val entryDateAsInstant = inputDate.toUtcInstant(testUserClock)
 
     whenever(bloodPressureRepository.saveMeasurement(
+        uuid = measurementUuid,
         patientUuid = patientUuid,
         reading = BloodPressureReading(systolic, diastolic),
         loggedInUser = user,
@@ -883,7 +888,7 @@ class BloodPressureEntrySheetLogicTest {
     )
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
 
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
@@ -947,7 +952,7 @@ class BloodPressureEntrySheetLogicTest {
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
     verify(patientRepository).compareAndUpdateRecordedAt(updatedBp.patientUuid, updatedBp.recordedAt)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
     verify(ui).setBpSavedResultAndFinish()
   }
@@ -1008,7 +1013,7 @@ class BloodPressureEntrySheetLogicTest {
     val entryDateAsInstant = newInputDate.toUtcInstant(testUserClock)
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
 
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
@@ -1037,15 +1042,15 @@ class BloodPressureEntrySheetLogicTest {
 
   private fun instantiateFixture(openAs: OpenAs) {
     val effectHandler = BloodPressureEntryEffectHandler.create(
-        ui,
-        userSession,
-        facilityRepository,
-        patientRepository,
-        bloodPressureRepository,
-        appointmentRepository,
-        testUserClock,
-        UserInputDatePaddingCharacter.ZERO,
-        TrampolineSchedulersProvider()
+        ui = ui,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        patientRepository = patientRepository,
+        bloodPressureRepository = bloodPressureRepository,
+        appointmentsRepository = appointmentRepository,
+        userClock = testUserClock,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        uuidGenerator = FakeUuidGenerator.fixed(measurementUuid)
     )
 
     fixture = MobiusTestFixture(

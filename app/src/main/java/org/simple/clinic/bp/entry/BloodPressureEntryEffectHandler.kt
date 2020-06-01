@@ -26,11 +26,11 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.toUtcInstant
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
@@ -46,7 +46,8 @@ class BloodPressureEntryEffectHandler private constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val appointmentsRepository: AppointmentRepository,
     private val userClock: UserClock,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val uuidGenerator: UuidGenerator
 ) {
   private val reportAnalyticsEvents = ReportAnalyticsEvents()
 
@@ -59,8 +60,8 @@ class BloodPressureEntryEffectHandler private constructor(
         bloodPressureRepository: BloodPressureRepository,
         appointmentsRepository: AppointmentRepository,
         userClock: UserClock,
-        paddingCharacter: UserInputDatePaddingCharacter,
-        schedulersProvider: SchedulersProvider
+        schedulersProvider: SchedulersProvider,
+        uuidGenerator: UuidGenerator
     ): ObservableTransformer<BloodPressureEntryEffect, BloodPressureEntryEvent> {
       return BloodPressureEntryEffectHandler(ui,
           userSession,
@@ -69,7 +70,8 @@ class BloodPressureEntryEffectHandler private constructor(
           bloodPressureRepository,
           appointmentsRepository,
           userClock,
-          schedulersProvider
+          schedulersProvider,
+          uuidGenerator
       ).buildEffectHandler()
     }
   }
@@ -260,6 +262,7 @@ class BloodPressureEntryEffectHandler private constructor(
   ): Single<BloodPressureMeasurement> {
     val (patientUuid, reading, date, _) = entry
     return bloodPressureRepository.saveMeasurement(
+        uuid = uuidGenerator.v4(),
         patientUuid = patientUuid,
         reading = reading,
         loggedInUser = user,

@@ -31,6 +31,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
@@ -90,7 +91,7 @@ class BloodPressureValidationTest {
     uiEvents.onNext(DiastolicChanged(diastolic))
     uiEvents.onNext(SaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
 
     uiChangeVerification(ui)
@@ -189,8 +190,8 @@ class BloodPressureValidationTest {
         bloodPressureRepository,
         appointmentRepository,
         testUserClock,
-        UserInputDatePaddingCharacter.ZERO,
-        TrampolineSchedulersProvider()
+        TrampolineSchedulersProvider(),
+        FakeUuidGenerator.fixed(UUID.fromString("abb04673-6ec0-4e1a-a4ad-5380e6f7e233"))
     )
 
     fixture = MobiusTestFixture(

@@ -32,6 +32,7 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
@@ -104,7 +105,7 @@ class BloodPressureValidationMockDateValidatorTest {
       onNext(SaveClicked)
     }
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(ui, never()).setBpSavedResultAndFinish()
 
@@ -143,7 +144,7 @@ class BloodPressureValidationMockDateValidatorTest {
     uiEvents.onNext(SaveClicked)
 
     when (openAs) {
-      is New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any())
+      is New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
       is Update -> verify(bloodPressureRepository, never()).updateMeasurement(any())
       else -> throw AssertionError()
     }
@@ -184,15 +185,15 @@ class BloodPressureValidationMockDateValidatorTest {
 
   private fun instantiateFixture(openAs: OpenAs) {
     val effectHandler = BloodPressureEntryEffectHandler.create(
-        ui,
-        userSession,
-        facilityRepository,
-        patientRepository,
-        bloodPressureRepository,
-        appointmentRepository,
-        testUserClock,
-        UserInputDatePaddingCharacter.ZERO,
-        TrampolineSchedulersProvider()
+        ui = ui,
+        userSession = userSession,
+        facilityRepository = facilityRepository,
+        patientRepository = patientRepository,
+        bloodPressureRepository = bloodPressureRepository,
+        appointmentsRepository = appointmentRepository,
+        userClock = testUserClock,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("7283abf4-b718-4379-b101-46f011b5536b"))
     )
 
     fixture = MobiusTestFixture(

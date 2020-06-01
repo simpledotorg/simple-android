@@ -39,6 +39,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.threeten.bp.Duration
@@ -59,6 +60,7 @@ class PatientSummaryScreenLogicTest {
   private val teleconsultationApi = mock<TeleconsultationApi>()
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
   private val facility = TestData.facility(uuid = UUID.fromString("b84a6311-6faf-4de3-9336-ccd64de629f9"))
+  private val medicalHistoryUuid = UUID.fromString("fe66d59b-b7e9-48f3-b22b-14d55c5532cb")
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
@@ -244,6 +246,7 @@ class PatientSummaryScreenLogicTest {
         teleconsultationApi = teleconsultationApi,
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
+        uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
         uiActions = uiActions
     )
 

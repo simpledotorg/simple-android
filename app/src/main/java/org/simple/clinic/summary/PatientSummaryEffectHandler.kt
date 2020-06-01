@@ -26,6 +26,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import java.util.UUID
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
@@ -43,6 +44,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val teleconsultationApi: TeleconsultationApi,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
+    private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: PatientSummaryUiActions
 ) {
 
@@ -161,7 +163,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
             val timestamp = loadDataForBackClick.screenCreatedTimestamp
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(patientUuid)
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = patientUuid
+            )
 
             DataForBackClickLoaded(
                 hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
@@ -180,7 +185,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(patientUuid)
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = patientUuid
+            )
 
             DataForDoneClickLoaded(countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid), diagnosisRecorded = medicalHistory.diagnosisRecorded)
           }

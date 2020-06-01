@@ -64,7 +64,7 @@ class MedicalHistoryRepositoryAndroidTest {
         historyEntry = historyEntry
     ).blockingAwait()
 
-    val savedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
+    val savedHistory = dao.historyForPatientImmediate(patientUuid)!!
 
     assertThat(savedHistory.hasHadHeartAttack).isEqualTo(Yes)
     assertThat(savedHistory.hasHadStroke).isEqualTo(Yes)
@@ -81,7 +81,7 @@ class MedicalHistoryRepositoryAndroidTest {
     val instant = Instant.now(clock)
     repository.save(historyToSave, instant)
 
-    val savedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
+    val savedHistory = dao.historyForPatientImmediate(patientUuid)!!
     val expectedSavedHistory = historyToSave.copy(syncStatus = SyncStatus.PENDING, updatedAt = instant)
 
     assertThat(savedHistory).isEqualTo(expectedSavedHistory)
@@ -102,7 +102,7 @@ class MedicalHistoryRepositoryAndroidTest {
     val newHistory = oldHistory.copy(hasHadHeartAttack = Yes)
     repository.save(newHistory, now)
 
-    val updatedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
+    val updatedHistory = dao.historyForPatientImmediate(patientUuid)!!
 
     assertThat(updatedHistory.hasHadHeartAttack).isEqualTo(Yes)
     assertThat(updatedHistory.syncStatus).isEqualTo(SyncStatus.PENDING)
@@ -110,9 +110,14 @@ class MedicalHistoryRepositoryAndroidTest {
   }
 
   @Test
-  fun when_medical_history_isnt_present_for_a_patient_then_an_empty_value_should_be_returned() {
-    val emptyHistory = repository.historyForPatientOrDefault(UUID.randomUUID()).blockingFirst()
+  fun when_medical_history_is_not_present_for_a_patient_then_an_empty_value_should_be_returned() {
+    val emptyHistoryUuid = UUID.fromString("b025b4e9-3907-4168-abd4-ab117739756d")
+    val emptyHistory = repository.historyForPatientOrDefault(
+        defaultHistoryUuid = emptyHistoryUuid,
+        patientUuid = UUID.randomUUID()
+    ).blockingFirst()
 
+    assertThat(emptyHistory.uuid).isEqualTo(emptyHistoryUuid)
     assertThat(emptyHistory.hasHadHeartAttack).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasHadStroke).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(Unanswered)
@@ -137,7 +142,7 @@ class MedicalHistoryRepositoryAndroidTest {
     repository.save(olderHistory, olderHistory.updatedAt)
     repository.save(newerHistory, newerHistory.updatedAt)
 
-    val foundHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
+    val foundHistory = dao.historyForPatientImmediate(patientUuid)!!
     assertThat(foundHistory.uuid).isEqualTo(newerHistory.uuid)
   }
 
@@ -157,15 +162,20 @@ class MedicalHistoryRepositoryAndroidTest {
 
     dao.save(listOf(olderHistory, newerHistory))
 
-    val foundHistory = repository.historyForPatientOrDefaultImmediate(patientUuid)
+    val foundHistory = dao.historyForPatientImmediate(patientUuid)!!
     assertThat(foundHistory).isEqualTo(newerHistory)
   }
 
   @Test
   fun when_no_medical_history_is_present_for_a_patient_then_return_detail_medical_history() {
+    val emptyHistoryUuid = UUID.fromString("3f7b9090-daa9-4406-834f-563219fec5a3")
     val patientUuid = UUID.fromString("694d1c32-048f-4d43-93d4-0cd51be686b0")
-    val emptyHistory = repository.historyForPatientOrDefaultImmediate(patientUuid)
+    val emptyHistory = repository.historyForPatientOrDefaultImmediate(
+        defaultHistoryUuid = emptyHistoryUuid,
+        patientUuid = patientUuid
+    )
 
+    assertThat(emptyHistory.uuid).isEqualTo(emptyHistoryUuid)
     assertThat(emptyHistory.hasHadHeartAttack).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasHadStroke).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(Unanswered)

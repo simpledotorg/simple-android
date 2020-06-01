@@ -33,6 +33,7 @@ import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.net.UnknownHostException
@@ -58,6 +59,8 @@ class PatientSummaryEffectHandlerTest {
   private val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
   private val user = TestData.loggedInUser(uuid = UUID.fromString("39f96341-c043-4059-880e-e32754341a04"))
   private val facility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
+  private val medicalHistoryUuid = UUID.fromString("78336f4d-071e-47a6-9423-7ab1f57a907e")
+  private val uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
 
   private val effectHandler = PatientSummaryEffectHandler(
       schedulersProvider = TrampolineSchedulersProvider(),
@@ -74,6 +77,7 @@ class PatientSummaryEffectHandlerTest {
       teleconsultationApi = teleconsultationApi,
       currentUser = Lazy { user },
       currentFacility = Lazy { facility },
+      uuidGenerator = uuidGenerator,
       uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -112,6 +116,7 @@ class PatientSummaryEffectHandlerTest {
         teleconsultationApi = teleconsultationApi,
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
+        uuidGenerator = uuidGenerator,
         uiActions = uiActions
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -177,7 +182,7 @@ class PatientSummaryEffectHandlerTest {
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 3
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 2
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp))
@@ -201,7 +206,7 @@ class PatientSummaryEffectHandlerTest {
 
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 2
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 3
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     testCase.dispatch(LoadDataForDoneClick(patientUuid))

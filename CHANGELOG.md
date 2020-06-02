@@ -3,6 +3,7 @@
 ## Next Release
 ### Feature
 - User can soft delete patient
+- [In Progress 02 Jun 2020] New Onboarding UI
 
 ### Changes
 - Rename the button label to 'Next' when assigning a new BP passport to an existing patient

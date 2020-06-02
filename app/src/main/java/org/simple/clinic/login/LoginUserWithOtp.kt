@@ -4,16 +4,14 @@ import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
-import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.readErrorResponseJson
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -22,10 +20,8 @@ import javax.inject.Named
 
 class LoginUserWithOtp @Inject constructor(
     private val usersApi: UsersApi,
-    private val dataSync: DataSync,
     private val userDao: User.RoomDao,
     private val facilityRepository: FacilityRepository,
-    private val schedulersProvider: SchedulersProvider,
     private val moshi: Moshi,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
 ) {
@@ -37,7 +33,6 @@ class LoginUserWithOtp @Inject constructor(
         .flatMap(::storeUserAndAccessToken)
         .doOnSuccess(::reportUserLoggedInToAnalytics)
         .map { LoginResult.Success as LoginResult }
-        .doOnSuccess { syncOnLoginResult() }
         .onErrorReturn(::mapErrorToLoginResult)
         .doOnSuccess { Timber.i("Login result: $it") }
   }
@@ -86,13 +81,5 @@ class LoginUserWithOtp @Inject constructor(
 
   private fun reportUserLoggedInToAnalytics(user: User) {
     Analytics.setLoggedInUser(AnalyticsUser(user.uuid, user.fullName))
-  }
-
-  private fun syncOnLoginResult() {
-    dataSync
-        .syncTheWorld()
-        .subscribeOn(schedulersProvider.io())
-        .onErrorComplete()
-        .subscribe()
   }
 }

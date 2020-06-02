@@ -9,6 +9,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.login.activateuser.ActivateUser
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingLoginEntryRepository
@@ -29,7 +30,8 @@ class EnterOtpScreenController @Inject constructor(
     private val activateUser: ActivateUser,
     private val loginUserWithOtp: LoginUserWithOtp,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val dataSync: DataSync
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -93,6 +95,7 @@ class EnterOtpScreenController @Inject constructor(
               .doOnSuccess { loginResult ->
                 if (loginResult is LoginResult.Success) {
                   ongoingLoginEntryRepository.clearLoginEntry()
+                  dataSync.fireAndForgetSync()
                 }
               }
               .flatMapObservable { loginResult ->

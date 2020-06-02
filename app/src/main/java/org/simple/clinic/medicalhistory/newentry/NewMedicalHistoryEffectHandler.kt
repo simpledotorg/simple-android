@@ -59,6 +59,8 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
                 .saveOngoingEntryAsPatient(
                     loggedInUser = user,
                     facility = facility,
+                    patientUuid = uuidGenerator.v4(),
+                    addressUuid = uuidGenerator.v4(),
                     supplyUuidForBpPassport = uuidGenerator::v4,
                     supplyUuidForAlternativeId = uuidGenerator::v4,
                     supplyUuidForPhoneNumber = uuidGenerator::v4

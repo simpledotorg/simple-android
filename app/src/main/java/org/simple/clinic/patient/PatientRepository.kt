@@ -258,6 +258,8 @@ class PatientRepository @Inject constructor(
   fun saveOngoingEntryAsPatient(
       loggedInUser: User,
       facility: Facility,
+      patientUuid: UUID,
+      addressUuid: UUID,
       supplyUuidForBpPassport: () -> UUID,
       supplyUuidForAlternativeId: () -> UUID,
       supplyUuidForPhoneNumber: () -> UUID
@@ -275,7 +277,6 @@ class PatientRepository @Inject constructor(
           }
         }
 
-    val addressUuid = UUID.randomUUID()
     val addressSave = cachedOngoingEntry
         .map {
           with(it) {
@@ -294,7 +295,6 @@ class PatientRepository @Inject constructor(
         }
         .flatMapCompletable { address -> saveAddress(address) }
 
-    val patientUuid = UUID.randomUUID()
     val sharedPatient = cachedOngoingEntry
         .map {
           with(it) {

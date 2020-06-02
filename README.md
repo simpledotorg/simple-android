@@ -37,18 +37,23 @@ export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 ```
 
-4. Install the JDK using Homebrew.
+4. Once this is done, you'll need to restart the terminal or reload the configuration file in order for the `jenv` command to be recognised.
+```sh
+source <path to shell configuration file>
+```
+
+5. Install the JDK using Homebrew.
 ```sh
 brew tap AdoptOpenJDK/openjdk
 brew cask install adoptopenjdk8
 ```
 
-5. Add the installed JDK to `jEnv`
+6. Add the installed JDK to `jEnv`
 ```sh
 jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
 ```
 
-6. Run the command `jenv versions`. You should see something like:
+7. Run the command `jenv versions`. You should see something like:
 ```sh
   system
 * 1.8

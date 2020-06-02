@@ -4,6 +4,9 @@
 ### Feature
 - User can soft delete patient
 
+### Internal
+- Change syncs on login to trigger at the usage site instead of in the `LoginUserWithOtp` class
+
 ## On Demo
 ### Feature
 - Handle cases where the patient ID is not set correctly in the deeplink

@@ -84,10 +84,23 @@ class NewMedicalHistoryScreenLogicTest {
   fun `when save is clicked with selected answers then patient with the answers should be saved and summary screen should be opened`() {
     // given
     val savedPatient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())).thenReturn(Single.just(savedPatient))
+    val addressUuid = UUID.fromString("79f6d1bc-0e10-480b-9cce-43c628d827b7")
+
+    val uuidGenerator = mock<UuidGenerator>()
+    whenever(uuidGenerator.v4()).thenReturn(patientUuid, addressUuid, medicalHistoryUuid)
+
+    whenever(patientRepository.saveOngoingEntryAsPatient(
+        loggedInUser = eq(user),
+        facility = eq(facility),
+        patientUuid = eq(patientUuid),
+        addressUuid = eq(addressUuid),
+        supplyUuidForBpPassport = any(),
+        supplyUuidForAlternativeId = any(),
+        supplyUuidForPhoneNumber = any()
+    )).thenReturn(Single.just(savedPatient))
 
     // when
-    startMobiusLoop()
+    startMobiusLoop(uuidGenerator = uuidGenerator)
 
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
@@ -98,7 +111,7 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())
+      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), eq(patientUuid), eq(addressUuid), any(), any(), any())
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
@@ -118,16 +131,29 @@ class NewMedicalHistoryScreenLogicTest {
   fun `when save is clicked with no answers then patient with an empty medical history should be saved and summary screen should be opened`() {
     // given
     val savedPatient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())).thenReturn(Single.just(savedPatient))
+    val addressUuid = UUID.fromString("79f6d1bc-0e10-480b-9cce-43c628d827b7")
+
+    val uuidGenerator = mock<UuidGenerator>()
+    whenever(uuidGenerator.v4()).thenReturn(patientUuid, addressUuid, medicalHistoryUuid)
+
+    whenever(patientRepository.saveOngoingEntryAsPatient(
+        loggedInUser = eq(user),
+        facility = eq(facility),
+        patientUuid = eq(patientUuid),
+        addressUuid = eq(addressUuid),
+        supplyUuidForBpPassport = any(),
+        supplyUuidForAlternativeId = any(),
+        supplyUuidForPhoneNumber = any()
+    )).thenReturn(Single.just(savedPatient))
 
     // when
-    startMobiusLoop()
+    startMobiusLoop(uuidGenerator = uuidGenerator)
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())
+      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), eq(patientUuid), eq(addressUuid), any(), any(), any())
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
@@ -148,10 +174,23 @@ class NewMedicalHistoryScreenLogicTest {
   fun `when an already selected answer for a question is changed, the new answer should be used when saving the medical history`() {
     // given
     val savedPatient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())).thenReturn(Single.just(savedPatient))
+    val addressUuid = UUID.fromString("79f6d1bc-0e10-480b-9cce-43c628d827b7")
+
+    val uuidGenerator = mock<UuidGenerator>()
+    whenever(uuidGenerator.v4()).thenReturn(patientUuid, addressUuid, medicalHistoryUuid)
+
+    whenever(patientRepository.saveOngoingEntryAsPatient(
+        loggedInUser = eq(user),
+        facility = eq(facility),
+        patientUuid = eq(patientUuid),
+        addressUuid = eq(addressUuid),
+        supplyUuidForBpPassport = any(),
+        supplyUuidForAlternativeId = any(),
+        supplyUuidForPhoneNumber = any()
+    )).thenReturn(Single.just(savedPatient))
 
     // when
-    startMobiusLoop()
+    startMobiusLoop(uuidGenerator = uuidGenerator)
 
     // Initial answers
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
@@ -171,7 +210,7 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())
+      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), eq(patientUuid), eq(addressUuid), any(), any(), any())
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,

@@ -258,8 +258,8 @@ class PatientRepository @Inject constructor(
   fun saveOngoingEntryAsPatient(
       loggedInUser: User,
       facility: Facility,
-      supplyUuidForBpPassport: () -> UUID = { UUID.randomUUID() },
-      supplyUuidForAlternativeId: () -> UUID = { UUID.randomUUID() }
+      supplyUuidForBpPassport: () -> UUID,
+      supplyUuidForAlternativeId: () -> UUID
   ): Single<Patient> {
     val cachedOngoingEntry = ongoingEntry().cache()
 

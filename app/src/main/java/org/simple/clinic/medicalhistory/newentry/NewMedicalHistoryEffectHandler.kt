@@ -55,7 +55,13 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
             RegisterPatientData(loggedInUser, facility, ongoingMedicalHistoryEntry)
           }
           .flatMapSingle { (user, facility, ongoingMedicalHistoryEntry) ->
-            patientRepository.saveOngoingEntryAsPatient(user, facility)
+            patientRepository
+                .saveOngoingEntryAsPatient(
+                    loggedInUser = user,
+                    facility = facility,
+                    supplyUuidForBpPassport = uuidGenerator::v4,
+                    supplyUuidForAlternativeId = uuidGenerator::v4
+                )
                 .flatMap { registeredPatient ->
                   medicalHistoryRepository
                       .save(

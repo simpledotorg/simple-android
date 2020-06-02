@@ -6,10 +6,15 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
+import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
 class DataSyncTest {
+
+  @get:Rule
+  val rule = RxErrorsRule()
 
   private val schedulersProvider = TrampolineSchedulersProvider()
 
@@ -47,20 +52,22 @@ class DataSyncTest {
   @Test
   fun `when syncing everything, if any of the syncs throws an error, the other syncs must not be affected`() {
     val modelSync1 = mock<ModelSync>()
-    val modelSync2 = mock<ModelSync>()
-    val modelSync3 = mock<ModelSync>()
-
     val (sync1Completable, sync1Consumer) = Completable.complete().subscriptionTest()
     whenever(modelSync1.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
     whenever(modelSync1.sync()).thenReturn(sync1Completable)
+    whenever(modelSync1.name).thenReturn("sync1")
 
+    val modelSync2 = mock<ModelSync>()
     val sync2Completable = Completable.error(RuntimeException("TEST"))
     whenever(modelSync2.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
     whenever(modelSync2.sync()).thenReturn(sync2Completable)
+    whenever(modelSync2.name).thenReturn("sync2")
 
+    val modelSync3 = mock<ModelSync>()
     val (sync3Completable, sync3Consumer) = Completable.complete().subscriptionTest()
     whenever(modelSync3.syncConfig()).thenReturn(createSyncConfig(SyncGroup.FREQUENT))
     whenever(modelSync3.sync()).thenReturn(sync3Completable)
+    whenever(modelSync3.name).thenReturn("sync3")
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),

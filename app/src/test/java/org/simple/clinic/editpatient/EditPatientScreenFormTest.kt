@@ -28,7 +28,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.EditPatientValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.EditPatientValidationError.STATE_EMPTY
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
@@ -74,7 +73,6 @@ class EditPatientScreenFormTest {
 
   private val patientRepository: PatientRepository = mock()
   private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
   private val country = TestData.country()
 
   @Test
@@ -806,7 +804,6 @@ class EditPatientScreenFormTest {
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
         userSession = userSession,
-        facilityRepository = facilityRepository,
         country = country,
         uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("d1593ec2-cf7e-44dd-a057-69f71fb920ee")),
         dateOfBirthFormatter = dateOfBirthFormat

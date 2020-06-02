@@ -12,7 +12,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.user.UserSession
@@ -45,21 +44,15 @@ class LinkIdWithPatientViewControllerTest {
 
   private val user = TestData.loggedInUser()
 
-  private val facility = TestData.facility()
-
-  private val facilityRepository = mock<FacilityRepository>()
-
   private val controller = LinkIdWithPatientViewController(
       patientRepository = patientRepository,
       userSession = userSession,
-      facilityRepository = facilityRepository,
       uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
   )
 
   @Before
   fun setUp() {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(view) }
@@ -80,8 +73,7 @@ class LinkIdWithPatientViewControllerTest {
         uuid = identifierUuid,
         patientUuid = patientUuid,
         identifier = identifier,
-        assigningUser = user,
-        assigningFacility = facility
+        assigningUser = user
     )).thenReturn(Single.just(businessId))
 
     uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
@@ -91,8 +83,7 @@ class LinkIdWithPatientViewControllerTest {
         uuid = identifierUuid,
         patientUuid = patientUuid,
         identifier = identifier,
-        assigningUser = user,
-        assigningFacility = facility
+        assigningUser = user
     )
     verify(view).closeSheetWithIdLinked()
   }
@@ -103,6 +94,6 @@ class LinkIdWithPatientViewControllerTest {
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
     verify(view).closeSheetWithoutIdLinked()
-    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any(), any())
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
   }
 }

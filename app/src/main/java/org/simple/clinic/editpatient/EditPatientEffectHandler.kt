@@ -11,8 +11,6 @@ import io.reactivex.Single
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
@@ -27,7 +25,6 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -47,7 +44,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val schedulersProvider: SchedulersProvider,
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val country: Country,
     private val uuidGenerator: UuidGenerator,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
@@ -250,12 +246,14 @@ class EditPatientEffectHandler @AssistedInject constructor(
     return savePatientEffects
         .filter(::isAlternativeIdAdded)
         .flatMapCompletable { savePatientEffect ->
-          userAndCurrentFacility()
-              .flatMap { (user, facility) ->
+          userSession
+              .loggedInUser()
+              .filterAndUnwrapJust()
+              .firstOrError()
+              .flatMap { user ->
                 patientRepository.addIdentifierToPatient(
                     uuid = uuidGenerator.v4(),
                     assigningUser = user,
-                    assigningFacility = facility,
                     patientUuid = savePatientEffect.ongoingEntry.patientUuid,
                     identifier = Identifier(
                         value = savePatientEffect.ongoingEntry.alternativeId,
@@ -327,18 +325,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .andThen(patientRepository.updateAddressForPatient(updatedPatient.uuid, updatedAddress))
         // Doing this because Completables are not working properly
         .toSingleDefault(true)
-  }
-
-  private fun userAndCurrentFacility(): Single<Pair<User, Facility>> {
-    return userSession
-        .loggedInUser()
-        .filterAndUnwrapJust()
-        .flatMap { user ->
-          facilityRepository
-              .currentFacility(user)
-              .map { facility -> user to facility }
-        }
-        .firstOrError()
   }
 
   private fun isAlternativeIdModified(it: SavePatientEffect) = it.saveAlternativeId != null && it.ongoingEntry.alternativeId.isNotBlank()

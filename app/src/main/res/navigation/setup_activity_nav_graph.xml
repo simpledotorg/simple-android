@@ -17,8 +17,8 @@
       app:popUpTo="@id/placeholderScreen"
       app:popUpToInclusive="true" />
     <action
-      android:id="@+id/action_placeholderScreen_to_onboardingScreen"
-      app:destination="@id/onboardingScreen"
+      android:id="@+id/action_placeholderScreen_to_onboardingScreenOld"
+      app:destination="@id/onboardingScreenOld"
       app:popUpTo="@id/placeholderScreen"
       app:popUpToInclusive="true" />
     <action
@@ -28,16 +28,16 @@
       app:popUpToInclusive="true" />
   </screen>
   <screen
-    android:id="@+id/onboardingScreen"
-    android:name="org.simple.clinic.onboarding.OnboardingScreen"
+    android:id="@+id/onboardingScreenOld"
+    android:name="org.simple.clinic.onboarding.OnboardingScreen_Old"
     android:label="OnboardingScreen"
     app:analyticsName="Onboarding"
-    app:layout="@layout/screen_onboarding"
-    tools:layout="@layout/screen_onboarding">
+    app:layout="@layout/screen_onboarding_old"
+    tools:layout="@layout/screen_onboarding_old">
     <action
-      android:id="@+id/action_onboardingScreen_to_selectCountryScreen"
+      android:id="@+id/action_onboardingScreenOld_to_selectCountryScreen"
       app:destination="@id/selectCountryScreen"
-      app:popUpTo="@id/onboardingScreen"
+      app:popUpTo="@id/onboardingScreenOld"
       app:popUpToInclusive="true" />
   </screen>
   <screen

@@ -10,7 +10,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import kotlinx.android.synthetic.main.screen_onboarding.view.*
+import kotlinx.android.synthetic.main.screen_onboarding_old.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
@@ -22,7 +22,7 @@ import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 import javax.inject.Named
 
-class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), OnboardingUi {
+class OnboardingScreen_Old(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet), OnboardingUi {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -89,6 +89,6 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   }
 
   override fun moveToRegistrationScreen() {
-    findNavController().navigate(R.id.action_onboardingScreen_to_selectCountryScreen)
+    findNavController().navigate(R.id.action_onboardingScreenOld_to_selectCountryScreen)
   }
 }

@@ -11,5 +11,5 @@ class OnboardingScreenKey : FullScreenKey {
   @IgnoredOnParcel
   override val analyticsName = "Onboarding"
 
-  override fun layoutRes() = R.layout.screen_onboarding
+  override fun layoutRes() = R.layout.screen_onboarding_old
 }

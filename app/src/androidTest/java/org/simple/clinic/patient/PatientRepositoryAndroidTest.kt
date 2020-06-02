@@ -1462,8 +1462,7 @@ class PatientRepositoryAndroidTest {
             uuid = UUID.fromString("3bf3cb49-a8be-4754-98da-da9f2b487727"),
             patientUuid = patientProfile.patient.uuid,
             identifier = Identifier(bpPassportCode, BpPassport),
-            assigningUser = loggedInUser,
-            assigningFacility = currentFacility
+            assigningUser = loggedInUser
         )
         .blockingGet()
 
@@ -1503,8 +1502,7 @@ class PatientRepositoryAndroidTest {
             uuid = UUID.fromString("3bf3cb49-a8be-4754-98da-da9f2b487727"),
             patientUuid = patientProfile.patient.uuid,
             identifier = Identifier(nationalId, BangladeshNationalId),
-            assigningUser = loggedInUser,
-            assigningFacility = currentFacility
+            assigningUser = loggedInUser
         )
         .blockingGet()
 
@@ -2853,8 +2851,7 @@ class PatientRepositoryAndroidTest {
               uuid = UUID.randomUUID(),
               patientUuid = patientProfile.patient.uuid,
               identifier = Identifier(bpPassportId, BpPassport),
-              assigningUser = loggedInUser,
-              assigningFacility = currentFacility
+              assigningUser = loggedInUser
           )
           .blockingGet()
     }
@@ -2958,8 +2955,7 @@ class PatientRepositoryAndroidTest {
               uuid = UUID.fromString("3bf3cb49-a8be-4754-98da-da9f2b487727"),
               patientUuid = patientProfile.patient.uuid,
               identifier = Identifier(bpPassportId, BpPassport),
-              assigningUser = loggedInUser,
-              assigningFacility = currentFacility
+              assigningUser = loggedInUser
           )
           .blockingGet()
     }

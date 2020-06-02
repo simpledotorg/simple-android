@@ -335,8 +335,7 @@ class PatientRepository @Inject constructor(
                 uuid = supplyUuidForBpPassport(),
                 patientUuid = patientUuid,
                 identifier = entry.identifier,
-                assigningUser = loggedInUser,
-                assigningFacility = facility
+                assigningUser = loggedInUser
             ).toCompletable()
           }
         }
@@ -350,8 +349,7 @@ class PatientRepository @Inject constructor(
                 uuid = supplyUuidForAlternativeId(),
                 patientUuid = patientUuid,
                 identifier = entry.alternativeId,
-                assigningUser = loggedInUser,
-                assigningFacility = facility
+                assigningUser = loggedInUser
             ).toCompletable()
           }
         }
@@ -534,10 +532,9 @@ class PatientRepository @Inject constructor(
       uuid: UUID,
       patientUuid: UUID,
       identifier: Identifier,
-      assigningUser: User,
-      assigningFacility: Facility
+      assigningUser: User
   ): Single<BusinessId> {
-    val businessIdStream = createBusinessIdMetaDataForIdentifier(identifier.type, assigningUser, assigningFacility)
+    val businessIdStream = createBusinessIdMetaDataForIdentifier(identifier.type, assigningUser)
         .map { metaAndVersion ->
           val now = Instant.now(utcClock)
           BusinessId(
@@ -565,24 +562,23 @@ class PatientRepository @Inject constructor(
 
   private fun createBusinessIdMetaDataForIdentifier(
       identifierType: IdentifierType,
-      assigningUser: User,
-      assigningFacility: Facility
+      assigningUser: User
   ): Single<BusinessIdMetaAndVersion> {
     return when (identifierType) {
-      BpPassport -> createBpPassportMetaData(assigningUser, assigningFacility)
-      BangladeshNationalId -> createBangladeshNationalIdMetadata(assigningUser, assigningFacility)
+      BpPassport -> createBpPassportMetaData(assigningUser)
+      BangladeshNationalId -> createBangladeshNationalIdMetadata(assigningUser)
       is Unknown -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
     }
   }
 
-  private fun createBpPassportMetaData(assigningUser: User, assigningFacility: Facility): Single<BusinessIdMetaAndVersion> {
-    return Single.just(BpPassportMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningFacility.uuid))
+  private fun createBpPassportMetaData(assigningUser: User): Single<BusinessIdMetaAndVersion> {
+    return Single.just(BpPassportMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningUser.currentFacilityUuid))
         .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.BpPassportMetaDataV1) to MetaDataVersion.BpPassportMetaDataV1 }
         .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
   }
 
-  private fun createBangladeshNationalIdMetadata(assigningUser: User, assigningFacility: Facility): Single<BusinessIdMetaAndVersion> {
-    return Single.just(BangladeshNationalIdMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningFacility.uuid))
+  private fun createBangladeshNationalIdMetadata(assigningUser: User): Single<BusinessIdMetaAndVersion> {
+    return Single.just(BangladeshNationalIdMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningUser.currentFacilityUuid))
         .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.BangladeshNationalIdMetaDataV1) to MetaDataVersion.BangladeshNationalIdMetaDataV1 }
         .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
   }

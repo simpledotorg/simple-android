@@ -17,22 +17,19 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
-import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toUser
 import retrofit2.HttpException
 import retrofit2.Response
@@ -45,10 +42,8 @@ class LoginUserWithOtpTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val usersApi: UsersApi = mock()
-  private val dataSync: DataSync = mock()
   private val userDao: User.RoomDao = mock()
   private val facilityRepository = mock<FacilityRepository>()
-  private val schedulersProvider: SchedulersProvider = TrampolineSchedulersProvider()
   private val moshi = Moshi.Builder().build()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val analyticsReporter: MockAnalyticsReporter = MockAnalyticsReporter()
@@ -66,10 +61,8 @@ class LoginUserWithOtpTest {
 
   private val loginUserWithOtp = LoginUserWithOtp(
       usersApi = usersApi,
-      dataSync = dataSync,
       userDao = userDao,
       facilityRepository = facilityRepository,
-      schedulersProvider = schedulersProvider,
       moshi = moshi,
       accessTokenPreference = accessTokenPref
   )
@@ -89,7 +82,6 @@ class LoginUserWithOtpTest {
     // given
     whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
     whenever(facilityRepository.setCurrentFacility(loggedInUserPayload.toUser(LOGGED_IN), facilityUuid)) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
 
     // when
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
@@ -105,7 +97,6 @@ class LoginUserWithOtpTest {
     whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
     val user = loggedInUserPayload.toUser(LOGGED_IN)
     whenever(facilityRepository.setCurrentFacility(user, facilityUuid)) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
 
     // when
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
@@ -121,31 +112,12 @@ class LoginUserWithOtpTest {
     whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
     val user = loggedInUserPayload.toUser(LOGGED_IN)
     whenever(facilityRepository.setCurrentFacility(user, facilityUuid)) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()) doReturn Completable.complete()
 
     // when
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
 
     // then
     assertThat(analyticsReporter.user).isEqualTo(AnalyticsUser(user.uuid, user.fullName))
-    assertThat(loginResult).isEqualTo(Success)
-  }
-
-  @Test
-  fun `when the login call is successful, sync all data`() {
-    // given
-    var allDataSynced = false
-    whenever(usersApi.login(loginRequest)) doReturn Single.just(loginResponse)
-    val user = loggedInUserPayload.toUser(LOGGED_IN)
-    whenever(facilityRepository.setCurrentFacility(user, facilityUuid)) doReturn Completable.complete()
-    whenever(dataSync.syncTheWorld()) doReturn Completable.fromAction { allDataSynced = true }
-
-    // when
-    val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
-
-    // then
-    assertThat(analyticsReporter.user).isEqualTo(AnalyticsUser(user.uuid, user.fullName))
-    assertThat(allDataSynced).isTrue()
     assertThat(loginResult).isEqualTo(Success)
   }
 

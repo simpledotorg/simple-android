@@ -16,14 +16,15 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
 import org.simple.clinic.login.LoginUserWithOtp
-import org.simple.clinic.TestData
 import org.simple.clinic.login.activateuser.ActivateUser
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.User
@@ -49,6 +50,7 @@ class EnterOtpScreenControllerTest {
   private val activateUser = mock<ActivateUser>()
   private val loginUserWithOtp = mock<LoginUserWithOtp>()
   private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
+  private val dataSync = mock<DataSync>()
 
   private val otp = "111111"
   private val pin = "1234"
@@ -78,7 +80,14 @@ class EnterOtpScreenControllerTest {
       updatedAt = user.updatedAt
   )
 
-  private val controller = EnterOtpScreenController(userSession, activateUser, loginUserWithOtp, ongoingLoginEntryRepository, TrampolineSchedulersProvider())
+  private val controller = EnterOtpScreenController(
+      userSession = userSession,
+      activateUser = activateUser,
+      loginUserWithOtp = loginUserWithOtp,
+      ongoingLoginEntryRepository = ongoingLoginEntryRepository,
+      schedulersProvider = TrampolineSchedulersProvider(),
+      dataSync = dataSync
+  )
 
   @Before
   fun setUp() {
@@ -179,6 +188,16 @@ class EnterOtpScreenControllerTest {
   }
 
   @Test
+  fun `when the login call succeeds, a complete sync must be triggered`() {
+    whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
+    whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(Success))
+
+    uiEvents.onNext(EnterOtpSubmitted(otp))
+
+    verify(dataSync).fireAndForgetSync()
+  }
+
+  @Test
   fun `when the login call fails unexpectedly, the generic error must be shown`() {
     whenever(ongoingLoginEntryRepository.entryImmediate()).doReturn(ongoingLoginEntry)
     whenever(loginUserWithOtp.loginWithOtp(phoneNumber, pin, otp)).doReturn(Single.just<LoginResult>(UnexpectedError))
@@ -186,6 +205,7 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showUnexpectedError()
+    verify(dataSync, never()).fireAndForgetSync()
   }
 
   @Test
@@ -196,6 +216,7 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showNetworkError()
+    verify(dataSync, never()).fireAndForgetSync()
   }
 
   @Test
@@ -207,6 +228,7 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     verify(screen).showServerError(errorMessage)
+    verify(dataSync, never()).fireAndForgetSync()
   }
 
   @Test

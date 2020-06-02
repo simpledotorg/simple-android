@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import timber.log.Timber
@@ -35,6 +36,11 @@ class OtpSmsReceiver : BroadcastReceiver() {
   @Inject
   lateinit var loginUserWithOtp: dagger.Lazy<LoginUserWithOtp>
 
+  // This is intentionally lazy so that the country specific retrofit endpoint
+  // is not instantiated until the SMS is received.
+  @Inject
+  lateinit var dataSync: dagger.Lazy<DataSync>
+
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
@@ -54,11 +60,7 @@ class OtpSmsReceiver : BroadcastReceiver() {
 
         userSession.ongoingLoginEntry()
             .flatMap { entry -> loginUserWithOtp.get().loginWithOtp(entry.phoneNumber!!, entry.pin!!, otp) }
-            .doOnSuccess { loginResult ->
-              if (loginResult is LoginResult.Success) {
-                userSession.clearOngoingLoginEntry()
-              }
-            }
+            .doOnSuccess(::onLoginResult)
             .subscribeOn(schedulersProvider.io())
             .observeOn(schedulersProvider.ui())
             .subscribe({
@@ -73,6 +75,13 @@ class OtpSmsReceiver : BroadcastReceiver() {
               showToast(context, R.string.api_unexpected_error)
             })
       }
+    }
+  }
+
+  private fun onLoginResult(loginResult: LoginResult) {
+    if (loginResult is LoginResult.Success) {
+      userSession.clearOngoingLoginEntry()
+      dataSync.get().fireAndForgetSync()
     }
   }
 

@@ -74,6 +74,12 @@ class DataSync @Inject constructor(
         .subscribe()
   }
 
+  fun fireAndForgetSync() {
+    syncTheWorld()
+        .subscribeOn(schedulersProvider.io())
+        .subscribe()
+  }
+
   private fun runAndSwallowErrors(completables: List<Completable>, syncGroup: SyncGroup): Completable {
     return Completable
         .mergeDelayError(completables)

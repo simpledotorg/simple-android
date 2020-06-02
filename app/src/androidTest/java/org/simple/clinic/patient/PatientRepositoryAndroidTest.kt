@@ -161,7 +161,12 @@ class PatientRepositoryAndroidTest {
         .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
         .map { updatedEntry -> updatedEntry.copy(phoneNumber = ongoingPhoneNumber) }
         .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
 
     val patient = database.patientDao().getOne(savedPatient.uuid)!!
@@ -179,7 +184,12 @@ class PatientRepositoryAndroidTest {
     val patientEntry = testData.ongoingPatientEntry(fullName = "Jeevan Bima", phone = null)
 
     val savedPatient = patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
 
     val patient = database.patientDao().patient(savedPatient.uuid)
@@ -195,7 +205,12 @@ class PatientRepositoryAndroidTest {
     val patientEntry = testData.ongoingPatientEntry(fullName = "Ashok Kumar")
 
     val savedPatient = patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
 
     val patient = database.patientDao().getOne(savedPatient.uuid)!!
@@ -215,7 +230,12 @@ class PatientRepositoryAndroidTest {
     val patientEntry = testData.ongoingPatientEntry(dateOfBirth = null, age = null)
 
     patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .test()
         .assertError(AssertionError::class.java)
   }
@@ -230,7 +250,12 @@ class PatientRepositoryAndroidTest {
     clock.advanceBy(advanceClockBy)
 
     val savedPatientUuid = patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
         .uuid
 
@@ -250,7 +275,12 @@ class PatientRepositoryAndroidTest {
     val patientEntry = testData.ongoingPatientEntry(fullName = "Asha Kumar", dateOfBirth = "15/08/1947", age = null)
 
     patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .subscribe()
 
     val combinedPatient = patientRepository.search(Name(patientName = "kumar"))
@@ -282,7 +312,12 @@ class PatientRepositoryAndroidTest {
     val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.Mobile, active = true)
     val ongoingPatientEntry = OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
     val abhayKumar = patientRepository.saveOngoingEntry(ongoingPatientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
 
     val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.Transgender)
@@ -296,7 +331,12 @@ class PatientRepositoryAndroidTest {
     val opn2 = OngoingNewPatientEntry.PhoneNumber("3418959", PatientPhoneNumberType.Mobile, active = true)
     val ope2 = OngoingNewPatientEntry(opd2, opa2, opn2)
     patientRepository.saveOngoingEntry(ope2)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
 
     val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "68", Gender.Transgender)
@@ -310,7 +350,12 @@ class PatientRepositoryAndroidTest {
     val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.Mobile, active = true)
     val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)
     val abhishekKumar = patientRepository.saveOngoingEntry(ope3)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
 
     val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "67", Gender.Transgender)
@@ -324,7 +369,12 @@ class PatientRepositoryAndroidTest {
     val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.Mobile, active = true)
     val ope4 = OngoingNewPatientEntry(opd4, opa4, opn4)
     val abshotKumar = patientRepository.saveOngoingEntry(ope4)
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
 
     val search0 = patientRepository.search(Name("Vinod")).blockingFirst()
@@ -525,7 +575,12 @@ class PatientRepositoryAndroidTest {
   fun when_patient_is_marked_dead_they_should_not_show_in_search_results() {
     val patient = patientRepository
         .saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar"))
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
 
     val searchResults = patientRepository.search(Name(patientName = "Ashok")).blockingFirst()
@@ -552,7 +607,12 @@ class PatientRepositoryAndroidTest {
 
     val patient = patientRepository
         .saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar"))
-        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+        .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
         .blockingGet()
 
     clock.advanceBy(Duration.ofDays(365))
@@ -1448,7 +1508,12 @@ class PatientRepositoryAndroidTest {
     patientRepository.saveOngoingEntry(ongoingPatientEntry).blockingAwait()
 
     // when
-    val savedPatient = patientRepository.saveOngoingEntryAsPatient(loggedInUser, facilityToSavePatientAt).blockingGet()
+    val savedPatient = patientRepository.saveOngoingEntryAsPatient(
+        loggedInUser = loggedInUser,
+        facility = facilityToSavePatientAt,
+        supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+        supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+    ).blockingGet()
     val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.uuid).blockingFirst().toNullable()!!
 
     // then
@@ -1471,7 +1536,12 @@ class PatientRepositoryAndroidTest {
     patientRepository.saveOngoingEntry(ongoingPatientEntry).blockingAwait()
 
     // when
-    val savedPatient = patientRepository.saveOngoingEntryAsPatient(loggedInUser, facilityToSavePatientAt).blockingGet()
+    val savedPatient = patientRepository.saveOngoingEntryAsPatient(
+        loggedInUser = loggedInUser,
+        facility = facilityToSavePatientAt,
+        supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+        supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+    ).blockingGet()
     val savedPatientNationalId = patientRepository.bangladeshNationalIdForPatient(savedPatient.uuid).blockingFirst()
 
     // then
@@ -1619,7 +1689,12 @@ class PatientRepositoryAndroidTest {
         bloodSugarMeasurement: List<BloodSugarMeasurement>?
     ): Pair<UUID, String> {
       val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName))
-          .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
+          .andThen(patientRepository.saveOngoingEntryAsPatient(
+            loggedInUser = loggedInUser,
+            facility = currentFacility,
+            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+        ))
           .blockingGet()
           .uuid
 
@@ -3013,7 +3088,12 @@ class PatientRepositoryAndroidTest {
     patientRepository.saveOngoingEntry(ongoingPatientEntry).blockingAwait()
 
     // when
-    val savedPatient = patientRepository.saveOngoingEntryAsPatient(loggedInUser, facilityToSavePatientAt).blockingGet()
+    val savedPatient = patientRepository.saveOngoingEntryAsPatient(
+        loggedInUser = loggedInUser,
+        facility = facilityToSavePatientAt,
+        supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
+        supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") }
+    ).blockingGet()
     val savedPatientAddress = patientRepository.address(savedPatient.addressUuid).blockingFirst().toNullable()!!
 
     // then

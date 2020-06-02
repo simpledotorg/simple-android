@@ -113,7 +113,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
     verify(patientRepository).deleteBusinessId(bangladeshNationalId)
     verify(patientRepository, never()).saveBusinessId(any())
-    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
     verifyZeroInteractions(ui)
@@ -136,7 +136,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
     verify(patientRepository).deleteBusinessId(bangladeshNationalId)
     verify(patientRepository, never()).saveBusinessId(any())
-    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
     verifyZeroInteractions(ui)
@@ -162,7 +162,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
     verify(patientRepository).saveBusinessId(updatedBangladeshNationalId)
-    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
     verifyZeroInteractions(ui)
@@ -172,6 +172,13 @@ class EditPatientEffectHandlerTest {
   fun `adding an id to an empty alternative id should create a new Business id if country has alternative id`() {
     //given
     val country = TestData.country(isoCountryCode = "BD")
+
+    // TODO: 02/06/20 This is nasty, we need to fix the flow for registering patients
+    // Tracked in the following tickets:
+    // https://www.pivotaltracker.com/story/show/173122062
+    // https://www.pivotaltracker.com/story/show/173122237
+    val identifierUuid = UUID.fromString("a72c3ada-b071-4818-8f0b-476432338235")
+
     val effectHandler = EditPatientEffectHandler(
         ui = ui,
         userClock = userClock,
@@ -181,7 +188,7 @@ class EditPatientEffectHandlerTest {
         userSession = userSession,
         facilityRepository = facilityRepository,
         country = country,
-        uuidGenerator = uuidGenerator,
+        uuidGenerator = FakeUuidGenerator.fixed(identifierUuid),
         dateOfBirthFormatter = dateOfBirthFormatter
     )
 
@@ -194,7 +201,13 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.saveBusinessId(bangladeshNationalId)) doReturn Completable.complete()
     whenever(userSession.loggedInUser()) doReturn (Observable.just(user.toOptional()))
     whenever(facilityRepository.currentFacility(user)) doReturn (Observable.just(facility))
-    whenever(patientRepository.addIdentifierToPatient(patient.uuid, identifier, user, facility)) doReturn Single.just(bangladeshNationalId)
+    whenever(patientRepository.addIdentifierToPatient(
+        uuid = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = identifier,
+        assigningUser = user,
+        assigningFacility = facility
+    )) doReturn Single.just(bangladeshNationalId)
 
     //when
     testCase.dispatch(SavePatientEffect(
@@ -209,7 +222,13 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePatient(patient)
     verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
-    verify(patientRepository).addIdentifierToPatient(patient.uuid, identifier, user, facility)
+    verify(patientRepository).addIdentifierToPatient(
+        uuid = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = identifier,
+        assigningUser = user,
+        assigningFacility = facility
+    )
     verify(patientRepository, never()).saveBusinessId(any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)

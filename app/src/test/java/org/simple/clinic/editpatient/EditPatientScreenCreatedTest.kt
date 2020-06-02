@@ -13,7 +13,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -48,7 +47,6 @@ class EditPatientScreenCreatedTest {
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val patientRepository = mock<PatientRepository>()
   private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
   private val country = TestData.country()
 
   @Test
@@ -166,7 +164,6 @@ class EditPatientScreenCreatedTest {
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
         userSession = userSession,
-        facilityRepository = facilityRepository,
         country = country,
         uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("4a08c52c-ebef-44a2-9de4-02916e703a47")),
         dateOfBirthFormatter = dateOfBirthFormat

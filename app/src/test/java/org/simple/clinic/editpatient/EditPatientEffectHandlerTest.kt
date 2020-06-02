@@ -83,7 +83,6 @@ class EditPatientEffectHandlerTest {
       utcClock = utcClock,
       schedulersProvider = TrampolineSchedulersProvider(),
       userSession = userSession,
-      facilityRepository = facilityRepository,
       country = country,
       uuidGenerator = uuidGenerator,
       dateOfBirthFormatter = dateOfBirthFormatter
@@ -113,7 +112,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
     verify(patientRepository).deleteBusinessId(bangladeshNationalId)
     verify(patientRepository, never()).saveBusinessId(any())
-    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any(), any())
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
     verifyZeroInteractions(ui)
@@ -136,7 +135,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
     verify(patientRepository).deleteBusinessId(bangladeshNationalId)
     verify(patientRepository, never()).saveBusinessId(any())
-    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any(), any())
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
     verifyZeroInteractions(ui)
@@ -162,7 +161,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
     verify(patientRepository).saveBusinessId(updatedBangladeshNationalId)
-    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any(), any())
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
     verifyZeroInteractions(ui)
@@ -186,7 +185,6 @@ class EditPatientEffectHandlerTest {
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
         userSession = userSession,
-        facilityRepository = facilityRepository,
         country = country,
         uuidGenerator = FakeUuidGenerator.fixed(identifierUuid),
         dateOfBirthFormatter = dateOfBirthFormatter
@@ -205,8 +203,7 @@ class EditPatientEffectHandlerTest {
         uuid = identifierUuid,
         patientUuid = patient.uuid,
         identifier = identifier,
-        assigningUser = user,
-        assigningFacility = facility
+        assigningUser = user
     )) doReturn Single.just(bangladeshNationalId)
 
     //when
@@ -226,8 +223,7 @@ class EditPatientEffectHandlerTest {
         uuid = identifierUuid,
         patientUuid = patient.uuid,
         identifier = identifier,
-        assigningUser = user,
-        assigningFacility = facility
+        assigningUser = user
     )
     verify(patientRepository, never()).saveBusinessId(any())
     verifyNoMoreInteractions(patientRepository)

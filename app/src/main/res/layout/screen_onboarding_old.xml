@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.onboarding.OnboardingScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.onboarding.OnboardingScreen_Old xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -73,4 +73,4 @@
     android:elevation="@dimen/spacing_24"
     android:text="@string/onboarding_get_started"
     tools:ignore="UnusedAttribute" />
-</org.simple.clinic.onboarding.OnboardingScreen>
+</org.simple.clinic.onboarding.OnboardingScreen_Old>

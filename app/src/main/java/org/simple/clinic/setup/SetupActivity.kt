@@ -126,8 +126,8 @@ class SetupActivity : AppCompatActivity(), UiActions {
   private fun navigateToOnboardingScreen() {
     // If onboarding screen is already being shown don't navigate again, it would cause
     // duplicate destinations
-    if (navController.currentDestination?.id != R.id.onboardingScreen) {
-      navController.navigate(R.id.action_placeholderScreen_to_onboardingScreen)
+    if (navController.currentDestination?.id != R.id.onboardingScreenOld) {
+      navController.navigate(R.id.action_placeholderScreen_to_onboardingScreenOld)
     }
   }
 

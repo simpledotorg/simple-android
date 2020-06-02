@@ -13,7 +13,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -34,6 +33,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -57,32 +57,6 @@ class NewMedicalHistoryScreenLogicTest {
 
   private lateinit var testFixture: MobiusTestFixture<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect>
 
-  @Before
-  fun setUp() {
-    whenever(medicalHistoryRepository.save(eq(medicalHistoryUuid), eq(patientUuid), any())).thenReturn(Completable.complete())
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
-
-    val effectHandler = NewMedicalHistoryEffectHandler(
-        uiActions = uiActions,
-        schedulersProvider = TrampolineSchedulersProvider(),
-        patientRepository = patientRepository,
-        medicalHistoryRepository = medicalHistoryRepository,
-        dataSync = mock(),
-        currentUser = Lazy { user },
-        currentFacility = Lazy { facility },
-        uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
-    ).build()
-
-    testFixture = MobiusTestFixture(
-        events = uiEvents.ofType(),
-        defaultModel = NewMedicalHistoryModel.default(),
-        init = NewMedicalHistoryInit(),
-        update = NewMedicalHistoryUpdate(),
-        effectHandler = effectHandler,
-        modelUpdateListener = viewRenderer::render
-    )
-  }
-
   @After
   fun tearDown() {
     testFixture.dispose()
@@ -98,7 +72,7 @@ class NewMedicalHistoryScreenLogicTest {
         gender = Gender.Transgender))
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(patientEntry))
 
-    startMobiusLoop()
+    startMobiusLoop(ongoingPatientEntry = patientEntry)
 
     // This gets set twice:
     // 1. When we read the patient entry
@@ -110,7 +84,7 @@ class NewMedicalHistoryScreenLogicTest {
   fun `when save is clicked with selected answers then patient with the answers should be saved and summary screen should be opened`() {
     // given
     val savedPatient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
+    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())).thenReturn(Single.just(savedPatient))
 
     // when
     startMobiusLoop()
@@ -124,7 +98,7 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
+      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
@@ -144,7 +118,7 @@ class NewMedicalHistoryScreenLogicTest {
   fun `when save is clicked with no answers then patient with an empty medical history should be saved and summary screen should be opened`() {
     // given
     val savedPatient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
+    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())).thenReturn(Single.just(savedPatient))
 
     // when
     startMobiusLoop()
@@ -153,7 +127,7 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
+      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
@@ -174,7 +148,7 @@ class NewMedicalHistoryScreenLogicTest {
   fun `when an already selected answer for a question is changed, the new answer should be used when saving the medical history`() {
     // given
     val savedPatient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
+    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())).thenReturn(Single.just(savedPatient))
 
     // when
     startMobiusLoop()
@@ -197,7 +171,7 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
+      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
@@ -213,7 +187,33 @@ class NewMedicalHistoryScreenLogicTest {
     }
   }
 
-  private fun startMobiusLoop() {
+  private fun startMobiusLoop(
+      ongoingPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry.fromFullName("Anish Acharya"),
+      uuidGenerator: UuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
+  ) {
+    whenever(medicalHistoryRepository.save(eq(medicalHistoryUuid), eq(patientUuid), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(ongoingPatientEntry))
+
+    val effectHandler = NewMedicalHistoryEffectHandler(
+        uiActions = uiActions,
+        schedulersProvider = TrampolineSchedulersProvider(),
+        patientRepository = patientRepository,
+        medicalHistoryRepository = medicalHistoryRepository,
+        dataSync = mock(),
+        currentUser = Lazy { user },
+        currentFacility = Lazy { facility },
+        uuidGenerator = uuidGenerator
+    ).build()
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = NewMedicalHistoryModel.default(),
+        init = NewMedicalHistoryInit(),
+        update = NewMedicalHistoryUpdate(),
+        effectHandler = effectHandler,
+        modelUpdateListener = viewRenderer::render
+    )
+
     testFixture.start()
   }
 }

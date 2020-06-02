@@ -9,6 +9,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -16,9 +17,10 @@ typealias Ui = LinkIdWithPatientView
 typealias UiChange = (Ui) -> Unit
 
 class LinkIdWithPatientViewController @Inject constructor(
-    val patientRepository: PatientRepository,
-    val userSession: UserSession,
-    val facilityRepository: FacilityRepository
+    private val patientRepository: PatientRepository,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
+    private val uuidGenerator: UuidGenerator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -61,7 +63,13 @@ class LinkIdWithPatientViewController @Inject constructor(
         }
         .switchMapSingle { (screen, loggedInUser, currentFacility) ->
           patientRepository
-              .addIdentifierToPatient(screen.patientUuid, screen.identifier, loggedInUser, currentFacility)
+              .addIdentifierToPatient(
+                  uuid = uuidGenerator.v4(),
+                  patientUuid = screen.patientUuid,
+                  identifier = screen.identifier,
+                  assigningUser = loggedInUser,
+                  assigningFacility = currentFacility
+              )
               .map { { ui: Ui -> ui.closeSheetWithIdLinked() } }
         }
   }

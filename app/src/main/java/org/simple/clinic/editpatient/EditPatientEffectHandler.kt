@@ -253,6 +253,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
           userAndCurrentFacility()
               .flatMap { (user, facility) ->
                 patientRepository.addIdentifierToPatient(
+                    uuid = uuidGenerator.v4(),
                     assigningUser = user,
                     assigningFacility = facility,
                     patientUuid = savePatientEffect.ongoingEntry.patientUuid,

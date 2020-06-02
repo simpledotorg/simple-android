@@ -257,7 +257,9 @@ class PatientRepository @Inject constructor(
 
   fun saveOngoingEntryAsPatient(
       loggedInUser: User,
-      facility: Facility
+      facility: Facility,
+      supplyUuidForBpPassport: () -> UUID = { UUID.randomUUID() },
+      supplyUuidForAlternativeId: () -> UUID = { UUID.randomUUID() }
   ): Single<Patient> {
     val cachedOngoingEntry = ongoingEntry().cache()
 
@@ -328,7 +330,13 @@ class PatientRepository @Inject constructor(
           if (entry.identifier == null) {
             Completable.complete()
           } else {
-            addIdentifierToPatient(patientUuid, entry.identifier, loggedInUser, facility).toCompletable()
+            addIdentifierToPatient(
+                uuid = supplyUuidForBpPassport(),
+                patientUuid = patientUuid,
+                identifier = entry.identifier,
+                assigningUser = loggedInUser,
+                assigningFacility = facility
+            ).toCompletable()
           }
         }
 
@@ -337,7 +345,13 @@ class PatientRepository @Inject constructor(
           if (entry.alternativeId == null || entry.alternativeId.value.isBlank()) {
             Completable.complete()
           } else {
-            addIdentifierToPatient(patientUuid, entry.alternativeId, loggedInUser, facility).toCompletable()
+            addIdentifierToPatient(
+                uuid = supplyUuidForAlternativeId(),
+                patientUuid = patientUuid,
+                identifier = entry.alternativeId,
+                assigningUser = loggedInUser,
+                assigningFacility = facility
+            ).toCompletable()
           }
         }
 
@@ -516,6 +530,7 @@ class PatientRepository @Inject constructor(
 
 
   fun addIdentifierToPatient(
+      uuid: UUID,
       patientUuid: UUID,
       identifier: Identifier,
       assigningUser: User,
@@ -525,7 +540,7 @@ class PatientRepository @Inject constructor(
         .map { metaAndVersion ->
           val now = Instant.now(utcClock)
           BusinessId(
-              uuid = UUID.randomUUID(),
+              uuid = uuid,
               patientUuid = patientUuid,
               identifier = identifier,
               metaDataVersion = metaAndVersion.metaDataVersion,

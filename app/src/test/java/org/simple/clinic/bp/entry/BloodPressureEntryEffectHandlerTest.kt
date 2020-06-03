@@ -13,17 +13,17 @@ import org.threeten.bp.ZoneOffset.UTC
 class BloodPressureEntryEffectHandlerTest {
   private val ui = mock<BloodPressureEntryUi>()
   private val userClock = TestUserClock()
-  private val effectHandler = BloodPressureEntryEffectHandler.create(
-      ui,
-      mock(),
-      mock(),
-      mock(),
-      mock(),
-      mock(),
-      userClock,
-      TrampolineSchedulersProvider(),
-      mock()
-  )
+  private val effectHandler = BloodPressureEntryEffectHandler(
+      ui = ui,
+      userSession = mock(),
+      facilityRepository = mock(),
+      patientRepository = mock(),
+      bloodPressureRepository = mock(),
+      appointmentsRepository = mock(),
+      userClock = userClock,
+      schedulersProvider = TrampolineSchedulersProvider(),
+      uuidGenerator = mock()
+  ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After

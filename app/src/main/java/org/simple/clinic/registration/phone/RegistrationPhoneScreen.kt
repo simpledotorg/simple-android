@@ -28,7 +28,7 @@ import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), RegistrationPhoneUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -76,24 +76,24 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
           .editorActions { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationPhoneDoneClicked() }
 
-  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
+  override fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
     isdCodeEditText.setText(resources.getString(R.string.registrationphone_country_code, country.isdCode))
     phoneNumberEditText.setTextAndCursor(ongoingEntry.phoneNumber)
   }
 
-  fun openRegistrationNameEntryScreen() {
+  override fun openRegistrationNameEntryScreen() {
     screenRouter.push(RegistrationNameScreenKey())
   }
 
-  fun showInvalidNumberError() {
+  override fun showInvalidNumberError() {
     showError(R.string.registrationphone_error_invalid_number)
   }
 
-  fun showUnexpectedErrorMessage() {
+  override fun showUnexpectedErrorMessage() {
     showError(R.string.registrationphone_error_unexpected_error)
   }
 
-  fun showNetworkErrorMessage() {
+  override fun showNetworkErrorMessage() {
     showError(R.string.registrationphone_error_check_internet_connection)
   }
 
@@ -102,27 +102,27 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
     validationErrorTextView.text = resources.getString(errorResId)
   }
 
-  fun hideAnyError() {
+  override fun hideAnyError() {
     validationErrorTextView.visibility = View.GONE
   }
 
-  fun showProgressIndicator() {
+  override fun showProgressIndicator() {
     progressView.visibility = VISIBLE
   }
 
-  fun hideProgressIndicator() {
+  override fun hideProgressIndicator() {
     progressView.visibility = GONE
   }
 
-  fun openLoginPinEntryScreen() {
+  override fun openLoginPinEntryScreen() {
     screenRouter.push(LoginPinScreenKey())
   }
 
-  fun showLoggedOutOfDeviceDialog() {
+  override fun showLoggedOutOfDeviceDialog() {
     LoggedOutOfDeviceDialog.show(activity.supportFragmentManager)
   }
 
-  fun showAccessDeniedScreen(number: String) {
+  override fun showAccessDeniedScreen(number: String) {
     screenRouter.clearHistoryAndPush(AccessDeniedScreenKey(number), RouterDirection.REPLACE)
   }
 

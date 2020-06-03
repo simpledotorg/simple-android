@@ -13,6 +13,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.junit.After
@@ -32,6 +33,7 @@ import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class RegistrationPhoneScreenControllerTest {
@@ -40,6 +42,7 @@ class RegistrationPhoneScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<RegistrationPhoneUi>()
+  private val uiActions = mock<RegistrationPhoneUiActions>()
   private val userSession = mock<UserSession>()
   private val numberValidator = IndianPhoneNumberValidator()
   private val findUserWithPhoneNumber = mock<UserLookup>()
@@ -52,10 +55,12 @@ class RegistrationPhoneScreenControllerTest {
   private lateinit var controller: RegistrationPhoneScreenController
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<RegistrationPhoneModel, RegistrationPhoneEvent, RegistrationPhoneEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -402,6 +407,18 @@ class RegistrationPhoneScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    val uiRenderer = RegistrationPhoneUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = RegistrationPhoneModel.create(),
+        init = RegistrationPhoneInit(),
+        update = RegistrationPhoneUpdate(),
+        effectHandler = RegistrationPhoneEffectHandler(uiActions).build(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
   }

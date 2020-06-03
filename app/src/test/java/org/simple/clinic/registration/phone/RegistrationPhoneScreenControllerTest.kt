@@ -247,42 +247,6 @@ class RegistrationPhoneScreenControllerTest {
     verify(screen, never()).showAccessDeniedScreen(inputNumber)
   }
 
-  // TODO (vs) 03/06/20: This test is pointless since there's only local persistence here. Remove this later.
-  @Test
-  fun `when the phone number belongs to an existing user and creating ongoing entry fails, an error should be shown`() {
-    val inputNumber = "1234567890"
-    val status = UserStatus.ApprovedForSyncing
-
-    val entryToBeSaved = OngoingLoginEntry(
-        uuid = userUuid,
-        phoneNumber = inputNumber,
-        pin = null,
-        fullName = null,
-        pinDigest = null,
-        registrationFacilityUuid = null,
-        status = status,
-        createdAt = null,
-        updatedAt = null
-    )
-
-    whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Found(userUuid, status))
-    whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
-    whenever(userSession.saveOngoingLoginEntry(entryToBeSaved)).doReturn(Completable.error(RuntimeException()))
-    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
-    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
-    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
-
-    setupController()
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
-    uiEvents.onNext(RegistrationPhoneDoneClicked())
-
-    verify(userSession).saveOngoingLoginEntry(entryToBeSaved)
-    verify(screen, never()).openLoginPinEntryScreen()
-    verify(screen, never()).showAccessDeniedScreen(inputNumber)
-    verify(screen).showUnexpectedErrorMessage()
-  }
-
   @Test
   fun `when the existing user is denied access then access denied screen should show`() {
     val inputNumber = "1234567890"

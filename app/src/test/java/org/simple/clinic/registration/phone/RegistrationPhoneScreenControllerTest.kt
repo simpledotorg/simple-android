@@ -66,7 +66,6 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
-    uiEvents.onNext(RegistrationPhoneScreenCreated())
 
     verify(userSession).saveOngoingRegistrationEntry(defaultOngoingEntry)
   }
@@ -79,7 +78,6 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
-    uiEvents.onNext(RegistrationPhoneScreenCreated())
 
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
   }
@@ -92,7 +90,6 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
-    uiEvents.onNext(RegistrationPhoneScreenCreated())
 
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(screen).preFillUserDetails(ongoingEntry)
@@ -107,6 +104,8 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
     whenever(userSession.saveOngoingRegistrationEntry(entryWithPhoneNumber)).doReturn(Completable.complete())
     whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(NotFound)
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(validNumber))
@@ -125,8 +124,12 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
     whenever(userSession.saveOngoingRegistrationEntry(entryWithValidNumber)).doReturn(Completable.complete())
     whenever(findUserWithPhoneNumber.find(validNumber)) doReturn NotFound
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
+    clearInvocations(userSession)
+
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(invalidNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
     verifyZeroInteractions(userSession)
@@ -140,8 +143,11 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when proceed is clicked with an invalid number then an error should be shown`() {
     val invalidNumber = "12345"
-    setupController()
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
+    setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(invalidNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
@@ -152,8 +158,13 @@ class RegistrationPhoneScreenControllerTest {
 
   @Test
   fun `when input text is changed then any visible errors should be removed`() {
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
+
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(""))
+
     verify(screen).hideAnyError()
   }
 
@@ -162,6 +173,9 @@ class RegistrationPhoneScreenControllerTest {
     val inputNumber = "1234567890"
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(NetworkError)
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
@@ -179,6 +193,9 @@ class RegistrationPhoneScreenControllerTest {
     whenever(findUserWithPhoneNumber.find(inputNumber))
         .doReturn(UnexpectedError)
         .doReturn(NetworkError)
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
@@ -216,6 +233,9 @@ class RegistrationPhoneScreenControllerTest {
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Found(userUuid, userStatus))
     whenever(userSession.saveOngoingLoginEntry(entryToBeSaved)).doReturn(Completable.complete())
     whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
@@ -249,6 +269,9 @@ class RegistrationPhoneScreenControllerTest {
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Found(userUuid, status))
     whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
     whenever(userSession.saveOngoingLoginEntry(entryToBeSaved)).doReturn(Completable.error(RuntimeException()))
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
@@ -266,6 +289,9 @@ class RegistrationPhoneScreenControllerTest {
     val userStatus = UserStatus.DisapprovedForSyncing
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Found(userUuid, userStatus))
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
@@ -282,6 +308,9 @@ class RegistrationPhoneScreenControllerTest {
     val inputNumber = "1234567890"
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(NetworkError)
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
@@ -296,7 +325,6 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.never())
 
     setupController()
-    uiEvents.onNext(RegistrationPhoneScreenCreated())
 
     verify(screen).showLoggedOutOfDeviceDialog()
   }
@@ -307,7 +335,6 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.never())
 
     setupController()
-    uiEvents.onNext(RegistrationPhoneScreenCreated())
 
     verify(screen, never()).showLoggedOutOfDeviceDialog()
   }
@@ -318,6 +345,9 @@ class RegistrationPhoneScreenControllerTest {
     val phoneNumber = "1234567890"
     whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn NetworkError
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     // when
     setupController()
@@ -335,6 +365,9 @@ class RegistrationPhoneScreenControllerTest {
     val phoneNumber = "1234567890"
     whenever(findUserWithPhoneNumber.find(phoneNumber)) doReturn NetworkError
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.NetworkError)
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     // when
     setupController()
@@ -350,6 +383,9 @@ class RegistrationPhoneScreenControllerTest {
     // given
     val phoneNumber = "1234567890"
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.NetworkError)
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     // when
     setupController()
@@ -367,6 +403,9 @@ class RegistrationPhoneScreenControllerTest {
     // given
     val phoneNumber = "1234567890"
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.UnexpectedError)
+    whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.isUserUnauthorized()).doReturn(Observable.never())
 
     // when
     setupController()
@@ -391,6 +430,8 @@ class RegistrationPhoneScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    uiEvents.onNext(RegistrationPhoneScreenCreated())
   }
 }
 

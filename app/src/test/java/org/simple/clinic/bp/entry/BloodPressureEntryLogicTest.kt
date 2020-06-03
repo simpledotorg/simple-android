@@ -1041,7 +1041,7 @@ class BloodPressureEntrySheetLogicTest {
   }
 
   private fun instantiateFixture(openAs: OpenAs) {
-    val effectHandler = BloodPressureEntryEffectHandler.create(
+    val effectHandler = BloodPressureEntryEffectHandler(
         ui = ui,
         userSession = userSession,
         facilityRepository = facilityRepository,
@@ -1051,7 +1051,7 @@ class BloodPressureEntrySheetLogicTest {
         userClock = testUserClock,
         schedulersProvider = TrampolineSchedulersProvider(),
         uuidGenerator = FakeUuidGenerator.fixed(measurementUuid)
-    )
+    ).build()
 
     fixture = MobiusTestFixture(
         uiEvents.ofType(),

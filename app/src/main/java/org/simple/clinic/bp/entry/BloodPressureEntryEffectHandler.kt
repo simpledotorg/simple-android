@@ -1,6 +1,8 @@
 package org.simple.clinic.bp.entry
 
 import com.spotify.mobius.rx2.RxMobius
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.Completable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
@@ -38,8 +40,8 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-class BloodPressureEntryEffectHandler private constructor(
-    private val ui: BloodPressureEntryUi,
+class BloodPressureEntryEffectHandler @AssistedInject constructor(
+    @Assisted private val ui: BloodPressureEntryUi,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
@@ -49,34 +51,15 @@ class BloodPressureEntryEffectHandler private constructor(
     private val schedulersProvider: SchedulersProvider,
     private val uuidGenerator: UuidGenerator
 ) {
-  private val reportAnalyticsEvents = ReportAnalyticsEvents()
 
-  companion object {
-    fun create(
-        ui: BloodPressureEntryUi,
-        userSession: UserSession,
-        facilityRepository: FacilityRepository,
-        patientRepository: PatientRepository,
-        bloodPressureRepository: BloodPressureRepository,
-        appointmentsRepository: AppointmentRepository,
-        userClock: UserClock,
-        schedulersProvider: SchedulersProvider,
-        uuidGenerator: UuidGenerator
-    ): ObservableTransformer<BloodPressureEntryEffect, BloodPressureEntryEvent> {
-      return BloodPressureEntryEffectHandler(ui,
-          userSession,
-          facilityRepository,
-          patientRepository,
-          bloodPressureRepository,
-          appointmentsRepository,
-          userClock,
-          schedulersProvider,
-          uuidGenerator
-      ).buildEffectHandler()
-    }
+  @AssistedInject.Factory
+  interface Factory {
+    fun create(ui: BloodPressureEntryUi): BloodPressureEntryEffectHandler
   }
 
-  private fun buildEffectHandler(): ObservableTransformer<BloodPressureEntryEffect, BloodPressureEntryEvent> {
+  private val reportAnalyticsEvents = ReportAnalyticsEvents()
+
+  fun build(): ObservableTransformer<BloodPressureEntryEffect, BloodPressureEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<BloodPressureEntryEffect, BloodPressureEntryEvent>()
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))

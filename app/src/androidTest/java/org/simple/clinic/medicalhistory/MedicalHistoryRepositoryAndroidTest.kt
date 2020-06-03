@@ -51,7 +51,7 @@ class MedicalHistoryRepositoryAndroidTest {
 
   @Test
   fun when_creating_new_medical_history_from_ongoing_entry_then_the_medical_history_should_be_saved() {
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("9a39d73b-6568-4359-90a7-1553d8cfa05c")
     val historyEntry = OngoingMedicalHistoryEntry(
         hasHadHeartAttack = Yes,
         hasHadStroke = Yes,
@@ -75,7 +75,7 @@ class MedicalHistoryRepositoryAndroidTest {
 
   @Test
   fun when_creating_new_medical_history_then_the_medical_history_should_be_saved() {
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("89d8e57c-e895-4b65-b5c8-f69886d70f2e")
     val historyToSave = testData.medicalHistory(patientUuid = patientUuid)
 
     val instant = Instant.now(clock)
@@ -89,7 +89,7 @@ class MedicalHistoryRepositoryAndroidTest {
 
   @Test
   fun when_updating_an_existing_medical_history_then_it_should_be_marked_as_pending_sync() {
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("93319278-e5bd-4adc-9627-7328c21a0bd3")
     val now = Instant.now(clock)
     val oldHistory = testData.medicalHistory(
         patientUuid = patientUuid,
@@ -114,7 +114,7 @@ class MedicalHistoryRepositoryAndroidTest {
     val emptyHistoryUuid = UUID.fromString("b025b4e9-3907-4168-abd4-ab117739756d")
     val emptyHistory = repository.historyForPatientOrDefault(
         defaultHistoryUuid = emptyHistoryUuid,
-        patientUuid = UUID.randomUUID()
+        patientUuid = UUID.fromString("2a0ae00f-bf18-4710-9a33-df4be6e1846b")
     ).blockingFirst()
 
     assertThat(emptyHistory.uuid).isEqualTo(emptyHistoryUuid)
@@ -127,7 +127,7 @@ class MedicalHistoryRepositoryAndroidTest {
 
   @Test
   fun when_multiple_medical_histories_are_present_for_a_patient_then_only_the_last_edited_one_should_be_returned() {
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("780a880d-0b00-441e-ad84-fe8b3d973ffd")
 
     val olderHistory = testData.medicalHistory(
         patientUuid = patientUuid,

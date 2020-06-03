@@ -13,6 +13,7 @@ import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_phone.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
@@ -23,6 +24,7 @@ import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
@@ -42,6 +44,16 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   @Inject
   lateinit var country: Country
 
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            phoneNumberTextChanges(),
+            doneClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -53,11 +65,7 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            phoneNumberTextChanges(),
-            doneClicks()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

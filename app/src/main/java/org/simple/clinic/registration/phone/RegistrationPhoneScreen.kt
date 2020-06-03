@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.phone
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -11,6 +12,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_phone.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -19,6 +21,7 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.name.RegistrationNameScreenKey
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.router.screen.RouterDirection
@@ -30,7 +33,10 @@ import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), RegistrationPhoneUi {
+class RegistrationPhoneScreen(
+    context: Context,
+    attrs: AttributeSet
+) : RelativeLayout(context, attrs), RegistrationPhoneUi, RegistrationPhoneUiActions {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -44,6 +50,9 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   @Inject
   lateinit var country: Country
 
+  @Inject
+  lateinit var effectHandlerFactory: RegistrationPhoneEffectHandler.Factory
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -52,6 +61,20 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
             doneClicks()
         )
         .compose(ReportAnalyticsEvents())
+        .share()
+  }
+
+  private val delegate by unsafeLazy {
+    val uiRenderer = RegistrationPhoneUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = RegistrationPhoneModel.create(),
+        update = RegistrationPhoneUpdate(),
+        effectHandler = effectHandlerFactory.create(this).build(),
+        init = RegistrationPhoneInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -69,6 +92,24 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just(RegistrationPhoneScreenCreated())

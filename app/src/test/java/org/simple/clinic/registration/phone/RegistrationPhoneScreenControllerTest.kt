@@ -1,7 +1,6 @@
 package org.simple.clinic.registration.phone
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -47,6 +46,7 @@ class RegistrationPhoneScreenControllerTest {
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create<UiEvent>()
   private val userUuid = UUID.fromString("a5c55e97-dcad-4cd8-9832-4da9f7b3d4b7")
+  private val defaultOngoingEntry = OngoingRegistrationEntry(uuid = userUuid)
 
   private val controller: RegistrationPhoneScreenController = RegistrationPhoneScreenController(
       userSession = userSession,
@@ -70,20 +70,20 @@ class RegistrationPhoneScreenControllerTest {
 
   @Test
   fun `when screen is created and an existing ongoing entry is absent then an empty ongoing entry should be created`() {
-    whenever(userSession.saveOngoingRegistrationEntry(any())).doReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntry(defaultOngoingEntry)).doReturn(Completable.complete())
     whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(false))
-    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.never())
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
 
-    verify(userSession).saveOngoingRegistrationEntry(argThat { uuid != null })
+    verify(userSession).saveOngoingRegistrationEntry(defaultOngoingEntry)
   }
 
   @Test
   fun `when screen is created and an existing ongoing entry is present then an empty ongoing entry should not be created`() {
     whenever(userSession.saveOngoingRegistrationEntry(any())).doReturn(Completable.complete())
     whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
-    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.never())
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
 
@@ -92,28 +92,30 @@ class RegistrationPhoneScreenControllerTest {
 
   @Test
   fun `when screen is created then existing details should be pre-filled`() {
-    val ongoingEntry = OngoingRegistrationEntry(phoneNumber = "123")
+    val ongoingEntry = defaultOngoingEntry.withPhoneNumber("123")
     whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(ongoingEntry))
     whenever(userSession.isOngoingRegistrationEntryPresent()).doReturn(Single.just(true))
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
 
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
-    verify(screen).preFillUserDetails(argThat { phoneNumber == ongoingEntry.phoneNumber })
+    verify(screen).preFillUserDetails(ongoingEntry)
   }
 
   @Test
   fun `when proceed is clicked with a valid number then the ongoing entry should be updated and then the next screen should be opened`() {
     val validNumber = "1234567890"
+    val entryWithPhoneNumber = defaultOngoingEntry.withPhoneNumber(validNumber)
+
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(OngoingRegistrationEntry()))
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).doReturn(Completable.complete())
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.saveOngoingRegistrationEntry(entryWithPhoneNumber)).doReturn(Completable.complete())
     whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(NotFound)
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(validNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
-    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))
+    verify(userSession).saveOngoingRegistrationEntry(entryWithPhoneNumber)
     verify(screen).openRegistrationNameEntryScreen()
   }
 
@@ -121,9 +123,10 @@ class RegistrationPhoneScreenControllerTest {
   fun `proceed button clicks should only be accepted if the input phone number is valid`() {
     val invalidNumber = "12345"
     val validNumber = "1234567890"
+    val entryWithValidNumber = defaultOngoingEntry.withPhoneNumber(validNumber)
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(OngoingRegistrationEntry()))
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).doReturn(Completable.complete())
+    whenever(userSession.ongoingRegistrationEntry()).doReturn(Single.just(defaultOngoingEntry))
+    whenever(userSession.saveOngoingRegistrationEntry(entryWithValidNumber)).doReturn(Completable.complete())
     whenever(findUserWithPhoneNumber.find(validNumber)) doReturn NotFound
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(invalidNumber))
@@ -132,7 +135,7 @@ class RegistrationPhoneScreenControllerTest {
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(validNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
-    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))
+    verify(userSession).saveOngoingRegistrationEntry(entryWithValidNumber)
     verify(screen).openRegistrationNameEntryScreen()
   }
 
@@ -193,7 +196,6 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when the phone number belongs to an existing user then an ongoing login entry should be created and login PIN entry screen should be opened`() {
     val inputNumber = "1234567890"
-    val userUuid = UUID.fromString("61804b34-d558-4191-b2ac-0c77b854eb81")
     val userStatus = UserStatus.ApprovedForSyncing
     val entryToBeSaved = OngoingLoginEntry(
         uuid = userUuid,
@@ -221,10 +223,10 @@ class RegistrationPhoneScreenControllerTest {
     verify(screen, never()).showAccessDeniedScreen(inputNumber)
   }
 
+  // TODO (vs) 03/06/20: This test is pointless since there's only local persistence here. Remove this later.
   @Test
   fun `when the phone number belongs to an existing user and creating ongoing entry fails, an error should be shown`() {
     val inputNumber = "1234567890"
-    val userUuid = UUID.fromString("61804b34-d558-4191-b2ac-0c77b854eb81")
     val status = UserStatus.ApprovedForSyncing
 
     val entryToBeSaved = OngoingLoginEntry(
@@ -256,7 +258,6 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when the existing user is denied access then access denied screen should show`() {
     val inputNumber = "1234567890"
-    val userUuid = UUID.fromString("597fbc43-88c7-4017-b4c1-e600980945b0")
     val userStatus = UserStatus.DisapprovedForSyncing
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Found(userUuid, userStatus))
@@ -362,4 +363,8 @@ class RegistrationPhoneScreenControllerTest {
     verify(screen).showUnexpectedErrorMessage()
     verify(findUserWithPhoneNumber, never()).find(phoneNumber)
   }
+}
+
+private fun OngoingRegistrationEntry.withPhoneNumber(number: String): OngoingRegistrationEntry {
+  return copy(phoneNumber = number)
 }

@@ -700,7 +700,8 @@ class AppointmentRepositoryAndroidTest {
 
     fun savePatientAndAppointment(
         patientUuid: UUID,
-        appointmentUuid: UUID = UUID.randomUUID(),
+        appointmentUuid: UUID,
+        medicalHistoryUuid: UUID,
         fullName: String,
         bps: List<BP>,
         hasHadHeartAttack: Answer = No,
@@ -745,7 +746,7 @@ class AppointmentRepositoryAndroidTest {
       bpRepository.save(bloodPressureMeasurements).blockingAwait()
 
       medicalHistoryRepository.save(
-          uuid = UUID.randomUUID(),
+          uuid = medicalHistoryUuid,
           patientUuid = patientUuid,
           historyEntry = OngoingMedicalHistoryEntry(
               hasHadHeartAttack = hasHadHeartAttack,
@@ -763,6 +764,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("0620c310-0248-4d05-b7c4-8134bd7335e8"),
+        appointmentUuid = UUID.fromString("efbd510b-e56d-4a1e-94e3-6dd0bbc483e8"),
+        medicalHistoryUuid = UUID.fromString("345db2fe-8580-44eb-9eba-6eb69115aab3"),
         fullName = "Has had a heart attack, sBP < 140 & dBP < 110, overdue == 30 days",
         bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasHadHeartAttack = Yes,
@@ -771,6 +774,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("fb4b1804-335b-41ba-b14d-0263ca9cfe6b"),
+        appointmentUuid = UUID.fromString("c5ec5523-01f6-4957-832a-2e1fd6be2c85"),
+        medicalHistoryUuid = UUID.fromString("3c47287c-a595-4dcf-80cf-317764a916b0"),
         fullName = "Has had a heart attack, sBP > 140, overdue == 30 days",
         bps = listOf(BP(systolic = 145, diastolic = 90)),
         hasHadHeartAttack = Yes,
@@ -779,6 +784,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("c99e9290-c456-4944-9ea3-7f68d1da17df"),
+        appointmentUuid = UUID.fromString("f8266b57-02d8-4f46-8dda-e8e5313bfa90"),
+        medicalHistoryUuid = UUID.fromString("75b9ae47-1986-4b36-85a2-63ce71b47688"),
         fullName = "Has had a heart attack, dBP > 110, overdue == 30 days",
         bps = listOf(BP(systolic = 130, diastolic = 120)),
         hasHadHeartAttack = Yes,
@@ -787,6 +794,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("c4c9b12e-05f2-4343-9a1d-319049df4ff7"),
+        appointmentUuid = UUID.fromString("1a6265f3-6e7c-4598-afed-5c721d1b489f"),
+        medicalHistoryUuid = UUID.fromString("92123194-21d1-42de-a603-c35a7e1a3c75"),
         fullName = "Has had a stroke, sBP < 140 & dBP < 110, overdue == 20 days",
         bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasHadStroke = Yes,
@@ -795,6 +804,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("2c24c3a5-c385-4e5e-8643-b48ab28107c8"),
+        appointmentUuid = UUID.fromString("6a5bd240-8154-4cc1-a6d3-5b647f46c397"),
+        medicalHistoryUuid = UUID.fromString("a963f0b2-f745-4d0c-97ea-3bccf6d99864"),
         fullName = "Has had a kidney disease, overdue == 30 days",
         bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasHadKidneyDisease = Yes,
@@ -803,6 +814,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("8b497bb5-f809-434c-b1a4-4efdf810f044"),
+        appointmentUuid = UUID.fromString("a684baf9-b5b5-4489-ac7d-d3dca698645d"),
+        medicalHistoryUuid = UUID.fromString("4c4d6bd4-afef-4989-9b4f-9ef44302c3d0"),
         fullName = "Has diabetes, overdue == 30 days",
         bps = listOf(BP(systolic = 100, diastolic = 90)),
         hasDiabetes = Yes,
@@ -811,17 +824,21 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("cd78a254-a028-4b5d-bdcd-5ff367ad4143"),
+        appointmentUuid = UUID.fromString("486f1c48-45df-4eb7-9dd6-dd7d617d293a"),
+        medicalHistoryUuid = UUID.fromString("2b12c886-d933-4f36-92da-cf633ae33ea6"),
         fullName = "Has had a heart attack, stroke, kidney disease and has diabetes, sBP > 140, overdue == 30 days",
         bps = listOf(BP(systolic = 140, diastolic = 90)),
-        hasHadStroke = Yes,
         hasHadHeartAttack = Yes,
-        hasHadKidneyDisease = Yes,
+        hasHadStroke = Yes,
         hasDiabetes = Yes,
+        hasHadKidneyDisease = Yes,
         appointmentHasBeenOverdueFor = thirtyDays
     )
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("9f51709f-b356-4d9c-b6b7-1466eca35b78"),
+        appointmentUuid = UUID.fromString("3267bb23-da03-46ef-a09c-89392a444d03"),
+        medicalHistoryUuid = UUID.fromString("df353013-ff82-492e-a0ea-2cf7520d9dc0"),
         fullName = "Systolic > 180, overdue == 4 days",
         bps = listOf(BP(systolic = 9000, diastolic = 100)),
         appointmentHasBeenOverdueFor = Duration.ofDays(4)
@@ -829,6 +846,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("a4ed131e-c02e-469d-87d1-8aa63a9da780"),
+        appointmentUuid = UUID.fromString("95181e83-a15d-4549-8a12-14d9e9b0c8b8"),
+        medicalHistoryUuid = UUID.fromString("0dfd1ab4-5075-4e9f-9708-2ae31b3602e6"),
         fullName = "Diastolic > 110, overdue == 3 days",
         bps = listOf(BP(systolic = 100, diastolic = 9000)),
         appointmentHasBeenOverdueFor = Duration.ofDays(3)
@@ -836,6 +855,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("b2a3fbd1-27eb-4ef4-b78d-f66cdbb164b4"),
+        appointmentUuid = UUID.fromString("41014c90-aa00-4f9f-bf44-b89ada75f2da"),
+        medicalHistoryUuid = UUID.fromString("01d9487e-06f4-4a05-8790-9f2631da19b9"),
         fullName = "Systolic == 180, overdue == 30 days",
         bps = listOf(BP(systolic = 180, diastolic = 90)),
         appointmentHasBeenOverdueFor = thirtyDays
@@ -843,6 +864,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("488ca972-9937-4bce-8ed6-2a926963432a"),
+        appointmentUuid = UUID.fromString("a366ae15-5a8f-42ce-b56c-5a0d3826d86d"),
+        medicalHistoryUuid = UUID.fromString("18299820-989b-4322-bb90-bdd2815b24f0"),
         fullName = "Systolic == 170, overdue == 30 days",
         bps = listOf(BP(systolic = 170, diastolic = 90)),
         appointmentHasBeenOverdueFor = thirtyDays
@@ -851,6 +874,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("a6ca12c1-6f00-4ea9-82f7-b949be415471"),
+        appointmentUuid = UUID.fromString("d17f0749-a3a5-4f7a-b6bb-8de83d8ff562"),
+        medicalHistoryUuid = UUID.fromString("931b12e2-4c3c-4ec8-86af-c05b96d31ea7"),
         fullName = "Diastolic == 110, overdue == 30 days",
         bps = listOf(BP(systolic = 101, diastolic = 110)),
         appointmentHasBeenOverdueFor = thirtyDays
@@ -858,6 +883,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("b261dc0d-c6e1-4a3c-9c48-5335928ddd63"),
+        appointmentUuid = UUID.fromString("fbcc6eab-d124-4c92-84db-788d0c905f98"),
+        medicalHistoryUuid = UUID.fromString("53629d7d-f181-4236-901d-022f0332ef29"),
         fullName = "Diastolic == 100, overdue == 30 days",
         bps = listOf(BP(systolic = 101, diastolic = 100)),
         appointmentHasBeenOverdueFor = thirtyDays
@@ -865,6 +892,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("234cbcb8-c3b1-4b7c-be34-7ac3691c1df7"),
+        appointmentUuid = UUID.fromString("2beb3ebc-4bab-40ea-966f-78d904e73ec9"),
+        medicalHistoryUuid = UUID.fromString("9517a1ff-7eca-4977-8a6b-b904367750e9"),
         fullName = "BP == 141/91, overdue == 350 days",
         bps = listOf(BP(systolic = 141, diastolic = 91)),
         appointmentHasBeenOverdueFor = threeFiftyDays
@@ -872,6 +901,8 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         patientUuid = UUID.fromString("96c30123-9b08-4e11-b058-e80a62030a31"),
+        appointmentUuid = UUID.fromString("1697f7bf-05d5-46ee-9139-11b2b1faf1dd"),
+        medicalHistoryUuid = UUID.fromString("b5812690-9493-453f-b357-b456308ed15f"),
         fullName = "BP == 110/80, overdue between 30 days and 1 year",
         bps = listOf(BP(systolic = 110, diastolic = 80)),
         appointmentHasBeenOverdueFor = Duration.ofDays(80)
@@ -2066,8 +2097,10 @@ class AppointmentRepositoryAndroidTest {
 
     fun savePatientDiagnosis(
         patientUuid: UUID,
+        appointmentUuid: UUID,
         fullName: String,
         medicalHistoryAnswers: MedicalHistoryAnswers?,
+        medicalHistoryUuid: () -> UUID,
         appointmentHasBeenOverdueFor: Duration
     ) {
       val patientProfile = testData.patientProfile(
@@ -2081,7 +2114,7 @@ class AppointmentRepositoryAndroidTest {
       val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
       appointmentRepository.schedule(
           patientUuid = patientUuid,
-          appointmentUuid = UUID.randomUUID(),
+          appointmentUuid = appointmentUuid,
           appointmentDate = scheduledDate,
           appointmentType = Manual,
           appointmentFacilityUuid = facility.uuid,
@@ -2105,7 +2138,7 @@ class AppointmentRepositoryAndroidTest {
 
       medicalHistoryAnswers?.run {
         medicalHistoryRepository.save(
-            uuid = UUID.randomUUID(),
+            uuid = medicalHistoryUuid(),
             patientUuid = patientUuid,
             historyEntry = OngoingMedicalHistoryEntry(
                 hasDiabetes = hasDiabetes,
@@ -2120,48 +2153,58 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientDiagnosis(
         patientUuid = UUID.fromString("466016d6-f3fd-4982-b960-363f6c76a6b0"),
+        appointmentUuid = UUID.fromString("d33e5ecf-54f6-49e9-b8c3-17d2d69b84cf"),
         fullName = "No diabetes; No hypertension",
         medicalHistoryAnswers = MedicalHistoryAnswers(
             hasDiabetes = No,
             hasHypertension = No
         ),
+        medicalHistoryUuid = { UUID.fromString("fdf28ece-ddcd-4c51-8967-1d82250656d7") },
         appointmentHasBeenOverdueFor = thirtyDays
     )
 
     savePatientDiagnosis(
         patientUuid = UUID.fromString("599a9f6b-4bb4-4b67-9b3e-8975fe3a2199"),
+        appointmentUuid = UUID.fromString("0e40b695-8fdd-4aa7-bf0d-2096ee0d9216"),
         fullName = "No diabetes; Has hypertension",
         medicalHistoryAnswers = MedicalHistoryAnswers(
             hasDiabetes = No,
             hasHypertension = Yes
         ),
+        medicalHistoryUuid = { UUID.fromString("c9bcb81c-2f3f-4a59-adb8-137c3629124a") },
         appointmentHasBeenOverdueFor = thirtyDays
     )
 
     savePatientDiagnosis(
         patientUuid = UUID.fromString("6ee27ce7-9492-41cd-8cec-936087de615c"),
+        appointmentUuid = UUID.fromString("0e175b99-837d-4147-adb8-3754a470abff"),
         fullName = "Has diabetes; No hypertension",
         medicalHistoryAnswers = MedicalHistoryAnswers(
             hasDiabetes = Yes,
             hasHypertension = No
         ),
+        medicalHistoryUuid = { UUID.fromString("ad968719-d9c2-42be-9129-6fb766b595f6") },
         appointmentHasBeenOverdueFor = thirtyDays
     )
 
     savePatientDiagnosis(
         patientUuid = UUID.fromString("9d1c4d05-fbed-475a-8e31-c9014ce66c9c"),
+        appointmentUuid = UUID.fromString("f0069f89-b9a6-4b0f-8493-64afa659eb47"),
         fullName = "Unanswered diabetes; Unanswered hypertension",
         medicalHistoryAnswers = MedicalHistoryAnswers(
             hasDiabetes = Unanswered,
             hasHypertension = Unanswered
         ),
+        medicalHistoryUuid = { UUID.fromString("4220001b-8bcd-4d9a-97b3-0cff9c41fb84") },
         appointmentHasBeenOverdueFor = thirtyDays
     )
 
     savePatientDiagnosis(
         patientUuid = UUID.fromString("c3602eb2-d146-469b-b73a-f8336fd803c8"),
+        appointmentUuid = UUID.fromString("51d88a67-291a-4f42-8606-3560cce215e5"),
         fullName = "No medical history",
         medicalHistoryAnswers = null,
+        medicalHistoryUuid = { UUID.fromString("8de704b5-c2f7-4249-8026-a7670f5add9b") },
         appointmentHasBeenOverdueFor = thirtyDays
     )
 

@@ -39,7 +39,7 @@ class RegistrationPhoneScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen = mock<RegistrationPhoneScreen>()
+  private val ui = mock<RegistrationPhoneUi>()
   private val userSession = mock<UserSession>()
   private val numberValidator = IndianPhoneNumberValidator()
   private val findUserWithPhoneNumber = mock<UserLookup>()
@@ -92,7 +92,7 @@ class RegistrationPhoneScreenControllerTest {
 
     // then
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
-    verify(screen).preFillUserDetails(ongoingEntry)
+    verify(ui).preFillUserDetails(ongoingEntry)
   }
 
   @Test
@@ -112,7 +112,7 @@ class RegistrationPhoneScreenControllerTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(entryWithPhoneNumber)
-    verify(screen).openRegistrationNameEntryScreen()
+    verify(ui).openRegistrationNameEntryScreen()
   }
 
   @Test
@@ -140,7 +140,7 @@ class RegistrationPhoneScreenControllerTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(entryWithValidNumber)
-    verify(screen).openRegistrationNameEntryScreen()
+    verify(ui).openRegistrationNameEntryScreen()
   }
 
   @Test
@@ -154,9 +154,9 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(screen).showInvalidNumberError()
+    verify(ui).showInvalidNumberError()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
-    verify(screen, never()).openRegistrationNameEntryScreen()
+    verify(ui, never()).openRegistrationNameEntryScreen()
   }
 
   @Test
@@ -166,7 +166,7 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(""))
 
     // then
-    verify(screen).hideAnyError()
+    verify(ui).hideAnyError()
   }
 
   @Test
@@ -182,7 +182,7 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(screen).showProgressIndicator()
+    verify(ui).showProgressIndicator()
     verify(findUserWithPhoneNumber).find(inputNumber)
   }
 
@@ -201,19 +201,19 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(screen).showProgressIndicator()
-    verify(screen).hideProgressIndicator()
-    verify(screen).showUnexpectedErrorMessage()
+    verify(ui).showProgressIndicator()
+    verify(ui).hideProgressIndicator()
+    verify(ui).showUnexpectedErrorMessage()
 
-    clearInvocations(screen)
+    clearInvocations(ui)
 
     // when
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(screen).showProgressIndicator()
-    verify(screen).hideProgressIndicator()
-    verify(screen).showNetworkErrorMessage()
+    verify(ui).showProgressIndicator()
+    verify(ui).hideProgressIndicator()
+    verify(ui).showNetworkErrorMessage()
   }
 
   @Test
@@ -246,8 +246,8 @@ class RegistrationPhoneScreenControllerTest {
     // then
     verify(userSession).saveOngoingLoginEntry(entryToBeSaved)
     verify(userSession).clearOngoingRegistrationEntry()
-    verify(screen).openLoginPinEntryScreen()
-    verify(screen, never()).showAccessDeniedScreen(inputNumber)
+    verify(ui).openLoginPinEntryScreen()
+    verify(ui, never()).showAccessDeniedScreen(inputNumber)
   }
 
   @Test
@@ -264,10 +264,10 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(screen).showAccessDeniedScreen(inputNumber)
+    verify(ui).showAccessDeniedScreen(inputNumber)
     verify(userSession, never()).saveOngoingLoginEntry(any())
     verify(userSession, never()).clearOngoingRegistrationEntry()
-    verify(screen, never()).openLoginPinEntryScreen()
+    verify(ui, never()).openLoginPinEntryScreen()
   }
 
   @Test
@@ -283,7 +283,7 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(screen, times(2)).hideAnyError()
+    verify(ui, times(2)).hideAnyError()
   }
 
   @Test
@@ -295,7 +295,7 @@ class RegistrationPhoneScreenControllerTest {
     setupController(ongoingRegistrationEntry = null, isUserUnauthorized = true)
 
     // then
-    verify(screen).showLoggedOutOfDeviceDialog()
+    verify(ui).showLoggedOutOfDeviceDialog()
   }
 
   @Test
@@ -307,7 +307,7 @@ class RegistrationPhoneScreenControllerTest {
     setupController(ongoingRegistrationEntry = null, isUserUnauthorized = false)
 
     // then
-    verify(screen, never()).showLoggedOutOfDeviceDialog()
+    verify(ui, never()).showLoggedOutOfDeviceDialog()
   }
 
   @Test
@@ -323,7 +323,7 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(screen).showProgressIndicator()
+    verify(ui).showProgressIndicator()
     verify(facilitySync).pullWithResult()
   }
 
@@ -355,8 +355,8 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(screen).hideProgressIndicator()
-    verify(screen).showNetworkErrorMessage()
+    verify(ui).hideProgressIndicator()
+    verify(ui).showNetworkErrorMessage()
     verify(findUserWithPhoneNumber, never()).find(phoneNumber)
   }
 
@@ -372,8 +372,8 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(screen).hideProgressIndicator()
-    verify(screen).showUnexpectedErrorMessage()
+    verify(ui).hideProgressIndicator()
+    verify(ui).showUnexpectedErrorMessage()
     verify(findUserWithPhoneNumber, never()).find(phoneNumber)
   }
 
@@ -401,7 +401,7 @@ class RegistrationPhoneScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
   }

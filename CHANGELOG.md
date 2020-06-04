@@ -7,7 +7,8 @@
 
 ### Changes
 - Rename the button label to 'Next' when assigning a new BP passport to an existing patient
-- Indicate low blood sugars
+- Add visual indication for low blood sugars
+- Display the "Low" label when a blood pressure is low
 
 ### Internal
 - Change syncs on login to trigger at the usage site instead of in the `LoginUserWithOtp` class

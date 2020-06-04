@@ -2,8 +2,11 @@ package org.simple.clinic.registration.phone
 
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.user.UserStatus
+import org.simple.clinic.user.finduser.FindUserResult
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 sealed class RegistrationPhoneEvent : UiEvent
 
@@ -52,6 +55,33 @@ data class FacilitiesSynced(val result: Result) : RegistrationPhoneEvent() {
   sealed class Result {
 
     object Synced : Result()
+
+    object NetworkError : Result()
+
+    object OtherError : Result()
+  }
+}
+
+data class SearchForExistingUserCompleted(val result: Result) : RegistrationPhoneEvent() {
+
+  companion object {
+    fun fromFindUserResult(findUserResult: FindUserResult): SearchForExistingUserCompleted {
+      val result = when (findUserResult) {
+        is FindUserResult.Found -> Result.Found(findUserResult.uuid, findUserResult.status)
+        FindUserResult.NotFound -> Result.NotFound
+        FindUserResult.NetworkError -> Result.NetworkError
+        FindUserResult.UnexpectedError -> Result.OtherError
+      }
+
+      return SearchForExistingUserCompleted(result)
+    }
+  }
+
+  sealed class Result {
+
+    data class Found(val uuid: UUID, val status: UserStatus) : Result()
+
+    object NotFound : Result()
 
     object NetworkError : Result()
 

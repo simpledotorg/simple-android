@@ -418,7 +418,8 @@ class RegistrationPhoneScreenControllerTest {
         userSession = userSession,
         uuidGenerator = uuidGenerator,
         numberValidator = numberValidator,
-        facilitySync = facilitySync
+        facilitySync = facilitySync,
+        userLookup = findUserWithPhoneNumber
     )
 
     testFixture = MobiusTestFixture(

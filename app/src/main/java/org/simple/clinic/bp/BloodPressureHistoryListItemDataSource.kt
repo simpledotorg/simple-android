@@ -115,7 +115,7 @@ class BloodPressureHistoryListItemDataSource(
         BloodPressureHistoryItem(
             measurement = measurement,
             isBpEditable = isBpEditable,
-            isHighBloodPressure = measurement.level.isUrgent(),
+            isUrgent = measurement.level.isUrgent(),
             bpDate = dateFormatter.format(recordedAt),
             bpTime = bpTime
         )

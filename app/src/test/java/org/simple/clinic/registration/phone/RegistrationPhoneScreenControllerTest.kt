@@ -416,7 +416,8 @@ class RegistrationPhoneScreenControllerTest {
         uiActions = ui,
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,
-        uuidGenerator = uuidGenerator
+        uuidGenerator = uuidGenerator,
+        numberValidator = numberValidator
     )
 
     testFixture = MobiusTestFixture(

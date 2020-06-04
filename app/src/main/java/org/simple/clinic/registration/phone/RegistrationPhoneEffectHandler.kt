@@ -17,7 +17,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: RegistrationPhoneUiActions,
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
-    private val uuidGenerator: UuidGenerator
+    private val uuidGenerator: UuidGenerator,
+    private val numberValidator: PhoneNumberValidator
 ) {
 
   @AssistedInject.Factory
@@ -31,6 +32,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addConsumer(PrefillFields::class.java, { uiActions.preFillUserDetails(it.entry) }, schedulers.ui())
         .addTransformer(LoadCurrentRegistrationEntry::class.java, loadCurrentRegistrationEntry())
         .addTransformer(CreateNewRegistrationEntry::class.java, createNewRegistrationEntry())
+        .addTransformer(ValidateEnteredNumber::class.java, validateEnteredPhoneNumber())
         .build()
   }
 
@@ -66,6 +68,14 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
                 .andThen(Single.just(registrationEntry))
           }
           .map(::NewRegistrationEntryCreated)
+    }
+  }
+
+  private fun validateEnteredPhoneNumber(): ObservableTransformer<ValidateEnteredNumber, RegistrationPhoneEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { numberValidator.validate(it.number, PhoneNumberValidator.Type.MOBILE) }
+          .map { EnteredNumberValidated.fromValidateNumberResult(it) }
     }
   }
 }

@@ -16,6 +16,9 @@
     <ignore path="src/main/res/drawable/ic_settings_24dp.xml" />
     <ignore path="src/main/res/drawable/ic_language_24dp.xml" />
     <ignore path="src/main/res/drawable/ic_whatsapp.xml" />
+    <ignore path="src/main/res/drawable/ic_onboarding_intro_1.xml" />
+    <ignore path="src/main/res/drawable/ic_onboarding_intro_2.xml" />
+    <ignore path="src/main/res/drawable/ic_onboarding_intro_3.xml" />
   </issue>
 
   <issue id="ParcelCreator" severity="informational" />
@@ -44,5 +47,8 @@
     <ignore path="src/main/res/drawable/ic_settings_account_24dp.xml" />
     <ignore path="src/main/res/drawable/ic_settings_phone_24dp.xml" />
     <ignore path="src/main/res/drawable/ic_settings_24dp.xml" />
+    <ignore path="src/main/res/drawable/ic_onboarding_intro_1.xml" />
+    <ignore path="src/main/res/drawable/ic_onboarding_intro_2.xml" />
+    <ignore path="src/main/res/drawable/ic_onboarding_intro_3.xml" />
   </issue>
 </lint>

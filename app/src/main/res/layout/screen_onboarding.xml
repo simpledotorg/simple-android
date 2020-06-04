@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.onboarding.OnboardingScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <ImageView
+    android:id="@+id/introOneImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_32"
+    android:layout_marginEnd="@dimen/spacing_24"
+    app:layout_constraintBottom_toTopOf="@+id/introTwoImageView"
+    app:layout_constraintEnd_toStartOf="@+id/introOneTextView"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_onboarding_intro_1"
+    tools:ignore="ContentDescription" />
+
+  <TextView
+    android:id="@+id/introOneTextView"
+    style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Grey1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:text="@string/screenonboarding_intro_1"
+    app:layout_constraintBottom_toBottomOf="@+id/introOneImageView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/introOneImageView"
+    app:layout_constraintTop_toTopOf="@id/introOneImageView" />
+
+  <ImageView
+    android:id="@+id/introTwoImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="32dp"
+    android:layout_marginEnd="22dp"
+    app:layout_constraintBottom_toTopOf="@+id/introThreeImageView"
+    app:layout_constraintEnd_toStartOf="@+id/introTwoTextView"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/introOneImageView"
+    app:srcCompat="@drawable/ic_onboarding_intro_2"
+    tools:ignore="ContentDescription" />
+
+  <TextView
+    android:id="@+id/introTwoTextView"
+    style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Grey1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:text="@string/screenonboarding_intro_2"
+    app:layout_constraintBottom_toBottomOf="@+id/introTwoImageView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/introTwoImageView"
+    app:layout_constraintTop_toTopOf="@id/introTwoImageView" />
+
+  <ImageView
+    android:id="@+id/introThreeImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_32"
+    android:layout_marginEnd="@dimen/spacing_24"
+    app:layout_constraintBottom_toTopOf="@id/nextButtonFrame"
+    app:layout_constraintEnd_toStartOf="@+id/introThreeTextView"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/introTwoImageView"
+    app:srcCompat="@drawable/ic_onboarding_intro_3"
+    tools:ignore="ContentDescription" />
+
+  <TextView
+    android:id="@+id/introThreeTextView"
+    style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Grey1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:text="@string/screenonboarding_intro_3"
+    app:layout_constraintBottom_toBottomOf="@+id/introThreeImageView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/introThreeImageView"
+    app:layout_constraintTop_toTopOf="@id/introThreeImageView" />
+
+  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+    android:id="@+id/nextButtonFrame"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    app:buttonBackgroundDisabled="@color/grey2"
+    app:buttonBackgroundEnabled="@color/blue1"
+    app:frameBackgroundDisabled="@color/grey3"
+    app:frameBackgroundEnabled="@color/blue2"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/getStartedButton"
+      style="?attr/materialButtonStyle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_4"
+      android:text="@string/onboarding_get_started" />
+
+  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+
+</org.simple.clinic.onboarding.OnboardingScreen>

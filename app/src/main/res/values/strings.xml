@@ -319,6 +319,15 @@
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">Get Started</string>
+  <string name="screenonboarding_intro_1">Search \&amp; find \nthousands of patients \nwith</string>
+  <string name="screenonboarding_intro_1_hypertension">\ hypertension</string>
+  <string name="screenonboarding_intro_2">Maintain records of \n</string>
+  <string name="screenonboarding_intro_2_bp">blood pressures \n</string>
+  <string name="screenonboarding_intro_2_and">\&amp;</string>
+  <string name="screenonboarding_intro_2_medicines">\ medicines</string>
+  <string name="screenonboarding_intro_3">Patients receive </string>
+  <string name="screenonboarding_intro_3_reminder">\nreminder messages</string>
+  <string name="screenonboarding_intro_3_visits">\nto return for visits</string>
 
   <!-- Overdue List -->
   <string name="overdue_no_patients">No patients overdue</string>

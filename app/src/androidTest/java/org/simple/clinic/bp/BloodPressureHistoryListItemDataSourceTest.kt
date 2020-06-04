@@ -107,8 +107,8 @@ class BloodPressureHistoryListItemDataSourceTest {
         assertThat(data)
             .containsExactly(
                 NewBpButton,
-                BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isHighBloodPressure = false, bpDate = "1-Jan-2020", bpTime = null),
-                BloodPressureHistoryItem(measurement = bloodPressureInPast, isBpEditable = false, isHighBloodPressure = false, bpDate = "31-Dec-2019", bpTime = null)
+                BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isUrgent = false, bpDate = "1-Jan-2020", bpTime = null),
+                BloodPressureHistoryItem(measurement = bloodPressureInPast, isBpEditable = false, isUrgent = false, bpDate = "31-Dec-2019", bpTime = null)
             )
       }
 
@@ -178,9 +178,9 @@ class BloodPressureHistoryListItemDataSourceTest {
       override fun onResult(data: MutableList<BloodPressureHistoryListItem>) {
         assertThat(data)
             .containsExactly(
-                BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isHighBloodPressure = false, bpDate = "1-Jan-2020", bpTime = null),
-                BloodPressureHistoryItem(measurement = bloodPressure15MinutesInPast, isBpEditable = false, isHighBloodPressure = false, bpDate = "31-Dec-2019", bpTime = null),
-                BloodPressureHistoryItem(measurement = bloodPressure40MinutesInPast, isBpEditable = false, isHighBloodPressure = false, bpDate = "30-Dec-2019", bpTime = null)
+                BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isUrgent = false, bpDate = "1-Jan-2020", bpTime = null),
+                BloodPressureHistoryItem(measurement = bloodPressure15MinutesInPast, isBpEditable = false, isUrgent = false, bpDate = "31-Dec-2019", bpTime = null),
+                BloodPressureHistoryItem(measurement = bloodPressure40MinutesInPast, isBpEditable = false, isUrgent = false, bpDate = "30-Dec-2019", bpTime = null)
             )
       }
     })
@@ -248,9 +248,9 @@ class BloodPressureHistoryListItemDataSourceTest {
         assertThat(data)
             .containsExactly(
                 NewBpButton,
-                BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isHighBloodPressure = false, bpDate = "1-Jan-2020", bpTime = null),
-                BloodPressureHistoryItem(measurement = bloodPressure15MinutesInPast, isBpEditable = false, isHighBloodPressure = false, bpDate = "31-Dec-2019", bpTime = null),
-                BloodPressureHistoryItem(measurement = bloodPressure40MinutesInPast, isBpEditable = false, isHighBloodPressure = false, bpDate = "30-Dec-2019", bpTime = null)
+                BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isUrgent = false, bpDate = "1-Jan-2020", bpTime = null),
+                BloodPressureHistoryItem(measurement = bloodPressure15MinutesInPast, isBpEditable = false, isUrgent = false, bpDate = "31-Dec-2019", bpTime = null),
+                BloodPressureHistoryItem(measurement = bloodPressure40MinutesInPast, isBpEditable = false, isUrgent = false, bpDate = "30-Dec-2019", bpTime = null)
             )
       }
     })

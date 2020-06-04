@@ -39,20 +39,9 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
     @SuppressLint("SetTextI18n")
     override fun render(holder: ViewHolderX, subject: Subject<Event>) {
       val context = holder.itemView.context
-      val bpDateTime = if (bpTime != null) {
-        context.getString(R.string.bloodpressurehistory_bp_time_date, bpDate, bpTime)
-      } else {
-        bpDate
-      }
-      val dateTimeTextAppearance = if (bpTime != null) {
-        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Caption_Grey1)
-      } else {
-        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Grey1)
-      }
-
       val formattedBPDateTime = Truss()
-          .pushSpan(dateTimeTextAppearance)
-          .append(bpDateTime)
+          .pushSpan(dateTimeTextAppearance(context))
+          .append(bloodPressureDateTime(context))
           .popSpan()
           .build()
       val labelTextRes = measurement.level.displayTextRes.toNullable()
@@ -78,6 +67,22 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
 
       holder.readingsTextView.text = "${measurement.reading.systolic} / ${measurement.reading.diastolic}"
       holder.timeDateTextView.text = formattedBPDateTime
+    }
+
+    private fun bloodPressureDateTime(context: Context): String {
+      return if (bpTime != null) {
+        context.getString(R.string.bloodpressurehistory_bp_time_date, bpDate, bpTime)
+      } else {
+        bpDate
+      }
+    }
+
+    private fun dateTimeTextAppearance(context: Context?): TextAppearanceSpan {
+      return if (bpTime != null) {
+        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Caption_Grey1)
+      } else {
+        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Grey1)
+      }
     }
   }
 }

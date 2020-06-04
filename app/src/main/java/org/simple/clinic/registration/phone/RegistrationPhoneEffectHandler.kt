@@ -11,11 +11,13 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 
 class RegistrationPhoneEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: RegistrationPhoneUiActions,
     private val schedulers: SchedulersProvider,
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    private val uuidGenerator: UuidGenerator
 ) {
 
   @AssistedInject.Factory
@@ -28,6 +30,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<RegistrationPhoneEffect, RegistrationPhoneEvent>()
         .addConsumer(PrefillFields::class.java, { uiActions.preFillUserDetails(it.entry) }, schedulers.ui())
         .addTransformer(LoadCurrentRegistrationEntry::class.java, loadCurrentRegistrationEntry())
+        .addTransformer(CreateNewRegistrationEntry::class.java, createNewRegistrationEntry())
         .build()
   }
 
@@ -51,5 +54,18 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
           else
             Single.just(None<OngoingRegistrationEntry>())
         }
+  }
+
+  private fun createNewRegistrationEntry(): ObservableTransformer<CreateNewRegistrationEntry, RegistrationPhoneEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { OngoingRegistrationEntry(uuid = uuidGenerator.v4()) }
+          .switchMapSingle { registrationEntry ->
+            userSession
+                .saveOngoingRegistrationEntry(registrationEntry)
+                .andThen(Single.just(registrationEntry))
+          }
+          .map(::NewRegistrationEntryCreated)
+    }
   }
 }

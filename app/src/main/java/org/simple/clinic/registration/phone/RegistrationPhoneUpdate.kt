@@ -22,6 +22,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
         else
           noChange()
       }
+      is NewRegistrationEntryCreated -> next(model.withEntry(event.entry))
     }
   }
 }

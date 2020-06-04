@@ -14,15 +14,20 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
   ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
     return when (event) {
       is RegistrationPhoneNumberTextChanged -> next(model.phoneNumberChanged(event.phoneNumber))
-      is CurrentRegistrationEntryLoaded -> {
-        val savedEntry = event.entry
-
-        if (savedEntry is Just)
-          next(model.withEntry(savedEntry.value), PrefillFields(savedEntry.value) as RegistrationPhoneEffect)
-        else
-          dispatch(CreateNewRegistrationEntry as RegistrationPhoneEffect)
-      }
+      is CurrentRegistrationEntryLoaded -> currentEntryLoaded(event, model)
       is NewRegistrationEntryCreated -> next(model.withEntry(event.entry))
     }
+  }
+
+  private fun currentEntryLoaded(
+      event: CurrentRegistrationEntryLoaded,
+      model: RegistrationPhoneModel
+  ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
+    val savedEntry = event.entry
+
+    return if (savedEntry is Just)
+      next(model.withEntry(savedEntry.value), PrefillFields(savedEntry.value) as RegistrationPhoneEffect)
+    else
+      dispatch(CreateNewRegistrationEntry as RegistrationPhoneEffect)
   }
 }

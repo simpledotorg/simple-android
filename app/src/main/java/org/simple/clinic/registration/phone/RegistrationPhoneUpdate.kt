@@ -17,7 +17,8 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is RegistrationPhoneNumberTextChanged -> next(model.phoneNumberChanged(event.phoneNumber))
       is CurrentRegistrationEntryLoaded -> currentEntryLoaded(event, model)
       is NewRegistrationEntryCreated -> next(model.withEntry(event.entry))
-      is EnteredNumberValidated -> noChange()
+      is RegistrationPhoneDoneClicked -> dispatch(ValidateEnteredNumber(model.ongoingRegistrationEntry!!.phoneNumber!!))
+      is EnteredNumberValidated -> next(model.phoneNumberValidated(event.result))
       is FacilitiesSynced -> noChange()
       is SearchForExistingUserCompleted -> noChange()
     }

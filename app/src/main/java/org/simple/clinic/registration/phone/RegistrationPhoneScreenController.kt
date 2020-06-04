@@ -41,23 +41,10 @@ class RegistrationPhoneScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        showValidationError(replayedEvents),
         hideValidationError(replayedEvents),
         saveOngoingEntryAndProceed(replayedEvents),
         showLoggedOutOnThisDeviceDialog(replayedEvents)
     )
-  }
-
-  private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {
-    val phoneNumberTextChanges = events
-        .ofType<RegistrationPhoneNumberTextChanged>()
-        .map { it.phoneNumber }
-
-    return events.ofType<RegistrationPhoneDoneClicked>()
-        .withLatestFrom(phoneNumberTextChanges)
-        .map { (_, number) -> numberValidator.validate(number, MOBILE) }
-        .filter { it != VALID }
-        .map { { ui: Ui -> ui.showInvalidNumberError() } }
   }
 
   private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {

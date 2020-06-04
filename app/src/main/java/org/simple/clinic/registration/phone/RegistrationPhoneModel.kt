@@ -8,7 +8,8 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 data class RegistrationPhoneModel(
     val mode: RegistrationUiMode,
     val ongoingRegistrationEntry: OngoingRegistrationEntry?,
-    val registrationResult: RegistrationResult?
+    val registrationResult: RegistrationResult?,
+    val phoneValidationResult: RegistrationPhoneValidationResult?
 ) : Parcelable {
 
   companion object {
@@ -16,9 +17,13 @@ data class RegistrationPhoneModel(
     fun create(): RegistrationPhoneModel = RegistrationPhoneModel(
         mode = RegistrationUiMode.PhoneEntry,
         ongoingRegistrationEntry = null,
-        registrationResult = null
+        registrationResult = null,
+        phoneValidationResult = null
     )
   }
+
+  val isInPhoneEntryMode: Boolean
+    get() = mode == RegistrationUiMode.PhoneEntry
 
   fun phoneNumberChanged(phoneNumber: String): RegistrationPhoneModel {
     // TODO (vs) 04/06/20: Change in a later commit to not require a null check
@@ -32,4 +37,7 @@ data class RegistrationPhoneModel(
     return copy(ongoingRegistrationEntry = entry)
   }
 
+  fun phoneNumberValidated(result: RegistrationPhoneValidationResult): RegistrationPhoneModel {
+    return copy(phoneValidationResult = result)
+  }
 }

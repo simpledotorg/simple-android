@@ -12,7 +12,6 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
 import org.simple.clinic.user.OngoingLoginEntry
-import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.finduser.FindUserResult
@@ -42,27 +41,11 @@ class RegistrationPhoneScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        createEmptyOngoingEntryAndPreFill(replayedEvents),
         showValidationError(replayedEvents),
         hideValidationError(replayedEvents),
         saveOngoingEntryAndProceed(replayedEvents),
         showLoggedOutOnThisDeviceDialog(replayedEvents)
     )
-  }
-
-  private fun createEmptyOngoingEntryAndPreFill(events: Observable<UiEvent>): Observable<UiChange> {
-    val createEmptyEntry = events
-        .ofType<RegistrationPhoneScreenCreated>()
-        .flatMap {
-          userSession.isOngoingRegistrationEntryPresent()
-              .filter { present -> present.not() }
-              .flatMapCompletable {
-                userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(uuid = uuidGenerator.v4()))
-              }
-              .andThen(Observable.empty<UiChange>())
-        }
-
-    return createEmptyEntry
   }
 
   private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {

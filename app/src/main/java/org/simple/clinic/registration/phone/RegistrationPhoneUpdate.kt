@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.next
+import org.simple.clinic.util.Just
 
 class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhoneEvent, RegistrationPhoneEffect> {
 
@@ -11,9 +12,16 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       model: RegistrationPhoneModel,
       event: RegistrationPhoneEvent
   ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
-    return when(event) {
+    return when (event) {
       is RegistrationPhoneNumberTextChanged -> next(model.phoneNumberChanged(event.phoneNumber))
-      is CurrentRegistrationEntryLoaded -> noChange()
+      is CurrentRegistrationEntryLoaded -> {
+        val savedEntry = event.entry
+
+        if (savedEntry is Just)
+          next(model.withEntry(savedEntry.value), PrefillFields(savedEntry.value) as RegistrationPhoneEffect)
+        else
+          noChange()
+      }
     }
   }
 }

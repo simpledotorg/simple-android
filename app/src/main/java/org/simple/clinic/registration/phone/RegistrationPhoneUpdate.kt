@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.phone
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -16,6 +17,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is RegistrationPhoneNumberTextChanged -> next(model.phoneNumberChanged(event.phoneNumber))
       is CurrentRegistrationEntryLoaded -> currentEntryLoaded(event, model)
       is NewRegistrationEntryCreated -> next(model.withEntry(event.entry))
+      is EnteredNumberValidated -> noChange()
     }
   }
 

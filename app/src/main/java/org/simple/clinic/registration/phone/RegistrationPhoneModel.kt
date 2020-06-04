@@ -23,4 +23,8 @@ data class RegistrationPhoneModel(
     else
       this
   }
+
+  fun withEntry(entry: OngoingRegistrationEntry): RegistrationPhoneModel {
+    return copy(ongoingRegistrationEntry = entry)
+  }
 }

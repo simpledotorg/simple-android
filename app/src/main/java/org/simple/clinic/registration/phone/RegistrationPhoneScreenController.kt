@@ -62,17 +62,7 @@ class RegistrationPhoneScreenController @Inject constructor(
               .andThen(Observable.empty<UiChange>())
         }
 
-    val preFill = events
-        .ofType<RegistrationPhoneScreenCreated>()
-        .flatMap { _ ->
-          userSession.isOngoingRegistrationEntryPresent()
-              .toObservable() // Because Single.filter() returns a Maybe and Maybe.flatMapSingle() errors on completion.
-              .filter { present -> present }
-              .flatMapSingle { userSession.ongoingRegistrationEntry() }
-              .map { { ui: Ui -> ui.preFillUserDetails(it) } }
-        }
-
-    return Observable.merge(createEmptyEntry, preFill)
+    return createEmptyEntry
   }
 
   private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {

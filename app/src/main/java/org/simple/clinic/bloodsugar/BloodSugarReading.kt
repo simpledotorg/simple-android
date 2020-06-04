@@ -3,7 +3,10 @@ package org.simple.clinic.bloodsugar
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.bloodsugar.entry.ValidationResult
-import org.simple.clinic.bloodsugar.entry.ValidationResult.*
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
+import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooLow
+import org.simple.clinic.bloodsugar.entry.ValidationResult.Valid
 
 @Parcelize
 data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementType) : Parcelable {
@@ -14,6 +17,16 @@ data class BloodSugarReading(val value: String, val type: BloodSugarMeasurementT
         PostPrandial -> value.toFloat() >= 200
         Fasting -> value.toFloat() >= 126
         HbA1c -> value.toFloat() >= 7.0
+        else -> false
+      }
+    }
+
+  val isLow: Boolean
+    get() {
+      return when (type) {
+        Random,
+        PostPrandial,
+        Fasting -> value.toFloat() < 70
         else -> false
       }
     }

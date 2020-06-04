@@ -53,7 +53,7 @@ class BloodSugarItemView(
 
     readingTextView.text = "$readingPrefix${reading.displayUnitSeparator}$readingSuffix"
 
-    if (reading.isHigh) {
+    if (reading.isHigh || reading.isLow) {
       bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
     } else {
       bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_outline)

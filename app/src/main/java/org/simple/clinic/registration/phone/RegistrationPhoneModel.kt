@@ -6,12 +6,14 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 
 @Parcelize
 data class RegistrationPhoneModel(
+    private val mode: RegistrationUiMode,
     private val ongoingRegistrationEntry: OngoingRegistrationEntry?
 ) : Parcelable {
 
   companion object {
 
     fun create(): RegistrationPhoneModel = RegistrationPhoneModel(
+        mode = RegistrationUiMode.PhoneEntry,
         ongoingRegistrationEntry = null
     )
   }

@@ -41,29 +41,20 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
     override fun render(holder: ViewHolderX, subject: Subject<Event>) {
       val context = holder.itemView.context
       val bloodSugarReading = measurement.reading
-      val bloodSugarDateTime = if (bloodSugarTime != null) {
-        context.getString(R.string.bloodsugarhistory_blood_sugar_date_time, bloodSugarDate, bloodSugarTime)
-      } else {
-        bloodSugarDate
-      }
-      val dateTimeTextAppearance = if (bloodSugarTime != null) {
-        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Caption_Grey1)
-      } else {
-        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Grey1)
-      }
       val formattedBPDateTime = Truss()
-          .pushSpan(dateTimeTextAppearance)
-          .append(bloodSugarDateTime)
+          .pushSpan(dateTimeTextAppearance(context))
+          .append(bloodSugarDateTime(context))
           .popSpan()
           .build()
       val isBloodSugarHigh = measurement.reading.isHigh
+      val isBloodSugarLow = measurement.reading.isLow
 
       val readingPrefix = bloodSugarReading.displayValue
       val readingSuffix = "${unitForReadingType(context, bloodSugarReading.type)} ${textForReadingType(context, bloodSugarReading.type)}"
 
       holder.readingsTextView.text = "$readingPrefix${bloodSugarReading.displayUnitSeparator}$readingSuffix"
       holder.dateTimeTextView.text = formattedBPDateTime
-      if (isBloodSugarHigh) {
+      if (isBloodSugarHigh || isBloodSugarLow) {
         holder.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
       } else {
         holder.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_outline)
@@ -77,6 +68,22 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
       holder.itemView.isClickable = isBloodSugarEditable
       holder.itemView.isFocusable = isBloodSugarEditable
       holder.editButton.visibleOrGone(isBloodSugarEditable)
+    }
+
+    private fun bloodSugarDateTime(context: Context): String {
+      return if (bloodSugarTime != null) {
+        context.getString(R.string.bloodsugarhistory_blood_sugar_date_time, bloodSugarDate, bloodSugarTime)
+      } else {
+        bloodSugarDate
+      }
+    }
+
+    private fun dateTimeTextAppearance(context: Context): TextAppearanceSpan {
+      return if (bloodSugarTime != null) {
+        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Caption_Grey1)
+      } else {
+        TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Grey1)
+      }
     }
 
     private fun unitForReadingType(context: Context, type: BloodSugarMeasurementType): String {

@@ -1,8 +1,8 @@
 package org.simple.clinic.registration.phone
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.util.Just
 
@@ -20,7 +20,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
         if (savedEntry is Just)
           next(model.withEntry(savedEntry.value), PrefillFields(savedEntry.value) as RegistrationPhoneEffect)
         else
-          noChange()
+          dispatch(CreateNewRegistrationEntry as RegistrationPhoneEffect)
       }
       is NewRegistrationEntryCreated -> next(model.withEntry(event.entry))
     }

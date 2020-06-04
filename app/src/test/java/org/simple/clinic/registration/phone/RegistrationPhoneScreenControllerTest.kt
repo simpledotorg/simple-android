@@ -413,7 +413,8 @@ class RegistrationPhoneScreenControllerTest {
 
     val effectHandler = RegistrationPhoneEffectHandler(
         uiActions = uiActions,
-        schedulers = TrampolineSchedulersProvider()
+        schedulers = TrampolineSchedulersProvider(),
+        userSession = userSession
     )
 
     testFixture = MobiusTestFixture(

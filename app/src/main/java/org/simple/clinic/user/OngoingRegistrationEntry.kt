@@ -1,9 +1,12 @@
 package org.simple.clinic.user
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import java.util.UUID
 
+@Parcelize
 data class OngoingRegistrationEntry(
     val uuid: UUID? = null,
     val phoneNumber: String? = null,
@@ -12,12 +15,16 @@ data class OngoingRegistrationEntry(
     val pinConfirmation: String? = null,
     val facilityId: UUID? = null,
     val createdAt: Instant? = null
-) {
+): Parcelable {
 
   fun withPinConfirmation(pinConfirmation: String, clock: UtcClock): OngoingRegistrationEntry {
     check(this.pin == pinConfirmation) { "Stored PIN != Entered PIN confirmation!" }
 
     return this.copy(pinConfirmation = pinConfirmation, createdAt = Instant.now(clock))
+  }
+
+  fun withPhoneNumber(number: String): OngoingRegistrationEntry {
+    return copy(phoneNumber = number)
   }
 
   fun resetPin(): OngoingRegistrationEntry {

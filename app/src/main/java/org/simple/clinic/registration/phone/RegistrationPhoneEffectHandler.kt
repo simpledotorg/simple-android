@@ -8,6 +8,7 @@ import io.reactivex.Single
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -20,7 +21,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val uuidGenerator: UuidGenerator,
     private val numberValidator: PhoneNumberValidator,
-    private val facilitySync: FacilitySync
+    private val facilitySync: FacilitySync,
+    private val userLookup: UserLookup
 ) {
 
   @AssistedInject.Factory
@@ -36,6 +38,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(CreateNewRegistrationEntry::class.java, createNewRegistrationEntry())
         .addTransformer(ValidateEnteredNumber::class.java, validateEnteredPhoneNumber())
         .addTransformer(SyncFacilities::class.java, syncFacilities())
+        .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
         .build()
   }
 
@@ -87,6 +90,15 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
       effects
           .switchMapSingle { facilitySync.pullWithResult().subscribeOn(schedulers.io()) }
           .map { FacilitiesSynced.fromFacilityPullResult(it) }
+    }
+  }
+
+  private fun findUserByPhoneNumber(): ObservableTransformer<SearchForExistingUser, RegistrationPhoneEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { userLookup.find(it.number) }
+          .map { SearchForExistingUserCompleted.fromFindUserResult(it) }
     }
   }
 }

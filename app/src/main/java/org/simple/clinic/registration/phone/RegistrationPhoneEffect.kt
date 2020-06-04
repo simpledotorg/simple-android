@@ -12,4 +12,6 @@ object CreateNewRegistrationEntry : RegistrationPhoneEffect()
 
 data class ValidateEnteredNumber(val number: String) : RegistrationPhoneEffect()
 
-object SyncFacilities: RegistrationPhoneEffect()
+object SyncFacilities : RegistrationPhoneEffect()
+
+data class SearchForExistingUser(val number: String) : RegistrationPhoneEffect()

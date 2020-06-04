@@ -4,8 +4,10 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 
 sealed class RegistrationPhoneEffect
 
-data class PrefillFields(val entry: OngoingRegistrationEntry): RegistrationPhoneEffect()
+data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationPhoneEffect()
 
-object LoadCurrentRegistrationEntry: RegistrationPhoneEffect()
+object LoadCurrentRegistrationEntry : RegistrationPhoneEffect()
 
-object CreateNewRegistrationEntry: RegistrationPhoneEffect()
+object CreateNewRegistrationEntry : RegistrationPhoneEffect()
+
+data class ValidateEnteredNumber(val number: String) : RegistrationPhoneEffect()

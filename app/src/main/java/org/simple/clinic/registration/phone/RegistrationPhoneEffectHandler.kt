@@ -5,6 +5,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
+import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -18,7 +19,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
     private val uuidGenerator: UuidGenerator,
-    private val numberValidator: PhoneNumberValidator
+    private val numberValidator: PhoneNumberValidator,
+    private val facilitySync: FacilitySync
 ) {
 
   @AssistedInject.Factory
@@ -33,6 +35,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(LoadCurrentRegistrationEntry::class.java, loadCurrentRegistrationEntry())
         .addTransformer(CreateNewRegistrationEntry::class.java, createNewRegistrationEntry())
         .addTransformer(ValidateEnteredNumber::class.java, validateEnteredPhoneNumber())
+        .addTransformer(SyncFacilities::class.java, syncFacilities())
         .build()
   }
 
@@ -76,6 +79,14 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
       effects
           .map { numberValidator.validate(it.number, PhoneNumberValidator.Type.MOBILE) }
           .map { EnteredNumberValidated.fromValidateNumberResult(it) }
+    }
+  }
+
+  private fun syncFacilities(): ObservableTransformer<SyncFacilities, RegistrationPhoneEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMapSingle { facilitySync.pullWithResult().subscribeOn(schedulers.io()) }
+          .map { FacilitiesSynced.fromFacilityPullResult(it) }
     }
   }
 }

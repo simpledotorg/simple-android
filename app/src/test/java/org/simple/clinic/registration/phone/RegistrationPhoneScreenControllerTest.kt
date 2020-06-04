@@ -423,7 +423,3 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneScreenCreated())
   }
 }
-
-private fun OngoingRegistrationEntry.withPhoneNumber(number: String): OngoingRegistrationEntry {
-  return copy(phoneNumber = number)
-}

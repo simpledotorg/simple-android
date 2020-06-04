@@ -1,3 +1,7 @@
 package org.simple.clinic.registration.phone
 
-class RegistrationPhoneEffect
+import org.simple.clinic.user.OngoingRegistrationEntry
+
+sealed class RegistrationPhoneEffect
+
+data class PrefillFields(val entry: OngoingRegistrationEntry): RegistrationPhoneEffect()

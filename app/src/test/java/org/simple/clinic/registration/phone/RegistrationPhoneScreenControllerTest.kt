@@ -396,12 +396,14 @@ class RegistrationPhoneScreenControllerTest {
 
     whenever(userSession.isUserUnauthorized()) doReturn Observable.just(isUserUnauthorized)
 
+    val uuidGenerator = FakeUuidGenerator.fixed(userUuid)
+
     controller = RegistrationPhoneScreenController(
         userSession = userSession,
         userLookup = findUserWithPhoneNumber,
         numberValidator = numberValidator,
         facilitySync = facilitySync,
-        uuidGenerator = FakeUuidGenerator.fixed(userUuid)
+        uuidGenerator = uuidGenerator
     )
 
     controllerSubscription = uiEvents
@@ -413,7 +415,8 @@ class RegistrationPhoneScreenControllerTest {
     val effectHandler = RegistrationPhoneEffectHandler(
         uiActions = ui,
         schedulers = TrampolineSchedulersProvider(),
-        userSession = userSession
+        userSession = userSession,
+        uuidGenerator = uuidGenerator
     )
 
     testFixture = MobiusTestFixture(

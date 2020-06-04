@@ -11,3 +11,5 @@ data class RegistrationPhoneNumberTextChanged(val phoneNumber: String) : Registr
 }
 
 data class CurrentRegistrationEntryLoaded(val entry: Optional<OngoingRegistrationEntry>): RegistrationPhoneEvent()
+
+data class NewRegistrationEntryCreated(val entry: OngoingRegistrationEntry): RegistrationPhoneEvent()

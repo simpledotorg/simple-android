@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.patientsummary_bpitem_content.view.*
 import org.simple.clinic.R
+import org.simple.clinic.bp.BloodPressureLevel
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.visibleOrGone
@@ -25,7 +26,7 @@ class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout
       bpTime: String?,
       editMeasurementClicked: (BloodPressureMeasurement) -> Unit
   ) {
-    renderBloodPressureReading(measurement.reading.systolic, measurement.reading.diastolic, measurement.level.isUrgent())
+    renderBloodPressureReading(measurement.reading.systolic, measurement.reading.diastolic, measurement.level)
     renderDateTime(bpDate, bpTime)
 
     if (isBpEditable) bpItemRoot.setOnClickListener { editMeasurementClicked(measurement) }
@@ -38,11 +39,18 @@ class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout
   private fun renderBloodPressureReading(
       systolic: Int,
       diastolic: Int,
-      isBpHigh: Boolean
+      bpLevel: BloodPressureLevel
   ) {
+    val isUrgent = bpLevel.isUrgent()
+    val labelTextRes = bpLevel.displayTextRes.toNullable()
+
     readingsTextView.text = "$systolic / $diastolic"
-    bpHighTextView.visibleOrGone(isBpHigh)
-    if (isBpHigh) {
+    bpHighTextView.visibleOrGone(isUrgent)
+    if (labelTextRes != null) {
+      bpHighTextView.setText(labelTextRes)
+    }
+
+    if (isUrgent) {
       heartImageView.setImageResource(R.drawable.bp_reading_high)
     } else {
       heartImageView.setImageResource(R.drawable.bp_reading_normal)

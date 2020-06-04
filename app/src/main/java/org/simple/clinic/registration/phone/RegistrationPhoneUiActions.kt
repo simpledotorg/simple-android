@@ -1,4 +1,7 @@
 package org.simple.clinic.registration.phone
 
+import org.simple.clinic.user.OngoingRegistrationEntry
+
 interface RegistrationPhoneUiActions {
+  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry)
 }

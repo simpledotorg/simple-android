@@ -1,9 +1,6 @@
 package org.simple.clinic.registration.phone
 
-import org.simple.clinic.user.OngoingRegistrationEntry
-
-interface RegistrationPhoneUi {
-  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry)
+interface RegistrationPhoneUi: RegistrationPhoneUiActions {
   fun openRegistrationNameEntryScreen()
   fun showInvalidNumberError()
   fun showUnexpectedErrorMessage()

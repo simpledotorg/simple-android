@@ -31,6 +31,7 @@ import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -410,12 +411,17 @@ class RegistrationPhoneScreenControllerTest {
 
     val uiRenderer = RegistrationPhoneUiRenderer(ui)
 
+    val effectHandler = RegistrationPhoneEffectHandler(
+        uiActions = uiActions,
+        schedulers = TrampolineSchedulersProvider()
+    )
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = RegistrationPhoneModel.create(),
         init = RegistrationPhoneInit(),
         update = RegistrationPhoneUpdate(),
-        effectHandler = RegistrationPhoneEffectHandler(uiActions).build(),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()

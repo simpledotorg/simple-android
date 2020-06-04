@@ -1,6 +1,7 @@
 package org.simple.clinic.bp.history.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.text.style.TextAppearanceSpan
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_bp_history_item.*
@@ -28,7 +29,7 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
   data class BloodPressureHistoryItem(
       val measurement: BloodPressureMeasurement,
       val isBpEditable: Boolean,
-      val isHighBloodPressure: Boolean,
+      val isUrgent: Boolean,
       val bpDate: String,
       val bpTime: String?
   ) : BloodPressureHistoryListItem() {
@@ -54,13 +55,17 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
           .append(bpDateTime)
           .popSpan()
           .build()
+      val labelTextRes = measurement.level.displayTextRes.toNullable()
 
-      if (isHighBloodPressure) {
+      if (isUrgent) {
         holder.heartImageView.setImageResource(R.drawable.bp_reading_high)
       } else {
         holder.heartImageView.setImageResource(R.drawable.bp_reading_normal)
       }
-      holder.bpHighTextView.visibleOrGone(isHighBloodPressure)
+      holder.bpHighTextView.visibleOrGone(isUrgent)
+      if (labelTextRes != null) {
+        holder.bpHighTextView.setText(labelTextRes)
+      }
 
       if (isBpEditable) {
         holder.itemView.setOnClickListener { subject.onNext(BloodPressureHistoryItemClicked(measurement)) }

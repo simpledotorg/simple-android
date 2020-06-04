@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.phone
 
+import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
@@ -32,5 +33,28 @@ data class EnteredNumberValidated(val result: RegistrationPhoneValidationResult)
 
       return EnteredNumberValidated(registrationPhoneValidationResult)
     }
+  }
+}
+
+data class FacilitiesSynced(val result: Result) : RegistrationPhoneEvent() {
+
+  companion object {
+    fun fromFacilityPullResult(facilityPullResult: FacilityPullResult): FacilitiesSynced {
+      val result = when (facilityPullResult) {
+        FacilityPullResult.Success -> Result.Synced
+        FacilityPullResult.NetworkError -> Result.NetworkError
+        FacilityPullResult.UnexpectedError -> Result.OtherError
+      }
+      return FacilitiesSynced(result)
+    }
+  }
+
+  sealed class Result {
+
+    object Synced : Result()
+
+    object NetworkError : Result()
+
+    object OtherError : Result()
   }
 }

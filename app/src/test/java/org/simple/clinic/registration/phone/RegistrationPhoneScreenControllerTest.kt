@@ -43,7 +43,6 @@ class RegistrationPhoneScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<RegistrationPhoneUi>()
-  private val uiActions = mock<RegistrationPhoneUiActions>()
   private val userSession = mock<UserSession>()
   private val numberValidator = IndianPhoneNumberValidator()
   private val findUserWithPhoneNumber = mock<UserLookup>()
@@ -412,7 +411,7 @@ class RegistrationPhoneScreenControllerTest {
     val uiRenderer = RegistrationPhoneUiRenderer(ui)
 
     val effectHandler = RegistrationPhoneEffectHandler(
-        uiActions = uiActions,
+        uiActions = ui,
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession
     )

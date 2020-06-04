@@ -18,6 +18,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is CurrentRegistrationEntryLoaded -> currentEntryLoaded(event, model)
       is NewRegistrationEntryCreated -> next(model.withEntry(event.entry))
       is EnteredNumberValidated -> noChange()
+      is FacilitiesSynced -> noChange()
     }
   }
 

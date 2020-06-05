@@ -42,13 +42,9 @@ class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout
       bpLevel: BloodPressureLevel
   ) {
     val isBpHigh = bpLevel.isHigh
-    val labelTextRes = bpLevel.displayTextRes.toNullable()
 
     readingsTextView.text = "$systolic / $diastolic"
     bpHighTextView.visibleOrGone(isBpHigh)
-    if (labelTextRes != null) {
-      bpHighTextView.setText(labelTextRes)
-    }
 
     if (isBpHigh) {
       heartImageView.setImageResource(R.drawable.bp_reading_high)

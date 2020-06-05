@@ -168,6 +168,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `when input text is changed then any visible errors should be removed`() {
     // when
     setupController()
+    clearInvocations(ui)
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(""))
 
     // then
@@ -284,6 +285,7 @@ class RegistrationPhoneScreenControllerTest {
 
     // when
     setupController()
+    clearInvocations(ui)
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 

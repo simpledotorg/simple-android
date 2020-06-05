@@ -12,6 +12,7 @@
 ### Internal
 - Change syncs on login to trigger at the usage site instead of in the `LoginUserWithOtp` class
 - [In Progress: 01 Jun 2020] Introduce a `UUID` generator class to ease testing record creation
+- Support receiving multiple teleconsultation phone numbers
 
 ### Fixes
 - Fix blood pressure "High" label displaying when blood pressure is low.

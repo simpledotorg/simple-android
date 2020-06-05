@@ -21,6 +21,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is EnteredNumberValidated -> next(model.phoneNumberValidated(event.result))
       is FacilitiesSynced -> noChange()
       is SearchForExistingUserCompleted -> noChange()
+      is UserCreatedLocally -> noChange()
     }
   }
 

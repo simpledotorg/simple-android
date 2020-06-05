@@ -3,9 +3,11 @@ package org.simple.clinic.registration.phone
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import org.simple.clinic.facility.FacilitySync
+import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.finduser.UserLookup
@@ -39,7 +41,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(ValidateEnteredNumber::class.java, validateEnteredPhoneNumber())
         .addTransformer(SyncFacilities::class.java, syncFacilities())
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
-        .addConsumer(ShowAccessDeniedScreen::class.java, { uiActions.showAccessDeniedScreen(it.number)}, schedulers.ui())
+        .addConsumer(ShowAccessDeniedScreen::class.java, { uiActions.showAccessDeniedScreen(it.number) }, schedulers.ui())
+        .addTransformer(CreateUserLocally::class.java, createUserLocally())
         .build()
   }
 
@@ -100,6 +103,24 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
           .observeOn(schedulers.io())
           .map { userLookup.find(it.number) }
           .map { SearchForExistingUserCompleted.fromFindUserResult(it) }
+    }
+  }
+
+  private fun createUserLocally(): ObservableTransformer<CreateUserLocally, RegistrationPhoneEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map {
+            OngoingLoginEntry(
+                uuid = uuidGenerator.v4(),
+                phoneNumber = it.number,
+                status = it.status
+            )
+          }
+          .flatMapSingle {
+            userSession
+                .saveOngoingLoginEntry(it)
+                .andThen(Single.just(UserCreatedLocally as RegistrationPhoneEvent))
+          }
     }
   }
 }

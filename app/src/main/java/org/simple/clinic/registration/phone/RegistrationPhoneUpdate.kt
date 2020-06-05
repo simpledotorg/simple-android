@@ -22,6 +22,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is FacilitiesSynced -> noChange()
       is SearchForExistingUserCompleted -> noChange()
       is UserCreatedLocally -> noChange()
+      is CurrentRegistrationEntryCleared -> noChange()
     }
   }
 

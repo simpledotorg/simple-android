@@ -27,10 +27,14 @@ data class RegistrationPhoneModel(
 
   fun phoneNumberChanged(phoneNumber: String): RegistrationPhoneModel {
     // TODO (vs) 04/06/20: Change in a later commit to not require a null check
-    return if (ongoingRegistrationEntry != null)
-      copy(ongoingRegistrationEntry = ongoingRegistrationEntry.withPhoneNumber(phoneNumber))
-    else
+    return if (ongoingRegistrationEntry != null) {
+      copy(
+          ongoingRegistrationEntry = ongoingRegistrationEntry.withPhoneNumber(phoneNumber),
+          phoneValidationResult = null
+      )
+    } else {
       this
+    }
   }
 
   fun withEntry(entry: OngoingRegistrationEntry): RegistrationPhoneModel {

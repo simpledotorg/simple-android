@@ -25,3 +25,5 @@ data class CreateUserLocally(val userUuid: UUID, val number: String, val status:
 object ClearCurrentRegistrationEntry: RegistrationPhoneEffect()
 
 object ProceedToLogin: RegistrationPhoneEffect()
+
+object LoadCurrentUserUnauthorizedStatus: RegistrationPhoneEffect()

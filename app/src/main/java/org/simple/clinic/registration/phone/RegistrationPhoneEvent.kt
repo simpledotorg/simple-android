@@ -18,7 +18,6 @@ data class CurrentRegistrationEntryLoaded(val entry: Optional<OngoingRegistratio
 
 data class NewRegistrationEntryCreated(val entry: OngoingRegistrationEntry) : RegistrationPhoneEvent()
 
-
 data class EnteredNumberValidated(val result: RegistrationPhoneValidationResult) : RegistrationPhoneEvent() {
 
   companion object {
@@ -96,3 +95,5 @@ class RegistrationPhoneDoneClicked : RegistrationPhoneEvent() {
 object UserCreatedLocally : RegistrationPhoneEvent()
 
 object CurrentRegistrationEntryCleared: RegistrationPhoneEvent()
+
+data class CurrentUserUnauthorizedStatusLoaded(val isUserUnauthorized: Boolean): RegistrationPhoneEvent()

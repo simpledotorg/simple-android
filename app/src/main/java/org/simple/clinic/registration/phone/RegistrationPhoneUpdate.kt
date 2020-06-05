@@ -23,6 +23,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is SearchForExistingUserCompleted -> noChange()
       is UserCreatedLocally -> noChange()
       is CurrentRegistrationEntryCleared -> noChange()
+      is CurrentUserUnauthorizedStatusLoaded -> noChange()
     }
   }
 

@@ -44,6 +44,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(CreateUserLocally::class.java, createUserLocally())
         .addTransformer(ClearCurrentRegistrationEntry::class.java, clearCurrentRegistrationEntry())
         .addAction(ProceedToLogin::class.java, { uiActions.openLoginPinEntryScreen() }, schedulers.ui())
+        .addTransformer(LoadCurrentUserUnauthorizedStatus::class.java, loadCurrentUserUnauthorizedStatus())
         .build()
   }
 
@@ -133,6 +134,19 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
                 .clearOngoingRegistrationEntry()
                 .andThen(Single.just(CurrentRegistrationEntryCleared as RegistrationPhoneEvent))
           }
+    }
+  }
+
+  private fun loadCurrentUserUnauthorizedStatus(): ObservableTransformer<LoadCurrentUserUnauthorizedStatus, RegistrationPhoneEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMapSingle {
+            userSession
+                .isUserUnauthorized()
+                .subscribeOn(schedulers.io())
+                .firstOrError()
+          }
+          .map(::CurrentUserUnauthorizedStatusLoaded)
     }
   }
 }

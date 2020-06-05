@@ -84,7 +84,7 @@ class NewMedicalHistoryScreenLogicTest {
   fun `when save is clicked with selected answers then patient with the answers should be saved and summary screen should be opened`() {
     // given
     val savedPatient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())).thenReturn(Single.just(savedPatient))
+    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())).thenReturn(Single.just(savedPatient))
 
     // when
     startMobiusLoop()
@@ -98,7 +98,7 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())
+      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
@@ -118,7 +118,7 @@ class NewMedicalHistoryScreenLogicTest {
   fun `when save is clicked with no answers then patient with an empty medical history should be saved and summary screen should be opened`() {
     // given
     val savedPatient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())).thenReturn(Single.just(savedPatient))
+    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())).thenReturn(Single.just(savedPatient))
 
     // when
     startMobiusLoop()
@@ -127,7 +127,7 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())
+      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,
@@ -148,7 +148,7 @@ class NewMedicalHistoryScreenLogicTest {
   fun `when an already selected answer for a question is changed, the new answer should be used when saving the medical history`() {
     // given
     val savedPatient = TestData.patient(uuid = patientUuid)
-    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())).thenReturn(Single.just(savedPatient))
+    whenever(patientRepository.saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())).thenReturn(Single.just(savedPatient))
 
     // when
     startMobiusLoop()
@@ -171,7 +171,7 @@ class NewMedicalHistoryScreenLogicTest {
 
     // then
     with(inOrder(medicalHistoryRepository, patientRepository, uiActions)) {
-      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any())
+      verify(patientRepository).saveOngoingEntryAsPatient(eq(user), eq(facility), any(), any(), any())
       verify(medicalHistoryRepository).save(
           uuid = medicalHistoryUuid,
           patientUuid = savedPatient.uuid,

@@ -41,16 +41,9 @@ class RegistrationPhoneScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        hideValidationError(replayedEvents),
         saveOngoingEntryAndProceed(replayedEvents),
         showLoggedOutOnThisDeviceDialog(replayedEvents)
     )
-  }
-
-  private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationPhoneNumberTextChanged>()
-        .map { { ui: Ui -> ui.hideAnyError() } }
   }
 
   private fun saveOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
@@ -79,7 +72,7 @@ class RegistrationPhoneScreenController @Inject constructor(
                       { ui: Ui -> ui.showUnexpectedErrorMessage() })
                 }
               }
-              .startWith(Observable.just({ ui: Ui -> ui.hideAnyError() }, { ui: Ui -> ui.showProgressIndicator() }))
+              .startWith(Observable.just { ui: Ui -> ui.showProgressIndicator() })
 
           val proceedToLogin = cachedUserFindResult
               .ofType<Found>()

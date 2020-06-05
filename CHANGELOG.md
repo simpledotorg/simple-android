@@ -3,7 +3,7 @@
 ## Next Release
 ### Feature
 - User can soft delete patient
-- [In Progress 02 Jun 2020] New Onboarding UI
+- [In Progress: 02 Jun 2020] New Onboarding UI
 
 ### Changes
 - Rename the button label to 'Next' when assigning a new BP passport to an existing patient
@@ -14,6 +14,7 @@
 - Change syncs on login to trigger at the usage site instead of in the `LoginUserWithOtp` class
 - Support receiving multiple teleconsultation phone numbers
 - Introduce a `UUID` generator class to ease testing record creation
+- [In Progress: 05 Jun 2020] Migrate `RegistrationPhoneScreen` to Mobius
 
 ### Fixes
 - Fix blood pressure "High" label displaying when blood pressure is low.

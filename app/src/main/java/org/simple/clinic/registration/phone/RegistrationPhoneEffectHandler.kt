@@ -3,7 +3,6 @@ package org.simple.clinic.registration.phone
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import org.simple.clinic.facility.FacilitySync
@@ -43,6 +42,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
         .addConsumer(ShowAccessDeniedScreen::class.java, { uiActions.showAccessDeniedScreen(it.number) }, schedulers.ui())
         .addTransformer(CreateUserLocally::class.java, createUserLocally())
+        .addTransformer(ClearCurrentRegistrationEntry::class.java, clearCurrentRegistrationEntry())
         .build()
   }
 
@@ -120,6 +120,17 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
             userSession
                 .saveOngoingLoginEntry(it)
                 .andThen(Single.just(UserCreatedLocally as RegistrationPhoneEvent))
+          }
+    }
+  }
+
+  private fun clearCurrentRegistrationEntry(): ObservableTransformer<ClearCurrentRegistrationEntry, RegistrationPhoneEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMapSingle {
+            userSession
+                .clearOngoingRegistrationEntry()
+                .andThen(Single.just(CurrentRegistrationEntryCleared as RegistrationPhoneEvent))
           }
     }
   }

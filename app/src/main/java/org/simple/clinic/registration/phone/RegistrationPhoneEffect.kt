@@ -21,3 +21,5 @@ data class SearchForExistingUser(val number: String) : RegistrationPhoneEffect()
 data class ShowAccessDeniedScreen(val number: String): RegistrationPhoneEffect()
 
 data class CreateUserLocally(val userUuid: UUID, val number: String, val status: UserStatus): RegistrationPhoneEffect()
+
+object ClearCurrentRegistrationEntry: RegistrationPhoneEffect()

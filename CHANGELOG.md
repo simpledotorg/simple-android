@@ -8,13 +8,13 @@
 ### Changes
 - Rename the button label to 'Next' when assigning a new BP passport to an existing patient
 - Add visual indication for low blood sugars
-- Display the "Low" label when a blood pressure is low
 
 ### Internal
 - Change syncs on login to trigger at the usage site instead of in the `LoginUserWithOtp` class
-
-### Internal
 - [In Progress: 01 Jun 2020] Introduce a `UUID` generator class to ease testing record creation
+
+### Fixes
+- Fix blood pressure "High" label displaying when blood pressure is low.
 
 ## On Demo
 ### Feature

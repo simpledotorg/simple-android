@@ -1,6 +1,8 @@
 package org.simple.clinic.registration.phone
 
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.user.UserStatus
+import java.util.UUID
 
 sealed class RegistrationPhoneEffect
 
@@ -17,3 +19,5 @@ object SyncFacilities : RegistrationPhoneEffect()
 data class SearchForExistingUser(val number: String) : RegistrationPhoneEffect()
 
 data class ShowAccessDeniedScreen(val number: String): RegistrationPhoneEffect()
+
+data class CreateUserLocally(val userUuid: UUID, val number: String, val status: UserStatus): RegistrationPhoneEffect()

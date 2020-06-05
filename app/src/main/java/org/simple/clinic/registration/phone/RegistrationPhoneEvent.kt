@@ -92,3 +92,5 @@ data class SearchForExistingUserCompleted(val result: Result) : RegistrationPhon
 class RegistrationPhoneDoneClicked : RegistrationPhoneEvent() {
   override val analyticsName = "Registration:Phone Entry:Done Clicked"
 }
+
+object UserCreatedLocally : RegistrationPhoneEvent()

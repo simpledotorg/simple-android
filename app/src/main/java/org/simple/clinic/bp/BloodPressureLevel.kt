@@ -25,16 +25,6 @@ enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Opti
       MODERATELY_HIGH, VERY_HIGH, EXTREMELY_HIGH -> true
     }
 
-  fun isUrgent(): Boolean {
-    // TODO: the chart shared by Daniel shows 90-139 as normal level. There is an
-    // overlap between Normal and Mildly high levels. Since we aren't labeling
-    // these on the UI, it's okay for now but we should resolve this.
-    return when (this) {
-      NORMAL, MILDLY_HIGH -> false
-      LOW, MODERATELY_HIGH, VERY_HIGH, EXTREMELY_HIGH -> true
-    }
-  }
-
   companion object {
 
     fun compute(measurement: BloodPressureMeasurement): BloodPressureLevel {

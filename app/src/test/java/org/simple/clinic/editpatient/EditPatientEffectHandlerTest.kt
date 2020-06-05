@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -20,7 +21,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -36,7 +36,6 @@ class EditPatientEffectHandlerTest {
 
   private val date = LocalDate.parse("2018-01-01")
   private val ui = mock<EditPatientUi>()
-  private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userClock = TestUserClock(date)
   private val utcClock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
@@ -82,9 +81,9 @@ class EditPatientEffectHandlerTest {
       patientRepository = patientRepository,
       utcClock = utcClock,
       schedulersProvider = TrampolineSchedulersProvider(),
-      userSession = userSession,
       country = country,
       uuidGenerator = uuidGenerator,
+      currentUser = Lazy { user },
       dateOfBirthFormatter = dateOfBirthFormatter
   )
 
@@ -184,9 +183,9 @@ class EditPatientEffectHandlerTest {
         patientRepository = patientRepository,
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
-        userSession = userSession,
         country = country,
         uuidGenerator = FakeUuidGenerator.fixed(identifierUuid),
+        currentUser = dagger.Lazy { user },
         dateOfBirthFormatter = dateOfBirthFormatter
     )
 
@@ -197,7 +196,6 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
     whenever(patientRepository.saveBusinessId(bangladeshNationalId)) doReturn Completable.complete()
-    whenever(userSession.loggedInUser()) doReturn (Observable.just(user.toOptional()))
     whenever(facilityRepository.currentFacility(user)) doReturn (Observable.just(facility))
     whenever(patientRepository.addIdentifierToPatient(
         uuid = identifierUuid,

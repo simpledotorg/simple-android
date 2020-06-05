@@ -19,7 +19,6 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -46,8 +45,8 @@ class EditPatientScreenCreatedTest {
   private val userClock: TestUserClock = TestUserClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val patientRepository = mock<PatientRepository>()
-  private val userSession = mock<UserSession>()
   private val country = TestData.country()
+  private val user = TestData.loggedInUser()
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
@@ -163,9 +162,9 @@ class EditPatientScreenCreatedTest {
         patientRepository = patientRepository,
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
-        userSession = userSession,
         country = country,
         uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("4a08c52c-ebef-44a2-9de4-02916e703a47")),
+        currentUser = dagger.Lazy { user },
         dateOfBirthFormatter = dateOfBirthFormat
     )
 

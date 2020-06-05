@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import dagger.Lazy
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -25,7 +26,7 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -43,9 +44,9 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val utcClock: UtcClock,
     private val schedulersProvider: SchedulersProvider,
-    private val userSession: UserSession,
     private val country: Country,
     private val uuidGenerator: UuidGenerator,
+    private val currentUser: Lazy<User>,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) {
 
@@ -246,21 +247,19 @@ class EditPatientEffectHandler @AssistedInject constructor(
     return savePatientEffects
         .filter(::isAlternativeIdAdded)
         .flatMapCompletable { savePatientEffect ->
-          userSession
-              .loggedInUser()
-              .filterAndUnwrapJust()
-              .firstOrError()
-              .flatMap { user ->
-                patientRepository.addIdentifierToPatient(
-                    uuid = uuidGenerator.v4(),
-                    assigningUser = user,
-                    patientUuid = savePatientEffect.ongoingEntry.patientUuid,
-                    identifier = Identifier(
-                        value = savePatientEffect.ongoingEntry.alternativeId,
-                        type = alternativeIdentifierType
-                    ))
-              }.ignoreElement()
-        }.toObservable()
+          patientRepository
+              .addIdentifierToPatient(
+                  uuid = uuidGenerator.v4(),
+                  assigningUser = currentUser.get(),
+                  patientUuid = savePatientEffect.ongoingEntry.patientUuid,
+                  identifier = Identifier(
+                      value = savePatientEffect.ongoingEntry.alternativeId,
+                      type = alternativeIdentifierType
+                  )
+              )
+              .ignoreElement()
+        }
+        .toObservable()
   }
 
   private fun updateAlternativeId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {

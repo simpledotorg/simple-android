@@ -43,6 +43,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addConsumer(ShowAccessDeniedScreen::class.java, { uiActions.showAccessDeniedScreen(it.number) }, schedulers.ui())
         .addTransformer(CreateUserLocally::class.java, createUserLocally())
         .addTransformer(ClearCurrentRegistrationEntry::class.java, clearCurrentRegistrationEntry())
+        .addAction(ProceedToLogin::class.java, { uiActions.openLoginPinEntryScreen() }, schedulers.ui())
         .build()
   }
 

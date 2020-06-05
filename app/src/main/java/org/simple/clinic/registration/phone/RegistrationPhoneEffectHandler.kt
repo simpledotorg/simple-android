@@ -39,6 +39,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(ValidateEnteredNumber::class.java, validateEnteredPhoneNumber())
         .addTransformer(SyncFacilities::class.java, syncFacilities())
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
+        .addConsumer(ShowAccessDeniedScreen::class.java, { uiActions.showAccessDeniedScreen(it.number)}, schedulers.ui())
         .build()
   }
 

@@ -72,8 +72,8 @@ class EditPatientScreenFormTest {
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   private val patientRepository: PatientRepository = mock()
-  private val userSession = mock<UserSession>()
   private val country = TestData.country()
+  private val user = TestData.loggedInUser()
 
   @Test
   @Parameters(method = "params for hiding errors on text changes")
@@ -803,9 +803,9 @@ class EditPatientScreenFormTest {
         patientRepository = patientRepository,
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
-        userSession = userSession,
         country = country,
         uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("d1593ec2-cf7e-44dd-a057-69f71fb920ee")),
+        currentUser = dagger.Lazy { user },
         dateOfBirthFormatter = dateOfBirthFormat
     )
 

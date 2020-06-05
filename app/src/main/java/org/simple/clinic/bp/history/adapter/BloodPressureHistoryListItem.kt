@@ -44,7 +44,6 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
           .append(bloodPressureDateTime(context))
           .popSpan()
           .build()
-      val labelTextRes = measurement.level.displayTextRes.toNullable()
 
       if (isBpHigh) {
         holder.heartImageView.setImageResource(R.drawable.bp_reading_high)
@@ -52,9 +51,6 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
         holder.heartImageView.setImageResource(R.drawable.bp_reading_normal)
       }
       holder.bpHighTextView.visibleOrGone(isBpHigh)
-      if (labelTextRes != null) {
-        holder.bpHighTextView.setText(labelTextRes)
-      }
 
       if (isBpEditable) {
         holder.itemView.setOnClickListener { subject.onNext(BloodPressureHistoryItemClicked(measurement)) }

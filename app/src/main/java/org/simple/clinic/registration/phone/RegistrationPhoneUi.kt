@@ -8,6 +8,5 @@ interface RegistrationPhoneUi: RegistrationPhoneUiActions {
   fun hideAnyError()
   fun showProgressIndicator()
   fun hideProgressIndicator()
-  fun openLoginPinEntryScreen()
   fun showLoggedOutOfDeviceDialog()
 }

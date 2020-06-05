@@ -94,3 +94,5 @@ class RegistrationPhoneDoneClicked : RegistrationPhoneEvent() {
 }
 
 object UserCreatedLocally : RegistrationPhoneEvent()
+
+object CurrentRegistrationEntryCleared: RegistrationPhoneEvent()

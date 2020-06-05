@@ -8,6 +8,7 @@
 ### Changes
 - Rename the button label to 'Next' when assigning a new BP passport to an existing patient
 - Add visual indication for low blood sugars
+- Updated translations: `ti_ET`, `om_ET`
 
 ### Internal
 - Change syncs on login to trigger at the usage site instead of in the `LoginUserWithOtp` class

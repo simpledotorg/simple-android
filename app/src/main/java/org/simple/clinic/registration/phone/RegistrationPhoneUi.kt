@@ -10,5 +10,4 @@ interface RegistrationPhoneUi: RegistrationPhoneUiActions {
   fun hideProgressIndicator()
   fun openLoginPinEntryScreen()
   fun showLoggedOutOfDeviceDialog()
-  fun showAccessDeniedScreen(number: String)
 }

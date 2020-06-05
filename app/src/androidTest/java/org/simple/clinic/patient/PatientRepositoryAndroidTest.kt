@@ -745,7 +745,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun editing_a_patients_phone_number_should_not_trigger_foreign_key_cascades_action() {
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("0da97c1d-2da6-46b1-b253-63cac28f39d5")
     val initialNumber = testData.phoneNumberPayload(number = "123")
     val initialPatient = testData.patientPayload(uuid = patientUuid, phoneNumbers = listOf(initialNumber))
     patientRepository.mergeWithLocalData(listOf(initialPatient)).blockingAwait()
@@ -768,7 +768,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun editing_a_patients_address_should_not_trigger_foreign_key_cascades_action() {
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("7df86eed-a86c-4b26-81cf-e303c8a6027b")
     val initialAddress = testData.addressPayload(district = "Gotham")
     val initialPatient = testData.patientPayload(uuid = patientUuid, address = initialAddress)
     patientRepository.mergeWithLocalData(listOf(initialPatient)).blockingAwait()
@@ -790,7 +790,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun editing_a_patients_profile_should_not_trigger_foreign_key_cascades_action() {
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("1d0d1d86-2b67-407a-8b3e-e127590e572e")
     val address = testData.addressPayload()
     val number = testData.phoneNumberPayload()
     val initialPatient = testData.patientPayload(
@@ -1159,12 +1159,12 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun verify_recent_patients_from_other_facilities_are_not_retrieved() {
-    val facility1Uuid = UUID.randomUUID()
+    val facility1Uuid = UUID.fromString("a6ebf824-4666-44ac-b202-881908d19d94")
     val patient1InFacility1 = savePatientWithBp(facilityUuid = facility1Uuid)
 
     verifyRecentPatientOrder(patient1InFacility1, facilityUuid = facility1Uuid)
 
-    val facility2Uuid = UUID.randomUUID()
+    val facility2Uuid = UUID.fromString("453ff1de-da87-4d2a-b6bb-737acb3cbe24")
     val patient1InFacility2 = savePatientWithBp(facilityUuid = facility2Uuid)
 
     verifyRecentPatientOrder(patient1InFacility1, facilityUuid = facility1Uuid)
@@ -1451,7 +1451,7 @@ class PatientRepositoryAndroidTest {
     val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
-    val bpPassportCode = UUID.randomUUID().toString()
+    val bpPassportCode = "6adbfe88-840e-4f03-aaaf-4b1f2bae747a"
     val now = Instant.now(clock)
 
     val duration = Duration.ofDays(1L)
@@ -1601,8 +1601,8 @@ class PatientRepositoryAndroidTest {
     val now = Instant.now(clock)
 
     val patientWithUniqueBusinessId = patientProfileTemplate.let { patientProfile ->
-      val addressUuid = UUID.randomUUID()
-      val patientUuid = UUID.randomUUID()
+      val addressUuid = UUID.fromString("8acf09b1-d778-4115-b84b-ef0ffb0b75ac")
+      val patientUuid = UUID.fromString("f6e2acdd-5a78-469b-8f9f-88a9859dfe01")
 
       val patient = patientProfile.patient.copy(
           uuid = patientUuid,
@@ -1611,7 +1611,7 @@ class PatientRepositoryAndroidTest {
       )
       val address = patientProfile.address.copy(uuid = addressUuid)
       val businessId = BusinessId(
-          uuid = UUID.randomUUID(),
+          uuid = UUID.fromString("c51267e5-aa9e-46d1-ad3d-25ab0a727964"),
           patientUuid = patientUuid,
           identifier = Identifier(uniqueBusinessIdentifier, identifierType),
           metaDataVersion = metaVersion,
@@ -1625,8 +1625,8 @@ class PatientRepositoryAndroidTest {
     }
 
     val (patientOneWithSharedBusinessId, patientTwoWithSharedBusinessId) = patientProfileTemplate.let { patientProfile ->
-      val patientUuidOne = UUID.randomUUID()
-      val addressUuidOne = UUID.randomUUID()
+      val patientUuidOne = UUID.fromString("c452b27d-6e39-4c5a-9897-ee84fd9c5829")
+      val addressUuidOne = UUID.fromString("301f5777-6045-470a-a3f3-98bf23d4459b")
       val patientOne = patientProfile.patient.copy(
           uuid = patientUuidOne,
           fullName = "Patient one with shared business ID",
@@ -1636,7 +1636,7 @@ class PatientRepositoryAndroidTest {
       )
       val addressOne = patientProfile.address.copy(uuid = addressUuidOne)
       val businessIdOne = BusinessId(
-          uuid = UUID.randomUUID(),
+          uuid = UUID.fromString("4effa4bc-a860-42ff-9266-e63792831b64"),
           patientUuid = patientUuidOne,
           identifier = Identifier(sharedBusinessIdentifier, identifierType),
           metaDataVersion = metaVersion,
@@ -1647,8 +1647,8 @@ class PatientRepositoryAndroidTest {
       )
       val patientProfileOne = patientProfile.copy(patient = patientOne, address = addressOne, businessIds = listOf(businessIdOne))
 
-      val patientUuidTwo = UUID.randomUUID()
-      val addressUuidTwo = UUID.randomUUID()
+      val patientUuidTwo = UUID.fromString("7bfc73b4-fc1d-4383-81d6-c502463b34eb")
+      val addressUuidTwo = UUID.fromString("ef050a6e-18c9-454a-84d9-b34ee539ca04")
       val patientTwo = patientProfile.patient.copy(
           fullName = "Patient two with shared business ID",
           uuid = patientUuidTwo,
@@ -1658,7 +1658,7 @@ class PatientRepositoryAndroidTest {
       )
       val addressTwo = patientProfile.address.copy(uuid = addressUuidTwo)
       val businessIdTwo = BusinessId(
-          uuid = UUID.randomUUID(),
+          uuid = UUID.fromString("fd5fac05-ba17-4d32-a793-15b1870f3348"),
           patientUuid = patientUuidTwo,
           identifier = Identifier(sharedBusinessIdentifier, identifierType),
           metaDataVersion = metaVersion,
@@ -1673,8 +1673,8 @@ class PatientRepositoryAndroidTest {
     }
 
     val patientWithDeletedBusinessId = patientProfileTemplate.let { patientProfile ->
-      val patientUuid = UUID.randomUUID()
-      val addressUuid = UUID.randomUUID()
+      val patientUuid = UUID.fromString("4361013c-8a28-4c06-97b1-169c15464aff")
+      val addressUuid = UUID.fromString("d261467d-c224-47c9-94e8-3900f6f6055a")
 
       val patient = patientProfile.patient.copy(
           uuid = patientUuid,
@@ -1683,7 +1683,7 @@ class PatientRepositoryAndroidTest {
       )
       val address = patientProfile.address.copy(uuid = addressUuid)
       val businessId = BusinessId(
-          uuid = UUID.randomUUID(),
+          uuid = UUID.fromString("ce8df015-9eaf-4fec-ab78-707e52dcbca6"),
           patientUuid = patientUuid,
           identifier = Identifier(deletedBusinessIdentifier, identifierType),
           metaDataVersion = metaVersion,
@@ -1726,20 +1726,27 @@ class PatientRepositoryAndroidTest {
         hasHadKidneyDisease: Answer = No,
         protocolDrug: ProtocolDrug?,
         appointmentDate: LocalDate?,
-        bloodSugarMeasurement: List<BloodSugarMeasurement>?
+        bloodSugarMeasurement: List<BloodSugarMeasurement>?,
+        patientUuid: UUID,
+        addressUuid: UUID,
+        bpPassportUuid: UUID,
+        alternativeIdUuid: UUID,
+        phoneNumberUuid: UUID,
+        prescribedDrugUuid: UUID,
+        appointmentUuid: UUID
     ): Pair<UUID, String> {
-      val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName))
+      patientRepository
+          .saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName))
           .andThen(patientRepository.saveOngoingEntryAsPatient(
               loggedInUser = loggedInUser,
               facility = currentFacility,
-              patientUuid = UUID.randomUUID(),
-              addressUuid = UUID.randomUUID(),
-              supplyUuidForBpPassport = { UUID.randomUUID() },
-              supplyUuidForAlternativeId = { UUID.randomUUID() },
-              supplyUuidForPhoneNumber = { UUID.randomUUID() }
+              patientUuid = patientUuid,
+              addressUuid = addressUuid,
+              supplyUuidForBpPassport = { bpPassportUuid },
+              supplyUuidForAlternativeId = { alternativeIdUuid },
+              supplyUuidForPhoneNumber = { phoneNumberUuid }
           ))
           .blockingGet()
-          .uuid
 
       bpMeasurement?.forEach {
         bloodPressureRepository.save(listOf(testData.bloodPressureMeasurement(
@@ -1765,7 +1772,7 @@ class PatientRepositoryAndroidTest {
 
       protocolDrug?.let {
         prescriptionRepository.savePrescription(
-            uuid = UUID.fromString("270dbf0b-604e-4b33-a11c-3b57e2f2125c"),
+            uuid = prescribedDrugUuid,
             patientUuid = patientUuid,
             drug = it,
             facility = currentFacility
@@ -1775,7 +1782,7 @@ class PatientRepositoryAndroidTest {
       appointmentDate?.let {
         appointmentRepository.schedule(
             patientUuid = patientUuid,
-            appointmentUuid = UUID.fromString("cf002164-3032-4a91-8dbe-15c0b029db51"),
+            appointmentUuid = appointmentUuid,
             appointmentDate = it,
             appointmentType = Manual,
             appointmentFacilityUuid = currentFacility.uuid,
@@ -1796,7 +1803,15 @@ class PatientRepositoryAndroidTest {
         )),
         protocolDrug = null,
         appointmentDate = null,
-        bloodSugarMeasurement = null)
+        bloodSugarMeasurement = null,
+        patientUuid = UUID.fromString("2952c363-74c4-4426-84f8-14c1cdbb61f8"),
+        addressUuid = UUID.fromString("78f133a1-11c9-4d73-a7b7-c15daf72b791"),
+        bpPassportUuid = UUID.fromString("713026da-b712-43a3-bde0-96d4dabfbea6"),
+        alternativeIdUuid = UUID.fromString("9c3edde1-d04b-4c65-a94e-58c158714d4f"),
+        phoneNumberUuid = UUID.fromString("b76f6bf4-cf67-426a-8f4c-ef2c33458371"),
+        prescribedDrugUuid = UUID.fromString("3f461e68-f36d-41fa-bbe1-68c3020233fc"),
+        appointmentUuid = UUID.fromString("e2511d98-e503-478a-b5b4-8c632e126409")
+    )
 
     patients += savePatientRecord(
         fullName = "Diastolic > 90",
@@ -1806,7 +1821,15 @@ class PatientRepositoryAndroidTest {
         )),
         protocolDrug = null,
         appointmentDate = null,
-        bloodSugarMeasurement = null)
+        bloodSugarMeasurement = null,
+        patientUuid = UUID.fromString("6b7f3d60-35c6-48e9-ad0e-3a54ce61687d"),
+        addressUuid = UUID.fromString("9e786918-ab2f-491a-a7af-0384d47f7e91"),
+        bpPassportUuid = UUID.fromString("b5069541-ba75-4525-806b-35b3e7adc0b2"),
+        alternativeIdUuid = UUID.fromString("a4dc4193-e0c8-4ae1-b0fd-47b315e2bc8f"),
+        phoneNumberUuid = UUID.fromString("87d95964-3938-4494-a186-9e4910e89961"),
+        prescribedDrugUuid = UUID.fromString("fbb1d0f3-4c0c-42fe-b832-e508b472cc73"),
+        appointmentUuid = UUID.fromString("d404312a-bb24-4987-9d01-5130f886385b")
+    )
 
     patients += savePatientRecord(
         fullName = "Has had stroke",
@@ -1817,7 +1840,15 @@ class PatientRepositoryAndroidTest {
         hasHadStroke = Yes,
         protocolDrug = null,
         appointmentDate = null,
-        bloodSugarMeasurement = null)
+        bloodSugarMeasurement = null,
+        patientUuid = UUID.fromString("99443e0f-56ae-401b-8800-38aa8e922edf"),
+        addressUuid = UUID.fromString("9b444f47-d848-4ef6-80b7-caedcd9a4466"),
+        bpPassportUuid = UUID.fromString("ef8b83dd-7c74-4b7e-978a-51cf4c0909e6"),
+        alternativeIdUuid = UUID.fromString("cf964635-7fa1-4334-af4b-d42cef53702a"),
+        phoneNumberUuid = UUID.fromString("e02ee963-c6ca-4fdc-ae30-5bb789abea6e"),
+        prescribedDrugUuid = UUID.fromString("2d1f735b-73a3-4e02-b879-cfbac9bb5d90"),
+        appointmentUuid = UUID.fromString("b3a75953-64c1-4520-9aff-6c76ef4b52b3")
+    )
 
     patients += savePatientRecord(
         fullName = "Had heart attack",
@@ -1828,7 +1859,15 @@ class PatientRepositoryAndroidTest {
         hasHadHeartAttack = Yes,
         protocolDrug = null,
         appointmentDate = null,
-        bloodSugarMeasurement = null)
+        bloodSugarMeasurement = null,
+        patientUuid = UUID.fromString("ced2b9ff-c898-4d22-af34-5241df8721f3"),
+        addressUuid = UUID.fromString("47d259d2-0a4f-4df4-8dcc-60cecfd04486"),
+        bpPassportUuid = UUID.fromString("b9f8983e-e0c7-4d79-8002-a85e1bf15b23"),
+        alternativeIdUuid = UUID.fromString("e65f3b03-1284-4ff9-8b8c-0d800a2fdcf2"),
+        phoneNumberUuid = UUID.fromString("df432c70-930b-402d-9ffd-270771125c49"),
+        prescribedDrugUuid = UUID.fromString("a2ebbb36-e04c-48c0-a6ea-78ccb39eea18"),
+        appointmentUuid = UUID.fromString("eff7ec34-dd3b-4789-a6a1-aed7bcc93466")
+    )
 
     patients += savePatientRecord(
         fullName = "Drugs prescribed",
@@ -1838,7 +1877,15 @@ class PatientRepositoryAndroidTest {
         )),
         protocolDrug = testData.protocolDrug(),
         appointmentDate = null,
-        bloodSugarMeasurement = null)
+        bloodSugarMeasurement = null,
+        patientUuid = UUID.fromString("6b098a4a-c851-4b0f-a81a-736323eb764a"),
+        addressUuid = UUID.fromString("9c609253-f3a0-49aa-8e65-cc530a03cf7f"),
+        bpPassportUuid = UUID.fromString("d1cdf7b7-89af-45f3-b916-9833c31e58f2"),
+        alternativeIdUuid = UUID.fromString("1d154963-a260-4001-9815-0a4da8920a3b"),
+        phoneNumberUuid = UUID.fromString("3cff8b4b-84e4-42a0-b305-7f230d04d0a6"),
+        prescribedDrugUuid = UUID.fromString("85c7e642-509c-4775-acda-4388827dfe1f"),
+        appointmentUuid = UUID.fromString("39b9b6b3-1313-446b-941f-3cea8cdab96b")
+    )
 
     patients += savePatientRecord(
         fullName = "Appointment already scheduled",
@@ -1848,7 +1895,15 @@ class PatientRepositoryAndroidTest {
         )),
         protocolDrug = null,
         appointmentDate = LocalDate.now(clock).plusDays(10),
-        bloodSugarMeasurement = null)
+        bloodSugarMeasurement = null,
+        patientUuid = UUID.fromString("e24258b3-af31-426d-8379-1664fe4d9651"),
+        addressUuid = UUID.fromString("0ac00796-fc86-41d9-bdaa-d224be28be7e"),
+        bpPassportUuid = UUID.fromString("d0017982-4c42-4213-bb7f-2d2278b8e4b2"),
+        alternativeIdUuid = UUID.fromString("1c14fe4b-db0e-4e6d-ab25-d16f015bcd48"),
+        phoneNumberUuid = UUID.fromString("24e6d358-8deb-43ee-b3b4-eb107ffc053a"),
+        prescribedDrugUuid = UUID.fromString("7db1948a-7fcf-46c7-89ff-9b0f3e0a38d7"),
+        appointmentUuid = UUID.fromString("a84f239b-9fe7-4b59-9349-770aac0cf538")
+    )
 
     patients += savePatientRecord(
         fullName = "BP deleted, Has had heart attack",
@@ -1860,7 +1915,15 @@ class PatientRepositoryAndroidTest {
         hasHadHeartAttack = Yes,
         protocolDrug = null,
         appointmentDate = null,
-        bloodSugarMeasurement = null)
+        bloodSugarMeasurement = null,
+        patientUuid = UUID.fromString("1b4605e7-381f-4f09-aff3-ca6537049385"),
+        addressUuid = UUID.fromString("d18ee6d0-78ff-4e10-84d2-1fc70c54e15b"),
+        bpPassportUuid = UUID.fromString("b5040d2c-8841-45cc-a9c6-2d714f924567"),
+        alternativeIdUuid = UUID.fromString("bdfb8993-1ae1-47f7-8f71-abda485ba725"),
+        phoneNumberUuid = UUID.fromString("358486d9-9dd5-42a7-a29d-89eb1840895d"),
+        prescribedDrugUuid = UUID.fromString("705f1ee9-6e4f-44e5-b417-1805a39df4ac"),
+        appointmentUuid = UUID.fromString("4d12669e-d00c-420a-94c2-b3a16c7297db")
+    )
 
     patients += savePatientRecord(
         fullName = "Multiple BPs",
@@ -1876,7 +1939,15 @@ class PatientRepositoryAndroidTest {
             )),
         protocolDrug = null,
         appointmentDate = null,
-        bloodSugarMeasurement = null)
+        bloodSugarMeasurement = null,
+        patientUuid = UUID.fromString("813c5934-b053-41cb-84d2-b6a2f7472a72"),
+        addressUuid = UUID.fromString("322b477b-6949-4dac-9fa8-f7abe8bd5dd5"),
+        bpPassportUuid = UUID.fromString("bfb8ad4e-ee27-4eed-a43c-d168e9f8931b"),
+        alternativeIdUuid = UUID.fromString("10ccf661-57a9-4be6-9ab2-8f3494167ada"),
+        phoneNumberUuid = UUID.fromString("af800e01-76b4-4cfa-becf-0402b95dfda5"),
+        prescribedDrugUuid = UUID.fromString("2b6bce9e-2125-45a3-9362-16a265326565"),
+        appointmentUuid = UUID.fromString("c2d44683-d59b-407c-bad5-7a2e7b5c49f4")
+    )
 
     patients += savePatientRecord(
         fullName = "Last recorded BP is normal",
@@ -1892,7 +1963,15 @@ class PatientRepositoryAndroidTest {
             )),
         protocolDrug = null,
         appointmentDate = null,
-        bloodSugarMeasurement = null)
+        bloodSugarMeasurement = null,
+        patientUuid = UUID.fromString("ea18ddc5-fa06-4039-bcb5-8d23114bf2d9"),
+        addressUuid = UUID.fromString("70fe0cdc-fa46-417f-a54a-89c739a821a0"),
+        bpPassportUuid = UUID.fromString("16a28c71-13ea-40bd-84f4-2fdf6eb96bdb"),
+        alternativeIdUuid = UUID.fromString("7bee5b2f-4a5a-426c-b215-ecc9d94354a4"),
+        phoneNumberUuid = UUID.fromString("cdc7660d-5b9a-42c0-8b29-1517695b3bfd"),
+        prescribedDrugUuid = UUID.fromString("8d920410-4b89-45b0-a352-9812181bb837"),
+        appointmentUuid = UUID.fromString("b852c01b-d2d6-41c4-8703-b15235865c2c")
+    )
 
     patients += savePatientRecord(
         fullName = "1 Normal Random Blood Sugar",
@@ -1904,7 +1983,14 @@ class PatientRepositoryAndroidTest {
                 reading = BloodSugarReading("120", Random),
                 recordedAt = Instant.now(clock).minus(30, ChronoUnit.DAYS)
             )
-        )
+        ),
+        patientUuid = UUID.fromString("a8e0cc6d-e913-4716-b8d5-9658825b1817"),
+        addressUuid = UUID.fromString("7ded905e-328b-4863-9420-683a0adfc61b"),
+        bpPassportUuid = UUID.fromString("17facd37-b089-48fd-b628-611909f6c36b"),
+        alternativeIdUuid = UUID.fromString("a0e03e9f-259b-4705-bf39-20ba2bab6cd7"),
+        phoneNumberUuid = UUID.fromString("4e7891ef-9caf-449c-961e-1183bb2b11d4"),
+        prescribedDrugUuid = UUID.fromString("ab6ba19b-6fd1-4f14-b02c-66c3be1f2252"),
+        appointmentUuid = UUID.fromString("b1a07d2b-3673-4258-bcc6-b86b86c1ed22")
     )
 
     patients += savePatientRecord(
@@ -1917,7 +2003,14 @@ class PatientRepositoryAndroidTest {
                 reading = BloodSugarReading("350", Random),
                 recordedAt = Instant.now(clock).minus(30, ChronoUnit.DAYS)
             )
-        )
+        ),
+        patientUuid = UUID.fromString("e3297b0b-431d-49d3-9515-338f11c082a8"),
+        addressUuid = UUID.fromString("d3455b56-e452-47b0-9e75-6cfa168066e8"),
+        bpPassportUuid = UUID.fromString("0819f437-75ab-483d-9a85-20e7b6d71a28"),
+        alternativeIdUuid = UUID.fromString("9c24db18-1b30-4ce1-a059-51a775933c3e"),
+        phoneNumberUuid = UUID.fromString("5c21c9ac-fe6c-4c5a-9d1c-f6c460ff49eb"),
+        prescribedDrugUuid = UUID.fromString("7f33a92c-db9e-410f-9c70-8d87bd00cc7b"),
+        appointmentUuid = UUID.fromString("ed53ac94-2585-4764-9cd3-db4069413827")
     )
 
     patients += savePatientRecord(
@@ -1936,7 +2029,14 @@ class PatientRepositoryAndroidTest {
                 reading = BloodSugarReading("300", Fasting),
                 recordedAt = Instant.now(clock).minus(36, ChronoUnit.DAYS)
             )
-        )
+        ),
+        patientUuid = UUID.fromString("fd68315f-fc14-471c-87ea-ca14db7bb7af"),
+        addressUuid = UUID.fromString("5333edaf-823e-4bd4-85f2-98cc51eb1c68"),
+        bpPassportUuid = UUID.fromString("c634f875-f4fd-41f2-8436-0e69ab90b785"),
+        alternativeIdUuid = UUID.fromString("70821e8b-7398-4c8f-987a-84354dcda43a"),
+        phoneNumberUuid = UUID.fromString("2681e8df-bcb7-4c95-80a5-743a5dd3262c"),
+        prescribedDrugUuid = UUID.fromString("0632a777-1100-4379-a47b-e6c1133eaa60"),
+        appointmentUuid = UUID.fromString("32d63b81-4099-4620-a5a2-87d442c18f88")
     )
 
     val defaulterPatients = mutableListOf<String>()
@@ -1961,8 +2061,8 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_fetching_bp_passport_for_patient_then_the_latest_one_should_be_returned() {
-    val patientUuid = UUID.randomUUID()
-    val identifier = Identifier(patientUuid.toString(), BpPassport)
+    val patientUuid = UUID.fromString("9c82b871-3c1c-42f2-9258-df785bd235e4")
+    val identifier = Identifier("bf48c718-5547-4b27-857b-0b670b4e2473", BpPassport)
 
 
     val oldBpPassport = testData.businessId(
@@ -2011,13 +2111,13 @@ class PatientRepositoryAndroidTest {
           }
     }
 
-    val patientUuid1 = UUID.randomUUID()
+    val patientUuid1 = UUID.fromString("aac54e4a-d9d6-4e3d-8b5d-84b868c1b3f5")
     val recordedAtForPatient1 = Instant.now(clock)
     val patientProfile1 = createPatientProfile(patientUuid1, recordedAtForPatient1)
     clock.advanceBy(Duration.ofMinutes(1))
     val instantToCompare1 = Instant.now(clock)
 
-    val patientUuid2 = UUID.randomUUID()
+    val patientUuid2 = UUID.fromString("c236ac96-d305-4454-be9c-40350e6f1bcb")
     val instantToCompare2 = Instant.now(clock)
     clock.advanceBy(Duration.ofMinutes(1))
     val recordedAtForPatient2 = Instant.now(clock)
@@ -2053,13 +2153,13 @@ class PatientRepositoryAndroidTest {
           }
     }
 
-    val patientUuid1 = UUID.randomUUID()
+    val patientUuid1 = UUID.fromString("ec98e243-a9c4-410e-b93a-2be7db37db1f")
     val recordedAtForPatient1 = Instant.now(clock)
     val patientProfile1 = createPatientProfile(patientUuid1, recordedAtForPatient1)
     clock.advanceBy(Duration.ofMinutes(1))
     val instantToCompare1 = Instant.now(clock)
 
-    val patientUuid2 = UUID.randomUUID()
+    val patientUuid2 = UUID.fromString("6ad956b7-c141-4d80-bfde-4bb4004c4f9d")
     val instantToCompare2 = Instant.now(clock)
     clock.advanceBy(Duration.ofMinutes(1))
     val recordedAtForPatient2 = Instant.now(clock)
@@ -2085,7 +2185,7 @@ class PatientRepositoryAndroidTest {
   fun when_patient_recorded_at_needs_to_be_updated_then_it_should_be_set_based_on_oldest_BP() {
     fun loadPatient(patientUuid: UUID) = patientRepository.patient(patientUuid).blockingFirst().toNullable()!!
 
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("8147f40a-1405-4139-8148-a748f7259949")
     val patientCreatedDate = Instant.now(clock)
     val patient = testData.patientProfile(patientUuid = patientUuid)
         .run {
@@ -2099,16 +2199,19 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(listOf(patient)).blockingAwait()
 
     val bpRecordedTwoDaysBeforePatientCreated = testData.bloodPressureMeasurement(
+        uuid = UUID.fromString("d24e9033-a397-4468-8a0a-4efb38c4dca1"),
         patientUuid = patientUuid,
         deletedAt = null,
         recordedAt = patientCreatedDate.minus(2, ChronoUnit.DAYS)
     )
     val bpRecordedOneDayBeforePatientCreated = testData.bloodPressureMeasurement(
+        uuid = UUID.fromString("c6dbb878-4fe5-4ba1-9143-90de024b3727"),
         patientUuid = patientUuid,
         deletedAt = null,
         recordedAt = patientCreatedDate.minus(1, ChronoUnit.DAYS)
     )
     val bpRecordedOneMinuteAfterPatientCreated = testData.bloodPressureMeasurement(
+        uuid = UUID.fromString("3ee3d3ae-c512-40e0-9503-e7fdb150cbe2"),
         patientUuid = patientUuid,
         deletedAt = null,
         recordedAt = patientCreatedDate.plus(1, ChronoUnit.MINUTES)
@@ -2181,9 +2284,9 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun patient_edits_should_not_affect_recent_patients() {
-    val patient1Uuid = UUID.randomUUID()
-    val patient2Uuid = UUID.randomUUID()
-    val patient1AddressUuid = UUID.randomUUID()
+    val patient1Uuid = UUID.fromString("ac279cbc-c930-4cc9-9434-01c0a8f7c027")
+    val patient2Uuid = UUID.fromString("6e595683-e007-4dd7-b001-5aff9042d681")
+    val patient1AddressUuid = UUID.fromString("c8f2f3b5-f527-44c8-b47f-62df941aa4a3")
 
     val recentPatient1 = savePatientWithBp(patientUuid = patient1Uuid, patientAddressUuid = patient1AddressUuid)
     val recentPatient2 = savePatientWithBp(patientUuid = patient2Uuid)
@@ -2206,7 +2309,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun patients_that_are_not_active_should_not_come_up_in_recent_patients_list() {
-    val facilityUuid = UUID.randomUUID()
+    val facilityUuid = UUID.fromString("25b7f61b-54bb-47b5-8935-c6f9028620eb")
 
     val patient1 = savePatientWithBp(facilityUuid = facilityUuid, patientStatus = Active)
     verifyRecentPatientOrder(patient1, facilityUuid = facilityUuid)
@@ -2688,12 +2791,13 @@ class PatientRepositoryAndroidTest {
   @Test
   fun searching_for_a_patient_by_phone_number_must_return_results_ordered_by_patient_name() {
     fun createPatientWithPhoneNumber(
+        patientUuid: UUID,
         patientName: String,
         phoneNumber: String
     ) {
 
       val patientProfile = testData
-          .patientProfile(patientUuid = UUID.randomUUID(), generatePhoneNumber = !phoneNumber.isBlank())
+          .patientProfile(patientUuid = patientUuid, generatePhoneNumber = !phoneNumber.isBlank())
           .let { patientProfile ->
             patientProfile.copy(
                 patient = patientProfile.patient.copy(fullName = patientName),
@@ -2715,13 +2819,41 @@ class PatientRepositoryAndroidTest {
     }
 
     // given
-    createPatientWithPhoneNumber(patientName = "Abhinav", phoneNumber = "1234567890")
-    createPatientWithPhoneNumber(patientName = "Chitra", phoneNumber = "1234567890")
-    createPatientWithPhoneNumber(patientName = "abhinav", phoneNumber = "1234567890")
-    createPatientWithPhoneNumber(patientName = "Fatima", phoneNumber = "1234567890")
-    createPatientWithPhoneNumber(patientName = "esther d' souza", phoneNumber = "1234567890")
-    createPatientWithPhoneNumber(patientName = "Dhruv Saxena", phoneNumber = "1234567890")
-    createPatientWithPhoneNumber(patientName = "Dhruv Acharya", phoneNumber = "1234567890")
+    createPatientWithPhoneNumber(
+        patientUuid = UUID.fromString("ac6c2671-f6d7-4b18-a0dc-212e34021192"),
+        patientName = "Abhinav",
+        phoneNumber = "1234567890"
+    )
+    createPatientWithPhoneNumber(
+        patientUuid = UUID.fromString("a7e43415-7b42-4096-8113-e6352a28cbed"),
+        patientName = "Chitra",
+        phoneNumber = "1234567890"
+    )
+    createPatientWithPhoneNumber(
+        patientUuid = UUID.fromString("f26853a9-cf4e-4d3c-b3cd-7e86850627bb"),
+        patientName = "abhinav",
+        phoneNumber = "1234567890"
+    )
+    createPatientWithPhoneNumber(
+        patientUuid = UUID.fromString("02f56027-62ab-4dbb-8515-2cf9ad0e906b"),
+        patientName = "Fatima",
+        phoneNumber = "1234567890"
+    )
+    createPatientWithPhoneNumber(
+        patientUuid = UUID.fromString("2d0867c4-fc3c-4296-91a0-044750f58fc9"),
+        patientName = "esther d' souza",
+        phoneNumber = "1234567890"
+    )
+    createPatientWithPhoneNumber(
+        patientUuid = UUID.fromString("7e3500da-9491-450c-b8de-722e9b7b3bb8"),
+        patientName = "Dhruv Saxena",
+        phoneNumber = "1234567890"
+    )
+    createPatientWithPhoneNumber(
+        patientUuid = UUID.fromString("7c362455-4238-49c5-ae5e-266b8a641339"),
+        patientName = "Dhruv Acharya",
+        phoneNumber = "1234567890"
+    )
 
     // when
     val searchResults = searchResults(phoneNumber = "1234567890")
@@ -2841,14 +2973,14 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun searching_for_patients_by_short_code_must_return_all_the_matching_results() {
-    fun createPatientWithBPPassport(patientUuid: UUID, bpPassportId: String) {
+    fun createPatientWithBPPassport(identifierUuid: UUID, patientUuid: UUID, bpPassportId: String) {
 
       val patientProfile = testData.patientProfile(patientUuid = patientUuid, generateBusinessId = false)
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
       patientRepository
           .addIdentifierToPatient(
-              uuid = UUID.randomUUID(),
+              uuid = identifierUuid,
               patientUuid = patientProfile.patient.uuid,
               identifier = Identifier(bpPassportId, BpPassport),
               assigningUser = loggedInUser
@@ -2858,11 +2990,31 @@ class PatientRepositoryAndroidTest {
 
 
     //given
-    createPatientWithBPPassport(UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff"), "3824f7e7-d0a9-4ae0-a0da-3230c53cdfb8")
-    createPatientWithBPPassport(UUID.fromString("0803356a-1079-46ac-9a3b-5763be2b5506"), "17671df1-1727-45f2-bf06-0e02c990c847")
-    createPatientWithBPPassport(UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d"), "3824f7e7-d0a9-4ae0-a0da-3230c53cdfb8")
-    createPatientWithBPPassport(UUID.fromString("0a549d43-7288-4633-b968-2ed91736edbe"), "884402f4-6066-41ac-a8b4-06a620d0ca5d")
-    createPatientWithBPPassport(UUID.fromString("b551fec9-b707-43e8-aa44-2ad444943229"), "199b123e-4664-4720-a184-494598d9b37d")
+    createPatientWithBPPassport(
+        identifierUuid = UUID.fromString("c74717b1-9845-49ee-935d-ca691b472bd1"),
+        patientUuid = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff"),
+        bpPassportId = "3824f7e7-d0a9-4ae0-a0da-3230c53cdfb8"
+    )
+    createPatientWithBPPassport(
+        identifierUuid = UUID.fromString("75a5b503-f012-44b5-a836-b9c81b1109da"),
+        patientUuid = UUID.fromString("0803356a-1079-46ac-9a3b-5763be2b5506"),
+        bpPassportId = "17671df1-1727-45f2-bf06-0e02c990c847"
+    )
+    createPatientWithBPPassport(
+        identifierUuid = UUID.fromString("1f03b35f-28dc-4fea-977d-12cdb709c4ed"),
+        patientUuid = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d"),
+        bpPassportId = "3824f7e7-d0a9-4ae0-a0da-3230c53cdfb8"
+    )
+    createPatientWithBPPassport(
+        identifierUuid = UUID.fromString("7d0c648f-e5a9-4679-9c54-4a9d0ae160da"),
+        patientUuid = UUID.fromString("0a549d43-7288-4633-b968-2ed91736edbe"),
+        bpPassportId = "884402f4-6066-41ac-a8b4-06a620d0ca5d"
+    )
+    createPatientWithBPPassport(
+        identifierUuid = UUID.fromString("248e22e3-d6f9-47c9-941b-2107fa5cb01e"),
+        patientUuid = UUID.fromString("b551fec9-b707-43e8-aa44-2ad444943229"),
+        bpPassportId = "199b123e-4664-4720-a184-494598d9b37d"
+    )
 
     val searchedShortCode = "3824770"
 
@@ -3162,24 +3314,27 @@ class PatientRepositoryAndroidTest {
       database.bloodPressureDao().updateSyncStatus(listOf(bpUuid), DONE)
     }
 
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("a255825d-1a36-47ee-a4c8-3657bf800076")
     val now = Instant.now(clock)
     val oneSecondEarlier = now.minus(Duration.ofSeconds(1))
     val fiftyNineSecondsLater = now.plus(Duration.ofSeconds(59))
     val oneMinuteLater = now.plus(Duration.ofMinutes(1))
 
     val bp1ForPatient = testData.bloodPressureMeasurement(
+        uuid = UUID.fromString("3f86cd1e-ceb0-4d56-9c78-00a205187ac7"),
         patientUuid = patientUuid,
         syncStatus = PENDING,
         updatedAt = now
     )
     val bp2ForPatient = testData.bloodPressureMeasurement(
+        uuid = UUID.fromString("bdf5ef57-39a4-4798-8da7-156b988ecd46"),
         patientUuid = patientUuid,
         syncStatus = PENDING,
         updatedAt = oneMinuteLater
     )
     val bpForSomeOtherPatient = testData.bloodPressureMeasurement(
-        patientUuid = UUID.randomUUID(),
+        UUID.fromString("f47eb886-db54-443f-989a-8f8984d15d1e"),
+        patientUuid = UUID.fromString("10dc49a6-79d0-4180-84d5-7c490dbaf533"),
         syncStatus = PENDING,
         updatedAt = now
     )
@@ -3216,16 +3371,19 @@ class PatientRepositoryAndroidTest {
     val oneMinuteLater = now.plus(Duration.ofMinutes(1))
 
     val bloodSugar1ForPatient = testData.bloodSugarMeasurement(
+        uuid = UUID.fromString("4837150b-aaf2-411e-a87e-c9abee1e883b"),
         patientUuid = patientUuid,
         syncStatus = PENDING,
         updatedAt = now
     )
     val bloodSugar2ForPatient = testData.bloodSugarMeasurement(
+        uuid = UUID.fromString("802a2c04-9a40-4281-9655-a01d88e2094f"),
         patientUuid = patientUuid,
         syncStatus = PENDING,
         updatedAt = oneMinuteLater
     )
     val bloodSugarForSomeOtherPatient = testData.bloodSugarMeasurement(
+        uuid = UUID.fromString("1cedf78f-a6fb-4a4e-bf98-8f32c485e158"),
         patientUuid = UUID.fromString("ba774e35-b727-472b-bb9c-231af252d190"),
         syncStatus = PENDING,
         updatedAt = now
@@ -3256,24 +3414,27 @@ class PatientRepositoryAndroidTest {
       database.prescriptionDao().updateSyncStatus(listOf(prescribedDrug), DONE)
     }
 
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("efd303fd-f96b-4b05-9c8a-c067b189974e")
     val now = Instant.now(clock)
     val oneSecondEarlier = now.minus(Duration.ofSeconds(1))
     val fiftyNineSecondsLater = now.plus(Duration.ofSeconds(59))
     val oneMinuteLater = now.plus(Duration.ofMinutes(1))
 
     val prescribedDrug1ForPatient = testData.prescription(
+        uuid = UUID.fromString("98f54657-79fa-49da-800d-5101d30b3c77"),
         patientUuid = patientUuid,
         syncStatus = PENDING,
         updatedAt = now
     )
     val prescribedDrug2ForPatient = testData.prescription(
+        uuid = UUID.fromString("1800a708-f66c-482e-88ec-94b495dbecda"),
         patientUuid = patientUuid,
         syncStatus = PENDING,
         updatedAt = oneMinuteLater
     )
     val prescribedDrugForSomeOtherPatient = testData.prescription(
-        patientUuid = UUID.randomUUID(),
+        uuid = UUID.fromString("27972e2d-03b6-45e6-a912-8b5f80f52610"),
+        patientUuid = UUID.fromString("a7b3c328-e98d-4b92-b9b8-16314ef08354"),
         syncStatus = PENDING,
         updatedAt = now
     )
@@ -3303,24 +3464,27 @@ class PatientRepositoryAndroidTest {
       database.medicalHistoryDao().updateSyncStatus(listOf(medicalHistoryUuid), DONE)
     }
 
-    val patientUuid = UUID.randomUUID()
+    val patientUuid = UUID.fromString("327b1bc3-da82-49b4-a6a5-668b7cf05ca2")
     val now = Instant.now(clock)
     val oneSecondEarlier = now.minus(Duration.ofSeconds(1))
     val fiftyNineSecondsLater = now.plus(Duration.ofSeconds(59))
     val oneMinuteLater = now.plus(Duration.ofMinutes(1))
 
     val medicalHistory1ForPatient = testData.medicalHistory(
+        uuid = UUID.fromString("d5569c03-2312-4495-b144-008f2586f140"),
         patientUuid = patientUuid,
         syncStatus = PENDING,
         updatedAt = now
     )
     val medicalHistory2ForPatient = testData.medicalHistory(
+        uuid = UUID.fromString("59db7dcb-2500-4e32-935d-fb570f573150"),
         patientUuid = patientUuid,
         syncStatus = PENDING,
         updatedAt = oneMinuteLater
     )
     val medicalHistoryForSomeOtherPatient = testData.medicalHistory(
-        patientUuid = UUID.randomUUID(),
+        uuid = UUID.fromString("1ce39939-1a5e-4628-b95c-66dfb745867e"),
+        patientUuid = UUID.fromString("fcece569-9386-4911-9b6b-884606e5a348"),
         syncStatus = PENDING,
         updatedAt = now
     )

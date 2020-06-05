@@ -5,4 +5,5 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 interface RegistrationPhoneUiActions {
   fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry)
   fun showAccessDeniedScreen(number: String)
+  fun openLoginPinEntryScreen()
 }

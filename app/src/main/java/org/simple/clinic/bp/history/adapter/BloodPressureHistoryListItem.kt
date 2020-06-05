@@ -29,7 +29,7 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
   data class BloodPressureHistoryItem(
       val measurement: BloodPressureMeasurement,
       val isBpEditable: Boolean,
-      val isUrgent: Boolean,
+      val isBpHigh: Boolean,
       val bpDate: String,
       val bpTime: String?
   ) : BloodPressureHistoryListItem() {
@@ -46,12 +46,12 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
           .build()
       val labelTextRes = measurement.level.displayTextRes.toNullable()
 
-      if (isUrgent) {
+      if (isBpHigh) {
         holder.heartImageView.setImageResource(R.drawable.bp_reading_high)
       } else {
         holder.heartImageView.setImageResource(R.drawable.bp_reading_normal)
       }
-      holder.bpHighTextView.visibleOrGone(isUrgent)
+      holder.bpHighTextView.visibleOrGone(isBpHigh)
       if (labelTextRes != null) {
         holder.bpHighTextView.setText(labelTextRes)
       }

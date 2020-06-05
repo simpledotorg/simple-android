@@ -66,5 +66,11 @@
     android:label="OnboardingScreen"
     app:analyticsName="Onboarding Screen"
     app:layout="@layout/screen_onboarding"
-    tools:layout="@layout/screen_onboarding" />
+    tools:layout="@layout/screen_onboarding" >
+    <action
+      android:id="@+id/action_onboardingScreen_to_selectCountryScreen"
+      app:destination="@id/selectCountryScreen"
+      app:popUpTo="@id/onboardingScreen"
+      app:popUpToInclusive="true" />
+  </screen>
 </navigation>

@@ -7,23 +7,23 @@ import org.simple.clinic.util.Optional
 
 enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Optional<Int>) {
 
-  EXTREMELY_HIGH
-      (4, Just(R.string.bloodpressure_level_high)),
+  EXTREMELY_HIGH(4, Just(R.string.bloodpressure_level_high)),
 
-  VERY_HIGH
-      (3, Just(R.string.bloodpressure_level_high)),
+  VERY_HIGH(3, Just(R.string.bloodpressure_level_high)),
 
-  MODERATELY_HIGH
-      (2, Just(R.string.bloodpressure_level_high)),
+  MODERATELY_HIGH(2, Just(R.string.bloodpressure_level_high)),
 
-  MILDLY_HIGH
-      (1, None),
+  MILDLY_HIGH(1, None),
 
-  NORMAL
-      (0, None),
+  NORMAL(0, None),
 
-  LOW
-      (-1, Just(R.string.bloodpressure_level_low));
+  LOW(-1, Just(R.string.bloodpressure_level_low));
+
+  val isHigh: Boolean
+    get() = when (this) {
+      LOW, NORMAL, MILDLY_HIGH -> false
+      MODERATELY_HIGH, VERY_HIGH, EXTREMELY_HIGH -> true
+    }
 
   fun isUrgent(): Boolean {
     // TODO: the chart shared by Daniel shows 90-139 as normal level. There is an

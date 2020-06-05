@@ -60,7 +60,8 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
                     loggedInUser = user,
                     facility = facility,
                     supplyUuidForBpPassport = uuidGenerator::v4,
-                    supplyUuidForAlternativeId = uuidGenerator::v4
+                    supplyUuidForAlternativeId = uuidGenerator::v4,
+                    supplyUuidForPhoneNumber = uuidGenerator::v4
                 )
                 .flatMap { registeredPatient ->
                   medicalHistoryRepository

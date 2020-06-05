@@ -259,7 +259,8 @@ class PatientRepository @Inject constructor(
       loggedInUser: User,
       facility: Facility,
       supplyUuidForBpPassport: () -> UUID,
-      supplyUuidForAlternativeId: () -> UUID
+      supplyUuidForAlternativeId: () -> UUID,
+      supplyUuidForPhoneNumber: () -> UUID
   ): Single<Patient> {
     val cachedOngoingEntry = ongoingEntry().cache()
 
@@ -362,7 +363,7 @@ class PatientRepository @Inject constructor(
           } else {
             val number = with(entry.phoneNumber) {
               PatientPhoneNumber(
-                  uuid = UUID.randomUUID(),
+                  uuid = supplyUuidForPhoneNumber(),
                   patientUuid = patientUuid,
                   number = number,
                   phoneType = type,

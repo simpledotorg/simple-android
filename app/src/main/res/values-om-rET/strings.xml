@@ -3,162 +3,176 @@
   <string name="app_name">Salphaa</string>
 
   <!-- Common -->
-  <string name="gender_female">Dhalaa</string>
+  <string name="gender_female">Dubara</string>
   <string name="gender_male">Dhiira</string>
-  <string name="gender_transgender">Saala Jijjiiramaa</string>
+  <string name="gender_transgender">Saaldarbee</string>
   <!--suppress UnusedResources -->
-  <string name="gender_male_letter">Dhi</string>
+  <string name="gender_male_letter">DH</string>
   <!--suppress UnusedResources -->
-  <string name="gender_female_letter">Dha</string>
+  <string name="gender_female_letter">D</string>
   <!--suppress UnusedResources -->
-  <string name="gender_trans_letter">SJ</string>
-  <string name="api_unexpected_error">Wanti ta’e dogoggrameera. Maaloo irra deebi’aa yaalaa</string>
-  <string name="api_network_error">Interneetiin hojjechaa hin jiru</string>
+  <string name="gender_trans_letter">SD</string>
+  <string name="api_unexpected_error">Wanti ta’e dogongorameera. Maaloo deebisaa yaalaa.</string>
+  <string name="api_network_error">Hidhati interneetaa hin jiru</string>
+  <string name="api_server_error">Dogongora Sarvarii! Maaloo booddee deebisaa yaalaa.</string>
 
   <!-- Country names -->
-  <string name="country_india">Indiyaa</string>
-  <string name="country_bangladesh">Baangilaadesh</string>
+  <string name="country_india">Hndii</string>
+  <string name="country_bangladesh">Baangilaadeesh</string>
   <string name="country_ethiopia">Itoophiyaa</string>
 
   <!-- Home -->
   <string name="home_help">Gargaarsa</string>
-  <string name="home_settings">Yoomessa</string>
+  <string name="home_settings">Teessuma</string>
 
   <!--Business id Identifier -->
-  <string name="identifiertype_bp_passport">Waraqaa Darbii BP</string>
-  <string name="identifiertype_bangladesh_national_id">Lakkoofsa Eenyummeessaa biyyoolessaa</string>
-  <string name="identifiertype_unknown">Eenyummeessaa</string>
+  <string name="identifiertype_bp_passport">Paaspoortii BP</string>
+  <string name="identifiertype_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
+  <string name="identifiertype_unknown">ID</string>
 
   <!-- Patient search -->
   <string name="patientsearch_search">Kan itti aanu</string>
-  <string name="patientsearch_error_empty_fullname">Maqaa guutuu yookiin lakkoofsa guutuu dhukkubsataa galchi</string>
-  <string name="patientsearch_hint">Maqaa yookiin Lakkoofsa bilbilaa</string>
+  <string name="patientsearch_error_empty_fullname">Maqaa dhukkubsataa guutuu yookan lakkoofsa bilbilaa galchi</string>
+  <string name="patientsearch_hint">Maqaa yookan lakkoofsa bilbilaa</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresults_empty_state">Dhukkubsataan kana fakkaatu hin jiru</string>
-  <string name="patientsearchresults_register_patient_rationale">Dhukkubsaticha tarreeffama kana keessatti hin argannee?</string>
+  <string name="patientsearchresults_empty_state">Dhukkubsataan firoomu hin jiru</string>
+  <string name="patientsearchresults_register_patient_rationale">Tarree kana irratti dhubbubsataa argachuu hin dandanyee?</string>
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">Dhukkubsataan hin galmoofne</string>
   <string name="patientsearchresults_register_patient">Akka dhukkubsataa haaraatti galmeessi</string>
   <string name="patientsearchresults_register_patient_for_empty_state">Dhukkubsataa galmeessi</string>
-  <string name="patientsearchresults_current_facility_header">%s ilaalameera</string>
-  <string name="patientsearchresults_other_results_header">Bu’aalee biroo</string>
-  <string name="patientsearchresults_no_patients_match">Dhukkubsataan kana fakkaatu hin jiru</string>
+  <string name="patientsearchresults_item_last_seen">Daawwannaa Darbe:</string>
+  <string name="patientsearchresults_current_facility_header">%s Daawwateera</string>
+  <string name="patientsearchresults_other_results_header">Bu’aawwan bira</string>
+  <string name="patientsearchresults_no_patients_match">Dhukkubsataan firoomu hin jiru</string>
 
   <!-- Manual patient entry -->
-  <string name="patiententry_contentdescription_up_button">Barbaaduuf dudduuba deebi’i</string>
-  <string name="patiententry_full_name">Maqaa dhukkubsataa</string>
+  <string name="patiententry_contentdescription_up_button">Gara barbaachatti duuba deebi’i</string>
+  <string name="patiententry_full_name">Maqaa dhukkubsataa\ttootaa</string>
   <string name="patiententry_phone_number">Lakkoofsa bilbilaa</string>
-  <string name="patiententry_bangladesh_national_id">Lakkoofsa Eenyummeessaa biyyoolessaa</string>
-  <string name="patiententry_date_of_birth_unfocused">Guyyaa dhalootaa</string>
-  <string name="patiententry_date_of_birth_focused">G.Dh: GG/JJ/BBBB</string>
-  <string name="patiententry_dateofbirth_and_age_separator">Yookiin</string>
-  <string name="patiententry_age">Umurii</string>
+  <string name="patiententry_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
+  <string name="patiententry_ethiopia_national_id">Lakkoosa eenyummeessaa biyyoolessaa</string>
+  <string name="patiententry_date_of_birth_unfocused">Guyyaa dhaloota</string>
+  <string name="patiententry_date_of_birth_focused">G,Dh GG/JJ/WWWW</string>
+  <string name="patiententry_dateofbirth_and_age_separator">Yookan</string>
+  <string name="patiententry_age">Umrii</string>
   <string name="patiententry_street_address">Teessoo manaa</string>
-  <string name="patiententry_street_house_road_number">Lakkoofsa manaa fi daandii</string>
-  <string name="patiententry_village_colony_ward">Iddoo / Mandara /  waardii</string>
-  <string name="patiententry_village_ward">Iddoo / waardii</string>
-  <string name="patiententry_zone">Yuuniyanii</string>
-  <string name="patiententry_district">Distriiktii</string>
-  <string name="patiententry_upazila">Upazilaa</string>
+  <string name="patiententry_street_house_road_number">Lakkoofsa manaa fii karaa</string>
+  <string name="patiententry_village_colony_ward">Araddaa/Gooxii/Qe’ee</string>
+  <string name="patiententry_village_ward">Araddaa/Qe’ee</string>
+  <string name="patiententry_kebele">Ganda</string>
+  <string name="patiententry_zone">Waldaa</string>
+  <string name="patiententry_district">Ganda</string>
+  <string name="patiententry_woreda">Aanaa</string>
+  <string name="patiententry_upazila">Uppaazilaa</string>
   <string name="patiententry_state">Naannoo</string>
+  <string name="patiententry_region">Naanoo</string>
   <string name="patiententry_save_patient">Kan itti aanu</string>
-  <string name="patiententry_error_empty_fullname">Maqaa guutuu dhukkubsataa galchi</string>
+  <string name="patiententry_error_empty_fullname">Maqaa dhukkubsataa guutuu galchi</string>
   <string name="patiententry_error_empty_gender">Saala dhukkubsataa filadhu</string>
-  <string name="patiententry_error_empty_colony_or_village">Iddoo / Mandara /  waardiigalchi</string>
-  <string name="patiententry_error_empty_district">Distriktii dhukkubsataa galchi</string>
+  <string name="patiententry_error_empty_colony_or_village">Araddaa/Gooxii/Qe’ee</string>
+  <string name="patiententry_error_empty_district">Ganda dhukkubsataa galchi</string>
   <string name="patiententry_error_state_empty">Naannoo dhukkubsataa galchi</string>
-  <string name="patiententry_error_both_dateofbirth_and_age_empty">Umurii dhukkubsataa galchi</string>
-  <string name="patiententry_error_invalid_dateofbirth">Guyyaa dhaloota dhukkubsataa bifa GG/JJ/BBBB  tiingalchi</string>
-  <string name="patiententry_error_dateofbirth_is_in_future">Guyyaa dhaloota dhukkubsataa murteessi</string>
-  <string name="patiententry_error_phonenumber_length_less">Lakkoofsi bilbilaa dijiitii 6 gadi ta’uu hin qabu</string>
-  <string name="patiententry_error_phonenumber_length_more">Lakkoofsi bilbilaa dijiitii 12 ol ta’uu hin qabu</string>
-  <string name="patiententry_identifier">Waraqaa Darbii BP:</string>
-  <string name="patiententry_consent_header">Walii Galtee:\u0020</string>
-  <string name="patiententry_consent_first_para">Kan armaan gadii irratti cuqaasuun, odeeffannoon dhukkubsataa ati guutte hundinuu bu’uura walii galtee gahaa argachuun ta’uu mirkaneessita. Kana jechuunis dhukkubsataanis ta’e eegduun seeraa odeeffannoo dhuunfaa moosaajii keessatti galchuu kee beeka, odeeffannoon akkamii akka walitti qabamaa jiru hubachaa, fi boodas karaa ergaa gabaabaa, WhatsApp, fi mala biraa kan akka lakkoofsa bilbilaa moosaajicha keessatti galeen quunnamamuu danda’uu isanii hubataniiru.</string>
-  <string name="patiententry_consent_second_para">Namni siin eeyyamameef, yookiin qopheessaan kunuunsa fayyaa ati hojjettuufii odeeffannoo dhuunfaa dhukkubsataa kana ilaaluu danda’a. Moosaajicha fayyadamuudhaan dhukkubsataan yookiin eegduun seeraa, karaa moosaajii kanaa odeeffannoo fudhatame eenyu ilaaluu akka danda’u fi walii galtee akkaataa ilaalcha odeeffannichaa hubachuu isaa mirkaneessita.</string>
-  <string name="patiententry_consent_whatsapp_sms_reminders">Yaadachiistuu WhatsApp / Ergaa Gabaabaa</string>
-  <string name="patiententry_age_exceeds_max_limit_error">Umuriin 120 ol ta’uu hin danda’u</string>
-  <string name="patiententry_age_exceeds_min_limit_error">Umuriin 0 ta’uu hin danda’u</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">Umrii dhukkubsataa galchi</string>
+  <string name="patiententry_error_invalid_dateofbirth">Guyyaa dhalootaa dhukkubsataa galchi akka GG/JJ/WWWW tti</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">Guyyaa dhaloota dhukkubsataa sirreessi</string>
+  <string name="patiententry_error_phonenumber_length_less">Lakkoofsi bilbilaa dijitii 6 gadi ta’uu hin danda’u</string>
+  <string name="patiententry_error_phonenumber_length_more">Lakkoofsi bilbilaa dijitii 12 ol ta’uu hin danda’u</string>
+  <string name="patiententry_identifier">Paaspoortii BP</string>
+  <string name="patiententry_consent_header">Hayyama:\u0020</string>
+  <string name="patiententry_consent_first_para">Kan armaan gadii kana tuquudhaan, ati ragaan dhukkuubsataa ati galchite kamiyyuu hayyama hubatamaa jalatti kan funaaname ta’uu mirkaneessita. Kana jechuun dhukkubsataan yookan eegduun seera qabeessi ati ragaalee kanniin akka apppiitti galchaa jirtu ni beeku jechuudha, ragaan maalii akka sassaabbamu, fii tarii karaa SMS, WhatsApp, yookan maloota biraa lakkoofsa bilbilaa appicha keessatti kenname fayyadamanii qunammamuu akka danda’an beeku.</string>
+  <string name="patiententry_consent_second_para">Namni siin mirkaneeffame kamiyyuu, yookan namni eegumsa fayyaa kennukan ati hojjattuuf, ragaalee fii odeeffannoo dhukkubsataa ati asittu galchitu ni argatu. Appicha fayyadamuudhaan ati dhukkubsataan yookan eegduun seera qabeessi odeeffannoo karaa appii kanaa walitti qabame eenyu argachuu akka danda’u hubachuu fii kuna akka ta’uufis hayyamuu isaanii mirkaneessita.</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">Yaadachiistuwwan WhatsApp/SMS</string>
+  <string name="patiententry_consent_sms_reminders">Yaadachiistuwwan SMS</string>
+  <string name="patiententry_age_exceeds_max_limit_error">Umriin waggoota 120 ol ta’uu hin danda’u</string>
+  <string name="patiententry_age_exceeds_min_limit_error">Umriin 0 wajjiin wall qixa ta’uu hin danda’u</string>
 
-  <string name="patientedit_save_patient">Ol Kaa’i</string>
-  <string name="patientedit_confirm_discard_title">Jijjiiramoota Balleessuufii?</string>
-  <string name="patientedit_confirm_discard_ok">Balleessi</string>
-  <string name="patientedit_confirm_discard_cancel">Addaan kuti</string>
+  <string name="patientedit_save_patient">Ol kaa’i</string>
+  <string name="patientedit_bp_passports_label">Paaspoortii Dhiibbaa Dhiigaa</string>
+  <string name="patientedit_confirm_discard_title">Jijjiirama dhiisi?</string>
+  <string name="patientedit_confirm_discard_ok">Dhiisi</string>
+  <string name="patientedit_confirm_discard_cancel">Adda kuti</string>
+  <string name="patientedit_delete_patient">Haqi</string>
+
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
   <string name="tab_patient">Dhukkubsattoota</string>
   <!--suppress UnusedResources -->
-  <string name="tab_overdue">Kan hafe</string>
+  <string name="tab_overdue">Kan itti darbe</string>
   <!--suppress UnusedResources -->
-  <string name="tab_progress">Adeemsa</string>
+  <string name="tab_progress">Dagaagina</string>
 
-  <string name="home_search_patient_name_phone">Maqaa dhukkubsataa galchi</string>
-  <string name="patients_user_awaiting_approval_title">Mirkaneessa eegaa jira</string>
-  <string name="patients_user_awaiting_approval_message">Takkaa mirkanoofnaan, galmee dhukkubsataa kilinika kee keessatti argatta.</string>
-  <string name="patients_user_approved_title">Siif mirkana’eera!</string>
-  <string name="patients_awaiting_sms_verification_title">Mirkaneessituu ergaa gabaabaa eegaa jira</string>
-  <string name="patients_user_approved_message">Amma galmee dhukkubsataa kilinika kee ilaaluu dandeessa.</string>
-  <string name="patients_awaiting_sms_verification_message">Takkaa mirkanoofnaan galmee dhukkubsataa kilinika kee keessatti argatta.</string>
-  <string name="patients_dismiss_user_approved_status">Argadhu</string>
-  <string name="patients_enter_code">Lakkaddaa galchi</string>
-  <string name="patients_you_are_now_logged_in">Haalaan mirkanaa’eera! Galmeen dhukkubsataa amma ni mul’ata</string>
-  <string name="patients_loggedoutalert_title">Al takkatti mi’a tokko qofaa irratti seenuu dandeessa.</string>
-  <string name="patients_loggedoutalert_message">Mi’a kee isa duraa keessaa baateetta.</string>
-  <string name="patients_loggedoutalert_dismiss">Argadhu</string>
-  <string name="patients_scan_simple_card">Waraqaa Darbiinsaa BP kaasi</string>
-  <string name="patients_recentpatients_title">Dhukkubsattoota yeroo dhiyoo</string>
-  <string name="patients_recentpatients_no_recent_patients">Dhukkubsataan yeroo dhiyoo hin jiru</string>
-  <string name="patients_recentpatients_see_all">Hundumaa ilaali</string>
+  <string name="home_search_patient_name_phone">Maqaa dhukkubsataa\ttootaa galchi</string>
+  <string name="patients_user_awaiting_approval_title">Mirkaneeffannaa eegaa jira</string>
+  <string name="patients_user_awaiting_approval_message">Takka yoo mirkanaa’e, galmeewwan dhubbusataa kilinika kee irraa argachuu ni dandeessa.</string>
+  <string name="patients_user_approved_title">Siif mirkanaa’eera</string>
+  <string name="patients_awaiting_sms_verification_title">Mirkaneeffannaa SMS eeguu irra jira</string>
+  <string name="patients_user_approved_message">Amma ragaa dhukkubsattootaa hundaa mana keetii arguu dandeessa</string>
+  <string name="patients_awaiting_sms_verification_message">Takka mirkanoofnan,  galmee dhukkubsataa kilinikii kee irraa argachuu ni dandeessa.</string>
+  <string name="patients_dismiss_user_approved_status">Argadheera</string>
+  <string name="patients_enter_code">Koodii galchi</string>
+  <string name="patients_you_are_now_logged_in">Mirkaneeffannaan ta’eera. Galmeen dhukkubsattootaa amma ni argama.</string>
+  <string name="patients_loggedoutalert_title">Meeshaa tokko irratti yeroo tokko qofa seenuu dandeesa</string>
+  <string name="patients_loggedoutalert_message">Meeshaa kee darbe keessaa baatee jirta.</string>
+  <string name="patients_loggedoutalert_dismiss">Argadheera</string>
+  <string name="patients_scan_simple_card">Paaspoortii PB scan godhi</string>
+  <string name="patients_recentpatients_title">Dhiyoo</string>
+  <string name="patients_recentpatients_no_recent_patients">Shukkubsattootni dhihoo hin jiran</string>
+  <string name="patients_recentpatients_see_all">Hundaa ilaali</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Dhiibbaa dhiigaa</string>
-  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">Dhiibbaa dhiigaa gulaali</string>
-  <string name="bloodpressureentry_sheet_title_enter_date">Guyyaa ilaalchaa</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">Dhiibbaa dhiigaa sirreessi</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">Guyyaa daawwii</string>
   <string name="bloodpressureentry_remove">Balleessi</string>
-  <string name="bloodpressureentry_systolic">Siistoolikii</string>
+  <string name="bloodpressureentry_systolic">Siistooliki</string>
   <string name="bloodpressureentry_diastolic">Diyaastoolikii</string>
   <string name="bloodpressureentry_day">Guyyaa</string>
   <string name="bloodpressureentry_month">Ji’a</string>
-  <string name="bloodpressureentry_year">Bara</string>
-  <string name="bloodpressureentry_error_systolic_more">Siistoolikiin diyaastoolikii ol ta’uu qaba</string>
-  <string name="bloodpressureentry_error_systolic_70">Siistoolikiin 70 gadi ta’uu hin qabu</string>
-  <string name="bloodpressureentry_error_systolic_300">Siistoolikiin 300 ol ta’uu hin qabu</string>
-  <string name="bloodpressureentry_error_diastolic_40">Diyaastoolikiin 40 gadi ta’uu hin qabu</string>
-  <string name="bloodpressureentry_error_diastolic_180">Diyaastoolikiin 180 ol ta’uu hin qabu</string>
-  <string name="bloodpressureentry_error_systolic_empty">Dhiibbaa siistoolikii fi diyaastoolikii galchi</string>
-  <string name="bloodpressureentry_error_diastolic_empty">Dhiibbaa siistoolikii fi diyaastoolikii galchi</string>
-  <string name="bloodpressureentry_error_date_invalid_pattern">Guyyaa sirrii GG/JJ/BB n galchi</string>
-  <string name="bloodpressureentry_error_date_is_in_future">Guyyaan kan  fuula duraa ta’uu hin qabu</string>
+  <string name="bloodpressureentry_year">Waggaa</string>
+  <string name="bloodpressureentry_error_systolic_more">Siistoolikiin diyaastoolikii irraa caaluu qaba</string>
+  <string name="bloodpressureentry_error_systolic_70">Siistoolikiin 70 gadi ta’uu hin danda’u</string>
+  <string name="bloodpressureentry_error_systolic_300">Siistoolikiin 300 ol ta’uu hin danda’u</string>
+  <string name="bloodpressureentry_error_diastolic_40">Diyaastoolikiin 40 gadi ta’uu hin danda’u</string>
+  <string name="bloodpressureentry_error_diastolic_180">Diyaastoolikiin 180 ol ta’uu hin danda’u</string>
+  <string name="bloodpressureentry_error_systolic_empty">Dhiibbaawwan siyaastoolikii fii diyaastoolikii galchi</string>
+  <string name="bloodpressureentry_error_diastolic_empty">Dhiibbaawwan siyaastoolikii fii diyaastoolikii galchi</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">Guyyaa sirrii GG/JJ/WWWW keessatti galchi</string>
+  <string name="bloodpressureentry_error_date_is_in_future">Guyyaan gara fuulduraa ta’uu hin danda’u</string>
   <string name="bloodpressureentry_remove_bp_title">BP balleessi</string>
-  <string name="bloodpressureentry_remove_bp_message">Galmee dhiibbaa dhiigaa akka balleessaa jirtu beekta mitii?</string>
-  <string name="bloodpressureentry_remove_bp_confirm">Haqi</string>
-  <string name="bloodpressureentry_remove_bp_cancel">Balleessi</string>
+  <string name="bloodpressureentry_remove_bp_message">Galmee dhiibbaa dhiigaa kana balleessuu barbaaddaa?</string>
+  <string name="bloodpressureentry_remove_bp_confirm">Balleessi</string>
+  <string name="bloodpressureentry_remove_bp_cancel">Adda kuti</string>
 
   <!-- Patient summary -->
-  <string name="patientsummary_contentdescription_up_button">Duuba deeb’i</string>
-  <string name="patientsummary_prescriptions_add">Qoricha dabali</string>
-  <string name="patientsummary_prescriptions_update">Qoricha haaromsi</string>
+  <string name="patientsummary_contentdescription_up_button">Duuba deebi’i</string>
+  <string name="patientsummary_prescriptions_add">Dawaawwan</string>
+  <string name="patientsummary_prescriptions_update">Dawaawwan gulaali</string>
   <string name="patientsummary_bp_add_new">Dhiibbaa dhiigaa</string>
   <string name="patientsummary_finish_saving_patient">Ol kaa’i</string>
-  <string name="patientsummary_bp_none_added">Dhiibbaan dhiigaa dabalame hin jiru</string>
+  <string name="patientsummary_bp_none_added">Dhiibban dhiigaa dabalame hin jiru</string>
   <string name="patientsummary_edit">Gulaali</string>
 
   <string name="patientsummary_updatephone_dialog_title">Lakkoofsa bilbilaa haaromsi</string>
-  <string name="patientsummary_updatephone_dialog_message">Lakkoofsi bilbilaa dhukkubsataa yeroo darbe sirrii miti jedhamee mallattoon irra kaa’ameera</string>
+  <string name="patientsummary_updatephone_dialog_message">Bilbilli dhukkubsataa dura akka sirrii hin taaneetti daangeffameera</string>
   <string name="patientsummary_updatephone_phone_hint">Lakkoofsa bilbilaa</string>
-  <string name="patientsummary_updatephone_save">Olkaa’i</string>
-  <string name="patientsummary_updatephone_cancel">Irra tari</string>
+  <string name="patientsummary_updatephone_save">Ol kaa’i</string>
+  <string name="patientsummary_updatephone_cancel">Irra utaali</string>
   <string name="patientsummary_addphone_dialog_title">Lakkoofsa bilbilaa haaromsi</string>
-  <string name="patientsummary_addphone_dialog_message">Yeroo galmee lakoofsa bilbila dhukkubsataa hin guunne</string>
+  <string name="patientsummary_addphone_dialog_message">Lakkoosi bilbilaa dhukkubsatichaa yeroo galmeetti hin galfamne</string>
   <string name="patientsummary_addphone_phone_hint">Lakkoofsa bilbilaa</string>
-  <string name="patientsummary_addphone_save">Olkaa’i</string>
-  <string name="patientsummary_addphone_cancel">Irra tari</string>
+  <string name="patientsummary_addphone_save">Ol kaa’i</string>
+  <string name="patientsummary_addphone_cancel">Irra utaali</string>
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
-  <string name="patientsummary_bangladesh_national_id">Waraqaa Eeenyummeessaa</string>
+  <string name="patientsummary_bangladesh_national_id">ID</string>
 
-  <string name="bloodpressuresummaryview_see_all_button">Hunda ilaali</string>
+  <string name="patientsummary_contact_doctor">Dooktara</string>
+  <string name="patientsummary_teleconsult_network_error">Sababa hanqina interneetiitiin quunnamuu hin dandeenye.</string>
+  <string name="patientsummary_teleconsult_network_error_retry">irra deebi’aa yaalaa</string>
+
+  <string name="bloodpressuresummaryview_see_all_button">Hundaa ilaali</string>
 
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
@@ -169,186 +183,193 @@
   <string name="timestamp_today">Har’a</string>
   <string name="timestamp_yesterday">Kaleessa</string>
   <!--suppress PluralsCandidate -->
-  <string name="timestamp_days_ago">Guyyoota %s dura </string>
+  <string name="timestamp_days_ago">Guyyoota %s dura</string>
 
   <!-- Prescribed drugs -->
-  <string name="patient_prescribeddrugs_screen_title">Qorichoota BP</string>
-  <string name="patient_prescribeddrugs_add_custom_prescription">Qoricha biraa dabali</string>
+  <string name="patient_prescribeddrugs_screen_title">Dawaawwan BP</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">Dawaa biraa galchi</string>
 
-  <string name="customprescription_enter_medicine">Qoricha galchi</string>
-  <string name="customprescription_edit_medicine">Qoricha gulaali</string>
+  <string name="customprescription_enter_medicine">Dawaa galchi</string>
+  <string name="customprescription_edit_medicine">Dawaa gulaali</string>
   <string name="customprescription_save_drug">Ol kaa’i</string>
-  <string name="customprescription_drug_name_hint">Maqaa qorichaa</string>
-  <string name="customprescription_drug_dosage_hint">Baay’ina fudhannaa qorichaa</string>
+  <string name="customprescription_drug_name_hint">Maqaa dawa</string>
+  <string name="customprescription_drug_dosage_hint">Hamma fudhanna</string>
 
-  <string name="customprescription_delete_title">Qoricha haqi</string>
-  <string name="customprescription_delete_message">Qoricha kana akka haqaa jirtu beekta mitii?</string>
-  <string name="customprescription_delete_confirm">Haqi</string>
-  <string name="customprescription_delete_cancel">Addaan kuti</string>
+  <string name="customprescription_delete_title">Dawaa balleessi</string>
+  <string name="customprescription_delete_message">Shakkii malee dawaa kana balleessuu barbaaddaa?</string>
+  <string name="customprescription_delete_confirm">Balleessi</string>
+  <string name="customprescription_delete_cancel">Adda kuti</string>
 
   <!-- Login -->
-  <string name="loginpin_go_back">Gara argii lakkoofsa bilbilaatti deebi’i</string>
+  <string name="loginpin_go_back">Gara fuula lakkoofsa bilbilaatti duuba deebi’i</string>
+
   <!-- App lock -->
-  <string name="applock_logout">Si mitii?</string>
-  <string name="applock_reset_pin_alert_title">PIN dhoksaa guuti</string>
-  <string name="applock_reset_pin_alert_message">PIN dhoksaa  haaromsaa akka jirtu beekta mitii?</string>
-  <string name="applock_reset_pin_alert_confirm">Irra deebiin haaromsi</string>
-  <string name="applock_reset_pin_alert_cancel">Addaan kuti</string>
+  <string name="applock_logout">Sii mitii?</string>
+  <string name="applock_reset_pin_alert_title">PIN Iccitii Sirreessi?</string>
+  <string name="applock_reset_pin_alert_message">Shakkii malee PIN kee iccitii sirreessuu barbaaddaa?</string>
+  <string name="applock_reset_pin_alert_confirm">Sirreessi</string>
+  <string name="applock_reset_pin_alert_cancel">Adda kuti</string>
 
   <!-- PIN entry -->
-  <string name="pinentry_forgotpin">PIN irraanfattee?</string>
-  <string name="pinentry_error_incorrect_pin_on_first_attempt">PINn PIN isa duraa wajjin tokko miti</string>
-  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">PIN dogongoraa, kan hafe %s</string>
-  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">Kan dogongoraa %s uumtee jirta</string>
-  <string name="pinentry_pin_number_hint">PIN dhoksaa kee</string>
-  <string name="pinentry_bruteforcelock_timer_label">Booda yaali</string>
+  <string name="pinentry_forgotpin">PIN dagattee?</string>
+  <string name="pinentry_error_incorrect_pin_on_first_attempt">PIN galchite PIN duraa wajjiin wal hin fakkaatu</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">PIN dogongoraa, yaalii %s hafa</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">Yaalii dogongoraa %s taasistee jirta</string>
+  <string name="pinentry_pin_number_hint">PIN kee iccitii</string>
+  <string name="pinentry_bruteforcelock_timer_label">Booda deebi’ii yaali</string>
   <!-- minutes:seconds -->
 
   <!-- Registration -->
-  <string name="registrationphone_phone_number_label">Lakkoofsa bilbilaa kee</string>
-  <string name="registrationphone_error_invalid_number">Lakkoofsa bilbilaa mirkaneessi Baay’ee gabaabaa fakkaata</string>
+  <string name="registrationphone_phone_number_label">Lakoofsa bilbila kee</string>
+  <string name="registrationphone_error_invalid_number">Lakkoofsa bilbilaa kee sakatta’i. Baayyee xiqqaa fakkaata</string>
   <string name="registration_loggedout_dialog_title">Keessaa baatee jirta</string>
-  <string name="registration_loggedout_dialog_message">Maaloo itti fufuuf saaqii seeni</string>
-  <string name="registration_loggedout_dialog_confirm">Tole</string>
-  <string name="registrationname_name_label">Maqaa guutuu kee nutti himi</string>
-  <string name="registrationname_error_empty_name">Maaloo maqaa guutuu kee galchi</string>
+  <string name="registration_loggedout_dialog_message">Maaloo itti fufuudhaaf deebi’ii seeni</string>
+  <string name="registration_loggedout_dialog_confirm">Hayyee</string>
+  <string name="registrationname_name_label">Maqaa kee guutuu nutti himi</string>
+  <string name="registrationname_error_empty_name">Maaloo maqaa kee guutuu galchi</string>
 
-  <string name="registrationpin_pin_label">PIN dhoksaa kee qopheeffadhu</string>
-  <string name="registrationpin_pin_hint">Booda waan si barbaachisuuf PIN kee yaadadhu</string>
-  <string name="registrationpin_error_incomplete_pin">PIN n kee baay’ee gabaabaadha Maaloo lakkoofsa 4 galchi</string>
+  <string name="registrationpin_pin_label">PIN kee iccitii uumi</string>
+  <string name="registrationpin_pin_hint">PIN kee yaadadhu</string>
+  <string name="registrationpin_error_incomplete_pin">PIN baayyee gabaabaadha. Maaloo lakkoofsota 4 galchi</string>
 
-  <string name="registrationconfirmpin_confirm_pin_label">PIN dhoksaa irra deebi’ii galchi</string>
-  <string name="registrationconfirmpin_error_pin_mismatch">PIN n PIN isa duraa wajjin tokko miti</string>
-  <string name="registrationconfirmpin_reset_pin">PIN irra deebi’ii guuti</string>
+  <string name="registrationconfirmpin_confirm_pin_label">Deebisii PIN iccitii galchi</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">PIN galchite PIN duraa wajjiin wal hin fakkaatu</string>
+  <string name="registrationconfirmpin_reset_pin">PIN deebisii sirreessi</string>
 
-  <string name="registrationlocation_screen_title">Argama</string>
-  <string name="registrationlocation_skip_permission">Irra tari</string>
-  <string name="registrationlocation_permission_rationale_description">Teessoon kee kilinika kee akka argannuuf gargaara</string>
-  <string name="registrationlocation_permission_rationale_title">Kilinika kee dafii barbaadi</string>
-  <string name="registrationlocation_allow_access">Argannoo teessoo eeyyamiif</string>
+  <string name="registrationlocation_screen_title">Argama teessoo</string>
+  <string name="registrationlocation_skip_permission">Irra utaali</string>
+  <string name="registrationlocation_permission_rationale_description">Teeoon kee akka kilinikii kee argannuuf nu tajaajila</string>
+  <string name="registrationlocation_permission_rationale_title">Kilinikii kee saffisaan aragadhu</string>
+  <string name="registrationlocation_allow_access">Argannaa teessoo hayyami</string>
 
-  <string name="registrationfacilities_screen_title">Kilinika kee filadhu</string>
-  <string name="registrationfacilities_search_hint">Kilinika kee barbaadi</string>
+  <string name="registrationfacilities_screen_title">Kilinikii kee filadhu</string>
+  <string name="registrationfacilities_search_hint">Kilinikii kee barbaadi</string>
   <!-- Street, District, State -->
-  <string name="registrationfacilities_error_unexpected_title">Wanti ta’e dogongora</string>
-  <string name="registrationfacilities_error_unexpected_message">Maaloo xiqqoo turii yaali yookiin hoogganaa kee quunnami</string>
-  <string name="registrationfacilities_error_internet_connection_title">Interneetiin hin jiru</string>
-  <string name="registrationfacilities_retry">Ammas yaali</string>
-  <string name="registrationfacilities_header_suggested_facilities">Kilinikoota tilmaamaman</string>
-  <string name="registrationfacilities_header_all_facilities">Kilinika hunda</string>
+  <string name="registrationfacilities_error_unexpected_title">Wanti ta’e dogongorameera</string>
+  <string name="registrationfacilities_error_unexpected_message">Maaloo yeroo muraasa booda deebi’ii yaali yookan hogganaa kee wajjiin wal qunnami.</string>
+  <string name="registrationfacilities_error_internet_connection_title">Hidhati interneetaa hin jiru</string>
+  <string name="registrationfacilities_retry">Deebisii yaali</string>
+  <string name="registrationfacilities_header_suggested_facilities">Kilinikiiwwan eeraman</string>
+  <string name="registrationfacilities_header_all_facilities">Kilinikiiwwan hunda</string>
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">Jalqabi</string>
 
   <!-- Overdue List -->
-  <string name="overdue_no_patients">Kilinikni hafe hin jiru</string>
-  <string name="overdue_empty_desc">Dhukkubsattoota hordoffii dhiibbaa dhiigaa isaanii irraa kaatan deemtee gaafachuu danda’uu qabda</string>
+  <string name="overdue_no_patients">Dhukkubsattoonni irra darbe hin jiran</string>
+  <string name="overdue_empty_desc">Dhukkubsattoota sagantaa hordoffii dubbisa dhiibbaa dhiigaa isaanii bilbiluufii ni dandeessa.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_diagnosis_diabetes">Sukkaara</string>
+  <string name="overdue_list_item_diagnosis_hypertension">Baayyina dhiiga</string>
+  <string name="overdue_list_item_diagnosis_none">Hin jiru</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">Guyyaa %s darbe</item>
-    <item quantity="other">Guyyoota %s darbe</item>
+    <item quantity="one">Guyyaa %s irra darbe</item>
+    <item quantity="other">Guyyoota %s irra darbe</item>
   </plurals>
-  <string name="overduelist_high_risk">Gaaga’a olaanaa</string>
+  <string name="overduelist_diagnosis_label">Dx</string>
+  <string name="overduelist_visited">Daawwatameera</string>
+  <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
 
   <!-- Facility change -->
-  <string name="changefacility_screen_title">Kilinika kee filadhu</string>
-  <string name="facilitychange_search_hint">Kilinika kee barbaadi</string>
+  <string name="changefacility_screen_title">Kilinikii kee filadhu</string>
+  <string name="facilitychange_search_hint">Kilinikii kee barbaadi</string>
 
   <!-- Enter OTP -->
-  <string name="enterotp_check_sms_sent_to">Ergaa gabaa tti ergami mirkaneessi</string>
-  <string name="enterotp_enter_verification_code">Lakkaddaa mirkaneessaa galchi</string>
-  <string name="enterotp_incorrect_code">Lakkaddaa dogongoraa, maaloo irra deebi’ii yaali</string>
-  <string name="enterotp_resend_sms">Ergaa gabaabaa irra deebin ergi</string>
-  <string name="enterotp_sms_sent">Ergaa gabaabaan mirkaneessaa haaraan ergameera</string>
+  <string name="enterotp_check_sms_sent_to">SMS ergame barbaadi</string>
+  <string name="enterotp_enter_verification_code">Koodii mirkaneeffannaa galchi</string>
+  <string name="enterotp_incorrect_code">Koodii  dogongoraa, maaloo deebisii yaali</string>
+  <string name="enterotp_resend_sms">SMS deebisii ergi</string>
+  <string name="enterotp_sms_sent">Mirkaneeffannaan SMS biraa ergameera</string>
 
   <!-- Schedule appointment -->
-  <string name="scheduleappointment_next_visit_in">Ilaalcha itti aanu saganteessi</string>
+  <string name="scheduleappointment_next_visit_in">Daawwannaa itti aanu karoorsi</string>
   <string name="scheduleappointment_not_now">Amma miti</string>
-  <string name="scheduleappointment_done">Ta’e</string>
+  <string name="scheduleappointment_done">Taasifameera</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">Guyyaa %s</item>
     <item quantity="other">Guyyoota %s</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
-    <item quantity="one">Torbee %s</item>
-    <item quantity="other">Torban %s</item>
+    <item quantity="one">Torban %s</item>
+    <item quantity="other">Torbanoota %s</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">Ji’a %s</item>
-    <item quantity="other">Ji’oota %s</item>
+    <item quantity="other">Ji’ota %s</item>
   </plurals>
 
   <!-- Forgot PIN -->
-  <string name="forgotpin_create_new_pin">PIN dhoksaa haaraa qopheessi</string>
-  <string name="forgotpin_create_new_pin_invalid_pin">PIN n baay’ee gabaabaadha Maaloo lakkoofsa 4 galchi</string>
-  <string name="forgotpin_confirm_pin">PIN dhoksaa galchi ammas</string>
-  <string name="forgotpin_confirm_pin_message">Mirkaneessuuf ammas PIN kee galchi</string>
-  <string name="forgotpin_error_pin_mismatch">PIN n PIN duraa wajjin tokko miti</string>
+  <string name="forgotpin_create_new_pin">PIN eeggumsaa haaraa uumi</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">PIN baayyee gabaabaadha. Maaloo lakkoofsota 4 galchi</string>
+  <string name="forgotpin_confirm_pin">Deebisii PIN iccitii galchi</string>
+  <string name="forgotpin_confirm_pin_message">Mirkaneeffachuudhaaf PIN kee deebisii galchi</string>
+  <string name="forgotpin_error_pin_mismatch">PIN galchite PIN duraa wajjiin wal hin fakkaatu</string>
 
   <!-- Reports -->
-  <string name="reports_come_back_later">Booda kottu</string>
-  <string name="reports_you_will_be_able_to_see">Gabaasa dhiibbaa dhiigaa olaanaa kilinika kee asitti ilaaluu ni dandeessa.</string>
+  <string name="reports_come_back_later">Booddee deebi’ii koottu</string>
+  <string name="reports_you_will_be_able_to_see">Gabaasaalee baayyina dhiigaa kilinikii keetif asitti ilaaluu ni dandeessa.</string>
 
   <!-- Medical History -->
   <!--suppress UnusedResources used in enum -->
-  <string name="medicalhistory_question_heartattack">Miidhama onnee</string>
+  <string name="medicalhistory_question_heartattack">Cita onne</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_stroke">Istrookii</string>
+  <string name="medicalhistory_question_stroke">Dhiiga sammuu</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_kidney">Dhukkuba kalee</string>
+  <string name="medicalhistory_question_kidney">Dhukkuba onne</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">Dhiibbaa dhiigaa olaanaa</string>
+  <string name="medicalhistory_question_diagnosed_with_hypertension">Baayyina dhiiga</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">Dhibee sukkaaraa</string>
-  <string name="newmedicalhistory_next">Itti aanee</string>
+  <string name="medicalhistory_question_diabetes">Sukkaara</string>
+  <string name="newmedicalhistory_next">Kan itti aanu</string>
   <string name="newmedicalhistory_yes">Eeyyee</string>
   <string name="newmedicalhistory_no">Lakki</string>
   <string name="newmedicalhistory_history">Seenaa</string>
-  <string name="newmedicalhistory_diagnosis">Yaalii (Barbaachisaa)</string>
-  <string name="newmedicalhistory_diagnosis_required_error">Maaloo yaalii filadhu</string>
+  <string name="newmedicalhistory_diagnosis">Qorannoo (Barbaadameera)</string>
+  <string name="newmedicalhistory_diagnosis_required_error">Maaloo qorannoo filadhu</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
-  <string name="prescribed_drugs_dosage_none">Homaa</string>
-  <string name="prescribed_drug_with_dosages_sheet_drug_name">Hamma fudhatamu %s</string>
+  <string name="prescribed_drugs_dosage_none">Hin jiru</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">Hamma fudhanna%s</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">Eenyummeessaa kaardii kaasi</string>
-  <string name="scansimpleid_shortcode_error_empty">Lakkoofsa Waraqaa Darbii BP galchi</string>
-  <string name="scansimpleid_shortcode_error_not_required_length">Baay’inni dijiitii Lakkoofsa Waraqaa Darbii BP 7 gadi</string>
-  <string name="scansimpleid_type_bp_passport_number">Yookiin Lakoofsa Waraqaa Darbii BP barreessi</string>
+  <string name="scansimpleid_title">Kaardii eenyummeessaa iskaan godhi</string>
+  <string name="scansimpleid_shortcode_error_empty">Lakkoofsa paaspoortii PB galchi</string>
+  <string name="scansimpleid_shortcode_error_not_required_length">Lakkoofsi paaspoortii PB dijitiiwwan 7 gadi</string>
+  <string name="scansimpleid_type_bp_passport_number">yookan lakoofsa paaspoortii PB katabi</string>
 
   <!--- Sync Indicator-->
-  <string name="syncindicator_status_pending">Duraaduuba eegaa jira</string>
-  <string name="syncindicator_status_failed">Duraaduuba addaan cite</string>
-  <string name="syncindicator_status_syncing">Duraaduubaan hojjechaa jira</string>
-  <string name="syncindicator_status_synced_just_now">Amma duraaduubomseera</string>
-  <string name="syncindicator_status_synced_min_ago">Daqiiqaa %s dura duraaduubomseera</string>
-  <string name="syncindicator_dialog_error_network">Galmeewwan dhukkubsataa duraaduubomsuuf interneetiin hojjechaa jiraachuu isaa mirkaneessi</string>
-  <string name="syncindicator_dialog_button_text">Tole</string>
-  <string name="syncindicator_dialog_error_server">Serveriin duraaduubomsu ammatti hojjetaa hin jiru Maaloo xiqqoo turii yaali yookiin hoogganaa kee quunnami</string>
+  <string name="syncindicator_status_pending">Mirkana ilaalamaa jira</string>
+  <string name="syncindicator_status_failed">Mirkanni kufeera</string>
+  <string name="syncindicator_status_syncing">Mirkaneeffacha…</string>
+  <string name="syncindicator_status_synced_just_now">Amma mirkaneeffameera</string>
+  <string name="syncindicator_status_synced_min_ago">Daqiiqaa %s dura mirkanaa’e</string>
+  <string name="syncindicator_dialog_error_network">Galmeeewwan dhukkubsattoottaa mirkaneeffachuudhaaf hidhata intarneetaa qabaachuu kee mirkaneeffadhu.</string>
+  <string name="syncindicator_dialog_button_text">Hayyee</string>
+  <string name="syncindicator_dialog_error_server">Sarvaroonnii mirkanaa amma hin hojjatan Maaloo turii deebi’ii yaali yookan hogganaa kee wajjiin wal qunnami.</string>
 
   <!-- Help Screen -->
   <string name="help_title">Gargaarsa</string>
-  <string name="help_no_connection">Interneetiin hin jiru</string>
-  <string name="help_something_went_wrong">Waan ta’e dogongora</string>
-  <string name="help_try_again">Ammas yaali</string>
+  <string name="help_no_connection">Hidhati interneetaa hin jiru</string>
+  <string name="help_something_went_wrong">Wanti ta’e dogongorameera</string>
+  <string name="help_try_again">Deebisii yaali</string>
 
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_add">Dabali</string>
-  <string name="linkidwithpatient_button_cancel">Addaan kuti</string>
+  <string name="linkidwithpatient_button_cancel">Adda kuti</string>
   <string name="linkidwithpatient_add_id_text">%1$s\u0020dabali</string>
-  <string name="linkidwithpatient_to_patient_text">\u0020 hamma\u00A0dhukkubsataa?</string>
+  <string name="linkidwithpatient_to_patient_text">Dhukkubataau0020 hanga\u00A0?</string>
 
   <!-- Add ID to Patient: Search -->
-  <string name="addidtopatientsearch_search">Itti aanee</string>
-  <string name="addidtopatientsearch_error_empty_fullname">Maqaa guutuu yookiin lakkoofsa dhukkubsataa galchi</string>
-  <string name="addidtopatientsearch_hint">Maqaa yookiin Lakkoofsa bilbilaa</string>
+  <string name="addidtopatientsearch_toolbar_title">Maqaa dhukkubsataa galchi</string>
+  <string name="addidtopatientsearch_search">Kan itti aanu</string>
+  <string name="addidtopatientsearch_error_empty_fullname">Maqaa dhukkubsataa guutuu yookan lakkoofsa bilbilaa galchi</string>
+  <string name="addidtopatientsearch_hint">Maqaa yookan lakkoofsa bilbilaa</string>
 
   <!-- Recent Patients -->
-  <string name="recent_patients_toolbar_title">Dhukkubsataa dhiyoo</string>
+  <string name="recent_patients_toolbar_title">Dhiyoo</string>
 
   <!-- Recent Patients Item View -->
-  <string name="recent_patients_itemview_last_seen">Dhumarra kan ilaalame:\u0020</string>
+  <string name="recent_patients_itemview_last_seen">Xumuraaf kan ilaalame:\u0020</string>
   <string name="recent_patients_itemview_title">%1$s, %2$s</string>
 
   <!-- Add ID to Patient: Search Results-->
@@ -356,89 +377,100 @@
   <string name="addidtopatientsearchresults_to_patient">\u0020hanga\u2026</string>
 
   <!-- App update : Dialog -->
-  <string name="appupdatedialog_title">Moosaajii haaromsi</string>
-  <string name="appupdatedialog_body">Salphaatti haaromsuuf Play Store seeni</string>
-  <string name="appupdatedialog_positive_button_text">Haaromsi</string>
+  <string name="appupdatedialog_title">Appicha haaromsi</string>
+  <string name="appupdatedialog_body">Salphaatti akka haaromsituuf gara Play Store fudhatamta</string>
+  <string name="appupdatedialog_positive_button_text">Haaromsa</string>
   <string name="appupdatedialog_negative_button_text">Amma miti</string>
 
   <!-- All Patients In Facility View-->
-  <string name="allpatientsinfacility_nopatients_message">Faasiliitii keetti dhukkubsattoota galmaa’an hunda ilaaluuf ni dandeessa.</string>
-  <string name="allpatientsinfacility_nopatients_title">%1$s tti dhukkubsataan hin jiru</string>
-  <string name="allpatientsinfacility_foundpatients_header">Dhukkubsataa Hunda: %1$s</string>
+  <string name="allpatientsinfacility_nopatients_message">Dhukkubsattoota galmaa’an hundumaa asitti teessoo keetti argachuu ni dandeessa</string>
+  <string name="allpatientsinfacility_nopatients_title">Dhukkubsattoota %1$s tti</string>
+  <string name="allpatientsinfacility_foundpatients_header">Dhukkubsattoota hundumaa %1$s</string>
 
   <!--Registration loader screen -->
-  <string name="registrationloader_error_unexpected_title">Wanti ta’e dogongora</string>
-  <string name="registrationloader_error_unexpected_message">Maaloo xiqqoo turii yaali yookiin hoogganaa kee quunnami</string>
-  <string name="registrationloader_error_internet_connection_title">Interneetiin hin jiru</string>
+  <string name="registrationloader_error_unexpected_title">Wanti ta’e dogongorameera</string>
+  <string name="registrationloader_error_unexpected_message">Maaloo yeroo muraasa booda deebi’ii yaali yookan hogganaa kee wajjiin wal qunnami.</string>
+  <string name="registrationloader_error_internet_connection_title">Hidhati interneetaa hin jiru</string>
   <!--suppress UnusedResources -->
-  <string name="registrationloader_retry">Ammas yaali</string>
+  <string name="registrationloader_retry">Deebisii yaali</string>
 
   <!-- Short code search -->
-  <string name="shortcodesearchresult_enter_patient_name_button">Maqaa dhukkubsataa galchi</string>
+  <string name="shortcodesearchresult_enter_patient_name_button">Maqaa dhukkubsataa\ttootaa galchi</string>
 
   <!-- Simple video -->
-  <string name="simple_video_watch_video">Viidiyoo ilaali</string>
-  <string name="simple_video_how_to_use_the_simple_app">Moosaajii salphaa akkamitti akka fayyadamtu</string>
-  <string name="simple_video_duration">Daqiiqaa %s</string>
+  <string name="simple_video_watch_video">Viidiyoo daawwadhu</string>
+  <string name="simple_video_how_to_use_the_simple_app">Appii salpha akkamitti fayyadamuu danda’a</string>
+  <string name="simple_video_duration">Daqiiqaawwan %s</string>
 
   <!-- Settings -->
-  <string name="settings_title">Yoomessa</string>
-  <string name="settings_user_name_icon_content">Yoomessa mallattoo maqaa fayyadamaa</string>
-  <string name="settings_user_phone_icon_content">Yoomessa mallattoo lakkoofsa bilbila fayyadamaa</string>
-  <string name="settings_current_language_icon_content">Yoomessa mallattoo afaan ammaa</string>
+  <string name="settings_title">Teessuma</string>
+  <string name="settings_user_name_icon_content">Ayikoonii teessoowwan maqaa fayyadamaa</string>
+  <string name="settings_user_phone_icon_content">Ayikoonii teessoowwan lakkoofsa bilbilaa fayyadamaa</string>
+  <string name="settings_current_language_icon_content">Ayikoonii teessoowwan afaan ammaa</string>
+  <string name="settings_app_version_icon_content">Sajoo fayyadama fooyya’aa qindeessituu</string>
   <string name="settings_name">Maqaa</string>
   <string name="settings_number">Lakkoofsa bilbilaa</string>
   <string name="settings_language">Afaan</string>
-  <string name="settings_change">Jijjiirama</string>
+  <string name="settings_change">Jijjiiri</string>
   <string name="settings_language_hint">Afaan filadhu</string>
+  <string name="settings_software">Mosajjii/sooftweerii</string>
+  <string name="settings_update">Haaromsa</string>
+  <string name="settings_software_version">Gulantaa %1$s</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">Afaan kee filadhu</string>
-  <string name="changelanguage_done">Ta’e</string>
+  <string name="changelanguage_done">Taasifameera</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Maaloo eegi…</string>
-  <string name="placeholder_loading_message">Daataabeeziin suphamaa jira Kun daqiiqaa qofa fudhata</string>
+  <string name="placeholder_loading_title">Maaloo turi…</string>
+  <string name="placeholder_loading_message">Suphaan daataa guddachaa jira. Kini daqiiqaa qofa fuadhata</string>
 
   <!-- Select Country Screen -->
-  <string name="selectcountry_logo_contentdescription">Aasxaa salphaa</string>
-  <string name="selectcountry_next">Itti aanee</string>
+  <string name="selectcountry_logo_contentdescription">Asxaa salphaa</string>
+  <string name="selectcountry_next">Kan itti aanu</string>
   <string name="selectcountry_title">Biyya kee filadhu</string>
-  <string name="selectcountry_networkerror">Interneetiin hin hojjetu</string>
-  <string name="selectcountry_servererror">Serveriin dogongora Maaloo booda yaali</string>
-  <string name="selectcountry_genericerror">Waan ta’e dogongora Maaloo booda yaali</string>
-  <string name="selectcountry_retry">Maaloo booda yaali</string>
-  <string name="scheduleappointment_at">Tti</string>
-  <string name="scheduleappointment_change">Jijjiirama</string>
+  <string name="selectcountry_networkerror">Hidhati interneetaa hin jiru!</string>
+  <string name="selectcountry_servererror">Dogongora Sarvarii! Maaloo booda turii yaali!</string>
+  <string name="selectcountry_genericerror">Wanti ta’e dogongorameera! Maaloo booda turii yaali!</string>
+  <string name="selectcountry_retry">Deebisii yaali</string>
+  <string name="scheduleappointment_at">Kan</string>
+  <string name="scheduleappointment_change">Jijjiiri</string>
 
   <!-- BloodSugar type picker -->
-  <string name="bloodsugartype_picker_title">Safara filadhu</string>
-  <string name="bloodsugartype_picker_desc">Ofitti hin amantu taanaan ‘RBS’ filadhu</string>
-  <string name="bloodsugartype_rbs">Sukkaara Dhiiga tasaa (SDT)</string>
-  <string name="bloodsugartype_fbs">Sukkaara dhiigaa soomaa (SDS)</string>
-  <string name="bloodsugartype_ppbs">Sukkaara dhiigaa piraandiyaalii boodaa (SDPB)</string>
-
-  <!-- Blood sugar entry -->
-  <string name="bloodsugarentry_sheet_title_enter_date">Guyyaa ilaalchaa</string>
+  <string name="bloodsugartype_picker_title">Tarkaanfii filadhu</string>
+  <string name="bloodsugartype_picker_desc">Yoo shakkii qabaatte ‘RBS’ filadhu</string>
+  <string name="bloodsugartype_rbs">Sukkaara Dhiigaa Tasaa (RBS)</string>
+  <string name="bloodsugartype_fbs">Sukkaara dhiigaa soomaa (FBS)</string>
+  <string name="bloodsugartype_ppbs">Sukkaara dhiigaa turtii boodaa (PPBS)</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">Guyyaa daawwii</string>
   <string name="bloodsugarentry_day">Guyyaa</string>
   <string name="bloodsugarentry_month">Ji’a</string>
-  <string name="bloodsugarentry_year">Bara</string>
-  <string name="bloodsugarentry_error_lower_limit">30 mg/dl gadi ta’uu hin qabu</string>
-  <string name="bloodsugarentry_error_higher_limit">1000 mg/dl oli ta’uu hin qabu</string>
-  <string name="bloodsugarentry_error_empty">Duwwaa ta’uu hin danda’u</string>
-  <string name="bloodsugarentry_error_date_invalid_pattern">Guyyaa sirrii DD/JJ/BBBB n guuti</string>
-  <string name="bloodsugarentry_error_date_is_in_future">Guyyaan egeree ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_year">Waggaa</string>
+  <string name="bloodsugarentry_error_lower_limit">Hammichi 30 mg/dl gadi ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">Hammichi 3\% gadi ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_higher_limit">Hammichi 1000 mg/dl o; ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">Hammichi 25\% ol ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_empty">Hammichi duwwaa ta’uu hin danda’u</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">Guyyaa sirrii GG/JJ/WWWW keessatti galchi</string>
+  <string name="bloodsugarentry_error_date_is_in_future">Guyyaan gara fuulduraa ta’uu hin danda’u</string>
   <string name="bloodsugarentry_random_title">Sukkaara dhiigaa tasaa</string>
-  <string name="bloodsugarentry_post_prandial_title">Sukkaara dhiigaa piraandiyaalii boodaa</string>
+  <string name="bloodsugarentry_post_prandial_title">Sukkaara dhiigaa turtii booddee</string>
   <string name="bloodsugarentry_fasting_title">Sukkaara dhiigaa soomaa</string>
-  <string name="bloodsugarentry_remove">Haqi</string>
-  <string name="bloodsugarentry_edit_random_title">Sukkaara dhiigaa tasaa gulaalu </string>
-  <string name="bloodsugarentry_edit_post_prandial_title">Sukkaara dhiigaa soorataa bodaa gulaali</string>
-  <string name="bloodsugarentry_edit_fasting_title">Sukkaara dhiigaa sooma gulaali</string>
+  <string name="bloodsugarentry_remove">Balleessi</string>
+  <string name="bloodsugarentry_edit_random_title">Sukkaara dhiigaa tasaa sirreessi</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">Sukkaara dhiigaa turtii booddee sirreessi</string>
+  <string name="bloodsugarentry_edit_fasting_title">Sukkaara dhiigaa soomaa sirreessi</string>
+  <string name="bloodsugarentry_edit_hba1c_title">HbA1c sirreessi</string>
+
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">Sukkaara Dhiigaa Balleesi</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">Shakkiidhan ala galmee sukkaara dhiigaa kana balleessuu barbaaddaa?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">Balleessi</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">Adda kuti</string>
 
   <!-- Blood Sugar Summary view -->
-  <string name="bloodsugarsummaryview_no_blood_sugars">Sukkaarri dhiigaa homtuu hin dabalamne</string>
-  <string name="bloodsugarsummaryview_add_blood_sugar_button">Dhibee sukkaaraa</string>
+  <string name="bloodsugarsummaryview_no_blood_sugars">Sukkaarri dhiigaa dabalame hin jiru</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">Sukkaara</string>
   <string name="bloodsugarsummary_bloodsugartype_rbs">RBS</string>
   <string name="bloodsugarsummary_bloodsugartype_ppbs">PPBS</string>
   <string name="bloodsugarsummary_bloodsugartype_fbs">FBS</string>
@@ -447,43 +479,89 @@
   <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
 
   <!-- Blood Sugar History screen -->
-  <string name="bloodsugarhistory_add_blood_sugar_button">Dhibee sukkaaraa</string>
+  <string name="bloodsugarhistory_add_blood_sugar_button">Sukkaara</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Seenaa</string>
-  <string name="medicalhistorysummaryview_diagnosis">Yaalii (Barbaachisaa)</string>
+  <string name="medicalhistorysummaryview_diagnosis">Qorannoo (Barbaadameera)</string>
 
   <!-- Summary prescriptions view -->
-  <string name="drugsummaryview_no_medicines">Homaa</string>
+  <string name="drugsummaryview_no_medicines">Qorichi kamiyyuu hin dabalamne</string>
+
+  <!-- Access Denied screen -->
+  <string name="accessdeniedscreen_title_access_denied">Hayyamni hin kennamne</string>
+  <string name="accessdeniedscreen_description">Hayyamni Salphaa hin hayyamane Maaloo kuni dogongora jettee yaadda taanan hogganaa kee qunnami.\n\n hayyamni kee yoo siif deebi’e, Salphaa balleessi fii Play store irraa buufadhu.</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">Iddoo gara ….jijjiiri</string>
+  <string name="confirmfacilitychange_negative_button">Adda kuti</string>
+  <string name="confirmfacilitychange_positive_button">Eeyyee</string>
+  <string name="confirmfacilitychange_facility_name">%s?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">Ati bakka ….jirtaa?</string>
+  <string name="registrationconfirmfacility_positive_button">Eeyyee</string>
+  <string name="registrationconfirmfacility_negative_button">Adda kuti</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">Ati bakka …..jirtaa</string>
+  <string name="alertfacilitychange_yes_button">Eeyyee</string>
+  <string name="alertfacilitychange_change_button">Jijjiiri</string>
+  <string name="alertfacilitychange_facility_name">%s?</string>
+
+  <!-- Prescribed Drug Summary -->
+  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">Dhukkubsataa ‘Ilaaluuf walii galeera’ tti sirreessi</string>
-  <string name="contactpatient_remind_call_later">Booda bilbiluu yaadadhu…</string>
-  <string name="contactpatient_remove_from_list">Tarree haftee irraa haqi…</string>
-  <string name="contactpatient_result_of_call">Bu’aa waamichaa</string>
+  <string name="contactpatient_agreed_to_visit">Dhukkubsataa \“dhufuudhaaf kan waliigale” jedhii milikkiteessi.</string>
+  <string name="contactpatient_remind_call_later">Booddee na yaadachiisi…</string>
+  <string name="contactpatient_remove_from_list">Tarree  irra darbeerraa kaasi…</string>
+  <string name="contactpatient_result_of_call">Bu’aa bilbiluu</string>
   <string name="contactpatient_call_normal">Sirrii</string>
-  <string name="contactpatient_call_secure">Nagaa</string>
-  <string name="contactpatient_help_text">Waamichi nagaa lakkoofsa kee kan dhoksu bilbila tolaati</string>
-  <string name="contactpatient_call_later_in">Booda keessatti waami</string>
-  <string name="contactpatient_done">Ta’e</string>
-  <string name="contactpatient_select_a_reason">Sababa Filadhu</string>
-  <string name="contactpatient_patient_already_visited">Dhukkubsataan daawwatameera</string>
-  <string name="contactpatient_patient_is_not_responding">Dhukkubsataan deebisaa hin jiru</string>
-  <string name="contactpatient_invalid_phone_number">Lakkoofsi bilbilaa hin hojjetu</string>
-  <string name="contactpatient_public_hospital_transfer">Faasiliitii Fayyaa Hawaasaatti darbeera</string>
-  <string name="contactpatient_moved_to_private">Abbaa Ogummaa dhuunfaatti darbe</string>
-  <string name="contactpatient_patient_died">In du’e</string>
-  <string name="contactpatient_other_reason">Sababa biroo</string>
+  <string name="contactpatient_call_secure">Eegamaa</string>
+  <string name="contactpatient_help_text">Bilbila kee eeggadhu lakkoofsa kee dhoksi fii bilisaan</string>
+  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">Booda ol waami</string>
+  <string name="contactpatient_done">Taasifameera</string>
   <plurals name="contactpatient_days">
     <item quantity="one">Guyyaa %s</item>
     <item quantity="other">Guyyoota %s</item>
   </plurals>
   <plurals name="contactpatient_weeks">
-    <item quantity="one">Torbee %s</item>
-    <item quantity="other">Torban %s</item>
+    <item quantity="one">Torban %s</item>
+    <item quantity="other">Torbanoota %s</item>
   </plurals>
   <plurals name="contactpatient_months">
     <item quantity="one">Ji’a %s</item>
-    <item quantity="other">Ji’oota %s</item>
+    <item quantity="other">Ji’ota %s</item>
   </plurals>
+  <string name="contactpatient_select_a_reason">Sababa filadhu</string>
+  <string name="contactpatient_patient_already_visited">Dhukkubsataan sirumaa daawwatameera</string>
+  <string name="contactpatient_patient_is_not_responding">Dhukkubsataan hin deebisu</string>
+  <string name="contactpatient_invalid_phone_number">Lakoofsi bilbilaa hin hojjatu</string>
+  <string name="contactpatient_public_hospital_transfer">Gara buufata fayyaa biraatti dabarfameera</string>
+  <string name="contactpatient_moved_to_private">Eeggumsa dhuunfaatti sochoofameera</string>
+  <string name="contactpatient_patient_died">Boqateera</string>
+  <string name="contactpatient_other_reason">Sababa biraa</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">Galmeen dhukkubsataa hin argamne.</string>
+  <string name="deeplink_patient_profile_not_found_desc">Adaraa intarneeta kee seeniitii dhukkubsattoota wal-simsiisi.</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">Hayyee</string>
+  <string name="deeplink_no_patient">Dhukkubsataan hin argamne.</string>
+  <string name="deeplink_no_patient_desc">Gorsa fageenya jalqabiiti odeeffannoo dhukkubsataa immoo hojjettoota eegumsa fayyaa gaaffadhu.</string>
+  <string name="deeplink_no_patient_positive_action">Tole</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">Sababa filadhu</string>
+  <string name="deletereason_duplicate_patient">Kuni dhukkubsataa deddeebifameedha</string>
+  <string name="deletereason_accidental_registration">Dhukkubsataa dogongoraan galmaa’e</string>
+  <string name="deletereason_died">Boqateera</string>
+  <string name="deletereason_confirm_title">Dhukkubsataa balleessi?</string>
+  <string name="deletereason_confirm_message">Kuni %1$s balleessa</string>
+  <string name="deletereason_confirm_positive">Haqi</string>
+  <string name="deletereason_confirm_negative">Adda kuti</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">Kan itti aanu</string>
 </resources>

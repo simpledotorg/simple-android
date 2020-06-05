@@ -53,6 +53,7 @@ import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.Timestamps
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationsResponse
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
@@ -1019,8 +1020,23 @@ object TestData {
   )
 
   fun facilityTeleconsultationsResponse(
-      phoneNumber: String? = "+911111111111"
+      phoneNumber: String? = "+911111111111",
+      phoneNumbers: List<TeleconsultPhoneNumber> = listOf(
+          teleconsultPhoneNumber(
+              phoneNumber = "+911111111111"
+          ),
+          teleconsultPhoneNumber(
+              phoneNumber = "+912222222222"
+          ))
   ) = TeleconsultationsResponse(
-      teleconsultationPhoneNumber = phoneNumber
+      teleconsultationPhoneNumber = phoneNumber,
+      teleconsultationPhoneNumbers = phoneNumbers
+  )
+
+
+  fun teleconsultPhoneNumber(
+      phoneNumber: String = "+911111111111"
+  ) = TeleconsultPhoneNumber(
+      phoneNumber = phoneNumber
   )
 }

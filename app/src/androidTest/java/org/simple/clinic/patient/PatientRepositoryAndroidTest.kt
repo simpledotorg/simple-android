@@ -321,9 +321,9 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(
             loggedInUser = loggedInUser,
             facility = currentFacility,
-            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
-            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
-            supplyUuidForPhoneNumber ={ UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
+            supplyUuidForBpPassport = { UUID.fromString("7d705a05-adf5-4dfc-b1c0-6ca7e5f9f81b") },
+            supplyUuidForAlternativeId = { UUID.fromString("1a3326ea-0be6-4265-ad17-57a89ed7ee1a") },
+            supplyUuidForPhoneNumber ={ UUID.fromString("b1c47a77-06ba-48af-8db7-8ec4ded3e906") }
         ))
         .blockingGet()
 
@@ -341,9 +341,9 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(
             loggedInUser = loggedInUser,
             facility = currentFacility,
-            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
-            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
-            supplyUuidForPhoneNumber ={ UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
+            supplyUuidForBpPassport = { UUID.fromString("a16d3578-9390-412c-b353-b7d0a50ef6d3") },
+            supplyUuidForAlternativeId = { UUID.fromString("2e07d591-f79d-4c9a-8209-54b86e23ac9f") },
+            supplyUuidForPhoneNumber ={ UUID.fromString("9b51bc94-418b-45a0-9c83-f28dc36147fd") }
         ))
         .blockingGet()
 
@@ -361,9 +361,9 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(
             loggedInUser = loggedInUser,
             facility = currentFacility,
-            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
-            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
-            supplyUuidForPhoneNumber ={ UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
+            supplyUuidForBpPassport = { UUID.fromString("dc4b038d-ad56-4a48-ba10-eea73abe75f8") },
+            supplyUuidForAlternativeId = { UUID.fromString("7fe2b07e-2bc3-42a1-95f3-d171154c6cad") },
+            supplyUuidForPhoneNumber ={ UUID.fromString("05a0d327-09e2-4bb5-8e6f-dfd911337748") }
         ))
         .blockingGet()
 
@@ -381,9 +381,9 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(
             loggedInUser = loggedInUser,
             facility = currentFacility,
-            supplyUuidForBpPassport = { UUID.fromString("b6915d20-d396-4c5d-b25c-4b2d9b81fd2b") },
-            supplyUuidForAlternativeId = { UUID.fromString("91539c5f-70a0-4e69-9740-fa8b37fa2f16") },
-            supplyUuidForPhoneNumber ={ UUID.fromString("b842da76-26f8-4d7d-814a-415209335ecb") }
+            supplyUuidForBpPassport = { UUID.fromString("262b6c69-3130-4f37-b8e6-13606e005098") },
+            supplyUuidForAlternativeId = { UUID.fromString("8b7a671c-f0fc-4c83-b9fb-19dce2515c57") },
+            supplyUuidForPhoneNumber ={ UUID.fromString("2a877a22-a9e6-40ab-b540-c0a49a6a15b4") }
         ))
         .blockingGet()
 

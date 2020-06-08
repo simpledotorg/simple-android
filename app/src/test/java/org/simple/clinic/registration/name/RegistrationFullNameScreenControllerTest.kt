@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
@@ -17,6 +18,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
 class RegistrationFullNameScreenControllerTest {
@@ -34,10 +36,12 @@ class RegistrationFullNameScreenControllerTest {
   )
 
   private lateinit var controllerSubscription: Disposable
+  private lateinit var testFixture: MobiusTestFixture<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect>
 
   @After
   fun tearDown() {
     controllerSubscription.dispose()
+    testFixture.dispose()
   }
 
   @Test
@@ -143,6 +147,18 @@ class RegistrationFullNameScreenControllerTest {
     controllerSubscription = uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(ui) }
+
+    val uiRenderer = RegistrationNameUiRenderer(ui)
+
+    testFixture = MobiusTestFixture(
+        events = uiEvents.ofType(),
+        defaultModel = RegistrationNameModel.create(),
+        init = RegistrationNameInit(),
+        update = RegistrationNameUpdate(),
+        effectHandler = RegistrationNameEffectHandler().build(),
+        modelUpdateListener = uiRenderer::render
+    )
+    testFixture.start()
 
     uiEvents.onNext(RegistrationFullNameScreenCreated())
   }

@@ -1,7 +1,6 @@
 package org.simple.clinic.registration.phone
 
 interface RegistrationPhoneUi: RegistrationPhoneUiActions {
-  fun openRegistrationNameEntryScreen()
   fun showInvalidNumberError()
   fun showUnexpectedErrorMessage()
   fun showNetworkErrorMessage()

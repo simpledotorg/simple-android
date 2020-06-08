@@ -3,6 +3,7 @@
 ## Next Release
 ### Feature
 - User can soft delete patient
+- Add diagnosis and blood sugar readings to the teleconsultation message
 - [In Progress: 02 Jun 2020] New Onboarding UI
 
 ### Changes

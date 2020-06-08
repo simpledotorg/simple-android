@@ -23,7 +23,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is SearchForExistingUserCompleted -> noChange()
       is UserCreatedLocally -> noChange()
       is CurrentRegistrationEntryCleared -> noChange()
-      is CurrentUserUnauthorizedStatusLoaded -> noChange()
+      is CurrentUserUnauthorizedStatusLoaded -> showUserLoggedOut(event)
     }
   }
 
@@ -37,5 +37,13 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       next(model.withEntry(savedEntry.value), PrefillFields(savedEntry.value) as RegistrationPhoneEffect)
     else
       dispatch(CreateNewRegistrationEntry as RegistrationPhoneEffect)
+  }
+
+  private fun showUserLoggedOut(event: CurrentUserUnauthorizedStatusLoaded): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
+    return if (event.isUserUnauthorized) {
+      dispatch(ShowUserLoggedOutAlert as RegistrationPhoneEffect)
+    } else {
+      noChange()
+    }
   }
 }

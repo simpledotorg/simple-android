@@ -40,10 +40,7 @@ class RegistrationPhoneScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .replay()
 
-    return Observable.mergeArray(
-        saveOngoingEntryAndProceed(replayedEvents),
-        showLoggedOutOnThisDeviceDialog(replayedEvents)
-    )
+    return saveOngoingEntryAndProceed(replayedEvents)
   }
 
   private fun saveOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
@@ -129,17 +126,5 @@ class RegistrationPhoneScreenController @Inject constructor(
             }
           }
     }
-  }
-
-  private fun showLoggedOutOnThisDeviceDialog(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationPhoneScreenCreated>()
-        .flatMap {
-          userSession
-              .isUserUnauthorized()
-              .take(1)
-        }
-        .filter { isUserUnauthorized -> isUserUnauthorized }
-        .map { { ui: Ui -> ui.showLoggedOutOfDeviceDialog() } }
   }
 }

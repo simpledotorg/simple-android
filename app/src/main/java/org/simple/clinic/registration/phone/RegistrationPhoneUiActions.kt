@@ -6,4 +6,5 @@ interface RegistrationPhoneUiActions {
   fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry)
   fun showAccessDeniedScreen(number: String)
   fun openLoginPinEntryScreen()
+  fun showLoggedOutOfDeviceDialog()
 }

@@ -7,6 +7,6 @@ class RegistrationNameUiRenderer(
 ): ViewRenderer<RegistrationNameModel> {
 
   override fun render(model: RegistrationNameModel) {
-    
+
   }
 }

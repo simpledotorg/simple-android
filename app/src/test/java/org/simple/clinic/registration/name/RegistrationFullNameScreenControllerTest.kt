@@ -1,9 +1,11 @@
 package org.simple.clinic.registration.name
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -51,6 +53,9 @@ class RegistrationFullNameScreenControllerTest {
 
     verify(userSession).saveOngoingRegistrationEntry(entryWithName)
     verify(screen).openRegistrationPinEntryScreen()
+    verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(screen).hideValidationError()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -61,6 +66,7 @@ class RegistrationFullNameScreenControllerTest {
     setupController(ongoingRegistrationEntry = ongoingEntry)
 
     verify(screen).preFillUserDetails(ongoingEntry)
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -71,14 +77,21 @@ class RegistrationFullNameScreenControllerTest {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(currentOngoingRegistrationEntry.toOptional())
 
     setupController()
+    verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
+
     uiEvents.onNext(RegistrationFullNameTextChanged(invalidName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
+    verify(screen).hideValidationError()
+    verify(screen).showEmptyNameValidationError()
+    clearInvocations(screen)
 
     uiEvents.onNext(RegistrationFullNameTextChanged(validName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(currentOngoingRegistrationEntry.withName(validName))
     verify(screen).openRegistrationPinEntryScreen()
+    verify(screen).hideValidationError()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -88,9 +101,12 @@ class RegistrationFullNameScreenControllerTest {
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
-    verify(screen).showEmptyNameValidationError()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
+    verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(screen).hideValidationError()
+    verify(screen).showEmptyNameValidationError()
     verify(screen, never()).openRegistrationPinEntryScreen()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -99,7 +115,9 @@ class RegistrationFullNameScreenControllerTest {
 
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
 
+    verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(screen).hideValidationError()
+    verifyNoMoreInteractions(screen)
   }
 
   private fun setupController(

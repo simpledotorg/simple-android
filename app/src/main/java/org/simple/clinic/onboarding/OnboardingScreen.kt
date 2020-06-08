@@ -5,7 +5,6 @@ import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
-import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -15,18 +14,13 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.util.Truss
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
-import javax.inject.Named
 
 class OnboardingScreen(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet), OnboardingUi {
 
-  @field:[Inject Named("onboarding_complete")]
-  lateinit var hasUserCompletedOnboarding: Preference<Boolean>
-
   @Inject
-  lateinit var schedulersProvider: SchedulersProvider
+  lateinit var onboardingEffectHandler: OnboardingEffectHandler.Factory
 
   private val events: Observable<OnboardingEvent> by unsafeLazy {
     getStartedClicks()
@@ -39,7 +33,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : Constrain
         events,
         OnboardingModel,
         OnboardingUpdate(),
-        OnboardingEffectHandler.createEffectHandler(hasUserCompletedOnboarding, this, schedulersProvider)
+        onboardingEffectHandler.create(this).build()
     )
   }
 

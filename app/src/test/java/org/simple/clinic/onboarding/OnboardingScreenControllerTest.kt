@@ -22,17 +22,20 @@ class OnboardingScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<OnboardingEvent>()
 
+  private val effectHandler = OnboardingEffectHandler(
+      hasUserCompletedOnboarding,
+      TrampolineSchedulersProvider(),
+      onboardingUi
+  ).build()
+
   @Before
   fun setUp() {
-    val onboardingEffectHandler = OnboardingEffectHandler
-        .createEffectHandler(hasUserCompletedOnboarding, onboardingUi, TrampolineSchedulersProvider())
-
     MobiusTestFixture<OnboardingModel, OnboardingEvent, OnboardingEffect>(
         uiEvents,
         OnboardingModel,
         null,
         OnboardingUpdate(),
-        onboardingEffectHandler,
+        effectHandler,
         { /* No-op */ }
     ).start()
   }

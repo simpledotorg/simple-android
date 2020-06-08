@@ -46,6 +46,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addAction(ProceedToLogin::class.java, uiActions::openLoginPinEntryScreen, schedulers.ui())
         .addTransformer(LoadCurrentUserUnauthorizedStatus::class.java, loadCurrentUserUnauthorizedStatus())
         .addAction(ShowUserLoggedOutAlert::class.java, uiActions::showLoggedOutOfDeviceDialog, schedulers.ui())
+        .addTransformer(SaveCurrentRegistrationEntry::class.java, saveCurrentRegistrationEntry())
         .build()
   }
 
@@ -148,6 +149,17 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
                 .firstOrError()
           }
           .map(::CurrentUserUnauthorizedStatusLoaded)
+    }
+  }
+
+  private fun saveCurrentRegistrationEntry(): ObservableTransformer<SaveCurrentRegistrationEntry, RegistrationPhoneEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMapSingle {
+            userSession
+                .saveOngoingRegistrationEntry(it.entry)
+                .andThen(Single.just(CurrentRegistrationEntrySaved))
+          }
     }
   }
 }

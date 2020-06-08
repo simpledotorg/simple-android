@@ -42,15 +42,18 @@ class RegistrationFullNameScreenControllerTest {
 
   @Test
   fun `when next is clicked with a valid name then the ongoing entry should be updated with the name and the next screen should be opened`() {
+    // given
     val input = "Ashok Kumar"
     val entryWithName = currentOngoingRegistrationEntry.withName(input)
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(currentOngoingRegistrationEntry.toOptional())
 
+    // when
     setupController()
     uiEvents.onNext(RegistrationFullNameTextChanged(input))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
+    // then
     verify(userSession).saveOngoingRegistrationEntry(entryWithName)
     verify(screen).openRegistrationPinEntryScreen()
     verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
@@ -60,34 +63,42 @@ class RegistrationFullNameScreenControllerTest {
 
   @Test
   fun `when screen is created then user's existing details should be pre-filled`() {
+    // given
     val ongoingEntry = currentOngoingRegistrationEntry.withName("Ashok Kumar")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
+    // when
     setupController(ongoingRegistrationEntry = ongoingEntry)
 
+    // then
     verify(screen).preFillUserDetails(ongoingEntry)
     verifyNoMoreInteractions(screen)
   }
 
   @Test
   fun `proceed button clicks should only be accepted if the input name is valid`() {
+    // given
     val validName = "Ashok"
     val invalidName = "  "
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(currentOngoingRegistrationEntry.toOptional())
 
+    // when
     setupController()
     verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
-
     uiEvents.onNext(RegistrationFullNameTextChanged(invalidName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
+
+    // then
     verify(screen).hideValidationError()
     verify(screen).showEmptyNameValidationError()
     clearInvocations(screen)
 
+    // when
     uiEvents.onNext(RegistrationFullNameTextChanged(validName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
+    // then
     verify(userSession).saveOngoingRegistrationEntry(currentOngoingRegistrationEntry.withName(validName))
     verify(screen).openRegistrationPinEntryScreen()
     verify(screen).hideValidationError()
@@ -96,11 +107,12 @@ class RegistrationFullNameScreenControllerTest {
 
   @Test
   fun `when proceed is clicked with an empty name then an error should be shown`() {
+    // when
     setupController()
-
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
+    // then
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(screen).hideValidationError()
@@ -111,10 +123,11 @@ class RegistrationFullNameScreenControllerTest {
 
   @Test
   fun `when input text is changed then any visible errors should be removed`() {
+    // when
     setupController()
-
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
 
+    // then
     verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
     verify(screen).hideValidationError()
     verifyNoMoreInteractions(screen)

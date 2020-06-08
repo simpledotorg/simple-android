@@ -27,11 +27,9 @@ class OnboardingScreen_Old(context: Context, attributeSet: AttributeSet) : Relat
   @Inject
   lateinit var activity: AppCompatActivity
 
-  @field:[Inject Named("onboarding_complete")]
-  lateinit var hasUserCompletedOnboarding: Preference<Boolean>
-
   @Inject
-  lateinit var schedulersProvider: SchedulersProvider
+  lateinit var onboardingEffectHandler: OnboardingEffectHandler.Factory
+
 
   @Inject
   lateinit var crashReporter: CrashReporter
@@ -47,7 +45,7 @@ class OnboardingScreen_Old(context: Context, attributeSet: AttributeSet) : Relat
         OnboardingModel,
         null,
         OnboardingUpdate(),
-        OnboardingEffectHandler.createEffectHandler(hasUserCompletedOnboarding, this, schedulersProvider),
+        onboardingEffectHandler.create(this).build(),
         { /* No-op, there's nothing to render */ },
         crashReporter
     )

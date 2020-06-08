@@ -210,8 +210,20 @@
     <item quantity="one">*Last %s BP reading*:</item>
     <item quantity="other">*Last %s BP readings*:</item>
   </plurals>
+  <plurals name="patientsummary_contact_doctor_patient_info_blood_sugars" translatable="false">
+    <item quantity="one">*Last %s Blood Sugar reading*:</item>
+    <item quantity="other">*Last %s Blood Sugars readings*:</item>
+  </plurals>
   <string name="patientsummary_teleconsult_network_error">Cannot connect due to poor internet</string>
   <string name="patientsummary_teleconsult_network_error_retry">Retry</string>
+
+  <string name="patientsummary_contact_doctor_bloodsugartype_rbs" translatable="false">RBS</string>
+  <string name="patientsummary_contact_doctor_bloodsugartype_ppbs" translatable="false">PPBS</string>
+  <string name="patientsummary_contact_doctor_bloodsugartype_fbs" translatable="false">FBS</string>
+  <string name="patientsummary_contact_doctor_bloodsugartype_hba1c" translatable="false">HbA1c</string>
+
+  <string name="patientsummary_contact_doctor_unit_type_mg_dl" translatable="false">mg/dl</string>
+  <string name="patientsummary_contact_doctor_unit_type_percentage" translatable="false">%</string>
 
   <string name="bloodpressuresummaryview_see_all_button">See all</string>
 

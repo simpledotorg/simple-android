@@ -16,6 +16,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientProfile
@@ -327,18 +328,27 @@ class PatientSummaryEffectHandlerTest {
     )
     val prescriptions = listOf(prescription)
 
+    val medicalHistory = TestData.medicalHistory(
+        uuid = medicalHistoryUuid,
+        patientUuid = patientUuid,
+        diagnosedWithHypertension = Answer.Yes,
+        hasDiabetes = Answer.No
+    )
+
     val patientInformation = PatientTeleconsultationInfo(
         patientUuid = patientUuid,
         bpPassport = bpPassport.identifier.displayValue(),
         facility = facility,
         bloodPressures = bloodPressures,
         bloodSugars = bloodSugars,
-        prescriptions = prescriptions
+        prescriptions = prescriptions,
+        medicalHistory = medicalHistory
     )
 
     whenever(bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)) doReturn bloodPressures
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescriptions
     whenever(bloodSugarRepository.latestMeasurementsImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)) doReturn bloodSugars
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     testCase.dispatch(LoadPatientTeleconsultationInfo(patientUuid, bpPassport, facility))
@@ -390,13 +400,21 @@ class PatientSummaryEffectHandlerTest {
     )
     val prescriptions = listOf(prescription1)
 
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("2fe79564-5d97-479f-99eb-925652bf39d6"),
+        patientUuid = patientUuid,
+        diagnosedWithHypertension = Answer.Yes,
+        hasDiabetes = Answer.No
+    )
+
     val patientInformation = PatientTeleconsultationInfo(
         patientUuid = patientUuid,
         bpPassport = bpPassport.identifier.displayValue(),
         facility = facility,
         bloodPressures = bloodPressures,
         bloodSugars = bloodSugars,
-        prescriptions = prescriptions
+        prescriptions = prescriptions,
+        medicalHistory = medicalHistory
     )
 
     // when

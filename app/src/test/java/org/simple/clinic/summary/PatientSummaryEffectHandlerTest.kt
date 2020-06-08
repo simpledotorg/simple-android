@@ -313,6 +313,14 @@ class PatientSummaryEffectHandlerTest {
     )
     val bloodPressures = listOf(bloodPressure1, bloodPressure2)
 
+    val bloodSugar1 = TestData.bloodSugarMeasurement(
+        uuid = UUID.fromString("81dc9be6-481e-4da0-a975-1998f2850562"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid
+    )
+
+    val bloodSugars = listOf(bloodSugar1)
+
     val prescription = TestData.prescription(
         uuid = UUID.fromString("38fffa68-bc29-4a67-a6c8-ece61071fe3b"),
         patientUuid = patientUuid
@@ -324,11 +332,13 @@ class PatientSummaryEffectHandlerTest {
         bpPassport = bpPassport.identifier.displayValue(),
         facility = facility,
         bloodPressures = bloodPressures,
+        bloodSugars = bloodSugars,
         prescriptions = prescriptions
     )
 
     whenever(bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)) doReturn bloodPressures
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescriptions
+    whenever(bloodSugarRepository.latestMeasurementsImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)) doReturn bloodSugars
 
     // when
     testCase.dispatch(LoadPatientTeleconsultationInfo(patientUuid, bpPassport, facility))
@@ -366,6 +376,14 @@ class PatientSummaryEffectHandlerTest {
     )
     val bloodPressures = listOf(bloodPressure1, bloodPressure2)
 
+    val bloodSugar1 = TestData.bloodSugarMeasurement(
+        uuid = UUID.fromString("782923da-4f1f-4008-bc17-d2f03871eb54"),
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid
+    )
+
+    val bloodSugars = listOf(bloodSugar1)
+
     val prescription1 = TestData.prescription(
         uuid = UUID.fromString("38fffa68-bc29-4a67-a6c8-ece61071fe3b"),
         patientUuid = patientUuid
@@ -377,6 +395,7 @@ class PatientSummaryEffectHandlerTest {
         bpPassport = bpPassport.identifier.displayValue(),
         facility = facility,
         bloodPressures = bloodPressures,
+        bloodSugars = bloodSugars,
         prescriptions = prescriptions
     )
 

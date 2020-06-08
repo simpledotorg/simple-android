@@ -25,7 +25,7 @@ class RegistrationFullNameScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()!!
-  private val screen = mock<RegistrationFullNameScreen>()
+  private val ui = mock<RegistrationNameUi>()
   private val userSession = mock<UserSession>()
 
   private val currentOngoingRegistrationEntry = OngoingRegistrationEntry(
@@ -55,10 +55,10 @@ class RegistrationFullNameScreenControllerTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(entryWithName)
-    verify(screen).openRegistrationPinEntryScreen()
-    verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
-    verify(screen).hideValidationError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openRegistrationPinEntryScreen()
+    verify(ui).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(ui).hideValidationError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -71,8 +71,8 @@ class RegistrationFullNameScreenControllerTest {
     setupController(ongoingRegistrationEntry = ongoingEntry)
 
     // then
-    verify(screen).preFillUserDetails(ongoingEntry)
-    verifyNoMoreInteractions(screen)
+    verify(ui).preFillUserDetails(ongoingEntry)
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -85,14 +85,14 @@ class RegistrationFullNameScreenControllerTest {
 
     // when
     setupController()
-    verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(ui).preFillUserDetails(currentOngoingRegistrationEntry)
     uiEvents.onNext(RegistrationFullNameTextChanged(invalidName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
     // then
-    verify(screen).hideValidationError()
-    verify(screen).showEmptyNameValidationError()
-    clearInvocations(screen)
+    verify(ui).hideValidationError()
+    verify(ui).showEmptyNameValidationError()
+    clearInvocations(ui)
 
     // when
     uiEvents.onNext(RegistrationFullNameTextChanged(validName))
@@ -100,9 +100,9 @@ class RegistrationFullNameScreenControllerTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(currentOngoingRegistrationEntry.withName(validName))
-    verify(screen).openRegistrationPinEntryScreen()
-    verify(screen).hideValidationError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).openRegistrationPinEntryScreen()
+    verify(ui).hideValidationError()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -114,11 +114,11 @@ class RegistrationFullNameScreenControllerTest {
 
     // then
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
-    verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
-    verify(screen).hideValidationError()
-    verify(screen).showEmptyNameValidationError()
-    verify(screen, never()).openRegistrationPinEntryScreen()
-    verifyNoMoreInteractions(screen)
+    verify(ui).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(ui).hideValidationError()
+    verify(ui).showEmptyNameValidationError()
+    verify(ui, never()).openRegistrationPinEntryScreen()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -128,9 +128,9 @@ class RegistrationFullNameScreenControllerTest {
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
 
     // then
-    verify(screen).preFillUserDetails(currentOngoingRegistrationEntry)
-    verify(screen).hideValidationError()
-    verifyNoMoreInteractions(screen)
+    verify(ui).preFillUserDetails(currentOngoingRegistrationEntry)
+    verify(ui).hideValidationError()
+    verifyNoMoreInteractions(ui)
   }
 
   private fun setupController(
@@ -142,7 +142,7 @@ class RegistrationFullNameScreenControllerTest {
 
     controllerSubscription = uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(ui) }
 
     uiEvents.onNext(RegistrationFullNameScreenCreated())
   }

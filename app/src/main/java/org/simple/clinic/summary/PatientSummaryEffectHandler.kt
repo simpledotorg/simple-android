@@ -254,15 +254,18 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
       loadPatientInformationStream
           .observeOn(schedulersProvider.io())
           .map {
-            val bloodPressures = bloodPressureRepository.newestMeasurementsForPatientImmediate(it.patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
-            val prescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(it.patientUuid)
+            val patientUuid = it.patientUuid
+            val bloodPressures = bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
+            val prescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)
+            val bloodSugars = bloodSugarRepository.latestMeasurementsImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
+
             PatientTeleconsultationInfo(
-                it.patientUuid,
+                patientUuid,
                 it.bpPassport?.identifier?.displayValue(),
                 it.currentFacility!!,
                 bloodPressures,
-                prescriptions
-            )
+                bloodSugars,
+                prescriptions)
           }
           .map(::PatientTeleconsultationInfoLoaded)
     }

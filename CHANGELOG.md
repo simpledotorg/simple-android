@@ -18,7 +18,7 @@
 ### Fixes
 - Fix blood pressure "High" label displaying when blood pressure is low.
 
-## On Demo
+## 2020-06-08-7298
 ### Feature
 - Handle cases where the patient ID is not set correctly in the deeplink
 - Show address for overdue patient

@@ -8,6 +8,7 @@ import org.simple.clinic.bloodsugar.HbA1c
 import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.Unknown
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.summary.PatientTeleconsultationInfo
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
@@ -32,6 +33,22 @@ class TeleconsultationMessageBuilder @Inject constructor(
         .appendln("*Patient record*:")
         .appendln("https://app.simple.org/patient/${patientTeleconsultationInfo.patientUuid}")
         .appendln("")
+
+    message.appendln(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
+
+    val hyperTensionTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_hypertension)
+    val diagnosedWithHypertension = patientTeleconsultationInfo.medicalHistory.diagnosedWithHypertension
+    if (diagnosedWithHypertension.isAnswered) {
+      message.appendln("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
+    }
+
+    val diabetesTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_diabetes)
+    val diagnosedWithDiabetes = patientTeleconsultationInfo.medicalHistory.diagnosedWithDiabetes
+    if (diagnosedWithDiabetes.isAnswered) {
+      message.appendln("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
+    }
+
+    message.appendln("")
 
     if (patientTeleconsultationInfo.bloodPressures.isNotEmpty()) {
       val bloodPressures = patientTeleconsultationInfo
@@ -98,6 +115,14 @@ class TeleconsultationMessageBuilder @Inject constructor(
       Random, PostPrandial, Fasting -> resources.getString(R.string.patientsummary_contact_doctor_unit_type_mg_dl)
       HbA1c -> resources.getString(R.string.patientsummary_contact_doctor_unit_type_percentage)
       is Unknown -> ""
+    }
+  }
+
+  private fun textForDiagnosisAnswer(answer: Answer): String {
+    return when (answer) {
+      Answer.Yes -> resources.getString(R.string.patientsummary_contact_doctor_diagnosis_answer_yes)
+      Answer.No -> resources.getString(R.string.patientsummary_contact_doctor_diagnosis_answer_no)
+      else -> ""
     }
   }
 }

@@ -69,6 +69,13 @@ data class BloodSugarMeasurement(
 
     @Query("""
       SELECT * FROM BloodSugarMeasurements
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+      ORDER BY recordedAt DESC LIMIT :limit
+    """)
+    fun latestMeasurementsImmediate(patientUuid: UUID, limit: Int): List<BloodSugarMeasurement>
+
+    @Query("""
+      SELECT * FROM BloodSugarMeasurements
       WHERE patientUuid == :patientUuid AND deletedAt IS NULL
       ORDER BY recordedAt DESC
     """)

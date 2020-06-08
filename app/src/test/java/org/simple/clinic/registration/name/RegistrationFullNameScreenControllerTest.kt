@@ -3,7 +3,6 @@ package org.simple.clinic.registration.name
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.subjects.PublishSubject
@@ -15,6 +14,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 class RegistrationFullNameScreenControllerTest {
 
@@ -24,6 +24,11 @@ class RegistrationFullNameScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()!!
   private val screen = mock<RegistrationFullNameScreen>()
   private val userSession = mock<UserSession>()
+
+  private val currentOngoingRegistrationEntry = OngoingRegistrationEntry(
+      uuid = UUID.fromString("301a9ea3-caed-4e50-a144-bc5aad66a53d"),
+      phoneNumber = "1111111111"
+  )
 
   private lateinit var controller: RegistrationFullNameScreenController
 
@@ -39,21 +44,20 @@ class RegistrationFullNameScreenControllerTest {
   @Test
   fun `when next is clicked with a valid name then the ongoing entry should be updated with the name and the next screen should be opened`() {
     val input = "Ashok Kumar"
+    val entryWithName = currentOngoingRegistrationEntry.withName(input)
 
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(currentOngoingRegistrationEntry.toOptional())
 
     uiEvents.onNext(RegistrationFullNameTextChanged(input))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
-    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(fullName = input))
+    verify(userSession).saveOngoingRegistrationEntry(entryWithName)
     verify(screen).openRegistrationPinEntryScreen()
   }
 
   @Test
   fun `when screen is created then user's existing details should be pre-filled`() {
-    val ongoingEntry = OngoingRegistrationEntry(
-        fullName = "Ashok Kumar",
-        phoneNumber = "1234567890")
+    val ongoingEntry = currentOngoingRegistrationEntry.withName("Ashok Kumar")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     uiEvents.onNext(RegistrationFullNameScreenCreated())
@@ -66,7 +70,7 @@ class RegistrationFullNameScreenControllerTest {
     val validName = "Ashok"
     val invalidName = "  "
 
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(currentOngoingRegistrationEntry.toOptional())
 
     uiEvents.onNext(RegistrationFullNameTextChanged(invalidName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
@@ -74,8 +78,7 @@ class RegistrationFullNameScreenControllerTest {
     uiEvents.onNext(RegistrationFullNameTextChanged(validName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
-    verify(userSession, times(1)).saveOngoingRegistrationEntry(any())
-    verify(screen, times(1)).openRegistrationPinEntryScreen()
+    verify(screen).openRegistrationPinEntryScreen()
   }
 
   @Test

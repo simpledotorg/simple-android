@@ -30,4 +30,8 @@ data class OngoingRegistrationEntry(
   fun resetPin(): OngoingRegistrationEntry {
     return this.copy(pin = null, pinConfirmation = null)
   }
+
+  fun withName(name: String): OngoingRegistrationEntry {
+    return copy(fullName = name)
+  }
 }

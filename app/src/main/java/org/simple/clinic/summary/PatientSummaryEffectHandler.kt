@@ -258,6 +258,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             val bloodPressures = bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
             val prescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)
             val bloodSugars = bloodSugarRepository.latestMeasurementsImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = patientUuid
+            )
 
             PatientTeleconsultationInfo(
                 patientUuid,
@@ -265,7 +269,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 it.currentFacility!!,
                 bloodPressures,
                 bloodSugars,
-                prescriptions)
+                prescriptions,
+                medicalHistory
+            )
           }
           .map(::PatientTeleconsultationInfoLoaded)
     }

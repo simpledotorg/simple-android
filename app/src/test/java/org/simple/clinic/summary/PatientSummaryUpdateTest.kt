@@ -607,6 +607,9 @@ class PatientSummaryUpdateTest {
         bloodPressures = listOf(
             TestData.bloodPressureMeasurement(uuid = UUID.fromString("7de25235-8b8f-41bc-b2e6-60db60b60455"))
         ),
+        bloodSugars = listOf(
+            TestData.bloodSugarMeasurement(uuid = UUID.fromString("22873c50-91fa-4916-8286-4d5c68a007c0"))
+        ),
         prescriptions = listOf(
             TestData.prescription(uuid = UUID.fromString("e0cfae5c-36ca-4206-8e6b-11d22693bc64"))
         )

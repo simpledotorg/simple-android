@@ -6,14 +6,10 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -28,14 +24,12 @@ class RegistrationFullNameScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()!!
   private val screen = mock<RegistrationFullNameScreen>()
   private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
-  private val facilitySync = mock<FacilitySync>()
 
   private lateinit var controller: RegistrationFullNameScreenController
 
   @Before
   fun setUp() {
-    controller = RegistrationFullNameScreenController(userSession, facilityRepository, facilitySync)
+    controller = RegistrationFullNameScreenController(userSession)
 
     uiEvents
         .compose(controller)
@@ -61,7 +55,6 @@ class RegistrationFullNameScreenControllerTest {
         fullName = "Ashok Kumar",
         phoneNumber = "1234567890")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
 
     uiEvents.onNext(RegistrationFullNameScreenCreated())
 
@@ -99,27 +92,5 @@ class RegistrationFullNameScreenControllerTest {
   fun `when input text is changed then any visible errors should be removed`() {
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
     verify(screen).hideValidationError()
-  }
-
-  @Test
-  fun `when screen is started and facilities haven't already been synced then facilities should be synced`() {
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
-    whenever(facilitySync.sync()).thenReturn(Completable.complete())
-
-    uiEvents.onNext(RegistrationFullNameScreenCreated())
-
-    verify(facilitySync).sync()
-  }
-
-  @Test
-  fun `when screen is started and facilities have already been synced then facilities should not be synced again`() {
-    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
-    whenever(facilitySync.sync()).thenReturn(Completable.complete())
-
-    uiEvents.onNext(RegistrationFullNameScreenCreated())
-
-    verify(facilitySync, never()).sync()
   }
 }

@@ -7,8 +7,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -19,9 +17,7 @@ typealias Ui = RegistrationFullNameScreen
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationFullNameScreenController @Inject constructor(
-    val userSession: UserSession,
-    val facilityRepository: FacilityRepository,
-    val facilitySync: FacilitySync
+    private val userSession: UserSession
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -31,7 +27,6 @@ class RegistrationFullNameScreenController @Inject constructor(
 
     return Observable.mergeArray(
         preFillExistingDetails(replayedEvents),
-        pullFacilitiesInAdvance(replayedEvents),
         showValidationError(replayedEvents),
         hideValidationError(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
@@ -41,18 +36,6 @@ class RegistrationFullNameScreenController @Inject constructor(
     return events
         .ofType<RegistrationFullNameScreenCreated>()
         .map { { ui: Ui -> ui.preFillUserDetails(ongoingRegistrationEntry()) } }
-  }
-
-  private fun pullFacilitiesInAdvance(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationFullNameScreenCreated>()
-        .flatMap {
-          facilityRepository.recordCount()
-              .take(1)
-              .filter { count -> count == 0 }
-              .flatMapCompletable { facilitySync.sync().onErrorComplete() }
-              .andThen(Observable.empty<UiChange>())
-        }
   }
 
   private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {

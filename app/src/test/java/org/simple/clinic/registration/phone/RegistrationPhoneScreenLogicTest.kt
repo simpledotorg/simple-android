@@ -12,7 +12,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -37,7 +36,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
 
-class RegistrationPhoneScreenControllerTest {
+class RegistrationPhoneScreenLogicTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -52,14 +51,10 @@ class RegistrationPhoneScreenControllerTest {
   private val userUuid = UUID.fromString("a5c55e97-dcad-4cd8-9832-4da9f7b3d4b7")
   private val defaultOngoingEntry = OngoingRegistrationEntry(uuid = userUuid)
 
-  private lateinit var controller: RegistrationPhoneScreenController
-
-  private lateinit var controllerSubscription: Disposable
   private lateinit var testFixture: MobiusTestFixture<RegistrationPhoneModel, RegistrationPhoneEvent, RegistrationPhoneEffect>
 
   @After
   fun tearDown() {
-    controllerSubscription.dispose()
     testFixture.dispose()
   }
 
@@ -403,18 +398,6 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.isUserUnauthorized()) doReturn Observable.just(isUserUnauthorized)
 
     val uuidGenerator = FakeUuidGenerator.fixed(userUuid)
-
-    controller = RegistrationPhoneScreenController(
-        userSession = userSession,
-        userLookup = findUserWithPhoneNumber,
-        numberValidator = numberValidator,
-        facilitySync = facilitySync,
-        uuidGenerator = uuidGenerator
-    )
-
-    controllerSubscription = uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(ui) }
 
     val uiRenderer = RegistrationPhoneUiRenderer(ui)
 

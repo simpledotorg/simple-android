@@ -8,22 +8,22 @@ import com.squareup.moshi.ToJson
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class Answer: Parcelable {
+sealed class Answer : Parcelable {
 
   @Parcelize
   object Yes : Answer()
 
   @Parcelize
-  object No: Answer()
+  object No : Answer()
 
   @Parcelize
-  object Unanswered: Answer()
+  object Unanswered : Answer()
 
   @Parcelize
-  data class Unknown(val actualValue: String): Answer()
+  data class Unknown(val actualValue: String) : Answer()
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  object TypeAdapter: SafeEnumTypeAdapter<Answer>(
+  object TypeAdapter : SafeEnumTypeAdapter<Answer>(
       knownMappings = mapOf(
           Yes to "yes",
           No to "no",
@@ -55,4 +55,7 @@ sealed class Answer: Parcelable {
     @ToJson
     fun toJson(answer: Answer): String? = TypeAdapter.fromEnum(answer)
   }
+
+  val isAnswered: Boolean
+    get() = this is Yes || this is No
 }

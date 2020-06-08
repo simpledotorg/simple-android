@@ -206,6 +206,11 @@
   <string name="patientsummary_bangladesh_national_id">ID</string>
 
   <string name="patientsummary_contact_doctor">Doctor</string>
+  <string name="patientsummary_contact_doctor_diagnosis" translatable="false">*Diagnosis*</string>
+  <string name="patientsummary_contact_doctor_diagnosis_hypertension" translatable="false">Hypertension:</string>
+  <string name="patientsummary_contact_doctor_diagnosis_diabetes" translatable="false">Diabetes:</string>
+  <string name="patientsummary_contact_doctor_diagnosis_answer_yes" translatable="false">Yes</string>
+  <string name="patientsummary_contact_doctor_diagnosis_answer_no" translatable="false">No</string>
   <plurals name="patientsummary_contact_doctor_patient_info_bps" translatable="false">
     <item quantity="one">*Last %s BP reading*:</item>
     <item quantity="other">*Last %s BP readings*:</item>

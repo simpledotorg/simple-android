@@ -24,6 +24,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is UserCreatedLocally -> noChange()
       is CurrentRegistrationEntryCleared -> noChange()
       is CurrentUserUnauthorizedStatusLoaded -> showUserLoggedOut(event)
+      is CurrentRegistrationEntrySaved -> noChange()
     }
   }
 

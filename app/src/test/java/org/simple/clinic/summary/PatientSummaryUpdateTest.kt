@@ -612,6 +612,9 @@ class PatientSummaryUpdateTest {
         ),
         prescriptions = listOf(
             TestData.prescription(uuid = UUID.fromString("e0cfae5c-36ca-4206-8e6b-11d22693bc64"))
+        ),
+        medicalHistory = TestData.medicalHistory(
+            uuid = UUID.fromString("d3575cf8-bbbb-4f54-bda2-ed84bdce0090")
         )
     )
 

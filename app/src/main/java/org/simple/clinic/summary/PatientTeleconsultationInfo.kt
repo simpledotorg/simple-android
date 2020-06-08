@@ -4,6 +4,7 @@ import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.MedicalHistory
 import java.util.UUID
 
 data class PatientTeleconsultationInfo(
@@ -12,5 +13,6 @@ data class PatientTeleconsultationInfo(
     val facility: Facility,
     val bloodPressures: List<BloodPressureMeasurement>,
     val bloodSugars: List<BloodSugarMeasurement>,
-    val prescriptions: List<PrescribedDrug>
+    val prescriptions: List<PrescribedDrug>,
+    val medicalHistory: MedicalHistory
 )

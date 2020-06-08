@@ -27,3 +27,5 @@ object ClearCurrentRegistrationEntry: RegistrationPhoneEffect()
 object ProceedToLogin: RegistrationPhoneEffect()
 
 object LoadCurrentUserUnauthorizedStatus: RegistrationPhoneEffect()
+
+object ShowUserLoggedOutAlert: RegistrationPhoneEffect()

@@ -34,37 +34,36 @@ class TeleconsultationMessageBuilder @Inject constructor(
         .appendln("https://app.simple.org/patient/${patientTeleconsultationInfo.patientUuid}")
         .appendln("")
 
-    message.appendln(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
+    addDiagnosisSectionToMessage(patientTeleconsultationInfo, message)
+    addBloodPressuresSectionToMessage(patientTeleconsultationInfo, message)
+    addBloodSugarsSectionToMessage(patientTeleconsultationInfo, message)
+    addPrescriptionsSectionToMessage(patientTeleconsultationInfo, message)
 
-    val hyperTensionTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_hypertension)
-    val diagnosedWithHypertension = patientTeleconsultationInfo.medicalHistory.diagnosedWithHypertension
-    if (diagnosedWithHypertension.isAnswered) {
-      message.appendln("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
-    }
-
-    val diabetesTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_diabetes)
-    val diagnosedWithDiabetes = patientTeleconsultationInfo.medicalHistory.diagnosedWithDiabetes
-    if (diagnosedWithDiabetes.isAnswered) {
-      message.appendln("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
-    }
-
-    message.appendln("")
-
-    if (patientTeleconsultationInfo.bloodPressures.isNotEmpty()) {
-      val bloodPressures = patientTeleconsultationInfo
-          .bloodPressures.joinToString(separator = LINE_BREAK) {
-            val bpRecordedAtDate = dateFormatter.format(it.recordedAt.toLocalDateAtZone(userClock.zone))
-            "${it.reading.systolic}/${it.reading.diastolic} ($bpRecordedAtDate)"
-          }
-      val bloodPressuresSize = patientTeleconsultationInfo.bloodPressures.size
-      val bloodPressuresTitle = resources
-          .getQuantityString(R.plurals.patientsummary_contact_doctor_patient_info_bps, bloodPressuresSize, bloodPressuresSize.toString())
-
-      message.appendln(bloodPressuresTitle)
-          .appendln(bloodPressures)
+    if (patientTeleconsultationInfo.bpPassport.isNullOrBlank().not()) {
+      message.appendln("*BP Passport*: ${patientTeleconsultationInfo.bpPassport}")
           .appendln("")
     }
 
+    return message.toString()
+  }
+
+  private fun addPrescriptionsSectionToMessage(
+      patientTeleconsultationInfo: PatientTeleconsultationInfo,
+      message: StringBuilder
+  ) {
+    if (patientTeleconsultationInfo.prescriptions.isNotEmpty()) {
+      val medicines = patientTeleconsultationInfo
+          .prescriptions.joinToString(separator = LINE_BREAK) { "${it.name} ${it.dosage}" }
+      message.appendln("*Current medicines*:")
+          .appendln(medicines)
+          .appendln("")
+    }
+  }
+
+  private fun addBloodSugarsSectionToMessage(
+      patientTeleconsultationInfo: PatientTeleconsultationInfo,
+      message: StringBuilder
+  ) {
     if (patientTeleconsultationInfo.bloodSugars.isNotEmpty()) {
       val bloodSugars = patientTeleconsultationInfo
           .bloodSugars.joinToString(separator = LINE_BREAK) {
@@ -83,21 +82,44 @@ class TeleconsultationMessageBuilder @Inject constructor(
           .appendln(bloodSugars)
           .appendln("")
     }
+  }
 
-    if (patientTeleconsultationInfo.prescriptions.isNotEmpty()) {
-      val medicines = patientTeleconsultationInfo
-          .prescriptions.joinToString(separator = LINE_BREAK) { "${it.name} ${it.dosage}" }
-      message.appendln("*Current medicines*:")
-          .appendln(medicines)
+  private fun addBloodPressuresSectionToMessage(
+      patientTeleconsultationInfo: PatientTeleconsultationInfo,
+      message: StringBuilder
+  ) {
+    if (patientTeleconsultationInfo.bloodPressures.isNotEmpty()) {
+      val bloodPressures = patientTeleconsultationInfo
+          .bloodPressures.joinToString(separator = LINE_BREAK) {
+            val bpRecordedAtDate = dateFormatter.format(it.recordedAt.toLocalDateAtZone(userClock.zone))
+            "${it.reading.systolic}/${it.reading.diastolic} ($bpRecordedAtDate)"
+          }
+      val bloodPressuresSize = patientTeleconsultationInfo.bloodPressures.size
+      val bloodPressuresTitle = resources
+          .getQuantityString(R.plurals.patientsummary_contact_doctor_patient_info_bps, bloodPressuresSize, bloodPressuresSize.toString())
+
+      message.appendln(bloodPressuresTitle)
+          .appendln(bloodPressures)
           .appendln("")
     }
+  }
 
-    if (patientTeleconsultationInfo.bpPassport.isNullOrBlank().not()) {
-      message.appendln("*BP Passport*: ${patientTeleconsultationInfo.bpPassport}")
-          .appendln("")
+  private fun addDiagnosisSectionToMessage(patientTeleconsultationInfo: PatientTeleconsultationInfo, message: StringBuilder) {
+    message.appendln(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
+
+    val hyperTensionTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_hypertension)
+    val diagnosedWithHypertension = patientTeleconsultationInfo.medicalHistory.diagnosedWithHypertension
+    if (diagnosedWithHypertension.isAnswered) {
+      message.appendln("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
     }
 
-    return message.toString()
+    val diabetesTitle = resources.getString(R.string.patientsummary_contact_doctor_diagnosis_diabetes)
+    val diagnosedWithDiabetes = patientTeleconsultationInfo.medicalHistory.diagnosedWithDiabetes
+    if (diagnosedWithDiabetes.isAnswered) {
+      message.appendln("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
+    }
+
+    message.appendln("")
   }
 
   private fun textForBloodSugarType(type: BloodSugarMeasurementType): String {

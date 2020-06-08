@@ -5,8 +5,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import org.junit.Before
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -30,15 +31,11 @@ class RegistrationFullNameScreenControllerTest {
       phoneNumber = "1111111111"
   )
 
-  private lateinit var controller: RegistrationFullNameScreenController
+  private lateinit var controllerSubscription: Disposable
 
-  @Before
-  fun setUp() {
-    controller = RegistrationFullNameScreenController(userSession)
-
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+  @After
+  fun tearDown() {
+    controllerSubscription.dispose()
   }
 
   @Test
@@ -48,6 +45,7 @@ class RegistrationFullNameScreenControllerTest {
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(currentOngoingRegistrationEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationFullNameTextChanged(input))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
@@ -60,6 +58,7 @@ class RegistrationFullNameScreenControllerTest {
     val ongoingEntry = currentOngoingRegistrationEntry.withName("Ashok Kumar")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationFullNameScreenCreated())
 
     verify(screen).preFillUserDetails(ongoingEntry)
@@ -72,6 +71,7 @@ class RegistrationFullNameScreenControllerTest {
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(currentOngoingRegistrationEntry.toOptional())
 
+    setupController()
     uiEvents.onNext(RegistrationFullNameTextChanged(invalidName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
@@ -83,6 +83,8 @@ class RegistrationFullNameScreenControllerTest {
 
   @Test
   fun `when proceed is clicked with an empty name then an error should be shown`() {
+    setupController()
+
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
@@ -93,7 +95,18 @@ class RegistrationFullNameScreenControllerTest {
 
   @Test
   fun `when input text is changed then any visible errors should be removed`() {
+    setupController()
+
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
+
     verify(screen).hideValidationError()
+  }
+
+  private fun setupController() {
+    val controller = RegistrationFullNameScreenController(userSession)
+
+    controllerSubscription = uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 }

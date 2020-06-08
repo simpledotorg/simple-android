@@ -25,11 +25,11 @@ class RegistrationFullNameScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  val uiEvents = PublishSubject.create<UiEvent>()!!
-  val screen = mock<RegistrationFullNameScreen>()
-  val userSession = mock<UserSession>()
-  val facilityRepository = mock<FacilityRepository>()
-  val facilitySync = mock<FacilitySync>()
+  private val uiEvents = PublishSubject.create<UiEvent>()!!
+  private val screen = mock<RegistrationFullNameScreen>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
+  private val facilitySync = mock<FacilitySync>()
 
   private lateinit var controller: RegistrationFullNameScreenController
 

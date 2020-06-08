@@ -11,8 +11,8 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_name.view.*
 import org.simple.clinic.R
-import org.simple.clinic.main.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -20,7 +20,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
-class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs), RegistrationNameUi {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -71,20 +71,20 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
           .editorActions(fullNameEditText) { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationFullNameDoneClicked() }
 
-  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
+  override fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
     fullNameEditText.setTextAndCursor(ongoingEntry.fullName)
   }
 
-  fun showEmptyNameValidationError() {
+  override fun showEmptyNameValidationError() {
     validationErrorTextView.visibility = View.VISIBLE
     validationErrorTextView.text = resources.getString(R.string.registrationname_error_empty_name)
   }
 
-  fun hideValidationError() {
+  override fun hideValidationError() {
     validationErrorTextView.visibility = View.GONE
   }
 
-  fun openRegistrationPinEntryScreen() {
+  override fun openRegistrationPinEntryScreen() {
     screenRouter.push(RegistrationPinScreenKey())
   }
 }

@@ -417,7 +417,7 @@ class PatientSummaryScreen(
 
   override fun contactDoctor(patientTeleconsultationInfo: PatientTeleconsultationInfo, teleconsultationPhoneNumber: String) {
     val message = teleconsultationMessageBuilder.message(patientTeleconsultationInfo)
-    whatsAppMessageSender.send(teleconsultationPhoneNumber, message.toString())
+    whatsAppMessageSender.send(teleconsultationPhoneNumber, message)
   }
 
   override fun showContactDoctorButtonTextAndIcon() {

@@ -28,4 +28,4 @@ object ShowUserLoggedOutAlert: RegistrationPhoneEffect()
 
 data class SaveCurrentRegistrationEntry(val entry: OngoingRegistrationEntry): RegistrationPhoneEffect()
 
-object ContinueRegistration: RegistrationPhoneEffect()
+data class ContinueRegistration(val entry: OngoingRegistrationEntry): RegistrationPhoneEffect()

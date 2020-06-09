@@ -11,11 +11,13 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_registration_name.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
@@ -27,6 +29,17 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
 
   @Inject
   lateinit var controller: RegistrationFullNameScreenController
+
+  private val events by unsafeLazy {
+    Observable
+        .merge(
+            screenCreates(),
+            nameTextChanges(),
+            doneClicks()
+        )
+        .compose(ReportAnalyticsEvents())
+        .share()
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -41,11 +54,7 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(
-            screenCreates(),
-            nameTextChanges(),
-            doneClicks()
-        ),
+        events = events,
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

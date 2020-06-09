@@ -22,15 +22,16 @@ data class RegistrationPhoneModel(
     )
   }
 
-  val isInPhoneEntryMode: Boolean
-    get() = mode == RegistrationUiMode.PhoneEntry
+  val isEnteredNumberValid: Boolean
+    get() = phoneValidationResult != null && phoneValidationResult == RegistrationPhoneValidationResult.Valid
 
   fun phoneNumberChanged(phoneNumber: String): RegistrationPhoneModel {
     // TODO (vs) 04/06/20: Change in a later commit to not require a null check
     return if (ongoingRegistrationEntry != null) {
       copy(
           ongoingRegistrationEntry = ongoingRegistrationEntry.withPhoneNumber(phoneNumber),
-          phoneValidationResult = null
+          phoneValidationResult = null,
+          registrationResult = null
       )
     } else {
       this
@@ -43,5 +44,21 @@ data class RegistrationPhoneModel(
 
   fun phoneNumberValidated(result: RegistrationPhoneValidationResult): RegistrationPhoneModel {
     return copy(phoneValidationResult = result)
+  }
+
+  fun withRegistrationResult(registrationResult: RegistrationResult?): RegistrationPhoneModel {
+    return copy(registrationResult = registrationResult)
+  }
+
+  fun switchToProgressMode(): RegistrationPhoneModel {
+    return copy(mode = RegistrationUiMode.RegistrationOngoing)
+  }
+
+  fun switchToPhoneEntryMode(): RegistrationPhoneModel {
+    return copy(mode = RegistrationUiMode.PhoneEntry)
+  }
+
+  fun clearPhoneRegistrationResult(): RegistrationPhoneModel {
+    return copy(registrationResult = null)
   }
 }

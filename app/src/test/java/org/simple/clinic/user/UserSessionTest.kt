@@ -24,11 +24,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestData
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
@@ -107,7 +107,7 @@ class UserSessionTest {
   fun `when ongoing registration entry is cleared then isOngoingRegistrationEntryPresent() should emit false`() {
     userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry())
         .andThen(userSession.clearOngoingRegistrationEntry())
-        .andThen(userSession.isOngoingRegistrationEntryPresent())
+        .andThen(Single.just(userSession.isOngoingRegistrationEntryPresent()))
         .test()
         .await()
         .assertValue(false)

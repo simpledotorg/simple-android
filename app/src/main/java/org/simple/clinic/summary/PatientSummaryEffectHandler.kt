@@ -291,10 +291,12 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .get(facilityUuid)
         .map {
           val phoneNumber = it.teleconsultationPhoneNumber
-          if (phoneNumber.isNullOrBlank()) {
+          val phoneNumbers = it.teleconsultationPhoneNumbers
+
+          if (phoneNumber.isNullOrBlank() || phoneNumbers.isNullOrEmpty()) {
             TeleconsultInfo.MissingPhoneNumber
           } else {
-            TeleconsultInfo.Fetched(phoneNumber)
+            TeleconsultInfo.Fetched(phoneNumber, phoneNumbers)
           }
         }
         .onErrorReturn { TeleconsultInfo.NetworkError }

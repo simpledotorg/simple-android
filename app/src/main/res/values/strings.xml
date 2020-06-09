@@ -654,4 +654,8 @@
 
   <!-- Splash screen -->
   <string name="screensplash_next">Next</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_title">Doctors</string>
+  <string name="contactdoctor_subtitle">Assigned to %1$s</string>
 </resources>

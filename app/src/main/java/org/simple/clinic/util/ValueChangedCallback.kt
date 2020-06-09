@@ -9,4 +9,8 @@ class ValueChangedCallback<T> {
       cachedValue = newValue
     }
   }
+
+  fun clear() {
+    cachedValue = null
+  }
 }

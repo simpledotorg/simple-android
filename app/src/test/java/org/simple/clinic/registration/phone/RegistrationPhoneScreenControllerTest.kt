@@ -204,6 +204,7 @@ class RegistrationPhoneScreenControllerTest {
     // when
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
+    clearInvocations(ui)
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
@@ -247,6 +248,7 @@ class RegistrationPhoneScreenControllerTest {
     // when
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
+    clearInvocations(ui)
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
@@ -359,6 +361,7 @@ class RegistrationPhoneScreenControllerTest {
     // when
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(phoneNumber))
+    clearInvocations(ui)
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
@@ -376,6 +379,7 @@ class RegistrationPhoneScreenControllerTest {
     // when
     setupController()
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(phoneNumber))
+    clearInvocations(ui)
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then

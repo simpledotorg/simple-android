@@ -10,7 +10,6 @@ sealed class TeleconsultInfo : Parcelable {
 
   @Parcelize
   data class Fetched(
-      val doctorPhoneNumber: String,
       val doctorsPhoneNumbers: List<TeleconsultPhoneNumber>
   ) : TeleconsultInfo()
 

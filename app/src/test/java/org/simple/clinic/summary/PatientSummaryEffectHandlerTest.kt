@@ -441,7 +441,7 @@ class PatientSummaryEffectHandlerTest {
 
     // then
     verifyZeroInteractions(uiActions)
-    testCase.assertOutgoingEvents(FetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumber, phoneNumbers)))
+    testCase.assertOutgoingEvents(FetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumbers)))
   }
 
   @Test

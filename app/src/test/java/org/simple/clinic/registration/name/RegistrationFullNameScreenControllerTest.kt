@@ -47,7 +47,6 @@ class RegistrationFullNameScreenControllerTest {
     val input = "Ashok Kumar"
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(fullName = input))).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationFullNameTextChanged(input))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
@@ -75,7 +74,6 @@ class RegistrationFullNameScreenControllerTest {
     val invalidName = "  "
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(fullName = validName))).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationFullNameTextChanged(invalidName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())

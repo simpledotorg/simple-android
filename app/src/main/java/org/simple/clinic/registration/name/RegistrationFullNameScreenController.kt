@@ -79,11 +79,11 @@ class RegistrationFullNameScreenController @Inject constructor(
     return doneClicks
         .withLatestFrom(fullNameTextChanges)
         .filter { (_, name) -> name.isNotBlank() }
-        .flatMap { (_, name) ->
+        .flatMapSingle { (_, name) ->
           userSession.ongoingRegistrationEntry()
               .map { it.copy(fullName = name) }
-              .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
-              .andThen(Observable.just({ ui: Ui -> ui.openRegistrationPinEntryScreen() }))
+              .doOnSuccess(userSession::saveOngoingRegistrationEntry)
+              .map { { ui: Ui -> ui.openRegistrationPinEntryScreen() } }
         }
   }
 }

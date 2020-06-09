@@ -60,9 +60,6 @@ class RegistrationPhoneScreenLogicTest {
 
   @Test
   fun `when screen is created and an existing ongoing entry is absent then an empty ongoing entry should be created`() {
-    // given
-    whenever(userSession.saveOngoingRegistrationEntry(defaultOngoingEntry)).doReturn(Completable.complete())
-
     // when
     setupController(ongoingRegistrationEntry = null)
 
@@ -72,9 +69,6 @@ class RegistrationPhoneScreenLogicTest {
 
   @Test
   fun `when screen is created and an existing ongoing entry is present then an empty ongoing entry should not be created`() {
-    // given
-    whenever(userSession.saveOngoingRegistrationEntry(any())).doReturn(Completable.complete())
-
     // when
     setupController()
 
@@ -102,7 +96,6 @@ class RegistrationPhoneScreenLogicTest {
     val entryWithPhoneNumber = defaultOngoingEntry.withPhoneNumber(validNumber)
 
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(userSession.saveOngoingRegistrationEntry(entryWithPhoneNumber)).doReturn(Completable.complete())
     whenever(findUserWithPhoneNumber.find(validNumber)).doReturn(NotFound)
 
     // when
@@ -122,7 +115,6 @@ class RegistrationPhoneScreenLogicTest {
     val validNumber = "1234567890"
     val entryWithValidNumber = defaultOngoingEntry.withPhoneNumber(validNumber)
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
-    whenever(userSession.saveOngoingRegistrationEntry(entryWithValidNumber)).doReturn(Completable.complete())
     whenever(findUserWithPhoneNumber.find(validNumber)) doReturn NotFound
 
     // when
@@ -291,9 +283,6 @@ class RegistrationPhoneScreenLogicTest {
 
   @Test
   fun `when the screen is created and a local logged in user exists, show the logged out dialog if the user is unauthorized`() {
-    // given
-    whenever(userSession.saveOngoingRegistrationEntry(defaultOngoingEntry)).doReturn(Completable.complete())
-
     // when
     setupController(ongoingRegistrationEntry = null, isUserUnauthorized = true)
 
@@ -303,9 +292,6 @@ class RegistrationPhoneScreenLogicTest {
 
   @Test
   fun `when the screen is created and a local logged in user exists, do not show the logged out dialog if the user is unauthorized`() {
-    // given
-    whenever(userSession.saveOngoingRegistrationEntry(defaultOngoingEntry)).doReturn(Completable.complete())
-
     // when
     setupController(ongoingRegistrationEntry = null, isUserUnauthorized = false)
 

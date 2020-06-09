@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
@@ -40,7 +39,6 @@ class RegistrationPinScreenControllerTest {
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
-    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPinTextChanged("1"))
     uiEvents.onNext(RegistrationPinTextChanged("12"))
@@ -55,7 +53,6 @@ class RegistrationPinScreenControllerTest {
     val input = "1234"
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = input))).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPinTextChanged(input))
 
@@ -69,12 +66,11 @@ class RegistrationPinScreenControllerTest {
     val invalidPin = "1"
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = validPin))).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
     uiEvents.onNext(RegistrationPinTextChanged(validPin))
 
-    verify(userSession, times(1)).saveOngoingRegistrationEntry(any())
+    verify(userSession, times(1)).saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = validPin))
     verify(screen, times(1)).openRegistrationConfirmPinScreen()
   }
 

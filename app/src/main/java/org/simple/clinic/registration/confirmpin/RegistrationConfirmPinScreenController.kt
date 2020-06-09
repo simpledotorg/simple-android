@@ -84,22 +84,22 @@ class RegistrationConfirmPinScreenController @Inject constructor(
     return events
         .ofType<RegistrationConfirmPinValidated>()
         .filter { it.valid }
-        .flatMap { confirmPinValidated ->
+        .flatMapSingle { confirmPinValidated ->
           userSession.ongoingRegistrationEntry()
               .map { entry -> entry.withPinConfirmation(pinConfirmation = confirmPinValidated.enteredPin, clock = utcClock) }
-              .flatMapCompletable { entry -> userSession.saveOngoingRegistrationEntry(entry) }
-              .andThen(Observable.just({ ui: Ui -> ui.openFacilitySelectionScreen() }))
+              .doOnSuccess(userSession::saveOngoingRegistrationEntry)
+              .map { { ui: Ui -> ui.openFacilitySelectionScreen() } }
         }
   }
 
   private fun resetPins(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<RegistrationResetPinClicked>()
-        .flatMap {
+        .flatMapSingle {
           userSession.ongoingRegistrationEntry()
               .map(OngoingRegistrationEntry::resetPin)
-              .flatMapCompletable { entry -> userSession.saveOngoingRegistrationEntry(entry) }
-              .andThen(Observable.just({ ui: Ui -> ui.goBackToPinScreen() }))
+              .doOnSuccess(userSession::saveOngoingRegistrationEntry)
+              .map { { ui: Ui -> ui.goBackToPinScreen() } }
         }
   }
 }

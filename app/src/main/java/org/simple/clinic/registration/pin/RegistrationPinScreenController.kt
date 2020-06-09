@@ -68,15 +68,15 @@ class RegistrationPinScreenController @Inject constructor(
 
     return Observables.combineLatest(doneClicks, pinTextChanges)
         .filter { (_, pin) -> isPinValid(pin) }
-        .flatMap { (_, pin) ->
+        .flatMapSingle { (_, pin) ->
           if (pin.length > 4) {
             throw AssertionError("Shouldn't happen")
           }
 
           userSession.ongoingRegistrationEntry()
               .map { it.copy(pin = pin) }
-              .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
-              .andThen(Observable.just({ ui: Ui -> ui.openRegistrationConfirmPinScreen() }))
+              .doOnSuccess(userSession::saveOngoingRegistrationEntry)
+              .map { { ui: Ui -> ui.openRegistrationConfirmPinScreen() } }
         }
   }
 }

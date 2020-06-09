@@ -29,6 +29,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
+import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.util.Just
@@ -477,6 +478,23 @@ class PatientSummaryEffectHandlerTest {
 
     // then
     verify(uiActions).showTeleconsultInfoError()
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when open contact doctor sheet effect is received, then open the contact sheet`() {
+    // given
+    val phoneNumbers = listOf(
+        TestData.teleconsultPhoneNumber("+911111111111"),
+        TestData.teleconsultPhoneNumber("+912222222222")
+    )
+
+    // when
+    testCase.dispatch(OpenContactDoctorSheet(phoneNumbers))
+
+    // then
+    verify(uiActions).openContactDoctorSheet(phoneNumbers)
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }

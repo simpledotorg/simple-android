@@ -593,8 +593,9 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when patient teleconsultation information is loaded, then contact doctor`() {
-    val phoneNumber = "+918981273898"
-    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumber)
+    val phoneNumber = "+911111111111"
+    val phoneNumbers = listOf(TestData.teleconsultPhoneNumber(phoneNumber))
+    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumber, phoneNumbers)
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
@@ -631,11 +632,12 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when contact doctor button is clicked, then load patient teleconsultation information`() {
-    val phoneNumber = "+918912893922"
+    val phoneNumber = "+911111111111"
+    val phoneNumbers = listOf(TestData.teleconsultPhoneNumber(phoneNumber))
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumber))
+        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumber, phoneNumbers))
 
     updateSpec
         .given(model)
@@ -669,11 +671,12 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when facility teleconsultation info is loaded, then update the UI`() {
-    val teleconsultationPhoneNumber = "+918927391392"
+    val teleconsultationPhoneNumber = "+911111111111"
+    val phoneNumbers = listOf(TestData.teleconsultPhoneNumber(teleconsultationPhoneNumber))
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-    val teleconsultInfo = TeleconsultInfo.Fetched(teleconsultationPhoneNumber)
+    val teleconsultInfo = TeleconsultInfo.Fetched(teleconsultationPhoneNumber, phoneNumbers)
 
     updateSpec
         .given(model)

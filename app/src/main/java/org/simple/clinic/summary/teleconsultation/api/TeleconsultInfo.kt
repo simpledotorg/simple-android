@@ -9,7 +9,10 @@ sealed class TeleconsultInfo : Parcelable {
   object Fetching : TeleconsultInfo()
 
   @Parcelize
-  data class Fetched(val doctorPhoneNumber: String) : TeleconsultInfo()
+  data class Fetched(
+      val doctorPhoneNumber: String,
+      val doctorsPhoneNumbers: List<TeleconsultPhoneNumber>
+  ) : TeleconsultInfo()
 
   @Parcelize
   object NetworkError : TeleconsultInfo()

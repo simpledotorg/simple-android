@@ -430,21 +430,22 @@ class PatientSummaryEffectHandlerTest {
   fun `when fetch teleconsultation phone number effect is received, then fetch the phone number`() {
     // given
     val phoneNumber = "+911111111111"
+    val phoneNumbers = listOf(TestData.teleconsultPhoneNumber(phoneNumber))
 
-    whenever(teleconsultationApi.get(facility.uuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(phoneNumber))
+    whenever(teleconsultationApi.get(facility.uuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(phoneNumber, phoneNumbers))
 
     // when
     testCase.dispatch(FetchTeleconsultationInfo(facility.uuid))
 
     // then
     verifyZeroInteractions(uiActions)
-    testCase.assertOutgoingEvents(FetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumber)))
+    testCase.assertOutgoingEvents(FetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumber, phoneNumbers)))
   }
 
   @Test
   fun `when fetched teleconsultation info contains no phone number, then set teleconsult info to missing number`() {
     // given
-    whenever(teleconsultationApi.get(facility.uuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(null))
+    whenever(teleconsultationApi.get(facility.uuid)) doReturn Single.just(TestData.facilityTeleconsultationsResponse(null, emptyList()))
 
     // when
     testCase.dispatch(FetchTeleconsultationInfo(facility.uuid))

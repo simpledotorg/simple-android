@@ -7,6 +7,6 @@ import org.simple.clinic.mobius.first
 class RegistrationPhoneInit : Init<RegistrationPhoneModel, RegistrationPhoneEffect> {
 
   override fun init(model: RegistrationPhoneModel): First<RegistrationPhoneModel, RegistrationPhoneEffect> {
-    return first(model, LoadCurrentRegistrationEntry, LoadCurrentUserUnauthorizedStatus)
+    return first(model, LoadCurrentUserUnauthorizedStatus, PrefillFields(model.ongoingRegistrationEntry))
   }
 }

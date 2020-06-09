@@ -31,7 +31,6 @@ import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -57,24 +56,6 @@ class RegistrationPhoneScreenLogicTest {
   @After
   fun tearDown() {
     testFixture.dispose()
-  }
-
-  @Test
-  fun `when screen is created and an existing ongoing entry is absent then an empty ongoing entry should be created`() {
-    // when
-    setupController(ongoingRegistrationEntry = null)
-
-    // then
-    verify(userSession).saveOngoingRegistrationEntry(defaultOngoingEntry)
-  }
-
-  @Test
-  fun `when screen is created and an existing ongoing entry is present then an empty ongoing entry should not be created`() {
-    // when
-    setupController()
-
-    // then
-    verify(userSession, never()).saveOngoingRegistrationEntry(any())
   }
 
   @Test
@@ -285,7 +266,7 @@ class RegistrationPhoneScreenLogicTest {
   @Test
   fun `when the screen is created and a local logged in user exists, show the logged out dialog if the user is unauthorized`() {
     // when
-    setupController(ongoingRegistrationEntry = null, isUserUnauthorized = true)
+    setupController(isUserUnauthorized = true)
 
     // then
     verify(ui).showLoggedOutOfDeviceDialog()
@@ -294,7 +275,7 @@ class RegistrationPhoneScreenLogicTest {
   @Test
   fun `when the screen is created and a local logged in user exists, do not show the logged out dialog if the user is unauthorized`() {
     // when
-    setupController(ongoingRegistrationEntry = null, isUserUnauthorized = false)
+    setupController(isUserUnauthorized = false)
 
     // then
     verify(ui, never()).showLoggedOutOfDeviceDialog()
@@ -370,10 +351,9 @@ class RegistrationPhoneScreenLogicTest {
   }
 
   private fun setupController(
-      ongoingRegistrationEntry: OngoingRegistrationEntry? = defaultOngoingEntry,
+      ongoingRegistrationEntry: OngoingRegistrationEntry = defaultOngoingEntry,
       isUserUnauthorized: Boolean = false
   ) {
-    whenever(userSession.ongoingRegistrationEntry()) doReturn ongoingRegistrationEntry.toOptional()
     whenever(userSession.isUserUnauthorized()) doReturn Observable.just(isUserUnauthorized)
 
     val uuidGenerator = FakeUuidGenerator.fixed(userUuid)
@@ -392,7 +372,7 @@ class RegistrationPhoneScreenLogicTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = RegistrationPhoneModel.create(),
+        defaultModel = RegistrationPhoneModel.create(ongoingRegistrationEntry),
         init = RegistrationPhoneInit(),
         update = RegistrationPhoneUpdate(),
         effectHandler = effectHandler.build(),

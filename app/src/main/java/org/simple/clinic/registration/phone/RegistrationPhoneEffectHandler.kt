@@ -7,10 +7,8 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingLoginEntry
-import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.finduser.UserLookup
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 
@@ -33,8 +31,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<RegistrationPhoneEffect, RegistrationPhoneEvent>()
         .addConsumer(PrefillFields::class.java, { uiActions.preFillUserDetails(it.entry) }, schedulers.ui())
-        .addTransformer(LoadCurrentRegistrationEntry::class.java, loadCurrentRegistrationEntry())
-        .addTransformer(CreateNewRegistrationEntry::class.java, createNewRegistrationEntry())
         .addTransformer(ValidateEnteredNumber::class.java, validateEnteredPhoneNumber())
         .addTransformer(SyncFacilities::class.java, syncFacilities())
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
@@ -47,27 +43,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(SaveCurrentRegistrationEntry::class.java, saveCurrentRegistrationEntry())
         .addAction(ContinueRegistration::class.java, uiActions::openRegistrationNameEntryScreen, schedulers.ui())
         .build()
-  }
-
-  private fun loadCurrentRegistrationEntry(): ObservableTransformer<LoadCurrentRegistrationEntry, RegistrationPhoneEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .switchMapSingle { currentOngoingRegistrationEntry() }
-          .map(::CurrentRegistrationEntryLoaded)
-    }
-  }
-
-  private fun currentOngoingRegistrationEntry(): Single<Optional<OngoingRegistrationEntry>> {
-    return Single.just(userSession.ongoingRegistrationEntry())
-  }
-
-  private fun createNewRegistrationEntry(): ObservableTransformer<CreateNewRegistrationEntry, RegistrationPhoneEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .map { OngoingRegistrationEntry(uuid = uuidGenerator.v4()) }
-          .doOnNext(userSession::saveOngoingRegistrationEntry)
-          .map(::NewRegistrationEntryCreated)
-    }
   }
 
   private fun validateEnteredPhoneNumber(): ObservableTransformer<ValidateEnteredNumber, RegistrationPhoneEvent> {

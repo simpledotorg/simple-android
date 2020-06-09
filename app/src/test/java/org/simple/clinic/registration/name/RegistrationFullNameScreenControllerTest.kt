@@ -153,7 +153,7 @@ class RegistrationFullNameScreenControllerTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = RegistrationNameModel.create(),
+        defaultModel = RegistrationNameModel.create(ongoingRegistrationEntry),
         init = RegistrationNameInit(),
         update = RegistrationNameUpdate(),
         effectHandler = effectHandler.build(),

@@ -87,7 +87,7 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(entryWithPhoneNumber)
-    verify(ui).openRegistrationNameEntryScreen()
+    verify(ui).openRegistrationNameEntryScreen(entryWithPhoneNumber)
   }
 
   @Test
@@ -114,7 +114,7 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(userSession).saveOngoingRegistrationEntry(entryWithValidNumber)
-    verify(ui).openRegistrationNameEntryScreen()
+    verify(ui).openRegistrationNameEntryScreen(entryWithValidNumber)
   }
 
   @Test
@@ -130,7 +130,7 @@ class RegistrationPhoneScreenLogicTest {
     // then
     verify(ui).showInvalidNumberError()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
-    verify(ui, never()).openRegistrationNameEntryScreen()
+    verify(ui, never()).openRegistrationNameEntryScreen(any())
   }
 
   @Test

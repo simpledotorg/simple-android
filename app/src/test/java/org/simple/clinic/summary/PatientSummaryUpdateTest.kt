@@ -746,6 +746,31 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when contact doctor phone number is selected, then load patient teleconsultation info`() {
+    val phoneNumber = TestData.teleconsultPhoneNumber()
+    val phoneNumbers = listOf(phoneNumber)
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumbers))
+
+    updateSpec
+        .given(model)
+        .whenEvent(ContactDoctorPhoneNumberSelected(phoneNumber))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(LoadPatientTeleconsultationInfo(
+                    model.patientUuid,
+                    model.patientSummaryProfile?.bpPassport,
+                    model.currentFacility,
+                    phoneNumber
+                ) as PatientSummaryEffect)
+            )
+        )
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

@@ -52,6 +52,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       ContactDoctorClicked -> contactDoctorClicked(model)
       is FetchedTeleconsultationInfo -> fetchedTeleconsultationInfo(model, event)
       RetryFetchTeleconsultInfo -> retryFetchTeleconsultInfo(model)
+      is ContactDoctorPhoneNumberSelected -> contactDoctorPhoneNumberSelected(model, event)
     }
   }
 
@@ -106,6 +107,18 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           model.patientSummaryProfile?.bpPassport,
           model.currentFacility,
           model.teleconsultInfo.doctorsPhoneNumbers.first()
+      ) as PatientSummaryEffect)
+      else -> noChange()
+    }
+  }
+
+  private fun contactDoctorPhoneNumberSelected(model: PatientSummaryModel, event: ContactDoctorPhoneNumberSelected): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return when (model.teleconsultInfo) {
+      is TeleconsultInfo.Fetched -> dispatch(LoadPatientTeleconsultationInfo(
+          model.patientUuid,
+          model.patientSummaryProfile?.bpPassport,
+          model.currentFacility,
+          event.phoneNumber
       ) as PatientSummaryEffect)
       else -> noChange()
     }

@@ -15,7 +15,7 @@
 - Change syncs on login to trigger at the usage site instead of in the `LoginUserWithOtp` class
 - Support receiving multiple teleconsultation phone numbers
 - Introduce a `UUID` generator class to ease testing record creation
-- [In Progress: 05 Jun 2020] Migrate `RegistrationPhoneScreen` to Mobius
+- [In Progress: 09 Jun 2020] Migrate `RegistrationPhoneScreen` to Mobius
 - Add support for [Java 8 desugaring](https://developer.android.com/studio/write/java8-support)
 
 ### Fixes

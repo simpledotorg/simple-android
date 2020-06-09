@@ -31,6 +31,7 @@ import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -372,14 +373,7 @@ class RegistrationPhoneScreenLogicTest {
       ongoingRegistrationEntry: OngoingRegistrationEntry? = defaultOngoingEntry,
       isUserUnauthorized: Boolean = false
   ) {
-    if (ongoingRegistrationEntry != null) {
-      whenever(userSession.isOngoingRegistrationEntryPresent()) doReturn true
-      whenever(userSession.ongoingRegistrationEntry()) doReturn Single.just(ongoingRegistrationEntry)
-    } else {
-      whenever(userSession.isOngoingRegistrationEntryPresent()) doReturn false
-      whenever(userSession.ongoingRegistrationEntry()) doReturn Single.never()
-    }
-
+    whenever(userSession.ongoingRegistrationEntry()) doReturn ongoingRegistrationEntry.toOptional()
     whenever(userSession.isUserUnauthorized()) doReturn Observable.just(isUserUnauthorized)
 
     val uuidGenerator = FakeUuidGenerator.fixed(userUuid)

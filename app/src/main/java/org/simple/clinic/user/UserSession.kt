@@ -21,6 +21,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.toOptional
 import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
@@ -58,24 +59,23 @@ class UserSession @Inject constructor(
   }
 
   fun saveOngoingRegistrationEntryAsUser(): Completable {
-    return ongoingRegistrationEntry()
+    val user = ongoingRegistrationEntry!!.let { entry ->
+      User(
+          uuid = entry.uuid!!,
+          fullName = entry.fullName!!,
+          phoneNumber = entry.phoneNumber!!,
+          pinDigest = passwordHasher.hash(entry.pin!!),
+          createdAt = entry.createdAt!!,
+          updatedAt = entry.createdAt,
+          status = WaitingForApproval,
+          loggedInStatus = NOT_LOGGED_IN,
+          registrationFacilityUuid = entry.facilityId!!,
+          currentFacilityUuid = entry.facilityId
+      )
+    }
+
+    return storeUser(user, ongoingRegistrationEntry!!.facilityId!!)
         .doOnSubscribe { Timber.i("Logging in from ongoing registration entry") }
-        .map { entry -> entry to passwordHasher.hash(entry.pin!!) }
-        .flatMapCompletable { (entry, passwordDigest) ->
-          val user = User(
-              uuid = entry.uuid!!,
-              fullName = entry.fullName!!,
-              phoneNumber = entry.phoneNumber!!,
-              pinDigest = passwordDigest,
-              createdAt = entry.createdAt!!,
-              updatedAt = entry.createdAt,
-              status = WaitingForApproval,
-              loggedInStatus = NOT_LOGGED_IN,
-              registrationFacilityUuid = entry.facilityId!!,
-              currentFacilityUuid = entry.facilityId
-          )
-          storeUser(user, entry.facilityId)
-        }
   }
 
   private fun userFromPayload(payload: LoggedInUserPayload, status: User.LoggedInStatus): User {
@@ -99,8 +99,8 @@ class UserSession @Inject constructor(
     this.ongoingRegistrationEntry = entry
   }
 
-  fun ongoingRegistrationEntry(): Single<OngoingRegistrationEntry> {
-    return Single.fromCallable { ongoingRegistrationEntry }
+  fun ongoingRegistrationEntry(): Optional<OngoingRegistrationEntry> {
+    return ongoingRegistrationEntry.toOptional()
   }
 
   fun clearOngoingRegistrationEntry() {

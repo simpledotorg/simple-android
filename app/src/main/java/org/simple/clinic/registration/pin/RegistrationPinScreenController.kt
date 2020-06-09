@@ -9,6 +9,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -66,17 +67,21 @@ class RegistrationPinScreenController @Inject constructor(
         .ofType<RegistrationPinTextChanged>()
         .map { it.pin }
 
-    return Observables.combineLatest(doneClicks, pinTextChanges)
-        .filter { (_, pin) -> isPinValid(pin) }
-        .flatMapSingle { (_, pin) ->
+    return Observables
+        .combineLatest(doneClicks, pinTextChanges) { _, pin -> pin}
+        .filter(::isPinValid)
+        .doOnNext { pin ->
+          // TODO (vs) 09/06/20: Remove this magic number from here and move it where it makes sense
           if (pin.length > 4) {
             throw AssertionError("Shouldn't happen")
           }
-
-          userSession.ongoingRegistrationEntry()
-              .map { it.copy(pin = pin) }
-              .doOnSuccess(userSession::saveOngoingRegistrationEntry)
-              .map { { ui: Ui -> ui.openRegistrationConfirmPinScreen() } }
         }
+        .map { pin ->
+          val entry = (userSession.ongoingRegistrationEntry() as Just).value
+
+          entry.copy(pin = pin)
+        }
+        .doOnNext(userSession::saveOngoingRegistrationEntry)
+        .map { { ui: Ui -> ui.openRegistrationConfirmPinScreen() } }
   }
 }

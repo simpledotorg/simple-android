@@ -10,8 +10,6 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.finduser.UserLookup
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
@@ -60,17 +58,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   }
 
   private fun currentOngoingRegistrationEntry(): Single<Optional<OngoingRegistrationEntry>> {
-    return Single
-        .just(userSession.isOngoingRegistrationEntryPresent())
-        .flatMap { isRegistrationEntryPresent ->
-          // TODO (vs) 04/06/20: This is nasty, make it a synchronous call
-          if (isRegistrationEntryPresent)
-            userSession
-                .ongoingRegistrationEntry()
-                .map { Just(it) }
-          else
-            Single.just(None<OngoingRegistrationEntry>())
-        }
+    return Single.just(userSession.ongoingRegistrationEntry())
   }
 
   private fun createNewRegistrationEntry(): ObservableTransformer<CreateNewRegistrationEntry, RegistrationPhoneEvent> {

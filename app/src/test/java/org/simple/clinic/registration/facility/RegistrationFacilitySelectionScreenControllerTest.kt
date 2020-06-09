@@ -44,6 +44,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestElapsedRealtimeClock
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
@@ -388,7 +389,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         pin = "1234",
         pinConfirmation = "5678",
         createdAt = Instant.parse("2018-01-01T00:00:00Z"))
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
@@ -406,7 +407,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         pin = "1234",
         pinConfirmation = "5678",
         createdAt = Instant.parse("2018-01-01T00:00:00Z"))
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))

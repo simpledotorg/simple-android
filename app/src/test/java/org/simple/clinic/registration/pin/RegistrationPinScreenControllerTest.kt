@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
@@ -14,6 +13,7 @@ import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 
 class RegistrationPinScreenControllerTest {
@@ -38,7 +38,7 @@ class RegistrationPinScreenControllerTest {
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
 
     uiEvents.onNext(RegistrationPinTextChanged("1"))
     uiEvents.onNext(RegistrationPinTextChanged("12"))
@@ -52,7 +52,7 @@ class RegistrationPinScreenControllerTest {
   fun `when next button is clicked then ongoing entry should be updated with the input PIN and the next screen should be opened`() {
     val input = "1234"
 
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
 
     uiEvents.onNext(RegistrationPinTextChanged(input))
 
@@ -65,7 +65,7 @@ class RegistrationPinScreenControllerTest {
     val validPin = "1234"
     val invalidPin = "1"
 
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
 
     uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
     uiEvents.onNext(RegistrationPinTextChanged(validPin))

@@ -100,8 +100,9 @@ class PatientSummaryViewRendererTest {
   @Test
   fun `when teleconsultation info is loaded, then enable contact doctor button`() {
     // given
-    val phoneNumber = "+918923749323"
-    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumber)
+    val phoneNumber = "+911111111111"
+    val phoneNumbers = listOf(TestData.teleconsultPhoneNumber(phoneNumber))
+    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumber, phoneNumbers)
     val model = defaultModel
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .fetchedTeleconsultationInfo(teleconsultInfo)

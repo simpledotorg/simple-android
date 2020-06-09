@@ -263,7 +263,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 patientUuid = patientUuid
             )
 
-            PatientTeleconsultationInfo(
+            it.doctorPhoneNumber to PatientTeleconsultationInfo(
                 patientUuid,
                 it.bpPassport?.identifier?.displayValue(),
                 it.currentFacility!!,
@@ -273,7 +273,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 medicalHistory
             )
           }
-          .map(::PatientTeleconsultationInfoLoaded)
+          .map { (doctorPhoneNumber, patientTeleconsultationInfo) ->
+            PatientTeleconsultationInfoLoaded(patientTeleconsultationInfo, doctorPhoneNumber)
+          }
     }
   }
 

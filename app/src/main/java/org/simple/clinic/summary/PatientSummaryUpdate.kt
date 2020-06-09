@@ -48,7 +48,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is ContactPatientClicked -> dispatch(OpenContactPatientScreen(model.patientUuid))
-      is PatientTeleconsultationInfoLoaded -> patientInformationLoaded(event, model)
+      is PatientTeleconsultationInfoLoaded -> patientInformationLoaded(event)
       ContactDoctorClicked -> contactDoctorClicked(model)
       is FetchedTeleconsultationInfo -> fetchedTeleconsultationInfo(model, event)
       RetryFetchTeleconsultInfo -> retryFetchTeleconsultInfo(model)
@@ -92,11 +92,9 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun patientInformationLoaded(
-      event: PatientTeleconsultationInfoLoaded,
-      model: PatientSummaryModel
+      event: PatientTeleconsultationInfoLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val teleconsultInfo = model.teleconsultInfo as TeleconsultInfo.Fetched
-    return dispatch(ContactDoctor(event.patientTeleconsultationInfo, teleconsultInfo.doctorPhoneNumber))
+    return dispatch(ContactDoctor(event.patientTeleconsultationInfo, event.doctorPhoneNumber.phoneNumber))
   }
 
   private fun contactDoctorClicked(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {

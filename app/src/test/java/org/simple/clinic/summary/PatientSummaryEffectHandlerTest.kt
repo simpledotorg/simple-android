@@ -356,7 +356,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(LoadPatientTeleconsultationInfo(patientUuid, bpPassport, facility, phoneNumber))
 
     // then
-    testCase.assertOutgoingEvents(PatientTeleconsultationInfoLoaded(patientInformation))
+    testCase.assertOutgoingEvents(PatientTeleconsultationInfoLoaded(patientInformation, phoneNumber))
   }
 
   @Test

@@ -102,7 +102,7 @@ class PatientSummaryViewRendererTest {
     // given
     val phoneNumber = "+911111111111"
     val phoneNumbers = listOf(TestData.teleconsultPhoneNumber(phoneNumber))
-    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumber, phoneNumbers)
+    val teleconsultInfo = TeleconsultInfo.Fetched(phoneNumbers)
     val model = defaultModel
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .fetchedTeleconsultationInfo(teleconsultInfo)

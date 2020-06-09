@@ -19,6 +19,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
@@ -292,13 +293,14 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return teleconsultationApi
         .get(facilityUuid)
         .map {
+          // TODO (SM): Remove phoneNumber, once API supports multiple phone number implementation
           val phoneNumber = it.teleconsultationPhoneNumber
           val phoneNumbers = it.teleconsultationPhoneNumbers
 
-          if (phoneNumber.isNullOrBlank() || phoneNumbers.isNullOrEmpty()) {
-            TeleconsultInfo.MissingPhoneNumber
-          } else {
-            TeleconsultInfo.Fetched(phoneNumber, phoneNumbers)
+          when {
+            phoneNumber.isNullOrBlank() && phoneNumbers.isNullOrEmpty() -> TeleconsultInfo.MissingPhoneNumber
+            !phoneNumbers.isNullOrEmpty() -> TeleconsultInfo.Fetched(phoneNumbers)
+            else -> TeleconsultInfo.Fetched(listOf(TeleconsultPhoneNumber(phoneNumber!!)))
           }
         }
         .onErrorReturn { TeleconsultInfo.NetworkError }

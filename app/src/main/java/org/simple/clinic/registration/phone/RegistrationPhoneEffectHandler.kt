@@ -132,11 +132,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   private fun clearCurrentRegistrationEntry(): ObservableTransformer<ClearCurrentRegistrationEntry, RegistrationPhoneEvent> {
     return ObservableTransformer { effects ->
       effects
-          .flatMapSingle {
-            userSession
-                .clearOngoingRegistrationEntry()
-                .andThen(Single.just(CurrentRegistrationEntryCleared as RegistrationPhoneEvent))
-          }
+          .doOnNext { userSession.clearOngoingRegistrationEntry() }
+          .map { CurrentRegistrationEntryCleared }
     }
   }
 

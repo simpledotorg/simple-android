@@ -107,8 +107,6 @@ class UserSession @Inject constructor(
     ongoingRegistrationEntry = null
   }
 
-  fun isOngoingRegistrationEntryPresent(): Boolean = ongoingRegistrationEntry != null
-
   fun storeUserAndAccessToken(userPayload: LoggedInUserPayload, accessToken: String): Completable {
     accessTokenPreference.set(Just(accessToken))
     return storeUser(

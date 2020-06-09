@@ -104,14 +104,6 @@ class UserSessionTest {
   }
 
   @Test
-  fun `when ongoing registration entry is cleared then isOngoingRegistrationEntryPresent() should emit false`() {
-    userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry())
-    userSession.clearOngoingRegistrationEntry()
-
-    assertThat(userSession.isOngoingRegistrationEntryPresent()).isFalse()
-  }
-
-  @Test
   fun `user approved for syncing changes should be notified correctly`() {
     fun createUser(loggedInStatus: User.LoggedInStatus, userStatus: UserStatus): List<User> {
       return listOf(TestData.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus))

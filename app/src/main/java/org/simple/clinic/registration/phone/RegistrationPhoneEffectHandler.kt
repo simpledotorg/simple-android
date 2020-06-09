@@ -77,11 +77,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .map { OngoingRegistrationEntry(uuid = uuidGenerator.v4()) }
-          .switchMapSingle { registrationEntry ->
-            userSession
-                .saveOngoingRegistrationEntry(registrationEntry)
-                .andThen(Single.just(registrationEntry))
-          }
+          .doOnNext(userSession::saveOngoingRegistrationEntry)
           .map(::NewRegistrationEntryCreated)
     }
   }
@@ -153,11 +149,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   private fun saveCurrentRegistrationEntry(): ObservableTransformer<SaveCurrentRegistrationEntry, RegistrationPhoneEvent> {
     return ObservableTransformer { effects ->
       effects
-          .flatMapSingle {
-            userSession
-                .saveOngoingRegistrationEntry(it.entry)
-                .andThen(Single.just(CurrentRegistrationEntrySaved))
-          }
+          .doOnNext { userSession.saveOngoingRegistrationEntry(it.entry) }
+          .map { CurrentRegistrationEntrySaved }
     }
   }
 }

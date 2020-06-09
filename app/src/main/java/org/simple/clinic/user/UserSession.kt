@@ -95,10 +95,8 @@ class UserSession @Inject constructor(
     }
   }
 
-  fun saveOngoingRegistrationEntry(entry: OngoingRegistrationEntry): Completable {
-    return Completable.fromAction {
-      this.ongoingRegistrationEntry = entry
-    }
+  fun saveOngoingRegistrationEntry(entry: OngoingRegistrationEntry) {
+    this.ongoingRegistrationEntry = entry
   }
 
   fun ongoingRegistrationEntry(): Single<OngoingRegistrationEntry> {

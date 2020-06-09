@@ -36,12 +36,12 @@ import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
+import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
-import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
-import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestElapsedRealtimeClock
 import org.simple.clinic.widgets.ScreenCreated
@@ -389,7 +389,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
         pinConfirmation = "5678",
         createdAt = Instant.parse("2018-01-01T00:00:00Z"))
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
-    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("5cf9d744-7f34-4633-aa46-a6c7e7542060"))
@@ -408,7 +407,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
         pinConfirmation = "5678",
         createdAt = Instant.parse("2018-01-01T00:00:00Z"))
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
-    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
 
     val facility1 = TestData.facility(name = "Hoshiarpur", uuid = UUID.fromString("bc761c6c-032f-4f1d-a66a-3ec81e9e8aa3"))

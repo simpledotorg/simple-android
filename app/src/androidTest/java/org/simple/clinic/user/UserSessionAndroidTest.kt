@@ -65,8 +65,7 @@ class UserSessionAndroidTest {
         registrationFacility = facility
     )
     userSession.saveOngoingRegistrationEntry(ongoingRegistrationEntry)
-        .andThen(userSession.saveOngoingRegistrationEntryAsUser())
-        .blockingAwait()
+    userSession.saveOngoingRegistrationEntryAsUser().blockingAwait()
 
     assertThat(userSession.isUserLoggedIn()).isTrue()
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()

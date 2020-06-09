@@ -9,7 +9,9 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -38,10 +40,7 @@ class RegistrationFullNameScreenController @Inject constructor(
   private fun preFillExistingDetails(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<RegistrationFullNameScreenCreated>()
-        .flatMapSingle {
-          userSession.ongoingRegistrationEntry()
-              .map { { ui: Ui -> ui.preFillUserDetails(it) } }
-        }
+        .map { { ui: Ui -> ui.preFillUserDetails(ongoingRegistrationEntry()) } }
   }
 
   private fun pullFacilitiesInAdvance(events: Observable<UiEvent>): Observable<UiChange> {
@@ -79,11 +78,10 @@ class RegistrationFullNameScreenController @Inject constructor(
     return doneClicks
         .withLatestFrom(fullNameTextChanges)
         .filter { (_, name) -> name.isNotBlank() }
-        .flatMapSingle { (_, name) ->
-          userSession.ongoingRegistrationEntry()
-              .map { it.copy(fullName = name) }
-              .doOnSuccess(userSession::saveOngoingRegistrationEntry)
-              .map { { ui: Ui -> ui.openRegistrationPinEntryScreen() } }
-        }
+        .map { (_, name) -> ongoingRegistrationEntry().copy(fullName = name) }
+        .doOnNext(userSession::saveOngoingRegistrationEntry)
+        .map { { ui: Ui -> ui.openRegistrationPinEntryScreen() } }
   }
+
+  private fun ongoingRegistrationEntry(): OngoingRegistrationEntry = (userSession.ongoingRegistrationEntry() as Just).value
 }

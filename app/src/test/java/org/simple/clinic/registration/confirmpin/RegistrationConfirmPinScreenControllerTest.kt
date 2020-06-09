@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
@@ -18,6 +17,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -45,7 +45,7 @@ class RegistrationConfirmPinScreenControllerTest {
 
   @Test
   fun `when 4 digits are entered then the PIN should be submitted automatically`() {
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry(pin = "1234")))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry(pin = "1234").toOptional())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged("1"))
     uiEvents.onNext(RegistrationConfirmPinTextChanged("12"))
@@ -63,7 +63,7 @@ class RegistrationConfirmPinScreenControllerTest {
     val input = "1234"
 
     val ongoingEntry = OngoingRegistrationEntry(pin = "1234")
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged(input))
 
@@ -82,7 +82,7 @@ class RegistrationConfirmPinScreenControllerTest {
     val validConfirmationPin = "1234"
 
     val ongoingEntry = OngoingRegistrationEntry(pin = originalPin)
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
@@ -96,7 +96,7 @@ class RegistrationConfirmPinScreenControllerTest {
   @Test
   fun `when proceed is clicked with a confirmation PIN that does not match with original PIN then an error should be shown`() {
     val ongoingEntry = OngoingRegistrationEntry(pin = "1234")
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged("4567"))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
@@ -116,7 +116,7 @@ class RegistrationConfirmPinScreenControllerTest {
         pinConfirmation = "5678",
         createdAt = Instant.now())
     val ongoingEntryWithoutPins = ongoingEntry.copy(pin = null, pinConfirmation = null)
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     uiEvents.onNext(RegistrationResetPinClicked())
 
@@ -131,7 +131,7 @@ class RegistrationConfirmPinScreenControllerTest {
     val invalidConfirmationPin = "5678"
 
     val ongoingEntry = OngoingRegistrationEntry(pin = originalPin)
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
 

@@ -8,10 +8,6 @@ sealed class RegistrationPhoneEffect
 
 data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationPhoneEffect()
 
-object LoadCurrentRegistrationEntry : RegistrationPhoneEffect()
-
-object CreateNewRegistrationEntry : RegistrationPhoneEffect()
-
 data class ValidateEnteredNumber(val number: String) : RegistrationPhoneEffect()
 
 object SyncFacilities : RegistrationPhoneEffect()

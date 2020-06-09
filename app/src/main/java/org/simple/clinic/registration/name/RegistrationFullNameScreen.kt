@@ -34,7 +34,7 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
   lateinit var controller: RegistrationFullNameScreenController
 
   @Inject
-  lateinit var effectHandler: RegistrationNameEffectHandler
+  lateinit var effectHandlerFactory: RegistrationNameEffectHandler.Factory
 
   private val events by unsafeLazy {
     Observable
@@ -54,7 +54,7 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
         events = events.ofType(),
         defaultModel = RegistrationNameModel.create(),
         update = RegistrationNameUpdate(),
-        effectHandler = effectHandler.build(),
+        effectHandler = effectHandlerFactory.create(this).build(),
         init = RegistrationNameInit(),
         modelUpdateListener = uiRenderer::render
     )

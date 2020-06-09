@@ -54,10 +54,8 @@ class RegistrationLoadingScreenController @Inject constructor(
 
     val clearOngoingEntry = register
         .filter { it is Success }
-        .flatMap {
-          userSession.clearOngoingRegistrationEntry()
-              .andThen(Observable.never<UiChange>())
-        }
+        .doOnNext { userSession.clearOngoingRegistrationEntry() }
+        .flatMap { Observable.never<UiChange>() }
 
     val showScreenChanges = register.map {
       { ui: Ui ->

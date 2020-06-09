@@ -238,7 +238,6 @@ class RegistrationPhoneScreenLogicTest {
     whenever(facilitySync.pullWithResult()) doReturn Single.just<FacilityPullResult>(FacilityPullResult.Success)
     whenever(findUserWithPhoneNumber.find(inputNumber)).doReturn(Found(userUuid, userStatus))
     whenever(userSession.saveOngoingLoginEntry(entryToBeSaved)).doReturn(Completable.complete())
-    whenever(userSession.clearOngoingRegistrationEntry()).doReturn(Completable.complete())
 
     // when
     setupController()

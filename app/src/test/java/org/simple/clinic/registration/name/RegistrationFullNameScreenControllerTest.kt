@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
@@ -18,6 +17,7 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 
 class RegistrationFullNameScreenControllerTest {
@@ -46,7 +46,7 @@ class RegistrationFullNameScreenControllerTest {
   fun `when next is clicked with a valid name then the ongoing entry should be updated with the name and the next screen should be opened`() {
     val input = "Ashok Kumar"
 
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
 
     uiEvents.onNext(RegistrationFullNameTextChanged(input))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
@@ -60,7 +60,7 @@ class RegistrationFullNameScreenControllerTest {
     val ongoingEntry = OngoingRegistrationEntry(
         fullName = "Ashok Kumar",
         phoneNumber = "1234567890")
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(ongoingEntry.toOptional())
     whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
 
     uiEvents.onNext(RegistrationFullNameScreenCreated())
@@ -73,7 +73,7 @@ class RegistrationFullNameScreenControllerTest {
     val validName = "Ashok"
     val invalidName = "  "
 
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
 
     uiEvents.onNext(RegistrationFullNameTextChanged(invalidName))
     uiEvents.onNext(RegistrationFullNameDoneClicked())
@@ -104,7 +104,7 @@ class RegistrationFullNameScreenControllerTest {
   @Test
   fun `when screen is started and facilities haven't already been synced then facilities should be synced`() {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationFullNameScreenCreated())
@@ -115,7 +115,7 @@ class RegistrationFullNameScreenControllerTest {
   @Test
   fun `when screen is started and facilities have already been synced then facilities should not be synced again`() {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(OngoingRegistrationEntry().toOptional())
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationFullNameScreenCreated())

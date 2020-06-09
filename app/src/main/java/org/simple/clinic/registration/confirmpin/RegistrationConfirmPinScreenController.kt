@@ -9,6 +9,7 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -54,14 +55,10 @@ class RegistrationConfirmPinScreenController @Inject constructor(
           .map { it.confirmPin }
 
       val validations = doneClicks
-          .withLatestFrom(pinTextChanges)
-          .flatMapSingle { (_, confirmPin) ->
-            userSession
-                .ongoingRegistrationEntry()
-                .map { ongoingEntry ->
-                  val valid = ongoingEntry.pin == confirmPin
-                  RegistrationConfirmPinValidated(confirmPin, valid)
-                }
+          .withLatestFrom(pinTextChanges) { _, confirmPin -> ongoingRegistrationEntry() to confirmPin }
+          .map { (currentEntry, confirmPin) ->
+            val valid = currentEntry.pin == confirmPin
+            RegistrationConfirmPinValidated(confirmPin, valid)
           }
 
       upstream.mergeWith(validations)
@@ -84,22 +81,24 @@ class RegistrationConfirmPinScreenController @Inject constructor(
     return events
         .ofType<RegistrationConfirmPinValidated>()
         .filter { it.valid }
-        .flatMapSingle { confirmPinValidated ->
-          userSession.ongoingRegistrationEntry()
-              .map { entry -> entry.withPinConfirmation(pinConfirmation = confirmPinValidated.enteredPin, clock = utcClock) }
-              .doOnSuccess(userSession::saveOngoingRegistrationEntry)
-              .map { { ui: Ui -> ui.openFacilitySelectionScreen() } }
+        .map { confirmPinValidated ->
+          ongoingRegistrationEntry().withPinConfirmation(
+              pinConfirmation = confirmPinValidated.enteredPin,
+              clock = utcClock
+          )
         }
+        .doOnNext(userSession::saveOngoingRegistrationEntry)
+        .map { { ui: Ui -> ui.openFacilitySelectionScreen() } }
   }
 
   private fun resetPins(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<RegistrationResetPinClicked>()
-        .flatMapSingle {
-          userSession.ongoingRegistrationEntry()
-              .map(OngoingRegistrationEntry::resetPin)
-              .doOnSuccess(userSession::saveOngoingRegistrationEntry)
-              .map { { ui: Ui -> ui.goBackToPinScreen() } }
-        }
+        .map { ongoingRegistrationEntry() }
+        .map(OngoingRegistrationEntry::resetPin)
+        .doOnNext(userSession::saveOngoingRegistrationEntry)
+        .map { { ui: Ui -> ui.goBackToPinScreen() } }
   }
+
+  private fun ongoingRegistrationEntry(): OngoingRegistrationEntry = (userSession.ongoingRegistrationEntry() as Just).value
 }

@@ -28,6 +28,7 @@ import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ElapsedRealtimeClock
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.timer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -213,11 +214,14 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     return events
         .ofType<RegistrationFacilityConfirmed>()
         .map { it.facilityUuid }
-        .flatMap { facilityUuid ->
-          userSession.ongoingRegistrationEntry()
-              .map { it.copy(facilityId = facilityUuid) }
-              .doOnSuccess(userSession::saveOngoingRegistrationEntry)
-              .flatMapCompletable { userSession.saveOngoingRegistrationEntryAsUser() }
+        .map { facilityUuid ->
+          val entry = (userSession.ongoingRegistrationEntry() as Just).value
+          entry.copy(facilityId = facilityUuid)
+        }
+        .doOnNext(userSession::saveOngoingRegistrationEntry)
+        .flatMap {
+          userSession
+              .saveOngoingRegistrationEntryAsUser()
               .andThen(Observable.just { ui: Ui -> ui.openRegistrationScreen() })
         }
   }

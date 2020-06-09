@@ -48,6 +48,7 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.teleconsultation.TeleconsultationMessageBuilder
+import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
@@ -418,6 +419,10 @@ class PatientSummaryScreen(
   override fun contactDoctor(patientTeleconsultationInfo: PatientTeleconsultationInfo, teleconsultationPhoneNumber: String) {
     val message = teleconsultationMessageBuilder.message(patientTeleconsultationInfo)
     whatsAppMessageSender.send(teleconsultationPhoneNumber, message)
+  }
+
+  override fun openContactDoctorSheet(phoneNumbers: List<TeleconsultPhoneNumber>) {
+    // TODO (SM): Open contact doctor sheet
   }
 
   override fun showContactDoctorButtonTextAndIcon() {

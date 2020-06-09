@@ -632,12 +632,12 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when contact doctor button is clicked, then load patient teleconsultation information`() {
-    val phoneNumber = "+911111111111"
-    val phoneNumbers = listOf(TestData.teleconsultPhoneNumber(phoneNumber))
+    val phoneNumber = TestData.teleconsultPhoneNumber()
+    val phoneNumbers = listOf(phoneNumber)
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumber, phoneNumbers))
+        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumber.phoneNumber, phoneNumbers))
 
     updateSpec
         .given(model)
@@ -648,7 +648,8 @@ class PatientSummaryUpdateTest {
                 hasEffects(LoadPatientTeleconsultationInfo(
                     model.patientUuid,
                     model.patientSummaryProfile?.bpPassport,
-                    model.currentFacility
+                    model.currentFacility,
+                    phoneNumber
                 ) as PatientSummaryEffect)
             )
         )

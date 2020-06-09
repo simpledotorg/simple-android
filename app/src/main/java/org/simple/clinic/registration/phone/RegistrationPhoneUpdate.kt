@@ -18,14 +18,17 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
   ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
     return when (event) {
       is RegistrationPhoneNumberTextChanged -> next(model.phoneNumberChanged(event.phoneNumber))
-      is RegistrationPhoneDoneClicked -> dispatch(ValidateEnteredNumber(model.ongoingRegistrationEntry!!.phoneNumber!!))
+      is RegistrationPhoneDoneClicked -> dispatch(ValidateEnteredNumber(model.ongoingRegistrationEntry.phoneNumber!!))
       is EnteredNumberValidated -> syncFacilitiesOnValidNumber(model, event)
       is FacilitiesSynced -> lookupUserByNumber(event, model)
       is SearchForExistingUserCompleted -> registerOrLoginUser(model, event.result)
       is UserCreatedLocally -> dispatch(ClearCurrentRegistrationEntry)
       is CurrentRegistrationEntryCleared -> next(model.switchToPhoneEntryMode(), ProceedToLogin)
       is CurrentUserUnauthorizedStatusLoaded -> showUserLoggedOut(event)
-      is CurrentRegistrationEntrySaved -> next(model.switchToPhoneEntryMode(), ContinueRegistration)
+      is CurrentRegistrationEntrySaved -> {
+        val updatedModel = model.switchToPhoneEntryMode()
+        next(updatedModel, ContinueRegistration(model.ongoingRegistrationEntry))
+      }
     }
   }
 

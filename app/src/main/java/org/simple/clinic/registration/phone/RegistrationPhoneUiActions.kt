@@ -7,5 +7,5 @@ interface RegistrationPhoneUiActions {
   fun showAccessDeniedScreen(number: String)
   fun openLoginPinEntryScreen()
   fun showLoggedOutOfDeviceDialog()
-  fun openRegistrationNameEntryScreen()
+  fun openRegistrationNameEntryScreen(currentRegistrationEntry: OngoingRegistrationEntry)
 }

@@ -50,9 +50,11 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
   private val delegate: MobiusDelegate<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect> by unsafeLazy {
     val uiRenderer = RegistrationNameUiRenderer(this)
 
+    val screenKey = screenRouter.key<RegistrationNameScreenKey>(this)
+
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = RegistrationNameModel.create(),
+        defaultModel = RegistrationNameModel.create(screenKey.registrationEntry),
         update = RegistrationNameUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = RegistrationNameInit(),

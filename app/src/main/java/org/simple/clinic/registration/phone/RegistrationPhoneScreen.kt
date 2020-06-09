@@ -118,8 +118,8 @@ class RegistrationPhoneScreen(
     phoneNumberEditText.setTextAndCursor(ongoingEntry.phoneNumber)
   }
 
-  override fun openRegistrationNameEntryScreen() {
-    screenRouter.push(RegistrationNameScreenKey())
+  override fun openRegistrationNameEntryScreen(currentRegistrationEntry: OngoingRegistrationEntry) {
+    screenRouter.push(RegistrationNameScreenKey(currentRegistrationEntry))
   }
 
   override fun showInvalidNumberError() {

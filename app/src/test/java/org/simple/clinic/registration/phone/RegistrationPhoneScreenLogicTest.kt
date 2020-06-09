@@ -420,7 +420,5 @@ class RegistrationPhoneScreenLogicTest {
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()
-
-    uiEvents.onNext(RegistrationPhoneScreenCreated())
   }
 }

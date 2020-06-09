@@ -8,7 +8,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
@@ -17,7 +16,6 @@ import kotlinx.android.synthetic.main.screen_registration_phone.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
 import org.simple.clinic.login.pin.LoginPinScreenKey
@@ -28,7 +26,6 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -42,9 +39,6 @@ class RegistrationPhoneScreen(
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: RegistrationPhoneScreenController
-
-  @Inject
   lateinit var activity: AppCompatActivity
 
   @Inject
@@ -56,7 +50,6 @@ class RegistrationPhoneScreen(
   private val events by unsafeLazy {
     Observable
         .merge(
-            screenCreates(),
             phoneNumberTextChanges(),
             doneClicks()
         )
@@ -85,13 +78,6 @@ class RegistrationPhoneScreen(
     context.injector<Injector>().inject(this)
 
     phoneNumberEditText.showKeyboard()
-
-    bindUiToController(
-        ui = this,
-        events = events,
-        controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    )
   }
 
   override fun onAttachedToWindow() {
@@ -111,8 +97,6 @@ class RegistrationPhoneScreen(
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
-
-  private fun screenCreates() = Observable.just(RegistrationPhoneScreenCreated())
 
   private fun phoneNumberTextChanges() =
       phoneNumberEditText

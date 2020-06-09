@@ -60,8 +60,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   }
 
   private fun currentOngoingRegistrationEntry(): Single<Optional<OngoingRegistrationEntry>> {
-    return userSession
-        .isOngoingRegistrationEntryPresent()
+    return Single
+        .just(userSession.isOngoingRegistrationEntryPresent())
         .flatMap { isRegistrationEntryPresent ->
           // TODO (vs) 04/06/20: This is nasty, make it a synchronous call
           if (isRegistrationEntryPresent)

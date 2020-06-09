@@ -6,14 +6,13 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.UserSession
@@ -58,7 +57,6 @@ class RegistrationLoadingScreenControllerTest {
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
-    whenever(userSession.clearOngoingRegistrationEntry()) doReturn Completable.complete()
 
     uiEvents.onNext(RegisterErrorRetryClicked)
 
@@ -88,7 +86,6 @@ class RegistrationLoadingScreenControllerTest {
     whenever(userSession.loggedInUser()) doReturn Observable.just<Optional<User>>(Just(user))
     whenever(facilityRepository.currentFacility(user)) doReturn Observable.just(facility)
     whenever(registerUser.registerUserAtFacility(user, facility)) doReturn Single.just<RegistrationResult>(Success)
-    whenever(userSession.clearOngoingRegistrationEntry()) doReturn Completable.complete()
 
     // when
     uiEvents.onNext(ScreenCreated())

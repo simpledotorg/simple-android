@@ -105,8 +105,9 @@ class UserSessionTest {
 
   @Test
   fun `when ongoing registration entry is cleared then isOngoingRegistrationEntryPresent() should emit false`() {
-    userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry())
-        .andThen(userSession.clearOngoingRegistrationEntry())
+    userSession
+        .saveOngoingRegistrationEntry(OngoingRegistrationEntry())
+        .doOnComplete { userSession.clearOngoingRegistrationEntry() }
         .andThen(Single.just(userSession.isOngoingRegistrationEntryPresent()))
         .test()
         .await()

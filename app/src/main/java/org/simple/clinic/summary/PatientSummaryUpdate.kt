@@ -101,10 +101,13 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
 
   private fun contactDoctorClicked(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when (model.teleconsultInfo) {
+      // TODO (SM): Check phone numbers before dispatching
+      //  LoadPatientTeleconsultationInfo to show contact doctor sheet
       is TeleconsultInfo.Fetched -> dispatch(LoadPatientTeleconsultationInfo(
           model.patientUuid,
           model.patientSummaryProfile?.bpPassport,
-          model.currentFacility
+          model.currentFacility,
+          model.teleconsultInfo.doctorsPhoneNumbers.first()
       ) as PatientSummaryEffect)
       else -> noChange()
     }

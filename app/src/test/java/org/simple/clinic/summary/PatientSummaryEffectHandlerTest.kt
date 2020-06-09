@@ -345,13 +345,15 @@ class PatientSummaryEffectHandlerTest {
         medicalHistory = medicalHistory
     )
 
+    val phoneNumber = TestData.teleconsultPhoneNumber()
+
     whenever(bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)) doReturn bloodPressures
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescriptions
     whenever(bloodSugarRepository.latestMeasurementsImmediate(patientUuid, patientSummaryConfig.numberOfMeasurementsForTeleconsultation)) doReturn bloodSugars
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
-    testCase.dispatch(LoadPatientTeleconsultationInfo(patientUuid, bpPassport, facility))
+    testCase.dispatch(LoadPatientTeleconsultationInfo(patientUuid, bpPassport, facility, phoneNumber))
 
     // then
     testCase.assertOutgoingEvents(PatientTeleconsultationInfoLoaded(patientInformation))

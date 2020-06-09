@@ -6,10 +6,10 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.storage.files.ClearAllFilesResult
 import org.simple.clinic.storage.files.FileStorage
@@ -111,8 +111,7 @@ class UserSession @Inject constructor(
     }
   }
 
-  fun isOngoingRegistrationEntryPresent(): Single<Boolean> =
-      Single.fromCallable { ongoingRegistrationEntry != null }
+  fun isOngoingRegistrationEntryPresent(): Boolean = ongoingRegistrationEntry != null
 
   fun storeUserAndAccessToken(userPayload: LoggedInUserPayload, accessToken: String): Completable {
     accessTokenPreference.set(Just(accessToken))

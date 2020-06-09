@@ -388,10 +388,10 @@ class RegistrationPhoneScreenLogicTest {
       isUserUnauthorized: Boolean = false
   ) {
     if (ongoingRegistrationEntry != null) {
-      whenever(userSession.isOngoingRegistrationEntryPresent()) doReturn Single.just(true)
+      whenever(userSession.isOngoingRegistrationEntryPresent()) doReturn true
       whenever(userSession.ongoingRegistrationEntry()) doReturn Single.just(ongoingRegistrationEntry)
     } else {
-      whenever(userSession.isOngoingRegistrationEntryPresent()) doReturn Single.just(false)
+      whenever(userSession.isOngoingRegistrationEntryPresent()) doReturn false
       whenever(userSession.ongoingRegistrationEntry()) doReturn Single.never()
     }
 

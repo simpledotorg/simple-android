@@ -149,13 +149,14 @@ class RegistrationFullNameScreenControllerTest {
         .subscribe { uiChange -> uiChange(ui) }
 
     val uiRenderer = RegistrationNameUiRenderer(ui)
+    val effectHandler = RegistrationNameEffectHandler(ui)
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = RegistrationNameModel.create(),
         init = RegistrationNameInit(),
         update = RegistrationNameUpdate(),
-        effectHandler = RegistrationNameEffectHandler().build(),
+        effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )
     testFixture.start()

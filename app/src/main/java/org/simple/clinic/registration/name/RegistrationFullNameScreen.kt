@@ -2,6 +2,7 @@ package org.simple.clinic.registration.name
 
 import android.animation.LayoutTransition
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -9,11 +10,13 @@ import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_registration_name.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -30,6 +33,9 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
   @Inject
   lateinit var controller: RegistrationFullNameScreenController
 
+  @Inject
+  lateinit var effectHandler: RegistrationNameEffectHandler
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -39,6 +45,19 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
         )
         .compose(ReportAnalyticsEvents())
         .share()
+  }
+
+  private val delegate: MobiusDelegate<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect> by unsafeLazy {
+    val uiRenderer = RegistrationNameUiRenderer(this)
+
+    MobiusDelegate.forView(
+        events = events.ofType(),
+        defaultModel = RegistrationNameModel.create(),
+        update = RegistrationNameUpdate(),
+        effectHandler = effectHandler.build(),
+        init = RegistrationNameInit(),
+        modelUpdateListener = uiRenderer::render
+    )
   }
 
   override fun onFinishInflate() {
@@ -65,6 +84,24 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
     cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGING, 0)
 
     post { fullNameEditText.requestFocus() }
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    delegate.start()
+  }
+
+  override fun onDetachedFromWindow() {
+    delegate.stop()
+    super.onDetachedFromWindow()
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return delegate.onSaveInstanceState(super.onSaveInstanceState())
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun screenCreates() = Observable.just(RegistrationFullNameScreenCreated())

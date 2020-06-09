@@ -6,7 +6,6 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.Just
 import java.util.UUID
 import org.simple.clinic.registration.phone.FacilitiesSynced.Result as FacilitySyncResult
 import org.simple.clinic.registration.phone.SearchForExistingUserCompleted.Result as SearchUserResult
@@ -19,8 +18,6 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
   ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
     return when (event) {
       is RegistrationPhoneNumberTextChanged -> next(model.phoneNumberChanged(event.phoneNumber))
-      is CurrentRegistrationEntryLoaded -> currentEntryLoaded(event, model)
-      is NewRegistrationEntryCreated -> next(model.withEntry(event.entry))
       is RegistrationPhoneDoneClicked -> dispatch(ValidateEnteredNumber(model.ongoingRegistrationEntry!!.phoneNumber!!))
       is EnteredNumberValidated -> syncFacilitiesOnValidNumber(model, event)
       is FacilitiesSynced -> lookupUserByNumber(event, model)
@@ -30,18 +27,6 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       is CurrentUserUnauthorizedStatusLoaded -> showUserLoggedOut(event)
       is CurrentRegistrationEntrySaved -> next(model.switchToPhoneEntryMode(), ContinueRegistration)
     }
-  }
-
-  private fun currentEntryLoaded(
-      event: CurrentRegistrationEntryLoaded,
-      model: RegistrationPhoneModel
-  ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
-    val savedEntry = event.entry
-
-    return if (savedEntry is Just)
-      next(model.withEntry(savedEntry.value), PrefillFields(savedEntry.value) as RegistrationPhoneEffect)
-    else
-      dispatch(CreateNewRegistrationEntry as RegistrationPhoneEffect)
   }
 
   private fun showUserLoggedOut(event: CurrentUserUnauthorizedStatusLoaded): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {

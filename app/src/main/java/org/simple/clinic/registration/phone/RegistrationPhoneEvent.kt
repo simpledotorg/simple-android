@@ -1,10 +1,8 @@
 package org.simple.clinic.registration.phone
 
 import org.simple.clinic.facility.FacilityPullResult
-import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.finduser.FindUserResult
-import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -13,10 +11,6 @@ sealed class RegistrationPhoneEvent : UiEvent
 data class RegistrationPhoneNumberTextChanged(val phoneNumber: String) : RegistrationPhoneEvent() {
   override val analyticsName = "Registration:Phone Entry:Phone Number Text Changed"
 }
-
-data class CurrentRegistrationEntryLoaded(val entry: Optional<OngoingRegistrationEntry>) : RegistrationPhoneEvent()
-
-data class NewRegistrationEntryCreated(val entry: OngoingRegistrationEntry) : RegistrationPhoneEvent()
 
 data class EnteredNumberValidated(val result: RegistrationPhoneValidationResult) : RegistrationPhoneEvent() {
 

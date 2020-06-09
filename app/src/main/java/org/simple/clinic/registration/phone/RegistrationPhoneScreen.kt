@@ -26,6 +26,7 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -47,6 +48,9 @@ class RegistrationPhoneScreen(
   @Inject
   lateinit var effectHandlerFactory: RegistrationPhoneEffectHandler.Factory
 
+  @Inject
+  lateinit var uuidGenerator: UuidGenerator
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -62,7 +66,7 @@ class RegistrationPhoneScreen(
 
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = RegistrationPhoneModel.create(),
+        defaultModel = RegistrationPhoneModel.create(OngoingRegistrationEntry(uuid = uuidGenerator.v4())),
         update = RegistrationPhoneUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = RegistrationPhoneInit(),

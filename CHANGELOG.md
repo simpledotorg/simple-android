@@ -15,6 +15,7 @@
 - Support receiving multiple teleconsultation phone numbers
 - Introduce a `UUID` generator class to ease testing record creation
 - [In Progress: 05 Jun 2020] Migrate `RegistrationPhoneScreen` to Mobius
+- Add support for [Java 8 desugaring](https://developer.android.com/studio/write/java8-support)
 
 ### Fixes
 - Fix blood pressure "High" label displaying when blood pressure is low.

@@ -29,7 +29,6 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultInfo
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultationApi
-import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.util.Just
@@ -494,7 +493,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(OpenContactDoctorSheet(phoneNumbers))
 
     // then
-    verify(uiActions).openContactDoctorSheet(phoneNumbers)
+    verify(uiActions).openContactDoctorSheet(facility, phoneNumbers)
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }

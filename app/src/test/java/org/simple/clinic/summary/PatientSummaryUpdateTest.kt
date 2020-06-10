@@ -631,7 +631,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when contact doctor button is clicked, then load patient teleconsultation information`() {
+  fun `when contact doctor button is clicked and only one doctor is available for teleconsultation, then load patient teleconsultation information`() {
     val phoneNumber = TestData.teleconsultPhoneNumber()
     val phoneNumbers = listOf(phoneNumber)
     val model = defaultModel
@@ -651,6 +651,27 @@ class PatientSummaryUpdateTest {
                     model.currentFacility,
                     phoneNumber
                 ) as PatientSummaryEffect)
+            )
+        )
+  }
+
+  @Test
+  fun `when contact doctor button is clicked and multiple doctors are available for teleconsultation, then open contact doctor sheet`() {
+    val phoneNumber1 = TestData.teleconsultPhoneNumber("+911111111111")
+    val phoneNumber2 = TestData.teleconsultPhoneNumber("+912222222222")
+    val phoneNumbers = listOf(phoneNumber1, phoneNumber2)
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .fetchedTeleconsultationInfo(TeleconsultInfo.Fetched(phoneNumbers))
+
+    updateSpec
+        .given(model)
+        .whenEvent(ContactDoctorClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenContactDoctorSheet(phoneNumbers) as PatientSummaryEffect)
             )
         )
   }

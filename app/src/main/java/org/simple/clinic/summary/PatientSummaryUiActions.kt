@@ -25,5 +25,8 @@ interface PatientSummaryUiActions {
   fun openPatientContactSheet(patientUuid: UUID)
   fun contactDoctor(patientTeleconsultationInfo: PatientTeleconsultationInfo, teleconsultationPhoneNumber: String)
   fun showTeleconsultInfoError()
-  fun openContactDoctorSheet(phoneNumbers: List<TeleconsultPhoneNumber>)
+  fun openContactDoctorSheet(
+      facility: Facility,
+      phoneNumbers: List<TeleconsultPhoneNumber>
+  )
 }

@@ -165,7 +165,7 @@ class DosagePickerSheetLogicTest {
   }
 
   private fun setupController(
-      existingPrescriptionUuid: Optional<UUID> = None
+      existingPrescriptionUuid: Optional<UUID> = None()
   ) {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

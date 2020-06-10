@@ -76,7 +76,7 @@ class SettingsEffectHandlerTest {
   @Test
   fun `when the user gets logged out, there must not be any error`() {
     // given
-    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(None))
+    whenever(userSession.loggedInUser()).doReturn(Observable.just<Optional<User>>(None()))
 
     // when
     testCase.dispatch(LoadUserDetailsEffect)

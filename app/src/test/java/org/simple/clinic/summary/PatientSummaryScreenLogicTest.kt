@@ -82,8 +82,8 @@ class PatientSummaryScreenLogicTest {
   @Before
   fun setUp() {
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Just(patientProfile))
-    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn None
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
+    whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn None()
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None()
   }
 
   @After
@@ -144,7 +144,7 @@ class PatientSummaryScreenLogicTest {
   fun `when a canceled appointment with the patient does not exist then update phone dialog should not be shown`(
       openIntention: OpenIntention
   ) {
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None()
 
     startMobiusLoop(openIntention)
 
@@ -153,7 +153,7 @@ class PatientSummaryScreenLogicTest {
 
   @Test
   fun `when a new patient is missing a phone number, then avoid showing update phone dialog`() {
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn None()
 
     startMobiusLoop(ViewExistingPatient)
 

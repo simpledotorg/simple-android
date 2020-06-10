@@ -45,7 +45,7 @@ class ProtocolSyncAndroidTest {
 
   @Test
   fun when_pulling_protocols_from_server_then_paginate_till_server_has_no_records_anymore() {
-    lastPullToken.set(None)
+    lastPullToken.set(None())
 
     sync.pull()
         .test()

@@ -215,7 +215,7 @@ data class Patient(
     fun patientProfile(patientUuid: UUID): Observable<Optional<PatientProfile>> {
       return loadPatientQueryModelsForPatientUuid(patientUuid)
           .map { queryModelsToPatientProfiles(it) }
-          .map { if (it.isEmpty()) None else Just(it.first()) }
+          .map { if (it.isEmpty()) None<PatientProfile>() else Just(it.first()) }
           .toObservable()
     }
 

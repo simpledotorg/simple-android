@@ -13,8 +13,8 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -68,7 +68,7 @@ class ScanSimpleIdScreenControllerTest {
       scannedTexts: List<String>,
       expectedScannedCode: UUID?
   ) {
-    whenever(patientRepository.findPatientWithBusinessId(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.findPatientWithBusinessId(any())).thenReturn(Observable.just(None()))
 
     scannedTexts.forEach { scannedText ->
       uiEvents.onNext(ScanSimpleIdScreenQrCodeScanned(scannedText))
@@ -181,7 +181,7 @@ class ScanSimpleIdScreenControllerTest {
     }
 
     return listOf(
-        testCase(None),
+        testCase(None()),
         testCase(TestData.patient().toOptional())
     )
   }

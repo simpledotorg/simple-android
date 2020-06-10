@@ -11,6 +11,7 @@ import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.unwrapJust
+import java.io.File
 import javax.inject.Inject
 
 
@@ -49,7 +50,7 @@ class ReportsSyncAndroidTest {
 
     val reportsFileAfterSync = reportsRepository.reportsFile().unwrapJust().blockingFirst()
 
-    assertThat(reportsFileBeforeSync).isSameInstanceAs(None)
+    assertThat(reportsFileBeforeSync).isEqualTo(None<File>())
     assertThat(reportsFileAfterSync.length()).isGreaterThan(0L)
   }
 }

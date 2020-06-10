@@ -327,7 +327,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged(""))
-      onNext(GenderChanged(None))
+      onNext(GenderChanged(None()))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
@@ -381,7 +381,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged(""))
-      onNext(GenderChanged(None))
+      onNext(GenderChanged(None()))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged(""))
       onNext(StateChanged(""))
@@ -499,7 +499,7 @@ class PatientEntryScreenLogicTest {
       onNext(PhoneNumberChanged(""))
       onNext(DateOfBirthChanged(""))
       onNext(AgeChanged("20"))
-      onNext(GenderChanged(None))
+      onNext(GenderChanged(None()))
       onNext(ColonyOrVillageChanged(""))
       onNext(DistrictChanged("District"))
       onNext(StateChanged("State"))
@@ -543,7 +543,7 @@ class PatientEntryScreenLogicTest {
     screenCreated()
 
     with(uiEvents) {
-      onNext(GenderChanged(None))
+      onNext(GenderChanged(None()))
       onNext(GenderChanged(Just(gender)))
       onNext(GenderChanged(Just(gender)))
     }

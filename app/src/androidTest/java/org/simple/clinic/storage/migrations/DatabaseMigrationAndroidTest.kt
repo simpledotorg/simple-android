@@ -78,8 +78,8 @@ class DatabaseMigrationAndroidTest {
 
     helper.migrations = migrations
 
-    lastFacilityPullToken.set(None)
-    lastPatientPullToken.set(None)
+    lastFacilityPullToken.set(None())
+    lastPatientPullToken.set(None())
   }
 
   @Test
@@ -891,7 +891,7 @@ class DatabaseMigrationAndroidTest {
       assertThat(it.string("deletedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
     }
 
-    assertThat(lastFacilityPullToken.get()).isEqualTo(None)
+    assertThat(lastFacilityPullToken.get()).isEqualTo(None<String>())
   }
 
   @Test
@@ -1375,7 +1375,7 @@ class DatabaseMigrationAndroidTest {
     val db_v30 = helper.migrateTo(30)
 
     db_v30.assertColumnCount(tableName, expectedColumnCount)
-    assertThat(lastPatientPullToken.get()).isEqualTo(None)
+    assertThat(lastPatientPullToken.get()).isEqualTo(None<String>())
   }
 
   @Test

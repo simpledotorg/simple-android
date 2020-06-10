@@ -31,7 +31,7 @@ open class BloodPressureModule {
   @Provides
   @Named("last_bp_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_bp_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_bp_pull_token_v2", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 
   @Provides

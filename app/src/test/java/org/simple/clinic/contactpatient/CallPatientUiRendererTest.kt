@@ -113,7 +113,7 @@ class CallPatientUiRendererTest {
   @Test
   fun `hide the call result section if there is no overdue appointment`() {
     // when
-    uiRenderer.render(defaultModel().overdueAppointmentLoaded(None))
+    uiRenderer.render(defaultModel().overdueAppointmentLoaded(None()))
 
     // then
     verify(ui).hideSecureCallUi()

@@ -28,6 +28,6 @@ class FacilityModule {
   @Provides
   @Named("last_facility_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_facility_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_facility_pull_token_v2", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

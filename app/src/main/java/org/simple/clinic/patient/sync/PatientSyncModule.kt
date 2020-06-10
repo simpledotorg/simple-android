@@ -22,6 +22,6 @@ open class PatientSyncModule {
   @Provides
   @Named("last_patient_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_patient_pull_token_v3", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_patient_pull_token_v3", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

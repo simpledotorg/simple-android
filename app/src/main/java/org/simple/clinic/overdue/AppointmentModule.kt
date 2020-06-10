@@ -49,7 +49,7 @@ class AppointmentModule {
   @Provides
   @Named("last_appointment_pull_token")
   fun lastPullTokenV3(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_appointment_pull_token_v3", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_appointment_pull_token_v3", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 
   private fun scheduleAppointmentDays(): List<TimeToAppointment> {

@@ -43,7 +43,7 @@ class HelpRepositoryTest {
 
     val fileStreamObserver = repository.helpFile().test()
 
-    fileStreamObserver.assertValue(None)
+    fileStreamObserver.assertValue(None())
   }
 
   @Test
@@ -55,7 +55,7 @@ class HelpRepositoryTest {
 
     val fileStreamObserver = repository.helpFile().test()
 
-    fileStreamObserver.assertValue(None)
+    fileStreamObserver.assertValue(None())
   }
 
   @Test
@@ -121,6 +121,6 @@ class HelpRepositoryTest {
     val helpFileStream = repository.helpFile().test()
     repository.deleteHelpFile().test().assertNoErrors()
 
-    helpFileStream.assertValues(file.toOptional(), None)
+    helpFileStream.assertValues(file.toOptional(), None())
   }
 }

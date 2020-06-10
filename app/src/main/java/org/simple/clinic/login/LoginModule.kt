@@ -26,7 +26,7 @@ class LoginModule {
   @Provides
   @Named("preference_access_token")
   fun accessTokenForLoggedInUser(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("access_token", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("access_token", None(), OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 
   @Provides

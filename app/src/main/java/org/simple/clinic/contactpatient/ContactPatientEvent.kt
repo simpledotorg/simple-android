@@ -3,10 +3,10 @@ package org.simple.clinic.contactpatient
 import android.Manifest
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.PatientProfile
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RequiresPermission
-import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 
@@ -21,7 +21,7 @@ data class OverdueAppointmentLoaded(
 ) : ContactPatientEvent()
 
 data class NormalCallClicked(
-    override var permission: Optional<RuntimePermissionResult> = None,
+    override var permission: Optional<RuntimePermissionResult> = None(),
     override val permissionRequestCode: Int = 1,
     override val permissionString: String = Manifest.permission.CALL_PHONE
 ) : ContactPatientEvent(), RequiresPermission {
@@ -30,7 +30,7 @@ data class NormalCallClicked(
 }
 
 data class SecureCallClicked(
-    override var permission: Optional<RuntimePermissionResult> = None,
+    override var permission: Optional<RuntimePermissionResult> = None(),
     override val permissionRequestCode: Int = 2,
     override val permissionString: String = Manifest.permission.CALL_PHONE
 ) : ContactPatientEvent(), RequiresPermission {

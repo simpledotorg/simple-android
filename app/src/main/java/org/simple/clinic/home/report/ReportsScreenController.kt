@@ -10,6 +10,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import java.io.File
 import javax.inject.Inject
 
 typealias Ui = ReportsScreen
@@ -35,7 +36,7 @@ class ReportsScreenController @Inject constructor(
         .map { { ui: Ui -> ui.showReport(it.toURI()) } }
 
     val showReportNotPresent = reports
-        .ofType<None>()
+        .ofType<None<File>>()
         .map { Ui::showNoReportsAvailable }
 
     return showReports.mergeWith(showReportNotPresent)

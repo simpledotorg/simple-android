@@ -1,12 +1,14 @@
 package org.simple.clinic.registration.name
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.next
 
-class RegistrationNameUpdate: Update<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect> {
+class RegistrationNameUpdate : Update<RegistrationNameModel, RegistrationNameEvent, RegistrationNameEffect> {
 
   override fun update(model: RegistrationNameModel, event: RegistrationNameEvent): Next<RegistrationNameModel, RegistrationNameEffect> {
-    return noChange()
+    return when (event) {
+      is RegistrationFullNameTextChanged -> next(model.nameChanged(event.fullName))
+    }
   }
 }

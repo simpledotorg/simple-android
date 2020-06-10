@@ -24,4 +24,8 @@ data class RegistrationNameModel(
   fun nameChanged(fullName: String): RegistrationNameModel {
     return copy(ongoingRegistrationEntry = ongoingRegistrationEntry.withName(fullName))
   }
+
+  fun nameValidated(nameValidationResult: RegistrationNameValidationResult): RegistrationNameModel {
+    return copy(nameValidationResult = nameValidationResult)
+  }
 }

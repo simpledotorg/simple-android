@@ -12,7 +12,9 @@ import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
 import org.simple.clinic.summary.teleconsultation.contactdoctor.PhoneNumberListItem.Event.PhoneNumberClicked
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.dp
 
 class ContactDoctorSheet : BottomSheetActivity() {
 
@@ -58,6 +60,11 @@ class ContactDoctorSheet : BottomSheetActivity() {
 
     contactDoctorSheetSubtitleTextView.text = getString(R.string.contactdoctor_subtitle, facilityName)
     phoneNumbersRecyclerView.adapter = itemAdapter
+    phoneNumbersRecyclerView.addItemDecoration(DividerItemDecorator(
+        context = this,
+        marginStart = 16.dp,
+        marginEnd = 16.dp
+    ))
 
     itemAdapter.submitList(PhoneNumberListItem.from(phoneNumbers))
 

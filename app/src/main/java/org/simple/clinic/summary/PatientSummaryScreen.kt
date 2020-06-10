@@ -49,6 +49,7 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.teleconsultation.TeleconsultationMessageBuilder
 import org.simple.clinic.summary.teleconsultation.api.TeleconsultPhoneNumber
+import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
@@ -105,7 +106,8 @@ class PatientSummaryScreen(
             editButtonClicks(),
             phoneNumberClicks(),
             contactDoctorClicks(),
-            snackbarActionClicks
+            snackbarActionClicks,
+            teleconsultPhoneNumberSelected()
         )
         .compose(ReportAnalyticsEvents())
         .cast<PatientSummaryEvent>()
@@ -170,6 +172,20 @@ class PatientSummaryScreen(
     }
     mobiusDelegate.stop()
     super.onDetachedFromWindow()
+  }
+
+  private fun teleconsultPhoneNumberSelected(): Observable<PatientSummaryEvent> {
+    return screenRouter
+        .streamScreenResults()
+        .ofType<ActivityResult>()
+        .filter { it.requestCode == CONTACT_DOCTOR_SHEET && it.succeeded() && it.data != null }
+        .map { it.data!! }
+        .map {
+          val teleconsultPhoneNumberString = ContactDoctorSheet.readPhoneNumberExtra(it)
+          val teleconsultPhoneNumber = TeleconsultPhoneNumber(teleconsultPhoneNumberString)
+
+          ContactDoctorPhoneNumberSelected(teleconsultPhoneNumber)
+        }
   }
 
   private fun editButtonClicks(): Observable<UiEvent> = editPatientButton.clicks().map { PatientSummaryEditClicked }
@@ -421,8 +437,12 @@ class PatientSummaryScreen(
     whatsAppMessageSender.send(teleconsultationPhoneNumber, message)
   }
 
-  override fun openContactDoctorSheet(phoneNumbers: List<TeleconsultPhoneNumber>) {
-    // TODO (SM): Open contact doctor sheet
+  override fun openContactDoctorSheet(
+      facility: Facility,
+      phoneNumbers: List<TeleconsultPhoneNumber>
+  ) {
+    val intent = ContactDoctorSheet.intent(context, facility, phoneNumbers)
+    activity.startActivityForResult(intent, CONTACT_DOCTOR_SHEET)
   }
 
   override fun showContactDoctorButtonTextAndIcon() {

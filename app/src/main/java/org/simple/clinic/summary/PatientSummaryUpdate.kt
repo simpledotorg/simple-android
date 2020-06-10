@@ -99,20 +99,35 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun contactDoctorClicked(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return when (model.teleconsultInfo) {
-      // TODO (SM): Check phone numbers before dispatching
-      //  LoadPatientTeleconsultationInfo to show contact doctor sheet
-      is TeleconsultInfo.Fetched -> dispatch(LoadPatientTeleconsultationInfo(
-          model.patientUuid,
-          model.patientSummaryProfile?.bpPassport,
-          model.currentFacility,
-          model.teleconsultInfo.doctorsPhoneNumbers.first()
-      ) as PatientSummaryEffect)
+    return when (val teleconsultInfo = model.teleconsultInfo) {
+      is TeleconsultInfo.Fetched -> {
+        val effect = eventForContactDoctorClicked(teleconsultInfo, model)
+        dispatch(effect)
+      }
       else -> noChange()
     }
   }
 
-  private fun contactDoctorPhoneNumberSelected(model: PatientSummaryModel, event: ContactDoctorPhoneNumberSelected): Next<PatientSummaryModel, PatientSummaryEffect> {
+  private fun eventForContactDoctorClicked(
+      teleconsultInfo: TeleconsultInfo.Fetched,
+      model: PatientSummaryModel
+  ): PatientSummaryEffect {
+    return if (teleconsultInfo.areMultipleDoctorsAvailable) {
+      OpenSelectDoctorSheet(teleconsultInfo.doctorsPhoneNumbers)
+    } else {
+      LoadPatientTeleconsultationInfo(
+          model.patientUuid,
+          model.patientSummaryProfile?.bpPassport,
+          model.currentFacility,
+          teleconsultInfo.doctorsPhoneNumbers.first()
+      )
+    }
+  }
+
+  private fun contactDoctorPhoneNumberSelected(
+      model: PatientSummaryModel,
+      event: ContactDoctorPhoneNumberSelected
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when (model.teleconsultInfo) {
       is TeleconsultInfo.Fetched -> dispatch(LoadPatientTeleconsultationInfo(
           model.patientUuid,

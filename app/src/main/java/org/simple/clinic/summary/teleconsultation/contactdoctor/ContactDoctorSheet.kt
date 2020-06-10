@@ -24,11 +24,15 @@ class ContactDoctorSheet : BottomSheetActivity() {
     fun intent(
         context: Context,
         facility: Facility,
-        teleconsultationPhoneNumbers: ArrayList<TeleconsultPhoneNumber>
+        teleconsultationPhoneNumbers: List<TeleconsultPhoneNumber>
     ): Intent {
+      val phoneNumbersArrayList = arrayListOf<TeleconsultPhoneNumber>().apply {
+        addAll(teleconsultationPhoneNumbers)
+      }
+
       return Intent(context, ContactDoctorSheet::class.java).apply {
         putExtra(EXTRA_FACILITY_NAME, facility.name)
-        putParcelableArrayListExtra(EXTRA_PHONE_NUMBERS, teleconsultationPhoneNumbers)
+        putParcelableArrayListExtra(EXTRA_PHONE_NUMBERS, phoneNumbersArrayList)
       }
     }
 

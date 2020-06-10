@@ -11,7 +11,11 @@ sealed class TeleconsultInfo : Parcelable {
   @Parcelize
   data class Fetched(
       val doctorsPhoneNumbers: List<TeleconsultPhoneNumber>
-  ) : TeleconsultInfo()
+  ) : TeleconsultInfo() {
+
+    val areMultipleDoctorsAvailable: Boolean
+      get() = doctorsPhoneNumbers.size > 1
+  }
 
   @Parcelize
   object NetworkError : TeleconsultInfo()

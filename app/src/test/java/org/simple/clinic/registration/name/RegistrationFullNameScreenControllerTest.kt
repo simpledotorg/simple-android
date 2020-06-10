@@ -154,6 +154,7 @@ class RegistrationFullNameScreenControllerTest {
     val uiRenderer = RegistrationNameUiRenderer(ui)
     val effectHandler = RegistrationNameEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
+        userSession = userSession,
         uiActions = ui
     )
 
